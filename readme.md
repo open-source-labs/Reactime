@@ -1,2 +1,2 @@
 This is react-time-travel 
-A debugging tool for react in chrome extension
+A debugging tool for react in chrome extension.
