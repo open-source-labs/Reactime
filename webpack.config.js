@@ -1,10 +1,14 @@
 const path = require('path');
+const ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
 
-module.exports = {
-  entry: './extension/index.js',
+const config = {
+  entry: {
+    main: './extension/index.js',
+    background: './extension/background.js',
+  },
   output: {
-    path: path.resolve(__dirname, 'extension'),
-    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'extension/dist'),
+    filename: '[name].bundle.js',
   },
   module: {
     rules: [
@@ -30,4 +34,12 @@ module.exports = {
       },
     ],
   },
+  plugins: [],
+};
+
+module.exports = (env, argv) => {
+  if (argv.mode === 'development') {
+    config.plugins.push(new ChromeExtensionReloader());
+  }
+  return config;
 };
