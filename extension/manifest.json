@@ -2,6 +2,6 @@
   "name": "React Time-Travel",
   "version": "1.0",
   "devtools_page": "devtools.html",
-  "description": "Helps debug React by memorizing the state of components with every render.",
+  "description": "A Chrome extension that helps debug React by memorizing the state of components with every render.",
   "manifest_version": 2
 }

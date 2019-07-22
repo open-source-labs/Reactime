@@ -7,4 +7,7 @@
     "browser": true,
     "webextensions": true,
   },
+	"globals": { 
+    "fetch": false,
+  }
 }
