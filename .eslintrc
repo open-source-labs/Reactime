@@ -5,7 +5,7 @@
   "env": {
     "jest/globals": true,
     "browser": true,
-    "webextensions": true,
+    "webextensions": true, 
   },
 	"globals": { 
     "fetch": false,
