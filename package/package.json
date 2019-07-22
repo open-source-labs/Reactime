@@ -1,0 +1,24 @@
+{
+  "name": "react-time-travel",
+  "version": "1.0.0",
+  "description": "A library that helps debug React by memorizing the state of components with every render.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oslabs-beta/react-time-travel"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\""
+  },
+  "keywords": [
+    "react",
+    "time",
+    "travel",
+    "time-travel",
+    "timetravel",
+    "react-time-travel",
+    "react-timetravel"
+  ],
+  "author": "Bryan Lee, Josh Kim, Ryan Dang, Sierra Swaby",
+  "license": "ISC"
+}

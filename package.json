@@ -1,0 +1,36 @@
+{
+  "name": "react-time-travel-extension",
+  "version": "1.0.0",
+  "description": "build web extension bundle.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "test": "echo \"Error: no test specified\""
+  },
+  "keywords": [
+    "react",
+    "time",
+    "travel",
+    "time-travel",
+    "timetravel",
+    "react-time-travel",
+    "react-timetravel"
+  ],
+  "author": "Bryan Lee, Josh Kim, Ryan Dang, Sierra Swaby",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.1.0",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb": "^17.1.1",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.36.1",
+    "webpack-cli": "^3.3.6"
+  },
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}
