@@ -1,0 +1,30 @@
+.main-container {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: rgb(238, 238, 238);
+}
+
+.head-container {
+  height: 10%;
+}
+
+.body-container {
+  height: 80%;
+  display: flex;
+  flex-direction: row wrap;
+}
+
+.travel-container {
+  height: 10%;
+}
+
+.head-container,
+.body-container,
+.action-container,
+.state-container,
+.travel-container {
+  border-style: solid;
+  border-color: black;
+  border-width: thin;
+}
