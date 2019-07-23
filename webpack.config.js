@@ -3,7 +3,7 @@ const ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
 
 const config = {
   entry: {
-    main: './extension/index.js',
+    app: './extension/app/index.js',
     background: './extension/background.js',
   },
   output: {
@@ -39,7 +39,12 @@ const config = {
 
 module.exports = (env, argv) => {
   if (argv.mode === 'development') {
-    config.plugins.push(new ChromeExtensionReloader());
+    config.plugins.push(new ChromeExtensionReloader({
+      entries: {
+        contentScript: ['app'],
+        background: ['background'],
+      },
+    }));
   }
   return config;
 };
