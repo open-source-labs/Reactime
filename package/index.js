@@ -1,10 +1,11 @@
 const snapShot = [];
 
-const linkState = require('./linkState')(snapShot);
-const getSnap = () => snapShot;
+window.addEventListener('message', (event) => {
+  console.log('data received', event.data);
+});
 
+const linkState = require('./linkState')(snapShot);
 
 module.exports = {
   linkState,
-  getSnap,
 };
