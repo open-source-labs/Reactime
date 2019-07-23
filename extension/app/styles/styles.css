@@ -13,15 +13,25 @@
   height: 80%;
   width: 100%;
   display: flex;
-  flex-direction: row wrap;
+  /* flex-direction: row; */
+  flex-wrap: wrap;
 }
 
 .action-container {
-  width: 30%;
+  flex: 3 auto;
 }
 
 .state-container {
-  width: 70%;
+  flex: 7 auto;
+}
+
+@media (max-width: 500px) {
+  .body-container {
+    flex-direction: column;
+  }
+  .state-container {
+    flex: 3 auto;
+  }
 }
 
 .travel-container {
