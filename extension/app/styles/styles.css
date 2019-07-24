@@ -13,15 +13,25 @@
   height: 80%;
   width: 100%;
   display: flex;
-  flex-direction: row wrap;
+  flex-wrap: wrap;
 }
 
 .action-container {
-  width: 30%;
+  flex: 3 auto;
 }
 
 .state-container {
-  width: 70%;
+  flex: 7 auto;
+}
+
+/* if extension width is less than 500px, stack the body containers */
+@media (max-width: 500px) {
+  .body-container {
+    flex-direction: column;
+  }
+  .state-container {
+    flex: 3 auto;
+  }
 }
 
 .travel-container {
@@ -35,5 +45,13 @@
 .travel-container {
   border-style: solid;
   border-color: black;
+  border-width: thin;
+}
+
+.action-component {
+  height: 40px;
+  width: 100%;
+  background-color: rgb(170, 170, 170);
+  border-style: solid;
   border-width: thin;
 }
