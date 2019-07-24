@@ -10,29 +10,29 @@ class MainContainer extends Component {
     this.state = {
       snapshots: [{ state: 'snapshot1' }, { state: 'snapshot2' }, { state: 'snapshot3' }],
       snapshotIndex: 0,
+      port: null,
     };
 
     this.handleChangeSnapshot = this.handleChangeSnapshot.bind(this);
   }
 
   componentDidMount() {
-    // add a listener to capture messages from our backend
-    // this should be in the inject script
-    // window.addEventListener(
-    //   'message',
-    //   (event) => {
-    //     // We only accept messages from ourselves
-    //     if (event.source !== window) return;
-    //     console.log(`Message received from backend: ${event.payload}`);
-    //   },
-    //   false,
-    // );
+    console.log('componentDidMount');
+    const port = chrome.runtime.connect();
+    port.onMessage.addListener((message) => {
+      console.log('message from content script', message);
+    });
+    port.onDisconnect.addListener((obj) => {
+      console.log('disconnected port', obj);
+    });
+    this.setState({ port });
   }
 
+  // this method changes the snapshotIndex state
+  // snapshotIndex could be changed from either the ActionContainer or the TravelContainer
   handleChangeSnapshot(snapshotIndex) {
-    console.log('handleChangeSnapshot', snapshotIndex);
-    // change snapshotIndex
-    // snapshotIndex could be changed from either the ActionContainer or the TravelContainer
+    // const { port } = this.state;
+    // port.postMessage({ message: snapshotIndex });
     this.setState({ snapshotIndex });
   }
 

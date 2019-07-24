@@ -13,7 +13,6 @@ const Action = (props) => {
       }}
     >
       {snapshot.state}
-      {selected.toString()}
     </div>
   );
 };
