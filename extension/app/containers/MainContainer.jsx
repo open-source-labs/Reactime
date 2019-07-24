@@ -12,17 +12,18 @@ class MainContainer extends Component {
 
   componentDidMount() {
     // add a listener to capture messages from our backend
-    window.addEventListener(
-      'message',
-      (event) => {
-        // We only accept messages from ourselves
-        if (event.source !== window) return;
-        console.log(`Message received from backend: ${event.payload}`);
-      },
-      false,
-    );
+    // this should be in the inject script
+    // window.addEventListener(
+    //   'message',
+    //   (event) => {
+    //     // We only accept messages from ourselves
+    //     if (event.source !== window) return;
+    //     console.log(`Message received from backend: ${event.payload}`);
+    //   },
+    //   false,
+    // );
 
-    // TESTING PURPOSES ONLY
+    // MOCK DATA -- FOR TESTING PURPOSES ONLY
     this.setState({
       snapshots: [{ state: 'snapshot1' }, { state: 'snapshot2' }, { state: 'snapshot3' }],
     });
