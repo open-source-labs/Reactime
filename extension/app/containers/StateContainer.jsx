@@ -1,12 +1,23 @@
 import React, { Component } from 'react';
+import ReactJson from 'react-json-view';
 
 class StateContainer extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
   }
 
   render() {
-    return <div className="state-container">StateContainer</div>;
+    const { snapshot } = this.props;
+    return (
+      <div className="state-container">
+        <ReactJson
+          enableClipboard={false}
+          theme="solarized"
+          groupArraysAfterLength={50}
+          src={snapshot}
+        />
+      </div>
+    );
   }
 }
 
