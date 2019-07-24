@@ -10,8 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "prop-types": "^15.7.2",
     "rc-slider": "^8.6.13",
-    "react-compound-slider": "^2.2.0"
+    "rc-tooltip": "^3.7.3"
   }
 }
