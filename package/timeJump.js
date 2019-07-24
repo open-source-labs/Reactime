@@ -1,6 +1,7 @@
 module.exports = (snapShot) => {
   return (newSnapShot) => {
-    console.log(snapShot);
-    console.log(newSnapShot);
-  }
-}
+    newSnapShot.forEach(async (state, i) => {
+      await snapShot[i].oldSetState(state);
+    });
+  };
+};
