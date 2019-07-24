@@ -1,8 +1,9 @@
 // links component state to library
 // changes the setState method to also update our snapshot
 
-module.exports = (snapShot) => {
+module.exports = (snapShot, mode) => {
   function sendSnapShot() {
+    if (mode.jumping) return;
     const payload = snapShot.map(({ component }) => component.state);
     window.postMessage({
       action: 'recordSnap',
@@ -14,7 +15,7 @@ module.exports = (snapShot) => {
     const oldSetState = component.setState.bind(component);
 
     const setStateAsync = (state) => {
-      return new Promise(resolve => component.setState.bind(component)(state, resolve));
+      return new Promise(resolve => oldSetState(state, resolve));
     };
 
     snapShot.push({ component, setStateAsync });

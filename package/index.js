@@ -1,6 +1,8 @@
 const snapShot = [];
-const linkState = require('./linkState')(snapShot);
-const timeJump = require('./timeJump')(snapShot);
+const mode = { jumping: false };
+
+const linkState = require('./linkState')(snapShot, mode);
+const timeJump = require('./timeJump')(snapShot, mode);
 
 const getShot = () => snapShot.map(({ component }) => component.state);
 
