@@ -58,3 +58,7 @@
   border-width: thin;
   cursor: pointer;
 }
+
+.action-component.selected {
+  background-color: rgb(134, 134, 134);
+}

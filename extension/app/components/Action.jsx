@@ -2,12 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 const Action = (props) => {
-  const { snapshot, selected } = props;
-  console.log(selected);
+  const {
+    snapshot, selected, handleChangeSnapshot, index,
+  } = props;
   return (
-    <div className="action-component">
+    <div
+      className={selected ? 'action-component selected' : 'action-component'}
+      onClick={() => {
+        handleChangeSnapshot(index);
+      }}
+    >
       {snapshot.state}
-      {' '}
       {selected.toString()}
     </div>
   );

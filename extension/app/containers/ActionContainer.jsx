@@ -7,13 +7,20 @@ class ActionContainer extends Component {
   }
 
   render() {
-    const { snapshots, snapshotIndex } = this.props;
+    const { snapshots, snapshotIndex, handleChangeSnapshot } = this.props;
     let actionsArr = [];
     if (snapshots) {
       actionsArr = snapshots.map((snapshot, index) => {
         const selected = index === snapshotIndex;
-        console.log(selected);
-        return <Action key={`action${index}`} snapshot={snapshot} selected={selected} />;
+        return (
+          <Action
+            key={`action${index}`}
+            index={index}
+            snapshot={snapshot}
+            selected={selected}
+            handleChangeSnapshot={handleChangeSnapshot}
+          />
+        );
       });
     }
     return <div className="action-container">{actionsArr}</div>;
