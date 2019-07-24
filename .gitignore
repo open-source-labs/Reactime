@@ -2,3 +2,5 @@ node_modules
 .DS_Store
 dist/
 extension/bundle.js
+package/react-time-travel-1.0.1.tgz
+testing
