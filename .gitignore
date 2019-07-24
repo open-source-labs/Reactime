@@ -2,3 +2,4 @@ node_modules
 .DS_Store
 dist/
 extension/bundle.js
+extensions/node_modules
