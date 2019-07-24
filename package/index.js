@@ -1,13 +1,19 @@
 const snapShot = [];
+const mode = { jumping: false };
+
+const linkState = require('./linkState')(snapShot, mode);
+const timeJump = require('./timeJump')(snapShot, mode);
+
+const getShot = () => snapShot.map(({ component }) => component.state);
 
 window.addEventListener('message', ({ data: { action, payload } }) => {
   if (action === 'jumpToSnap') {
-    console.log('snap received from chrome', payload);
+    timeJump(payload);
   }
 });
 
-const linkState = require('./linkState')(snapShot);
-
 module.exports = {
   linkState,
+  timeJump,
+  getShot,
 };
