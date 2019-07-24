@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+}
+
+.container {
+  padding: 0 2.5%;
+}
+
+.Box {
+  height: 100px;
+  width: 100px;
+  border: 1px solid black;
+}
