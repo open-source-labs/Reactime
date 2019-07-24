@@ -7,8 +7,10 @@ import 'rc-tooltip/assets/bootstrap.css';
 
 const Handle  = Slider.Handle;
 
+
 const handle = (props) => {
     const { value, dragging, index, ...restProps } = props;
+
     return (
       <Tooltip
         prefixCls="rc-slider-tooltip"
@@ -26,9 +28,22 @@ class mainSlider extends Component {
     constructor(props){
         super(props)
     }
+
+
     render(){
         return(
-        <Slider min={0} max={20} defaultValue={3} handle={handle} />
+            <div>
+                <Slider 
+                min={0} 
+                max={this.props.snapshotLength-1} 
+                value = {this.props.snapshotIndex}
+                onChange={(index) => {
+                    this.props.handleChangeSnapshot(index)
+                }}
+                handle={handle}
+                 >
+                </Slider>
+            </div>
         )
     }
 }
