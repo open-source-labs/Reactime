@@ -21,7 +21,9 @@
 }
 
 .state-container {
+  font-size: 15px;
   flex: 7 auto;
+  background-color: rgb(0, 43, 54);
 }
 
 /* if extension width is less than 500px, stack the body containers */
@@ -54,4 +56,9 @@
   background-color: rgb(170, 170, 170);
   border-style: solid;
   border-width: thin;
+  cursor: pointer;
+}
+
+.action-component.selected {
+  background-color: rgb(134, 134, 134);
 }
