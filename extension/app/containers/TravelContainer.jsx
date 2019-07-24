@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import Slider from '../components/Slider'
+
+
+
 
 class TravelContainer extends Component {
   constructor() {
@@ -6,8 +10,13 @@ class TravelContainer extends Component {
   }
 
   render() {
-    return <div className="travel-container">TravelContainer</div>;
+    return (
+      <div>
+      <div className="travel-container">TravelContainer</div>
+      <Slider/>
+      </div>
+    )
+
   }
 }
-
 export default TravelContainer;
