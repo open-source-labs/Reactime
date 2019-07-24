@@ -1,4 +1,6 @@
 const snapShot = [];
+const linkState = require('./linkState')(snapShot);
+const timeJump = require('./timeJump')(snapShot);
 
 window.addEventListener('message', ({ data: { action, payload } }) => {
   if (action === 'jumpToSnap') {
@@ -6,8 +8,8 @@ window.addEventListener('message', ({ data: { action, payload } }) => {
   }
 });
 
-const linkState = require('./linkState')(snapShot);
 
 module.exports = {
   linkState,
+  timeJump,
 };
