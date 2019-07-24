@@ -7,7 +7,9 @@ import TravelContainer from './TravelContainer';
 class MainContainer extends Component {
   constructor() {
     super();
-    this.state = { snapshots: [] };
+    this.state = { snapshots: [], snapshotIndex: 0 };
+
+    this.handleChangeSnapshot = this.handleChangeSnapshot.bind(this);
   }
 
   componentDidMount() {
@@ -26,18 +28,26 @@ class MainContainer extends Component {
     // MOCK DATA -- FOR TESTING PURPOSES ONLY
     this.setState({
       snapshots: [{ state: 'snapshot1' }, { state: 'snapshot2' }, { state: 'snapshot3' }],
+      snapshotIndex: 1,
     });
   }
 
+  handleChangeSnapshot(snapshotIndex) {
+    console.log('handleChangeSnapshot');
+    // change snapshotIndex
+    // snapshotIndex could be changed from either the ActionContainer or the TravelContainer
+    this.setState({ snapshotIndex });
+  }
+
   render() {
-    const { snapshots } = this.state;
+    const { snapshots, snapshotIndex } = this.state;
 
     return (
       <div className="main-container">
         <HeadContainer />
         <div className="body-container">
-          <ActionContainer snapshots={snapshots} />
-          <StateContainer />
+          <ActionContainer snapshots={snapshots} snapshotIndex={snapshotIndex} />
+          <StateContainer snapshot={snapshots[snapshotIndex]} />
         </div>
         <TravelContainer />
       </div>
