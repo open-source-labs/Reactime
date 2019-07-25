@@ -3,7 +3,7 @@ console.log('background.js file is running');
 let bg;
 
 // need a function to clear snapshotArr when either tab is closed or page is refreshed
-const snapshotArr = [];
+let snapshotArr = [];
 
 // establishing connection with devtools
 chrome.runtime.onConnect.addListener((port) => {
@@ -19,11 +19,15 @@ chrome.runtime.onConnect.addListener((port) => {
   // receive snapshot from devtools and send it to contentScript
   port.onMessage.addListener((msg) => {
     console.log('background -> contentScript', msg);
-    // find active tab
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      // send message to tab
-      chrome.tabs.sendMessage(tabs[0].id, msg);
-    });
+    if(msg.action==='emptySnap') {
+      snapshotArr = [];
+    } else {
+      // find active tab
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        // send message to tab
+        chrome.tabs.sendMessage(tabs[0].id, msg);
+      });
+    }
   });
 });
 

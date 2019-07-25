@@ -5,7 +5,6 @@ window.addEventListener('message', (msg) => {
   const { action, payload } = msg.data;
 
   if (action === 'recordSnap') chrome.runtime.sendMessage(payload);
-  // console.log(msg);
 });
 
 // listening for messages from background.js

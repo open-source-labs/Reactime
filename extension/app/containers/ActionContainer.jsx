@@ -26,7 +26,13 @@ class ActionContainer extends Component {
         );
       });
     }
-    return <div className="action-container">{actionsArr}</div>;
+    return (
+      <div>
+        <button onClick = {this.props.emptySnapshot}>emptySnapshot</button>
+        <div className="action-container">{actionsArr}</div>
+      </div>
+    );
+
   }
 }
 
