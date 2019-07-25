@@ -15,8 +15,11 @@ class MainContainer extends Component {
 
     this.handleChangeSnapshot = this.handleChangeSnapshot.bind(this);
     this.handleSendSnapshot = this.handleSendSnapshot.bind(this);
+    this.emptySnapshot = this.emptySnapshot.bind(this)
   }
 
+  
+  
   componentDidMount() {
     const port = chrome.runtime.connect();
     port.onMessage.addListener((snapshots) => {
@@ -27,6 +30,14 @@ class MainContainer extends Component {
       console.log('disconnected port', obj);
     });
     this.setState({ port });
+  }
+  
+  emptySnapshot(){
+    const { port } = this.state;
+
+    this.setState({ snapshots: [] })
+    
+    port.postMessage({action: 'emptySnap', payload: [] });
   }
 
   // this method changes the snapshotIndex state
@@ -53,6 +64,7 @@ class MainContainer extends Component {
             snapshotIndex={snapshotIndex}
             handleChangeSnapshot={this.handleChangeSnapshot}
             handleSendSnapshot={this.handleSendSnapshot}
+            emptySnapshot = {this.emptySnapshot}
           />
           <StateContainer snapshot={snapshots[snapshotIndex]} />
         </div>
