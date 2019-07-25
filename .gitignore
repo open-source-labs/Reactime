@@ -3,3 +3,5 @@ node_modules
 dist/
 extension/bundle.js
 package/react-time-travel-1.0.1.tgz
+tictactoe
+parents
