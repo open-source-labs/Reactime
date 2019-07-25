@@ -1,4 +1,4 @@
-const snapShot = [];
+let snapShot = [];
 const mode = { jumping: false };
 
 const linkState = require('./linkState')(snapShot, mode);
@@ -7,6 +7,7 @@ const timeJump = require('./timeJump')(snapShot, mode);
 const getShot = () => snapShot.map(({ component }) => component.state);
 
 window.addEventListener('message', ({ data: { action, payload } }) => {
+  console.log(action);
   if (action === 'jumpToSnap') {
     timeJump(payload);
   }

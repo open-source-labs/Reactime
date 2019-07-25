@@ -13,17 +13,11 @@ module.exports = (snapShot, mode) => {
     });
   }
 
-  return (component) => {
+  let snapShotIndex = 0;
+
+  function changeSetState(component) {
     // make a copy of setState
     const oldSetState = component.setState.bind(component);
-
-    // convert setState to promise
-    const setStateAsync = (state) => {
-      return new Promise(resolve => oldSetState(state, resolve));
-    };
-
-    // add component to snapshot
-    snapShot.push({ component, setStateAsync });
 
     let first = true;
     function newSetState(state, callback = () => { }) {
@@ -39,8 +33,34 @@ module.exports = (snapShot, mode) => {
         callback();
       });
     }
+    
+    // convert setState to promise
+    const setStateAsync = (state) => {
+      return new Promise(resolve => oldSetState(state, resolve));
+    };
+
+    // add component to snapshot
+    snapShotIndex = snapShot.push({ component, setStateAsync }) - 1;
 
     // replace component's setState so developer doesn't change syntax
     component.setState = newSetState;
+  }
+
+  function changeComponentWillUnmount(component) {
+    component.componentWillUnmount = () => {
+      console.log('dismounting');
+      // console.log(snapShot.slice(0, snapShotIndex));
+      // console.log(snapShot.slice(snapShotIndex + 1));
+      // console.log(snapShot.slice(0, snapShotIndex).concat(snapShot.slice(snapShotIndex + 1)));
+      snapShot.splice(snapShotIndex, 1);
+      // console.log(snapShot);
+      // snapShot[snapShotIndex] = null;
+    };
+  }
+
+
+  return (component) => {
+    changeSetState(component);
+    changeComponentWillUnmount(component);
   };
 };
