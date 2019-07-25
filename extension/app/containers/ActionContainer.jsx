@@ -9,7 +9,7 @@ class ActionContainer extends Component {
   render() {
     const { snapshots, snapshotIndex, handleChangeSnapshot } = this.props;
     let actionsArr = [];
-    if (snapshots) {
+    if (snapshots.length > 0) {
       actionsArr = snapshots.map((snapshot, index) => {
         const selected = index === snapshotIndex;
         return (

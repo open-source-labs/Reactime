@@ -12,7 +12,8 @@ const Action = (props) => {
         handleChangeSnapshot(index);
       }}
     >
-      {snapshot.state}
+      {index}
+      <button>Jump</button>
     </div>
   );
 };

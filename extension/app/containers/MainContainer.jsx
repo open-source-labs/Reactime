@@ -8,7 +8,7 @@ class MainContainer extends Component {
   constructor() {
     super();
     this.state = {
-      snapshots: [{ state: 'snapshot1' , state2: 'othercomp snapshot1'}, { state: 'snapshot2' }, { state: 'snapshot3' }],
+      snapshots: [],
       snapshotIndex: 0,
       port: null,
     };
@@ -18,8 +18,9 @@ class MainContainer extends Component {
 
   componentDidMount() {
     const port = chrome.runtime.connect();
-    port.onMessage.addListener((message) => {
-      console.log('message from background script', message);
+    port.onMessage.addListener((snapshots) => {
+      console.log('message from background script', snapshots);
+      this.setState({ snapshots });
     });
     port.onDisconnect.addListener((obj) => {
       console.log('disconnected port', obj);
@@ -51,9 +52,9 @@ class MainContainer extends Component {
           <StateContainer snapshot={snapshots[snapshotIndex]} />
         </div>
         <TravelContainer
-          snapshotsLength = {snapshots.length}
-          handleChangeSnapshot = {this.handleChangeSnapshot}
-          snapshotIndex = {snapshotIndex}
+          snapshotsLength={snapshots.length}
+          handleChangeSnapshot={this.handleChangeSnapshot}
+          snapshotIndex={snapshotIndex}
         />
       </div>
     );
