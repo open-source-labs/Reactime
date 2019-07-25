@@ -17,10 +17,9 @@ class MainContainer extends Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
     const port = chrome.runtime.connect();
     port.onMessage.addListener((message) => {
-      console.log('message from content script', message);
+      console.log('message from background script', message);
     });
     port.onDisconnect.addListener((obj) => {
       console.log('disconnected port', obj);
