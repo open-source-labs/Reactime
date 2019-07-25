@@ -8,32 +8,36 @@ class MainContainer extends Component {
   constructor() {
     super();
     this.state = {
-      snapshots: [{ state: 'snapshot1' , state2: 'othercomp snapshot1'}, { state: 'snapshot2' }, { state: 'snapshot3' }],
+      snapshots: [],
       snapshotIndex: 0,
+      port: null,
     };
 
     this.handleChangeSnapshot = this.handleChangeSnapshot.bind(this);
+    this.handleSendSnapshot = this.handleSendSnapshot.bind(this);
   }
 
   componentDidMount() {
-    // add a listener to capture messages from our backend
-    // this should be in the inject script
-    // window.addEventListener(
-    //   'message',
-    //   (event) => {
-    //     // We only accept messages from ourselves
-    //     if (event.source !== window) return;
-    //     console.log(`Message received from backend: ${event.payload}`);
-    //   },
-    //   false,
-    // );
+    const port = chrome.runtime.connect();
+    port.onMessage.addListener((snapshots) => {
+      console.log('message from background script', snapshots);
+      this.setState({ snapshots });
+    });
+    port.onDisconnect.addListener((obj) => {
+      console.log('disconnected port', obj);
+    });
+    this.setState({ port });
   }
 
+  // this method changes the snapshotIndex state
+  // snapshotIndex could be changed from either the ActionContainer or the TravelContainer
   handleChangeSnapshot(snapshotIndex) {
-    console.log('handleChangeSnapshot', snapshotIndex);
-    // change snapshotIndex
-    // snapshotIndex could be changed from either the ActionContainer or the TravelContainer
     this.setState({ snapshotIndex });
+  }
+
+  handleSendSnapshot(snapshotIndex) {
+    const { snapshots, port } = this.state;
+    port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
   }
 
   render() {
@@ -48,13 +52,14 @@ class MainContainer extends Component {
             snapshots={snapshots}
             snapshotIndex={snapshotIndex}
             handleChangeSnapshot={this.handleChangeSnapshot}
+            handleSendSnapshot={this.handleSendSnapshot}
           />
           <StateContainer snapshot={snapshots[snapshotIndex]} />
         </div>
         <TravelContainer
-          snapshotsLength = {snapshots.length}
-          handleChangeSnapshot = {this.handleChangeSnapshot}
-          snapshotIndex = {snapshotIndex}
+          snapshotsLength={snapshots.length}
+          handleChangeSnapshot={this.handleChangeSnapshot}
+          snapshotIndex={snapshotIndex}
         />
       </div>
     );
