@@ -24,6 +24,7 @@ class MainContainer extends Component {
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener((snapshots) => {
       console.log('message from background script', snapshots);
+      console.log('snapshots', this.state.snapshots);
       const snapshotIndex = snapshots.length - 1;
 
       // set state with the information received from the background script
@@ -49,6 +50,7 @@ class MainContainer extends Component {
   // when the jump button is clicked, send a message to npm package with the selected snapshot
   handleSendSnapshot(snapshotIndex) {
     const { snapshots, port } = this.state;
+
     port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
   }
 
