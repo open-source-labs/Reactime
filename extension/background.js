@@ -16,10 +16,14 @@ chrome.runtime.onConnect.addListener((port) => {
     bg.postMessage(snapshotArr);
   }
 
-  // receive snapshot from background and send it to contentScript
+  // receive snapshot from devtools and send it to contentScript
   port.onMessage.addListener((msg) => {
-    console.log('contentScript -> background', msg);
-    chrome.runtime.sendMessage({ data: msg });
+    console.log('background -> contentScript', msg);
+    // find active tab
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      // send message to tab
+      chrome.tabs.sendMessage(tabs[0].id, msg);
+    });
   });
 });
 
@@ -27,6 +31,8 @@ chrome.runtime.onConnect.addListener((port) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // if port is not null, send a message to devtools
   if (bg) {
+    // get active tab id
+    // get snapshot arr from tab object
     snapshotArr.push(request);
     bg.postMessage(snapshotArr);
     // else, push snapshot into an array
