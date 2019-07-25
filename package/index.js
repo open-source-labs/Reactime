@@ -1,5 +1,5 @@
 const snapShot = [];
-const mode = { jumping: false, removed: 0 };
+const mode = { jumping: false };
 
 const linkState = require('./linkState')(snapShot, mode);
 const timeJump = require('./timeJump')(snapShot, mode);
