@@ -18,23 +18,35 @@ class MainContainer extends Component {
   }
 
   componentDidMount() {
+    // open connection with background script
     const port = chrome.runtime.connect();
+
+    // listen for a message containing snapshots from the background script
     port.onMessage.addListener((snapshots) => {
       console.log('message from background script', snapshots);
-      this.setState({ snapshots });
+      const snapshotIndex = snapshots.length - 1;
+
+      // set state with the information received from the background script
+      this.setState({ snapshots, snapshotIndex });
     });
+
+    // console log if the port with background script disconnects
     port.onDisconnect.addListener((obj) => {
       console.log('disconnected port', obj);
     });
+
+    // assign port to state so it could be used by other components
     this.setState({ port });
   }
 
-  // this method changes the snapshotIndex state
-  // snapshotIndex could be changed from either the ActionContainer or the TravelContainer
+  // change the snapshot index
+  // --> 1. affects the action that is highlighted
+  // --> 2. moves the slider
   handleChangeSnapshot(snapshotIndex) {
     this.setState({ snapshotIndex });
   }
 
+  // when the jump button is clicked, send a message to npm package with the selected snapshot
   handleSendSnapshot(snapshotIndex) {
     const { snapshots, port } = this.state;
     port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
