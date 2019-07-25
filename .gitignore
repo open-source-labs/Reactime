@@ -4,4 +4,7 @@ dist/
 extension/bundle.js
 package/react-time-travel-1.0.1.tgz
 tictactoe
+tictactoe/build/bundle.js
+tictactoe/package-lock.json
 parents
+coverage
