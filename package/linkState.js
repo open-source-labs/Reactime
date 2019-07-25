@@ -2,6 +2,8 @@
 // changes the setState method to also update our snapshot
 
 module.exports = (snapShot, mode) => {
+  const unlinkState = require('./unlinkState')(snapShot);
+
   // send message to window containing component states
   // unless library is currently jumping through time
   function sendSnapShot() {
@@ -45,15 +47,13 @@ module.exports = (snapShot, mode) => {
   }
 
   function changeComponentWillUnmount(component) {
+    let oldComponentWillUnmount = () => { };
+    // if componentWillUnmount is defined, then create copy by value
+    if (typeof component.componentWillUnmount === 'function') oldComponentWillUnmount = component.componentWillUnmount.bind(component);
+    // replace componentWillUnmount
     component.componentWillUnmount = () => {
-      let snapShotIndex = snapShot.length;
-      for (let i = 0; i < snapShot.length; i += 1) {
-        const { component: comp } = snapShot[i];
-        if (component === comp) {
-          snapShotIndex = i;
-        }
-      }
-      snapShot.splice(snapShotIndex, 1);
+      oldComponentWillUnmount();
+      unlinkState(component);
     };
   }
 
