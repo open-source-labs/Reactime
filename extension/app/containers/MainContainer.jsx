@@ -8,7 +8,7 @@ class MainContainer extends Component {
   constructor() {
     super();
     this.state = {
-      snapshots: [{ state: 'snapshot1' }, { state: 'snapshot2' }, { state: 'snapshot3' }],
+      snapshots: [{ state: 'snapshot1' , state2: 'othercomp snapshot1'}, { state: 'snapshot2' }, { state: 'snapshot3' }],
       snapshotIndex: 0,
       port: null,
     };
@@ -50,7 +50,11 @@ class MainContainer extends Component {
           />
           <StateContainer snapshot={snapshots[snapshotIndex]} />
         </div>
-        <TravelContainer />
+        <TravelContainer
+          snapshotsLength = {snapshots.length}
+          handleChangeSnapshot = {this.handleChangeSnapshot}
+          snapshotIndex = {snapshotIndex}
+        />
       </div>
     );
   }
