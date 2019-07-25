@@ -7,7 +7,9 @@ class ActionContainer extends Component {
   }
 
   render() {
-    const { snapshots, snapshotIndex, handleChangeSnapshot } = this.props;
+    const {
+      snapshots, snapshotIndex, handleChangeSnapshot, handleSendSnapshot,
+    } = this.props;
     let actionsArr = [];
     if (snapshots.length > 0) {
       actionsArr = snapshots.map((snapshot, index) => {
@@ -19,6 +21,7 @@ class ActionContainer extends Component {
             snapshot={snapshot}
             selected={selected}
             handleChangeSnapshot={handleChangeSnapshot}
+            handleSendSnapshot={handleSendSnapshot}
           />
         );
       });

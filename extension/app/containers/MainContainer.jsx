@@ -14,6 +14,7 @@ class MainContainer extends Component {
     };
 
     this.handleChangeSnapshot = this.handleChangeSnapshot.bind(this);
+    this.handleSendSnapshot = this.handleSendSnapshot.bind(this);
   }
 
   componentDidMount() {
@@ -31,9 +32,12 @@ class MainContainer extends Component {
   // this method changes the snapshotIndex state
   // snapshotIndex could be changed from either the ActionContainer or the TravelContainer
   handleChangeSnapshot(snapshotIndex) {
-    // const { port } = this.state;
-    // port.postMessage({ message: snapshotIndex });
     this.setState({ snapshotIndex });
+  }
+
+  handleSendSnapshot(snapshotIndex) {
+    const { snapshots, port } = this.state;
+    port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
   }
 
   render() {
@@ -48,6 +52,7 @@ class MainContainer extends Component {
             snapshots={snapshots}
             snapshotIndex={snapshotIndex}
             handleChangeSnapshot={this.handleChangeSnapshot}
+            handleSendSnapshot={this.handleSendSnapshot}
           />
           <StateContainer snapshot={snapshots[snapshotIndex]} />
         </div>
