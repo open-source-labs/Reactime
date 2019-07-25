@@ -1,6 +1,6 @@
-const index = require('../package/index');
+const index = require('../index');
 
-jest.mock('../package/timeJump');
+jest.mock('../timeJump');
 
 describe('unit testing for index.js', () => {
   test('index.js should be exporting the linkState and timeJump methods', () => {
