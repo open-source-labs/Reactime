@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const Action = (props) => {
   const {
-    snapshot, selected, handleChangeSnapshot, handleSendSnapshot, index,
+    selected, handleChangeSnapshot, handleSendSnapshot, index,
   } = props;
   return (
     <div
@@ -12,7 +12,7 @@ const Action = (props) => {
         handleChangeSnapshot(index);
       }}
     >
-      {index}
+      <div className="action-component-text">{index}</div>
       <button onClick={() => handleSendSnapshot(index)}>Jump</button>
     </div>
   );
