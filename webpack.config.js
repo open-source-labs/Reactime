@@ -3,11 +3,11 @@ const ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
 
 const config = {
   entry: {
-    app: './extension/app/index.js',
-    background: './extension/background.js',
+    app: './src/app/index.js',
+    background: './src/extension/background.js',
   },
   output: {
-    path: path.resolve(__dirname, 'extension/dist'),
+    path: path.resolve(__dirname, 'src/extension/dist'),
     filename: '[name].bundle.js',
   },
   module: {
@@ -27,10 +27,7 @@ const config = {
       },
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader',
-        ],
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
@@ -39,12 +36,14 @@ const config = {
 
 module.exports = (env, argv) => {
   if (argv.mode === 'development') {
-    config.plugins.push(new ChromeExtensionReloader({
-      entries: {
-        contentScript: ['app'],
-        background: ['background'],
-      },
-    }));
+    config.plugins.push(
+      new ChromeExtensionReloader({
+        entries: {
+          contentScript: ['app'],
+          background: ['background'],
+        },
+      }),
+    );
   }
   return config;
 };

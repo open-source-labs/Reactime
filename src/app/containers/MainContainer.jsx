@@ -9,6 +9,7 @@ class MainContainer extends Component {
     super();
     this.state = {
       snapshots: [],
+      snapshotsTree: null,
       snapshotIndex: 0,
       currentIndex: null,
       port: null,
@@ -20,13 +21,12 @@ class MainContainer extends Component {
   }
 
   componentDidMount() {
+    console.log('componentDidMount');
     // open connection with background script
     const port = chrome.runtime.connect();
 
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener((snapshots) => {
-      console.log('message from background script', snapshots);
-      console.log('snapshots', this.state.snapshots);
       const snapshotIndex = snapshots.length - 1;
 
       // set state with the information received from the background script
@@ -49,9 +49,11 @@ class MainContainer extends Component {
   }
 
   // change the snapshot index
-  // --> 1. affects the action that is highlighted
-  // --> 2. moves the slider
+  // this will change the state shown in the state container but won't change the DOM
   handleChangeSnapshot(snapshotIndex) {
+    // snapshotIndex
+    // --> 1. affects the action that is highlighted
+    // --> 2. moves the slider
     this.setState({ snapshotIndex });
   }
 
@@ -61,23 +63,27 @@ class MainContainer extends Component {
     let { currentIndex } = this.state;
     const payload = [];
 
+    // currentIndex is initialized to null
+    // currentIndex = null means that the user hasn't jumped yet
     currentIndex = currentIndex === null ? snapshots.length - 1 : currentIndex;
 
+    // if the user wants to jump backward
     if (currentIndex > snapshotIndex) {
       for (let i = currentIndex - 1; i >= snapshotIndex; i -= 1) {
         payload.push(snapshots[i]);
       }
     } else {
+      // if the user wants to jump forward
       for (let i = currentIndex + 1; i <= snapshotIndex; i += 1) {
         payload.push(snapshots[i]);
       }
     }
 
+    // currentIndex should be changed to index the user jumped to
     this.setState({ currentIndex: snapshotIndex });
 
-    console.log('payload', payload);
+    // send the arrays of snapshots to background script
     port.postMessage({ action: 'stepToSnap', payload });
-    // port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
   }
 
   render() {
