@@ -1,4 +1,4 @@
-console.log('contentScript injected');
+console.log('contentScript running');
 
 // listening for messages from npm package
 window.addEventListener('message', (msg) => {
