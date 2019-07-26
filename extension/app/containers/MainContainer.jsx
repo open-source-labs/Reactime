@@ -10,16 +10,15 @@ class MainContainer extends Component {
     this.state = {
       snapshots: [],
       snapshotIndex: 0,
+      currentIndex: null,
       port: null,
     };
 
     this.handleChangeSnapshot = this.handleChangeSnapshot.bind(this);
     this.handleSendSnapshot = this.handleSendSnapshot.bind(this);
-    this.emptySnapshot = this.emptySnapshot.bind(this)
+    this.emptySnapshot = this.emptySnapshot.bind(this);
   }
 
-  
-  
   componentDidMount() {
     // open connection with background script
     const port = chrome.runtime.connect();
@@ -27,6 +26,7 @@ class MainContainer extends Component {
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener((snapshots) => {
       console.log('message from background script', snapshots);
+      console.log('snapshots', this.state.snapshots);
       const snapshotIndex = snapshots.length - 1;
 
       // set state with the information received from the background script
@@ -41,13 +41,11 @@ class MainContainer extends Component {
     // assign port to state so it could be used by other components
     this.setState({ port });
   }
-  
-  emptySnapshot(){
-    const { port } = this.state;
 
-    this.setState({ snapshots: [] })
-    
-    port.postMessage({action: 'emptySnap', payload: [] });
+  emptySnapshot() {
+    const { port } = this.state;
+    this.setState({ snapshots: [] });
+    port.postMessage({ action: 'emptySnap', payload: [] });
   }
 
   // change the snapshot index
@@ -60,7 +58,26 @@ class MainContainer extends Component {
   // when the jump button is clicked, send a message to npm package with the selected snapshot
   handleSendSnapshot(snapshotIndex) {
     const { snapshots, port } = this.state;
-    port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
+    let { currentIndex } = this.state;
+    const payload = [];
+
+    currentIndex = currentIndex === null ? snapshots.length - 1 : currentIndex;
+
+    if (currentIndex > snapshotIndex) {
+      for (let i = currentIndex - 1; i >= snapshotIndex; i -= 1) {
+        payload.push(snapshots[i]);
+      }
+    } else {
+      for (let i = currentIndex + 1; i <= snapshotIndex; i += 1) {
+        payload.push(snapshots[i]);
+      }
+    }
+
+    this.setState({ currentIndex: snapshotIndex });
+
+    console.log('payload', payload);
+    port.postMessage({ action: 'stepToSnap', payload });
+    // port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
   }
 
   render() {
@@ -76,7 +93,7 @@ class MainContainer extends Component {
             snapshotIndex={snapshotIndex}
             handleChangeSnapshot={this.handleChangeSnapshot}
             handleSendSnapshot={this.handleSendSnapshot}
-            emptySnapshot = {this.emptySnapshot}
+            emptySnapshot={this.emptySnapshot}
           />
           <StateContainer snapshot={snapshots[snapshotIndex]} />
         </div>

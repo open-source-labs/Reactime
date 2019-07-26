@@ -13,4 +13,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('devtools -> contentScript', request);
   const { action } = request;
   if (action === 'jumpToSnap') window.postMessage(request);
+  if (action === 'stepToSnap') window.postMessage(request);
 });
