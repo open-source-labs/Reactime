@@ -1,6 +1,6 @@
 class Tree {
   constructor(component) {
-    this.component = component;
+    this.component = (component === 'root') ? { state: 'root', setState: (partial, callback) => callback() } : component;
     this.children = [];
   }
 
@@ -8,6 +8,18 @@ class Tree {
     const child = new Tree(component);
     this.children.push(child);
     return child;
+  }
+
+  getCopy(copy = new Tree(null)) {
+    const { state } = this.component;
+    if (!copy.component) copy.component = { state };
+
+    // copy state of children
+    copy.children = this.children.map(child => new Tree({ state: child.component.state }));
+
+    // copy children's children recursively
+    this.children.forEach((child, i) => child.getCopy(copy.children[i]));
+    return copy;
   }
 
   print() {
@@ -22,12 +34,5 @@ class Tree {
     });
   }
 }
-
-const tree = new Tree({ state: 1 });
-tree.appendChild({ state: 2 });
-const three = tree.appendChild({ state: 3 });
-three.appendChild({ state: 4 });
-three.appendChild({ state: 5 });
-tree.print();
 
 module.exports = Tree;

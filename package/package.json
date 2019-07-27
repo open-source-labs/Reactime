@@ -20,5 +20,8 @@
     "react-timetravel"
   ],
   "author": "Bryan Lee, Josh Kim, Ryan Dang, Sierra Swaby",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.15"
+  }
 }
