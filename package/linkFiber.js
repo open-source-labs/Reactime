@@ -4,6 +4,17 @@ const Tree = require('./tree');
 
 module.exports = (snap, mode) => {
   let fiberRoot = null;
+  let first = true;
+
+  function sendSnapshot() {
+    // don't send messages while jumping
+    if (mode.jumping) return;
+    const payload = snap.tree.getCopy();
+    window.postMessage({
+      action: 'recordSnap',
+      payload,
+    });
+  }
 
   function changeSetState(component) {
     // check that setState hasn't been changed yet
@@ -14,8 +25,14 @@ module.exports = (snap, mode) => {
 
     function newSetState(state, callback = () => { }) {
       // continue normal setState functionality, except add sending message middleware
+      if (first) {
+        updateSnapShotTree();
+        sendSnapshot();
+        first = false;
+      }
       oldSetState(state, () => {
         updateSnapShotTree();
+        sendSnapshot();
         callback();
       });
     }
@@ -45,11 +62,11 @@ module.exports = (snap, mode) => {
 
   function updateSnapShotTree() {
     const { current } = fiberRoot;
-    const curr = createTree(current);
-    snap.tree = curr;
+    snap.tree = createTree(current);
   }
   return (container) => {
-    fiberRoot = container._reactRootContainer._internalRoot;
-    snap.tree = createTree(fiberRoot.current);
+    const { _reactRootContainer: { _internalRoot } } = container;
+    fiberRoot = _internalRoot;
+    updateSnapShotTree();
   };
 };
