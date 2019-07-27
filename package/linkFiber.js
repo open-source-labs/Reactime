@@ -4,7 +4,6 @@ const Tree = require('./tree');
 
 module.exports = (snap, mode) => {
   let fiberRoot = null;
-  let first = true;
 
   function sendSnapshot() {
     // don't send messages while jumping
@@ -25,11 +24,6 @@ module.exports = (snap, mode) => {
 
     function newSetState(state, callback = () => { }) {
       // continue normal setState functionality, except add sending message middleware
-      if (first) {
-        updateSnapShotTree();
-        sendSnapshot();
-        first = false;
-      }
       oldSetState(state, () => {
         updateSnapShotTree();
         sendSnapshot();
@@ -47,8 +41,11 @@ module.exports = (snap, mode) => {
     const { sibling, stateNode, child } = currentFiber;
 
     let nextTree = tree;
+    // check if stateful component
     if (stateNode && stateNode.state) {
+      // add component to tree
       nextTree = tree.appendChild(stateNode);
+      // change setState functionality
       changeSetState(stateNode);
     }
 
@@ -68,5 +65,6 @@ module.exports = (snap, mode) => {
     const { _reactRootContainer: { _internalRoot } } = container;
     fiberRoot = _internalRoot;
     updateSnapShotTree();
+    sendSnapshot();
   };
 };
