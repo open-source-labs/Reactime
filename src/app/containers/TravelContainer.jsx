@@ -19,7 +19,7 @@ class TravelContainer extends Component {
         handleChangeSnapshot = {this.props.handleChangeSnapshot}
         snapshotIndex = {this.props.snapshotIndex}
       />
-      {`snapshot inex in slider ${this.props.snapshotIndex}`}
+      {`travelContainer snapshotIndex ${this.props.snapshotIndex}`}
       </div>
     )
 

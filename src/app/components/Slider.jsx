@@ -38,6 +38,7 @@ class mainSlider extends Component {
                 max={this.props.snapshotLength-1} 
                 value = {this.props.snapshotIndex}
                 onChange={(index) => {
+                    index = index === -1 ? 0 : index;
                     this.props.handleChangeSnapshot(index)
                 }}
                 handle={handle}

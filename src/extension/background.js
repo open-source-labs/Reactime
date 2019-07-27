@@ -8,7 +8,7 @@ let snapshotArr = [];
 // establishing connection with devtools
 chrome.runtime.onConnect.addListener((port) => {
   bg = port;
-  bg.postMessage({ from: 'background.js', message: 'established connection', date: Date.now() });
+  // bg.postMessage({ from: 'background.js', message: 'established connection', date: Date.now() });
 
   // if snapshots were saved in the snapshotArr,
   // send it to devtools as soon as connection to devtools is made
