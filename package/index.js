@@ -12,8 +12,11 @@ window.addEventListener('message', ({ data: { action, payload } }) => {
     case 'jumpToSnap':
       timeJump(payload);
       break;
-    case 'stepToSnap':
-      const { speed, steps } = payload;
+    case 'stepToSnap': {
+      const { steps, speed } = payload;
+      console.log('i would like to step through here');
+      break;
+    }
     default:
   }
 });

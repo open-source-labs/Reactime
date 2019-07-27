@@ -43,24 +43,10 @@ module.exports = (snap, mode) => {
     return tree;
   }
 
-  // mutates origin tree and merges it with target
-  function mergeTrees(origin, target) {
-    target.children.forEach((child, i) => {
-      // check if child exists in origin tree
-      if (!origin.children[i]) {
-        origin.children.push(child);
-      } else {
-        mergeTrees(origin.children[i], child);
-      }
-    });
-    // remove any unnecessary children
-    origin.children.splice(target.children.length);
-  }
-
   function updateSnapShotTree() {
     const { current } = fiberRoot;
     const curr = createTree(current);
-    mergeTrees(snap.tree, curr);
+    snap.tree = curr;
   }
   return (container) => {
     fiberRoot = container._reactRootContainer._internalRoot;
