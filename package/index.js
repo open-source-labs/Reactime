@@ -8,8 +8,13 @@ const timeJump = require('./timeJump')(snapShot, mode);
 const getTree = () => snapShot.tree.getCopy();
 
 window.addEventListener('message', ({ data: { action, payload } }) => {
-  if (action === 'jumpToSnap') {
-    timeJump(payload);
+  switch (action) {
+    case 'jumpToSnap':
+      timeJump(payload);
+      break;
+    case 'stepToSnap':
+      const { speed, steps } = payload;
+    default:
   }
 });
 
