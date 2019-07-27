@@ -91,7 +91,6 @@ class MainContainer extends Component {
     
     return (
       <div className="main-container">
-        main-conatiner
         <HeadContainer />
         <div className="body-container">
           <ActionContainer

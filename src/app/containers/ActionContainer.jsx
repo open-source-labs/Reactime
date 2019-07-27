@@ -28,11 +28,14 @@ class ActionContainer extends Component {
     }
     return (
       <div className="action-container">
-        <button className="emptySnapshot" onClick = {this.props.emptySnapshot}>emptySnapshot</button>
-        <div >{actionsArr}</div>
+        <div className="action-component">
+          <div className="empty-button" onClick={this.props.emptySnapshot}>
+            emptySnapshot
+          </div>
+        </div>
+        <div>{actionsArr}</div>
       </div>
     );
-
   }
 }
 

@@ -1,0 +1,26 @@
+/// fontFamily: 'monaco, Consolas, Lucida Console, monospace'
+/// @type List
+$text-font-stack: monaco, Consolas, 'Lucida Console', monospace, Arial,
+  sans-serif !default;
+
+/// @type Color
+$text-color: rgb(231, 231, 231);
+
+/// @type Color
+$brand-color: #2a2f3a !default;
+
+/// Light grey
+/// @type Color
+$light-grey-one: #474c55 !default;
+
+/// @type Color
+$light-grey-two: #5f6369 !default;
+
+/// @type Color
+$border-color: rgba(190, 190, 190, 0.5) !default;
+
+/// @type Color
+$highlight-color: rgba(224, 224, 224, 0.5) !default;
+
+/// @type Font Size
+$button-text-size: 10px;

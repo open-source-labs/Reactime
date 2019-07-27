@@ -1,0 +1,30 @@
+.empty-button {
+  @extend %button-shared;
+  width: 120px;
+}
+
+.jump-button {
+  @extend %button-shared;
+  width: 50px;
+}
+
+.jump-button:hover {
+  background-color: $highlight-color;
+}
+
+.empty-button:hover {
+  background-color: $highlight-color;
+}
+
+%button-shared {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: $button-text-size;
+  line-height: 1.5em;
+}
