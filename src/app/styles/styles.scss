@@ -18,11 +18,19 @@
 
 .action-container {
   flex: 3 auto;
+  height: 100%;
+  overflow: scroll;
+}
+
+.emptySnapshot{
+  width: 100%;
 }
 
 .state-container {
   font-size: 15px;
   flex: 7 auto;
+  height: 100%;
+  overflow: scroll;
   background-color: rgb(0, 43, 54);
 }
 
