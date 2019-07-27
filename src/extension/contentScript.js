@@ -3,7 +3,7 @@ console.log('contentScript running');
 // listening for messages from npm package
 window.addEventListener('message', (msg) => {
   const { action, payload } = msg.data;
-
+  console.log(msg.data);
   if (action === 'recordSnap') chrome.runtime.sendMessage(payload);
 });
 

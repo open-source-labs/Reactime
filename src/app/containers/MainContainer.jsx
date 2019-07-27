@@ -44,8 +44,8 @@ class MainContainer extends Component {
 
   emptySnapshot() {
     const { port } = this.state;
-    this.setState({ snapshots: [] , snapshotIndex: 0 });
-    port.postMessage({ action: 'emptySnap'});
+    this.setState({ snapshots: [], snapshotIndex: 0 });
+    port.postMessage({ action: 'emptySnap' });
   }
 
   // change the snapshot index
@@ -88,7 +88,7 @@ class MainContainer extends Component {
 
   render() {
     const { snapshots, snapshotIndex } = this.state;
-    
+
     return (
       <div className="main-container">
         <HeadContainer />
