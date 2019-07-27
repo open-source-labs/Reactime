@@ -12,17 +12,13 @@ class TravelContainer extends Component {
   render() {
     return (
       <div className="travel-container">
-        <div>
-          Travel Container-playbutton
-          {`travelContainer snapshotIndex ${this.props.snapshotIndex}`}
-        </div>
+        <button>playbutton</button>
         <MainSlider
-          className = 'mainSlider'
           snapshotLength = {this.props.snapshotsLength} 
           handleChangeSnapshot = {this.props.handleChangeSnapshot}
           snapshotIndex = {this.props.snapshotIndex}
         />
-        <div>forward and backward</div>
+        <button>forward</button>
       </div>
     )
 

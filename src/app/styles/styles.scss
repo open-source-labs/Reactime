@@ -35,6 +35,8 @@
   height: 10%;
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
 }
 
 /* if extension width is less than 500px, stack the body containers */
