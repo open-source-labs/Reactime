@@ -13,13 +13,16 @@ const Action = (props) => {
       }}
     >
       <div className="action-component-text">{index}</div>
-      <button onClick={() => handleSendSnapshot(index)}>Jump</button>
+      <div className="jump-button" onClick={() => handleSendSnapshot(index)}>
+        Jump
+      </div>
     </div>
   );
 };
 
 Action.propTypes = {
-  // snapshot: PropTypes.object,
+  selected: PropTypes.bool,
+  index: PropTypes.number,
 };
 
 export default Action;
