@@ -1,3 +1,18 @@
+@charset 'UTF-8';
+
+// 1. Configuration and helpers
+@import 'abstracts/variables';
+
+// 3. Base stuff
+@import 'base/base', 'base/fonts', 'base/helpers', 'base/typography';
+
+// 4. Layout-related sections
+@import 'layout/actionContainer';
+
+// 5. Components
+@import 'components/buttons', 'components/actionComponent';
+
+// other styles that needs to be modularized
 @import 'styles';
 
 // slider component
