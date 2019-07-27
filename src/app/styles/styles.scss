@@ -22,9 +22,6 @@
   overflow: scroll;
 }
 
-.emptySnapshot{
-  width: 100%;
-}
 
 .state-container {
   font-size: 15px;
@@ -32,6 +29,12 @@
   height: 100%;
   overflow: scroll;
   background-color: rgb(0, 43, 54);
+}
+
+.travel-container {
+  height: 10%;
+  display: flex;
+  flex-direction: row;
 }
 
 /* if extension width is less than 500px, stack the body containers */
@@ -44,13 +47,12 @@
   }
 }
 
-.travel-container {
-  height: 10%;
+.emptySnapshot{
+  width: 100%;
 }
 
-.travel-slider {
-  width: 50%;
-}
+
+
 
 .head-container,
 .body-container,
