@@ -5,18 +5,17 @@ import StateContainer from './StateContainer';
 import TravelContainer from './TravelContainer';
 
 class MainContainer extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       snapshots: [],
-      snapshotsTree: null,
       snapshotIndex: 0,
       currentIndex: null,
       port: null,
     };
-
     this.handleChangeSnapshot = this.handleChangeSnapshot.bind(this);
     this.handleSendSnapshot = this.handleSendSnapshot.bind(this);
+    this.handleJumpSnapshot = this.handleJumpSnapshot.bind(this);
     this.emptySnapshot = this.emptySnapshot.bind(this);
   }
 
@@ -57,6 +56,12 @@ class MainContainer extends Component {
     this.setState({ snapshotIndex });
   }
 
+  handleJumpSnapshot(snapshotIndex) {
+    const { snapshots, port } = this.state;
+    this.setState({ currentIndex: snapshotIndex });
+    port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
+  }
+
   // when the jump button is clicked, send a message to npm package with the selected snapshot
   handleSendSnapshot(snapshotIndex) {
     const { snapshots, port } = this.state;
@@ -88,7 +93,6 @@ class MainContainer extends Component {
 
   render() {
     const { snapshots, snapshotIndex } = this.state;
-
     return (
       <div className="main-container">
         <HeadContainer />
@@ -97,7 +101,7 @@ class MainContainer extends Component {
             snapshots={snapshots}
             snapshotIndex={snapshotIndex}
             handleChangeSnapshot={this.handleChangeSnapshot}
-            handleSendSnapshot={this.handleSendSnapshot}
+            handleJumpSnapshot={this.handleJumpSnapshot}
             emptySnapshot={this.emptySnapshot}
           />
           <StateContainer snapshot={snapshots[snapshotIndex]} />
@@ -105,6 +109,7 @@ class MainContainer extends Component {
         <TravelContainer
           snapshotsLength={snapshots.length}
           handleChangeSnapshot={this.handleChangeSnapshot}
+          handleJumpSnapshot={this.handleJumpSnapshot}
           snapshotIndex={snapshotIndex}
         />
       </div>

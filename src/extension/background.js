@@ -32,7 +32,7 @@ chrome.runtime.onConnect.addListener((port) => {
 
 // background.js recieves message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log(request);
+  console.log('npm -> background', request);
   // if port is not null, send a message to devtools
   if (bg) {
     // get active tab id
