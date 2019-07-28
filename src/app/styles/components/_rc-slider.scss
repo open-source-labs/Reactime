@@ -1,8 +1,5 @@
 .rc-slider {
   position: relative;
-  // height: 14px;
-  // padding: 5px 0;
-  margin: 0 10px;
   width: 70%;
   border-radius: 6px;
   -ms-touch-action: none;
@@ -27,20 +24,20 @@
   left: 0;
   height: 4px;
   border-radius: 6px;
-  background-color: #abe2fb;
+  background-color: #78909C;
 }
 .rc-slider-handle {
   position: absolute;
-  margin-left: -7px;
-  margin-top: -5px;
-  width: 14px;
-  height: 14px;
+  margin-left: -10px;
+  margin-top: -10px;
+  width: 25px;
+  height: 25px;
   cursor: pointer;
   cursor: -webkit-grab;
   cursor: grab;
   border-radius: 50%;
-  border: solid 2px #96dbfa;
-  background-color: #fff;
+  // border: solid 2px #96dbfa;
+  background-color: #78909B;
   -ms-touch-action: pan-x;
       touch-action: pan-x;
 }

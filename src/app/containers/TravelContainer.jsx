@@ -12,13 +12,20 @@ class TravelContainer extends Component {
   render() {
     return (
       <div className="travel-container">
-        <button>playbutton</button>
+        <div className="empty-button" onClick={console.log('hello')}>
+            play
+        </div>
         <MainSlider
           snapshotLength = {this.props.snapshotsLength} 
           handleChangeSnapshot = {this.props.handleChangeSnapshot}
           snapshotIndex = {this.props.snapshotIndex}
         />
-        <button>forward</button>
+        <div className="backward-button" onClick={console.log('backward')}>
+          {'<'}
+        </div>
+        <div className="forward-button" onClick={console.log('forward')}>
+          {'>'}
+        </div>
       </div>
     )
 

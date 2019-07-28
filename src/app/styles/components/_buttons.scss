@@ -16,6 +16,21 @@
   background-color: $highlight-color;
 }
 
+.play-button {
+  @extend %button-shared;
+  width: 60px;
+}
+
+.backward-button {
+  @extend %button-shared;
+  width: 30px;
+}
+
+.forward-button {
+  @extend %button-shared;
+  width: 30px;
+}
+
 %button-shared {
   display: flex;
   justify-content: center;
