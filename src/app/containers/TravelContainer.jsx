@@ -21,6 +21,7 @@ class TravelContainer extends Component {
           snapshotLength = {this.props.snapshotsLength} 
           handleChangeSnapshot = {this.props.handleChangeSnapshot}
           snapshotIndex = {this.props.snapshotIndex}
+          handleJumpSnapshot={this.props.handleJumpSnapshot}
         />
         <div className="backward-button" onClick={this.props.moveBackward}>
           {'<'}
