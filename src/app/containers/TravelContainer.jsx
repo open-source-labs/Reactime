@@ -14,7 +14,7 @@ class TravelContainer extends Component {
   render() {
     return (
       <div className="travel-container">
-        <div className="empty-button" onClick={()=>console.log('hello')}>
+        <div className="play-button" onClick={this.props.playForward}>
             play
         </div>
         <MainSlider

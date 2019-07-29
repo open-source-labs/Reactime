@@ -37,7 +37,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (bg) {
     // get active tab id
     // get snapshot arr from tab object
-    snapshotArr.push([request]);
+    snapshotArr.push(request);
     bg.postMessage(snapshotArr);
     // else, push snapshot into an array
   } else snapshotArr.push(request);

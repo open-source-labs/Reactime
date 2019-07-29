@@ -30,7 +30,6 @@ class mainSlider extends Component {
 
   render() {
     return (
-      <div>
         <Slider
           min={0}
           max={this.props.snapshotLength - 1}
@@ -42,7 +41,6 @@ class mainSlider extends Component {
           }}
           handle={handle}
         />
-      </div>
     );
   }
 }

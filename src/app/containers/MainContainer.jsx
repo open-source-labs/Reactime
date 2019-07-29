@@ -19,6 +19,7 @@ class MainContainer extends Component {
     this.emptySnapshot = this.emptySnapshot.bind(this);
     this.moveBackward = this.moveBackward.bind(this);
     this.moveForward = this.moveForward.bind(this);
+    this.playForward = this.playForward.bind(this);
   }
 
   componentDidMount() {
@@ -59,7 +60,17 @@ class MainContainer extends Component {
       
       this.setState({ snapshotIndex: newIndex });
     }
+  }
 
+  playForward(){
+    setInterval(()=>{
+      const { snapshots, snapshotIndex } = this.state;
+      if(snapshotIndex<snapshots.length-1){
+        const newIndex = snapshotIndex+1;
+        
+        this.setState({ snapshotIndex: newIndex });
+      } else return;
+    },1000)
   }
 
   emptySnapshot() {
@@ -133,6 +144,7 @@ class MainContainer extends Component {
           snapshotIndex={snapshotIndex}
           moveBackward = {this.moveBackward}
           moveForward = {this.moveForward}
+          playForward = {this.playForward}
         />
       </div>
     );
