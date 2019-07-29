@@ -14,26 +14,24 @@
   height: 100%;
   width: 100%;
   display: grid;
-  grid-template-rows: 9fr 1fr;
+  grid-template-rows: 5fr 1fr;
   grid-template-areas:
     "actions states"
     "travel travel";
 }
 
-/* if extension width is less than 300px, stack the body containers */
+
+/* if extension width is less than 500px, stack the body containers */
 // this is not working for some reason
 @media (max-width: 500px) {
   .body-container {
-    grid-template-rows: 4.5fr 4.5fr 1fr;
+    grid-template-rows: 2.5fr 2.5fr 1fr;
     grid-template-areas:
       "actions"
       "states"
       "travel";
   }
-  .main-container {
-  }
 }
-
 .travel-container {
   // height: 10%;
   height: 100%;
@@ -47,7 +45,9 @@
 .state-container {
   grid-area: states;
 }
-
+.emptySnapshot{
+  width: 100%;
+}
 .head-container,
 .body-container,
 .action-container,

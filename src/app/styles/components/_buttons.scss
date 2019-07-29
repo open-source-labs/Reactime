@@ -17,6 +17,24 @@
   background-color: $highlight-color;
 }
 
+.play-button {
+  @extend %button-shared;
+  width: 60px;
+  margin: 10px;
+}
+
+.backward-button {
+  @extend %button-shared;
+  width: 30px;
+  margin: 7px;
+}
+
+.forward-button {
+  @extend %button-shared;
+  width: 30px;
+  margin: 7px;
+}
+
 %button-shared {
   display: flex;
   justify-content: center;

@@ -1,22 +1,31 @@
 import React from 'react';
-import Slider from '../components/Slider';
+import MainSlider from '../components/MainSlider'
 
 const TravelContainer = ({
+  playForward,
+  moveBackward,
+  moveForward,
   snapshotsLength,
   handleChangeSnapshot,
   handleJumpSnapshot,
   snapshotIndex,
 }) => (
   <div className="travel-container">
-    <Slider
-      className="travel-slider"
+    <div className="play-button" onClick={playForward}>
+      play
+    </div>
+    <MainSlider
       snapshotLength={snapshotsLength}
       handleChangeSnapshot={handleChangeSnapshot}
-      handleJumpSnapshot={handleJumpSnapshot}
       snapshotIndex={snapshotIndex}
+      handleJumpSnapshot={handleJumpSnapshot}
     />
-    {`travelContainer snapshotIndex ${snapshotIndex}`}
+    <div className="backward-button" onClick={moveBackward}>
+      {'<'}
+    </div>
+    <div className="forward-button" onClick={moveForward}>
+      {'>'}
+    </div>
   </div>
 );
-
 export default TravelContainer;
