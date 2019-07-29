@@ -48,7 +48,7 @@ class MainContainer extends Component {
     const { snapshots, snapshotIndex } = this.state;
     if(snapshots.length>0 && snapshotIndex>0) {
       const newIndex = snapshotIndex-1;
-
+      this.handleJumpSnapshot(newIndex);
       this.setState({ snapshotIndex: newIndex });
     }
   }
@@ -57,7 +57,7 @@ class MainContainer extends Component {
     const { snapshots, snapshotIndex } = this.state;
     if(snapshotIndex<snapshots.length-1){
       const newIndex = snapshotIndex+1;
-      
+      this.handleJumpSnapshot(newIndex);
       this.setState({ snapshotIndex: newIndex });
     }
   }
@@ -67,7 +67,7 @@ class MainContainer extends Component {
       const { snapshots, snapshotIndex } = this.state;
       if(snapshotIndex<snapshots.length-1){
         const newIndex = snapshotIndex+1;
-        
+        this.handleJumpSnapshot(newIndex);
         this.setState({ snapshotIndex: newIndex });
       } else return;
     },1000)
