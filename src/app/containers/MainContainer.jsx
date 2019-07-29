@@ -63,14 +63,15 @@ class MainContainer extends Component {
   }
 
   playForward(){
-    setInterval(()=>{
+    var play = setInterval(()=>{
       const { snapshots, snapshotIndex } = this.state;
       if(snapshotIndex<snapshots.length-1){
         const newIndex = snapshotIndex+1;
         this.handleJumpSnapshot(newIndex);
         this.setState({ snapshotIndex: newIndex });
-      } else return;
+      } else clearInterval(play);
     },1000)
+    play();
   }
 
   emptySnapshot() {
