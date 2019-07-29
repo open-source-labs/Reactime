@@ -8,7 +8,11 @@ class ActionContainer extends Component {
 
   render() {
     const {
-      snapshots, snapshotIndex, handleChangeSnapshot, handleSendSnapshot,
+      snapshots,
+      snapshotIndex,
+      handleChangeSnapshot,
+      handleJumpSnapshot,
+      emptySnapshot,
     } = this.props;
     let actionsArr = [];
     if (snapshots.length > 0) {
@@ -21,7 +25,7 @@ class ActionContainer extends Component {
             snapshot={snapshot}
             selected={selected}
             handleChangeSnapshot={handleChangeSnapshot}
-            handleSendSnapshot={handleSendSnapshot}
+            handleJumpSnapshot={handleJumpSnapshot}
           />
         );
       });
@@ -29,7 +33,7 @@ class ActionContainer extends Component {
     return (
       <div className="action-container">
         <div className="action-component">
-          <div className="empty-button" onClick={this.props.emptySnapshot}>
+          <div className="empty-button" onClick={emptySnapshot}>
             emptySnapshot
           </div>
         </div>

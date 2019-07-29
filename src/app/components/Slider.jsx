@@ -5,49 +5,48 @@ import Tooltip from 'rc-tooltip';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
 
-const Handle  = Slider.Handle;
-
+const { Handle } = Slider;
 
 const handle = (props) => {
-    const { value, dragging, index, ...restProps } = props;
+  const {
+    value, dragging, index, ...restProps
+  } = props;
 
-    return (
-      <Tooltip
-        prefixCls="rc-slider-tooltip"
-        overlay={value}
-        visible={dragging}
-        placement="top"
-        key={index}
-      >
-        <Handle value={value} {...restProps} />
-      </Tooltip>
-    );
+  return (
+    <Tooltip
+      prefixCls="rc-slider-tooltip"
+      overlay={value}
+      visible={dragging}
+      placement="top"
+      key={index}
+    >
+      <Handle value={value} {...restProps} />
+    </Tooltip>
+  );
 };
 
 class mainSlider extends Component {
-    constructor(props){
-        super(props)
-    }
+  constructor(props) {
+    super(props);
+  }
 
-
-    render(){
-        return(
-            <div>
-                <Slider 
-                min={0} 
-                max={this.props.snapshotLength-1} 
-                value = {this.props.snapshotIndex}
-                onChange={(index) => {
-                    index = index === -1 ? 0 : index;
-                    this.props.handleChangeSnapshot(index)
-                }}
-                handle={handle}
-                 >
-                </Slider>
-            </div>
-        )
-    }
+  render() {
+    return (
+      <div>
+        <Slider
+          min={0}
+          max={this.props.snapshotLength - 1}
+          value={this.props.snapshotIndex}
+          onChange={(index) => {
+            index = index === -1 ? 0 : index;
+            this.props.handleChangeSnapshot(index);
+            this.props.handleJumpSnapshot(index);
+          }}
+          handle={handle}
+        />
+      </div>
+    );
+  }
 }
 
 export default mainSlider;
-

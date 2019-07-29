@@ -16,14 +16,6 @@
   flex-wrap: wrap;
 }
 
-.state-container {
-  font-size: 15px;
-  flex: 6 auto;
-  height: 100%;
-  overflow: scroll;
-  background-color: $brand-color;
-}
-
 /* if extension width is less than 500px, stack the body containers */
 // this is not working for some reason
 @media (max-width: 500px) {
