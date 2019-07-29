@@ -1,9 +1,14 @@
 class Tree {
-  constructor(component) {
+  constructor(component, useStateInstead = false, name) {
     // special case when component is root
     // give it a special state = 'root'
     // a setState function that just calls the callback instantly
-    this.component = (component === 'root') ? { state: 'root', setState: (partial, callback) => callback() } : component;
+    if (!useStateInstead) {
+      this.component = (component === 'root') ? { state: 'root', setState: (partial, callback) => callback() } : component;
+    } else {
+      this.state = component;
+      this.name = name;
+    }
     this.children = [];
   }
 
@@ -14,12 +19,9 @@ class Tree {
   }
 
   // deep copies only the state of each component and creates a new tree
-  getCopy(copy = new Tree(null)) {
-    const { state } = this.component;
-    if (!copy.component) copy.component = { state };
-
+  getCopy(copy = new Tree('root', true, 'root')) {
     // copy state of children
-    copy.children = this.children.map(child => new Tree({ state: child.component.state }));
+    copy.children = this.children.map(child => new Tree(child.component.state, true, child.component.constructor.name));
 
     // copy children's children recursively
     this.children.forEach((child, i) => child.getCopy(copy.children[i]));
@@ -30,10 +32,13 @@ class Tree {
   print() {
     const children = ['children: '];
     this.children.forEach((child) => {
-      children.push(child.component.state);
+      children.push(child.state || child.component.state);
     });
-    if (children.length === 1) console.log(this.component.state);
-    else console.log(this.component.state, ...children);
+    if (this.name) console.log(this.name);
+    if (children.length === 1) {
+      console.log(this.state || this.component.state);
+    }
+    else console.log(this.state || this.component.state, ...children);
     this.children.forEach((child) => {
       child.print();
     });

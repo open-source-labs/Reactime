@@ -2,6 +2,8 @@ console.log('background.js file is running');
 
 let bg;
 
+// when tab refreshes, empty snapshotArr
+
 // need a function to clear snapshotArr when either tab is closed or page is refreshed
 let snapshotArr = [];
 
@@ -34,11 +36,19 @@ chrome.runtime.onConnect.addListener((port) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('npm -> background', request);
   // if port is not null, send a message to devtools
-  if (bg) {
-    // get active tab id
-    // get snapshot arr from tab object
-    snapshotArr.push(request);
-    bg.postMessage(snapshotArr);
-    // else, push snapshot into an array
-  } else snapshotArr.push(request);
+
+  if (request.action === 'tabReload') {
+    console.log('tabReload');
+    snapshotArr = [];
+  }
+
+  console.log(request);
+  if (request.action === 'recordSnap') {
+    snapshotArr.push(request.payload);
+    if (bg) {
+      // get active tab id
+      // get snapshot arr from tab object
+      bg.postMessage(snapshotArr);
+    }
+  }
 });
