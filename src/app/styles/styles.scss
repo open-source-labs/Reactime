@@ -16,6 +16,7 @@
   flex-wrap: wrap;
 }
 
+
 /* if extension width is less than 500px, stack the body containers */
 // this is not working for some reason
 @media (max-width: 500px) {
@@ -27,13 +28,12 @@
   }
 }
 
-.travel-container {
-  height: 10%;
+.emptySnapshot{
+  width: 100%;
 }
 
-.travel-slider {
-  width: 50%;
-}
+
+
 
 .head-container,
 .body-container,
