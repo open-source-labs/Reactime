@@ -65,6 +65,10 @@ module.exports = (snap, mode) => {
     const { _reactRootContainer: { _internalRoot } } = container;
     fiberRoot = _internalRoot;
     updateSnapShotTree();
-    sendSnapshot();
+
+    // send the initial snapshot once the content script has started up
+    window.addEventListener('message', ({ data: { action } }) => {
+      if (action === 'contentScriptStarted') sendSnapshot();
+    });
   };
 };
