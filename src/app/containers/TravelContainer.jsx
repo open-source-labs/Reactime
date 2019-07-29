@@ -29,8 +29,7 @@ class TravelContainer extends Component {
           {'>'}
         </div>
       </div>
-    )
-
+    );
   }
 }
 export default TravelContainer;

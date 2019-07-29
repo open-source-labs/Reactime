@@ -16,6 +16,7 @@
   flex-wrap: wrap;
 }
 
+<<<<<<< HEAD
 .state-container {
   font-size: 15px;
   flex: 6 auto;
@@ -32,6 +33,8 @@
   justify-content: space-around;
 }
 
+=======
+>>>>>>> dev
 /* if extension width is less than 500px, stack the body containers */
 // this is not working for some reason
 @media (max-width: 500px) {

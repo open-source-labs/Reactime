@@ -5,18 +5,17 @@ import StateContainer from './StateContainer';
 import TravelContainer from './TravelContainer';
 
 class MainContainer extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       snapshots: [],
-      snapshotsTree: null,
       snapshotIndex: 0,
       currentIndex: null,
       port: null,
     };
-
     this.handleChangeSnapshot = this.handleChangeSnapshot.bind(this);
     this.handleSendSnapshot = this.handleSendSnapshot.bind(this);
+    this.handleJumpSnapshot = this.handleJumpSnapshot.bind(this);
     this.emptySnapshot = this.emptySnapshot.bind(this);
     this.moveBackward = this.moveBackward.bind(this);
     this.moveForward = this.moveForward.bind(this);
@@ -65,8 +64,8 @@ class MainContainer extends Component {
 
   emptySnapshot() {
     const { port } = this.state;
-    this.setState({ snapshots: [] , snapshotIndex: 0 });
-    port.postMessage({ action: 'emptySnap'});
+    this.setState({ snapshots: [], snapshotIndex: 0 });
+    port.postMessage({ action: 'emptySnap' });
   }
 
   // change the snapshot index, this will change the state shown in the state container but won't change the DOM
@@ -75,6 +74,12 @@ class MainContainer extends Component {
     // --> 1. affects the action that is highlighted
     // --> 2. moves the slider
     this.setState({ snapshotIndex });
+  }
+
+  handleJumpSnapshot(snapshotIndex) {
+    const { snapshots, port } = this.state;
+    this.setState({ currentIndex: snapshotIndex });
+    port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
   }
 
   // when the jump button is clicked, send a message to npm package with the selected snapshot
@@ -108,7 +113,6 @@ class MainContainer extends Component {
 
   render() {
     const { snapshots, snapshotIndex } = this.state;
-    
     return (
       <div className="main-container">
         <HeadContainer />
@@ -117,7 +121,7 @@ class MainContainer extends Component {
             snapshots={snapshots}
             snapshotIndex={snapshotIndex}
             handleChangeSnapshot={this.handleChangeSnapshot}
-            handleSendSnapshot={this.handleSendSnapshot}
+            handleJumpSnapshot={this.handleJumpSnapshot}
             emptySnapshot={this.emptySnapshot}
           />
           <StateContainer snapshot={snapshots[snapshotIndex]} />
@@ -125,6 +129,7 @@ class MainContainer extends Component {
         <TravelContainer
           snapshotsLength={snapshots.length}
           handleChangeSnapshot={this.handleChangeSnapshot}
+          handleJumpSnapshot={this.handleJumpSnapshot}
           snapshotIndex={snapshotIndex}
           moveBackward = {this.moveBackward}
           moveForward = {this.moveForward}

@@ -8,7 +8,6 @@ let snapshotArr = [];
 // establishing connection with devtools
 chrome.runtime.onConnect.addListener((port) => {
   bg = port;
-  // bg.postMessage({ from: 'background.js', message: 'established connection', date: Date.now() });
 
   // if snapshots were saved in the snapshotArr,
   // send it to devtools as soon as connection to devtools is made
@@ -19,7 +18,7 @@ chrome.runtime.onConnect.addListener((port) => {
   // receive snapshot from devtools and send it to contentScript
   port.onMessage.addListener((msg) => {
     console.log('background -> contentScript', msg);
-    if(msg.action==='emptySnap') {
+    if (msg.action === 'emptySnap') {
       snapshotArr = [];
     } else {
       // find active tab
@@ -33,6 +32,7 @@ chrome.runtime.onConnect.addListener((port) => {
 
 // background.js recieves message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log('npm -> background', request);
   // if port is not null, send a message to devtools
   if (bg) {
     // get active tab id

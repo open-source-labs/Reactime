@@ -3,46 +3,48 @@ import Slider from 'rc-slider';
 import Tooltip from 'rc-tooltip';
 
 
-const Handle  = Slider.Handle;
-
+const { Handle } = Slider;
 
 const handle = (props) => {
-    const { value, dragging, index, ...restProps } = props;
+  const {
+    value, dragging, index, ...restProps
+  } = props;
 
-    return (
-      <Tooltip
-        prefixCls="rc-slider-tooltip"
-        overlay={value}
-        visible={dragging}
-        placement="top"
-        key={index}
-      >
-        <Handle value={value} {...restProps} />
-      </Tooltip>
-    );
+  return (
+    <Tooltip
+      prefixCls="rc-slider-tooltip"
+      overlay={value}
+      visible={dragging}
+      placement="top"
+      key={index}
+    >
+      <Handle value={value} {...restProps} />
+    </Tooltip>
+  );
 };
 
-class MainSlider extends Component {
-    constructor(props){
-        super(props)
-    }
+class mainSlider extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-
-    render(){
-        return(
-                <Slider
-                    min={0} 
-                    max={this.props.snapshotLength-1<0 ? 0: this.props.snapshotLength-1} 
-                    value = {this.props.snapshotIndex}
-                    onChange={(index) => {
-                        index = index === -1 ? 0 : index;
-                        this.props.handleChangeSnapshot(index)
-                    }}
-                    handle={handle}
-                 />
-        )
-    }
+  render() {
+    return (
+      <div>
+        <Slider
+          min={0}
+          max={this.props.snapshotLength - 1}
+          value={this.props.snapshotIndex}
+          onChange={(index) => {
+            index = index === -1 ? 0 : index;
+            this.props.handleChangeSnapshot(index);
+            this.props.handleJumpSnapshot(index);
+          }}
+          handle={handle}
+        />
+      </div>
+    );
+  }
 }
 
-export default MainSlider;
-
+export default mainSlider;
