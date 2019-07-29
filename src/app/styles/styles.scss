@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   background-color: $brand-color;
+  overflow: hidden;
 }
 
 .head-container {
@@ -10,29 +11,41 @@
 }
 
 .body-container {
-  height: 75%;
+  height: 100%;
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-rows: 9fr 1fr;
+  grid-template-areas:
+    "actions states"
+    "travel travel";
 }
 
-/* if extension width is less than 500px, stack the body containers */
+/* if extension width is less than 300px, stack the body containers */
 // this is not working for some reason
 @media (max-width: 500px) {
   .body-container {
-    flex-direction: column;
+    grid-template-rows: 4.5fr 4.5fr 1fr;
+    grid-template-areas:
+      "actions"
+      "states"
+      "travel";
   }
-  .state-container {
-    // flex: 5 auto;
+  .main-container {
   }
 }
 
 .travel-container {
-  height: 10%;
+  // height: 10%;
+  height: 100%;
+  margin-right: 1%;
+  grid-area: travel;
 }
 
-.travel-slider {
-  width: 50%;
+.action-container {
+  grid-area: actions;
+}
+.state-container {
+  grid-area: states;
 }
 
 .head-container,

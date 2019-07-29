@@ -105,13 +105,13 @@ class MainContainer extends Component {
             emptySnapshot={this.emptySnapshot}
           />
           <StateContainer snapshot={snapshots[snapshotIndex]} />
+          <TravelContainer
+            snapshotsLength={snapshots.length}
+            handleChangeSnapshot={this.handleChangeSnapshot}
+            handleJumpSnapshot={this.handleJumpSnapshot}
+            snapshotIndex={snapshotIndex}
+          />
         </div>
-        <TravelContainer
-          snapshotsLength={snapshots.length}
-          handleChangeSnapshot={this.handleChangeSnapshot}
-          handleJumpSnapshot={this.handleJumpSnapshot}
-          snapshotIndex={snapshotIndex}
-        />
       </div>
     );
   }

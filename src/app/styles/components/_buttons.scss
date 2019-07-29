@@ -6,6 +6,7 @@
 .jump-button {
   @extend %button-shared;
   width: 50px;
+  visibility: hidden;
 }
 
 .jump-button:hover {

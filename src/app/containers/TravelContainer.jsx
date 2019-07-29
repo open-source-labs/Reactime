@@ -1,25 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Slider from '../components/Slider';
 
-class TravelContainer extends Component {
-  constructor(props) {
-    super(props);
-  }
+const TravelContainer = ({
+  snapshotsLength,
+  handleChangeSnapshot,
+  handleJumpSnapshot,
+  snapshotIndex,
+}) => (
+  <div className="travel-container">
+    <Slider
+      className="travel-slider"
+      snapshotLength={snapshotsLength}
+      handleChangeSnapshot={handleChangeSnapshot}
+      handleJumpSnapshot={handleJumpSnapshot}
+      snapshotIndex={snapshotIndex}
+    />
+    {`travelContainer snapshotIndex ${snapshotIndex}`}
+  </div>
+);
 
-  render() {
-    return (
-      <div>
-        <div className="travel-container">TravelContainer</div>
-        <Slider
-          className="travel-slider"
-          snapshotLength={this.props.snapshotsLength}
-          handleChangeSnapshot={this.props.handleChangeSnapshot}
-          handleJumpSnapshot={this.props.handleJumpSnapshot}
-          snapshotIndex={this.props.snapshotIndex}
-        />
-        {`travelContainer snapshotIndex ${this.props.snapshotIndex}`}
-      </div>
-    );
-  }
-}
 export default TravelContainer;
