@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import JSONTree from 'react-json-tree';
 import * as themes from 'redux-devtools-themes';
+import Tree from '../components/Tree';
 
 const getItemString = (type, data, itemType, itemString) => (
   <span>
@@ -17,17 +17,7 @@ class StateContainer extends Component {
 
   render() {
     const { snapshot } = this.props;
-    return (
-      <div className="state-container">
-        {snapshot && (
-          <JSONTree
-            data={snapshot}
-            theme={{ tree: () => ({ className: 'json-tree' }) }}
-            getItemString={getItemString}
-          />
-        )}
-      </div>
-    );
+    return <div className="state-container">{snapshot && <Tree snapshot={snapshot} />}</div>;
   }
 }
 
