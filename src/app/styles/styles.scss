@@ -1,8 +1,9 @@
 .main-container {
   height: 100%;
-  margin: 0;
-  padding: 0;
+  margin: 0 auto;
+  padding: 0 auto;
   background-color: $brand-color;
+  overflow: hidden;
 }
 
 .head-container {
@@ -10,31 +11,40 @@
 }
 
 .body-container {
-  height: 75%;
+  height: 95%;
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-rows: 8fr 1fr;
+  grid-template-areas:
+    "actions states"
+    "travel travel";
 }
+
 
 /* if extension width is less than 500px, stack the body containers */
 // this is not working for some reason
 @media (max-width: 500px) {
   .body-container {
-    flex-direction: column;
-  }
-  .state-container {
-    // flex: 5 auto;
+    grid-template-rows: 4fr 4fr 1fr;
+    grid-template-areas:
+      "actions"
+      "states"
+      "travel";
   }
 }
-
 .travel-container {
-  height: 10%;
+  grid-area: travel;
 }
 
-.travel-slider {
-  width: 50%;
+.action-container {
+  grid-area: actions;
 }
-
+.state-container {
+  grid-area: states;
+}
+.emptySnapshot{
+  width: 100%;
+}
 .head-container,
 .body-container,
 .action-container,

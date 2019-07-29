@@ -6,6 +6,7 @@
 .jump-button {
   @extend %button-shared;
   width: 50px;
+  visibility: hidden;
 }
 
 .jump-button:hover {
@@ -14,6 +15,24 @@
 
 .empty-button:hover {
   background-color: $highlight-color;
+}
+
+.play-button {
+  @extend %button-shared;
+  width: 60px;
+  margin: 10px;
+}
+
+.backward-button {
+  @extend %button-shared;
+  width: 30px;
+  margin: 7px;
+}
+
+.forward-button {
+  @extend %button-shared;
+  width: 30px;
+  margin: 7px;
 }
 
 %button-shared {

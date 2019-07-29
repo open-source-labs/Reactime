@@ -17,6 +17,9 @@ class MainContainer extends Component {
     this.handleSendSnapshot = this.handleSendSnapshot.bind(this);
     this.handleJumpSnapshot = this.handleJumpSnapshot.bind(this);
     this.emptySnapshot = this.emptySnapshot.bind(this);
+    this.moveBackward = this.moveBackward.bind(this);
+    this.moveForward = this.moveForward.bind(this);
+    this.playForward = this.playForward.bind(this);
   }
 
   componentDidMount() {
@@ -41,14 +44,43 @@ class MainContainer extends Component {
     this.setState({ port });
   }
 
+  moveBackward() {
+    const { snapshots, snapshotIndex } = this.state;
+    if (snapshots.length > 0 && snapshotIndex > 0) {
+      const newIndex = snapshotIndex - 1;
+      this.handleJumpSnapshot(newIndex);
+      this.setState({ snapshotIndex: newIndex });
+    }
+  }
+
+  moveForward() {
+    const { snapshots, snapshotIndex } = this.state;
+    if (snapshotIndex < snapshots.length - 1) {
+      const newIndex = snapshotIndex + 1;
+      this.handleJumpSnapshot(newIndex);
+      this.setState({ snapshotIndex: newIndex });
+    }
+  }
+
+  playForward() {
+    var play = setInterval(() => {
+      const { snapshots, snapshotIndex } = this.state;
+      if (snapshotIndex < snapshots.length - 1) {
+        const newIndex = snapshotIndex + 1;
+        this.handleJumpSnapshot(newIndex);
+        this.setState({ snapshotIndex: newIndex });
+      } else clearInterval(play);
+    }, 1000)
+    play();
+  }
+
   emptySnapshot() {
     const { port } = this.state;
     this.setState({ snapshots: [], snapshotIndex: 0 });
     port.postMessage({ action: 'emptySnap' });
   }
 
-  // change the snapshot index
-  // this will change the state shown in the state container but won't change the DOM
+  // change the snapshot index, this will change the state shown in the state container but won't change the DOM
   handleChangeSnapshot(snapshotIndex) {
     // snapshotIndex
     // --> 1. affects the action that is highlighted
@@ -105,13 +137,16 @@ class MainContainer extends Component {
             emptySnapshot={this.emptySnapshot}
           />
           <StateContainer snapshot={snapshots[snapshotIndex]} />
+          <TravelContainer
+            snapshotsLength={snapshots.length}
+            handleChangeSnapshot={this.handleChangeSnapshot}
+            handleJumpSnapshot={this.handleJumpSnapshot}
+            snapshotIndex={snapshotIndex}
+            moveBackward={this.moveBackward}
+            moveForward={this.moveForward}
+            playForward={this.playForward}
+          />
         </div>
-        <TravelContainer
-          snapshotsLength={snapshots.length}
-          handleChangeSnapshot={this.handleChangeSnapshot}
-          handleJumpSnapshot={this.handleJumpSnapshot}
-          snapshotIndex={snapshotIndex}
-        />
       </div>
     );
   }
