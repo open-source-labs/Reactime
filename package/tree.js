@@ -1,9 +1,13 @@
 class Tree {
-  constructor(component) {
+  constructor(component, useStateInstead = false) {
     // special case when component is root
     // give it a special state = 'root'
     // a setState function that just calls the callback instantly
-    this.component = (component === 'root') ? { state: 'root', setState: (partial, callback) => callback() } : component;
+    if (!useStateInstead) {
+      this.component = (component === 'root') ? { state: 'root', setState: (partial, callback) => callback() } : component;
+    } else {
+      this.state = component;
+    }
     this.children = [];
   }
 
@@ -14,12 +18,9 @@ class Tree {
   }
 
   // deep copies only the state of each component and creates a new tree
-  getCopy(copy = new Tree(null)) {
-    const { state } = this.component;
-    if (!copy.component) copy.component = { state };
-
+  getCopy(copy = new Tree('root', true)) {
     // copy state of children
-    copy.children = this.children.map(child => new Tree({ state: child.component.state }));
+    copy.children = this.children.map(child => new Tree(child.component.state, true));
 
     // copy children's children recursively
     this.children.forEach((child, i) => child.getCopy(copy.children[i]));
