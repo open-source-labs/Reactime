@@ -18,6 +18,8 @@ class MainContainer extends Component {
     this.handleChangeSnapshot = this.handleChangeSnapshot.bind(this);
     this.handleSendSnapshot = this.handleSendSnapshot.bind(this);
     this.emptySnapshot = this.emptySnapshot.bind(this);
+    this.moveBackward = this.moveBackward.bind(this);
+    this.moveForward = this.moveForward.bind(this);
   }
 
   componentDidMount() {
@@ -42,14 +44,32 @@ class MainContainer extends Component {
     this.setState({ port });
   }
 
+  moveBackward(){
+    const { snapshots, snapshotIndex } = this.state;
+    if(snapshots.length>0 && snapshotIndex>0) {
+      const newIndex = snapshotIndex-1;
+
+      this.setState({ snapshotIndex: newIndex });
+    }
+  }
+
+  moveForward(){
+    const { snapshots, snapshotIndex } = this.state;
+    if(snapshotIndex<snapshots.length-1){
+      const newIndex = snapshotIndex+1;
+      
+      this.setState({ snapshotIndex: newIndex });
+    }
+
+  }
+
   emptySnapshot() {
     const { port } = this.state;
     this.setState({ snapshots: [] , snapshotIndex: 0 });
     port.postMessage({ action: 'emptySnap'});
   }
 
-  // change the snapshot index
-  // this will change the state shown in the state container but won't change the DOM
+  // change the snapshot index, this will change the state shown in the state container but won't change the DOM
   handleChangeSnapshot(snapshotIndex) {
     // snapshotIndex
     // --> 1. affects the action that is highlighted
@@ -106,6 +126,8 @@ class MainContainer extends Component {
           snapshotsLength={snapshots.length}
           handleChangeSnapshot={this.handleChangeSnapshot}
           snapshotIndex={snapshotIndex}
+          moveBackward = {this.moveBackward}
+          moveForward = {this.moveForward}
         />
       </div>
     );

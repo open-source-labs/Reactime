@@ -4,7 +4,9 @@ console.log('contentScript running');
 window.addEventListener('message', (msg) => {
   const { action, payload } = msg.data;
 
-  if (action === 'recordSnap') chrome.runtime.sendMessage(payload);
+  if (action === 'recordSnap') {
+    chrome.runtime.sendMessage(payload);
+  }
 });
 
 // listening for messages from background.js

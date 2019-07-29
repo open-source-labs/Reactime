@@ -19,6 +19,7 @@ class StateContainer extends Component {
     let snapshotObjs = [];
     const { snapshot } = this.props;
     if (snapshot) {
+      console.log('snapshot in statecontainer' , snapshot);
       snapshotObjs = snapshot.map((component, index) => JsonDisplay(component, index));
     }
     return <div className="state-container">{snapshotObjs}</div>;

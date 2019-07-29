@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import MainSlider from '../components/Slider'
+import MainSlider from '../components/MainSlider'
 
 
 
@@ -9,10 +9,12 @@ class TravelContainer extends Component {
     super(props);
   }
 
+  
+
   render() {
     return (
       <div className="travel-container">
-        <div className="empty-button" onClick={console.log('hello')}>
+        <div className="empty-button" onClick={()=>console.log('hello')}>
             play
         </div>
         <MainSlider
@@ -20,10 +22,10 @@ class TravelContainer extends Component {
           handleChangeSnapshot = {this.props.handleChangeSnapshot}
           snapshotIndex = {this.props.snapshotIndex}
         />
-        <div className="backward-button" onClick={console.log('backward')}>
+        <div className="backward-button" onClick={this.props.moveBackward}>
           {'<'}
         </div>
-        <div className="forward-button" onClick={console.log('forward')}>
+        <div className="forward-button" onClick={this.props.moveForward}>
           {'>'}
         </div>
       </div>
