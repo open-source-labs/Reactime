@@ -7,10 +7,11 @@
 @import 'base/base', 'base/fonts', 'base/helpers', 'base/typography';
 
 // 4. Layout-related sections
-@import 'layout/actionContainer';
+@import 'layout/actionContainer', 'layout/stateContainer';
 
 // 5. Components
-@import 'components/buttons', 'components/actionComponent';
+@import 'components/buttons', 'components/actionComponent',
+  'components/jsonTree';
 
 // other styles that needs to be modularized
 @import 'styles';
