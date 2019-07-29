@@ -9,7 +9,17 @@
   visibility: hidden;
 }
 
+.jump-button:focus {
+  outline: 0;
+  // make the text in the button not highlightable
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
 .jump-button:hover {
+  // remove the blue border when button is clicked
   background-color: $highlight-color;
 }
 

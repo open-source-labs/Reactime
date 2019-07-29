@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-import React, { Component } from 'react';
-
-import Slider from '../components/Slider';
-=======
 import React from 'react';
-import MainSlider from '../components/MainSlider'
->>>>>>> dev
+import MainSlider from '../components/MainSlider';
 
 const TravelContainer = ({
   playForward,
