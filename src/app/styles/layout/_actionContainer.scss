@@ -1,6 +1,4 @@
 .action-container {
-  flex: 3 auto;
-  height: 100%;
-  overflow: scroll;
+  overflow: auto;
   background-color: $brand-color;
 }

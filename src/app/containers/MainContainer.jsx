@@ -44,33 +44,33 @@ class MainContainer extends Component {
     this.setState({ port });
   }
 
-  moveBackward(){
+  moveBackward() {
     const { snapshots, snapshotIndex } = this.state;
-    if(snapshots.length>0 && snapshotIndex>0) {
-      const newIndex = snapshotIndex-1;
+    if (snapshots.length > 0 && snapshotIndex > 0) {
+      const newIndex = snapshotIndex - 1;
       this.handleJumpSnapshot(newIndex);
       this.setState({ snapshotIndex: newIndex });
     }
   }
 
-  moveForward(){
+  moveForward() {
     const { snapshots, snapshotIndex } = this.state;
-    if(snapshotIndex<snapshots.length-1){
-      const newIndex = snapshotIndex+1;
+    if (snapshotIndex < snapshots.length - 1) {
+      const newIndex = snapshotIndex + 1;
       this.handleJumpSnapshot(newIndex);
       this.setState({ snapshotIndex: newIndex });
     }
   }
 
-  playForward(){
-    var play = setInterval(()=>{
+  playForward() {
+    var play = setInterval(() => {
       const { snapshots, snapshotIndex } = this.state;
-      if(snapshotIndex<snapshots.length-1){
-        const newIndex = snapshotIndex+1;
+      if (snapshotIndex < snapshots.length - 1) {
+        const newIndex = snapshotIndex + 1;
         this.handleJumpSnapshot(newIndex);
         this.setState({ snapshotIndex: newIndex });
       } else clearInterval(play);
-    },1000)
+    }, 1000)
     play();
   }
 
@@ -137,16 +137,16 @@ class MainContainer extends Component {
             emptySnapshot={this.emptySnapshot}
           />
           <StateContainer snapshot={snapshots[snapshotIndex]} />
+          <TravelContainer
+            snapshotsLength={snapshots.length}
+            handleChangeSnapshot={this.handleChangeSnapshot}
+            handleJumpSnapshot={this.handleJumpSnapshot}
+            snapshotIndex={snapshotIndex}
+            moveBackward={this.moveBackward}
+            moveForward={this.moveForward}
+            playForward={this.playForward}
+          />
         </div>
-        <TravelContainer
-          snapshotsLength={snapshots.length}
-          handleChangeSnapshot={this.handleChangeSnapshot}
-          handleJumpSnapshot={this.handleJumpSnapshot}
-          snapshotIndex={snapshotIndex}
-          moveBackward = {this.moveBackward}
-          moveForward = {this.moveForward}
-          playForward = {this.playForward}
-        />
       </div>
     );
   }

@@ -1,7 +1,7 @@
 .action-component {
   padding: 5px 10px;
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: 5fr 1fr;
   align-items: center;
   height: 20px;
   background-color: $brand-color;
@@ -18,5 +18,8 @@
 
 .action-component button {
   position: relative;
-  right: 0px;
+}
+
+.action-component:hover .jump-button {
+  visibility: visible;
 }
