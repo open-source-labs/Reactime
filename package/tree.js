@@ -19,7 +19,7 @@ class Tree {
   }
 
   // deep copies only the state of each component and creates a new tree
-  getCopy(copy = new Tree('root', true, 'root')) {
+  getCopy(copy = new Tree('root', true)) {
     // copy state of children
     copy.children = this.children.map(child => new Tree(child.component.state, true, child.component.constructor.name));
 
