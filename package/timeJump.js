@@ -13,7 +13,7 @@ module.exports = (origin, mode) => {
     const originNode = traverseTree(origin.tree, coords);
 
     // set the state of the origin tree
-    originNode.component.setState(target.component.state, () => {
+    originNode.component.setState(target.state, () => {
       // iterate through new children once state has been set
       target.children.forEach((child, i) => {
         jump(child, coords.concat(i));
