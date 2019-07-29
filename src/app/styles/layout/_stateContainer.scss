@@ -3,3 +3,32 @@
   overflow: auto;
   background-color: $brand-color;
 }
+
+.state-container .navbar {
+  background-color: $navbar-color;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  height: 30px;
+}
+
+.state-container {
+  .router-link {
+    height: 100%;
+    width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $navbar-color;
+    text-decoration: none;
+    color: $text-color;
+  }
+  .router-link:hover {
+    background-color: $light-grey-three;
+  }
+
+  .router-link.is-active {
+    background-color: $brand-color;
+  }
+}
