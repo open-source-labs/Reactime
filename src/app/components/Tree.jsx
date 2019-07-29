@@ -10,12 +10,18 @@ const getItemString = (type, data, itemType, itemString) => (
 
 const Tree = (props) => {
   const { snapshot } = props;
+  console.log('TREE COMPONENT IS PRINTED');
+  console.log(snapshot);
   return (
-    <JSONTree
-      data={snapshot}
-      theme={{ tree: () => ({ className: 'json-tree' }) }}
-      getItemString={getItemString}
-    />
+    <React.Fragment>
+      {snapshot && (
+        <JSONTree
+          data={snapshot}
+          theme={{ tree: () => ({ className: 'json-tree' }) }}
+          getItemString={getItemString}
+        />
+      )}
+    </React.Fragment>
   );
 };
 export default Tree;

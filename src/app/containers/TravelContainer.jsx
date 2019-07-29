@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import Slider from '../components/Slider';
 
 class TravelContainer extends Component {
