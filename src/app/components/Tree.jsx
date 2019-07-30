@@ -19,6 +19,9 @@ const Tree = (props) => {
           data={snapshot}
           theme={{ tree: () => ({ className: 'json-tree' }) }}
           getItemString={getItemString}
+          shouldExpandNode={() => true}
+          // labelRenderer={raw => <strong>{raw}</strong>}
+          // valueRenderer={raw => <em>{raw}</em>}
         />
       )}
     </React.Fragment>
