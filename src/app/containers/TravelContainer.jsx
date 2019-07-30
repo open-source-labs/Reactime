@@ -2,17 +2,17 @@ import React from 'react';
 import MainSlider from '../components/MainSlider';
 
 const TravelContainer = ({
-  playForward,
   moveBackward,
   moveForward,
   snapshotsLength,
   handleChangeSnapshot,
   handleJumpSnapshot,
   snapshotIndex,
+  play,
   playing
 }) => (
   <div className="travel-container">
-    <div className="play-button" onClick={playForward}>
+    <div className="play-button" onClick={play}>
       { playing ? 'Pause': 'Play' }
     </div>
     <MainSlider
