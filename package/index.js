@@ -1,6 +1,8 @@
 const snapShot = { tree: null };
 
-const mode = { jumping: false, paused: false, locked: false };
+const mode = {
+  jumping: false, paused: false, locked: false,
+};
 
 const linkFiber = require('./linkFiber')(snapShot, mode);
 const timeJump = require('./timeJump')(snapShot, mode);

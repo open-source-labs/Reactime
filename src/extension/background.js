@@ -5,6 +5,7 @@ const mode = {
   locked: false,
   paused: false,
 };
+let firstSnapshot = true;
 
 // establishing connection with devtools
 chrome.runtime.onConnect.addListener((port) => {
@@ -50,21 +51,35 @@ chrome.runtime.onConnect.addListener((port) => {
 
 // background.js recieves message from contentScript.js
 chrome.runtime.onMessage.addListener((request) => {
-  if (request.action === 'tabReload') snapshotArr = [];
+  const { action } = request;
+  const { persist } = mode;
 
-  if (request.action === 'recordSnap') {
-    snapshotArr.push(request.payload);
-    // if port is not null, send a message to devtools
-    if (bg) {
-      // TODO:
-      // get active tab id
-      // get snapshot arr from tab object
+  switch (action) {
+    case 'tabReload':
+      firstSnapshot = true;
+      if (!persist) snapshotArr = [];
+      break;
+    case 'recordSnap':
+      // don't do anything for the first snapshot if current mode is persist
+      if (persist && firstSnapshot) {
+        firstSnapshot = false;
+        break;
+      }
+      firstSnapshot = false;
+      snapshotArr.push(request.payload);
+      // if port is not null, send a message to devtools
+      if (bg) {
+        // TODO:
+        // get active tab id
+        // get snapshot arr from tab object
 
-      // send message to devtools
-      bg.postMessage({
-        action: 'sendSnapshots',
-        payload: snapshotArr,
-      });
-    }
+        // send message to devtools
+        bg.postMessage({
+          action: 'sendSnapshots',
+          payload: snapshotArr,
+        });
+      }
+      break;
+    default:
   }
 });

@@ -120,7 +120,7 @@ class MainContainer extends Component {
         mode.locked = !locked;
         break;
       case 'persist':
-        port.postMessage({ action: 'setPersist', payload: !locked });
+        port.postMessage({ action: 'setPersist', payload: !persist });
         mode.persist = !persist;
         break;
       default:
