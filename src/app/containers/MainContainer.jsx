@@ -83,9 +83,13 @@ class MainContainer extends Component {
   }
 
   play() {
+    // flip glboal variable onClick
     globalPlaying = !globalPlaying
+    // set state with callback of setInterval
     this.setState({playing: globalPlaying}, () => {
+      // check if playing is false, if false run interval
       if(this.state.playing){
+        // store intervalId to global vairable interval Id
         intervalId = setInterval(() => {
           const { snapshots, snapshotIndex } = this.state;
             if (snapshotIndex < snapshots.length - 1) {
@@ -99,12 +103,14 @@ class MainContainer extends Component {
               }
         }, 1000);
       } else {
+        // menas already playing, user wants to pause so clearinterval using global vairable
         clearInterval(intervalId);
       }
     })
   }
 
   pause() {
+    // clearInterval and set playing to false, used for onChange and forward,backward button on travel container
     this.setState({playing: false}, clearInterval(intervalId))
   }
 
