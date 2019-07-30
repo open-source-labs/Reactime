@@ -11,13 +11,12 @@ window.addEventListener('message', (msg) => {
 // listening for messages from background.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // send the message to npm package
-  console.log('devtools -> contentScript', request);
   const { action } = request;
   switch (action) {
     case 'jumpToSnap':
-      window.postMessage(request);
-      break;
     case 'stepToSnap':
+    case 'setLock':
+    case 'setPause':
       window.postMessage(request);
       break;
     default:

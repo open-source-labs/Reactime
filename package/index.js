@@ -1,6 +1,6 @@
 const snapShot = { tree: null };
 
-const mode = { jumping: false };
+const mode = { jumping: false, paused: false, locked: false };
 
 const linkFiber = require('./linkFiber')(snapShot, mode);
 const timeJump = require('./timeJump')(snapShot, mode);
@@ -12,11 +12,12 @@ window.addEventListener('message', ({ data: { action, payload } }) => {
     case 'jumpToSnap':
       timeJump(payload);
       break;
-    case 'stepToSnap': {
-      const { steps, speed } = payload;
-      console.log('i would like to step through here');
+    case 'setLock':
+      mode.locked = payload;
       break;
-    }
+    case 'setPause':
+      mode.paused = payload;
+      break;
     default:
   }
 });
