@@ -13,7 +13,6 @@ class MainContainer extends Component {
     this.state = {
       snapshots: [],
       snapshotIndex: 0,
-      currentIndex: null,
       port: null,
       mode: {
         locked: false,
@@ -106,7 +105,6 @@ class MainContainer extends Component {
 
   handleJumpSnapshot(snapshotIndex) {
     const { snapshots, port } = this.state;
-    this.setState({ currentIndex: snapshotIndex });
     port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
   }
 
