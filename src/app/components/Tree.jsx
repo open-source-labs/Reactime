@@ -3,8 +3,8 @@ import JSONTree from 'react-json-tree';
 
 const getItemString = (type, data, itemType, itemString) => (
   <span>
-    //
-    {type}
+    {/* //
+    {type} */}
   </span>
 );
 
@@ -18,7 +18,10 @@ const Tree = (props) => {
         <JSONTree
           data={snapshot}
           theme={{ tree: () => ({ className: 'json-tree' }) }}
+          shouldExpandNode={() => true}
           getItemString={getItemString}
+          // labelRenderer={raw => <strong>{raw}</strong>}
+          // valueRenderer={raw => <em>{raw}</em>}
         />
       )}
     </React.Fragment>

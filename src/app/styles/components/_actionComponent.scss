@@ -16,10 +16,15 @@
   background-color: $light-grey-one;
 }
 
-.action-component button {
-  position: relative;
+.action-component .empty-button {
+  // grid-column: 1 / span 4;
 }
 
 .action-component:hover .jump-button {
   visibility: visible;
+}
+
+.action-component.exclude {
+  display: flex;
+  justify-content: center;
 }

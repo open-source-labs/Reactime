@@ -1,13 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class HeadContainer extends Component {
-  constructor() {
-    super();
-  }
-
-  render() {
-    return <div className="head-container">HeadContainer</div>;
-  }
-}
+const HeadContainer = () => (
+  <div className="head-container" />
+);
 
 export default HeadContainer;
