@@ -35,6 +35,14 @@
   margin: 7px;
 }
 
+.lock-button {
+  @extend %button-shared;
+}
+
+.pause-button {
+  @extend %button-shared;
+}
+
 %button-shared {
   display: flex;
   justify-content: center;

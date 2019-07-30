@@ -11,13 +11,15 @@
 }
 
 .body-container {
-  height: 95%;
+  height: 94%;
   width: 100%;
   display: grid;
+  grid-template-columns: 1fr 2fr;
   grid-template-rows: 8fr 1fr;
   grid-template-areas:
     "actions states"
-    "travel travel";
+    "travel travel"
+    "buttons buttons";
 }
 
 
@@ -25,22 +27,26 @@
 // this is not working for some reason
 @media (max-width: 500px) {
   .body-container {
-    grid-template-rows: 4fr 4fr 1fr;
+    grid-template-rows: 3fr 5fr 1fr;
+    grid-template-columns: auto;
     grid-template-areas:
       "actions"
       "states"
-      "travel";
+      "travel"
+      "buttons";
   }
 }
 .travel-container {
   grid-area: travel;
 }
-
 .action-container {
   grid-area: actions;
 }
 .state-container {
   grid-area: states;
+}
+.buttons-container {
+  grid-area: buttons;
 }
 .emptySnapshot{
   width: 100%;

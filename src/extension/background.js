@@ -19,9 +19,8 @@ chrome.runtime.onConnect.addListener((port) => {
 
   // receive snapshot from devtools and send it to contentScript
   port.onMessage.addListener((msg) => {
-    console.log('background -> contentScript', msg);
     if (msg.action === 'emptySnap') {
-      snapshotArr = [];
+      snapshotArr.splice(1);
     } else {
       // find active tab
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {

@@ -6,8 +6,8 @@ module.exports = (snap, mode) => {
   let fiberRoot = null;
 
   function sendSnapshot() {
-    // don't send messages while jumping
-    if (mode.jumping) return;
+    // don't send messages while jumping or while paused
+    if (mode.jumping || mode.paused) return;
     const payload = snap.tree.getCopy();
     window.postMessage({
       action: 'recordSnap',
@@ -23,6 +23,8 @@ module.exports = (snap, mode) => {
     const oldSetState = component.setState.bind(component);
 
     function newSetState(state, callback = () => { }) {
+      // dont do anything if state is locked
+      if (mode.locked) return;
       // continue normal setState functionality, except add sending message middleware
       oldSetState(state, () => {
         updateSnapShotTree();
