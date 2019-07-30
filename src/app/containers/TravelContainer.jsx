@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import MainSlider from '../components/MainSlider';
 
 const TravelContainer = ({
@@ -28,4 +29,14 @@ const TravelContainer = ({
     </div>
   </div>
 );
+
+TravelContainer.propTypes = {
+  playForward: PropTypes.func.isRequired,
+  moveBackward: PropTypes.func.isRequired,
+  moveForward: PropTypes.func.isRequired,
+  snapshotsLength: PropTypes.number.isRequired,
+  handleChangeSnapshot: PropTypes.func.isRequired,
+  handleJumpSnapshot: PropTypes.func.isRequired,
+  snapshotIndex: PropTypes.number.isRequired,
+};
 export default TravelContainer;
