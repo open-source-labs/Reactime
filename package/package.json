@@ -1,6 +1,6 @@
 {
   "name": "react-time-travel",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "A library that helps debug React by memorizing the state of components with every render.",
   "main": "index.js",
   "repository": {
