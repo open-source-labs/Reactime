@@ -65,6 +65,7 @@ class MainContainer extends Component {
 
   moveBackward() {
     const { snapshots, snapshotIndex } = this.state;
+    this.pause();
     if (snapshots.length > 0 && snapshotIndex > 0) {
       const newIndex = snapshotIndex - 1;
       // second callback parameter of setState to invoke handleJumpSnapshot
@@ -74,6 +75,7 @@ class MainContainer extends Component {
 
   moveForward() {
     const { snapshots, snapshotIndex } = this.state;
+    this.pause();
     if (snapshotIndex < snapshots.length - 1) {
       const newIndex = snapshotIndex + 1;
       this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex) );
@@ -91,7 +93,7 @@ class MainContainer extends Component {
                 this.setState({ snapshotIndex: newIndex}, this.handleJumpSnapshot(newIndex) );
             } else {
                 // clear interval when play reaches the end
-                globalVariable = false;
+                globalPlaying = false;
                 clearInterval(intervalId);
                 this.setState({ playing: false })
               }
@@ -100,6 +102,10 @@ class MainContainer extends Component {
         clearInterval(intervalId);
       }
     })
+  }
+
+  pause() {
+    this.setState({playing: false}, clearInterval(intervalId))
   }
 
   emptySnapshot() {
@@ -165,6 +171,7 @@ class MainContainer extends Component {
             moveForward={this.moveForward}
             play={this.play}
             playing = {playing}
+            pause = {this.pause}
           />
           <ButtonsContainer mode={mode} toggleMode={this.toggleMode} />
         </div>

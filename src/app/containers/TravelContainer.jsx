@@ -10,7 +10,8 @@ const TravelContainer = ({
   handleJumpSnapshot,
   snapshotIndex,
   play,
-  playing
+  playing,
+  pause,
 }) => (
   <div className="travel-container">
     <div className="play-button" onClick={play}>
@@ -21,6 +22,7 @@ const TravelContainer = ({
       handleChangeSnapshot={handleChangeSnapshot}
       snapshotIndex={snapshotIndex}
       handleJumpSnapshot={handleJumpSnapshot}
+      pause={pause}
     />
     <div className="backward-button" onClick={moveBackward}>
       {'<'}
@@ -32,7 +34,8 @@ const TravelContainer = ({
 );
 
 TravelContainer.propTypes = {
-  playForward: PropTypes.func.isRequired,
+  pause: PropTypes.func.isRequried,
+  play: PropTypes.func.isRequired,
   moveBackward: PropTypes.func.isRequired,
   moveForward: PropTypes.func.isRequired,
   snapshotsLength: PropTypes.number.isRequired,
