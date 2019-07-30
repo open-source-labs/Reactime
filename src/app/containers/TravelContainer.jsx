@@ -9,10 +9,11 @@ const TravelContainer = ({
   handleChangeSnapshot,
   handleJumpSnapshot,
   snapshotIndex,
+  playing
 }) => (
   <div className="travel-container">
     <div className="play-button" onClick={playForward}>
-      play
+      { playing ? 'Pause': 'Play' }
     </div>
     <MainSlider
       snapshotLength={snapshotsLength}

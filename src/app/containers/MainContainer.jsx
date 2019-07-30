@@ -12,6 +12,7 @@ class MainContainer extends Component {
       snapshotIndex: 0,
       currentIndex: null,
       port: null,
+      playing: false,
     };
     this.handleChangeSnapshot = this.handleChangeSnapshot.bind(this);
     this.handleSendSnapshot = this.handleSendSnapshot.bind(this);
@@ -64,13 +65,21 @@ class MainContainer extends Component {
 
   playForward() {
     var play = setInterval(() => {
-      const { snapshots, snapshotIndex } = this.state;
-      if (snapshotIndex < snapshots.length - 1) {
-        const newIndex = snapshotIndex + 1;
-        this.handleJumpSnapshot(newIndex);
-        this.setState({ snapshotIndex: newIndex });
-      } else clearInterval(play);
+      const { snapshots, snapshotIndex, playing } = this.state;
+      if(!playing){
+        if (snapshotIndex < snapshots.length - 1) {
+          const newIndex = snapshotIndex + 1;
+          this.handleJumpSnapshot(newIndex);
+          this.setState({ snapshotIndex: newIndex, playing: true });
+        } else {
+          this.setState({ playing: false})
+          clearInterval(play);
+        }
+      } else {
+        clearInterval(play);
+      }
     }, 1000)
+
     play();
   }
 
@@ -124,7 +133,7 @@ class MainContainer extends Component {
   }
 
   render() {
-    const { snapshots, snapshotIndex } = this.state;
+    const { snapshots, snapshotIndex, playing } = this.state;
     return (
       <div className="main-container">
         <HeadContainer />
@@ -145,6 +154,7 @@ class MainContainer extends Component {
             moveBackward={this.moveBackward}
             moveForward={this.moveForward}
             playForward={this.playForward}
+            playing={playing}
           />
         </div>
       </div>
