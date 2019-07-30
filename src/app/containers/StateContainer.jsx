@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { MemoryRouter as Router, Route, NavLink } from 'react-router-dom';
+import {
+  MemoryRouter as Router, Route, NavLink, Switch,
+} from 'react-router-dom';
 import Tree from '../components/Tree';
 import Chart from '../components/Chart';
 
@@ -14,15 +16,17 @@ class StateContainer extends Component {
       <Router>
         <div className="state-container">
           <div className="navbar">
-            <NavLink className="router-link" activeClassName="is-active" to="/tree">
+            <NavLink className="router-link" activeClassName="is-active" exact to="/">
               Tree
             </NavLink>
-            <NavLink className="router-link" activeClassName="is-active" to="/chart">
+            <NavLink className="router-link" activeClassName="is-active" exact to="/chart">
               Chart
             </NavLink>
           </div>
-          <Route path="/tree" render={() => <Tree snapshot={snapshot} />} />
-          <Route path="/chart" render={() => <Chart snapshot={snapshot} />} />
+          <Switch>
+            <Route path="/chart" render={() => <Chart snapshot={snapshot} />} />
+            <Route path="/" render={() => <Tree snapshot={snapshot} />} />
+          </Switch>
         </div>
       </Router>
     );

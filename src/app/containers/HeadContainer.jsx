@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 
 class HeadContainer extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    console.log(this);
   }
 
   render() {
-    return <div className="head-container">HeadContainer</div>;
+    return <div className="head-container" />;
   }
 }
 
