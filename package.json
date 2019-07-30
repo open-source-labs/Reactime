@@ -45,6 +45,7 @@
     "webpack-cli": "^3.3.6"
   },
   "dependencies": {
+    "auto-bind": "^2.1.0",
     "prop-types": "^15.7.2",
     "rc-slider": "^8.6.13",
     "rc-tooltip": "^3.7.3",
