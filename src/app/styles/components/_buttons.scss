@@ -45,11 +45,9 @@
   margin: 7px;
 }
 
-.lock-button {
-  @extend %button-shared;
-}
-
-.pause-button {
+.lock-button,
+.pause-button,
+.persist-button {
   @extend %button-shared;
 }
 
