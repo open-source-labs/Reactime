@@ -32,7 +32,7 @@ class ActionContainer extends Component {
     }
     return (
       <div className="action-container">
-        <div className="action-component">
+        <div className="action-component exclude">
           <div className="empty-button" onClick={emptySnapshot}>
             emptySnapshot
           </div>
