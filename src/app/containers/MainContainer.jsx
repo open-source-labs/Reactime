@@ -41,7 +41,7 @@ class MainContainer extends Component {
         }
         case 'initialConnectSnapshot': {
           const { snapshots, mode } = payload;
-          const snapshotIndex = payload.length - 1;
+          const snapshotIndex = snapshots.length - 1;
           this.setState({ snapshots, snapshotIndex, mode });
           break;
         }
