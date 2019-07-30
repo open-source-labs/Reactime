@@ -3,23 +3,26 @@ import PropTypes from 'prop-types';
 import MainSlider from '../components/MainSlider';
 
 const TravelContainer = ({
-  playForward,
   moveBackward,
   moveForward,
   snapshotsLength,
   handleChangeSnapshot,
   handleJumpSnapshot,
   snapshotIndex,
+  play,
+  playing,
+  pause,
 }) => (
   <div className="travel-container">
-    <div className="play-button" onClick={playForward}>
-      play
+    <div className="play-button" onClick={play}>
+      { playing ? 'Pause': 'Play' }
     </div>
     <MainSlider
       snapshotLength={snapshotsLength}
       handleChangeSnapshot={handleChangeSnapshot}
       snapshotIndex={snapshotIndex}
       handleJumpSnapshot={handleJumpSnapshot}
+      pause={pause}
     />
     <div className="backward-button" onClick={moveBackward}>
       {'<'}
@@ -31,7 +34,8 @@ const TravelContainer = ({
 );
 
 TravelContainer.propTypes = {
-  playForward: PropTypes.func.isRequired,
+  pause: PropTypes.func.isRequried,
+  play: PropTypes.func.isRequired,
   moveBackward: PropTypes.func.isRequired,
   moveForward: PropTypes.func.isRequired,
   snapshotsLength: PropTypes.number.isRequired,
