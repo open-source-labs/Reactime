@@ -95,7 +95,8 @@ class MainContainer extends Component {
     port.postMessage({ action: 'emptySnap' });
   }
 
-  // change the snapshot index, this will change the state shown in the state container but won't change the DOM
+  // change the snapshot index
+  // this will change the state shown in the state container but won't change the DOM
   handleChangeSnapshot(snapshotIndex) {
     // snapshotIndex
     // --> 1. affects the action that is highlighted
