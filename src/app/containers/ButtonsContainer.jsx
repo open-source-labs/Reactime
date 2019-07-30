@@ -1,40 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-const autoBind = require('auto-bind');
+const ButtonsContainer = ({ mode: { paused, locked }, toggleMode }) => (
+  <div className="buttons-container">
+    <div className="pause-button" onClick={() => toggleMode('paused')}>{(paused) ? 'Resume' : 'Pause'}</div>
+    <div className="lock-button" onClick={() => toggleMode('locked')}>{(locked) ? 'Unlock' : 'Lock'}</div>
+  </div>
+);
 
-class ButtonsContainer extends Component {
-  constructor(props) {
-    super(props);
+ButtonsContainer.propTypes = {
+  toggleMode: PropTypes.func.isRequired,
+  mode: PropTypes.shape({
+    paused: PropTypes.bool,
+    locked: PropTypes.bool,
+  }).isRequired,
+};
 
-    this.state = {
-      paused: false,
-      locked: false,
-    };
-
-    autoBind(this);
-  }
-
-  togglePause(port) {
-    const { paused } = this.state;
-    port.postMessage({ action: 'setPause', payload: !paused });
-    this.setState({ paused: !paused });
-  }
-
-  toggleLock(port) {
-    const { locked } = this.state;
-    port.postMessage({ action: 'setLock', payload: !locked });
-    this.setState({ locked: !locked });
-  }
-
-  render() {
-    const { paused, locked } = this.state;
-    const { port } = this.props;
-    return (
-      <div className="buttons-container">
-        <div className="pause-button" onClick={() => this.togglePause(port)}>{(paused) ? 'Resume' : 'Pause'}</div>
-        <div className="lock-button" onClick={() => this.toggleLock(port)}>{(locked) ? 'Unlock' : 'Lock'}</div>
-      </div>
-    );
-  }
-}
 export default ButtonsContainer;
