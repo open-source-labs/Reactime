@@ -13,24 +13,40 @@ class MainContainer extends Component {
     this.state = {
       snapshots: [],
       snapshotIndex: 0,
-      currentIndex: null,
       port: null,
+      mode: {
+        locked: false,
+        paused: false,
+        persist: false,
+      },
     };
 
     autoBind(this);
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
     // open connection with background script
     const port = chrome.runtime.connect();
 
     // listen for a message containing snapshots from the background script
-    port.onMessage.addListener((snapshots) => {
-      const snapshotIndex = snapshots.length - 1;
+    port.onMessage.addListener((message) => {
+      const { action, payload } = message;
+      switch (action) {
+        case 'sendSnapshots': {
+          const snapshotIndex = payload.length - 1;
 
-      // set state with the information received from the background script
-      this.setState({ snapshots, snapshotIndex });
+          // set state with the information received from the background script
+          this.setState({ snapshots: payload, snapshotIndex });
+          break;
+        }
+        case 'initialConnectSnapshot': {
+          const { snapshots, mode } = payload;
+          const snapshotIndex = snapshots.length - 1;
+          this.setState({ snapshots, snapshotIndex, mode });
+          break;
+        }
+        default:
+      }
     });
 
     // console log if the port with background script disconnects
@@ -78,7 +94,8 @@ class MainContainer extends Component {
     port.postMessage({ action: 'emptySnap' });
   }
 
-  // change the snapshot index, this will change the state shown in the state container but won't change the DOM
+  // change the snapshot index
+  // this will change the state shown in the state container but won't change the DOM
   handleChangeSnapshot(snapshotIndex) {
     // snapshotIndex
     // --> 1. affects the action that is highlighted
@@ -88,12 +105,31 @@ class MainContainer extends Component {
 
   handleJumpSnapshot(snapshotIndex) {
     const { snapshots, port } = this.state;
-    this.setState({ currentIndex: snapshotIndex });
     port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
   }
 
+  toggleMode(targetMode) {
+    const { mode, mode: { locked, paused, persist }, port } = this.state;
+    switch (targetMode) {
+      case 'paused':
+        port.postMessage({ action: 'setPause', payload: !paused });
+        mode.paused = !paused;
+        break;
+      case 'locked':
+        port.postMessage({ action: 'setLock', payload: !locked });
+        mode.locked = !locked;
+        break;
+      case 'persist':
+        port.postMessage({ action: 'setPersist', payload: !locked });
+        mode.persist = !persist;
+        break;
+      default:
+    }
+    this.setState({ mode });
+  }
+
   render() {
-    const { snapshots, snapshotIndex, port } = this.state;
+    const { snapshots, snapshotIndex, mode } = this.state;
     return (
       <div className="main-container">
         <HeadContainer />
@@ -117,7 +153,7 @@ class MainContainer extends Component {
             playForward={this.playForward}
             playing={playing}
           />
-          <ButtonsContainer port={port} />
+          <ButtonsContainer mode={mode} toggleMode={this.toggleMode} />
         </div>
       </div>
     );
