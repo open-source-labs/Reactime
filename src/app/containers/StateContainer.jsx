@@ -10,7 +10,7 @@ const StateContainer = ({ snapshot }) => (
   <Router>
     <div className="state-container">
       <div className="navbar">
-        <NavLink className="router-link" activeClassName="is-active" to="/">
+        <NavLink className="router-link" activeClassName="is-active" exact to="/">
           Tree
         </NavLink>
         <NavLink className="router-link" activeClassName="is-active" to="/chart">
@@ -27,13 +27,8 @@ const StateContainer = ({ snapshot }) => (
 
 StateContainer.propTypes = {
   snapshot: PropTypes.shape({
-    state: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.object,
-    ]),
-    children: PropTypes.arrayOf(
-      PropTypes.object,
-    ),
+    state: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    children: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
 };
 

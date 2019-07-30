@@ -19,6 +19,7 @@ class MainContainer extends Component {
       snapshotIndex: 0,
       port: null,
       playing: false,
+      playSpeed: 1000,
       mode: {
         locked: false,
         paused: false,
@@ -69,7 +70,7 @@ class MainContainer extends Component {
     if (snapshots.length > 0 && snapshotIndex > 0) {
       const newIndex = snapshotIndex - 1;
       // second callback parameter of setState to invoke handleJumpSnapshot
-      this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex) );
+      this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex));
     }
   }
 
@@ -78,34 +79,35 @@ class MainContainer extends Component {
     this.pause();
     if (snapshotIndex < snapshots.length - 1) {
       const newIndex = snapshotIndex + 1;
-      this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex) );
+      this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex));
     }
   }
 
-  play() {
-    globalPlaying = !globalPlaying
-    this.setState({playing: globalPlaying}, () => {
-      if(this.state.playing){
+  play(speed = 1000) {
+    globalPlaying = !globalPlaying;
+    this.setState({ playing: globalPlaying }, () => {
+      const { playing } = this.state;
+      if (playing) {
         intervalId = setInterval(() => {
           const { snapshots, snapshotIndex } = this.state;
-            if (snapshotIndex < snapshots.length - 1) {
-                const newIndex = snapshotIndex + 1;
-                this.setState({ snapshotIndex: newIndex}, this.handleJumpSnapshot(newIndex) );
-            } else {
-                // clear interval when play reaches the end
-                globalPlaying = false;
-                clearInterval(intervalId);
-                this.setState({ playing: false })
-              }
-        }, 1000);
+          if (snapshotIndex < snapshots.length - 1) {
+            const newIndex = snapshotIndex + 1;
+            this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex));
+          } else {
+            // clear interval when play reaches the end
+            globalPlaying = false;
+            clearInterval(intervalId);
+            this.setState({ playing: false });
+          }
+        }, speed);
       } else {
         clearInterval(intervalId);
       }
-    })
+    });
   }
 
   pause() {
-    this.setState({playing: false}, clearInterval(intervalId))
+    this.setState({ playing: false }, clearInterval(intervalId));
   }
 
   emptySnapshot() {
@@ -129,7 +131,11 @@ class MainContainer extends Component {
   }
 
   toggleMode(targetMode) {
-    const { mode, mode: { locked, paused, persist }, port } = this.state;
+    const {
+      mode,
+      mode: { locked, paused, persist },
+      port,
+    } = this.state;
     switch (targetMode) {
       case 'paused':
         port.postMessage({ action: 'setPause', payload: !paused });
@@ -149,7 +155,9 @@ class MainContainer extends Component {
   }
 
   render() {
-    const { snapshots, snapshotIndex, mode, playing } = this.state;
+    const {
+      snapshots, snapshotIndex, mode, playing, playSpeed,
+    } = this.state;
     return (
       <div className="main-container">
         <HeadContainer />
@@ -170,8 +178,9 @@ class MainContainer extends Component {
             moveBackward={this.moveBackward}
             moveForward={this.moveForward}
             play={this.play}
-            playing = {playing}
-            pause = {this.pause}
+            pause={this.pause}
+            playing={playing}
+            playSpeed={playSpeed}
           />
           <ButtonsContainer mode={mode} toggleMode={this.toggleMode} />
         </div>

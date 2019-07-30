@@ -11,27 +11,38 @@ const TravelContainer = ({
   snapshotIndex,
   play,
   playing,
+  playSpeed,
   pause,
-}) => (
-  <div className="travel-container">
-    <div className="play-button" onClick={play}>
-      { playing ? 'Pause': 'Play' }
+}) => {
+  const options = ['0.5x', '1.0x', '2.0x'];
+  const defaultOption = options[0];
+  return (
+    <div className="travel-container">
+      <div
+        className="play-button"
+        onClick={() => {
+          play(300);
+          console.log('play clicked');
+        }}
+      >
+        {playing ? 'Pause' : 'Play'}
+      </div>
+      <MainSlider
+        snapshotLength={snapshotsLength}
+        handleChangeSnapshot={handleChangeSnapshot}
+        snapshotIndex={snapshotIndex}
+        handleJumpSnapshot={handleJumpSnapshot}
+        pause={pause}
+      />
+      <div className="backward-button" onClick={moveBackward}>
+        {'<'}
+      </div>
+      <div className="forward-button" onClick={moveForward}>
+        {'>'}
+      </div>
     </div>
-    <MainSlider
-      snapshotLength={snapshotsLength}
-      handleChangeSnapshot={handleChangeSnapshot}
-      snapshotIndex={snapshotIndex}
-      handleJumpSnapshot={handleJumpSnapshot}
-      pause={pause}
-    />
-    <div className="backward-button" onClick={moveBackward}>
-      {'<'}
-    </div>
-    <div className="forward-button" onClick={moveForward}>
-      {'>'}
-    </div>
-  </div>
-);
+  );
+};
 
 TravelContainer.propTypes = {
   pause: PropTypes.func.isRequried,
