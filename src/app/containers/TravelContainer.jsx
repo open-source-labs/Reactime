@@ -1,5 +1,5 @@
-import React from 'react';
-import MainSlider from '../components/MainSlider'
+import React, { Component } from 'react';
+import MainSlider from '../components/MainSlider';
 
 const TravelContainer = ({
   playForward,

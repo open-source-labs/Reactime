@@ -12,6 +12,7 @@ class MainContainer extends Component {
       snapshotIndex: 0,
       currentIndex: null,
       port: null,
+      pause: false,
     };
     this.handleChangeSnapshot = this.handleChangeSnapshot.bind(this);
     this.handleSendSnapshot = this.handleSendSnapshot.bind(this);
@@ -65,18 +66,22 @@ class MainContainer extends Component {
   playForward() {
     var play = setInterval(() => {
       const { snapshots, snapshotIndex } = this.state;
-      if (snapshotIndex < snapshots.length - 1) {
-        const newIndex = snapshotIndex + 1;
-        this.handleJumpSnapshot(newIndex);
-        this.setState({ snapshotIndex: newIndex });
-      } else clearInterval(play);
+        if (snapshotIndex < snapshots.length - 1 ) {
+          const newIndex = snapshotIndex + 1;
+          this.handleJumpSnapshot(newIndex);
+          this.setState({ snapshotIndex: newIndex});
+        } else {
+          // this.setState({ playing: false });
+          clearInterval(play);
+        }
     }, 1000)
+
     play();
   }
 
   emptySnapshot() {
-    const { port } = this.state;
-    this.setState({ snapshots: [], snapshotIndex: 0 });
+    const { port, snapshots } = this.state;
+    this.setState({ snapshots: [snapshots[0]], snapshotIndex: 0 });
     port.postMessage({ action: 'emptySnap' });
   }
 
@@ -124,7 +129,7 @@ class MainContainer extends Component {
   }
 
   render() {
-    const { snapshots, snapshotIndex } = this.state;
+    const { snapshots, snapshotIndex, playing } = this.state;
     return (
       <div className="main-container">
         <HeadContainer />
@@ -138,6 +143,7 @@ class MainContainer extends Component {
           />
           <StateContainer snapshot={snapshots[snapshotIndex]} />
           <TravelContainer
+            playing = {playing}
             snapshotsLength={snapshots.length}
             handleChangeSnapshot={this.handleChangeSnapshot}
             handleJumpSnapshot={this.handleJumpSnapshot}
