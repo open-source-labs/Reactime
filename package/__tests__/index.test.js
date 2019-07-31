@@ -1,3 +1,5 @@
+import { shallow } from 'enzyme';
+
 const index = require('../index');
 
 jest.mock('../timeJump');
@@ -25,4 +27,20 @@ describe('unit testing for index.js', () => {
     // iterate ${calls} amount of times
     [...Array(calls).keys()].forEach(() => global.postMessage({ action: 'jumpToSnap', payload: ['test'] }, '*'));
   });
-});
+
+}); 
+
+describe('testing the emptySnapshot button', () => {
+  test('emptySnapshot button should delete all newly created snapshots', () => {
+    const mockCb = jest.fn();
+
+    const snapshots = shallow(<div>snapshot</div>)
+    const parentComponent = shallow(<snapshots></snapshots><snapshots></snapshots>)
+
+    const button = shallow((<Button onClick= { mockCb }>Empty Snapshots</Button>));
+
+    button.find('button').simulate('click');
+
+    expect(mockFuncs.length).not.toEqual(1)
+  });
+})
