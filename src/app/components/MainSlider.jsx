@@ -38,6 +38,7 @@ class mainSlider extends Component {
             index = index === -1 ? 0 : index;
             this.props.handleChangeSnapshot(index);
             this.props.handleJumpSnapshot(index);
+            this.props.pause();
           }}
           handle={handle}
         />
