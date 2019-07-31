@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import MainSlider from '../components/MainSlider';
 import Dropdown from '../components/Dropdown';
 
-<<<<<<< HEAD
 const options = [
   { value: 2000, label: '0.5x' },
   { value: 1000, label: '1.0x' },
@@ -63,38 +62,6 @@ class TravelContainer extends Component {
     );
   }
 }
-=======
-const TravelContainer = ({
-  moveBackward,
-  moveForward,
-  snapshotsLength,
-  handleChangeSnapshot,
-  handleJumpSnapshot,
-  snapshotIndex,
-  play,
-  playing,
-  pause,
-}) => (
-  <div className="travel-container">
-    <div className="play-button" onClick={play}>
-      {playing ? 'Pause' : 'Play'}
-    </div>
-    <MainSlider
-      snapshotLength={snapshotsLength}
-      handleChangeSnapshot={handleChangeSnapshot}
-      snapshotIndex={snapshotIndex}
-      handleJumpSnapshot={handleJumpSnapshot}
-      pause={pause}
-    />
-    <div className="backward-button" onClick={moveBackward}>
-      {'<'}
-    </div>
-    <div className="forward-button" onClick={moveForward}>
-      {'>'}
-    </div>
-  </div>
-);
->>>>>>> dev
 
 TravelContainer.propTypes = {
   pause: PropTypes.func.isRequired,
