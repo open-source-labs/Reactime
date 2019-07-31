@@ -50,11 +50,10 @@
     "rc-slider": "^8.6.13",
     "rc-tooltip": "^3.7.3",
     "react": "^16.8.6",
-    "react-16-dropdown": "^0.3.1",
     "react-dom": "^16.8.6",
     "react-json-tree": "^0.11.2",
     "react-router-dom": "^5.0.1",
-    "redux-devtools-themes": "^1.0.0",
+    "react-select": "^3.0.4",
     "sass": "^1.22.7"
   }
 }

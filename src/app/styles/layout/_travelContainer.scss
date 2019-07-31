@@ -1,6 +1,34 @@
 .travel-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.react-select-container {
+  font-size: 12px;
+  min-width: 90px;
+  margin: 10px;
+}
+
+.react-select-container {
+  .react-select__control,
+  .react-select__menu {
+    background-color: $light-grey-one;
   }
+  .react-select__single-value {
+    color: white;
+  }
+  .react-select__option:hover {
+    background-color: #2683ff;
+  }
+  .react-select__option--is-selected,
+  .react-select__option--is-focused {
+    background-color: transparent;
+  }
+
+  // removes the cursor from blinking
+  .css-w8afj7-Input {
+    color: transparent;
+  }
+}
