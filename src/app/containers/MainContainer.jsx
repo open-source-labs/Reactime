@@ -69,7 +69,7 @@ class MainContainer extends Component {
     if (snapshots.length > 0 && snapshotIndex > 0) {
       const newIndex = snapshotIndex - 1;
       // second callback parameter of setState to invoke handleJumpSnapshot
-      this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex) );
+      this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex));
     }
   }
 
@@ -78,25 +78,25 @@ class MainContainer extends Component {
     this.pause();
     if (snapshotIndex < snapshots.length - 1) {
       const newIndex = snapshotIndex + 1;
-      this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex) );
+      this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex));
     }
   }
 
   play() {
     globalPlaying = !globalPlaying
-    this.setState({playing: globalPlaying}, () => {
-      if(this.state.playing){
+    this.setState({ playing: globalPlaying }, () => {
+      if (this.state.playing) {
         intervalId = setInterval(() => {
           const { snapshots, snapshotIndex } = this.state;
-            if (snapshotIndex < snapshots.length - 1) {
-                const newIndex = snapshotIndex + 1;
-                this.setState({ snapshotIndex: newIndex}, this.handleJumpSnapshot(newIndex) );
-            } else {
-                // clear interval when play reaches the end
-                globalPlaying = false;
-                clearInterval(intervalId);
-                this.setState({ playing: false })
-              }
+          if (snapshotIndex < snapshots.length - 1) {
+            const newIndex = snapshotIndex + 1;
+            this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex));
+          } else {
+            // clear interval when play reaches the end
+            globalPlaying = false;
+            clearInterval(intervalId);
+            this.setState({ playing: false })
+          }
         }, 1000);
       } else {
         clearInterval(intervalId);
@@ -105,7 +105,7 @@ class MainContainer extends Component {
   }
 
   pause() {
-    this.setState({playing: false}, clearInterval(intervalId))
+    this.setState({ playing: false }, clearInterval(intervalId))
   }
 
   emptySnapshot() {
@@ -126,6 +126,28 @@ class MainContainer extends Component {
   handleJumpSnapshot(snapshotIndex) {
     const { snapshots, port } = this.state;
     port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
+  }
+
+  importSnapshots() {
+    const { snapshots } = this.state;
+    const fileDownload = document.createElement('a');
+    fileDownload.style.display = 'none';
+    document.body.appendChild(fileDownload);
+    fileDownload.href = URL.createObjectURL(
+      new Blob([JSON.stringify(snapshots)], { type: 'application/json' }),
+    );
+    fileDownload.setAttribute('download', 'snapshot.json');
+    fileDownload.click();
+    URL.revokeObjectURL(fileDownload.href);
+    document.body.removeChild(fileDownload);
+  }
+
+  exportSnapshots() {
+    const fileUpload = document.createElement('input');
+    fileUpload.setAttribute('type', 'file');
+    
+    fileUpload.click();
+    this;
   }
 
   toggleMode(targetMode) {
@@ -170,10 +192,15 @@ class MainContainer extends Component {
             moveBackward={this.moveBackward}
             moveForward={this.moveForward}
             play={this.play}
-            playing = {playing}
-            pause = {this.pause}
+            playing={playing}
+            pause={this.pause}
           />
-          <ButtonsContainer mode={mode} toggleMode={this.toggleMode} />
+          <ButtonsContainer
+            mode={mode}
+            toggleMode={this.toggleMode}
+            importSnapshots={this.importSnapshots}
+            exportSnapshots={this.exportSnapshots}
+          />
         </div>
       </div>
     );
