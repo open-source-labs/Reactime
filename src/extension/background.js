@@ -15,7 +15,7 @@ chrome.runtime.onConnect.addListener((port) => {
   // send it to devtools as soon as connection to devtools is made
   if (snapshotArr.length > 0) {
     bg.postMessage({
-      action: 'initialConnectSnapshot',
+      action: 'initialConnectSnapshots',
       payload: {
         snapshots: snapshotArr,
         mode,
@@ -57,28 +57,34 @@ chrome.runtime.onMessage.addListener((request) => {
   switch (action) {
     case 'tabReload':
       firstSnapshot = true;
+      mode.locked = false;
+      mode.paused = false;
       if (!persist) snapshotArr = [];
       break;
     case 'recordSnap':
-      // don't do anything for the first snapshot if current mode is persist
-      if (persist && firstSnapshot) {
+      if (firstSnapshot) {
         firstSnapshot = false;
+        // don't add anything to snapshot storage if mode is persisting for the initial snapshot
+        if (!persist) snapshotArr.push(request.payload);
+        bg.postMessage({
+          action: 'initialConnectSnapshots',
+          payload: {
+            snapshots: snapshotArr,
+            mode,
+          },
+        });
         break;
       }
-      firstSnapshot = false;
       snapshotArr.push(request.payload);
-      // if port is not null, send a message to devtools
-      if (bg) {
-        // TODO:
-        // get active tab id
-        // get snapshot arr from tab object
+      // TODO:
+      // get active tab id
+      // get snapshot arr from tab object
 
-        // send message to devtools
-        bg.postMessage({
-          action: 'sendSnapshots',
-          payload: snapshotArr,
-        });
-      }
+      // send message to devtools
+      bg.postMessage({
+        action: 'sendSnapshots',
+        payload: snapshotArr,
+      });
       break;
     default:
   }
