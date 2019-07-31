@@ -14,6 +14,7 @@ let intervalId = null;
 class MainContainer extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       snapshots: [],
       snapshotIndex: 0,
@@ -127,6 +128,40 @@ class MainContainer extends Component {
     port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
   }
 
+  importSnapshots() {
+    const { snapshots } = this.state;
+
+    // create invisible download anchor link
+    const fileDownload = document.createElement('a');
+
+    // set file in anchor link
+    fileDownload.href = URL.createObjectURL(
+      new Blob([JSON.stringify(snapshots)], { type: 'application/json' }),
+    );
+
+    // set anchor as file download and click it
+    fileDownload.setAttribute('download', 'snapshot.json');
+    fileDownload.click();
+
+    // remove file url
+    URL.revokeObjectURL(fileDownload.href);
+  }
+
+  exportSnapshots() {
+    const fileUpload = document.createElement('input');
+    fileUpload.setAttribute('type', 'file');
+
+    fileUpload.onchange = (event) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.setState({ snapshots: JSON.parse(reader.result) });
+      };
+      reader.readAsText(event.target.files[0]);
+    };
+
+    fileUpload.click();
+  }
+
   toggleMode(targetMode) {
     const { mode, mode: { locked, paused, persist }, port } = this.state;
     switch (targetMode) {
@@ -172,7 +207,12 @@ class MainContainer extends Component {
             playing={playing}
             pause={this.pause}
           />
-          <ButtonsContainer mode={mode} toggleMode={this.toggleMode} />
+          <ButtonsContainer
+            mode={mode}
+            toggleMode={this.toggleMode}
+            importSnapshots={this.importSnapshots}
+            exportSnapshots={this.exportSnapshots}
+          />
         </div>
       </div>
     );
