@@ -3,14 +3,26 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import MainSlider from '../components/MainSlider';
 
+const options = [
+  { value: '2000', label: '0.5x' },
+  { value: '1000', label: '1.0x' },
+  { value: '500', label: '2.0x' },
+];
+
 class TravelContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = { playSpeed: 1000 };
+    this.state = { playSpeed: 1000, selectedOption: options[1] };
+    this.handleChangeSpeed = this.handleChangeSpeed.bind(this);
+  }
+
+  handleChangeSpeed(selectedOption) {
+    const playSpeed = parseInt(selectedOption.value, 10);
+    this.setState({ selectedOption, playSpeed });
   }
 
   render() {
-    const { playSpeed } = this.state;
+    const { playSpeed, selectedOption } = this.state;
     const {
       moveBackward,
       moveForward,
@@ -23,22 +35,9 @@ class TravelContainer extends Component {
       pause,
     } = this.props;
 
-    const options = [
-      { value: '2000', label: '0.5x' },
-      { value: '1000', label: '1.0x' },
-      { value: '500', label: '2.0x' },
-    ];
-    const selectedOption = options[0];
-
     return (
       <div className="travel-container">
-        <div
-          className="play-button"
-          onClick={() => {
-            play(playSpeed);
-            console.log('play clicked');
-          }}
-        >
+        <div className="play-button" onClick={() => play(playSpeed)}>
           {playing ? 'Pause' : 'Play'}
         </div>
         <MainSlider
@@ -54,13 +53,14 @@ class TravelContainer extends Component {
         <div className="forward-button" role="button" onClick={moveForward}>
           {'>'}
         </div>
-        {/* <Select
-        value={selectedOption}
-        onChange={() => {
-          console.log('select => value changed');
-        }}
-        options={options}
-      /> */}
+        <Select
+          className="react-select-container"
+          classNamePrefix="react-select"
+          value={selectedOption}
+          onChange={this.handleChangeSpeed}
+          options={options}
+          menuPlacement="top"
+        />
       </div>
     );
   }

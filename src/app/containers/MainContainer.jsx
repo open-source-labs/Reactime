@@ -19,7 +19,6 @@ class MainContainer extends Component {
       snapshotIndex: 0,
       port: null,
       playing: false,
-      playSpeed: 1000,
       mode: {
         locked: false,
         paused: false,
