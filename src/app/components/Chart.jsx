@@ -8,12 +8,40 @@ import * as d3 from 'd3';
 class Chart extends Component {
     constructor(props){
         super(props);
-        console.log('props', this.props.snapshot);
+        console.log('constructor')
     }
 
+    // componentWillMount(){
+    //     const {snapshot} = this.props;
+    //     this.setState({ d3Tree: JSON.parse(JSON.stringify(snapshot))})
+    // }
+    
     componentDidMount(){
-        // const svg = d3.select(this.refs.anchor);
+        console.log('componentDidMount')
+        this.removed3Tree();
+        this.maked3Tree();
+    }
+    
+    componentWillUpdate(){
+        console.log('componentWillUpdate')
 
+        console.log(this.props.snapshot)
+        this.removed3Tree();
+        this.maked3Tree();
+    }
+
+
+    removed3Tree(){
+        console.log('function removed3Tree')
+
+        const anchor = this.refs.anchor;
+        while(anchor.hasChildNodes()){
+            anchor.removeChild(anchor.lastChild);
+        }
+    }
+
+    maked3Tree(){
+        console.log('function maked3Tree')
 
         var margin = {top: 20, right: 120, bottom: 20, left: 120},
             width = 960 - margin.right - margin.left,
@@ -35,52 +63,14 @@ class Chart extends Component {
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        var flame = {
-            "name": "flare",
-            "test": "test",
-            "children": [
-            {
-            "name": "analytics",
-            "test": "test",
-            "children": [
-            {
-                "name": "cluster",
-                "test": "test",
-                "children": [
-                {"name": "AgglomerativeCluster", "size": 3938},
-                {"name": "CommunityStructure", "size": 3812},
-                {"name": "HierarchicalCluster", "size": 6714}
-                ]
-            },
-            {
-                "name": "graph",
-                "test": "test",
-                "children": [
-                {"name": "BetweennessCentrality", "size": 3534},
-                {"name": "LinkDistance", "size": 5731}
-                ]
-            }
-            ]
-            },
-            {
-            "name": "animate",
-            "test": "test",
-            "children": [
-            {"name": "Easing", "size": 17010},
-            {"name": "FunctionSequence", "size": 5842},
-            {"name": "Transitioner", "size": 19975},
-            {"name": "TransitionEvent", "size": 1116},
-            {"name": "Tween", "size": 6006}
-            ]
-            }
-            ]
-        };
 
-        root = this.props.snapshot;
+        root = JSON.parse(JSON.stringify(this.props.snapshot));
         root.x0 = height / 2;
         root.y0 = 0;
         
         function update(source) {
+            console.log('function update')
+
         
             // Compute the new tree layout.
             var nodes = tree.nodes(root).reverse(),
@@ -181,6 +171,7 @@ class Chart extends Component {
             update(d);
         }
         
+        // Show state on mouse over
         function mouseover(d) {
             d3.select(this).append("text")
                 .attr("class", "hover")
@@ -203,16 +194,20 @@ class Chart extends Component {
             }
         }
         
-        root.children.forEach(collapse);
+        // root.children.forEach(collapse);
         update(root);
         
-        d3.select(self.frameElement).style("height", "800px");
+        // d3.select(self.frameElement).style("height", "800px");
             
     }
 
     render(){
+        console.log('render')
+
+        // this.removed3Tree();
+        // this.maked3Tree();
         return (
-            <div ref="anchor">
+            <div ref="anchor" className={'d3Container'} width={'100%'}>
                 
             </div>
         )
