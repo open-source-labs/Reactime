@@ -24,7 +24,8 @@ module.exports = (snap, mode) => {
 
     function newSetState(state, callback = () => { }) {
       // dont do anything if state is locked
-      if (mode.locked) return;
+      // UNLESS we are currently jumping through time
+      if (mode.locked && !mode.jumping) return;
       // continue normal setState functionality, except add sending message middleware
       oldSetState(state, () => {
         updateSnapShotTree();

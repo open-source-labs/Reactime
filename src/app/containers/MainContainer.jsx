@@ -39,12 +39,11 @@ class MainContainer extends Component {
       switch (action) {
         case 'sendSnapshots': {
           const snapshotIndex = payload.length - 1;
-
           // set state with the information received from the background script
           this.setState({ snapshots: payload, snapshotIndex });
           break;
         }
-        case 'initialConnectSnapshot': {
+        case 'initialConnectSnapshots': {
           const { snapshots, mode } = payload;
           const snapshotIndex = snapshots.length - 1;
           this.setState({ snapshots, snapshotIndex, mode });
@@ -82,11 +81,18 @@ class MainContainer extends Component {
     }
   }
 
+<<<<<<< HEAD
   play(speed = 1000) {
     globalPlaying = !globalPlaying;
     this.setState({ playing: globalPlaying }, () => {
       const { playing } = this.state;
       if (playing) {
+=======
+  play() {
+    globalPlaying = !globalPlaying;
+    this.setState({ playing: globalPlaying }, () => {
+      if (this.state.playing) {
+>>>>>>> dev
         intervalId = setInterval(() => {
           const { snapshots, snapshotIndex } = this.state;
           if (snapshotIndex < snapshots.length - 1) {
@@ -96,9 +102,15 @@ class MainContainer extends Component {
             // clear interval when play reaches the end
             globalPlaying = false;
             clearInterval(intervalId);
+<<<<<<< HEAD
             this.setState({ playing: false });
           }
         }, speed);
+=======
+            this.setState({ playing: false })
+          }
+        }, 1000);
+>>>>>>> dev
       } else {
         clearInterval(intervalId);
       }
@@ -168,7 +180,7 @@ class MainContainer extends Component {
             handleJumpSnapshot={this.handleJumpSnapshot}
             emptySnapshot={this.emptySnapshot}
           />
-          <StateContainer snapshot={snapshots[snapshotIndex]} />
+          {(snapshots.length) ? <StateContainer snapshot={snapshots[snapshotIndex]} /> : null}
           <TravelContainer
             snapshotsLength={snapshots.length}
             snapshotIndex={snapshotIndex}
@@ -177,9 +189,14 @@ class MainContainer extends Component {
             moveBackward={this.moveBackward}
             moveForward={this.moveForward}
             play={this.play}
+<<<<<<< HEAD
             pause={this.pause}
             playing={playing}
             playSpeed={playSpeed}
+=======
+            playing={playing}
+            pause={this.pause}
+>>>>>>> dev
           />
           <ButtonsContainer mode={mode} toggleMode={this.toggleMode} />
         </div>
