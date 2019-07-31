@@ -40,15 +40,14 @@ class MainContainer extends Component {
       const { action, payload } = message;
       switch (action) {
         case 'sendSnapshots': {
-          const viewIndex = payload.length - 1;
-          const sliderIndex = viewIndex;
+          const sliderIndex = payload.length - 1;
           // set state with the information received from the background script
-          this.setState({ snapshots: payload, viewIndex, sliderIndex });
+          this.setState({ snapshots: payload, sliderIndex });
           break;
         }
         case 'initialConnectSnapshots': {
           const { snapshots, mode } = payload;
-          const viewIndex = snapshots.length - 1;
+          const viewIndex = 0;
           const sliderIndex = viewIndex;
           this.setState({ snapshots, mode, viewIndex, sliderIndex });
           break;

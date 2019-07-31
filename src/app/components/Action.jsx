@@ -14,7 +14,10 @@ const Action = (props) => {
       <div className="action-component-text">{index}</div>
       <div
         className="jump-button"
-        onClick={() => handleJumpSnapshot(index)}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleJumpSnapshot(index);
+        }}
         tabIndex={index}
         role="button"
       >
@@ -24,9 +27,11 @@ const Action = (props) => {
   );
 };
 
-// Action.propTypes = {
-//   selected: PropTypes.bool,
-//   index: PropTypes.number,
-// };
+Action.propTypes = {
+  selected: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  handleChangeSnapshot: PropTypes.func.isRequired,
+  handleJumpSnapshot: PropTypes.func.isRequired,
+};
 
 export default Action;
