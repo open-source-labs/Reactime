@@ -1,15 +1,12 @@
-console.log('contentScript running');
-
 // listening for messages from npm package
 window.addEventListener('message', (msg) => {
   // post initial Message to npm package
-  const { action, payload } = msg.data;
-  console.log('npm -> contentScript', msg.data);
+  const { action } = msg.data;
   if (action === 'recordSnap') chrome.runtime.sendMessage(msg.data);
 });
 
 // listening for messages from background.js
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request) => {
   // send the message to npm package
   const { action } = request;
   switch (action) {
@@ -29,4 +26,3 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.runtime.sendMessage({ action: 'tabReload' });
 
 window.postMessage({ action: 'contentScriptStarted' });
-console.log('contentScriptStarted msg sent');

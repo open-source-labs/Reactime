@@ -15,7 +15,7 @@ const TravelContainer = ({
 }) => (
   <div className="travel-container">
     <div className="play-button" onClick={play}>
-      { playing ? 'Pause': 'Play' }
+      {playing ? 'Pause' : 'Play'}
     </div>
     <MainSlider
       snapshotLength={snapshotsLength}
@@ -34,7 +34,7 @@ const TravelContainer = ({
 );
 
 TravelContainer.propTypes = {
-  pause: PropTypes.func.isRequried,
+  pause: PropTypes.func.isRequired,
   play: PropTypes.func.isRequired,
   moveBackward: PropTypes.func.isRequired,
   moveForward: PropTypes.func.isRequired,
@@ -42,5 +42,6 @@ TravelContainer.propTypes = {
   handleChangeSnapshot: PropTypes.func.isRequired,
   handleJumpSnapshot: PropTypes.func.isRequired,
   snapshotIndex: PropTypes.number.isRequired,
+  playing: PropTypes.bool.isRequired,
 };
 export default TravelContainer;
