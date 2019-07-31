@@ -14,6 +14,7 @@ let intervalId = null;
 class MainContainer extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       snapshots: [],
       snapshotIndex: 0,
@@ -129,24 +130,36 @@ class MainContainer extends Component {
 
   importSnapshots() {
     const { snapshots } = this.state;
+
+    // create invisible download anchor link
     const fileDownload = document.createElement('a');
-    fileDownload.style.display = 'none';
-    document.body.appendChild(fileDownload);
+
+    // set file in anchor link
     fileDownload.href = URL.createObjectURL(
       new Blob([JSON.stringify(snapshots)], { type: 'application/json' }),
     );
+
+    // set anchor as file download and click it
     fileDownload.setAttribute('download', 'snapshot.json');
     fileDownload.click();
+
+    // remove file url
     URL.revokeObjectURL(fileDownload.href);
-    document.body.removeChild(fileDownload);
   }
 
   exportSnapshots() {
     const fileUpload = document.createElement('input');
     fileUpload.setAttribute('type', 'file');
 
+    fileUpload.onchange = (event) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.setState({ snapshots: JSON.parse(reader.result) });
+      };
+      reader.readAsText(event.target.files[0]);
+    };
+
     fileUpload.click();
-    this;
   }
 
   toggleMode(targetMode) {
