@@ -17,7 +17,8 @@ class MainContainer extends Component {
 
     this.state = {
       snapshots: [],
-      snapshotIndex: 0,
+      sliderIndex: 0,
+      viewIndex: 0,
       port: null,
       playing: false,
       mode: {
@@ -39,15 +40,17 @@ class MainContainer extends Component {
       const { action, payload } = message;
       switch (action) {
         case 'sendSnapshots': {
-          const snapshotIndex = payload.length - 1;
+          const viewIndex = payload.length - 1;
+          const sliderIndex = viewIndex;
           // set state with the information received from the background script
-          this.setState({ snapshots: payload, snapshotIndex });
+          this.setState({ snapshots: payload, viewIndex, sliderIndex });
           break;
         }
         case 'initialConnectSnapshots': {
           const { snapshots, mode } = payload;
-          const snapshotIndex = snapshots.length - 1;
-          this.setState({ snapshots, snapshotIndex, mode });
+          const viewIndex = snapshots.length - 1;
+          const sliderIndex = viewIndex;
+          this.setState({ snapshots, mode, viewIndex, sliderIndex });
           break;
         }
         default:
@@ -64,21 +67,21 @@ class MainContainer extends Component {
   }
 
   moveBackward() {
-    const { snapshots, snapshotIndex } = this.state;
+    const { snapshots, sliderIndex } = this.state;
     this.pause();
-    if (snapshots.length > 0 && snapshotIndex > 0) {
-      const newIndex = snapshotIndex - 1;
+    if (snapshots.length > 0 && sliderIndex > 0) {
+      const newIndex = sliderIndex - 1;
       // second callback parameter of setState to invoke handleJumpSnapshot
-      this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex));
+      this.setState({ sliderIndex: newIndex }, this.handleJumpSnapshot(newIndex));
     }
   }
 
   moveForward() {
-    const { snapshots, snapshotIndex } = this.state;
+    const { snapshots, sliderIndex } = this.state;
     this.pause();
-    if (snapshotIndex < snapshots.length - 1) {
-      const newIndex = snapshotIndex + 1;
-      this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex));
+    if (sliderIndex < snapshots.length - 1) {
+      const newIndex = sliderIndex + 1;
+      this.setState({ sliderIndex: newIndex }, this.handleJumpSnapshot(newIndex));
     }
   }
 
@@ -88,10 +91,10 @@ class MainContainer extends Component {
       const { playing } = this.state;
       if (playing) {
         intervalId = setInterval(() => {
-          const { snapshots, snapshotIndex } = this.state;
-          if (snapshotIndex < snapshots.length - 1) {
-            const newIndex = snapshotIndex + 1;
-            this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex));
+          const { snapshots, sliderIndex } = this.state;
+          if (sliderIndex < snapshots.length - 1) {
+            const newIndex = sliderIndex + 1;
+            this.setState({ sliderIndex: newIndex }, this.handleJumpSnapshot(newIndex));
           } else {
             // clear interval when play reaches the end
             globalPlaying = false;
@@ -111,22 +114,22 @@ class MainContainer extends Component {
 
   emptySnapshot() {
     const { port, snapshots } = this.state;
-    this.setState({ snapshots: [snapshots[0]], snapshotIndex: 0 });
+    this.setState({ snapshots: [snapshots[0]], sliderIndex: 0, viewIndex: 0 });
     port.postMessage({ action: 'emptySnap' });
   }
 
-  // change the snapshot index
+  // change the view index
   // this will change the state shown in the state container but won't change the DOM
-  handleChangeSnapshot(snapshotIndex) {
-    // snapshotIndex
-    // --> 1. affects the action that is highlighted
-    // --> 2. moves the slider
-    this.setState({ snapshotIndex });
+  handleChangeSnapshot(viewIndex) {
+    this.setState({ viewIndex });
   }
 
-  handleJumpSnapshot(snapshotIndex) {
+  // changes the slider index
+  // this will change the dom but not the state shown in the state container
+  handleJumpSnapshot(sliderIndex) {
     const { snapshots, port } = this.state;
-    port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
+    port.postMessage({ action: 'jumpToSnap', payload: snapshots[sliderIndex] });
+    this.setState({ sliderIndex });
   }
 
   importSnapshots() {
@@ -189,7 +192,7 @@ class MainContainer extends Component {
 
   render() {
     const {
-      snapshots, snapshotIndex, mode, playing, playSpeed,
+      snapshots, viewIndex, sliderIndex, mode, playing, playSpeed,
     } = this.state;
     return (
       <div className="main-container">
@@ -197,15 +200,15 @@ class MainContainer extends Component {
         <div className="body-container">
           <ActionContainer
             snapshots={snapshots}
-            snapshotIndex={snapshotIndex}
+            viewIndex={viewIndex}
             handleChangeSnapshot={this.handleChangeSnapshot}
             handleJumpSnapshot={this.handleJumpSnapshot}
             emptySnapshot={this.emptySnapshot}
           />
-          {(snapshots.length) ? <StateContainer snapshot={snapshots[snapshotIndex]} /> : null}
+          {(snapshots.length) ? <StateContainer snapshot={snapshots[viewIndex]} /> : null}
           <TravelContainer
             snapshotsLength={snapshots.length}
-            snapshotIndex={snapshotIndex}
+            sliderIndex={sliderIndex}
             handleChangeSnapshot={this.handleChangeSnapshot}
             handleJumpSnapshot={this.handleJumpSnapshot}
             moveBackward={this.moveBackward}

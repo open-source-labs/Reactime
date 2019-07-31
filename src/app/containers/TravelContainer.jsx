@@ -29,7 +29,7 @@ class TravelContainer extends Component {
       snapshotsLength,
       handleChangeSnapshot,
       handleJumpSnapshot,
-      snapshotIndex,
+      sliderIndex,
       play,
       playing,
       pause,
@@ -43,7 +43,7 @@ class TravelContainer extends Component {
         <MainSlider
           snapshotLength={snapshotsLength}
           handleChangeSnapshot={handleChangeSnapshot}
-          snapshotIndex={snapshotIndex}
+          sliderIndex={sliderIndex}
           handleJumpSnapshot={handleJumpSnapshot}
           pause={pause}
         />
@@ -71,7 +71,7 @@ TravelContainer.propTypes = {
   snapshotsLength: PropTypes.number.isRequired,
   handleChangeSnapshot: PropTypes.func.isRequired,
   handleJumpSnapshot: PropTypes.func.isRequired,
-  snapshotIndex: PropTypes.number.isRequired,
+  sliderIndex: PropTypes.number.isRequired,
   playing: PropTypes.bool.isRequired,
 };
 export default TravelContainer;

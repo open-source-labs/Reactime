@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Slider from 'rc-slider';
 import Tooltip from 'rc-tooltip';
-
+import PropTypes from 'prop-types';
 
 const { Handle } = Slider;
 
@@ -23,27 +23,34 @@ const handle = (props) => {
   );
 };
 
-class mainSlider extends Component {
-  constructor(props) {
-    super(props);
-  }
+const MainSlider = ({
+  snapshotLength,
+  handleChangeSnapshot,
+  sliderIndex,
+  handleJumpSnapshot,
+  pause,
+}) =>
+  (
+    <Slider
+      min={0}
+      max={snapshotLength - 1}
+      value={sliderIndex}
+      onChange={(index) => {
+        const newIndex = index === -1 ? 0 : index;
+        handleChangeSnapshot(newIndex);
+        handleJumpSnapshot(newIndex);
+        pause();
+      }}
+      handle={handle}
+    />
+  );
 
-  render() {
-    return (
-        <Slider
-          min={0}
-          max={this.props.snapshotLength - 1}
-          value={this.props.snapshotIndex}
-          onChange={(index) => {
-            index = index === -1 ? 0 : index;
-            this.props.handleChangeSnapshot(index);
-            this.props.handleJumpSnapshot(index);
-            this.props.pause();
-          }}
-          handle={handle}
-        />
-    );
-  }
-}
+MainSlider.propTypes = {
+  snapshotLength: PropTypes.number.isRequired,
+  handleChangeSnapshot: PropTypes.func.isRequired,
+  sliderIndex: PropTypes.number.isRequired,
+  handleJumpSnapshot: PropTypes.func.isRequired,
+  pause: PropTypes.func.isRequired,
+};
 
-export default mainSlider;
+export default MainSlider;
