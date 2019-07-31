@@ -25,7 +25,6 @@ const handle = (props) => {
 
 const MainSlider = ({
   snapshotLength,
-  handleChangeSnapshot,
   sliderIndex,
   handleJumpSnapshot,
   pause,
@@ -37,7 +36,6 @@ const MainSlider = ({
       value={sliderIndex}
       onChange={(index) => {
         const newIndex = index === -1 ? 0 : index;
-        handleChangeSnapshot(newIndex);
         handleJumpSnapshot(newIndex);
         pause();
       }}
@@ -47,7 +45,6 @@ const MainSlider = ({
 
 MainSlider.propTypes = {
   snapshotLength: PropTypes.number.isRequired,
-  handleChangeSnapshot: PropTypes.func.isRequired,
   sliderIndex: PropTypes.number.isRequired,
   handleJumpSnapshot: PropTypes.func.isRequired,
   pause: PropTypes.func.isRequired,

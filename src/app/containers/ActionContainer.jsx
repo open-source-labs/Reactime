@@ -28,9 +28,9 @@ const ActionContainer = ({
   return (
     <div className="action-container">
       <div className="action-component exclude">
-        <div className="empty-button" onClick={emptySnapshot}>
+        <button className="empty-button" onClick={emptySnapshot} type="button">
           emptySnapshot
-        </div>
+        </button>
       </div>
       <div>{actionsArr}</div>
     </div>

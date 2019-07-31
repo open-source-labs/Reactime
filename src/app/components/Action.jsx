@@ -12,17 +12,17 @@ const Action = (props) => {
       role="presentation"
     >
       <div className="action-component-text">{index}</div>
-      <div
+      <button
         className="jump-button"
         onClick={(e) => {
           e.stopPropagation();
           handleJumpSnapshot(index);
         }}
         tabIndex={index}
-        role="button"
+        type="button"
       >
         Jump
-      </div>
+      </button>
     </div>
   );
 };

@@ -27,7 +27,6 @@ class TravelContainer extends Component {
       moveBackward,
       moveForward,
       snapshotsLength,
-      handleChangeSnapshot,
       handleJumpSnapshot,
       sliderIndex,
       play,
@@ -37,22 +36,21 @@ class TravelContainer extends Component {
 
     return (
       <div className="travel-container">
-        <div className="play-button" onClick={() => play(playSpeed)}>
+        <button className="play-button" onClick={() => play(playSpeed)} type="button">
           {playing ? 'Pause' : 'Play'}
-        </div>
+        </button>
         <MainSlider
           snapshotLength={snapshotsLength}
-          handleChangeSnapshot={handleChangeSnapshot}
           sliderIndex={sliderIndex}
           handleJumpSnapshot={handleJumpSnapshot}
           pause={pause}
         />
-        <div className="backward-button" role="button" onClick={moveBackward}>
+        <button className="backward-button" onClick={moveBackward} type="button">
           {'<'}
-        </div>
-        <div className="forward-button" role="button" onClick={moveForward}>
+        </button>
+        <button className="forward-button" onClick={moveForward} type="button">
           {'>'}
-        </div>
+        </button>
         <Dropdown
           options={options}
           selectedOption={selectedOption}
@@ -69,7 +67,6 @@ TravelContainer.propTypes = {
   moveBackward: PropTypes.func.isRequired,
   moveForward: PropTypes.func.isRequired,
   snapshotsLength: PropTypes.number.isRequired,
-  handleChangeSnapshot: PropTypes.func.isRequired,
   handleJumpSnapshot: PropTypes.func.isRequired,
   sliderIndex: PropTypes.number.isRequired,
   playing: PropTypes.bool.isRequired,

@@ -208,7 +208,6 @@ class MainContainer extends Component {
           <TravelContainer
             snapshotsLength={snapshots.length}
             sliderIndex={sliderIndex}
-            handleChangeSnapshot={this.handleChangeSnapshot}
             handleJumpSnapshot={this.handleJumpSnapshot}
             moveBackward={this.moveBackward}
             moveForward={this.moveForward}

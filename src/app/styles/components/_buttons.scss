@@ -29,8 +29,8 @@
 
 .play-button {
   @extend %button-shared;
-  width: 60px;
-  margin: 10px;
+  width: 100px;
+  margin: 0 1% 0 2%;
 }
 
 .backward-button {
@@ -54,6 +54,9 @@
 }
 
 %button-shared {
+  outline: none;
+  background-color: $brand-color;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;

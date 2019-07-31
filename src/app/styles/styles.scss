@@ -1,14 +1,12 @@
 .main-container {
   height: 100%;
   margin: 0 auto;
-  padding: 0 auto;
   background-color: $brand-color;
   overflow: hidden;
 }
 
 .body-container {
   height: 94%;
-  width: 100%;
   display: grid;
   grid-template-columns: 1fr 2fr;
   grid-template-rows: 8fr 1fr;
@@ -19,7 +17,6 @@
 }
 
 /* if extension width is less than 500px, stack the body containers */
-// this is not working for some reason
 @media (max-width: 500px) {
   .body-container {
     grid-template-rows: 3fr 5fr 1fr;
