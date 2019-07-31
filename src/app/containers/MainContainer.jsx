@@ -39,12 +39,11 @@ class MainContainer extends Component {
       switch (action) {
         case 'sendSnapshots': {
           const snapshotIndex = payload.length - 1;
-
           // set state with the information received from the background script
           this.setState({ snapshots: payload, snapshotIndex });
           break;
         }
-        case 'initialConnectSnapshot': {
+        case 'initialConnectSnapshots': {
           const { snapshots, mode } = payload;
           const snapshotIndex = snapshots.length - 1;
           this.setState({ snapshots, snapshotIndex, mode });
@@ -83,7 +82,7 @@ class MainContainer extends Component {
   }
 
   play() {
-    globalPlaying = !globalPlaying
+    globalPlaying = !globalPlaying;
     this.setState({ playing: globalPlaying }, () => {
       if (this.state.playing) {
         intervalId = setInterval(() => {
@@ -101,11 +100,11 @@ class MainContainer extends Component {
       } else {
         clearInterval(intervalId);
       }
-    })
+    });
   }
 
   pause() {
-    this.setState({ playing: false }, clearInterval(intervalId))
+    this.setState({ playing: false }, clearInterval(intervalId));
   }
 
   emptySnapshot() {
@@ -145,7 +144,7 @@ class MainContainer extends Component {
   exportSnapshots() {
     const fileUpload = document.createElement('input');
     fileUpload.setAttribute('type', 'file');
-    
+
     fileUpload.click();
     this;
   }
@@ -183,7 +182,7 @@ class MainContainer extends Component {
             handleJumpSnapshot={this.handleJumpSnapshot}
             emptySnapshot={this.emptySnapshot}
           />
-          <StateContainer snapshot={snapshots[snapshotIndex]} />
+          {(snapshots.length) ? <StateContainer snapshot={snapshots[snapshotIndex]} /> : null}
           <TravelContainer
             snapshotsLength={snapshots.length}
             snapshotIndex={snapshotIndex}
