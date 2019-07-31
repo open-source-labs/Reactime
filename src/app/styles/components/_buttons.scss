@@ -65,6 +65,7 @@
   border-width: 1px;
   border-radius: 3px;
   cursor: pointer;
-  font-size: $button-text-size;
   line-height: 1.5em;
+  font: normal 13px monaco, Consolas, "Lucida Console", monospace, Arial, sans-serif;
+  font-size: $button-text-size;
 }
