@@ -25,16 +25,16 @@ const StateContainer = ({ snapshot }) => (
   </Router>
 );
 
-StateContainer.propTypes = {
-  snapshot: PropTypes.shape({
-    state: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.object,
-    ]),
-    children: PropTypes.arrayOf(
-      PropTypes.object,
-    ),
-  }).isRequired,
-};
+// StateContainer.propTypes = {
+//   snapshot: PropTypes.shape({
+//     state: PropTypes.oneOfType([
+//       PropTypes.string,
+//       PropTypes.object,
+//     ]),
+//     children: PropTypes.arrayOf(
+//       PropTypes.object,
+//     ),
+//   }).isRequired,
+// };
 
 export default StateContainer;
