@@ -10,18 +10,11 @@
   border-color: $border-color;
   cursor: pointer;
   text-overflow: ellipsis;
+  @extend %disable-highlight
 }
 
 .action-component.selected {
   background-color: $light-grey-one;
-}
-
-.action-component .empty-button {
-  // grid-column: 1 / span 4;
-}
-
-.action-component:hover .jump-button {
-  visibility: visible;
 }
 
 .action-component.exclude {

@@ -15,6 +15,7 @@
   .react-select__control,
   .react-select__menu {
     background-color: $light-grey-one;
+    @extend %disable-highlight;
   }
   .react-select__single-value {
     color: white;
