@@ -3,13 +3,15 @@ import PropTypes from 'prop-types';
 
 const Action = (props) => {
   const {
-    selected, handleChangeSnapshot, handleJumpSnapshot, index,
+    selected, handleChangeSnapshot, handleJumpSnapshot, index, sliderIndex,
   } = props;
+
   return (
     <div
       className={selected ? 'action-component selected' : 'action-component'}
       onClick={() => handleChangeSnapshot(index)}
       role="presentation"
+      style={index > sliderIndex ? { color: '#5f6369' } : {}}
     >
       <div className="action-component-text">{index}</div>
       <button

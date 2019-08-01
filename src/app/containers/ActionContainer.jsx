@@ -8,6 +8,7 @@ const ActionContainer = ({
   handleChangeSnapshot,
   handleJumpSnapshot,
   emptySnapshot,
+  sliderIndex,
 }) => {
   let actionsArr = [];
   if (snapshots.length > 0) {
@@ -19,6 +20,7 @@ const ActionContainer = ({
           index={index}
           snapshot={snapshot}
           selected={selected}
+          sliderIndex={sliderIndex}
           handleChangeSnapshot={handleChangeSnapshot}
           handleJumpSnapshot={handleJumpSnapshot}
         />
@@ -38,9 +40,7 @@ const ActionContainer = ({
 };
 
 ActionContainer.propTypes = {
-  snapshots: PropTypes.arrayOf(
-    PropTypes.object,
-  ).isRequired,
+  snapshots: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewIndex: PropTypes.number.isRequired,
   handleChangeSnapshot: PropTypes.func.isRequired,
   handleJumpSnapshot: PropTypes.func.isRequired,

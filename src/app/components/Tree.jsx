@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 
 const getItemString = (type, data) => {
   // check to make sure that we are on the tree node, not anything else
-  if (Object.keys(data).length === 3 && typeof data.state === 'object' && typeof data.name === 'string' && Array.isArray(data.children)) {
-    return (
-      <span>
-        {data.name}
-      </span>
-    );
+  if (
+    Object.keys(data).length === 3
+    && typeof data.state === 'object'
+    && typeof data.name === 'string'
+    && Array.isArray(data.children)
+  ) {
+    return <span>{data.name}</span>;
   }
 };
 
@@ -23,9 +24,7 @@ const Tree = (props) => {
           theme={{ tree: () => ({ className: 'json-tree' }) }}
           shouldExpandNode={() => true}
           getItemString={getItemString}
-          labelRenderer={(raw) => {
-            return (typeof raw[0] !== 'number') ? <span>{raw[0]}</span> : null;
-          }}
+          labelRenderer={raw => (typeof raw[0] !== 'number' ? <span>{raw[0]}</span> : null)}
         />
       )}
     </React.Fragment>
@@ -34,13 +33,8 @@ const Tree = (props) => {
 
 Tree.propTypes = {
   snapshot: PropTypes.shape({
-    state: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.object,
-    ]),
-    children: PropTypes.arrayOf(
-      PropTypes.object,
-    ),
+    state: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    children: PropTypes.arrayOf(PropTypes.object),
     name: PropTypes.string,
   }).isRequired,
 };
