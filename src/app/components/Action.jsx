@@ -24,9 +24,11 @@ const Action = (props) => {
   );
 };
 
-// Action.propTypes = {
-//   selected: PropTypes.bool,
-//   index: PropTypes.number,
-// };
+Action.propTypes = {
+  selected: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  handleChangeSnapshot: PropTypes.func.isRequired,
+  handleJumpSnapshot: PropTypes.func.isRequired,
+};
 
 export default Action;
