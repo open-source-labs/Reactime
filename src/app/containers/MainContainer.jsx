@@ -100,6 +100,7 @@ class MainContainer extends Component {
           }
         }, speed);
       } else {
+        // menas already playing, user wants to pause so clearinterval using global vairable
         clearInterval(intervalId);
       }
     });
