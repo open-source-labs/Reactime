@@ -4,7 +4,7 @@ class Tree {
     // give it a special state = 'root'
     // a setState function that just calls the callback instantly
     if (!useStateInstead) {
-      this.component = (component === 'root') ? { state: 'root', setState: (partial, callback) => callback() } : component;
+      this.component = (component === 'root') ? { state: 'root',  setState: (partial, callback) => callback() } : component;
     } else {
       this.state = component;
       this.name = name;
