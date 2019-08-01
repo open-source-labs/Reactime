@@ -1,3 +1,16 @@
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
 .main-container {
   height: 100%;
   margin: 0 auto;
@@ -11,9 +24,9 @@
   grid-template-columns: 1fr 2fr;
   grid-template-rows: 8fr 1fr;
   grid-template-areas:
-    'actions states'
-    'travel travel'
-    'buttons buttons';
+    "actions states"
+    "travel travel"
+    "buttons buttons";
 }
 
 /* if extension width is less than 500px, stack the body containers */
@@ -22,10 +35,10 @@
     grid-template-rows: 3fr 5fr 1fr;
     grid-template-columns: auto;
     grid-template-areas:
-      'actions'
-      'states'
-      'travel'
-      'buttons';
+      "actions"
+      "states"
+      "travel"
+      "buttons";
   }
 }
 .travel-container {
