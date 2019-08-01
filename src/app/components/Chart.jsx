@@ -5,34 +5,6 @@ import * as d3 from 'd3';
 var root={};
 let duration = 750;
 
-// var test={
-//     name: 'root',
-//     state: {
-//         "kids": 0,
-//         "kids1": 0,
-//         "kids2": 0,
-//         "kids3": 0,
-//         "kids4": 0,
-//         "kids5": {
-//             subkid: 3,
-//             subkid3: 5,
-//             sukid5:{
-//                 kid:1,
-//                 kid:3
-//             }
-//         },
-//         "kids6": 0,
-//         "kids7": 0,
-//         "kids8": 0,
-//         "kids9": 0,
-//         "kids10": 0,
-//         "kids11": 0,
-//         "kids12": 0,
-//         "kids13": 0,
-//     },
-//     children: [{name: 'hello',state:{name: "codesmith"}},{name: 'bye'}]
-// }
-
 class Chart extends Component {
   constructor(props) {
     super(props);
@@ -50,7 +22,6 @@ class Chart extends Component {
       }
   }
   
-
   removed3Tree() {
     const { anchor } = this.refs;
     while (anchor.hasChildNodes()) {
@@ -58,12 +29,10 @@ class Chart extends Component {
     }
   }
     
-
   maked3Tree(){
     this.removed3Tree();
 
     duration=0;
-    // root = test;
 
     var margin = {top: 20, right: 120, bottom: 20, left: 120},
         width = 960 - margin.right - margin.left,
@@ -89,8 +58,6 @@ class Chart extends Component {
         .style("opacity", 1e-6)
         .on("mouseover", tipMouseover)
         .on("mouseout", tipMouseout)
-
-
 
     root.x0 = height / 2;
     root.y0 = 0;
@@ -198,29 +165,28 @@ class Chart extends Component {
         update(d);
     }
 
-    
     // Show state on mouse over
-    function mouseover(d) {
+    function mouseover() {
         div.transition()
             .duration(300)
             .style("display", "block")
             .style("opacity", 1)
     }
     
-    function mouseout(d) {
+    function mouseout() {
         div.transition()
             .duration(3000)
             .style("opacity", 1e-6)
             .style("display", "none");
     }
 
-    function tipMouseover(d){
+    function tipMouseover(){
         div.transition()
             .duration(300)
             .style("opacity", 1);
     }
 
-    function tipMouseout(d) {
+    function tipMouseout() {
         div.transition()
             .duration(3000)
             .style("opacity", 1e-6)
