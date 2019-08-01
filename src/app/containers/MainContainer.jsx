@@ -201,6 +201,7 @@ class MainContainer extends Component {
           <ActionContainer
             snapshots={snapshots}
             viewIndex={viewIndex}
+            sliderIndex={sliderIndex}
             handleChangeSnapshot={this.handleChangeSnapshot}
             handleJumpSnapshot={this.handleJumpSnapshot}
             emptySnapshot={this.emptySnapshot}
