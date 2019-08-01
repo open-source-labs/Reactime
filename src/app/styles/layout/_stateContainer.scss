@@ -13,6 +13,13 @@
   height: 30px;
 }
 
+.navbar {
+  // prevent navbar from scrolling with state/tree display
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+}
+
 .state-container {
   .router-link {
     height: 100%;
