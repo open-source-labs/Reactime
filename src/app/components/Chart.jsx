@@ -3,6 +3,35 @@ import '../styles/components/_d3Tree.scss';
 import * as d3 from 'd3';
 
 var root={};
+let duration = 750;
+
+// var test={
+//     name: 'root',
+//     state: {
+//         "kids": 0,
+//         "kids1": 0,
+//         "kids2": 0,
+//         "kids3": 0,
+//         "kids4": 0,
+//         "kids5": {
+//             subkid: 3,
+//             subkid3: 5,
+//             sukid5:{
+//                 kid:1,
+//                 kid:3
+//             }
+//         },
+//         "kids6": 0,
+//         "kids7": 0,
+//         "kids8": 0,
+//         "kids9": 0,
+//         "kids10": 0,
+//         "kids11": 0,
+//         "kids12": 0,
+//         "kids13": 0,
+//     },
+//     children: [{name: 'hello',state:{name: "codesmith"}},{name: 'bye'}]
+// }
 
 class Chart extends Component {
     constructor(props){
@@ -31,15 +60,17 @@ class Chart extends Component {
     maked3Tree(){
         this.removed3Tree();
 
+        duration=0;
+        // root = test;
+
         var margin = {top: 20, right: 120, bottom: 20, left: 120},
             width = 960 - margin.right - margin.left,
             height = 800 - margin.top - margin.bottom;
 
-        var i = 0,
-            duration = 750;
+        var i = 0;
 
         var tree = d3.layout.tree()
-            .size([height, width]);
+            .size([400, 400]);
 
         var diagonal = d3.svg.diagonal()
             .projection(function(d) { return [d.y, d.x]; });
@@ -49,6 +80,14 @@ class Chart extends Component {
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Add tooltip div
+        var div = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 1e-6)
+            .on("mouseover", tipMouseover)
+            .on("mouseout", tipMouseout)
+
 
 
         root.x0 = height / 2;
@@ -74,7 +113,9 @@ class Chart extends Component {
                 .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
                 .on("click", click)
                 .on("mouseover", mouseover)
-                .on("mouseout", mouseout);
+                .on("mouseout", mouseout)
+                .on("mousemove", function(d){mousemove(d);});
+
         
             nodeEnter.append("circle")
                 .attr("r", 1e-6)
@@ -85,6 +126,7 @@ class Chart extends Component {
                 .attr("dy", ".35em")
                 .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
                 .text(function(d) { return d.name; })
+                .style('fill', '#6FB3D2')
                 .style("fill-opacity", 1e-6);
         
             // Transition nodes to their new position.
@@ -93,8 +135,8 @@ class Chart extends Component {
                 .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
         
             nodeUpdate.select("circle")
-                .attr("r", 4.5)
-                .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+                .attr("r", 7)
+                .style("fill", function(d) { return d._children ? "#A1C658" : "#D381C3"; });
         
             nodeUpdate.select("text")
                 .style("fill-opacity", 1);
@@ -158,17 +200,49 @@ class Chart extends Component {
         
         // Show state on mouse over
         function mouseover(d) {
-            d3.select(this).append("text")
-                .attr("class", "hover")
-                .attr('transform', function(d){ 
-                    return 'translate(5, -10)';
-                })
-                .text(d.state === undefined ? '' : JSON.stringify(d.state));
+            // d3.select(this).append("text")
+            //     .attr("class", "hover")
+            //     .attr('transform', function(d){ 
+            //         return 'translate(5, -10)';
+            //     })
+            //     .text(d.state === undefined ? '' : JSON.stringify(d.state));
+
+            div.transition()
+                .duration(300)
+                .style("display", "block")
+                .style("opacity", 1)
         }
         
-        // Toggle children on click.
         function mouseout(d) {
-            d3.select(this).select("text.hover").remove();
+            // d3.select(this).select("text.hover").remove();
+
+            div.transition()
+                .duration(3000)
+                .style("opacity", 1e-6)
+                .style("display", "none");
+        }
+
+        function tipMouseover(d){
+            div.transition()
+                .duration(300)
+                .style("opacity", 1);
+        }
+
+        function tipMouseout(d) {
+            // d3.select(this).select("text.hover").remove();
+
+            div.transition()
+                .duration(3000)
+                .style("opacity", 1e-6)
+                .style("display", "none");
+        }
+
+
+        function mousemove(d){
+            div
+                .text(d.state == undefined ? 'No state found' : JSON.stringify(d.state,null,4))
+                .style("left", (d3.event.pageX ) + "px")
+                .style("top", (d3.event.pageY) + "px");
         }
         
         function collapse(d) {
@@ -181,16 +255,14 @@ class Chart extends Component {
         
         // root.children.forEach(collapse);
         update(root);
+        duration = 750;
         
         // d3.select(self.frameElement).style("height", "800px");
             
     }
 
     render(){
-        return (
-            <div ref="anchor" className={'d3Container'} width={'100%'}>
-            </div>
-        )
+        return <div ref="anchor" className={'d3Container'} width={'100%'}></div>
     }
 }
 

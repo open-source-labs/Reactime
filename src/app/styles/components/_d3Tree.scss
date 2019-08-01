@@ -1,19 +1,54 @@
+.d3Container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .node {
     cursor: pointer;
-    }
+}
 
-    .node circle {
+.node circle {
     fill: #fff;
-    stroke: steelblue;
-    stroke-width: 1.5px;
-    }
+    stroke: black;
+    stroke-width: 2px;
+    
+}
 
-    .node text {
-    font: 10px sans-serif;
-    }
+.node text {
+    font: 15px sans-serif;
+    color: white;
+}
 
-    .link {
+.link {
     fill: none;
-    stroke: #ccc;
+    stroke: black;
     stroke-width: 1.5px;
-    }
+}
+
+div.tooltip {
+    white-space: pre;
+    position: absolute;
+    // display: flex;
+    // flex-direction: column;
+    // flex-wrap: nowrap;
+    // justify-content: center;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    // align-items: center;
+    flex: auto;
+    // min-height: 10vh;
+    // min-width: 10vh;
+    // max-height: 100px;
+    // max-width: 50vh;
+    // text-align: center;
+    // width: 300px;
+    // height: 100px;
+    padding: 8px;
+    font: 15px sans-serif;
+    color: black;
+    background: #ffff;
+    border: solid 1px #aaa;
+    border-radius: 8px;
+    // pointer-events: none;
+}
