@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../styles/components/_d3Tree.scss';
 import * as d3 from 'd3';
 
-var root;
+var root={};
 
 class Chart extends Component {
     constructor(props){
@@ -14,9 +14,9 @@ class Chart extends Component {
         this.maked3Tree();
     }
     
-    componentWillUpdate(prevProps){
-        if(this.props.snapshot !== prevProps.snapshot){
-            root = JSON.parse(JSON.stringify(prevProps.snapshot));
+    componentWillUpdate(newProps){
+        if(this.props.snapshot !== newProps.snapshot){
+            root = JSON.parse(JSON.stringify(newProps.snapshot));
             this.maked3Tree();
         }
     }
