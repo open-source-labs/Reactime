@@ -18,7 +18,7 @@ class MainContainer extends Component {
     this.state = {
       snapshots: [],
       sliderIndex: 0,
-      viewIndex: 0,
+      viewIndex: -1,
       port: null,
       playing: false,
       mode: {
@@ -47,8 +47,8 @@ class MainContainer extends Component {
         }
         case 'initialConnectSnapshots': {
           const { snapshots, mode } = payload;
-          const viewIndex = 0;
-          const sliderIndex = viewIndex;
+          const viewIndex = -1;
+          const sliderIndex = 0;
           this.setState({ snapshots, mode, viewIndex, sliderIndex });
           break;
         }
@@ -114,14 +114,17 @@ class MainContainer extends Component {
 
   emptySnapshot() {
     const { port, snapshots } = this.state;
-    this.setState({ snapshots: [snapshots[0]], sliderIndex: 0, viewIndex: 0 });
+    this.setState({ snapshots: [snapshots[0]], sliderIndex: 0, viewIndex: -1 });
     port.postMessage({ action: 'emptySnap' });
   }
 
   // change the view index
   // this will change the state shown in the state container but won't change the DOM
   handleChangeSnapshot(viewIndex) {
-    this.setState({ viewIndex });
+    const { viewIndex: oldViewIndex } = this.state;
+    // unselect view if same index was selected
+    if (viewIndex === oldViewIndex) this.setState({ viewIndex: -1 });
+    else this.setState({ viewIndex });
   }
 
   // changes the slider index
@@ -194,6 +197,10 @@ class MainContainer extends Component {
     const {
       snapshots, viewIndex, sliderIndex, mode, playing, playSpeed,
     } = this.state;
+
+    // if viewIndex is -1, then use the sliderIndex instead
+    const snapshotView = (viewIndex === -1) ? snapshots[sliderIndex] : snapshots[viewIndex];
+
     return (
       <div className="main-container">
         <HeadContainer />
@@ -206,7 +213,7 @@ class MainContainer extends Component {
             handleJumpSnapshot={this.handleJumpSnapshot}
             emptySnapshot={this.emptySnapshot}
           />
-          {(snapshots.length) ? <StateContainer snapshot={snapshots[viewIndex]} /> : null}
+          {(snapshots.length) ? <StateContainer snapshot={snapshotView} /> : null}
           <TravelContainer
             snapshotsLength={snapshots.length}
             sliderIndex={sliderIndex}
