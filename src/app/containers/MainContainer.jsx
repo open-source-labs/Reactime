@@ -14,6 +14,7 @@ let intervalId = null;
 class MainContainer extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       snapshots: [],
       snapshotIndex: 0,
@@ -39,12 +40,11 @@ class MainContainer extends Component {
       switch (action) {
         case 'sendSnapshots': {
           const snapshotIndex = payload.length - 1;
-
           // set state with the information received from the background script
           this.setState({ snapshots: payload, snapshotIndex });
           break;
         }
-        case 'initialConnectSnapshot': {
+        case 'initialConnectSnapshots': {
           const { snapshots, mode } = payload;
           const snapshotIndex = snapshots.length - 1;
           this.setState({ snapshots, snapshotIndex, mode });
@@ -69,7 +69,7 @@ class MainContainer extends Component {
     if (snapshots.length > 0 && snapshotIndex > 0) {
       const newIndex = snapshotIndex - 1;
       // second callback parameter of setState to invoke handleJumpSnapshot
-      this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex) );
+      this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex));
     }
   }
 
@@ -78,40 +78,36 @@ class MainContainer extends Component {
     this.pause();
     if (snapshotIndex < snapshots.length - 1) {
       const newIndex = snapshotIndex + 1;
-      this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex) );
+      this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex));
     }
   }
 
-  play() {
-    // flip glboal variable onClick
-    globalPlaying = !globalPlaying
-    // set state with callback of setInterval
-    this.setState({playing: globalPlaying}, () => {
-      // check if playing is false, if false run interval
-      if(this.state.playing){
-        // store intervalId to global vairable interval Id
+  play(speed = 1000) {
+    globalPlaying = !globalPlaying;
+    this.setState({ playing: globalPlaying }, () => {
+      const { playing } = this.state;
+      if (playing) {
         intervalId = setInterval(() => {
           const { snapshots, snapshotIndex } = this.state;
-            if (snapshotIndex < snapshots.length - 1) {
-                const newIndex = snapshotIndex + 1;
-                this.setState({ snapshotIndex: newIndex}, this.handleJumpSnapshot(newIndex) );
-            } else {
-                // clear interval when play reaches the end
-                globalPlaying = false;
-                clearInterval(intervalId);
-                this.setState({ playing: false })
-              }
-        }, 1000);
+          if (snapshotIndex < snapshots.length - 1) {
+            const newIndex = snapshotIndex + 1;
+            this.setState({ snapshotIndex: newIndex }, this.handleJumpSnapshot(newIndex));
+          } else {
+            // clear interval when play reaches the end
+            globalPlaying = false;
+            clearInterval(intervalId);
+            this.setState({ playing: false });
+          }
+        }, speed);
       } else {
         // menas already playing, user wants to pause so clearinterval using global vairable
         clearInterval(intervalId);
       }
-    })
+    });
   }
 
   pause() {
-    // clearInterval and set playing to false, used for onChange and forward,backward button on travel container
-    this.setState({playing: false}, clearInterval(intervalId))
+    this.setState({ playing: false }, clearInterval(intervalId));
   }
 
   emptySnapshot() {
@@ -134,8 +130,46 @@ class MainContainer extends Component {
     port.postMessage({ action: 'jumpToSnap', payload: snapshots[snapshotIndex] });
   }
 
+  importSnapshots() {
+    const { snapshots } = this.state;
+
+    // create invisible download anchor link
+    const fileDownload = document.createElement('a');
+
+    // set file in anchor link
+    fileDownload.href = URL.createObjectURL(
+      new Blob([JSON.stringify(snapshots)], { type: 'application/json' }),
+    );
+
+    // set anchor as file download and click it
+    fileDownload.setAttribute('download', 'snapshot.json');
+    fileDownload.click();
+
+    // remove file url
+    URL.revokeObjectURL(fileDownload.href);
+  }
+
+  exportSnapshots() {
+    const fileUpload = document.createElement('input');
+    fileUpload.setAttribute('type', 'file');
+
+    fileUpload.onchange = (event) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.setState({ snapshots: JSON.parse(reader.result) });
+      };
+      reader.readAsText(event.target.files[0]);
+    };
+
+    fileUpload.click();
+  }
+
   toggleMode(targetMode) {
-    const { mode, mode: { locked, paused, persist }, port } = this.state;
+    const {
+      mode,
+      mode: { locked, paused, persist },
+      port,
+    } = this.state;
     switch (targetMode) {
       case 'paused':
         port.postMessage({ action: 'setPause', payload: !paused });
@@ -155,7 +189,9 @@ class MainContainer extends Component {
   }
 
   render() {
-    const { snapshots, snapshotIndex, mode, playing } = this.state;
+    const {
+      snapshots, snapshotIndex, mode, playing, playSpeed,
+    } = this.state;
     return (
       <div className="main-container">
         <HeadContainer />
@@ -167,7 +203,7 @@ class MainContainer extends Component {
             handleJumpSnapshot={this.handleJumpSnapshot}
             emptySnapshot={this.emptySnapshot}
           />
-          <StateContainer snapshot={snapshots[snapshotIndex]} />
+          {(snapshots.length) ? <StateContainer snapshot={snapshots[snapshotIndex]} /> : null}
           <TravelContainer
             snapshotsLength={snapshots.length}
             snapshotIndex={snapshotIndex}
@@ -176,10 +212,16 @@ class MainContainer extends Component {
             moveBackward={this.moveBackward}
             moveForward={this.moveForward}
             play={this.play}
-            playing = {playing}
-            pause = {this.pause}
+            pause={this.pause}
+            playing={playing}
+            playSpeed={playSpeed}
           />
-          <ButtonsContainer mode={mode} toggleMode={this.toggleMode} />
+          <ButtonsContainer
+            mode={mode}
+            toggleMode={this.toggleMode}
+            importSnapshots={this.importSnapshots}
+            exportSnapshots={this.exportSnapshots}
+          />
         </div>
       </div>
     );

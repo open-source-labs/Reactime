@@ -15,7 +15,6 @@ const Action = (props) => {
       <div
         className="jump-button"
         onClick={() => handleJumpSnapshot(index)}
-        onKeyPress={() => console.log('key pressed')}
         tabIndex={index}
         role="button"
       >

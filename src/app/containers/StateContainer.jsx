@@ -10,7 +10,7 @@ const StateContainer = ({ snapshot }) => (
   <Router>
     <div className="state-container">
       <div className="navbar">
-        <NavLink className="router-link" activeClassName="is-active" to="/">
+        <NavLink className="router-link" activeClassName="is-active" exact to="/">
           Tree
         </NavLink>
         <NavLink className="router-link" activeClassName="is-active" to="/chart">
@@ -19,7 +19,6 @@ const StateContainer = ({ snapshot }) => (
       </div>
       <Switch>
         <Route path="/chart" render={() => {
-          console.log('stateContainer => snapshot',snapshot)
           return <Chart snapshot={snapshot} />}} />
         <Route path="/" render={() => <Tree snapshot={snapshot} />} />
       </Switch>
@@ -27,16 +26,11 @@ const StateContainer = ({ snapshot }) => (
   </Router>
 );
 
-// StateContainer.propTypes = {
-//   snapshot: PropTypes.shape({
-//     state: PropTypes.oneOfType([
-//       PropTypes.string,
-//       PropTypes.object,
-//     ]),
-//     children: PropTypes.arrayOf(
-//       PropTypes.object,
-//     ),
-//   }).isRequired,
-// };
+StateContainer.propTypes = {
+  snapshot: PropTypes.shape({
+    state: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    children: PropTypes.arrayOf(PropTypes.object),
+  }).isRequired,
+};
 
 export default StateContainer;
