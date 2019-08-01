@@ -10,41 +10,51 @@ describe('unit testing for Action.jsx', () => {
   const props = {
     selected: true,
     handleChangeSnapshot: jest.fn(),
-    handleSendSnapshot: jest.fn(),
+    handleJumpSnapshot: jest.fn(),
     index: 1,
   };
   beforeEach(() => {
     wrapper = shallow(<Action {...props} />);
   });
 
-  describe('<Action> component', () => {
-    it("<Action> should have a className 'action-component selected' if props.selected is true", () => {
+  describe('Component', () => {
+    test("should have a className 'action-component selected' if props.selected is true", () => {
       wrapper.setProps({ selected: true });
       expect(wrapper.hasClass('action-component selected')).toEqual(true);
     });
 
-    it("<Action> shouldn't have a className 'action-component selected' if props.selected is false", () => {
+    test("shouldn't have a className 'action-component selected' if props.selected is false", () => {
       wrapper.setProps({ selected: false });
       expect(wrapper.hasClass('action-component selected')).toEqual(false);
     });
 
-    it('<Action> should have a text that is equal to props.index', () => {
+    test('should have a text that is equal to props.index', () => {
       expect(wrapper.find('.action-component-text').text()).toEqual(props.index.toString());
+    });
+
+    test('should invoke changeSnapshot method when clicked', () => {
+      wrapper.find('.action-component').simulate('click');
+      expect(props.handleChangeSnapshot).toHaveBeenCalled();
     });
   });
 
-  describe('jump button', () => {
-    it('Should render a jump button', () => {
-      expect(wrapper.type()).toEqual('div');
-      expect(wrapper.find('button')).toHaveLength(1);
+  describe('Jump Button', () => {
+    test("should render a div with a className 'jump-button' inside action-component", () => {
+      expect(
+        wrapper
+          .find('.action-component')
+          .children()
+          .find('.jump-button'),
+      ).toHaveLength(1);
     });
 
-    it('Should invoke the sendSnapshot method when the jump button is clicked', () => {
+    test('should invoke jumpSnapshot method when clicked', () => {
       wrapper
-        .find('button')
-        .at(0)
+        .find('.action-component')
+        .children()
+        .find('.jump-button')
         .simulate('click');
-      expect(props.handleSendSnapshot).toHaveBeenCalled();
+      expect(props.handleJumpSnapshot).toHaveBeenCalled();
     });
   });
 });
