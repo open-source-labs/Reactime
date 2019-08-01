@@ -42,6 +42,7 @@ const ActionContainer = ({
 ActionContainer.propTypes = {
   snapshots: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewIndex: PropTypes.number.isRequired,
+  sliderIndex: PropTypes.number.isRequired,
   handleChangeSnapshot: PropTypes.func.isRequired,
   handleJumpSnapshot: PropTypes.func.isRequired,
   emptySnapshot: PropTypes.func.isRequired,
