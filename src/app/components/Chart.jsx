@@ -4,31 +4,30 @@ import * as d3 from 'd3';
 
 
 
-
 class Chart extends Component {
     constructor(props){
         super(props);
-        console.log('constructor')
+        this.state = {d3: {}}
     }
 
-    // componentWillMount(){
-    //     const {snapshot} = this.props;
-    //     this.setState({ d3Tree: JSON.parse(JSON.stringify(snapshot))})
-    // }
+    componentWillMount(){
+        this.setState({d3: JSON.parse(JSON.stringify(this.props.snapshot))});
+    }
     
     componentDidMount(){
-        console.log('componentDidMount')
-        this.removed3Tree();
-        this.maked3Tree();
+        console.log('componentDidMount', this.props.snapshot)
+        this.setState({d3: JSON.parse(JSON.stringify(this.props.snapshot))},this.maked3Tree());
     }
     
-    componentWillUpdate(){
-        console.log('componentWillUpdate')
+    componentDidUpdate(prevProps){
+        if(this.props.snapshot !== prevProps){
+            console.log('componentWillUpdate', this.props.snapshot)
+            // this.maked3Tree();
+            this.setState({d3: JSON.parse(JSON.stringify(this.props.snapshot))},this.maked3Tree());
 
-        console.log(this.props.snapshot)
-        this.removed3Tree();
-        this.maked3Tree();
+        }
     }
+
 
 
     removed3Tree(){
@@ -41,6 +40,7 @@ class Chart extends Component {
     }
 
     maked3Tree(){
+        this.removed3Tree();
         console.log('function maked3Tree')
 
         var margin = {top: 20, right: 120, bottom: 20, left: 120},
@@ -64,7 +64,8 @@ class Chart extends Component {
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-        root = JSON.parse(JSON.stringify(this.props.snapshot));
+        // root = JSON.parse(JSON.stringify(this.props.snapshot));
+        root = this.state.d3;
         root.x0 = height / 2;
         root.y0 = 0;
         
@@ -203,12 +204,11 @@ class Chart extends Component {
 
     render(){
         console.log('render')
-
+        var htmlElement = <div>hello</div>;
         // this.removed3Tree();
         // this.maked3Tree();
         return (
             <div ref="anchor" className={'d3Container'} width={'100%'}>
-                
             </div>
         )
     }
