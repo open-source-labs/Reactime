@@ -55,12 +55,7 @@
     "react-dom": "^16.8.6",
     "react-json-tree": "^0.11.2",
     "react-router-dom": "^5.0.1",
-<<<<<<< HEAD
-    "react-test-renderer": "^16.8.6",
-    "redux-devtools-themes": "^1.0.0",
-=======
     "react-select": "^3.0.4",
->>>>>>> c2249dad99b74725bef4d439c547588aa9d654ae
     "sass": "^1.22.7"
   }
 }
