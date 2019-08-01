@@ -1,38 +1,30 @@
 import React, { Component } from 'react';
-import './d3Tree.css';
+import '../styles/components/_d3Tree.scss';
 import * as d3 from 'd3';
 
-
+var root;
 
 class Chart extends Component {
     constructor(props){
         super(props);
-        this.state = {d3: {}}
     }
 
-    componentWillMount(){
-        this.setState({d3: JSON.parse(JSON.stringify(this.props.snapshot))});
-    }
     
     componentDidMount(){
-        console.log('componentDidMount', this.props.snapshot)
-        this.setState({d3: JSON.parse(JSON.stringify(this.props.snapshot))},this.maked3Tree());
+        root = JSON.parse(JSON.stringify(this.props.snapshot));
+        this.maked3Tree();
     }
     
-    componentDidUpdate(prevProps){
-        if(this.props.snapshot !== prevProps){
-            console.log('componentWillUpdate', this.props.snapshot)
-            // this.maked3Tree();
-            this.setState({d3: JSON.parse(JSON.stringify(this.props.snapshot))},this.maked3Tree());
-
+    componentWillUpdate(prevProps){
+        if(this.props.snapshot !== prevProps.snapshot){
+            root = JSON.parse(JSON.stringify(prevProps.snapshot));
+            this.maked3Tree();
         }
     }
 
 
 
     removed3Tree(){
-        console.log('function removed3Tree')
-
         const anchor = this.refs.anchor;
         while(anchor.hasChildNodes()){
             anchor.removeChild(anchor.lastChild);
@@ -41,15 +33,13 @@ class Chart extends Component {
 
     maked3Tree(){
         this.removed3Tree();
-        console.log('function maked3Tree')
 
         var margin = {top: 20, right: 120, bottom: 20, left: 120},
             width = 960 - margin.right - margin.left,
             height = 800 - margin.top - margin.bottom;
 
         var i = 0,
-            duration = 750,
-            root;
+            duration = 750;
 
         var tree = d3.layout.tree()
             .size([height, width]);
@@ -64,13 +54,10 @@ class Chart extends Component {
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-        // root = JSON.parse(JSON.stringify(this.props.snapshot));
-        root = this.state.d3;
         root.x0 = height / 2;
         root.y0 = 0;
         
         function update(source) {
-            console.log('function update')
 
         
             // Compute the new tree layout.
@@ -203,10 +190,6 @@ class Chart extends Component {
     }
 
     render(){
-        console.log('render')
-        var htmlElement = <div>hello</div>;
-        // this.removed3Tree();
-        // this.maked3Tree();
         return (
             <div ref="anchor" className={'d3Container'} width={'100%'}>
             </div>
