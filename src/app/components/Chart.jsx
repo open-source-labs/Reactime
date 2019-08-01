@@ -9,7 +9,6 @@ class Chart extends Component {
         super(props);
     }
 
-    
     componentDidMount(){
         root = JSON.parse(JSON.stringify(this.props.snapshot));
         this.maked3Tree();
@@ -21,8 +20,6 @@ class Chart extends Component {
             this.maked3Tree();
         }
     }
-
-
 
     removed3Tree(){
         const anchor = this.refs.anchor;
