@@ -35,9 +35,9 @@ class TravelContainer extends Component {
 
     return (
       <div className="travel-container">
-        <div className="play-button" type="button" onClick={() => play(selectedOption.value)}>
+        <button className="play-button" type="button" onClick={() => play(selectedOption.value)}>
           {playing ? 'Pause' : 'Play'}
-        </div>
+        </button>
         <MainSlider
           snapshotLength={snapshotsLength}
           sliderIndex={sliderIndex}
