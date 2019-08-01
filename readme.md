@@ -41,3 +41,4 @@ Then open up your Chrome DevTools. There'll be a new tab called React-Time-Trave
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
