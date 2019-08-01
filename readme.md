@@ -1,12 +1,5 @@
 # React-Time-Travel
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-TESTING DEV
-=======
-TESTING MASTER
->>>>>>> 298432aa989b21248ce2b84b8404600b203003bb
-=======
 A debugging tool for React. Records state whenever state is changed and allows user to jump to any previous recorded state.
 
 Two parts are needed for this tool to function. The chrome extension must be installed, and the NPM package must be installed and used in the React code.
@@ -48,4 +41,4 @@ Then open up your Chrome DevTools. There'll be a new tab called React-Time-Trave
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
->>>>>>> c2249dad99b74725bef4d439c547588aa9d654ae
+
