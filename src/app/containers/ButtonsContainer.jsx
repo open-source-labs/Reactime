@@ -8,21 +8,21 @@ const ButtonsContainer = ({
   exportSnapshots,
 }) => (
   <div className="buttons-container">
-    <div className="pause-button" onClick={() => toggleMode('paused')}>
+    <button className="pause-button" type="button" onClick={() => toggleMode('paused')}>
       {paused ? 'Resume' : 'Pause'}
-    </div>
-    <div className="lock-button" onClick={() => toggleMode('locked')}>
+    </button>
+    <button className="lock-button" type="button" onClick={() => toggleMode('locked')}>
       {locked ? 'Unlock' : 'Lock'}
-    </div>
-    <div className="persist-button" onClick={() => toggleMode('persist')}>
+    </button>
+    <button className="persist-button" type="button" onClick={() => toggleMode('persist')}>
       {persist ? 'Unpersist' : 'Persist'}
-    </div>
-    <div className="import-button" onClick={importSnapshots}>
+    </button>
+    <button className="import-button" type="button" onClick={importSnapshots}>
       Import
-    </div>
-    <div className="export-button" onClick={exportSnapshots}>
+    </button>
+    <button className="export-button" type="button" onClick={exportSnapshots}>
       Export
-    </div>
+    </button>
   </div>
 );
 
