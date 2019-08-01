@@ -2,7 +2,7 @@ import React from 'react';
 import JSONTree from 'react-json-tree';
 import PropTypes from 'prop-types';
 
-const getItemString = (type, data, itemType, itemString) => <span>{data.name}</span>;
+const getItemString = data => <span>{data.name}</span>;
 
 const Tree = (props) => {
   const { snapshot } = props;
