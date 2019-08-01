@@ -18,8 +18,7 @@ const StateContainer = ({ snapshot }) => (
         </NavLink>
       </div>
       <Switch>
-        <Route path="/chart" render={() => {
-          return <Chart snapshot={snapshot} />}} />
+        <Route path="/chart" render={() => <Chart snapshot={snapshot} />} />
         <Route path="/" render={() => <Tree snapshot={snapshot} />} />
       </Switch>
     </div>
