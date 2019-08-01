@@ -12,17 +12,16 @@ const options = [
 class TravelContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = { playSpeed: 1000, selectedOption: options[1] };
+    this.state = { selectedOption: options[1] };
     this.handleChangeSpeed = this.handleChangeSpeed.bind(this);
   }
 
   handleChangeSpeed(selectedOption) {
-    const playSpeed = selectedOption.value;
-    this.setState({ selectedOption, playSpeed });
+    this.setState({ selectedOption });
   }
 
   render() {
-    const { playSpeed, selectedOption } = this.state;
+    const { selectedOption } = this.state;
     const {
       moveBackward,
       moveForward,
@@ -37,7 +36,7 @@ class TravelContainer extends Component {
 
     return (
       <div className="travel-container">
-        <div className="play-button" onClick={() => play(playSpeed)}>
+        <div className="play-button" onClick={() => play(selectedOption.value)}>
           {playing ? 'Pause' : 'Play'}
         </div>
         <MainSlider
