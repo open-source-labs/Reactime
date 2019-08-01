@@ -3,19 +3,18 @@
   width: 120px;
 }
 
+.action-component:hover .jump-button {
+  opacity: 1;
+  transform: rotateX(0deg);
+  transition: opacity 300ms, transform 0.15s linear;
+}
+
 .jump-button {
   @extend %button-shared;
   width: 50px;
-  visibility: hidden;
-}
-
-.jump-button:focus {
-  outline: 0;
-  // make the text in the button not highlightable
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+/Edge */
-  user-select: none; /* Standard */
+  opacity: 0;
+  transform: rotateX(90deg);
+  transition: opacity 300ms, transform 0.15s linear;
 }
 
 .jump-button:hover {
@@ -29,8 +28,8 @@
 
 .play-button {
   @extend %button-shared;
-  width: 60px;
-  margin: 10px;
+  width: 100px;
+  margin: 0 1% 0 2%;
 }
 
 .backward-button {
@@ -54,6 +53,9 @@
 }
 
 %button-shared {
+  outline: none;
+  background-color: $brand-color;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,6 +64,9 @@
   border-width: 1px;
   border-radius: 3px;
   cursor: pointer;
-  font-size: $button-text-size;
   line-height: 1.5em;
+  font: normal 13px monaco, Consolas, "Lucida Console", monospace, Arial, sans-serif;
+  font-size: $button-text-size;
+
+  @extend %disable-highlight;
 }

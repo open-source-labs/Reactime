@@ -5,9 +5,10 @@ const config = {
   entry: {
     app: './src/app/index.js',
     background: './src/extension/background.js',
+    content: './src/extension/contentScript.js',
   },
   output: {
-    path: path.resolve(__dirname, 'src/extension/dist'),
+    path: path.resolve(__dirname, 'src/extension/build/bundles'),
     filename: '[name].bundle.js',
   },
   module: {
@@ -43,7 +44,7 @@ module.exports = (env, argv) => {
     config.plugins.push(
       new ChromeExtensionReloader({
         entries: {
-          contentScript: ['app'],
+          contentScript: ['app', 'content'],
           background: ['background'],
         },
       }),

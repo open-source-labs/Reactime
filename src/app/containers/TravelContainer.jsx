@@ -12,24 +12,22 @@ const options = [
 class TravelContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = { playSpeed: 1000, selectedOption: options[1] };
+    this.state = { selectedOption: options[1] };
     this.handleChangeSpeed = this.handleChangeSpeed.bind(this);
   }
 
   handleChangeSpeed(selectedOption) {
-    const playSpeed = selectedOption.value;
-    this.setState({ selectedOption, playSpeed });
+    this.setState({ selectedOption });
   }
 
   render() {
-    const { playSpeed, selectedOption } = this.state;
+    const { selectedOption } = this.state;
     const {
       moveBackward,
       moveForward,
       snapshotsLength,
-      handleChangeSnapshot,
       handleJumpSnapshot,
-      snapshotIndex,
+      sliderIndex,
       play,
       playing,
       pause,
@@ -37,22 +35,21 @@ class TravelContainer extends Component {
 
     return (
       <div className="travel-container">
-        <div className="play-button" onClick={() => play(playSpeed)}>
+        <button className="play-button" type="button" onClick={() => play(selectedOption.value)}>
           {playing ? 'Pause' : 'Play'}
-        </div>
+        </button>
         <MainSlider
           snapshotLength={snapshotsLength}
-          handleChangeSnapshot={handleChangeSnapshot}
-          snapshotIndex={snapshotIndex}
+          sliderIndex={sliderIndex}
           handleJumpSnapshot={handleJumpSnapshot}
           pause={pause}
         />
-        <div className="backward-button" role="button" onClick={moveBackward}>
+        <button className="backward-button" onClick={moveBackward} type="button">
           {'<'}
-        </div>
-        <div className="forward-button" role="button" onClick={moveForward}>
+        </button>
+        <button className="forward-button" onClick={moveForward} type="button">
           {'>'}
-        </div>
+        </button>
         <Dropdown
           options={options}
           selectedOption={selectedOption}
@@ -69,9 +66,8 @@ TravelContainer.propTypes = {
   moveBackward: PropTypes.func.isRequired,
   moveForward: PropTypes.func.isRequired,
   snapshotsLength: PropTypes.number.isRequired,
-  handleChangeSnapshot: PropTypes.func.isRequired,
   handleJumpSnapshot: PropTypes.func.isRequired,
-  snapshotIndex: PropTypes.number.isRequired,
+  sliderIndex: PropTypes.number.isRequired,
   playing: PropTypes.bool.isRequired,
 };
 export default TravelContainer;
