@@ -4,7 +4,7 @@ import Action from '../components/Action';
 
 const ActionContainer = ({
   snapshots,
-  snapshotIndex,
+  viewIndex,
   handleChangeSnapshot,
   handleJumpSnapshot,
   emptySnapshot,
@@ -12,7 +12,7 @@ const ActionContainer = ({
   let actionsArr = [];
   if (snapshots.length > 0) {
     actionsArr = snapshots.map((snapshot, index) => {
-      const selected = index === snapshotIndex;
+      const selected = index === viewIndex;
       return (
         <Action
           key={`action${index}`}
@@ -28,9 +28,9 @@ const ActionContainer = ({
   return (
     <div className="action-container">
       <div className="action-component exclude">
-        <div className="empty-button" onClick={emptySnapshot}>
+        <button className="empty-button" onClick={emptySnapshot} type="button">
           emptySnapshot
-        </div>
+        </button>
       </div>
       <div>{actionsArr}</div>
     </div>
@@ -41,7 +41,7 @@ ActionContainer.propTypes = {
   snapshots: PropTypes.arrayOf(
     PropTypes.object,
   ).isRequired,
-  snapshotIndex: PropTypes.number.isRequired,
+  viewIndex: PropTypes.number.isRequired,
   handleChangeSnapshot: PropTypes.func.isRequired,
   handleJumpSnapshot: PropTypes.func.isRequired,
   emptySnapshot: PropTypes.func.isRequired,

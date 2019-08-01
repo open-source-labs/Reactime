@@ -1,15 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const ButtonsContainer = ({ mode: { paused, locked, persist }, toggleMode, importSnapshots, exportSnapshots }) => (
-  <div className="buttons-container">
-    <div className="pause-button" onClick={() => toggleMode('paused')}>{(paused) ? 'Resume' : 'Pause'}</div>
-    <div className="lock-button" onClick={() => toggleMode('locked')}>{(locked) ? 'Unlock' : 'Lock'}</div>
-    <div className="persist-button" onClick={() => toggleMode('persist')}>{(persist) ? 'Unpersist' : 'Persist'}</div>
-    <div className="import-button" onClick={importSnapshots}>Import</div>
-    <div className="export-button" onClick={exportSnapshots}>Export</div>
-  </div>
-);
+const ButtonsContainer = ({
+  mode: { paused, locked, persist },
+  toggleMode,
+  importSnapshots,
+  exportSnapshots,
+}) =>
+  (
+    <div className="buttons-container">
+      <button className="pause-button" type="button" onClick={() => toggleMode('paused')}>{(paused) ? 'Resume' : 'Pause'}</button>
+      <button className="lock-button" type="button" onClick={() => toggleMode('locked')}>{(locked) ? 'Unlock' : 'Lock'}</button>
+      <button className="persist-button" type="button" onClick={() => toggleMode('persist')}>{(persist) ? 'Unpersist' : 'Persist'}</button>
+      <button className="import-button" type="button" onClick={importSnapshots}>Import</button>
+      <button className="export-button" type="button" onClick={exportSnapshots}>Export</button>
+    </div>
+  );
 
 ButtonsContainer.propTypes = {
   toggleMode: PropTypes.func.isRequired,
