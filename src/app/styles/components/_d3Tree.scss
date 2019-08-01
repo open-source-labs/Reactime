@@ -29,26 +29,14 @@
 div.tooltip {
     white-space: pre;
     position: absolute;
-    // display: flex;
-    // flex-direction: column;
-    // flex-wrap: nowrap;
-    // justify-content: center;
     overflow-y: scroll;
     overscroll-behavior: contain;
-    // align-items: center;
     flex: auto;
-    // min-height: 10vh;
-    // min-width: 10vh;
-    // max-height: 100px;
-    // max-width: 50vh;
-    // text-align: center;
-    // width: 300px;
-    // height: 100px;
-    padding: 8px;
+    max-height: 100px;    
+    padding: 15px;
     font: 15px sans-serif;
     color: black;
     background: #ffff;
     border: solid 1px #aaa;
     border-radius: 8px;
-    // pointer-events: none;
 }

@@ -5,6 +5,7 @@ import * as d3 from 'd3';
 var root={};
 let duration = 750;
 
+
 class Chart extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +32,6 @@ class Chart extends Component {
     
   maked3Tree(){
     this.removed3Tree();
-
     duration=0;
 
     var margin = {top: 20, right: 120, bottom: 20, left: 120},
