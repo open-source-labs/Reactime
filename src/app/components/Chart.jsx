@@ -35,22 +35,30 @@ class Chart extends Component {
     duration=0;
 
     var margin = {top: 20, right: 120, bottom: 20, left: 120},
-        width = 960 - margin.right - margin.left,
-        height = 800 - margin.top - margin.bottom;
+        width = 600 - margin.right - margin.left,
+        height = 600 - margin.top - margin.bottom;
 
     var i = 0;
 
     var tree = d3.layout.tree()
-        .size([400, 400]);
+        .nodeSize([20,])
+        .separation(function separation(a, b) {
+        return a.parent == b.parent ? 3 : 1;
+    });
 
     var diagonal = d3.svg.diagonal()
         .projection(function(d) { return [d.y, d.x]; });
 
     var svg = d3.select(this.refs.anchor).append("svg")
-        .attr("width", width + margin.right + margin.left)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("width", "100%")
+        .attr("height","100%")
+        .attr("cursor", "-webkit-grab")
+        .attr("preserveAspectRatio", "xMinYMin slice")
+        .call(d3.behavior.zoom().on("zoom", function () {
+            svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+          }))
+    .append("g")
+        .attr("transform", "translate(" + 60 + "," + height/2 + ")")
 
     // Add tooltip div
     var div = d3.select("body").append("div")
@@ -215,7 +223,7 @@ class Chart extends Component {
 }
 
   render() {
-    return <div ref="anchor" className="d3Container" width="100%" />;
+    return <div ref="anchor" className="d3Container" />;
   }
 }
 
