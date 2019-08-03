@@ -58,7 +58,7 @@ class Chart extends Component {
             svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
           }))
     .append("g")
-        .attr("transform", "translate(" + width/2 + "," + height/2 + ")")
+        .attr("transform", "translate(" + 60 + "," + height/2 + ")")
 
     // Add tooltip div
     var div = d3.select("body").append("div")
