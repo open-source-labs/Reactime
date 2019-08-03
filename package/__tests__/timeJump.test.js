@@ -1,6 +1,4 @@
-import TestRenderer from 'react-test-renderer';
 const timeJumpExport = require('../timeJump');
-import { shallow } from 'enzyme';
 
 describe('unit testing for timeJump.js', () => {
   let timeJump;
@@ -15,14 +13,10 @@ describe('unit testing for timeJump.js', () => {
     mockFuncs = [];
     timeJump = timeJumpExport(snapShot, mode);
 
-    const createSetStateAsync = (i) => {
-      return (state) => {
-        return new Promise((resolve) => {
-          mockFuncs[i](state);
-          resolve();
-        });
-      };
-    };
+    const createSetStateAsync = i => state => new Promise((resolve) => {
+      mockFuncs[i](state);
+      resolve();
+    });
 
     for (let i = 0; i < count; i += 1) {
       mockFuncs.push(jest.fn());
@@ -56,5 +50,4 @@ describe('unit testing for timeJump.js', () => {
   //   timeJump(newSnapShot);
   //   mockFuncs.forEach((mockFunc, i) => expect(mockFunc.mock.calls[1][0]).toEqual({ testkey: `testval${i}` }));
   // });
-
 });

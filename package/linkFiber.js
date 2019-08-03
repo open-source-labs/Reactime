@@ -22,7 +22,7 @@ module.exports = (snap, mode) => {
     // make a copy of setState
     const oldSetState = component.setState.bind(component);
 
-    function newSetState(state, callback = () => { }) {
+    function newSetState(state, callback = () => {}) {
       // dont do anything if state is locked
       // UNLESS we are currently jumping through time
       if (mode.locked && !mode.jumping) return;
@@ -64,8 +64,11 @@ module.exports = (snap, mode) => {
     const { current } = fiberRoot;
     snap.tree = createTree(current);
   }
+
   return (container) => {
-    const { _reactRootContainer: { _internalRoot } } = container;
+    const {
+      _reactRootContainer: { _internalRoot },
+    } = container;
     fiberRoot = _internalRoot;
     updateSnapShotTree();
 
