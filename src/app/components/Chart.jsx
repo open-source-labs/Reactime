@@ -35,20 +35,23 @@ class Chart extends Component {
     duration=0;
 
     var margin = {top: 20, right: 120, bottom: 20, left: 120},
-        width = 800 - margin.right - margin.left,
-        height = 800 - margin.top - margin.bottom;
+        width = 400 - margin.right - margin.left,
+        height = 400 - margin.top - margin.bottom;
 
     var i = 0;
 
     var tree = d3.layout.tree()
-        .size([400, 400]);
+        .size([height, width]);
 
     var diagonal = d3.svg.diagonal()
         .projection(function(d) { return [d.y, d.x]; });
 
     var svg = d3.select(this.refs.anchor).append("svg")
-        .attr("width", width + margin.right + margin.left)
-        .attr("height", height + margin.top + margin.bottom)
+        // .attr("width", width + margin.right + margin.left)
+        // .attr("height", height + margin.top + margin.bottom)
+        .attr("width", "100%")
+        .attr("height","100%")
+        .attr("preserveAspectRatio", "xMinYMin slice")
         .call(d3.behavior.zoom().on("zoom", function () {
             svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
           }))
