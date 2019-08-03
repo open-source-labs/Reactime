@@ -1,7 +1,7 @@
 .d3Container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow: scroll;
+    height: 100%;
+    width: 100%;
 }
 
 .node {
@@ -12,7 +12,6 @@
     fill: #fff;
     stroke: black;
     stroke-width: 2px;
-    
 }
 
 .node text {
