@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import '../styles/components/_d3Tree.scss';
 import * as d3 from 'd3';
 
 var root={};
