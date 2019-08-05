@@ -1,4 +1,4 @@
-import { mount , shallow, configure } from 'enzyme';
+import { mount , configure } from 'enzyme';
 
 import React from 'react';
 import { MemoryRouter , NavLink } from 'react-router-dom';
