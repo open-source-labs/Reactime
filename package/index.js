@@ -1,7 +1,9 @@
 const snapShot = { tree: null };
 
 const mode = {
-  jumping: false, paused: false, locked: false,
+  jumping: false,
+  paused: false,
+  locked: false,
 };
 
 const linkFiber = require('./linkFiber')(snapShot, mode);
@@ -21,9 +23,11 @@ window.addEventListener('message', ({ data: { action, payload } }) => {
       mode.paused = payload;
       break;
     default:
+      break;
   }
 });
 
+// window.postMessage({ data: { action: 'foo', payload: 'bar' } });
 module.exports = {
   timeJump,
   linkFiber,
