@@ -24,30 +24,28 @@ const handle = (props) => {
 };
 
 const MainSlider = ({
-  snapshotLength,
+  snapshotsLength,
   sliderIndex,
-  handleJumpSnapshot,
-  pause,
+  dispatch,
 }) =>
   (
     <Slider
       min={0}
-      max={snapshotLength - 1}
+      max={snapshotsLength - 1}
       value={sliderIndex}
       onChange={(index) => {
         const newIndex = index === -1 ? 0 : index;
-        handleJumpSnapshot(newIndex);
-        pause();
+        dispatch({ type: 'changeSlider', payload: newIndex });
+        dispatch({ type: 'pause' });
       }}
       handle={handle}
     />
   );
 
 MainSlider.propTypes = {
-  snapshotLength: PropTypes.number.isRequired,
+  snapshotsLength: PropTypes.number.isRequired,
   sliderIndex: PropTypes.number.isRequired,
-  handleJumpSnapshot: PropTypes.func.isRequired,
-  pause: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default MainSlider;

@@ -9,35 +9,48 @@ const speeds = [
   { value: 500, label: '2.0x' },
 ];
 
+function play(speed, playing, dispatch, snapshotsLength, sliderIndex) {
+  if (playing) {
+    dispatch({ type: 'pause' });
+  } else {
+    const intervalId = setInterval(() => {
+      if (sliderIndex < snapshotsLength - 1) {
+        dispatch({
+          type: 'moveForward',
+          payload: true,
+        });
+      } else {
+        dispatch({ type: 'pause' });
+      }
+    }, speed);
+    dispatch({ type: 'play', payload: intervalId });
+  }
+}
+
 const TravelContainer = (props) => {
   const [selectedSpeed, setSpeed] = useState(speeds[1]);
 
   const {
-    moveBackward,
-    moveForward,
     snapshotsLength,
-    handleJumpSnapshot,
     sliderIndex,
-    play,
     playing,
-    pause,
+    dispatch,
   } = props;
 
   return (
     <div className="travel-container">
-      <button className="play-button" type="button" onClick={() => play(selectedSpeed.value)}>
+      <button className="play-button" type="button" onClick={() => play(selectedSpeed.value, playing, dispatch, snapshotsLength, sliderIndex)}>
         {playing ? 'Pause' : 'Play'}
       </button>
       <MainSlider
-        snapshotLength={snapshotsLength}
+        snapshotsLength={snapshotsLength}
         sliderIndex={sliderIndex}
-        handleJumpSnapshot={handleJumpSnapshot}
-        pause={pause}
+        dispatch={dispatch}
       />
-      <button className="backward-button" onClick={moveBackward} type="button">
+      <button className="backward-button" onClick={() => dispatch({ type: 'moveBackward' })} type="button">
         {'<'}
       </button>
-      <button className="forward-button" onClick={moveForward} type="button">
+      <button className="forward-button" onClick={() => dispatch({ type: 'moveForward' })} type="button">
         {'>'}
       </button>
       <Dropdown
@@ -47,16 +60,12 @@ const TravelContainer = (props) => {
       />
     </div>
   );
-}
+};
 
 
 TravelContainer.propTypes = {
-  pause: PropTypes.func.isRequired,
-  play: PropTypes.func.isRequired,
-  moveBackward: PropTypes.func.isRequired,
-  moveForward: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
   snapshotsLength: PropTypes.number.isRequired,
-  handleJumpSnapshot: PropTypes.func.isRequired,
   sliderIndex: PropTypes.number.isRequired,
   playing: PropTypes.bool.isRequired,
 };

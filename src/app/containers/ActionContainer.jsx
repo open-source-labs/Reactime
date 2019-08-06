@@ -4,11 +4,9 @@ import Action from '../components/Action';
 
 const ActionContainer = ({
   snapshots,
-  viewIndex,
-  handleChangeSnapshot,
-  handleJumpSnapshot,
-  emptySnapshot,
   sliderIndex,
+  viewIndex,
+  dispatch,
 }) => {
   let actionsArr = [];
   if (snapshots.length > 0) {
@@ -18,11 +16,9 @@ const ActionContainer = ({
         <Action
           key={`action${index}`}
           index={index}
-          snapshot={snapshot}
           selected={selected}
+          dispatch={dispatch}
           sliderIndex={sliderIndex}
-          handleChangeSnapshot={handleChangeSnapshot}
-          handleJumpSnapshot={handleJumpSnapshot}
         />
       );
     });
@@ -30,7 +26,7 @@ const ActionContainer = ({
   return (
     <div className="action-container">
       <div className="action-component exclude">
-        <button className="empty-button" onClick={emptySnapshot} type="button">
+        <button className="empty-button" onClick={() => dispatch({ type: 'empty' })} type="button">
           emptySnapshot
         </button>
       </div>
@@ -41,11 +37,9 @@ const ActionContainer = ({
 
 ActionContainer.propTypes = {
   snapshots: PropTypes.arrayOf(PropTypes.object).isRequired,
-  viewIndex: PropTypes.number.isRequired,
+  dispatch: PropTypes.func.isRequired,
   sliderIndex: PropTypes.number.isRequired,
-  handleChangeSnapshot: PropTypes.func.isRequired,
-  handleJumpSnapshot: PropTypes.func.isRequired,
-  emptySnapshot: PropTypes.func.isRequired,
+  viewIndex: PropTypes.number.isRequired,
 };
 
 export default ActionContainer;
