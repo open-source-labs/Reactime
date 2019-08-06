@@ -1,8 +1,10 @@
 import { shallow, configure } from 'enzyme';
 
 import React from 'react';
-
+import ReactDOM from 'react-dom';
 import TravelContainer from '../containers/TravelContainer';
+// import MainContainer from '../containers/MainContainer';
+import Dropdown from '../components/Dropdown';
 
 import Adapter from 'enzyme-adapter-react-16';
 
@@ -19,6 +21,21 @@ const props = {
   playing: false,
   pause: jest.fn()
 }
+
+const dropdownProps = {
+  selectedOption: { 
+    value: 1, 
+    label: 'label'
+  },
+  options: [0.5, 1, 2],
+  onChange: jest.fn(),
+}
+
+const options = [
+  { value: 2000, label: '0.5x' },
+  { value: 1000, label: '1.0x' },
+  { value: 500, label: '2.0x' },
+];
 
 describe('testing the backward and forward buttons', () => {
   test('if the backward button rewinds the playback', () => {
@@ -65,4 +82,36 @@ describe('testing the play button', () => {
 
     expect(wrapper.find('.play-button').text()).toBe('Pause');
   })
+})
+
+describe('testing the playback speed', () => {
+  test('if the playback dropdown states 0.5x the speed should be 0.5x', () => {
+
+    const wrapper = render(<TravelContainer { ...props } />);
+
+    wrapper.find('Dropdown').simulate('change', { value: ['val'] });
+    // wrapper.find('select').simulate('change', { value : 'hello'});
+    // console.log('val',wrapper.find('Dropdown').simulate('select', { value: ['val'] }));
+    // expect(wrapper.find('Dropdown').text()).toBe('0.5x')
+    expect(wrapper.find('select [selected]').val()).to.equal('key')
+    
+  });
+
+  // test('if the playback dropdown states 1x the speed should be 1x', () => {
+
+  //   const wrapper = shallow(<TravelContainer { ...dropdownProps } />);
+
+  //   expect(wrapper.find('Dropdown').label).toBe('1.0x')
+    
+  // });
+
+  // test('if the playback dropdown states 2x the speed should be 2x', () => {
+
+  //   const wrapper = shallow(<TravelContainer { ...dropdownProps } />);
+
+  //   wrapper.find('Dropdown').simulate('click');
+
+  //   expect(wrapper.find('Dropdown').label).toBe('2.0x')
+    
+  // });
 })
