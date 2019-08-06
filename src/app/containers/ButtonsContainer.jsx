@@ -44,10 +44,10 @@ const ButtonsContainer = ({
       <button className="pause-button" type="button" onClick={() => dispatch({ type: 'toggleMode', payload: 'paused' })}>
         {paused ? 'Resume' : 'Pause'}
       </button>
-      <button className="lock-button" type="button" onClick={() => dispatch({ type: 'toggleLocked', payload: 'locked' })}>
+      <button className="lock-button" type="button" onClick={() => dispatch({ type: 'toggleMode', payload: 'locked' })}>
         {locked ? 'Unlock' : 'Lock'}
       </button>
-      <button className="persist-button" type="button" onClick={() => dispatch({ type: 'togglePersist', payload: 'persist' })}>
+      <button className="persist-button" type="button" onClick={() => dispatch({ type: 'toggleMode', payload: 'persist' })}>
         {persist ? 'Unpersist' : 'Persist'}
       </button>
       <button className="export-button" type="button" onClick={() => exportSnapshots(snapshots)}>

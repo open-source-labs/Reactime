@@ -81,6 +81,7 @@ function mainReducer(state, action) {
       return { ...state, port: action.payload };
     }
     case ACTIONS.import: {
+      port.postMessage({ action: 'import', payload: action.payload });
       return {
         ...state,
         snapshots: action.payload,
@@ -90,6 +91,19 @@ function mainReducer(state, action) {
     }
     case ACTIONS.toggleMode: {
       mode[action.payload] = !mode[action.payload];
+      const newMode = mode[action.payload];
+      switch (action.payload) {
+        case 'paused':
+          port.postMessage({ action: 'setPause', payload: newMode });
+          break;
+        case 'locked':
+          port.postMessage({ action: 'setLock', payload: newMode });
+          break;
+        case 'persist':
+          port.postMessage({ action: 'setPersist', payload: newMode });
+          break;
+        default:
+      }
       return { ...state, mode };
     }
     case ACTIONS.pause: {

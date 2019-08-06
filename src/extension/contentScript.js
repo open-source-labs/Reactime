@@ -11,7 +11,6 @@ chrome.runtime.onMessage.addListener((request) => {
   const { action } = request;
   switch (action) {
     case 'jumpToSnap':
-    case 'stepToSnap':
     case 'setLock':
     case 'setPause':
       window.postMessage(request);

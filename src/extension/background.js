@@ -27,6 +27,9 @@ chrome.runtime.onConnect.addListener((port) => {
   port.onMessage.addListener((msg) => {
     const { action, payload } = msg;
     switch (action) {
+      case 'import':
+        snapshotArr = payload;
+        break;
       case 'emptySnap':
         snapshotArr.splice(1);
         break;
