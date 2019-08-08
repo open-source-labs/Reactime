@@ -50,9 +50,12 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 // background.js recieves message from contentScript.js
-chrome.runtime.onMessage.addListener((request) => {
+chrome.runtime.onMessage.addListener((request, sender) => {
   const { action } = request;
   const { persist } = mode;
+
+  console.log('request: ', request)
+  console.log('sender: ', sender)
 
   switch (action) {
     case 'tabReload':
@@ -66,25 +69,31 @@ chrome.runtime.onMessage.addListener((request) => {
         firstSnapshot = false;
         // don't add anything to snapshot storage if mode is persisting for the initial snapshot
         if (!persist) snapshotArr.push(request.payload);
-        bg.postMessage({
-          action: 'initialConnectSnapshots',
-          payload: {
-            snapshots: snapshotArr,
-            mode,
-          },
-        });
+        if (bg) {
+          bg.postMessage({
+            action: 'initialConnectSnapshots',
+            payload: {
+              snapshots: snapshotArr,
+              mode,
+            },
+          });
+        }
         break;
       }
       snapshotArr.push(request.payload);
       // TODO:
       // get active tab id
+      const tabID = sender.tab.id;
       // get snapshot arr from tab object
+      console.log(tabID)
 
       // send message to devtools
-      bg.postMessage({
-        action: 'sendSnapshots',
-        payload: snapshotArr,
-      });
+      if(bg) {
+        bg.postMessage({
+          action: 'sendSnapshots',
+          payload: snapshotArr,
+        });
+      }
       break;
     default:
   }
