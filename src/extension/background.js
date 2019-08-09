@@ -98,6 +98,9 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
   const { persist } = tabsObj[tabId].mode;
 
+  console.log('request: ', request)
+  console.log('sender: ', sender)
+
   switch (action) {
     case 'tabReload':
       tabsObj[tabId].firstSnapshot = true;
