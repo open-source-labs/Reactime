@@ -6,6 +6,7 @@ import Tooltip from 'rc-tooltip';
 import PropTypes from 'prop-types';
 
 import { changeSlider, pause } from '../actions/actions';
+import { useStoreContext } from '../store';
 
 const { Handle } = Slider;
 
@@ -27,7 +28,10 @@ const handle = (props) => {
   );
 };
 
-function MainSlider({ snapshotsLength, sliderIndex, dispatch }) {
+function MainSlider({ snapshotsLength }) {
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const { sliderIndex } = tabs[currentTab];
+
   return (
     <Slider
       min={0}
@@ -45,8 +49,6 @@ function MainSlider({ snapshotsLength, sliderIndex, dispatch }) {
 
 MainSlider.propTypes = {
   snapshotsLength: PropTypes.number.isRequired,
-  sliderIndex: PropTypes.number.isRequired,
-  dispatch: PropTypes.func.isRequired,
 };
 
 export default MainSlider;

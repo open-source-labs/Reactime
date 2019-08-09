@@ -2,7 +2,7 @@ let bg;
 const tabsObj = {};
 function createTabObj() {
   return {
-    snapshotArr: [],
+    snapshots: [],
     mode: {
       persist: false,
       locked: false,
@@ -16,26 +16,26 @@ function createTabObj() {
 chrome.runtime.onConnect.addListener((port) => {
   bg = port;
 
-  // if snapshots were saved in the snapshotArr,
+  // if snapshots were saved in the snapshots,
   // send it to devtools as soon as connection to devtools is made
-  if (Object.values(tabsObj)[0].snapshotArr.length > 0) {
+  if (Object.values(tabsObj)[0].snapshots.length > 0) {
     // later we want to send the entire tabsObj to devTools
     // but currently since devTools can only handle one tab at a time
     // we will test our obj assuming that the user opened only one tab
     // below is what we want the postMessage to look like eventually
     // ---------------------------------------------------------------
-    // bg.postMessage({
-    //   action: 'initialConnectSnapshots',
-    //   payload: tabsObj,
-    // });
-    // ---------------------------------------------------------------
     bg.postMessage({
       action: 'initialConnectSnapshots',
-      payload: {
-        snapshots: Object.values(tabsObj)[0].snapshotArr,
-        mode: Object.values(tabsObj)[0].mode,
-      },
+      payload: tabsObj,
     });
+    // ---------------------------------------------------------------
+    // bg.postMessage({
+    //   action: 'initialConnectSnapshots',
+    //   payload: {
+    //     snapshots: Object.values(tabsObj)[0].snapshots,
+    //     mode: Object.values(tabsObj)[0].mode,
+    //   },
+    // });
   }
 
   // receive snapshot from devtools and send it to contentScript
@@ -51,11 +51,11 @@ chrome.runtime.onConnect.addListener((port) => {
     const { action, payload, tabId } = msg;
     switch (action) {
       case 'import':
-        snapshotArr = payload;
-        break;
+        tabsObj[tabId].snapshots = payload;
+        return;
       case 'emptySnap':
-        tabsObj[tabId].snapshotArr.splice(1);
-        break;
+        tabsObj[tabId].snapshots.splice(1);
+        return;
       case 'setLock':
         tabsObj[tabId].mode.locked = payload;
         break;
@@ -108,32 +108,41 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       tabsObj[tabId].firstSnapshot = true;
       tabsObj[tabId].mode.locked = false;
       tabsObj[tabId].mode.paused = false;
-      if (!persist) tabsObj[tabId].snapshotArr = [];
+      if (!persist) tabsObj[tabId].snapshots = [];
       break;
     case 'recordSnap':
       if (tabsObj[tabId].firstSnapshot) {
         tabsObj[tabId].firstSnapshot = false;
         // don't add anything to snapshot storage if mode is persisting for the initial snapshot
-        if (!persist) tabsObj[tabId].snapshotArr.push(request.payload);
+        if (!persist) tabsObj[tabId].snapshots.push(request.payload);
         if (bg) {
+          // bg.postMessage({
+          //   action: 'initialConnectSnapshots',
+          //   payload: {
+          //     snapshots: tabsObj[tabId].snapshots,
+          //     mode: tabsObj[tabId].mode,
+          //   },
+          // });
+          console.log('connecting');
           bg.postMessage({
             action: 'initialConnectSnapshots',
-            payload: {
-              snapshots: tabsObj[tabId].snapshotArr,
-              mode: tabsObj[tabId].mode,
-            },
+            payload: tabsObj,
           });
         }
         break;
       }
 
-      tabsObj[tabId].snapshotArr.push(request.payload);
+      tabsObj[tabId].snapshots.push(request.payload);
 
       // send message to devtools
       if (bg) {
+        // bg.postMessage({
+        //   action: 'sendSnapshots',
+        //   payload: tabsObj[tabId].snapshots,
+        // });
         bg.postMessage({
           action: 'sendSnapshots',
-          payload: tabsObj[tabId].snapshotArr,
+          payload: tabsObj,
         });
       }
       break;
