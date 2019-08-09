@@ -1,11 +1,16 @@
 let bg;
-let snapshotArr = [];
-const mode = {
-  persist: false,
-  locked: false,
-  paused: false,
-};
-let firstSnapshot = true;
+const tabsObj = {};
+function createTabObj() {
+  return {
+    snapshotArr: [],
+    mode: {
+      persist: false,
+      locked: false,
+      paused: false,
+    },
+    firstSnapshot: true,
+  };
+}
 
 // establishing connection with devtools
 chrome.runtime.onConnect.addListener((port) => {
@@ -13,37 +18,62 @@ chrome.runtime.onConnect.addListener((port) => {
 
   // if snapshots were saved in the snapshotArr,
   // send it to devtools as soon as connection to devtools is made
-  if (snapshotArr.length > 0) {
+  if (Object.values(tabsObj)[0].snapshotArr.length > 0) {
+    // later we want to send the entire tabsObj to devTools
+    // but currently since devTools can only handle one tab at a time
+    // we will test our obj assuming that the user opened only one tab
+    // below is what we want the postMessage to look like eventually
+    // ---------------------------------------------------------------
+    // bg.postMessage({
+    //   action: 'initialConnectSnapshots',
+    //   payload: tabsObj,
+    // });
+    // ---------------------------------------------------------------
     bg.postMessage({
       action: 'initialConnectSnapshots',
       payload: {
-        snapshots: snapshotArr,
-        mode,
+        snapshots: Object.values(tabsObj)[0].snapshotArr,
+        mode: Object.values(tabsObj)[0].mode,
       },
     });
   }
 
   // receive snapshot from devtools and send it to contentScript
   port.onMessage.addListener((msg) => {
-    const { action, payload } = msg;
+    // ---------------------------------------------------------------
+    // message incoming from devTools should look like this:
+    // {
+    //   action: 'emptySnap',
+    //   payload: tabsObj,
+    //   tabId: 101
+    // }
+    // ---------------------------------------------------------------
+    const { action, payload, tabId } = msg;
     switch (action) {
       case 'import':
         snapshotArr = payload;
         break;
       case 'emptySnap':
-        snapshotArr.splice(1);
+        tabsObj[tabId].snapshotArr.splice(1);
         break;
       case 'setLock':
-        mode.locked = payload;
+        tabsObj[tabId].mode.locked = payload;
         break;
       case 'setPause':
-        mode.paused = payload;
+        tabsObj[tabId].mode.paused = payload;
         break;
       case 'setPersist':
-        mode.persist = payload;
+        tabsObj[tabId].mode.persist = payload;
         break;
       default:
     }
+
+    // Instead of sending the message to the active tab,
+    // now we can send messages to specific tabs that we specify
+    // using tabId
+    // ---------------------------------------------------------------
+    // chrome.tabs.sendMessage(tabId, msg);
+    // ---------------------------------------------------------------
     // find active tab
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       // send message to tab
@@ -53,42 +83,65 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 // background.js recieves message from contentScript.js
-chrome.runtime.onMessage.addListener((request) => {
+chrome.runtime.onMessage.addListener((request, sender) => {
+  // IGNORE THE AUTOMTAIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
+  if (request.type === 'SIGN_CONNECT') return;
+
+  const tabId = sender.tab.id;
   const { action } = request;
-  const { persist } = mode;
+  let isReactTimeTravel = false;
+
+  // Filter out tabs that don't have react-time-travel
+  if (action === 'tabReload' || action === 'recordSnap') {
+    isReactTimeTravel = true;
+  }
+
+  // everytime we get a new tabid, add it to the object
+  if (isReactTimeTravel && !(tabId in tabsObj)) {
+    tabsObj[tabId] = createTabObj();
+  }
+
+  const { persist } = tabsObj[tabId].mode;
 
   switch (action) {
     case 'tabReload':
-      firstSnapshot = true;
-      mode.locked = false;
-      mode.paused = false;
-      if (!persist) snapshotArr = [];
+      tabsObj[tabId].firstSnapshot = true;
+      tabsObj[tabId].mode.locked = false;
+      tabsObj[tabId].mode.paused = false;
+      if (!persist) tabsObj[tabId].snapshotArr = [];
       break;
     case 'recordSnap':
-      if (firstSnapshot) {
-        firstSnapshot = false;
+      if (tabsObj[tabId].firstSnapshot) {
+        tabsObj[tabId].firstSnapshot = false;
         // don't add anything to snapshot storage if mode is persisting for the initial snapshot
-        if (!persist) snapshotArr.push(request.payload);
-        bg.postMessage({
-          action: 'initialConnectSnapshots',
-          payload: {
-            snapshots: snapshotArr,
-            mode,
-          },
-        });
+        if (!persist) tabsObj[tabId].snapshotArr.push(request.payload);
+        if (bg) {
+          bg.postMessage({
+            action: 'initialConnectSnapshots',
+            payload: {
+              snapshots: tabsObj[tabId].snapshotArr,
+              mode: tabsObj[tabId].mode,
+            },
+          });
+        }
         break;
       }
-      snapshotArr.push(request.payload);
-      // TODO:
-      // get active tab id
-      // get snapshot arr from tab object
+
+      tabsObj[tabId].snapshotArr.push(request.payload);
 
       // send message to devtools
-      bg.postMessage({
-        action: 'sendSnapshots',
-        payload: snapshotArr,
-      });
+      if (bg) {
+        bg.postMessage({
+          action: 'sendSnapshots',
+          payload: tabsObj[tabId].snapshotArr,
+        });
+      }
       break;
     default:
   }
+});
+
+// when tab is closed, remove the tabid from the tabsObj
+chrome.tabs.onRemoved.addListener((tabId) => {
+  delete tabsObj[tabId];
 });
