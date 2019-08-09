@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 
 import {
   importSnapshots, toggleMode,
@@ -36,9 +35,8 @@ function importHandler(dispatch) {
   fileUpload.click();
 }
 
-function ButtonsContainer(props) {
-  const { snapshots, mode: { paused, locked, persist }, dispatch } = props;
-  // const [{ snapshots, mode: { paused, locked, persist } }, dispatch] = useContext(StoreContext);
+function ButtonsContainer() {
+  const [{ snapshots, mode: { paused, locked, persist } }, dispatch] = useContext(StoreContext);
   return (
     <div className="buttons-container">
       <button className="pause-button" type="button" onClick={() => dispatch(toggleMode('paused'))}>
@@ -59,17 +57,5 @@ function ButtonsContainer(props) {
     </div>
   );
 }
-
-ButtonsContainer.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  snapshots: PropTypes.arrayOf(
-    PropTypes.object,
-  ).isRequired,
-  mode: PropTypes.shape({
-    paused: PropTypes.bool,
-    locked: PropTypes.bool,
-    persist: PropTypes.bool,
-  }).isRequired,
-};
 
 export default ButtonsContainer;
