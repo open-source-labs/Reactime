@@ -19,23 +19,10 @@ chrome.runtime.onConnect.addListener((port) => {
   // if snapshots were saved in the snapshots,
   // send it to devtools as soon as connection to devtools is made
   if (Object.values(tabsObj)[0].snapshots.length > 0) {
-    // later we want to send the entire tabsObj to devTools
-    // but currently since devTools can only handle one tab at a time
-    // we will test our obj assuming that the user opened only one tab
-    // below is what we want the postMessage to look like eventually
-    // ---------------------------------------------------------------
     bg.postMessage({
       action: 'initialConnectSnapshots',
       payload: tabsObj,
     });
-    // ---------------------------------------------------------------
-    // bg.postMessage({
-    //   action: 'initialConnectSnapshots',
-    //   payload: {
-    //     snapshots: Object.values(tabsObj)[0].snapshots,
-    //     mode: Object.values(tabsObj)[0].mode,
-    //   },
-    // });
   }
 
   // receive snapshot from devtools and send it to contentScript
@@ -98,9 +85,6 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
   const { persist } = tabsObj[tabId].mode;
 
-  console.log('request: ', request)
-  console.log('sender: ', sender)
-
   switch (action) {
     case 'tabReload':
       tabsObj[tabId].firstSnapshot = true;
@@ -114,13 +98,6 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         // don't add anything to snapshot storage if mode is persisting for the initial snapshot
         if (!persist) tabsObj[tabId].snapshots.push(request.payload);
         if (bg) {
-          // bg.postMessage({
-          //   action: 'initialConnectSnapshots',
-          //   payload: {
-          //     snapshots: tabsObj[tabId].snapshots,
-          //     mode: tabsObj[tabId].mode,
-          //   },
-          // });
           console.log('connecting');
           bg.postMessage({
             action: 'initialConnectSnapshots',
@@ -134,10 +111,6 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
       // send message to devtools
       if (bg) {
-        // bg.postMessage({
-        //   action: 'sendSnapshots',
-        //   payload: tabsObj[tabId].snapshots,
-        // });
         bg.postMessage({
           action: 'sendSnapshots',
           payload: tabsObj,
