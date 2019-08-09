@@ -72,13 +72,8 @@ chrome.runtime.onConnect.addListener((port) => {
     // now we can send messages to specific tabs that we specify
     // using tabId
     // ---------------------------------------------------------------
-    // chrome.tabs.sendMessage(tabId, msg);
+    chrome.tabs.sendMessage(tabId, msg);
     // ---------------------------------------------------------------
-    // find active tab
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      // send message to tab
-      chrome.tabs.sendMessage(tabs[0].id, msg);
-    });
   });
 });
 

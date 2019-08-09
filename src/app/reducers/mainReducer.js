@@ -13,7 +13,7 @@ export default function mainReducer(state, action) {
       if (snapshots.length > 0 && sliderIndex > 0) {
         const newIndex = sliderIndex - 1;
 
-        port.postMessage({ action: 'jumpToSnap', payload: snapshots[newIndex] });
+        port.postMessage({ action: 'jumpToSnap', payload: snapshots[newIndex], tabId: currentTab });
         clearInterval(intervalId);
 
         tabs[currentTab].sliderIndex = newIndex;
@@ -30,7 +30,7 @@ export default function mainReducer(state, action) {
       if (sliderIndex < snapshots.length - 1) {
         const newIndex = sliderIndex + 1;
 
-        port.postMessage({ action: 'jumpToSnap', payload: snapshots[newIndex] });
+        port.postMessage({ action: 'jumpToSnap', payload: snapshots[newIndex], tabId: currentTab });
 
         tabs[currentTab].sliderIndex = newIndex;
 
@@ -58,16 +58,16 @@ export default function mainReducer(state, action) {
       };
     }
     case types.CHANGE_SLIDER: {
-      port.postMessage({ action: 'jumpToSnap', payload: snapshots[action.payload] });
+      port.postMessage({ action: 'jumpToSnap', payload: snapshots[action.payload], tabId: currentTab });
       tabs[currentTab].sliderIndex = action.payload;
       return { ...state, tabs };
     }
     case types.EMPTY: {
-      port.postMessage({ action: 'emptySnap', tabd: currentTab });
+      port.postMessage({ action: 'emptySnap', tabId: currentTab });
       tabs[currentTab].sliderIndex = 0;
       tabs[currentTab].viewIndex = -1;
       tabs[currentTab].playing = false;
-      tabs[currentTab].snapshots = [];
+      tabs[currentTab].snapshots.splice(1);
       return {
         ...state,
         tabs,
@@ -77,7 +77,7 @@ export default function mainReducer(state, action) {
       return { ...state, port: action.payload };
     }
     case types.IMPORT: {
-      port.postMessage({ action: 'import', payload: action.payload });
+      port.postMessage({ action: 'import', payload: action.payload, tabId: currentTab });
       tabs[currentTab].snapshots = action.payload;
       return {
         ...state,
@@ -100,7 +100,7 @@ export default function mainReducer(state, action) {
           break;
         default:
       }
-      port.postMessage({ action: actionText, payload: newMode });
+      port.postMessage({ action: actionText, payload: newMode, tabId: currentTab });
       return { ...state, tabs };
     }
     case types.PAUSE: {
