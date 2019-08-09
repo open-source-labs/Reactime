@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import {
+  importSnapshots, toggleLock, togglePause, togglePersist,
+} from '../actions/actions';
 
-function exportSnapshots(snapshots) {
+function exportHandler(snapshots) {
   // create invisible download anchor link
   const fileDownload = document.createElement('a');
 
@@ -19,15 +22,13 @@ function exportSnapshots(snapshots) {
   URL.revokeObjectURL(fileDownload.href);
 }
 
-function importSnapshots(dispatch) {
+function importHandler(dispatch) {
   const fileUpload = document.createElement('input');
   fileUpload.setAttribute('type', 'file');
 
   fileUpload.onchange = (event) => {
     const reader = new FileReader();
-    reader.onload = () => {
-      dispatch({ type: 'import', payload: JSON.parse(reader.result) });
-    };
+    reader.onload = () => dispatch(importSnapshots(JSON.parse(reader.result)));
     reader.readAsText(event.target.files[0]);
   };
 
@@ -41,19 +42,19 @@ const ButtonsContainer = ({
 }) =>
   (
     <div className="buttons-container">
-      <button className="pause-button" type="button" onClick={() => dispatch({ type: 'toggleMode', payload: 'paused' })}>
+      <button className="pause-button" type="button" onClick={() => dispatch(togglePause())}>
         {paused ? 'Resume' : 'Pause'}
       </button>
-      <button className="lock-button" type="button" onClick={() => dispatch({ type: 'toggleMode', payload: 'locked' })}>
+      <button className="lock-button" type="button" onClick={() => dispatch(toggleLock())}>
         {locked ? 'Unlock' : 'Lock'}
       </button>
-      <button className="persist-button" type="button" onClick={() => dispatch({ type: 'toggleMode', payload: 'persist' })}>
+      <button className="persist-button" type="button" onClick={() => dispatch(togglePersist())}>
         {persist ? 'Unpersist' : 'Persist'}
       </button>
-      <button className="export-button" type="button" onClick={() => exportSnapshots(snapshots)}>
+      <button className="export-button" type="button" onClick={() => exportHandler(snapshots)}>
         Export
       </button>
-      <button className="import-button" type="button" onClick={() => importSnapshots(dispatch)}>
+      <button className="import-button" type="button" onClick={() => importHandler(dispatch)}>
         Import
       </button>
     </div>

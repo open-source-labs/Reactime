@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import '../styles/components/_d3Tree.scss';
 import * as d3 from 'd3';
 
@@ -8,12 +9,14 @@ let duration = 750;
 
 class Chart extends Component {
   componentDidMount() {
-    root = JSON.parse(JSON.stringify(this.props.snapshot));
+    const { snapshot } = this.props;
+    root = JSON.parse(JSON.stringify(snapshot));
     this.maked3Tree();
   }
 
   componentDidUpdate() {
-    root = JSON.parse(JSON.stringify(this.props.snapshot));
+    const { snapshot } = this.props;
+    root = JSON.parse(JSON.stringify(snapshot));
     this.maked3Tree();
   }
 
@@ -28,8 +31,10 @@ class Chart extends Component {
     this.removed3Tree();
     duration = 0;
 
-    const margin = { top: 20, right: 120, bottom: 20, left: 120 };
-    const width = 600 - margin.right - margin.left;
+    const margin = {
+      top: 20, right: 120, bottom: 20, left: 120,
+    };
+    // const width = 600 - margin.right - margin.left;
     const height = 600 - margin.top - margin.bottom;
 
     let i = 0;
@@ -218,5 +223,11 @@ class Chart extends Component {
     return <div ref="anchor" className="d3Container" />;
   }
 }
+
+Chart.propTypes = {
+  snapshot: PropTypes.arrayOf(
+    PropTypes.object,
+  ).isRequired,
+};
 
 export default Chart;

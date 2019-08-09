@@ -5,155 +5,25 @@ import StateContainer from './StateContainer';
 import TravelContainer from './TravelContainer';
 import ButtonsContainer from './ButtonsContainer';
 
-const ACTIONS = {
-  toggleMode: 'toggleMode',
-  moveBackward: 'moveBackward',
-  moveForward: 'moveForward',
-  import: 'import',
-  empty: 'empty',
-  changeView: 'changeView',
-  changeSlider: 'changeSlider',
-  setPort: 'setPort',
-  pause: 'pause',
-  play: 'play',
-  initialConnect: 'initialConnect',
-  newSnapshots: 'newSnapshots',
+import mainReducer from '../reducers/mainReducer';
+import { addNewSnapshots, initialConnect, setPort } from '../actions/actions';
+
+const initialState = {
+  port: null,
+  sliderIndex: 0,
+  viewIndex: -1,
+  intervalId: null,
+  playing: false,
+  snapshots: [],
+  mode: {
+    locked: false,
+    paused: false,
+    persist: false,
+  },
 };
 
-function mainReducer(state, action) {
-  const {
-    sliderIndex, snapshots, viewIndex, port, mode, intervalId,
-  } = state;
-  switch (action.type) {
-    case ACTIONS.moveBackward: {
-      if (snapshots.length > 0 && sliderIndex > 0) {
-        const newIndex = sliderIndex - 1;
-        clearInterval(intervalId);
-        port.postMessage({ action: 'jumpToSnap', payload: snapshots[newIndex] });
-        return {
-          ...state,
-          sliderIndex: newIndex,
-          playing: false,
-        };
-      }
-      return state;
-    }
-    case ACTIONS.moveForward: {
-      if (sliderIndex < snapshots.length - 1) {
-        const newIndex = sliderIndex + 1;
-        port.postMessage({ action: 'jumpToSnap', payload: snapshots[newIndex] });
-
-        // if payload is true, then message is coming from the setInterval
-        if (!action.payload) {
-          clearInterval(intervalId);
-          return {
-            ...state,
-            sliderIndex: newIndex,
-            playing: false,
-          };
-        }
-        return {
-          ...state,
-          sliderIndex: newIndex,
-        };
-      }
-      return state;
-    }
-    case ACTIONS.changeView: {
-      // unselect view if same index was selected
-      if (viewIndex === action.payload) return [...state, { viewIndex: -1 }];
-      return { ...state, viewIndex: action.payload };
-    }
-    case ACTIONS.changeSlider: {
-      port.postMessage({ action: 'jumpToSnap', payload: snapshots[action.payload] });
-      return { ...state, sliderIndex: action.payload };
-    }
-    case ACTIONS.empty: {
-      port.postMessage({ action: 'emptySnap' });
-      return {
-        sliderIndex: 0,
-        viewIndex: -1,
-        playing: false,
-        snapshots: [],
-      };
-    }
-    case ACTIONS.setPort: {
-      return { ...state, port: action.payload };
-    }
-    case ACTIONS.import: {
-      port.postMessage({ action: 'import', payload: action.payload });
-      return {
-        ...state,
-        snapshots: action.payload,
-        sliderIndex: 0,
-        viewIndex: -1,
-      };
-    }
-    case ACTIONS.toggleMode: {
-      mode[action.payload] = !mode[action.payload];
-      const newMode = mode[action.payload];
-      switch (action.payload) {
-        case 'paused':
-          port.postMessage({ action: 'setPause', payload: newMode });
-          break;
-        case 'locked':
-          port.postMessage({ action: 'setLock', payload: newMode });
-          break;
-        case 'persist':
-          port.postMessage({ action: 'setPersist', payload: newMode });
-          break;
-        default:
-      }
-      return { ...state, mode };
-    }
-    case ACTIONS.pause: {
-      clearInterval(intervalId);
-      return { ...state, playing: false, intervalId: null };
-    }
-    case ACTIONS.play: {
-      return {
-        ...state,
-        playing: true,
-        intervalId: action.payload,
-      };
-    }
-    case ACTIONS.initialConnect: {
-      const { payload } = action;
-      return {
-        ...state,
-        snapshots: payload.snapshots,
-        mode: payload.mode,
-        viewIndex: payload.viewIndex,
-        sliderIndex: payload.sliderIndex,
-      };
-    }
-    case ACTIONS.newSnapshots: {
-      const { payload } = action;
-      return {
-        ...state,
-        snapshots: payload.snapshots,
-        sliderIndex: payload.sliderIndex,
-      };
-    }
-    default:
-      throw new Error('nonexistent action');
-  }
-}
-
 function MainContainer() {
-  const [mainState, dispatch] = useReducer(mainReducer, {
-    port: null,
-    sliderIndex: 0,
-    viewIndex: -1,
-    intervalId: null,
-    playing: false,
-    snapshots: [],
-    mode: {
-      locked: false,
-      paused: false,
-      persist: false,
-    },
-  });
+  const [mainState, dispatch] = useReducer(mainReducer, initialState);
 
   useEffect(() => {
     if (mainState.port) return;
@@ -165,30 +35,13 @@ function MainContainer() {
       const { action, payload } = message;
       switch (action) {
         case 'sendSnapshots': {
-          const sliderIndex = payload.length - 1;
           // set state with the information received from the background script
-          dispatch({
-            type: ACTIONS.newSnapshots,
-            payload: {
-              snapshots: payload,
-              sliderIndex,
-            },
-          });
+          dispatch(addNewSnapshots(payload));
           break;
         }
         case 'initialConnectSnapshots': {
           const { snapshots, mode } = payload;
-          const viewIndex = -1;
-          const sliderIndex = 0;
-          dispatch({
-            type: ACTIONS.initialConnect,
-            payload: {
-              snapshots,
-              mode,
-              viewIndex,
-              sliderIndex,
-            }
-          });
+          dispatch(initialConnect(snapshots, mode));
           break;
         }
         default:
@@ -202,10 +55,7 @@ function MainContainer() {
 
     // assign port to state so it could be used by other components
     // this.setState({ port });
-    dispatch({
-      type: 'setPort',
-      payload: port,
-    });
+    dispatch(setPort(port));
   });
 
   const {

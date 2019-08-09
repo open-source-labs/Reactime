@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import MainSlider from '../components/MainSlider';
 import Dropdown from '../components/Dropdown';
 
+import {
+  playForward, pause, startPlaying, moveForward, moveBackward,
+} from '../actions/actions';
+
 const speeds = [
   { value: 2000, label: '0.5x' },
   { value: 1000, label: '1.0x' },
@@ -11,23 +15,22 @@ const speeds = [
 
 function play(speed, playing, dispatch, snapshotsLength, sliderIndex) {
   if (playing) {
-    dispatch({ type: 'pause' });
+    dispatch(pause());
   } else {
+    let currentIndex = sliderIndex;
     const intervalId = setInterval(() => {
-      if (sliderIndex < snapshotsLength - 1) {
-        dispatch({
-          type: 'moveForward',
-          payload: true,
-        });
+      if (currentIndex < snapshotsLength - 1) {
+        dispatch(playForward());
+        currentIndex += 1;
       } else {
-        dispatch({ type: 'pause' });
+        dispatch(pause());
       }
     }, speed);
-    dispatch({ type: 'play', payload: intervalId });
+    dispatch(startPlaying(intervalId));
   }
 }
 
-const TravelContainer = (props) => {
+function TravelContainer(props) {
   const [selectedSpeed, setSpeed] = useState(speeds[1]);
 
   const {
@@ -47,10 +50,10 @@ const TravelContainer = (props) => {
         sliderIndex={sliderIndex}
         dispatch={dispatch}
       />
-      <button className="backward-button" onClick={() => dispatch({ type: 'moveBackward' })} type="button">
+      <button className="backward-button" onClick={() => dispatch(moveBackward())} type="button">
         {'<'}
       </button>
-      <button className="forward-button" onClick={() => dispatch({ type: 'moveForward' })} type="button">
+      <button className="forward-button" onClick={() => dispatch(moveForward())} type="button">
         {'>'}
       </button>
       <Dropdown

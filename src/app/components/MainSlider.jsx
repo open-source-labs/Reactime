@@ -1,7 +1,11 @@
+/* eslint-disable react/prop-types */
+
 import React from 'react';
 import Slider from 'rc-slider';
 import Tooltip from 'rc-tooltip';
 import PropTypes from 'prop-types';
+
+import { changeSlider, pause } from '../actions/actions';
 
 const { Handle } = Slider;
 
@@ -23,24 +27,21 @@ const handle = (props) => {
   );
 };
 
-const MainSlider = ({
-  snapshotsLength,
-  sliderIndex,
-  dispatch,
-}) =>
-  (
+function MainSlider({ snapshotsLength, sliderIndex, dispatch }) {
+  return (
     <Slider
       min={0}
       max={snapshotsLength - 1}
       value={sliderIndex}
       onChange={(index) => {
         const newIndex = index === -1 ? 0 : index;
-        dispatch({ type: 'changeSlider', payload: newIndex });
-        dispatch({ type: 'pause' });
+        dispatch(changeSlider(newIndex));
+        dispatch(pause());
       }}
       handle={handle}
     />
   );
+}
 
 MainSlider.propTypes = {
   snapshotsLength: PropTypes.number.isRequired,

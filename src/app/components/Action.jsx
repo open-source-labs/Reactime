@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { changeView, changeSlider } from '../actions/actions';
+
 const Action = (props) => {
   const {
     selected, index, sliderIndex, dispatch,
@@ -9,10 +11,7 @@ const Action = (props) => {
   return (
     <div
       className={selected ? 'action-component selected' : 'action-component'}
-      onClick={() => dispatch({
-        type: 'changeView',
-        payload: index,
-      })}
+      onClick={() => dispatch(changeView(index))}
       role="presentation"
       style={index > sliderIndex ? { color: '#5f6369' } : {}}
     >
@@ -21,10 +20,7 @@ const Action = (props) => {
         className="jump-button"
         onClick={(e) => {
           e.stopPropagation();
-          dispatch({
-            type: 'changeSlider',
-            payload: index,
-          });
+          dispatch(changeSlider(index));
         }}
         tabIndex={index}
         type="button"

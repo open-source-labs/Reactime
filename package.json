@@ -5,7 +5,8 @@
   "scripts": {
     "build": "webpack --mode production",
     "dev": "webpack --mode development --watch",
-    "test": "jest --verbose --coverage --watchAll"
+    "test": "jest --verbose --coverage --watchAll",
+    "lint": "eslint --ext .js --ext .jsx src"
   },
   "keywords": [
     "react",

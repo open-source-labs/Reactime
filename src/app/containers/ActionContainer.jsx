@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Action from '../components/Action';
 
+import { emptySnapshots } from '../actions/actions';
+
 const ActionContainer = ({
   snapshots,
   sliderIndex,
@@ -26,7 +28,7 @@ const ActionContainer = ({
   return (
     <div className="action-container">
       <div className="action-component exclude">
-        <button className="empty-button" onClick={() => dispatch({ type: 'empty' })} type="button">
+        <button className="empty-button" onClick={() => dispatch(emptySnapshots())} type="button">
           emptySnapshot
         </button>
       </div>
