@@ -50,6 +50,9 @@ chrome.runtime.onConnect.addListener((port) => {
     // ---------------------------------------------------------------
     const { action, payload, tabId } = msg;
     switch (action) {
+      case 'import':
+        tabsObj[tabId].snapshotArr = payload;
+        break;
       case 'emptySnap':
         tabsObj[tabId].snapshotArr.splice(1);
         break;
@@ -99,6 +102,9 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   }
 
   const { persist } = tabsObj[tabId].mode;
+
+  // console.log('request: ', request)
+  // console.log('sender: ', sender)
 
   switch (action) {
     case 'tabReload':
