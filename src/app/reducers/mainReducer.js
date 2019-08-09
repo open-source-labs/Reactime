@@ -72,7 +72,20 @@ export default function mainReducer(state, action) {
     case types.TOGGLE_MODE: {
       mode[action.payload] = !mode[action.payload];
       const newMode = mode[action.payload];
-      port.postMessage({ action: action.payload, payload: newMode });
+      let actionText;
+      switch (action.payload) {
+        case 'paused':
+          actionText = 'setPause';
+          break;
+        case 'locked':
+          actionText = 'setLock';
+          break;
+        case 'persist':
+          actionText = 'setPersist';
+          break;
+        default:
+      }
+      port.postMessage({ action: actionText, payload: newMode });
       return { ...state, mode };
     }
     case types.PAUSE: {

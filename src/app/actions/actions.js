@@ -1,18 +1,8 @@
 import * as types from '../constants/actionTypes';
 
-export const togglePause = () => ({
+export const toggleMode = mode => ({
   type: types.TOGGLE_MODE,
-  payload: 'setPause',
-});
-
-export const toggleLock = () => ({
-  type: types.TOGGLE_MODE,
-  payload: 'setLock',
-});
-
-export const togglePersist = () => ({
-  type: types.TOGGLE_MODE,
-  payload: 'setPersist',
+  payload: mode,
 });
 
 export const addNewSnapshots = snapshots => ({

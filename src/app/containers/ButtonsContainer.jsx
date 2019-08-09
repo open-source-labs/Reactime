@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  importSnapshots, toggleLock, togglePause, togglePersist,
+  importSnapshots, toggleMode,
 } from '../actions/actions';
+import StoreContext from '../store';
 
 function exportHandler(snapshots) {
   // create invisible download anchor link
@@ -35,20 +36,18 @@ function importHandler(dispatch) {
   fileUpload.click();
 }
 
-const ButtonsContainer = ({
-  mode: { paused, locked, persist },
-  dispatch,
-  snapshots,
-}) =>
-  (
+function ButtonsContainer(props) {
+  const { snapshots, mode: { paused, locked, persist }, dispatch } = props;
+  // const [{ snapshots, mode: { paused, locked, persist } }, dispatch] = useContext(StoreContext);
+  return (
     <div className="buttons-container">
-      <button className="pause-button" type="button" onClick={() => dispatch(togglePause())}>
+      <button className="pause-button" type="button" onClick={() => dispatch(toggleMode('paused'))}>
         {paused ? 'Resume' : 'Pause'}
       </button>
-      <button className="lock-button" type="button" onClick={() => dispatch(toggleLock())}>
+      <button className="lock-button" type="button" onClick={() => dispatch(toggleMode('locked'))}>
         {locked ? 'Unlock' : 'Lock'}
       </button>
-      <button className="persist-button" type="button" onClick={() => dispatch(togglePersist())}>
+      <button className="persist-button" type="button" onClick={() => dispatch(toggleMode('persist'))}>
         {persist ? 'Unpersist' : 'Persist'}
       </button>
       <button className="export-button" type="button" onClick={() => exportHandler(snapshots)}>
@@ -59,6 +58,7 @@ const ButtonsContainer = ({
       </button>
     </div>
   );
+}
 
 ButtonsContainer.propTypes = {
   dispatch: PropTypes.func.isRequired,

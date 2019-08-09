@@ -7,6 +7,7 @@ import ButtonsContainer from './ButtonsContainer';
 
 import mainReducer from '../reducers/mainReducer';
 import { addNewSnapshots, initialConnect, setPort } from '../actions/actions';
+import StoreContext from '../store';
 
 const initialState = {
   port: null,
@@ -59,7 +60,6 @@ function MainContainer() {
   });
 
   const {
-    port,
     snapshots,
     sliderIndex,
     viewIndex,
@@ -69,33 +69,33 @@ function MainContainer() {
 
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = (viewIndex === -1) ? snapshots[sliderIndex] : snapshots[viewIndex];
-
   return (
-    (port) ? (
-      <div className="main-container">
-        <HeadContainer />
-        <div className="body-container">
-          <ActionContainer
-            snapshots={snapshots}
-            sliderIndex={sliderIndex}
-            viewIndex={viewIndex}
-            dispatch={dispatch}
-          />
-          {(snapshots.length) ? <StateContainer snapshot={snapshotView} /> : null}
-          <TravelContainer
-            snapshotsLength={snapshots.length}
-            sliderIndex={sliderIndex}
-            playing={playing}
-            dispatch={dispatch}
-          />
-          <ButtonsContainer
-            mode={mode}
-            dispatch={dispatch}
-            snapshots={mainState.snapshots}
-          />
-        </div>
+    // <StoreContext.Provider value={[mainState, dispatch]}>
+    <div className="main-container">
+      <HeadContainer />
+      <div className="body-container">
+        <ActionContainer
+          snapshots={snapshots}
+          sliderIndex={sliderIndex}
+          viewIndex={viewIndex}
+          dispatch={dispatch}
+        />
+        {(snapshots.length) ? <StateContainer snapshot={snapshotView} /> : null}
+        <TravelContainer
+          snapshotsLength={snapshots.length}
+          sliderIndex={sliderIndex}
+          playing={playing}
+          dispatch={dispatch}
+        />
+        <ButtonsContainer
+          mode={mode}
+          dispatch={dispatch}
+          snapshots={mainState.snapshots}
+        />
       </div>
-    ) : <div>no existing react-time-travel page</div>);
+    </div>
+    // </StoreContext.Provider>
+  );
 }
 
 export default MainContainer;
