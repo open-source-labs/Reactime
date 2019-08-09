@@ -1,16 +1,14 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
-import PropTypes from 'prop-types';
 import Action from '../components/Action';
 
 import { emptySnapshots } from '../actions/actions';
+import { useStoreContext } from '../store';
 
-const ActionContainer = ({
-  snapshots,
-  sliderIndex,
-  viewIndex,
-  dispatch,
-}) => {
+function ActionContainer() {
+  const [{ snapshots, sliderIndex, viewIndex }, dispatch] = useStoreContext();
   let actionsArr = [];
+  // build actions array
   if (snapshots.length > 0) {
     actionsArr = snapshots.map((snapshot, index) => {
       const selected = index === viewIndex;
@@ -35,13 +33,6 @@ const ActionContainer = ({
       <div>{actionsArr}</div>
     </div>
   );
-};
-
-ActionContainer.propTypes = {
-  snapshots: PropTypes.arrayOf(PropTypes.object).isRequired,
-  dispatch: PropTypes.func.isRequired,
-  sliderIndex: PropTypes.number.isRequired,
-  viewIndex: PropTypes.number.isRequired,
-};
+}
 
 export default ActionContainer;

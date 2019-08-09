@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import {
   importSnapshots, toggleMode,
 } from '../actions/actions';
-import StoreContext from '../store';
+import { useStoreContext } from '../store';
 
 function exportHandler(snapshots) {
   // create invisible download anchor link
@@ -36,7 +36,7 @@ function importHandler(dispatch) {
 }
 
 function ButtonsContainer() {
-  const [{ snapshots, mode: { paused, locked, persist } }, dispatch] = useContext(StoreContext);
+  const [{ snapshots, mode: { paused, locked, persist } }, dispatch] = useStoreContext();
   return (
     <div className="buttons-container">
       <button className="pause-button" type="button" onClick={() => dispatch(toggleMode('paused'))}>

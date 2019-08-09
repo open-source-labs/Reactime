@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import MainSlider from '../components/MainSlider';
 import Dropdown from '../components/Dropdown';
-
 import {
   playForward, pause, startPlaying, moveForward, moveBackward,
 } from '../actions/actions';
+import { useStoreContext } from '../store';
 
 const speeds = [
   { value: 2000, label: '0.5x' },
@@ -13,6 +13,7 @@ const speeds = [
   { value: 500, label: '2.0x' },
 ];
 
+// start slider movement
 function play(speed, playing, dispatch, snapshotsLength, sliderIndex) {
   if (playing) {
     dispatch(pause());
@@ -30,15 +31,9 @@ function play(speed, playing, dispatch, snapshotsLength, sliderIndex) {
   }
 }
 
-function TravelContainer(props) {
+function TravelContainer({ snapshotsLength }) {
   const [selectedSpeed, setSpeed] = useState(speeds[1]);
-
-  const {
-    snapshotsLength,
-    sliderIndex,
-    playing,
-    dispatch,
-  } = props;
+  const [{ sliderIndex, playing }, dispatch] = useStoreContext();
 
   return (
     <div className="travel-container">
@@ -63,13 +58,10 @@ function TravelContainer(props) {
       />
     </div>
   );
-};
+}
 
 
 TravelContainer.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   snapshotsLength: PropTypes.number.isRequired,
-  sliderIndex: PropTypes.number.isRequired,
-  playing: PropTypes.bool.isRequired,
 };
 export default TravelContainer;
