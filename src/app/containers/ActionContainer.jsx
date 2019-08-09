@@ -8,7 +8,7 @@ import { useStoreContext } from '../store';
 function ActionContainer() {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { snapshots, sliderIndex, viewIndex } = tabs[currentTab];
-  // const [{ snapshots, sliderIndex, viewIndex }, dispatch] = useStoreContext();
+
   let actionsArr = [];
   // build actions array
   if (snapshots.length > 0) {
