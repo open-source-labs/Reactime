@@ -1,16 +1,14 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
-import PropTypes from 'prop-types';
 import Action from '../components/Action';
 
-const ActionContainer = ({
-  snapshots,
-  viewIndex,
-  handleChangeSnapshot,
-  handleJumpSnapshot,
-  emptySnapshot,
-  sliderIndex,
-}) => {
+import { emptySnapshots } from '../actions/actions';
+import { useStoreContext } from '../store';
+
+function ActionContainer() {
+  const [{ snapshots, sliderIndex, viewIndex }, dispatch] = useStoreContext();
   let actionsArr = [];
+  // build actions array
   if (snapshots.length > 0) {
     actionsArr = snapshots.map((snapshot, index) => {
       const selected = index === viewIndex;
@@ -18,11 +16,9 @@ const ActionContainer = ({
         <Action
           key={`action${index}`}
           index={index}
-          snapshot={snapshot}
           selected={selected}
+          dispatch={dispatch}
           sliderIndex={sliderIndex}
-          handleChangeSnapshot={handleChangeSnapshot}
-          handleJumpSnapshot={handleJumpSnapshot}
         />
       );
     });
@@ -30,22 +26,13 @@ const ActionContainer = ({
   return (
     <div className="action-container">
       <div className="action-component exclude">
-        <button className="empty-button" onClick={emptySnapshot} type="button">
+        <button className="empty-button" onClick={() => dispatch(emptySnapshots())} type="button">
           emptySnapshot
         </button>
       </div>
       <div>{actionsArr}</div>
     </div>
   );
-};
-
-ActionContainer.propTypes = {
-  snapshots: PropTypes.arrayOf(PropTypes.object).isRequired,
-  viewIndex: PropTypes.number.isRequired,
-  sliderIndex: PropTypes.number.isRequired,
-  handleChangeSnapshot: PropTypes.func.isRequired,
-  handleJumpSnapshot: PropTypes.func.isRequired,
-  emptySnapshot: PropTypes.func.isRequired,
-};
+}
 
 export default ActionContainer;

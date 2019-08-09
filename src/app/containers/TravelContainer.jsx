@@ -1,73 +1,67 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import MainSlider from '../components/MainSlider';
 import Dropdown from '../components/Dropdown';
+import {
+  playForward, pause, startPlaying, moveForward, moveBackward,
+} from '../actions/actions';
+import { useStoreContext } from '../store';
 
-const options = [
+const speeds = [
   { value: 2000, label: '0.5x' },
   { value: 1000, label: '1.0x' },
   { value: 500, label: '2.0x' },
 ];
 
-class TravelContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { selectedOption: options[1] };
-    this.handleChangeSpeed = this.handleChangeSpeed.bind(this);
-  }
-
-  handleChangeSpeed(selectedOption) {
-    this.setState({ selectedOption });
-  }
-
-  render() {
-    const { selectedOption } = this.state;
-    const {
-      moveBackward,
-      moveForward,
-      snapshotsLength,
-      handleJumpSnapshot,
-      sliderIndex,
-      play,
-      playing,
-      pause,
-    } = this.props;
-
-    return (
-      <div className="travel-container">
-        <button className="play-button" type="button" onClick={() => play(selectedOption.value)}>
-          {playing ? 'Pause' : 'Play'}
-        </button>
-        <MainSlider
-          snapshotLength={snapshotsLength}
-          sliderIndex={sliderIndex}
-          handleJumpSnapshot={handleJumpSnapshot}
-          pause={pause}
-        />
-        <button className="backward-button" onClick={moveBackward} type="button">
-          {'<'}
-        </button>
-        <button className="forward-button" onClick={moveForward} type="button">
-          {'>'}
-        </button>
-        <Dropdown
-          options={options}
-          selectedOption={selectedOption}
-          handleChangeSpeed={this.handleChangeSpeed}
-        />
-      </div>
-    );
+// start slider movement
+function play(speed, playing, dispatch, snapshotsLength, sliderIndex) {
+  if (playing) {
+    dispatch(pause());
+  } else {
+    let currentIndex = sliderIndex;
+    const intervalId = setInterval(() => {
+      if (currentIndex < snapshotsLength - 1) {
+        dispatch(playForward());
+        currentIndex += 1;
+      } else {
+        dispatch(pause());
+      }
+    }, speed);
+    dispatch(startPlaying(intervalId));
   }
 }
 
+function TravelContainer({ snapshotsLength }) {
+  const [selectedSpeed, setSpeed] = useState(speeds[1]);
+  const [{ sliderIndex, playing }, dispatch] = useStoreContext();
+
+  return (
+    <div className="travel-container">
+      <button className="play-button" type="button" onClick={() => play(selectedSpeed.value, playing, dispatch, snapshotsLength, sliderIndex)}>
+        {playing ? 'Pause' : 'Play'}
+      </button>
+      <MainSlider
+        snapshotsLength={snapshotsLength}
+        sliderIndex={sliderIndex}
+        dispatch={dispatch}
+      />
+      <button className="backward-button" onClick={() => dispatch(moveBackward())} type="button">
+        {'<'}
+      </button>
+      <button className="forward-button" onClick={() => dispatch(moveForward())} type="button">
+        {'>'}
+      </button>
+      <Dropdown
+        speeds={speeds}
+        selectedSpeed={selectedSpeed}
+        setSpeed={setSpeed}
+      />
+    </div>
+  );
+}
+
+
 TravelContainer.propTypes = {
-  pause: PropTypes.func.isRequired,
-  play: PropTypes.func.isRequired,
-  moveBackward: PropTypes.func.isRequired,
-  moveForward: PropTypes.func.isRequired,
   snapshotsLength: PropTypes.number.isRequired,
-  handleJumpSnapshot: PropTypes.func.isRequired,
-  sliderIndex: PropTypes.number.isRequired,
-  playing: PropTypes.bool.isRequired,
 };
 export default TravelContainer;

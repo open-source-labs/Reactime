@@ -50,6 +50,9 @@ chrome.runtime.onConnect.addListener((port) => {
     // ---------------------------------------------------------------
     const { action, payload, tabId } = msg;
     switch (action) {
+      case 'import':
+        snapshotArr = payload;
+        break;
       case 'emptySnap':
         tabsObj[tabId].snapshotArr.splice(1);
         break;
