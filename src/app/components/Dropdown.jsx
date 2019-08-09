@@ -15,6 +15,7 @@ const Dropdown = (props) => {
     />
   );
 };
+
 Dropdown.propTypes = {
   selectedSpeed: PropTypes.shape({ value: PropTypes.number, label: PropTypes.string }).isRequired,
   speeds: PropTypes.arrayOf(PropTypes.object).isRequired,
