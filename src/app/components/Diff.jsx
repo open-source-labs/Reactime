@@ -8,22 +8,18 @@ import { useStoreContext } from '../store';
 function Diff({ snapshot, show }) {
   const [mainState] = useStoreContext();
   const { currentTab, tabs } = mainState;
-  const { snapshots, viewIndex } = tabs[currentTab];
+  const { snapshots, viewIndex, sliderIndex } = tabs[currentTab];
   let previous;
 
-  if (viewIndex === -1) {
-    if (snapshots.length > 1) {
-      previous = snapshots[snapshots.length - 2];
-    } else {
-      previous = undefined;
-    }
-  } else if (snapshots.length > 1) {
+  // previous follows viewIndex or sliderIndex
+  if (viewIndex !== -1) {
     previous = snapshots[viewIndex - 1];
   } else {
-    [previous] = snapshots;
+    previous = snapshots[sliderIndex - 1];
   }
 
   const delta = diff(previous, snapshot);
+  // returns html in string
   const html = formatters.html.format(delta, previous);
   if (show) formatters.html.showUnchanged();
   else formatters.html.hideUnchanged();
