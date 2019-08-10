@@ -7,7 +7,8 @@
     "dev": "webpack --mode development --watch",
     "test": "jest --verbose --coverage --watchAll",
     "lint": "eslint --ext .js --ext .jsx src",
-    "docker-build": "docker build -t reacttt/test-lint"
+    "docker-build": "docker build -t reacttt/test-lint .",
+    "docker-check": "docker-compose up --abort-on-container-exit"
   },
   "keywords": [
     "react",
