@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 import Tree from '../components/Tree';
 import Chart from '../components/Chart';
+import Diff from '../components/Diff';
 
 const StateContainer = ({ snapshot }) => (
   <Router>
@@ -16,9 +17,13 @@ const StateContainer = ({ snapshot }) => (
         <NavLink className="router-link" activeClassName="is-active" to="/chart">
           Chart
         </NavLink>
+        <NavLink className="router-link" activeClassName="is-active" to="/diff">
+          Diff
+        </NavLink>
       </div>
       <Switch>
         <Route path="/chart" render={() => <Chart snapshot={snapshot} />} />
+        <Route path="/diff" render={() => <Diff snapshot={snapshot} />} />
         <Route path="/" render={() => <Tree snapshot={snapshot} />} />
       </Switch>
     </div>
