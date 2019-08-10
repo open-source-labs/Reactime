@@ -4,7 +4,6 @@
 /* eslint-disable react/no-string-refs */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import '../styles/components/_d3Tree.scss';
 import * as d3 from 'd3';
 
 let root = {};
