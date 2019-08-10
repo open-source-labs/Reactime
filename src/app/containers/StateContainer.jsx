@@ -1,34 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   MemoryRouter as Router, Route, NavLink, Switch,
 } from 'react-router-dom';
-import Tree from '../components/Tree';
-import Chart from '../components/Chart';
-import Diff from '../components/Diff';
+import StateRoute from '../components/StateRoute';
+import DiffRoute from '../components/DiffRoute';
 
-const StateContainer = ({ snapshot }) => (
-  <Router>
-    <div className="state-container">
-      <div className="navbar">
-        <NavLink className="router-link" activeClassName="is-active" exact to="/">
-          Tree
-        </NavLink>
-        <NavLink className="router-link" activeClassName="is-active" to="/chart">
-          Chart
-        </NavLink>
-        <NavLink className="router-link" activeClassName="is-active" to="/diff">
-          Diff
-        </NavLink>
+
+const StateContainer = ({ snapshot }) => {
+  const [Text, setText] = useState('State');
+  return (
+    <Router>
+      <div className="state-container">
+        <div className="main-navbar-container">
+          <div className="main-navbar-text">
+            {Text}
+          </div>
+          <div className="main-navbar">
+            <NavLink className="main-router-link" activeClassName="is-active" exact to="/">
+              State
+            </NavLink>
+            <NavLink className="main-router-link" activeClassName="is-active" to="/diff">
+              Diff
+            </NavLink>
+          </div>
+        </div>
+        <Switch>
+          <Route path="/diff" render={() => { setText('Diff'); return <DiffRoute snapshot={snapshot} />; }} />
+          <Route path="/" render={() => { setText('State'); return <StateRoute snapshot={snapshot} />; }} />
+        </Switch>
       </div>
-      <Switch>
-        <Route path="/chart" render={() => <Chart snapshot={snapshot} />} />
-        <Route path="/diff" render={() => <Diff snapshot={snapshot} />} />
-        <Route path="/" render={() => <Tree snapshot={snapshot} />} />
-      </Switch>
-    </div>
-  </Router>
-);
+    </Router>
+  );
+};
 
 StateContainer.propTypes = {
   snapshot: PropTypes.shape({

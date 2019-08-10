@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { diff, reverse, formatters } from "jsondiffpatch";
+import { diff, formatters } from 'jsondiffpatch';
+import ReactHtmlParser from 'react-html-parser';
 import './diff.css';
 
 import { useStoreContext } from '../store';
 
-function Diff({ snapshot }) {
+function Diff({ snapshot, show }) {
   const [mainState] = useStoreContext();
   const { snapshots, viewIndex } = mainState;
 
@@ -21,20 +22,13 @@ function Diff({ snapshot }) {
   } else {
     [previous] = snapshots;
   }
-  const delta = diff(previous,snapshot)
-  console.log('delta',delta);
+
+  const delta = diff(previous, snapshot);
   const html = formatters.html.format(delta, previous);
-  console.log('format', formatters.html.format(delta, previous));
-  if (previous === undefined) {
-    return (
-      <div>
-       states are equal
-      </div>
-    );
-  }
+  show ? formatters.html.showUnchanged() : formatters.html.hideUnchanged();
+
   return (
-    <div dangerouslySetInnerHTML={{__html: html}}>
-    </div>
+    previous ? <div> { ReactHtmlParser(html) } </div> : <div>states are equal</div>
   );
 }
 
@@ -43,6 +37,7 @@ Diff.propTypes = {
     state: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     children: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
+  // show: PropTypes.boolean,
 };
 
 export default Diff;
