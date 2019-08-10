@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-filename-extension */
 
-import { shallow, mount, configure } from 'enzyme';
+import { shallow, configure } from 'enzyme';
 import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
 import ActionContainer from '../containers/ActionContainer';
