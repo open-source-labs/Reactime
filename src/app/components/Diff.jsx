@@ -7,9 +7,10 @@ import { useStoreContext } from '../store';
 
 function Diff({ snapshot, show }) {
   const [mainState] = useStoreContext();
-  const { snapshots, viewIndex } = mainState;
-
+  const { currentTab, tabs } = mainState;
+  const { snapshots, viewIndex } = tabs[currentTab];
   let previous;
+
   if (viewIndex === -1) {
     if (snapshots.length > 1) {
       previous = snapshots[snapshots.length - 2];
@@ -24,10 +25,14 @@ function Diff({ snapshot, show }) {
 
   const delta = diff(previous, snapshot);
   const html = formatters.html.format(delta, previous);
-  show ? formatters.html.showUnchanged() : formatters.html.hideUnchanged();
+  if (show) formatters.html.showUnchanged();
+  else formatters.html.hideUnchanged();
 
+  if (previous === undefined) return <div> states are equal </div>;
   return (
-    previous ? <div> { ReactHtmlParser(html) } </div> : <div>states are equal</div>
+    <div>
+      { ReactHtmlParser(html) }
+    </div>
   );
 }
 
@@ -36,7 +41,7 @@ Diff.propTypes = {
     state: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     children: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
-  // show: PropTypes.boolean,
+  show: PropTypes.bool.isRequired,
 };
 
 export default Diff;
