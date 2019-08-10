@@ -38,29 +38,24 @@ function TravelContainer({ snapshotsLength }) {
 
   return (
     <div className="travel-container">
-      <button className="play-button" type="button" onClick={() => play(selectedSpeed.value, playing, dispatch, snapshotsLength, sliderIndex)}>
+      <button
+        className="play-button"
+        type="button"
+        onClick={() => play(selectedSpeed.value, playing, dispatch, snapshotsLength, sliderIndex)}
+      >
         {playing ? 'Pause' : 'Play'}
       </button>
-      <MainSlider
-        snapshotsLength={snapshotsLength}
-        sliderIndex={sliderIndex}
-        dispatch={dispatch}
-      />
+      <MainSlider snapshotsLength={snapshotsLength} sliderIndex={sliderIndex} dispatch={dispatch} />
       <button className="backward-button" onClick={() => dispatch(moveBackward())} type="button">
         {'<'}
       </button>
       <button className="forward-button" onClick={() => dispatch(moveForward())} type="button">
         {'>'}
       </button>
-      <Dropdown
-        speeds={speeds}
-        selectedSpeed={selectedSpeed}
-        setSpeed={setSpeed}
-      />
+      <Dropdown speeds={speeds} selectedSpeed={selectedSpeed} setSpeed={setSpeed} />
     </div>
   );
 }
-
 
 TravelContainer.propTypes = {
   snapshotsLength: PropTypes.number.isRequired,
