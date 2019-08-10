@@ -1,3 +1,7 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-use-before-define */
+/* eslint-disable react/no-string-refs */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
@@ -59,7 +63,7 @@ class Chart extends Component {
       .attr('class', 'tooltip')
       .style('opacity', 1e-6)
       .on('mouseover', tipMouseover)
-      .on('mouseout', tipMouseout)
+      .on('mouseout', tipMouseout);
 
     root.x0 = height / 2;
     root.y0 = 0;
@@ -75,7 +79,10 @@ class Chart extends Component {
       // Update the nodes…
       const node = svg.selectAll('g.node')
         .data(nodes, (d) => {
-          if (!d.id) d.id = ++i;
+          if (!d.id) {
+            i += 1;
+            d.id = i;
+          }
           return d.id;
         });
 
@@ -174,7 +181,7 @@ class Chart extends Component {
       div.transition()
         .duration(300)
         .style('display', 'block')
-        .style('opacity', 1)
+        .style('opacity', 1);
     }
 
     function mouseout() {
@@ -202,14 +209,6 @@ class Chart extends Component {
         .text(!d.state ? 'No state found' : JSON.stringify(d.state, null, 4))
         .style('left', `${d3.event.pageX}px`)
         .style('top', `${d3.event.pageY}px`);
-    }
-
-    function collapse(d) {
-      if (d.children) {
-        d._children = d.children;
-        d._children.forEach(collapse);
-        d.children = null;
-      }
     }
 
     update(root);

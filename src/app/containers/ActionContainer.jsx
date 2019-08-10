@@ -6,7 +6,9 @@ import { emptySnapshots } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 function ActionContainer() {
-  const [{ snapshots, sliderIndex, viewIndex }, dispatch] = useStoreContext();
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const { snapshots, sliderIndex, viewIndex } = tabs[currentTab];
+
   let actionsArr = [];
   // build actions array
   if (snapshots.length > 0) {

@@ -5,15 +5,21 @@ import StateContainer from './StateContainer';
 import TravelContainer from './TravelContainer';
 import ButtonsContainer from './ButtonsContainer';
 
-import { addNewSnapshots, initialConnect, setPort } from '../actions/actions';
+import {
+  addNewSnapshots, initialConnect, setPort,
+} from '../actions/actions';
 import { useStoreContext } from '../store';
 
+let npmPackageExists = false;
 
 function MainContainer() {
-  const [mainState, dispatch] = useStoreContext();
+  const [store, dispatch] = useStoreContext();
+  const { tabs, currentTab, port: currentPort } = store;
 
+  // add event listeners to background script
   useEffect(() => {
-    if (mainState.port) return;
+    // only open port once
+    if (currentPort) return;
     // open connection with background script
     const port = chrome.runtime.connect();
 
@@ -27,29 +33,25 @@ function MainContainer() {
           break;
         }
         case 'initialConnectSnapshots': {
-          const { snapshots, mode } = payload;
-          dispatch(initialConnect(snapshots, mode));
+          npmPackageExists = true;
+          dispatch(initialConnect(payload));
           break;
         }
         default:
       }
     });
 
-    // console log if the port with background script disconnects
-    port.onDisconnect.addListener((obj) => {
-      console.log('disconnected port', obj);
+    port.onDisconnect.addListener(() => {
+      // disconnecting
     });
 
     // assign port to state so it could be used by other components
-    // this.setState({ port });
     dispatch(setPort(port));
   });
 
-  const {
-    snapshots,
-    sliderIndex,
-    viewIndex,
-  } = mainState;
+  if (!npmPackageExists) return <div style={{ color: 'black' }}>please install our npm package in your app</div>;
+
+  const { viewIndex, sliderIndex, snapshots } = tabs[currentTab];
 
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = (viewIndex === -1) ? snapshots[sliderIndex] : snapshots[viewIndex];
