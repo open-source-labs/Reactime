@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { diff, formatters } from 'jsondiffpatch';
 import ReactHtmlParser from 'react-html-parser';
-import './diff.css';
 
 import { useStoreContext } from '../store';
 
