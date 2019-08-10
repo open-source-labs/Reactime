@@ -130,7 +130,7 @@ export default function mainReducer(state, action) {
       });
 
       // only set first tab if current tab is non existent
-      const firstTab = Object.keys(payload)[0];
+      const firstTab = parseInt(Object.keys(payload)[0], 10);
       return {
         ...state,
         currentTab: (currentTab === null) ? firstTab : currentTab,
