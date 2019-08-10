@@ -41,9 +41,8 @@ function MainContainer() {
       }
     });
 
-    // console log if the port with background script disconnects
-    port.onDisconnect.addListener((obj) => {
-      console.log('disconnected port', obj);
+    port.onDisconnect.addListener(() => {
+      // disconnecting
     });
 
     // assign port to state so it could be used by other components

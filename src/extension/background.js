@@ -98,7 +98,6 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         // don't add anything to snapshot storage if mode is persisting for the initial snapshot
         if (!persist) tabsObj[tabId].snapshots.push(request.payload);
         if (bg) {
-          console.log('connecting');
           bg.postMessage({
             action: 'initialConnectSnapshots',
             payload: tabsObj,

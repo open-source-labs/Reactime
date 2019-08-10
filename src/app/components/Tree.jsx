@@ -12,6 +12,7 @@ const getItemString = (type, data) => {
   ) {
     return <span>{data.name}</span>;
   }
+  return null;
 };
 
 const Tree = (props) => {
