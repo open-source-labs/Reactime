@@ -33,7 +33,8 @@ function play(speed, playing, dispatch, snapshotsLength, sliderIndex) {
 
 function TravelContainer({ snapshotsLength }) {
   const [selectedSpeed, setSpeed] = useState(speeds[1]);
-  const [{ sliderIndex, playing }, dispatch] = useStoreContext();
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const { sliderIndex, playing } = tabs[currentTab];
 
   return (
     <div className="travel-container">

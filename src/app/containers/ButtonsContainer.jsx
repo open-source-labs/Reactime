@@ -36,7 +36,9 @@ function importHandler(dispatch) {
 }
 
 function ButtonsContainer() {
-  const [{ snapshots, mode: { paused, locked, persist } }, dispatch] = useStoreContext();
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const { snapshots, mode: { paused, locked, persist } } = tabs[currentTab];
+  // const [{ snapshots, mode: { paused, locked, persist } }, dispatch] = useStoreContext();
   return (
     <div className="buttons-container">
       <button className="pause-button" type="button" onClick={() => dispatch(toggleMode('paused'))}>

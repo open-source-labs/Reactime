@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-filename-extension */
 import { mount, configure } from 'enzyme';
 import React from 'react';
 import { MemoryRouter, NavLink } from 'react-router-dom';
