@@ -16,9 +16,8 @@ function createTabObj() {
 chrome.runtime.onConnect.addListener((port) => {
   bg = port;
 
-  // if snapshots were saved in the snapshots,
   // send it to devtools as soon as connection to devtools is made
-  if (Object.values(tabsObj)[0].snapshots.length > 0) {
+  if (Object.keys(tabsObj).length > 0) {
     bg.postMessage({
       action: 'initialConnectSnapshots',
       payload: tabsObj,
@@ -55,12 +54,7 @@ chrome.runtime.onConnect.addListener((port) => {
       default:
     }
 
-    // Instead of sending the message to the active tab,
-    // now we can send messages to specific tabs that we specify
-    // using tabId
-    // ---------------------------------------------------------------
     chrome.tabs.sendMessage(tabId, msg);
-    // ---------------------------------------------------------------
   });
 });
 
