@@ -1,9 +1,14 @@
+/* eslint-disable import/no-extraneous-dependencies */
 // const Tree = require('./tree');
+import React from 'react';
+import { render } from 'react-dom';
+
+const linkFiberRequire = require('../linkFiber');
+
 let linkFiber;
-let ReactDOM;
-let React;
 let mode;
 let snapShot;
+let component;
 
 describe('unit test for linkFiber', () => {
   beforeEach(() => {
@@ -13,9 +18,7 @@ describe('unit test for linkFiber', () => {
       paused: false,
       locked: false,
     };
-    React = require('react');
-    ReactDOM = require('react-dom');
-    linkFiber = require('../linkFiber')(snapShot, mode);
+    linkFiber = linkFiberRequire(snapShot, mode);
 
     class App extends React.Component {
       constructor(props) {
@@ -29,8 +32,10 @@ describe('unit test for linkFiber', () => {
     }
 
     const container = document.createElement('div');
-    ReactDOM.render(<App />, container);
+    render(<App />, container);
     linkFiber(container);
+    // eslint-disable-next-line prefer-destructuring
+    component = snapShot.tree.children[0].component;
   });
 
   test('linkFiber should mutate the snapshot tree property', () => {
@@ -42,9 +47,12 @@ describe('unit test for linkFiber', () => {
   });
 
   test('linkFiber should modify the setState of the stateful component', () => {
-    console.log(snapShot.tree.children[0].component.setState);
-    // snapShot.tree.children[0].component.setState({ foo: 'josh' });
-    // expect(snapShot.tree.children[0].component.setState).toBeInstanceOf(newSetState);
-    // expect(snapShot.tree.children[0].component.state.foo).toBe('josh');
+    expect(snapShot.tree.children[0].component.setState.name).toBe('newSetState');
   });
+
+  // test('newSetState should still setState correctly', () => {
+  //   component.setState({ foo: 'barf' });
+  //   expect(component.state).not.toEqual({ foo: 'bar' });
+  //   expect(component.state).toEqual({ foo: 'barf' });
+  // });
 });

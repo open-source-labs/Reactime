@@ -68,8 +68,10 @@ module.exports = (snap, mode) => {
   return (container) => {
     const {
       _reactRootContainer: { _internalRoot },
+      _reactRootContainer,
     } = container;
-    fiberRoot = _internalRoot;
+    // only assign internal root if it actually exists
+    fiberRoot = (_internalRoot) ? _internalRoot : _reactRootContainer;
     updateSnapShotTree();
 
     // send the initial snapshot once the content script has started up
