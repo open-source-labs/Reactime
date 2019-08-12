@@ -17,12 +17,14 @@ module.exports = (snap, mode) => {
 
   function changeSetState(component) {
     // check that setState hasn't been changed yet
-    if (component.setState.name === 'newSetState') return;
+    if (component.setState.linkFiberChanged) return;
 
     // make a copy of setState
     const oldSetState = component.setState.bind(component);
 
-    function newSetState(state, callback = () => {}) {
+    // replace component's setState so developer doesn't change syntax
+    // component.setState = newSetState.bind(component);
+    component.setState = (state, callback = () => {}) => {
       // dont do anything if state is locked
       // UNLESS we are currently jumping through time
       if (mode.locked && !mode.jumping) return;
@@ -32,10 +34,8 @@ module.exports = (snap, mode) => {
         sendSnapshot();
         callback();
       });
-    }
-
-    // replace component's setState so developer doesn't change syntax
-    component.setState = newSetState;
+    };
+    component.setState.linkFiberChanged = true;
   }
 
   function createTree(currentFiber, tree = new Tree('root')) {
