@@ -15,7 +15,7 @@ describe('unit testing for Dropdown.jsx', () => {
       { value: 23, label: '2.0x' },
     ],
     setSpeed: jest.fn(),
-    selectedOption: { value: 312, label: '1.0x' },
+    selectedSpeed: { value: 312, label: '1.0x' },
   };
   beforeEach(() => {
     wrapper = shallow(<Dropdown {...props} />);
@@ -30,8 +30,8 @@ describe('unit testing for Dropdown.jsx', () => {
     });
   });
 
-  describe('handlechangeSpeed', () => {
-    test('should invoke handleChangeSpeed onChange', () => {
+  describe('setSpeed', () => {
+    test('should invoke setSpeed on change', () => {
       wrapper.simulate('change', { value: 2000, label: '0.5x' });
       expect(props.setSpeed).toHaveBeenCalled();
     });

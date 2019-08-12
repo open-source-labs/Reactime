@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import HeadContainer from './HeadContainer';
 import ActionContainer from './ActionContainer';
 import StateContainer from './StateContainer';
@@ -10,9 +10,8 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-let npmPackageExists = false;
-
 function MainContainer() {
+  const [npmExists, setnpm] = useState(false);
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
 
@@ -33,8 +32,8 @@ function MainContainer() {
           break;
         }
         case 'initialConnectSnapshots': {
-          npmPackageExists = true;
           dispatch(initialConnect(payload));
+          setnpm(true);
           break;
         }
         default:
@@ -49,7 +48,7 @@ function MainContainer() {
     dispatch(setPort(port));
   });
 
-  if (!npmPackageExists) return <div style={{ color: 'black' }}>please install our npm package in your app</div>;
+  if (!npmExists) return <div style={{ color: 'black' }}>please install our npm package in your app</div>;
 
   const { viewIndex, sliderIndex, snapshots } = tabs[currentTab];
 
