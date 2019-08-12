@@ -1,53 +1,78 @@
-const timeJumpExport = require('../timeJump');
+const timeJumpRequire = require('../timeJump');
+
+class Component {
+  constructor(mockfn) {
+    this.mockfn = mockfn;
+  }
+
+  setState(state, func = () => { }) {
+    this.mockfn(state);
+    func();
+  }
+}
+
+class FiberNode {
+  constructor(mockfn, state) {
+    this.state = state;
+    this.children = [];
+    this.component = new Component(mockfn);
+  }
+}
 
 describe('unit testing for timeJump.js', () => {
   let timeJump;
   let snapShot;
   let mode;
   let mockFuncs;
-  const count = 3;
 
   beforeEach(() => {
-    snapShot = [];
     mode = { jumping: false };
     mockFuncs = [];
-    timeJump = timeJumpExport(snapShot, mode);
+    for (let i = 0; i < 4; i += 1) mockFuncs.push(jest.fn());
 
-    const createSetStateAsync = i => state => new Promise((resolve) => {
-      mockFuncs[i](state);
-      resolve();
-    });
+    const tree = new FiberNode(mockFuncs[0]);
+    tree.children = [
+      new FiberNode(mockFuncs[1]),
+      new FiberNode(mockFuncs[2]),
+      new FiberNode(mockFuncs[3]),
+    ];
 
-    for (let i = 0; i < count; i += 1) {
-      mockFuncs.push(jest.fn());
-      snapShot.push({ setStateAsync: createSetStateAsync(i) });
-    }
+    snapShot = { tree };
+    timeJump = timeJumpRequire(snapShot, mode);
   });
 
-  // test('calling the initial require should return a function', () => {
-  //   expect(typeof timeJump).toBe('function');
-  // });
+  test('calling the initial require should return a function', () => {
+    expect(typeof timeJumpRequire).toBe('function');
+  });
 
-  // test('timeJump should iterate through snapshot and call setStateAsync on each state', () => {
-  //   const calls = 10;
-  //   for (let i = 1; i <= calls; i += 1) {
-  //     timeJump(Array(count).fill('test'));
-  //     mockFuncs.forEach(mockFunc => expect(mockFunc.mock.calls.length).toBe(i));
-  //   }
-  // });
+  describe('testing iteration through snapshot tree', () => {
+    const states = ['root', 'firstChild', 'secondChild', 'thirdChild'];
+    const target = new FiberNode(null, states[0]);
+    target.children = [
+      new FiberNode(null, states[1]),
+      new FiberNode(null, states[2]),
+      new FiberNode(null, states[3]),
+    ];
 
-  // test('timeJump should pass the state from new snapshot to setStateAsync', () => {
-  //   const newSnapShot = [];
-  //   for (let i = 0; i < count; i += 1) {
-  //     newSnapShot.push(`testState${i}`);
-  //   }
-  //   timeJump(newSnapShot);
-  //   mockFuncs.forEach((mockFunc, i) => expect(mockFunc.mock.calls[0][0]).toBe(`testState${i}`));
+    beforeEach(() => {
+      timeJump(target);
+    });
+    test('timeJump should call setState on each state in origin', () => {
+      mockFuncs.forEach(mockFunc => expect(mockFunc.mock.calls.length).toBe(1));
+    });
 
-  //   for (let i = 0; i < count; i += 1) {
-  //     newSnapShot[i] = { testkey: `testval${i}` };
-  //   }
-  //   timeJump(newSnapShot);
-  //   mockFuncs.forEach((mockFunc, i) => expect(mockFunc.mock.calls[1][0]).toEqual({ testkey: `testval${i}` }));
-  // });
+    test('timeJump should pass target state to origin setState', () => {
+      mockFuncs.forEach((mockFunc, i) => expect(mockFunc.mock.calls[0][0]).toBe(states[i]));
+    });
+  });
+
+  test('jumping mode should be set while timeJumping', () => {
+    const logMode = jest.fn();
+    logMode.mockImplementation(() => expect(mode.jumping).toBe(true));
+
+    snapShot.tree = new FiberNode(logMode);
+    const target = new FiberNode(null, 'test');
+    timeJump(target);
+    expect(logMode).toHaveBeenCalled();
+  });
 });

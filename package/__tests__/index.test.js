@@ -1,69 +1,28 @@
-const index = require('../index');
+const timeJumpRequire = require('../timeJump');
 
 jest.mock('../timeJump');
+const timeJump = jest.fn();
+timeJumpRequire.mockReturnValue(timeJump);
+
+const index = require('../index');
 
 describe('unit testing for index.js', () => {
-  test('index.js should be exporting the linkFiber, timeJump, getTree methods', () => {
-    expect(typeof index.linkFiber).toBe('function');
-    expect(typeof index.timeJump).toBe('function');
-    expect(typeof index.getTree).toBe('function');
+  test('index.js should be exporting a function', () => {
+    expect(typeof index).toBe('function');
   });
 
-  test('index.js should be listening to the window for the jumpToSnap message', (done) => {
+  test('index.js should be calling timeJump for every jumpToSnap message', (done) => {
     const calls = 10;
     let count = 0;
     global.addEventListener('message', ({ data: { action } }) => {
-      switch (action) {
-        case 'jumpToSnap':
-          count += 1;
-          expect(index.timeJump.mock.calls.length).toBe(count);
-          if (count === calls) done();
-          break;
-        default:
-          break;
+      if (action === 'jumpToSnap') {
+        count += 1;
+        expect(timeJump.mock.calls.length).toBe(count);
+        if (count === calls) done();
       }
     });
-    [...Array(calls).keys()].forEach(() => global.postMessage({ action: 'jumpToSnap', payload: ['test'] }, '*'));
-  });
-  test('setLock message should change the mode object to the given payload', (done) => {
-    const mode = { paused: false };
-    const action = 'setLock';
-    const payloads = [true, false, true, false, true, false, false];
-    let count = 0;
-    const calls = payloads.length;
-    global.addEventListener('message', ({ data: { action: actionReceived, payload } }) => {
-      switch (actionReceived) {
-        case 'setLock':
-          mode.locked = payload;
-          expect(mode.locked).toBe(payloads[count]);
-          count += 1;
-          if (calls === count) done();
-          break;
-        default:
-          break;
-      }
-    });
-    payloads.forEach(payload => global.postMessage({ action, payload }, '*'));
-  });
-
-  test('setPause message should change the mode object to the given payload', (done) => {
-    const mode = { paused: false };
-    const action = 'setPause';
-    const payloads = [true, false, true, false, true, false, false];
-    let count = 0;
-    const calls = payloads.length;
-    global.addEventListener('message', ({ data: { action: actionReceived, payload } }) => {
-      switch (actionReceived) {
-        case 'setPause':
-          mode.locked = payload;
-          expect(mode.locked).toBe(payloads[count]);
-          count += 1;
-          if (calls === count) done();
-          break;
-        default:
-          break;
-      }
-    });
-    payloads.forEach(payload => global.postMessage({ action, payload }, '*'));
+    for (let i = 0; i < calls; i += 1) {
+      global.postMessage({ action: 'jumpToSnap', payload: ['test'] }, '*');
+    }
   });
 });

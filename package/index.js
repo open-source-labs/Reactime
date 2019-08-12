@@ -9,8 +9,6 @@ const mode = {
 const linkFiber = require('./linkFiber')(snapShot, mode);
 const timeJump = require('./timeJump')(snapShot, mode);
 
-const getTree = () => snapShot.tree.getCopy();
-
 window.addEventListener('message', ({ data: { action, payload } }) => {
   switch (action) {
     case 'jumpToSnap':
@@ -27,9 +25,4 @@ window.addEventListener('message', ({ data: { action, payload } }) => {
   }
 });
 
-// window.postMessage({ data: { action: 'foo', payload: 'bar' } });
-module.exports = {
-  timeJump,
-  linkFiber,
-  getTree,
-};
+module.exports = linkFiber;
