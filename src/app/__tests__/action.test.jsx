@@ -2,6 +2,7 @@ import React from 'react';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Action from '../components/Action';
+import { changeView, changeSlider } from '../actions/actions';
 
 configure({ adapter: new Adapter() });
 
@@ -9,12 +10,13 @@ describe('unit testing for Action.jsx', () => {
   let wrapper;
   const props = {
     selected: true,
-    handleChangeSnapshot: jest.fn(),
-    handleJumpSnapshot: jest.fn(),
+    sliderIndex: 1,
     index: 1,
+    dispatch: jest.fn(),
   };
   beforeEach(() => {
     wrapper = shallow(<Action {...props} />);
+    props.dispatch.mockClear();
   });
 
   describe('Component', () => {
@@ -32,9 +34,14 @@ describe('unit testing for Action.jsx', () => {
       expect(wrapper.find('.action-component-text').text()).toEqual(props.index.toString());
     });
 
-    test('should invoke changeSnapshot method when clicked', () => {
+    test('should invoke dispatch method when clicked', () => {
       wrapper.find('.action-component').simulate('click');
-      expect(props.handleChangeSnapshot).toHaveBeenCalled();
+      expect(props.dispatch).toHaveBeenCalled();
+    });
+
+    test('dispatch should send a changeView action', () => {
+      wrapper.find('.action-component').simulate('click');
+      expect(props.dispatch.mock.calls[0][0]).toEqual(changeView(props.index));
     });
   });
 
@@ -48,13 +55,14 @@ describe('unit testing for Action.jsx', () => {
       ).toHaveLength(1);
     });
 
-    test('should invoke jumpSnapshot method when clicked', () => {
-      wrapper
-        .find('.action-component')
-        .children()
-        .find('.jump-button')
-        .simulate('click');
-      expect(props.handleJumpSnapshot).toHaveBeenCalled();
+    test('should invoke dispatch method when clicked', () => {
+      wrapper.find('.jump-button').simulate('click', { stopPropagation() { } });
+      expect(props.dispatch).toHaveBeenCalled();
+    });
+
+    test('dispatch should send a changeSlider action', () => {
+      wrapper.find('.jump-button').simulate('click', { stopPropagation() { } });
+      expect(props.dispatch.mock.calls[0][0]).toEqual(changeSlider(props.index));
     });
   });
 });

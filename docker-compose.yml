@@ -1,0 +1,11 @@
+version: '3'
+services:
+  test:
+    image: reacttt/test-lint
+    container_name: reacttt-test-lint
+    volumes:
+      - .:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    command: bash -c "npm run lint && npm test"
+volumes:
+  node_modules:

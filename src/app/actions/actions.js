@@ -5,22 +5,14 @@ export const toggleMode = mode => ({
   payload: mode,
 });
 
-export const addNewSnapshots = snapshots => ({
+export const addNewSnapshots = tabsObj => ({
   type: types.NEW_SNAPSHOTS,
-  payload: {
-    snapshots,
-    sliderIndex: snapshots.length - 1,
-  },
+  payload: tabsObj,
 });
 
-export const initialConnect = (snapshots, mode) => ({
+export const initialConnect = tabsObj => ({
   type: types.INITIAL_CONNECT,
-  payload: {
-    snapshots,
-    mode,
-    sliderIndex: 0,
-    viewIndex: -1,
-  },
+  payload: tabsObj,
 });
 
 export const setPort = port => ({
@@ -69,4 +61,9 @@ export const startPlaying = intervalId => ({
 export const importSnapshots = newSnaps => ({
   type: types.IMPORT,
   payload: newSnaps,
+});
+
+export const setTab = tab => ({
+  type: types.SET_TAB,
+  payload: tab,
 });

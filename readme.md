@@ -12,15 +12,15 @@ Two parts are needed for this tool to function. The chrome extension must be ins
 ```
 npm i react-time-travel
 ```
-3. Call the `linkFiber` method on your root container after rendering your App.
+3. Call the library method on your root container after rendering your App.
 
 ```
-const { linkFiber } = require('react-time-travel');
+const reactTimeTravel = require('react-time-travel');
 
 const rootContainer = document.getElementById('root');
 ReactDom.render(<App />, rootContainer);
 
-linkFiber(rootContainer);
+reactTimeTravel(rootContainer);
 ```
 
 4. Done! That's all you have to do to link your React project to our library.

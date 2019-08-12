@@ -5,16 +5,8 @@ import mainReducer from '../reducers/mainReducer';
 
 const initialState = {
   port: null,
-  sliderIndex: 0,
-  viewIndex: -1,
-  intervalId: null,
-  playing: false,
-  snapshots: [],
-  mode: {
-    locked: false,
-    paused: false,
-    persist: false,
-  },
+  currentTab: null,
+  tabs: {},
 };
 
 function App() {
