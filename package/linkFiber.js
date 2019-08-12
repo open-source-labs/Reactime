@@ -32,7 +32,7 @@ module.exports = (snap, mode) => {
       oldSetState(state, () => {
         updateSnapShotTree();
         sendSnapshot();
-        callback.bind(component)();
+        callback();
       });
     };
     component.setState.linkFiberChanged = true;
