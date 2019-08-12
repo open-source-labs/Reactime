@@ -5,3 +5,4 @@ package/react-time-travel-*.tgz
 tictactoe
 parents
 coverage
+src/extension/build.zip

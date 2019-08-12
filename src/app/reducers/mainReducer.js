@@ -1,9 +1,11 @@
+/* eslint-disable no-param-reassign */
+import produce from 'immer';
 import * as types from '../constants/actionTypes';
 
-export default function mainReducer(state, action) {
+export default (state, action) => produce(state, (draft) => {
   const {
     port, currentTab, tabs,
-  } = state;
+  } = draft;
   const {
     snapshots, mode, intervalId, viewIndex, sliderIndex,
   } = (tabs[currentTab] || {});
@@ -18,13 +20,8 @@ export default function mainReducer(state, action) {
 
         tabs[currentTab].sliderIndex = newIndex;
         tabs[currentTab].playing = false;
-
-        return {
-          ...state,
-          tabs,
-        };
       }
-      return state;
+      break;
     }
     case types.MOVE_FORWARD: {
       if (sliderIndex < snapshots.length - 1) {
@@ -39,28 +36,19 @@ export default function mainReducer(state, action) {
           clearInterval(intervalId);
           tabs[currentTab].playing = false;
         }
-        // message is coming from the setInterval
-        return {
-          ...state,
-          tabs,
-        };
       }
-      return state;
+      break;
     }
     case types.CHANGE_VIEW: {
       // unselect view if same index was selected
       if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
       else tabs[currentTab].viewIndex = action.payload;
-
-      return {
-        ...state,
-        tabs,
-      };
+      break;
     }
     case types.CHANGE_SLIDER: {
       port.postMessage({ action: 'jumpToSnap', payload: snapshots[action.payload], tabId: currentTab });
       tabs[currentTab].sliderIndex = action.payload;
-      return { ...state, tabs };
+      break;
     }
     case types.EMPTY: {
       port.postMessage({ action: 'emptySnap', tabId: currentTab });
@@ -68,21 +56,16 @@ export default function mainReducer(state, action) {
       tabs[currentTab].viewIndex = -1;
       tabs[currentTab].playing = false;
       tabs[currentTab].snapshots.splice(1);
-      return {
-        ...state,
-        tabs,
-      };
+      break;
     }
     case types.SET_PORT: {
-      return { ...state, port: action.payload };
+      draft.port = action.payload;
+      break;
     }
     case types.IMPORT: {
       port.postMessage({ action: 'import', payload: action.payload, tabId: currentTab });
       tabs[currentTab].snapshots = action.payload;
-      return {
-        ...state,
-        tabs,
-      };
+      break;
     }
     case types.TOGGLE_MODE: {
       mode[action.payload] = !mode[action.payload];
@@ -101,66 +84,60 @@ export default function mainReducer(state, action) {
         default:
       }
       port.postMessage({ action: actionText, payload: newMode, tabId: currentTab });
-      return { ...state, tabs };
+      break;
     }
     case types.PAUSE: {
       clearInterval(intervalId);
       tabs[currentTab].playing = false;
       tabs[currentTab].intervalId = null;
-      return { ...state, tabs };
+      break;
     }
     case types.PLAY: {
       tabs[currentTab].playing = true;
       tabs[currentTab].intervalId = action.payload;
-      return {
-        ...state,
-        tabs,
-      };
+      break;
     }
     case types.INITIAL_CONNECT: {
       const { payload } = action;
       Object.keys(payload).forEach((tab) => {
-        payload[tab] = {
-          ...payload[tab],
-          sliderIndex: 0,
-          viewIndex: -1,
-          intervalId: null,
-          playing: false,
-        };
+        // check if tab exists in memory
+        if (!tabs[tab]) {
+          // add new tab
+          tabs[tab] = {
+            ...payload[tab],
+            sliderIndex: 0,
+            viewIndex: -1,
+            intervalId: null,
+            playing: false,
+          };
+        }
       });
 
       // only set first tab if current tab is non existent
       const firstTab = parseInt(Object.keys(payload)[0], 10);
-      return {
-        ...state,
-        currentTab: (currentTab === null) ? firstTab : currentTab,
-        tabs: payload,
-      };
+      draft.currentTab = (currentTab === null) ? firstTab : currentTab;
+
+      break;
     }
     case types.NEW_SNAPSHOTS: {
       const { payload } = action;
 
       Object.keys(payload).forEach((tab) => {
         const { snapshots: newSnaps } = payload[tab];
-        payload[tab] = {
+        tabs[tab] = {
           ...tabs[tab],
           ...payload[tab],
           sliderIndex: newSnaps.length - 1,
         };
       });
 
-      return {
-        ...state,
-        tabs: payload,
-      };
+      break;
     }
     case types.SET_TAB: {
-      return {
-        ...state,
-        currentTab: action.payload,
-      };
+      draft.currentTab = action.paylod;
+      break;
     }
     default:
       throw new Error(`nonexistent action: ${action.type}`);
   }
-}
+});
