@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-filename-extension */
 
-import { shallow, configure } from 'enzyme';
-import React, { useState } from 'react';
+import { mount, configure } from 'enzyme';
+import React from 'react';
+import { act } from 'react-dom/test-utils';
 import Adapter from 'enzyme-adapter-react-16';
 import MainContainer from '../containers/MainContainer';
 import { useStoreContext } from '../store';
@@ -19,9 +20,10 @@ configure({ adapter: new Adapter() });
 const state = {
   tabs: {
     87: {
-      snapshots: [1, 2, 3, 4],
+      snapshots: [{}, {}, {}, {}],
       sliderIndex: 0,
       viewIndex: -1,
+      mode: {},
     },
   },
   currentTab: 87,
@@ -32,16 +34,22 @@ jest.mock('../store');
 useStoreContext.mockImplementation(() => [state, dispatch]);
 
 let wrapper;
-// global.chrome = chrome;
-const setnpm = jest.fn();
-
-
+global.chrome = chrome;
+let eventListener;
+const port = {
+  onMessage: {
+    addListener: ((fn) => {
+      eventListener = fn;
+    }),
+  },
+  onDisconnect: {
+    addListener: () => { },
+  },
+};
+chrome.runtime.connect.returns(port);
 
 beforeEach(() => {
-  wrapper = shallow(<MainContainer />);
-  chrome.runtime.connect = () => {}
-  console.log(chrome.runtime.connect);
-  chrome.runtime.onMessage.dispatch({action: 'initialConnectSnapshots', payload: []});
+  wrapper = mount(<MainContainer />);
   useStoreContext.mockClear();
   dispatch.mockClear();
 });
@@ -56,6 +64,14 @@ describe('MainContainer rendering', () => {
     expect(wrapper.find(ButtonsContainer).length).toBe(0);
   });
   test('With connection established, should render all containers', () => {
+    // fake connect
+    act(() => {
+      eventListener({
+        action: 'initialConnectSnapshots',
+        payload: 'test',
+      });
+    });
+    wrapper.update();
     expect(wrapper.find(HeadContainer).length).toBe(1);
     expect(wrapper.find(ActionContainer).length).toBe(1);
     expect(wrapper.find(StateContainer).length).toBe(1);
