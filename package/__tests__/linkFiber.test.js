@@ -47,7 +47,7 @@ describe('unit test for linkFiber', () => {
   });
 
   test('linkFiber should modify the setState of the stateful component', () => {
-    expect(snapShot.tree.children[0].component.setState.name).toBe('newSetState');
+    expect(snapShot.tree.children[0].component.setState.linkFiberChanged).toBe(true);
   });
 
   // test('newSetState should still setState correctly', () => {
