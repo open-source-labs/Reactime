@@ -1,73 +1,71 @@
+/* eslint-disable no-param-reassign */
+import produce from 'immer';
 import * as types from '../constants/actionTypes';
 
-export default function mainReducer(state, action) {
+export default (state, action) => produce(state, (draft) => {
   const {
-    sliderIndex, snapshots, viewIndex, port, mode, intervalId,
-  } = state;
+    port, currentTab, tabs,
+  } = draft;
+  const {
+    snapshots, mode, intervalId, viewIndex, sliderIndex,
+  } = (tabs[currentTab] || {});
+
   switch (action.type) {
     case types.MOVE_BACKWARD: {
       if (snapshots.length > 0 && sliderIndex > 0) {
         const newIndex = sliderIndex - 1;
+
+        port.postMessage({ action: 'jumpToSnap', payload: snapshots[newIndex], tabId: currentTab });
         clearInterval(intervalId);
-        port.postMessage({ action: 'jumpToSnap', payload: snapshots[newIndex] });
-        return {
-          ...state,
-          sliderIndex: newIndex,
-          playing: false,
-        };
+
+        tabs[currentTab].sliderIndex = newIndex;
+        tabs[currentTab].playing = false;
       }
-      return state;
+      break;
     }
     case types.MOVE_FORWARD: {
       if (sliderIndex < snapshots.length - 1) {
         const newIndex = sliderIndex + 1;
-        port.postMessage({ action: 'jumpToSnap', payload: snapshots[newIndex] });
 
-        // if payload is true, then message is coming from the setInterval
+        port.postMessage({ action: 'jumpToSnap', payload: snapshots[newIndex], tabId: currentTab });
+
+        tabs[currentTab].sliderIndex = newIndex;
+
+        // message is coming from the user
         if (!action.payload) {
           clearInterval(intervalId);
-          return {
-            ...state,
-            sliderIndex: newIndex,
-            playing: false,
-          };
+          tabs[currentTab].playing = false;
         }
-        return {
-          ...state,
-          sliderIndex: newIndex,
-        };
       }
-      return state;
+      break;
     }
     case types.CHANGE_VIEW: {
       // unselect view if same index was selected
-      if (viewIndex === action.payload) return { ...state, viewIndex: -1 };
-      return { ...state, viewIndex: action.payload };
+      if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
+      else tabs[currentTab].viewIndex = action.payload;
+      break;
     }
     case types.CHANGE_SLIDER: {
-      port.postMessage({ action: 'jumpToSnap', payload: snapshots[action.payload] });
-      return { ...state, sliderIndex: action.payload };
+      port.postMessage({ action: 'jumpToSnap', payload: snapshots[action.payload], tabId: currentTab });
+      tabs[currentTab].sliderIndex = action.payload;
+      break;
     }
     case types.EMPTY: {
-      port.postMessage({ action: 'emptySnap' });
-      return {
-        sliderIndex: 0,
-        viewIndex: -1,
-        playing: false,
-        snapshots: [],
-      };
+      port.postMessage({ action: 'emptySnap', tabId: currentTab });
+      tabs[currentTab].sliderIndex = 0;
+      tabs[currentTab].viewIndex = -1;
+      tabs[currentTab].playing = false;
+      tabs[currentTab].snapshots.splice(1);
+      break;
     }
     case types.SET_PORT: {
-      return { ...state, port: action.payload };
+      draft.port = action.payload;
+      break;
     }
     case types.IMPORT: {
-      port.postMessage({ action: 'import', payload: action.payload });
-      return {
-        ...state,
-        snapshots: action.payload,
-        sliderIndex: 0,
-        viewIndex: -1,
-      };
+      port.postMessage({ action: 'import', payload: action.payload, tabId: currentTab });
+      tabs[currentTab].snapshots = action.payload;
+      break;
     }
     case types.TOGGLE_MODE: {
       mode[action.payload] = !mode[action.payload];
@@ -85,39 +83,61 @@ export default function mainReducer(state, action) {
           break;
         default:
       }
-      port.postMessage({ action: actionText, payload: newMode });
-      return { ...state, mode };
+      port.postMessage({ action: actionText, payload: newMode, tabId: currentTab });
+      break;
     }
     case types.PAUSE: {
       clearInterval(intervalId);
-      return { ...state, playing: false, intervalId: null };
+      tabs[currentTab].playing = false;
+      tabs[currentTab].intervalId = null;
+      break;
     }
     case types.PLAY: {
-      return {
-        ...state,
-        playing: true,
-        intervalId: action.payload,
-      };
+      tabs[currentTab].playing = true;
+      tabs[currentTab].intervalId = action.payload;
+      break;
     }
     case types.INITIAL_CONNECT: {
       const { payload } = action;
-      return {
-        ...state,
-        snapshots: payload.snapshots,
-        mode: payload.mode,
-        viewIndex: payload.viewIndex,
-        sliderIndex: payload.sliderIndex,
-      };
+      Object.keys(payload).forEach((tab) => {
+        // check if tab exists in memory
+        if (!tabs[tab]) {
+          // add new tab
+          tabs[tab] = {
+            ...payload[tab],
+            sliderIndex: 0,
+            viewIndex: -1,
+            intervalId: null,
+            playing: false,
+          };
+        }
+      });
+
+      // only set first tab if current tab is non existent
+      const firstTab = parseInt(Object.keys(payload)[0], 10);
+      draft.currentTab = (currentTab === null) ? firstTab : currentTab;
+
+      break;
     }
     case types.NEW_SNAPSHOTS: {
       const { payload } = action;
-      return {
-        ...state,
-        snapshots: payload.snapshots,
-        sliderIndex: payload.sliderIndex,
-      };
+
+      Object.keys(payload).forEach((tab) => {
+        const { snapshots: newSnaps } = payload[tab];
+        tabs[tab] = {
+          ...tabs[tab],
+          ...payload[tab],
+          sliderIndex: newSnaps.length - 1,
+        };
+      });
+
+      break;
+    }
+    case types.SET_TAB: {
+      draft.currentTab = action.paylod;
+      break;
     }
     default:
       throw new Error(`nonexistent action: ${action.type}`);
   }
-}
+});
