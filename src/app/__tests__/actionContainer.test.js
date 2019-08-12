@@ -13,7 +13,7 @@ configure({ adapter: new Adapter() });
 const state = {
   tabs: {
     87: {
-      snapshots: [1,2,3,4],
+      snapshots: [1, 2, 3, 4],
       sliderIndex: 0,
       viewIndex: -1,
     },
