@@ -32,6 +32,7 @@ function MainContainer() {
           break;
         }
         case 'initialConnectSnapshots': {
+          console.log('connection received')
           dispatch(initialConnect(payload));
           setnpm(true);
           break;
