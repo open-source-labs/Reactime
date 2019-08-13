@@ -2,3 +2,10 @@
   height: 5%;
   background-color: $head-color;
 }
+
+.head-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
