@@ -10,7 +10,7 @@ import { useStoreContext } from '../store';
 
 const { Handle } = Slider;
 
-const handle = (props) => {
+const handle = props => {
   const {
     value, dragging, index, ...restProps
   } = props;
@@ -37,7 +37,7 @@ function MainSlider({ snapshotsLength }) {
       min={0}
       max={snapshotsLength - 1}
       value={sliderIndex}
-      onChange={(index) => {
+      onChange={index => {
         const newIndex = index === -1 ? 0 : index;
         dispatch(changeSlider(newIndex));
         dispatch(pause());
