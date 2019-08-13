@@ -8,7 +8,7 @@ Two parts are needed for this tool to function. The chrome extension must be ins
 
 1. Download the Chrome extension from Chrome Web Store.
 
-2. Install the npm package in your code.
+2. Install the [npm package](https://www.npmjs.com/package/react-time-travel) in your code.
 ```
 npm i react-time-travel
 ```
