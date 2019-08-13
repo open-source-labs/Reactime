@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { changeView, changeSlider } from '../actions/actions';
 
+// testing travis
 const Action = props => {
   const {
     selected, index, sliderIndex, dispatch,
