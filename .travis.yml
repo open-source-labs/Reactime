@@ -2,7 +2,7 @@ language: node
 services:
   - docker
 script:
-  - npm run docker-check
+  - docker-compose up --abort-on-container-exit
 deploy:
   provider: script
   skip_cleanup: true
