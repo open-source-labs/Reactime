@@ -9,7 +9,6 @@ import * as d3 from 'd3';
 let root = {};
 let duration = 750;
 
-
 class Chart extends Component {
   componentDidMount() {
     const { snapshot } = this.props;
@@ -35,31 +34,42 @@ class Chart extends Component {
     duration = 0;
 
     const margin = {
-      top: 20, right: 120, bottom: 20, left: 120,
+      top: 20,
+      right: 120,
+      bottom: 20,
+      left: 120,
     };
     // const width = 600 - margin.right - margin.left;
     const height = 600 - margin.top - margin.bottom;
 
     let i = 0;
 
-    const tree = d3.layout.tree()
+    const tree = d3.layout
+      .tree()
       .nodeSize([20])
       .separation((a, b) => (a.parent === b.parent ? 3 : 1));
 
-    const diagonal = d3.svg.diagonal()
-      .projection(d => [d.y, d.x]);
+    const diagonal = d3.svg.diagonal().projection(d => [d.y, d.x]);
 
-    const svg = d3.select(this.refs.anchor).append('svg')
+    const svg = d3
+      .select(this.refs.anchor)
+      .append('svg')
       .attr('width', '100%')
       .attr('height', '100%')
       .attr('cursor', '-webkit-grab')
       .attr('preserveAspectRatio', 'xMinYMin slice')
-      .call(d3.behavior.zoom().on('zoom', () => svg.attr('transform', `translate(${d3.event.translate}) scale(${d3.event.scale})`)))
+      .call(
+        d3.behavior
+          .zoom()
+          .on('zoom', () => svg.attr('transform', `translate(${d3.event.translate}) scale(${d3.event.scale})`)),
+      )
       .append('g')
       .attr('transform', `translate(60,${height / 2})`);
 
     // Add tooltip div
-    const div = d3.select('body').append('div')
+    const div = d3
+      .select('body')
+      .append('div')
       .attr('class', 'tooltip')
       .style('opacity', 1e-6)
       .on('mouseover', tipMouseover)
@@ -74,20 +84,23 @@ class Chart extends Component {
       const links = tree.links(nodes);
 
       // Normalize for fixed-depth.
-      nodes.forEach((d) => { d.y = d.depth * 180; });
+      nodes.forEach(d => {
+        d.y = d.depth * 180;
+      });
 
       // Update the nodes…
-      const node = svg.selectAll('g.node')
-        .data(nodes, (d) => {
-          if (!d.id) {
-            i += 1;
-            d.id = i;
-          }
-          return d.id;
-        });
+      const node = svg.selectAll('g.node').data(nodes, d => {
+        if (!d.id) {
+          i += 1;
+          d.id = i;
+        }
+        return d.id;
+      });
 
       // Enter any new nodes at the parent's previous position.
-      const nodeEnter = node.enter().append('g')
+      const nodeEnter = node
+        .enter()
+        .append('g')
         .attr('class', 'node')
         .attr('transform', () => `translate(${source.y0},${source.x0})`)
         .on('click', click)
@@ -95,11 +108,13 @@ class Chart extends Component {
         .on('mouseout', mouseout)
         .on('mousemove', d => mousemove(d));
 
-      nodeEnter.append('circle')
+      nodeEnter
+        .append('circle')
         .attr('r', 1e-6)
         .style('fill', d => (d._children ? 'lightsteelblue' : '#fff'));
 
-      nodeEnter.append('text')
+      nodeEnter
+        .append('text')
         .attr('x', d => (d.children || d._children ? -10 : 10))
         .attr('dy', '.35em')
         .attr('text-anchor', d => (d.children || d._children ? 'end' : 'start'))
@@ -108,35 +123,37 @@ class Chart extends Component {
         .style('fill-opacity', 1e-6);
 
       // Transition nodes to their new position.
-      const nodeUpdate = node.transition()
+      const nodeUpdate = node
+        .transition()
         .duration(duration)
         .attr('transform', d => `translate(${d.y},${d.x})`);
 
-      nodeUpdate.select('circle')
+      nodeUpdate
+        .select('circle')
         .attr('r', 7)
         .style('fill', d => (d._children ? '#A1C658' : '#D381C3'));
 
-      nodeUpdate.select('text')
-        .style('fill-opacity', 1);
+      nodeUpdate.select('text').style('fill-opacity', 1);
 
       // Transition exiting nodes to the parent's new position.
-      const nodeExit = node.exit().transition()
+      const nodeExit = node
+        .exit()
+        .transition()
         .duration(duration)
         .attr('transform', () => `translate(${source.y},${source.x})`)
         .remove();
 
-      nodeExit.select('circle')
-        .attr('r', 1e-6);
+      nodeExit.select('circle').attr('r', 1e-6);
 
-      nodeExit.select('text')
-        .style('fill-opacity', 1e-6);
+      nodeExit.select('text').style('fill-opacity', 1e-6);
 
       // Update the links…
-      const link = svg.selectAll('path.link')
-        .data(links, d => d.target.id);
+      const link = svg.selectAll('path.link').data(links, d => d.target.id);
 
       // Enter any new links at the parent's previous position.
-      link.enter().insert('path', 'g')
+      link
+        .enter()
+        .insert('path', 'g')
         .attr('class', 'link')
         .attr('d', () => {
           const o = { x: source.x0, y: source.y0 };
@@ -144,12 +161,15 @@ class Chart extends Component {
         });
 
       // Transition links to their new position.
-      link.transition()
+      link
+        .transition()
         .duration(duration)
         .attr('d', diagonal);
 
       // Transition exiting nodes to the parent's new position.
-      link.exit().transition()
+      link
+        .exit()
+        .transition()
         .duration(duration)
         .attr('d', () => {
           const o = { x: source.x, y: source.y };
@@ -158,7 +178,7 @@ class Chart extends Component {
         .remove();
 
       // Stash the old positions for transition.
-      nodes.forEach((d) => {
+      nodes.forEach(d => {
         d.x0 = d.x;
         d.y0 = d.y;
       });
@@ -178,27 +198,31 @@ class Chart extends Component {
 
     // Show state on mouse over
     function mouseover() {
-      div.transition()
+      div
+        .transition()
         .duration(300)
         .style('display', 'block')
         .style('opacity', 1);
     }
 
     function mouseout() {
-      div.transition()
+      div
+        .transition()
         .duration(3000)
         .style('opacity', 1e-6)
         .style('display', 'none');
     }
 
     function tipMouseover() {
-      div.transition()
+      div
+        .transition()
         .duration(300)
         .style('opacity', 1);
     }
 
     function tipMouseout() {
-      div.transition()
+      div
+        .transition()
         .duration(3000)
         .style('opacity', 1e-6)
         .style('display', 'none');
@@ -223,9 +247,7 @@ class Chart extends Component {
 }
 
 Chart.propTypes = {
-  snapshot: PropTypes.arrayOf(
-    PropTypes.object,
-  ).isRequired,
+  snapshot: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Chart;

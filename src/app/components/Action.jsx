@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { changeView, changeSlider } from '../actions/actions';
 
-const Action = (props) => {
+const Action = props => {
   const {
     selected, index, sliderIndex, dispatch,
   } = props;
@@ -18,7 +18,7 @@ const Action = (props) => {
       <div className="action-component-text">{index}</div>
       <button
         className="jump-button"
-        onClick={(e) => {
+        onClick={e => {
           e.stopPropagation();
           dispatch(changeSlider(index));
         }}

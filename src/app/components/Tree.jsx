@@ -15,7 +15,7 @@ const getItemString = (type, data) => {
   return null;
 };
 
-const Tree = (props) => {
+const Tree = props => {
   const { snapshot } = props;
   return (
     <React.Fragment>

@@ -9,7 +9,7 @@ const SwitchAppDropdown = () => {
 
   const tabsArray = [];
 
-  Object.keys(tabs).forEach((tab) => {
+  Object.keys(tabs).forEach(tab => {
     tabsArray.push({ value: tab, label: tab });
   });
 
@@ -24,7 +24,7 @@ const SwitchAppDropdown = () => {
       classNamePrefix="react-select"
       value={currTab}
       // onChange={dispatch(setTab(loadApp))}
-      onChange={(e) => {
+      onChange={e => {
         dispatch(setTab(parseInt(e.value, 10)));
         // console.log(e)
       }}
