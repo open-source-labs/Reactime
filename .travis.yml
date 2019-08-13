@@ -1,4 +1,3 @@
-language: node
 services:
   - docker
 script:
