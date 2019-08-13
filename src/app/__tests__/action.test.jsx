@@ -4,6 +4,8 @@ import Adapter from 'enzyme-adapter-react-16';
 import Action from '../components/Action';
 import { changeView, changeSlider } from '../actions/actions';
 
+//asdflaksdfjlk
+
 configure({ adapter: new Adapter() });
 
 describe('unit testing for Action.jsx', () => {
