@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 services:
   test:
     image: reacttt/test-lint
@@ -6,4 +6,4 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: bash -c "npm run lint && npm test"
+    command: npm run docker-test-lint
