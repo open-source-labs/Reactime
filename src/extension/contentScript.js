@@ -1,12 +1,12 @@
 // listening for messages from npm package
-window.addEventListener('message', (msg) => {
+window.addEventListener('message', msg => {
   // post initial Message to npm package
   const { action } = msg.data;
   if (action === 'recordSnap') chrome.runtime.sendMessage(msg.data);
 });
 
 // listening for messages from background.js
-chrome.runtime.onMessage.addListener((request) => {
+chrome.runtime.onMessage.addListener(request => {
   // send the message to npm package
   const { action } = request;
   switch (action) {

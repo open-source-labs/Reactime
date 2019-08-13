@@ -17,7 +17,7 @@ function createTabObj(title) {
 }
 
 // establishing connection with devtools
-chrome.runtime.onConnect.addListener((port) => {
+chrome.runtime.onConnect.addListener(port => {
   bg = port;
 
   // send it to devtools as soon as connection to devtools is made
@@ -29,7 +29,7 @@ chrome.runtime.onConnect.addListener((port) => {
   }
 
   // receive snapshot from devtools and send it to contentScript
-  port.onMessage.addListener((msg) => {
+  port.onMessage.addListener(msg => {
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:
     // {
@@ -132,6 +132,6 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 // });
 
 // when tab is closed, remove the tabid from the tabsObj
-chrome.tabs.onRemoved.addListener((tabId) => {
+chrome.tabs.onRemoved.addListener(tabId => {
   delete tabsObj[tabId];
 });
