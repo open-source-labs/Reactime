@@ -11,3 +11,7 @@ deploy:
       only:
         - dev
         - master
+addons:
+  apt:
+    packages:
+      - docker-ce
