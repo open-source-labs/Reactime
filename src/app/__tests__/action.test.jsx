@@ -56,12 +56,12 @@ describe('unit testing for Action.jsx', () => {
     });
 
     test('should invoke dispatch method when clicked', () => {
-      wrapper.find('.jump-button').simulate('click', { stopPropagation() { } });
+      wrapper.find('.jump-button').simulate('click', { stopPropagation() {} });
       expect(props.dispatch).toHaveBeenCalled();
     });
 
     test('dispatch should send a changeSlider action', () => {
-      wrapper.find('.jump-button').simulate('click', { stopPropagation() { } });
+      wrapper.find('.jump-button').simulate('click', { stopPropagation() {} });
       expect(props.dispatch.mock.calls[0][0]).toEqual(changeSlider(props.index));
     });
   });
