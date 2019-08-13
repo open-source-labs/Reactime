@@ -49,7 +49,6 @@ function MainContainer() {
   });
 
   if (!npmExists) return <div style={{ color: 'black' }}>please install our npm package in your app</div>;
-
   const { viewIndex, sliderIndex, snapshots } = tabs[currentTab];
 
   // if viewIndex is -1, then use the sliderIndex instead

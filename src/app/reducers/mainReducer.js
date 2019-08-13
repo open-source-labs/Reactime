@@ -134,7 +134,7 @@ export default (state, action) => produce(state, (draft) => {
       break;
     }
     case types.SET_TAB: {
-      draft.currentTab = action.paylod;
+      draft.currentTab = action.payload;
       break;
     }
     default:

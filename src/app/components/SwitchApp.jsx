@@ -23,10 +23,8 @@ const SwitchAppDropdown = () => {
       className="react-select-container"
       classNamePrefix="react-select"
       value={currTab}
-      // onChange={dispatch(setTab(loadApp))}
       onChange={(e) => {
         dispatch(setTab(parseInt(e.value, 10)));
-        // console.log(e)
       }}
       options={tabsArray}
     />
