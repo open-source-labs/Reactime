@@ -6,7 +6,7 @@ import TravelContainer from './TravelContainer';
 import ButtonsContainer from './ButtonsContainer';
 
 import {
-  addNewSnapshots, initialConnect, setPort,
+  addNewSnapshots, initialConnect, setPort, setTab,
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
@@ -27,6 +27,7 @@ function MainContainer() {
       const { action, payload } = message;
       switch (action) {
         case 'sendSnapshots': {
+          if (payload.sourceTab !== currentTab) dispatch(setTab(payload.sourceTab));
           // set state with the information received from the background script
           dispatch(addNewSnapshots(payload));
           break;
@@ -34,6 +35,10 @@ function MainContainer() {
         case 'initialConnectSnapshots': {
           dispatch(initialConnect(payload));
           setnpm(true);
+          break;
+        }
+        case 'activatedTab': {
+          // console.log(payload, 'activatedTab in main Container');
           break;
         }
         default:

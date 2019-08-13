@@ -4,19 +4,19 @@ import { useStoreContext } from '../store';
 import { setTab } from '../actions/actions';
 
 const SwitchAppDropdown = () => {
-  // const { loadApp } = setTab;
   const [{ currentTab, tabs }, dispatch] = useStoreContext();
 
   const tabsArray = [];
 
   Object.keys(tabs).forEach((tab) => {
-    tabsArray.push({ value: tab, label: tab });
+    if (tab !== 'sourceTab') tabsArray.push({ value: tab, label: tabs[tab].title });
   });
 
   const currTab = {
     value: currentTab,
-    label: currentTab,
+    label: tabs[currentTab].title,
   };
+
 
   return (
     <Select

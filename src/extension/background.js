@@ -1,7 +1,11 @@
 let bg;
-const tabsObj = {};
-function createTabObj() {
+const tabsObj = {
+  sourceTab: null,
+};
+
+function createTabObj(title) {
   return {
+    title,
     snapshots: [],
     mode: {
       persist: false,
@@ -62,7 +66,7 @@ chrome.runtime.onConnect.addListener((port) => {
 chrome.runtime.onMessage.addListener((request, sender) => {
   // IGNORE THE AUTOMTAIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
   if (request.type === 'SIGN_CONNECT') return;
-
+  const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
   const { action } = request;
   let isReactTimeTravel = false;
@@ -74,7 +78,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
   // everytime we get a new tabid, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) {
-    tabsObj[tabId] = createTabObj();
+    tabsObj[tabId] = createTabObj(tabTitle);
   }
 
   const { persist } = tabsObj[tabId].mode;
@@ -101,6 +105,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       }
 
       tabsObj[tabId].snapshots.push(request.payload);
+      tabsObj.sourceTab = tabId;
 
       // send message to devtools
       if (bg) {
@@ -111,8 +116,20 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       }
       break;
     default:
+      break;
   }
 });
+
+// chrome.tabs.onActivated.addListener((info) => {
+//   console.log('this is activated', info);
+//   if (bg) {
+//     console.log('hello', bg);
+//     bg.postMessage({
+//       action: 'activatedTab',
+//       payload: info.tabId,
+//     });
+//   }
+// });
 
 // when tab is closed, remove the tabid from the tabsObj
 chrome.tabs.onRemoved.addListener((tabId) => {

@@ -123,11 +123,13 @@ export default (state, action) => produce(state, (draft) => {
       const { payload } = action;
 
       Object.keys(payload).forEach((tab) => {
-        const { snapshots: newSnaps } = payload[tab];
-        tabs[tab] = {
-          ...tabs[tab],
-          ...payload[tab],
-          sliderIndex: newSnaps.length - 1,
+        if (tab !== 'sourceTab') {
+          const { snapshots: newSnaps } = payload[tab];
+          tabs[tab] = {
+            ...tabs[tab],
+            ...payload[tab],
+            sliderIndex: newSnaps.length - 1,
+          };
         };
       });
 
