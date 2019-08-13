@@ -10,9 +10,6 @@ function HeadContainer() {
   return (
     <div className="head-container">
       <SwitchAppDropdown />
-      <div>
-        {title}
-      </div>
     </div>
   );
 }
