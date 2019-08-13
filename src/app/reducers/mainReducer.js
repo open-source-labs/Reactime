@@ -141,6 +141,10 @@ export default (state, action) => produce(state, draft => {
         };
       });
 
+      // only set first tab if current tab is non existent
+      const firstTab = parseInt(Object.keys(payload)[0], 10);
+      draft.currentTab = currentTab === null ? firstTab : currentTab;
+
       break;
     }
     case types.SET_TAB: {
