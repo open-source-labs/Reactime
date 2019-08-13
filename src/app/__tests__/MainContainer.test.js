@@ -38,12 +38,12 @@ global.chrome = chrome;
 let eventListener;
 const port = {
   onMessage: {
-    addListener: ((fn) => {
+    addListener: fn => {
       eventListener = fn;
-    }),
+    },
   },
   onDisconnect: {
-    addListener: () => { },
+    addListener: () => {},
   },
 };
 chrome.runtime.connect.returns(port);

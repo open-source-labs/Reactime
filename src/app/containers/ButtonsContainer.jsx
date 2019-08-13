@@ -1,8 +1,6 @@
 import React from 'react';
 
-import {
-  importSnapshots, toggleMode,
-} from '../actions/actions';
+import { importSnapshots, toggleMode } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 function exportHandler(snapshots) {
@@ -26,7 +24,7 @@ function importHandler(dispatch) {
   const fileUpload = document.createElement('input');
   fileUpload.setAttribute('type', 'file');
 
-  fileUpload.onchange = (event) => {
+  fileUpload.onchange = event => {
     const reader = new FileReader();
     reader.onload = () => dispatch(importSnapshots(JSON.parse(reader.result)));
     reader.readAsText(event.target.files[0]);
@@ -37,7 +35,10 @@ function importHandler(dispatch) {
 
 function ButtonsContainer() {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { snapshots, mode: { paused, locked, persist } } = tabs[currentTab];
+  const {
+    snapshots,
+    mode: { paused, locked, persist },
+  } = tabs[currentTab];
   // const [{ snapshots, mode: { paused, locked, persist } }, dispatch] = useStoreContext();
   return (
     <div className="buttons-container">
@@ -47,7 +48,11 @@ function ButtonsContainer() {
       <button className="lock-button" type="button" onClick={() => dispatch(toggleMode('locked'))}>
         {locked ? 'Unlock' : 'Lock'}
       </button>
-      <button className="persist-button" type="button" onClick={() => dispatch(toggleMode('persist'))}>
+      <button
+        className="persist-button"
+        type="button"
+        onClick={() => dispatch(toggleMode('persist'))}
+      >
         {persist ? 'Unpersist' : 'Persist'}
       </button>
       <button className="export-button" type="button" onClick={() => exportHandler(snapshots)}>

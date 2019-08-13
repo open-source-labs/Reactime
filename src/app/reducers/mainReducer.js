@@ -2,20 +2,22 @@
 import produce from 'immer';
 import * as types from '../constants/actionTypes';
 
-export default (state, action) => produce(state, (draft) => {
-  const {
-    port, currentTab, tabs,
-  } = draft;
+export default (state, action) => produce(state, draft => {
+  const { port, currentTab, tabs } = draft;
   const {
     snapshots, mode, intervalId, viewIndex, sliderIndex,
-  } = (tabs[currentTab] || {});
+  } = tabs[currentTab] || {};
 
   switch (action.type) {
     case types.MOVE_BACKWARD: {
       if (snapshots.length > 0 && sliderIndex > 0) {
         const newIndex = sliderIndex - 1;
 
-        port.postMessage({ action: 'jumpToSnap', payload: snapshots[newIndex], tabId: currentTab });
+        port.postMessage({
+          action: 'jumpToSnap',
+          payload: snapshots[newIndex],
+          tabId: currentTab,
+        });
         clearInterval(intervalId);
 
         tabs[currentTab].sliderIndex = newIndex;
@@ -27,7 +29,11 @@ export default (state, action) => produce(state, (draft) => {
       if (sliderIndex < snapshots.length - 1) {
         const newIndex = sliderIndex + 1;
 
-        port.postMessage({ action: 'jumpToSnap', payload: snapshots[newIndex], tabId: currentTab });
+        port.postMessage({
+          action: 'jumpToSnap',
+          payload: snapshots[newIndex],
+          tabId: currentTab,
+        });
 
         tabs[currentTab].sliderIndex = newIndex;
 
@@ -46,7 +52,11 @@ export default (state, action) => produce(state, (draft) => {
       break;
     }
     case types.CHANGE_SLIDER: {
-      port.postMessage({ action: 'jumpToSnap', payload: snapshots[action.payload], tabId: currentTab });
+      port.postMessage({
+        action: 'jumpToSnap',
+        payload: snapshots[action.payload],
+        tabId: currentTab,
+      });
       tabs[currentTab].sliderIndex = action.payload;
       break;
     }
@@ -99,7 +109,7 @@ export default (state, action) => produce(state, (draft) => {
     }
     case types.INITIAL_CONNECT: {
       const { payload } = action;
-      Object.keys(payload).forEach((tab) => {
+      Object.keys(payload).forEach(tab => {
         // check if tab exists in memory
         if (!tabs[tab]) {
           // add new tab
@@ -115,14 +125,14 @@ export default (state, action) => produce(state, (draft) => {
 
       // only set first tab if current tab is non existent
       const firstTab = parseInt(Object.keys(payload)[0], 10);
-      draft.currentTab = (currentTab === null) ? firstTab : currentTab;
+      draft.currentTab = currentTab === null ? firstTab : currentTab;
 
       break;
     }
     case types.NEW_SNAPSHOTS: {
       const { payload } = action;
 
-      Object.keys(payload).forEach((tab) => {
+      Object.keys(payload).forEach(tab => {
         const { snapshots: newSnaps } = payload[tab];
         tabs[tab] = {
           ...tabs[tab],
