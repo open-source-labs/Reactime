@@ -1,9 +1,10 @@
 import React from 'react';
 import Select from 'react-select';
 import { useStoreContext } from '../store';
+import { setTab } from '../actions/actions';
 
 const SwitchAppDropdown = () => {
-  // const { selectedApp, loadApp, allApps } = props;
+  // const { loadApp } = setTab;
   const [{ currentTab, tabs }, dispatch] = useStoreContext();
 
   const tabsArray = [];
@@ -22,10 +23,11 @@ const SwitchAppDropdown = () => {
       className="react-select-container"
       classNamePrefix="react-select"
       value={currTab}
-      // onChange={
-      //   // setApp (like setSpeed in speed dropdown) goes here
-      //   loadApp
-      // }
+      // onChange={dispatch(setTab(loadApp))}
+      onChange={(e) => {
+        dispatch(setTab(parseInt(e.value, 10)));
+        // console.log(e)
+      }}
       options={tabsArray}
     />
   );
