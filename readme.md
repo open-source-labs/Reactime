@@ -31,6 +31,33 @@ After installing both the Chrome extension and the npm package, just open up you
 
 Then open up your Chrome DevTools. There'll be a new tab called React-Time-Travel.
 
+## Features
+
+### Recording
+
+Whenever state is changed (whenever setState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the React-Time-Travel panel. 
+
+### Viewing
+
+You can click on a snapshot to view your app's state. State can be visualized in a JSON or a tree. 
+
+The selected snapshot can also be diffed/compared with the current dom.
+
+### Jumping
+
+The most important feature of all. Jumping to any previous recorded snapshot. Hitting the jump button on any snapshot will change the dom by setting their state. One important thing to note. This library does not work well when mixing React with direct DOM manipulation. Since DOM manipulation doesn't change any React state, this library cannot record or even detect that change. Of course, you should be avoiding mixing the two in the first place.
+
+### Others
+
+Other handy features include: 
+* multiple tabs support
+* a slider to move through snapshots quickly
+* a play button to move through snapshots automatically
+* a pause which button stops recording each snapshot
+* a lock button to freeze the DOM in place. setState will lose all functionality while the extension is locked
+* a persist button to keep snapshots upon refresh. handy when changing code and debugging
+* export/import the current snapshots in memory
+
 ## Authors
 
 * **Ryan Dang** - [@rydang](https://github.com/rydang)
