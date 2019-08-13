@@ -1,7 +1,12 @@
 import React from 'react';
+import SwitchAppDropdown from '../components/SwitchApp';
 
-const HeadContainer = () => (
-  <div className="head-container" />
-);
+function HeadContainer() {
+  return (
+    <div className="head-container">
+      <SwitchAppDropdown />
+    </div>
+  );
+}
 
 export default HeadContainer;
