@@ -24,10 +24,10 @@ function MainContainer() {
 
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener(message => {
-      const { action, payload } = message;
+      const { action, payload, sourceTab } = message;
       switch (action) {
         case 'sendSnapshots': {
-          if (payload.sourceTab !== currentTab) dispatch(setTab(payload.sourceTab));
+          dispatch(setTab(sourceTab));
           // set state with the information received from the background script
           dispatch(addNewSnapshots(payload));
           break;
@@ -52,6 +52,8 @@ function MainContainer() {
     // assign port to state so it could be used by other components
     dispatch(setPort(port));
   });
+
+  console.log(store);
 
   if (!npmExists) return <div style={{ color: 'black' }}>please install our npm package in your app</div>;
   const { viewIndex, sliderIndex, snapshots } = tabs[currentTab];
