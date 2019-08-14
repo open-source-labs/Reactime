@@ -29,7 +29,7 @@ function ActionContainer() {
     <div className="action-container">
       <div className="action-component exclude">
         <button className="empty-button" onClick={() => dispatch(emptySnapshots())} type="button">
-          emptySnapshot
+          Empty
         </button>
       </div>
       <div>{actionsArr}</div>

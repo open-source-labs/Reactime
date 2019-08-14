@@ -42,6 +42,7 @@
     "node-sass": "^4.12.0",
     "sass": "^1.22.9",
     "sass-loader": "^7.2.0",
+    "sinon-chrome": "^3.0.1",
     "style-loader": "^0.23.1",
     "webpack": "^4.39.1",
     "webpack-chrome-extension-reloader": "^1.3.0",
@@ -59,7 +60,6 @@
     "react-html-parser": "^2.0.2",
     "react-json-tree": "^0.11.2",
     "react-router-dom": "^5.0.1",
-    "react-select": "^3.0.4",
-    "sinon-chrome": "^3.0.1"
+    "react-select": "^3.0.4"
   }
 }

@@ -9,7 +9,7 @@
 ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/oslabs-beta/reactime)
 
 <p align="center">
-  <img src="demo.gif" alt="Demo of Reactime">
+  <img src="demo2.gif" alt="Demo of Reactime">
 </p>
 
 A debugging tool for React. Records state whenever state is changed and allows user to jump to any previous recorded state.
