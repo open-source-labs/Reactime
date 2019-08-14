@@ -82,7 +82,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   const { action } = request;
   let isReactTimeTravel = false;
 
-  // Filter out tabs that don't have react-time-travel
+  // Filter out tabs that don't have reactime
   if (action === 'tabReload' || action === 'recordSnap') {
     isReactTimeTravel = true;
   } else return;
@@ -167,18 +167,18 @@ chrome.tabs.onRemoved.addListener(tabId => {
   delete firstSnapshotReceived[tabId];
 });
 
-// when react time travel is installed
+// when reactime is installed
 // create a context menu that will open our devtools in a new window
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
-    id: 'react-time-travel',
-    title: 'React Time Travel',
+    id: 'reactime',
+    title: 'Reactime',
     contexts: ['page', 'selection', 'image', 'link'],
   });
 });
 
 // when context menu is clicked, listen for the menuItemId,
-// if user clicked on react-time-travel, open the devtools window
+// if user clicked on reactime, open the devtools window
 chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
   const options = {
     type: 'panel',
@@ -188,5 +188,5 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     height: window.screen.availHeight,
     url: chrome.runtime.getURL('panel.html'),
   };
-  if (menuItemId === 'react-time-travel') chrome.windows.create(options);
+  if (menuItemId === 'reactime') chrome.windows.create(options);
 });
