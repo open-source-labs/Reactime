@@ -132,14 +132,18 @@ export default (state, action) => produce(state, draft => {
     case types.NEW_SNAPSHOTS: {
       const { payload } = action;
 
-      Object.keys(payload).forEach(tab => {
+      Object.keys(tabs).forEach(tab => {
         if (tab !== 'sourceTab') {
-          const { snapshots: newSnaps } = payload[tab];
-          tabs[tab] = {
-            ...tabs[tab],
-            ...payload[tab],
-            sliderIndex: newSnaps.length - 1,
-          };
+          if (!payload[tab]) {
+            delete tabs[tab];
+          } else {
+            const { snapshots: newSnaps } = payload[tab];
+            tabs[tab] = {
+              ...tabs[tab],
+              ...payload[tab],
+              sliderIndex: newSnaps.length - 1,
+            };
+          }
         }
       });
 
@@ -151,6 +155,16 @@ export default (state, action) => produce(state, draft => {
     }
     case types.SET_TAB: {
       draft.currentTab = action.payload;
+      break;
+    }
+    case types.DELETE_TAB: {
+      delete draft.tabs[action.payload];
+      if (draft.currentTab === action.payload) {
+        // if the deleted tab was set to currentTab, replace currentTab with
+        // the first tabId within tabs obj
+        const newCurrentTab = Object.keys(draft.tabs)[0];
+        draft.currentTab = newCurrentTab;
+      }
       break;
     }
     default:
