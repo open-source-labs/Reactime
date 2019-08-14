@@ -1,17 +1,20 @@
-let reloaded = true;
+// let reloaded = true;
+let firstMessage = true;
 
 // listening for messages from npm package
 window.addEventListener('message', msg => {
+  // window listener picks up the message it sends, so we should filter
+  // messages sent by contentscript
+  if (msg.data.action !== 'contentScriptStarted' && firstMessage) {
+    // since contentScript is run everytime a page is refreshed
+    // tell the background script that the tab has reloaded
+    chrome.runtime.sendMessage({ action: 'tabReload' });
+    firstMessage = false;
+  }
+
   // post initial Message to npm package
   const { action } = msg.data;
   if (action === 'recordSnap') {
-    if (reloaded) {
-      reloaded = false;
-      // since contentScript is run everytime a page is refreshed
-      // tell the background script that the tab has reloaded
-      chrome.runtime.sendMessage({ action: 'tabReload' });
-    }
-
     chrome.runtime.sendMessage(msg.data);
   }
 });

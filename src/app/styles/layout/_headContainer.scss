@@ -5,7 +5,58 @@
 
 .head-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
+}
+
+.tab-select-container {
+  font-size: 12px;
+  min-width: 90px;
+  margin: 2px 7px;
+}
+
+.tab-select-container {
+  height: 70%;
+
+  .tab-select__control,
+  .tab-select__control--is-focused,
+  .tab-select__menu {
+    border-style: none;
+    width: 300px;
+    background-color: $light-grey-one;
+    z-index: 2;
+    @extend %disable-highlight;
+  }
+  .tab-select__single-value {
+    color: white;
+  }
+  .tab-select__value-container {
+    padding: 0px;
+  }
+  .tab-select__option:hover {
+    background-color: #2683ff;
+  }
+  .tab-select__option--is-selected,
+  .tab-select__option--is-focused {
+    background-color: transparent;
+  }
+  .tab-select__indicator {
+    padding: 0;
+  }
+  .tab-select__indicator-separator {
+    margin-top: 3px;
+    margin-bottom: 3px;
+  }
+
+  // removes the cursor from blinking
+  .css-w8afj7-Input {
+    color: transparent;
+  }
+
+  // removes min-height of dropdown and change it to 100%
+  .css-yk16xz-control,
+  .css-1pahdxg-control {
+    min-height: 100%;
+  }
 }

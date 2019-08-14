@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 // traverses given tree by accessing children through coords array
 function traverseTree(tree, coords) {
   let curr = tree;

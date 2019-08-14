@@ -20,8 +20,8 @@ const SwitchAppDropdown = () => {
 
   return (
     <Select
-      className="react-select-container"
-      classNamePrefix="react-select"
+      className="tab-select-container"
+      classNamePrefix="tab-select"
       value={currTab}
       onChange={e => {
         dispatch(setTab(parseInt(e.value, 10)));

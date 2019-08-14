@@ -1,7 +1,7 @@
-let bg;
-const tabsObj = {};
-
+// store ports in an array
+const portsArr = [];
 const reloaded = {};
+const tabsObj = {};
 
 function createTabObj(title) {
   return {
@@ -18,11 +18,25 @@ function createTabObj(title) {
 
 // establishing connection with devtools
 chrome.runtime.onConnect.addListener(port => {
-  bg = port;
+  // push every port connected to the ports array
+  portsArr.push(port);
 
-  bg.postMessage({
-    action: 'initialConnectSnapshots',
-    payload: tabsObj,
+  // send tabs obj to the connected devtools as soon as connection to devtools is made
+  if (Object.keys(tabsObj).length > 0) {
+    port.postMessage({
+      action: 'initialConnectSnapshots',
+      payload: tabsObj,
+    });
+  }
+
+  // every time devtool is closed, remove the port from portsArr
+  port.onDisconnect.addListener(e => {
+    for (let i = 0; i < portsArr.length; i += 1) {
+      if (portsArr[i] === e) {
+        portsArr.splice(i, 1);
+        break;
+      }
+    }
   });
 
   // receive snapshot from devtools and send it to contentScript
@@ -82,36 +96,51 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
   switch (action) {
     case 'tabReload': {
-      tabsObj[tabId].firstSnapshot = true;
       tabsObj[tabId].mode.locked = false;
       tabsObj[tabId].mode.paused = false;
+      // dont remove snapshots if persisting
       if (!persist) {
         tabsObj[tabId].snapshots.splice(1);
-        reloaded[tabId] = true;
+
+        // send a message to devtools
+        portsArr.forEach(bg => bg.postMessage({
+          action: 'initialConnectSnapshots',
+          payload: tabsObj,
+        }));
       }
 
-      bg.postMessage({
-        action: 'initialConnectSnapshots',
-        payload: tabsObj,
-      });
+      reloaded[tabId] = true;
 
       break;
     }
     case 'recordSnap': {
       const sourceTab = tabId;
 
+      // first snapshot received from tab
       if (tabsObj[tabId].firstSnapshot) {
         tabsObj[tabId].firstSnapshot = false;
+        tabsObj[tabId].snapshots.push(request.payload);
+        if (portsArr.length > 0) {
+          portsArr.forEach(bg => bg.postMessage({
+            action: 'initialConnectSnapshots',
+            payload: tabsObj,
+          }));
+        }
         break;
       }
-      tabsObj[tabId].snapshots.push(request.payload);
+
+      // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
+      if (reloaded[tabId]) {
+        reloaded[tabId] = false;
+      } else tabsObj[tabId].snapshots.push(request.payload);
+
       // send message to devtools
-      if (bg) {
-        bg.postMessage({
+      if (portsArr.length > 0) {
+        portsArr.forEach(bg => bg.postMessage({
           action: 'sendSnapshots',
           payload: tabsObj,
           sourceTab,
-        });
+        }));
       }
       break;
     }
@@ -122,5 +151,14 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
 // when tab is closed, remove the tabid from the tabsObj
 chrome.tabs.onRemoved.addListener(tabId => {
+  // tell devtools which tab to delete
+  if (portsArr.length > 0) {
+    portsArr.forEach(bg => bg.postMessage({
+      action: 'deleteTab',
+      payload: tabId,
+    }));
+  }
+
+  // delete the tab from the tabsObj
   delete tabsObj[tabId];
 });

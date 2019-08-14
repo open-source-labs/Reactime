@@ -11,3 +11,4 @@ export const PLAY = 'PLAY';
 export const INITIAL_CONNECT = 'INITIAL_CONNECT';
 export const NEW_SNAPSHOTS = 'NEW_SNAPSHOTS';
 export const SET_TAB = 'SET_TAB';
+export const DELETE_TAB = 'DELETE_TAB';
