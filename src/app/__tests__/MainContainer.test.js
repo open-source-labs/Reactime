@@ -1,8 +1,7 @@
 /* eslint-disable react/jsx-filename-extension */
 
-import { mount, configure } from 'enzyme';
+import { shallow, configure } from 'enzyme';
 import React from 'react';
-import { act } from 'react-dom/test-utils';
 import Adapter from 'enzyme-adapter-react-16';
 import MainContainer from '../containers/MainContainer';
 import { useStoreContext } from '../store';
@@ -18,15 +17,8 @@ const chrome = require('sinon-chrome');
 configure({ adapter: new Adapter() });
 
 const state = {
-  tabs: {
-    87: {
-      snapshots: [{}, {}, {}, {}],
-      sliderIndex: 0,
-      viewIndex: -1,
-      mode: {},
-    },
-  },
-  currentTab: 87,
+  tabs: {},
+  currentTab: null,
 };
 
 const dispatch = jest.fn();
@@ -35,12 +27,9 @@ useStoreContext.mockImplementation(() => [state, dispatch]);
 
 let wrapper;
 global.chrome = chrome;
-let eventListener;
 const port = {
   onMessage: {
-    addListener: fn => {
-      eventListener = fn;
-    },
+    addListener: () => {},
   },
   onDisconnect: {
     addListener: () => {},
@@ -49,29 +38,32 @@ const port = {
 chrome.runtime.connect.returns(port);
 
 beforeEach(() => {
-  wrapper = mount(<MainContainer />);
+  wrapper = shallow(<MainContainer />);
   useStoreContext.mockClear();
   dispatch.mockClear();
 });
 
 describe('MainContainer rendering', () => {
-  test.skip('With no connection, should not render any containers', () => {
-    expect(wrapper.text()).toEqual('please install our npm package in your app');
+  test('With no snapshots, should not render any containers', () => {
+    expect(wrapper.text()).toEqual(
+      'No React application found. Please install our npm package in your app.',
+    );
     expect(wrapper.find(HeadContainer).length).toBe(0);
     expect(wrapper.find(ActionContainer).length).toBe(0);
     expect(wrapper.find(StateContainer).length).toBe(0);
     expect(wrapper.find(TravelContainer).length).toBe(0);
     expect(wrapper.find(ButtonsContainer).length).toBe(0);
   });
-  test('With connection established, should render all containers', () => {
-    // fake connect
-    act(() => {
-      eventListener({
-        action: 'initialConnectSnapshots',
-        payload: 'test',
-      });
-    });
-    wrapper.update();
+  test('With snapshots, should render all containers', () => {
+    state.currentTab = 87;
+    state.tabs[87] = {
+      snapshots: [{}],
+      viewIndex: -1,
+      sliderIndex: 0,
+      mode: {},
+    };
+
+    wrapper = shallow(<MainContainer />);
     expect(wrapper.find(HeadContainer).length).toBe(1);
     expect(wrapper.find(ActionContainer).length).toBe(1);
     expect(wrapper.find(StateContainer).length).toBe(1);
