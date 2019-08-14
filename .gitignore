@@ -1,7 +1,7 @@
 node_modules
 .DS_Store
 src/extension/build/bundles
-package/react-time-travel-*.tgz
+package/reactime-*.tgz
 tictactoe
 parents
 coverage

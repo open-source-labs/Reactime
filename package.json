@@ -1,6 +1,5 @@
 {
-  "name": "react-time-travel-extension",
-  "version": "1.0.0",
+  "name": "reacttime-extension",
   "description": "build web extension bundle.js",
   "scripts": {
     "build": "webpack --mode production",
@@ -14,15 +13,12 @@
   "keywords": [
     "react",
     "time",
-    "travel",
-    "time-travel",
-    "timetravel",
-    "react-time-travel",
-    "react-timetravel"
+    "time travel",
+    "reactime"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/oslabs-beta/react-time-travel"
+    "url": "https://github.com/oslabs-beta/reactime"
   },
   "author": "Bryan Lee, Josh Kim, Ryan Dang, Sierra Swaby",
   "license": "ISC",
