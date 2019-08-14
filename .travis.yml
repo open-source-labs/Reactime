@@ -6,7 +6,5 @@ deploy:
   provider: script
   skip_cleanup: true
   on:
-    branches:
-      only:
-        - dev
-        - master
+    branch:
+      - master
