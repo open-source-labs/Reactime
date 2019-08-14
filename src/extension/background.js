@@ -1,6 +1,7 @@
 // store ports in an array
 const portsArr = [];
 const reloaded = {};
+const firstSnapshotReceived = {};
 const tabsObj = {};
 
 function createTabObj(title) {
@@ -12,7 +13,6 @@ function createTabObj(title) {
       locked: false,
       paused: false,
     },
-    firstSnapshot: true,
   };
 }
 
@@ -117,8 +117,10 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       const sourceTab = tabId;
 
       // first snapshot received from tab
-      if (tabsObj[tabId].firstSnapshot) {
-        tabsObj[tabId].firstSnapshot = false;
+      if (!firstSnapshotReceived[tabId]) {
+        firstSnapshotReceived[tabId] = true;
+        reloaded[tabId] = false;
+
         tabsObj[tabId].snapshots.push(request.payload);
         if (portsArr.length > 0) {
           portsArr.forEach(bg => bg.postMessage({
@@ -161,4 +163,6 @@ chrome.tabs.onRemoved.addListener(tabId => {
 
   // delete the tab from the tabsObj
   delete tabsObj[tabId];
+  delete reloaded[tabId];
+  delete firstSnapshotReceived[tabId];
 });
