@@ -1,4 +1,5 @@
-const bgArr = [];
+const portsArr = [];
+// store ports in an array
 const tabsObj = {
   sourceTab: null,
 };
@@ -18,10 +19,10 @@ function createTabObj(title) {
 
 // establishing connection with devtools
 chrome.runtime.onConnect.addListener(port => {
-  bgArr.push(port);
+  // push every port connected to the ports array
+  portsArr.push(port);
 
-  console.log('bgArr', bgArr);
-  // send it to devtools as soon as connection to devtools is made
+  // send tabs obj to the connected devtools as soon as connection to devtools is made
   if (Object.keys(tabsObj).length > 0) {
     port.postMessage({
       action: 'initialConnectSnapshots',
@@ -29,11 +30,11 @@ chrome.runtime.onConnect.addListener(port => {
     });
   }
 
-  // every time devtool is closed, remove the port from bgArr
+  // every time devtool is closed, remove the port from portsArr
   port.onDisconnect.addListener(e => {
-    for (let i = 0; i < bgArr.length; i += 1) {
-      if (bgArr[i] === e) {
-        bgArr.splice(i, 1);
+    for (let i = 0; i < portsArr.length; i += 1) {
+      if (portsArr[i] === e) {
+        portsArr.splice(i, 1);
         break;
       }
     }
@@ -106,8 +107,8 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         tabsObj[tabId].firstSnapshot = false;
         // don't add anything to snapshot storage if mode is persisting for the initial snapshot
         if (!persist) tabsObj[tabId].snapshots.push(request.payload);
-        if (bgArr.length > 0) {
-          bgArr.forEach(bg => bg.postMessage({
+        if (portsArr.length > 0) {
+          portsArr.forEach(bg => bg.postMessage({
             action: 'initialConnectSnapshots',
             payload: tabsObj,
           }));
@@ -119,8 +120,8 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       tabsObj.sourceTab = tabId;
 
       // send message to devtools
-      if (bgArr.length > 0) {
-        bgArr.forEach(bg => bg.postMessage({
+      if (portsArr.length > 0) {
+        portsArr.forEach(bg => bg.postMessage({
           action: 'sendSnapshots',
           payload: tabsObj,
         }));
@@ -133,14 +134,14 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
 // when tab is closed, remove the tabid from the tabsObj
 chrome.tabs.onRemoved.addListener(tabId => {
-  // after deleting the tab, send the updated tabs object to devtools
-  if (bgArr.length > 0) {
-    console.log('background => delete tab');
-    bgArr.forEach(bg => bg.postMessage({
+  // tell devtools which tab to delete
+  if (portsArr.length > 0) {
+    portsArr.forEach(bg => bg.postMessage({
       action: 'deleteTab',
       payload: tabId,
     }));
   }
 
+  // delete the tab from the tabsObj
   delete tabsObj[tabId];
 });
