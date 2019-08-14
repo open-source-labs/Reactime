@@ -9,7 +9,7 @@
 
 [![NPM](https://nodei.co/npm/reactime.png)](https://nodei.co/npm/reactime/)
 
-<p align="center">
+<p align="center" style="width: 70%">
   <img src="demo2.gif" alt="Demo of Reactime">
 </p>
 
