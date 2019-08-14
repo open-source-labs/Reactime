@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-param-reassign */
 class Tree {
   constructor(component, useStateInstead = false, name) {
     // special case when component is root
