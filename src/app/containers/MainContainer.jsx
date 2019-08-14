@@ -46,10 +46,6 @@ function MainContainer() {
           setnpm(true);
           break;
         }
-        case 'activatedTab': {
-          // console.log(payload, 'activatedTab in main Container');
-          break;
-        }
         default:
       }
     });

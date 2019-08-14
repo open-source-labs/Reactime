@@ -24,7 +24,7 @@ function Diff({ snapshot, show }) {
   if (show) formatters.html.showUnchanged();
   else formatters.html.hideUnchanged();
 
-  if (previous === undefined) return <div> states are equal </div>;
+  if (previous === undefined || delta === undefined) return <div> states are equal </div>;
   return (
     <div>
       { ReactHtmlParser(html) }
