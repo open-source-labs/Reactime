@@ -134,9 +134,6 @@ export default (state, action) => produce(state, draft => {
 
       Object.keys(tabs).forEach(tab => {
         if (tab !== 'sourceTab') {
-          console.log('reducer => payload', payload);
-          console.log('reducer => tabs[tab]', tabs[tab]);
-          console.log('reducer => state', state);
           if (!payload[tab]) {
             delete tabs[tab];
           } else {
@@ -168,7 +165,6 @@ export default (state, action) => produce(state, draft => {
         const newCurrentTab = Object.keys(draft.tabs)[0];
         draft.currentTab = newCurrentTab;
       }
-      console.log('reducer => delete tab', action.payload);
       break;
     }
     default:
