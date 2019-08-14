@@ -29,17 +29,14 @@ chrome.runtime.onConnect.addListener(port => {
     });
   }
 
+  // every time devtool is closed, remove the port from bgArr
   port.onDisconnect.addListener(e => {
-    console.log('port disconnected => e', e);
-    console.log('port disconnected => port', port);
     for (let i = 0; i < bgArr.length; i += 1) {
       if (bgArr[i] === e) {
-        console.log('inside if statement');
         bgArr.splice(i, 1);
         break;
       }
     }
-    console.log(bgArr);
   });
 
   // receive snapshot from devtools and send it to contentScript
