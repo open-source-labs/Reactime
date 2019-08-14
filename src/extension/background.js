@@ -167,7 +167,7 @@ chrome.tabs.onRemoved.addListener(tabId => {
   delete firstSnapshotReceived[tabId];
 });
 
-// when react time travel is installed
+// when reactime is installed
 // create a context menu that will open our devtools in a new window
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
