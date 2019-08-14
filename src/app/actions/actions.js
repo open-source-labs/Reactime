@@ -67,3 +67,8 @@ export const setTab = tab => ({
   type: types.SET_TAB,
   payload: tab,
 });
+
+export const deleteTab = tab => ({
+  type: types.DELETE_TAB,
+  payload: tab,
+});

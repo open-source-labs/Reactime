@@ -1,4 +1,4 @@
-let bg;
+const bgArr = [];
 const tabsObj = {
   sourceTab: null,
 };
@@ -18,15 +18,29 @@ function createTabObj(title) {
 
 // establishing connection with devtools
 chrome.runtime.onConnect.addListener(port => {
-  bg = port;
+  bgArr.push(port);
 
+  console.log('bgArr', bgArr);
   // send it to devtools as soon as connection to devtools is made
   if (Object.keys(tabsObj).length > 0) {
-    bg.postMessage({
+    port.postMessage({
       action: 'initialConnectSnapshots',
       payload: tabsObj,
     });
   }
+
+  port.onDisconnect.addListener(e => {
+    console.log('port disconnected => e', e);
+    console.log('port disconnected => port', port);
+    for (let i = 0; i < bgArr.length; i += 1) {
+      if (bgArr[i] === e) {
+        console.log('inside if statement');
+        bgArr.splice(i, 1);
+        break;
+      }
+    }
+    console.log(bgArr);
+  });
 
   // receive snapshot from devtools and send it to contentScript
   port.onMessage.addListener(msg => {
@@ -95,11 +109,11 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         tabsObj[tabId].firstSnapshot = false;
         // don't add anything to snapshot storage if mode is persisting for the initial snapshot
         if (!persist) tabsObj[tabId].snapshots.push(request.payload);
-        if (bg) {
-          bg.postMessage({
+        if (bgArr.length > 0) {
+          bgArr.forEach(bg => bg.postMessage({
             action: 'initialConnectSnapshots',
             payload: tabsObj,
-          });
+          }));
         }
         break;
       }
@@ -108,11 +122,11 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       tabsObj.sourceTab = tabId;
 
       // send message to devtools
-      if (bg) {
-        bg.postMessage({
+      if (bgArr.length > 0) {
+        bgArr.forEach(bg => bg.postMessage({
           action: 'sendSnapshots',
           payload: tabsObj,
-        });
+        }));
       }
       break;
     default:
@@ -120,18 +134,16 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   }
 });
 
-// chrome.tabs.onActivated.addListener((info) => {
-//   console.log('this is activated', info);
-//   if (bg) {
-//     console.log('hello', bg);
-//     bg.postMessage({
-//       action: 'activatedTab',
-//       payload: info.tabId,
-//     });
-//   }
-// });
-
 // when tab is closed, remove the tabid from the tabsObj
 chrome.tabs.onRemoved.addListener(tabId => {
+  // after deleting the tab, send the updated tabs object to devtools
+  if (bgArr.length > 0) {
+    console.log('background => delete tab');
+    bgArr.forEach(bg => bg.postMessage({
+      action: 'deleteTab',
+      payload: tabId,
+    }));
+  }
+
   delete tabsObj[tabId];
 });
