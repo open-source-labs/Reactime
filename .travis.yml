@@ -2,11 +2,3 @@ services:
   - docker
 script:
   - docker-compose up --abort-on-container-exit
-deploy:
-  provider: script
-  skip_cleanup: true
-  on:
-    branches:
-      only:
-        - dev
-        - master
