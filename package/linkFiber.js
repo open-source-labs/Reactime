@@ -1,3 +1,5 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-param-reassign */
 // links component state tree to library
 // changes the setState method to also update our snapshot
 const Tree = require('./tree');
@@ -65,13 +67,13 @@ module.exports = (snap, mode) => {
     snap.tree = createTree(current);
   }
 
-  return (container) => {
+  return container => {
     const {
       _reactRootContainer: { _internalRoot },
       _reactRootContainer,
     } = container;
     // only assign internal root if it actually exists
-    fiberRoot = (_internalRoot) ? _internalRoot : _reactRootContainer;
+    fiberRoot = _internalRoot || _reactRootContainer;
     updateSnapShotTree();
 
     // send the initial snapshot once the content script has started up
