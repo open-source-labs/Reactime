@@ -1,8 +1,8 @@
-const portsArr = [];
 // store ports in an array
-const tabsObj = {
-  sourceTab: null,
-};
+const portsArr = [];
+const reloaded = {};
+const firstSnapshotReceived = {};
+const tabsObj = {};
 
 function createTabObj(title) {
   return {
@@ -13,7 +13,6 @@ function createTabObj(title) {
       locked: false,
       paused: false,
     },
-    firstSnapshot: true,
   };
 }
 
@@ -86,7 +85,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   // Filter out tabs that don't have react-time-travel
   if (action === 'tabReload' || action === 'recordSnap') {
     isReactTimeTravel = true;
-  }
+  } else return;
 
   // everytime we get a new tabid, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) {
@@ -96,17 +95,33 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   const { persist } = tabsObj[tabId].mode;
 
   switch (action) {
-    case 'tabReload':
-      tabsObj[tabId].firstSnapshot = true;
+    case 'tabReload': {
       tabsObj[tabId].mode.locked = false;
       tabsObj[tabId].mode.paused = false;
-      if (!persist) tabsObj[tabId].snapshots = [];
+      // dont remove snapshots if persisting
+      if (!persist) {
+        tabsObj[tabId].snapshots.splice(1);
+
+        // send a message to devtools
+        portsArr.forEach(bg => bg.postMessage({
+          action: 'initialConnectSnapshots',
+          payload: tabsObj,
+        }));
+      }
+
+      reloaded[tabId] = true;
+
       break;
-    case 'recordSnap':
-      if (tabsObj[tabId].firstSnapshot) {
-        tabsObj[tabId].firstSnapshot = false;
-        // don't add anything to snapshot storage if mode is persisting for the initial snapshot
-        if (!persist) tabsObj[tabId].snapshots.push(request.payload);
+    }
+    case 'recordSnap': {
+      const sourceTab = tabId;
+
+      // first snapshot received from tab
+      if (!firstSnapshotReceived[tabId]) {
+        firstSnapshotReceived[tabId] = true;
+        reloaded[tabId] = false;
+
+        tabsObj[tabId].snapshots.push(request.payload);
         if (portsArr.length > 0) {
           portsArr.forEach(bg => bg.postMessage({
             action: 'initialConnectSnapshots',
@@ -116,17 +131,21 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         break;
       }
 
-      tabsObj[tabId].snapshots.push(request.payload);
-      tabsObj.sourceTab = tabId;
+      // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
+      if (reloaded[tabId]) {
+        reloaded[tabId] = false;
+      } else tabsObj[tabId].snapshots.push(request.payload);
 
       // send message to devtools
       if (portsArr.length > 0) {
         portsArr.forEach(bg => bg.postMessage({
           action: 'sendSnapshots',
           payload: tabsObj,
+          sourceTab,
         }));
       }
       break;
+    }
     default:
       break;
   }
@@ -144,4 +163,30 @@ chrome.tabs.onRemoved.addListener(tabId => {
 
   // delete the tab from the tabsObj
   delete tabsObj[tabId];
+  delete reloaded[tabId];
+  delete firstSnapshotReceived[tabId];
+});
+
+// when react time travel is installed
+// create a context menu that will open our devtools in a new window
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: 'react-time-travel',
+    title: 'React Time Travel',
+    contexts: ['page', 'selection', 'image', 'link'],
+  });
+});
+
+// when context menu is clicked, listen for the menuItemId,
+// if user clicked on react-time-travel, open the devtools window
+chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
+  const options = {
+    type: 'panel',
+    left: 0,
+    top: 0,
+    width: 380,
+    height: window.screen.availHeight,
+    url: chrome.runtime.getURL('panel.html'),
+  };
+  if (menuItemId === 'react-time-travel') chrome.windows.create(options);
 });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import HeadContainer from './HeadContainer';
 import ActionContainer from './ActionContainer';
 import StateContainer from './StateContainer';
@@ -11,7 +11,6 @@ import {
 import { useStoreContext } from '../store';
 
 function MainContainer() {
-  const [npmExists, setnpm] = useState(false);
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
 
@@ -24,7 +23,7 @@ function MainContainer() {
 
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener(message => {
-      const { action, payload } = message;
+      const { action, payload, sourceTab } = message;
       switch (action) {
         case 'deleteTab': {
           dispatch(deleteTab(payload));
@@ -32,14 +31,13 @@ function MainContainer() {
         }
 
         case 'sendSnapshots': {
-          if (payload.sourceTab !== currentTab) dispatch(setTab(payload.sourceTab));
+          dispatch(setTab(sourceTab));
           // set state with the information received from the background script
           dispatch(addNewSnapshots(payload));
           break;
         }
         case 'initialConnectSnapshots': {
           dispatch(initialConnect(payload));
-          setnpm(true);
           break;
         }
         default:
@@ -54,7 +52,19 @@ function MainContainer() {
     dispatch(setPort(port));
   });
 
-  if (!npmExists) return <div style={{ color: 'black' }}>Please install our npm package in your app</div>;
+  if (!tabs[currentTab]) {
+    return (
+      <div className="error-container">
+        <a
+          href="https://www.npmjs.com/package/react-time-travel"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          No React application found. Please install our npm package in your app.
+        </a>
+      </div>
+    );
+  }
   const { viewIndex, sliderIndex, snapshots } = tabs[currentTab];
 
   // if viewIndex is -1, then use the sliderIndex instead
