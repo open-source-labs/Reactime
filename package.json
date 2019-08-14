@@ -8,7 +8,7 @@
     "lint": "eslint --ext .js --ext .jsx src",
     "docker-build": "docker build -t reacttt/test-lint .",
     "docker-check": "docker-compose up --abort-on-container-exit",
-    "docker-test-lint": "eslint --ext .js --ext .jsx src && jest --verbose"
+    "docker-test-lint": "eslint --ext .js --ext .jsx src package && jest --verbose"
   },
   "keywords": [
     "react",
