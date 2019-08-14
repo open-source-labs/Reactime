@@ -27,11 +27,7 @@ function MainContainer() {
       const { action, payload } = message;
       switch (action) {
         case 'deleteTab': {
-          console.log('maincontainer', action, payload);
           dispatch(deleteTab(payload));
-
-          // if (payload === currentTab) dispatch(setTab(Object.keys(tabs)[0]));
-
           break;
         }
 
@@ -59,9 +55,6 @@ function MainContainer() {
   });
 
   if (!npmExists) return <div style={{ color: 'black' }}>Please install our npm package in your app</div>;
-  // if (!tabs[currentTab]) return <div style={{ color: 'black' }}>Please select another tab</div>;
-  console.log('maincontainer => tabs', tabs);
-  console.log('maincontainer => currentTab', currentTab);
   const { viewIndex, sliderIndex, snapshots } = tabs[currentTab];
 
   // if viewIndex is -1, then use the sliderIndex instead
