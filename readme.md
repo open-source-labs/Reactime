@@ -17,8 +17,9 @@ A debugging tool for React. Records state whenever state is changed and allows u
 Two parts are needed for this tool to function. The <a href="https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga">chrome extension</a> must be installed, and the NPM package must be installed and used in the React code.
 
 After successfully installing the chrome extension, you can test Reactime functionalities in the demo repositories below.
-<a href="http://reactime-demo1.us-east-1.elasticbeanstalk.com/">Calculator</a>
-<a href="http://reactime-demo2.us-east-1.elasticbeanstalk.com/"> Bitcoin Price Index</a>
+
+- <a href="http://reactime-demo1.us-east-1.elasticbeanstalk.com/">Calculator</a>
+- <a href="http://reactime-demo2.us-east-1.elasticbeanstalk.com/"> Bitcoin Price Index</a>
 
 ## Installing
 
