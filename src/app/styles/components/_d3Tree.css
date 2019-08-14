@@ -1,0 +1,40 @@
+.d3Container{
+    height: 100%;
+    width: 100%;
+}
+
+.node {
+    cursor: pointer;
+}
+
+.node circle {
+    fill: #fff;
+    stroke: black;
+    stroke-width: 2px;
+}
+
+.node text {
+    font: 15px sans-serif;
+    color: white;
+}
+
+.link {
+    fill: none;
+    stroke: black;
+    stroke-width: 1.5px;
+}
+
+div.tooltip {
+    white-space: pre;
+    position: absolute;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    flex: auto;
+    max-height: 100px;    
+    padding: 15px;
+    font: 15px sans-serif;
+    color: black;
+    background: #ffff;
+    border: solid 1px #aaa;
+    border-radius: 8px;
+}

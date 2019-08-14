@@ -1,0 +1,78 @@
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+.main-container {
+  height: 100%;
+  margin: 0 auto;
+  background-color: $brand-color;
+  overflow: hidden;
+}
+
+.error-container {
+  height: 100%;
+  margin: 0 auto;
+  background-color: $brand-color;
+  overflow: hidden;
+
+  display: grid;
+  justify-content: center;
+  a {
+    color: white;
+    margin-top: 5%;
+    height: 3%;
+  }
+}
+
+.body-container {
+  height: 94%;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 8fr 1fr;
+  grid-template-areas:
+    'actions states'
+    'travel travel'
+    'buttons buttons';
+}
+
+/* if extension width is less than 500px, stack the body containers */
+@media (max-width: 500px) {
+  .body-container {
+    grid-template-rows: 3fr 5fr 1fr;
+    grid-template-columns: auto;
+    grid-template-areas:
+      'actions'
+      'states'
+      'travel'
+      'buttons';
+  }
+}
+.travel-container {
+  grid-area: travel;
+}
+.action-container {
+  grid-area: actions;
+}
+.state-container {
+  grid-area: states;
+}
+.buttons-container {
+  grid-area: buttons;
+}
+
+.action-container,
+.state-container,
+.travel-container {
+  border-style: solid;
+  border-color: $border-color;
+  border-width: 1px;
+}

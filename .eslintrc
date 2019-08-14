@@ -1,0 +1,16 @@
+{
+  "extends": ["airbnb", "plugin:jest/recommended"],
+  "root": true,
+  "plugins": ["jest"],
+  "env": {
+    "jest/globals": true,
+    "browser": true,
+    "webextensions": true
+  },
+  "globals": {
+    "fetch": false
+  },
+  "rules": {
+    "arrow-parens": [2, "as-needed"]
+  }
+}

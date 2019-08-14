@@ -1,0 +1,72 @@
+.empty-button {
+  @extend %button-shared;
+  width: 120px;
+}
+
+.action-component:hover .jump-button {
+  opacity: 1;
+  transform: rotateX(0deg);
+  transition: opacity 300ms, transform 0.15s linear;
+}
+
+.jump-button {
+  @extend %button-shared;
+  width: 50px;
+  opacity: 0;
+  transform: rotateX(90deg);
+  transition: opacity 300ms, transform 0.15s linear;
+}
+
+.jump-button:hover {
+  // remove the blue border when button is clicked
+  background-color: $highlight-color;
+}
+
+.empty-button:hover {
+  background-color: $highlight-color;
+}
+
+.play-button {
+  @extend %button-shared;
+  width: 100px;
+  margin: 0 1% 0 2%;
+}
+
+.backward-button {
+  @extend %button-shared;
+  width: 30px;
+  margin: 7px;
+}
+
+.forward-button {
+  @extend %button-shared;
+  width: 30px;
+  margin: 7px;
+}
+
+.import-button,
+.export-button,
+.lock-button,
+.pause-button,
+.persist-button {
+  @extend %button-shared;
+}
+
+%button-shared {
+  outline: none;
+  background-color: $brand-color;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  cursor: pointer;
+  line-height: 1.5em;
+  font: normal 13px monaco, Consolas, "Lucida Console", monospace, Arial, sans-serif;
+  font-size: $button-text-size;
+
+  @extend %disable-highlight;
+}

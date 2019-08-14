@@ -1,0 +1,28 @@
+@charset 'UTF-8';
+
+// 1. Configuration and helpers
+@import 'abstracts/variables';
+
+// 3. Base stuff
+@import 'base/base', 'base/fonts', 'base/helpers', 'base/typography';
+
+// 4. Layout-related sections
+@import 'layout/actionContainer', 'layout/stateContainer',
+  'layout/travelContainer', 'layout/buttonsContainer',
+  'layout/headContainer.scss';
+
+// 5. Components
+@import 'components/buttons', 'components/actionComponent',
+  'components/jsonTree';
+
+// other styles that needs to be modularized
+@import 'styles';
+
+// slider component
+@import './components/rc-slider', './components/sliderHandle';
+
+// d3 chart component
+@import './components/d3Tree';
+
+// diff component
+@import './components/diff';

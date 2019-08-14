@@ -1,0 +1,13 @@
+.buttons-container {
+  margin: 0 1% 0 1%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 1%;
+  padding: 1% 0 1% 0;
+}
+
+@media (max-width: 500px) {
+  .buttons-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

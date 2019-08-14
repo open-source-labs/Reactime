@@ -1,0 +1,23 @@
+.action-component {
+  padding: 5px 10px;
+  display: grid;
+  grid-template-columns: 5fr 1fr;
+  align-items: center;
+  height: 20px;
+  background-color: $brand-color;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-color: $border-color;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  @extend %disable-highlight
+}
+
+.action-component.selected {
+  background-color: $light-grey-one;
+}
+
+.action-component.exclude {
+  display: flex;
+  justify-content: center;
+}
