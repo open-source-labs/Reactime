@@ -7,14 +7,12 @@ window.addEventListener('message', msg => {
   if (msg.data.action !== 'contentScriptStarted' && firstMessage) {
     // since contentScript is run everytime a page is refreshed
     // tell the background script that the tab has reloaded
-    console.log('before sending tabReload');
     chrome.runtime.sendMessage({ action: 'tabReload' });
     firstMessage = false;
   }
 
   // post initial Message to npm package
   const { action } = msg.data;
-  console.log('before sending recordsnap');
   if (action === 'recordSnap') chrome.runtime.sendMessage(msg.data);
 });
 
