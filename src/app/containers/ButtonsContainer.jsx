@@ -39,7 +39,7 @@ function ButtonsContainer() {
     snapshots,
     mode: { paused, locked, persist },
   } = tabs[currentTab];
-  // const [{ snapshots, mode: { paused, locked, persist } }, dispatch] = useStoreContext();
+
   return (
     <div className="buttons-container">
       <button className="pause-button" type="button" onClick={() => dispatch(toggleMode('paused'))}>
