@@ -27,12 +27,9 @@ useStoreContext.mockImplementation(() => [state, dispatch]);
 
 let wrapper;
 global.chrome = chrome;
-let eventListener;
 const port = {
   onMessage: {
-    addListener: fn => {
-      eventListener = fn;
-    },
+    addListener: () => {},
   },
   onDisconnect: {
     addListener: () => {},
