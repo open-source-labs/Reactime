@@ -1,7 +1,7 @@
 # Reactime
 
 [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime)
-[![Build Status](https://secure.travis-ci.org/oslabs-beta/reactime.svg?branch=master))](https://travis-ci.com/oslabs-beta/reactime)
+[![Build Status](https://secure.travis-ci.org/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime)
 [![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime)
 [![Dependencies](https://david-dm.org/oslabs-beta/reactime.svg)](https://david-dm.org/oslabs-beta/reactime#info=dependencies)
 [![DevDependencies](https://david-dm.org/oslabs-beta/reactime/dev-status.svg)](https://david-dm.org/oslabs-beta/reactime?type=dev)
