@@ -1,11 +1,11 @@
 # Reactime
 
 [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime)
-[![Travis (.com) branch](https://img.shields.io/travis/com/oslabs-beta/reactime/master)](https://travis-ci.com/oslabs-beta/reactime)
-[![npm](https://img.shields.io/npm/v/reactime?color=green)](https://www.npmjs.com/package/reactime)
-[![David](https://img.shields.io/david/oslabs-beta/reactime)](https://david-dm.org/oslabs-beta/reactime#info=dependencies)
-[![DevDependencies](https://img.shields.io/david/dev/oslabs-beta/reactime.svg)](https://david-dm.org/oslabs-beta/reactime?type=dev)
-[![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/oslabs-beta/reactime)](https://snyk.io/test/github/oslabs-beta/reactime)
+[![Build Status](https://secure.travis-ci.org/oslabs-beta/reactime.svg?branch=master))](https://travis-ci.com/oslabs-beta/reactime)
+[![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime)
+[![Dependencies](https://david-dm.org/oslabs-beta/reactime.svg)](https://david-dm.org/oslabs-beta/reactime#info=dependencies)
+[![DevDependencies](https://david-dm.org/oslabs-beta/reactime/dev-status.svg)](https://david-dm.org/oslabs-beta/reactime?type=dev)
+[![Vulnerabilities](https://snyk.io/test/github/oslabs-beta/reactime/badge.svg)](https://snyk.io/test/github/oslabs-beta/reactime)
 
 [![NPM](https://nodei.co/npm/reactime.png)](https://nodei.co/npm/reactime/)
 
