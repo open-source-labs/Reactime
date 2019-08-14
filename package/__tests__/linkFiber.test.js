@@ -1,5 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies */
-// const Tree = require('./tree');
+/* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import { render } from 'react-dom';
 
@@ -8,7 +7,18 @@ const linkFiberRequire = require('../linkFiber');
 let linkFiber;
 let mode;
 let snapShot;
-let component;
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { foo: 'bar' };
+  }
+
+  render() {
+    const { foo } = this.state;
+    return <div>{foo}</div>;
+  }
+}
 
 describe('unit test for linkFiber', () => {
   beforeEach(() => {
@@ -20,22 +30,9 @@ describe('unit test for linkFiber', () => {
     };
     linkFiber = linkFiberRequire(snapShot, mode);
 
-    class App extends React.Component {
-      constructor(props) {
-        super(props);
-        this.state = { foo: 'bar' };
-      }
-
-      render() {
-        return <div>{this.state.foo}</div>;
-      }
-    }
-
     const container = document.createElement('div');
     render(<App />, container);
     linkFiber(container);
-    // eslint-disable-next-line prefer-destructuring
-    component = snapShot.tree.children[0].component;
   });
 
   test('linkFiber should mutate the snapshot tree property', () => {
@@ -49,10 +46,4 @@ describe('unit test for linkFiber', () => {
   test('linkFiber should modify the setState of the stateful component', () => {
     expect(snapShot.tree.children[0].component.setState.linkFiberChanged).toBe(true);
   });
-
-  // test('newSetState should still setState correctly', () => {
-  //   component.setState({ foo: 'barf' });
-  //   expect(component.state).not.toEqual({ foo: 'bar' });
-  //   expect(component.state).toEqual({ foo: 'barf' });
-  // });
 });
