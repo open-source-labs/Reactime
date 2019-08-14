@@ -24,7 +24,7 @@ function MainContainer() {
 
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener(message => {
-      const { action, payload } = message;
+      const { action, payload, sourceTab } = message;
       switch (action) {
         case 'deleteTab': {
           dispatch(deleteTab(payload));
@@ -32,7 +32,7 @@ function MainContainer() {
         }
 
         case 'sendSnapshots': {
-          if (payload.sourceTab !== currentTab) dispatch(setTab(payload.sourceTab));
+          dispatch(setTab(sourceTab));
           // set state with the information received from the background script
           dispatch(addNewSnapshots(payload));
           break;

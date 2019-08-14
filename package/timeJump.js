@@ -1,7 +1,8 @@
+/* eslint-disable no-param-reassign */
 // traverses given tree by accessing children through coords array
 function traverseTree(tree, coords) {
   let curr = tree;
-  coords.forEach((coord) => {
+  coords.forEach(coord => {
     curr = curr.children[coord];
   });
   return curr;
@@ -21,8 +22,7 @@ module.exports = (origin, mode) => {
     });
   }
 
-
-  return (target) => {
+  return target => {
     // setting mode disables setState from posting messages to window
     mode.jumping = true;
     jump(target);

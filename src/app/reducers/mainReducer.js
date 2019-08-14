@@ -111,46 +111,40 @@ export default (state, action) => produce(state, draft => {
       const { payload } = action;
       Object.keys(payload).forEach(tab => {
         // check if tab exists in memory
-        if (!tabs[tab]) {
-          // add new tab
-          tabs[tab] = {
-            ...payload[tab],
-            sliderIndex: 0,
-            viewIndex: -1,
-            intervalId: null,
-            playing: false,
-          };
-        }
+        // add new tab
+        tabs[tab] = {
+          ...payload[tab],
+          sliderIndex: 0,
+          viewIndex: -1,
+          intervalId: null,
+          playing: false,
+        };
       });
 
       // only set first tab if current tab is non existent
       const firstTab = parseInt(Object.keys(payload)[0], 10);
-      draft.currentTab = currentTab === null ? firstTab : currentTab;
-
+      if (currentTab === undefined || currentTab === null) draft.currentTab = firstTab;
       break;
     }
     case types.NEW_SNAPSHOTS: {
       const { payload } = action;
 
       Object.keys(tabs).forEach(tab => {
-        if (tab !== 'sourceTab') {
-          if (!payload[tab]) {
-            delete tabs[tab];
-          } else {
-            const { snapshots: newSnaps } = payload[tab];
-            tabs[tab] = {
-              ...tabs[tab],
-              ...payload[tab],
-              sliderIndex: newSnaps.length - 1,
-            };
-          }
+        if (!payload[tab]) {
+          delete tabs[tab];
+        } else {
+          const { snapshots: newSnaps } = payload[tab];
+          tabs[tab] = {
+            ...tabs[tab],
+            ...payload[tab],
+            sliderIndex: newSnaps.length - 1,
+          };
         }
       });
 
       // only set first tab if current tab is non existent
       const firstTab = parseInt(Object.keys(payload)[0], 10);
-      draft.currentTab = currentTab === null ? firstTab : currentTab;
-
+      if (currentTab === undefined || currentTab === null) draft.currentTab = firstTab;
       break;
     }
     case types.SET_TAB: {
@@ -162,7 +156,7 @@ export default (state, action) => produce(state, draft => {
       if (draft.currentTab === action.payload) {
         // if the deleted tab was set to currentTab, replace currentTab with
         // the first tabId within tabs obj
-        const newCurrentTab = Object.keys(draft.tabs)[0];
+        const newCurrentTab = parseInt(Object.keys(draft.tabs)[0], 10);
         draft.currentTab = newCurrentTab;
       }
       break;
