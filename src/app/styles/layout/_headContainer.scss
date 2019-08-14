@@ -5,7 +5,39 @@
 
 .head-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
+}
+
+.tab-select-container {
+  font-size: 12px;
+  min-width: 90px;
+  margin: 7px;
+}
+
+.tab-select-container {
+  .tab-select__control,
+  .tab-select__menu {
+    border-style: none;
+    width: 300px;
+    background-color: $light-grey-one;
+    z-index: 2;
+    @extend %disable-highlight;
+  }
+  .tab-select__single-value {
+    color: white;
+  }
+  .tab-select__option:hover {
+    background-color: #2683ff;
+  }
+  .tab-select__option--is-selected,
+  .tab-select__option--is-focused {
+    background-color: transparent;
+  }
+
+  // removes the cursor from blinking
+  .css-w8afj7-Input {
+    color: transparent;
+  }
 }
