@@ -10,7 +10,7 @@
 [![NPM](https://nodei.co/npm/reactime.png)](https://nodei.co/npm/reactime/)
 
 <p align="center">
-  <img src="demo2.gif" alt="Demo of Reactime" style="width: 55%">
+  <img src="demo.gif" alt="Demo of Reactime" style="width: 55%">
 </p>
 
 A debugging tool for React. Records state whenever state is changed and allows user to jump to any previous recorded state.
