@@ -1,4 +1,3 @@
-// let reloaded = true;
 let firstMessage = true;
 
 // listening for messages from npm package
@@ -14,9 +13,7 @@ window.addEventListener('message', msg => {
 
   // post initial Message to npm package
   const { action } = msg.data;
-  if (action === 'recordSnap') {
-    chrome.runtime.sendMessage(msg.data);
-  }
+  if (action === 'recordSnap') chrome.runtime.sendMessage(msg.data);
 });
 
 // listening for messages from background.js
