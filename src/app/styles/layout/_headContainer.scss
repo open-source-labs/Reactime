@@ -57,6 +57,7 @@
   // removes min-height of dropdown and change it to 100%
   .css-yk16xz-control,
   .css-1pahdxg-control {
-    min-height: 100%;
+    min-height: initial;
+    height: 100%;
   }
 }
