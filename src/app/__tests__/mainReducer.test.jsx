@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-import * as types from '../constants/actionTypes';
 import mainReducer from '../reducers/mainReducer';
 import {
   toggleMode, addNewSnapshots, initialConnect, setPort, emptySnapshots, changeView, changeSlider, moveBackward, moveForward, playForward, pause, startPlaying, importSnapshots, setTab, deleteTab,
