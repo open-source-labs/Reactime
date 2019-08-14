@@ -92,6 +92,7 @@ export default (state, action) => produce(state, draft => {
           actionText = 'setPersist';
           break;
         default:
+          break;
       }
       port.postMessage({ action: actionText, payload: newMode, tabId: currentTab });
       break;

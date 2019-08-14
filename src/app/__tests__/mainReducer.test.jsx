@@ -52,12 +52,26 @@ describe('mainReducer testing', () => {
       expect(mainReducer(state, moveBackward()).tabs[currentTab].sliderIndex).toEqual(1);
       expect(mainReducer(state, moveBackward()).tabs[currentTab].playing).toEqual(false);
     });
+    it('should not decrement if sliderIndex is zero', () => {
+      state.tabs[currentTab].sliderIndex = 0;
+      const { sliderIndex } = mainReducer(state, moveBackward()).tabs[currentTab];
+      expect(sliderIndex).toBe(0);
+    });
   });
 
   describe('moveForward', () => {
     it('should increment sliderIndex by 1', () => {
       expect(mainReducer(state, moveForward()).tabs[currentTab].sliderIndex).toEqual(3);
       expect(mainReducer(state, moveForward()).tabs[currentTab].playing).toEqual(false);
+    });
+    it('should not increment if sliderIndex at end', () => {
+      state.tabs[currentTab].sliderIndex = 3;
+      const { sliderIndex } = mainReducer(state, moveForward()).tabs[currentTab];
+      expect(sliderIndex).toBe(3);
+    });
+    it('should not change playing if not coming from user', () => {
+      const { playing } = mainReducer(state, playForward()).tabs[currentTab];
+      expect(playing).toBe(true);
     });
   });
 
@@ -118,6 +132,12 @@ describe('mainReducer testing', () => {
       expect(mode.locked).toBe(false);
       expect(mode.persist).toBe(true);
     });
+    it('undefined payload does nothing', () => {
+      const { mode } = mainReducer(state, toggleMode('undefined')).tabs[currentTab];
+      expect(mode.paused).toBe(false);
+      expect(mode.locked).toBe(false);
+      expect(mode.persist).toBe(false);
+    });
   });
 
   describe('slider pause', () => {
@@ -153,7 +173,7 @@ describe('mainReducer testing', () => {
     };
     it('should add new tab', () => {
       const addedTab = mainReducer(state, initialConnect(newTab)).tabs[104];
-      expect(addedTab).not.toBe(undefined);    
+      expect(addedTab).not.toBe(undefined);
     });
     it('should force some values to default', () => {
       const addedTab = mainReducer(state, initialConnect(newTab)).tabs[104];
@@ -166,9 +186,75 @@ describe('mainReducer testing', () => {
       const addedTab = mainReducer(state, initialConnect(newTab)).tabs[104];
       expect(addedTab.snapshots).toEqual(newTab[104].snapshots);
     });
+    it('if currentTab undefined currentTab becomes firstTab', () => {
+      state.currentTab = undefined;
+      const addedTab = mainReducer(state, initialConnect(newTab));
+      expect(addedTab.currentTab).toBe(104);
+    });
   });
 
   describe('new snapshots', () => {
+    const newSnapshots = {
+      87: {
+        snapshots: [1, 2, 3, 4, 5],
+        sliderIndex: 2,
+        viewIndex: -1,
+        mode: {
+          paused: false,
+          locked: false,
+          persist: false,
+        },
+        intervalId: 87,
+        playing: true,
+      },
+    };
+    it('update snapshots of corresponding tabId', () => {
+      const updated = mainReducer(state, addNewSnapshots(newSnapshots));
+      expect(updated.tabs[87].snapshots).toEqual(newSnapshots[87].snapshots);
+    });
+    it('should delete tabs that are deleted from background script', () => {
+      const updated = mainReducer(state, addNewSnapshots(newSnapshots));
+      expect(updated.tabs[75]).toBe(undefined);
+    });
+    it('if currentTab undefined currentTab becomes first Tab', () => {
+      state.currentTab = undefined;
+      const updated = mainReducer(state, addNewSnapshots(newSnapshots));
+      expect(updated.currentTab).toBe(87);
+    });
+  });
 
+  describe('set_tab', () => {
+    it('should set tab to payload', () => {
+      const newCurrentTab = mainReducer(state, setTab(75)).currentTab;
+      expect(newCurrentTab).toBe(75);
+    });
+  });
+
+  describe('delete_tab', () => {
+    it('should delete only payload tab from state', () => {
+      const afterDelete = mainReducer(state, deleteTab(75));
+      expect(afterDelete.tabs[75]).toBe(undefined);
+      expect(afterDelete.tabs[87]).not.toBe(undefined);
+    });
+    it('should change current tab if deleted tab matches current tab', () => {
+      const afterDelete = mainReducer(state, deleteTab(87));
+      expect(afterDelete.tabs[87]).toBe(undefined);
+      expect(afterDelete.tabs[75]).not.toBe(undefined);
+      expect(afterDelete.currentTab).toBe(75);
+    });
+  });
+
+  describe('default', () => {
+    const action = {
+      type: 'doesNotExist',
+      payload: 'trigger',
+    };
+    it('if there are no match of action types, throw error', () => {
+      try {
+        mainReducer(state, action);
+      } catch (err) {
+        expect(err).toBeInstanceOf(Error);
+      }
+    });
   });
 });
