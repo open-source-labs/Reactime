@@ -1,4 +1,16 @@
-# React-Time-Travel
+# Reactime
+
+![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime) 
+![Travis (.com) branch](https://img.shields.io/travis/com/oslabs-beta/reactime/dev?label=dev%20build)
+![Travis (.com) branch](https://img.shields.io/travis/com/oslabs-beta/reactime/master?label=master%20build)
+![npm](https://img.shields.io/npm/v/reactime?color=green)
+![David](https://img.shields.io/david/oslabs-beta/reactime)
+![DevDependencies](https://img.shields.io/david/dev/oslabs-beta/reactime.svg)
+![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/oslabs-beta/reactime)
+
+<p align="center">
+  <img src="demo.gif" alt="Demo of Reactime">
+</p>
 
 A debugging tool for React. Records state whenever state is changed and allows user to jump to any previous recorded state.
 
@@ -6,16 +18,18 @@ Two parts are needed for this tool to function. The chrome extension must be ins
 
 ## Installing
 
-1. Download the Chrome extension from Chrome Web Store.
+1. Download the [extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) from Chrome Web Store.
 
-2. Install the [npm package](https://www.npmjs.com/package/react-time-travel) in your code.
+2. Install the [npm package](https://www.npmjs.com/package/reactime) in your code.
+
 ```
-npm i react-time-travel
+npm i reactime
 ```
+
 3. Call the library method on your root container after rendering your App.
 
 ```
-const reactTimeTravel = require('react-time-travel');
+const reactTimeTravel = require('reactime');
 
 const rootContainer = document.getElementById('root');
 ReactDom.render(<App />, rootContainer);
@@ -27,19 +41,19 @@ reactTimeTravel(rootContainer);
 
 ## How to Use
 
-After installing both the Chrome extension and the npm package, just open up your project in the browser. 
+After installing both the Chrome extension and the npm package, just open up your project in the browser.
 
-Then open up your Chrome DevTools. There'll be a new tab called React-Time-Travel.
+Then open up your Chrome DevTools. There'll be a new tab called reactime.
 
 ## Features
 
 ### Recording
 
-Whenever state is changed (whenever setState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the React-Time-Travel panel. 
+Whenever state is changed (whenever setState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the Reactime panel.
 
 ### Viewing
 
-You can click on a snapshot to view your app's state. State can be visualized in a JSON or a tree. 
+You can click on a snapshot to view your app's state. State can be visualized in a JSON or a tree.
 
 The selected snapshot can also be diffed/compared with the current dom.
 
@@ -49,21 +63,22 @@ The most important feature of all. Jumping to any previous recorded snapshot. Hi
 
 ### Others
 
-Other handy features include: 
-* multiple tabs support
-* a slider to move through snapshots quickly
-* a play button to move through snapshots automatically
-* a pause which button stops recording each snapshot
-* a lock button to freeze the DOM in place. setState will lose all functionality while the extension is locked
-* a persist button to keep snapshots upon refresh. handy when changing code and debugging
-* export/import the current snapshots in memory
+Other handy features include:
+
+- multiple tabs support
+- a slider to move through snapshots quickly
+- a play button to move through snapshots automatically
+- a pause which button stops recording each snapshot
+- a lock button to freeze the DOM in place. setState will lose all functionality while the extension is locked
+- a persist button to keep snapshots upon refresh. handy when changing code and debugging
+- export/import the current snapshots in memory
 
 ## Authors
 
-* **Ryan Dang** - [@rydang](https://github.com/rydang)
-* **Bryan Lee** - [@mylee1995](https://github.com/mylee1995)
-* **Josh Kim** - [@joshua0308](https://github.com/joshua0308)
-* **Sierra Swaby** - [@starkspark](https://github.com/starkspark)
+- **Ryan Dang** - [@rydang](https://github.com/rydang)
+- **Bryan Lee** - [@mylee1995](https://github.com/mylee1995)
+- **Josh Kim** - [@joshua0308](https://github.com/joshua0308)
+- **Sierra Swaby** - [@starkspark](https://github.com/starkspark)
 
 ## License
 

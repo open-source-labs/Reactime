@@ -1,15 +1,15 @@
-# React-Time-Travel
+# Reactime
 
-![GitHub](https://img.shields.io/github/license/oslabs-beta/react-time-travel) 
-![Travis (.com) branch](https://img.shields.io/travis/com/oslabs-beta/react-time-travel/dev?label=dev%20build)
-![Travis (.com) branch](https://img.shields.io/travis/com/oslabs-beta/react-time-travel/master?label=master%20build)
-![npm](https://img.shields.io/npm/v/react-time-travel?color=green)
-![David](https://img.shields.io/david/oslabs-beta/react-time-travel)
-![DevDependencies](https://img.shields.io/david/dev/oslabs-beta/react-time-travel.svg)
-![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/oslabs-beta/react-time-travel)
+![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime) 
+![Travis (.com) branch](https://img.shields.io/travis/com/oslabs-beta/reactime/dev?label=dev%20build)
+![Travis (.com) branch](https://img.shields.io/travis/com/oslabs-beta/reactime/master?label=master%20build)
+![npm](https://img.shields.io/npm/v/reactime?color=green)
+![David](https://img.shields.io/david/oslabs-beta/reactime)
+![DevDependencies](https://img.shields.io/david/dev/oslabs-beta/reactime.svg)
+![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/oslabs-beta/reactime)
 
 <p align="center">
-  <img src="demo.gif" alt="Demo of React-Time-Travel">
+  <img src="demo.gif" alt="Demo of Reactime">
 </p>
 
 A debugging tool for React. Records state whenever state is changed and allows user to jump to any previous recorded state.
@@ -18,18 +18,18 @@ Two parts are needed for this tool to function. The chrome extension must be ins
 
 ## Installing
 
-1. Download the [extension](https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga) from Chrome Web Store.
+1. Download the [extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) from Chrome Web Store.
 
-2. Install the [npm package](https://www.npmjs.com/package/react-time-travel) in your code.
+2. Install the [npm package](https://www.npmjs.com/package/reactime) in your code.
 
 ```
-npm i react-time-travel
+npm i reactime
 ```
 
 3. Call the library method on your root container after rendering your App.
 
 ```
-const reactTimeTravel = require('react-time-travel');
+const reactTimeTravel = require('reactime');
 
 const rootContainer = document.getElementById('root');
 ReactDom.render(<App />, rootContainer);
@@ -43,13 +43,13 @@ reactTimeTravel(rootContainer);
 
 After installing both the Chrome extension and the npm package, just open up your project in the browser.
 
-Then open up your Chrome DevTools. There'll be a new tab called React-Time-Travel.
+Then open up your Chrome DevTools. There'll be a new tab called reactime.
 
 ## Features
 
 ### Recording
 
-Whenever state is changed (whenever setState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the React-Time-Travel panel.
+Whenever state is changed (whenever setState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the Reactime panel.
 
 ### Viewing
 

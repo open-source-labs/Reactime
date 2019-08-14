@@ -1,1 +1,1 @@
-chrome.devtools.panels.create('React Time Travel', null, 'panel.html', () => {});
+chrome.devtools.panels.create('Reactime', null, 'panel.html', () => {});

@@ -56,7 +56,7 @@ function MainContainer() {
     return (
       <div className="error-container">
         <a
-          href="https://www.npmjs.com/package/react-time-travel"
+          href="https://www.npmjs.com/package/reactime"
           target="_blank"
           rel="noopener noreferrer"
         >

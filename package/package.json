@@ -1,24 +1,26 @@
 {
-  "name": "react-time-travel",
-  "version": "1.1.1",
+  "name": "reactime",
+  "version": "2.0.0",
   "description": "A library that helps debug React by memorizing the state of components with every render.",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/oslabs-beta/react-time-travel"
+    "url": "https://github.com/oslabs-beta/reactime"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\""
   },
+  "peerDependencies": {
+    "react": "~16.0.0",
+    "react-dom": "~16.0.0"
+  },
   "keywords": [
     "react",
     "time",
-    "travel",
-    "time-travel",
-    "timetravel",
-    "react-time-travel",
-    "react-timetravel"
+    "time travel",
+    "reactime",
+    "react devtool"
   ],
   "author": "Bryan Lee, Josh Kim, Ryan Dang, Sierra Swaby",
-  "license": "ISC"
+  "license": "MIT"
 }
