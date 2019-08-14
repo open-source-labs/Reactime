@@ -120,17 +120,6 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   }
 });
 
-// chrome.tabs.onActivated.addListener((info) => {
-//   console.log('this is activated', info);
-//   if (bg) {
-//     console.log('hello', bg);
-//     bg.postMessage({
-//       action: 'activatedTab',
-//       payload: info.tabId,
-//     });
-//   }
-// });
-
 // when tab is closed, remove the tabid from the tabsObj
 chrome.tabs.onRemoved.addListener(tabId => {
   delete tabsObj[tabId];
