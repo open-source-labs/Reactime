@@ -1,6 +1,6 @@
 # Reactime
 
-![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime) 
+![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)
 ![Travis (.com) branch](https://img.shields.io/travis/com/oslabs-beta/reactime/dev?label=dev%20build)
 ![Travis (.com) branch](https://img.shields.io/travis/com/oslabs-beta/reactime/master?label=master%20build)
 ![npm](https://img.shields.io/npm/v/reactime?color=green)
@@ -14,7 +14,7 @@
 
 A debugging tool for React. Records state whenever state is changed and allows user to jump to any previous recorded state.
 
-Two parts are needed for this tool to function. The chrome extension must be installed, and the NPM package must be installed and used in the React code.
+Two parts are needed for this tool to function. The <a href="https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga">chrome extension</a> must be installed, and the NPM package must be installed and used in the React code.
 
 ## Installing
 
