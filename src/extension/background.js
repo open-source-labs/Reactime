@@ -166,3 +166,27 @@ chrome.tabs.onRemoved.addListener(tabId => {
   delete reloaded[tabId];
   delete firstSnapshotReceived[tabId];
 });
+
+// when react time travel is installed
+// create a context menu that will open our devtools in a new window
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: 'react-time-travel',
+    title: 'React Time Travel',
+    contexts: ['page', 'selection', 'image', 'link'],
+  });
+});
+
+// when context menu is clicked, listen for the menuItemId,
+// if user clicked on react-time-travel, open the devtools window
+chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
+  const options = {
+    type: 'panel',
+    left: 0,
+    top: 0,
+    width: 380,
+    height: window.screen.availHeight,
+    url: chrome.runtime.getURL('panel.html'),
+  };
+  if (menuItemId === 'react-time-travel') chrome.windows.create(options);
+});
