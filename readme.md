@@ -1,5 +1,13 @@
 # React-Time-Travel
 
+![GitHub](https://img.shields.io/github/license/oslabs-beta/react-time-travel) 
+![Travis (.com) branch](https://img.shields.io/travis/com/oslabs-beta/react-time-travel/dev?label=dev%20build)
+![Travis (.com) branch](https://img.shields.io/travis/com/oslabs-beta/react-time-travel/master?label=master%20build)
+![npm](https://img.shields.io/npm/v/react-time-travel?color=green)
+![David](https://img.shields.io/david/oslabs-beta/react-time-travel)
+![DevDependencies](https://img.shields.io/david/dev/oslabs-beta/react-time-travel.svg)
+![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/oslabs-beta/react-time-travel)
+
 <p align="center">
   <img src="demo.gif" alt="Demo of React-Time-Travel">
 </p>
@@ -10,7 +18,7 @@ Two parts are needed for this tool to function. The chrome extension must be ins
 
 ## Installing
 
-1. Download the Chrome extension from Chrome Web Store.
+1. Download the [extension](https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga) from Chrome Web Store.
 
 2. Install the [npm package](https://www.npmjs.com/package/react-time-travel) in your code.
 
