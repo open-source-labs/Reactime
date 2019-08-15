@@ -1,3 +1,7 @@
+<p align="center">
+  <img src ="./assets/readme_logo.png" width="200"/>
+</p>
+
 # Reactime
 
 [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime)

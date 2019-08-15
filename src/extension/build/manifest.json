@@ -9,6 +9,7 @@
     "scripts": ["bundles/background.bundle.js"],
     "persistent": false
   },
+  "icons": { "48": "assets/icon48.png", "128": "assets/icon128.png" },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
