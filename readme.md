@@ -19,6 +19,10 @@
 
 Reactime is a debugging tool for React developers. It records state whenever state is changed and allows user to jump to any previous recorded state.
 
+One important thing to note. This devtool is for React apps using only stateful components and prop drilling. If you're using Redux, Hooks, Context, or functional components, this devtool will not function on your app. 
+
+Another thing is that this library does not work well when mixing React with direct DOM manipulation. Since DOM manipulation doesn't change any React state, this library cannot record or even detect that change. Of course, you should be avoiding mixing the two in the first place.
+
 Two parts are needed for this tool to function. The <a href="https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga">chrome extension</a> must be installed, and the NPM package must be installed and used in the React code.
 
 After successfully installing the chrome extension, you can test Reactime functionalities in the demo repositories below.
@@ -67,7 +71,7 @@ You can click on a snapshot to view your app's state. State can be visualized in
 
 ### Jumping
 
-Jumping is the most important feature of all. It allows you to jump to any previous recorded snapshots. Hitting the jump button on any snapshot will change the DOM by setting their state. One important thing to note is that this library does not work well when mixing React with direct DOM manipulation. Since DOM manipulation doesn't change any React state, this library cannot record or even detect that change. Of course, you should be avoiding mixing the two in the first place.
+Jumping is the most important feature of all. It allows you to jump to any previous recorded snapshots. Hitting the jump button on any snapshot will change the DOM by setting their state.
 
 ### Others
 
