@@ -1,5 +1,5 @@
 <p align="center">
-  <img src ="./assets/readme_logo2.png" width="500"/>
+  <img src ="./assets/readme_logo.png" width="400"/>
 </p>
 
 # Reactime: A Time Travel Debugger for React
