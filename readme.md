@@ -42,7 +42,7 @@ npm i reactime
 const reactime = require('reactime');
 
 const rootContainer = document.getElementById('root');
-ReactDom.render(<App />, rootContainer);
+ReactDOM.render(<App />, rootContainer);
 
 reactime(rootContainer);
 ```
