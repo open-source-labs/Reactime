@@ -14,9 +14,6 @@
 // 5. Components
 @import 'components/buttons', 'components/actionComponent', 'components/jsonTree';
 
-// other styles that needs to be modularized
-@import 'styles';
-
 // slider component
 @import './components/rc-slider', './components/sliderHandle';
 
