@@ -20,7 +20,7 @@ Two parts are needed for this tool to function. The <a href="https://chrome.goog
 After successfully installing the chrome extension, you can test Reactime functionalities in the demo repositories below.
 
 - <a href="http://reactime-demo1.us-east-1.elasticbeanstalk.com/">Calculator</a>
-- <a href="http://reactime-demo2.us-east-1.elasticbeanstalk.com/"> Bitcoin Price Index</a>
+- <a href="http://reactime-demo2.us-east-1.elasticbeanstalk.com/">Bitcoin Price Index</a>
 
 ## Installing
 
