@@ -1,6 +1,8 @@
 <p align="center">
-  <img src ="./assets/readme_logo.png" width="400"/>
+  <img src ="./assets/readme_logo2.png" width="500"/>
 </p>
+
+# Reactime: A Time Travel Debugger for React
 
 [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime)
 [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime)
