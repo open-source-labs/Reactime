@@ -12,7 +12,6 @@ module.exports = (origin, mode) => {
   // recursively change state of tree
   function jump(target, coords = []) {
     const originNode = traverseTree(origin.tree, coords);
-
     // set the state of the origin tree
     originNode.component.setState(target.state, () => {
       // iterate through new children once state has been set

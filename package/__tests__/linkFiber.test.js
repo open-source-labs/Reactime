@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-filename-extension */
-import React from 'react';
+import React, { Component, useState } from 'react';
 import { render } from 'react-dom';
 
 const linkFiberRequire = require('../linkFiber');
@@ -8,7 +8,7 @@ let linkFiber;
 let mode;
 let snapShot;
 
-class App extends React.Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = { foo: 'bar' };
@@ -19,6 +19,17 @@ class App extends React.Component {
     return <div>{foo}</div>;
   }
 }
+
+// Need to create a functioanl component instance to test 
+// Would need to be revised but here's the gist
+// const funcComponent = () => {
+//     const [ number, setNumber ] = useState(0); 
+//     const newNumber = setNumber(1); 
+    
+//     return (
+//       <div>{newNumber}</div>
+//     )
+// }
 
 describe('unit test for linkFiber', () => {
   beforeEach(() => {
