@@ -9,14 +9,17 @@ module.exports = (snap, mode) => {
 
   function sendSnapshot() {
     // don't send messages while jumping or while paused
+    // DEV: So that when we are jumping to an old snapshot it wouldn't think we want to create new snapshots
     if (mode.jumping || mode.paused) return;
     const payload = snap.tree.getCopy();
+    console.log('payload', payload);
     window.postMessage({
       action: 'recordSnap',
       payload,
     });
   }
 
+  // DEV: This is how we know when a change has happened (by injecting an event listener to every component's setState functionality). Will need to create a separate one for useState components
   function changeSetState(component) {
     // check that setState hasn't been changed yet
     if (component.setState.linkFiberChanged) return;
@@ -63,15 +66,19 @@ module.exports = (snap, mode) => {
   }
 
   function updateSnapShotTree() {
+    console.log('fiberRoot', fiberRoot);
     const { current } = fiberRoot;
+    console.log('current', current);
     snap.tree = createTree(current);
   }
 
   return container => {
+    console.log('Container', container);
     const {
       _reactRootContainer: { _internalRoot },
       _reactRootContainer,
     } = container;
+    console.log('Root container', _reactRootContainer);
     // only assign internal root if it actually exists
     fiberRoot = _internalRoot || _reactRootContainer;
     updateSnapShotTree();
