@@ -28,7 +28,7 @@ class Tree {
   getCopy(copy = new Tree('root', true)) {
     // copy state of children
     copy.children = this.children.map(
-      child => new Tree(child.component.state, true, child.component.constructor.name),
+      child => new Tree(child.component.state || child.component, true, child.component.constructor.name),
     );
 
     // copy children's children recursively
