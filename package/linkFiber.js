@@ -44,6 +44,15 @@ module.exports = (snap, mode) => {
     if (!currentFiber) return tree;
     // We have to figure out which properties to destructure from currentFiber
     // To support hooks and Context API 
+    // Potential properties (pulling from `current`):
+        // memoizedState (initialized to null and it refers to the state used to create the output)
+        
+        // updateQueue ? >> refers to a queue of state updates and callbacks 
+                // React adds the callback from setState to the updateQueue and schedules work
+
+
+
+
     const { sibling, stateNode, child } = currentFiber;
 
     let nextTree = tree;
