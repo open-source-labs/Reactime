@@ -12,7 +12,7 @@ module.exports = (snap, mode) => {
     // DEV: So that when we are jumping to an old snapshot it wouldn't think we want to create new snapshots
     if (mode.jumping || mode.paused) return;
     const payload = snap.tree.getCopy();
-    console.log('payload', payload);
+    // console.log('payload', payload);
     window.postMessage({
       action: 'recordSnap',
       payload,
@@ -43,10 +43,34 @@ module.exports = (snap, mode) => {
     component.setState.linkFiberChanged = true;
   }
 
+  // Helper function to traverse through the memoized state
+  function traverseHooks(memoizedState) {
+    // Declare variables and assigned to 0th index and an empty object, respectively
+    let index = 0; 
+    let memoizedObj = {};
+    // while memoizedState is truthy, save the value to the object 
+    while (memoizedState) { 
+      memoizedObj[index] = memoizedState.memoizedState; 
+      // Reassign memoizedState to its next value
+      memoizedState = memoizedState.next; 
+      // Increment the index by 1
+      index += 1; 
+    }
+    return memoizedObj; 
+  }
+
   function createTree(currentFiber, tree = new Tree('root')) {
     if (!currentFiber) return tree;
-
-    const { sibling, stateNode, child } = currentFiber;
+    // We have to figure out which properties to destructure from currentFiber
+    // To support hooks and Context API 
+    const { sibling, stateNode, child, memoizedState } = currentFiber;
+    // TODO: Refactor the conditionals - think about the edge case where a stateful component might have a key called 'baseState' in the state
+    if (memoizedState && memoizedState.hasOwnProperty('baseState')) {
+      // console.log('The hook element is:', currentFiber);
+      // console.log('The memoizedState is: ', memoizedState);
+      const result = traverseHooks(memoizedState); 
+      console.log('This is the result of calling traverseHooks:', result);
+    }
 
     let nextTree = tree;
     // check if stateful component
@@ -56,7 +80,8 @@ module.exports = (snap, mode) => {
       // change setState functionality
       changeSetState(stateNode);
     }
-
+    // Need to check if functional component AND uses hooks 
+    
     // iterate through siblings
     createTree(sibling, tree);
     // iterate through children
@@ -66,19 +91,19 @@ module.exports = (snap, mode) => {
   }
 
   function updateSnapShotTree() {
-    console.log('fiberRoot', fiberRoot);
+    // console.log('fiberRoot', fiberRoot);
     const { current } = fiberRoot;
-    console.log('current', current);
+    // console.log('current', current);
     snap.tree = createTree(current);
   }
 
   return container => {
-    console.log('Container', container);
+    // console.log('Container', container);
     const {
       _reactRootContainer: { _internalRoot },
       _reactRootContainer,
     } = container;
-    console.log('Root container', _reactRootContainer);
+    // console.log('Root container', _reactRootContainer);
     // only assign internal root if it actually exists
     fiberRoot = _internalRoot || _reactRootContainer;
     updateSnapShotTree();

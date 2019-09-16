@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 
 import { changeView, changeSlider } from '../actions/actions';
 
+// BUG FIX: 
+  // changeSlider should also respond to the click event on the div
+
 const Action = props => {
   const {
     selected, index, sliderIndex, dispatch,

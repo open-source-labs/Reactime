@@ -5,6 +5,8 @@ import ReactHtmlParser from 'react-html-parser';
 
 import { useStoreContext } from '../store';
 
+// FIX: Update the div copy to something more explanatory 
+
 function Diff({ snapshot, show }) {
   const [mainState] = useStoreContext();
   const { currentTab, tabs } = mainState;
