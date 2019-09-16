@@ -35,6 +35,8 @@ class Tree {
   }
 
   // print out the tree in the console
+  // BUG FIX: Don't print the Router as a component 
+  // Change how the children are printed 
   print() {
     const children = ['children: '];
     this.children.forEach(child => {

@@ -42,7 +42,8 @@ module.exports = (snap, mode) => {
 
   function createTree(currentFiber, tree = new Tree('root')) {
     if (!currentFiber) return tree;
-
+    // We have to figure out which properties to destructure from currentFiber
+    // To support hooks and Context API 
     const { sibling, stateNode, child } = currentFiber;
 
     let nextTree = tree;
@@ -53,7 +54,8 @@ module.exports = (snap, mode) => {
       // change setState functionality
       changeSetState(stateNode);
     }
-
+    // Need to check if functional component AND uses hooks 
+    
     // iterate through siblings
     createTree(sibling, tree);
     // iterate through children
