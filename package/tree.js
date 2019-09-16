@@ -14,6 +14,8 @@ class Tree {
       this.name = name;
     }
     this.children = [];
+    // DEV: Added print() for debugging purposes
+    // this.print();
   }
 
   appendChild(component) {
@@ -35,10 +37,12 @@ class Tree {
   }
 
   // print out the tree in the console
+  // DEV: Process may be different for useState components
   // BUG FIX: Don't print the Router as a component 
   // Change how the children are printed 
   print() {
     const children = ['children: '];
+    // DEV: What should we push instead for components using hooks (it wouldn't be state)
     this.children.forEach(child => {
       children.push(child.state || child.component.state);
     });
