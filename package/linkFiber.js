@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
 // links component state tree to library
@@ -12,7 +13,6 @@ module.exports = (snap, mode) => {
     // DEV: So that when we are jumping to an old snapshot it wouldn't think we want to create new snapshots
     if (mode.jumping || mode.paused) return;
     const payload = snap.tree.getCopy();
-    console.log(payload);
     // console.log('payload', payload);
     window.postMessage({
       action: 'recordSnap',
@@ -103,20 +103,55 @@ module.exports = (snap, mode) => {
     snap.tree = createTree(current);
   }
 
-  return container => {
-    // console.log('Container', container);
-    const {
-      _reactRootContainer: { _internalRoot },
-      _reactRootContainer,
-    } = container;
-    // console.log('Root container', _reactRootContainer);
-    // only assign internal root if it actually exists
-    fiberRoot = _internalRoot || _reactRootContainer;
-    updateSnapShotTree();
+  // return container => {
+  //   // console.log('Container', container);
+  //   const {
+  //     _reactRootContainer: { _internalRoot },
+  //     _reactRootContainer,
+  //   } = container;
+  //   // console.log('Root container', _reactRootContainer);
+  //   // only assign internal root if it actually exists
+  //   fiberRoot = _internalRoot || _reactRootContainer;
+  //   updateSnapShotTree();
 
-    // send the initial snapshot once the content script has started up
-    window.addEventListener('message', ({ data: { action } }) => {
-      if (action === 'contentScriptStarted') sendSnapshot();
-    });
+  //   // send the initial snapshot once the content script has started up
+  //   window.addEventListener('message', ({ data: { action } }) => {
+  //     if (action === 'contentScriptStarted') sendSnapshot();
+  //   });
+  // };
+
+  return {
+    main(container) {
+      // console.log('Container', container);
+      const {
+        _reactRootContainer: { _internalRoot },
+        _reactRootContainer,
+      } = container;
+      // console.log('Root container', _reactRootContainer);
+      // only assign internal root if it actually exists
+      fiberRoot = _internalRoot || _reactRootContainer;
+      updateSnapShotTree();
+  
+      // send the initial snapshot once the content script has started up
+      window.addEventListener('message', ({ data: { action } }) => {
+        if (action === 'contentScriptStarted') sendSnapshot();
+      });
+    },
+    changeUseState(useState) {
+      return function (initial) {
+        // running the original useState and storing its result (state and dispatch function)
+        const toReturn = useState(initial);
+        console.log(toReturn);
+        // storing the original dispatch function definition somewhere
+        const oldDispatch = toReturn[1];
+        // redefining the dispatch function so we can inject our code
+        toReturn[1] = function (callback) {
+          oldDispatch(callback);
+          updateSnapShotTree();
+          sendSnapshot();
+        };
+        return toReturn;
+      };
+    },
   };
 };
