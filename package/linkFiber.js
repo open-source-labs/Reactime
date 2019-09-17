@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
 // links component state tree to library
@@ -12,7 +13,6 @@ module.exports = (snap, mode) => {
     // DEV: So that when we are jumping to an old snapshot it wouldn't think we want to create new snapshots
     if (mode.jumping || mode.paused) return;
     const payload = snap.tree.getCopy();
-    console.log('Here is the payload:', payload);
     // console.log('payload', payload);
     window.postMessage({
       action: 'recordSnap',
@@ -56,7 +56,7 @@ module.exports = (snap, mode) => {
     // while memoizedState is truthy, save the value to the object
     while (memoizedState) {
       // Increment the index by 1
-      memoizedObj[`useState${index += 1}`] = memoizedState.memoizedState;
+      memoizedObj[`state${index += 1}`] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
       memoizedState = memoizedState.next;
     }
@@ -87,37 +87,83 @@ module.exports = (snap, mode) => {
     if (memoizedState && memoizedState.hasOwnProperty('baseState')) {
       // console.log('The memoizedState is: ', memoizedState)
 
-      const result = traverseHooks(memoizedState); 
-      nextTree = tree.appendChild(result);
+      const traversed = traverseHooks(memoizedState); 
+      nextTree = tree.appendChild(traversed);
     }
 
     // iterate through siblings
     createTree(sibling, tree);
     // iterate through children
     createTree(child, nextTree);
-    console.log('this is the tree after being traversed', tree)
+
     return tree;
   }
 
   function updateSnapShotTree() {
-  
     const { current } = fiberRoot;
     snap.tree = createTree(current);
   }
+  // return container => {
+  //   console.log('this is the container', container)
+  //   const {
+  //     _reactRootContainer: { _internalRoot },
+  //     _reactRootContainer,
+  //   } = container; 
+  //   // only assign internal root if it actually exists
+  //   fiberRoot = _internalRoot || _reactRootContainer;
+  //   console.log('fiberRoot', fiberRoot);
+  //   updateSnapShotTree();
 
-  return container => {
-    const {
-      _reactRootContainer: { _internalRoot },
-      _reactRootContainer,
-    } = container;
-    // only assign internal root if it actually exists
-    fiberRoot = _internalRoot || _reactRootContainer;
-    console.log('here is the fiberRoot', fiberRoot)
-    updateSnapShotTree();
+  //   // send the initial snapshot once the content script has started up
+  //   window.addEventListener('message', ({ data: { action } }) => {
+  //     if (action === 'contentScriptStarted') sendSnapshot();
+  //   });
+  // };
 
-    // send the initial snapshot once the content script has started up
-    window.addEventListener('message', ({ data: { action } }) => {
-      if (action === 'contentScriptStarted') sendSnapshot();
-    });
+  return {
+    _(container) {
+      const {
+        _reactRootContainer: { _internalRoot },
+        _reactRootContainer,
+      } = container;
+      // only assign internal root if it actually exists
+      fiberRoot = _internalRoot || _reactRootContainer;
+      updateSnapShotTree();
+      // send the initial snapshot once the content script has started up
+      window.addEventListener('message', ({ data: { action } }) => {
+        if (action === 'contentScriptStarted') sendSnapshot();
+      });
+    },
+    testUseState(useState) {
+      return function(initial) {
+        // running the original useState and storing its result (state and dispatch function)
+        const toReturn = useState(initial);
+        // storing the original dispatch function definition somewhere
+        const oldDispatch = toReturn[1];
+        // redefining the dispatch function so we can inject our code
+        toReturn[1] = function(newVal) {
+          oldDispatch(newVal);
+          updateSnapShotTree();
+          sendSnapshot();
+        };
+        return toReturn;
+      };
+    },
+    testUseReducer(useReducer) {
+      return function(reducer, initialState, init) {
+        // Declare a constant and initialize to the built-in useReducer method 
+        // Which returns an array with the state and dispatch 
+        const reduced = useReducer(reducer, initialState, init);
+        // Save the dispatch method 
+        const oldDispatch = reduced[1]; 
+        // reassign the dispatch method with the additional methods
+        reduced[1] = function(type) {
+          oldDispatch(type);
+          updateSnapShotTree();
+          sendSnapshot(); 
+        }
+        return reduced; 
+      }  
+    },
   };
 };
