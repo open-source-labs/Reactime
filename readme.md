@@ -1,7 +1,11 @@
-# Reactime
+<p align="center">
+  <img src ="./assets/readme_logo.png" width="400"/>
+</p>
+
+# Reactime: A Time Travel Debugger for React
 
 [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime)
-[![Build Status](https://secure.travis-ci.org/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime)
+[![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime)
 [![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime)
 [![Dependencies](https://david-dm.org/oslabs-beta/reactime.svg)](https://david-dm.org/oslabs-beta/reactime#info=dependencies)
 [![DevDependencies](https://david-dm.org/oslabs-beta/reactime/dev-status.svg)](https://david-dm.org/oslabs-beta/reactime?type=dev)
@@ -10,17 +14,21 @@
 [![NPM](https://nodei.co/npm/reactime.png)](https://nodei.co/npm/reactime/)
 
 <p align="center">
-  <img src="demo2.gif" alt="Demo of Reactime" style="width: 55%">
+  <img src="demo.gif" alt="Demo of Reactime" style="width: 55%">
 </p>
 
-A debugging tool for React. Records state whenever state is changed and allows user to jump to any previous recorded state.
+Reactime is a debugging tool for React developers. It records state whenever state is changed and allows user to jump to any previous recorded state.
+
+One important thing to note. This devtool is for React apps using only stateful components and prop drilling. If you're using Redux, Hooks, Context, or functional components, this devtool will not function on your app. 
+
+Another thing is that this library does not work well when mixing React with direct DOM manipulation. Since DOM manipulation doesn't change any React state, this library cannot record or even detect that change. Of course, you should be avoiding mixing the two in the first place.
 
 Two parts are needed for this tool to function. The <a href="https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga">chrome extension</a> must be installed, and the NPM package must be installed and used in the React code.
 
 After successfully installing the chrome extension, you can test Reactime functionalities in the demo repositories below.
 
 - <a href="http://reactime-demo1.us-east-1.elasticbeanstalk.com/">Calculator</a>
-- <a href="http://reactime-demo2.us-east-1.elasticbeanstalk.com/"> Bitcoin Price Index</a>
+- <a href="http://reactime-demo2.us-east-1.elasticbeanstalk.com/">Bitcoin Price Index</a>
 
 ## Installing
 
@@ -38,7 +46,7 @@ npm i reactime
 const reactime = require('reactime');
 
 const rootContainer = document.getElementById('root');
-ReactDom.render(<App />, rootContainer);
+ReactDOM.render(<App />, rootContainer);
 
 reactime(rootContainer);
 ```
@@ -63,7 +71,7 @@ You can click on a snapshot to view your app's state. State can be visualized in
 
 ### Jumping
 
-Jumping is the most important feature of all. It allows you to jump to any previous recorded snapshots. Hitting the jump button on any snapshot will change the DOM by setting their state. One important thing to note is that this library does not work well when mixing React with direct DOM manipulation. Since DOM manipulation doesn't change any React state, this library cannot record or even detect that change. Of course, you should be avoiding mixing the two in the first place.
+Jumping is the most important feature of all. It allows you to jump to any previous recorded snapshots. Hitting the jump button on any snapshot will change the DOM by setting their state.
 
 ### Others
 
