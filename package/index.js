@@ -7,7 +7,6 @@ const mode = {
 };
 
 const linkFiber = require('./linkFiber')(snapShot, mode);
-
 const timeJump = require('./timeJump')(snapShot, mode);
 
 window.addEventListener('message', ({ data: { action, payload } }) => {
