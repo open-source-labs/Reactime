@@ -22,5 +22,6 @@
     "react devtool"
   ],
   "author": "Bryan Lee, Josh Kim, Ryan Dang, Sierra Swaby",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {}
 }
