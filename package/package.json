@@ -21,7 +21,16 @@
     "reactime",
     "react devtool"
   ],
-  "author": "Bryan Lee, Josh Kim, Ryan Dang, Sierra Swaby",
+  "contributors": [
+    "Andy Wong",
+    "Bryan Lee",
+    "David Chai",
+    "Josh Kim",
+    "Ruthba Anam",
+    "Ryan Dang", 
+    "Sierra Swaby",
+    "Yujin Kang"
+  ],
   "license": "MIT",
   "dependencies": {}
 }
