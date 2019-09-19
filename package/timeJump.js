@@ -12,8 +12,6 @@ module.exports = (origin, mode) => {
   // recursively change state of tree
   function jump(target, coords = []) {
     const originNode = traverseTree(origin.tree, coords);
-    console.log('coords', coords);
-    console.log('originNode', originNode);
     // set the state of the origin tree if the component is stateful
     if (originNode.component.setState) {
       originNode.component.setState(target.state, () => {
@@ -44,6 +42,8 @@ module.exports = (origin, mode) => {
     // setting mode disables setState from posting messages to window
     mode.jumping = true;
     jump(target);
-    mode.jumping = false;
+    setTimeout(() => {
+      mode.jumping = false;
+    }, 100);
   };
 };
