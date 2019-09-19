@@ -43,6 +43,26 @@ module.exports = (snap, mode) => {
     component.setState.linkFiberChanged = true;
   }
 
+  function changeUseState (component) {
+    if (component.queue.dispatch.linkFiberChanged) return;
+    // running the original useState and storing its result (state and dispatch function)
+    const oldDispatch = component.queue.dispatch.bind(component.queue);
+    // storing the original dispatch function definition somewhere
+    console.log('inside changeusestate', oldDispatch);
+
+    // redefining the dispatch function so we can inject our code
+    component.queue.dispatch = function (fiber, queue, action) {
+      if (mode.locked && !mode.jumping) return;
+      oldDispatch(fiber, queue, action);
+      setTimeout(() => {
+        console.log('Updating the snapshot tree after an action has been dispatched');
+        updateSnapShotTree();
+        sendSnapshot();
+      }, 100);
+    };
+    component.queue.dispatch.linkFiberChanged = true;
+  };
+  
   // Helper function to traverse through the memoized state
   function traverseHooks(memoizedState) {
     // Declare variables and assigned to 0th index and an empty object, respectively
@@ -50,6 +70,7 @@ module.exports = (snap, mode) => {
     const memoizedObj = {};
     // while memoizedState is truthy, save the value to the object
     while (memoizedState) {
+      changeUseState(memoizedState);
       // Increment the index by 1
       memoizedObj[`state${index += 1}`] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
@@ -80,10 +101,8 @@ module.exports = (snap, mode) => {
     // TODO: Refactor the conditionals - think about the edge case where a stateful
     // component might have a key called 'baseState' in the state
     if (memoizedState && memoizedState.hasOwnProperty('baseState')) {
-      // console.log('The memoizedState is: ', memoizedState)
-
-      const traversed = traverseHooks(memoizedState);
-      nextTree = tree.appendChild(traversed);
+      memoizedState.traversed = traverseHooks(memoizedState);
+      nextTree = tree.appendChild(memoizedState);
     }
 
     // iterate through siblings
@@ -113,81 +132,41 @@ module.exports = (snap, mode) => {
         if (action === 'contentScriptStarted') sendSnapshot();
       });
     },
-    // testUseState(useState) {
-    //   return initial => {
-    //     // running the original useState and storing its result (state and dispatch function)
-    //     const toReturn = useState(initial);
-    //     // storing the original dispatch function definition somewhere
-    //     const oldDispatch = toReturn[1];
-    //     // redefining the dispatch function so we can inject our code
-    //     toReturn[1] = function (newVal) {
-    //       console.log('dispatch:', oldDispatch(newVal));
-    //       setTimeout(() => {
-    //         updateSnapShotTree();
-    //         sendSnapshot();
-    //       }, 100);
-    //     };
-    //     return toReturn;
+    // testHooks(react) {
+    //   return {
+    //     useState: initialState => {
+    //       // running the original useState and storing its result (state and dispatch function)
+    //       const toReturn = react.useState(initialState);
+    //       // storing the original dispatch function definition somewhere
+    //       const oldDispatch = toReturn[1];
+    //       console.log('old dispatch', oldDispatch)
+    //       // redefining the dispatch function so we can inject our code
+    //       toReturn[1] = function (newVal) {
+    //         oldDispatch(newVal);
+    //         setTimeout(() => {
+    //           updateSnapShotTree();
+    //           sendSnapshot();
+    //         }, 100);
+    //       };
+    //       return toReturn;
+    //     },
+    //     useReducer: (reducer, initialState, init) => {
+    //       // Declare a constant and initialize to the built-in useReducer method
+    //       // Which returns an array with the state and dispatch
+    //       const reduced = react.useReducer(reducer, initialState, init);
+    //       // Save the dispatch method
+    //       const oldDispatch = reduced[1];
+    //       // reassign the dispatch method with the additional methods
+    //       reduced[1] = function (type) {
+    //         oldDispatch(type);
+    //         setTimeout(() => {
+    //           updateSnapShotTree();
+    //           sendSnapshot();
+    //         }, 100);
+    //       };
+    //       return reduced;
+    //     },
     //   };
     // },
-    testHooks(react) {
-      const reducerInjection = reducer => {
-        return (state, action) => {
-          reducer(state, action);
-          updateSnapShotTree();
-          sendSnapshot();
-        };
-      };
-      return {
-        useState: initial => {
-          const basicStateReducerClone = (state, action) => {
-            return typeof action === 'function' ? action(state) : action;
-          };
-          // running the original useState and storing its result (state and dispatch function)
-          const toReturn = react.useReducer(initial, reducerInjection(basicStateReducerClone));
-          // // storing the original dispatch function definition somewhere
-          // const oldDispatch = toReturn[1];
-          // // redefining the dispatch function so we can inject our code
-          // toReturn[1] = function (newVal) {
-          //   console.log('dispatch:', oldDispatch(newVal));
-          //   setTimeout(() => {
-          //     updateSnapShotTree();
-          //     sendSnapshot();
-          //   }, 100);
-          // };
-          return toReturn;
-        },
-        useReducer: (reducer, initialState, init) => {
-          // Declare a constant and initialize to the built-in useReducer method 
-          // Which returns an array with the state and dispatch 
-          const reduced = react.useReducer(reducer, initialState, init);
-          // Save the dispatch method 
-          const oldDispatch = reduced[1]; 
-          // reassign the dispatch method with the additional methods
-          reduced[1] = function (type) {
-            oldDispatch(type);
-            updateSnapShotTree();
-            sendSnapshot();
-          };
-          return reduced;
-        },
-      };
-    },
-    testUseReducer(useReducer) {
-      return (reducer, initialState, init) => {
-        // Declare a constant and initialize to the built-in useReducer method 
-        // Which returns an array with the state and dispatch 
-        const reduced = useReducer(reducer, initialState, init);
-        // Save the dispatch method 
-        const oldDispatch = reduced[1]; 
-        // reassign the dispatch method with the additional methods
-        reduced[1] = function (type) {
-          oldDispatch(type);
-          updateSnapShotTree();
-          sendSnapshot();
-        }
-        return reduced;
-      }  
-    },
   };
 };
