@@ -52,6 +52,7 @@ module.exports = (snap, mode) => {
 
     // redefining the dispatch function so we can inject our code
     component.queue.dispatch = function (fiber, queue, action) {
+      console.log('mode', mode);
       if (mode.locked && !mode.jumping) return;
       oldDispatch(fiber, queue, action);
       setTimeout(() => {
@@ -104,7 +105,6 @@ module.exports = (snap, mode) => {
       memoizedState.traversed = traverseHooks(memoizedState);
       nextTree = tree.appendChild(memoizedState);
     }
-
     // iterate through siblings
     createTree(sibling, tree);
     // iterate through children

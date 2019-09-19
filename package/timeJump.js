@@ -23,12 +23,20 @@ module.exports = (origin, mode) => {
         });
       });
     }
-    // else {
-    //   // if component uses hooks
-    //   // traverse down the memoize tree again
-    //   console.log('component', originNode.component);
-    //   originNode.component.queue.dispatch(target.state);
-    // }
+    else {
+      // if component uses hooks
+      // variable for current location
+      let currLocation = originNode.component;
+      // state no
+      let stateNum = 1;
+      console.log('component', originNode.component);
+      // while loop through the memoize tree
+      while (currLocation) {
+        currLocation.queue.dispatch(target.state[`state${stateNum}`]);
+        currLocation = currLocation.next;
+        stateNum += 1;
+      }
+    }
   }
 
   return target => {
