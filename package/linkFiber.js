@@ -20,9 +20,6 @@ module.exports = (snap, mode) => {
     });
   }
 
-  // DEV: This is how we know when a change has happened 
-  // (by injecting an event listener to every component's setState functionality). 
-  // Will need to create a separate one for useState components
   function changeSetState(component) {
     // check that setState hasn't been changed yet
     if (component.setState.linkFiberChanged) return;
@@ -46,8 +43,24 @@ module.exports = (snap, mode) => {
     component.setState.linkFiberChanged = true;
   }
 
-  // Helper function to 
-
+  function changeUseState (component) {
+    if (component.queue.dispatch.linkFiberChanged) return;
+    // storing the original dispatch function definition somewhere
+    const oldDispatch = component.queue.dispatch.bind(component.queue);
+    // redefining the dispatch function so we can inject our code
+    component.queue.dispatch = function (fiber, queue, action) {
+      console.log('mode', mode);
+      if (mode.locked && !mode.jumping) return;
+      oldDispatch(fiber, queue, action);
+      setTimeout(() => {
+        console.log('Updating the snapshot tree after an action has been dispatched');
+        updateSnapShotTree();
+        sendSnapshot();
+      }, 100);
+    };
+    component.queue.dispatch.linkFiberChanged = true;
+  };
+  
   // Helper function to traverse through the memoized state
   function traverseHooks(memoizedState) {
     // Declare variables and assigned to 0th index and an empty object, respectively
@@ -55,6 +68,7 @@ module.exports = (snap, mode) => {
     const memoizedObj = {};
     // while memoizedState is truthy, save the value to the object
     while (memoizedState) {
+      changeUseState(memoizedState);
       // Increment the index by 1
       memoizedObj[`state${index += 1}`] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
@@ -85,12 +99,10 @@ module.exports = (snap, mode) => {
     // TODO: Refactor the conditionals - think about the edge case where a stateful
     // component might have a key called 'baseState' in the state
     if (memoizedState && memoizedState.hasOwnProperty('baseState')) {
-      // console.log('The memoizedState is: ', memoizedState)
-
-      const traversed = traverseHooks(memoizedState); 
-      nextTree = tree.appendChild(traversed);
+      console.log("I'm not supposed to run", currentFiber);
+      memoizedState.traversed = traverseHooks(memoizedState);
+      nextTree = tree.appendChild(memoizedState);
     }
-
     // iterate through siblings
     createTree(sibling, tree);
     // iterate through children
@@ -101,24 +113,9 @@ module.exports = (snap, mode) => {
 
   function updateSnapShotTree() {
     const { current } = fiberRoot;
+    console.log('current', current);
     snap.tree = createTree(current);
   }
-  // return container => {
-  //   console.log('this is the container', container)
-  //   const {
-  //     _reactRootContainer: { _internalRoot },
-  //     _reactRootContainer,
-  //   } = container; 
-  //   // only assign internal root if it actually exists
-  //   fiberRoot = _internalRoot || _reactRootContainer;
-  //   console.log('fiberRoot', fiberRoot);
-  //   updateSnapShotTree();
-
-  //   // send the initial snapshot once the content script has started up
-  //   window.addEventListener('message', ({ data: { action } }) => {
-  //     if (action === 'contentScriptStarted') sendSnapshot();
-  //   });
-  // };
 
   return {
     _(container) {
@@ -133,37 +130,6 @@ module.exports = (snap, mode) => {
       window.addEventListener('message', ({ data: { action } }) => {
         if (action === 'contentScriptStarted') sendSnapshot();
       });
-    },
-    testUseState(useState) {
-      return function(initial) {
-        // running the original useState and storing its result (state and dispatch function)
-        const toReturn = useState(initial);
-        // storing the original dispatch function definition somewhere
-        const oldDispatch = toReturn[1];
-        // redefining the dispatch function so we can inject our code
-        toReturn[1] = function(newVal) {
-          oldDispatch(newVal);
-          updateSnapShotTree();
-          sendSnapshot();
-        };
-        return toReturn;
-      };
-    },
-    testUseReducer(useReducer) {
-      return function(reducer, initialState, init) {
-        // Declare a constant and initialize to the built-in useReducer method 
-        // Which returns an array with the state and dispatch 
-        const reduced = useReducer(reducer, initialState, init);
-        // Save the dispatch method 
-        const oldDispatch = reduced[1]; 
-        // reassign the dispatch method with the additional methods
-        reduced[1] = function(type) {
-          oldDispatch(type);
-          updateSnapShotTree();
-          sendSnapshot(); 
-        }
-        return reduced; 
-      }  
     },
   };
 };
