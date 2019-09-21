@@ -20,8 +20,7 @@ module.exports = (origin, mode) => {
           jump(child, coords.concat(i));
         });
       });
-    }
-    else {
+    } else {
       // if component uses hooks
       // variable for current location
       let currLocation = originNode.component;
