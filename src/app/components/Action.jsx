@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import { changeView, changeSlider } from '../actions/actions';
 
-// BUG FIX: 
-  // changeSlider should also respond to the click event on the div
+// Launch Feature: Figure out changeView vs changeSlider
+// Should we make the btn bigger instead and keep the functionality? 
 
 const Action = props => {
   const {
