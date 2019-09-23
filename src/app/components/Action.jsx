@@ -5,6 +5,7 @@ import { changeView, changeSlider } from '../actions/actions';
 
 // Launch Feature: Figure out changeView vs changeSlider
 // Should we make the btn bigger instead and keep the functionality? 
+// div onclick event triggers the changeView method 
 
 const Action = props => {
   const {
