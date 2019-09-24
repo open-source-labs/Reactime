@@ -5,10 +5,7 @@ import Action from '../components/Action';
 import { emptySnapshots } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-// MVP Feature: Include a dropdown functionality 
-// to show stateful/functional/Context API differentiation
-// May want to add another child component to the container
-
+// Launch: render a dropdown filterable list 
 function ActionContainer() {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { snapshots, sliderIndex, viewIndex } = tabs[currentTab];

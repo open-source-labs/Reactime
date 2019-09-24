@@ -37,7 +37,6 @@ module.exports = (origin, mode) => {
   }
 
   return target => {
-    console.log('im a target', target);
     // setting mode disables setState from posting messages to window
     mode.jumping = true;
     jump(target);

@@ -4,7 +4,7 @@ import { useStoreContext } from '../store';
 import { setTab } from '../actions/actions';
 
 
-// BUG FIX: Fix the dropdown styling to make it more distinguishable
+// Launch Feature: Fix the dropdown styling to make it more distinguishable
  
 const SwitchAppDropdown = () => {
   const [{ currentTab, tabs }, dispatch] = useStoreContext();
