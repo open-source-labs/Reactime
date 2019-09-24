@@ -1,5 +1,5 @@
 {
-  "name": "reactime-extension",
+  "name": "reactime",
   "description": "build web extension bundle.js",
   "scripts": {
     "build": "webpack --mode production",
@@ -26,7 +26,7 @@
     "David Chai",
     "Josh Kim",
     "Ruthba Anam",
-    "Ryan Dang", 
+    "Ryan Dang",
     "Sierra Swaby",
     "Yujin Kang"
   ],
