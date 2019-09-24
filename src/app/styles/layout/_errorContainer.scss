@@ -1,0 +1,14 @@
+.error-container {
+  height: 100%;
+  margin: 0 auto;
+  background-color: $brand-color;
+  overflow: hidden;
+
+  display: grid;
+  justify-content: center;
+  a {
+    color: white;
+    margin-top: 5%;
+    height: 3%;
+  }
+}

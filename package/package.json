@@ -1,6 +1,6 @@
 {
   "name": "reactime",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "description": "A library that helps debug React by memorizing the state of components with every render.",
   "main": "index.js",
   "repository": {
@@ -21,6 +21,16 @@
     "reactime",
     "react devtool"
   ],
-  "author": "Bryan Lee, Josh Kim, Ryan Dang, Sierra Swaby",
-  "license": "MIT"
+  "contributors": [
+    "Andy Wong",
+    "Bryan Lee",
+    "David Chai",
+    "Josh Kim",
+    "Ruthba Anam",
+    "Ryan Dang", 
+    "Sierra Swaby",
+    "Yujin Kang"
+  ],
+  "license": "MIT",
+  "dependencies": {}
 }
