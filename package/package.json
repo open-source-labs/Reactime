@@ -27,10 +27,13 @@
     "David Chai",
     "Josh Kim",
     "Ruthba Anam",
-    "Ryan Dang", 
+    "Ryan Dang",
     "Sierra Swaby",
     "Yujin Kang"
   ],
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "acorn": "^7.1.0",
+    "acorn-jsx": "^5.0.2"
+  }
 }

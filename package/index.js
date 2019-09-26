@@ -25,4 +25,4 @@ window.addEventListener('message', ({ data: { action, payload } }) => {
   }
 });
 
-module.exports = linkFiber; 
+module.exports = linkFiber;

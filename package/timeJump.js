@@ -22,16 +22,12 @@ module.exports = (origin, mode) => {
       });
     } else {
       // if component uses hooks
-      // variable for current location
-      let currLocation = originNode.component;
-      // state no
-      let stateNum = 1;
-      console.log('component', originNode.component);
-      // while loop through the memoize tree
-      while (currLocation) {
-        currLocation.queue.dispatch(target.state[`state${stateNum}`]);
-        currLocation = currLocation.next;
-        stateNum += 1;
+      let current = originNode.component;
+      let index = 1;
+      // Iterate through the memoized tree
+      while (current) {
+        current.queue.dispatch(target.state[`state${index++}`]);
+        current = current.next;
       }
     }
   }
