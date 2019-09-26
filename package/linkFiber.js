@@ -53,7 +53,6 @@ module.exports = (snap, mode) => {
       if (mode.locked && !mode.jumping) return;
       oldDispatch(fiber, queue, action);
       setTimeout(() => {
-        console.log('Updating the snapshot tree after an action has been dispatched');
         updateSnapShotTree();
         sendSnapshot();
       }, 100);
@@ -113,7 +112,6 @@ module.exports = (snap, mode) => {
 
   function updateSnapShotTree() {
     const { current } = fiberRoot;
-    console.log('current', current);
     snap.tree = createTree(current);
   }
 
