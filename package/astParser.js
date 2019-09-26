@@ -1,38 +1,34 @@
 const acorn = require('acorn');
 const jsx = require('acorn-jsx');
-
 const JSXParser = acorn.Parser.extend(jsx());
 
-const hookState = {};
+// Helper function to recursively traverse through the user's codebase 
+// INSERT HERE 
 
-module.exports = jsFile => {
-  // console.log('ast inside', jsFile);
-  const ast = JSXParser.parse(jsFile).body;
-  // Iterating through AST of every function declaration
-  ast.forEach(astFuncDec => {
-    // Checking within each function declaration if there are hook declarations
-    // console.log('App.js', astFuncDec.body.body);
-    const fd = astFuncDec.body.body;
-    // console.log(astFuncDec.body.body);
-    // Traversing through the function's funcDecs and Expression Statements
-    const allVarDeclarations = [];
-    fd.forEach(astProgramBody => {
-      if (astProgramBody.type === 'VariableDeclaration') {
-        astProgramBody.declarations.forEach(declarations => {
-          allVarDeclarations.push(declarations.id.name);
+module.exports = file => {
+  // Initialize empty object to store the setters and getter
+  const hookState = {};
+  const ast = JSXParser.parse(file).body;
+  // Iterate through AST of every function declaration
+  // Check within each function declaration if there are hook declarations
+  ast.forEach(func => {
+    const { body } = func.body; 
+    const statements = [];
+    // Traverse through the function's funcDecs and Expression Statements
+    body.forEach(program => {
+      if (program.type === 'VariableDeclaration') {
+        program.declarations.forEach(dec => {
+          statements.push(dec.id.name);
         });
       }
     });
-    // console.log(allVarDeclarations);
-    // Iterate through the array
-    for (let varDec = 0; varDec < allVarDeclarations.length; varDec += 1) {
-      // Determine getter/setters based on pattern
-      if (allVarDeclarations[varDec].match(/_useState/)) {
-        // Map the 4 elements together
-        hookState[allVarDeclarations[varDec]] = allVarDeclarations[varDec + 2];
-        // hookState[allVarDeclarations[varDec + 1]] = allVarDeclarations[varDec + 2];
+    // Iterate through the array and determine getter/setters based on pattern
+    for (let i = 0; i < statements.length; i += 1) {
+      if (statements[i].match(/_use/)) {
+        hookState[statements[i]] = statements[i + 2];
       }
     }
   });
+  // Return the object with setters and getters
   return hookState;
 };

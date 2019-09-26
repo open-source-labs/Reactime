@@ -8,6 +8,7 @@ const astParser = require('./astParser.js');
 
 module.exports = (snap, mode) => {
   let fiberRoot = null;
+  let astHooks; 
 
   function sendSnapshot() {
     // don't send messages while jumping or while paused
@@ -24,14 +25,12 @@ module.exports = (snap, mode) => {
   function changeSetState(component) {
     // check that setState hasn't been changed yet
     if (component.setState.linkFiberChanged) return;
-
     // make a copy of setState
     const oldSetState = component.setState.bind(component);
-
     // replace component's setState so developer doesn't change syntax
     // component.setState = newSetState.bind(component);
     component.setState = (state, callback = () => { }) => {
-      // dont do anything if state is locked
+      // don't do anything if state is locked
       // UNLESS we are currently jumping through time
       if (mode.locked && !mode.jumping) return;
       // continue normal setState functionality, except add sending message middleware
@@ -46,15 +45,14 @@ module.exports = (snap, mode) => {
 
   function changeUseState(component) {
     if (component.queue.dispatch.linkFiberChanged) return;
-    // storing the original dispatch function definition somewhere
-    const oldDispatch = component.queue.dispatch.bind(component.queue);
-    // redefining the dispatch function so we can inject our code
-    component.queue.dispatch = function (fiber, queue, action) {
-      console.log('mode', mode);
-      if (mode.locked && !mode.jumping) return;
+    // store the original dispatch function definition 
+    const oldDispatch = component.queue.dispatch.bind(component.queue);; 
+    // redefine the dispatch function so we can inject our code
+    component.queue.dispatch = (fiber, queue, action) => {
+      // don't do anything if state is locked
+      if (mode.locked && !mode.jumping) return; 
       oldDispatch(fiber, queue, action);
       setTimeout(() => {
-        console.log('Updating the snapshot tree after an action has been dispatched');
         updateSnapShotTree();
         sendSnapshot();
       }, 100);
@@ -63,19 +61,22 @@ module.exports = (snap, mode) => {
   }
 
   // Helper function to traverse through the memoized state
+  // TODO: WE NEED TO CLEAN IT UP A BIT
   function traverseHooks(memoizedState) {
     // Declare variables and assigned to 0th index and an empty object, respectively
-    let index = 0;
-    const memoizedObj = {};
+    const memoized = {};
+    let index = 0; 
+    astHooks = Object.values(astHooks); 
     // while memoizedState is truthy, save the value to the object
-    while (memoizedState) {
+    while (memoizedState && astHooks) {
       changeUseState(memoizedState);
-      // Increment the index by 1
-      memoizedObj[`state${index += 1}`] = memoizedState.memoizedState;
+      memoized[astHooks[index]] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
       memoizedState = memoizedState.next;
+      // Increment the index by 2
+      index += 2; 
     }
-    return memoizedObj;
+    return memoized;
   }
 
   function createTree(currentFiber, tree = new Tree('root')) {
@@ -97,9 +98,9 @@ module.exports = (snap, mode) => {
       changeSetState(stateNode);
     }
     // Check if the component uses hooks
-    // TODO: Refactor the conditionals - think about the edge case where a stateful
-    // component might have a key called 'baseState' in the state
     if (memoizedState && memoizedState.hasOwnProperty('baseState')) {
+      // Add a traversed property and initialize to the evaluated result 
+      // of invoking traverseHooks, and reassign nextTree
       memoizedState.traversed = traverseHooks(memoizedState);
       nextTree = tree.appendChild(memoizedState);
     }
@@ -113,24 +114,23 @@ module.exports = (snap, mode) => {
 
   function updateSnapShotTree() {
     const { current } = fiberRoot;
-    console.log('current', current);
     snap.tree = createTree(current);
   }
-  return {
-    _(container, ENTRYFILE) {
-      const {
-        _reactRootContainer: { _internalRoot },
-        _reactRootContainer,
-      } = container;
-      // only assign internal rootp if it actually exists
-      fiberRoot = _internalRoot || _reactRootContainer;
-      updateSnapShotTree();
-      // send the initial snapshot once the content script has started up
-      window.addEventListener('message', ({ data: { action } }) => {
-        if (action === 'contentScriptStarted') sendSnapshot();
-      });
-      const astEntryFile = astParser(ENTRYFILE);
-      console.log('ENTRYFILE into ast', astEntryFile);
-    },
-  };
+
+  return (container, entryFile) => {
+    const {
+      _reactRootContainer: { _internalRoot },
+      _reactRootContainer,
+    } = container;
+    // only assign internal rootp if it actually exists
+    fiberRoot = _internalRoot || _reactRootContainer;
+    // If hooks are implemented, traverse through the source code 
+    if (entryFile) astHooks = astParser(entryFile);
+
+    updateSnapShotTree();
+    // send the initial snapshot once the content script has started up
+    window.addEventListener('message', ({ data: { action } }) => {
+      if (action === 'contentScriptStarted') sendSnapshot();
+    });
+  }
 };
