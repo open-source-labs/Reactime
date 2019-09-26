@@ -4,6 +4,7 @@
 // links component state tree to library
 // changes the setState method to also update our snapshot
 const Tree = require('./tree');
+const astParser = require('./astParser.js');
 
 module.exports = (snap, mode) => {
   let fiberRoot = null;
@@ -29,7 +30,7 @@ module.exports = (snap, mode) => {
 
     // replace component's setState so developer doesn't change syntax
     // component.setState = newSetState.bind(component);
-    component.setState = (state, callback = () => {}) => {
+    component.setState = (state, callback = () => { }) => {
       // dont do anything if state is locked
       // UNLESS we are currently jumping through time
       if (mode.locked && !mode.jumping) return;
@@ -43,7 +44,7 @@ module.exports = (snap, mode) => {
     component.setState.linkFiberChanged = true;
   }
 
-  function changeUseState (component) {
+  function changeUseState(component) {
     if (component.queue.dispatch.linkFiberChanged) return;
     // storing the original dispatch function definition somewhere
     const oldDispatch = component.queue.dispatch.bind(component.queue);
@@ -59,8 +60,8 @@ module.exports = (snap, mode) => {
       }, 100);
     };
     component.queue.dispatch.linkFiberChanged = true;
-  };
-  
+  }
+
   // Helper function to traverse through the memoized state
   function traverseHooks(memoizedState) {
     // Declare variables and assigned to 0th index and an empty object, respectively
@@ -79,7 +80,7 @@ module.exports = (snap, mode) => {
 
   function createTree(currentFiber, tree = new Tree('root')) {
     if (!currentFiber) return tree;
-  
+
     const {
       sibling,
       stateNode,
@@ -99,7 +100,6 @@ module.exports = (snap, mode) => {
     // TODO: Refactor the conditionals - think about the edge case where a stateful
     // component might have a key called 'baseState' in the state
     if (memoizedState && memoizedState.hasOwnProperty('baseState')) {
-      console.log("I'm not supposed to run", currentFiber);
       memoizedState.traversed = traverseHooks(memoizedState);
       nextTree = tree.appendChild(memoizedState);
     }
@@ -116,20 +116,21 @@ module.exports = (snap, mode) => {
     console.log('current', current);
     snap.tree = createTree(current);
   }
-
   return {
-    _(container) {
+    _(container, ENTRYFILE) {
       const {
         _reactRootContainer: { _internalRoot },
         _reactRootContainer,
       } = container;
-      // only assign internal root if it actually exists
+      // only assign internal rootp if it actually exists
       fiberRoot = _internalRoot || _reactRootContainer;
       updateSnapShotTree();
       // send the initial snapshot once the content script has started up
       window.addEventListener('message', ({ data: { action } }) => {
         if (action === 'contentScriptStarted') sendSnapshot();
       });
+      const astEntryFile = astParser(ENTRYFILE);
+      console.log('ENTRYFILE into ast', astEntryFile);
     },
   };
 };
