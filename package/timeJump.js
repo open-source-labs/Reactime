@@ -12,20 +12,32 @@ module.exports = (origin, mode) => {
   // recursively change state of tree
   function jump(target, coords = []) {
     const originNode = traverseTree(origin.tree, coords);
-
-    // set the state of the origin tree
-    originNode.component.setState(target.state, () => {
-      // iterate through new children once state has been set
-      target.children.forEach((child, i) => {
-        jump(child, coords.concat(i));
+    // set the state of the origin tree if the component is stateful
+    if (originNode.component.setState) {
+      originNode.component.setState(target.state, () => {
+        // iterate through new children once state has been set
+        target.children.forEach((child, i) => {
+          jump(child, coords.concat(i));
+        });
       });
-    });
+    } else {
+      // if component uses hooks
+      let current = originNode.component;
+      let index = 1;
+      // Iterate through the memoized tree
+      while (current) {
+        current.queue.dispatch(target.state[`state${index++}`]);
+        current = current.next;
+      }
+    }
   }
 
   return target => {
     // setting mode disables setState from posting messages to window
     mode.jumping = true;
     jump(target);
-    mode.jumping = false;
+    setTimeout(() => {
+      mode.jumping = false;
+    }, 100);
   };
 };

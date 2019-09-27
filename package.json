@@ -1,5 +1,5 @@
 {
-  "name": "reacttime-extension",
+  "name": "reactime",
   "description": "build web extension bundle.js",
   "scripts": {
     "build": "webpack --mode production",
@@ -20,10 +20,20 @@
     "type": "git",
     "url": "https://github.com/oslabs-beta/reactime"
   },
-  "author": "Bryan Lee, Josh Kim, Ryan Dang, Sierra Swaby",
+  "contributors": [
+    "Andy Wong",
+    "Bryan Lee",
+    "David Chai",
+    "Josh Kim",
+    "Ruthba Anam",
+    "Ryan Dang",
+    "Sierra Swaby",
+    "Yujin Kang"
+  ],
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-decorators": "^7.4.4",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
@@ -49,6 +59,8 @@
     "webpack-cli": "^3.3.6"
   },
   "dependencies": {
+    "acorn": "^7.1.0",
+    "acorn-jsx": "^5.0.2",
     "d3": "^3.5.17",
     "immer": "^3.2.0",
     "jsondiffpatch": "^0.3.11",
