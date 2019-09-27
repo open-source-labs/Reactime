@@ -4,11 +4,12 @@
 // links component state tree to library
 // changes the setState method to also update our snapshot
 const Tree = require('./tree');
-const astParser = require('./astParser.js');
+const astParser = require('./astParser'); 
+const { saveState } = require('./masterState'); 
 
 module.exports = (snap, mode) => {
   let fiberRoot = null;
-  let astHooks; 
+  let astHooks;
 
   function sendSnapshot() {
     // don't send messages while jumping or while paused
@@ -61,16 +62,16 @@ module.exports = (snap, mode) => {
   }
 
   // Helper function to traverse through the memoized state
-  // TODO: WE NEED TO CLEAN IT UP A BIT
   function traverseHooks(memoizedState) {
     // Declare variables and assigned to 0th index and an empty object, respectively
     const memoized = {};
     let index = 0; 
     astHooks = Object.values(astHooks); 
     // while memoizedState is truthy, save the value to the object
-    while (memoizedState && astHooks) {
+    while (memoizedState) {
       changeUseState(memoizedState);
-      memoized[astHooks[index]] = memoizedState.memoizedState;
+      //memoized[astHooks[index]] = memoizedState.memoizedState;
+      memoized[astHooks[index]] = memoizedState.memoizedState; 
       // Reassign memoizedState to its next value
       memoizedState = memoizedState.next;
       // Increment the index by 2
@@ -125,8 +126,11 @@ module.exports = (snap, mode) => {
     // only assign internal rootp if it actually exists
     fiberRoot = _internalRoot || _reactRootContainer;
     // If hooks are implemented, traverse through the source code 
-    if (entryFile) astHooks = astParser(entryFile);
-
+    // Save the getter/setter combo for timeJump
+    if (entryFile) {
+      astHooks = astParser(entryFile);
+      saveState(astHooks); 
+    }
     updateSnapShotTree();
     // send the initial snapshot once the content script has started up
     window.addEventListener('message', ({ data: { action } }) => {
