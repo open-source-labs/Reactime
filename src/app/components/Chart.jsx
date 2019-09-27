@@ -36,7 +36,7 @@ class Chart extends Component {
 
   maked3Tree() {
     // this.removed3Tree();
-    const dataset = {
+    const snapshotHierarchy = {
       name: "rootNode",
       diffState: {},
       children: [
@@ -132,7 +132,7 @@ class Chart extends Component {
     let radius = width / 2;
 
     // d3.hierarchy constructs a root node from the specified hierarchical data (our object titled dataset), which must be an object representing the root node
-    let hierarchy = d3.hierarchy(dataset);
+    let hierarchy = d3.hierarchy(snapshotHierarchy);
 
     let tree = d3.tree()
       // this assigns width of tree to be 2pi

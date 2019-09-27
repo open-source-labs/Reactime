@@ -8,6 +8,8 @@ function createTabObj(title) {
   return {
     title,
     snapshots: [],
+    //* inserting a new property
+    snapshotHierarchy: {},
     mode: {
       persist: false,
       locked: false,
@@ -16,6 +18,13 @@ function createTabObj(title) {
   };
 }
 
+function buildHierarchy() {
+  // if empty is clicked hierarchy needs to be reset to an object
+
+  // once state is modified (when user does something with app), a step appears in actionContainer.jsx column
+  // that current state snapshot is added to our hierarchy object
+
+}
 // create a helper function that groups all the snapshots underneath each other
   // current state snapshot
     // needs to be supplied by the UI
@@ -81,7 +90,7 @@ chrome.runtime.onConnect.addListener(port => {
 
 // background.js recieves message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender) => {
-  // IGNORE THE AUTOMTAIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
+  // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
   if (request.type === 'SIGN_CONNECT') return;
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
