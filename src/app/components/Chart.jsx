@@ -37,7 +37,8 @@ class Chart extends Component {
   maked3Tree() {
     // this.removed3Tree();
     const dataset = {
-      name: "parentMost",
+      name: "rootNode",
+      diffState: {},
       children: [
         {
           name: 'state1',
@@ -124,19 +125,25 @@ class Chart extends Component {
 
     let g = chartContainer
       .append("g")
-      .attr("transform", `translate(${width / 2 + 40}, ${height / 2 + 90})`);
+          // this is changing where the graph is located physically
+      .attr("transform", `translate(${width / 2.5}, ${height / 2 + 90})`);
+    
+     // if we consider the container for our radial node graph as a box encapsulating, half of this container width is essentially the radius of our radial node graph
     let radius = width / 2;
 
-    let root = d3.hierarchy(dataset);
+    // d3.hierarchy constructs a root node from the specified hierarchical data (our object titled dataset), which must be an object representing the root node
+    let hierarchy = d3.hierarchy(dataset);
 
-    let treeLayout = d3.tree()
+    let tree = d3.tree()
+      // this assigns width of tree to be 2pi
       .size([2 * Math.PI, radius])
 
-    let tree = treeLayout(root);
+    let root = tree(hierarchy);
 
     console.log('children', root.descendants());
 
-    g.selectAll('path')
+    g.selectAll('.link')
+      // root.links() gets an array of all the links, where each element is an object containing a source property, which represents the link's source node, and a target property, which represents the link's target node.
       .data(root.links())
       .enter()
       .append('path')
@@ -144,6 +151,7 @@ class Chart extends Component {
       .attr("d", d3.linkRadial()
         .angle(d => d.x)
         .radius(d => d.y));
+    
     let node = g.selectAll(".node")
       // root.descendants gets an array of of all nodes
       .data(root.descendants())

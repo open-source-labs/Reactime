@@ -16,6 +16,12 @@ function createTabObj(title) {
   };
 }
 
+// create a helper function that groups all the snapshots underneath each other
+  // current state snapshot
+    // needs to be supplied by the UI
+    // also need to figure out how we would traverse through the big ass object to find the current state
+  // Create a new object with name, 
+
 // establishing connection with devtools
 chrome.runtime.onConnect.addListener(port => {
   // push every port connected to the ports array
@@ -122,6 +128,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         reloaded[tabId] = false;
 
         tabsObj[tabId].snapshots.push(request.payload);
+        console.log(tabsObj[tabId].snapshots);
         if (portsArr.length > 0) {
           portsArr.forEach(bg => bg.postMessage({
             action: 'initialConnectSnapshots',
