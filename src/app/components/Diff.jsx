@@ -5,10 +5,8 @@ import ReactHtmlParser from 'react-html-parser';
 
 import { useStoreContext } from '../store';
 
-// FIX: Update the div copy to something more explanatory 
-
 function Diff({ snapshot, show }) {
-  const [mainState] = useStoreContext();
+  const [ mainState ] = useStoreContext();
   const { currentTab, tabs } = mainState;
   const { snapshots, viewIndex, sliderIndex } = tabs[currentTab];
   let previous;
@@ -26,7 +24,7 @@ function Diff({ snapshot, show }) {
   if (show) formatters.html.showUnchanged();
   else formatters.html.hideUnchanged();
 
-  if (previous === undefined || delta === undefined) return <div> states are equal </div>;
+  if (previous === undefined || delta === undefined) return <div> No state change detected. </div>;
   return (
     <div>
       { ReactHtmlParser(html) }

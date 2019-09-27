@@ -4,9 +4,11 @@
 // links component state tree to library
 // changes the setState method to also update our snapshot
 const Tree = require('./tree');
+const astParser = require('./astParser.js');
 
 module.exports = (snap, mode) => {
   let fiberRoot = null;
+  let astHooks; 
 
   function sendSnapshot() {
     // don't send messages while jumping or while paused
@@ -20,20 +22,15 @@ module.exports = (snap, mode) => {
     });
   }
 
-  // DEV: This is how we know when a change has happened 
-  // (by injecting an event listener to every component's setState functionality). 
-  // Will need to create a separate one for useState components
   function changeSetState(component) {
     // check that setState hasn't been changed yet
     if (component.setState.linkFiberChanged) return;
-
     // make a copy of setState
     const oldSetState = component.setState.bind(component);
-
     // replace component's setState so developer doesn't change syntax
     // component.setState = newSetState.bind(component);
-    component.setState = (state, callback = () => {}) => {
-      // dont do anything if state is locked
+    component.setState = (state, callback = () => { }) => {
+      // don't do anything if state is locked
       // UNLESS we are currently jumping through time
       if (mode.locked && !mode.jumping) return;
       // continue normal setState functionality, except add sending message middleware
@@ -46,26 +43,45 @@ module.exports = (snap, mode) => {
     component.setState.linkFiberChanged = true;
   }
 
-  // Helper function to 
+  function changeUseState(component) {
+    if (component.queue.dispatch.linkFiberChanged) return;
+    // store the original dispatch function definition 
+    const oldDispatch = component.queue.dispatch.bind(component.queue);; 
+    // redefine the dispatch function so we can inject our code
+    component.queue.dispatch = (fiber, queue, action) => {
+      // don't do anything if state is locked
+      if (mode.locked && !mode.jumping) return; 
+      oldDispatch(fiber, queue, action);
+      setTimeout(() => {
+        updateSnapShotTree();
+        sendSnapshot();
+      }, 100);
+    };
+    component.queue.dispatch.linkFiberChanged = true;
+  }
 
   // Helper function to traverse through the memoized state
+  // TODO: WE NEED TO CLEAN IT UP A BIT
   function traverseHooks(memoizedState) {
     // Declare variables and assigned to 0th index and an empty object, respectively
-    let index = 0;
-    const memoizedObj = {};
+    const memoized = {};
+    let index = 0; 
+    astHooks = Object.values(astHooks); 
     // while memoizedState is truthy, save the value to the object
-    while (memoizedState) {
-      // Increment the index by 1
-      memoizedObj[`state${index += 1}`] = memoizedState.memoizedState;
+    while (memoizedState && astHooks) {
+      changeUseState(memoizedState);
+      memoized[astHooks[index]] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
       memoizedState = memoizedState.next;
+      // Increment the index by 2
+      index += 2; 
     }
-    return memoizedObj;
+    return memoized;
   }
 
   function createTree(currentFiber, tree = new Tree('root')) {
     if (!currentFiber) return tree;
-  
+
     const {
       sibling,
       stateNode,
@@ -82,15 +98,12 @@ module.exports = (snap, mode) => {
       changeSetState(stateNode);
     }
     // Check if the component uses hooks
-    // TODO: Refactor the conditionals - think about the edge case where a stateful
-    // component might have a key called 'baseState' in the state
     if (memoizedState && memoizedState.hasOwnProperty('baseState')) {
-      // console.log('The memoizedState is: ', memoizedState)
-
-      const traversed = traverseHooks(memoizedState); 
-      nextTree = tree.appendChild(traversed);
+      // Add a traversed property and initialize to the evaluated result 
+      // of invoking traverseHooks, and reassign nextTree
+      memoizedState.traversed = traverseHooks(memoizedState);
+      nextTree = tree.appendChild(memoizedState);
     }
-
     // iterate through siblings
     createTree(sibling, tree);
     // iterate through children
@@ -103,67 +116,21 @@ module.exports = (snap, mode) => {
     const { current } = fiberRoot;
     snap.tree = createTree(current);
   }
-  // return container => {
-  //   console.log('this is the container', container)
-  //   const {
-  //     _reactRootContainer: { _internalRoot },
-  //     _reactRootContainer,
-  //   } = container; 
-  //   // only assign internal root if it actually exists
-  //   fiberRoot = _internalRoot || _reactRootContainer;
-  //   console.log('fiberRoot', fiberRoot);
-  //   updateSnapShotTree();
 
-  //   // send the initial snapshot once the content script has started up
-  //   window.addEventListener('message', ({ data: { action } }) => {
-  //     if (action === 'contentScriptStarted') sendSnapshot();
-  //   });
-  // };
+  return (container, entryFile) => {
+    const {
+      _reactRootContainer: { _internalRoot },
+      _reactRootContainer,
+    } = container;
+    // only assign internal rootp if it actually exists
+    fiberRoot = _internalRoot || _reactRootContainer;
+    // If hooks are implemented, traverse through the source code 
+    if (entryFile) astHooks = astParser(entryFile);
 
-  return {
-    _(container) {
-      const {
-        _reactRootContainer: { _internalRoot },
-        _reactRootContainer,
-      } = container;
-      // only assign internal root if it actually exists
-      fiberRoot = _internalRoot || _reactRootContainer;
-      updateSnapShotTree();
-      // send the initial snapshot once the content script has started up
-      window.addEventListener('message', ({ data: { action } }) => {
-        if (action === 'contentScriptStarted') sendSnapshot();
-      });
-    },
-    testUseState(useState) {
-      return function(initial) {
-        // running the original useState and storing its result (state and dispatch function)
-        const toReturn = useState(initial);
-        // storing the original dispatch function definition somewhere
-        const oldDispatch = toReturn[1];
-        // redefining the dispatch function so we can inject our code
-        toReturn[1] = function(newVal) {
-          oldDispatch(newVal);
-          updateSnapShotTree();
-          sendSnapshot();
-        };
-        return toReturn;
-      };
-    },
-    testUseReducer(useReducer) {
-      return function(reducer, initialState, init) {
-        // Declare a constant and initialize to the built-in useReducer method 
-        // Which returns an array with the state and dispatch 
-        const reduced = useReducer(reducer, initialState, init);
-        // Save the dispatch method 
-        const oldDispatch = reduced[1]; 
-        // reassign the dispatch method with the additional methods
-        reduced[1] = function(type) {
-          oldDispatch(type);
-          updateSnapShotTree();
-          sendSnapshot(); 
-        }
-        return reduced; 
-      }  
-    },
-  };
+    updateSnapShotTree();
+    // send the initial snapshot once the content script has started up
+    window.addEventListener('message', ({ data: { action } }) => {
+      if (action === 'contentScriptStarted') sendSnapshot();
+    });
+  }
 };

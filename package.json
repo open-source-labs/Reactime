@@ -1,5 +1,5 @@
 {
-  "name": "reacttime-extension",
+  "name": "reactime",
   "description": "build web extension bundle.js",
   "scripts": {
     "build": "webpack --mode production",
@@ -26,7 +26,7 @@
     "David Chai",
     "Josh Kim",
     "Ruthba Anam",
-    "Ryan Dang", 
+    "Ryan Dang",
     "Sierra Swaby",
     "Yujin Kang"
   ],
@@ -59,6 +59,8 @@
     "webpack-cli": "^3.3.6"
   },
   "dependencies": {
+    "acorn": "^7.1.0",
+    "acorn-jsx": "^5.0.2",
     "d3": "^3.5.17",
     "immer": "^3.2.0",
     "jsondiffpatch": "^0.3.11",
