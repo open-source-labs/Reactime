@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 // traverses given tree by accessing children through coords array
-const { saveState, returnState } = require('./masterState'); 
+const { returnState } = require('./masterState'); 
 
 function traverseTree(tree, coords) {
   let curr = tree;
