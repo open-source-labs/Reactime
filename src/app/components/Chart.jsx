@@ -35,79 +35,6 @@ class Chart extends Component {
   // }
 
   maked3Tree() {
-    // this.removed3Tree();
-    // const snapshotHierarchy = {
-    //   name: "rootNode",
-    //   diffState: {},
-    //   children: [
-    //     {
-    //       name: 'state1',
-    //       children: [
-    //         {
-    //           name: 'state2',
-    //           children: [
-    //             {
-    //               name: 'state3',
-    //               children: [
-    //                 {
-    //                   name: 'state5'
-    //                 },
-    //               ]
-    //             },
-    //             {
-    //               name: 'state4'
-    //             },
-    //             {
-    //               name: 'state5'
-    //             },
-    //             {
-    //               name: 'state6'
-    //             },
-    //             {
-    //               name: 'state7'
-    //             },
-    //             {
-    //               name: 'state8'
-    //             },
-    //             {
-    //               name: 'state9'
-    //             },
-    //             {
-    //               name: 'state10'
-    //             },
-    //             {
-    //               name: 'state11'
-    //             },
-    //             {
-    //               name: 'state12'
-    //             },
-    //             {
-    //               name: 'state13'
-    //             },
-    //             {
-    //               name: 'state14'
-    //             },
-    //             {
-    //               name: 'state15'
-    //             },
-    //             {
-    //               name: 'state16'
-    //             },
-    //             {
-    //               name: 'state17'
-    //             },
-    //             {
-    //               name: 'state18'
-    //             },
-    //             {
-    //               name: 'state19'
-    //             },
-    //           ]
-    //         },
-    //       ]
-    //     },
-    //   ]
-    // };
 
     let width = 900;
     let height = 1000;
@@ -171,7 +98,7 @@ class Chart extends Component {
       // this arranges the angle of the text
       .attr("transform", function (d) { return "rotate(" + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 180 / Math.PI + ")"; })
       .text(function (d) {
-        return d.data.index
+        return "state" + d.data.index;
       });
 
     function reinfeldTidierAlgo(x, y) {

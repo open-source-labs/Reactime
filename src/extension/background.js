@@ -63,20 +63,6 @@ function changeCurrLocation(tabObj, currNode, index) {
   }
 }
 
-//! once state is modified (when user does something with app), a step appears in actionContainer.jsx column. That current state snapshot is added to our hierarchy object. That is what the buildHierarchy function is for. It takes in the entire tabObj, which has a hierarcy object as a property within it. Then we build this hierarchy object so that d3 can render graphs in our extension
-// whenever we receive a snapshot from contentScript.js via message, we execute this function
-//* if empty on extension UI is clicked hierarchy needs to be reset to an object
-
-// each time a statesnapshot is added, this gets incremented otherwise it will be decremented
-// we need to find a way to traverse through the object to know which node the user is on so we can add a new state snapshot in the right location
-// could we potentially have a variable in timejump function (timeJump.js in the package) that our function can work with --> contentScript.js has access to it --> we can access that variable message;
-
-// create a helper function that groups all the snapshots underneath each other
-// current state snapshot
-// needs to be supplied by the UI
-// also need to figure out how we would traverse through the big ass object to find the current state
-// Create a new object with name, 
-
 // establishing connection with devtools
 chrome.runtime.onConnect.addListener(port => {
   // push every port connected to the ports array
