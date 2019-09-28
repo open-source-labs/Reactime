@@ -11,7 +11,7 @@ window.addEventListener('message', msg => {
     firstMessage = false;
   }
 
-  // post initial Message to npm package
+  // post initial Message to background.js
   const { action } = msg.data;
   if (action === 'recordSnap') chrome.runtime.sendMessage(msg.data);
 });

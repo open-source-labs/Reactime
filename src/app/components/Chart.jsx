@@ -10,19 +10,21 @@ let root = {};
 let duration = 750;
 
 class Chart extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.chartRef = React.createRef();
     this.maked3Tree = this.maked3Tree.bind(this);
   }
   componentDidMount() {
-    const { snapshot } = this.props;
+    const { snapshot, hierarchy } = this.props;
+    console.log('initial props', this.props)
     root = JSON.parse(JSON.stringify(snapshot));
     this.maked3Tree();
   }
 
   componentDidUpdate() {
-    const { snapshot } = this.props;
+    const { snapshot, hierarchy } = this.props;
+    console.log('updated props', this.props)
     root = JSON.parse(JSON.stringify(snapshot));
     this.maked3Tree();
   }
@@ -139,8 +141,6 @@ class Chart extends Component {
       .size([2 * Math.PI, radius])
 
     let root = tree(hierarchy);
-
-    console.log('children', root.descendants());
 
     g.selectAll('.link')
       // root.links() gets an array of all the links, where each element is an object containing a source property, which represents the link's source node, and a target property, which represents the link's target node.

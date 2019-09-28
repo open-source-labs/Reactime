@@ -7,7 +7,8 @@ import StateRoute from '../components/StateRoute';
 import DiffRoute from '../components/DiffRoute';
 
 
-const StateContainer = ({ snapshot }) => {
+const StateContainer = ({ snapshot, hierarchy }) => {
+  console.log('passing?', hierarchy);
   const [Text, setText] = useState('State');
   return (
     <Router>
@@ -27,7 +28,7 @@ const StateContainer = ({ snapshot }) => {
         </div>
         <Switch>
           <Route path="/diff" render={() => { setText('Diff'); return <DiffRoute snapshot={snapshot} />; }} />
-          <Route path="/" render={() => { setText('State'); return <StateRoute snapshot={snapshot} />; }} />
+          <Route path="/" render={() => { setText('State'); return <StateRoute snapshot={snapshot} hierarchy={hierarchy} />; }} />
         </Switch>
       </div>
     </Router>
