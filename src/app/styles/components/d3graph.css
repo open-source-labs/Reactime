@@ -1,0 +1,22 @@
+/*   this represents leaf nodes aka no children */
+.node circle {
+  fill: #2e3634;
+}
+.node text {
+  font: 15px sans-serif;
+}
+
+/*   this represents those nodes that have children */
+.node--internal circle {
+  fill: teal;
+}
+/*   modifies text of parent nodes (has children) */
+.node--internal text {
+  fill: white;
+}
+.link {
+  fill: none;
+  stroke: #bfe3da;
+  stroke-opacity: 0.2;
+  stroke-width: 50px;
+}
