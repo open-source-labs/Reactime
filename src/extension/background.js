@@ -33,31 +33,31 @@ const makeNewNode = () => {
       this.children = [];
     }
   };
-}
+};
+
 const Node = makeNewNode();
 
-function buildHierachy(tabObj, newNode) {
+function sendToHierarchy (tabObj, newNode) {
   if (!tabObj.currLocation) {
     tabObj.currLocation = newNode;
-    tabObj.hierachy = newNode;
+    tabObj.hierarchy = newNode;
   } else {
     tabObj.currLocation.children.push(newNode);
     tabObj.currLocation = newNode;
   }
 }
-
-function changeCurrLocation(tabObj, currNode, index) {
+function changeCurrLocation (tabObj, rootNode, index) {
   // check if current node has the index wanted
-  if (currNode.index === index) {
-    tabObj.currLocation = currNode;
+  if (rootNode.index === index) {
+    tabObj.currLocation = rootNode;
     return;
   }
   // base case if no children
-  if (!currNode.children.length) {
+  if (!rootNode.children.length) {
     return;
   } else {
     // if not, recurse on each one of the children
-    currNode.children.forEach(child => {
+    rootNode.children.forEach(child => {
       changeCurrLocation(tabObj, child, index);
     });
   }
@@ -72,7 +72,7 @@ chrome.runtime.onConnect.addListener(port => {
   if (Object.keys(tabsObj).length > 0) {
     port.postMessage({
       action: 'initialConnectSnapshots',
-      payload: tabsObj,
+      payload: {...tabsObj, msg: 'connection to devgools made'},
     });
   }
 
@@ -148,15 +148,16 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       // dont remove snapshots if persisting
       if (!persist) {
         tabsObj[tabId].snapshots.splice(1);
-
+        
         // send a message to devtools
         portsArr.forEach(bg => bg.postMessage({
           action: 'initialConnectSnapshots',
-          payload: tabsObj,
+          payload: { ...tabsObj, msg: 'reload' },
         }));
       }
 
       reloaded[tabId] = true;
+      
 
       break;
     }
@@ -169,15 +170,11 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         reloaded[tabId] = false;
 
         tabsObj[tabId].snapshots.push(request.payload);
-        // invoking function to place a new d3 tree node in the right location
-        const newNode = new Node(request.payload)
-        buildHierarchy(tabsObj[tabId], newNode);
-
-        console.log(tabsObj[tabId].snapshots);
+        sendToHierarchy(tabsObj[tabId], new Node(request.payload));
         if (portsArr.length > 0) {
           portsArr.forEach(bg => bg.postMessage({
             action: 'initialConnectSnapshots',
-            payload: tabsObj,
+            payload: {...tabsObj, msg: 'firstsnapshotreceived'},
           }));
         }
         break;
@@ -188,9 +185,8 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         reloaded[tabId] = false;
       } else {
         tabsObj[tabId].snapshots.push(request.payload);
-        // invoking function to place a new d3 tree node in the right location
-        const newNode = new Node(request.payload)
-        buildHierarchy(tabsObj[tabId], newNode);
+        //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
+        sendToHierarchy(tabsObj[tabId], new Node(request.payload));
       }
       // send message to devtools
       if (portsArr.length > 0) {
