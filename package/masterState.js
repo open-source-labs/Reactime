@@ -7,8 +7,7 @@ module.exports = {
     for (const key in state) {
       masterState.push(state[key]);
     }
-  },
-  returnState: () => {
     return masterState; 
   },
+  returnState: () => masterState
 };

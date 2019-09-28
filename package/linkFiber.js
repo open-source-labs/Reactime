@@ -46,14 +46,15 @@ module.exports = (snap, mode) => {
 
   function changeUseState(component) {
     if (component.queue.dispatch.linkFiberChanged) return;
-    // store the original dispatch function definition 
-    const oldDispatch = component.queue.dispatch.bind(component.queue);; 
+    // store the original dispatch function definition  
+    const oldDispatch = component.queue.dispatch.bind(component.queue);
     // redefine the dispatch function so we can inject our code
     component.queue.dispatch = (fiber, queue, action) => {
       // don't do anything if state is locked
       if (mode.locked && !mode.jumping) return; 
-      oldDispatch(fiber, queue, action);
+      //oldDispatch(fiber, queue, action);
       setTimeout(() => {
+        oldDispatch(fiber, queue, action);
         updateSnapShotTree();
         sendSnapshot();
       }, 100);
@@ -99,7 +100,7 @@ module.exports = (snap, mode) => {
       changeSetState(stateNode);
     }
     // Check if the component uses hooks
-    if (memoizedState && memoizedState.hasOwnProperty('baseState')) {
+    if (memoizedState && memoizedState.hasOwnProperty('baseState')) { 
       // Add a traversed property and initialize to the evaluated result 
       // of invoking traverseHooks, and reassign nextTree
       memoizedState.traversed = traverseHooks(memoizedState);
@@ -112,7 +113,8 @@ module.exports = (snap, mode) => {
 
     return tree;
   }
-
+  // runs when page initially loads 
+  // but skips 1st hook click 
   function updateSnapShotTree() {
     const { current } = fiberRoot;
     snap.tree = createTree(current);
@@ -131,7 +133,7 @@ module.exports = (snap, mode) => {
       astHooks = astParser(entryFile);
       saveState(astHooks); 
     }
-    updateSnapShotTree();
+    updateSnapShotTree(); 
     // send the initial snapshot once the content script has started up
     window.addEventListener('message', ({ data: { action } }) => {
       if (action === 'contentScriptStarted') sendSnapshot();
