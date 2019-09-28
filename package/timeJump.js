@@ -1,5 +1,7 @@
 /* eslint-disable no-param-reassign */
 // traverses given tree by accessing children through coords array
+const { returnState } = require('./masterState'); 
+
 function traverseTree(tree, coords) {
   let curr = tree;
   coords.forEach(coord => {
@@ -21,13 +23,16 @@ module.exports = (origin, mode) => {
         });
       });
     } else {
-      // if component uses hooks
+      // if component uses hooks, traverse through the memoize tree
       let current = originNode.component;
-      let index = 1;
-      // Iterate through the memoized tree
+      let index = 0;
+      const hooks = returnState(); 
+      // Iterate through the memoize tree
       while (current) {
-        current.queue.dispatch(target.state[`state${index++}`]);
+        current.queue.dispatch(target.state[hooks[index]]);
+        // Reassign the current value
         current = current.next;
+        index += 2;
       }
     }
   }
