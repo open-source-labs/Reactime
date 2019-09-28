@@ -22,48 +22,60 @@ function createTabObj(title) {
     },
   };
 }
-// once state is modified (when user does something with app), a step appears in actionContainer.jsx column. That current state snapshot is added to our hierarchy object. That is what the buildHierarchy function is for. It takes in the entire tabObj, which has a hierarcy object as a property within it. Then we build this hierarchy object so that d3 can render graphs in our extension
-function buildHierarchy(obj, newNode) {
-  // whenever we receive a snapshot from contentScript.js via message, we execute this function
-  //* if empty on extension UI is clicked hierarchy needs to be reset to an object
-  let num = 1;
-  class d3Node {
-    constructor(num, obj) {
-      this.name = num++;
+
+const makeNewNode = () => {
+  let num = 0;
+
+  return class Node {
+    constructor(obj) {
+      this.index = num += 1;
       this.stateSnapshot = obj;
       this.children = [];
     }
+  };
+}
+const Node = makeNewNode();
+
+function buildHierachy(tabObj, newNode) {
+  if (!tabObj.currLocation) {
+    tabObj.currLocation = newNode;
+    tabObj.hierachy = newNode;
+  } else {
+    tabObj.currLocation.children.push(newNode);
+    tabObj.currLocation = newNode;
   }
-  
-  obj.hierarchy
-  /* properties inside this object absolutely requires:
-  name: string (the first state snapshot has to be a root)
-  stateSnapshot: object
-  currentStateSnapshot: boolean
-  */
+}
+
+function changeCurrLocation(tabObj, currNode, index) {
+  // check if current node has the index wanted
+  if (currNode.index === index) {
+    tabObj.currLocation = currNode;
+    return;
+  }
+  // base case if no children
+  if (!currNode.children.length) {
+    return;
+  } else {
+    // if not, recurse on each one of the children
+    currNode.children.forEach(child => {
+      changeCurrLocation(tabObj, child, index);
+    });
+  }
+}
+
+//! once state is modified (when user does something with app), a step appears in actionContainer.jsx column. That current state snapshot is added to our hierarchy object. That is what the buildHierarchy function is for. It takes in the entire tabObj, which has a hierarcy object as a property within it. Then we build this hierarchy object so that d3 can render graphs in our extension
+  // whenever we receive a snapshot from contentScript.js via message, we execute this function
+  //* if empty on extension UI is clicked hierarchy needs to be reset to an object
  
  // each time a statesnapshot is added, this gets incremented otherwise it will be decremented
  // we need to find a way to traverse through the object to know which node the user is on so we can add a new state snapshot in the right location
 // could we potentially have a variable in timejump function (timeJump.js in the package) that our function can work with --> contentScript.js has access to it --> we can access that variable message;
- stateCount = 1;
- 
-  class stateNode {
-
-    constructor() {
-      this.name = `state${stateCount}`;
-      this.stateSnapshot = {};
-      this.children = [];
-    }
-  }
-
 
   // create a helper function that groups all the snapshots underneath each other
   // current state snapshot
   // needs to be supplied by the UI
   // also need to figure out how we would traverse through the big ass object to find the current state
   // Create a new object with name, 
-}
-
 
 // establishing connection with devtools
 chrome.runtime.onConnect.addListener(port => {
@@ -171,9 +183,10 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         reloaded[tabId] = false;
 
         tabsObj[tabId].snapshots.push(request.payload);
-        //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
-        let currentStateObject = tabsObj[tabId]
-        buildHierarchy(tabsObj[tabId], request.payloadTurnedIntoNODE );
+        // invoking function to place a new d3 tree node in the right location
+        const newNode = new Node(request.payload)
+        buildHierarchy(tabsObj[tabId], newNode);
+
         console.log(tabsObj[tabId].snapshots);
         if (portsArr.length > 0) {
           portsArr.forEach(bg => bg.postMessage({
@@ -189,8 +202,9 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         reloaded[tabId] = false;
       } else {
         tabsObj[tabId].snapshots.push(request.payload);
-        //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
-        buildHierarchy();
+        // invoking function to place a new d3 tree node in the right location
+        const newNode = new Node(request.payload)
+        buildHierarchy(tabsObj[tabId], newNode);
       }
       // send message to devtools
       if (portsArr.length > 0) {
