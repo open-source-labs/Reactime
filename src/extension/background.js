@@ -2,14 +2,19 @@
 const portsArr = [];
 const reloaded = {};
 const firstSnapshotReceived = {};
+// there will be the same number of objects in here as there are reactime tabs open for each user application being worked on
 const tabsObj = {};
 
 function createTabObj(title) {
+  // updating tabsObj
   return {
     title,
+    // snapshots is an array of ALL state snapshots for the reactime tab working on a specific user application
     snapshots: [],
-    //* inserting a new property
-    snapshotHierarchy: {},
+    //* this is our pointer so we know what the current state the user is checking (this accounts for time travel aka when user clicks jump on the UI)
+    currentStatePointer: null,
+    //* inserting a new property to build out our hierarchy dataset for d3 
+    hierarchy: null,
     mode: {
       persist: false,
       locked: false,
@@ -17,19 +22,48 @@ function createTabObj(title) {
     },
   };
 }
+// once state is modified (when user does something with app), a step appears in actionContainer.jsx column. That current state snapshot is added to our hierarchy object. That is what the buildHierarchy function is for. It takes in the entire tabObj, which has a hierarcy object as a property within it. Then we build this hierarchy object so that d3 can render graphs in our extension
+function buildHierarchy(obj, newNode) {
+  // whenever we receive a snapshot from contentScript.js via message, we execute this function
+  //* if empty on extension UI is clicked hierarchy needs to be reset to an object
+  let num = 1;
+  class d3Node {
+    constructor(num, obj) {
+      this.name = num++;
+      this.stateSnapshot = obj;
+      this.children = [];
+    }
+  }
+  
+  obj.hierarchy
+  /* properties inside this object absolutely requires:
+  name: string (the first state snapshot has to be a root)
+  stateSnapshot: object
+  currentStateSnapshot: boolean
+  */
+ 
+ // each time a statesnapshot is added, this gets incremented otherwise it will be decremented
+ // we need to find a way to traverse through the object to know which node the user is on so we can add a new state snapshot in the right location
+// could we potentially have a variable in timejump function (timeJump.js in the package) that our function can work with --> contentScript.js has access to it --> we can access that variable message;
+ stateCount = 1;
+ 
+  class stateNode {
 
-function buildHierarchy() {
-  // if empty is clicked hierarchy needs to be reset to an object
+    constructor() {
+      this.name = `state${stateCount}`;
+      this.stateSnapshot = {};
+      this.children = [];
+    }
+  }
 
-  // once state is modified (when user does something with app), a step appears in actionContainer.jsx column
-  // that current state snapshot is added to our hierarchy object
 
-}
-// create a helper function that groups all the snapshots underneath each other
+  // create a helper function that groups all the snapshots underneath each other
   // current state snapshot
-    // needs to be supplied by the UI
-    // also need to figure out how we would traverse through the big ass object to find the current state
+  // needs to be supplied by the UI
+  // also need to figure out how we would traverse through the big ass object to find the current state
   // Create a new object with name, 
+}
+
 
 // establishing connection with devtools
 chrome.runtime.onConnect.addListener(port => {
@@ -137,6 +171,9 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         reloaded[tabId] = false;
 
         tabsObj[tabId].snapshots.push(request.payload);
+        //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
+        let currentStateObject = tabsObj[tabId]
+        buildHierarchy(tabsObj[tabId], request.payloadTurnedIntoNODE );
         console.log(tabsObj[tabId].snapshots);
         if (portsArr.length > 0) {
           portsArr.forEach(bg => bg.postMessage({
@@ -150,8 +187,11 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
       if (reloaded[tabId]) {
         reloaded[tabId] = false;
-      } else tabsObj[tabId].snapshots.push(request.payload);
-
+      } else {
+        tabsObj[tabId].snapshots.push(request.payload);
+        //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
+        buildHierarchy();
+      }
       // send message to devtools
       if (portsArr.length > 0) {
         portsArr.forEach(bg => bg.postMessage({
