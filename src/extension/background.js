@@ -11,6 +11,7 @@ function createTabObj(title) {
     title,
     // snapshots is an array of ALL state snapshots for the reactime tab working on a specific user application
     snapshots: [],
+    index: 0,
     //* this is our pointer so we know what the current state the user is checking (this accounts for time travel aka when user clicks jump on the UI)
     currLocation: null,
     //* inserting a new property to build out our hierarchy dataset for d3 
@@ -23,19 +24,20 @@ function createTabObj(title) {
   };
 }
 
-const makeNewNode = () => {
-  let num = 0;
 
-  return class Node {
-    constructor(obj) {
-      this.index = num += 1;
+// function resetIndex(num) {
+  //   return num = 0;
+  // }
+  
+    // let num = 0;
+
+  class Node {
+    constructor(obj, tabObj) {
+      this.index = tabObj.index += 1;
       this.stateSnapshot = obj;
       this.children = [];
     }
   };
-};
-
-const Node = makeNewNode();
 
 function sendToHierarchy (tabObj, newNode) {
   if (!tabObj.currLocation) {
@@ -72,7 +74,7 @@ chrome.runtime.onConnect.addListener(port => {
   if (Object.keys(tabsObj).length > 0) {
     port.postMessage({
       action: 'initialConnectSnapshots',
-      payload: {...tabsObj, msg: 'connection to devgools made'},
+      payload: { ...tabsObj, msg: 'connection to devgools made' },
     });
   }
 
@@ -103,6 +105,12 @@ chrome.runtime.onConnect.addListener(port => {
         return;
       case 'emptySnap':
         tabsObj[tabId].snapshots.splice(1);
+        // reset children in root node to reset graph
+        tabsObj[tabId].hierarchy.children = [];
+        // reassigning pointer to the appropriate node to branch off of
+        tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
+        // reset index
+        tabsObj[tabId].index = 1;
         return;
       case 'setLock':
         tabsObj[tabId].mode.locked = payload;
@@ -148,6 +156,12 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       // dont remove snapshots if persisting
       if (!persist) {
         tabsObj[tabId].snapshots.splice(1);
+         // reset children in root node to reset graph
+        tabsObj[tabId].hierarchy.children = [];
+        // reassigning pointer to the appropriate node to branch off of
+        tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
+        // reset index
+        tabsObj[tabId].index = 1;
         
         // send a message to devtools
         portsArr.forEach(bg => bg.postMessage({
@@ -170,7 +184,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         reloaded[tabId] = false;
 
         tabsObj[tabId].snapshots.push(request.payload);
-        sendToHierarchy(tabsObj[tabId], new Node(request.payload));
+        sendToHierarchy(tabsObj[tabId], new Node(request.payload, tabsObj[tabId]));
         if (portsArr.length > 0) {
           portsArr.forEach(bg => bg.postMessage({
             action: 'initialConnectSnapshots',
@@ -186,7 +200,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       } else {
         tabsObj[tabId].snapshots.push(request.payload);
         //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
-        sendToHierarchy(tabsObj[tabId], new Node(request.payload));
+        sendToHierarchy(tabsObj[tabId], new Node(request.payload, tabsObj[tabId]));
       }
       // send message to devtools
       if (portsArr.length > 0) {

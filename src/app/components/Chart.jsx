@@ -13,30 +13,31 @@ class Chart extends Component {
     super(props);
     this.chartRef = React.createRef();
     this.maked3Tree = this.maked3Tree.bind(this);
+    this.removed3Tree = this.removed3Tree.bind(this);
   }
   componentDidMount() {
     const { snapshot, hierarchy } = this.props;
     console.log('initial props', this.props)
-    root = JSON.parse(JSON.stringify(snapshot));
+    root = JSON.parse(JSON.stringify(hierarchy));
     this.maked3Tree();
   }
 
   componentDidUpdate() {
     const { snapshot, hierarchy } = this.props;
     console.log('updated props', this.props)
-    root = JSON.parse(JSON.stringify(snapshot));
+    root = JSON.parse(JSON.stringify(hierarchy));
     this.maked3Tree();
   }
 
-  // removed3Tree() {
-  //   const { anchor } = this.refs;
-  //   while (anchor.hasChildNodes()) {
-  //     anchor.removeChild(anchor.lastChild);
-  //   }
-  // }
+  removed3Tree() {
+    const { current } = this.chartRef;
+    while (current.hasChildNodes()) {
+      current.removeChild(current.lastChild);
+    }
+  }
 
   maked3Tree() {
-
+    this.removed3Tree();
     let width = 900;
     let height = 1000;
     let chartContainer = d3.select(this.chartRef.current)
