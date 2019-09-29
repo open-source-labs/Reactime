@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-import '../d3tooltip.js'
+import * as _d3Tip from "d3-tip"
 
 let root = {};
 let duration = 750;
@@ -91,7 +91,8 @@ class Chart extends Component {
       .attr("r", 15)
 
     //creating a d3.tip method where the html has a function that returns the data we passed into tip.show from line 120
-    let tip = d3.tip()
+    const d3Tip = _d3Tip.bind(d3)
+    let tip = d3Tip()
       .attr("class", "d3-tip")
       .html(function (d) { return "State Snapshot: " + d; })
     //invoking tooltip for nodes
