@@ -90,6 +90,13 @@ class Chart extends Component {
     node.append("circle")
       .attr("r", 15)
 
+    // creating a d3.tip method where the html has a function that returns the data we passed into tip.show from line 120
+    let tip = d3.tip()
+      .attr("class", "d3-tip")
+      .html(function (d) { return "State Snapshot: " + d; })
+    // invoking tooltip for nodes
+    node.call(tip)
+
     node
       .append("text")
       // adjusts the y coordinates for the node text
@@ -97,7 +104,7 @@ class Chart extends Component {
       .attr("x", function (d) {
         // this positions how far the text is from leaf nodes (ones without children)
         // negative number before the colon moves the text of rightside nodes, positive number moves the text for the leftside nodes
-        return d.x < Math.PI === !d.children ? -6 : 7;
+        return d.x < Math.PI === !d.children ? -5 : 9;
       })
       .attr("text-anchor", function (d) { return d.x < Math.PI === !d.children ? "start" : "end"; })
       // this arranges the angle of the text
@@ -105,6 +112,14 @@ class Chart extends Component {
       .text(function (d) {
         return d.data.index;
       });
+    
+    //applying tooltip on mouseover and removes it when mouse cursor moves away
+    node
+      .on('mouseover', function (d) {
+        // without JSON.stringify, data will display as object Object
+        tip.show(JSON.stringify(d.data.stateSnaphot))
+      })
+      .on('mouseout', tip.hide)
 
     function reinfeldTidierAlgo(x, y) {
       return [(y = +y) * Math.cos(x -= Math.PI / 2), y * Math.sin(x)];
