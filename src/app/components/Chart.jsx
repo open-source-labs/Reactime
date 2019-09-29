@@ -39,8 +39,8 @@ class Chart extends Component {
 
   maked3Tree() {
     this.removed3Tree();
-    let width = 960;
-    let height = 1060;
+    let width = 900;
+    let height = 1000;
     let chartContainer = d3.select(this.chartRef.current)
       .append('svg') // chartContainer is now pointing to svg
       .attr('width', width)
@@ -96,7 +96,7 @@ class Chart extends Component {
       .attr("x", function (d) {
         // this positions how far the text is from leaf nodes (ones without children)
         // negative number before the colon moves the text of rightside nodes, positive number moves the text for the leftside nodes
-        return d.x < Math.PI === !d.children ? -20 : 20;
+        return d.x < Math.PI === !d.children ? -20 : 23;
       })
       .attr("text-anchor", function (d) { return d.x < Math.PI === !d.children ? "start" : "end"; })
       // this arranges the angle of the text

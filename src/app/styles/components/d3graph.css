@@ -1,4 +1,8 @@
 /*   this represents leaf nodes aka no children */
+.node {
+    cursor: pointer;
+}
+
 .node circle {
   fill: #2e3634;
 }
@@ -18,5 +22,5 @@
   fill: none;
   stroke: #bfe3da;
   stroke-opacity: 0.2;
-  stroke-width: 50px;
+  stroke-width: 10px;
 }
