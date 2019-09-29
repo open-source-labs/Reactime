@@ -90,11 +90,11 @@ class Chart extends Component {
     node.append("circle")
       .attr("r", 15)
 
-    //creating a d3.tip method where the html has a function that returns the data we passed into tip.show from line 120
+    // creating a d3.tip method where the html has a function that returns the data we passed into tip.show from line 120
     let tip = d3.tip()
       .attr("class", "d3-tip")
       .html(function (d) { return "State Snapshot: " + d; })
-    //invoking tooltip for nodes
+    // invoking tooltip for nodes
     node.call(tip)
 
     node
@@ -115,51 +115,11 @@ class Chart extends Component {
     
     //applying tooltip on mouseover and removes it when mouse cursor moves away
     node
-      // .on('mouseover', mouseover)
-      // .on('mouseout', mouseout)
-      // .on('mousemove', d => mousemove(d));
       .on('mouseover', function (d) {
         // without JSON.stringify, data will display as object Object
         tip.show(JSON.stringify(d.data.stateSnaphot))
       })
       .on('mouseout', tip.hide)
-    
-    // function mousemove(d) {
-    //   div
-    //     .text(JSON.stringify(d.data.stateSnapshot))
-    // }
-
-    // // Show state on mouse over
-    // function mouseover() {
-    //   div
-    //     .transition()
-    //     .duration(300)
-    //     .style('display', 'block')
-    //     .style('opacity', 1);
-    // }
-
-    // function mouseout() {
-    //   div
-    //     .transition()
-    //     .duration(3000)
-    //     .style('opacity', 1e-6)
-    //     .style('display', 'none');
-    // }
-
-    // function tipMouseover() {
-    //   div
-    //     .transition()
-    //     .duration(300)
-    //     .style('opacity', 1);
-    // }
-
-    // function tipMouseout() {
-    //   div
-    //     .transition()
-    //     .duration(3000)
-    //     .style('opacity', 1e-6)
-    //     .style('display', 'none');
-    // }
 
     function reinfeldTidierAlgo(x, y) {
       return [(y = +y) * Math.cos(x -= Math.PI / 2), y * Math.sin(x)];
