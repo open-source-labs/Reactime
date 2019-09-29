@@ -68,7 +68,7 @@ chrome.runtime.onConnect.addListener(port => {
   if (Object.keys(tabsObj).length > 0) {
     port.postMessage({
       action: 'initialConnectSnapshots',
-      payload: { ...tabsObj, msg: 'connection to devgools made' },
+      payload: tabsObj,
     });
   }
 
@@ -164,7 +164,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         // send a message to devtools
         portsArr.forEach(bg => bg.postMessage({
           action: 'initialConnectSnapshots',
-          payload: { ...tabsObj, msg: 'reload' },
+          payload: tabsObj,
         }));
       }
 
@@ -186,7 +186,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         if (portsArr.length > 0) {
           portsArr.forEach(bg => bg.postMessage({
             action: 'initialConnectSnapshots',
-            payload: {...tabsObj, msg: 'firstsnapshotreceived'},
+            payload: tabsObj,
           }));
         }
         break;
