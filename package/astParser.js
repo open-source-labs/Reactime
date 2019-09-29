@@ -5,8 +5,6 @@ const JSXParser = acorn.Parser.extend(jsx());
 
 const hookState = {};
 
-function getHookNames()
-
 module.exports = file => {
   // Initialize empty object to store the setters and getter
   let ast = JSXParser.parse(file);

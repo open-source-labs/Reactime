@@ -139,13 +139,13 @@ module.exports = (snap, mode) => {
     window.addEventListener('message', ({ data: { action } }) => {
       if (action === 'contentScriptStarted') sendSnapshot();
     });
-    //
-    if (astHooks) {
-      function consoleLoggerTest(someString) {
-        return someString;
-      }
-      const testFunction = consoleLoggerTest('Hello from reactime');
-      return testFunction;
-    }
+    // Testing sending back a function def to client
+    // if (astHooks) {
+    //   function consoleLoggerTest(someString) {
+    //     return someString;
+    //   }
+    //   const testFunction = consoleLoggerTest('Hello from reactime');
+    //   return testFunction;
+    // }
   };
 };
