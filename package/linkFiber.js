@@ -63,6 +63,7 @@ module.exports = (snap, mode) => {
   }
 
   // Helper function to traverse through the memoized state
+  // TODO: WE NEED TO CLEAN IT UP A BIT
   function traverseHooks(memoizedState) {
     // Declare variables and assigned to 0th index and an empty object, respectively
     const memoized = {};
