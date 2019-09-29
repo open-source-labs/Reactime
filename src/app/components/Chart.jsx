@@ -118,7 +118,7 @@ class Chart extends Component {
     node
       .on('mouseover', function (d) {
         // without JSON.stringify, data will display as object Object
-        console.log('d.data --> ', JSON.stringify(d.data))
+        // console.log('d.data --> ', JSON.stringify(d.data))
         tip.show(JSON.stringify(d.data.stateSnapshot), this)
       })
       .on('mouseout', tip.hide)
