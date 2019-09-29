@@ -33,7 +33,6 @@ function ActionContainer() {
         <button className="empty-button" onClick={() => dispatch(emptySnapshots())} type="button">
           Empty
         </button>
-        <SwitchStateDropdown />
       </div>
       <div>{actionsArr}</div>
     </div>
