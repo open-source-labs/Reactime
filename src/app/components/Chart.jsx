@@ -96,13 +96,13 @@ class Chart extends Component {
       .attr("x", function (d) {
         // this positions how far the text is from leaf nodes (ones without children)
         // negative number before the colon moves the text of rightside nodes, positive number moves the text for the leftside nodes
-        return d.x < Math.PI === !d.children ? -20 : 23;
+        return d.x < Math.PI === !d.children ? -7 : 7;
       })
       .attr("text-anchor", function (d) { return d.x < Math.PI === !d.children ? "start" : "end"; })
       // this arranges the angle of the text
       .attr("transform", function (d) { return "rotate(" + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 1 / Math.PI + ")"; })
       .text(function (d) {
-        return "state" + d.data.index;
+        return d.data.index;
       });
 
     function reinfeldTidierAlgo(x, y) {
