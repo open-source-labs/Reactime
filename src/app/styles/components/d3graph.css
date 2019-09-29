@@ -9,11 +9,11 @@
 }
 .node text {
   font-size: 15px;
-  font-family: 'Raleway', sans-serif;;
+  font-family: 'Raleway', sans-serif;
 }
 /* this represents text for leaf nodes aka the ones with no children */
 .node--leaf{
-  fill: #F4C1B6;
+  fill: #71e9e1;
 }
 
 /*   this represents those nodes that have children */
@@ -22,8 +22,8 @@
 }
 /*   modifies text of parent nodes (has children) */
 .node--internal text {
-  fill: white;
-  font-size: 25px;
+  fill: #fae6e4;
+  font-size: 19px;
   
 }
 .link {
@@ -32,3 +32,4 @@
   stroke-opacity: 0.4;
   stroke-width: 3px;
 }
+  

@@ -88,12 +88,12 @@ class Chart extends Component {
       });
 
     node.append("circle")
-      .attr("r", 20)
+      .attr("r", 15)
 
     node
       .append("text")
       // adjusts the y coordinates for the node text
-      .attr("dy", "0.3em")
+      .attr("dy", "0.276em")
       .attr("x", function (d) {
         // this positions how far the text is from leaf nodes (ones without children)
         // negative number before the colon moves the text of rightside nodes, positive number moves the text for the leftside nodes
