@@ -18,7 +18,7 @@ const StateRoute = ({ snapshot, hierarchy }) => (
       </NavLink>
     </div>
     <Switch>
-      <Route path="/chart" render={() => <Chart snapshot={snapshot} hierarchy={hierarchy} />} />
+      <Route path="/chart" render={() => <Chart hierarchy={hierarchy} />} />
       <Route path="/" render={() => <Tree snapshot={snapshot} />} />
     </Switch>
   </Router>

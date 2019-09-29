@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
 let root = {};
-let duration = 750;
 class Chart extends Component {
   constructor(props) {
     super(props);
@@ -16,15 +15,13 @@ class Chart extends Component {
     this.removed3Tree = this.removed3Tree.bind(this);
   }
   componentDidMount() {
-    const { snapshot, hierarchy } = this.props;
-    console.log('initial props', this.props)
+    const { hierarchy } = this.props;
     root = JSON.parse(JSON.stringify(hierarchy));
     this.maked3Tree();
   }
 
   componentDidUpdate() {
-    const { snapshot, hierarchy } = this.props;
-    console.log('updated props', this.props)
+    const { hierarchy } = this.props;
     root = JSON.parse(JSON.stringify(hierarchy));
     this.maked3Tree();
   }
