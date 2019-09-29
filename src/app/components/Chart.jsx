@@ -88,7 +88,7 @@ class Chart extends Component {
       });
 
     node.append("circle")
-      .attr("r", 40.5)
+      .attr("r", 35.5)
 
     node
       .append("text")

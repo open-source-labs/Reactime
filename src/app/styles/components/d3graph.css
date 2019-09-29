@@ -1,26 +1,27 @@
-/*   this represents leaf nodes aka no children */
-.node {
-    cursor: pointer;
-}
+@import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
 
+/* this represents leaf nodes aka no children */
 .node circle {
-  fill: #2e3634;
+  fill: #5249f7;
 }
 .node text {
-  font: 15px sans-serif;
+  font-size: 20px;
+  font-family: 'Raleway', sans-serif;;
 }
 
 /*   this represents those nodes that have children */
 .node--internal circle {
-  fill: teal;
+  fill: #d317c9;
 }
 /*   modifies text of parent nodes (has children) */
 .node--internal text {
   fill: white;
+  font-size: 30px;
+  
 }
 .link {
   fill: none;
-  stroke: #bfe3da;
-  stroke-opacity: 0.2;
-  stroke-width: 10px;
+  stroke: #3853ea ;
+  stroke-opacity: 0.4;
+  stroke-width: 30px;
 }
