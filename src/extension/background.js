@@ -24,20 +24,13 @@ function createTabObj(title) {
   };
 }
 
-
-// function resetIndex(num) {
-  //   return num = 0;
-  // }
-  
-    // let num = 0;
-
-  class Node {
-    constructor(obj, tabObj) {
-      this.index = tabObj.index += 1;
-      this.stateSnapshot = obj;
-      this.children = [];
-    }
-  };
+class Node {
+  constructor(obj, tabObj) {
+    this.index = tabObj.index += 1;
+    this.stateSnapshot = obj;
+    this.children = [];
+  }
+};
 
 function sendToHierarchy (tabObj, newNode) {
   if (!tabObj.currLocation) {
@@ -48,6 +41,7 @@ function sendToHierarchy (tabObj, newNode) {
     tabObj.currLocation = newNode;
   }
 }
+
 function changeCurrLocation (tabObj, rootNode, index) {
   // check if current node has the index wanted
   if (rootNode.index === index) {
@@ -130,15 +124,16 @@ chrome.runtime.onConnect.addListener(port => {
 
 // background.js recieves message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender) => {
+  console.log('received request', request);
   // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
   if (request.type === 'SIGN_CONNECT') return;
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
-  const { action } = request;
+  const { action, index } = request;
   let isReactTimeTravel = false;
 
   // Filter out tabs that don't have reactime
-  if (action === 'tabReload' || action === 'recordSnap') {
+  if (action === 'tabReload' || action === 'recordSnap' || action === 'jumpToSnap') {
     isReactTimeTravel = true;
   } else return;
 
@@ -150,13 +145,19 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   const { persist } = tabsObj[tabId].mode;
 
   switch (action) {
+    case 'jumpToSnap': {
+      console.log("im triggered")
+      changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index);
+      break;
+    }
     case 'tabReload': {
+      console.log("tabreload triggered")
       tabsObj[tabId].mode.locked = false;
       tabsObj[tabId].mode.paused = false;
       // dont remove snapshots if persisting
       if (!persist) {
         tabsObj[tabId].snapshots.splice(1);
-         // reset children in root node to reset graph
+        // reset children in root node to reset graph
         tabsObj[tabId].hierarchy.children = [];
         // reassigning pointer to the appropriate node to branch off of
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;

@@ -16,6 +16,7 @@ export default (state, action) => produce(state, draft => {
         port.postMessage({
           action: 'jumpToSnap',
           payload: snapshots[newIndex],
+          index: newIndex,
           tabId: currentTab,
         });
         clearInterval(intervalId);
@@ -31,6 +32,7 @@ export default (state, action) => produce(state, draft => {
 
         port.postMessage({
           action: 'jumpToSnap',
+          index: newIndex,
           payload: snapshots[newIndex],
           tabId: currentTab,
         });
@@ -55,6 +57,7 @@ export default (state, action) => produce(state, draft => {
       port.postMessage({
         action: 'jumpToSnap',
         payload: snapshots[action.payload],
+        index: action.payload,
         tabId: currentTab,
       });
       tabs[currentTab].sliderIndex = action.payload;
