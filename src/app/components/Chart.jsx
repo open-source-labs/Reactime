@@ -39,8 +39,8 @@ class Chart extends Component {
 
   maked3Tree() {
     this.removed3Tree();
-    let width = 900;
-    let height = 1000;
+    let width = 960;
+    let height = 1060;
     let chartContainer = d3.select(this.chartRef.current)
       .append('svg') // chartContainer is now pointing to svg
       .attr('width', width)
@@ -118,8 +118,8 @@ class Chart extends Component {
     node
       .on('mouseover', function (d) {
         // without JSON.stringify, data will display as object Object
-        console.log('this is inside mouseover fxnality', JSON.stringify(d.data.stateSnaphot))
-        tip.show(JSON.stringify(d.data), this)
+        console.log('d.data --> ', JSON.stringify(d.data))
+        tip.show(JSON.stringify(d.data.stateSnapshot), this)
       })
       .on('mouseout', tip.hide)
 
