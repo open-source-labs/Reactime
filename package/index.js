@@ -25,4 +25,12 @@ window.addEventListener('message', ({ data: { action, payload } }) => {
   }
 });
 
-module.exports = linkFiber;
+function visitor() {
+  return './Components/BoardGame.js';
+}
+
+// module.exports = linkFiber;
+module.exports = {
+  reactime: linkFiber,
+  visitor,
+};

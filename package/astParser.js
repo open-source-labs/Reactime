@@ -1,18 +1,20 @@
 const acorn = require('acorn');
 const jsx = require('acorn-jsx');
+
 const JSXParser = acorn.Parser.extend(jsx());
 
-// Helper function to recursively traverse through the user's codebase 
-// INSERT HERE 
+// Helper function to recursively traverse through the user's codebase
+// INSERT HERE
 
 module.exports = file => {
   // Initialize empty object to store the setters and getter
   const hookState = {};
   const ast = JSXParser.parse(file).body;
+  console.log('AST Tree', ast);
   // Iterate through AST of every function declaration
   // Check within each function declaration if there are hook declarations
   ast.forEach(func => {
-    const { body } = func.body; 
+    const { body } = func.body;
     const statements = [];
     // Traverse through the function's funcDecs and Expression Statements
     body.forEach(program => {
