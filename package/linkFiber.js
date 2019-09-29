@@ -147,5 +147,6 @@ module.exports = (snap, mode) => {
     //   const testFunction = consoleLoggerTest('Hello from reactime');
     //   return testFunction;
     // }
+    return "This is reactime's return statement";
   };
 };

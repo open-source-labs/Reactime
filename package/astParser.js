@@ -3,11 +3,9 @@ const jsx = require('acorn-jsx');
 
 const JSXParser = acorn.Parser.extend(jsx());
 
-const hookState = {};
-
-module.exports = file => {
-  // Initialize empty object to store the setters and getter
-  let ast = JSXParser.parse(file);
+// Helper function to recursively traverse AST of a specified component for all hook declarations
+function getHookNames(ast) {
+  const hookState = {};
   while (Object.hasOwnProperty.call(ast, 'body')) {
     // All module exports will always start off as a single 'FunctionDeclaration' type
     // Traverse down .body once before invoking parsing logic and will loop through any .body after
@@ -35,6 +33,14 @@ module.exports = file => {
       }
     });
   }
-  // Return the object with setters and getters
   return hookState;
+}
+
+module.exports = file => {
+  // Initialize empty object to store the setters and getter
+  const ast = JSXParser.parse(file);
+  const hookNames = getHookNames(ast);
+
+  // Return the object with setters and getters
+  return hookNames;
 };
