@@ -91,6 +91,10 @@ Other handy features include:
 - **Bryan Lee** - [@mylee1995](https://github.com/mylee1995)
 - **Josh Kim** - [@joshua0308](https://github.com/joshua0308)
 - **Sierra Swaby** - [@starkspark](https://github.com/starkspark)
+- **Ruth Anam** - [@peachiecodes](https://github.com/peachiecodes)
+- **David Chai** - [@peachiecodes](https://github.com/davidchaidev)
+- **Yujin Kang** - [@yujinkay](https://github.com/yujinkay)
+- **Andy Wong** - [@andywongdev](https://github.com/andywongdev)
 
 ## License
 
