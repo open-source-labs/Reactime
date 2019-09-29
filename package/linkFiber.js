@@ -26,7 +26,7 @@ module.exports = (snap, mode) => {
   function changeSetState(component) {
     console.log('Component', component);
     // check that setState hasn't been changed yet
-    if (component.setState.linkFiberChanged === true) return;
+    if (component.setState.linkFiberChanged) return;
     // make a copy of setState
     const oldSetState = component.setState.bind(component);
     // replace component's setState so developer doesn't change syntax
@@ -64,7 +64,7 @@ module.exports = (snap, mode) => {
 
   // Helper function to traverse through the memoized state
   function traverseHooks(memoizedState) {
-    // Declare variables and assigned t  return nextComponent;o 0th index and an empty object, respectively
+    // Declare variables and assigned to 0th index and an empty object, respectively
     const memoized = {};
     let index = 0;
     astHooks = Object.values(astHooks);
