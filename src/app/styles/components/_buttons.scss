@@ -3,6 +3,11 @@
   width: 120px;
 }
 
+.state-dropdown {
+  width: 240px; 
+  margin-left: 20px; 
+}
+
 .action-component:hover .jump-button {
   opacity: 1;
   transform: rotateX(0deg);

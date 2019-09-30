@@ -1,0 +1,75 @@
+/* @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap'); */
+@import url("https://fonts.googleapis.com/css?family=Overpass+Mono&display=swap");
+body {
+  background-color: black;
+}
+
+.node {
+  cursor: pointer;
+}
+
+/*   this represents leaf nodes aka nodes with no children */
+.node circle {
+  fill: #5249f7;
+}
+
+.node circle:hover {
+  fill: #9cf4df;
+}
+
+.node text {
+  font-size: 12px;
+  font-family: "Overpass Mono", monospace;
+}
+/* this represents text for leaf nodes aka the ones with no children */
+.node--leaf {
+  fill: #71e9e1;
+}
+
+/*   this represents those nodes that have children */
+.node--internal circle {
+  fill: #d317c9;
+}
+/*   modifies text of parent nodes (has children) */
+.node--internal text {
+  fill: #fae6e4;
+  font-size: 12px;
+}
+.link {
+  fill: none;
+  stroke: #3853ea;
+  stroke-opacity: 0.4;
+  stroke-width: 3px;
+}
+
+.d3-tip {
+  line-height: 1;
+  padding: 6px;
+  background: #9cf4df;
+  color: #320a5c;
+  border-radius: 4px;
+  font-size: 13px;
+  max-width: 400px;
+  overflow-wrap: break-word;
+  font-family: "Overpass Mono", monospace;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 15px;
+  width: 100%;
+  line-height: 1;
+  color: #9cf4df;
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips specifically */
+.d3-tip.n:after {
+  margin: -2px 0 0 0;
+  top: 100%;
+  left: 0;
+}
