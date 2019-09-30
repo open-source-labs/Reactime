@@ -80,7 +80,7 @@ Jumping is the most important feature of all. It allows you to jump to any previ
 - multiple tabs support
 - a slider to move through snapshots quickly
 - a play button to move through snapshots automatically
-- a pause which button stops recording each snapshot
+- a pause button, which stops recording each snapshot
 - a lock button to freeze the DOM in place. setState will lose all functionality while the extension is locked
 - a persist button to keep snapshots upon refresh (handy when changing code and debugging)
 - export/import the current snapshots in memory
