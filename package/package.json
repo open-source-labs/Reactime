@@ -1,6 +1,6 @@
 {
   "name": "reactime",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "A library that helps debug React by memorizing the state of components with every render.",
   "main": "index.js",
   "repository": {
@@ -16,8 +16,10 @@
   },
   "keywords": [
     "react",
-    "time",
-    "time travel",
+    "state",
+    "useState",
+    "setState",
+    "debug",
     "reactime",
     "react devtool"
   ],
