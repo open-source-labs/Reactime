@@ -16,7 +16,6 @@ module.exports = (origin, mode) => {
     const originNode = traverseTree(origin.tree, coords);
     // set the state of the origin tree if the component is stateful
     if (originNode.component.setState) {
-      console.log('if(originNode.component.setState):', originNode.component);
       originNode.component.setState(target.state, () => {
         // iterate through new children once state has been set
         target.children.forEach((child, i) => {
