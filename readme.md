@@ -2,7 +2,7 @@
   <img src ="./assets/readme-logo-svg.svg" width="300"/>
 </p>
 
-<h1 align="center">Reactime: A Time Travel Debugger for React</h1>
+<h1 align="center">State Debugger for React</h1>
 
 [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime)
 [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime)
@@ -17,7 +17,7 @@
   <img src="demo.gif" alt="Demo of Reactime" style="width: 55%">
 </p>
 
-Reactime is a debugging tool for React developers. It records state whenever state is changed and allows user to jump to any previous recorded state.
+Reactime is a debugging tool for React developers. It records state whenever it is changed and allows the user to jump to any previously recorded state.
 
 This dev tool is for React apps using stateful components and prop drilling, and has beta support for Context API, conditional state routing, Hooks (useState) and functional components. 
 
@@ -73,9 +73,7 @@ You can click on a snapshot to view your app's state. State can be visualized in
 
 Jumping is the most important feature of all. It allows you to jump to any previous recorded snapshots. Hitting the jump button on any snapshot will change the DOM by setting their state.
 
-### Others
-
-Other handy features include:
+### Features
 
 - multiple tree graph branches depicting state changes
 - tree graph hover functionality to view state changes 
