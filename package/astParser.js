@@ -7,11 +7,10 @@ const JSXParser = acorn.Parser.extend(jsx());
 function getHookNames(ast) {
   // Initialize empty object to store the setters and getter
   const hookState = {};
+  // All module exports will always start off as a single 'FunctionDeclaration' type
   while (Object.hasOwnProperty.call(ast, 'body')) {
-    // All module exports will always start off as a single 'FunctionDeclaration' type
     // Traverse down .body once before invoking parsing logic and will loop through any .body after
     ast = ast.body;
-    console.log('AST Tree', ast);
     // Iterate through AST of every function declaration
     // Check within each function declaration if there are hook declarations
     ast.forEach(functionDec => {
@@ -39,16 +38,16 @@ function getHookNames(ast) {
 
 module.exports = file => {
   // Create an empty object to allow all invocations of getHookNames to consolidate
-  let hookNames = {};
+  let allHookNames = {};
   const ast = JSXParser.parse(file);
-  console.log('Original File', file.toString());
-  console.log('Original AST', ast);
+  // console.log('Original File', file.toString());
+  // console.log('Original AST', ast);
   // Upsert any new/updated {_hookType#: hookName} pairs
-  hookNames = {
-    ...hookNames,
+  allHookNames = {
+    ...allHookNames,
     ...getHookNames(ast),
   };
 
   // Return the object with setters and getters
-  return hookNames;
+  return allHookNames;
 };
