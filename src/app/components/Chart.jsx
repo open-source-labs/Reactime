@@ -42,6 +42,12 @@ class Chart extends Component {
       .append('svg') // chartContainer is now pointing to svg
       .attr('width', width)
       .attr('height', height);
+    
+    svg.call(d3.zoom()
+      .on("zoom", function () {
+        svg.attr("transform", d3.event.transform)
+      }))
+      .append("g")
 
     let g = chartContainer
       .append("g")
@@ -116,6 +122,7 @@ class Chart extends Component {
       .on('mouseover', function (d) {
         // without JSON.stringify, data will display as object Object
         // console.log('d.data --> ', JSON.stringify(d.data))
+        let displayedState;
         tip.show(JSON.stringify(d.data.stateSnapshot), this)
       })
       .on('mouseout', tip.hide)

@@ -4,6 +4,10 @@ body {
   background-color: black;
 }
 
+.node {
+  cursor: pointer;
+}
+
 /*   this represents leaf nodes aka nodes with no children */
 .node circle {
   fill: #5249f7;
@@ -45,16 +49,17 @@ body {
   color: #320a5c;
   border-radius: 4px;
   font-size: 15px;
-  width: 200px;
+  width: 300px;
+  overflow-wrap: break-word;
   font-family: "Overpass Mono", monospace;
 }
 
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
   box-sizing: border-box;
-  /* display: inline; */
+  display: inline;
   font-size: 15px;
-  width: 200px;
+  width: 100%;
   line-height: 1;
   color: #9cf4df;
   content: "\25BC";
