@@ -36,21 +36,29 @@ class Chart extends Component {
 
   maked3Tree() {
     this.removed3Tree();
-    let width = 960;
-    let height = 1060;
+    let width = 600;
+    
+    const margin = {
+      top: 20,
+      right: 120,
+      bottom: 20,
+      left: 120,
+    };
+    // const width = 600 - margin.right - margin.left;
+    const height = 600 - margin.top - margin.bottom;
+
     let chartContainer = d3.select(this.chartRef.current)
       .append('svg') // chartContainer is now pointing to svg
       .attr('width', width)
       .attr('height', height);
     
-    svg.call(d3.zoom()
+    chartContainer.call(d3.zoom()
       .on("zoom", function () {
-        svg.attr("transform", d3.event.transform)
+        chartContainer.attr("transform", d3.event.transform)
       }))
       .append("g")
 
-    let g = chartContainer
-      .append("g")
+    let g = chartContainer.append("g")
       // this is changing where the graph is located physically
       .attr("transform", `translate(${width / 2 + 4}, ${height / 2 + 2})`);
 
