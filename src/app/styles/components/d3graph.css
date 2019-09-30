@@ -45,15 +45,16 @@ body {
   color: #320a5c;
   border-radius: 4px;
   font-size: 15px;
+  width: 200px;
   font-family: "Overpass Mono", monospace;
 }
 
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
   box-sizing: border-box;
-  display: inline;
+  /* display: inline; */
   font-size: 15px;
-  width: 100%;
+  width: 200px;
   line-height: 1;
   color: #9cf4df;
   content: "\25BC";
