@@ -2,7 +2,7 @@
   <img src ="./assets/readme_logo.png" width="400"/>
 </p>
 
-# Reactime: A Time Travel Debugger for React
+<h1 align="center">Reactime: A Time Travel Debugger for React</h1>
 
 [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime)
 [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime)
@@ -19,11 +19,11 @@
 
 Reactime is a debugging tool for React developers. It records state whenever state is changed and allows user to jump to any previous recorded state.
 
-One important thing to note. This devtool is for React apps using only stateful components and prop drilling. If you're using Redux, Hooks, Context, or functional components, this devtool will not function on your app. 
+This dev tool is for React apps using stateful components and prop drilling, and has experimental support for Context API, Router, Hooks (useState) and functional components. 
 
-Another thing is that this library does not work well when mixing React with direct DOM manipulation. Since DOM manipulation doesn't change any React state, this library cannot record or even detect that change. Of course, you should be avoiding mixing the two in the first place.
+One thing to note is that this library does not work well when mixing React with direct DOM manipulation. Since DOM manipulation doesn't change any React state, this library cannot record or even detect that change. Of course, you should be avoiding mixing the two in the first place.
 
-Two parts are needed for this tool to function. The <a href="https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga">chrome extension</a> must be installed, and the NPM package must be installed and used in the React code.
+Two parts are needed for this tool to function. The <a href="https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga"><strong>chrome extension</strong></a> must be installed, and the <strong>NPM package</strong> must be installed and used in the React code.
 
 After successfully installing the chrome extension, you can test Reactime functionalities in the demo repositories below.
 
@@ -40,7 +40,7 @@ After successfully installing the chrome extension, you can test Reactime functi
 npm i reactime
 ```
 
-3. Call the library method on your root container after rendering your App.
+3. Call the library method on your root container and App after rendering your App.
 
 ```
 const reactime = require('reactime');
@@ -48,7 +48,7 @@ const reactime = require('reactime');
 const rootContainer = document.getElementById('root');
 ReactDOM.render(<App />, rootContainer);
 
-reactime(rootContainer);
+reactime(rootContainer, App);
 ```
 
 4. Done! That's all you have to do to link your React project to our library.
@@ -63,7 +63,7 @@ Then open up your Chrome DevTools. There'll be a new tab called Reactime.
 
 ### Recording
 
-Whenever state is changed (whenever setState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the Reactime panel.
+Whenever state is changed (whenever setState or useState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the Reactime panel.
 
 ### Viewing
 
@@ -77,6 +77,8 @@ Jumping is the most important feature of all. It allows you to jump to any previ
 
 Other handy features include:
 
+- multiple branches depicting state changes 
+- a hover functionality to view state changes 
 - multiple tabs support
 - a slider to move through snapshots quickly
 - a play button to move through snapshots automatically
