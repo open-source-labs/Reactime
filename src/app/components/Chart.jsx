@@ -36,16 +36,16 @@ class Chart extends Component {
 
   maked3Tree() {
     this.removed3Tree();
-    let width = 960;
-    let height = 1060;
-    // const margin = {
-    //   top: 0,
-    //   right: 60,
-    //   bottom: 80,
-    //   left: 120,
-    // };
+    let width = 600;
+    // let height = 1060;
+    const margin = {
+      top: 0,
+      right: 60,
+      bottom: 80,
+      left: 120,
+    };
     // const width = 600 - margin.right - margin.left;
-    // const height = 600 - margin.top - margin.bottom;
+    const height = 700 - margin.top - margin.bottom;
 
     let chartContainer = d3.select(this.chartRef.current)
       .append('svg') // chartContainer is now pointing to svg
@@ -70,7 +70,7 @@ class Chart extends Component {
 
     let tree = d3.tree()
       // this assigns width of tree to be 2pi
-      .size([2 * Math.PI, radius])
+      .size([2 * Math.PI, radius / 1.5])
       .separation(function (a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth });
 
     let d3root = tree(hierarchy);
