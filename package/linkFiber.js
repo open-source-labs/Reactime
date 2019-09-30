@@ -135,7 +135,7 @@ module.exports = (snap, mode) => {
     // Save the getter/setter combo for timeJump
     if (entryFile) {
       astHooks = astParser(entryFile);
-      console.log('Ast Hooks', astHooks);
+      // console.log('Ast Hooks', astHooks);
       saveState(astHooks);
     }
     updateSnapShotTree();
