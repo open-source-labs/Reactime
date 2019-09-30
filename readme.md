@@ -10,10 +10,9 @@
 [![Dependencies](https://david-dm.org/oslabs-beta/reactime.svg)](https://david-dm.org/oslabs-beta/reactime#info=dependencies)
 [![DevDependencies](https://david-dm.org/oslabs-beta/reactime/dev-status.svg)](https://david-dm.org/oslabs-beta/reactime?type=dev)
 [![Vulnerabilities](https://snyk.io/test/github/oslabs-beta/reactime/badge.svg)](https://snyk.io/test/github/oslabs-beta/reactime)
-
-[![NPM](https://nodei.co/npm/reactime.png)](https://nodei.co/npm/reactime/)
-
 <p align="center">
+<a href="https://nodei.co/npm/reactime/"><img src="https://nodei.co/npm/reactime.png"></a>
+
   <img src="demo.gif" alt="Demo of Reactime" style="width: 55%">
 </p>
 
