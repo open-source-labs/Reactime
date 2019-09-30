@@ -36,16 +36,16 @@ class Chart extends Component {
 
   maked3Tree() {
     this.removed3Tree();
-    let width = 600;
-    
-    const margin = {
-      top: 20,
-      right: 120,
-      bottom: 20,
-      left: 120,
-    };
+    let width = 960;
+    let height = 1060;
+    // const margin = {
+    //   top: 0,
+    //   right: 60,
+    //   bottom: 80,
+    //   left: 120,
+    // };
     // const width = 600 - margin.right - margin.left;
-    const height = 600 - margin.top - margin.bottom;
+    // const height = 600 - margin.top - margin.bottom;
 
     let chartContainer = d3.select(this.chartRef.current)
       .append('svg') // chartContainer is now pointing to svg
@@ -99,12 +99,12 @@ class Chart extends Component {
       });
 
     node.append("circle")
-      .attr("r", 15)
+      .attr("r", 12)
 
     //creating a d3.tip method where the html has a function that returns the data we passed into tip.show from line 120
     let tip = d3Tip()
       .attr("class", "d3-tip")
-      .html(function (d) { return "State Snapshot: " + d; })
+      .html(function (d) { return "State: " + d; })
     
       //invoking tooltip for nodes
     node.call(tip)
@@ -112,11 +112,11 @@ class Chart extends Component {
     node
       .append("text")
       // adjusts the y coordinates for the node text
-      .attr("dy", "0.276em")
+      .attr("dy", "0.35em")
       .attr("x", function (d) {
         // this positions how far the text is from leaf nodes (ones without children)
         // negative number before the colon moves the text of rightside nodes, positive number moves the text for the leftside nodes
-        return d.x < Math.PI === !d.children ? -5 : 9;
+        return d.x < Math.PI === !d.children ? -4 : 5;
       })
       .attr("text-anchor", function (d) { return d.x < Math.PI === !d.children ? "start" : "end"; })
       // this arranges the angle of the text
@@ -131,7 +131,7 @@ class Chart extends Component {
         // without JSON.stringify, data will display as object Object
         // console.log('d.data --> ', JSON.stringify(d.data))
         let displayedState;
-        tip.show(JSON.stringify(d.data.stateSnapshot), this)
+        tip.show(JSON.stringify(d.data.stateSnapshot.children[0].state), this)
       })
       .on('mouseout', tip.hide)
 
