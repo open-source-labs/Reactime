@@ -3,6 +3,9 @@
 /* eslint-disable no-param-reassign */
 // links component state tree to library
 // changes the setState method to also update our snapshot
+
+// import loadable from '@loadable/component';
+
 const Tree = require('./tree');
 const astParser = require('./astParser');
 const { saveState } = require('./masterState');
@@ -140,13 +143,13 @@ module.exports = (snap, mode) => {
       if (action === 'contentScriptStarted') sendSnapshot();
     });
     // Testing sending back a function def to client
-    // if (astHooks) {
-    //   function consoleLoggerTest(someString) {
-    //     return someString;
-    //   }
-    //   const testFunction = consoleLoggerTest('Hello from reactime');
-    //   return testFunction;
-    // }
-    return "This is reactime's return statement";
+    function getNextImport(filePath) {
+      // return loadable(() => import(`${filePath}`))
+      // Got relative file path to return back to client code
+      return (`myTestString${filePath}`);
+    }
+    return getNextImport('./UseStateHook');
+    // return 'Testing outside';
   };
 };
+// const OtherComponent = loadable(() => import('./OtherComponent'))
