@@ -144,12 +144,12 @@ module.exports = (snap, mode) => {
       if (action === 'contentScriptStarted') sendSnapshot();
     });
     // Testing sending back a function def to client
-    function getNextImport(filePath) {
+    // function getNextImport(filePath) {
       // return loadable(() => import(`${filePath}`))
       // Got relative file path to return back to client code
-      return (`myTestString${filePath}`);
+      // return (`myTestString${filePath}`);
     }
-    return getNextImport('./UseStateHook');
+    // return getNextImport('./UseStateHook');
     // return 'Testing outside';
   };
 };
