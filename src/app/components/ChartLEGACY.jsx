@@ -107,6 +107,11 @@ class Chart extends Component {
         .on('mouseover', mouseover)
         .on('mouseout', mouseout)
         .on('mousemove', d => mousemove(d));
+      
+      function mousemove(d) {
+        div
+          .text(!d.state ? 'No state found' : JSON.stringify(d.state, null, 4))
+      }
 
       nodeEnter
         .append('circle')
@@ -226,13 +231,6 @@ class Chart extends Component {
         .duration(3000)
         .style('opacity', 1e-6)
         .style('display', 'none');
-    }
-
-    function mousemove(d) {
-      div
-        .text(!d.state ? 'No state found' : JSON.stringify(d.state, null, 4))
-        .style('left', `${d3.event.pageX}px`)
-        .style('top', `${d3.event.pageY}px`);
     }
 
     update(root);

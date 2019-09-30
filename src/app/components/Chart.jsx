@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
+import d3Tip from "d3-tip";
 
 let root = {};
 class Chart extends Component {
@@ -35,17 +36,31 @@ class Chart extends Component {
 
   maked3Tree() {
     this.removed3Tree();
-    let width = 900;
-    let height = 1000;
+    let width = 600;
+    // let height = 1060;
+    const margin = {
+      top: 0,
+      right: 60,
+      bottom: 80,
+      left: 120,
+    };
+    // const width = 600 - margin.right - margin.left;
+    const height = 700 - margin.top - margin.bottom;
+
     let chartContainer = d3.select(this.chartRef.current)
       .append('svg') // chartContainer is now pointing to svg
       .attr('width', width)
       .attr('height', height);
-
-    let g = chartContainer
+    
+    chartContainer.call(d3.zoom()
+      .on("zoom", function () {
+        chartContainer.attr("transform", d3.event.transform)
+      }))
       .append("g")
+
+    let g = chartContainer.append("g")
       // this is changing where the graph is located physically
-      .attr("transform", `translate(${width / 2.5}, ${height / 2 + 90})`);
+      .attr("transform", `translate(${width / 2 + 4}, ${height / 2 + 2})`);
 
     // if we consider the container for our radial node graph as a box encapsulating, half of this container width is essentially the radius of our radial node graph
     let radius = width / 2;
@@ -55,7 +70,8 @@ class Chart extends Component {
 
     let tree = d3.tree()
       // this assigns width of tree to be 2pi
-      .size([2 * Math.PI, radius])
+      .size([2 * Math.PI, radius / 1.5])
+      .separation(function (a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth });
 
     let d3root = tree(hierarchy);
 
@@ -74,6 +90,7 @@ class Chart extends Component {
       .data(d3root.descendants())
       .enter()
       .append("g")
+      //  assigning class to the node based on whether node has children or not
       .attr("class", function (d) {
         return "node" + (d.children ? " node--internal" : " node--leaf")
       })
@@ -82,21 +99,41 @@ class Chart extends Component {
       });
 
     node.append("circle")
-      .attr("r", 5.5)
+      .attr("r", 12)
+
+    //creating a d3.tip method where the html has a function that returns the data we passed into tip.show from line 120
+    let tip = d3Tip()
+      .attr("class", "d3-tip")
+      .html(function (d) { return "State: " + d; })
+    
+      //invoking tooltip for nodes
+    node.call(tip)
 
     node
       .append("text")
-      .attr("dy", "0.1em")
+      // adjusts the y coordinates for the node text
+      .attr("dy", "0.35em")
       .attr("x", function (d) {
         // this positions how far the text is from leaf nodes (ones without children)
-        return d.x < Math.PI === !d.children ? 10 : -10;
+        // negative number before the colon moves the text of rightside nodes, positive number moves the text for the leftside nodes
+        return d.x < Math.PI === !d.children ? -4 : 5;
       })
       .attr("text-anchor", function (d) { return d.x < Math.PI === !d.children ? "start" : "end"; })
       // this arranges the angle of the text
-      .attr("transform", function (d) { return "rotate(" + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 180 / Math.PI + ")"; })
+      .attr("transform", function (d) { return "rotate(" + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 1 / Math.PI + ")"; })
       .text(function (d) {
-        return "state" + d.data.index;
+        return d.data.index;
       });
+    
+    //applying tooltip on mouseover and removes it when mouse cursor moves away
+    node
+      .on('mouseover', function (d) {
+        // without JSON.stringify, data will display as object Object
+        // console.log('d.data --> ', JSON.stringify(d.data))
+        let displayedState;
+        tip.show(JSON.stringify(d.data.stateSnapshot.children[0].state), this)
+      })
+      .on('mouseout', tip.hide)
 
     function reinfeldTidierAlgo(x, y) {
       return [(y = +y) * Math.cos(x -= Math.PI / 2), y * Math.sin(x)];
