@@ -24,8 +24,6 @@ function MainContainer() {
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener(message => {
       const { action, payload, sourceTab } = message;
-      console.log('action message', action);
-      console.log('payload message', message)
       switch (action) {
         case 'deleteTab': {
           dispatch(deleteTab(payload));
@@ -68,7 +66,6 @@ function MainContainer() {
     );
   }
   const { viewIndex, sliderIndex, snapshots, hierarchy } = tabs[currentTab];
-  console.log('main container', tabs[currentTab]);
 
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];

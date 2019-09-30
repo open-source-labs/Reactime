@@ -8,7 +8,6 @@ import DiffRoute from '../components/DiffRoute';
 
 
 const StateContainer = ({ snapshot, hierarchy }) => {
-  console.log('passing?', hierarchy);
   const [Text, setText] = useState('State');
   return (
     <Router>

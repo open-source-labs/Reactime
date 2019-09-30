@@ -11,7 +11,7 @@ function createTabObj(title) {
     title,
     // snapshots is an array of ALL state snapshots for the reactime tab working on a specific user application
     snapshots: [],
-    index: 0,
+    index: -1,
     //* this is our pointer so we know what the current state the user is checking (this accounts for time travel aka when user clicks jump on the UI)
     currLocation: null,
     //* inserting a new property to build out our hierarchy dataset for d3 
@@ -68,7 +68,7 @@ chrome.runtime.onConnect.addListener(port => {
   if (Object.keys(tabsObj).length > 0) {
     port.postMessage({
       action: 'initialConnectSnapshots',
-      payload: { ...tabsObj, msg: 'connection to devgools made' },
+      payload: tabsObj,
     });
   }
 
@@ -104,7 +104,7 @@ chrome.runtime.onConnect.addListener(port => {
         // reassigning pointer to the appropriate node to branch off of
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
         // reset index
-        tabsObj[tabId].index = 1;
+        tabsObj[tabId].index = 0;
         return;
       case 'setLock':
         tabsObj[tabId].mode.locked = payload;
@@ -124,7 +124,6 @@ chrome.runtime.onConnect.addListener(port => {
 
 // background.js recieves message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender) => {
-  console.log('received request', request);
   // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
   if (request.type === 'SIGN_CONNECT') return;
   const tabTitle = sender.tab.title;
@@ -146,12 +145,10 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
   switch (action) {
     case 'jumpToSnap': {
-      console.log("im triggered")
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index);
       break;
     }
     case 'tabReload': {
-      console.log("tabreload triggered")
       tabsObj[tabId].mode.locked = false;
       tabsObj[tabId].mode.paused = false;
       // dont remove snapshots if persisting
@@ -162,12 +159,12 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         // reassigning pointer to the appropriate node to branch off of
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
         // reset index
-        tabsObj[tabId].index = 1;
+        tabsObj[tabId].index = 0;
         
         // send a message to devtools
         portsArr.forEach(bg => bg.postMessage({
           action: 'initialConnectSnapshots',
-          payload: { ...tabsObj, msg: 'reload' },
+          payload: tabsObj,
         }));
       }
 
@@ -189,7 +186,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         if (portsArr.length > 0) {
           portsArr.forEach(bg => bg.postMessage({
             action: 'initialConnectSnapshots',
-            payload: {...tabsObj, msg: 'firstsnapshotreceived'},
+            payload: tabsObj,
           }));
         }
         break;
