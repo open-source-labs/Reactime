@@ -1,5 +1,5 @@
 <p align="center">
-  <img src ="./assets/readme_logo.png" width="400"/>
+  <img src ="./assets/readme-logo-svg.svg" width="300"/>
 </p>
 
 <h1 align="center">Reactime: A Time Travel Debugger for React</h1>
@@ -19,7 +19,7 @@
 
 Reactime is a debugging tool for React developers. It records state whenever state is changed and allows user to jump to any previous recorded state.
 
-This dev tool is for React apps using stateful components and prop drilling, and has experimental support for Context API, Router, Hooks (useState) and functional components. 
+This dev tool is for React apps using stateful components and prop drilling, and has beta support for Context API, conditional state routing, Hooks (useState) and functional components. 
 
 One thing to note is that this library does not work well when mixing React with direct DOM manipulation. Since DOM manipulation doesn't change any React state, this library cannot record or even detect that change. Of course, you should be avoiding mixing the two in the first place.
 
@@ -77,8 +77,9 @@ Jumping is the most important feature of all. It allows you to jump to any previ
 
 Other handy features include:
 
-- multiple branches depicting state changes 
-- a hover functionality to view state changes 
+- multiple tree graph branches depicting state changes
+- tree graph hover functionality to view state changes 
+- ability to pan and zoom tree graph
 - multiple tabs support
 - a slider to move through snapshots quickly
 - a play button to move through snapshots automatically
@@ -94,7 +95,7 @@ Other handy features include:
 - **Josh Kim** - [@joshua0308](https://github.com/joshua0308)
 - **Sierra Swaby** - [@starkspark](https://github.com/starkspark)
 - **Ruth Anam** - [@peachiecodes](https://github.com/peachiecodes)
-- **David Chai** - [@peachiecodes](https://github.com/davidchaidev)
+- **David Chai** - [@davidchaidev](https://github.com/davidchaidev)
 - **Yujin Kang** - [@yujinkay](https://github.com/yujinkay)
 - **Andy Wong** - [@andywongdev](https://github.com/andywongdev)
 
