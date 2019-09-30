@@ -92,7 +92,7 @@ Other handy features include:
 - **Josh Kim** - [@joshua0308](https://github.com/joshua0308)
 - **Sierra Swaby** - [@starkspark](https://github.com/starkspark)
 - **Ruth Anam** - [@peachiecodes](https://github.com/peachiecodes)
-- **David Chai** - [@peachiecodes](https://github.com/davidchaidev)
+- **David Chai** - [@davidchaidev](https://github.com/davidchaidev)
 - **Yujin Kang** - [@yujinkay](https://github.com/yujinkay)
 - **Andy Wong** - [@andywongdev](https://github.com/andywongdev)
 
