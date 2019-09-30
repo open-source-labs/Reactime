@@ -33,7 +33,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@loadable/component": "^5.10.3",
     "acorn": "^7.1.0",
     "acorn-jsx": "^5.0.2"
   }
