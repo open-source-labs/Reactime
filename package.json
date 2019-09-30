@@ -25,7 +25,7 @@
     "Bryan Lee",
     "David Chai",
     "Josh Kim",
-    "Ruthba Anam",
+    "Ruth Anam",
     "Ryan Dang",
     "Sierra Swaby",
     "Yujin Kang"
@@ -59,9 +59,10 @@
     "webpack-cli": "^3.3.6"
   },
   "dependencies": {
-    "acorn": "^7.1.0",
-    "acorn-jsx": "^5.0.2",
-    "d3": "^3.5.17",
+    "bower": "^1.8.8",
+    "d3": "^4.13.0",
+    "d3-tip": "^0.9.1",
+    "d3-zoom": "^1.8.3",
     "immer": "^3.2.0",
     "jsondiffpatch": "^0.3.11",
     "prop-types": "^15.7.2",

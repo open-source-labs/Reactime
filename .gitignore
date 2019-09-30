@@ -8,3 +8,5 @@ coverage
 src/extension/build.zip
 src/extension/build.crx
 src/extension/build/key.pem
+package/__tests__
+bower_components

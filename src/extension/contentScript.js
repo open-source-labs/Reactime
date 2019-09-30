@@ -11,17 +11,21 @@ window.addEventListener('message', msg => {
     firstMessage = false;
   }
 
-  // post initial Message to npm package
+  // post initial Message to background.js
   const { action } = msg.data;
   if (action === 'recordSnap') chrome.runtime.sendMessage(msg.data);
 });
 
-// listening for messages from background.js
+// listening for messages from the UI
 chrome.runtime.onMessage.addListener(request => {
   // send the message to npm package
   const { action } = request;
   switch (action) {
     case 'jumpToSnap':
+      console.log('jumpped to snap', request);
+      chrome.runtime.sendMessage(request);
+      window.postMessage(request);
+      break;
     case 'setLock':
     case 'setPause':
       window.postMessage(request);
