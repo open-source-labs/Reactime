@@ -3,9 +3,12 @@
 /* eslint-disable no-param-reassign */
 // links component state tree to library
 // changes the setState method to also update our snapshot
+
+// import loadable from '@loadable/component';
+
 const Tree = require('./tree');
-const astParser = require('./astParser'); 
-const { saveState } = require('./masterState'); 
+const astParser = require('./astParser');
+const { saveState } = require('./masterState');
 
 module.exports = (snap, mode) => {
   let fiberRoot = null;
@@ -46,13 +49,13 @@ module.exports = (snap, mode) => {
 
   function changeUseState(component) {
     if (component.queue.dispatch.linkFiberChanged) return;
-    // store the original dispatch function definition  
+    // store the original dispatch function definition
     const oldDispatch = component.queue.dispatch.bind(component.queue);
     // redefine the dispatch function so we can inject our code
     component.queue.dispatch = (fiber, queue, action) => {
       // don't do anything if state is locked
-      if (mode.locked && !mode.jumping) return; 
-      //oldDispatch(fiber, queue, action);
+      if (mode.locked && !mode.jumping) return;
+      // oldDispatch(fiber, queue, action);
       setTimeout(() => {
         oldDispatch(fiber, queue, action);
         updateSnapShotTree();
@@ -67,17 +70,17 @@ module.exports = (snap, mode) => {
   function traverseHooks(memoizedState) {
     // Declare variables and assigned to 0th index and an empty object, respectively
     const memoized = {};
-    let index = 0; 
-    astHooks = Object.values(astHooks); 
+    let index = 0;
+    astHooks = Object.values(astHooks);
     // while memoizedState is truthy, save the value to the object
     while (memoizedState) {
       changeUseState(memoizedState);
-      //memoized[astHooks[index]] = memoizedState.memoizedState;
-      memoized[astHooks[index]] = memoizedState.memoizedState; 
+      // memoized[astHooks[index]] = memoizedState.memoizedState;
+      memoized[astHooks[index]] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
       memoizedState = memoizedState.next;
       // Increment the index by 2
-      index += 2; 
+      index += 2;
     }
     return memoized;
   }
@@ -101,8 +104,8 @@ module.exports = (snap, mode) => {
       changeSetState(stateNode);
     }
     // Check if the component uses hooks
-    if (memoizedState && memoizedState.hasOwnProperty('baseState')) { 
-      // Add a traversed property and initialize to the evaluated result 
+    if (memoizedState && Object.hasOwnProperty.call(memoizedState, 'baseState')) {
+      // Add a traversed property and initialize to the evaluated result
       // of invoking traverseHooks, and reassign nextTree
       memoizedState.traversed = traverseHooks(memoizedState);
       nextTree = tree.appendChild(memoizedState);
@@ -114,8 +117,8 @@ module.exports = (snap, mode) => {
 
     return tree;
   }
-  // runs when page initially loads 
-  // but skips 1st hook click 
+  // runs when page initially loads
+  // but skips 1st hook click
   function updateSnapShotTree() {
     const { current } = fiberRoot;
     snap.tree = createTree(current);
@@ -128,16 +131,26 @@ module.exports = (snap, mode) => {
     } = container;
     // only assign internal rootp if it actually exists
     fiberRoot = _internalRoot || _reactRootContainer;
-    // If hooks are implemented, traverse through the source code 
+    // If hooks are implemented, traverse through the source code
     // Save the getter/setter combo for timeJump
     if (entryFile) {
       astHooks = astParser(entryFile);
-      saveState(astHooks); 
+      // console.log('Ast Hooks', astHooks);
+      saveState(astHooks);
     }
-    updateSnapShotTree(); 
+    updateSnapShotTree();
     // send the initial snapshot once the content script has started up
     window.addEventListener('message', ({ data: { action } }) => {
       if (action === 'contentScriptStarted') sendSnapshot();
     });
-  }
+    // Testing sending back a function def to client
+    // function getNextImport(filePath) {
+      // return loadable(() => import(`${filePath}`))
+      // Got relative file path to return back to client code
+      // return (`myTestString${filePath}`);
+    }
+    // return getNextImport('./UseStateHook');
+    // return 'Testing outside';
+  };
 };
+// const OtherComponent = loadable(() => import('./OtherComponent'))
