@@ -3,6 +3,9 @@ import Select from 'react-select';
 import { useStoreContext } from '../store';
 import { setTab } from '../actions/actions';
 
+
+// Launch Feature: Fix the dropdown styling to make it more distinguishable
+ 
 const SwitchAppDropdown = () => {
   const [{ currentTab, tabs }, dispatch] = useStoreContext();
 

@@ -7,7 +7,7 @@ import {
 import Chart from './Chart';
 import Tree from './Tree';
 
-const StateRoute = ({ snapshot }) => (
+const StateRoute = ({ snapshot, hierarchy }) => (
   <Router>
     <div className="navbar">
       <NavLink className="router-link" activeClassName="is-active" exact to="/">
@@ -18,7 +18,7 @@ const StateRoute = ({ snapshot }) => (
       </NavLink>
     </div>
     <Switch>
-      <Route path="/chart" render={() => <Chart snapshot={snapshot} />} />
+      <Route path="/chart" render={() => <Chart hierarchy={hierarchy} />} />
       <Route path="/" render={() => <Tree snapshot={snapshot} />} />
     </Switch>
   </Router>

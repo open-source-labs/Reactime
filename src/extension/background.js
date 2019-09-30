@@ -2,18 +2,61 @@
 const portsArr = [];
 const reloaded = {};
 const firstSnapshotReceived = {};
+// there will be the same number of objects in here as there are reactime tabs open for each user application being worked on
 const tabsObj = {};
 
 function createTabObj(title) {
+  // updating tabsObj
   return {
     title,
+    // snapshots is an array of ALL state snapshots for the reactime tab working on a specific user application
     snapshots: [],
+    index: -1,
+    //* this is our pointer so we know what the current state the user is checking (this accounts for time travel aka when user clicks jump on the UI)
+    currLocation: null,
+    //* inserting a new property to build out our hierarchy dataset for d3 
+    hierarchy: null,
     mode: {
       persist: false,
       locked: false,
       paused: false,
     },
   };
+}
+
+class Node {
+  constructor(obj, tabObj) {
+    this.index = tabObj.index += 1;
+    this.stateSnapshot = obj;
+    this.children = [];
+  }
+};
+
+function sendToHierarchy (tabObj, newNode) {
+  if (!tabObj.currLocation) {
+    tabObj.currLocation = newNode;
+    tabObj.hierarchy = newNode;
+  } else {
+    tabObj.currLocation.children.push(newNode);
+    tabObj.currLocation = newNode;
+  }
+}
+
+function changeCurrLocation (tabObj, rootNode, index) {
+  // check if current node has the index wanted
+  if (rootNode.index === index) {
+    tabObj.currLocation = rootNode;
+    return;
+  }
+  // base case if no children
+  if (!rootNode.children.length) {
+    return;
+  } else {
+    // if not, recurse on each one of the children
+    rootNode.children.forEach(child => {
+      changeCurrLocation(tabObj, child, index);
+    });
+  }
 }
 
 // establishing connection with devtools
@@ -56,6 +99,12 @@ chrome.runtime.onConnect.addListener(port => {
         return;
       case 'emptySnap':
         tabsObj[tabId].snapshots.splice(1);
+        // reset children in root node to reset graph
+        tabsObj[tabId].hierarchy.children = [];
+        // reassigning pointer to the appropriate node to branch off of
+        tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
+        // reset index
+        tabsObj[tabId].index = 0;
         return;
       case 'setLock':
         tabsObj[tabId].mode.locked = payload;
@@ -75,15 +124,15 @@ chrome.runtime.onConnect.addListener(port => {
 
 // background.js recieves message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender) => {
-  // IGNORE THE AUTOMTAIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
+  // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
   if (request.type === 'SIGN_CONNECT') return;
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
-  const { action } = request;
+  const { action, index } = request;
   let isReactTimeTravel = false;
 
   // Filter out tabs that don't have reactime
-  if (action === 'tabReload' || action === 'recordSnap') {
+  if (action === 'tabReload' || action === 'recordSnap' || action === 'jumpToSnap') {
     isReactTimeTravel = true;
   } else return;
 
@@ -95,13 +144,23 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   const { persist } = tabsObj[tabId].mode;
 
   switch (action) {
+    case 'jumpToSnap': {
+      changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index);
+      break;
+    }
     case 'tabReload': {
       tabsObj[tabId].mode.locked = false;
       tabsObj[tabId].mode.paused = false;
       // dont remove snapshots if persisting
       if (!persist) {
         tabsObj[tabId].snapshots.splice(1);
-
+        // reset children in root node to reset graph
+        tabsObj[tabId].hierarchy.children = [];
+        // reassigning pointer to the appropriate node to branch off of
+        tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
+        // reset index
+        tabsObj[tabId].index = 0;
+        
         // send a message to devtools
         portsArr.forEach(bg => bg.postMessage({
           action: 'initialConnectSnapshots',
@@ -110,6 +169,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       }
 
       reloaded[tabId] = true;
+      
 
       break;
     }
@@ -122,6 +182,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         reloaded[tabId] = false;
 
         tabsObj[tabId].snapshots.push(request.payload);
+        sendToHierarchy(tabsObj[tabId], new Node(request.payload, tabsObj[tabId]));
         if (portsArr.length > 0) {
           portsArr.forEach(bg => bg.postMessage({
             action: 'initialConnectSnapshots',
@@ -134,8 +195,11 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
       if (reloaded[tabId]) {
         reloaded[tabId] = false;
-      } else tabsObj[tabId].snapshots.push(request.payload);
-
+      } else {
+        tabsObj[tabId].snapshots.push(request.payload);
+        //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
+        sendToHierarchy(tabsObj[tabId], new Node(request.payload, tabsObj[tabId]));
+      }
       // send message to devtools
       if (portsArr.length > 0) {
         portsArr.forEach(bg => bg.postMessage({
