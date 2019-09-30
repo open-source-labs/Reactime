@@ -22,7 +22,7 @@ This dev tool is for React apps using stateful components and prop drilling, and
 
 One thing to note is that this library does not work well when mixing React with direct DOM manipulation. Since DOM manipulation doesn't change any React state, this library cannot record or even detect that change. Of course, you should be avoiding mixing the two in the first place.
 
-Two parts are needed for this tool to function. The <a href="https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga"><strong>chrome extension</strong></a> must be installed, and the <strong>NPM package</strong> must be installed and used in the React code.
+Two parts are needed for this tool to function. The <a href="https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga"><strong>chrome extension</strong></a> must be installed, and the <a href="https://www.npmjs.com/package/reactime"><strong>NPM package</strong></a> must be installed and used in the React code.
 
 After successfully installing the chrome extension, you can test Reactime functionalities in the demo repositories below.
 
