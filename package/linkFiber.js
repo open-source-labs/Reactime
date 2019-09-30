@@ -145,12 +145,11 @@ module.exports = (snap, mode) => {
     });
     // Testing sending back a function def to client
     // function getNextImport(filePath) {
-      // return loadable(() => import(`${filePath}`))
-      // Got relative file path to return back to client code
-      // return (`myTestString${filePath}`);
-    }
+    // return loadable(() => import(`${filePath}`))
+    // Got relative file path to return back to client code
+    // return (`myTestString${filePath}`);
     // return getNextImport('./UseStateHook');
     // return 'Testing outside';
-  };
+    // const OtherComponent = loadable(() => import('./OtherComponent'))
+  }
 };
-// const OtherComponent = loadable(() => import('./OtherComponent'))
