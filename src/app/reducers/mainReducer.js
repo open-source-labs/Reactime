@@ -69,6 +69,12 @@ export default (state, action) => produce(state, draft => {
       tabs[currentTab].viewIndex = -1;
       tabs[currentTab].playing = false;
       tabs[currentTab].snapshots.splice(1);
+      // reset children in root node to reset graph
+      tabs[currentTab].hierarchy.children = [];
+      // reassigning pointer to the appropriate node to branch off of
+      tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+      // reset index
+      tabs[currentTab].index = 0;
       break;
     }
     case types.SET_PORT: {
