@@ -72,7 +72,7 @@ You can click on a snapshot to view your app's state. State can be visualized in
 
 Jumping is the most important feature of all. It allows you to jump to any previous recorded snapshots. Hitting the jump button on any snapshot will change the DOM by setting their state.
 
-### Features
+### And Much More
 
 - multiple tree graph branches depicting state changes
 - tree graph hover functionality to view state changes 
