@@ -22,7 +22,6 @@ chrome.runtime.onMessage.addListener(request => {
   const { action } = request;
   switch (action) {
     case 'jumpToSnap':
-      console.log('jumpped to snap', request);
       chrome.runtime.sendMessage(request);
       window.postMessage(request);
       break;
