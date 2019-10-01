@@ -3,9 +3,6 @@
 /* eslint-disable no-param-reassign */
 // links component state tree to library
 // changes the setState method to also update our snapshot
-
-// import loadable from '@loadable/component';
-
 const Tree = require('./tree');
 const astParser = require('./astParser');
 const { saveState } = require('./masterState');
@@ -55,9 +52,8 @@ module.exports = (snap, mode) => {
     component.queue.dispatch = (fiber, queue, action) => {
       // don't do anything if state is locked
       if (mode.locked && !mode.jumping) return;
-      // oldDispatch(fiber, queue, action);
+      oldDispatch(fiber, queue, action);
       setTimeout(() => {
-        oldDispatch(fiber, queue, action);
         updateSnapShotTree();
         sendSnapshot();
       }, 100);
@@ -87,12 +83,13 @@ module.exports = (snap, mode) => {
 
   function createTree(currentFiber, tree = new Tree('root')) {
     if (!currentFiber) return tree;
-
+   
     const {
       sibling,
       stateNode,
       child,
       memoizedState,
+      elementType,
     } = currentFiber;
 
     let nextTree = tree;
@@ -105,8 +102,11 @@ module.exports = (snap, mode) => {
     }
     // Check if the component uses hooks
     if (memoizedState && Object.hasOwnProperty.call(memoizedState, 'baseState')) {
-      // Add a traversed property and initialize to the evaluated result
-      // of invoking traverseHooks, and reassign nextTree
+      // Traverse through the currentFiber and extract the getters/setters
+      astHooks = astParser(elementType); 
+      saveState(astHooks); 
+      // Create a traversed property and assign to the evaluated result of 
+      // invoking traverseHooks with memoizedState
       memoizedState.traversed = traverseHooks(memoizedState);
       nextTree = tree.appendChild(memoizedState);
     }
@@ -124,20 +124,14 @@ module.exports = (snap, mode) => {
     snap.tree = createTree(current);
   }
 
-  return (container, entryFile) => {
+  return container => {
     const {
       _reactRootContainer: { _internalRoot },
       _reactRootContainer,
     } = container;
     // only assign internal rootp if it actually exists
     fiberRoot = _internalRoot || _reactRootContainer;
-    // If hooks are implemented, traverse through the source code
-    // Save the getter/setter combo for timeJump
-    if (entryFile) {
-      astHooks = astParser(entryFile);
-      // console.log('Ast Hooks', astHooks);
-      saveState(astHooks);
-    }
+  
     updateSnapShotTree();
     // send the initial snapshot once the content script has started up
     window.addEventListener('message', ({ data: { action } }) => {
