@@ -47,11 +47,11 @@ div.tooltip {
   position: absolute;
   text-align: center;
   display: inline;
-  max-width: 400px;
+  max-width: 250px;
   overflow-wrap: break-word;
   padding: 6px;
   color: #320a5c;
-  font-size: 15px;
+  font-size: 12px;
   font-family: "Overpass Mono", monospace;
   background: #9cf4df;
   border-radius: 8px;

@@ -78,10 +78,10 @@ class Chart extends Component {
     const d3root = tree(hierarchy);
 
     g.selectAll('.link')
-    // root.links() gets an array of all the links,
-    // where each element is an object containing a
-    // source property, which represents the link's source node,
-    // and a target property, which represents the link's target node.
+      // root.links() gets an array of all the links,
+      // where each element is an object containing a
+      // source property, which represents the link's source node,
+      // and a target property, which represents the link's target node.
       .data(d3root.links())
       .enter()
       .append('path')
@@ -104,21 +104,36 @@ class Chart extends Component {
       });
 
     node.append('circle')
-      .attr('r', 10);
+      .attr('r', 10)
+      .on('mouseover', function (d) {
+        d3.select(this)
+          .transition(100)
+          .duration(20)
+          .attr('r', 20);
 
-    // // creating a d3.tip method where the html has a function that returns
-    // // the data we passed into tip.show from line 120
-    // const tip = d3Tip()
-    //   .attr('class', 'd3-tip')
-    //   .html(function (d) { return 'State: ' + d; });
+        tooltipDiv.transition()
+          .duration(200)
+          .style('opacity', 0.9);
 
-    // // invoking tooltip for nodes
-    // node.call(tip);
+        tooltipDiv.html(JSON.stringify(d.data.stateSnapshot.children[0].state), this)
+          .style('left', (d3.event.pageX) + 'px')
+          .style('top', (d3.event.pageY - 28) + 'px');
+      })
+      // eslint-disable-next-line no-unused-vars
+      .on('mouseout', function (d) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr('r', 12);
 
+        tooltipDiv.transition()
+          .duration(500)
+          .style('opacity', 0);
+      });
     node
       .append('text')
       // adjusts the y coordinates for the node text
-      .attr('dy', '0.35em')
+      .attr('dy', '-1.5em')
       .attr('x', function (d) {
         // this positions how far the text is from leaf nodes (ones without children)
         // negative number before the colon moves the text of rightside nodes,
@@ -166,27 +181,6 @@ class Chart extends Component {
       .style('opacity', 0);
 
     // applying tooltip on mouseover and removes it when mouse cursor moves away
-    node
-      .on('mouseover', function (d) {
-        tooltipDiv.transition()
-          .duration(200)
-          .style('opacity', 0.9);
-        tooltipDiv.html(JSON.stringify(d.data.stateSnapshot.children[0].state), this)
-          .style('left', (d3.event.pageX) + 'px')
-          .style('top', (d3.event.pageY - 28) + 'px');
-      })
-      // eslint-disable-next-line no-unused-vars
-      .on('mouseout', function (d) {
-        tooltipDiv.transition()
-          .duration(500)
-          .style('opacity', 0);
-      });
-    // .on('mouseover', function (d) {
-    //   // without JSON.stringify, data will display as object Object
-    //   // console.log('d.data --> ', JSON.stringify(d.data))
-    //   tip.show(JSON.stringify(d.data.stateSnapshot.children[0].state), this);
-    // })
-    // .on('mouseout', tip.hide);
 
     function reinfeldTidierAlgo(x, y) {
       return [(y = +y) * Math.cos(x -= Math.PI / 2), y * Math.sin(x)];
