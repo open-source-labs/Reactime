@@ -12,7 +12,7 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-import d3Tip from 'd3-tip';
+// import d3Tip from 'd3-tip';
 
 let root = {};
 class Chart extends Component {
@@ -106,14 +106,14 @@ class Chart extends Component {
     node.append('circle')
       .attr('r', 10);
 
-    // creating a d3.tip method where the html has a function that returns
-    // the data we passed into tip.show from line 120
-    const tip = d3Tip()
-      .attr('class', 'd3-tip')
-      .html(function (d) { return 'State: ' + d; });
+    // // creating a d3.tip method where the html has a function that returns
+    // // the data we passed into tip.show from line 120
+    // const tip = d3Tip()
+    //   .attr('class', 'd3-tip')
+    //   .html(function (d) { return 'State: ' + d; });
 
-    // invoking tooltip for nodes
-    node.call(tip);
+    // // invoking tooltip for nodes
+    // node.call(tip);
 
     node
       .append('text')
@@ -160,14 +160,33 @@ class Chart extends Component {
       g.attr('transform', d3.event.transform);
     }
 
+    // define the div for the tooltip
+    const tooltipDiv = d3.select('body').append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0);
+
     // applying tooltip on mouseover and removes it when mouse cursor moves away
     node
       .on('mouseover', function (d) {
-        // without JSON.stringify, data will display as object Object
-        // console.log('d.data --> ', JSON.stringify(d.data))
-        tip.show(JSON.stringify(d.data.stateSnapshot.children[0].state), this);
+        tooltipDiv.transition()
+          .duration(200)
+          .style('opacity', 0.9);
+        tooltipDiv.html(JSON.stringify(d.data.stateSnapshot.children[0].state), this)
+          .style('left', (d3.event.pageX) + 'px')
+          .style('top', (d3.event.pageY - 28) + 'px');
       })
-      .on('mouseout', tip.hide);
+      // eslint-disable-next-line no-unused-vars
+      .on('mouseout', function (d) {
+        tooltipDiv.transition()
+          .duration(500)
+          .style('opacity', 0);
+      });
+    // .on('mouseover', function (d) {
+    //   // without JSON.stringify, data will display as object Object
+    //   // console.log('d.data --> ', JSON.stringify(d.data))
+    //   tip.show(JSON.stringify(d.data.stateSnapshot.children[0].state), this);
+    // })
+    // .on('mouseout', tip.hide);
 
     function reinfeldTidierAlgo(x, y) {
       return [(y = +y) * Math.cos(x -= Math.PI / 2), y * Math.sin(x)];
