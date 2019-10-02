@@ -18,7 +18,7 @@ body {
 }
 
 .node text {
-  font-size: 12px;
+  font-size: 10px;
   font-family: "Overpass Mono", monospace;
 }
 /* this represents text for leaf nodes aka the ones with no children */
@@ -33,7 +33,7 @@ body {
 /*   modifies text of parent nodes (has children) */
 .node--internal text {
   fill: #fae6e4;
-  font-size: 12px;
+  font-size: 11px;
 }
 .link {
   fill: none;

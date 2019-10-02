@@ -51,12 +51,6 @@ class Chart extends Component {
       .append('svg') // chartContainer is now pointing to svg
       .attr('width', width)
       .attr('height', height);
-    
-    chartContainer.call(d3.zoom()
-      .on("zoom", function () {
-        chartContainer.attr("transform", d3.event.transform)
-      }))
-      .append("g")
 
     let g = chartContainer.append("g")
       // this is changing where the graph is located physically
@@ -70,7 +64,7 @@ class Chart extends Component {
 
     let tree = d3.tree()
       // this assigns width of tree to be 2pi
-      .size([2 * Math.PI, radius / 1.5])
+      .size([2 * Math.PI, radius / 1.4])
       .separation(function (a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth });
 
     let d3root = tree(hierarchy);
@@ -99,7 +93,7 @@ class Chart extends Component {
       });
 
     node.append("circle")
-      .attr("r", 12)
+      .attr("r", 10)
 
     //creating a d3.tip method where the html has a function that returns the data we passed into tip.show from line 120
     let tip = d3Tip()
@@ -124,6 +118,34 @@ class Chart extends Component {
       .text(function (d) {
         return d.data.index;
       });
+    
+// allows svg to be dragged around
+    node.call(d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended));
+
+    chartContainer.call(d3.zoom()
+      .extent([[0, 0], [width, height]])
+      .scaleExtent([1, 8])
+      .on("zoom", zoomed));
+
+    function dragstarted() {
+      d3.select(this).raise();
+      g.attr("cursor", "grabbing");
+    }
+
+    function dragged(d) {
+      d3.select(this).attr("dx", d.x = d3.event.x).attr("dy", d.y = d3.event.y);
+    }
+
+    function dragended() {
+      g.attr("cursor", "grab");
+    }
+
+    function zoomed() {
+      g.attr("transform", d3.event.transform);
+    }
     
     //applying tooltip on mouseover and removes it when mouse cursor moves away
     node
