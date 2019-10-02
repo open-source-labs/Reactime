@@ -70,7 +70,7 @@ export default (state, action) => produce(state, draft => {
       tabs[currentTab].playing = false;
       tabs[currentTab].snapshots.splice(1);
       // reset children in root node to reset graph
-      tabs[currentTab].hierarchy.children = [];
+      if (tabs[currentTab].hierarchy) tabs[currentTab].hierarchy.children = [];
       // reassigning pointer to the appropriate node to branch off of
       tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
       // reset index

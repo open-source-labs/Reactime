@@ -55,18 +55,17 @@ body {
   font-family: "Overpass Mono", monospace;
 }
 
-/* Creates a small triangle extender for the tooltip */
+/* Creates a small triangle extender for the tooltip
 .d3-tip:after {
   box-sizing: border-box;
   display: inline;
   font-size: 15px;
-  width: 100%;
   line-height: 1;
   color: #9cf4df;
   content: "\25BC";
   position: absolute;
   text-align: center;
-}
+} */
 
 /* Style northward tooltips specifically */
 .d3-tip.n:after {

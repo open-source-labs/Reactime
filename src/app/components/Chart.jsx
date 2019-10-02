@@ -3,9 +3,9 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/no-string-refs */
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-import d3Tip from "d3-tip";
+import d3Tip from 'd3-tip';
 
 let root = {};
 class Chart extends Component {
@@ -36,15 +36,13 @@ class Chart extends Component {
 
   maked3Tree() {
     this.removed3Tree();
-    let width = 600;
-    // let height = 1060;
     const margin = {
       top: 0,
       right: 60,
-      bottom: 80,
+      bottom: 200,
       left: 120,
     };
-    // const width = 600 - margin.right - margin.left;
+    const width = 600 - margin.right - margin.left;
     const height = 700 - margin.top - margin.bottom;
 
     let chartContainer = d3.select(this.chartRef.current)
@@ -93,7 +91,7 @@ class Chart extends Component {
       });
 
     node.append("circle")
-      .attr("r", 12)
+      .attr("r", 10)
 
     //creating a d3.tip method where the html has a function that returns the data we passed into tip.show from line 120
     let tip = d3Tip()

@@ -94,7 +94,7 @@ describe('mainReducer testing', () => {
   });
 
   describe('empty', () => {
-    xit('should empty snapshots except the first one', () => {
+    it('should empty snapshots except the first one', () => {
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab].sliderIndex).toEqual(0);
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab].viewIndex).toEqual(-1);
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab].playing).toEqual(false);
