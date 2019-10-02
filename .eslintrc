@@ -22,5 +22,8 @@
     },
     "ecmaVersion": 2018,
     "sourceType": "module"
+  },
+  "settings": {
+    "import/no-unresolved": "off"
   }
 }
