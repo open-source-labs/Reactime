@@ -18,12 +18,13 @@ body {
 }
 
 .node text {
-  font-size: 12px;
+  font-size: 10px;
   font-family: "Overpass Mono", monospace;
 }
 /* this represents text for leaf nodes aka the ones with no children */
 .node--leaf {
   fill: #71e9e1;
+  fill-opacity: 0.8;
 }
 
 /*   this represents those nodes that have children */
@@ -33,13 +34,13 @@ body {
 /*   modifies text of parent nodes (has children) */
 .node--internal text {
   fill: #fae6e4;
-  font-size: 12px;
+  font-size: 11px;
 }
 .link {
   fill: none;
   stroke: #3853ea;
   stroke-opacity: 0.4;
-  stroke-width: 3px;
+  stroke-width: 5px;
 }
 
 .d3-tip {
@@ -54,18 +55,17 @@ body {
   font-family: "Overpass Mono", monospace;
 }
 
-/* Creates a small triangle extender for the tooltip */
+/* Creates a small triangle extender for the tooltip
 .d3-tip:after {
   box-sizing: border-box;
   display: inline;
   font-size: 15px;
-  width: 100%;
   line-height: 1;
   color: #9cf4df;
   content: "\25BC";
   position: absolute;
   text-align: center;
-}
+} */
 
 /* Style northward tooltips specifically */
 .d3-tip.n:after {

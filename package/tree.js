@@ -30,7 +30,8 @@ class Tree {
   getCopy(copy = new Tree('root', true)) {
     // copy state of children
     copy.children = this.children.map(
-      child => new Tree(child.component.state || child.component.traversed, true, child.component.constructor.name),
+      child => new Tree(child.component.state
+        || child.component.traversed, true, child.component.constructor.name),
     );
 
     // copy children's children recursively
@@ -40,8 +41,8 @@ class Tree {
 
   // print out the tree in the console
   // DEV: Process may be different for useState components
-  // BUG FIX: Don't print the Router as a component 
-  // Change how the children are printed 
+  // BUG FIX: Don't print the Router as a component
+  // Change how the children are printed
   print() {
     const children = ['children: '];
     // DEV: What should we push instead for components using hooks (it wouldn't be state)
