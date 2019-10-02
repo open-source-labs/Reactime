@@ -1,4 +1,4 @@
-// const TestRunner = require("jest-runner")
+// import TestRunner from 'jest-runner';
 
 // Unit Test Cases for Charts
 // description: lifecycle methods
