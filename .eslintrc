@@ -3,7 +3,9 @@
   "root": true,
   "plugins": ["jest", "react"],
   "rules": {
-    "arrow-parens": [2, "as-needed"]
+    "arrow-parens": [2, "as-needed"],
+    "import/no-unresolved": "off",
+    "import/extensions": "off"
   },
   "env": {
     "es6": true,
@@ -22,8 +24,5 @@
     },
     "ecmaVersion": 2018,
     "sourceType": "module"
-  },
-  "settings": {
-    "import/no-unresolved": "off"
   }
 }
