@@ -1,11 +1,12 @@
 const acorn = require('acorn');
 const jsx = require('acorn-jsx');
+
 const JSXParser = acorn.Parser.extend(jsx());
 
 // Helper function to grab the getters/setters from `elementType`
 module.exports = elementType => {
   // Initialize empty object to store the setters and getter
-  let ast = JSXParser.parse(elementType); 
+  let ast = JSXParser.parse(elementType);
   const hookState = {};
   // All module exports will always start off as a single 'FunctionDeclaration' type
   while (Object.hasOwnProperty.call(ast, 'body')) {
@@ -34,4 +35,4 @@ module.exports = elementType => {
     });
   }
   return hookState;
-}
+};

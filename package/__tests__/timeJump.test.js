@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 const timeJumpRequire = require('../timeJump');
 
 class Component {
@@ -18,10 +19,6 @@ class FiberNode {
     this.component = new Component(mockfn);
   }
 }
-
-// MVP FEATURE: Additional Testing 
-// Testing for useState and useContext 
-
 
 describe('unit testing for timeJump.js', () => {
   let timeJump;

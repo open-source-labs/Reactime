@@ -65,7 +65,9 @@ function MainContainer() {
       </div>
     );
   }
-  const { viewIndex, sliderIndex, snapshots, hierarchy } = tabs[currentTab];
+  const {
+    viewIndex, sliderIndex, snapshots, hierarchy,
+  } = tabs[currentTab];
 
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];

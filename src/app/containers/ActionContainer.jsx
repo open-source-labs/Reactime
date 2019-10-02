@@ -5,7 +5,7 @@ import Action from '../components/Action';
 import { emptySnapshots } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-// Launch: render a dropdown filterable list 
+// Launch: render a dropdown filterable list
 function ActionContainer() {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { snapshots, sliderIndex, viewIndex } = tabs[currentTab];
