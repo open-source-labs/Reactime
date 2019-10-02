@@ -1,3 +1,5 @@
+const TestRunner = require("jest-runner")
+
 // Unit Test Cases for Charts
   // description: lifecycle methods
     // Component should call make3dTree upon mounting
@@ -16,3 +18,9 @@
       // 'mouseout' event -> 'mouseout' function
       // 'click' event -> 'click' function
     // Should call function 'update' at least once
+
+    describe('placeholder', () => {
+      xit('placeholder for tests', () => {
+        expect(1+1).toEqual(2);
+      })
+    })

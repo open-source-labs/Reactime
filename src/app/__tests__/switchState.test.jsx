@@ -8,3 +8,10 @@ import SwitchState from '../components/SwitchState';
     // and the label should be the name of the state being captured 
     
     // If the label is selected, it should only display relevant components with the same state name
+
+
+describe('placeholder', () => {
+    xit('placeholder for tests', () => {
+      expect(1+1).toEqual(2);
+    })
+  })
