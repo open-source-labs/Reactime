@@ -25,6 +25,4 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "import/extensions": "off",
-  "import/no-unresolved": "off"
 }
