@@ -64,7 +64,7 @@ class Chart extends Component {
 
     let tree = d3.tree()
       // this assigns width of tree to be 2pi
-      .size([2 * Math.PI, radius / 1.4])
+      .size([2 * Math.PI, radius / 1.3])
       .separation(function (a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth });
 
     let d3root = tree(hierarchy);
@@ -93,7 +93,7 @@ class Chart extends Component {
       });
 
     node.append("circle")
-      .attr("r", 10)
+      .attr("r", 12)
 
     //creating a d3.tip method where the html has a function that returns the data we passed into tip.show from line 120
     let tip = d3Tip()

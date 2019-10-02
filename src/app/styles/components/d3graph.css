@@ -24,6 +24,7 @@ body {
 /* this represents text for leaf nodes aka the ones with no children */
 .node--leaf {
   fill: #71e9e1;
+  fill-opacity: 0.4;
 }
 
 /*   this represents those nodes that have children */
@@ -39,7 +40,7 @@ body {
   fill: none;
   stroke: #3853ea;
   stroke-opacity: 0.4;
-  stroke-width: 3px;
+  stroke-width: 5px;
 }
 
 .d3-tip {
