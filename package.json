@@ -12,8 +12,10 @@
   },
   "keywords": [
     "react",
-    "time",
-    "time travel",
+    "useState",
+    "state",
+    "debug",
+    "react dev tool",
     "reactime"
   ],
   "repository": {

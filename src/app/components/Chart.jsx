@@ -3,9 +3,9 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/no-string-refs */
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-import d3Tip from "d3-tip";
+import d3Tip from 'd3-tip';
 
 let root = {};
 class Chart extends Component {

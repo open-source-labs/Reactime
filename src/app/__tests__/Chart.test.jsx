@@ -1,26 +1,50 @@
-const TestRunner = require("jest-runner")
+import React from 'react'; 
+import Chart from '../components/Chart'; 
+import testRunner from 'jest-runner'; 
 
-// Unit Test Cases for Charts
-  // description: lifecycle methods
-    // Component should call make3dTree upon mounting
-    // object 'root' should be a deep clone of the snapshot
-      // i.e.: this.props.snapshot !== root
+// Unit test cases for d3 functionality 
+// Test the life cycle methods in Chart
+describe('Life cycle methods in Chart', () => {
+  it('should call maked3Tree upon mounting', () => {
+    // Component should call maked3Tree upon mounting
+    // Use the mock function + .toBeCalled()
+   // Test the method in the component 
+  }); 
+}); 
 
-  // description: maked3Tree
-    // Should call function 'removed3tree' only once
-    // Should call appropriate function upon triggering a certain event on the tooltip div
-      // i.e.:
-      // 'mouseover' event -> 'tipMouseover' function
-      // 'mouseout' event -> 'tipMouseout' function
-    // Should call appropriate function upon triggering a certain event on a node (nested under the 'update' function)
-      // i.e.:
-      // 'mouseover' event -> 'mouseover' function
-      // 'mouseout' event -> 'mouseout' function
-      // 'click' event -> 'click' function
-    // Should call function 'update' at least once
+// Test the root object and hierarchy 
+describe('Root object', () => {
+  it('should be a deep clone of the hierarchy', () => {
+    // object 'root' should be a deep clone of the hierarchy
+    // create an empty object to mimic root 
+      // i.e.: this.props.hierarchy !== root
+      // expect to !== this.props.hierarchy 
+      // expect to be a deep clone 
+  }); 
+}); 
 
-    describe('placeholder', () => {
-      xit('placeholder for tests', () => {
-        expect(1+1).toEqual(2);
-      })
-    })
+// Test the maked3Tree method 
+describe('maked3Tree method', () => {
+  it('should call removed3tree once', () => {
+ // Should call function 'removed3tree' only once
+    // expect toBeCalled()
+    // expect toHaveBeenCalled()
+  }); 
+}); 
+// Test the tooltip functionality in maked3Tree method 
+describe('tooltip functionality in maked3Tree', () => {
+// Should call appropriate function upon triggering 
+// a certain event on the tooltip div
+  // Should call appropriate function upon triggering mouseOver
+  it('should invoke tip.show on mouseOver', () => {
+
+  }); 
+  // Should call appropriate function upon triggering mouseOut
+  it ('should invoke tip.hide on mouseOut', () => {
+
+  }); 
+}); 
+
+
+
+    
