@@ -21,7 +21,7 @@
 // Should call function 'update' at least once
 
 describe('placeholder', () => {
-  xit('placeholder for tests', () => {
+  it.skip('placeholder for tests', () => {
     expect(1 + 1).toEqual(2);
-  })
-})
+  });
+});
