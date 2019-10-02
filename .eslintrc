@@ -23,10 +23,6 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "settings": {
-    "import/no-unresolved": [
-      2,
-      { "caseSensitive": false }
-    ]
-  }
+  "import/extensions": "off",
+  "import/no-unresolved": "off"
 }
