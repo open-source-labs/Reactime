@@ -18,7 +18,7 @@ const getItemString = (type, data) => {
 const Tree = props => {
   const { snapshot } = props;
   return (
-    <React.Fragment>
+    <>
       {snapshot && (
         <JSONTree
           data={snapshot}
@@ -28,7 +28,7 @@ const Tree = props => {
           labelRenderer={raw => (typeof raw[0] !== 'number' ? <span>{raw[0]}</span> : null)}
         />
       )}
-    </React.Fragment>
+    </>
   );
 };
 

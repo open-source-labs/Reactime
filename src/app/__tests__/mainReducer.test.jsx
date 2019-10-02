@@ -23,8 +23,8 @@ describe('mainReducer testing', () => {
           intervalId: 87,
           playing: true,
           index: 3,
-          hierarchy: null,  // should be a linked list with four nodes
-          currLocation: null // should point to the last node in hierarchy
+          hierarchy: null, // should be a linked list with four nodes
+          currLocation: null, // should point to the last node in hierarchy
         },
         75: {
           snapshots: [1, 2, 3, 4],
@@ -94,7 +94,7 @@ describe('mainReducer testing', () => {
   });
 
   describe('empty', () => {
-    xit('should empty snapshots except the first one', () => {
+    it('should empty snapshots except the first one', () => {
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab].sliderIndex).toEqual(0);
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab].viewIndex).toEqual(-1);
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab].playing).toEqual(false);

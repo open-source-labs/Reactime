@@ -13,7 +13,8 @@ module.exports = (snap, mode) => {
 
   function sendSnapshot() {
     // don't send messages while jumping or while paused
-    // DEV: So that when we are jumping to an old snapshot it wouldn't think we want to create new snapshots
+    // DEV: So that when we are jumping to an old snapshot it
+    // wouldn't think we want to create new snapshots
     if (mode.jumping || mode.paused) return;
     const payload = snap.tree.getCopy();
     // console.log('payload', payload);
@@ -83,7 +84,7 @@ module.exports = (snap, mode) => {
 
   function createTree(currentFiber, tree = new Tree('root')) {
     if (!currentFiber) return tree;
-   
+
     const {
       sibling,
       stateNode,
@@ -103,9 +104,9 @@ module.exports = (snap, mode) => {
     // Check if the component uses hooks
     if (memoizedState && Object.hasOwnProperty.call(memoizedState, 'baseState')) {
       // Traverse through the currentFiber and extract the getters/setters
-      astHooks = astParser(elementType); 
-      saveState(astHooks); 
-      // Create a traversed property and assign to the evaluated result of 
+      astHooks = astParser(elementType);
+      saveState(astHooks);
+      // Create a traversed property and assign to the evaluated result of
       // invoking traverseHooks with memoizedState
       memoizedState.traversed = traverseHooks(memoizedState);
       nextTree = tree.appendChild(memoizedState);
@@ -131,7 +132,7 @@ module.exports = (snap, mode) => {
     } = container;
     // only assign internal rootp if it actually exists
     fiberRoot = _internalRoot || _reactRootContainer;
-  
+
     updateSnapShotTree();
     // send the initial snapshot once the content script has started up
     window.addEventListener('message', ({ data: { action } }) => {
@@ -145,5 +146,5 @@ module.exports = (snap, mode) => {
     // return getNextImport('./UseStateHook');
     // return 'Testing outside';
     // const OtherComponent = loadable(() => import('./OtherComponent'))
-  }
+  };
 };

@@ -5,7 +5,7 @@ import { setTab } from '../actions/actions';
 
 
 // Launch Feature: Fix the dropdown styling to make it more distinguishable
- 
+
 const SwitchAppDropdown = () => {
   const [{ currentTab, tabs }, dispatch] = useStoreContext();
 

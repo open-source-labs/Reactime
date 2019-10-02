@@ -7,6 +7,7 @@ import {
 import Chart from './Chart';
 import Tree from './Tree';
 
+// eslint-disable-next-line react/prop-types
 const StateRoute = ({ snapshot, hierarchy }) => (
   <Router>
     <div className="navbar">

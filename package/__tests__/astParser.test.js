@@ -1,4 +1,7 @@
-// Test 1: Should take in a function definition with 1 hook and return an object with the getter/setter
+// import { configure, shallow } from 'enzyme';
+
+// Test 1: Should take in a function definition with 1 hook
+// and return an object with the getter / setter
 // EXAMPLE INPUT FOR TEST
 /**
  * function UseStateHookTest() {
@@ -22,7 +25,14 @@
  * }
  */
 
- // TEST 2: Should take in multiple function definitions with hooks and return an object with all 4 properties
- // TEST 3: Should ignore any non-hook definitions
- // Test 4: Should return an empty object if no hooks found
- // Test 5: Should throw an error if input is invalid javascript
+// TEST 2: Should take in multiple function definitions
+// with hooks and return an object with all 4 properties
+// TEST 3: Should ignore any non-hook definitions
+// Test 4: Should return an empty object if no hooks found
+// Test 5: Should throw an error if input is invalid javascript
+
+describe('placeholder', () => {
+  it.skip('placeholder for tests', () => {
+    expect(1 + 1).toEqual(2);
+  });
+});
