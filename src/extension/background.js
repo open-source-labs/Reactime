@@ -109,7 +109,7 @@ chrome.runtime.onConnect.addListener(port => {
         // reassigning pointer to the appropriate node to branch off of
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
         // reset index
-        tabsObj[tabId].index = 0;
+        tabsObj[tabId].index = 1;
         return;
       case 'setLock':
         tabsObj[tabId].mode.locked = payload;
@@ -161,8 +161,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       if (!persist) {
         tabsObj[tabId].snapshots.splice(1);
         // reset children in root node to reset graph
-        // if (tabsObj[tabId].hierarchy)
-        tabsObj[tabId].hierarchy.children = [];
+        if (tabsObj[tabId].hierarchy) tabsObj[tabId].hierarchy.children = [];
         // reassigning pointer to the appropriate node to branch off of
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
         // reset index
