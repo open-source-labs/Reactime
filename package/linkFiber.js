@@ -17,11 +17,18 @@ module.exports = (snap, mode) => {
     // wouldn't think we want to create new snapshots
     if (mode.jumping || mode.paused) return;
     const payload = snap.tree.getCopy();
-    // console.log('payload', payload);
-    window.postMessage({
-      action: 'recordSnap',
-      payload,
-    });
+
+    if (process.env.MODE === 'test') {
+      window.postMessage({
+        action: 'recordSnap',
+        payload,
+      }, '*');
+    } else {
+      window.postMessage({
+        action: 'recordSnap',
+        payload,
+      });
+    }
   }
 
   function changeSetState(component) {
