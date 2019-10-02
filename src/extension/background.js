@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-param-reassign */
 // store ports in an array
 const portsArr = [];
 const reloaded = {};
@@ -11,10 +13,10 @@ function createTabObj(title) {
     title,
     // snapshots is an array of ALL state snapshots for the reactime tab working on a specific user application
     snapshots: [],
-    index: -1,
+    index: 0,
     //* this is our pointer so we know what the current state the user is checking (this accounts for time travel aka when user clicks jump on the UI)
     currLocation: null,
-    //* inserting a new property to build out our hierarchy dataset for d3 
+    //* inserting a new property to build out our hierarchy dataset for d3
     hierarchy: null,
     mode: {
       persist: false,
@@ -26,13 +28,16 @@ function createTabObj(title) {
 
 class Node {
   constructor(obj, tabObj) {
-    this.index = tabObj.index += 1;
+    // eslint-disable-next-line no-param-reassign
+    // eslint-disable-next-line no-multi-assign
+    // eslint-disable-next-line no-plusplus
+    this.index = tabObj.index++;
     this.stateSnapshot = obj;
     this.children = [];
   }
-};
+}
 
-function sendToHierarchy (tabObj, newNode) {
+function sendToHierarchy(tabObj, newNode) {
   if (!tabObj.currLocation) {
     tabObj.currLocation = newNode;
     tabObj.hierarchy = newNode;
@@ -42,7 +47,7 @@ function sendToHierarchy (tabObj, newNode) {
   }
 }
 
-function changeCurrLocation (tabObj, rootNode, index) {
+function changeCurrLocation(tabObj, rootNode, index) {
   // check if current node has the index wanted
   if (rootNode.index === index) {
     tabObj.currLocation = rootNode;
@@ -51,13 +56,13 @@ function changeCurrLocation (tabObj, rootNode, index) {
   // base case if no children
   if (!rootNode.children.length) {
     return;
-  } else {
     // if not, recurse on each one of the children
-    rootNode.children.forEach(child => {
-      changeCurrLocation(tabObj, child, index);
-    });
   }
+  rootNode.children.forEach(child => {
+    changeCurrLocation(tabObj, child, index);
+  });
 }
+
 
 // establishing connection with devtools
 chrome.runtime.onConnect.addListener(port => {
@@ -148,6 +153,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index);
       break;
     }
+    // this case causes d3 graph to display 1 instead of 0
     case 'tabReload': {
       tabsObj[tabId].mode.locked = false;
       tabsObj[tabId].mode.paused = false;
@@ -155,12 +161,13 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       if (!persist) {
         tabsObj[tabId].snapshots.splice(1);
         // reset children in root node to reset graph
-        if (tabsObj[tabId].hierarchy) tabsObj[tabId].hierarchy.children = [];
+        // if (tabsObj[tabId].hierarchy)
+        tabsObj[tabId].hierarchy.children = [];
         // reassigning pointer to the appropriate node to branch off of
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
         // reset index
         tabsObj[tabId].index = 0;
-        
+
         // send a message to devtools
         portsArr.forEach(bg => bg.postMessage({
           action: 'initialConnectSnapshots',
@@ -169,7 +176,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       }
 
       reloaded[tabId] = true;
-      
+
 
       break;
     }

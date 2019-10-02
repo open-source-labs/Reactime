@@ -24,7 +24,7 @@ body {
 /* this represents text for leaf nodes aka the ones with no children */
 .node--leaf {
   fill: #71e9e1;
-  fill-opacity: 0.4;
+  fill-opacity: 0.8;
 }
 
 /*   this represents those nodes that have children */
