@@ -14,8 +14,10 @@ module.exports = elementType => {
     ast = ast.body;
     // Iterate through AST of every function declaration
     // Check within each function declaration if there are hook declarations
+    console.log('problem with ast', ast)
     ast.forEach(functionDec => {
-      const { body } = functionDec.body;
+      console.log('functionDec', functionDec.expression.body)
+      const { body } = functionDec.expression.body;
       const statements = [];
       // Traverse through the function's funcDecs and Expression Statements
       body.forEach(program => {
@@ -23,6 +25,7 @@ module.exports = elementType => {
         if (program.type === 'VariableDeclaration') {
           program.declarations.forEach(dec => {
             statements.push(dec.id.name);
+            console.log('statements array', statements);
           });
         }
       });
