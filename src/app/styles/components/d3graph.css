@@ -43,7 +43,22 @@ body {
   stroke-width: 5px;
 }
 
-.d3-tip {
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  display: inline;
+  max-width: 250px;
+  overflow-wrap: break-word;
+  padding: 6px;
+  color: #320a5c;
+  font-size: 12px;
+  font-family: "Overpass Mono", monospace;
+  background: #9cf4df;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+/* .d3-tip {
   line-height: 1;
   padding: 6px;
   background: #9cf4df;
@@ -53,7 +68,7 @@ body {
   max-width: 400px;
   overflow-wrap: break-word;
   font-family: "Overpass Mono", monospace;
-}
+} */
 
 /* Creates a small triangle extender for the tooltip
 .d3-tip:after {
@@ -68,8 +83,8 @@ body {
 } */
 
 /* Style northward tooltips specifically */
-.d3-tip.n:after {
+/* .d3-tip.n:after {
   margin: -2px 0 0 0;
   top: 100%;
   left: 0;
-}
+} */
