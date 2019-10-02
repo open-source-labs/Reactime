@@ -1,16 +1,26 @@
 {
   "extends": ["airbnb", "plugin:jest/recommended"],
   "root": true,
-  "plugins": ["jest"],
+  "plugins": ["jest", "react"],
+  "rules": {
+    "arrow-parens": [2, "as-needed"]
+  },
   "env": {
+    "es6": true,
     "jest/globals": true,
     "browser": true,
     "webextensions": true
   },
   "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly",
     "fetch": false
   },
-  "rules": {
-    "arrow-parens": [2, "as-needed"]
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
   }
 }
