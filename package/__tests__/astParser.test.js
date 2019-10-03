@@ -15,29 +15,44 @@ configure({ adapter: new Adapter() });
 describe('AST Unit Tests', () => {
   describe('astParser', () => {
     it.skip('Should return object with one getter/setter for a single useState instance', () => {
-      const singleUseState = 'const singleUseStateTest = () => { const [testCount, setTestCount] = useState(0); return ( <div> <p> You clicked this {testCount} times </p> <button onClick={() => setTestCount(testCount + 1)}>+1</button> <button onClick={() => setTestCount(testCount - 1)}>-1</button> <hr /> </div> ) }';
+      const useState = 'const singleUseStateTest = () => { const [testCount, setTestCount] = useState(0); return ( <div> <p> You clicked this {testCount} times </p> <button onClick={() => setTestCount(testCount + 1)}>+1</button> <button onClick={() => setTestCount(testCount - 1)}>-1</button> <hr /> </div> )';
 
       const expectedObject = {
         _useState: 'testCount',
         _useState2: 'setTestCount',
       };
-      expect(astParser(singleUseState)).toEqual(expectedObject);
+      expect(astParser(useState)).toEqual(expectedObject);
+    });
 
-    // TEST 2: Should take in multiple function definitions
-      it.skip('Should return object with two getters/setters for a single useState instance', () => {
-        const singleUseState = 'const singleUseStateTest = () => { const [testCount, setTestCount] = useState(0); const [age, setAge] = useState(20); return ( <div> <p> You clicked this {testCount} times </p> <button onClick={() => setTestCount(testCount + 1)}>+1</button> <button onClick={() => setTestCount(testCount - 1)}>-1</button> <p> You are {age} years old! </p> <button onClick={() => setAge(age + 1)}>Get Older</button> <hr /> </div>) }';
+    it.skip('Should output the right number of properties when taking in multiple function definitions', () => {
+      const useState = 'const singleUseStateTest = () => { const [testCount, setTestCount] = useState(0); const [age, setAge] = useState(20); return ( <div> <p> You clicked this {testCount} times </p> <button onClick={() => setTestCount(testCount + 1)}>+1</button> <button onClick={() => setTestCount(testCount - 1)}>-1</button> <p> You are {age} years old! </p> <button onClick={() => setAge(age + 1)}>Get Older</button> <hr /> </div>)';
 
-        const expectedObject = {
-          _useState: 'testCount',
-          _useState2: 'setTestCount',
-          _useState3: 'age',
-          _useState4: 'setAge'
-        };
-        expect(astParser(singleUseState)).toEqual(expectedObject);
-    // with hooks and return an object with all 4 properties
-    // TEST 3: Should ignore any non-hook definitions
-    // Test 4: Should return an empty object if no hooks found
-    // Test 5: Should throw an error if input is invalid javascript
+      const expectedObject = {
+        _useState: 'testCount',
+        _useState2: 'setTestCount',
+        _useState3: 'age',
+        _useState4: 'setAge',
+      };
+      expect(astParser(useState)).toEqual(expectedObject);
+      expect(Object.keys(astParser(useState))).toHaveLength(4);
+    });
+
+    it.skip('Should ignore any non-hook definitions', () => {
+      const useState = 'const singleUseStateTest = () => { const [testCount, setTestCount] = useState(0); const age = 20; return ( <div> <p> You clicked this {testCount} times </p> <button onClick={() => setTestCount(testCount + 1)}>+1</button> <button onClick={() => setTestCount(testCount - 1)}>-1</button> <p> You are {age} years old! </p> <button onClick={age => age + 1}>Get Older</button> <hr /> </div>)';
+
+      expect(Object.keys(astParser(useState))).toHaveLength(2);
+    });
+
+    it.skip('Should return an empty object if no hooks found', () => {
+      const useState = 'const singleUseStateTest = () => { const age = 20; return ( <div> <p> You are {age} years old! </p> <button onClick={age => age + 1}>Get Older</button> <hr /> </div>)';
+
+      expect(astParser(useState)).toBe({});
+    });
+
+    it.skip('Should throw an error if input is invalid javascript', () => {
+      const useState = 'const singleUseStateTest = () => { age: 20; return ( <div> <p> You are {age} years old! </p> <button onClick={age + 1}>Get Older</button></div>) }';
+
+      expect(astParser(useState)).toThrow();
     });
   });
 });

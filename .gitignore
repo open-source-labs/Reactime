@@ -9,3 +9,4 @@ src/extension/build.zip
 src/extension/build.crx
 src/extension/build/key.pem
 bower_components
+astParser.test.js
