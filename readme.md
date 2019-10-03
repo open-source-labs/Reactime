@@ -20,7 +20,7 @@ Reactime is a debugging tool for React developers. It records state whenever it 
 
 This dev tool is for React apps using stateful components and prop drilling, and has beta support for Context API, conditional state routing, Hooks (useState) and functional components. 
 
-One thing to note is that this library does not work well when mixing React with direct DOM manipulation. Since DOM manipulation doesn't change any React state, this library cannot record or even detect that change. Of course, you should be avoiding mixing the two in the first place.
+One thing to note is that this library does not work well when mixing React with direct DOM manipulation.
 
 Two parts are needed for this tool to function. The <a href="https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga"><strong>chrome extension</strong></a> must be installed, and the <a href="https://www.npmjs.com/package/reactime"><strong>NPM package</strong></a> must be installed and used in the React code.
 
