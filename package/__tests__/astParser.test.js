@@ -1,38 +1,58 @@
-// import { configure, shallow } from 'enzyme';
+/* eslint-disable jest/no-disabled-tests */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable react/button-has-type */
+/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable jest/valid-describe */
+/* eslint-disable react/react-in-jsx-scope */
+import { configure } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+// import toJson from 'enzyme-to-json';
+import astParser from '../astParser';
 
-// Test 1: Should take in a function definition with 1 hook
-// and return an object with the getter / setter
-// EXAMPLE INPUT FOR TEST
-/**
- * function UseStateHookTest() {
- *   const [testCount, setTestCount] = useState(0);
- *   return (
- *     <div>
- *       <p>You clicked this {useStateCount} times</p>
- *       <button onClick={() => setTestCount(testCount + 1)}>+1</button>
- *       <button onClick={() => setTestCount(testCount - 1)}>-1</button>
- *       <hr />
- *   </div>
- *   );
- * }
-*/
+// Newer Enzyme versions require an adapter to a particular version of React
+configure({ adapter: new Adapter() });
 
-// EXPECTED RESULT of astParser(input)
-/**
- * {
- *  _useState: "testCount",
- *  _useState2: "setTestCount"
- * }
- */
+describe('AST Unit Tests', () => {
+  describe('astParser', () => {
+    it.skip('Should return object with one getter/setter for a single useState instance', () => {
+      const useState = 'const singleUseStateTest = () => { const [testCount, setTestCount] = useState(0); return ( <div> <p> You clicked this {testCount} times </p> <button onClick={() => setTestCount(testCount + 1)}>+1</button> <button onClick={() => setTestCount(testCount - 1)}>-1</button> <hr /> </div> )';
 
-// TEST 2: Should take in multiple function definitions
-// with hooks and return an object with all 4 properties
-// TEST 3: Should ignore any non-hook definitions
-// Test 4: Should return an empty object if no hooks found
-// Test 5: Should throw an error if input is invalid javascript
+      const expectedObject = {
+        _useState: 'testCount',
+        _useState2: 'setTestCount',
+      };
+      expect(astParser(useState)).toEqual(expectedObject);
+    });
 
-describe('placeholder', () => {
-  it.skip('placeholder for tests', () => {
-    expect(1 + 1).toEqual(2);
+    it.skip('Should output the right number of properties when taking in multiple function definitions', () => {
+      const useState = 'const singleUseStateTest = () => { const [testCount, setTestCount] = useState(0); const [age, setAge] = useState(20); return ( <div> <p> You clicked this {testCount} times </p> <button onClick={() => setTestCount(testCount + 1)}>+1</button> <button onClick={() => setTestCount(testCount - 1)}>-1</button> <p> You are {age} years old! </p> <button onClick={() => setAge(age + 1)}>Get Older</button> <hr /> </div>)';
+
+      const expectedObject = {
+        _useState: 'testCount',
+        _useState2: 'setTestCount',
+        _useState3: 'age',
+        _useState4: 'setAge',
+      };
+      expect(astParser(useState)).toEqual(expectedObject);
+      expect(Object.keys(astParser(useState))).toHaveLength(4);
+    });
+
+    it.skip('Should ignore any non-hook definitions', () => {
+      const useState = 'const singleUseStateTest = () => { const [testCount, setTestCount] = useState(0); const age = 20; return ( <div> <p> You clicked this {testCount} times </p> <button onClick={() => setTestCount(testCount + 1)}>+1</button> <button onClick={() => setTestCount(testCount - 1)}>-1</button> <p> You are {age} years old! </p> <button onClick={age => age + 1}>Get Older</button> <hr /> </div>)';
+
+      expect(Object.keys(astParser(useState))).toHaveLength(2);
+    });
+
+    it.skip('Should return an empty object if no hooks found', () => {
+      const useState = 'const singleUseStateTest = () => { const age = 20; return ( <div> <p> You are {age} years old! </p> <button onClick={age => age + 1}>Get Older</button> <hr /> </div>)';
+
+      expect(astParser(useState)).toBe({});
+    });
+
+    it.skip('Should throw an error if input is invalid javascript', () => {
+      const useState = 'const singleUseStateTest = () => { age: 20; return ( <div> <p> You are {age} years old! </p> <button onClick={age + 1}>Get Older</button></div>) }';
+
+      expect(astParser(useState)).toThrow();
+    });
   });
 });

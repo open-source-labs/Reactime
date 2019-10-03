@@ -102,30 +102,30 @@ class Chart extends Component {
       });
 
     node.append('circle')
-      .attr('r', 10)
+      .attr('r', 5)
       .on('mouseover', function (d) {
         d3.select(this)
           .transition(100)
           .duration(20)
-          .attr('r', 20);
+          .attr('r', 10);
 
         tooltipDiv.transition()
-          .duration(200)
+          .duration(50)
           .style('opacity', 0.9);
 
         tooltipDiv.html(JSON.stringify(d.data.stateSnapshot.children[0].state), this)
-          .style('left', (d3.event.pageX) + 'px')
-          .style('top', (d3.event.pageY - 28) + 'px');
+          .style('left', (d3.event.pageX - 90) + 'px')
+          .style('top', (d3.event.pageY - 65) + 'px');
       })
       // eslint-disable-next-line no-unused-vars
       .on('mouseout', function (d) {
         d3.select(this)
           .transition()
-          .duration(200)
-          .attr('r', 12);
+          .duration(300)
+          .attr('r', 5);
 
         tooltipDiv.transition()
-          .duration(500)
+          .duration(400)
           .style('opacity', 0);
       });
     node
