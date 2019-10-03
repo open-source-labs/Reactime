@@ -9,7 +9,7 @@ import DiffRoute from '../components/DiffRoute';
 
 // eslint-disable-next-line react/prop-types
 const StateContainer = ({ snapshot, hierarchy }) => {
-  const [Text, setText] = useState('State');
+  const [ Text, setText ] = useState('State');
   return (
     <Router>
       <div className="state-container">

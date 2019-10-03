@@ -8,7 +8,7 @@ const firstSnapshotReceived = {};
 const tabsObj = {};
 
 function createTabObj(title) {
-  // updating tabsObj
+  // update tabsObj
   return {
     title,
     // snapshots is an array of ALL state snapshots for the reactime tab working on a specific user application
@@ -173,15 +173,11 @@ chrome.runtime.onMessage.addListener((request, sender) => {
           payload: tabsObj,
         }));
       }
-
       reloaded[tabId] = true;
-
-
       break;
     }
     case 'recordSnap': {
       const sourceTab = tabId;
-
       // first snapshot received from tab
       if (!firstSnapshotReceived[tabId]) {
         firstSnapshotReceived[tabId] = true;

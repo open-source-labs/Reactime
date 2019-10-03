@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
 
-// this is the current snapshot that is being sent to the snapshots array. it is an object
+// this is the current snapshot that is being sent to the snapshots array.
 class Tree {
   constructor(component, useStateInstead = false, name) {
     // special case when component is root

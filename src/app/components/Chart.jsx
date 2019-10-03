@@ -178,8 +178,6 @@ class Chart extends Component {
       .attr('class', 'tooltip')
       .style('opacity', 0);
 
-    // applying tooltip on mouseover and removes it when mouse cursor moves away
-
     function reinfeldTidierAlgo(x, y) {
       return [(y = +y) * Math.cos(x -= Math.PI / 2), y * Math.sin(x)];
     }

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-named-as-default-member */
 /* eslint-disable import/no-named-as-default */

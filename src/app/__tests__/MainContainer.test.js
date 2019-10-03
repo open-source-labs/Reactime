@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-filename-extension */
-
 import { shallow, configure } from 'enzyme';
 import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
