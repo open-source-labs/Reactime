@@ -104,12 +104,12 @@ class Chart extends Component {
       });
 
     node.append('circle')
-      .attr('r', 10)
+      .attr('r', 5)
       .on('mouseover', function (d) {
         d3.select(this)
           .transition(100)
           .duration(20)
-          .attr('r', 20);
+          .attr('r', 10);
 
         tooltipDiv.transition()
           .duration(50)
@@ -124,7 +124,7 @@ class Chart extends Component {
         d3.select(this)
           .transition()
           .duration(300)
-          .attr('r', 12);
+          .attr('r', 5);
 
         tooltipDiv.transition()
           .duration(400)
