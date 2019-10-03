@@ -1,6 +1,6 @@
 const acorn = require('acorn');
+// eslint-disable-next-line import/newline-after-import
 const jsx = require('acorn-jsx');
-
 const JSXParser = acorn.Parser.extend(jsx());
 
 // Helper function to grab the getters/setters from `elementType`

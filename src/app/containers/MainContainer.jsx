@@ -29,7 +29,6 @@ function MainContainer() {
           dispatch(deleteTab(payload));
           break;
         }
-
         case 'sendSnapshots': {
           dispatch(setTab(sourceTab));
           // set state with the information received from the background script

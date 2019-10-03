@@ -60,4 +60,5 @@ function TravelContainer({ snapshotsLength }) {
 TravelContainer.propTypes = {
   snapshotsLength: PropTypes.number.isRequired,
 };
+
 export default TravelContainer;
