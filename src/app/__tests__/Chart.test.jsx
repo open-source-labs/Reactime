@@ -1,7 +1,9 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable import/no-named-as-default */
 import React from 'react';
 import { configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-// eslint-disable-next-line import/no-named-as-default-member
 import Chart from '../components/Chart';
 // Unit test cases for d3 functionality
 configure({ adapter: new Adapter() });
@@ -61,7 +63,7 @@ describe('Root object', () => {
   });
 
   // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('should be a deep clone of the hierarchy', () => {
+  it('should be a deep clone of the hierarchy', () => {
     const instance = wrapper.instance();
     instance.componentDidMount();
     expect(typeof root).toBe(typeof props.hierarchy);
