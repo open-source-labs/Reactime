@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-filename-extension */
-import React from 'react';
+import React, { Component } from 'react';
 import { render } from 'react-dom';
 
 const linkFiberRequire = require('../linkFiber');
@@ -8,7 +8,7 @@ let linkFiber;
 let mode;
 let snapShot;
 
-class App extends React.Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = { foo: 'bar' };

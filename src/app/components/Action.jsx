@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { changeView, changeSlider } from '../actions/actions';
 
 const Action = props => {

@@ -1,253 +1,191 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-mixed-operators */
+/* eslint-disable prefer-template */
+/* eslint-disable no-return-assign */
+/* eslint-disable prefer-arrow-callback */
+/* eslint-disable func-names */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/no-string-refs */
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
 let root = {};
-let duration = 750;
-
 class Chart extends Component {
+  constructor(props) {
+    super(props);
+    this.chartRef = React.createRef();
+    this.maked3Tree = this.maked3Tree.bind(this);
+    this.removed3Tree = this.removed3Tree.bind(this);
+  }
+
   componentDidMount() {
-    const { snapshot } = this.props;
-    root = JSON.parse(JSON.stringify(snapshot));
+    const { hierarchy } = this.props;
+    root = JSON.parse(JSON.stringify(hierarchy));
     this.maked3Tree();
   }
 
   componentDidUpdate() {
-    const { snapshot } = this.props;
-    root = JSON.parse(JSON.stringify(snapshot));
+    const { hierarchy } = this.props;
+    root = JSON.parse(JSON.stringify(hierarchy));
     this.maked3Tree();
   }
 
   removed3Tree() {
-    const { anchor } = this.refs;
-    while (anchor.hasChildNodes()) {
-      anchor.removeChild(anchor.lastChild);
+    const { current } = this.chartRef;
+    while (current.hasChildNodes()) {
+      current.removeChild(current.lastChild);
     }
   }
 
   maked3Tree() {
     this.removed3Tree();
-    duration = 0;
-
     const margin = {
-      top: 20,
-      right: 120,
-      bottom: 20,
+      top: 0,
+      right: 60,
+      bottom: 200,
       left: 120,
     };
-    // const width = 600 - margin.right - margin.left;
-    const height = 600 - margin.top - margin.bottom;
+    const width = 600 - margin.right - margin.left;
+    const height = 700 - margin.top - margin.bottom;
 
-    let i = 0;
+    const chartContainer = d3.select(this.chartRef.current)
+      .append('svg') // chartContainer is now pointing to svg
+      .attr('width', width)
+      .attr('height', height);
 
-    const tree = d3.layout
-      .tree()
-      .nodeSize([20])
-      .separation((a, b) => (a.parent === b.parent ? 3 : 1));
+    const g = chartContainer.append('g')
+      // this is changing where the graph is located physically
+      .attr('transform', `translate(${width / 2 + 4}, ${height / 2 + 2})`);
 
-    const diagonal = d3.svg.diagonal().projection(d => [d.y, d.x]);
+    // if we consider the container for our radial node graph as a box encapsulating
+    // half of this container width is essentially the radius of our radial node graph
+    const radius = width / 2;
 
-    const svg = d3
-      .select(this.refs.anchor)
-      .append('svg')
-      .attr('width', '100%')
-      .attr('height', '100%')
-      .attr('cursor', '-webkit-grab')
-      .attr('preserveAspectRatio', 'xMinYMin slice')
-      .call(
-        d3.behavior
-          .zoom()
-          .on('zoom', () => svg.attr('transform', `translate(${d3.event.translate}) scale(${d3.event.scale})`)),
-      )
+    // d3.hierarchy constructs a root node from the specified hierarchical data
+    // (our object titled dataset), which must be an object representing the root node
+    const hierarchy = d3.hierarchy(root);
+
+    const tree = d3.tree()
+      // this assigns width of tree to be 2pi
+      .size([2 * Math.PI, radius / 1.3])
+      .separation(function (a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
+
+    const d3root = tree(hierarchy);
+
+    g.selectAll('.link')
+      // root.links() gets an array of all the links,
+      // where each element is an object containing a
+      // source property, which represents the link's source node,
+      // and a target property, which represents the link's target node.
+      .data(d3root.links())
+      .enter()
+      .append('path')
+      .attr('class', 'link')
+      .attr('d', d3.linkRadial()
+        .angle(d => d.x)
+        .radius(d => d.y));
+
+    const node = g.selectAll('.node')
+      // root.descendants gets an array of of all nodes
+      .data(d3root.descendants())
+      .enter()
       .append('g')
-      .attr('transform', `translate(60,${height / 2})`);
+      //  assigning class to the node based on whether node has children or not
+      .attr('class', function (d) {
+        return 'node' + (d.children ? ' node--internal' : ' node--leaf');
+      })
+      .attr('transform', function (d) {
+        return 'translate(' + reinfeldTidierAlgo(d.x, d.y) + ')';
+      });
 
-    // Add tooltip div
-    const div = d3
-      .select('body')
-      .append('div')
+    node.append('circle')
+      .attr('r', 5)
+      .on('mouseover', function (d) {
+        d3.select(this)
+          .transition(100)
+          .duration(20)
+          .attr('r', 10);
+
+        tooltipDiv.transition()
+          .duration(50)
+          .style('opacity', 0.9);
+
+        tooltipDiv.html(JSON.stringify(d.data.stateSnapshot.children[0].state), this)
+          .style('left', (d3.event.pageX - 90) + 'px')
+          .style('top', (d3.event.pageY - 65) + 'px');
+      })
+      // eslint-disable-next-line no-unused-vars
+      .on('mouseout', function (d) {
+        d3.select(this)
+          .transition()
+          .duration(300)
+          .attr('r', 5);
+
+        tooltipDiv.transition()
+          .duration(400)
+          .style('opacity', 0);
+      });
+    node
+      .append('text')
+      // adjusts the y coordinates for the node text
+      .attr('dy', '-1.5em')
+      .attr('x', function (d) {
+        // this positions how far the text is from leaf nodes (ones without children)
+        // negative number before the colon moves the text of rightside nodes,
+        // positive number moves the text for the leftside nodes
+        return d.x < Math.PI === !d.children ? -4 : 5;
+      })
+      .attr('text-anchor', function (d) { return d.x < Math.PI === !d.children ? 'start' : 'end'; })
+      // this arranges the angle of the text
+      .attr('transform', function (d) { return 'rotate(' + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 1 / Math.PI + ')'; })
+      .text(function (d) {
+        return d.data.index;
+      });
+
+    // allows svg to be dragged around
+    node.call(d3.drag()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended));
+
+    chartContainer.call(d3.zoom()
+      .extent([[0, 0], [width, height]])
+      .scaleExtent([1, 8])
+      .on('zoom', zoomed));
+
+    function dragstarted() {
+      d3.select(this).raise();
+      g.attr('cursor', 'grabbing');
+    }
+
+    function dragged(d) {
+      d3.select(this).attr('dx', d.x = d3.event.x).attr('dy', d.y = d3.event.y);
+    }
+
+    function dragended() {
+      g.attr('cursor', 'grab');
+    }
+
+    function zoomed() {
+      g.attr('transform', d3.event.transform);
+    }
+
+    // define the div for the tooltip
+    const tooltipDiv = d3.select('body').append('div')
       .attr('class', 'tooltip')
-      .style('opacity', 1e-6)
-      .on('mouseover', tipMouseover)
-      .on('mouseout', tipMouseout);
+      .style('opacity', 0);
 
-    root.x0 = height / 2;
-    root.y0 = 0;
-
-    function update(source) {
-      // Compute the new tree layout.
-      const nodes = tree.nodes(root).reverse();
-      const links = tree.links(nodes);
-
-      // Normalize for fixed-depth.
-      nodes.forEach(d => {
-        d.y = d.depth * 180;
-      });
-
-      // Update the nodes…
-      const node = svg.selectAll('g.node').data(nodes, d => {
-        if (!d.id) {
-          i += 1;
-          d.id = i;
-        }
-        return d.id;
-      });
-
-      // Enter any new nodes at the parent's previous position.
-      const nodeEnter = node
-        .enter()
-        .append('g')
-        .attr('class', 'node')
-        .attr('transform', () => `translate(${source.y0},${source.x0})`)
-        .on('click', click)
-        .on('mouseover', mouseover)
-        .on('mouseout', mouseout)
-        .on('mousemove', d => mousemove(d));
-
-      nodeEnter
-        .append('circle')
-        .attr('r', 1e-6)
-        .style('fill', d => (d._children ? 'lightsteelblue' : '#fff'));
-
-      nodeEnter
-        .append('text')
-        .attr('x', d => (d.children || d._children ? -10 : 10))
-        .attr('dy', '.35em')
-        .attr('text-anchor', d => (d.children || d._children ? 'end' : 'start'))
-        .text(d => d.name)
-        .style('fill', '#6FB3D2')
-        .style('fill-opacity', 1e-6);
-
-      // Transition nodes to their new position.
-      const nodeUpdate = node
-        .transition()
-        .duration(duration)
-        .attr('transform', d => `translate(${d.y},${d.x})`);
-
-      nodeUpdate
-        .select('circle')
-        .attr('r', 7)
-        .style('fill', d => (d._children ? '#A1C658' : '#D381C3'));
-
-      nodeUpdate.select('text').style('fill-opacity', 1);
-
-      // Transition exiting nodes to the parent's new position.
-      const nodeExit = node
-        .exit()
-        .transition()
-        .duration(duration)
-        .attr('transform', () => `translate(${source.y},${source.x})`)
-        .remove();
-
-      nodeExit.select('circle').attr('r', 1e-6);
-
-      nodeExit.select('text').style('fill-opacity', 1e-6);
-
-      // Update the links…
-      const link = svg.selectAll('path.link').data(links, d => d.target.id);
-
-      // Enter any new links at the parent's previous position.
-      link
-        .enter()
-        .insert('path', 'g')
-        .attr('class', 'link')
-        .attr('d', () => {
-          const o = { x: source.x0, y: source.y0 };
-          return diagonal({ source: o, target: o });
-        });
-
-      // Transition links to their new position.
-      link
-        .transition()
-        .duration(duration)
-        .attr('d', diagonal);
-
-      // Transition exiting nodes to the parent's new position.
-      link
-        .exit()
-        .transition()
-        .duration(duration)
-        .attr('d', () => {
-          const o = { x: source.x, y: source.y };
-          return diagonal({ source: o, target: o });
-        })
-        .remove();
-
-      // Stash the old positions for transition.
-      nodes.forEach(d => {
-        d.x0 = d.x;
-        d.y0 = d.y;
-      });
+    function reinfeldTidierAlgo(x, y) {
+      return [(y = +y) * Math.cos(x -= Math.PI / 2), y * Math.sin(x)];
     }
-
-    // Toggle children on click.
-    function click(d) {
-      if (d.children) {
-        d._children = d.children;
-        d.children = null;
-      } else {
-        d.children = d._children;
-        d._children = null;
-      }
-      update(d);
-    }
-
-    // Show state on mouse over
-    function mouseover() {
-      div
-        .transition()
-        .duration(300)
-        .style('display', 'block')
-        .style('opacity', 1);
-    }
-
-    function mouseout() {
-      div
-        .transition()
-        .duration(3000)
-        .style('opacity', 1e-6)
-        .style('display', 'none');
-    }
-
-    function tipMouseover() {
-      div
-        .transition()
-        .duration(300)
-        .style('opacity', 1);
-    }
-
-    function tipMouseout() {
-      div
-        .transition()
-        .duration(3000)
-        .style('opacity', 1e-6)
-        .style('display', 'none');
-    }
-
-    function mousemove(d) {
-      div
-        .text(!d.state ? 'No state found' : JSON.stringify(d.state, null, 4))
-        .style('left', `${d3.event.pageX}px`)
-        .style('top', `${d3.event.pageY}px`);
-    }
-
-    update(root);
-    duration = 750;
-
-    // root.children.forEach(collapse);
   }
 
   render() {
-    return <div ref="anchor" className="d3Container" />;
+    return <div ref={this.chartRef} className="d3Container" />;
   }
 }
-
-Chart.propTypes = {
-  snapshot: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
 
 export default Chart;

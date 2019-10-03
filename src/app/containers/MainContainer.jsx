@@ -29,7 +29,6 @@ function MainContainer() {
           dispatch(deleteTab(payload));
           break;
         }
-
         case 'sendSnapshots': {
           dispatch(setTab(sourceTab));
           // set state with the information received from the background script
@@ -65,7 +64,9 @@ function MainContainer() {
       </div>
     );
   }
-  const { viewIndex, sliderIndex, snapshots } = tabs[currentTab];
+  const {
+    viewIndex, sliderIndex, snapshots, hierarchy,
+  } = tabs[currentTab];
 
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
@@ -74,7 +75,7 @@ function MainContainer() {
       <HeadContainer />
       <div className="body-container">
         <ActionContainer />
-        {snapshots.length ? <StateContainer snapshot={snapshotView} /> : null}
+        {snapshots.length ? <StateContainer snapshot={snapshotView} hierarchy={hierarchy} /> : null}
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
       </div>
