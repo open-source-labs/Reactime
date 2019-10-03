@@ -39,7 +39,7 @@ After successfully installing the chrome extension, you can test Reactime functi
 npm i reactime
 ```
 
-3. Call the library method on your root container and App after rendering your App.
+3. Call the library method on your root container after rendering your App.
 
 ```
 const reactime = require('reactime');
@@ -47,7 +47,7 @@ const reactime = require('reactime');
 const rootContainer = document.getElementById('root');
 ReactDOM.render(<App />, rootContainer);
 
-reactime(rootContainer, App);
+reactime(rootContainer);
 ```
 
 4. Done! That's all you have to do to link your React project to our library.
