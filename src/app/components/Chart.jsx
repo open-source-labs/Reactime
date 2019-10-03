@@ -10,9 +10,7 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/no-string-refs */
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-// import d3Tip from 'd3-tip';
 
 let root = {};
 class Chart extends Component {
@@ -191,9 +189,5 @@ class Chart extends Component {
     return <div ref={this.chartRef} className="d3Container" />;
   }
 }
-
-// Chart.propTypes = {
-//   snapshot: PropTypes.arrayOf(PropTypes.object).isRequired,
-// };
 
 export default Chart;

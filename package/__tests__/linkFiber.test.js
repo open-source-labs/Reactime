@@ -20,17 +20,6 @@ class App extends Component {
   }
 }
 
-// Need to create a functioanl component instance to test
-// Would need to be revised but here's the gist
-// const funcComponent = () => {
-//     const [ number, setNumber ] = useState(0);
-//     const newNumber = setNumber(1);
-
-//     return (
-//       <div>{newNumber}</div>
-//     )
-// }
-
 describe('unit test for linkFiber', () => {
   beforeEach(() => {
     snapShot = { tree: null };

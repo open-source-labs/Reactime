@@ -1,6 +1,5 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
-// import SwitchStateDropdown from '../components/SwitchState';
 import Action from '../components/Action';
 
 import { emptySnapshots } from '../actions/actions';
