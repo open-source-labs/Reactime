@@ -1,4 +1,4 @@
-const acorn = require('acorn');
+const acorn = require('acorn'); // javascript parser
 // eslint-disable-next-line import/newline-after-import
 const jsx = require('acorn-jsx');
 const JSXParser = acorn.Parser.extend(jsx());
