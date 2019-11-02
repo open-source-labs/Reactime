@@ -5,6 +5,3 @@ import App from './components/App';
 import './styles/main.scss';
 
 ReactDOM.render(<App />, document.getElementById('root'));
-
-
-// chris test

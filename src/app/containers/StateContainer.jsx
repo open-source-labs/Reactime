@@ -1,34 +1,55 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  MemoryRouter as Router, Route, NavLink, Switch,
+  MemoryRouter as Router,
+  Route,
+  NavLink,
+  Switch,
 } from 'react-router-dom';
 import StateRoute from '../components/StateRoute';
 import DiffRoute from '../components/DiffRoute';
 
-
 // eslint-disable-next-line react/prop-types
 const StateContainer = ({ snapshot, hierarchy }) => {
-  const [ Text, setText ] = useState('State');
+  const [Text, setText] = useState('State');
   return (
     <Router>
       <div className="state-container">
         <div className="main-navbar-container">
-          <div className="main-navbar-text">
-            {Text}
-          </div>
+          <div className="main-navbar-text">{Text}</div>
           <div className="main-navbar">
-            <NavLink className="main-router-link" activeClassName="is-active" exact to="/">
+            <NavLink
+              className="main-router-link"
+              activeClassName="is-active"
+              exact
+              to="/"
+            >
               State
             </NavLink>
-            <NavLink className="main-router-link" activeClassName="is-active" to="/diff">
+            <NavLink
+              className="main-router-link"
+              activeClassName="is-active"
+              to="/diff"
+            >
               Diff
             </NavLink>
           </div>
         </div>
         <Switch>
-          <Route path="/diff" render={() => { setText('Diff'); return <DiffRoute snapshot={snapshot} />; }} />
-          <Route path="/" render={() => { setText('State'); return <StateRoute snapshot={snapshot} hierarchy={hierarchy} />; }} />
+          <Route
+            path="/diff"
+            render={() => {
+              setText('Diff');
+              return <DiffRoute snapshot={snapshot} />;
+            }}
+          />
+          <Route
+            path="/"
+            render={() => {
+              setText('State');
+              return <StateRoute snapshot={snapshot} hierarchy={hierarchy} />;
+            }}
+          />
         </Switch>
       </div>
     </Router>
