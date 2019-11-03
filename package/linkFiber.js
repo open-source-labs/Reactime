@@ -11,7 +11,7 @@ const { saveState } = require('./masterState'); // saves AST state as array for 
 
 module.exports = (snap, mode) => {
   // snap is the current tree
-  // mode is {jumping: bool, locked: bool, paused: bool}
+  // mode is {jumping: bool, locked: bool, paused: bool
 
   let fiberRoot = null;
   let astHooks;
@@ -34,7 +34,7 @@ module.exports = (snap, mode) => {
     if (component.setState.linkFiberChanged) {
       // console.log("setState has already been changed for", component);
       return;
-    };
+    }
     // make a copy of setState
     const oldSetState = component.setState.bind(component);
     // replace component's setState so developer doesn't change syntax
@@ -46,7 +46,7 @@ module.exports = (snap, mode) => {
       // continue normal setState functionality, except add sending message (to chrome extension) middleware
       oldSetState(state, () => {
         updateSnapShotTree(); // this doubles the actions in reactime for star wars app, also invokes changeSetState twice, also invokes changeSetState with Route and Characters
-        sendSnapshot(); //runs once on page load, after event listener: message (line 145)
+        sendSnapshot(); // runs once on page load, after event listener: message (line 145)
         callback.bind(component)(); // WHY DO WE NEED THIS ?
       });
     };
@@ -54,19 +54,23 @@ module.exports = (snap, mode) => {
   }
 
   function changeUseState(component) { // if invoked, change useState dispatch functionality so that it also updates our snapshot
-    //check that changeUseState hasn't been changed yet
+    // check that changeUseState hasn't been changed yet
     if (component.queue.dispatch.linkFiberChanged) return;
     // store the original dispatch function definition
-    const oldDispatch = component.queue.dispatch.bind(component.queue);
+
+    // not sure why we need the bind, seems to work without it
+    // const oldDispatch = component.queue.dispatch.bind(component.queue);
+    const oldDispatch = component.queue.dispatch;
+
     // redefine the dispatch function so we can inject our code
     component.queue.dispatch = (fiber, queue, action) => {
       // don't do anything if state is locked, UNLESS we are currently jumping through time
       if (mode.locked && !mode.jumping) return;
-      oldDispatch(fiber, queue, action);
-      setTimeout(() => {
-        updateSnapShotTree();
-        sendSnapshot();
-      }, 100);
+      oldDispatch(fiber, queue, action); // hooks sees this and thinks its a side effect, that's why it's throwing an error
+      // setTimeout(() => {
+      updateSnapShotTree();
+      sendSnapshot();
+      // }, 100);
     };
     component.queue.dispatch.linkFiberChanged = true;
   }
@@ -79,8 +83,13 @@ module.exports = (snap, mode) => {
     let index = 0;
     astHooks = Object.values(astHooks);
     // while memoizedState is truthy, save the value to the object
-    while (memoizedState) {
-      changeUseState(memoizedState);
+    while (memoizedState && memoizedState.queue !== null) {
+      // we only want to changeUseState (which updates and sends the snapshot)
+      // on the last item in the memoizedState chain. This makes sure it doesn't double-push
+      // values to the timeline.
+      if (memoizedState.next === null) {
+        changeUseState(memoizedState);
+      }
       // memoized[astHooks[index]] = memoizedState.memoizedState;
       memoized[astHooks[index]] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
@@ -103,7 +112,7 @@ module.exports = (snap, mode) => {
       elementType,
     } = currentFiber; // extract properties of current fiber
 
-    let childTree = tree; // initialize child fiber tree as current fiber tree 
+    let childTree = tree; // initialize child fiber tree as current fiber tree
     // check if stateful component
     if (stateNode && stateNode.state) {
       // add component to tree
@@ -112,6 +121,7 @@ module.exports = (snap, mode) => {
       changeSetState(stateNode);
     }
     // Check if the component uses hooks
+
     if (memoizedState && Object.hasOwnProperty.call(memoizedState, 'baseState')) {
       // Traverse through the currentFiber and extract the getters/setters
       astHooks = astParser(elementType);
@@ -133,7 +143,7 @@ module.exports = (snap, mode) => {
   // but skips 1st hook click
   function updateSnapShotTree() {
     const { current } = fiberRoot; // on initial page load, current - fiberNode is tag type HostRoot (entire fiber tree)
-    console.log("current", current);
+    console.log('current', current);
     snap.tree = createTree(current);
   }
 
@@ -154,8 +164,9 @@ module.exports = (snap, mode) => {
     window.addEventListener('message', ({ data: { action } }) => {
       if (action === 'contentScriptStarted') { // runs once on initial page load
         // console.log("in window.addEL")
-        sendSnapshot()
-      };
+        console.log('page running');
+        sendSnapshot();
+      }
     });
   };
 };

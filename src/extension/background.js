@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
+
 // store ports in an array
 const portsArr = [];
 const reloaded = {};
@@ -7,7 +8,10 @@ const firstSnapshotReceived = {};
 // there will be the same number of objects in here as there are reactime tabs open for each user application being worked on
 const tabsObj = {};
 
+console.log("background scripts");
+
 function createTabObj(title) {
+
   // update tabsObj
   return {
     title,
@@ -65,7 +69,8 @@ function changeCurrLocation(tabObj, rootNode, index) {
 
 
 // establishing connection with devtools
-chrome.runtime.onConnect.addListener(port => {
+chrome.runtime.onConnect.addListener(port => { // port is one end of the connection - an object
+
   // push every port connected to the ports array
   portsArr.push(port);
 
@@ -87,8 +92,9 @@ chrome.runtime.onConnect.addListener(port => {
     }
   });
 
-  // receive snapshot from devtools and send it to contentScript
-  port.onMessage.addListener(msg => {
+  // receive snapshot from devtools and send it to contentScript - 
+  port.onMessage.addListener(msg => { // msg is action denoting a time jump in devtools
+
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:
     // {
@@ -99,7 +105,7 @@ chrome.runtime.onConnect.addListener(port => {
     // ---------------------------------------------------------------
     const { action, payload, tabId } = msg;
     switch (action) {
-      case 'import':
+      case 'import': // create a snapshot property on tabId and set equal to tabs object
         tabsObj[tabId].snapshots = payload;
         return;
       case 'emptySnap':
@@ -247,6 +253,7 @@ chrome.runtime.onInstalled.addListener(() => {
 // when context menu is clicked, listen for the menuItemId,
 // if user clicked on reactime, open the devtools window
 chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
+  console.log("clicked menu");
   const options = {
     type: 'panel',
     left: 0,
