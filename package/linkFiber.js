@@ -87,7 +87,7 @@ module.exports = (snap, mode) => {
       // we only want to changeUseState (which updates and sends the snapshot)
       // on the last item in the memoizedState chain. This makes sure it doesn't double-push
       // values to the timeline.
-      if (memoizedState.next === null) {
+      if (astHooks[index + 2] === undefined) {
         changeUseState(memoizedState);
       }
       // memoized[astHooks[index]] = memoizedState.memoizedState;

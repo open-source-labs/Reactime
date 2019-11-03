@@ -28,7 +28,7 @@ module.exports = (origin, mode) => {
       let index = 0;
       const hooks = returnState();
       // while loop through the memoize tree
-      while (current) {
+      while (current && current.queue) {
         current.queue.dispatch(target.state[hooks[index]]);
         // Reassign the current value
         current = current.next;
