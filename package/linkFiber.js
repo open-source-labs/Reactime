@@ -54,10 +54,10 @@ module.exports = (snap, mode) => {
       // don't do anything if state is locked
       if (mode.locked && !mode.jumping) return;
       oldDispatch(fiber, queue, action);
-      setTimeout(() => {
-        updateSnapShotTree();
-        sendSnapshot();
-      }, 100);
+      // setTimeout(() => {
+      updateSnapShotTree();
+      sendSnapshot();
+      // }, 100);
     };
     component.queue.dispatch.linkFiberChanged = true;
   }
@@ -71,7 +71,9 @@ module.exports = (snap, mode) => {
     astHooks = Object.values(astHooks);
     // while memoizedState is truthy, save the value to the object
     while (memoizedState && memoizedState.queue) { // prevents useEffect from crashing on load
-      changeUseState(memoizedState);
+      if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
+        changeUseState(memoizedState);
+      }
       // memoized[astHooks[index]] = memoizedState.memoizedState;
       memoized[astHooks[index]] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
