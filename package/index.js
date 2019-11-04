@@ -9,7 +9,7 @@ const mode = {
 const linkFiber = require('./linkFiber')(snapShot, mode);
 const timeJump = require('./timeJump')(snapShot, mode);
 
-window.addEventListener('message', ({ data: { action, payload } }) => {
+window.addEventListener('message', ({ data: { action, payload } }) => { //runs automatically twice per second with inspectedElement
   switch (action) {
     case 'jumpToSnap':
       timeJump(payload);

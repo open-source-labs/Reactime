@@ -1,7 +1,7 @@
 let firstMessage = true;
 
 // listening for messages from npm package
-window.addEventListener('message', msg => {
+window.addEventListener('message', msg => { // runs automatically every second
   // window listener picks up the message it sends, so we should filter
   // messages sent by contentscript
   if (msg.data.action !== 'contentScriptStarted' && firstMessage) {
@@ -13,11 +13,15 @@ window.addEventListener('message', msg => {
 
   // post initial Message to background.js
   const { action } = msg.data;
-  if (action === 'recordSnap') chrome.runtime.sendMessage(msg.data);
+
+  if (action === 'recordSnap') { // this is firing on page load
+    chrome.runtime.sendMessage(msg.data);
+  }
 });
 
 // listening for messages from the UI
-chrome.runtime.onMessage.addListener(request => {
+chrome.runtime.onMessage.addListener(request => { // seems to never fire
+
   // send the message to npm package
   const { action } = request;
   switch (action) {
