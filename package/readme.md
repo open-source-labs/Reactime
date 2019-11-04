@@ -18,7 +18,7 @@
 
 Reactime is a debugging tool for React developers. It records state whenever it is changed and allows the user to jump to any previously recorded state.
 
-This dev tool is for React apps using stateful components and prop drilling, and has beta support for Context API, conditional state routing, Hooks (useState, useEffect) and functional components. 
+This dev tool is for React apps using stateful components and prop drilling, and has beta support for Context API, conditional state routing, Hooks (useState & useEffect) and functional components. 
 
 One thing to note is that this library does not work well when mixing React with direct DOM manipulation.
 
