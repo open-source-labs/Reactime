@@ -78,7 +78,7 @@ module.exports = (snap, mode) => {
       memoized[astHooks[index]] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
       memoizedState = memoizedState.next;
-      // Increment the index by 2
+      // Increment the index by  2
       index += 2;
     }
     return memoized;
