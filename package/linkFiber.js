@@ -70,16 +70,13 @@ module.exports = (snap, mode) => {
     let index = 0;
     astHooks = Object.values(astHooks);
     // while memoizedState is truthy, save the value to the object
-    while (memoizedState && memoizedState.queue) { // prevents useEffect from crashing on load
-      if (memoizedState.next && memoizedState.next.queue === null) { // prevents double pushing snapshot updates
-        changeUseState(memoizedState);
-      }
-      // memoized[astHooks[index]] = memoizedState.memoizedState;
+    while (memoizedState && memoizedState.queue) {
+      changeUseState(memoizedState);
+
       memoized[astHooks[index]] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
       memoizedState = memoizedState.next;
-      // Increment the index by  2
-      index += 2;
+      index += 2; // Increment the index by 2
     }
     return memoized;
   }
@@ -104,7 +101,10 @@ module.exports = (snap, mode) => {
       changeSetState(stateNode);
     }
     // Check if the component uses hooks
-    if (memoizedState && Object.hasOwnProperty.call(memoizedState, 'baseState')) {
+    if (
+      memoizedState
+      && Object.hasOwnProperty.call(memoizedState, 'baseState')
+    ) {
       // Traverse through the currentFiber and extract the getters/setters
       astHooks = astParser(elementType);
       saveState(astHooks);
