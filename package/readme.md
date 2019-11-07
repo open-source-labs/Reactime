@@ -1,8 +1,8 @@
 <p align="center">
-  <img src ="./assets/readme_logo.png" width="400"/>
+  <img src ="./assets/readme-logo-svg.svg" width="300"/>
 </p>
 
-# Reactime: A Time Travel Debugger for React
+<h1 align="center">State Debugger for React</h1>
 
 [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime)
 [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime)
@@ -10,20 +10,19 @@
 [![Dependencies](https://david-dm.org/oslabs-beta/reactime.svg)](https://david-dm.org/oslabs-beta/reactime#info=dependencies)
 [![DevDependencies](https://david-dm.org/oslabs-beta/reactime/dev-status.svg)](https://david-dm.org/oslabs-beta/reactime?type=dev)
 [![Vulnerabilities](https://snyk.io/test/github/oslabs-beta/reactime/badge.svg)](https://snyk.io/test/github/oslabs-beta/reactime)
-
-[![NPM](https://nodei.co/npm/reactime.png)](https://nodei.co/npm/reactime/)
-
 <p align="center">
+<a href="https://nodei.co/npm/reactime/"><img src="https://nodei.co/npm/reactime.png"></a>
+
   <img src="demo.gif" alt="Demo of Reactime" style="width: 55%">
 </p>
 
-Reactime is a debugging tool for React developers. It records state whenever state is changed and allows user to jump to any previous recorded state.
+Reactime is a debugging tool for React developers. It records state whenever it is changed and allows the user to jump to any previously recorded state.
 
-One important thing to note. This devtool is for React apps using only stateful components and prop drilling. If you're using Redux, Hooks, Context, or functional components, this devtool will not function on your app. 
+This dev tool is for React apps using stateful components and prop drilling, and has beta support for Context API, conditional state routing, Hooks (useState & useEffect) and functional components. 
 
-Another thing is that this library does not work well when mixing React with direct DOM manipulation. Since DOM manipulation doesn't change any React state, this library cannot record or even detect that change. Of course, you should be avoiding mixing the two in the first place.
+One thing to note is that this library does not work well when mixing React with direct DOM manipulation.
 
-Two parts are needed for this tool to function. The <a href="https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga">chrome extension</a> must be installed, and the NPM package must be installed and used in the React code.
+Two parts are needed for this tool to function. The <a href="https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga"><strong>chrome extension</strong></a> must be installed, and the <a href="https://www.npmjs.com/package/reactime"><strong>NPM package</strong></a> must be installed and used in the React code.
 
 After successfully installing the chrome extension, you can test Reactime functionalities in the demo repositories below.
 
@@ -63,7 +62,7 @@ Then open up your Chrome DevTools. There'll be a new tab called Reactime.
 
 ### Recording
 
-Whenever state is changed (whenever setState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the Reactime panel.
+Whenever state is changed (whenever setState or useState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the Reactime panel.
 
 ### Viewing
 
@@ -73,14 +72,15 @@ You can click on a snapshot to view your app's state. State can be visualized in
 
 Jumping is the most important feature of all. It allows you to jump to any previous recorded snapshots. Hitting the jump button on any snapshot will change the DOM by setting their state.
 
-### Others
+### And Much More
 
-Other handy features include:
-
+- multiple tree graph branches depicting state changes
+- tree graph hover functionality to view state changes 
+- ability to pan and zoom tree graph
 - multiple tabs support
 - a slider to move through snapshots quickly
 - a play button to move through snapshots automatically
-- a pause which button stops recording each snapshot
+- a pause button, which stops recording each snapshot
 - a lock button to freeze the DOM in place. setState will lose all functionality while the extension is locked
 - a persist button to keep snapshots upon refresh (handy when changing code and debugging)
 - export/import the current snapshots in memory
@@ -91,6 +91,14 @@ Other handy features include:
 - **Bryan Lee** - [@mylee1995](https://github.com/mylee1995)
 - **Josh Kim** - [@joshua0308](https://github.com/joshua0308)
 - **Sierra Swaby** - [@starkspark](https://github.com/starkspark)
+- **Ruth Anam** - [@peachiecodes](https://github.com/peachiecodes)
+- **David Chai** - [@davidchaidev](https://github.com/davidchaidev)
+- **Yujin Kang** - [@yujinkay](https://github.com/yujinkay)
+- **Andy Wong** - [@andywongdev](https://github.com/andywongdev)
+- **Chris Flannery** - [@chriswillsflannery](https://github.com/chriswillsflannery)
+- **Rajeeb Banstola** - [@rajeebthegreat](https://github.com/rajeebthegreat)
+- **Prasanna Malla** - [@prasmalla](https://github.com/prasmalla)
+- **Rocky Lin** - [@rocky9413](https://github.com/rocky9413)
 
 ## License
 

@@ -31,7 +31,7 @@ module.exports = (snap, mode) => {
     const oldSetState = component.setState.bind(component);
     // replace component's setState so developer doesn't change syntax
     // component.setState = newSetState.bind(component);
-    component.setState = (state, callback = () => {}) => {
+    component.setState = (state, callback = () => { }) => {
       // don't do anything if state is locked
       // UNLESS we are currently jumping through time
       if (mode.locked && !mode.jumping) return;
@@ -102,8 +102,8 @@ module.exports = (snap, mode) => {
     }
     // Check if the component uses hooks
     if (
-      memoizedState &&
-      Object.hasOwnProperty.call(memoizedState, 'baseState')
+      memoizedState
+      && Object.hasOwnProperty.call(memoizedState, 'baseState')
     ) {
       // Traverse through the currentFiber and extract the getters/setters
       astHooks = astParser(elementType);
