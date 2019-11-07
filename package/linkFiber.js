@@ -71,16 +71,12 @@ module.exports = (snap, mode) => {
     astHooks = Object.values(astHooks);
     // while memoizedState is truthy, save the value to the object
     while (memoizedState && memoizedState.queue) {
-      // prevents useEffect from crashing on load
-      // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
       changeUseState(memoizedState);
-      // }
-      // memoized[astHooks[index]] = memoizedState.memoizedState;
+
       memoized[astHooks[index]] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
       memoizedState = memoizedState.next;
-      // Increment the index by 2
-      index += 2;
+      index += 2; // Increment the index by 2
     }
     return memoized;
   }
