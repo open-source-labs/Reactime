@@ -70,19 +70,24 @@ module.exports = (snap, mode) => {
     let index = 0;
     astHooks = Object.values(astHooks);
     // while memoizedState is truthy, save the value to the object
-    while (memoizedState && memoizedState.queue) {
+    while (memoizedState && memoizedState.queue) { // prevents useEffect from crashing on load
+      // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
       changeUseState(memoizedState);
-
+      // }
+      // memoized[astHooks[index]] = memoizedState.memoizedState;
       memoized[astHooks[index]] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
       memoizedState = memoizedState.next;
-      index += 2; // Increment the index by 2
+      // Increment the index by 2
+      index += 2;
     }
     return memoized;
   }
 
   function createTree(currentFiber, tree = new Tree('root')) {
     if (!currentFiber) return tree;
+
+    // console.log("currentFiber", currentFiber);
 
     const {
       sibling,
@@ -101,10 +106,11 @@ module.exports = (snap, mode) => {
       changeSetState(stateNode);
     }
     // Check if the component uses hooks
-    if (
-      memoizedState
-      && Object.hasOwnProperty.call(memoizedState, 'baseState')
-    ) {
+    // console.log("memoizedState", memoizedState);
+
+    if (memoizedState && Object.hasOwnProperty.call(memoizedState, 'baseState')) {
+      // 'catch-all' for suspense elements (experimental)
+      if (typeof elementType.$$typeof === 'symbol') return;
       // Traverse through the currentFiber and extract the getters/setters
       astHooks = astParser(elementType);
       saveState(astHooks);
@@ -134,6 +140,7 @@ module.exports = (snap, mode) => {
     } = container;
     // only assign internal rootp if it actually exists
     fiberRoot = _internalRoot || _reactRootContainer;
+
 
     updateSnapShotTree();
     // send the initial snapshot once the content script has started up
