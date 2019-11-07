@@ -12,27 +12,43 @@ module.exports = elementType => {
   while (Object.hasOwnProperty.call(ast, 'body')) {
     // Traverse down .body once before invoking parsing logic and will loop through any .body after
     ast = ast.body;
-    // Iterate through AST of every function declaration
-    // Check within each function declaration if there are hook declarations
-    ast.forEach(functionDec => {
-      const { body } = functionDec.body;
-      const statements = [];
-      // Traverse through the function's funcDecs and Expression Statements
-      body.forEach(program => {
-        // Hook Declarations will only be under 'VariableDeclaration' type
-        if (program.type === 'VariableDeclaration') {
-          program.declarations.forEach(dec => {
-            statements.push(dec.id.name);
-          });
-        }
+    const statements = [];
+
+    // handle useState useContext
+    if (ast[0].expression.body.body) {
+      ast = ast[0].expression.body.body;
+      // Hook Declarations will only be under 'VariableDeclaration' type
+      hookDeclare(ast);
+      // Iterate array and determine getter/setters based on pattern
+      stMent(statements); // add key-value to hookState
+    } else {
+      // Iterate through AST of every function declaration
+      // Check within each function declaration if there are hook declarations
+      ast.forEach(functionDec => {
+        const { body } = functionDec.body;
+        // Traverse through the function's funcDecs and Expression Statements
+        hookDeclare(body);
+        // Iterate array and determine getter/setters based on pattern
+        stMent(statements); // add key-value to hookState
       });
-      // Iterate through the array and determine getter/setters based on pattern
-      for (let i = 0; i < statements.length; i += 1) {
-        if (statements[i].match(/_use/)) {
-          hookState[statements[i]] = statements[i + 2];
-        }
+    }
+  }
+
+  function stMent(st) {
+    st.forEach((el, i) => {
+      if (el.match(/_use/)) hookState[el] = statements[i + 2];
+    });
+  }
+
+  function hookDeclare(astVal) {
+    astVal.forEach(elem => {
+      if (elem.type === 'VariableDeclaration') {
+        elem.declarations.forEach(decClar => {
+          statements.push(decClar.id.name);
+        });
       }
     });
   }
+
   return hookState;
 };

@@ -31,7 +31,7 @@ module.exports = (snap, mode) => {
     const oldSetState = component.setState.bind(component);
     // replace component's setState so developer doesn't change syntax
     // component.setState = newSetState.bind(component);
-    component.setState = (state, callback = () => { }) => {
+    component.setState = (state, callback = () => {}) => {
       // don't do anything if state is locked
       // UNLESS we are currently jumping through time
       if (mode.locked && !mode.jumping) return;
@@ -70,10 +70,11 @@ module.exports = (snap, mode) => {
     let index = 0;
     astHooks = Object.values(astHooks);
     // while memoizedState is truthy, save the value to the object
-    while (memoizedState && memoizedState.queue) { // prevents useEffect from crashing on load
-      if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
-        changeUseState(memoizedState);
-      }
+    while (memoizedState && memoizedState.queue) {
+      // prevents useEffect from crashing on load
+      // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
+      changeUseState(memoizedState);
+      // }
       // memoized[astHooks[index]] = memoizedState.memoizedState;
       memoized[astHooks[index]] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
@@ -104,7 +105,10 @@ module.exports = (snap, mode) => {
       changeSetState(stateNode);
     }
     // Check if the component uses hooks
-    if (memoizedState && Object.hasOwnProperty.call(memoizedState, 'baseState')) {
+    if (
+      memoizedState &&
+      Object.hasOwnProperty.call(memoizedState, 'baseState')
+    ) {
       // Traverse through the currentFiber and extract the getters/setters
       astHooks = astParser(elementType);
       saveState(astHooks);
