@@ -1,3 +1,4 @@
+/* eslint-disable no-inner-declarations */
 const acorn = require('acorn'); // javascript parser
 // eslint-disable-next-line import/newline-after-import
 const jsx = require('acorn-jsx');
@@ -13,6 +14,22 @@ module.exports = elementType => {
     // Traverse down .body once before invoking parsing logic and will loop through any .body after
     ast = ast.body;
     const statements = [];
+
+    function stMent(st) {
+      st.forEach((el, i) => {
+        if (el.match(/_use/)) hookState[el] = statements[i + 2];
+      });
+    }
+
+    function hookDeclare(astVal) {
+      astVal.forEach(elem => {
+        if (elem.type === 'VariableDeclaration') {
+          elem.declarations.forEach(decClar => {
+            statements.push(decClar.id.name);
+          });
+        }
+      });
+    }
 
     // handle useState useContext
     if (ast[0].expression.body.body) {
@@ -33,22 +50,5 @@ module.exports = elementType => {
       });
     }
   }
-
-  function stMent(st) {
-    st.forEach((el, i) => {
-      if (el.match(/_use/)) hookState[el] = statements[i + 2];
-    });
-  }
-
-  function hookDeclare(astVal) {
-    astVal.forEach(elem => {
-      if (elem.type === 'VariableDeclaration') {
-        elem.declarations.forEach(decClar => {
-          statements.push(decClar.id.name);
-        });
-      }
-    });
-  }
-
   return hookState;
 };
