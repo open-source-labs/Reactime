@@ -13,6 +13,12 @@ window.addEventListener('message', ({ data: { action, payload } }) => { //runs a
   switch (action) {
     case 'jumpToSnap':
       timeJump(payload);
+      // Get the pathname from payload and add new entry to browser history
+      // MORE: https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
+      if (payload.children[0].state && payload.children[0].state.location) {
+        const route = payload.children[0].state.location.pathname;
+        window.history.pushState(route);
+      }
       break;
     case 'setLock':
       mode.locked = payload;
