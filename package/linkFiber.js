@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable func-names */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
@@ -10,6 +11,7 @@ const { saveState } = require('./masterState');
 module.exports = (snap, mode) => {
   let fiberRoot = null;
   let astHooks;
+  let concurrent = false; // flag to check if we are in concurrent mode
 
   function sendSnapshot() {
     // don't send messages while jumping or while paused
@@ -87,7 +89,6 @@ module.exports = (snap, mode) => {
   function createTree(currentFiber, tree = new Tree('root')) {
     if (!currentFiber) return tree;
 
-    // console.log("currentFiber", currentFiber);
 
     const {
       sibling,
@@ -128,21 +129,39 @@ module.exports = (snap, mode) => {
   }
   // runs when page initially loads
   // but skips 1st hook click
-  function updateSnapShotTree() {
-    const { current } = fiberRoot;
+  async function updateSnapShotTree() {
+    let current;
+    // if concurrent mode, grab current.child'
+    if (concurrent) {
+      // we need a way to wait for current child to populate
+      const promise = new Promise((resolve, reject) => {
+        setTimeout(() => resolve(fiberRoot.current.child), 400);
+      });
+
+      current = await promise;
+
+      current = fiberRoot.current.child;
+    } else {
+      current = fiberRoot.current;
+    }
+
     snap.tree = createTree(current);
   }
 
-  return container => {
-    const {
-      _reactRootContainer: { _internalRoot },
-      _reactRootContainer,
-    } = container;
-    // only assign internal rootp if it actually exists
-    fiberRoot = _internalRoot || _reactRootContainer;
+  return async container => {
+    if (container._internalRoot) {
+      fiberRoot = container._internalRoot;
+      concurrent = true;
+    } else {
+      const {
+        _reactRootContainer: { _internalRoot },
+        _reactRootContainer,
+      } = container;
+      // only assign internal rootp if it actually exists
+      fiberRoot = _internalRoot || _reactRootContainer;
+    }
 
-
-    updateSnapShotTree();
+    await updateSnapShotTree();
     // send the initial snapshot once the content script has started up
     window.addEventListener('message', ({ data: { action } }) => {
       if (action === 'contentScriptStarted') sendSnapshot();
