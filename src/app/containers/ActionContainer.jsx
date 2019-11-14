@@ -6,10 +6,8 @@ import { emptySnapshots } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 const resetSlider = () => {
-  console.log('in reset slider');
   const slider = document.querySelector('.rc-slider-handle');
-  console.log('my slider', slider);
-  slider.setAttribute('style', 'left: 0');
+  if (slider) { slider.setAttribute('style', 'left: 0'); }
 };
 
 function ActionContainer() {
