@@ -13,7 +13,7 @@ function getRouteURL(node) {
   if (node.name === 'Router') {
     return node.state.location.pathname;
   }
-  if (node.children.length >= 1) {
+  if (node.children && node.children.length >= 1) {
     const tempNode = node.children;
     for (let index = 0; index < tempNode.length; index += 1) {
       return getRouteURL(tempNode[index]);
