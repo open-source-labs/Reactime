@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable func-names */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
@@ -10,6 +11,7 @@ const { saveState } = require('./masterState');
 module.exports = (snap, mode) => {
   let fiberRoot = null;
   let astHooks;
+  let concurrent = false; // flag to check if we are in concurrent mode
 
   function sendSnapshot() {
     // don't send messages while jumping or while paused
@@ -70,19 +72,23 @@ module.exports = (snap, mode) => {
     let index = 0;
     astHooks = Object.values(astHooks);
     // while memoizedState is truthy, save the value to the object
-    while (memoizedState && memoizedState.queue) {
+    while (memoizedState && memoizedState.queue) { // prevents useEffect from crashing on load
+      // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
       changeUseState(memoizedState);
-
+      // }
+      // memoized[astHooks[index]] = memoizedState.memoizedState;
       memoized[astHooks[index]] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
       memoizedState = memoizedState.next;
-      index += 2; // Increment the index by 2
+      // Increment the index by 2
+      index += 2;
     }
     return memoized;
   }
 
   function createTree(currentFiber, tree = new Tree('root')) {
     if (!currentFiber) return tree;
+
 
     const {
       sibling,
@@ -101,10 +107,11 @@ module.exports = (snap, mode) => {
       changeSetState(stateNode);
     }
     // Check if the component uses hooks
-    if (
-      memoizedState
-      && Object.hasOwnProperty.call(memoizedState, 'baseState')
-    ) {
+    // console.log("memoizedState", memoizedState);
+
+    if (memoizedState && Object.hasOwnProperty.call(memoizedState, 'baseState')) {
+      // 'catch-all' for suspense elements (experimental)
+      if (typeof elementType.$$typeof === 'symbol') return;
       // Traverse through the currentFiber and extract the getters/setters
       astHooks = astParser(elementType);
       saveState(astHooks);
@@ -122,20 +129,39 @@ module.exports = (snap, mode) => {
   }
   // runs when page initially loads
   // but skips 1st hook click
-  function updateSnapShotTree() {
-    const { current } = fiberRoot;
+  async function updateSnapShotTree() {
+    let current;
+    // if concurrent mode, grab current.child'
+    if (concurrent) {
+      // we need a way to wait for current child to populate
+      const promise = new Promise((resolve, reject) => {
+        setTimeout(() => resolve(fiberRoot.current.child), 400);
+      });
+
+      current = await promise;
+
+      current = fiberRoot.current.child;
+    } else {
+      current = fiberRoot.current;
+    }
+
     snap.tree = createTree(current);
   }
 
-  return container => {
-    const {
-      _reactRootContainer: { _internalRoot },
-      _reactRootContainer,
-    } = container;
-    // only assign internal rootp if it actually exists
-    fiberRoot = _internalRoot || _reactRootContainer;
+  return async container => {
+    if (container._internalRoot) {
+      fiberRoot = container._internalRoot;
+      concurrent = true;
+    } else {
+      const {
+        _reactRootContainer: { _internalRoot },
+        _reactRootContainer,
+      } = container;
+      // only assign internal rootp if it actually exists
+      fiberRoot = _internalRoot || _reactRootContainer;
+    }
 
-    updateSnapShotTree();
+    await updateSnapShotTree();
     // send the initial snapshot once the content script has started up
     window.addEventListener('message', ({ data: { action } }) => {
       if (action === 'contentScriptStarted') sendSnapshot();
