@@ -33,7 +33,7 @@ module.exports = (snap, mode) => {
     const oldSetState = component.setState.bind(component);
     // replace component's setState so developer doesn't change syntax
     // component.setState = newSetState.bind(component);
-    component.setState = (state, callback = () => { }) => {
+    component.setState = (state, callback = () => {}) => {
       // don't do anything if state is locked
       // UNLESS we are currently jumping through time
       if (mode.locked && !mode.jumping) return;
@@ -72,7 +72,8 @@ module.exports = (snap, mode) => {
     let index = 0;
     astHooks = Object.values(astHooks);
     // while memoizedState is truthy, save the value to the object
-    while (memoizedState && memoizedState.queue) { // prevents useEffect from crashing on load
+    while (memoizedState && memoizedState.queue) {
+      // prevents useEffect from crashing on load
       // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
       changeUseState(memoizedState);
       // }
@@ -88,7 +89,6 @@ module.exports = (snap, mode) => {
 
   function createTree(currentFiber, tree = new Tree('root')) {
     if (!currentFiber) return tree;
-
 
     const {
       sibling,
@@ -109,7 +109,10 @@ module.exports = (snap, mode) => {
     // Check if the component uses hooks
     // console.log("memoizedState", memoizedState);
 
-    if (memoizedState && Object.hasOwnProperty.call(memoizedState, 'baseState')) {
+    if (
+      memoizedState &&
+      Object.hasOwnProperty.call(memoizedState, 'baseState')
+    ) {
       // 'catch-all' for suspense elements (experimental)
       if (typeof elementType.$$typeof === 'symbol') return;
       // Traverse through the currentFiber and extract the getters/setters
@@ -157,7 +160,7 @@ module.exports = (snap, mode) => {
         _reactRootContainer: { _internalRoot },
         _reactRootContainer,
       } = container;
-      // only assign internal rootp if it actually exists
+      // only assign internal root if it actually exists
       fiberRoot = _internalRoot || _reactRootContainer;
     }
 

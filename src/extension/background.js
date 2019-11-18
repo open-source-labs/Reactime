@@ -8,7 +8,6 @@ const firstSnapshotReceived = {};
 // there will be the same number of objects in here as there are reactime tabs open for each user application being worked on
 const tabsObj = {};
 
-
 function createTabObj(title) {
   // update tabsObj
   return {
@@ -60,7 +59,6 @@ function changeCurrLocation(tabObj, rootNode, index) {
     return;
     // if not, recurse on each one of the children
   }
-  // added if (rootNode.children) { <=======
   if (rootNode.children) {
     rootNode.children.forEach(child => {
       changeCurrLocation(tabObj, child, index);
@@ -146,9 +144,9 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
   // Filter out tabs that don't have reactime
   if (
-    action === 'tabReload'
-    || action === 'recordSnap'
-    || action === 'jumpToSnap'
+    action === 'tabReload' ||
+    action === 'recordSnap' ||
+    action === 'jumpToSnap'
   ) {
     isReactTimeTravel = true;
   } else return;
@@ -181,10 +179,12 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         tabsObj[tabId].index = 1;
 
         // send a message to devtools
-        portsArr.forEach(bg => bg.postMessage({
-          action: 'initialConnectSnapshots',
-          payload: tabsObj,
-        }));
+        portsArr.forEach(bg =>
+          bg.postMessage({
+            action: 'initialConnectSnapshots',
+            payload: tabsObj,
+          })
+        );
       }
       reloaded[tabId] = true;
       break;
@@ -199,13 +199,15 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         tabsObj[tabId].snapshots.push(request.payload);
         sendToHierarchy(
           tabsObj[tabId],
-          new Node(request.payload, tabsObj[tabId]),
+          new Node(request.payload, tabsObj[tabId])
         );
         if (portsArr.length > 0) {
-          portsArr.forEach(bg => bg.postMessage({
-            action: 'initialConnectSnapshots',
-            payload: tabsObj,
-          }));
+          portsArr.forEach(bg =>
+            bg.postMessage({
+              action: 'initialConnectSnapshots',
+              payload: tabsObj,
+            })
+          );
         }
         break;
       }
@@ -218,16 +220,18 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
         sendToHierarchy(
           tabsObj[tabId],
-          new Node(request.payload, tabsObj[tabId]),
+          new Node(request.payload, tabsObj[tabId])
         );
       }
       // send message to devtools
       if (portsArr.length > 0) {
-        portsArr.forEach(bg => bg.postMessage({
-          action: 'sendSnapshots',
-          payload: tabsObj,
-          sourceTab,
-        }));
+        portsArr.forEach(bg =>
+          bg.postMessage({
+            action: 'sendSnapshots',
+            payload: tabsObj,
+            sourceTab,
+          })
+        );
       }
       break;
     }
@@ -240,10 +244,12 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 chrome.tabs.onRemoved.addListener(tabId => {
   // tell devtools which tab to delete
   if (portsArr.length > 0) {
-    portsArr.forEach(bg => bg.postMessage({
-      action: 'deleteTab',
-      payload: tabId,
-    }));
+    portsArr.forEach(bg =>
+      bg.postMessage({
+        action: 'deleteTab',
+        payload: tabId,
+      })
+    );
   }
 
   // delete the tab from the tabsObj

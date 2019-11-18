@@ -31,13 +31,6 @@ module.exports = elementType => {
         }
       });
 
-      /* body will look something like:
-      [ 0: "_useState"
-        1: "_useState2"
-        2: "character"
-        3: "setCharacter" ]
-      */
-
       // Iterate array and determine getter/setters based on pattern
       statements.forEach((el, i) => {
         if (el.match(/_use/)) hookState[el] = statements[i + 2];
