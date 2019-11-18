@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
 /* eslint-disable function-paren-newline */
+/* eslint-disable implicit-arrow-linebreak */
 
 // store ports in an array
 const portsArr = [];
@@ -145,9 +146,9 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
   // Filter out tabs that don't have reactime
   if (
-    action === 'tabReload' ||
-    action === 'recordSnap' ||
-    action === 'jumpToSnap'
+    action === 'tabReload'
+    || action === 'recordSnap'
+    || action === 'jumpToSnap'
   ) {
     isReactTimeTravel = true;
   } else return;
@@ -202,7 +203,8 @@ chrome.runtime.onMessage.addListener((request, sender) => {
           new Node(request.payload, tabsObj[tabId]),
         );
         if (portsArr.length > 0) {
-          portsArr.forEach(bg => bg.postMessage({
+          portsArr.forEach(bg =>
+            bg.postMessage({
               action: 'initialConnectSnapshots',
               payload: tabsObj,
             }),
@@ -224,7 +226,8 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       }
       // send message to devtools
       if (portsArr.length > 0) {
-        portsArr.forEach(bg => bg.postMessage({
+        portsArr.forEach(bg =>
+          bg.postMessage({
             action: 'sendSnapshots',
             payload: tabsObj,
             sourceTab,
@@ -242,7 +245,8 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 chrome.tabs.onRemoved.addListener(tabId => {
   // tell devtools which tab to delete
   if (portsArr.length > 0) {
-    portsArr.forEach(bg => bg.postMessage({
+    portsArr.forEach(bg =>
+      bg.postMessage({
         action: 'deleteTab',
         payload: tabId,
       }),
