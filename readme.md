@@ -51,12 +51,12 @@ ReactDOM.render(<App />, rootContainer);
 reactime(rootContainer);
 ```
 
-4. For experimental concurrent mode support:
+4. For experimental concurrent mode support.
 
 ```
 import reactime from 'reactime';
 
-const rootContainer = ReactDOM.createRoot( document.getElementById('root'));
+const rootContainer = ReactDOM.createRoot(document.getElementById('root'));
 rootContainer.render(<App />);
 reactime(rootContainer);
 ```
