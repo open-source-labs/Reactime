@@ -41,7 +41,7 @@ describe('mainReducer testing', () => {
       },
       currentTab: 87,
       port: {
-        postMessage: () => {},
+        postMessage: () => { },
       },
     };
 
@@ -66,7 +66,7 @@ describe('mainReducer testing', () => {
       expect(mainReducer(state, moveForward()).tabs[currentTab].sliderIndex).toEqual(3);
       expect(mainReducer(state, moveForward()).tabs[currentTab].playing).toEqual(false);
     });
-    it('should not increment if sliderIndex at end', () => {
+    it('should not increment past end value if sliderIndex at end', () => {
       state.tabs[currentTab].sliderIndex = 3;
       const { sliderIndex } = mainReducer(state, moveForward()).tabs[currentTab];
       expect(sliderIndex).toBe(3);
@@ -78,7 +78,7 @@ describe('mainReducer testing', () => {
   });
 
   describe('changeView', () => {
-    it('unselect view if same index was selected', () => {
+    it('should unselect view if same index was selected', () => {
       state.tabs[currentTab].viewIndex = 1;
       expect(mainReducer(state, changeView(1)).tabs[currentTab].viewIndex).toEqual(-1);
     });
@@ -91,6 +91,7 @@ describe('mainReducer testing', () => {
     it('should change sliderIndex', () => {
       expect(mainReducer(state, changeSlider(2)).tabs[currentTab].sliderIndex).toEqual(2);
     });
+    // should also change view
   });
 
   describe('empty', () => {
@@ -101,6 +102,7 @@ describe('mainReducer testing', () => {
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab]
         .snapshots).toEqual(state.tabs[currentTab].snapshots.slice(0, 1));
     });
+    // should push slider back to start position
   });
 
   describe('setPort', () => {
@@ -110,7 +112,7 @@ describe('mainReducer testing', () => {
   });
 
   describe('Import', () => {
-    it('impoting file should replace snapshots of devtool', () => {
+    it('importing file should replace snapshots of devtool', () => {
       expect(mainReducer(state, importSnapshots([100, 101])).tabs[currentTab].snapshots).toEqual([100, 101]);
     });
   });

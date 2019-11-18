@@ -5,7 +5,7 @@
     "build": "webpack --mode production",
     "dev": "webpack --mode development --watch",
     "test": "jest --verbose --coverage --watchAll",
-    "lint": "eslint --ext .js --ext .jsx src"
+    "docker-test-lint": "eslint --ext .js --ext .jsx src"
   },
   "keywords": [
     "react",
@@ -22,8 +22,12 @@
   "contributors": [
     "Andy Wong",
     "Bryan Lee",
+    "Chris Flannery",
     "David Chai",
     "Josh Kim",
+    "Prasanna Malla",
+    "Rajeeb Banstola",
+    "Rocky Lin",
     "Ruth Anam",
     "Ryan Dang",
     "Sierra Swaby",
