@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
+/* eslint-disable function-paren-newline */
 
 // store ports in an array
 const portsArr = [];
@@ -179,11 +180,10 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         tabsObj[tabId].index = 1;
 
         // send a message to devtools
-        portsArr.forEach(bg =>
-          bg.postMessage({
+        portsArr.forEach(bg => bg.postMessage({
             action: 'initialConnectSnapshots',
             payload: tabsObj,
-          })
+          }),
         );
       }
       reloaded[tabId] = true;
@@ -199,14 +199,13 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         tabsObj[tabId].snapshots.push(request.payload);
         sendToHierarchy(
           tabsObj[tabId],
-          new Node(request.payload, tabsObj[tabId])
+          new Node(request.payload, tabsObj[tabId]),
         );
         if (portsArr.length > 0) {
-          portsArr.forEach(bg =>
-            bg.postMessage({
+          portsArr.forEach(bg => bg.postMessage({
               action: 'initialConnectSnapshots',
               payload: tabsObj,
-            })
+            }),
           );
         }
         break;
@@ -220,17 +219,16 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
         sendToHierarchy(
           tabsObj[tabId],
-          new Node(request.payload, tabsObj[tabId])
+          new Node(request.payload, tabsObj[tabId]),
         );
       }
       // send message to devtools
       if (portsArr.length > 0) {
-        portsArr.forEach(bg =>
-          bg.postMessage({
+        portsArr.forEach(bg => bg.postMessage({
             action: 'sendSnapshots',
             payload: tabsObj,
             sourceTab,
-          })
+          }),
         );
       }
       break;
@@ -244,11 +242,10 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 chrome.tabs.onRemoved.addListener(tabId => {
   // tell devtools which tab to delete
   if (portsArr.length > 0) {
-    portsArr.forEach(bg =>
-      bg.postMessage({
+    portsArr.forEach(bg => bg.postMessage({
         action: 'deleteTab',
         payload: tabId,
-      })
+      }),
     );
   }
 
