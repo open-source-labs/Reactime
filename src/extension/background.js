@@ -181,7 +181,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         tabsObj[tabId].index = 1;
 
         // send a message to devtools
-        portsArr.forEach(bg => 
+        portsArr.forEach(bg =>
           bg.postMessage({
             action: 'initialConnectSnapshots',
             payload: tabsObj,
