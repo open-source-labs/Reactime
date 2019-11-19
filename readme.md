@@ -23,12 +23,12 @@ This dev tool is for React apps using stateful components and prop drilling, and
 
 One thing to note is that this library does not work well when mixing React with direct DOM manipulation.
 
-Two parts are needed for this tool to function. The <a href="https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga"><strong>chrome extension</strong></a> must be installed, and the <a href="https://www.npmjs.com/package/reactime"><strong>NPM package</strong></a> must be installed and used in the React code.
+Two parts are needed for this tool to function. The [**chrome extension**](https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga) must be installed, and the [**NPM package**](https://www.npmjs.com/package/reactime) must be installed and used in the React code. You can also download [**zipped version**](build.zip) of the chrome extension and install it in [Developer mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and turn on 'Allow access to file URLs' in extension details page if testing locally.
 
 After successfully installing the chrome extension, you can test Reactime functionalities in the demo repositories below.
 
-- <a href="http://reactime-demo1.us-east-1.elasticbeanstalk.com/">Calculator</a>
-- <a href="http://reactime-demo2.us-east-1.elasticbeanstalk.com/">Bitcoin Price Index</a>
+- [Calculator](http://reactime-demo1.us-east-1.elasticbeanstalk.com)
+- [Bitcoin Price Index](http://reactime-demo2.us-east-1.elasticbeanstalk.com)
 
 ## Installing
 
@@ -103,7 +103,7 @@ Jumping is the most important feature of all. It allows you to jump to any previ
 - **Josh Kim** - [@joshua0308](https://github.com/joshua0308)
 - **Sierra Swaby** - [@starkspark](https://github.com/starkspark)
 - **Ruth Anam** - [@peachiecodes](https://github.com/peachiecodes)
-- **David Chai** - [@davidchaidev](https://github.com/davidchaidev)
+- **David Chai** - [@davidchaidev](https://github.com/davidchai717)
 - **Yujin Kang** - [@yujinkay](https://github.com/yujinkay)
 - **Andy Wong** - [@andywongdev](https://github.com/andywongdev)
 - **Chris Flannery** - [@chriswillsflannery](https://github.com/chriswillsflannery)
