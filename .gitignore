@@ -7,6 +7,5 @@ parents
 coverage
 src/extension/build.zip
 src/extension/build.crx
-src/extension/build/key.pem
+src/extension/build.pem
 bower_components
-package/__tests__/astParser.test.js
