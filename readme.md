@@ -4,12 +4,7 @@
 
 <h1 align="center">State Debugger for React</h1>
 
-[![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime)
-[![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime)
-[![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime)
-[![Dependencies](https://david-dm.org/oslabs-beta/reactime.svg)](https://david-dm.org/oslabs-beta/reactime#info=dependencies)
-[![DevDependencies](https://david-dm.org/oslabs-beta/reactime/dev-status.svg)](https://david-dm.org/oslabs-beta/reactime?type=dev)
-[![Vulnerabilities](https://snyk.io/test/github/oslabs-beta/reactime/badge.svg)](https://snyk.io/test/github/oslabs-beta/reactime)
+[![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime) [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime) [![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime) [![Dependencies](https://david-dm.org/oslabs-beta/reactime.svg)](https://david-dm.org/oslabs-beta/reactime#info=dependencies) [![DevDependencies](https://david-dm.org/oslabs-beta/reactime/dev-status.svg)](https://david-dm.org/oslabs-beta/reactime?type=dev) [![Vulnerabilities](https://snyk.io/test/github/oslabs-beta/reactime/badge.svg)](https://snyk.io/test/github/oslabs-beta/reactime)
 
 <p align="center">
 <a href="https://nodei.co/npm/reactime/"><img src="https://nodei.co/npm/reactime.png"></a>
@@ -27,7 +22,7 @@ Two parts are needed for this tool to function. The [**chrome extension**](https
 
 After successfully installing the chrome extension, you can test Reactime functionalities in the demo repositories below.
 
-- [Calculator](http://reactime-demo1.us-east-1.elasticbeanstalk.com)
+- [Calculator](https://joshua0308.github.io/calculator/)
 - [Bitcoin Price Index](http://reactime-demo2.us-east-1.elasticbeanstalk.com)
 
 ## Installing
