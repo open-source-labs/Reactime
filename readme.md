@@ -27,7 +27,7 @@ Two parts are needed for this tool to function. The [**chrome extension**](https
 
 After successfully installing the chrome extension, you can test Reactime functionalities in the demo repositories below.
 
-- [Calculator](http://reactime-demo1.us-east-1.elasticbeanstalk.com)
+- [Calculator](https://github.com/open-source-labs/reactime.git)
 - [Bitcoin Price Index](http://reactime-demo2.us-east-1.elasticbeanstalk.com)
 
 ## Installing
