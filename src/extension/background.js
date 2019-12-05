@@ -1,5 +1,8 @@
 /* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
+/* eslint-disable function-paren-newline */
+/* eslint-disable implicit-arrow-linebreak */
+
 // store ports in an array
 const portsArr = [];
 const reloaded = {};
@@ -58,14 +61,17 @@ function changeCurrLocation(tabObj, rootNode, index) {
     return;
     // if not, recurse on each one of the children
   }
-  rootNode.children.forEach(child => {
-    changeCurrLocation(tabObj, child, index);
-  });
+  if (rootNode.children) {
+    rootNode.children.forEach(child => {
+      changeCurrLocation(tabObj, child, index);
+    });
+  }
 }
-
 
 // establishing connection with devtools
 chrome.runtime.onConnect.addListener(port => {
+  // port is one end of the connection - an object
+
   // push every port connected to the ports array
   portsArr.push(port);
 
@@ -87,8 +93,10 @@ chrome.runtime.onConnect.addListener(port => {
     }
   });
 
-  // receive snapshot from devtools and send it to contentScript
+  // receive snapshot from devtools and send it to contentScript -
   port.onMessage.addListener(msg => {
+    // msg is action denoting a time jump in devtools
+
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:
     // {
@@ -99,7 +107,7 @@ chrome.runtime.onConnect.addListener(port => {
     // ---------------------------------------------------------------
     const { action, payload, tabId } = msg;
     switch (action) {
-      case 'import':
+      case 'import': // create a snapshot property on tabId and set equal to tabs object
         tabsObj[tabId].snapshots = payload;
         return;
       case 'emptySnap':
@@ -137,7 +145,11 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   let isReactTimeTravel = false;
 
   // Filter out tabs that don't have reactime
-  if (action === 'tabReload' || action === 'recordSnap' || action === 'jumpToSnap') {
+  if (
+    action === 'tabReload'
+    || action === 'recordSnap'
+    || action === 'jumpToSnap'
+  ) {
     isReactTimeTravel = true;
   } else return;
 
@@ -169,10 +181,12 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         tabsObj[tabId].index = 1;
 
         // send a message to devtools
-        portsArr.forEach(bg => bg.postMessage({
-          action: 'initialConnectSnapshots',
-          payload: tabsObj,
-        }));
+        portsArr.forEach(bg =>
+          bg.postMessage({
+            action: 'initialConnectSnapshots',
+            payload: tabsObj,
+          }),
+        );
       }
       reloaded[tabId] = true;
       break;
@@ -185,12 +199,17 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         reloaded[tabId] = false;
 
         tabsObj[tabId].snapshots.push(request.payload);
-        sendToHierarchy(tabsObj[tabId], new Node(request.payload, tabsObj[tabId]));
+        sendToHierarchy(
+          tabsObj[tabId],
+          new Node(request.payload, tabsObj[tabId]),
+        );
         if (portsArr.length > 0) {
-          portsArr.forEach(bg => bg.postMessage({
-            action: 'initialConnectSnapshots',
-            payload: tabsObj,
-          }));
+          portsArr.forEach(bg =>
+            bg.postMessage({
+              action: 'initialConnectSnapshots',
+              payload: tabsObj,
+            }),
+          );
         }
         break;
       }
@@ -201,15 +220,20 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       } else {
         tabsObj[tabId].snapshots.push(request.payload);
         //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
-        sendToHierarchy(tabsObj[tabId], new Node(request.payload, tabsObj[tabId]));
+        sendToHierarchy(
+          tabsObj[tabId],
+          new Node(request.payload, tabsObj[tabId]),
+        );
       }
       // send message to devtools
       if (portsArr.length > 0) {
-        portsArr.forEach(bg => bg.postMessage({
-          action: 'sendSnapshots',
-          payload: tabsObj,
-          sourceTab,
-        }));
+        portsArr.forEach(bg =>
+          bg.postMessage({
+            action: 'sendSnapshots',
+            payload: tabsObj,
+            sourceTab,
+          }),
+        );
       }
       break;
     }
@@ -222,10 +246,12 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 chrome.tabs.onRemoved.addListener(tabId => {
   // tell devtools which tab to delete
   if (portsArr.length > 0) {
-    portsArr.forEach(bg => bg.postMessage({
-      action: 'deleteTab',
-      payload: tabId,
-    }));
+    portsArr.forEach(bg =>
+      bg.postMessage({
+        action: 'deleteTab',
+        payload: tabId,
+      }),
+    );
   }
 
   // delete the tab from the tabsObj

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable func-names */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
@@ -10,6 +11,7 @@ const { saveState } = require('./masterState');
 module.exports = (snap, mode) => {
   let fiberRoot = null;
   let astHooks;
+  let concurrent = false; // flag to check if we are in concurrent mode
 
   function sendSnapshot() {
     // don't send messages while jumping or while paused
@@ -31,7 +33,7 @@ module.exports = (snap, mode) => {
     const oldSetState = component.setState.bind(component);
     // replace component's setState so developer doesn't change syntax
     // component.setState = newSetState.bind(component);
-    component.setState = (state, callback = () => { }) => {
+    component.setState = (state, callback = () => {}) => {
       // don't do anything if state is locked
       // UNLESS we are currently jumping through time
       if (mode.locked && !mode.jumping) return;
@@ -54,10 +56,10 @@ module.exports = (snap, mode) => {
       // don't do anything if state is locked
       if (mode.locked && !mode.jumping) return;
       oldDispatch(fiber, queue, action);
-      setTimeout(() => {
-        updateSnapShotTree();
-        sendSnapshot();
-      }, 100);
+      // setTimeout(() => {
+      updateSnapShotTree();
+      sendSnapshot();
+      // }, 100);
     };
     component.queue.dispatch.linkFiberChanged = true;
   }
@@ -70,8 +72,11 @@ module.exports = (snap, mode) => {
     let index = 0;
     astHooks = Object.values(astHooks);
     // while memoizedState is truthy, save the value to the object
-    while (memoizedState) {
+    while (memoizedState && memoizedState.queue) {
+      // prevents useEffect from crashing on load
+      // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
       changeUseState(memoizedState);
+      // }
       // memoized[astHooks[index]] = memoizedState.memoizedState;
       memoized[astHooks[index]] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
@@ -102,7 +107,14 @@ module.exports = (snap, mode) => {
       changeSetState(stateNode);
     }
     // Check if the component uses hooks
-    if (memoizedState && Object.hasOwnProperty.call(memoizedState, 'baseState')) {
+    // console.log("memoizedState", memoizedState);
+
+    if (
+      memoizedState &&
+      Object.hasOwnProperty.call(memoizedState, 'baseState')
+    ) {
+      // 'catch-all' for suspense elements (experimental)
+      if (typeof elementType.$$typeof === 'symbol') return;
       // Traverse through the currentFiber and extract the getters/setters
       astHooks = astParser(elementType);
       saveState(astHooks);
@@ -120,20 +132,39 @@ module.exports = (snap, mode) => {
   }
   // runs when page initially loads
   // but skips 1st hook click
-  function updateSnapShotTree() {
-    const { current } = fiberRoot;
+  async function updateSnapShotTree() {
+    let current;
+    // if concurrent mode, grab current.child'
+    if (concurrent) {
+      // we need a way to wait for current child to populate
+      const promise = new Promise((resolve, reject) => {
+        setTimeout(() => resolve(fiberRoot.current.child), 400);
+      });
+
+      current = await promise;
+
+      current = fiberRoot.current.child;
+    } else {
+      current = fiberRoot.current;
+    }
+
     snap.tree = createTree(current);
   }
 
-  return container => {
-    const {
-      _reactRootContainer: { _internalRoot },
-      _reactRootContainer,
-    } = container;
-    // only assign internal rootp if it actually exists
-    fiberRoot = _internalRoot || _reactRootContainer;
+  return async container => {
+    if (container._internalRoot) {
+      fiberRoot = container._internalRoot;
+      concurrent = true;
+    } else {
+      const {
+        _reactRootContainer: { _internalRoot },
+        _reactRootContainer,
+      } = container;
+      // only assign internal root if it actually exists
+      fiberRoot = _internalRoot || _reactRootContainer;
+    }
 
-    updateSnapShotTree();
+    await updateSnapShotTree();
     // send the initial snapshot once the content script has started up
     window.addEventListener('message', ({ data: { action } }) => {
       if (action === 'contentScriptStarted') sendSnapshot();
