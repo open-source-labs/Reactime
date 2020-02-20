@@ -19,6 +19,11 @@ function play(speed, playing, dispatch, snapshotsLength, sliderIndex) {
     dispatch(pause());
   } else {
     let currentIndex = sliderIndex;
+    if (currentIndex === snapshotsLength - 1) {
+      // dispatch action to reset the slider
+      dispatch(resetSlider());
+      currentIndex = 0;
+    }
     const intervalId = setInterval(() => {
       if (currentIndex < snapshotsLength - 1) {
         dispatch(playForward());

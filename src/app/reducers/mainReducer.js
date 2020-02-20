@@ -47,6 +47,17 @@ export default (state, action) => produce(state, draft => {
       }
       break;
     }
+    case types.SLIDER_ZERO: {
+      console.log('main reducer Slider Zero')
+      port.postMessage({
+        action: 'jumpToSnap',
+        index: 0,
+        payload: snapshots[0],
+        tabId: currentTab,
+      });
+      tabs[currentTab].sliderIndex = 0;
+      break;
+    }
     case types.CHANGE_VIEW: {
       // unselect view if same index was selected
       if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
