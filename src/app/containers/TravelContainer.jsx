@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import MainSlider from '../components/MainSlider';
 import Dropdown from '../components/Dropdown';
 import {
-  playForward, pause, startPlaying, moveForward, moveBackward,
+  playForward, pause, startPlaying, moveForward, moveBackward, resetSlider
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
