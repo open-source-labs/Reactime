@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { createStore } from 'redux';\nimport { composeWithDevTools } from 'redux-devtools-extension';\nimport reducers from './reducers/index'; // composeWithDevTools allows for easy access to Redux dev tools\n\nvar store = createStore(reducers, composeWithDevTools());\nexport default store;","map":null,"metadata":{},"sourceType":"module"}

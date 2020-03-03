@@ -1,0 +1,1 @@
+{"ast":null,"code":"export var INCREASE_COUNT = 'INCREASE_COUNT';","map":{"version":3,"sources":["/Users/josh/Documents/GitHub/reactime-sandboxes/Frontend/src/redux/actions/actionTypes.js"],"names":["INCREASE_COUNT"],"mappings":"AAAA,OAAO,IAAMA,cAAc,GAAG,gBAAvB","sourcesContent":["export const INCREASE_COUNT = 'INCREASE_COUNT';\n"]},"metadata":{},"sourceType":"module"}
