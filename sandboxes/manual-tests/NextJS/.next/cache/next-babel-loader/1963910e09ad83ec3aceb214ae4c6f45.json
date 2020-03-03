@@ -1,1 +1,0 @@
-{"ast":null,"code":"import * as types from './actionTypes';\nexport var increaseCount = function increaseCount() {\n  return {\n    type: types.INCREASE_COUNT\n  };\n};","map":null,"metadata":{},"sourceType":"module"}

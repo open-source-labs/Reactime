@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { createContext } from 'react';\nconst AppContext = createContext();\nexport default AppContext;","map":null,"metadata":{},"sourceType":"module"}

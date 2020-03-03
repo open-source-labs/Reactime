@@ -1,1 +1,0 @@
-{"ast":null,"code":"import * as types from './actionTypes';\nexport const increaseCount = () => ({\n  type: types.INCREASE_COUNT\n});","map":null,"metadata":{},"sourceType":"module"}
