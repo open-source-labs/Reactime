@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --inline --hot --open 'Google Chrome'",
+    "start-server": "node Backend/server & webpack --mode=development",
     "test": "webpack --mode=development && jest",
     "jest": "jest",
     "server": "node Backend/server",
