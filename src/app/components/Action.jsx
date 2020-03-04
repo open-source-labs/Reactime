@@ -14,7 +14,11 @@ const Action = props => {
       role="presentation"
       style={index > sliderIndex ? { color: '#5f6369' } : {}}
     >
-      <div className="action-component-text">{index}</div>
+      <div className="action-component-text">
+        {`${index
+        }:   ${delta}`}
+
+      </div>
       <button
         className="jump-button"
         onClick={e => {
