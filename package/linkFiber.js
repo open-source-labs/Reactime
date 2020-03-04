@@ -12,7 +12,7 @@
  * --> Middleware #1: Updates snap object with latest snapshot
  *
  * @function sendSnapshot
- * --> Middleware #2: Gets a copy of the current snapshot state tree and posts it to the window
+ * --> Middleware #2: Gets a copy of the current snap.tree and posts a message to the window
  *
  * @function changeSetState
  * @param component : stateNode property on a stateful class component's FiberNode object
@@ -51,12 +51,10 @@ module.exports = (snap, mode) => {
   let concurrent = false; // flag to check if we are in concurrent mode
 
   function sendSnapshot() {
-    // don't send messages while jumping or while paused
+    // Don't send messages while jumping or while paused
     // DEV: So that when we are jumping to an old snapshot it
-    // wouldn't think we want to create new snapshots
     if (mode.jumping || mode.paused) return;
     const payload = snap.tree.getCopy();
-    // console.log('payload', payload);
     window.postMessage({
       action: 'recordSnap',
       payload,
