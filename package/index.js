@@ -1,3 +1,9 @@
+/**
+ * 'reactime' module has a single export
+ * @function linkFiber
+ */
+
+// * State object initialized here
 const snapShot = { tree: null };
 
 const mode = {
@@ -21,7 +27,8 @@ function getRouteURL(node) {
   }
 }
 
-window.addEventListener('message', ({ data: { action, payload } }) => { // runs automatically twice per second with inspectedElement
+// * Event listener for time-travel actions
+window.addEventListener('message', ({ data: { action, payload } }) => {
   switch (action) {
     case 'jumpToSnap':
       timeJump(payload);
