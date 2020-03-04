@@ -1,35 +1,35 @@
 /**
  * This file contains core module functionality.
- * 
+ *
  * It exports an anonymous
  * @function
  * that is invoked on
  * @param snap --> Current snapshot
  * @param mode --> Current mode (jumping i.e. time-traveling, locked, or paused)
  * and @returns a function to be invoked on the rootContainer HTMLElement
- * 
+ *
  * @function updateSnapShotTree
  * --> Middleware #1: Updates snap object with latest snapshot
- * 
+ *
  * @function sendSnapshot
  * --> Middleware #2: Gets a copy of the current snapshot state tree and posts it to the window
- * 
+ *
  * @function changeSetState
  * @param component : stateNode property on a stateful class component's FiberNode object
  * --> Binds class component setState method to the component
  * --> Injects middleware into class component's setState method
- * 
+ *
  * @function changeUseState
  * @param component : memoizedState property on a stateful functional component's FiberNode object
  * --> Binds functional component dispatch method to the component
  * --> Injects middleware into component's dispatch method
  * Note: dispatch is hook equivalent to setState()
- * 
+ *
  * @function traverseHooks
- * @param memoizedState : memoizedState property on a stateful functional component's FiberNode object
+ * @param memoizedState : memoizedState property on a stateful fctnl component's FiberNode object
  * --> Helper function to traverse through memoizedState
  * --> Invokes @changeUseState on each stateful functional component
- * 
+ *
  * @function createTree
  * @param currentFiber : a FiberNode object
  * --> Recursive function to traverse from FiberRootNode and create
@@ -92,7 +92,7 @@ module.exports = (snap, mode) => {
     component.queue.dispatch = (fiber, queue, action) => {
       if (mode.locked && !mode.jumping) return;
       oldDispatch(fiber, queue, action);
-      // * Uncomment setTimeout to prevent snapshot lag-effect 
+      // * Uncomment setTimeout to prevent snapshot lag-effect
       // * (i.e. getting the prior snapshot on each state change)
       // setTimeout(() => {
       updateSnapShotTree();
@@ -147,8 +147,8 @@ module.exports = (snap, mode) => {
 
     // Check if the component uses hooks
     if (
-      memoizedState &&
-      Object.hasOwnProperty.call(memoizedState, 'baseState')
+      memoizedState
+      && Object.hasOwnProperty.call(memoizedState, 'baseState')
     ) {
       // 'catch-all' for suspense elements (experimental)
       if (typeof elementType.$$typeof === 'symbol') return;
@@ -190,7 +190,7 @@ module.exports = (snap, mode) => {
   }
 
   return async container => {
-    // Point fiberRoot to FiberRootNode 
+    // Point fiberRoot to FiberRootNode
     if (container._internalRoot) {
       fiberRoot = container._internalRoot;
       concurrent = true;
