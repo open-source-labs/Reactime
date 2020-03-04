@@ -3,7 +3,7 @@
  * @function linkFiber
  */
 
-// * State object initialized here
+// * State snapshot object initialized here
 const snapShot = { tree: null };
 
 const mode = {
