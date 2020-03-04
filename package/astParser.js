@@ -1,4 +1,4 @@
-/* eslint-disable no-inner-declarations */
+/* eslint-disable no-inner-declarations, no-loop-func */
 // eslint-disable-next-line import/newline-after-import
 const acorn = require('acorn'); // javascript parser
 const jsx = require('acorn-jsx');
@@ -12,6 +12,7 @@ module.exports = elementType => {
   const hookState = {};
 
   while (Object.hasOwnProperty.call(ast, 'body')) {
+    let tsCount = 0; // Counter for the number of TypeScript hooks seen (to distinguish in masterState)
     ast = ast.body;
     const statements = [];
 
@@ -27,7 +28,19 @@ module.exports = elementType => {
       body.forEach(elem => {
         if (elem.type === 'VariableDeclaration') {
           elem.declarations.forEach(hook => {
-            statements.push(hook.id.name);
+            // * TypeScript hooks appear to have no "VariableDeclarator"
+            // * with id.name of _useState, _useState2, etc...
+            // * hook.id.type relevant for TypeScript applications
+            // *
+            // * Works for useState hooks
+            if (hook.id.type === 'ArrayPattern') {
+              hook.id.elements.forEach(hook => {
+                statements.push(hook.name);
+                // * Unshift a wildcard name to achieve similar functionality as before
+                statements.unshift(`_useWildcard${tsCount}`);
+                tsCount += 1;
+              });
+            } else statements.push(hook.id.name);
           });
         }
       });
