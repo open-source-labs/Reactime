@@ -1,0 +1,6 @@
+/node_modules/*
+!/node_modules/reactime
+.DS_Store
+index-bundle.js
+typescript-bundle.js
+example.png
