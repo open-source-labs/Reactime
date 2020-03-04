@@ -1,9 +1,46 @@
+/**
+ * This file contains core module functionality.
+ * 
+ * It exports an anonymous
+ * @function
+ * that is invoked on
+ * @param snap --> Current snapshot
+ * @param mode --> Current mode (jumping i.e. time-traveling, locked, or paused)
+ * and @returns a function to be invoked on the rootContainer HTMLElement
+ * 
+ * @function updateSnapShotTree
+ * --> Middleware #1: Updates snap object with latest snapshot
+ * 
+ * @function sendSnapshot
+ * --> Middleware #2: Gets a copy of the current snapshot state tree and posts it to the window
+ * 
+ * @function changeSetState
+ * @param component : stateNode property on a stateful class component's FiberNode object
+ * --> Binds class component setState method to the component
+ * --> Injects middleware into class component's setState method
+ * 
+ * @function changeUseState
+ * @param component : memoizedState property on a stateful functional component's FiberNode object
+ * --> Binds functional component dispatch method to the component
+ * --> Injects middleware into component's dispatch method
+ * Note: dispatch is hook equivalent to setState()
+ * 
+ * @function traverseHooks
+ * @param memoizedState : memoizedState property on a stateful functional component's FiberNode object
+ * --> Helper function to traverse through memoizedState
+ * --> Invokes @changeUseState on each stateful functional component
+ * 
+ * @function createTree
+ * @param currentFiber : a FiberNode object
+ * --> Recursive function to traverse from FiberRootNode and create
+ *     an instance of custom Tree class and build up state snapshot
+ */
+
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable func-names */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
-// links component state tree to library
-// changes the setState method to also update our snapshot
+
 const Tree = require('./tree');
 const astParser = require('./astParser');
 const { saveState } = require('./masterState');
@@ -27,53 +64,54 @@ module.exports = (snap, mode) => {
   }
 
   function changeSetState(component) {
-    // check that setState hasn't been changed yet
     if (component.setState.linkFiberChanged) return;
-    // make a copy of setState
+
+    // Persist the old setState and bind to component so we can continue to setState({})
     const oldSetState = component.setState.bind(component);
-    // replace component's setState so developer doesn't change syntax
-    // component.setState = newSetState.bind(component);
+
     component.setState = (state, callback = () => {}) => {
-      // don't do anything if state is locked
-      // UNLESS we are currently jumping through time
+      // Don't do anything if state is locked UNLESS we are currently jumping through time
       if (mode.locked && !mode.jumping) return;
-      // continue normal setState functionality, except add sending message middleware
+      // Continue normal setState functionality, with middleware in callback
       oldSetState(state, () => {
         updateSnapShotTree();
         sendSnapshot();
         callback.bind(component)();
       });
     };
+    // Set a custom property to ensure we don't change this method again
     component.setState.linkFiberChanged = true;
   }
 
   function changeUseState(component) {
     if (component.queue.dispatch.linkFiberChanged) return;
-    // store the original dispatch function definition
+
+    // Persist the old dispatch and bind to component so we can continue to dispatch()
     const oldDispatch = component.queue.dispatch.bind(component.queue);
-    // redefine the dispatch function so we can inject our code
+
     component.queue.dispatch = (fiber, queue, action) => {
-      // don't do anything if state is locked
       if (mode.locked && !mode.jumping) return;
       oldDispatch(fiber, queue, action);
+      // * Uncomment setTimeout to prevent snapshot lag-effect 
+      // * (i.e. getting the prior snapshot on each state change)
       // setTimeout(() => {
       updateSnapShotTree();
       sendSnapshot();
       // }, 100);
     };
+    // Set a custom property to ensure we don't change this method again
     component.queue.dispatch.linkFiberChanged = true;
   }
 
-  // Helper function to traverse through the memoized state
   // TODO: WE NEED TO CLEAN IT UP A BIT
   function traverseHooks(memoizedState) {
     // Declare variables and assigned to 0th index and an empty object, respectively
     const memoized = {};
     let index = 0;
     astHooks = Object.values(astHooks);
-    // while memoizedState is truthy, save the value to the object
+    // While memoizedState is truthy, save the value to the object
     while (memoizedState && memoizedState.queue) {
-      // prevents useEffect from crashing on load
+      // // prevents useEffect from crashing on load
       // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
       changeUseState(memoizedState);
       // }
@@ -81,13 +119,14 @@ module.exports = (snap, mode) => {
       memoized[astHooks[index]] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
       memoizedState = memoizedState.next;
-      // Increment the index by 2
+      // See astParser.js for explanation of this increment
       index += 2;
     }
     return memoized;
   }
 
   function createTree(currentFiber, tree = new Tree('root')) {
+    // Base case: child or sibling pointed to null
     if (!currentFiber) return tree;
 
     const {
@@ -99,16 +138,14 @@ module.exports = (snap, mode) => {
     } = currentFiber;
 
     let nextTree = tree;
-    // check if stateful component
-    if (stateNode && stateNode.state) {
-      // add component to tree
-      nextTree = tree.appendChild(stateNode);
-      // change setState functionality
-      changeSetState(stateNode);
-    }
-    // Check if the component uses hooks
-    // console.log("memoizedState", memoizedState);
 
+    // Check if stateful component
+    if (stateNode && stateNode.state) {
+      nextTree = tree.appendChild(stateNode); // Add component to tree
+      changeSetState(stateNode); // Change setState functionality
+    }
+
+    // Check if the component uses hooks
     if (
       memoizedState &&
       Object.hasOwnProperty.call(memoizedState, 'baseState')
@@ -123,18 +160,19 @@ module.exports = (snap, mode) => {
       memoizedState.traversed = traverseHooks(memoizedState);
       nextTree = tree.appendChild(memoizedState);
     }
-    // iterate through siblings
+
+    // Recurse on siblings
     createTree(sibling, tree);
-    // iterate through children
+    // Recurse on children
     createTree(child, nextTree);
 
     return tree;
   }
-  // runs when page initially loads
-  // but skips 1st hook click
+
+  // ! BUG: skips 1st hook click
   async function updateSnapShotTree() {
     let current;
-    // if concurrent mode, grab current.child'
+    // If concurrent mode, grab current.child
     if (concurrent) {
       // we need a way to wait for current child to populate
       const promise = new Promise((resolve, reject) => {
@@ -152,6 +190,7 @@ module.exports = (snap, mode) => {
   }
 
   return async container => {
+    // Point fiberRoot to FiberRootNode 
     if (container._internalRoot) {
       fiberRoot = container._internalRoot;
       concurrent = true;
@@ -160,12 +199,13 @@ module.exports = (snap, mode) => {
         _reactRootContainer: { _internalRoot },
         _reactRootContainer,
       } = container;
-      // only assign internal root if it actually exists
+      // Only assign internal root if it actually exists
       fiberRoot = _internalRoot || _reactRootContainer;
     }
 
     await updateSnapShotTree();
-    // send the initial snapshot once the content script has started up
+    // Send the initial snapshot once the content script has started up
+    // This message is sent from contentScript.js in chrome extension bundles
     window.addEventListener('message', ({ data: { action } }) => {
       if (action === 'contentScriptStarted') sendSnapshot();
     });
