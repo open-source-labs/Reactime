@@ -4,7 +4,7 @@ import { changeView, changeSlider } from '../actions/actions';
 
 const Action = props => {
   const {
-    selected, index, sliderIndex, dispatch,
+    selected, index, delta, sliderIndex, dispatch,
   } = props;
 
   return (
