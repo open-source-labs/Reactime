@@ -21,6 +21,7 @@ function ActionContainer() {
   if (snapshots.length > 0) {
     // breadth  first function - take in an delta obj
     function breadthFirst(delta) {
+      if (delta === undefined) return '';
       // aux array = current and one called next
       let current = Object.values(delta.children); // Object.keys(delta.children);
       let next = [];
