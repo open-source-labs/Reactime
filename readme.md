@@ -22,11 +22,13 @@ After installing the Reactime, you can test its functionalities in the following
 - [Calculator](https://joshua0308.github.io/calculator/)
 - [Bitcoin Price Index](http://reactime-demo2.us-east-1.elasticbeanstalk.com)
 
+Reactime was nominated for the Productivity Booster award at [React Open Source Awards 2020](https://osawards.com/react/)!
+
 ## Installation
 
 Two parts are required for this tool to function: a [**Chrome extension**](https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga) and an [**NPM package**](https://www.npmjs.com/package/reactime).
 
-1. Install the Reactime [extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) from Chrome Web Store. Alternatively, a [**zipped version**](build.zip) has been provided in `build.zip` for manual installation in [Developer mode](https://developer.chrome.com/extensions/faq#faq-dev-01). Turn on 'Allow access to file URLs' in extension details page if testing locally.
+1. Install the Reactime [extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) from Chrome Web Store. Alternatively, use `src/extension/build/build.zip` for manual installation in [Developer mode](https://developer.chrome.com/extensions/faq#faq-dev-01). Turn on 'Allow access to file URLs' in extension details page if testing locally.
 
 2. Install the [NPM package](https://www.npmjs.com/package/reactime) in your application's root directory. 
 
