@@ -1,3 +1,9 @@
+/**
+ * 'reactime' module has a single export
+ * @function linkFiber
+ */
+
+// * State snapshot object initialized here
 const snapShot = { tree: null };
 
 const mode = {
@@ -21,10 +27,11 @@ function getRouteURL(node) {
   }
 }
 
-window.addEventListener('message', ({ data: { action, payload } }) => { // runs automatically twice per second with inspectedElement
+// * Event listener for time-travel actions
+window.addEventListener('message', ({ data: { action, payload } }) => {
   switch (action) {
     case 'jumpToSnap':
-      timeJump(payload);
+      timeJump(payload); // * This sets state with given payload
       // Get the pathname from payload and add new entry to browser history
       // MORE: https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
       window.history.pushState('', '', getRouteURL(payload));
