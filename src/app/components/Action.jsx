@@ -39,6 +39,7 @@ Action.propTypes = {
   selected: PropTypes.bool.isRequired,
   index: PropTypes.number.isRequired,
   dispatch: PropTypes.func.isRequired,
+  delta: PropTypes.string.isRequired,
 };
 
 export default Action;
