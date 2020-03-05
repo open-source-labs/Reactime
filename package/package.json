@@ -1,6 +1,6 @@
 {
   "name": "reactime",
-  "version": "2.0.9",
+  "version": "3.1.0",
   "description": "A library that helps debug React by memorizing the state of components with every render.",
   "main": "index.js",
   "repository": {
@@ -25,13 +25,17 @@
     "react devtool"
   ],
   "contributors": [
+    "Abaas Khorrami",
     "Andy Wong",
     "Bryan Lee",
     "Chris Flannery",
     "David Chai",
+    "Ergi Shehu",
     "Josh Kim",
+    "Joshua Howard",
     "Prasanna Malla",
     "Rajeeb Banstola",
+    "Raymond Kwan",
     "Rocky Lin",
     "Ruth Anam",
     "Ryan Dang",

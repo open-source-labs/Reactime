@@ -6,30 +6,29 @@
 
 [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime) [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime) [![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime) [![Dependencies](https://david-dm.org/oslabs-beta/reactime.svg)](https://david-dm.org/oslabs-beta/reactime#info=dependencies) [![DevDependencies](https://david-dm.org/oslabs-beta/reactime/dev-status.svg)](https://david-dm.org/oslabs-beta/reactime?type=dev) [![Vulnerabilities](https://snyk.io/test/github/oslabs-beta/reactime/badge.svg)](https://snyk.io/test/github/oslabs-beta/reactime)
 
-<p align="center">
-<a href="https://nodei.co/npm/reactime/"><img src="https://nodei.co/npm/reactime.png"></a>
 
-  <img src="demo.gif" alt="Demo of Reactime" style="width: 55%">
-</p>
+![demo](./demo.gif)
+
+
 
 Reactime is a debugging tool for React developers. It records state whenever it is changed and allows the user to jump to any previously recorded state.
 
-This dev tool is for React apps using stateful components and prop drilling, and has beta support for Context API, conditional state routing, Hooks (useState, useEffect) and functional components.
+This tool is for React apps using stateful components and prop drilling, and has beta support for Context API, conditional state routing, Hooks (useState, useEffect) and functional components.
 
-One thing to note is that this library does not work well when mixing React with direct DOM manipulation.
+The latest release extends the core functionality by including support for TypeScript applications, improving the user experience through more declarative titles in the actions panel, and extending support for components with conditional state fields. The testing suite has also been expanded with the inclusion of a Sandbox utility to aid future expansion as well as additional E2E and integration tests with Puppeteer and React Testing Library.
 
-Two parts are needed for this tool to function. The [**chrome extension**](https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga) must be installed, and the [**NPM package**](https://www.npmjs.com/package/reactime) must be installed and used in the React code. You can also download [**zipped version**](build.zip) of the chrome extension and install it in [Developer mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and turn on 'Allow access to file URLs' in extension details page if testing locally.
-
-After successfully installing the chrome extension, you can test Reactime functionalities in the demo repositories below.
+After installing the Reactime, you can test its functionalities in the following demo repositories:
 
 - [Calculator](https://joshua0308.github.io/calculator/)
 - [Bitcoin Price Index](http://reactime-demo2.us-east-1.elasticbeanstalk.com)
 
-## Installing
+## Installation
 
-1. Download the [extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) from Chrome Web Store.
+Two parts are required for this tool to function: a [**Chrome extension**](https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga) and an [**NPM package**](https://www.npmjs.com/package/reactime).
 
-2. Install the [npm package](https://www.npmjs.com/package/reactime) in your code.
+1. Install the Reactime [extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) from Chrome Web Store. Alternatively, a [**zipped version**](build.zip) has been provided in `build.zip` for manual installation in [Developer mode](https://developer.chrome.com/extensions/faq#faq-dev-01). Turn on 'Allow access to file URLs' in extension details page if testing locally.
+
+2. Install the [NPM package](https://www.npmjs.com/package/reactime) in your application's root directory. 
 
 ```
 npm i reactime
@@ -60,9 +59,9 @@ reactime(rootContainer);
 
 ## How to Use
 
-After installing both the Chrome extension and the npm package, just open up your project in the browser.
+After installing both the Chrome extension and the NPM package, just open up your project in the browser.
 
-Then open up your Chrome DevTools. There'll be a new tab called Reactime.
+Then open up your Chrome DevTools and navigate to the Reactime tab.
 
 ## Features
 
@@ -78,7 +77,11 @@ You can click on a snapshot to view your app's state. State can be visualized in
 
 Jumping is the most important feature of all. It allows you to jump to any previous recorded snapshots. Hitting the jump button on any snapshot will change the DOM by setting their state.
 
-### And Much More
+### TypeScript Support
+
+Reactime offers beta support for TypeScript applications using stateful class components and functional components with useState hooks.  Further testing and development is required for custom hooks, Context API, and Concurrent Mode.
+
+### Additional Features
 
 - multiple tree graph branches depicting state changes
 - tree graph hover functionality to view state changes
@@ -90,6 +93,9 @@ Jumping is the most important feature of all. It allows you to jump to any previ
 - a lock button to freeze the DOM in place. setState will lose all functionality while the extension is locked
 - a persist button to keep snapshots upon refresh (handy when changing code and debugging)
 - export/import the current snapshots in memory
+- declarative titles in the actions panel
+- extended support for components with conditional state fields
+- a Sandbox utility to aid future expansion
 
 ## Authors
 
@@ -105,7 +111,12 @@ Jumping is the most important feature of all. It allows you to jump to any previ
 - **Rajeeb Banstola** - [@rajeebthegreat](https://github.com/rajeebthegreat)
 - **Prasanna Malla** - [@prasmalla](https://github.com/prasmalla)
 - **Rocky Lin** - [@rocky9413](https://github.com/rocky9413)
+- **Abaas Khorrami** - [@dubalol](https://github.com/dubalol)
+- **Ergi Shehu** - [@Ergi516](https://github.com/ergi516)
+- **Raymond Kwan** - [@rkwn](https://github.com/rkwn)
+- **Joshua Howard** - [@Joshua-Howard](https://github.com/joshua-howard)
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
