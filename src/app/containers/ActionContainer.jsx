@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-inner-declarations */
 import React from 'react';
-import { diff, formatters } from 'jsondiffpatch';
+import { diff } from 'jsondiffpatch';
 import Action from '../components/Action';
 
 import { emptySnapshots } from '../actions/actions';
@@ -35,6 +35,7 @@ function ActionContainer() {
           });
         }
         if (shifted.children) {
+          // eslint-disable-next-line no-loop-func
           Object.keys(shifted.children).forEach(el => {
             next.push(shifted.children[el]);
           });
