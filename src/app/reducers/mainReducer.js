@@ -48,7 +48,6 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.SLIDER_ZERO: {
-      console.log('main reducer Slider Zero')
       port.postMessage({
         action: 'jumpToSnap',
         index: 0,

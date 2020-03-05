@@ -73,6 +73,6 @@ export const deleteTab = tab => ({
   payload: tab,
 });
 
-export const resetSlider = slider => ({
+export const resetSlider = () => ({
   type: types.SLIDER_ZERO,
 });
