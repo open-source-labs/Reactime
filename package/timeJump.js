@@ -1,7 +1,19 @@
+/**
+ * This file contains necessary functionality for time-travel feature
+ *
+ * It exports an anonymous
+ * @function
+ * that is invoked on
+ * @param target --> a target snapshot portraying some past state
+ * and recursively sets state for any stateful components.
+ *
+ */
+
 /* eslint-disable no-param-reassign */
-// traverses given tree by accessing children through coords array
+
 const { returnState } = require('./masterState');
 
+// Traverses given tree by accessing children through coords array
 function traverseTree(tree, coords) {
   let curr = tree;
   coords.forEach(coord => {
@@ -11,23 +23,33 @@ function traverseTree(tree, coords) {
 }
 
 module.exports = (origin, mode) => {
-  // recursively change state of tree
+  // Recursively change state of tree
   function jump(target, coords = []) {
     const originNode = traverseTree(origin.tree, coords);
-    // set the state of the origin tree if the component is stateful
+
+    // Set the state of the origin tree if the component is stateful
     if (originNode.component.setState) {
-      originNode.component.setState(target.state, () => {
-        // iterate through new children once state has been set
+      // * Use the function argument when setting state to account for any state properties
+      // * that may not have existed in the past
+      originNode.component.setState(prevState => {
+        Object.keys(prevState).forEach(key => {
+          if (target.state[key] === undefined) {
+            target.state[key] = undefined;
+          }
+        });
+        return target.state;
+      }, () => {
+        // Iterate through new children once state has been set
         target.children.forEach((child, i) => {
           jump(child, coords.concat(i));
         });
       });
     } else {
-      // if component uses hooks, traverse through the memoize tree
+      // If component uses hooks, traverse through the memoize tree
       let current = originNode.component;
       let index = 0;
       const hooks = returnState();
-      // while loop through the memoize tree
+      // While loop through the memoize tree
       while (current && current.queue) { // allows time travel with useEffect
         current.queue.dispatch(target.state[hooks[index]]);
         // Reassign the current value
@@ -38,7 +60,7 @@ module.exports = (origin, mode) => {
   }
 
   return target => {
-    // setting mode disables setState from posting messages to window
+    // * Setting mode disables setState from posting messages to window
     mode.jumping = true;
     jump(target);
     setTimeout(() => {
