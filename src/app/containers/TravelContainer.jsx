@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import MainSlider from '../components/MainSlider';
 import Dropdown from '../components/Dropdown';
 import {
-  playForward, pause, startPlaying, moveForward, moveBackward,
+  playForward, pause, startPlaying, moveForward, moveBackward, resetSlider,
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
@@ -19,6 +19,11 @@ function play(speed, playing, dispatch, snapshotsLength, sliderIndex) {
     dispatch(pause());
   } else {
     let currentIndex = sliderIndex;
+    if (currentIndex === snapshotsLength - 1) {
+      // dispatch action to reset the slider
+      dispatch(resetSlider());
+      currentIndex = 0;
+    }
     const intervalId = setInterval(() => {
       if (currentIndex < snapshotsLength - 1) {
         dispatch(playForward());
