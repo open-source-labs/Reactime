@@ -1,6 +1,6 @@
 {
   "name": "reactime",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "A library that helps debug React by memorizing the state of components with every render.",
   "main": "index.js",
   "repository": {
