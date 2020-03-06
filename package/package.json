@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/oslabs-beta/reactime"
+    "url": "https://github.com/open-source-labs/reactime"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\""
