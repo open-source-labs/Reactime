@@ -13,13 +13,16 @@ import { useStoreContext } from '../store';
 function MainContainer() {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
+  console.log('entered MainContainer');
 
   // add event listeners to background script
   useEffect(() => {
     // only open port once
     if (currentPort) return;
     // open connection with background script
+    console.log('opening connection with background script');
     const port = chrome.runtime.connect();
+    console.log('connection opened?');
 
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener(message => {
@@ -41,6 +44,7 @@ function MainContainer() {
         }
         default:
       }
+      return true;
     });
 
     port.onDisconnect.addListener(() => {

@@ -36,6 +36,8 @@ chrome.runtime.onMessage.addListener(request => { // seems to never fire
     default:
       break;
   }
+  return true; // attempt to fix port closing console error
 });
 
+console.log('sending contentScriptStarted message to window');
 window.postMessage({ action: 'contentScriptStarted' });
