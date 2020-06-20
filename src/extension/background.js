@@ -9,6 +9,7 @@ const reloaded = {};
 const firstSnapshotReceived = {};
 // there will be the same number of objects in here as there are reactime tabs open for each user application being worked on
 const tabsObj = {};
+console.log('entered background.js');
 
 function createTabObj(title) {
   // update tabsObj
@@ -37,6 +38,7 @@ class Node {
     this.index = tabObj.index++;
     this.stateSnapshot = obj;
     this.children = [];
+    console.log('created node in  background.js constructor');
   }
 }
 
@@ -57,7 +59,7 @@ function changeCurrLocation(tabObj, rootNode, index) {
     return;
   }
   // base case if no children
-  if (!rootNode.children.length) {
+  if (!rootNode || !rootNode.children.length) {
     return;
     // if not, recurse on each one of the children
   }
@@ -109,7 +111,7 @@ chrome.runtime.onConnect.addListener(port => {
     switch (action) {
       case 'import': // create a snapshot property on tabId and set equal to tabs object
         tabsObj[tabId].snapshots = payload;
-        return;
+        return true;
       case 'emptySnap':
         tabsObj[tabId].snapshots.splice(1);
         // reset children in root node to reset graph
@@ -118,7 +120,7 @@ chrome.runtime.onConnect.addListener(port => {
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
         // reset index
         tabsObj[tabId].index = 1;
-        return;
+        return true;
       case 'setLock':
         tabsObj[tabId].mode.locked = payload;
         break;
@@ -131,14 +133,15 @@ chrome.runtime.onConnect.addListener(port => {
       default:
     }
 
-    chrome.tabs.sendMessage(tabId, msg);
+    chrome.tabs.sendMessage(tabId, msg); // change to postMessage? keeps the port open, sendMessage closes the port
+    return true; // attempt to fix message port closing error, consider return Promise
   });
 });
 
 // background.js recieves message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender) => {
   // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
-  if (request.type === 'SIGN_CONNECT') return;
+  if (request.type === 'SIGN_CONNECT') return true;
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
   const { action, index } = request;
@@ -151,7 +154,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     || action === 'jumpToSnap'
   ) {
     isReactTimeTravel = true;
-  } else return;
+  } else return true;
 
   // everytime we get a new tabid, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) {
@@ -174,7 +177,8 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         tabsObj[tabId].snapshots.splice(1);
         // reset children in root node to reset graph
         // if (tabsObj[tabId].hierarchy)
-        tabsObj[tabId].hierarchy.children = [];
+        if (tabsObj[tabId].hierarchy)
+          tabsObj[tabId].hierarchy.children = [];
         // reassigning pointer to the appropriate node to branch off of
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
         // reset index
@@ -240,6 +244,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     default:
       break;
   }
+  return true; // attempt
 });
 
 // when tab is closed, remove the tabid from the tabsObj

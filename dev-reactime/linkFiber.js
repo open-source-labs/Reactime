@@ -199,13 +199,17 @@ module.exports = (snap, mode) => {
       } = container;
       // Only assign internal root if it actually exists
       fiberRoot = _internalRoot || _reactRootContainer;
+      console.log('linkFiber.js, fiberRoot:', fiberRoot);
     }
 
     await updateSnapShotTree();
     // Send the initial snapshot once the content script has started up
     // This message is sent from contentScript.js in chrome extension bundles
     window.addEventListener('message', ({ data: { action } }) => {
-      if (action === 'contentScriptStarted') sendSnapshot();
+      if (action === 'contentScriptStarted') {
+        console.log('linkFiber.js received contentScriptStarted message, sending snapshot');
+        sendSnapshot();
+      }
     });
   };
 };

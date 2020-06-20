@@ -1,5 +1,5 @@
 const path = require('path');
-const ChromeExtensionReloader = require('webpack-chrome-extension-reloader'); //enable hot reloading while developing a chrome extension
+const ChromeExtensionReloader = require('webpack-chrome-extension-reloader'); // enable hot reloading while developing a chrome extension
 
 const config = {
   // use a "multi-main entry" to inject multiple dependent files together and graph their dependencies into one "chunk"
@@ -24,7 +24,14 @@ const config = {
           loader: 'babel-loader',
           options: {
             presets: [
-              '@babel/preset-env',
+              ['@babel/preset-env',
+                {
+                  useBuiltIns: 'entry',
+                  corejs: 3,
+                  debug: true,
+                },
+              ],
+
               '@babel/preset-react',
               {
                 plugins: [

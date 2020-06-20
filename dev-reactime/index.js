@@ -2,6 +2,8 @@
  * 'reactime' module has a single export
  * @function linkFiber
  */
+import 'core-js';
+import 'regenerator-runtime/runtime';
 
 // * State snapshot object initialized here
 const snapShot = { tree: null };
@@ -47,4 +49,5 @@ window.addEventListener('message', ({ data: { action, payload } }) => {
   }
 });
 
-module.exports = linkFiber;
+//module.exports = linkFiber;
+export default linkFiber;
