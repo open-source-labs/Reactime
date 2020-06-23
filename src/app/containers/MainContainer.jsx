@@ -26,10 +26,15 @@ function MainContainer() {
 
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener(message => {
+      console.log('this is message from port', message)
       const { action, payload, sourceTab } = message;
       switch (action) {
         case 'deleteTab': {
           dispatch(deleteTab(payload));
+          break;
+        }
+        case 'changeTab': {
+          dispatch(setTab(payload));
           break;
         }
         case 'sendSnapshots': {
@@ -40,6 +45,7 @@ function MainContainer() {
         }
         case 'initialConnectSnapshots': {
           dispatch(initialConnect(payload));
+          dispatch(setTab(sourceTab));
           break;
         }
         default:
