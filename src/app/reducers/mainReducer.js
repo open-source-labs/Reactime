@@ -168,8 +168,14 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.SET_TAB: {
-      draft.currentTab = action.payload;
-      break;
+      console.log('this is action.payload', action.payload)
+      if (typeof action.payload === 'number') {
+        draft.currentTab = action.payload;
+        break;
+      } else if (typeof action.payload === 'object'){
+        draft.currentTab = action.payload.tabId;
+        break;
+      }
     }
     case types.DELETE_TAB: {
       delete draft.tabs[action.payload];
