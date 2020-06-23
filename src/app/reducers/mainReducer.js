@@ -168,6 +168,7 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.SET_TAB: {
+      console.log('this is action.payload', action.payload)
       draft.currentTab = action.payload;
       break;
     }

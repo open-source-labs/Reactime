@@ -10,7 +10,7 @@ const SwitchAppDropdown = () => {
   const tabsArray = [];
 
   Object.keys(tabs).forEach(tab => {
-    tabsArray.push({ value: tab, label: tabs[tab].title });
+    tabsArray.unshift({ value: tab, label: tabs[tab].title });
   });
 
   const currTab = {
