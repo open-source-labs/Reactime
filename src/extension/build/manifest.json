@@ -1,5 +1,5 @@
 {
-  "name": "Reactime",
+  "name": "Reactimetest",
   "version": "3.3",
   "devtools_page": "devtools.html",
   "description": "A Chrome extension that helps debug React applications by memorizing the state of components with every render.",
