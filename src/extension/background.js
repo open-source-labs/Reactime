@@ -266,14 +266,14 @@ chrome.tabs.onRemoved.addListener(tabId => {
 });
 
 // when tab is view change, put the tabid as the current tab
-chrome.tabs.onActivated.addListener(tabId => {
+chrome.tabs.onActivated.addListener(info => {
   // tell devtools which tab to be the current
-  console.log('this is tabId from chrome.tabs.onActivated.addListener', tabId)
+  console.log('this is info.tabId from chrome.tabs.onActivated.addListener', info)
   if (portsArr.length > 0) {
     portsArr.forEach(bg =>
       bg.postMessage({
         action: 'changeTab',
-        payload: tabId,
+        payload: info,
       }),
     );
   }
