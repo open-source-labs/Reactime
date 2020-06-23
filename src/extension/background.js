@@ -39,22 +39,24 @@ class Node {
     this.stateSnapshot = obj;
     this.children = [];
     console.log('created node in  background.js constructor');
+    console.log('tabsObj is: ', tabsObj);
   }
 }
 
+// Carlos: no clue what is the purpose of this thing
 function sendToHierarchy(tabObj, newNode) {
   if (!tabObj.currLocation) {
     tabObj.currLocation = newNode;
     tabObj.hierarchy = newNode;
   } else {
-    tabObj.currLocation.children.push(newNode);
+    tabObj.currLocation.children.push(newNode); // Carlos: sets new node as currLocation and into it's children?
     tabObj.currLocation = newNode;
   }
 }
 
 function changeCurrLocation(tabObj, rootNode, index) {
   // check if current node has the index wanted
-  if (rootNode.index === index) {
+  if (rootNode.index || rootNode.index === index) {
     tabObj.currLocation = rootNode;
     return;
   }
@@ -63,9 +65,9 @@ function changeCurrLocation(tabObj, rootNode, index) {
     return;
     // if not, recurse on each one of the children
   }
-  if (rootNode.children) {
+  if (rootNode.children) { // Carlos: remove if, redundant
     rootNode.children.forEach(child => {
-      changeCurrLocation(tabObj, child, index);
+      changeCurrLocation(tabObj, child, index); // Carlos: this can be made more efficient with for loop and exiting when node found
     });
   }
 }
@@ -162,7 +164,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   }
 
   const { persist } = tabsObj[tabId].mode;
-
+  console.log('tabsObj is: ', tabsObj);
   switch (action) {
     case 'jumpToSnap': {
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index);
@@ -177,8 +179,10 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         tabsObj[tabId].snapshots.splice(1);
         // reset children in root node to reset graph
         // if (tabsObj[tabId].hierarchy)
-        if (tabsObj[tabId].hierarchy)
-          tabsObj[tabId].hierarchy.children = [];
+        if (!tabsObj[tabId].hierarchy) {
+          tabsObj[tabId].hierarchy = {};
+        }
+        tabsObj[tabId].hierarchy.children = [];
         // reassigning pointer to the appropriate node to branch off of
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
         // reset index

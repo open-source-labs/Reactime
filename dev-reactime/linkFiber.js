@@ -61,6 +61,10 @@ module.exports = (snap, mode) => {
     });
   }
 
+  // Carlos: this right here is the secret sauce of the whole thing!
+  // Carlos: This is used to change the setState function for
+  // all stateful components for another function that updates our
+  // snapshot global variable immediately after updating the state
   function changeSetState(component) {
     if (component.setState.linkFiberChanged) return;
 
@@ -125,7 +129,7 @@ module.exports = (snap, mode) => {
 
   function createTree(currentFiber, tree = new Tree('root')) {
     // Base case: child or sibling pointed to null
-    if (!currentFiber) return tree;
+    if (!currentFiber) return tree; //Carlos: consider returning null?
 
     const {
       sibling,
@@ -139,6 +143,9 @@ module.exports = (snap, mode) => {
 
     // Check if stateful component
     if (stateNode && stateNode.state) {
+      // Carlos: this is a Tree class object, which has an appendChild 
+      // method that adds stateNode to an array. We should refactor
+      // into variable because there is always at most one element in the array
       nextTree = tree.appendChild(stateNode); // Add component to tree
       changeSetState(stateNode); // Change setState functionality
     }
@@ -199,6 +206,7 @@ module.exports = (snap, mode) => {
       } = container;
       // Only assign internal root if it actually exists
       fiberRoot = _internalRoot || _reactRootContainer;
+      console.log('_reactRootContainer is:', _reactRootContainer);
       console.log('linkFiber.js, fiberRoot:', fiberRoot);
     }
 
