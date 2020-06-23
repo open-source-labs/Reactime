@@ -27,7 +27,9 @@ function Diff({ snapshot, show }) {
   else formatters.html.hideUnchanged();
 
   if (previous === undefined || delta === undefined)
-    return <div> No changes to state: trigger an event to update state </div>;
+    return (
+      <div> No state change detected. Trigger an event to change state </div>
+    );
   return <div>{ReactHtmlParser(html)}</div>;
 }
 
