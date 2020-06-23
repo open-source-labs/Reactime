@@ -13,27 +13,14 @@
 
 const { returnState } = require('./masterState');
 
-// Traverses given tree by accessing children through coords array
-function traverseTree(tree, coords) {
-  let curr = tree;
-  coords.forEach(coord => {
-    curr = curr.children[coord];
-    //curr = curr.children[0];
-  });
-  return curr;
-}
-
 // Carlos: origin is latest snapshot, linking to the fiber,
 // so changes to origin change app
 module.exports = (origin, mode) => {
   // Recursively change state of tree
   // Carlos: target is past state we are travelling to
-  let count = 0;
-  function jump(target, coords = []) {
-    count++;
-    console.log("ran jump ", count, " times");
+
+  function jump(target, originNode = origin.tree) {
     console.log('origin in jump():', origin);
-    const originNode = traverseTree(origin.tree, coords);
     // Set the state of the origin tree if the component is stateful
     if (!target) return;
     if (originNode.component.setState) {
@@ -50,9 +37,7 @@ module.exports = (origin, mode) => {
         return target.state;
       }, () => {
         // Iterate through new children once state has been set
-        target.children.forEach((child, i) => {
-          jump(target, i);
-        });
+        jump(target.children[0], originNode.children[0]);
       });
     } else {
       // If component uses hooks, traverse through the memoize tree
@@ -68,7 +53,6 @@ module.exports = (origin, mode) => {
         index += 2;
       }
     }
-    count = 0;
   }
 
   return target => {
