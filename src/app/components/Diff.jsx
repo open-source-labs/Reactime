@@ -7,7 +7,7 @@ import { useStoreContext } from '../store';
 
 function Diff({ snapshot, show }) {
   const [mainState] = useStoreContext();
-  const { currentTab, tabs } = mainState;
+  const { currentTab, tabs } = mainState; // Nate:: k/v pairs of mainstate store object being created
   const { snapshots, viewIndex, sliderIndex } = tabs[currentTab];
   let previous;
 
@@ -17,19 +17,17 @@ function Diff({ snapshot, show }) {
   } else {
     previous = snapshots[sliderIndex - 1];
   }
-
+  // Nate:: diff function returns a comparaison of two objects, one has an updated change
   const delta = diff(previous, snapshot);
   // returns html in string
   const html = formatters.html.format(delta, previous);
   if (show) formatters.html.showUnchanged();
   else formatters.html.hideUnchanged();
 
-  if (previous === undefined || delta === undefined) return <div> No state change detected. </div>;
-  return (
-    <div>
-      {ReactHtmlParser(html)}
-    </div>
-  );
+  if (previous === undefined || delta === undefined) {
+    return <div> No state change detected. Trigger an event to change state </div>;
+  }
+  return <div>{ReactHtmlParser(html)}</div>;
 }
 
 Diff.propTypes = {
