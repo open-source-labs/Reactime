@@ -7,8 +7,7 @@ import { useStoreContext } from "../store";
 
 function Diff({ snapshot, show }) {
   const [mainState] = useStoreContext();
-  const { currentTab, tabs } = mainState; //k/v pairs of mainstate store object being created
-  console.log(mainState);
+  const { currentTab, tabs } = mainState; //Nate:: k/v pairs of mainstate store object being created
   const { snapshots, viewIndex, sliderIndex } = tabs[currentTab];
   let previous;
 
@@ -18,9 +17,8 @@ function Diff({ snapshot, show }) {
   } else {
     previous = snapshots[sliderIndex - 1];
   }
-  //diff function is supposed to return two of the same objects side by side
+  // Nate:: diff function from jsondiffpatch is supposed to return a comparaison of two objects, one has an updated change
   const delta = diff(previous, snapshot);
-  console.log("this is the result of running diff function   ", delta);
   // returns html in string
   const html = formatters.html.format(delta, previous);
   if (show) formatters.html.showUnchanged();
