@@ -97,6 +97,7 @@ module.exports = (snap, mode) => {
       // * Uncomment setTimeout to prevent snapshot lag-effect
       // * (i.e. getting the prior snapshot on each state change)
       // setTimeout(() => {
+      console.log('in dispatch(fiber, queue, action)', fiber, queue, action);
       updateSnapShotTree();
       sendSnapshot();
       // }, 100);
@@ -149,7 +150,7 @@ module.exports = (snap, mode) => {
       nextTree = tree.appendChild(stateNode); // Add component to tree
       changeSetState(stateNode); // Change setState functionality
     }
-
+    // console.log('current fiber:', currentFiber);
     // Check if the component uses hooks
     if (
       memoizedState
@@ -159,6 +160,7 @@ module.exports = (snap, mode) => {
       if (typeof elementType.$$typeof === 'symbol') return;
       // Traverse through the currentFiber and extract the getters/setters
       astHooks = astParser(elementType);
+      console.log('astHooks: ', astHooks);
       saveState(astHooks);
       // Create a traversed property and assign to the evaluated result of
       // invoking traverseHooks with memoizedState
