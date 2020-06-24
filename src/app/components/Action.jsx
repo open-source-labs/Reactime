@@ -24,6 +24,7 @@ const Action = props => {
         onClick={e => {
           e.stopPropagation();
           dispatch(changeSlider(index));
+          dispatch(changeView(index));
         }}
         tabIndex={index}
         type="button"
