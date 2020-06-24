@@ -17,9 +17,14 @@ function createTabObj(title) {
     title,
     // snapshots is an array of ALL state snapshots for the reactime tab working on a specific user application
     snapshots: [],
-    index: 0,
+    // gabi and nate :: index here is the tab index that show total amount of state changes 
+    index: 0, 
     //* this is our pointer so we know what the current state the user is checking (this accounts for time travel aka when user clicks jump on the UI)
     currLocation: null,
+    // gabi and nate :: point the node that will generate the next child set by newest node or jump
+    currParent: 0,
+    // gabi and nate :: points to the current branch                     
+    currBranch: 0,
     //* inserting a new property to build out our hierarchy dataset for d3
     hierarchy: null,
     mode: {
@@ -35,7 +40,12 @@ class Node {
     // eslint-disable-next-line no-param-reassign
     // eslint-disable-next-line no-multi-assign
     // eslint-disable-next-line no-plusplus
+    // gabi and nate :: continue the order of number of total state changes
     this.index = tabObj.index++;
+    // gabi and nate :: continue the order of number of states changed from that parent
+    this.name = tabObj.currParent+=1;
+    // gabi and nate :: mark from what branch this node is originated
+    this.branch = tabObj.currBranch;
     this.stateSnapshot = obj;
     this.children = [];
     console.log('created node in  background.js constructor');
@@ -48,14 +58,24 @@ function sendToHierarchy(tabObj, newNode) {
     tabObj.hierarchy = newNode;
   } else {
     tabObj.currLocation.children.push(newNode);
+    // gabi and nate :: if the node's children's array is empty
+    if(tabObj.currLocation.children.length > 1){
+      // gabi and nate :: increment the value of the nodes branch by 1 
+      newNode.branch+=1
+      // gabi and nate :: reassign value of current branch the newNode branch value
+      tabObj.currBranch = newNode.branch;
+    }
     tabObj.currLocation = newNode;
   }
 }
 
 function changeCurrLocation(tabObj, rootNode, index) {
+  // gabi and nate :: index comes from the app's main reducer to locate the right current location on tabObj 
   // check if current node has the index wanted
-  if (rootNode.index === index) {
+  if (rootNode.index === index) { 
     tabObj.currLocation = rootNode;
+    // gabi and nate :: index of current location from where the next node will be a child
+    tabObj.currParent = index;
     return;
   }
   // base case if no children
@@ -165,6 +185,9 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
   switch (action) {
     case 'jumpToSnap': {
+      // console.log('this tabsObj[tabId] sent to changeCurrLocation', tabsObj[tabId])
+      // console.log('this tabsObj[tabId].hierarchy sent to changeCurrLocation', tabsObj[tabId].hierarchy)
+      // console.log('this index sent to changeCurrLocation', index)
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index);
       break;
     }

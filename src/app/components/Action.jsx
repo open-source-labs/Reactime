@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { changeView, changeSlider } from '../actions/actions';
 
+/* // gabi and nate :: index and delta props were removed from Action.jsx  */
 const Action = props => {
   const {
-    selected, index, delta, sliderIndex, dispatch,
+    selected, index, sliderIndex, dispatch, displayName, componentName, state
   } = props;
 
   return (
@@ -15,9 +16,7 @@ const Action = props => {
       style={index > sliderIndex ? { color: '#5f6369' } : {}}
     >
       <div className="action-component-text">
-        {`${index
-        }:   ${delta}`}
-
+        {`${displayName}:  ${componentName} `} 
       </div>
       <button
         className="jump-button"
@@ -34,13 +33,15 @@ const Action = props => {
     </div>
   );
 };
-
+// gabi and nate :: added displayName, componentName and State props to propTypes
 Action.propTypes = {
   sliderIndex: PropTypes.number.isRequired,
   selected: PropTypes.bool.isRequired,
   index: PropTypes.number.isRequired,
   dispatch: PropTypes.func.isRequired,
-  delta: PropTypes.string.isRequired,
+  displayName: PropTypes.string.isRequired, 
+  componentName: PropTypes.string.isRequired, 
+  state: PropTypes.object.isRequired
 };
 
 export default Action;
