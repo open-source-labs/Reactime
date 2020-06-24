@@ -14,7 +14,9 @@ const resetSlider = () => {
 
 function ActionContainer() {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { snapshots, sliderIndex, viewIndex } = tabs[currentTab];
+  const { hierarchy, snapshots, sliderIndex, viewIndex } = tabs[currentTab];
+  console.log('actionContainer tabs[currentTab];', tabs[currentTab])
+  console.log('actionContainer snapshots;', snapshots)
 
   let actionsArr = [];
   // build actions array
