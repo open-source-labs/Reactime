@@ -62,8 +62,8 @@ function sendToHierarchy(tabObj, newNode) {
     if(tabObj.currLocation.children.length > 1){
       // gabi and nate :: increment the value of the nodes branch by 1 
       newNode.branch+=1
-      // gabi and nate :: reassign value of current branch to be the length of the children array less one
-      tabObj.currBranch = tabObj.currLocation.children.length-1;
+      // gabi and nate :: reassign value of current branch the newNode branch value
+      tabObj.currBranch = newNode.branch;
     }
     tabObj.currLocation = newNode;
   }
