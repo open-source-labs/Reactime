@@ -36,7 +36,7 @@ function ActionContainer() {
       }
     }    
     displayArray(hierarchy)
-    console.log('this is hierarchyArr', hierarchyArr)
+    // console.log('this is hierarchyArr', hierarchyArr)
     
     actionsArr = hierarchyArr.map((snapshot, index) => {
       const selected = index === viewIndex;

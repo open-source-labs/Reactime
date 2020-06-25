@@ -69,13 +69,13 @@ function sendToHierarchy(tabObj, newNode) {
   }
 }
 
-function changeCurrLocation(tabObj, rootNode, index) {
+function changeCurrLocation(tabObj, rootNode, index, name) {
   // gabi and nate :: index comes from the app's main reducer to locate the right current location on tabObj 
   // check if current node has the index wanted
   if (rootNode.index === index) { 
     tabObj.currLocation = rootNode;
     // gabi and nate :: index of current location from where the next node will be a child
-    tabObj.currParent = index;
+    tabObj.currParent = name;
     return;
   }
   // base case if no children
@@ -85,7 +85,7 @@ function changeCurrLocation(tabObj, rootNode, index) {
   }
   if (rootNode.children) {
     rootNode.children.forEach(child => {
-      changeCurrLocation(tabObj, child, index);
+      changeCurrLocation(tabObj, child, index, name);
     });
   }
 }
@@ -139,7 +139,11 @@ chrome.runtime.onConnect.addListener(port => {
         // reassigning pointer to the appropriate node to branch off of
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
         // reset index
-        tabsObj[tabId].index = 1;
+        tabsObj[tabId].index = 0;
+        // reset name
+        tabs[currentTab].name = 0;
+        // reset branch
+        tabs[currentTab].branch = 0;
         return true;
       case 'setLock':
         tabsObj[tabId].mode.locked = payload;
@@ -164,7 +168,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   if (request.type === 'SIGN_CONNECT') return true;
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
-  const { action, index } = request;
+  const { action, index, name } = request;
   let isReactTimeTravel = false;
 
   // Filter out tabs that don't have reactime
@@ -188,7 +192,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       // console.log('this tabsObj[tabId] sent to changeCurrLocation', tabsObj[tabId])
       // console.log('this tabsObj[tabId].hierarchy sent to changeCurrLocation', tabsObj[tabId].hierarchy)
       // console.log('this index sent to changeCurrLocation', index)
-      changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index);
+      changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
       break;
     }
     // this case causes d3 graph to display 1 instead of 0
@@ -199,13 +203,18 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       if (!persist) {
         tabsObj[tabId].snapshots.splice(1);
         // reset children in root node to reset graph
-        // if (tabsObj[tabId].hierarchy)
         if (tabsObj[tabId].hierarchy)
           tabsObj[tabId].hierarchy.children = [];
         // reassigning pointer to the appropriate node to branch off of
+        // tabsObj[tabId].hierarchy = null;
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
+        // tabsObj[tabId].currLocation = null;
         // reset index
-        tabsObj[tabId].index = 1;
+        tabsObj[tabId].index = 0;
+        // reset currParent
+        tabsObj[tabId].currParent = 0;
+        // reset currBranch
+        tabsObj[tabId].currBranch = 0;
 
         // send a message to devtools
         portsArr.forEach(bg =>
