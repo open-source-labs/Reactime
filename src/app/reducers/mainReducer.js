@@ -11,22 +11,22 @@ export default (state, action) => produce(state, draft => {
   
   
   // gabi and nate :: function that find the index in the hiearachy and extract the name of the equivalent index to add to the post message
-    const findName = (index, hierarchy) => {
-      if(hierarchy.index == index){
-        return hierarchy.name;
-      }
-      else {
-        const hierarchyChildArray = [];
-        for (let hierarchyChild of hierarchy.children){
-          hierarchyChildArray.push(findName(index, hierarchyChild));
-        }
-        for (let hierarchyChildName of hierarchyChildArray){
-          if(hierarchyChildName){
-            return hierarchyChildName
-          }
-        }
-      } 
+  const findName = (index, hierarchy) => {
+    if(hierarchy.index == index){
+      return hierarchy.name;
     }
+    else {
+      const hierarchyChildArray = [];
+      for (let hierarchyChild of hierarchy.children){
+        hierarchyChildArray.push(findName(index, hierarchyChild));
+      }
+      for (let hierarchyChildName of hierarchyChildArray){
+        if(hierarchyChildName){
+          return hierarchyChildName
+        }
+      }
+    } 
+  }
 
   switch (action.type) {
     case types.MOVE_BACKWARD: {
@@ -110,17 +110,27 @@ export default (state, action) => produce(state, draft => {
       tabs[currentTab].sliderIndex = 0;
       tabs[currentTab].viewIndex = -1;
       tabs[currentTab].playing = false;
-      tabs[currentTab].snapshots.splice(1);
-      // reset children in root node to reset graph
-      if (tabs[currentTab].hierarchy) tabs[currentTab].hierarchy.children = [];
-      // reassigning pointer to the appropriate node to branch off of
+      // gabi :: activate empty mode
+      tabs[currentTab].mode.empty = true 
+      // gabi :: record snapshot of page inicial state
+      tabs[currentTab].inicialSnapshot.push(tabs[currentTab].snapshots[0]);
+      // gabi :: reset snapshots to page last state recorded
+      tabs[currentTab].snapshots = [ tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1] ];
+      // gabi :: record hierarchy of page inicial state
+      tabs[currentTab].inicialHierarchy = {...tabs[currentTab].hierarchy};
+      tabs[currentTab].inicialHierarchy.children = [];
+      // gabi :: reset hierarchy
+      tabs[currentTab].hierarchy.children = [];
+      // gabi :: reset hierarchy to page last state recorded
+      tabs[currentTab].hierarchy.stateSnapshot = tabs[currentTab].snapshots[0]
+      // gabi :: reset currLocation to page last state recorded
       tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
-      // reset index
+      // gabi :: reset index
       tabs[currentTab].index = 0;
-      // gabi and nate :: reset name
-      tabs[currentTab].name = 0;
-      // gabi and nate :: reset branch
-      tabs[currentTab].branch = 0;
+      // gabi :: reset currParent plus current state
+      tabs[currentTab].currParent = 1;
+      // gabi :: reset currBranch
+      tabs[currentTab].currBranch = 0;
       break;
     }
     case types.SET_PORT: {
