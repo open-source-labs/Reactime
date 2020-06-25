@@ -23,14 +23,14 @@ class Chart extends Component {
 
   componentDidMount() {
     const { hierarchy } = this.props;
-    console.log('this is hierarchy on didMount chart', hierarchy)
+    // console.log('this is hierarchy on didMount chart', hierarchy)
     root = JSON.parse(JSON.stringify(hierarchy));
     this.maked3Tree();
   }
 
   componentDidUpdate() {
     const { hierarchy } = this.props;
-    console.log('this is hierarchy on didUpdate chart', hierarchy)
+    // console.log('this is hierarchy on didUpdate chart', hierarchy)
     root = JSON.parse(JSON.stringify(hierarchy));
     this.maked3Tree();
   }
@@ -52,7 +52,7 @@ class Chart extends Component {
     };
     const width = 600 - margin.right - margin.left;
     const height = 700 - margin.top - margin.bottom;
-    console.log('this is this.chartRef.current on chart', this.chartRef.current)
+    // console.log('this is this.chartRef.current on chart', this.chartRef.current)
     const chartContainer = d3.select(this.chartRef.current)
       .append('svg') // chartContainer is now pointing to svg
       .attr('width', width)
@@ -145,7 +145,7 @@ class Chart extends Component {
       // this arranges the angle of the text
       .attr('transform', function (d) { return 'rotate(' + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 1 / Math.PI + ')'; })
       .text(function (d) {
-        console.log('this is d from text char line 148', d)
+        // console.log('this is d from text char line 148', d)
         // save d.data.index to variable
         // gabi and nate :: display the name of of specific patch
         return `${d.data.name}.${d.data.branch}`;
