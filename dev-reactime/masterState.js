@@ -3,6 +3,7 @@
 // Export two functions that either saves the AST state object into an array
 // or returns the array for use
 const masterState = [];
+const hooksComponentsActions = {};
 
 module.exports = {
   saveState: state => {
@@ -12,4 +13,9 @@ module.exports = {
     return masterState;
   },
   returnState: () => masterState,
+  saveHooksComponent: comp => {
+    for (const key in comp) {
+      hooksComponentsActions[key] = comp[key];
+    }
+  },
 };

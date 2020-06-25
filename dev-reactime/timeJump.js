@@ -20,7 +20,7 @@ module.exports = (origin, mode) => {
   // Carlos: target is past state we are travelling to
 
   function jump(target, originNode = origin.tree) {
-    console.log('origin (link to current app state) in jump():', origin);
+    // console.log('origin (link to current app state) in jump():', origin);
     // Set the state of the origin tree if the component is stateful
     if (!target) return;
     if (originNode.component.setState) {
@@ -49,6 +49,7 @@ module.exports = (origin, mode) => {
       // While loop through the memoize tree
       console.log('hooks:', hooks);
       while (current && current.queue) { // allows time travel with useEffect
+        console.log('about to call hooks dispatch, target state is: ', target);
         //console.log('calling dispatch with arg:', target.state[hooks[index]]);
         current.queue.dispatch(target.state[hooks[index]]);
         // Reassign the current value

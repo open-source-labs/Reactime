@@ -31,12 +31,39 @@ class Tree {
   getCopy(copy = new Tree('root', true)) {
     // copy state of children
     copy.children = this.children.map(
-      child => new Tree(child.component.state
-        || child.component.traversed, true, child.component.constructor.name),
+      child => {
+        console.log('tree.js child:', child);
+        if (child.component.state) {
+          return new Tree(child.component.state, true, child.component.constructor.name);
+        }
+        
+        if (child.component.hooksDispatch) {
+          return new Tree(child.component.hooksDispatch, true, child.component.hooksDispatch.name);
+        }
+      },
     );
 
+    // Carlos : remove functions from state, to avoid failure in postMessage
+    if (copy.children) {
+      copy.children.forEach(child => {
+        if (child.state) {
+          Object.entries(child.state).forEach(e => {
+            if (typeof e[1] === 'function') {
+              console.log('message will contain function, may fail');
+              child.state[e[0]] = child.state[e[0]].toString();
+            }
+            if (e[0] === 'children') {
+              delete child.state[e[0]];
+            }
+          });
+        }
+      });
+    }
+
     // copy children's children recursively
-    this.children.forEach((child, i) => child.getCopy(copy.children[i]));
+    this.children.forEach((child, i) => {
+      if (child !== this.children) child.getCopy(copy.children[i]);
+    });
     return copy;
   }
 
@@ -45,16 +72,16 @@ class Tree {
   // BUG FIX: Don't print the Router as a component
   // Change how the children are printed
   print() {
-    console.log("current tree structure for *this : ", this);
+    console.log('current tree structure for *this : ', this);
     const children = ['children: '];
     // DEV: What should we push instead for components using hooks (it wouldn't be state)
     this.children.forEach(child => { // if this.children is always initialized to empty array, when would there ever be anything to iterate through here?
       children.push(child.state || child.component.state);
     });
-    if (this.name) console.log("this.name if exists: ", this.name);
+    if (this.name) console.log('this.name if exists: ', this.name);
     if (children.length === 1) {
-      console.log(`children length 1. ${this.state ? `this.state: ` : `this.component.state: `}`, this.state || this.component.state);
-    } else console.log(`children length !== 1. ${this.state ? `this.state: ` : `this.component.state, children: `}`, this.state || this.component.state, ...children);
+      console.log(`children length 1. ${this.state ? 'this.state: ' : 'this.component.state: '}`, this.state || this.component.state);
+    } else console.log(`children length !== 1. ${this.state ? 'this.state: ' : 'this.component.state, children: '}`, this.state || this.component.state, ...children);
     this.children.forEach(child => {
       child.print();
     });
