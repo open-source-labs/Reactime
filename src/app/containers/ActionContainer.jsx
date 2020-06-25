@@ -14,67 +14,47 @@ const resetSlider = () => {
 
 function ActionContainer() {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { snapshots, sliderIndex, viewIndex } = tabs[currentTab];
+  const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
+  console.log('actionContainer tabs[currentTab];', tabs[currentTab])
 
   let actionsArr = [];
-  // build actions array
-  if (snapshots.length > 0) {
-    // breadth  first function - take in an delta obj
-    function breadthFirst(delta) {
-      if (delta === undefined) return '';
-      // aux array = current and one called next
-      let current = Object.values(delta.children); // Object.keys(delta.children);
-      let next = [];
-      let result = '';
-      // return a string
-      while (current.length > 0) {
-        const shifted = current.shift();
-        if (shifted.state) {
-          // eslint-disable-next-line no-loop-func
-          Object.keys(shifted.state).forEach(key => {
-            result = result.concat(key, ', ');
-          });
-        }
-        if (shifted.children) {
-          // eslint-disable-next-line no-loop-func
-          Object.keys(shifted.children).forEach(el => {
-            next.push(shifted.children[el]);
-          });
-        }
-        if (current.length === 0) {
-          current = next;
-          next = [];
-        }
-      }
-      return result;
-    }
+  let hierarchyArr = [];
 
-    function truncate(newDiff, num = 15) {
-      if (newDiff.length <= num) return newDiff.replace(',', '');
-      const thisdiff = newDiff.slice(0, num);
-      return thisdiff.concat('...');
-    }
-    actionsArr = snapshots.map((snapshot, index) => {
-      const selected = index === viewIndex;
-      let newDiff = '';
-      // if index is greater than 0
-      if (index > 0) {
-        // calculate the diff
-        const delta = diff(snapshots[index - 1], snapshot);
-        newDiff = truncate(breadthFirst(delta));
+    // gabi and nate :: delete function to traverse state from snapshots, now we are tranversing state from hiararchy and alsog getting infromation on display name and component name
+    const displayArray = (obj) => {
+      const newObj = {
+        index: obj.index,
+        displayName : `${obj.name}.${obj.branch}`,
+        state: obj.stateSnapshot.children[0].state,
+        componentName: obj.stateSnapshot.children[0].name,
       }
+      hierarchyArr.push(newObj)
+      if(obj.children){
+        obj.children.forEach((element) => {
+          displayArray(element)
+        })
+      }
+    }
+    // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was inicialize involk displayArray to display the hierarchy  
+    if (hierarchy) displayArray(hierarchy)
+    // console.log('this is hierarchyArr', hierarchyArr)
+    
+    actionsArr = hierarchyArr.map((snapshot, index) => {
+      const selected = index === viewIndex;
       return (
         <Action
           key={`action${index}`}
           index={index}
+          state={snapshot.state}
+          displayName={snapshot.displayName}
+          componentName={snapshot.componentName} 
           selected={selected}
           dispatch={dispatch}
           sliderIndex={sliderIndex}
-          delta={newDiff}
         />
       );
     });
-  }
+
   return (
     <div className="action-container">
       <div className="action-component exclude">

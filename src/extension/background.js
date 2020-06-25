@@ -17,15 +17,25 @@ function createTabObj(title) {
     title,
     // snapshots is an array of ALL state snapshots for the reactime tab working on a specific user application
     snapshots: [],
+    // gabi :: record inicial snapshot to refresh page in case empty function is called
+    inicialSnapshot: [],
+    // gabi and nate :: index here is the tab index that show total amount of state changes
     index: 0,
     //* this is our pointer so we know what the current state the user is checking (this accounts for time travel aka when user clicks jump on the UI)
     currLocation: null,
+    // gabi and nate :: point the node that will generate the next child set by newest node or jump
+    currParent: 0,
+    // gabi and nate :: points to the current branch
+    currBranch: 0,
     //* inserting a new property to build out our hierarchy dataset for d3
     hierarchy: null,
+    // gabi :: record inicial hierarchy to refresh page in case empty function is called
+    inicialHierarchy: null,
     mode: {
       persist: false,
       locked: false,
       paused: false,
+      empty: false,
     },
   };
 }
@@ -35,7 +45,12 @@ class Node {
     // eslint-disable-next-line no-param-reassign
     // eslint-disable-next-line no-multi-assign
     // eslint-disable-next-line no-plusplus
+    // gabi and nate :: continue the order of number of total state changes
     this.index = tabObj.index++;
+    // gabi and nate :: continue the order of number of states changed from that parent
+    this.name = tabObj.currParent += 1;
+    // gabi and nate :: mark from what branch this node is originated
+    this.branch = tabObj.currBranch;
     this.stateSnapshot = obj;
     this.children = [];
     console.log('created node in  background.js constructor');
@@ -49,15 +64,25 @@ function sendToHierarchy(tabObj, newNode) {
     tabObj.currLocation = newNode;
     tabObj.hierarchy = newNode;
   } else {
-    tabObj.currLocation.children.push(newNode); // Carlos: sets new node as currLocation and into it's children?
+    tabObj.currLocation.children.push(newNode);
+    // gabi and nate :: if the node's children's array is empty
+    if (tabObj.currLocation.children.length > 1) {
+      // gabi and nate :: increment the value of the nodes branch by 1
+      newNode.branch += 1;
+      // gabi and nate :: reassign value of current branch the newNode branch value
+      tabObj.currBranch = newNode.branch;
+    }
     tabObj.currLocation = newNode;
   }
 }
 
-function changeCurrLocation(tabObj, rootNode, index) {
+function changeCurrLocation(tabObj, rootNode, index, name) {
+  // gabi and nate :: index comes from the app's main reducer to locate the right current location on tabObj
   // check if current node has the index wanted
-  if (rootNode.index || rootNode.index === index) {
+  if (rootNode.index === index) {
     tabObj.currLocation = rootNode;
+    // gabi and nate :: index of current location from where the next node will be a child
+    tabObj.currParent = name;
     return;
   }
   // base case if no children
@@ -65,9 +90,10 @@ function changeCurrLocation(tabObj, rootNode, index) {
     return;
     // if not, recurse on each one of the children
   }
+  // Carlos: this can be made more efficient with for loop and exiting when node found
   if (rootNode.children) { // Carlos: remove if, redundant
     rootNode.children.forEach(child => {
-      changeCurrLocation(tabObj, child, index); // Carlos: this can be made more efficient with for loop and exiting when node found
+      changeCurrLocation(tabObj, child, index, name);
     });
   }
 }
@@ -115,13 +141,27 @@ chrome.runtime.onConnect.addListener(port => {
         tabsObj[tabId].snapshots = payload;
         return true;
       case 'emptySnap':
-        tabsObj[tabId].snapshots.splice(1);
-        // reset children in root node to reset graph
+        // gabi :: activate empty mode
+        tabsObj[tabId].mode.empty = true;
+        // gabi :: record snapshot of page inicial state
+        tabsObj[tabId].inicialSnapshot.push(tabsObj[tabId].snapshots[0]);
+        // gabi :: reset snapshots to page last state recorded
+        tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]];
+        // gabi :: record hierarchy of page inicial state
+        tabsObj[tabId].inicialHierarchy = { ...tabsObj[tabId].hierarchy };
+        tabsObj[tabId].inicialHierarchy.children = [];
+        // gabi :: reset hierarchy
         tabsObj[tabId].hierarchy.children = [];
-        // reassigning pointer to the appropriate node to branch off of
+        // gabi :: reset hierarchy to page last state recorded
+        tabsObj[tabId].hierarchy.stateSnapshot = tabsObj[tabId].snapshots[0];
+        // gabi :: reset currLocation to page last state recorded
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
-        // reset index
-        tabsObj[tabId].index = 1;
+        // gabi :: reset index
+        tabsObj[tabId].index = 0;
+        // gabi :: reset currParent plus current state
+        tabsObj[tabId].currParent = 1;
+        // gabi :: reset currBranch
+        tabsObj[tabId].currBranch = 0;
         return true;
       case 'setLock':
         tabsObj[tabId].mode.locked = payload;
@@ -146,7 +186,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   if (request.type === 'SIGN_CONNECT') return true;
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
-  const { action, index } = request;
+  const { action, index, name } = request;
   let isReactTimeTravel = false;
 
   // Filter out tabs that don't have reactime
@@ -163,11 +203,11 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     tabsObj[tabId] = createTabObj(tabTitle);
   }
 
-  const { persist } = tabsObj[tabId].mode;
-  console.log('tabsObj is: ', tabsObj);
+  const { persist, empty } = tabsObj[tabId].mode;
+
   switch (action) {
     case 'jumpToSnap': {
-      changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index);
+      changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
       break;
     }
     // this case causes d3 graph to display 1 instead of 0
@@ -176,17 +216,25 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       tabsObj[tabId].mode.paused = false;
       // dont remove snapshots if persisting
       if (!persist) {
-        tabsObj[tabId].snapshots.splice(1);
-        // reset children in root node to reset graph
-        // if (tabsObj[tabId].hierarchy)
-        if (!tabsObj[tabId].hierarchy) {
-          tabsObj[tabId].hierarchy = {};
+        if (empty) {
+          // gabi :: reset snapshots to page inicial state recorded when empted
+          tabsObj[tabId].snapshots = tabsObj[tabId].inicialSnapshot;
+          // gabi :: reset hierarchy to page inicial state recorded when empted
+          tabsObj[tabId].hierarchy = tabsObj[tabId].inicialHierarchy;
+        } else {
+          // gabi :: reset snapshots to page inicial state
+          tabsObj[tabId].snapshots.splice(1);
+          // gabi :: reset hierarchy to page inicial state
+          tabsObj[tabId].hierarchy.children = [];
         }
-        tabsObj[tabId].hierarchy.children = [];
-        // reassigning pointer to the appropriate node to branch off of
+        // gabi :: reset currLocation to page inicial state
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
-        // reset index
-        tabsObj[tabId].index = 1;
+        // gabi :: reset index
+        tabsObj[tabId].index = 0;
+        // gabi :: reset currParent plus current state
+        tabsObj[tabId].currParent = 1;
+        // gabi :: reset currBranch
+        tabsObj[tabId].currBranch = 0;
 
         // send a message to devtools
         portsArr.forEach(bg =>
@@ -272,7 +320,7 @@ chrome.tabs.onRemoved.addListener(tabId => {
 // when tab is view change, put the tabid as the current tab
 chrome.tabs.onActivated.addListener(info => {
   // tell devtools which tab to be the current
-  console.log('this is info.tabId from chrome.tabs.onActivated.addListener', info)
+  console.log('this is info.tabId from chrome.tabs.onActivated.addListener', info);
   if (portsArr.length > 0) {
     portsArr.forEach(bg =>
       bg.postMessage({
