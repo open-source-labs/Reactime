@@ -31,12 +31,13 @@ function ActionContainer() {
     hierarchyArr.push(newObj)
     if (obj.children) {
       obj.children.forEach((element) => {
-        displayArray(element);
-      });
+        displayArray(element)
+      })
     }
-  }    
-  displayArray(hierarchy)
-  console.log('this is hierarchyArr', hierarchyArr)
+  }
+  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was inicialize involk displayArray to display the hierarchy  
+  if (hierarchy) displayArray(hierarchy)
+  // console.log('this is hierarchyArr', hierarchyArr)
 
   // Edwin: handles keyboard presses, function passes an event and index of each action-component
   function handleOnKeyDown(e, i) {
@@ -59,7 +60,7 @@ function ActionContainer() {
       dispatch(changeSlider(currIndex));
     }
   }
-
+    
   actionsArr = hierarchyArr.map((snapshot, index) => {
     const selected = index === viewIndex;
     return (
@@ -77,7 +78,6 @@ function ActionContainer() {
       />
     );
   });
-
 
   return (
     <div className="action-container">
