@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
 
@@ -39,26 +40,40 @@ class Tree {
     this.children.forEach((child, i) => child.getCopy(copy.children[i]));
     return copy;
   }
-
-  // print out the tree structure in the console
-  // DEV: Process may be different for useState components
-  // BUG FIX: Don't print the Router as a component
-  // Change how the children are printed
-  print() {
-    console.log("current tree structure for *this : ", this);
-    const children = ['children: '];
-    // DEV: What should we push instead for components using hooks (it wouldn't be state)
-    this.children.forEach(child => { // if this.children is always initialized to empty array, when would there ever be anything to iterate through here?
-      children.push(child.state || child.component.state);
-    });
-    if (this.name) console.log("this.name if exists: ", this.name);
-    if (children.length === 1) {
-      console.log(`children length 1. ${this.state ? `this.state: ` : `this.component.state: `}`, this.state || this.component.state);
-    } else console.log(`children length !== 1. ${this.state ? `this.state: ` : `this.component.state, children: `}`, this.state || this.component.state, ...children);
-    this.children.forEach(child => {
-      child.print();
-    });
-  }
 }
 
+class TreeUnfiltered extends Tree {
+  constructor (component, useStateInstead = false, name) {
+    super(component, useStateInstead, name);
+    
+  }
+
+}
+
+
+
+
 module.exports = Tree;
+
+
+
+
+  // // print out the tree structure in the console
+  // // DEV: Process may be different for useState components
+  // // BUG FIX: Don't print the Router as a component
+  // // Change how the children are printed
+  // print() {
+  //   console.log("current tree structure for *this : ", this);
+  //   const children = ['children: '];
+  //   // DEV: What should we push instead for components using hooks (it wouldn't be state)
+  //   this.children.forEach(child => { // if this.children is always initialized to empty array, when would there ever be anything to iterate through here?
+  //     children.push(child.state || child.component.state);
+  //   });
+  //   if (this.name) console.log("this.name if exists: ", this.name);
+  //   if (children.length === 1) {
+  //     console.log(`children length 1. ${this.state ? `this.state: ` : `this.component.state: `}`, this.state || this.component.state);
+  //   } else console.log(`children length !== 1. ${this.state ? `this.state: ` : `this.component.state, children: `}`, this.state || this.component.state, ...children);
+  //   this.children.forEach(child => {
+  //     child.print();
+  //   });
+  // }
