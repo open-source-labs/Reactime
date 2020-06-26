@@ -27,12 +27,12 @@ const StateRoute = ({ snapshot, hierarchy }) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
-  const renderPerfView = () => {
-    if (snapshot) {
-      return <PerfView snapshot={snapshot} />;
-    }
-    return <div className="noState">{NO_STATE_MSG}</div>;
-  };
+  // const renderPerfView = () => {
+  //   if (snapshot) {
+  //     return <PerfView data={[5, 10, 1, 3]} size={[500, 500]} />;
+  //   }
+  //   return <div className="noState">{NO_STATE_MSG}</div>;
+  // };
 
   return (
     <Router> 
@@ -43,13 +43,13 @@ const StateRoute = ({ snapshot, hierarchy }) => {
         <NavLink className="router-link" activeClassName="is-active" to="/chart">
         History
         </NavLink>
-        <NavLink className="router-link" activeClassName="is-active" to="/performance">
+        {/* <NavLink className="router-link" activeClassName="is-active" to="/performance">
         Performance
-        </NavLink>
+        </NavLink> */}
       </div>
       <Switch>
         <Route path="/chart" render={renderChart} />
-        <Route path="/performance" render={renderPerfView} />
+        {/* <Route path="/performance" render={renderPerfView} /> */}
         <Route path="/" render={renderTree} />
       </Switch>
     </Router>
