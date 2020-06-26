@@ -28,6 +28,7 @@ function ActionContainer() {
       state: obj.stateSnapshot.children[0].state,
       componentName: obj.stateSnapshot.children[0].name,
     }
+
     hierarchyArr.push(newObj)
     if (obj.children) {
       obj.children.forEach((element) => {
