@@ -3,6 +3,7 @@
 
 // this is the current snapshot that is being sent to the snapshots array.
 class Tree {
+  /*
   constructor(component, useStateInstead = false, name) {
     // special case when component is root
     // give it a special state = 'root'
@@ -16,37 +17,84 @@ class Tree {
       this.name = name;
     }
     this.children = [];
-    // DEV: Added print() for debugging purposes
-
-    // this.print(); // this call is not useful here. it would be useful in a function call where we've already added to this.children
+  } */
+  constructor(component) {
+    this.state = component === 'root' ? 'root' : component.state;
+    this.name = component.name;
+    this.children = []; // [sib1, sib2, sib3] -> sib3.children[nextsib1, nextsib1]
   }
 
-  appendChild(component) {
+  appendChild(component, name) {
     const child = new Tree(component);
+    child.name = name;
     this.children.push(child);
     return child;
+  }
+
+  appendSibling(component, name) {
+    const sibling = new Tree(component);
+    sibling.name = name;
+    this.children.push(sibling);
+  }
+
+  cleanTree() {
+    if (this.children && this.children.length > 0) {
+      this.children.forEach((child, i) => {
+        if (child.state === {}) {
+          this.children.splice(i, 1);
+        }
+        console.log("CLEAN, children:", this.children);
+        if (child && child.state && child.state !== {}) {
+          if ((typeof child.state === 'object') && child.state !== null) {
+            const states = Object.entries(child.state);
+            if (states && states.length > 0) {
+              console.log('CLEAN STATES IS: ', states);
+              states.forEach(e => {
+                if (typeof e[1] === 'function') {
+                  console.log('message will contain function, may fail');
+                  child.state[e[0]] = 'function';
+                }
+                /* if (e[0] === 'children') {
+                  delete child.state[e[0]];
+                } */
+              });
+            }
+          }
+        }
+      });
+    }
+
+    if (this.children && this.children.length > 0) {
+      this.children.forEach((child, i) => {
+        //if (child && child !== this.children) child.cleanTree(this.children[i]);
+        if (child && child !== this.children) child.cleanTree(this.children[i]);
+      });
+    }
   }
 
   // deep copies only the state of each component and creates a new tree
   getCopy(copy = new Tree('root', true)) {
     // copy state of children
-    copy.children = this.children.map(
-      child => {
-        console.log('tree.js child:', child);
-        if (child.component.state) {
-          return new Tree(child.component.state, true, child.component.constructor.name);
-        }
-        
-        if (child.component.hooksDispatch) {
-          return new Tree(child.component.hooksDispatch, true, child.component.hooksDispatch.name);
-        }
-      },
-    );
+    if (copy.children) {
+      copy.children = this.children.map(
+        child => {
+          // console.log('tree.js child:', child);
+          if (child.component && child.component.state) {
+          // return new Tree(child.component.state, true, child.component.constructor.name);
+            return new Tree(child.component.state, true, child.component.name);
+          }
+
+          if (child.component && child.component.hooksDispatch) {
+            return new Tree(child.component.hooksDispatch, true, child.component.hooksDispatch.name);
+          }
+        },
+      );
+    }
 
     // Carlos : remove functions from state, to avoid failure in postMessage
     if (copy.children) {
       copy.children.forEach(child => {
-        if (child.state) {
+        if (child && child.state) {
           Object.entries(child.state).forEach(e => {
             if (typeof e[1] === 'function') {
               console.log('message will contain function, may fail');
@@ -61,9 +109,11 @@ class Tree {
     }
 
     // copy children's children recursively
-    this.children.forEach((child, i) => {
-      if (child !== this.children) child.getCopy(copy.children[i]);
-    });
+    if (this.children && this.children.length > 0) {
+      this.children.forEach((child, i) => {
+        if (child && child !== this.children) child.getCopy(this.children[i]);
+      });
+    }
     return copy;
   }
 

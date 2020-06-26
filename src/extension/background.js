@@ -53,8 +53,8 @@ class Node {
     this.branch = tabObj.currBranch;
     this.stateSnapshot = obj;
     this.children = [];
-    console.log('created node in  background.js constructor');
-    console.log('tabsObj is: ', tabsObj);
+    //console.log('created node in  background.js constructor');
+    //console.log('tabsObj is: ', tabsObj);
   }
 }
 
@@ -111,6 +111,7 @@ chrome.runtime.onConnect.addListener(port => {
       action: 'initialConnectSnapshots',
       payload: tabsObj,
     });
+
   }
 
   // every time devtool is closed, remove the port from portsArr
@@ -248,6 +249,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       break;
     }
     case 'recordSnap': {
+      console.log('*****&&&&& PAYLOAD IN BACKGROUND:', request.payload);
       const sourceTab = tabId;
       // first snapshot received from tab
       if (!firstSnapshotReceived[tabId]) {

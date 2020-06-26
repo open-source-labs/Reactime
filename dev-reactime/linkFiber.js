@@ -42,12 +42,13 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
 
-const fs = require('fs');
 const { memo } = require('react');
+const { fontSettings } = require('sinon-chrome');
 const Tree = require('./tree');
 const astParser = require('./astParser');
 const { saveState, saveHooksComponent } = require('./masterState');
-const { fontSettings } = require('sinon-chrome');
+var util = require('util');
+const fs = require('fs');
 
 module.exports = (snap, mode) => {
   let fiberRoot = null;
@@ -58,9 +59,10 @@ module.exports = (snap, mode) => {
     // Don't send messages while jumping or while paused
     // DEV: So that when we are jumping to an old snapshot it
     if (mode.jumping || mode.paused) return;
-    console.log('tree to be sent, before generating payload copy', snap.tree);
-    const payload = snap.tree.getCopy();
-    console.log('payload', payload);
+    console.log('PAYLOAD: tree to be sent, before cleaning', JSON.stringify(snap.tree));
+    snap.tree.cleanTree();
+    const payload = snap.tree;// snap.tree.getCopy();
+    console.log('PAYLOAD: after cleaning', payload);
     try {
       await window.postMessage({
         action: 'recordSnap',
@@ -135,17 +137,20 @@ module.exports = (snap, mode) => {
     while (memoizedState && memoizedState.queue) {
       // // prevents useEffect from crashing on load
       // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
-      changeUseState(memoizedState);
+      // Temp: changeUseState(memoizedState);
       // }
       // memoized[astHooks[index]] = memoizedState.memoizedState;
       // memoized[astHooks[index]] = memoizedState.memoizedState;
       // Reassign memoizedState to its next value
-      console.log('memoizedState: ', memoizedState);
-      hooksComponents.push({
-        action: memoizedState.queue.dispatch,
-        state: memoizedState.memoizedState,
-      });
-      memoizedState = memoizedState.next === memoizedState
+      //console.log('memoizedState: ', memoizedState);
+      if (memoizedState.memoizedState) {
+        hooksComponents.push({
+          action: memoizedState.queue.dispatch,
+          state: memoizedState.memoizedState,
+        });
+      }
+      console.log('GOT STATE', memoizedState.memoizedState);
+      memoizedState = memoizedState.next !== memoizedState
         ? memoizedState.next : null;
       // See astParser.js for explanation of this increment
       // index += 2;
@@ -160,8 +165,8 @@ module.exports = (snap, mode) => {
   // starts.
   function createTree(currentFiber, tree = new Tree('root'), hooksDispatch) {
     // Base case: child or sibling pointed to null
-    if (!currentFiber) return tree; //Carlos: consider returning null?
-    //if (!currentFiber) return null;
+    if (!currentFiber) return tree; // Carlos: consider returning null?
+    // if (!currentFiber) return null;
 
     // These have the newest state. We updated state and then
     // called updateSnapshotTree()
@@ -179,27 +184,28 @@ module.exports = (snap, mode) => {
 
     // if (tree.component && tree.component.state === 'root' && (tag === 0 || tag === 1)) {
     if ((tag === 0 || tag === 1)) {
-      console.log('****current fiber ROOT:', currentFiber);
-      fs.appendFile('fiberlog.txt', JSON.stringify(currentFiber));
+      //console.log('****current fiber ROOT:', currentFiber);
     }
 
-    // Check if stateful component
+    // Check if stateful component 
+    
     if (stateNode && stateNode.state
-      // && (tag === 0 || tag === 1)) {
-      && (tag >= 0)) {
+      && (tag === 0 || tag === 1)) {
+      //&& (tag >= 0)) {
       // Carlos: this is a Tree class object, which has an appendChild
       // method that adds stateNode to an array. We should refactor
       // into variable because there is always at most one element in the array
-      nextTree = tree.appendChild(stateNode); // Add component to tree
-      changeSetState(stateNode); // Change setState functionality (first time only)
+      // nextTree = tree.appendChild(stateNode); // Add component to tree
+      console.log('stateNode: ', stateNode);
+      tree.appendSibling(stateNode, elementType.name); // Add component to tree
+      //changeSetState(stateNode); // Change setState functionality (first time only)
     }
 
     // Check if the component uses hooks
     if (
       memoizedState
       // && Object.hasOwnProperty.call(memoizedState, 'queue') && tag === 1
-      // && (tag === 0 || tag === 1)
-      && (tag >= 0)
+      && (tag === 0 || tag === 1 || tag === 10)
     ) {
       // 'catch-all' for suspense elements (experimental)
       /*
@@ -208,7 +214,7 @@ module.exports = (snap, mode) => {
         return;
       } */
 
-      console.log('**** fiber of identified hooks comp:', currentFiber);
+      //console.log('**** fiber of identified hooks comp:', currentFiber);
 
       // Traverse through the currentFiber and extract the getters/setters
       // astHooks = astParser(elementType);
@@ -219,13 +225,19 @@ module.exports = (snap, mode) => {
       // Carlos: try passing new state in updateSnapShotTree instead ****
       // memoizedState.traversed = traverseHooks(memoizedState);
       if (memoizedState.queue) {
-        console.log('hooks with queue found, calling traverseHooks. memoizedState is: ', memoizedState);
+        console.log('hooks with queue found, calling traverseHooks, fiber is ', currentFiber);
         const hooksComponents = traverseHooks(memoizedState);
+        
         hooksComponents.forEach(c => {
-          const hooksSnapshot = { [elementType.name]: { action: c.action, state: c.state } };
-          saveHooksComponent(hooksSnapshot);
-          nextTree = tree.appendChild({ name: elementType.name, state: c.state });
+          if (elementType.name) {
+            const hooksSnapshot = { [elementType.name]: { action: c.action, state: c.state } };
+            if (hooksSnapshot) saveHooksComponent(hooksSnapshot);
+            // nextTree = tree.appendChild({ name: elementType.name, state: c.state });
+            tree.appendSibling({ state: c.state });
+            console.log('GOT STATE, HOOKS SNAPSHOT:', hooksSnapshot);
+          }
         });
+        
       }
 
       /*
@@ -236,17 +248,22 @@ module.exports = (snap, mode) => {
       } */
     }
 
+
     // Recurse on siblings
     createTree(sibling, tree);
     // Recurse on children
-    createTree(child, nextTree);
+    if (tree.children.length > 0) {
+      createTree(child, tree.children[0]);
+    } else {
+      createTree(child, tree);
+    }
 
     return tree;
   }
 
   // ! BUG: skips 1st hook click
-  async function updateSnapShotTree(hooksDispatch) {
-    let current;
+  function updateSnapShotTree(hooksDispatch) {
+    /* let current;
     // If concurrent mode, grab current.child
     if (concurrent) {
       // we need a way to wait for current child to populate
@@ -257,11 +274,15 @@ module.exports = (snap, mode) => {
       current = await promise;
 
       current = fiberRoot.current.child;
-    } else {
+    } else { 
       current = fiberRoot.current;
-    }
+    } */
+    const current = fiberRoot.current; // Carlos: get rid of concurrent mode for now
 
+    // console.log('FIBER COMMITTED, new fiber is:', util.inspect(current, false, 4));
+    // fs.appendFile('fiberlog.txt', util.inspect(current, false, 10));
     snap.tree = createTree(current, undefined, hooksDispatch); // Carlos: pass new hooks state here?
+    console.log("GOT STATE, MOVING TO CHILD/SIBLING, tree:", snap.tree);
   }
 
   return async container => {
@@ -279,8 +300,21 @@ module.exports = (snap, mode) => {
       // console.log('_reactRootContainer is:', _reactRootContainer);
       // console.log('linkFiber.js, fiberRoot:', fiberRoot);
     }
-    console.log('%%%%%%%%%%%% CONTAINER:', window.__REACT_DEVTOOLS_GLOBAL_HOOK__);
-    await updateSnapShotTree();
+    const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    const reactInstance = devTools ? devTools.renderers.get(1) : null;
+
+    if (reactInstance && reactInstance.version) {
+      devTools.onCommitFiberRoot = (function (original) {
+        return function (...args) {
+          fiberRoot = args[1];
+          updateSnapShotTree();
+          sendSnapshot();
+          return original(...args);
+        };
+      }(devTools.onCommitFiberRoot));
+    }
+    //console.log('%%%%%%%%%%%% CONTAINER:', window.__REACT_DEVTOOLS_GLOBAL_HOOK__);
+    updateSnapShotTree();
     // Send the initial snapshot once the content script has started up
     // This message is sent from contentScript.js in chrome extension bundles
     window.addEventListener('message', ({ data: { action } }) => {
