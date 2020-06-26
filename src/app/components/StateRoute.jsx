@@ -10,7 +10,7 @@ import Tree from './Tree';
 // eslint-disable-next-line react/prop-types
 
 const StateRoute = ({ snapshot, hierarchy }) => {
-  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was inicialize involk render chart  
+  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was initialize involk render chart  
   const renderChart = () =>{ 
     if (hierarchy){
       return <Chart hierarchy={hierarchy} />
@@ -20,7 +20,7 @@ const StateRoute = ({ snapshot, hierarchy }) => {
     }
   }
 
-  // gabi :: the snapshot get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if snapshot was inicialize involk render chart 
+  // gabi :: the snapshot get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if snapshot was initialize involk render chart 
   const renderTree = () => { 
     if (hierarchy){
       return <Tree snapshot={snapshot} />

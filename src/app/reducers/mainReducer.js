@@ -112,13 +112,13 @@ export default (state, action) => produce(state, draft => {
       tabs[currentTab].playing = false;
       // gabi :: activate empty mode
       tabs[currentTab].mode.empty = true 
-      // gabi :: record snapshot of page inicial state
-      tabs[currentTab].inicialSnapshot.push(tabs[currentTab].snapshots[0]);
+      // gabi :: record snapshot of page initial state
+      tabs[currentTab].initialSnapshot.push(tabs[currentTab].snapshots[0]);
       // gabi :: reset snapshots to page last state recorded
       tabs[currentTab].snapshots = [ tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1] ];
-      // gabi :: record hierarchy of page inicial state
-      tabs[currentTab].inicialHierarchy = {...tabs[currentTab].hierarchy};
-      tabs[currentTab].inicialHierarchy.children = [];
+      // gabi :: record hierarchy of page initial state
+      tabs[currentTab].initialHierarchy = {...tabs[currentTab].hierarchy};
+      tabs[currentTab].initialHierarchy.children = [];
       // gabi :: reset hierarchy
       tabs[currentTab].hierarchy.children = [];
       // gabi :: reset hierarchy to page last state recorded
@@ -222,6 +222,7 @@ export default (state, action) => produce(state, draft => {
         draft.currentTab = action.payload.tabId;
         break;
       }
+      break;
     }
     case types.DELETE_TAB: {
       delete draft.tabs[action.payload];
