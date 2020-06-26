@@ -2,6 +2,7 @@ import React from 'react';
 import JSONTree from 'react-json-tree';
 import PropTypes from 'prop-types';
 
+
 const getItemString = (type, data) => {
   // check to make sure that we are on the tree node, not anything else
   if (
