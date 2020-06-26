@@ -4,7 +4,7 @@ import React from 'react';
 import { diff } from 'jsondiffpatch';
 import Action from '../components/Action';
 
-import { emptySnapshots } from '../actions/actions';
+import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 const resetSlider = () => {
@@ -20,40 +20,65 @@ function ActionContainer() {
   let actionsArr = [];
   let hierarchyArr = [];
 
-    // gabi and nate :: delete function to traverse state from snapshots, now we are tranversing state from hiararchy and alsog getting infromation on display name and component name
-    const displayArray = (obj) => {
-      const newObj = {
-        index: obj.index,
-        displayName : `${obj.name}.${obj.branch}`,
-        state: obj.stateSnapshot.children[0].state,
-        componentName: obj.stateSnapshot.children[0].name,
-      }
-      hierarchyArr.push(newObj)
-      if(obj.children){
-        obj.children.forEach((element) => {
-          displayArray(element)
-        })
-      }
+  // gabi and nate :: delete function to traverse state from snapshots, now we are tranversing state from hiararchy and alsog getting infromation on display name and component name
+  const displayArray = (obj) => {
+    const newObj = {
+      index: obj.index,
+      displayName: `${obj.name}.${obj.branch}`,
+      state: obj.stateSnapshot.children[0].state,
+      componentName: obj.stateSnapshot.children[0].name,
     }
-    // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was initialize involk displayArray to display the hierarchy  
-    if (hierarchy) displayArray(hierarchy)
-    // console.log('this is hierarchyArr', hierarchyArr)
+
+    hierarchyArr.push(newObj)
+    if (obj.children) {
+      obj.children.forEach((element) => {
+        displayArray(element)
+      })
+    }
+  }
+  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was inicialize involk displayArray to display the hierarchy  
+  if (hierarchy) displayArray(hierarchy)
+  // console.log('this is hierarchyArr', hierarchyArr)
+
+  // Edwin: handles keyboard presses, function passes an event and index of each action-component
+  function handleOnKeyDown(e, i) {
+    let currIndex = i;
+    // up array key pressed
+    if (e.keyCode === 38) {
+      currIndex -= 1;
+      if (currIndex < 0) return;
+      dispatch(changeView(currIndex));
+    }
+    // down arrow key pressed
+    else if (e.keyCode === 40) {
+      currIndex += 1;
+      if (currIndex > hierarchyArr.length - 1) return;
+      dispatch(changeView(currIndex));
+    }
+    // enter key pressed
+    else if (e.keyCode === 13) {
+      e.stopPropagation();
+      dispatch(changeSlider(currIndex));
+    }
+  }
     
-    actionsArr = hierarchyArr.map((snapshot, index) => {
-      const selected = index === viewIndex;
-      return (
-        <Action
-          key={`action${index}`}
-          index={index}
-          state={snapshot.state}
-          displayName={snapshot.displayName}
-          componentName={snapshot.componentName} 
-          selected={selected}
-          dispatch={dispatch}
-          sliderIndex={sliderIndex}
-        />
-      );
-    });
+  actionsArr = hierarchyArr.map((snapshot, index) => {
+    const selected = index === viewIndex;
+    return (
+      <Action
+        key={`action${index}`}
+        index={index}
+        state={snapshot.state}
+        displayName={snapshot.displayName}
+        componentName={snapshot.componentName} 
+        selected={selected}
+        dispatch={dispatch}
+        sliderIndex={sliderIndex}
+        handleOnkeyDown={handleOnKeyDown}
+        viewIndex={viewIndex}
+      />
+    );
+  });
 
   return (
     <div className="action-container">
