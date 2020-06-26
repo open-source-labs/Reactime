@@ -13,14 +13,16 @@ body {
   fill: #5249f7;
 }
 
-.node circle:hover {
-  fill: #9cf4df;
-}
+/* .node circle:hover {
+  fill: #320a5c;
+} */
 
 .node text {
   font-size: 10px;
   font-family: "Overpass Mono", monospace;
 }
+
+
 /* this represents text for leaf nodes aka the ones with no children */
 .node--leaf {
   fill: #71e9e1;
@@ -34,7 +36,7 @@ body {
 /*   modifies text of parent nodes (has children) */
 .node--internal text {
   fill: #fae6e4;
-  font-size: 11px;
+  font-size: 10px;
 }
 .link {
   fill: none;
