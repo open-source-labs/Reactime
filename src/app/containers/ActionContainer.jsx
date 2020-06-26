@@ -35,7 +35,7 @@ function ActionContainer() {
         })
       }
     }
-    // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was inicialize involk displayArray to display the hierarchy  
+    // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was initialize involk displayArray to display the hierarchy  
     if (hierarchy) displayArray(hierarchy)
     // console.log('this is hierarchyArr', hierarchyArr)
     
