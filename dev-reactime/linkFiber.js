@@ -127,67 +127,65 @@ module.exports = (snap, mode) => {
     return memoized;
   }
 
-  // function createTree(curFiber, tree = new Tree('root')) {
-  //   // Base case: child or sibling pointed to null
-  //   if (!curFiber) return tree;
+  
+  function createTree(curFiber, parentNode) {
+    // on call from updateSnapShot, no parentNode provided, so create a root node
+    if(! parentNode) parentNode = new Tree('root');
+    
+    // Base case: parentNode's child or sibling pointed to null
+    if (!curFiber) return parentNode;
+    
+    let newChildNode = null;
 
-  //   let nextTree = tree;
+    // If stateful, add to parentNode's children array, then inject new setState into fiber node
+    if (curFiber.stateNode && curFiber.stateNode.state) {
+      newChildNode = parentNode.appendChild(curFiber.stateNode);
+      changeSetState(curFiber.stateNode);
+      newChildNode.isStateful = true;
+    }
 
-  //   // Check if stateful component
+    // Recurse to sibling; siblings that have state should be added to our parentNode
+    createTree(curFiber.sibling, parentNode);  
+
+    // Recurse to child; If this fiber was stateful, then we added a newChildNode here, and we want
+    // to attach further children to that. If this fiber wasn't stateful, we want to attach any 
+    // children to our existing parentNode.
+    createTree(curFiber.child, newChildNode || parentNode);
+
+    return parentNode;
+  }
+
+
+  // function createUnfilteredTree(curFiber, parentNode) {
+  //   // on call from updateSnapShot, no parentNode provided, so create a root node
+  //   if(! parentNode) parentNode = new Tree('root');
+    
+  //   // Base case: parentNode's child or sibling pointed to null
+  //   if (!curFiber) return parentNode;
+    
+  //   let newChildNode = null;
+
+  //   // If stateful, add to parentNode's children array, then inject new setState into fiber node
   //   if (curFiber.stateNode && curFiber.stateNode.state) {
-  //     nextTree = tree.appendChild(curFiber.stateNode);  // Add component to this tree node
-  //     changeSetState(curFiber.stateNode);               // Change setState functionality
-  //     nextTree.isStateful = true;
+  //     newChildNode = parentNode.appendChild(curFiber.stateNode);
+  //     // changeSetState(curFiber.stateNode);
+  //     newChildNode.isStateful = true;
+  //   }
+  //   else {
+
   //   }
 
-  //   // Recurse on siblings and children
-  //   createTree(curFiber.sibling, tree);  
-  //   createTree(curFiber.child, nextTree);
+  //   // Recurse to sibling; siblings that have state should be added to our parentNode
+  //   createTree(curFiber.sibling, parentNode);  
 
-  //   return tree;
+  //   // Recurse to child; If this fiber was stateful, then we added a newChildNode here, and we want
+  //   // to attach further children to that. If this fiber wasn't stateful, we want to attach any 
+  //   // children to our existing parentNode.
+  //   createTree(curFiber.child, newChildNode || parentNode);
+
+  //   return parentNode;
   // }
-  function createTree(currentFiber, tree = new Tree('root')) {
-    // Base case: child or sibling pointed to null
-    if (!currentFiber) return tree;
 
-    const {
-      sibling,
-      stateNode,
-      child,
-      memoizedState,
-      elementType,
-    } = currentFiber;
-    
-    let nextTree = tree;
-
-    if (stateNode && stateNode.state) {
-      // console.log('createTree – adding STATEFUL component', typeof(type));
-      nextTree = tree.appendChild(stateNode); // Add component to tree
-      changeSetState(stateNode); // Change setState functionality
-    }
-    // Check if the component uses hooks
-    if (memoizedState && Object.hasOwnProperty.call(memoizedState, 'baseState')) {
-      console.log('createTree ****** HOOK-LAND ******', memoizedState);
-      
-      // 'catch-all' for suspense elements (experimental)
-      if (typeof elementType.$$typeof === 'symbol') return;
-      // Traverse through the currentFiber and extract the getters/setters
-      astHooks = astParser(elementType);
-      saveState(astHooks);
-      // Create a traversed property and assign to the evaluated result of
-      // invoking traverseHooks with memoizedState
-      memoizedState.traversed = traverseHooks(memoizedState);
-      nextTree = tree.appendChild(memoizedState);
-      nextTree.isStateful = true;
-    }
-
-    // Recurse on siblings
-    createTree(sibling, tree);
-    // Recurse on children
-    createTree(child, nextTree);
-
-    return tree;
-  }
 
   // ! BUG: skips 1st hook click
   async function updateSnapShotTree() {
@@ -207,7 +205,9 @@ module.exports = (snap, mode) => {
     }
 
     snap.tree = createTree(current);
+    console.log("updateSnapShotTree -> snap.tree", snap.tree)
     // snap.unfilteredTree = createUnfilteredTree(current);
+    // console.log("updateSnapShotTree -> snap.unfilteredTree", snap.unfilteredTree)
   }
 
   return async container => {
