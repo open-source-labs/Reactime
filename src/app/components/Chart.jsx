@@ -9,6 +9,8 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/no-string-refs */
+
+
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 
@@ -72,9 +74,10 @@ class Chart extends Component {
 
     const tree = d3.tree()
       // this assigns width of tree to be 2pi
-      .size([2 * Math.PI, radius / 1.3])
+      // .size([2 * Math.PI, radius / 1.3])
+      .nodeSize([width/10, height/10])
       // .separation(function (a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
-      .separation(function (a, b) { return (a.parent == b.parent ? 1 : 2)});
+      .separation(function (a, b) { return (a.parent == b.parent ? 2 : 2)});
 
     const d3root = tree(hierarchy);
 
@@ -88,7 +91,10 @@ class Chart extends Component {
       .append('path')
       .attr('class', 'link')
       .attr('d', d3.linkRadial()
-        .angle(d => d.x)
+        .angle(d => {
+          console.log('d on line 92 chart', d)
+          return d.x
+        })
         .radius(d => d.y));
 
     const node = g.selectAll('.node')
@@ -105,12 +111,12 @@ class Chart extends Component {
       });
 
     node.append('circle')
-      .attr('r', 5)
+      .attr('r', 15)
       .on('mouseover', function (d) {
         d3.select(this)
           .transition(100)
           .duration(20)
-          .attr('r', 10);
+          .attr('r', 25);
 
         tooltipDiv.transition()
           .duration(50)
@@ -125,7 +131,7 @@ class Chart extends Component {
         d3.select(this)
           .transition()
           .duration(300)
-          .attr('r', 5);
+          .attr('r', 15);
 
         tooltipDiv.transition()
           .duration(400)
@@ -134,14 +140,14 @@ class Chart extends Component {
     node
       .append('text')
       // adjusts the y coordinates for the node text
-      .attr('dy', '-1.5em')
+      .attr('dy', '0.5em')
       .attr('x', function (d) {
         // this positions how far the text is from leaf nodes (ones without children)
         // negative number before the colon moves the text of rightside nodes,
         // positive number moves the text for the leftside nodes
-        return d.x < Math.PI === !d.children ? -4 : 5;
+        return d.x < Math.PI === !d.children ? 0 : 0;
       })
-      .attr('text-anchor', function (d) { return d.x < Math.PI === !d.children ? 'start' : 'end'; })
+      .attr('text-anchor', 'middle')
       // this arranges the angle of the text
       .attr('transform', function (d) { return 'rotate(' + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 1 / Math.PI + ')'; })
       .text(function (d) {
@@ -159,7 +165,7 @@ class Chart extends Component {
 
     chartContainer.call(d3.zoom()
       .extent([[0, 0], [width, height]])
-      .scaleExtent([1, 8])
+      .scaleExtent([0, 8]) //scaleExtent([minimum scale factor, maximum scale factor])
       .on('zoom', zoomed));
 
     function dragstarted() {

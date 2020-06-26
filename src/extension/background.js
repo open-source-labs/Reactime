@@ -17,8 +17,8 @@ function createTabObj(title) {
     title,
     // snapshots is an array of ALL state snapshots for the reactime tab working on a specific user application
     snapshots: [],
-    // gabi :: record inicial snapshot to refresh page in case empty function is called 
-    inicialSnapshot: [],
+    // gabi :: record initial snapshot to refresh page in case empty function is called 
+    initialSnapshot: [],
     // gabi and nate :: index here is the tab index that show total amount of state changes 
     index: 0, 
     //* this is our pointer so we know what the current state the user is checking (this accounts for time travel aka when user clicks jump on the UI)
@@ -29,8 +29,8 @@ function createTabObj(title) {
     currBranch: 0,
     //* inserting a new property to build out our hierarchy dataset for d3
     hierarchy: null,
-    // gabi :: record inicial hierarchy to refresh page in case empty function is called 
-    inicialHierarchy: null,
+    // gabi :: record initial hierarchy to refresh page in case empty function is called 
+    initialHierarchy: null,
     mode: {
       persist: false,
       locked: false,
@@ -140,13 +140,13 @@ chrome.runtime.onConnect.addListener(port => {
       case 'emptySnap':
         // gabi :: activate empty mode
         tabsObj[tabId].mode.empty = true 
-        // gabi :: record snapshot of page inicial state
-        tabsObj[tabId].inicialSnapshot.push(tabsObj[tabId].snapshots[0]);
+        // gabi :: record snapshot of page initial state
+        tabsObj[tabId].initialSnapshot.push(tabsObj[tabId].snapshots[0]);
         // gabi :: reset snapshots to page last state recorded
         tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1] ];
-        // gabi :: record hierarchy of page inicial state
-        tabsObj[tabId].inicialHierarchy = {...tabsObj[tabId].hierarchy};
-        tabsObj[tabId].inicialHierarchy.children = [];
+        // gabi :: record hierarchy of page initial state
+        tabsObj[tabId].initialHierarchy = {...tabsObj[tabId].hierarchy};
+        tabsObj[tabId].initialHierarchy.children = [];
         // gabi :: reset hierarchy
         tabsObj[tabId].hierarchy.children = [];
         // gabi :: reset hierarchy to page last state recorded
@@ -214,17 +214,17 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       // dont remove snapshots if persisting
       if (!persist) {
         if(empty){        
-          // gabi :: reset snapshots to page inicial state recorded when empted 
-          tabsObj[tabId].snapshots = tabsObj[tabId].inicialSnapshot;
-          // gabi :: reset hierarchy to page inicial state recorded when empted 
-          tabsObj[tabId].hierarchy = tabsObj[tabId].inicialHierarchy
+          // gabi :: reset snapshots to page initial state recorded when empted 
+          tabsObj[tabId].snapshots = tabsObj[tabId].initialSnapshot;
+          // gabi :: reset hierarchy to page initial state recorded when empted 
+          tabsObj[tabId].hierarchy = tabsObj[tabId].initialHierarchy;
         } else {
-          // gabi :: reset snapshots to page inicial state
+          // gabi :: reset snapshots to page initial state
           tabsObj[tabId].snapshots.splice(1);
-          // gabi :: reset hierarchy to page inicial state
+          // gabi :: reset hierarchy to page initial state
           tabsObj[tabId].hierarchy.children = [];
         }
-      // gabi :: reset currLocation to page inicial state
+      // gabi :: reset currLocation to page initial state
       tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
       // gabi :: reset index
       tabsObj[tabId].index = 0;
