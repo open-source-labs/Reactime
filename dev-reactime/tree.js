@@ -1,6 +1,8 @@
+/* eslint-disable no-multiple-empty-lines */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
+// import * as reactWorkTags from './reactWorkTags';
 
 // this is the current snapshot that is being sent to the snapshots array.
 class Tree {
@@ -42,18 +44,31 @@ class Tree {
   }
 }
 
-class TreeUnfiltered extends Tree {
-  constructor (component, useStateInstead = false, name) {
+class UnfilteredTreeNode extends Tree {
+  constructor(component, useStateInstead = false, name, unfilteredProps) {
     super(component, useStateInstead, name);
-    
+    // this.isStateful = unfilteredProps.isStateful;
+    // this.tagLabel = reactWorkTags[unfilteredProps.tag];
+    if(unfilteredProps) {
+      this.tag = unfilteredProps.tag;
+      this.actualDuration = unfilteredProps.actualDuration;
+      this.actualStartTime = unfilteredProps.actualStartTime;
+      this.selfBaseDuration = unfilteredProps.selfBaseDuration;
+      this.treeBaseDuration = unfilteredProps.treeBaseDuration;
+    }
   }
 
+  appendChild(component) {
+    const newChild = new UnfilteredTreeNode(component);
+    this.children.push(newChild);
+    return newChild;
+  }
 }
 
-
-
-
-module.exports = Tree;
+module.exports = {
+  Tree,
+  UnfilteredTreeNode,
+};
 
 
 
