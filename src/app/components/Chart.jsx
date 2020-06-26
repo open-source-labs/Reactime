@@ -14,6 +14,8 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 
+const colors = ['#2C4870','#519331','#AA5039','#8B2F5F','#C5B738','#858DFF', '#FF8D02','#FFCD51','#ACDAE6','#FC997E','#CF93AD','#AA3939','#AA6C39','#226666',]
+
 let root = {};
 class Chart extends Component {
   constructor(props) {
@@ -102,10 +104,16 @@ class Chart extends Component {
       .data(d3root.descendants())
       .enter()
       .append('g')
-      //  assigning class to the node based on whether node has children or not
-      .attr('class', function (d) {
-        return 'node' + (d.children ? ' node--internal' : ' node--leaf');
+      .style('fill', function (d) {
+        console.log('this is d', d)
+        return colors[d.data.branch]
       })
+      .attr('class', 'node--internal')
+      // })
+      //  assigning class to the node based on whether node has children or not
+      // .attr('class', function (d) {
+      //   return 'node' + (d.children ? ' node--internal' : ' node--leaf');
+      // })
       .attr('transform', function (d) {
         return 'translate(' + reinfeldTidierAlgo(d.x, d.y) + ')';
       });
