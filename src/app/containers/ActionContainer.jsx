@@ -58,6 +58,7 @@ function ActionContainer() {
     // enter key pressed
     else if (e.keyCode === 13) {
       e.stopPropagation();
+      e.preventDefault(); // needed or will trigger onClick right after
       dispatch(changeSlider(currIndex));
     }
   }
