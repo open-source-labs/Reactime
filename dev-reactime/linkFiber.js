@@ -53,6 +53,16 @@ module.exports = (snap, mode) => {
   let fiberRoot = null;
   let astHooks;
   let concurrent = false; // flag to check if we are in concurrent mode
+  const reactWorkTags = [
+    'FunctionComponent',
+    'ClassComponent',
+    'IndeterminateComponent',
+    'HostRoot', // Root of a host tree. Could be nested inside another node.
+    'HostPortal', // A subtree. Could be an entry point to a different renderer.
+    'HostComponent',
+    'HostText',
+  ];
+
 
   function sendSnapshot() {
     // Don't send messages while jumping or while paused
@@ -141,7 +151,13 @@ module.exports = (snap, mode) => {
     if (curFiber.stateNode && curFiber.stateNode.state) {
       newChildNode = parentNode.appendChild(curFiber.stateNode);
       changeSetState(curFiber.stateNode);
-      newChildNode.isStateful = true;
+
+      // newChildNode.isStateful = true;
+      newChildNode.tagLabel = reactWorkTags[curFiber.tag];
+      newChildNode.actualDuration = curFiber.actualDuration;
+      // newChildNode.actualStartTime = curFiber.actualStartTime;
+      // newChildNode.selfBaseDuration = curFiber.selfBaseDuration;
+      // newChildNode.treeBaseDuration = curFiber.treeBaseDuration;
     }
 
     // Recurse to sibling; siblings that have state should be added to our parentNode

@@ -38,6 +38,13 @@ class Tree {
         || child.component.traversed, true, child.component.constructor.name),
     );
 
+    // copy.isStateful = this.isStateful;
+    copy.tagLabel = this.tagLabel;
+    copy.actualDuration = this.actualDuration;
+    // copy.actualStartTime = this.actualStartTime;
+    // copy.selfBaseDuration = this.selfBaseDuration;
+    // copy.treeBaseDuration = this.treeBaseDuration;
+
     // copy children's children recursively
     this.children.forEach((child, i) => child.getCopy(copy.children[i]));
     return copy;

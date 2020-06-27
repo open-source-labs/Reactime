@@ -32,7 +32,7 @@ class Chart extends Component {
 
   componentDidUpdate() {
     const { hierarchy } = this.props;
-    // console.log('this is hierarchy on didUpdate chart', hierarchy)
+    console.log('this is hierarchy on didUpdate chart', hierarchy)
     root = JSON.parse(JSON.stringify(hierarchy));
     this.maked3Tree();
   }
@@ -45,6 +45,7 @@ class Chart extends Component {
   }
 
   maked3Tree() {
+
     this.removed3Tree();
     const margin = {
       top: 0,
@@ -92,7 +93,7 @@ class Chart extends Component {
       .attr('class', 'link')
       .attr('d', d3.linkRadial()
         .angle(d => {
-          console.log('d on line 92 chart', d)
+          // console.log('d on line 92 chart', d)
           return d.x
         })
         .radius(d => d.y));
