@@ -18,7 +18,7 @@ function ActionContainer() {
   console.log('actionContainer tabs[currentTab];', tabs[currentTab])
 
   let actionsArr = [];
-  let hierarchyArr = [];
+  const hierarchyArr = [];
 
   // gabi and nate :: delete function to traverse state from snapshots, now we are tranversing state from hiararchy and alsog getting infromation on display name and component name
   const displayArray = (obj) => {
