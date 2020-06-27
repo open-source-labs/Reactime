@@ -18,7 +18,7 @@ const Action = props => {
         dispatch(changeView(index));
       }}
       role="presentation"
-      style={index > sliderIndex ? { color: '#5f6369' } : {}}
+      style={index >= sliderIndex ? { color: '#5f6369' } : {}}
       tabIndex={index}
     >
       <div className="action-component-text">
