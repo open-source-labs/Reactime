@@ -9,7 +9,6 @@ const reloaded = {};
 const firstSnapshotReceived = {};
 // there will be the same number of objects in here as there are reactime tabs open for each user application being worked on
 const tabsObj = {};
-console.log('entered background.js');
 
 function createTabObj(title) {
   // update tabsObj
@@ -53,7 +52,6 @@ class Node {
     this.branch = tabObj.currBranch;
     this.stateSnapshot = obj;
     this.children = [];
-    console.log('created node in  background.js constructor');
   }
 }
 
@@ -145,8 +143,9 @@ chrome.runtime.onConnect.addListener(port => {
         // gabi :: reset snapshots to page last state recorded
         tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1] ];
         // gabi :: record hierarchy of page initial state
-        tabsObj[tabId].initialHierarchy = {...tabsObj[tabId].hierarchy};
-        tabsObj[tabId].initialHierarchy.children = [];
+        // tabsObj[tabId].initialHierarchy = {...tabsObj[tabId].hierarchy};
+        // tabsObj[tabId].initialHierarchy.children = [];
+        tabsObj[tabId].initialHierarchy = {...tabsObj[tabId].hierarchy, children: []};
         // gabi :: reset hierarchy
         tabsObj[tabId].hierarchy.children = [];
         // gabi :: reset hierarchy to page last state recorded
@@ -180,7 +179,9 @@ chrome.runtime.onConnect.addListener(port => {
 // background.js recieves message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender) => {
   // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
-  if (request.type === 'SIGN_CONNECT') return true;
+  if (request.type === 'SIGN_CONNECT'){
+    return true;
+  }
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
   const { action, index, name } = request;
@@ -222,14 +223,19 @@ chrome.runtime.onMessage.addListener((request, sender) => {
           // gabi :: reset snapshots to page initial state
           tabsObj[tabId].snapshots.splice(1);
           // gabi :: reset hierarchy to page initial state
-          tabsObj[tabId].hierarchy.children = [];
+          if(tabsObj[tabId].hierarchy){
+            tabsObj[tabId].hierarchy.children = [];
+            // gabi :: reset currParent plus current state
+            tabsObj[tabId].currParent = 1;
+          } else {
+            // gabi :: reset currParent
+            tabsObj[tabId].currParent = 0;
+          }
         }
       // gabi :: reset currLocation to page initial state
       tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
       // gabi :: reset index
       tabsObj[tabId].index = 0;
-      // gabi :: reset currParent plus current state
-      tabsObj[tabId].currParent = 1;
       // gabi :: reset currBranch
       tabsObj[tabId].currBranch = 0;
 
@@ -317,7 +323,6 @@ chrome.tabs.onRemoved.addListener(tabId => {
 // when tab is view change, put the tabid as the current tab
 chrome.tabs.onActivated.addListener(info => {
   // tell devtools which tab to be the current
-  console.log('this is info.tabId from chrome.tabs.onActivated.addListener', info)
   if (portsArr.length > 0) {
     portsArr.forEach(bg =>
       bg.postMessage({
