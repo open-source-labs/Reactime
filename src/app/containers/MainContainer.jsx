@@ -13,21 +13,22 @@ import { useStoreContext } from '../store';
 function MainContainer() {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
-  // console.log('entered MainContainer');
 
   // add event listeners to background script
   useEffect(() => {
     // only open port once
     if (currentPort) return;
     // open connection with background script
-    // console.log('opening connection with background script');
     const port = chrome.runtime.connect();
-    // console.log('connection opened?');
 
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener(message => {
-      // console.log('this is message from port', message)
       const { action, payload, sourceTab } = message;
+      let maxTab
+        if(!sourceTab){
+          let tabsArray = Object.keys(payload)
+          maxTab = Math.max(...tabsArray)
+        }
       switch (action) {
         case 'deleteTab': {
           dispatch(deleteTab(payload));
@@ -44,8 +45,8 @@ function MainContainer() {
           break;
         }
         case 'initialConnectSnapshots': {
+          dispatch(setTab(maxTab));
           dispatch(initialConnect(payload));
-          dispatch(setTab(sourceTab));
           break;
         }
         default:
