@@ -61,9 +61,11 @@ class Node {
 // Carlos: no clue what is the purpose of this thing
 function sendToHierarchy(tabObj, newNode) {
   if (!tabObj.currLocation) {
+    console.log('no currLocation, creating...');
     tabObj.currLocation = newNode;
     tabObj.hierarchy = newNode;
   } else {
+    console.log('currLocation exists')
     tabObj.currLocation.children.push(newNode);
     // gabi and nate :: if the node's children's array is empty
     if (tabObj.currLocation.children.length > 1) {
@@ -74,6 +76,7 @@ function sendToHierarchy(tabObj, newNode) {
     }
     tabObj.currLocation = newNode;
   }
+  console.log('hierarchy complete:', tabObj.hierarchy);
 }
 
 function changeCurrLocation(tabObj, rootNode, index, name) {
@@ -142,6 +145,7 @@ chrome.runtime.onConnect.addListener(port => {
         tabsObj[tabId].snapshots = payload;
         return true;
       case 'emptySnap':
+        console.log('running emptySnap');
         // gabi :: activate empty mode
         tabsObj[tabId].mode.empty = true 
         // gabi :: record snapshot of page initial state
@@ -149,8 +153,7 @@ chrome.runtime.onConnect.addListener(port => {
         // gabi :: reset snapshots to page last state recorded
         tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1] ];
         // gabi :: record hierarchy of page initial state
-        tabsObj[tabId].initialHierarchy = {...tabsObj[tabId].hierarchy};
-        tabsObj[tabId].initialHierarchy.children = [];
+        tabsObj[tabId].initialHierarchy = { ...tabsObj[tabId].hierarchy, children: [] };
         // gabi :: reset hierarchy
         tabsObj[tabId].hierarchy.children = [];
         // gabi :: reset hierarchy to page last state recorded
@@ -184,7 +187,10 @@ chrome.runtime.onConnect.addListener(port => {
 // background.js recieves message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender) => {
   // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
-  if (request.type === 'SIGN_CONNECT') return true;
+  if (request.type === 'SIGN_CONNECT') {
+    console.log('in SIGN_CONNECT');
+    return true;
+  };
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
   const { action, index, name } = request;
@@ -208,6 +214,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
   switch (action) {
     case 'jumpToSnap': {
+      console.log('running jumpToSnap');
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
       break;
     }
@@ -226,14 +233,20 @@ chrome.runtime.onMessage.addListener((request, sender) => {
           // gabi :: reset snapshots to page initial state
           tabsObj[tabId].snapshots.splice(1);
           // gabi :: reset hierarchy to page initial state
-          tabsObj[tabId].hierarchy.children = [];
+          if(tabsObj[tabId].hierarchy){
+            tabsObj[tabId].hierarchy.children = [];
+            // gabi :: reset currParent plus current state
+            tabsObj[tabId].currParent = 1;
+          } else {
+            // gabi :: reset currParent
+            tabsObj[tabId].currParent = 0;
+          }
         }
       // gabi :: reset currLocation to page initial state
+      console.log('running tabReload');
       tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
       // gabi :: reset index
       tabsObj[tabId].index = 0;
-      // gabi :: reset currParent plus current state
-      tabsObj[tabId].currParent = 1;
       // gabi :: reset currBranch
       tabsObj[tabId].currBranch = 0;
 
@@ -257,6 +270,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         reloaded[tabId] = false;
 
         tabsObj[tabId].snapshots.push(request.payload);
+        console.log('recordSnap 1');
         sendToHierarchy(
           tabsObj[tabId],
           new Node(request.payload, tabsObj[tabId]),
@@ -278,6 +292,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       } else {
         tabsObj[tabId].snapshots.push(request.payload);
         //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
+        console.log('recordSnap 2');
         sendToHierarchy(
           tabsObj[tabId],
           new Node(request.payload, tabsObj[tabId]),
