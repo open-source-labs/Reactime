@@ -29,7 +29,7 @@ const StateRoute = ({ snapshot, hierarchy }) => {
 
   const renderPerfView = () => {
     if (snapshot && hierarchy) {
-      return <PerfView data={[5,10,1,3]} size={[500,500]}  />;
+      return <PerfView data={[5,10,1,3]} size={[500,500]} snapshot={snapshot} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };

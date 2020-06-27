@@ -2,12 +2,11 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
 const PerfView = props => {
+  console.log("Rendering Tab - snapshot: ", props.snapshot);
   
   const thisRef = useRef(null);
-  // const thisRef = React.createRef();
-  
+ 
   useEffect(() => {
-    // const { node } = this;
 
     const dataMax = d3.max(props.data);
 
