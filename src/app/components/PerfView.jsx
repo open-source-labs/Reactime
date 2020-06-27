@@ -1,9 +1,12 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-console */
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
 const PerfView = props => {
-  console.log("Rendering Tab - snapshot: ", props.snapshot);
-  
+  console.log('Rendering Tab - snapshot: ', props.snapshot);
+
   const thisRef = useRef(null);
  
   useEffect(() => {
