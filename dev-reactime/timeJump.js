@@ -11,7 +11,7 @@
 
 /* eslint-disable no-param-reassign */
 
-const { returnState } = require('./masterState');
+const componentActionsRecord = require('./masterState');
 
 // Carlos: origin is latest snapshot, linking to the fiber,
 // so changes to origin change app
@@ -21,8 +21,39 @@ module.exports = (origin, mode) => {
 
   function jump(target, originNode = origin.tree) {
     console.log('origin (link to current app state) in jump():', origin);
+    console.log('target state is: ', target);
     // Set the state of the origin tree if the component is stateful
     if (!target) return;
+    const component = componentActionsRecord.getComponentByIndex(target.index);
+    if (component) {
+      console.log('time-travel component is true');
+      if (component.setState) {
+        console.log('time-travel component setState is true');
+      }
+    }
+
+    if (component && component.setState) {
+      console.log('time-travel calling setState', component);
+      component.setState(prevState => {
+        Object.keys(prevState).forEach(key => {
+          if (target.state[key] === undefined) {
+            target.state[key] = undefined;
+          }
+        });
+        return target.state;
+        // Iterate through new children after state has been set
+      }, () => target.children.forEach(child => jump(child)));
+    } else if (component && component.dispatch) {
+      // ** not entering here
+      console.log('time-travel calling dispatch', component);
+      component.dispatch(target.state);
+      target.children.forEach(child => jump(child));
+    } else {
+      console.log('time-travel did not call setState nor dispatch', component);
+      target.children.forEach(child => jump(child));
+    }
+
+    /*
     if (originNode.component.setState) {
       console.log('stateful component jump, originNode: ', originNode.component);
       console.log('new target is:', target);
@@ -59,6 +90,7 @@ module.exports = (origin, mode) => {
         index += 2;
       }
     }
+    */
   }
 
   return target => {

@@ -12,22 +12,23 @@ function scrubUnserializableMembers(tree) {
 
 // this is the current snapshot that is being sent to the snapshots array.
 class Tree {
-  constructor(state, name = 'nameless') {
+  constructor(state, name = 'nameless', index) {
     this.state = state === 'root' ? 'root' : JSON.parse(JSON.stringify(state));
     this.name = name;
+    this.index = index;
     this.children = [];
   }
 
-  appendChild(state, name) {
-    const child = new Tree(state, name);
+  appendChild(state, name, index) {
+    const child = new Tree(state, name, index);
     this.children.push(child);
   }
 
   cleanTreeCopy() {
-    const copy = new Tree(this.state, this.name);
+    const copy = new Tree(this.state, this.name, this.index);
     let newChild;
     copy.children = this.children.map(child => {
-      newChild = new Tree(child.state, child.name);
+      newChild = new Tree(child.state, child.name, child.index);
       newChild.children = child.children;
       return scrubUnserializableMembers(newChild);
     });
