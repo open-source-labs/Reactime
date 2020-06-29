@@ -6,7 +6,10 @@ import 'core-js';
 import 'regenerator-runtime/runtime';
 
 // * State snapshot object initialized here
-const snapShot = { tree: null };
+const snapShot = { 
+  tree: null, 
+  unfilteredTree: null 
+};
 
 const mode = {
   jumping: false,
