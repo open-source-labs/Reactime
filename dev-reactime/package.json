@@ -45,6 +45,7 @@
   "license": "MIT",
   "dependencies": {
     "acorn": "^7.1.0",
-    "acorn-jsx": "^5.0.2"
+    "acorn-jsx": "^5.0.2",
+    "fs": "0.0.1-security"
   }
 }
