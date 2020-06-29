@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const getItemString = (type, data) => {
   // check to make sure that we are on the tree node, not anything else
   if (
-    Object.keys(data).length === 3
+    Object.keys(data).length > 3
     && typeof data.state === 'object'
     && typeof data.name === 'string'
     && Array.isArray(data.children)
