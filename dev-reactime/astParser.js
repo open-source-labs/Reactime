@@ -8,7 +8,10 @@ const JSXParser = acorn.Parser.extend(jsx());
 // Helper function to grab the getters/setters from `elementType`
 module.exports = elementType => {
   // Initialize empty object to store the setters and getter
+  console.log('entered ast parser');
+  //console.log('elementType: ', elementType);
   let ast = JSXParser.parse(elementType);
+  //console.log('ast:', ast);
   const hookState = {};
 
   while (Object.hasOwnProperty.call(ast, 'body')) {

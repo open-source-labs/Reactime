@@ -18,27 +18,36 @@ function ActionContainer() {
   console.log('actionContainer tabs[currentTab];', tabs[currentTab]);
 
   let actionsArr = [];
-  let hierarchyArr = [];
+  const hierarchyArr = [];
 
   // gabi and nate :: delete function to traverse state from snapshots, now we are tranversing state from hiararchy and alsog getting infromation on display name and component name
-  const displayArray = (obj) => {
-    const newObj = {
-      index: obj.index,
-      displayName: `${obj.name}.${obj.branch}`,
-      state: obj.stateSnapshot.children[0].state,
-      componentName: obj.stateSnapshot.children[0].name,
-    }
+  const displayArray = obj => {
+    console.log('obj', obj);
+    if (obj.stateSnapshot.children.length > 0 && obj.stateSnapshot.children[0] && obj.stateSnapshot.children[0].state && obj.stateSnapshot.children[0].name) {
+      const newObj = {
+        index: obj.index,
+        displayName: `${obj.name}.${obj.branch}`,
+        state: obj.stateSnapshot.children[0].state,
+        componentName: obj.stateSnapshot.children[0].name,
+      };
 
-    hierarchyArr.push(newObj)
-    if (obj.children) {
-      obj.children.forEach((element) => {
-        displayArray(element)
-      })
+      hierarchyArr.push(newObj);
+      if (obj.children) {
+        obj.children.forEach(element => {
+          displayArray(element);
+        });
+      }
     }
+<<<<<<< HEAD
+  };
+  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was inicialize involk displayArray to display the hierarchy
+  if (hierarchy) displayArray(hierarchy);
+  // console.log('this is hierarchyArr', hierarchyArr)
+=======
   }
   // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was inicialize involk displayArray to display the hierarchy  
   if (hierarchy) displayArray(hierarchy)
-  // console.log('this is hierarchyArr', hierarchyArr)
+>>>>>>> master
 
   // Edwin: handles keyboard presses, function passes an event and index of each action-component
   function handleOnKeyDown(e, i) {
@@ -58,10 +67,11 @@ function ActionContainer() {
     // enter key pressed
     else if (e.keyCode === 13) {
       e.stopPropagation();
+      e.preventDefault(); // needed or will trigger onClick right after
       dispatch(changeSlider(currIndex));
     }
   }
-    
+
   actionsArr = hierarchyArr.map((snapshot, index) => {
     const selected = index === viewIndex;
     return (
@@ -70,7 +80,7 @@ function ActionContainer() {
         index={index}
         state={snapshot.state}
         displayName={snapshot.displayName}
-        componentName={snapshot.componentName} 
+        componentName={snapshot.componentName}
         selected={selected}
         dispatch={dispatch}
         sliderIndex={sliderIndex}
