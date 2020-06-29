@@ -11,16 +11,16 @@ const NO_STATE_MSG = 'No state change detected. Trigger an event to change state
 // eslint-disable-next-line react/prop-types
 
 const StateRoute = ({ snapshot, hierarchy }) => {
-  // const windowRef = useRef(null);
-  // const winWidth = null;
-  // const winHeight = null;
+  const windowRef = useRef(null);
+  const winWidth = null;
+  const winHeight = null;
 
-  // useEffect(() => {
-  //   if (windowRef.current) {
-  //     winWidth = windowRef.current.offsetHeight;
-  //     winHeight = windowRef.current.offsetWidth;
-  //   }
-  // }, [windowRef]);
+  useEffect(() => {
+    if (windowRef.current) {
+      winWidth = windowRef.current.offsetHeight;
+      winHeight = windowRef.current.offsetWidth;
+    }
+  }, [windowRef]);
 
   // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was initialize involk render chart
   const renderChart = () => {
@@ -40,7 +40,7 @@ const StateRoute = ({ snapshot, hierarchy }) => {
 
   const renderPerfView = () => {
     if (snapshot) {
-      return <PerfView width={500} height={500} />;
+      return <PerfView width={600} height={600} />; // ref={windowRef}
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
