@@ -44,10 +44,15 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
 
+<<<<<<< HEAD
 const { Tree, UnfilteredTreeNode } = require('./tree');
 const astParser = require('./astParser');
 const { saveState } = require('./masterState');
 // import * as reactWorkTags from './reactWorkTags';
+=======
+const Tree = require('./tree');
+const componentActionsRecord = require('./masterState');
+>>>>>>> 8e774670f36699322d70300c6382bcdcc7b349e0
 
 module.exports = (snap, mode) => {
   let fiberRoot = null;
@@ -64,109 +69,93 @@ module.exports = (snap, mode) => {
   ];
 
 
-  function sendSnapshot() {
+  async function sendSnapshot() {
     // Don't send messages while jumping or while paused
-    // DEV: So that when we are jumping to an old snapshot it
     if (mode.jumping || mode.paused) return;
-    const payload = snap.tree.getCopy();
-    window.postMessage({
-      action: 'recordSnap',
-      payload,
-    });
-  }
-
-  function changeSetState(component) {
-    if (component.setState.linkFiberChanged) return;
-
-    // Persist the old setState and bind to component so we can continue to setState({})
-    const oldSetState = component.setState.bind(component);
-
-    component.setState = (state, callback = () => {}) => {
-      // Don't do anything if state is locked UNLESS we are currently jumping through time
-      if (mode.locked && !mode.jumping) return;
-      // Continue normal setState functionality, with middleware in callback
-      oldSetState(state, () => {
-        updateSnapShotTree();
-        sendSnapshot();
-        callback.bind(component)();
+    // console.log('PAYLOAD: before cleaning', snap.tree);
+    const payload = snap.tree.cleanTreeCopy();// snap.tree.getCopy();
+    // console.log('PAYLOAD: after cleaning', payload);
+    try {
+      await window.postMessage({
+        action: 'recordSnap',
+        payload,
       });
-    };
-    // Set a custom property to ensure we don't change this method again
-    component.setState.linkFiberChanged = true;
+    } catch (e) {
+      console.log('failed to send postMessage:', e);
+    }
   }
 
-  function changeUseState(component) {
-    if (component.queue.dispatch.linkFiberChanged) return;
-
-    // Persist the old dispatch and bind to component so we can continue to dispatch()
-    const oldDispatch = component.queue.dispatch.bind(component.queue);
-
-    component.queue.dispatch = (fiber, queue, action) => {
-      if (mode.locked && !mode.jumping) return;
-      oldDispatch(fiber, queue, action);
-      // * Uncomment setTimeout to prevent snapshot lag-effect
-      // * (i.e. getting the prior snapshot on each state change)
-      // setTimeout(() => {
-      updateSnapShotTree();
-      sendSnapshot();
-      // }, 100);
-    };
-    // Set a custom property to ensure we don't change this method again
-    component.queue.dispatch.linkFiberChanged = true;
-  }
-
-  // TODO: WE NEED TO CLEAN IT UP A BIT
+  // Carlos: Injects instrumentation to update our state tree every time
+  // a hooks component changes state
   function traverseHooks(memoizedState) {
-    // Declare variables and assigned to 0th index and an empty object, respectively
-    const memoized = {};
-    let index = 0;
-    astHooks = Object.values(astHooks);
-    // While memoizedState is truthy, save the value to the object
+    const hooksComponents = [];
     while (memoizedState && memoizedState.queue) {
-      // // prevents useEffect from crashing on load
+      // Carlos: these two are legacy comments, we should look into them later
+      // prevents useEffect from crashing on load
       // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
-      changeUseState(memoizedState);
-      // }
-      // memoized[astHooks[index]] = memoizedState.memoizedState;
-      memoized[astHooks[index]] = memoizedState.memoizedState;
-      // Reassign memoizedState to its next value
-      memoizedState = memoizedState.next;
-      // See astParser.js for explanation of this increment
-      index += 2;
+      if (memoizedState.memoizedState) {
+        console.log('memoizedState in traverseHooks is:', memoizedState);
+        hooksComponents.push({
+          component: memoizedState.queue,
+          state: memoizedState.memoizedState,
+        });
+      }
+      // console.log('GOT STATE', memoizedState.memoizedState);
+      memoizedState = memoizedState.next !== memoizedState
+        ? memoizedState.next : null;
     }
-    return memoized;
+    return hooksComponents;
   }
 
-  
-  function createTree(curFiber, parentNode) {
-    // on call from updateSnapShot, no parentNode provided, so create a root node
-    if(! parentNode) parentNode = new Tree('root');
-    
-    // Base case: parentNode's child or sibling pointed to null
-    if (!curFiber) return parentNode;
-    
-    let newChildNode = null;
+  // Carlos: This runs after EVERY Fiber commit. It creates a new snapshot,
+  //
+  function createTree(currentFiber, tree = new Tree('root')) {
+    // Base case: child or sibling pointed to null
+    if (!currentFiber) return tree;
 
-    // If stateful, add to parentNode's children array, then inject new setState into fiber node
-    if (curFiber.stateNode && curFiber.stateNode.state) {
-      newChildNode = parentNode.appendChild(curFiber.stateNode);
-      changeSetState(curFiber.stateNode);
+    // These have the newest state. We update state and then
+    // called updateSnapshotTree()
+    const {
+      sibling,
+      stateNode,
+      child,
+      memoizedState,
+      elementType,
+      tag,
+    } = currentFiber;
 
-      // newChildNode.isStateful = true;
-      newChildNode.tagLabel = reactWorkTags[curFiber.tag];
-      newChildNode.actualDuration = curFiber.actualDuration;
-      // newChildNode.actualStartTime = curFiber.actualStartTime;
-      // newChildNode.selfBaseDuration = curFiber.selfBaseDuration;
-      // newChildNode.treeBaseDuration = curFiber.treeBaseDuration;
+    let index;
+    // Check if node is a stateful component
+    if (stateNode && stateNode.state && (tag === 0 || tag === 1)) {
+      // Save component's state and setState() function to our record for future
+      // time-travel state changing. Add record index to snapshot so we can retrieve.
+      index = componentActionsRecord.saveNew(stateNode.state, stateNode);
+      tree.appendChild(stateNode.state, elementType.name, index); // Add component to tree
+    } else {
+      // grab stateless components here
     }
 
-    // Recurse to sibling; siblings that have state should be added to our parentNode
-    createTree(curFiber.sibling, parentNode);  
+    // Check if node is a hooks function
+    if (memoizedState && (tag === 0 || tag === 1 || tag === 10)) {
+      if (memoizedState.queue) {
+        const hooksComponents = traverseHooks(memoizedState);
+        hooksComponents.forEach(c => {
+          if (elementType.name) {
+            index = componentActionsRecord.saveNew(c.state, c.component);
+            tree.appendChild(c.state, elementType.name ? elementType.name : 'nameless', index);
+          }
+        });
+      }
+    }
 
-    // Recurse to child; If this fiber was stateful, then we added a newChildNode here, and we want
-    // to attach further children to that. If this fiber wasn't stateful, we want to attach any 
-    // children to our existing parentNode.
-    createTree(curFiber.child, newChildNode || parentNode);
+    // Recurse on siblings
+    createTree(sibling, tree);
+    // Recurse on children
+    if (tree.children.length > 0) {
+      createTree(child, tree.children[0]);
+    } else {
+      createTree(child, tree);
+    }
 
     return parentNode;
   }
@@ -204,26 +193,31 @@ module.exports = (snap, mode) => {
 
 
   // ! BUG: skips 1st hook click
-  async function updateSnapShotTree() {
-    let current;
+  function updateSnapShotTree() {
+    /* let current;
     // If concurrent mode, grab current.child
     if (concurrent) {
       // we need a way to wait for current child to populate
       const promise = new Promise((resolve, reject) => {
         setTimeout(() => resolve(fiberRoot.current.child), 400);
       });
-
       current = await promise;
-
       current = fiberRoot.current.child;
     } else {
       current = fiberRoot.current;
-    }
+    } */
+    const { current } = fiberRoot; // Carlos: get rid of concurrent mode for now
 
+<<<<<<< HEAD
     snap.tree = createTree(current);
     console.log("updateSnapShotTree -> snap.tree", snap.tree)
     // snap.unfilteredTree = createUnfilteredTree(current);
     // console.log("updateSnapShotTree -> snap.unfilteredTree", snap.unfilteredTree)
+=======
+    // console.log('FIBER COMMITTED, new fiber is:', util.inspect(current, false, 4));
+    // fs.appendFile('fiberlog.txt', util.inspect(current, false, 10));
+    snap.tree = createTree(current); // Carlos: pass new hooks state here?
+>>>>>>> 8e774670f36699322d70300c6382bcdcc7b349e0
   }
 
   return async container => {
@@ -238,15 +232,30 @@ module.exports = (snap, mode) => {
       } = container;
       // Only assign internal root if it actually exists
       fiberRoot = _internalRoot || _reactRootContainer;
-      console.log('linkFiber.js, fiberRoot:', fiberRoot);
+      // console.log('_reactRootContainer is:', _reactRootContainer);
+      // console.log('linkFiber.js, fiberRoot:', fiberRoot);
     }
+    const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    const reactInstance = devTools ? devTools.renderers.get(1) : null;
+    const overrideHookState = reactInstance ? reactInstance.overrideHookState : null;
+    console.log('DEVTOOLS:', devTools);
+    console.log('roots:', reactInstance.getCurrentFiber())
 
-    await updateSnapShotTree();
+    if (reactInstance && reactInstance.version) {
+      devTools.onCommitFiberRoot = (function (original) {
+        return function (...args) {
+          fiberRoot = args[1];
+          updateSnapShotTree();
+          sendSnapshot();
+          return original(...args);
+        };
+      }(devTools.onCommitFiberRoot));
+    }
+    updateSnapShotTree();
     // Send the initial snapshot once the content script has started up
     // This message is sent from contentScript.js in chrome extension bundles
     window.addEventListener('message', ({ data: { action } }) => {
       if (action === 'contentScriptStarted') {
-        console.log('linkFiber.js received contentScriptStarted message, sending snapshot');
         sendSnapshot();
       }
     });

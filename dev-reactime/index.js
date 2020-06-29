@@ -4,12 +4,14 @@
  */
 import 'core-js';
 import 'regenerator-runtime/runtime';
+import { exist } from 'acorn-jsx/xhtml';
 
 // * State snapshot object initialized here
 const snapShot = { 
   tree: null, 
   unfilteredTree: null 
 };
+
 
 const mode = {
   jumping: false,
@@ -18,7 +20,9 @@ const mode = {
 };
 
 const linkFiber = require('./linkFiber')(snapShot, mode);
+console.log('import timeJump in index.js:', JSON.parse(JSON.stringify(snapShot)));
 const timeJump = require('./timeJump')(snapShot, mode);
+
 
 function getRouteURL(node) {
   if (node.name === 'Router') {
@@ -27,7 +31,7 @@ function getRouteURL(node) {
   if (node.children && node.children.length >= 1) {
     const tempNode = node.children;
     for (let index = 0; index < tempNode.length; index += 1) {
-      return getRouteURL(tempNode[index]);
+      return getRouteURL(tempNode[index]); // Carlos: ???
     }
   }
 }
@@ -36,9 +40,12 @@ function getRouteURL(node) {
 window.addEventListener('message', ({ data: { action, payload } }) => {
   switch (action) {
     case 'jumpToSnap':
+      console.log('payload in jumpToSnap', payload);
       timeJump(payload); // * This sets state with given payload
       // Get the pathname from payload and add new entry to browser history
       // MORE: https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
+
+      // try to modify workInProgress tree from here
       window.history.pushState('', '', getRouteURL(payload));
       break;
     case 'setLock':
@@ -52,5 +59,5 @@ window.addEventListener('message', ({ data: { action, payload } }) => {
   }
 });
 
-//module.exports = linkFiber;
+// module.exports = linkFiber;
 export default linkFiber;
