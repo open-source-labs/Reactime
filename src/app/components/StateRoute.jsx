@@ -30,7 +30,7 @@ const StateRoute = ({ snapshot, hierarchy }) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
-  // gabi :: the snapshot get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if snapshot was initialize involk render chart
+  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if snapshot was initialize involk render chart
   const renderTree = () => {
     if (hierarchy) {
       return <Tree snapshot={snapshot} />;
@@ -39,7 +39,7 @@ const StateRoute = ({ snapshot, hierarchy }) => {
   };
 
   const renderPerfView = () => {
-    if (snapshot) {
+    if (hierarchy) {
       return <PerfView width={600} height={600} />; // ref={windowRef}
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
