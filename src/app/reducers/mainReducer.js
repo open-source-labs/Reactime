@@ -214,7 +214,6 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.SET_TAB: {
-      // console.log('this is SET_TAB action.payload', action.payload)
       if (typeof action.payload === 'number') {
         draft.currentTab = action.payload;
         break;

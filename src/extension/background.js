@@ -9,7 +9,6 @@ const reloaded = {};
 const firstSnapshotReceived = {};
 // there will be the same number of objects in here as there are reactime tabs open for each user application being worked on
 const tabsObj = {};
-console.log('entered background.js');
 
 function createTabObj(title) {
   // update tabsObj
@@ -53,8 +52,11 @@ class Node {
     this.branch = tabObj.currBranch;
     this.stateSnapshot = obj;
     this.children = [];
+<<<<<<< HEAD
     //console.log('created node in  background.js constructor');
     //console.log('tabsObj is: ', tabsObj);
+=======
+>>>>>>> master
   }
 }
 
@@ -153,7 +155,13 @@ chrome.runtime.onConnect.addListener(port => {
         // gabi :: reset snapshots to page last state recorded
         tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1] ];
         // gabi :: record hierarchy of page initial state
+<<<<<<< HEAD
         tabsObj[tabId].initialHierarchy = { ...tabsObj[tabId].hierarchy, children: [] };
+=======
+        // tabsObj[tabId].initialHierarchy = {...tabsObj[tabId].hierarchy};
+        // tabsObj[tabId].initialHierarchy.children = [];
+        tabsObj[tabId].initialHierarchy = {...tabsObj[tabId].hierarchy, children: []};
+>>>>>>> master
         // gabi :: reset hierarchy
         tabsObj[tabId].hierarchy.children = [];
         // gabi :: reset hierarchy to page last state recorded
@@ -187,10 +195,16 @@ chrome.runtime.onConnect.addListener(port => {
 // background.js recieves message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender) => {
   // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
+<<<<<<< HEAD
   if (request.type === 'SIGN_CONNECT') {
     console.log('in SIGN_CONNECT');
     return true;
   };
+=======
+  if (request.type === 'SIGN_CONNECT'){
+    return true;
+  }
+>>>>>>> master
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
   const { action, index, name } = request;
@@ -337,7 +351,10 @@ chrome.tabs.onRemoved.addListener(tabId => {
 // when tab is view change, put the tabid as the current tab
 chrome.tabs.onActivated.addListener(info => {
   // tell devtools which tab to be the current
+<<<<<<< HEAD
   console.log('this is info.tabId from chrome.tabs.onActivated.addListener', info);
+=======
+>>>>>>> master
   if (portsArr.length > 0) {
     portsArr.forEach(bg =>
       bg.postMessage({
