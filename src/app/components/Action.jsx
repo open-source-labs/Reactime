@@ -6,14 +6,19 @@ import { changeView, changeSlider } from '../actions/actions';
 // viewIndex and handleonkeyDown added to props
 const Action = props => {
   const {
-    selected, index, sliderIndex, dispatch, displayName, componentName, state, viewIndex, handleOnkeyDown,
+    selected, last, index, sliderIndex, dispatch, displayName, componentName, state, viewIndex, handleOnkeyDown,
   } = props;
+  console.log('last', last)
+  console.log('index', index)
+  console.log('viewIndex', viewIndex)
+  console.log('selected', selected)
+  selected
 
   return (
     <div
       // Edwin: invoking keyboard functionality; functionality is in ActionContainer;
       onKeyDown={e => handleOnkeyDown(e, viewIndex)}
-      className={selected || index == sliderIndex ? 'action-component selected' : 'action-component'}
+      className={selected || last ? 'action-component selected' : 'action-component'}
       onClick={() => {
         dispatch(changeView(index));
       }}

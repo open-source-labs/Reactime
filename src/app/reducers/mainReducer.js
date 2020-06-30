@@ -6,40 +6,38 @@ import * as types from '../constants/actionTypes';
 export default (state, action) => produce(state, draft => {
   const { port, currentTab, tabs } = draft;
   const {
-    hierarchy, 
-    snapshots, 
-    // relationship, 
-    mode, 
-    intervalId, 
-    viewIndex, 
+    hierarchy,
+    snapshots,
+    mode,
+    intervalId,
+    viewIndex,
     sliderIndex,
   } = tabs[currentTab] || {};
-  
-  
-  // gabi and nate :: function that find the index in the hiearachy and extract the name of the equivalent index to add to the post message
+
+
+  // gabi and nate :: function that find the index in the hierarchy and extract the name of the equivalent index to add to the post message
   const findName = (index, hierarchy) => {
-    if(hierarchy.index == index){
+    if (hierarchy.index == index) {
       return hierarchy.name;
     }
-    else {
-      const hierarchyChildArray = [];
-      for (let hierarchyChild of hierarchy.children){
-        hierarchyChildArray.push(findName(index, hierarchyChild));
+
+    const hierarchyChildArray = [];
+    for (const hierarchyChild of hierarchy.children) {
+      hierarchyChildArray.push(findName(index, hierarchyChild));
+    }
+    for (const hierarchyChildName of hierarchyChildArray) {
+      if (hierarchyChildName) {
+        return hierarchyChildName;
       }
-      for (let hierarchyChildName of hierarchyChildArray){
-        if(hierarchyChildName){
-          return hierarchyChildName
-        }
-      }
-    } 
-  }
+    }
+  };
 
   switch (action.type) {
     case types.MOVE_BACKWARD: {
       if (snapshots.length > 0 && sliderIndex > 0) {
         const newIndex = sliderIndex - 1;
         // gabi and nate :: find the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
-        const nameFromIndex = findName(newIndex, hierarchy)
+        const nameFromIndex = findName(newIndex, hierarchy);
 
         port.postMessage({
           action: 'jumpToSnap',
@@ -59,7 +57,7 @@ export default (state, action) => produce(state, draft => {
       if (sliderIndex < snapshots.length - 1) {
         const newIndex = sliderIndex + 1;
         // gabi and nate :: find the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
-        const nameFromIndex = findName(newIndex, hierarchy)
+        const nameFromIndex = findName(newIndex, hierarchy);
 
         port.postMessage({
           action: 'jumpToSnap',
@@ -99,7 +97,7 @@ export default (state, action) => produce(state, draft => {
     }
     case types.CHANGE_SLIDER: {
       // gabi and nate :: finds the name by the action.payload, parsing through the hierarchy to send to background.js the current name in the jump action
-      const nameFromIndex = findName(action.payload, hierarchy)
+      const nameFromIndex = findName(action.payload, hierarchy);
 
       port.postMessage({
         action: 'jumpToSnap',
@@ -117,22 +115,18 @@ export default (state, action) => produce(state, draft => {
       tabs[currentTab].viewIndex = -1;
       tabs[currentTab].playing = false;
       // gabi :: activate empty mode
-      tabs[currentTab].mode.empty = true 
+      tabs[currentTab].mode.empty = true;
       // gabi :: record snapshot of page initial state
       tabs[currentTab].initialSnapshot.push(tabs[currentTab].snapshots[0]);
       // gabi :: reset snapshots to page last state recorded
-      tabs[currentTab].snapshots = [ tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1] ];
-      // gabi :: record snapshot of page initial state
-      // tabs[currentTab].initialrelationship.push(tabs[currentTab].relationship[0]);
-      // gabi :: reset snapshots to page last state recorded
-      // tabs[currentTab].relationship = [ tabs[currentTab].relationship[tabs[currentTab].relationship.length - 1] ];
+      tabs[currentTab].snapshots = [tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1]];
       // gabi :: record hierarchy of page initial state
-      tabs[currentTab].initialHierarchy = {...tabs[currentTab].hierarchy};
+      tabs[currentTab].initialHierarchy = { ...tabs[currentTab].hierarchy };
       tabs[currentTab].initialHierarchy.children = [];
       // gabi :: reset hierarchy
       tabs[currentTab].hierarchy.children = [];
       // gabi :: reset hierarchy to page last state recorded
-      tabs[currentTab].hierarchy.stateSnapshot = tabs[currentTab].snapshots[0]
+      tabs[currentTab].hierarchy.stateSnapshot = tabs[currentTab].snapshots[0];
       // gabi :: reset currLocation to page last state recorded
       tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
       // gabi :: reset index
@@ -227,7 +221,7 @@ export default (state, action) => produce(state, draft => {
       if (typeof action.payload === 'number') {
         draft.currentTab = action.payload;
         break;
-      } else if (typeof action.payload === 'object'){
+      } else if (typeof action.payload === 'object') {
         draft.currentTab = action.payload.tabId;
         break;
       }

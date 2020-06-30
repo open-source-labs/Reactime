@@ -8,7 +8,7 @@ const getItemString = (type, data) => {
   // console.log("getItemString -> data", data)
   // check to make sure that we are on the tree node, not anything else
   if (
-    Object.keys(data).length >= 3
+    Object.keys(data).length > 3
     && typeof data.state === 'object'
     && typeof data.name === 'string'
     && Array.isArray(data.children)
@@ -20,7 +20,7 @@ const getItemString = (type, data) => {
 
 const Tree = props => {
   const { snapshot } = props;
-  console.log('this is snapshot at tree', snapshot)
+
   return (
     <>
       {snapshot && (

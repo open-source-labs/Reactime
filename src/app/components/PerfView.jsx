@@ -9,48 +9,13 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { addNewSnapshots } from '../actions/actions';
 
-// const chartData = {
-//   name: 'App',
-//   children: [
-//    { name: 'DisplayPanel', value: 17010 },
-//    { name: 'AltDisplay', value: 5842 },
-//    {
-//     name: 'Button Panel',
-//     children: [
-//      { name: 'Button', value: 10000 },
-//      { name: 'Button', value: 2047 },
-//      { name: 'Button', value: 1375 },
-//      { name: 'Button', value: 8746 },
-//      { name: 'Button', value: 2202 },
-//      { name: 'Button', value: 1382 },
-//      { name: 'Button', value: 1629 },
-//      { name: 'Button', value: 1675 },
-//      { name: 'Button', value: 2042 },
-//     ],
-//    },
-//    { name: 'MarketSContainer', value: 1041 },
-//    { name: 'MainSlider', value: 5176 },
-//    { name: 'Tree', value: 449 },
-//    { name: 'AnotherTree', value: 5593 },
-//    { name: 'TreeOfTrees', value: 5534 },
-//    { name: 'KanyeWest', value: 9201 },
-//    { name: 'ElectricMeatloaf', value: 19975 },
-//    { name: 'GuidoTheKillerPimp', value: 1116 },
-//    { name: 'Gravy', value: 6006 },
-//   ],
-//  };
-
-const PerfView = ({ 
-  width=200, 
-  height=200, 
-  // relationship
+const PerfView = ({
+  width = 200,
+  height = 200,
   snapshots
 }) => {
-  // console.log('this is relationship at PerfView',relationship)
-  // console.log('this is relationship[relationship.length-1] at PerfView', relationship[relationship.length-1])
-  // const chartData = relationship[relationship.length-1]
-  console.log('this is snapshots at PerfView',snapshots)
-  console.log('this is snapshots[snapshots.length-1] at PerfView', snapshots[snapshots.length-1])
+  console.log('this is snapshots at PerfView', snapshots);
+  console.log('this is snapshots[snapshots.length-1] at PerfView', snapshots[snapshots.length - 1]);
   const chartData = snapshots[snapshots.length - 1];
   const svgRef = useRef(null);
   // returns color scale function
@@ -62,7 +27,9 @@ const PerfView = ({
   // returns a function that formats numbers
   const numFormat = d3.format(',d');
 
-  const margin = { top: 0, right: 60, bottom: 200, left: 120, };
+  const margin = {
+ top: 0, right: 60, bottom: 200, left: 120,
+};
 
   // create a new circle packing layout function
   const packFunc = data => d3.pack()
@@ -159,26 +126,26 @@ const PerfView = ({
 //       .domain([0, 5])
 //       .range(['hsl(152,80%,80%)', 'hsl(228,30%,40%)'])
 //       .interpolate(d3.interpolateHcl);
-  
+
 //     // returns a function that formats numbers
 //     this.numFormat = d3.format(',d');
-  
+
 //     this.margin = { top: 0, right: 60, bottom: 200, left: 120, };
-  
+
 //     // create a new circle packing layout function
 //     this.packFunc = data => d3.pack()
 //       .size([this.props.width, this.props.height])
 //       .padding(3)(d3.hierarchy(data)
 //       .sum(d => d.value)
 //       .sort((a, b) => b.value - a.value));
-      
+
 //       this.drawChart = this.drawChart.bind(this);
 //   }
 
 //   componentDidMount() {
 //     this.drawChart();
 //   }
-  
+
 //   componentDidUpdate() {
 //     this.drawChart();
 //   }
@@ -228,7 +195,7 @@ const PerfView = ({
 //       .text(d => d.data.name);
 
 //     console.log('PerfView -> node', node);
-    
+
 //     zoomTo([packedRoot.x, packedRoot.y, packedRoot.r * 2], this.props.width);
 
 //     function zoomTo(v, width) {

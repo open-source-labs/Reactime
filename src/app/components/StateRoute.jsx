@@ -13,7 +13,6 @@ const NO_STATE_MSG = 'No state change detected. Trigger an event to change state
 const StateRoute = ({ 
   snapshot, 
   hierarchy, 
-  // relationship 
   snapshots
 }) => {
   const windowRef = useRef(null);

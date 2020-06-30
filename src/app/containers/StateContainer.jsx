@@ -14,7 +14,6 @@ const StateContainer = ({
   snapshot, 
   hierarchy,
   snapshots 
-  // relationship
 }) => {
   const [Text, setText] = useState('State');
   return (

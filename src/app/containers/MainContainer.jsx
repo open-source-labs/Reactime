@@ -80,17 +80,49 @@ function MainContainer() {
     sliderIndex,
     snapshots,
     hierarchy,
-    // relationship
   } = tabs[currentTab];
 
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
+  // gabi :: cleannign hierarchy and snapshotView from stateless data
+  const statelessCleanning = obj => {
+    console.log('statelessCleanning = obj =>', obj);
+    const newObj = { ...obj };
+    if (newObj.name === 'nameless') {
+      delete newObj.name;
+    }
+    if (newObj.componentData) {
+      delete newObj.componentData;
+    }
+    if (newObj.state === 'stateless') {
+      delete newObj.state;
+    }
+    if (newObj.stateSnaphot) {
+      newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
+    }
+    if (newObj.children) {
+      newObj.children = [];
+      if (obj.children.length > 0) {
+        obj.children.forEach(element => {
+          if (element.state !== 'stateless' || element.children.length > 0) {
+            const clean = statelessCleanning(element);
+            console.log('clean', clean)
+            newObj.children.push(clean);
+          }
+        });
+      }
+    }
+    console.log('statelessCleanning = newObj =>', newObj);
+    return newObj;
+  };
+  const snapshotDisplay = statelessCleanning(snapshotView);
+  const hierarchyDisplay = statelessCleanning(hierarchy);
   return (
     <div className="main-container">
       <HeadContainer />
       <div className="body-container">
         <ActionContainer />
-        {snapshots.length ? <StateContainer snapshot={snapshotView} hierarchy={hierarchy} snapshots={snapshots} /> : null}
+        {snapshots.length ? <StateContainer snapshot={snapshotDisplay} hierarchy={hierarchyDisplay} snapshots={snapshots} /> : null}
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
       </div>

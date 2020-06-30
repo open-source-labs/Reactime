@@ -14,16 +14,10 @@ function createTabObj(title) {
   // update tabsObj
   return {
     title,
-    // snapshots is an array of ALL state snapshots for statefull components the reactime tab working on a specific user application
+    // snapshots is an array of ALL state snapshots for statefull and stateless components the reactime tab working on a specific user application
     snapshots: [],
     // gabi :: record initial snapshot to refresh page in case empty function is called
     initialSnapshot: [],
-    // gabi :: stateless logic
-    // relationship is an array of ALL state snapshots for statefull and stateless components for the reactime tab working on a specific user application
-    // relationship: [],
-    // gabi :: record initial snapshot to refresh page in case empty function is called
-    // initialRelationship: [],
-    // gabi :: stateless logic
     // gabi and nate :: index here is the tab index that show total amount of state changes
     index: 0,
     //* this is our pointer so we know what the current state the user is checking (this accounts for time travel aka when user clicks jump on the UI)
@@ -155,10 +149,6 @@ chrome.runtime.onConnect.addListener(port => {
         tabsObj[tabId].initialSnapshot.push(tabsObj[tabId].snapshots[0]);
         // gabi :: reset snapshots to page last state recorded
         tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]];
-        // gabi :: record snapshot of page initial state
-        // tabsObj[tabId].initialRelationship.push(tabsObj[tabId].relationship[0]);
-        // gabi :: reset snapshots to page last state recorded
-        // tabsObj[tabId].relationship = [tabsObj[tabId].relationship[tabsObj[tabId].relationship.length - 1] ];
         // gabi :: record hierarchy of page initial state
         tabsObj[tabId].initialHierarchy = { ...tabsObj[tabId].hierarchy, children: [] };
         // gabi :: reset hierarchy
@@ -233,15 +223,11 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         if (empty) {
           // gabi :: reset snapshots to page initial state recorded when empted
           tabsObj[tabId].snapshots = tabsObj[tabId].initialSnapshot;
-          // gabi :: reset snapshots to page initial state recorded when empted
-          // tabsObj[tabId].relationship = tabsObj[tabId].initialRelationship;
           // gabi :: reset hierarchy to page initial state recorded when empted
           tabsObj[tabId].hierarchy = tabsObj[tabId].initialHierarchy;
         } else {
           // gabi :: reset snapshots to page initial state
           tabsObj[tabId].snapshots.splice(1);
-          // gabi :: reset snapshots to page initial state
-          // tabsObj[tabId].relationship.splice(1);
           // gabi :: reset hierarchy to page initial state
           if (tabsObj[tabId].hierarchy) {
             tabsObj[tabId].hierarchy.children = [];
@@ -279,37 +265,12 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         firstSnapshotReceived[tabId] = true;
         reloaded[tabId] = false;
 
-        // gabi :: stateless logic
-        // const cleanStateless = (request) => {
-        //   if (request.children && request.children.length > 0) {
-        //     request.children.forEach(element => {
-        //       return cleanStateless(element);
-        //     })
-
-        //     let statefullChild = request.children.filter((obj)=>{
-        //     return obj.state !== 'stateless'
-        //     })
-        //     request.children = statefullChild
-        //     return request
-        //   } else {
-        //     return request
-        //   }
-        // }
-        // const statefull = cleanStateless(request.payload)
-
-        // gabi :: stateless logic
-        // tabsObj[tabId].relationship.push(request.payload);
-        // ORIGINAL :: only stateful logic
         tabsObj[tabId].snapshots.push(request.payload);
-        // gabi :: stateless logic
-        // tabsObj[tabId].snapshots.push(statefull);
+
         console.log('recordSnap 1');
         sendToHierarchy(
           tabsObj[tabId],
-          // ORIGINAL :: only stateful logic
           new Node(request.payload, tabsObj[tabId]),
-          // gabi :: stateless logic
-          // new Node(statefull, tabsObj[tabId]),
         );
         if (portsArr.length > 0) {
           portsArr.forEach(bg =>
@@ -326,20 +287,13 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       if (reloaded[tabId]) {
         reloaded[tabId] = false;
       } else {
-        // gabi :: stateless logic
-        // tabsObj[tabId].relationship.push(request.payload);
-        // ORIGINAL :: only stateful logic
+
         tabsObj[tabId].snapshots.push(request.payload);
-        // gabi :: stateless logic
-        // tabsObj[tabId].snapshots.push(statefull);
         //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
         console.log('recordSnap 2');
         sendToHierarchy(
           tabsObj[tabId],
-          // ORIGINAL :: only stateful logic
           new Node(request.payload, tabsObj[tabId]),
-          // gabi :: stateless logic
-          // new Node(statefull, tabsObj[tabId]),
         );
       }
       // send message to devtools

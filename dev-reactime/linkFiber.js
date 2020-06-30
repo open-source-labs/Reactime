@@ -104,7 +104,9 @@ module.exports = (snap, mode) => {
   //
   function createTree(currentFiber, tree = new Tree('root')) {
     // Base case: child or sibling pointed to null
-    if (!currentFiber) return tree;
+    if (!currentFiber) return null;
+    if (!tree) return tree;
+
 
     // These have the newest state. We update state and then
     // called updateSnapshotTree()
@@ -115,44 +117,48 @@ module.exports = (snap, mode) => {
       memoizedState,
       elementType,
       tag,
+      actualDuration,
+      actualStartTime,
+      selfBaseDuration,
+      treeBaseDuration,
     } = currentFiber;
 
-    let index;
+    let newState = null;
+    let componentData = {};
+    let componentFound = false;
     // Check if node is a stateful component
     if (stateNode && stateNode.state && (tag === 0 || tag === 1)) {
       console.log('in create tree if')
       console.log('this is currentFiber from createTree', currentFiber)
       // Save component's state and setState() function to our record for future
       // time-travel state changing. Add record index to snapshot so we can retrieve.
-      index = componentActionsRecord.saveNew(stateNode.state, stateNode);
-      if(elementType.name){
-        tree.appendChild(stateNode.state, elementType.name, index); // Add component to tree
-      }
-    } else {
-      console.log('in create tree else')
-      console.log('this is currentFiber from createTree', currentFiber)
-      console.log('this is memoizedState from createTree', memoizedState)
+      componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
+      newState = stateNode.state;
+      componentFound = true;
+      // tree.appendToChild(stateNode.state, elementType.name, index); // Add component to tree
+    } else if (tag === 0 || tag === 1) {
       // grab stateless components here
-      if(elementType){
-        if(elementType.name){
-          tree.appendChild('stateless', elementType.name, index);
-        } else {
-          tree.appendChild('stateless', elementType, index);
-        }
-      }
+      newState = 'stateless';
+      //  tree.appendChild({}, elementType.name) // Add component to tree
     }
 
     // Check if node is a hooks function
+    let hooksIndex;
     if (memoizedState && (tag === 0 || tag === 1 || tag === 10)) {
       console.log('in create tree if')
       console.log('this is currentFiber from createTree', currentFiber)
       if (memoizedState.queue) {
         const hooksComponents = traverseHooks(memoizedState);
         hooksComponents.forEach(c => {
-          if (elementType.name) {
-            index = componentActionsRecord.saveNew(c.state, c.component);
-            tree.appendChild(c.state, elementType.name ? elementType.name : 'nameless', index);
+          hooksIndex = componentActionsRecord.saveNew(c.state, c.component);
+          if (newState.hooksState) {
+            newState.hooksState.push([c.state, hooksIndex]);
+          } else {
+            newState.hooksState = [[c.state, hooksIndex]];
           }
+          componentFound = true;
+          // newState = { ...newState, hooksState: c.state };
+          // tree.appendSibling(c.state, elementType.name ? elementType.name : 'nameless', index);
         });
       }
     } else {
@@ -169,14 +175,30 @@ module.exports = (snap, mode) => {
       }
     }
 
-    // Recurse on siblings
-    createTree(sibling, tree);
-    // Recurse on children
-    if (tree.children.length > 0) {
-      createTree(child, tree.children[0]);
-    } else {
-      createTree(child, tree);
+    componentData = {
+      ...componentData,
+      actualDuration,
+      actualStartTime,
+      selfBaseDuration,
+      treeBaseDuration,
+    };
+
+    if (componentFound) {
+      tree.addChild(newState, elementType.name ? elementType.name : elementType, componentData);
+    } else if (newState === 'stateless') {
+      tree.addChild(newState, elementType.name ? elementType.name : elementType, componentData);
     }
+
+    // Recurse on children
+    if (child) {
+      if (tree.children.length > 0) {
+        createTree(child, tree.children[tree.children.length - 1]);
+      } else {
+        createTree(child, tree);
+      }
+    }
+    // Recurse on siblings
+    if (sibling) createTree(sibling, tree);
 
     return tree;
   }
