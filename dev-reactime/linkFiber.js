@@ -44,15 +44,8 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
 
-<<<<<<< HEAD
-const { Tree, UnfilteredTreeNode } = require('./tree');
-const astParser = require('./astParser');
-const { saveState } = require('./masterState');
-// import * as reactWorkTags from './reactWorkTags';
-=======
 const Tree = require('./tree');
 const componentActionsRecord = require('./masterState');
->>>>>>> 8e774670f36699322d70300c6382bcdcc7b349e0
 
 module.exports = (snap, mode) => {
   let fiberRoot = null;
@@ -72,9 +65,9 @@ module.exports = (snap, mode) => {
   async function sendSnapshot() {
     // Don't send messages while jumping or while paused
     if (mode.jumping || mode.paused) return;
-    // console.log('PAYLOAD: before cleaning', snap.tree);
+    console.log('PAYLOAD: before cleaning', snap.tree);
     const payload = snap.tree.cleanTreeCopy();// snap.tree.getCopy();
-    // console.log('PAYLOAD: after cleaning', payload);
+    console.log('PAYLOAD: after cleaning', payload);
     try {
       await window.postMessage({
         action: 'recordSnap',
@@ -127,16 +120,32 @@ module.exports = (snap, mode) => {
     let index;
     // Check if node is a stateful component
     if (stateNode && stateNode.state && (tag === 0 || tag === 1)) {
+      console.log('in create tree if')
+      console.log('this is currentFiber from createTree', currentFiber)
       // Save component's state and setState() function to our record for future
       // time-travel state changing. Add record index to snapshot so we can retrieve.
       index = componentActionsRecord.saveNew(stateNode.state, stateNode);
-      tree.appendChild(stateNode.state, elementType.name, index); // Add component to tree
+      if(elementType.name){
+        tree.appendChild(stateNode.state, elementType.name, index); // Add component to tree
+      }
     } else {
+      console.log('in create tree else')
+      console.log('this is currentFiber from createTree', currentFiber)
+      console.log('this is memoizedState from createTree', memoizedState)
       // grab stateless components here
+      if(elementType){
+        if(elementType.name){
+          tree.appendChild('stateless', elementType.name, index);
+        } else {
+          tree.appendChild('stateless', elementType, index);
+        }
+      }
     }
 
     // Check if node is a hooks function
     if (memoizedState && (tag === 0 || tag === 1 || tag === 10)) {
+      console.log('in create tree if')
+      console.log('this is currentFiber from createTree', currentFiber)
       if (memoizedState.queue) {
         const hooksComponents = traverseHooks(memoizedState);
         hooksComponents.forEach(c => {
@@ -145,6 +154,18 @@ module.exports = (snap, mode) => {
             tree.appendChild(c.state, elementType.name ? elementType.name : 'nameless', index);
           }
         });
+      }
+    } else {
+      console.log('in create tree else')
+      console.log('this is currentFiber from createTree', currentFiber)
+      console.log('this is memoizedState from createTree', memoizedState)
+      // grab stateless components here
+      if(elementType){
+        if(elementType.name){
+          tree.appendChild('stateless', elementType.name, index);
+        } else {
+          tree.appendChild('stateless', elementType, index);
+        }
       }
     }
 
@@ -157,7 +178,7 @@ module.exports = (snap, mode) => {
       createTree(child, tree);
     }
 
-    return parentNode;
+    return tree;
   }
 
 
@@ -208,16 +229,9 @@ module.exports = (snap, mode) => {
     } */
     const { current } = fiberRoot; // Carlos: get rid of concurrent mode for now
 
-<<<<<<< HEAD
-    snap.tree = createTree(current);
-    console.log("updateSnapShotTree -> snap.tree", snap.tree)
-    // snap.unfilteredTree = createUnfilteredTree(current);
-    // console.log("updateSnapShotTree -> snap.unfilteredTree", snap.unfilteredTree)
-=======
     // console.log('FIBER COMMITTED, new fiber is:', util.inspect(current, false, 4));
     // fs.appendFile('fiberlog.txt', util.inspect(current, false, 10));
     snap.tree = createTree(current); // Carlos: pass new hooks state here?
->>>>>>> 8e774670f36699322d70300c6382bcdcc7b349e0
   }
 
   return async container => {
@@ -236,15 +250,15 @@ module.exports = (snap, mode) => {
       // console.log('linkFiber.js, fiberRoot:', fiberRoot);
     }
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    console.log('this is devTools', devTools)
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     const overrideHookState = reactInstance ? reactInstance.overrideHookState : null;
-    console.log('DEVTOOLS:', devTools);
-    console.log('roots:', reactInstance.getCurrentFiber())
 
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           fiberRoot = args[1];
+          console.log('this is fiberRoot', fiberRoot)
           updateSnapShotTree();
           sendSnapshot();
           return original(...args);

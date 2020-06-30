@@ -10,7 +10,12 @@ import PerfView from './PerfView';
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types
 
-const StateRoute = ({ snapshot, hierarchy }) => {
+const StateRoute = ({ 
+  snapshot, 
+  hierarchy, 
+  // relationship 
+  snapshots
+}) => {
   const windowRef = useRef(null);
   const winWidth = null;
   const winHeight = null;
@@ -40,7 +45,7 @@ const StateRoute = ({ snapshot, hierarchy }) => {
 
   const renderPerfView = () => {
     if (hierarchy) {
-      return <PerfView width={600} height={600} />; // ref={windowRef}
+      return <PerfView width={600} height={600} snapshots={snapshots} />; // ref={windowRef}
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
@@ -49,13 +54,13 @@ const StateRoute = ({ snapshot, hierarchy }) => {
     <Router>
       <div className="navbar">
         <NavLink className="router-link" activeClassName="is-active" exact to="/">
-        State
+        Tree
         </NavLink>
         <NavLink className="router-link" activeClassName="is-active" to="/chart">
-        History
+        History Chart
         </NavLink>
         <NavLink className="router-link" activeClassName="is-active" to="/performance">
-        Rendering
+        Performance Chart
         </NavLink>
       </div>
       <Switch>

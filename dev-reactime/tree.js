@@ -15,7 +15,7 @@ function scrubUnserializableMembers(tree) {
 
 // this is the current snapshot that is being sent to the snapshots array.
 class Tree {
-  constructor(state, name = 'nameless', index) {
+  constructor(state = 'stateless', name = 'nameless', index) {
     this.state = state === 'root' ? 'root' : JSON.parse(JSON.stringify(state));
     this.name = name;
     this.index = index;
@@ -48,52 +48,32 @@ class Tree {
   }
 }
 
-class UnfilteredTreeNode extends Tree {
-  constructor(component, useStateInstead = false, name, unfilteredProps) {
-    super(component, useStateInstead, name);
-    // this.isStateful = unfilteredProps.isStateful;
-    // this.tagLabel = reactWorkTags[unfilteredProps.tag];
-    if(unfilteredProps) {
-      this.tag = unfilteredProps.tag;
-      this.actualDuration = unfilteredProps.actualDuration;
-      this.actualStartTime = unfilteredProps.actualStartTime;
-      this.selfBaseDuration = unfilteredProps.selfBaseDuration;
-      this.treeBaseDuration = unfilteredProps.treeBaseDuration;
-    }
-  }
+// class UnfilteredTreeNode extends Tree {
+//   constructor(component, useStateInstead = false, name, unfilteredProps) {
+//     super(component, useStateInstead, name);
+//     // this.isStateful = unfilteredProps.isStateful;
+//     // this.tagLabel = reactWorkTags[unfilteredProps.tag];
+//     if(unfilteredProps) {
+//       this.tag = unfilteredProps.tag;
+//       this.actualDuration = unfilteredProps.actualDuration;
+//       this.actualStartTime = unfilteredProps.actualStartTime;
+//       this.selfBaseDuration = unfilteredProps.selfBaseDuration;
+//       this.treeBaseDuration = unfilteredProps.treeBaseDuration;
+//     }
+//   }
 
-<<<<<<< HEAD
-  appendChild(component) {
-    const newChild = new UnfilteredTreeNode(component);
-    this.children.push(newChild);
-    return newChild;
-=======
-  // print out the tree structure in the console
-  // DEV: Process may be different for useState components
-  // BUG FIX: Don't print the Router as a component
-  // Change how the children are printed
-  print() {
-    // console.log('current tree structure for *this : ', this);
-    const children = ['children: '];
-    // DEV: What should we push instead for components using hooks (it wouldn't be state)
-    this.children.forEach(child => { // if this.children is always initialized to empty array, when would there ever be anything to iterate through here?
-      children.push(child.state || child.component.state);
-    });
-    if (this.name) console.log('this.name if exists: ', this.name);
-    if (children.length === 1) {
-      console.log(`children length 1. ${this.state ? 'this.state: ' : 'this.component.state: '}`, this.state || this.component.state);
-    } else console.log(`children length !== 1. ${this.state ? 'this.state: ' : 'this.component.state, children: '}`, this.state || this.component.state, ...children);
-    this.children.forEach(child => {
-      child.print();
-    });
->>>>>>> 8e774670f36699322d70300c6382bcdcc7b349e0
-  }
-}
+//   appendChild(component) {
+//     const newChild = new UnfilteredTreeNode(component);
+//     this.children.push(newChild);
+//     return newChild;
+//   }
+// }
 
-module.exports = {
-  Tree,
-  UnfilteredTreeNode,
-};
+module.exports = Tree
+// module.exports = {
+//   Tree,
+  // UnfilteredTreeNode,
+// };
 
 
 

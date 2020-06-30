@@ -7,39 +7,51 @@
 /* eslint-disable no-console */
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import { addNewSnapshots } from '../actions/actions';
 
-const chartData = {
-  name: 'App',
-  children: [
-   { name: 'DisplayPanel', value: 17010 },
-   { name: 'AltDisplay', value: 5842 },
-   {
-    name: 'Button Panel',
-    children: [
-     { name: 'Button', value: 10000 },
-     { name: 'Button', value: 2047 },
-     { name: 'Button', value: 1375 },
-     { name: 'Button', value: 8746 },
-     { name: 'Button', value: 2202 },
-     { name: 'Button', value: 1382 },
-     { name: 'Button', value: 1629 },
-     { name: 'Button', value: 1675 },
-     { name: 'Button', value: 2042 },
-    ],
-   },
-   { name: 'MarketSContainer', value: 1041 },
-   { name: 'MainSlider', value: 5176 },
-   { name: 'Tree', value: 449 },
-   { name: 'AnotherTree', value: 5593 },
-   { name: 'TreeOfTrees', value: 5534 },
-   { name: 'KanyeWest', value: 9201 },
-   { name: 'ElectricMeatloaf', value: 19975 },
-   { name: 'GuidoTheKillerPimp', value: 1116 },
-   { name: 'Gravy', value: 6006 },
-  ],
- };
+// const chartData = {
+//   name: 'App',
+//   children: [
+//    { name: 'DisplayPanel', value: 17010 },
+//    { name: 'AltDisplay', value: 5842 },
+//    {
+//     name: 'Button Panel',
+//     children: [
+//      { name: 'Button', value: 10000 },
+//      { name: 'Button', value: 2047 },
+//      { name: 'Button', value: 1375 },
+//      { name: 'Button', value: 8746 },
+//      { name: 'Button', value: 2202 },
+//      { name: 'Button', value: 1382 },
+//      { name: 'Button', value: 1629 },
+//      { name: 'Button', value: 1675 },
+//      { name: 'Button', value: 2042 },
+//     ],
+//    },
+//    { name: 'MarketSContainer', value: 1041 },
+//    { name: 'MainSlider', value: 5176 },
+//    { name: 'Tree', value: 449 },
+//    { name: 'AnotherTree', value: 5593 },
+//    { name: 'TreeOfTrees', value: 5534 },
+//    { name: 'KanyeWest', value: 9201 },
+//    { name: 'ElectricMeatloaf', value: 19975 },
+//    { name: 'GuidoTheKillerPimp', value: 1116 },
+//    { name: 'Gravy', value: 6006 },
+//   ],
+//  };
 
-const PerfView = ({ width=200, height=200 }) => {
+const PerfView = ({ 
+  width=200, 
+  height=200, 
+  // relationship
+  snapshots
+}) => {
+  // console.log('this is relationship at PerfView',relationship)
+  // console.log('this is relationship[relationship.length-1] at PerfView', relationship[relationship.length-1])
+  // const chartData = relationship[relationship.length-1]
+  console.log('this is snapshots at PerfView',snapshots)
+  console.log('this is snapshots[snapshots.length-1] at PerfView', snapshots[snapshots.length-1])
+  const chartData = snapshots[snapshots.length - 1];
   const svgRef = useRef(null);
   // returns color scale function
   const color = d3.scaleLinear()

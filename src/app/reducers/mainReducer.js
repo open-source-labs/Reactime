@@ -6,7 +6,13 @@ import * as types from '../constants/actionTypes';
 export default (state, action) => produce(state, draft => {
   const { port, currentTab, tabs } = draft;
   const {
-    hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex,
+    hierarchy, 
+    snapshots, 
+    // relationship, 
+    mode, 
+    intervalId, 
+    viewIndex, 
+    sliderIndex,
   } = tabs[currentTab] || {};
   
   
@@ -116,6 +122,10 @@ export default (state, action) => produce(state, draft => {
       tabs[currentTab].initialSnapshot.push(tabs[currentTab].snapshots[0]);
       // gabi :: reset snapshots to page last state recorded
       tabs[currentTab].snapshots = [ tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1] ];
+      // gabi :: record snapshot of page initial state
+      // tabs[currentTab].initialrelationship.push(tabs[currentTab].relationship[0]);
+      // gabi :: reset snapshots to page last state recorded
+      // tabs[currentTab].relationship = [ tabs[currentTab].relationship[tabs[currentTab].relationship.length - 1] ];
       // gabi :: record hierarchy of page initial state
       tabs[currentTab].initialHierarchy = {...tabs[currentTab].hierarchy};
       tabs[currentTab].initialHierarchy.children = [];

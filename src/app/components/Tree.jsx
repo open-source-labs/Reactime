@@ -20,6 +20,7 @@ const getItemString = (type, data) => {
 
 const Tree = props => {
   const { snapshot } = props;
+  console.log('this is snapshot at tree', snapshot)
   return (
     <>
       {snapshot && (

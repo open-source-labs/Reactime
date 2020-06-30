@@ -24,11 +24,11 @@ function MainContainer() {
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener(message => {
       const { action, payload, sourceTab } = message;
-      let maxTab
-        if(!sourceTab){
-          let tabsArray = Object.keys(payload)
-          maxTab = Math.max(...tabsArray)
-        }
+      let maxTab;
+      if (!sourceTab) {
+        const tabsArray = Object.keys(payload);
+        maxTab = Math.max(...tabsArray);
+      }
       switch (action) {
         case 'deleteTab': {
           dispatch(deleteTab(payload));
@@ -76,7 +76,11 @@ function MainContainer() {
     );
   }
   const {
-    viewIndex, sliderIndex, snapshots, hierarchy,
+    viewIndex,
+    sliderIndex,
+    snapshots,
+    hierarchy,
+    // relationship
   } = tabs[currentTab];
 
   // if viewIndex is -1, then use the sliderIndex instead
@@ -86,7 +90,7 @@ function MainContainer() {
       <HeadContainer />
       <div className="body-container">
         <ActionContainer />
-        {snapshots.length ? <StateContainer snapshot={snapshotView} hierarchy={hierarchy} /> : null}
+        {snapshots.length ? <StateContainer snapshot={snapshotView} hierarchy={hierarchy} snapshots={snapshots} /> : null}
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
       </div>

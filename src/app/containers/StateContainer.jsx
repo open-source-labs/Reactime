@@ -10,7 +10,12 @@ import StateRoute from '../components/StateRoute';
 import DiffRoute from '../components/DiffRoute';
 
 // eslint-disable-next-line react/prop-types
-const StateContainer = ({ snapshot, hierarchy }) => {
+const StateContainer = ({ 
+  snapshot, 
+  hierarchy,
+  snapshots 
+  // relationship
+}) => {
   const [Text, setText] = useState('State');
   return (
     <Router>
@@ -47,7 +52,7 @@ const StateContainer = ({ snapshot, hierarchy }) => {
             path="/"
             render={() => {
               setText('State');
-              return <StateRoute snapshot={snapshot} hierarchy={hierarchy} />;
+              return <StateRoute snapshot={snapshot} hierarchy={hierarchy} snapshots={snapshots}/>;
             }}
           />
         </Switch>
