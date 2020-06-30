@@ -121,7 +121,7 @@ module.exports = (snap, mode) => {
       // Save component's state and setState() function to our record for future
       // time-travel state changing. Add record index to snapshot so we can retrieve.
       componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
-      newState.state = stateNode.state;
+      newState = stateNode.state;
       componentFound = true;
     }
 
@@ -147,18 +147,6 @@ module.exports = (snap, mode) => {
           }
           componentFound = true;
         });
-      }
-    } else {
-      console.log('in create tree else');
-      console.log('this is currentFiber from createTree', currentFiber);
-      console.log('this is memoizedState from createTree', memoizedState);
-      // grab stateless components here
-      if (elementType) {
-        if (elementType.name) {
-          tree.appendChild('stateless', elementType.name, index);
-        } else {
-          tree.appendChild('stateless', elementType, index);
-        }
       }
     }
 

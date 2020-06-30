@@ -44,6 +44,7 @@ class Tree {
       });
     }
     return copy;
+  }
 
   // print out the tree structure in the console
   // DEV: Process may be different for useState components
@@ -53,7 +54,8 @@ class Tree {
     // console.log('current tree structure for *this : ', this);
     const children = ['children: '];
     // DEV: What should we push instead for components using hooks (it wouldn't be state)
-    this.children.forEach(child => { // if this.children is always initialized to empty array, when would there ever be anything to iterate through here?
+    // if this.children is always initialized to empty array, when would there ever be anything to iterate through here?
+    this.children.forEach(child => { 
       children.push(child.state || child.component.state);
     });
     if (this.name) console.log('this.name if exists: ', this.name);
@@ -66,4 +68,4 @@ class Tree {
   }
 }
 
-module.exports = Tree
+module.exports = Tree;
