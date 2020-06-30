@@ -2,7 +2,10 @@ import React from 'react';
 import JSONTree from 'react-json-tree';
 import PropTypes from 'prop-types';
 
+
 const getItemString = (type, data) => {
+  // console.log("getItemString -> type", type)
+  // console.log("getItemString -> data", data)
   // check to make sure that we are on the tree node, not anything else
   if (
     Object.keys(data).length > 3
@@ -17,6 +20,7 @@ const getItemString = (type, data) => {
 
 const Tree = props => {
   const { snapshot } = props;
+
   return (
     <>
       {snapshot && (

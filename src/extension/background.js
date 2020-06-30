@@ -14,7 +14,7 @@ function createTabObj(title) {
   // update tabsObj
   return {
     title,
-    // snapshots is an array of ALL state snapshots for the reactime tab working on a specific user application
+    // snapshots is an array of ALL state snapshots for statefull and stateless components the reactime tab working on a specific user application
     snapshots: [],
     // gabi :: record initial snapshot to refresh page in case empty function is called
     initialSnapshot: [],
@@ -138,6 +138,7 @@ chrome.runtime.onConnect.addListener(port => {
     const { action, payload, tabId } = msg;
     switch (action) {
       case 'import': // create a snapshot property on tabId and set equal to tabs object
+        // gabi :: may need do something like filter payload from stateless
         tabsObj[tabId].snapshots = payload;
         return true;
       case 'emptySnap':
@@ -265,6 +266,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         reloaded[tabId] = false;
 
         tabsObj[tabId].snapshots.push(request.payload);
+
         console.log('recordSnap 1');
         sendToHierarchy(
           tabsObj[tabId],
@@ -285,6 +287,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       if (reloaded[tabId]) {
         reloaded[tabId] = false;
       } else {
+
         tabsObj[tabId].snapshots.push(request.payload);
         //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
         console.log('recordSnap 2');
