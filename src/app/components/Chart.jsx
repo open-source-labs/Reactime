@@ -14,7 +14,7 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 
-const colors = ['#2C4870','#519331','#AA5039','#8B2F5F','#C5B738','#858DFF', '#FF8D02','#FFCD51','#ACDAE6','#FC997E','#CF93AD','#AA3939','#AA6C39','#226666',]
+const colors = ['#2C4870', '#519331', '#AA5039', '#8B2F5F', '#C5B738', '#858DFF', '#FF8D02','#FFCD51','#ACDAE6','#FC997E','#CF93AD','#AA3939','#AA6C39','#226666',]
 
 let root = {};
 class Chart extends Component {
@@ -174,7 +174,7 @@ class Chart extends Component {
 
     chartContainer.call(d3.zoom()
       .extent([[0, 0], [width, height]])
-      .scaleExtent([0, 8]) //scaleExtent([minimum scale factor, maximum scale factor])
+      .scaleExtent([0, 8]) // scaleExtent([minimum scale factor, maximum scale factor])
       .on('zoom', zoomed));
 
     function dragstarted() {
