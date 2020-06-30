@@ -12,23 +12,22 @@ function scrubUnserializableMembers(tree) {
 
 // this is the current snapshot that is being sent to the snapshots array.
 class Tree {
-  constructor(state, name = 'nameless', index) {
+  constructor(state, name = 'nameless', componentData = {}) {
     this.state = state === 'root' ? 'root' : JSON.parse(JSON.stringify(state));
     this.name = name;
-    this.index = index;
+    this.componentData = JSON.parse(JSON.stringify(componentData));
     this.children = [];
   }
 
-  appendChild(state, name, index) {
-    const child = new Tree(state, name, index);
-    this.children.push(child);
+  addChild(state, name = this.name, componentData = this.componentData) {
+    this.children.push(new Tree(state, name, componentData));
   }
 
   cleanTreeCopy() {
-    const copy = new Tree(this.state, this.name, this.index);
+    const copy = new Tree(this.state, this.name, this.componentData);
     let newChild;
     copy.children = this.children.map(child => {
-      newChild = new Tree(child.state, child.name, child.index);
+      newChild = new Tree(child.state, child.name, child.componentData);
       newChild.children = child.children;
       return scrubUnserializableMembers(newChild);
     });
@@ -42,7 +41,72 @@ class Tree {
       });
     }
     return copy;
-  }
+
+  // This is a regular old tree version of the above, but above version
+  // is better suited for D3 chart displays
+// class Tree {
+//   constructor(state, name = 'nameless', index) {
+//     this.state = state === 'root' ? 'root' : JSON.parse(JSON.stringify(state));
+//     this.name = name;
+//     this.index = index;
+//     this.child = null;
+//     this.sibling = null;
+//   }
+
+//   setNode(state, name, index) {
+//     this.state = { ...this.child.state, ...state };
+//     this.name = name;
+//     this.index = index;
+//   }
+
+//   appendToChild(state, name = this.name, index = this.index) {
+//     if (this.child) {
+//       this.child.state = { ...this.child.state, ...state };
+//       this.child.name = name;
+//       this.child.index = index;
+//     } else {
+//       this.child = new Tree(state, name, index);
+//     }
+//   }
+
+//   appendToSibling(state, name = this.name, index = this.index) {
+//     if (this.sibling) {
+//       state = { ...this.sibling.state, ...state };
+//       this.sibling.name = name;
+//       this.sibling.index = index;
+//     } else {
+//       this.sibling = new Tree(state, name, index);
+//     }
+//   }
+
+//   cleanTreeCopy() {
+//     const copy = new Tree(this.state, this.name, this.index);
+//     if (this.sibling) {
+//       copy.sibling = new Tree(this.sibling.state, this.sibling.name, this.sibling.index);
+//       copy.sibling = scrubUnserializableMembers(copy.sibling);
+//       copy.sibling = this.sibling.sibling;
+//       copy.sibling.cleanTreeCopy();
+//     }
+
+//     if (this.child) {
+//       copy.child = new Tree(this.child.state, this.child.name, this.child.index);
+//       copy.child = scrubUnserializableMembers(copy.child);
+//       copy.child = this.child.child;
+//       copy.child.cleanTreeCopy();
+//     }
+// 
+//   // unfinished:
+//   cleanD3Copy(children = []) {
+//     copy = D3Tree(this.state, this.name, this.index, this.isStateless);
+//     let nextSibling = this.sibling;
+//     while(nextSibling = this.sibling) {
+//     copy.cleanD3Copy(copy.)
+//   }
+  
+}
+
+//     return copy;
+//   }
 
   // print out the tree structure in the console
   // DEV: Process may be different for useState components

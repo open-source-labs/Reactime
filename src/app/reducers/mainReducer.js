@@ -10,7 +10,7 @@ export default (state, action) => produce(state, draft => {
   } = tabs[currentTab] || {};
   
   
-  // gabi and nate :: function that find the index in the hiearachy and extract the name of the equivalent index to add to the post message
+  // gabi and nate :: function that find the index in the hierarchy and extract the name of the equivalent index to add to the post message
   const findName = (index, hierarchy) => {
     if(hierarchy.index == index){
       return hierarchy.name;
@@ -93,7 +93,7 @@ export default (state, action) => produce(state, draft => {
     }
     case types.CHANGE_SLIDER: {
       // gabi and nate :: finds the name by the action.payload, parsing through the hierarchy to send to background.js the current name in the jump action
-      const nameFromIndex = findName(action.payload, hierarchy)
+      const nameFromIndex = findName(action.payload, hierarchy);
 
       port.postMessage({
         action: 'jumpToSnap',

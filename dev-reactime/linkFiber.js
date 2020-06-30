@@ -52,9 +52,9 @@ module.exports = (snap, mode) => {
   async function sendSnapshot() {
     // Don't send messages while jumping or while paused
     if (mode.jumping || mode.paused) return;
-    // console.log('PAYLOAD: before cleaning', snap.tree);
+    console.log('PAYLOAD: before cleaning', snap.tree);
     const payload = snap.tree.cleanTreeCopy();// snap.tree.getCopy();
-    // console.log('PAYLOAD: after cleaning', payload);
+    console.log('PAYLOAD: after cleaning', payload);
     try {
       await window.postMessage({
         action: 'recordSnap',
@@ -91,7 +91,9 @@ module.exports = (snap, mode) => {
   //
   function createTree(currentFiber, tree = new Tree('root')) {
     // Base case: child or sibling pointed to null
-    if (!currentFiber) return tree;
+    if (!currentFiber) return null;
+    if (!tree) return tree;
+
 
     // These have the newest state. We update state and then
     // called updateSnapshotTree()
@@ -102,40 +104,72 @@ module.exports = (snap, mode) => {
       memoizedState,
       elementType,
       tag,
+      actualDuration,
+      actualStartTime,
+      selfBaseDuration,
+      treeBaseDuration,
     } = currentFiber;
 
-    let index;
+    let newState = null;
+    let componentData = {};
+    let componentFound = false;
     // Check if node is a stateful component
     if (stateNode && stateNode.state && (tag === 0 || tag === 1)) {
       // Save component's state and setState() function to our record for future
       // time-travel state changing. Add record index to snapshot so we can retrieve.
-      index = componentActionsRecord.saveNew(stateNode.state, stateNode);
-      tree.appendChild(stateNode.state, elementType.name, index); // Add component to tree
-    } else {
+      componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
+      newState = stateNode.state;
+      componentFound = true;
+      // tree.appendToChild(stateNode.state, elementType.name, index); // Add component to tree
+    } else if (tag === 0 || tag === 1) {
       // grab stateless components here
+      newState = 'stateless';
+      //  tree.appendChild({}, elementType.name) // Add component to tree
     }
 
     // Check if node is a hooks function
+    let hooksIndex;
     if (memoizedState && (tag === 0 || tag === 1 || tag === 10)) {
       if (memoizedState.queue) {
         const hooksComponents = traverseHooks(memoizedState);
         hooksComponents.forEach(c => {
-          if (elementType.name) {
-            index = componentActionsRecord.saveNew(c.state, c.component);
-            tree.appendChild(c.state, elementType.name ? elementType.name : 'nameless', index);
+          hooksIndex = componentActionsRecord.saveNew(c.state, c.component);
+          if (newState.hooksState) {
+            newState.hooksState.push([c.state, hooksIndex]);
+          } else {
+            newState.hooksState = [[c.state, hooksIndex]];
           }
+          componentFound = true;
+          // newState = { ...newState, hooksState: c.state };
+          // tree.appendSibling(c.state, elementType.name ? elementType.name : 'nameless', index);
         });
       }
     }
 
-    // Recurse on siblings
-    createTree(sibling, tree);
-    // Recurse on children
-    if (tree.children.length > 0) {
-      createTree(child, tree.children[0]);
-    } else {
-      createTree(child, tree);
+    componentData = {
+      ...componentData,
+      actualDuration,
+      actualStartTime,
+      selfBaseDuration,
+      treeBaseDuration,
+    };
+
+    if (componentFound) {
+      tree.addChild(newState, elementType.name ? elementType.name : elementType, componentData);
+    } else if (newState === 'stateless') {
+      tree.addChild(newState, elementType.name ? elementType.name : elementType, componentData);
     }
+
+    // Recurse on children
+    if (child) {
+      if (tree.children.length > 0) {
+        createTree(child, tree.children[tree.children.length - 1]);
+      } else {
+        createTree(child, tree);
+      }
+    }
+    // Recurse on siblings
+    if (sibling) createTree(sibling, tree);
 
     return tree;
   }
@@ -179,8 +213,6 @@ module.exports = (snap, mode) => {
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     const overrideHookState = reactInstance ? reactInstance.overrideHookState : null;
-    console.log('DEVTOOLS:', devTools);
-    console.log('roots:', reactInstance.getCurrentFiber())
 
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
