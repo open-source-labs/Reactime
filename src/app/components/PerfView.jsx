@@ -79,22 +79,13 @@ const PerfView = ({ width = 200, height = 200, chartData }) => {
       .sort((a, b) => b.actualDuration - a.actualDuration));
 
   useEffect(() => {
-    // const hierarchy = d3.hierarchy(chartData);
     const packedRoot = packFunc(chartData);
     console.log('** PerfView -> packedRoot', packedRoot);
     let focus = packedRoot;
     let view;
 
     const svg = d3.select(svgRef.current)
-      .attr('class', 'd3Container')
-      .attr('viewBox', `-${width / 2} -${height / 2} ${width} ${height}`)
-      .style('display', 'block')
-      .style('margin', '0 -14px')
-      .style('background', color(0))
-      .style('cursor', 'pointer')  
       .on('click', () => zoom(packedRoot));
-
-    console.log('packedRoot.descendents()', packedRoot.descendants());
 
     const node = svg.append('g')
       .selectAll('circle')
@@ -154,7 +145,7 @@ const PerfView = ({ width = 200, height = 200, chartData }) => {
     }
   }, [chartData]);
 
-  return <svg ref={svgRef} />;
+  return <svg viewBox="-250 -250 500 500" className="perfContainer" ref={svgRef} />;
 };
 
 // class PerfView extends React.Component {
