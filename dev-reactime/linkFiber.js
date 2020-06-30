@@ -49,18 +49,6 @@ const componentActionsRecord = require('./masterState');
 
 module.exports = (snap, mode) => {
   let fiberRoot = null;
-  let astHooks;
-  let concurrent = false; // flag to check if we are in concurrent mode
-  const reactWorkTags = [
-    'FunctionComponent',
-    'ClassComponent',
-    'IndeterminateComponent',
-    'HostRoot', // Root of a host tree. Could be nested inside another node.
-    'HostPortal', // A subtree. Could be an entry point to a different renderer.
-    'HostComponent',
-    'HostText',
-  ];
-
 
   async function sendSnapshot() {
     // Don't send messages while jumping or while paused
@@ -81,14 +69,14 @@ module.exports = (snap, mode) => {
   // Carlos: Injects instrumentation to update our state tree every time
   // a hooks component changes state
   function traverseHooks(memoizedState) {
-    const hooksComponents = [];
+    const hooksStates = [];
     while (memoizedState && memoizedState.queue) {
       // Carlos: these two are legacy comments, we should look into them later
       // prevents useEffect from crashing on load
       // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
       if (memoizedState.memoizedState) {
         console.log('memoizedState in traverseHooks is:', memoizedState);
-        hooksComponents.push({
+        hooksStates.push({
           component: memoizedState.queue,
           state: memoizedState.memoizedState,
         });
@@ -97,7 +85,7 @@ module.exports = (snap, mode) => {
       memoizedState = memoizedState.next !== memoizedState
         ? memoizedState.next : null;
     }
-    return hooksComponents;
+    return hooksStates;
   }
 
   // Carlos: This runs after EVERY Fiber commit. It creates a new snapshot,
@@ -106,7 +94,6 @@ module.exports = (snap, mode) => {
     // Base case: child or sibling pointed to null
     if (!currentFiber) return null;
     if (!tree) return tree;
-
 
     // These have the newest state. We update state and then
     // called updateSnapshotTree()
@@ -126,39 +113,39 @@ module.exports = (snap, mode) => {
     let newState = null;
     let componentData = {};
     let componentFound = false;
-    // Check if node is a stateful component
+
+    // Check if node is a stateful setState component
     if (stateNode && stateNode.state && (tag === 0 || tag === 1)) {
       console.log('in create tree if')
       console.log('this is currentFiber from createTree', currentFiber)
       // Save component's state and setState() function to our record for future
       // time-travel state changing. Add record index to snapshot so we can retrieve.
       componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
-      newState = stateNode.state;
+      newState.state = stateNode.state;
       componentFound = true;
-      // tree.appendToChild(stateNode.state, elementType.name, index); // Add component to tree
-    } else if (tag === 0 || tag === 1) {
-      // grab stateless components here
-      newState = 'stateless';
-      //  tree.appendChild({}, elementType.name) // Add component to tree
     }
 
-    // Check if node is a hooks function
+    // Check if node is a hooks useState function
     let hooksIndex;
     if (memoizedState && (tag === 0 || tag === 1 || tag === 10)) {
       console.log('in create tree if')
       console.log('this is currentFiber from createTree', currentFiber)
       if (memoizedState.queue) {
-        const hooksComponents = traverseHooks(memoizedState);
-        hooksComponents.forEach(c => {
-          hooksIndex = componentActionsRecord.saveNew(c.state, c.component);
-          if (newState.hooksState) {
-            newState.hooksState.push([c.state, hooksIndex]);
+        // Hooks states are stored as a linked list using memoizedState.next,
+        // so we must traverse through the list and get the states.
+        // We then store them along with the corresponding memoizedState.queue,
+        // which includes the dispatch() function we use to change their state.
+        const hooksStates = traverseHooks(memoizedState);
+        hooksStates.forEach(state => {
+          hooksIndex = componentActionsRecord.saveNew(state.state, state.component);
+          if (newState && newState.hooksState) {
+            newState.hooksState.push([state.state, hooksIndex]);
+          } else if (newState) {
+            newState.hooksState = [[state.state, hooksIndex]];
           } else {
-            newState.hooksState = [[c.state, hooksIndex]];
+            newState = { hooksState: [[state.state, hooksIndex]] };
           }
           componentFound = true;
-          // newState = { ...newState, hooksState: c.state };
-          // tree.appendSibling(c.state, elementType.name ? elementType.name : 'nameless', index);
         });
       }
     } else {
@@ -175,6 +162,12 @@ module.exports = (snap, mode) => {
       }
     }
 
+    // This grabs stateless components
+    if (!componentFound && (tag === 0 || tag === 1)) {
+      newState = 'stateless';
+    }
+
+    // Adds performance metrics to the component data
     componentData = {
       ...componentData,
       actualDuration,
@@ -191,6 +184,9 @@ module.exports = (snap, mode) => {
 
     // Recurse on children
     if (child) {
+      // If this node had state we appended to the children array,
+      // so attach children to the newly appended child.
+      // Otherwise, attach children to this same node.
       if (tree.children.length > 0) {
         createTree(child, tree.children[tree.children.length - 1]);
       } else {
@@ -237,6 +233,7 @@ module.exports = (snap, mode) => {
 
   // ! BUG: skips 1st hook click
   function updateSnapShotTree() {
+<<<<<<< HEAD
     /* let current;
     // If concurrent mode, grab current.child
     if (concurrent) {
@@ -260,7 +257,6 @@ module.exports = (snap, mode) => {
     // Point fiberRoot to FiberRootNode
     if (container._internalRoot) {
       fiberRoot = container._internalRoot;
-      concurrent = true;
     } else {
       const {
         _reactRootContainer: { _internalRoot },
@@ -268,13 +264,10 @@ module.exports = (snap, mode) => {
       } = container;
       // Only assign internal root if it actually exists
       fiberRoot = _internalRoot || _reactRootContainer;
-      // console.log('_reactRootContainer is:', _reactRootContainer);
-      // console.log('linkFiber.js, fiberRoot:', fiberRoot);
     }
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     console.log('this is devTools', devTools)
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
-    const overrideHookState = reactInstance ? reactInstance.overrideHookState : null;
 
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
