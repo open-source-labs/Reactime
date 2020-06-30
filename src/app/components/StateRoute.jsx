@@ -39,9 +39,9 @@ const StateRoute = ({ snapshot, hierarchy }) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
-  const renderPerfView = () => {
+  const renderPerfView = () => {    
     if (hierarchy) {
-      return <PerfView width={500} height={500} />; // ref={windowRef}
+      return <PerfView chartData={snapshot} width={500} height={500} />; // ref={windowRef}
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };

@@ -1,3 +1,5 @@
+/* eslint-disable object-curly-newline */
+/* eslint-disable object-property-newline */
 /* eslint-disable class-methods-use-this */
 // eslint-disable-next-line object-curly-newline
 /* eslint-disable comma-dangle */
@@ -39,7 +41,24 @@ const chartData = {
   ],
  };
 
-const PerfView = ({ width = 200, height = 200 }) => {
+// const chartData = {
+//   name: 'App', index: 1, val3: 50000, timeData: { actualDuration: 35000 }, children: [
+//    { name: 'DisplayPanel', index: 2, timeData: { actualDuration: 35000 }, val3: 17010 },
+//    { name: 'Button Panel', index: 3, timeData: { actualDuration: 35000 }, val3: 50000, children: [
+//                       { name: 'Button', timeData: { actualDuration: 35000 }, val3: 10000 },
+//                       { name: 'Button', timeData: { actualDuration: 35000 }, val3: 2047 },
+//                         ],
+//    },
+//    { name: 'MainSlider', timeData: { actualDuration: 35000 }, val3: 5176 },
+//   ],
+//  };
+
+
+const PerfView = ({ width = 200, height = 200, chartData }) => {
+
+  console.log("PerfView -> chartData", chartData)
+
+  
   const svgRef = useRef(null);
   // returns color scale function
   const color = d3.scaleLinear()
@@ -56,8 +75,8 @@ const PerfView = ({ width = 200, height = 200 }) => {
   const packFunc = data => d3.pack()
     .size([width, height])
     .padding(3)(d3.hierarchy(data)
-      .sum(d => d.value)
-      .sort((a, b) => b.value - a.value));
+      .sum(d => d.actualDuration)
+      .sort((a, b) => b.actualDuration - a.actualDuration));
 
   useEffect(() => {
     // const hierarchy = d3.hierarchy(chartData);
@@ -72,10 +91,10 @@ const PerfView = ({ width = 200, height = 200 }) => {
       .style('display', 'block')
       .style('margin', '0 -14px')
       .style('background', color(0))
-      .style('cursor', 'pointer')
+      .style('cursor', 'pointer')  
       .on('click', () => zoom(packedRoot));
 
-    console.log('packedRoot.descendents().slice(1)', packedRoot.descendants().slice(1));
+    console.log('packedRoot.descendents()', packedRoot.descendants());
 
     const node = svg.append('g')
       .selectAll('circle')

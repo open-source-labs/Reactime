@@ -102,6 +102,10 @@ module.exports = (snap, mode) => {
       memoizedState,
       elementType,
       tag,
+      actualDuration,
+      // actualStartTime,
+      // selfBaseDuration,
+      // treeBaseDuration,
     } = currentFiber;
 
     let index;
@@ -110,7 +114,7 @@ module.exports = (snap, mode) => {
       // Save component's state and setState() function to our record for future
       // time-travel state changing. Add record index to snapshot so we can retrieve.
       index = componentActionsRecord.saveNew(stateNode.state, stateNode);
-      tree.appendChild(stateNode.state, elementType.name, index); // Add component to tree
+      tree.appendChild(stateNode.state, elementType.name, index, actualDuration); // Add component to tree
     } else {
       // grab stateless components here
     }
@@ -122,7 +126,7 @@ module.exports = (snap, mode) => {
         hooksComponents.forEach(c => {
           if (elementType.name) {
             index = componentActionsRecord.saveNew(c.state, c.component);
-            tree.appendChild(c.state, elementType.name ? elementType.name : 'nameless', index);
+            tree.appendChild(c.state, elementType.name ? elementType.name : 'nameless', index, actualDuration);
           }
         });
       }
@@ -179,8 +183,6 @@ module.exports = (snap, mode) => {
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     const overrideHookState = reactInstance ? reactInstance.overrideHookState : null;
-    console.log('DEVTOOLS:', devTools);
-    console.log('roots:', reactInstance.getCurrentFiber())
 
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {

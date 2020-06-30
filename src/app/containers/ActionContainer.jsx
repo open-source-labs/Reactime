@@ -22,7 +22,7 @@ function ActionContainer() {
 
   // gabi and nate :: delete function to traverse state from snapshots, now we are tranversing state from hiararchy and alsog getting infromation on display name and component name
   const displayArray = obj => {
-    console.log('obj', obj);
+    // console.log('obj', obj);
     if (obj.stateSnapshot.children.length > 0 && obj.stateSnapshot.children[0] && obj.stateSnapshot.children[0].state && obj.stateSnapshot.children[0].name) {
       const newObj = {
         index: obj.index,
@@ -38,16 +38,9 @@ function ActionContainer() {
         });
       }
     }
-<<<<<<< HEAD
-  };
-  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was inicialize involk displayArray to display the hierarchy
-  if (hierarchy) displayArray(hierarchy);
-  // console.log('this is hierarchyArr', hierarchyArr)
-=======
   }
   // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was inicialize involk displayArray to display the hierarchy  
   if (hierarchy) displayArray(hierarchy)
->>>>>>> master
 
   // Edwin: handles keyboard presses, function passes an event and index of each action-component
   function handleOnKeyDown(e, i) {
