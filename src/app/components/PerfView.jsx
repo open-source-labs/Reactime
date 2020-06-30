@@ -41,19 +41,6 @@ const chartData = {
   ],
  };
 
-// const chartData = {
-//   name: 'App', index: 1, val3: 50000, timeData: { actualDuration: 35000 }, children: [
-//    { name: 'DisplayPanel', index: 2, timeData: { actualDuration: 35000 }, val3: 17010 },
-//    { name: 'Button Panel', index: 3, timeData: { actualDuration: 35000 }, val3: 50000, children: [
-//                       { name: 'Button', timeData: { actualDuration: 35000 }, val3: 10000 },
-//                       { name: 'Button', timeData: { actualDuration: 35000 }, val3: 2047 },
-//                         ],
-//    },
-//    { name: 'MainSlider', timeData: { actualDuration: 35000 }, val3: 5176 },
-//   ],
-//  };
-
-
 const PerfView = ({ width = 200, height = 200, chartData }) => {
 
   console.log("PerfView -> chartData", chartData)
@@ -100,7 +87,7 @@ const PerfView = ({ width = 200, height = 200, chartData }) => {
       .on('click', d => focus !== d && (zoom(d), d3.event.stopPropagation()));
 
     const label = svg.append('g')
-      .style('font', '10px sans-serif')
+      .style('font', '11px sans-serif')
       .attr('pointer-events', 'none')
       .attr('text-anchor', 'middle')
       .selectAll('text')
@@ -110,7 +97,7 @@ const PerfView = ({ width = 200, height = 200, chartData }) => {
       .append('text')
       .style('fill-opacity', d => (d.parent === packedRoot ? 1 : 0))
       .style('display', d => (d.parent === packedRoot ? 'inline' : 'none'))
-      .text(d => d.data.name);
+      .text(d => `${d.data.name}: ${Number.parseFloat(d.data.actualDuration).toFixed(2)}ms`);
 
     console.log('PerfView -> node', node);
     zoomTo([packedRoot.x, packedRoot.y, packedRoot.r * 2]);

@@ -92,6 +92,7 @@ module.exports = (snap, mode) => {
   function createTree(currentFiber, tree = new Tree('root')) {
     // Base case: child or sibling pointed to null
     if (!currentFiber) return tree;
+    console.log("createTree -> currentFiber", currentFiber);
 
     // These have the newest state. We update state and then
     // called updateSnapshotTree()
