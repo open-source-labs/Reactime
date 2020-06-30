@@ -132,7 +132,7 @@ const PerfView = ({ width = 200, height = 200, chartData }) => {
     }
   }, [chartData]);
 
-  return <svg viewBox="-250 -250 500 500" className="perfContainer" ref={svgRef} />;
+  return <div className="d3divContainer"><svg viewBox="-250 -250 500 500" className="perfContainer" ref={svgRef} /></div>;
 };
 
 // class PerfView extends React.Component {

@@ -99,3 +99,7 @@ div.tooltip {
   background-color: hsl(152,80%,80%);
   border: 2px solid red;
 }
+
+.d3divContainer {
+  border: 1px solid blue;
+}
