@@ -10,42 +10,40 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const chartData = {
-  name: 'App',
-  children: [
-   { name: 'DisplayPanel', timeData: { actualDuration: 35000 }, value: 17010 },
-   { name: 'AltDisplay', timeData: { actualDuration: 35000 }, value: 5842 },
-   {
-    name: 'Button Panel',
-    children: [
-     { name: 'Button', timeData: { actualDuration: 35000 }, value: 50000 },
-     { name: 'Button', timeData: { actualDuration: 35000 }, value: 2047 },
-     { name: 'Button', timeData: { actualDuration: 35000 }, value: 1375 },
-     { name: 'Button', timeData: { actualDuration: 35000 }, value: 8746 },
-     { name: 'Button', timeData: { actualDuration: 35000 }, value: 2202 },
-     { name: 'Button', timeData: { actualDuration: 35000 }, value: 1382 },
-     { name: 'Button', timeData: { actualDuration: 35000 }, value: 1629 },
-     { name: 'Button', timeData: { actualDuration: 35000 }, value: 1675 },
-     { name: 'Button', timeData: { actualDuration: 35000 }, value: 2042 },
-    ],
-   },
-   { name: 'MarketSContainer', timeData: { actualDuration: 35000 }, value: 1041 },
-   { name: 'MainSlider', timeData: { actualDuration: 35000 }, value: 5176 },
-   { name: 'Tree',timeData: { actualDuration: 35000 },  value: 449 },
-   { name: 'AnotherTree', timeData: { actualDuration: 35000 }, value: 5593 },
-   { name: 'TreeOfTrees', timeData: { actualDuration: 35000 }, value: 5534 },
-   { name: 'KanyeWest', timeData: { actualDuration: 35000 }, value: 9201 },
-   { name: 'ElectricMeatloaf', timeData: { actualDuration: 35000 }, value: 19975 },
-   { name: 'GuidoTheKillerPimp', timeData: { actualDuration: 35000 }, value: 1116 },
-   { name: 'Gravy', timeData: { actualDuration: 35000 }, value: 6006 },
-  ],
- };
+// const chartData = {
+//   name: 'App',
+//   children: [
+//    { name: 'DisplayPanel', timeData: { actualDuration: 35000 }, value: 17010 },
+//    { name: 'AltDisplay', timeData: { actualDuration: 35000 }, value: 5842 },
+//    {
+//     name: 'Button Panel',
+//     children: [
+//      { name: 'Button', timeData: { actualDuration: 35000 }, value: 50000 },
+//      { name: 'Button', timeData: { actualDuration: 35000 }, value: 2047 },
+//      { name: 'Button', timeData: { actualDuration: 35000 }, value: 1375 },
+//      { name: 'Button', timeData: { actualDuration: 35000 }, value: 8746 },
+//      { name: 'Button', timeData: { actualDuration: 35000 }, value: 2202 },
+//      { name: 'Button', timeData: { actualDuration: 35000 }, value: 1382 },
+//      { name: 'Button', timeData: { actualDuration: 35000 }, value: 1629 },
+//      { name: 'Button', timeData: { actualDuration: 35000 }, value: 1675 },
+//      { name: 'Button', timeData: { actualDuration: 35000 }, value: 2042 },
+//     ],
+//    },
+//    { name: 'MarketSContainer', timeData: { actualDuration: 35000 }, value: 1041 },
+//    { name: 'MainSlider', timeData: { actualDuration: 35000 }, value: 5176 },
+//    { name: 'Tree',timeData: { actualDuration: 35000 },  value: 449 },
+//    { name: 'AnotherTree', timeData: { actualDuration: 35000 }, value: 5593 },
+//    { name: 'TreeOfTrees', timeData: { actualDuration: 35000 }, value: 5534 },
+//    { name: 'KanyeWest', timeData: { actualDuration: 35000 }, value: 9201 },
+//    { name: 'ElectricMeatloaf', timeData: { actualDuration: 35000 }, value: 19975 },
+//    { name: 'GuidoTheKillerPimp', timeData: { actualDuration: 35000 }, value: 1116 },
+//    { name: 'Gravy', timeData: { actualDuration: 35000 }, value: 6006 },
+//   ],
+//  };
 
 const PerfView = ({ width = 200, height = 200, chartData }) => {
-
   console.log("PerfView -> chartData", chartData)
 
-  
   const svgRef = useRef(null);
   // returns color scale function
   const color = d3.scaleLinear()
@@ -76,7 +74,7 @@ const PerfView = ({ width = 200, height = 200, chartData }) => {
 
     const node = svg.append('g')
       .selectAll('circle')
-      .data(packedRoot.descendants().slice(1))
+      .data(packedRoot.descendants().slice(1))  
       // .join('circle')
       .enter()
       .append('circle')
