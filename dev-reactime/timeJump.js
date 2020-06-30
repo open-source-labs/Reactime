@@ -20,20 +20,11 @@ module.exports = (origin, mode) => {
   // Carlos: target is past state we are travelling to
 
   function jump(target, originNode = origin.tree) {
-    console.log('origin (link to current app state) in jump():', origin);
-    console.log('target state is: ', target);
     // Set the state of the origin tree if the component is stateful
     if (!target) return;
-    const component = componentActionsRecord.getComponentByIndex(target.index);
-    if (component) {
-      console.log('time-travel component is true');
-      if (component.setState) {
-        console.log('time-travel component setState is true');
-      }
-    }
-
+    if (target.state === 'stateless') target.children.forEach(child => jump(child));
+    const component = componentActionsRecord.getComponentByIndex(target.componentData.index);
     if (component && component.setState) {
-      console.log('time-travel calling setState', component);
       component.setState(prevState => {
         Object.keys(prevState).forEach(key => {
           if (target.state[key] === undefined) {
@@ -43,15 +34,23 @@ module.exports = (origin, mode) => {
         return target.state;
         // Iterate through new children after state has been set
       }, () => target.children.forEach(child => jump(child)));
-    } else if (component && component.dispatch) {
-      // ** not entering here
-      console.log('time-travel calling dispatch', component);
-      component.dispatch(target.state);
-      target.children.forEach(child => jump(child));
-    } else {
-      console.log('time-travel did not call setState nor dispatch', component);
+    }
+    
+    if (target.state.hooksState) {
+      target.state.hooksState.forEach(hooksState => {
+        if (component && component.dispatch) {
+          const hooksComponent = componentActionsRecord.getComponentByIndex(hooksState[1]);
+          hooksComponent.dispatch(target.state.hooksState[0]);
+        }
+      });
       target.children.forEach(child => jump(child));
     }
+    
+    if ((!component || !component.state) && !target.state.hooksState) {
+      target.children.forEach(child => jump(child));
+    }
+
+
 
     /*
     if (originNode.component.setState) {
