@@ -10,7 +10,11 @@ import PerfView from './PerfView';
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types
 
-const StateRoute = ({ snapshot, hierarchy }) => {
+const StateRoute = ({
+  snapshot,
+  hierarchy,
+  snapshots,
+}) => {
   const windowRef = useRef(null);
   const winWidth = null;
   const winHeight = null;
@@ -19,19 +23,19 @@ const StateRoute = ({ snapshot, hierarchy }) => {
     if (windowRef.current) {
       winWidth = windowRef.current.offsetHeight;
       winHeight = windowRef.current.offsetWidth;
-      console.log("** SETTING WINDOW SIZES: ", winWidth, winHeight);
+      console.log('** SETTING WINDOW SIZES: ', winWidth, winHeight);
     }
   }, [windowRef]);
 
   // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was initialize involk render chart
   const renderChart = () => {
     if (hierarchy) {
-      return <Chart hierarchy={hierarchy} winWidth={winWidth} winHeight={winHeight} />;
+      return <Chart hierarchy={hierarchy} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
-  // gabi :: the snapshot get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if snapshot was initialize involk render chart
+  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if snapshot was initialize involk render chart
   const renderTree = () => {
     if (hierarchy) {
       return <Tree snapshot={snapshot} />;
@@ -41,7 +45,7 @@ const StateRoute = ({ snapshot, hierarchy }) => {
 
   const renderPerfView = () => {    
     if (hierarchy) {
-      return <PerfView chartData={snapshot} width={500} height={500} />; // ref={windowRef}
+      return <PerfView width={600} height={600} snapshots={snapshots} />; // ref={windowRef}
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };

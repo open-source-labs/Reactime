@@ -46,6 +46,7 @@ class Chart extends Component {
   }
 
   maked3Tree() {
+
     this.removed3Tree();
     const margin = {
       top: 0,

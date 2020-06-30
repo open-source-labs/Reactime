@@ -7,7 +7,10 @@ import 'regenerator-runtime/runtime';
 import { exist } from 'acorn-jsx/xhtml';
 
 // * State snapshot object initialized here
-const snapShot = { tree: null };
+const snapShot = { 
+  tree: null, 
+  unfilteredTree: null 
+};
 
 
 const mode = {
