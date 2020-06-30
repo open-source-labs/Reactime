@@ -11,26 +11,26 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { addNewSnapshots } from '../actions/actions';
 
-const chartData = {
-  name: 'App',
-  actualDuration: 35000,
-  value: 17010,
-  children: [
-   { name: 'DisplayPanel', actualDuration: 35000, value: 17010 },
-   { name: 'AltDisplay', actualDuration: 35000, value: 5842 },
-   { name: 'MarketSContainer', actualDuration: 35000, value: 1041 },
-   { name: 'MainSlider', actualDuration: 35000, value: 5176 },
-  ],
- };
+// const chartData = {
+//   name: 'App',
+//   actualDuration: 35000,
+//   value: 17010,
+//   children: [
+//    { name: 'DisplayPanel', actualDuration: 35000, value: 17010 },
+//    { name: 'AltDisplay', actualDuration: 35000, value: 5842 },
+//    { name: 'MarketSContainer', actualDuration: 35000, value: 1041 },
+//    { name: 'MainSlider', actualDuration: 35000, value: 5176 },
+//   ],
+//  };
 
 const PerfView = ({
   width = 200,
   height = 200,
-  // snapshots
+  snapshots
 }) => {
   // const chartData = snapshots;
-  // const chartData = snapshots[snapshots.length - 1].children[0];
-  // console.log("snapshots", snapshots);
+  console.log("snapshots", snapshots);
+  const chartData = snapshots[snapshots.length - 1].children[0];
   console.log("chartData", chartData);
 
   const svgRef = useRef(null);
@@ -45,8 +45,8 @@ const PerfView = ({
   const packFunc = data => d3.pack()
     .size([width, height])
     .padding(3)(d3.hierarchy(data)
-      .sum(d => d.actualDuration)
-      .sort((a, b) => b.actualDuration - a.actualDuration));
+      .sum(d => d.componentData.actualDuration)
+      .sort((a, b) => b.componentData.actualDuration - a.componentData.actualDuration));
 
   useEffect(() => {
     const packedRoot = packFunc(chartData);
@@ -80,7 +80,7 @@ const PerfView = ({
       .append('text')
       .style('fill-opacity', d => (d.parent === packedRoot ? 1 : 0))
       .style('display', d => (d.parent === packedRoot ? 'inline' : 'none'))
-      .text(d => `${d.name}: ${Number.parseFloat(d.actualDuration).toFixed(2)}ms`);
+      .text(d => `${d.data.name}: ${Number.parseFloat(d.data.actualDuration).toFixed(2)}ms`);
 
     console.log('PerfView -> node', node);
     zoomTo([packedRoot.x, packedRoot.y, packedRoot.r * 2]);

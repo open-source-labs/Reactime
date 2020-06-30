@@ -45,7 +45,7 @@ const StateRoute = ({
 
   const renderPerfView = () => {    
     if (hierarchy) {
-      return <PerfView width={600} height={600} snapshots={snapshot} />; // ref={windowRef}
+      return <PerfView width={600} height={600} snapshots={snapshots} />; // ref={windowRef}
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
