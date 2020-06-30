@@ -4,14 +4,12 @@
  */
 import 'core-js';
 import 'regenerator-runtime/runtime';
-import { exist } from 'acorn-jsx/xhtml';
 
 // * State snapshot object initialized here
 const snapShot = { 
-  tree: null, 
-  unfilteredTree: null 
+  tree: null,
+  unfilteredTree: null
 };
-
 
 const mode = {
   jumping: false,

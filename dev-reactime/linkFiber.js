@@ -253,7 +253,6 @@ module.exports = (snap, mode) => {
       fiberRoot = _internalRoot || _reactRootContainer;
     }
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-    console.log('this is devTools', devTools)
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
 
     if (reactInstance && reactInstance.version) {
@@ -277,82 +276,3 @@ module.exports = (snap, mode) => {
     });
   };
 };
-
-
-
-
-// function createUnfilteredTree(currentFiber, tree = new Tree('root')) {
-//   // Base case: child or sibling pointed to null
-//   if (!currentFiber) return tree;
-
-//   const { sibling, stateNode, child, memoizedState, elementType,
-//           tag, actualDuration, actualStartTime, selfBaseDuration, treeBaseDuration,
-//   } = currentFiber;
-
-//   const extraProps = {
-//     tag, actualDuration, actualStartTime, selfBaseDuration, treeBaseDuration,
-//   };
-
-//   let nextTree = tree;
-//   let nextTreeUnfiltered = unfilteredTreeNode = new UnfilteredTreeNode('root');
-
-//   // Check if stateful component
-//   if (stateNode && stateNode.state) {
-//     nextTree = tree.appendChild(stateNode); // Add component to tree
-//     changeSetState(stateNode); // Change setState functionality
-//   }
-//   nextTreeUnfiltered = unfilteredTreeNode.appendChild(stateNode);
-
-//   // TODO: handle Hooks cases...
-
-//   // Recurse on siblings
-//   createTree(sibling, tree);
-//   // Recurse on children
-//   createTree(child, nextTree);
-
-//   return tree;
-// }
-
-
-
-// Check if the component uses hooks
-// if (memoizedState && Object.hasOwnProperty.call(memoizedState, 'baseState')) {
-//   // 'catch-all' for suspense elements (experimental)
-//   if (typeof elementType.$$typeof === 'symbol') return;
-//   // Traverse through the currentFiber and extract the getters/setters
-//   astHooks = astParser(elementType);
-//   saveState(astHooks);
-//   // Create a traversed property and assign to the evaluated result of
-//   // invoking traverseHooks with memoizedState
-//   memoizedState.traversed = traverseHooks(memoizedState);
-//   nextTree = tree.appendChild(memoizedState);
-// }
-
-
-
-
-
-
-
-
-// function createTree(currentFiber, tree = new Tree('root')) {
-//   // Base case: child or sibling pointed to null
-//   if (!currentFiber) return tree;
-
-//   const { sibling, stateNode, child, memoizedState, elementType } = currentFiber;
-
-//   let nextTree = tree;
-
-//   // Check if stateful component
-//   if (stateNode && stateNode.state) {
-//     nextTree = tree.appendChild(stateNode); // Add component to tree
-//     changeSetState(stateNode); // Change setState functionality
-//   }
-
-//   // Recurse on siblings
-//   createTree(sibling, tree);
-//   // Recurse on children
-//   createTree(child, nextTree);
-
-//   return tree;
-// }
