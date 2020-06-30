@@ -116,7 +116,7 @@ module.exports = (snap, mode) => {
       // Save component's state and setState() function to our record for future
       // time-travel state changing. Add record index to snapshot so we can retrieve.
       componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
-      newState.state = stateNode.state;
+      newState = {state: stateNode.state};
       componentFound = true;
     }
 
