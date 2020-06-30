@@ -38,16 +38,9 @@ function ActionContainer() {
         });
       }
     }
-<<<<<<< HEAD
   };
   // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was inicialize involk displayArray to display the hierarchy
   if (hierarchy) displayArray(hierarchy);
-  // console.log('this is hierarchyArr', hierarchyArr)
-=======
-  }
-  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was inicialize involk displayArray to display the hierarchy  
-  if (hierarchy) displayArray(hierarchy)
->>>>>>> master
 
   // Edwin: handles keyboard presses, function passes an event and index of each action-component
   function handleOnKeyDown(e, i) {
@@ -74,6 +67,7 @@ function ActionContainer() {
 
   actionsArr = hierarchyArr.map((snapshot, index) => {
     const selected = index === viewIndex;
+    const last = viewIndex === -1 && index === hierarchyArr.length - 1;
     return (
       <Action
         key={`action${index}`}
@@ -82,6 +76,7 @@ function ActionContainer() {
         displayName={snapshot.displayName}
         componentName={snapshot.componentName}
         selected={selected}
+        last={last}
         dispatch={dispatch}
         sliderIndex={sliderIndex}
         handleOnkeyDown={handleOnKeyDown}
