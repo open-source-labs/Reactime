@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable func-names */
 /* eslint-disable react/no-this-in-sfc */
 /* eslint-disable no-shadow */
@@ -30,7 +31,7 @@ import { addNewSnapshots } from '../actions/actions';
 // }, [windowRef]);
 
 const PerfView = ({ snapshots, viewIndex }) => {
-  const [chartData, setChartData] = useState(snapshots[snapshots.length - 1]);
+  const [chartData, updateChartData] = useState(snapshots[snapshots.length - 1]);
   const svgRef = useRef(null);
 
   // Todo: implement update functions...
@@ -72,10 +73,10 @@ const PerfView = ({ snapshots, viewIndex }) => {
     }
 
     if (viewIndex < 0) {
-      setChartData(snapshots[snapshots.length - 1]);
+      updateChartData(snapshots[snapshots.length - 1]);
       console.log(`Using snapshots[${snapshots.length - 1}]`);
     } else {
-      setChartData(snapshots[viewIndex]);
+      updateChartData(snapshots[viewIndex]);
       console.log(`Using snapshots[${viewIndex}]`);
     }
 
