@@ -199,7 +199,7 @@ module.exports = (snap, mode) => {
       } = container;
       // Only assign internal root if it actually exists
       fiberRoot = _internalRoot || _reactRootContainer;
-      console.log('linkFiber.js, fiberRoot:', fiberRoot);
+      // console.log('linkFiber.js, fiberRoot:', fiberRoot);
     }
 
     await updateSnapShotTree();
