@@ -18,31 +18,47 @@ class Tree {
   constructor(state, name = 'nameless', componentData = {}) {
     this.state = state === 'root' ? 'root' : JSON.parse(JSON.stringify(state));
     this.name = name;
-    this.componentData = JSON.parse(JSON.stringify(componentData));
+    this.componentData = componentData ? JSON.parse(JSON.stringify(componentData)) : {};
     this.children = [];
+    this.parent = null; // ref to parent so we can add siblings
   }
 
-  addChild(state, name = this.name, componentData = this.componentData) {
+  addChild(state, name, componentData) {
+    console.log('tree.js: in addChild');
     this.children.push(new Tree(state, name, componentData));
+    this.children[this.children.length - 1].parent = this;
+  }
+
+  addSibling(state, name, componentData) {
+    console.log('tree.js: in addChild');
+    this.parent.children.push(new Tree(state, name, componentData));
+    this.parent.children[this.children.length - 1].parent = this;
   }
 
   cleanTreeCopy() {
-    const copy = new Tree(this.state, this.name, this.componentData);
-    let newChild;
-    copy.children = this.children.map(child => {
-      newChild = new Tree(child.state, child.name, child.componentData);
-      newChild.children = child.children;
-      return scrubUnserializableMembers(newChild);
-    });
+    // copies present node
+    let copy = new Tree(this.state, this.name, this.componentData);
+    copy = scrubUnserializableMembers(copy);
+    copy.children = this.children;
+
+    // creates copy of each child of the present node
+    copy.children = this.children.map(child => child.cleanTreeCopy());
+
+    // copy.children = this.children.map(child => {
+    //   newChild = new Tree(child.state, child.name, child.componentData);
+    //   newChild.children = child.children;
+    //   return scrubUnserializableMembers(newChild);
+    // });
+
+    /*
     if (copy.children.length > 0) {
       copy.children.forEach(child => {
         if (child !== copy.children) {
           child = child.cleanTreeCopy();
-        } else {
-          child = null;
         }
+        return null;
       });
-    }
+    } */
     return copy;
   }
 
@@ -67,4 +83,4 @@ class Tree {
   }
 }
 
-module.exports = Tree;
+export default Tree;

@@ -44,26 +44,41 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
 
-const Tree = require('./tree');
-const componentActionsRecord = require('./masterState');
+// const Tree = require('./tree').default;
+// const componentActionsRecord = require('./masterState');\
 
-module.exports = (snap, mode) => {
+import Tree from './tree';
+import componentActionsRecord from './masterState';
+
+const circularComponentTable = new Map();
+
+// module.exports = (snap, mode) => {
+export default (snap, mode) => {
   let fiberRoot = null;
 
-  async function sendSnapshot() {
+  function sendSnapshot() {
     // Don't send messages while jumping or while paused
+    circularComponentTable.clear();
+    console.log('sending snapshot');
     if (mode.jumping || mode.paused) return;
     console.log('PAYLOAD: before cleaning', snap.tree);
+
+    if (!snap.tree) {
+      console.log('snapshot empty, sending root');
+      snap.tree = new Tree('root');
+    }
     const payload = snap.tree.cleanTreeCopy();// snap.tree.getCopy();
+
     console.log('PAYLOAD: after cleaning', payload);
-    try {
-      await window.postMessage({
+    //try {
+      //await window.postMessage({
+      window.postMessage({
         action: 'recordSnap',
         payload,
       });
-    } catch (e) {
-      console.log('failed to send postMessage:', e);
-    }
+    // } catch (e) {
+    //   console.log('failed to send postMessage:', e);
+    // }
   }
 
   // Carlos: Injects instrumentation to update our state tree every time
@@ -75,13 +90,11 @@ module.exports = (snap, mode) => {
       // prevents useEffect from crashing on load
       // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
       if (memoizedState.memoizedState) {
-        console.log('memoizedState in traverseHooks is:', memoizedState);
         hooksStates.push({
           component: memoizedState.queue,
           state: memoizedState.memoizedState,
         });
       }
-      // console.log('GOT STATE', memoizedState.memoizedState);
       memoizedState = memoizedState.next !== memoizedState
         ? memoizedState.next : null;
     }
@@ -90,8 +103,9 @@ module.exports = (snap, mode) => {
 
   // Carlos: This runs after EVERY Fiber commit. It creates a new snapshot,
   //
-  function createTree(currentFiber, tree = new Tree('root')) {
+  function createTree(currentFiber, tree = new Tree('root'), fromSibling = false) {
     // Base case: child or sibling pointed to null
+    console.log('linkFiber.js: creating tree');
     if (!currentFiber) return null;
     if (!tree) return tree;
 
@@ -115,11 +129,10 @@ module.exports = (snap, mode) => {
     let componentFound = false;
 
     // Check if node is a stateful setState component
-    if (stateNode && stateNode.state && (tag === 0 || tag === 1)) {
-      console.log('in create tree if')
-      console.log('this is currentFiber from createTree', currentFiber)
+    if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
       // Save component's state and setState() function to our record for future
       // time-travel state changing. Add record index to snapshot so we can retrieve.
+      console.log('linkFiber.js: found stateNode component');
       componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
       newState = stateNode.state;
       componentFound = true;
@@ -128,9 +141,8 @@ module.exports = (snap, mode) => {
     // Check if node is a hooks useState function
     let hooksIndex;
     if (memoizedState && (tag === 0 || tag === 1 || tag === 10)) {
-      console.log('in create tree if')
-      console.log('this is currentFiber from createTree', currentFiber)
       if (memoizedState.queue) {
+        console.log('linkFiber.js: found hooks component');
         // Hooks states are stored as a linked list using memoizedState.next,
         // so we must traverse through the list and get the states.
         // We then store them along with the corresponding memoizedState.queue,
@@ -164,17 +176,30 @@ module.exports = (snap, mode) => {
       treeBaseDuration,
     };
 
+    console.log('linkFiber.js: adding new state to tree:', newState);
     if (componentFound) {
-      tree.addChild(newState, elementType.name ? elementType.name : elementType, componentData);
+      console.log('componentFound, calling tree.addChild');
+      if (fromSibling) {
+        tree.addSibling(newState, elementType.name ? elementType.name : elementType, componentData);
+      } else {
+        tree.addChild(newState, elementType.name ? elementType.name : elementType, componentData);
+      }
     } else if (newState === 'stateless') {
-      tree.addChild(newState, elementType.name ? elementType.name : elementType, componentData);
+      if (fromSibling) {
+        tree.addSibling(newState, elementType.name ? elementType.name : elementType, componentData);
+      } else {
+        tree.addChild(newState, elementType.name ? elementType.name : elementType, componentData);
+      }
     }
 
     // Recurse on children
-    if (child) {
+    
+    if (child) { // && !circularComponentTable.has(child)) {
       // If this node had state we appended to the children array,
       // so attach children to the newly appended child.
       // Otherwise, attach children to this same node.
+      console.log('going into child');
+      // circularComponentTable.set(child, true);
       if (tree.children.length > 0) {
         createTree(child, tree.children[tree.children.length - 1]);
       } else {
@@ -182,85 +207,49 @@ module.exports = (snap, mode) => {
       }
     }
     // Recurse on siblings
-    if (sibling) createTree(sibling, tree);
+    if (sibling) { // && !circularComponentTable.has(sibling)) {
+      console.log('going into sibling');
+      // circularComponentTable.set(sibling, true);
+      createTree(sibling, tree, true);
+    }
 
+    console.log('linkFiber.js: processed children and sibling, returning tree');
     return tree;
   }
 
-
-  // function createUnfilteredTree(curFiber, parentNode) {
-  //   // on call from updateSnapShot, no parentNode provided, so create a root node
-  //   if(! parentNode) parentNode = new Tree('root');
-    
-  //   // Base case: parentNode's child or sibling pointed to null
-  //   if (!curFiber) return parentNode;
-    
-  //   let newChildNode = null;
-
-  //   // If stateful, add to parentNode's children array, then inject new setState into fiber node
-  //   if (curFiber.stateNode && curFiber.stateNode.state) {
-  //     newChildNode = parentNode.appendChild(curFiber.stateNode);
-  //     // changeSetState(curFiber.stateNode);
-  //     newChildNode.isStateful = true;
-  //   }
-  //   else {
-
-  //   }
-
-  //   // Recurse to sibling; siblings that have state should be added to our parentNode
-  //   createTree(curFiber.sibling, parentNode);  
-
-  //   // Recurse to child; If this fiber was stateful, then we added a newChildNode here, and we want
-  //   // to attach further children to that. If this fiber wasn't stateful, we want to attach any 
-  //   // children to our existing parentNode.
-  //   createTree(curFiber.child, newChildNode || parentNode);
-
-  //   return parentNode;
-  // }
-
-
-  // ! BUG: skips 1st hook click
   function updateSnapShotTree() {
-    /* let current;
-    // If concurrent mode, grab current.child
-    if (concurrent) {
-      // we need a way to wait for current child to populate
-      const promise = new Promise((resolve, reject) => {
-        setTimeout(() => resolve(fiberRoot.current.child), 400);
-      });
-      current = await promise;
-      current = fiberRoot.current.child;
-    } else {
-      current = fiberRoot.current;
-    } */
-    const { current } = fiberRoot; // Carlos: get rid of concurrent mode for now
-
-    // console.log('FIBER COMMITTED, new fiber is:', util.inspect(current, false, 4));
-    // fs.appendFile('fiberlog.txt', util.inspect(current, false, 10));
-    snap.tree = createTree(current); // Carlos: pass new hooks state here?
+    console.log('linkFiber.js, updateSnapshotTree(), checking if we have fiberRoot to update');
+    if (fiberRoot) {
+      console.log('linkFiber.js, updateSnapshotTree(), fiberRoot found, updating snapshot', snap.tree);
+      const { current } = fiberRoot;
+      snap.tree = createTree(current);
+      console.log('linkFiber.js, updateSnapshotTree(), completed snapshot', snap.tree);
+    }
   }
 
-  return async container => {
-    // Point fiberRoot to FiberRootNode
-    if (container._internalRoot) {
-      fiberRoot = container._internalRoot;
-    } else {
-      const {
-        _reactRootContainer: { _internalRoot },
-        _reactRootContainer,
-      } = container;
-      // Only assign internal root if it actually exists
-      fiberRoot = _internalRoot || _reactRootContainer;
-    }
+  return async () => {
+    // if (container._internalRoot) {
+    //   fiberRoot = container._internalRoot;
+    // } else {
+    //   const {
+    //     _reactRootContainer: { _internalRoot },
+    //     _reactRootContainer,
+    //   } = container;
+    //   // Only assign internal root if it actually exists
+    //   fiberRoot = _internalRoot || _reactRootContainer;
+    // }
+
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
+    console.log('devTools:', devTools);
 
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           fiberRoot = args[1];
-          console.log('this is fiberRoot', fiberRoot)
+          console.log('this is fiberRoot', fiberRoot);
           updateSnapShotTree();
+          console.log('snap.tree is: ', snap.tree);
           sendSnapshot();
           return original(...args);
         };
@@ -271,6 +260,7 @@ module.exports = (snap, mode) => {
     // This message is sent from contentScript.js in chrome extension bundles
     window.addEventListener('message', ({ data: { action } }) => {
       if (action === 'contentScriptStarted') {
+        console.log('content script started received at linkFiber.js')
         sendSnapshot();
       }
     });

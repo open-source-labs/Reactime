@@ -11,11 +11,13 @@
 
 /* eslint-disable no-param-reassign */
 
-const componentActionsRecord = require('./masterState');
+// const componentActionsRecord = require('./masterState');
+import componentActionsRecord from './masterState';
 
 // Carlos: origin is latest snapshot, linking to the fiber,
 // so changes to origin change app
-module.exports = (origin, mode) => {
+// module.exports = (origin, mode) => {
+export default (origin, mode) => {
   // Recursively change state of tree
   // Carlos: target is past state we are travelling to
 

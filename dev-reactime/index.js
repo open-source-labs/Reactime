@@ -4,6 +4,8 @@
  */
 import 'core-js';
 import 'regenerator-runtime/runtime';
+import linkFiberStart from './linkFiber';
+import timeJumpStart from './timeJump';
 
 // * State snapshot object initialized here
 const snapShot = { 
@@ -17,9 +19,14 @@ const mode = {
   locked: false,
 };
 
-const linkFiber = require('./linkFiber')(snapShot, mode);
-console.log('import timeJump in index.js:', JSON.parse(JSON.stringify(snapShot)));
-const timeJump = require('./timeJump')(snapShot, mode);
+// const linkFiber = require('./linkFiber')(snapShot, mode);
+// console.log('import timeJump in index.js:', JSON.parse(JSON.stringify(snapShot)));
+// const timeJump = require('./timeJump')(snapShot, mode);
+
+
+
+const linkFiber = linkFiberStart(snapShot, mode);
+const timeJump = timeJumpStart(snapShot, mode);
 
 
 function getRouteURL(node) {
@@ -57,5 +64,8 @@ window.addEventListener('message', ({ data: { action, payload } }) => {
   }
 });
 
+console.log('index.js: loading reactime');
+linkFiber();
+
 // module.exports = linkFiber;
-export default linkFiber;
+// export default linkFiber;
