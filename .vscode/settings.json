@@ -1,1 +1,3 @@
-123,125
+{
+  "eslint.enable": true
+}

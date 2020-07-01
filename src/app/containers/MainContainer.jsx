@@ -24,11 +24,11 @@ function MainContainer() {
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener(message => {
       const { action, payload, sourceTab } = message;
-      let maxTab
-        if(!sourceTab){
-          let tabsArray = Object.keys(payload)
-          maxTab = Math.max(...tabsArray)
-        }
+      let maxTab;
+      if (!sourceTab) {
+        const tabsArray = Object.keys(payload);
+        maxTab = Math.max(...tabsArray);
+      }
       switch (action) {
         case 'deleteTab': {
           dispatch(deleteTab(payload));
@@ -76,17 +76,53 @@ function MainContainer() {
     );
   }
   const {
-    viewIndex, sliderIndex, snapshots, hierarchy,
+    viewIndex,
+    sliderIndex,
+    snapshots,
+    hierarchy,
   } = tabs[currentTab];
 
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
+  // gabi :: cleannign hierarchy and snapshotView from stateless data
+  const statelessCleanning = obj => {
+    // console.log('statelessCleanning = obj =>', obj);
+    const newObj = { ...obj };
+    if (newObj.name === 'nameless') {
+      delete newObj.name;
+    }
+    if (newObj.componentData) {
+      delete newObj.componentData;
+    }
+    if (newObj.state === 'stateless') {
+      delete newObj.state;
+    }
+    if (newObj.stateSnaphot) {
+      newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
+    }
+    if (newObj.children) {
+      newObj.children = [];
+      if (obj.children.length > 0) {
+        obj.children.forEach(element => {
+          if (element.state !== 'stateless' || element.children.length > 0) {
+            const clean = statelessCleanning(element);
+            // console.log('clean', clean)
+            newObj.children.push(clean);
+          }
+        });
+      }
+    }
+    // console.log('statelessCleanning = newObj =>', newObj);
+    return newObj;
+  };
+  const snapshotDisplay = statelessCleanning(snapshotView);
+  const hierarchyDisplay = statelessCleanning(hierarchy);
   return (
     <div className="main-container">
       <HeadContainer />
       <div className="body-container">
         <ActionContainer />
-        {snapshots.length ? <StateContainer snapshot={snapshotView} hierarchy={hierarchy} /> : null}
+        {snapshots.length ? <StateContainer viewIndex={viewIndex} snapshot={snapshotDisplay} hierarchy={hierarchyDisplay} snapshots={snapshots} /> : null}
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
       </div>

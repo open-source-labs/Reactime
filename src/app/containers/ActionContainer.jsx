@@ -15,29 +15,33 @@ const resetSlider = () => {
 function ActionContainer() {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
-  console.log('actionContainer tabs[currentTab];', tabs[currentTab])
-
+  console.log('actionContainer tabs[currentTab];', tabs[currentTab]);
+  console.log('actionContainer hierarchy;', hierarchy);
   let actionsArr = [];
   const hierarchyArr = [];
 
   // gabi and nate :: delete function to traverse state from snapshots, now we are tranversing state from hiararchy and alsog getting infromation on display name and component name
-  const displayArray = (obj) => {
-    const newObj = {
-      index: obj.index,
-      displayName: `${obj.name}.${obj.branch}`,
-      state: obj.stateSnapshot.children[0].state,
-      componentName: obj.stateSnapshot.children[0].name,
-    }
+  const displayArray = obj => {
 
-    hierarchyArr.push(newObj)
-    if (obj.children) {
-      obj.children.forEach((element) => {
-        displayArray(element)
-      })
+    if (obj.stateSnapshot.children.length > 0 && obj.stateSnapshot.children[0] && obj.stateSnapshot.children[0].state && obj.stateSnapshot.children[0].name) {
+      const newObj = {
+        index: obj.index,
+        displayName: `${obj.name}.${obj.branch}`,
+        state: obj.stateSnapshot.children[0].state,
+        componentName: obj.stateSnapshot.children[0].name,
+        componentData: JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}' ? '' : obj.stateSnapshot.children[0].componentData
+      };
+
+      hierarchyArr.push(newObj);
+      if (obj.children) {
+        obj.children.forEach(element => {
+          displayArray(element);
+        });
+      }
     }
-  }
-  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was inicialize involk displayArray to display the hierarchy  
-  if (hierarchy) displayArray(hierarchy)
+  };
+  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was inicialize involk displayArray to display the hierarchy
+  if (hierarchy) displayArray(hierarchy);
 
   // Edwin: handles keyboard presses, function passes an event and index of each action-component
   function handleOnKeyDown(e, i) {
@@ -61,17 +65,20 @@ function ActionContainer() {
       dispatch(changeSlider(currIndex));
     }
   }
-    
+
   actionsArr = hierarchyArr.map((snapshot, index) => {
     const selected = index === viewIndex;
+    const last = viewIndex === -1 && index === hierarchyArr.length - 1;
     return (
       <Action
         key={`action${index}`}
         index={index}
         state={snapshot.state}
         displayName={snapshot.displayName}
-        componentName={snapshot.componentName} 
+        componentName={snapshot.componentName}
+        componentData={snapshot.componentData}
         selected={selected}
+        last={last}
         dispatch={dispatch}
         sliderIndex={sliderIndex}
         handleOnkeyDown={handleOnKeyDown}
