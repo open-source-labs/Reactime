@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+/* eslint-disable arrow-body-style */
 /* eslint-disable no-plusplus */
 /* eslint-disable func-names */
-/* eslint-disable react/no-this-in-sfc */
 /* eslint-disable no-shadow */
 /* eslint-disable no-multi-spaces */
 /* eslint-disable newline-per-chained-call */
@@ -10,13 +12,11 @@
 // eslint-disable-next-line object-curly-newline
 /* eslint-disable comma-dangle */
 /* eslint-disable indent */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/prop-types */
 /* eslint-disable no-console */
 
 import React, { useEffect, useState, useRef } from 'react';
 import * as d3 from 'd3';
-import { addNewSnapshots } from '../actions/actions';
+// import { addNewSnapshots } from '../actions/actions';
 
 // const windowRef = useRef(null);
 // const winWidth = null;
