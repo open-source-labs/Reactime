@@ -1,3 +1,8 @@
+/* eslint-disable func-names */
+/* eslint-disable react/no-this-in-sfc */
+/* eslint-disable no-shadow */
+/* eslint-disable no-multi-spaces */
+/* eslint-disable newline-per-chained-call */
 /* eslint-disable object-curly-newline */
 /* eslint-disable object-property-newline */
 /* eslint-disable class-methods-use-this */
@@ -7,108 +12,126 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-console */
-import React, { useEffect, useRef } from 'react';
+
+import React, { useEffect, useState, useRef } from 'react';
 import * as d3 from 'd3';
 import { addNewSnapshots } from '../actions/actions';
 
-// const chartData = {
-//   name: 'App',
-//   children: [
-//    { name: 'DisplayPanel', componentData: { actualDuration: 5000 } },
-//    { name: 'AltDisplay', componentData: { actualDuration: 2000 } },
-//    { name: 'MarketSContainer', componentData: { actualDuration: 4000 } },
-//    { name: 'MainSlider', componentData: { actualDuration: 3000 } },
-//   ],
-//  };
+// const windowRef = useRef(null);
+// const winWidth = null;
+// const winHeight = null;
 
-const moveCompData = node => {
-  if (node === null) return node;
+// useEffect(() => {
+//   if (windowRef.current) {
+//     winWidth = windowRef.current.offsetHeight;
+//     winHeight = windowRef.current.offsetWidth;
+//     console.log('** SETTING WINDOW SIZES: ', winWidth, winHeight);
+//   }
+// }, [windowRef]);
 
-  if (node.componentData.actualDuration) {
-    node.val = node.componentData.actualDuration;
-  }
-  else {
-    node.val = 1;
-  }
-  if(node.children.length > 0) {
-    node.children.forEach(elem => copyToProp(elem));
-  }
-  else {
-    return;
-  }
-};
-
-const PerfView = ({
-  width = 200,
-  height = 200,
-  snapshots
-}) => {
-  console.log('snapshots', snapshots);
-  const chartData = snapshots[snapshots.length - 1].children[0];
-  moveCompData(chartData);
-  console.log('chartData', chartData);
-
+const PerfView = ({ snapshots, viewIndex }) => {
+  const [chartData, setChartData] = useState(snapshots[snapshots.length - 1]);
   const svgRef = useRef(null);
 
-  // returns color scale function
+  // Todo: implement update functions...
+  const [curZoom, setZoom] = useState(null);
+  const [width, setWidth] = useState(600);
+  const [height, setHeight] = useState(600);
+
+  // set up color scaling function
   const color = d3.scaleLinear()
-    .domain([0, 5])
+    .domain([0, 7])
     .range(['hsl(152,80%,80%)', 'hsl(228,30%,40%)'])
     .interpolate(d3.interpolateHcl);
 
-  // create a new circle packing layout function
+  // set up circle-packing layout function
   const packFunc = data => d3.pack()
     .size([width, height])
     .padding(3)(d3.hierarchy(data)
       .sum(d => {
-        console.log('in pack func. d=', d);
-        return d.val;
+        // console.log('in pack func. d=', d);
+        return d.componentData.actualDuration;
       })
-      .sort((a, b) => b.val - a.val));
+      .sort((a, b) => {
+        // console.log('in sort func. a&b=', a, b);
+        return b.value - a.value;
+      }));
 
   console.log('packFunc', packFunc);
 
   useEffect(() => {
+    console.log('PerfView -> snapshots', snapshots);
+    console.log('Current viewIndex: ', viewIndex);
+    for (let i = 0; i < snapshots.length; i++) {
+      console.log(`SNAPSHOT[${i}] App actualDuration:`, snapshots[i].children[0].componentData.actualDuration);
+    }
+
+    // empty old tree
+    while (svgRef.current.hasChildNodes()) {
+      svgRef.current.removeChild(svgRef.current.lastChild);
+    }
+
+    if (viewIndex < 0) {
+      setChartData(snapshots[snapshots.length - 1]);
+      console.log(`Using snapshots[${snapshots.length - 1}]`);
+    } else {
+      setChartData(snapshots[viewIndex]);
+      console.log(`Using snapshots[${viewIndex}]`);
+    }
+
+    console.log('PerfView -> chartData', chartData);
+
+    // generate tree with our data
     const packedRoot = packFunc(chartData);
-    console.log('** PerfView -> packedRoot', packedRoot);
+    // console.log('PerfView -> packedRoot', packedRoot);
+
+    // initial focus points at root of tree
     let focus = packedRoot;
     let view;
 
+    // set up viewBox dimensions and onClick for parent svg
     const svg = d3.select(svgRef.current)
+      .attr('viewBox', `-${width / 2} -${height / 2} ${width} ${height}`)
       .on('click', () => zoom(packedRoot));
 
+    // connect circles below root to data
     const node = svg.append('g')
       .selectAll('circle')
       .data(packedRoot.descendants().slice(1))
-
-      .enter()
-      .append('circle')
+      .enter().append('circle')
       .attr('fill', d => (d.children ? color(d.depth) : 'white'))
       .attr('pointer-events', d => (!d.children ? 'none' : null))
-      .on('mouseover', function () { d3.select(this).attr('stroke', '#000'); })
-      .on('mouseout', function () { d3.select(this).attr('stroke', null); })
+      .on('mouseover', () => d3.select(this).attr('stroke', '#000'))
+      .on('mouseout', () => d3.select(this).attr('stroke', null))
       .on('click', d => focus !== d && (zoom(d), d3.event.stopPropagation()));
 
-    console.log('PerfView -> node', node);
+    // console.log('PerfView -> node', node);
+    // console.log('packedRoot.descendants()', packedRoot.descendants());
 
+    // generate text labels
     const label = svg.append('g')
-      .style('font', '11px sans-serif')
-      .attr('pointer-events', 'none')
-      .attr('text-anchor', 'middle')
+      .attr('class', 'perf-chart-labels')
       .selectAll('text')
       .data(packedRoot.descendants())
-      .enter()
-      .append('text')
+      .enter().append('text')
       .style('fill-opacity', d => (d.parent === packedRoot ? 1 : 0))
       .style('display', d => (d.parent === packedRoot ? 'inline' : 'none'))
-      .text(d => `${d.data.name}: ${Number.parseFloat(d.data.val).toFixed(2)}ms`);
+      .text(d => {
+        console.log('generating text label for d: ', d);
+        return `${d.data.name}: ${Number.parseFloat(d.data.componentData.actualDuration).toFixed(2)}ms`;
+      });
 
+    label.exit().remove();
+    node.exit().remove();
+
+    // console.log('PerfView -> label', label);
+
+    // jump to default zoom state
     zoomTo([packedRoot.x, packedRoot.y, packedRoot.r * 2]);
 
     function zoomTo(v) {
       const k = width / v[2];
       view = v;
-
       label.attr('transform', d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
       node.attr('transform', d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
       node.attr('r', d => d.r * k);
@@ -116,7 +139,6 @@ const PerfView = ({
 
     function zoom(d) {
       const focus0 = focus;
-
       focus = d;
 
       const transition = svg.transition()
@@ -127,16 +149,15 @@ const PerfView = ({
           });
 
       label
-        .filter(function (d) { return d.parent === focus || this.style.display === 'inline'; })
-        .transition(transition)
-          .style('fill-opacity', d => (d.parent === focus ? 1 : 0))
-          .on('start', function (d) { if (d.parent === focus) this.style.display = 'inline'; })
-          .on('end', function (d) { if (d.parent !== focus) this.style.display = 'none'; });
+      .filter(function (d) { return d.parent === focus || this.style.display === 'inline'; })
+      .transition(transition)
+        .style('fill-opacity', d => (d.parent === focus ? 1 : 0))
+        .on('start', function (d) { if (d.parent === focus) this.style.display = 'inline'; })
+        .on('end', function (d) { if (d.parent !== focus) this.style.display = 'none'; });
     }
-  }, [chartData]);
+  }, [snapshots.length, height, width, viewIndex]);
 
-  return <svg viewBox="-250 -250 500 500" className="perfContainer" ref={svgRef} />;
+  return <svg className="perfContainer" ref={svgRef} />;
 };
-
 
 export default PerfView;

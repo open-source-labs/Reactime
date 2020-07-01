@@ -13,7 +13,8 @@ import DiffRoute from '../components/DiffRoute';
 const StateContainer = ({ 
   snapshot, 
   hierarchy,
-  snapshots 
+  snapshots, 
+  viewIndex,
 }) => {
   const [Text, setText] = useState('State');
   return (
@@ -51,7 +52,7 @@ const StateContainer = ({
             path="/"
             render={() => {
               setText('State');
-              return <StateRoute snapshot={snapshot} hierarchy={hierarchy} snapshots={snapshots}/>;
+              return <StateRoute viewIndex={viewIndex} snapshot={snapshot} hierarchy={hierarchy} snapshots={snapshots}/>;
             }}
           />
         </Switch>

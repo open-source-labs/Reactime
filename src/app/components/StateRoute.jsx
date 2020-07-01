@@ -14,19 +14,8 @@ const StateRoute = ({
   snapshot,
   hierarchy,
   snapshots,
+  viewIndex,
 }) => {
-  const windowRef = useRef(null);
-  const winWidth = null;
-  const winHeight = null;
-
-  useEffect(() => {
-    if (windowRef.current) {
-      winWidth = windowRef.current.offsetHeight;
-      winHeight = windowRef.current.offsetWidth;
-      console.log('** SETTING WINDOW SIZES: ', winWidth, winHeight);
-    }
-  }, [windowRef]);
-
   // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was initialize involk render chart
   const renderChart = () => {
     if (hierarchy) {
@@ -45,7 +34,7 @@ const StateRoute = ({
 
   const renderPerfView = () => {    
     if (hierarchy) {
-      return <PerfView width={600} height={600} snapshots={snapshots} />; // ref={windowRef}
+      return <PerfView  viewIndex={viewIndex} snapshots={snapshots} />; // ref={windowRef}
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };

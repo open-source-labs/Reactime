@@ -8,10 +8,10 @@ const Action = props => {
   const {
     selected, last, index, sliderIndex, dispatch, displayName, componentName, state, viewIndex, handleOnkeyDown,
   } = props;
-  console.log('last', last)
-  console.log('index', index)
-  console.log('viewIndex', viewIndex)
-  console.log('selected', selected)
+  // console.log('last', last)
+  // console.log('index', index)
+  // console.log('viewIndex', viewIndex)
+  // console.log('selected', selected)
   selected
 
   return (
