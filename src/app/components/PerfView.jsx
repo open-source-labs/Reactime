@@ -1,3 +1,4 @@
+/* eslint-disable react/no-this-in-sfc */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable arrow-body-style */
@@ -14,7 +15,7 @@
 /* eslint-disable indent */
 /* eslint-disable no-console */
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import * as d3 from 'd3';
 // import { addNewSnapshots } from '../actions/actions';
 
@@ -46,7 +47,8 @@ const PerfView = ({ snapshots, viewIndex }) => {
     .interpolate(d3.interpolateHcl);
 
   // set up circle-packing layout function
-  const packFunc = data => d3.pack()
+  const packFunc = useCallback(data => {
+    return d3.pack()
     .size([width, height])
     .padding(3)(d3.hierarchy(data)
       .sum(d => {
@@ -56,10 +58,10 @@ const PerfView = ({ snapshots, viewIndex }) => {
       .sort((a, b) => {
         // console.log('in sort func. a&b=', a, b);
         return b.value - a.value;
-      }));
+    }));
+  }, [width, height]);
 
-  console.log('packFunc', packFunc);
-
+  // first run, or user has made changes in their app; clear old tree and get current chartData
   useEffect(() => {
     console.log('PerfView -> snapshots', snapshots);
     console.log('Current viewIndex: ', viewIndex);
@@ -67,19 +69,20 @@ const PerfView = ({ snapshots, viewIndex }) => {
       console.log(`SNAPSHOT[${i}] App actualDuration:`, snapshots[i].children[0].componentData.actualDuration);
     }
 
-    // empty old tree
+    // clear old tree
     while (svgRef.current.hasChildNodes()) {
       svgRef.current.removeChild(svgRef.current.lastChild);
     }
 
-    if (viewIndex < 0) {
-      updateChartData(snapshots[snapshots.length - 1]);
-      console.log(`Using snapshots[${snapshots.length - 1}]`);
-    } else {
-      updateChartData(snapshots[viewIndex]);
-      console.log(`Using snapshots[${viewIndex}]`);
-    }
+    let indexToDisplay = null;
+    if (viewIndex < 0) indexToDisplay = snapshots.length - 1;
+    else indexToDisplay = viewIndex;
 
+    updateChartData(snapshots[indexToDisplay]);
+    console.log(`Using snapshots[${indexToDisplay}]`);
+  }, [svgRef, viewIndex, snapshots, chartData]);
+
+  useEffect(() => {
     console.log('PerfView -> chartData', chartData);
 
     // generate tree with our data
@@ -118,19 +121,18 @@ const PerfView = ({ snapshots, viewIndex }) => {
       .style('fill-opacity', d => (d.parent === packedRoot ? 1 : 0))
       .style('display', d => (d.parent === packedRoot ? 'inline' : 'none'))
       .text(d => {
-        console.log('generating text label for d: ', d);
+        // console.log('generating text label for d: ', d);
         return `${d.data.name}: ${Number.parseFloat(d.data.componentData.actualDuration).toFixed(2)}ms`;
       });
 
     label.exit().remove();
     node.exit().remove();
 
-    // console.log('PerfView -> label', label);
-
     // jump to default zoom state
     zoomTo([packedRoot.x, packedRoot.y, packedRoot.r * 2]);
 
     function zoomTo(v) {
+      // console.log("zoomTo -> v", v);
       const k = width / v[2];
       view = v;
       label.attr('transform', d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
@@ -139,6 +141,7 @@ const PerfView = ({ snapshots, viewIndex }) => {
     }
 
     function zoom(d) {
+      // console.log("zoom -> d", d);
       const focus0 = focus;
       focus = d;
 
@@ -156,7 +159,7 @@ const PerfView = ({ snapshots, viewIndex }) => {
         .on('start', function (d) { if (d.parent === focus) this.style.display = 'inline'; })
         .on('end', function (d) { if (d.parent !== focus) this.style.display = 'none'; });
     }
-  }, [snapshots.length, height, width, viewIndex]);
+  }, [chartData, color, packFunc, width, height]);
 
   return <svg className="perfContainer" ref={svgRef} />;
 };
