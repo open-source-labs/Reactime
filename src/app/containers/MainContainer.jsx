@@ -86,7 +86,7 @@ function MainContainer() {
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // gabi :: cleannign hierarchy and snapshotView from stateless data
   const statelessCleanning = obj => {
-    console.log('statelessCleanning = obj =>', obj);
+    // console.log('statelessCleanning = obj =>', obj);
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;
@@ -106,13 +106,13 @@ function MainContainer() {
         obj.children.forEach(element => {
           if (element.state !== 'stateless' || element.children.length > 0) {
             const clean = statelessCleanning(element);
-            console.log('clean', clean)
+            // console.log('clean', clean)
             newObj.children.push(clean);
           }
         });
       }
     }
-    console.log('statelessCleanning = newObj =>', newObj);
+    // console.log('statelessCleanning = newObj =>', newObj);
     return newObj;
   };
   const snapshotDisplay = statelessCleanning(snapshotView);
@@ -122,7 +122,7 @@ function MainContainer() {
       <HeadContainer />
       <div className="body-container">
         <ActionContainer />
-        {snapshots.length ? <StateContainer snapshot={snapshotDisplay} hierarchy={hierarchyDisplay} snapshots={snapshots} /> : null}
+        {snapshots.length ? <StateContainer viewIndex={viewIndex} snapshot={snapshotDisplay} hierarchy={hierarchyDisplay} snapshots={snapshots} /> : null}
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
       </div>
