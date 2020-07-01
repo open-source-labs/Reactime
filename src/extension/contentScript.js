@@ -21,7 +21,7 @@ window.addEventListener('message', msg => { // runs automatically every second
   const { action } = msg.data;
 
   if (action === 'recordSnap') { // this is firing on page load
-    console.log('DATA AT EXTENSION:', msg.data);
+    // console.log('DATA AT EXTENSION:', msg.data);
     chrome.runtime.sendMessage(msg.data);
   }
 });

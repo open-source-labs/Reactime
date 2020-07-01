@@ -45,7 +45,7 @@ function getRouteURL(node) {
 window.addEventListener('message', ({ data: { action, payload } }) => {
   switch (action) {
     case 'jumpToSnap':
-      console.log('payload in jumpToSnap', payload);
+      // console.log('payload in jumpToSnap', payload);
       timeJump(payload); // * This sets state with given payload
       // Get the pathname from payload and add new entry to browser history
       // MORE: https://developer.mozilla.org/en-US/docs/Web/API/History/pushState

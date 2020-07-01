@@ -59,19 +59,19 @@ export default (snap, mode) => {
   function sendSnapshot() {
     // Don't send messages while jumping or while paused
     circularComponentTable.clear();
-    console.log('sending snapshot');
+    // console.log('sending snapshot');
     if (mode.jumping || mode.paused) return;
-    console.log('PAYLOAD: before cleaning', snap.tree);
+    // console.log('PAYLOAD: before cleaning', snap.tree);
 
     if (!snap.tree) {
-      console.log('snapshot empty, sending root');
+      // console.log('snapshot empty, sending root');
       snap.tree = new Tree('root');
     }
     const payload = snap.tree.cleanTreeCopy();// snap.tree.getCopy();
 
-    console.log('PAYLOAD: after cleaning', payload);
-    //try {
-      //await window.postMessage({
+    // console.log('PAYLOAD: after cleaning', payload);
+    // try {
+      // await window.postMessage({
       window.postMessage({
         action: 'recordSnap',
         payload,
@@ -105,7 +105,7 @@ export default (snap, mode) => {
   //
   function createTree(currentFiber, tree = new Tree('root'), fromSibling = false) {
     // Base case: child or sibling pointed to null
-    console.log('linkFiber.js: creating tree');
+    // console.log('linkFiber.js: creating tree');
     if (!currentFiber) return null;
     if (!tree) return tree;
 
@@ -132,7 +132,7 @@ export default (snap, mode) => {
     if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
       // Save component's state and setState() function to our record for future
       // time-travel state changing. Add record index to snapshot so we can retrieve.
-      console.log('linkFiber.js: found stateNode component');
+      // console.log('linkFiber.js: found stateNode component');
       componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
       newState = stateNode.state;
       componentFound = true;
@@ -142,7 +142,7 @@ export default (snap, mode) => {
     let hooksIndex;
     if (memoizedState && (tag === 0 || tag === 1 || tag === 10)) {
       if (memoizedState.queue) {
-        console.log('linkFiber.js: found hooks component');
+        // console.log('linkFiber.js: found hooks component');
         // Hooks states are stored as a linked list using memoizedState.next,
         // so we must traverse through the list and get the states.
         // We then store them along with the corresponding memoizedState.queue,
@@ -163,7 +163,7 @@ export default (snap, mode) => {
     }
 
     // This grabs stateless components
-    if (!componentFound && (tag === 0 || tag === 1)) {
+    if (!componentFound && (tag === 0 || tag === 1 || tag === 2)) {
       newState = 'stateless';
     }
 
@@ -176,20 +176,19 @@ export default (snap, mode) => {
       treeBaseDuration,
     };
 
-    console.log('linkFiber.js: adding new state to tree:', newState);
-    if (componentFound) {
-      console.log('componentFound, calling tree.addChild');
+    let newNode = null;
+    if (componentFound || newState === 'stateless') {
       if (fromSibling) {
-        tree.addSibling(newState, elementType.name ? elementType.name : elementType, componentData);
+        newNode = tree.addSibling(newState, 
+          elementType.name ? elementType.name : elementType,
+          componentData);
       } else {
-        tree.addChild(newState, elementType.name ? elementType.name : elementType, componentData);
+        newNode = tree.addChild(newState, 
+          elementType.name ? elementType.name : elementType,
+          componentData);
       }
-    } else if (newState === 'stateless') {
-      if (fromSibling) {
-        tree.addSibling(newState, elementType.name ? elementType.name : elementType, componentData);
-      } else {
-        tree.addChild(newState, elementType.name ? elementType.name : elementType, componentData);
-      }
+    } else {
+      newNode = tree;
     }
 
     // Recurse on children
@@ -198,32 +197,28 @@ export default (snap, mode) => {
       // If this node had state we appended to the children array,
       // so attach children to the newly appended child.
       // Otherwise, attach children to this same node.
-      console.log('going into child');
+      // console.log('going into child');
       // circularComponentTable.set(child, true);
-      if (tree.children.length > 0) {
-        createTree(child, tree.children[tree.children.length - 1]);
-      } else {
-        createTree(child, tree);
-      }
+      createTree(child, newNode);
     }
     // Recurse on siblings
     if (sibling) { // && !circularComponentTable.has(sibling)) {
-      console.log('going into sibling');
+      // console.log('going into sibling');
       // circularComponentTable.set(sibling, true);
-      createTree(sibling, tree, true);
+      createTree(sibling, newNode, true);
     }
 
-    console.log('linkFiber.js: processed children and sibling, returning tree');
+    // console.log('linkFiber.js: processed children and sibling, returning tree');
     return tree;
   }
 
   function updateSnapShotTree() {
-    console.log('linkFiber.js, updateSnapshotTree(), checking if we have fiberRoot to update');
+    // console.log('linkFiber.js, updateSnapshotTree(), checking if fiberRoot updated');
     if (fiberRoot) {
-      console.log('linkFiber.js, updateSnapshotTree(), fiberRoot found, updating snapshot', snap.tree);
+      // console.log('linkFiber.js, updateSnapshotTree(), updating snapshot', snap.tree);
       const { current } = fiberRoot;
       snap.tree = createTree(current);
-      console.log('linkFiber.js, updateSnapshotTree(), completed snapshot', snap.tree);
+      // console.log('linkFiber.js, updateSnapshotTree(), completed snapshot', snap.tree);
     }
   }
 
@@ -241,15 +236,13 @@ export default (snap, mode) => {
 
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
-    console.log('devTools:', devTools);
+    // console.log('devTools:', devTools);
 
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           fiberRoot = args[1];
-          console.log('this is fiberRoot', fiberRoot);
           updateSnapShotTree();
-          console.log('snap.tree is: ', snap.tree);
           sendSnapshot();
           return original(...args);
         };
@@ -260,7 +253,7 @@ export default (snap, mode) => {
     // This message is sent from contentScript.js in chrome extension bundles
     window.addEventListener('message', ({ data: { action } }) => {
       if (action === 'contentScriptStarted') {
-        console.log('content script started received at linkFiber.js')
+        // console.log('content script started received at linkFiber.js')
         sendSnapshot();
       }
     });

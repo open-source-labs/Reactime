@@ -9,7 +9,6 @@ function scrubUnserializableMembers(tree) {
   Object.entries(tree.state).forEach(keyValuePair => {
     if (typeof keyValuePair[1] === 'function') tree.state[keyValuePair[0]] = 'function';
   });
-  // console.log('PAYLOAD: unserializable returns:', tree);
   return tree;
 }
 
@@ -24,19 +23,23 @@ class Tree {
   }
 
   addChild(state, name, componentData) {
-    console.log('tree.js: in addChild');
-    this.children.push(new Tree(state, name, componentData));
-    this.children[this.children.length - 1].parent = this;
+    // console.log('tree.js: in addChild');
+    const newChild = new Tree(state, name, componentData);
+    newChild.parent = this;
+    this.children.push(newChild);
+    return newChild;
   }
 
   addSibling(state, name, componentData) {
-    console.log('tree.js: in addChild');
-    this.parent.children.push(new Tree(state, name, componentData));
-    this.parent.children[this.children.length - 1].parent = this;
+    // console.log('tree.js: in addSibling');
+    const newSibling = new Tree(state, name, componentData);
+    newSibling.parent = this.parent;
+    this.parent.children.push(newSibling);
+    return newSibling;
   }
 
   cleanTreeCopy() {
-    // copies present node
+    // creates copy of present node
     let copy = new Tree(this.state, this.name, this.componentData);
     copy = scrubUnserializableMembers(copy);
     copy.children = this.children;
@@ -44,21 +47,7 @@ class Tree {
     // creates copy of each child of the present node
     copy.children = this.children.map(child => child.cleanTreeCopy());
 
-    // copy.children = this.children.map(child => {
-    //   newChild = new Tree(child.state, child.name, child.componentData);
-    //   newChild.children = child.children;
-    //   return scrubUnserializableMembers(newChild);
-    // });
-
-    /*
-    if (copy.children.length > 0) {
-      copy.children.forEach(child => {
-        if (child !== copy.children) {
-          child = child.cleanTreeCopy();
-        }
-        return null;
-      });
-    } */
+    // returns copy
     return copy;
   }
 
