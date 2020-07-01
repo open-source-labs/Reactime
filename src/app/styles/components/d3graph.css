@@ -92,3 +92,20 @@ div.tooltip {
   top: 100%;
   left: 0;
 }
+
+.perfContainer {
+  display: block;
+  margin: 0 -14px;
+  background-color: hsl(152,80%,80%);
+  /* border: 2px solid red; */
+}
+
+.d3divContainer {
+  /* border: 1px solid blue; */
+}
+
+.perf-chart-labels {
+  font: 11px sans-serif;
+  pointer-events: none;
+  text-anchor: middle;
+};
