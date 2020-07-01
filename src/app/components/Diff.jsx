@@ -17,10 +17,43 @@ function Diff({ snapshot, show }) {
   } else {
     previous = snapshots[sliderIndex - 1];
   }
+
+  // gabi :: cleanning preview from stateless data
+  const statelessCleanning = obj => {
+    const newObj = { ...obj };
+    if (newObj.name === 'nameless') {
+      delete newObj.name;
+    }
+    if (newObj.componentData) {
+      delete newObj.componentData;
+    }
+    if (newObj.state === 'stateless') {
+      delete newObj.state;
+    }
+    if (newObj.stateSnaphot) {
+      newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
+    }
+    if (newObj.children) {
+      newObj.children = [];
+      if (obj.children.length > 0) {
+        obj.children.forEach(element => {
+          if (element.state !== 'stateless' || element.children.length > 0) {
+            const clean = statelessCleanning(element);
+            newObj.children.push(clean);
+          }
+        });
+      }
+    }
+    return newObj;
+  };
+  // gabi :: just display statefull data
+  const previousDisplay = statelessCleanning(previous);
   // Nate:: diff function returns a comparaison of two objects, one has an updated change
-  const delta = diff(previous, snapshot);
+  // gabi :: just display statefull data
+  const delta = diff(previousDisplay, snapshot);
   // returns html in string
-  const html = formatters.html.format(delta, previous);
+  // gabi :: just display statefull data
+  const html = formatters.html.format(delta, previousDisplay);
   if (show) formatters.html.showUnchanged();
   else formatters.html.hideUnchanged();
 
