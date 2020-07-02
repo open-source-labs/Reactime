@@ -23,13 +23,10 @@ const Action = props => {
     } else {
       seconds = '00';
     }
-    miliseconds = JSON.stringify(miliseconds);
+    miliseconds = Number.parseFloat(miliseconds).toFixed(2)
     const arrayMiliseconds = miliseconds.split('.');
     if (arrayMiliseconds[0].length < 2) {
       arrayMiliseconds[0] = '0'.concat(arrayMiliseconds[0]);
-    }
-    if (arrayMiliseconds[1].length > 3) {
-      arrayMiliseconds[1] = arrayMiliseconds[1].slice(0, 2);
     }
     if (index == 0) {
       return `${seconds}:${arrayMiliseconds[0]}.${arrayMiliseconds[1]}`;
