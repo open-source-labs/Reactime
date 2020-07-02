@@ -37,13 +37,6 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
     .domain([0, 7])
     .range(['hsl(200,60%,60%)', 'hsl(255,30%,30%)'])
     .interpolate(d3.interpolateHcl);
-  // const colorScale = d3.scaleLinear()
-  //   .domain([0, 7])
-  //   .range(['#60c96e', '#4d4193'])
-  //   .interpolate(d3.interpolateHcl);
-
-    // d3.quantize(d3.interpolateHcl('#60c96e', '#4d4193'), 10);
-        // const colorScale = d3.scaleOrdinal(colorScheme);
 
   // Set up circle-packing layout function
   const packFunc = useCallback(data => {
@@ -146,3 +139,7 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
 };
 
 export default PerfView;
+
+
+    // d3.quantize(d3.interpolateHcl('#60c96e', '#4d4193'), 10);
+        // const colorScale = d3.scaleOrdinal(colorScheme);
