@@ -16,5 +16,6 @@
       "js": ["bundles/content.bundle.js"]
     }
   ],
-  "permissions": ["contextMenus", "tabs", "<all_urls>"]
+  "web_accessible_resources" : ["bundles/backend.bundle.js"],
+  "permissions": ["contextMenus", "tabs", "activeTab", "<all_urls>"]
 }

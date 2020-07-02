@@ -4,14 +4,14 @@
  */
 import 'core-js';
 import 'regenerator-runtime/runtime';
-import { exist } from 'acorn-jsx/xhtml';
+import linkFiberStart from './linkFiber';
+import timeJumpStart from './timeJump';
 
 // * State snapshot object initialized here
 const snapShot = { 
-  tree: null, 
-  unfilteredTree: null 
+  tree: null,
+  unfilteredTree: null
 };
-
 
 const mode = {
   jumping: false,
@@ -19,9 +19,14 @@ const mode = {
   locked: false,
 };
 
-const linkFiber = require('./linkFiber')(snapShot, mode);
-console.log('import timeJump in index.js:', JSON.parse(JSON.stringify(snapShot)));
-const timeJump = require('./timeJump')(snapShot, mode);
+// const linkFiber = require('./linkFiber')(snapShot, mode);
+// console.log('import timeJump in index.js:', JSON.parse(JSON.stringify(snapShot)));
+// const timeJump = require('./timeJump')(snapShot, mode);
+
+
+
+const linkFiber = linkFiberStart(snapShot, mode);
+const timeJump = timeJumpStart(snapShot, mode);
 
 
 function getRouteURL(node) {
@@ -40,7 +45,7 @@ function getRouteURL(node) {
 window.addEventListener('message', ({ data: { action, payload } }) => {
   switch (action) {
     case 'jumpToSnap':
-      console.log('payload in jumpToSnap', payload);
+      // console.log('payload in jumpToSnap', payload);
       timeJump(payload); // * This sets state with given payload
       // Get the pathname from payload and add new entry to browser history
       // MORE: https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
@@ -59,5 +64,8 @@ window.addEventListener('message', ({ data: { action, payload } }) => {
   }
 });
 
+console.log('index.js: loading reactime');
+linkFiber();
+
 // module.exports = linkFiber;
-export default linkFiber;
+// export default linkFiber;
