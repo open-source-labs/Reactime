@@ -1,3 +1,8 @@
+// const reactimeBackend = require('../../dev-reactime/index.js');
+
+// console.log( 'this reactimeBackend:', reactimeBackend);
+
+
 let firstMessage = true;
 
 // listening for messages from npm package
@@ -16,8 +21,8 @@ window.addEventListener('message', msg => { // runs automatically every second
   const { action } = msg.data;
 
   if (action === 'recordSnap') { // this is firing on page load
+    // console.log('DATA AT EXTENSION:', msg.data);
     chrome.runtime.sendMessage(msg.data);
-    console.log('DATA AT EXTENSION:',msg.data);
   }
 });
 
@@ -40,4 +45,19 @@ chrome.runtime.onMessage.addListener(request => { // seems to never fire
   return true; // attempt to fix port closing console error
 });
 
-window.postMessage({ action: 'contentScriptStarted' });
+
+
+
+// // inject script into DOM that grabs window
+// function injectScript(file, node) {
+//   const th = document.getElementsByTagName(node)[0];
+//   const s = document.createElement('script');
+//   s.setAttribute('type', 'text/javascript');
+//   s.setAttribute('src', file);
+//   th.appendChild(s);
+// }
+
+// // console.log('WINDOW in content script:', window);
+// reactimeBackend.default(devTools);
+
+//window.postMessage({ action: 'contentScriptStarted' });

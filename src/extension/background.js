@@ -176,7 +176,7 @@ chrome.runtime.onConnect.addListener(port => {
       default:
     }
 
-    chrome.tabs.sendMessage(tabId, msg); // change to postMessage? keeps the port open, sendMessage closes the port
+    chrome.tabs.sendMessage(tabId, msg);
     return true; // attempt to fix message port closing error, consider return Promise
   });
 });
@@ -216,6 +216,22 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     }
     // this case causes d3 graph to display 1 instead of 0
     case 'tabReload': {
+
+      console.log('ran execute script to inject backend');
+      chrome.tabs.executeScript(tabId, {
+        code: `
+        // Function will attach script to the dom 
+        const injectScript = (file, tag) => {
+          const htmlBody = document.getElementsByTagName(tag)[0];
+          const script = document.createElement('script');
+          script.setAttribute('type', 'text/javascript');
+          script.setAttribute('src', file);
+          htmlBody.appendChild(script);
+        };
+        injectScript(chrome.runtime.getURL('bundles/backend.bundle.js'), 'body');
+      `,
+      });
+
       tabsObj[tabId].mode.locked = false;
       tabsObj[tabId].mode.paused = false;
       // dont remove snapshots if persisting
@@ -255,6 +271,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         );
       }
       reloaded[tabId] = true;
+
       break;
     }
     case 'recordSnap': {
@@ -287,7 +304,6 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       if (reloaded[tabId]) {
         reloaded[tabId] = false;
       } else {
-
         tabsObj[tabId].snapshots.push(request.payload);
         //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
         console.log('recordSnap 2');
@@ -311,7 +327,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     default:
       break;
   }
-  return true; // attempt
+  return true; // attempt to fix close port error
 });
 
 // when tab is closed, remove the tabid from the tabsObj
