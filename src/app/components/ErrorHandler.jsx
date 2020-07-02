@@ -12,7 +12,7 @@ class ErrorHandler extends React.Component {
   }
 
   render() {
-    return this.state.errorOccurred ? <h1>Something went wrong!</h1> : this.props.children
+    return this.state.errorOccurred ? <h1>An error occurred</h1> : this.props.children
   }
 }
 

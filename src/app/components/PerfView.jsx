@@ -24,7 +24,7 @@ import { schemeSet1 as colorScheme } from 'd3';
 
 
 const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
-  console.log('***** constructor *****');
+  // console.log('***** constructor *****');
   const svgRef = useRef(null);
 
   // Figure out which snapshot index to use
@@ -43,25 +43,28 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
     return d3.pack()
     .size([width, height])
     .padding(3)(d3.hierarchy(data)
-      .sum(d => { return d.componentData.actualDuration; })
+      .sum(d => { return d.componentData.actualDuration || 0; })
       .sort((a, b) => { return b.value - a.value; }));
   }, [width, height]);
 
   // If indexToDisplay changes, clear old tree nodes
   useEffect(() => {
-    console.log('***** useEffect - CLEARING');
+    // console.log('***** useEffect - CLEARING');
     while (svgRef.current.hasChildNodes()) {
       svgRef.current.removeChild(svgRef.current.lastChild);
     }
   }, [indexToDisplay, svgRef]);
 
   useEffect(() => {
-    console.log(`***** useEffect - MAIN -> snapshots[${indexToDisplay}]`, snapshots[indexToDisplay]);
+    // console.log(`***** useEffect - MAIN -> snapshots[${indexToDisplay}]`, snapshots[indexToDisplay]);
+    
+    // Error, no App-level component present
+    if (snapshots[indexToDisplay].children.length < 1) return;
 
     // Generate tree with our data
     const packedRoot = packFunc(snapshots[indexToDisplay]);
 
-    // Set initial focus root node
+    // Set initial focus to root node
     let curFocus = packedRoot;
 
     // View [x, y, r]
@@ -93,7 +96,7 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
         .style('fill-opacity', d => (d.parent === packedRoot ? 1 : 0))
         .style('display', d => (d.parent === packedRoot ? 'inline' : 'none'))
         .text(d =>  `${d.data.name}: \
-          ${Number.parseFloat(d.data.componentData.actualDuration).toFixed(2)}ms`);
+          ${Number.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`);
 
     // Remove any unused nodes
     label.exit().remove();
@@ -115,7 +118,6 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
     // Transition visibility of labels
     function zoomToNode(newFocus) {
       // console.log("zoom -> d", d);
-
       const transition = svg.transition()
       .duration(d3.event.altKey ? 7500 : 750)
       .tween('zoom', d => {
