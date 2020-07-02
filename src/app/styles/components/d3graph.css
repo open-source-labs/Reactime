@@ -101,11 +101,15 @@ div.tooltip {
 }
 
 .d3divContainer {
-  /* border: 1px solid blue; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .perf-chart-labels {
-  font: 11px sans-serif;
+  font: 15px sans-serif;
+  color: white;
   pointer-events: none;
   text-anchor: middle;
 };
+

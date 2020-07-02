@@ -30,7 +30,7 @@ const StateRoute = ({ snapshot, hierarchy, snapshots, viewIndex }) => {
 
   const renderPerfView = () => {
     if (hierarchy) {
-      return <PerfView viewIndex={viewIndex} snapshots={snapshots} />; // ref={windowRef}
+      return <PerfView viewIndex={viewIndex} snapshots={snapshots} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
@@ -65,3 +65,9 @@ StateRoute.propTypes = {
 };
 
 export default StateRoute;
+
+//   <div>
+//     <PerfView viewIndex={viewIndex} snapshots={snapshots} />
+//     <div className="ancestorStatus">Test</div>
+//   </div>
+// );

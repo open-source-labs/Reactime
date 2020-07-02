@@ -18,6 +18,8 @@
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import * as d3 from 'd3';
+import { schemeSet1 as colorScheme } from 'd3';
+
 // import { addNewSnapshots } from '../actions/actions';
 
 
@@ -33,8 +35,15 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
   // Set up color scaling function
   const colorScale = d3.scaleLinear()
     .domain([0, 7])
-    .range(['hsl(152,80%,80%)', 'hsl(228,30%,40%)'])
+    .range(['hsl(200,60%,60%)', 'hsl(255,30%,30%)'])
     .interpolate(d3.interpolateHcl);
+  // const colorScale = d3.scaleLinear()
+  //   .domain([0, 7])
+  //   .range(['#60c96e', '#4d4193'])
+  //   .interpolate(d3.interpolateHcl);
+
+    // d3.quantize(d3.interpolateHcl('#60c96e', '#4d4193'), 10);
+        // const colorScale = d3.scaleOrdinal(colorScheme);
 
   // Set up circle-packing layout function
   const packFunc = useCallback(data => {
@@ -47,7 +56,7 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
 
   // If indexToDisplay changes, clear old tree nodes
   useEffect(() => {
-    console.log('***** useEffect - CLEARING')
+    console.log('***** useEffect - CLEARING');
     while (svgRef.current.hasChildNodes()) {
       svgRef.current.removeChild(svgRef.current.lastChild);
     }
@@ -61,7 +70,7 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
 
     // Set initial focus root node
     let curFocus = packedRoot;
-  
+
     // View [x, y, r]
     let view;
 
@@ -75,21 +84,22 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
       .selectAll('circle')
       .data(packedRoot.descendants().slice(1))
       .enter().append('circle')
-      .attr('fill', d => (d.children ? colorScale(d.depth) : 'white'))
-      .attr('pointer-events', d => (!d.children ? 'none' : null))
-      .on('mouseover', () => d3.select(this).attr('stroke', '#000'))
-      .on('mouseout', () => d3.select(this).attr('stroke', null))
-      .on('click', d => curFocus !== d && (zoomToNode(d), d3.event.stopPropagation()));
+        .attr('fill', d => (d.children ? colorScale(d.depth) : 'white'))
+        .attr('pointer-events', d => (!d.children ? 'none' : null))
+        .on('mouseover', () => d3.select(this).attr('stroke', '#000'))
+        .on('mouseout', () => d3.select(this).attr('stroke', null))
+        .on('click', d => curFocus !== d && (zoomToNode(d), d3.event.stopPropagation()));
 
     // Generate text labels. Set (only) root to visible initially
     const label = svg.append('g')
-      .attr('class', 'perf-chart-labels')
+        // .style('fill', 'rgb(231, 231, 231)')
+        .attr('class', 'perf-chart-labels')
       .selectAll('text')
       .data(packedRoot.descendants())
       .enter().append('text')
-      .style('fill-opacity', d => (d.parent === packedRoot ? 1 : 0))
-      .style('display', d => (d.parent === packedRoot ? 'inline' : 'none'))
-      .text(d =>  `${d.data.name}: \
+        .style('fill-opacity', d => (d.parent === packedRoot ? 1 : 0))
+        .style('display', d => (d.parent === packedRoot ? 'inline' : 'none'))
+        .text(d =>  `${d.data.name}: \
           ${Number.parseFloat(d.data.componentData.actualDuration).toFixed(2)}ms`);
 
     // Remove any unused nodes
