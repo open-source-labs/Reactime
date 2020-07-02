@@ -22,20 +22,46 @@ function Diff({ snapshot, show }) {
     previous = snapshots[sliderIndex - 1];
     // console.log('previous with sliderIndex - 1: ', previous)
   }
-  // Nate:: diff function returns a comparaison of two objects, one has an updated change
-  const delta = diff(previous, snapshot); // initilly an array with one object, on state change becomes an object
-  // console.log('delta: ', delta);
-  // returns html in string
-  const html = formatters.html.format(delta, previous);
-  // console.log('html   -->', html)
-  if (show){
-    // console.log('showing unchanged values', formatters.html.showUnchanged() );
-    formatters.html.showUnchanged();
-  } else {
-    // console.log('hiding unchanged values', formatters.html.hideUnchanged() );
-    formatters.html.hideUnchanged();
+
+  // gabi :: cleanning preview from stateless data
+  const statelessCleanning = obj => {
+    const newObj = { ...obj };
+    if (newObj.name === 'nameless') {
+      delete newObj.name;
+    }
+    if (newObj.componentData) {
+      delete newObj.componentData;
+    }
+    if (newObj.state === 'stateless') {
+      delete newObj.state;
+    }
+    if (newObj.stateSnaphot) {
+      newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
+    }
+    if (newObj.children) {
+      newObj.children = [];
+      if (obj.children.length > 0) {
+        obj.children.forEach(element => {
+          if (element.state !== 'stateless' || element.children.length > 0) {
+            const clean = statelessCleanning(element);
+            newObj.children.push(clean);
+          }
+        });
+      }
+    }
+    return newObj;
   };
-  
+  // gabi :: just display stateful data
+  const previousDisplay = statelessCleanning(previous);
+  // Nate:: diff function returns a comparison of two objects, one has an updated change
+  // gabi :: just display stateful data
+  const delta = diff(previousDisplay, snapshot);
+  // returns html in string
+  // gabi :: just display stateful data
+  const html = formatters.html.format(delta, previousDisplay);
+  if (show) formatters.html.showUnchanged();
+  else formatters.html.hideUnchanged();
+
   if (previous === undefined || delta === undefined) {
     return <div className='noState'> No state change detected. Trigger an event to change state </div>;
   }

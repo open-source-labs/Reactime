@@ -39,13 +39,13 @@ const StateRoute = ({ snapshot, hierarchy, snapshots, viewIndex }) => {
     <Router>
       <div className="navbar">
         <NavLink className="router-link" activeClassName="is-active" exact to="/">
-        State
+        Tree
         </NavLink>
         <NavLink className="router-link" activeClassName="is-active" to="/chart">
         History
         </NavLink>
         <NavLink className="router-link" activeClassName="is-active" to="/performance">
-        Rendering
+        Performance
         </NavLink>
       </div>
       <Switch>
