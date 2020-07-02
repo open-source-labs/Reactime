@@ -1,11 +1,13 @@
 {
   "extends": ["airbnb", "plugin:jest/recommended"],
   "root": true,
-  "plugins": ["jest", "react"],
+  "plugins": ["jest", "react", "react-hooks"],
   "rules": {
     "arrow-parens": [2, "as-needed"],
     "import/no-unresolved": "off",
-    "import/extensions": "off"
+    "import/extensions": "off",
+    "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
+    "react-hooks/exhaustive-deps": "warn" // Checks effect dependencies
   },
   "env": {
     "es6": true,

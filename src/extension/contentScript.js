@@ -17,6 +17,7 @@ window.addEventListener('message', msg => { // runs automatically every second
 
   if (action === 'recordSnap') { // this is firing on page load
     chrome.runtime.sendMessage(msg.data);
+    console.log('DATA AT EXTENSION:',msg.data);
   }
 });
 
@@ -39,5 +40,4 @@ chrome.runtime.onMessage.addListener(request => { // seems to never fire
   return true; // attempt to fix port closing console error
 });
 
-console.log('sending contentScriptStarted message to window');
 window.postMessage({ action: 'contentScriptStarted' });
