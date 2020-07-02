@@ -248,7 +248,8 @@ export default (snap, mode) => {
         };
       }(devTools.onCommitFiberRoot));
     }
-    updateSnapShotTree();
+    sendSnapshot();
+    // updateSnapShotTree();
     // Send the initial snapshot once the content script has started up
     // This message is sent from contentScript.js in chrome extension bundles
     window.addEventListener('message', ({ data: { action } }) => {
