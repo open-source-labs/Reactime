@@ -107,7 +107,7 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
 
     // Zoom/relocated nodes and labels based on dimensions given [x, y, r]
     function zoomViewArea(newXYR) {
-      // console.log("zoomTo -> v", v);
+      console.log("zoomTo -> newXYR", newXYR);
       const k = width / newXYR[2];
       view = newXYR;
       label.attr('transform', d => `translate(${(d.x - newXYR[0]) * k},${(d.y - newXYR[1]) * k})`);
