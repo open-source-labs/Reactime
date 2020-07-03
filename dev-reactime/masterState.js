@@ -5,7 +5,8 @@
 const componentActionsRecord = {};
 let index = 0;
 
-module.exports = {
+// module.exports = {
+export default {
   saveNew: (state, component) => {
     componentActionsRecord[index] = { state, component };
     index++;

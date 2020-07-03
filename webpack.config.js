@@ -7,6 +7,7 @@ const config = {
     app: './src/app/index.js',
     background: './src/extension/background.js',
     content: './src/extension/contentScript.js',
+    backend: './dev-reactime/index.js',
   },
   output: {
     path: path.resolve(__dirname, 'src/extension/build/bundles'),

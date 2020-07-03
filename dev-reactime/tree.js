@@ -9,7 +9,6 @@ function scrubUnserializableMembers(tree) {
   Object.entries(tree.state).forEach(keyValuePair => {
     if (typeof keyValuePair[1] === 'function') tree.state[keyValuePair[0]] = 'function';
   });
-  // console.log('PAYLOAD: unserializable returns:', tree);
   return tree;
 }
 
@@ -18,31 +17,37 @@ class Tree {
   constructor(state, name = 'nameless', componentData = {}) {
     this.state = state === 'root' ? 'root' : JSON.parse(JSON.stringify(state));
     this.name = name;
-    this.componentData = JSON.parse(JSON.stringify(componentData));
+    this.componentData = componentData ? JSON.parse(JSON.stringify(componentData)) : {};
     this.children = [];
+    this.parent = null; // ref to parent so we can add siblings
   }
 
-  addChild(state, name = this.name, componentData = this.componentData) {
-    this.children.push(new Tree(state, name, componentData));
+  addChild(state, name, componentData) {
+    // console.log('tree.js: in addChild');
+    const newChild = new Tree(state, name, componentData);
+    newChild.parent = this;
+    this.children.push(newChild);
+    return newChild;
+  }
+
+  addSibling(state, name, componentData) {
+    // console.log('tree.js: in addSibling');
+    const newSibling = new Tree(state, name, componentData);
+    newSibling.parent = this.parent;
+    this.parent.children.push(newSibling);
+    return newSibling;
   }
 
   cleanTreeCopy() {
-    const copy = new Tree(this.state, this.name, this.componentData);
-    let newChild;
-    copy.children = this.children.map(child => {
-      newChild = new Tree(child.state, child.name, child.componentData);
-      newChild.children = child.children;
-      return scrubUnserializableMembers(newChild);
-    });
-    if (copy.children.length > 0) {
-      copy.children.forEach(child => {
-        if (child !== copy.children) {
-          child = child.cleanTreeCopy();
-        } else {
-          child = null;
-        }
-      });
-    }
+    // creates copy of present node
+    let copy = new Tree(this.state, this.name, this.componentData);
+    copy = scrubUnserializableMembers(copy);
+    copy.children = this.children;
+
+    // creates copy of each child of the present node
+    copy.children = this.children.map(child => child.cleanTreeCopy());
+
+    // returns copy
     return copy;
   }
 
@@ -68,4 +73,4 @@ class Tree {
   }
 }
 
-module.exports = Tree;
+export default Tree;
