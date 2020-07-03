@@ -101,9 +101,9 @@ div.tooltip {
 }
 
 .d3divContainer {
-  display: flex;
+  /* display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-between; */
 }
 
 .perf-chart-labels {
