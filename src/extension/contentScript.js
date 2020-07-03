@@ -9,10 +9,9 @@ let firstMessage = true;
 window.addEventListener('message', msg => { // runs automatically every second
   // window listener picks up the message it sends, so we should filter
   // messages sent by contentscrip
-
-  if (msg.data.action !== 'contentScriptStarted' && firstMessage) {
-    // since contentScript is run everytime a page is refreshed
+  if (firstMessage) {
     // tell the background script that the tab has reloaded
+    console.log('event from window, now sending message to extension:', msg);
     chrome.runtime.sendMessage({ action: 'tabReload' });
     firstMessage = false;
   }
@@ -45,19 +44,4 @@ chrome.runtime.onMessage.addListener(request => { // seems to never fire
   return true; // attempt to fix port closing console error
 });
 
-
-
-
-// // inject script into DOM that grabs window
-// function injectScript(file, node) {
-//   const th = document.getElementsByTagName(node)[0];
-//   const s = document.createElement('script');
-//   s.setAttribute('type', 'text/javascript');
-//   s.setAttribute('src', file);
-//   th.appendChild(s);
-// }
-
-// // console.log('WINDOW in content script:', window);
-// reactimeBackend.default(devTools);
-
-//window.postMessage({ action: 'contentScriptStarted' });
+chrome.runtime.sendMessage({ action: 'injectScript' });

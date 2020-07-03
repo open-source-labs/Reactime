@@ -65,7 +65,7 @@ export default (snap, mode) => {
 
     if (!snap.tree) {
       // console.log('snapshot empty, sending root');
-      snap.tree = new Tree('root');
+      snap.tree = new Tree('root', 'root');
     }
     const payload = snap.tree.cleanTreeCopy();// snap.tree.getCopy();
 
@@ -103,7 +103,7 @@ export default (snap, mode) => {
 
   // Carlos: This runs after EVERY Fiber commit. It creates a new snapshot,
   //
-  function createTree(currentFiber, tree = new Tree('root'), fromSibling = false) {
+  function createTree(currentFiber, tree = new Tree('root', 'root'), fromSibling = false) {
     // Base case: child or sibling pointed to null
     // console.log('linkFiber.js: creating tree');
     if (!currentFiber) return null;
@@ -223,21 +223,23 @@ export default (snap, mode) => {
   }
 
   return async () => {
-    // if (container._internalRoot) {
-    //   fiberRoot = container._internalRoot;
-    // } else {
-    //   const {
-    //     _reactRootContainer: { _internalRoot },
-    //     _reactRootContainer,
-    //   } = container;
-    //   // Only assign internal root if it actually exists
-    //   fiberRoot = _internalRoot || _reactRootContainer;
-    // }
+
+    const container = document.getElementById('root');
+    if (container._internalRoot) {
+      fiberRoot = container._internalRoot;
+    } else {
+      const {
+        _reactRootContainer: { _internalRoot },
+        _reactRootContainer,
+      } = container;
+      // Only assign internal root if it actually exists
+      fiberRoot = _internalRoot || _reactRootContainer;
+    }
 
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
-    // console.log('devTools:', devTools);
 
+    //console.log('fiberRoot retrieved:', fiberRoot);
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
@@ -249,13 +251,15 @@ export default (snap, mode) => {
       }(devTools.onCommitFiberRoot));
     }
     updateSnapShotTree();
+    sendSnapshot();
+    // updateSnapShotTree();
     // Send the initial snapshot once the content script has started up
     // This message is sent from contentScript.js in chrome extension bundles
-    window.addEventListener('message', ({ data: { action } }) => {
-      if (action === 'contentScriptStarted') {
-        // console.log('content script started received at linkFiber.js')
-        sendSnapshot();
-      }
-    });
+    // window.addEventListener('message', ({ data: { action } }) => {
+    //   if (action === 'contentScriptStarted') {
+    //     // console.log('content script started received at linkFiber.js')
+    //     sendSnapshot();
+    //   }
+    // });
   };
 };
