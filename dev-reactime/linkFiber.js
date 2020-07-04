@@ -45,7 +45,9 @@
 /* eslint-disable no-param-reassign */
 
 // const Tree = require('./tree').default;
-// const componentActionsRecord = require('./masterState');\
+// const componentActionsRecord = require('./masterState');
+import Tree from './tree';
+import componentActionsRecord from './masterState';
 
 const DEBUG_MODE = false;
 
@@ -57,8 +59,6 @@ console.log = (original => {
   }
 })(console.log);
 
-import Tree from './tree';
-import componentActionsRecord from './masterState';
 
 const circularComponentTable = new Map();
 
@@ -238,8 +238,8 @@ export default (snap, mode) => {
 
   return async () => {
 
-    /*
-    const container = document.getElementById('root');
+    
+/*     const container = document.getElementById('root');
     if (container._internalRoot) {
       fiberRoot = container._internalRoot;
     } else {
@@ -249,12 +249,12 @@ export default (snap, mode) => {
       } = container;
       // Only assign internal root if it actually exists
       fiberRoot = _internalRoot || _reactRootContainer;
-    }*/
-
+    }
+ */
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
+    fiberRoot = devTools.getFiberRoots(1).values().next().value;
 
-    //// console.log('fiberRoot retrieved:', fiberRoot);
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
