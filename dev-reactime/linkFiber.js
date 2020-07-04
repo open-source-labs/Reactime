@@ -60,7 +60,7 @@ console.log = (original => {
 })(console.log);
 
 
-const circularComponentTable = new Map();
+const circularComponentTable = new Set();
 
 // module.exports = (snap, mode) => {
 export default (snap, mode) => {
@@ -114,6 +114,8 @@ export default (snap, mode) => {
 
   // Carlos: This runs after EVERY Fiber commit. It creates a new snapshot,
   //
+
+  let ctRunning = 0;
   function createTree(currentFiber, tree = new Tree('root', 'root'), fromSibling = false) {
     // Base case: child or sibling pointed to null
     console.log('createTree: creating tree');
@@ -140,7 +142,7 @@ export default (snap, mode) => {
     let componentFound = false;
 
     // Check if node is a stateful setState component
-    if (stateNode && stateNode.state && (tag === 0 || tag === 1)) { // { || tag === 2)) {
+    if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag ===2)) { // { || tag === 2)) {
       // Save component's state and setState() function to our record for future
       // time-travel state changing. Add record index to snapshot so we can retrieve.
       console.log('createTree() found setState component');
@@ -151,7 +153,7 @@ export default (snap, mode) => {
 
     // Check if node is a hooks useState function
     let hooksIndex;
-    if (memoizedState && (tag === 0 || tag === 1 || tag === 10)) {
+    if (memoizedState && (tag === 0 || tag === 1 || tag === 2 || tag === 10)) {
       if (memoizedState.queue) {
         console.log('createTree() found hooks component');
         // Hooks states are stored as a linked list using memoizedState.next,
@@ -174,9 +176,10 @@ export default (snap, mode) => {
     }
 
     // This grabs stateless components
-    if (!componentFound && (tag === 0 || tag === 1)) { // || tag === 2)) {
+    /*
+    if (!componentFound && (tag === 0 || tag === 1 || tag === 2)) {
       newState = 'stateless';
-    }
+    }*/
 
     // Adds performance metrics to the component data
     componentData = {
@@ -207,38 +210,49 @@ export default (snap, mode) => {
 
     // Recurse on children
     
-    if (child) { // && !circularComponentTable.has(child)) {
+    if (child && !circularComponentTable.has(child)) {
       // If this node had state we appended to the children array,
       // so attach children to the newly appended child.
       // Otherwise, attach children to this same node.
       console.log('going into child');
-      // circularComponentTable.set(child, true);
+      circularComponentTable.add(child);
       createTree(child, newNode);
     }
     // Recurse on siblings
-    if (sibling) { // && !circularComponentTable.has(sibling)) {
+    if (sibling && !circularComponentTable.has(sibling)) {
       console.log('going into sibling');
-      // circularComponentTable.set(sibling, true);
+      circularComponentTable.add(sibling);
       createTree(sibling, newNode, true);
+    }
+
+    if (circularComponentTable.has(child)) {
+      console.log('found circular child, exiting tree loop');
+    }
+
+    if (circularComponentTable.has(sibling)) {
+      console.log('found circular sibling, exiting tree loop');
     }
 
     // // console.log('linkFiber.js: processed children and sibling, returning tree');
     return tree;
   }
 
+  let updateSnapshotTreeCount = 0;
   function updateSnapShotTree() {
     // console.log('updateSnapshotTree(), checking if fiberRoot updated');
+
+    updateSnapshotTreeCount++;
+    if (updateSnapshotTreeCount > 1) alwaysLog('MULTIPLE SNAPSHOT TREE UPDATES:', updateSnapshotTreeCount);
     if (fiberRoot) {
       console.log('updateSnapshotTree(), updating snapshot', snap.tree);
       const { current } = fiberRoot;
       snap.tree = createTree(current);
       console.log('updateSnapshotTree(), completed snapshot', snap.tree);
     }
+    updateSnapshotTreeCount--;
   }
 
-  return async () => {
-
-    
+  return async () => {    
 /*     const container = document.getElementById('root');
     if (container._internalRoot) {
       fiberRoot = container._internalRoot;
@@ -254,7 +268,8 @@ export default (snap, mode) => {
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-
+    
+    alwaysLog('fiberRoot:', fiberRoot);
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
