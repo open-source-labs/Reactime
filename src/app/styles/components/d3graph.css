@@ -95,17 +95,21 @@ div.tooltip {
 
 .perfContainer {
   display: block;
-  margin: 0 -14px;
-  background-color: hsl(221,16%,20%);
+  /* margin: 0 -14px;
+  background-color: hsl(152,80%,80%); */
   /* border: 2px solid red; */
 }
 
 .d3divContainer {
-  /* border: 1px solid blue; */
+  /* display: flex;
+  flex-direction: column;
+  justify-content: space-between; */
 }
 
 .perf-chart-labels {
-  font: 11px sans-serif;
+  font: 15px sans-serif;
+  color: white;
   pointer-events: none;
   text-anchor: middle;
 };
+
