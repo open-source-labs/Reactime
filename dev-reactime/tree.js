@@ -23,7 +23,7 @@ class Tree {
   }
 
   addChild(state, name, componentData) {
-    // console.log('tree.js: in addChild');
+    //console.log('tree.js: in addChild');
     const newChild = new Tree(state, name, componentData);
     newChild.parent = this;
     this.children.push(newChild);
