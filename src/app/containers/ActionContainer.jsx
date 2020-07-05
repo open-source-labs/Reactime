@@ -31,13 +31,12 @@ function ActionContainer() {
         componentName: obj.stateSnapshot.children[0].name,
         componentData: JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}' ? '' : obj.stateSnapshot.children[0].componentData
       };
-
       hierarchyArr.push(newObj);
-      if (obj.children) {
-        obj.children.forEach(element => {
-          displayArray(element);
-        });
-      }
+    }
+    if (obj.children) {
+      obj.children.forEach(element => {
+        displayArray(element);
+      });
     }
   };
   // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was inicialize involk displayArray to display the hierarchy

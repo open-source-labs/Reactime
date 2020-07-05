@@ -45,18 +45,29 @@
 /* eslint-disable no-param-reassign */
 
 // const Tree = require('./tree').default;
-// const componentActionsRecord = require('./masterState');\
-
+// const componentActionsRecord = require('./masterState');
 import Tree from './tree';
 import componentActionsRecord from './masterState';
 
-const circularComponentTable = new Map();
+const DEBUG_MODE = false;
+
+const alwaysLog = console.log;
+
+console.log = (original => { 
+  return (...args) => {
+    if (DEBUG_MODE) original(...args);
+  }
+})(console.log);
+
+
+const circularComponentTable = new Set();
 
 // module.exports = (snap, mode) => {
 export default (snap, mode) => {
   let fiberRoot = null;
 
   function sendSnapshot() {
+    alwaysLog('sendSnapshot called');
     // Don't send messages while jumping or while paused
     circularComponentTable.clear();
     // console.log('sending snapshot');
@@ -103,9 +114,11 @@ export default (snap, mode) => {
 
   // Carlos: This runs after EVERY Fiber commit. It creates a new snapshot,
   //
+
+  let ctRunning = 0;
   function createTree(currentFiber, tree = new Tree('root', 'root'), fromSibling = false) {
     // Base case: child or sibling pointed to null
-    // console.log('linkFiber.js: creating tree');
+    console.log('createTree: creating tree');
     if (!currentFiber) return null;
     if (!tree) return tree;
 
@@ -129,10 +142,10 @@ export default (snap, mode) => {
     let componentFound = false;
 
     // Check if node is a stateful setState component
-    if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
+    if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag ===2)) { // { || tag === 2)) {
       // Save component's state and setState() function to our record for future
       // time-travel state changing. Add record index to snapshot so we can retrieve.
-      // console.log('linkFiber.js: found stateNode component');
+      console.log('createTree() found setState component');
       componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
       newState = stateNode.state;
       componentFound = true;
@@ -140,9 +153,9 @@ export default (snap, mode) => {
 
     // Check if node is a hooks useState function
     let hooksIndex;
-    if (memoizedState && (tag === 0 || tag === 1 || tag === 10)) {
+    if (memoizedState && (tag === 0 || tag === 1 || tag === 2 || tag === 10)) {
       if (memoizedState.queue) {
-        // console.log('linkFiber.js: found hooks component');
+        console.log('createTree() found hooks component');
         // Hooks states are stored as a linked list using memoizedState.next,
         // so we must traverse through the list and get the states.
         // We then store them along with the corresponding memoizedState.queue,
@@ -163,9 +176,10 @@ export default (snap, mode) => {
     }
 
     // This grabs stateless components
+    /*
     if (!componentFound && (tag === 0 || tag === 1 || tag === 2)) {
       newState = 'stateless';
-    }
+    }*/
 
     // Adds performance metrics to the component data
     componentData = {
@@ -179,52 +193,67 @@ export default (snap, mode) => {
     let newNode = null;
     if (componentFound || newState === 'stateless') {
       if (fromSibling) {
-        newNode = tree.addSibling(newState, 
-          elementType.name ? elementType.name : elementType,
+        console.log('createTree(), relevant component found in sibling');
+        newNode = tree.addSibling(newState,
+          elementType ? elementType.name : 'nameless',
           componentData);
       } else {
-        newNode = tree.addChild(newState, 
-          elementType.name ? elementType.name : elementType,
+        console.log('createTree(), relevant component found in child');
+        newNode = tree.addChild(newState,
+          elementType ? elementType.name : 'nameless',
           componentData);
       }
     } else {
+      console.log('createTree(), no new relevant nodes, continuing from same node')
       newNode = tree;
     }
 
     // Recurse on children
     
-    if (child) { // && !circularComponentTable.has(child)) {
+    if (child && !circularComponentTable.has(child)) {
       // If this node had state we appended to the children array,
       // so attach children to the newly appended child.
       // Otherwise, attach children to this same node.
-      // console.log('going into child');
-      // circularComponentTable.set(child, true);
+      console.log('going into child');
+      circularComponentTable.add(child);
       createTree(child, newNode);
     }
     // Recurse on siblings
-    if (sibling) { // && !circularComponentTable.has(sibling)) {
-      // console.log('going into sibling');
-      // circularComponentTable.set(sibling, true);
+    if (sibling && !circularComponentTable.has(sibling)) {
+      console.log('going into sibling');
+      circularComponentTable.add(sibling);
       createTree(sibling, newNode, true);
     }
 
-    // console.log('linkFiber.js: processed children and sibling, returning tree');
+    if (circularComponentTable.has(child)) {
+      console.log('found circular child, exiting tree loop');
+    }
+
+    if (circularComponentTable.has(sibling)) {
+      console.log('found circular sibling, exiting tree loop');
+    }
+
+    // // console.log('linkFiber.js: processed children and sibling, returning tree');
     return tree;
   }
 
+  let updateSnapshotTreeCount = 0;
   function updateSnapShotTree() {
-    // console.log('linkFiber.js, updateSnapshotTree(), checking if fiberRoot updated');
+    // console.log('updateSnapshotTree(), checking if fiberRoot updated');
+
+    updateSnapshotTreeCount++;
+    if (updateSnapshotTreeCount > 1) alwaysLog('MULTIPLE SNAPSHOT TREE UPDATES:', updateSnapshotTreeCount);
     if (fiberRoot) {
-      // console.log('linkFiber.js, updateSnapshotTree(), updating snapshot', snap.tree);
+      console.log('updateSnapshotTree(), updating snapshot', snap.tree);
       const { current } = fiberRoot;
       snap.tree = createTree(current);
-      // console.log('linkFiber.js, updateSnapshotTree(), completed snapshot', snap.tree);
+      console.log('updateSnapshotTree(), completed snapshot', snap.tree);
     }
+    updateSnapshotTreeCount--;
   }
 
-  return async () => {
-
-    const container = document.getElementById('root');
+  return async () => {    
+/*     const container = document.getElementById('root');
     if (container._internalRoot) {
       fiberRoot = container._internalRoot;
     } else {
@@ -235,17 +264,21 @@ export default (snap, mode) => {
       // Only assign internal root if it actually exists
       fiberRoot = _internalRoot || _reactRootContainer;
     }
-
+ */
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
-
-    //console.log('fiberRoot retrieved:', fiberRoot);
+    fiberRoot = devTools.getFiberRoots(1).values().next().value;
+    
+    alwaysLog('fiberRoot:', fiberRoot);
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           fiberRoot = args[1];
+          //console.log('Fiber committed, updating snapshot tree with:', fiberRoot);
           updateSnapShotTree();
+          console.log('Fiber committed, sending latest snapshot');
           sendSnapshot();
+          console.log('Fiber committed, latest snapshot sent');
           return original(...args);
         };
       }(devTools.onCommitFiberRoot));
