@@ -42,7 +42,7 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
   const packFunc = useCallback(data => {
     return d3.pack()
     .size([width, height])
-    .radius(d => { return d.r; })
+    // .radius(d => { return d.r; })
     .padding(3)(d3.hierarchy(data)
                     .sum(d => { return d.componentData.actualDuration || 0; })
                     .sort((a, b) => { return b.value - a.value; }));
@@ -109,7 +109,9 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
     // Zoom/relocated nodes and labels based on dimensions given [x, y, r]
     function zoomViewArea(newXYR) {
       // console.log('zoomTo -> newXYR', newXYR);
-      const k = width / newXYR[2];
+      // if (!newXYR.every(val => Number.isNaN(val))) { console.log('NaN'); return; }
+
+      const k = (width / newXYR[2]);
       view = newXYR;
       label.attr('transform', d => `translate(${(d.x - newXYR[0]) * k},${(d.y - newXYR[1]) * k})`);
       node.attr('transform', d => `translate(${(d.x - newXYR[0]) * k},${(d.y - newXYR[1]) * k})`);
