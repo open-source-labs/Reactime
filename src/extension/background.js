@@ -197,6 +197,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     action === 'tabReload'
     || action === 'recordSnap'
     || action === 'jumpToSnap'
+    || action === 'injectScript'
   ) {
     isReactTimeTravel = true;
   } else return true;
@@ -215,7 +216,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       break;
     }
     // this case causes d3 graph to display 1 instead of 0
-    case 'tabReload': {
+    case 'injectScript': {
       console.log('ran execute script to inject backend');
       chrome.tabs.executeScript(tabId, {
         code: `
@@ -230,7 +231,9 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         injectScript(chrome.runtime.getURL('bundles/backend.bundle.js'), 'body');
       `,
       });
-      console.log('this is from tabReload', request);
+      break;
+    }
+    case 'tabReload': {
       tabsObj[tabId].mode.locked = false;
       tabsObj[tabId].mode.paused = false;
       // dont remove snapshots if persisting

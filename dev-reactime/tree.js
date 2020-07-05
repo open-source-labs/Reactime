@@ -4,6 +4,11 @@
 /* eslint-disable no-param-reassign */
 // import * as reactWorkTags from './reactWorkTags';
 
+const Flatted = require('flatted');
+let copyInstances = 0;
+const circularComponentTable = new Set();
+
+
 // removes unserializable state data such as functions
 function scrubUnserializableMembers(tree) {
   Object.entries(tree.state).forEach(keyValuePair => {
@@ -15,7 +20,7 @@ function scrubUnserializableMembers(tree) {
 // this is the current snapshot that is being sent to the snapshots array.
 class Tree {
   constructor(state, name = 'nameless', componentData = {}) {
-    this.state = state === 'root' ? 'root' : JSON.parse(JSON.stringify(state));
+    this.state = state === 'root' ? 'root' : Flatted.parse(Flatted.stringify(state));
     this.name = name;
     this.componentData = componentData ? JSON.parse(JSON.stringify(componentData)) : {};
     this.children = [];
@@ -23,7 +28,7 @@ class Tree {
   }
 
   addChild(state, name, componentData) {
-    // console.log('tree.js: in addChild');
+    //console.log('tree.js: in addChild');
     const newChild = new Tree(state, name, componentData);
     newChild.parent = this;
     this.children.push(newChild);
@@ -39,15 +44,28 @@ class Tree {
   }
 
   cleanTreeCopy() {
+    if (copyInstances === 0) {
+      copyInstances++;
+      circularComponentTable.clear();
+    }
     // creates copy of present node
     let copy = new Tree(this.state, this.name, this.componentData);
+    circularComponentTable.add(this);
     copy = scrubUnserializableMembers(copy);
-    copy.children = this.children;
+
+    // copy.children = this.children;
 
     // creates copy of each child of the present node
-    copy.children = this.children.map(child => child.cleanTreeCopy());
+    copy.children = this.children.map(child => {
+      if (!circularComponentTable.has(child)) {
+        return child.cleanTreeCopy()
+      } else {
+        return 'circular';
+      }
+    });
 
     // returns copy
+    copyInstances--;
     return copy;
   }
 
