@@ -154,7 +154,7 @@ chrome.runtime.onConnect.addListener(port => {
         // gabi :: reset hierarchy
         tabsObj[tabId].hierarchy.children = [];
         // gabi :: reset hierarchy to page last state recorded
-        tabsObj[tabId].hierarchy.stateSnapshot = tabsObj[tabId].snapshots[0];
+        tabsObj[tabId].hierarchy.stateSnapshot = { ...tabsObj[tabId].snapshots[0] };
         // gabi :: reset currLocation to page last state recorded
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
         // gabi :: reset index
@@ -216,7 +216,6 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     }
     // this case causes d3 graph to display 1 instead of 0
     case 'tabReload': {
-
       console.log('ran execute script to inject backend');
       chrome.tabs.executeScript(tabId, {
         code: `
@@ -231,7 +230,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         injectScript(chrome.runtime.getURL('bundles/backend.bundle.js'), 'body');
       `,
       });
-
+      console.log('this is from tabReload', request);
       tabsObj[tabId].mode.locked = false;
       tabsObj[tabId].mode.paused = false;
       // dont remove snapshots if persisting
@@ -241,14 +240,29 @@ chrome.runtime.onMessage.addListener((request, sender) => {
           tabsObj[tabId].snapshots = tabsObj[tabId].initialSnapshot;
           // gabi :: reset hierarchy to page initial state recorded when empted
           tabsObj[tabId].hierarchy = tabsObj[tabId].initialHierarchy;
+          // gabi :: resolve no initial state
+          // tabsObj[tabId].hierarchy = null;
         } else {
+          // tabsObj[tabId].snapshots = null;
           // gabi :: reset snapshots to page initial state
           tabsObj[tabId].snapshots.splice(1);
+          //  gabi :: resolve no initial state
+          // tabsObj[tabId].snapshots = [{
+          //   state: {"@@INIT":"Inicial State"},
+          //   name: "nameless",
+          //   componentData: {},
+          //   children: [],
+          //   parent: null,
+          // }]
           // gabi :: reset hierarchy to page initial state
           if (tabsObj[tabId].hierarchy) {
             tabsObj[tabId].hierarchy.children = [];
+            // gabi :: resolve no initial state
+            // tabsObj[tabId].hierarchy = null;
             // gabi :: reset currParent plus current state
             tabsObj[tabId].currParent = 1;
+            // gabi :: resolve no initial state
+            tabsObj[tabId].currParent = 0;
           } else {
             // gabi :: reset currParent
             tabsObj[tabId].currParent = 0;

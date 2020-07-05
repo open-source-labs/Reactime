@@ -43,7 +43,8 @@ const PerfView = ({ snapshots, viewIndex }) => {
   // set up color scaling function
   const color = d3.scaleLinear()
     .domain([0, 7])
-    .range(['hsl(152,80%,80%)', 'hsl(228,30%,40%)'])
+    .range(['hsl(152,30%,80%)', 'hsl(228,30%,40%)'])
+    // .range(['hsl(210,30%,80%)', 'hsl(152,30%,40%)'])
     .interpolate(d3.interpolateHcl);
 
   // set up circle-packing layout function
