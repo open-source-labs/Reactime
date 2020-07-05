@@ -107,8 +107,9 @@ div.tooltip {
 }
 
 .perf-chart-labels {
-  font: 15px sans-serif;
-  color: white;
+  font: 12px sans-serif;
+  /* color: white; */
+  fill: rgb(231, 231, 231);
   pointer-events: none;
   text-anchor: middle;
 };
