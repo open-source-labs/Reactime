@@ -93,6 +93,14 @@ div.tooltip {
   left: 0;
 }
 
+.history-d3-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100% - 70px);
+  /* border: 2px solid red; */
+}
+
 .perfContainer {
   display: flex;
   flex-direction: column;
