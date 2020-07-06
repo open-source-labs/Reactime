@@ -7,20 +7,15 @@ import { useStoreContext } from '../store';
 
 function Diff({ snapshot, show }) {
   const [mainState] = useStoreContext();
-  // console.log('this is the mainState variable -->', mainState);
   const { currentTab, tabs } = mainState; // Nate:: k/v pairs of mainstate store object being created
-  // console.log('this is the currentTab variable -->', currentTab);
-  // console.log('this is the tabs variable -->', tabs);
   const { snapshots, viewIndex, sliderIndex } = tabs[currentTab];
   let previous;
 
   // previous follows viewIndex or sliderIndex
   if (viewIndex !== -1) { // if tab isnt selected, view index is set to -1
     previous = snapshots[viewIndex - 1];
-    // console.log('previous with viewIndex - 1: ', previous)
   } else {
     previous = snapshots[sliderIndex - 1];
-    // console.log('previous with sliderIndex - 1: ', previous)
   }
 
   // gabi :: cleanning preview from stateless data

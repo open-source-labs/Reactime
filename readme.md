@@ -100,7 +100,6 @@ Reactime offers beta support for TypeScript applications using stateful class co
 - a Sandbox utility to aid future expansion
 
 ## Authors
-
 - **Ryan Dang** - [@rydang](https://github.com/rydang)
 - **Bryan Lee** - [@mylee1995](https://github.com/mylee1995)
 - **Josh Kim** - [@joshua0308](https://github.com/joshua0308)

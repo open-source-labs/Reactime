@@ -86,7 +86,6 @@ function MainContainer() {
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // gabi :: cleannign hierarchy and snapshotView from stateless data
   const statelessCleanning = obj => {
-    // console.log('statelessCleanning = obj =>', obj);
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;
@@ -94,7 +93,7 @@ function MainContainer() {
     if (newObj.componentData) {
       delete newObj.componentData;
     }
-    if (newObj.parent || newObj.parent === null){
+    if (newObj.parent || newObj.parent === null) {
       delete newObj.parent;
     }
     if (newObj.state === 'stateless') {
@@ -109,13 +108,11 @@ function MainContainer() {
         obj.children.forEach(element => {
           if (element.state !== 'stateless' || element.children.length > 0) {
             const clean = statelessCleanning(element);
-            // console.log('clean', clean)
             newObj.children.push(clean);
           }
         });
       }
     }
-    // console.log('statelessCleanning = newObj =>', newObj);
     return newObj;
   };
   const snapshotDisplay = statelessCleanning(snapshotView);

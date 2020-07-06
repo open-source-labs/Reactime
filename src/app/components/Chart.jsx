@@ -34,7 +34,6 @@ class Chart extends Component {
   componentDidUpdate() {
     const { hierarchy } = this.props;
     root = JSON.parse(JSON.stringify(hierarchy));
-    console.log('Chart -> componentDidUpdate -> hierarchy', hierarchy);
     this.maked3Tree();
   }
 

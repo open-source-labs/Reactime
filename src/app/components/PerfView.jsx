@@ -24,7 +24,6 @@ import { schemeSet1 as colorScheme } from 'd3';
 
 
 const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
-  // console.log('***** constructor *****');
   const svgRef = useRef(null);
 
   // Figure out which snapshot index to use
@@ -50,14 +49,12 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
 
   // If indexToDisplay changes, clear old tree nodes
   useEffect(() => {
-    // console.log('***** useEffect - CLEARING');
     while (svgRef.current.hasChildNodes()) {
       svgRef.current.removeChild(svgRef.current.lastChild);
     }
   }, [indexToDisplay, svgRef]);
 
   useEffect(() => {
-    // console.log(`***** useEffect - MAIN -> snapshots[${indexToDisplay}]`, snapshots[indexToDisplay]);
     
     // Error, no App-level component present
     if (snapshots[indexToDisplay].children.length < 1) return;
@@ -108,7 +105,6 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
 
     // Zoom/relocated nodes and labels based on dimensions given [x, y, r]
     function zoomViewArea(newXYR) {
-      console.log("zoomTo -> newXYR", newXYR);
       const k = width / newXYR[2];
       view = newXYR;
       label.attr('transform', d => `translate(${(d.x - newXYR[0]) * k},${(d.y - newXYR[1]) * k})`);
@@ -118,7 +114,6 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
 
     // Transition visibility of labels
     function zoomToNode(newFocus) {
-      // console.log("zoom -> d", d);
       const transition = svg.transition()
       .duration(d3.event.altKey ? 7500 : 750)
       .tween('zoom', d => {
@@ -128,7 +123,7 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
 
       // Grab all nodes that were previously displayed, or who's parent is the new target newFocus
       // Transition their labels to visible or not
-      label.filter(function (d) { console.log('label filtering. d=', d); return d.parent === newFocus || this.style.display === 'inline'; })
+      label.filter(function (d) { return d.parent === newFocus || this.style.display === 'inline'; })
       .transition(transition)
       .style('fill-opacity', d => (d.parent === newFocus ? 1 : 0))
       .on('start', function (d) { if (d.parent === newFocus) this.style.display = 'inline'; })

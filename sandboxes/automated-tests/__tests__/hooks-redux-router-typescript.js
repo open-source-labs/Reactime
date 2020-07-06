@@ -52,7 +52,6 @@ describe('Sandbox Tests', () => {
         const lastSnapshot = await JSON.parse(lastSnapshotJSON);
 
         // The snapshot is 1 event behind currently; if this is changed then the expected value would be 2
-        // console.log(JSON.parse(document.querySelector('#lastSnapshot').innerHTML).children[0].children[1].state.count)
         expect(lastSnapshot.children[0].children[1].state.count).toBe(1);
       });
 
@@ -67,7 +66,6 @@ describe('Sandbox Tests', () => {
 
         const lastSnapshot = await JSON.parse(lastSnapshotJSON);
 
-        // console.log(JSON.parse(document.querySelector('#lastSnapshot').innerHTML).children[0].children[1].children[0].state.count2)
         expect(
           lastSnapshot.children[0].children[1].children[0].state.count2
         ).toBe(1);

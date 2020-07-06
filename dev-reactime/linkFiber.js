@@ -70,17 +70,13 @@ export default (snap, mode) => {
     alwaysLog('sendSnapshot called');
     // Don't send messages while jumping or while paused
     circularComponentTable.clear();
-    // console.log('sending snapshot');
     if (mode.jumping || mode.paused) return;
-    // console.log('PAYLOAD: before cleaning', snap.tree);
 
     if (!snap.tree) {
-      // console.log('snapshot empty, sending root');
       snap.tree = new Tree('root', 'root');
     }
     const payload = snap.tree.cleanTreeCopy();// snap.tree.getCopy();
 
-    // console.log('PAYLOAD: after cleaning', payload);
     // try {
       // await window.postMessage({
       window.postMessage({
@@ -118,7 +114,6 @@ export default (snap, mode) => {
   let ctRunning = 0;
   function createTree(currentFiber, tree = new Tree('root', 'root'), fromSibling = false) {
     // Base case: child or sibling pointed to null
-    console.log('createTree: creating tree');
     if (!currentFiber) return null;
     if (!tree) return tree;
 
@@ -145,7 +140,6 @@ export default (snap, mode) => {
     if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag ===2)) { // { || tag === 2)) {
       // Save component's state and setState() function to our record for future
       // time-travel state changing. Add record index to snapshot so we can retrieve.
-      console.log('createTree() found setState component');
       componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
       newState = stateNode.state;
       componentFound = true;
@@ -155,7 +149,6 @@ export default (snap, mode) => {
     let hooksIndex;
     if (memoizedState && (tag === 0 || tag === 1 || tag === 2 || tag === 10)) {
       if (memoizedState.queue) {
-        console.log('createTree() found hooks component');
         // Hooks states are stored as a linked list using memoizedState.next,
         // so we must traverse through the list and get the states.
         // We then store them along with the corresponding memoizedState.queue,
@@ -193,18 +186,15 @@ export default (snap, mode) => {
     let newNode = null;
     if (componentFound || newState === 'stateless') {
       if (fromSibling) {
-        console.log('createTree(), relevant component found in sibling');
         newNode = tree.addSibling(newState,
           elementType ? elementType.name : 'nameless',
           componentData);
       } else {
-        console.log('createTree(), relevant component found in child');
         newNode = tree.addChild(newState,
           elementType ? elementType.name : 'nameless',
           componentData);
       }
     } else {
-      console.log('createTree(), no new relevant nodes, continuing from same node')
       newNode = tree;
     }
 
@@ -214,13 +204,11 @@ export default (snap, mode) => {
       // If this node had state we appended to the children array,
       // so attach children to the newly appended child.
       // Otherwise, attach children to this same node.
-      console.log('going into child');
       circularComponentTable.add(child);
       createTree(child, newNode);
     }
     // Recurse on siblings
     if (sibling && !circularComponentTable.has(sibling)) {
-      console.log('going into sibling');
       circularComponentTable.add(sibling);
       createTree(sibling, newNode, true);
     }
@@ -233,21 +221,17 @@ export default (snap, mode) => {
       console.log('found circular sibling, exiting tree loop');
     }
 
-    // // console.log('linkFiber.js: processed children and sibling, returning tree');
     return tree;
   }
 
   let updateSnapshotTreeCount = 0;
   function updateSnapShotTree() {
-    // console.log('updateSnapshotTree(), checking if fiberRoot updated');
 
     updateSnapshotTreeCount++;
     if (updateSnapshotTreeCount > 1) alwaysLog('MULTIPLE SNAPSHOT TREE UPDATES:', updateSnapshotTreeCount);
     if (fiberRoot) {
-      console.log('updateSnapshotTree(), updating snapshot', snap.tree);
       const { current } = fiberRoot;
       snap.tree = createTree(current);
-      console.log('updateSnapshotTree(), completed snapshot', snap.tree);
     }
     updateSnapshotTreeCount--;
   }
@@ -274,11 +258,8 @@ export default (snap, mode) => {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           fiberRoot = args[1];
-          //console.log('Fiber committed, updating snapshot tree with:', fiberRoot);
           updateSnapShotTree();
-          console.log('Fiber committed, sending latest snapshot');
           sendSnapshot();
-          console.log('Fiber committed, latest snapshot sent');
           return original(...args);
         };
       }(devTools.onCommitFiberRoot));

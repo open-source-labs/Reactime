@@ -15,8 +15,6 @@ const resetSlider = () => {
 function ActionContainer() {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
-  console.log('actionContainer tabs[currentTab];', tabs[currentTab]);
-  console.log('actionContainer hierarchy;', hierarchy);
   let actionsArr = [];
   const hierarchyArr = [];
 

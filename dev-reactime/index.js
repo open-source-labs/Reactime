@@ -20,7 +20,6 @@ const mode = {
 };
 
 // const linkFiber = require('./linkFiber')(snapShot, mode);
-// console.log('import timeJump in index.js:', JSON.parse(JSON.stringify(snapShot)));
 // const timeJump = require('./timeJump')(snapShot, mode);
 
 
@@ -45,7 +44,6 @@ function getRouteURL(node) {
 window.addEventListener('message', ({ data: { action, payload } }) => {
   switch (action) {
     case 'jumpToSnap':
-      // console.log('payload in jumpToSnap', payload);
       timeJump(payload); // * This sets state with given payload
       // Get the pathname from payload and add new entry to browser history
       // MORE: https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
@@ -64,7 +62,6 @@ window.addEventListener('message', ({ data: { action, payload } }) => {
   }
 });
 
-console.log('index.js: loading reactime');
 linkFiber();
 
 // module.exports = linkFiber;
