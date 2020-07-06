@@ -140,7 +140,12 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
     }
   }, [colorScale, packFunc, width, height, indexToDisplay, snapshots]);
 
-  return <svg className="perfContainer" ref={svgRef} />;
+  return (
+    <div className="perfContainer">
+      <svg className="perf-d3-svg" ref={svgRef} />
+      {/* <span>TEST</span> */}
+    </div>
+    );
 };
 
 export default PerfView;

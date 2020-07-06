@@ -94,16 +94,15 @@ div.tooltip {
 }
 
 .perfContainer {
-  display: block;
-  /* margin: 0 -14px;
-  background-color: hsl(152,80%,80%); */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100% - 70px);
   /* border: 2px solid red; */
 }
 
-.d3divContainer {
-  /* display: flex;
-  flex-direction: column;
-  justify-content: space-between; */
+.perf-d3-svg {
+  display: block;
 }
 
 .perf-chart-labels {
