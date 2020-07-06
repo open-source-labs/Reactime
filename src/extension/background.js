@@ -246,26 +246,13 @@ chrome.runtime.onMessage.addListener((request, sender) => {
           // gabi :: resolve no initial state
           // tabsObj[tabId].hierarchy = null;
         } else {
-          // tabsObj[tabId].snapshots = null;
           // gabi :: reset snapshots to page initial state
           tabsObj[tabId].snapshots.splice(1);
-          //  gabi :: resolve no initial state
-          // tabsObj[tabId].snapshots = [{
-          //   state: {"@@INIT":"Inicial State"},
-          //   name: "nameless",
-          //   componentData: {},
-          //   children: [],
-          //   parent: null,
-          // }]
           // gabi :: reset hierarchy to page initial state
           if (tabsObj[tabId].hierarchy) {
             tabsObj[tabId].hierarchy.children = [];
-            // gabi :: resolve no initial state
-            // tabsObj[tabId].hierarchy = null;
             // gabi :: reset currParent plus current state
             tabsObj[tabId].currParent = 1;
-            // gabi :: resolve no initial state
-            tabsObj[tabId].currParent = 0;
           } else {
             // gabi :: reset currParent
             tabsObj[tabId].currParent = 0;
