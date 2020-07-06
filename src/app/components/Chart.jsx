@@ -209,7 +209,7 @@ class Chart extends Component {
   render() {
     return (
       <div className="history-d3-container">
-        <div ref={this.chartRef} className="d3Container" />
+        <div ref={this.chartRef} className="history-d3-div" />
       </div>
     );
   }
