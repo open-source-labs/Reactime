@@ -66,11 +66,11 @@ function MainContainer() {
     return (
       <div className="error-container">
         <a
-          href="https://www.npmjs.com/package/reactime"
+          href="reactime.io"
           target="_blank"
           rel="noopener noreferrer"
         >
-          No React application found. Please install our npm package in your app.
+          No React application found. Please visit reactime.io to more info.
         </a>
       </div>
     );
