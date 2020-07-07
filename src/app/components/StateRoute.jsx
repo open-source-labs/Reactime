@@ -7,6 +7,7 @@ import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom
 import Chart from './Chart';
 import Tree from './Tree';
 import PerfView from './PerfView';
+import ErrorHandler from './ErrorHandler';
 
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types
@@ -30,7 +31,11 @@ const StateRoute = ({ snapshot, hierarchy, snapshots, viewIndex }) => {
 
   const renderPerfView = () => {
     if (hierarchy) {
-      return <PerfView viewIndex={viewIndex} snapshots={snapshots} />; // ref={windowRef}
+      return (
+        <ErrorHandler>
+          <PerfView viewIndex={viewIndex} snapshots={snapshots} />
+        </ErrorHandler>
+      );
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
@@ -39,13 +44,13 @@ const StateRoute = ({ snapshot, hierarchy, snapshots, viewIndex }) => {
     <Router>
       <div className="navbar">
         <NavLink className="router-link" activeClassName="is-active" exact to="/">
-        State
+        Tree
         </NavLink>
         <NavLink className="router-link" activeClassName="is-active" to="/chart">
         History
         </NavLink>
         <NavLink className="router-link" activeClassName="is-active" to="/performance">
-        Rendering
+        Performance
         </NavLink>
       </div>
       <Switch>
@@ -65,3 +70,9 @@ StateRoute.propTypes = {
 };
 
 export default StateRoute;
+
+//   <div>
+//     <PerfView viewIndex={viewIndex} snapshots={snapshots} />
+//     <div className="ancestorStatus">Test</div>
+//   </div>
+// );
