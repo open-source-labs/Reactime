@@ -20,7 +20,11 @@ const state = {
         branch: 0,
         stateSnapshot: {
           state: {},
-          children: [],
+          children: [{
+            state: { test: 'test' },
+            name: 'App',
+            componentData: { actualDuration: 3.5 },
+          }],
         },
         children: [{
           index: 1,
@@ -28,7 +32,11 @@ const state = {
           branch: 0,
           stateSnapshot: {
             state: {},
-            children: [],
+            children: [{
+              state: { test: 'test' },
+              name: 'App',
+              componentData: { actualDuration: 3.5 },
+            }],
           },
           children: [{
             index: 2,
@@ -36,7 +44,11 @@ const state = {
             branch: 0,
             stateSnapshot: {
               state: {},
-              children: [],
+              children: [{
+                state: { test: 'test' },
+                name: 'App',
+                componentData: { actualDuration: 3.5 },
+              }],
             },
             children: [{
               index: 3,
@@ -44,12 +56,16 @@ const state = {
               branch: 0,
               stateSnapshot: {
                 state: {},
-                children: [],
+                children: [{
+                  state: { test: 'test' },
+                  name: 'App',
+                  componentData: { actualDuration: 3.5 },
+                }],
               },
               children: [],
-            }]
-          }]
-        }]
+            }],
+          }],
+        }],
       },
       sliderIndex: 0,
       viewIndex: -1,
@@ -83,6 +99,5 @@ describe('testing the emptySnapshot button', () => {
 });
 
 test('number of actions should reflect snapshots array', () => {
-  console.log(wrapper)
   expect(wrapper.find(Action).length).toBe(state.tabs[state.currentTab].snapshots.length);
 });
