@@ -14,6 +14,43 @@ const state = {
   tabs: {
     87: {
       snapshots: [1, 2, 3, 4],
+      hierarchy: {
+        index: 0,
+        name: 1,
+        branch: 0,
+        stateSnapshot: {
+          state: {},
+          children: [],
+        },
+        children: [{
+          index: 1,
+          name: 2,
+          branch: 0,
+          stateSnapshot: {
+            state: {},
+            children: [],
+          },
+          children: [{
+            index: 2,
+            name: 3,
+            branch: 0,
+            stateSnapshot: {
+              state: {},
+              children: [],
+            },
+            children: [{
+              index: 3,
+              name: 4,
+              branch: 0,
+              stateSnapshot: {
+                state: {},
+                children: [],
+              },
+              children: [],
+            }]
+          }]
+        }]
+      },
       sliderIndex: 0,
       viewIndex: -1,
     },
@@ -46,5 +83,6 @@ describe('testing the emptySnapshot button', () => {
 });
 
 test('number of actions should reflect snapshots array', () => {
+  console.log(wrapper)
   expect(wrapper.find(Action).length).toBe(state.tabs[state.currentTab].snapshots.length);
 });
