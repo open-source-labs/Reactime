@@ -42,9 +42,10 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
   const packFunc = useCallback(data => {
     return d3.pack()
     .size([width, height])
+    // .radius(d => { return d.r; })
     .padding(3)(d3.hierarchy(data)
-      .sum(d => { return d.componentData.actualDuration || 0; })
-      .sort((a, b) => { return b.value - a.value; }));
+                    .sum(d => { return d.componentData.actualDuration || 0; })
+                    .sort((a, b) => { return b.value - a.value; }));
   }, [width, height]);
 
   // If indexToDisplay changes, clear old tree nodes
@@ -56,13 +57,14 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
   }, [indexToDisplay, svgRef]);
 
   useEffect(() => {
-    // console.log(`***** useEffect - MAIN -> snapshots[${indexToDisplay}]`, snapshots[indexToDisplay]);
-    
+    console.log(`***** useEffect - MAIN -> snapshots[${indexToDisplay}]`, snapshots[indexToDisplay]);
+
     // Error, no App-level component present
     if (snapshots[indexToDisplay].children.length < 1) return;
 
     // Generate tree with our data
     const packedRoot = packFunc(snapshots[indexToDisplay]);
+    console.log('PerfView -> packedRoot', packedRoot);
 
     // Set initial focus to root node
     let curFocus = packedRoot;
@@ -82,13 +84,12 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
       .enter().append('circle')
         .attr('fill', d => (d.children ? colorScale(d.depth) : 'white'))
         .attr('pointer-events', d => (!d.children ? 'none' : null))
-        .on('mouseover', () => d3.select(this).attr('stroke', '#000'))
-        .on('mouseout', () => d3.select(this).attr('stroke', null))
+        .on('mouseover', function () { d3.select(this).attr('stroke', '#000'); })
+        .on('mouseout', function () { d3.select(this).attr('stroke', null); })
         .on('click', d => curFocus !== d && (zoomToNode(d), d3.event.stopPropagation()));
 
     // Generate text labels. Set (only) root to visible initially
     const label = svg.append('g')
-        // .style('fill', 'rgb(231, 231, 231)')
         .attr('class', 'perf-chart-labels')
       .selectAll('text')
       .data(packedRoot.descendants())
@@ -107,8 +108,10 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
 
     // Zoom/relocated nodes and labels based on dimensions given [x, y, r]
     function zoomViewArea(newXYR) {
-      console.log("zoomTo -> newXYR", newXYR);
-      const k = width / newXYR[2];
+      // console.log('zoomTo -> newXYR', newXYR);
+      // if (!newXYR.every(val => Number.isNaN(val))) { console.log('NaN'); return; }
+
+      const k = (width / newXYR[2]);
       view = newXYR;
       label.attr('transform', d => `translate(${(d.x - newXYR[0]) * k},${(d.y - newXYR[1]) * k})`);
       node.attr('transform', d => `translate(${(d.x - newXYR[0]) * k},${(d.y - newXYR[1]) * k})`);
@@ -137,7 +140,12 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
     }
   }, [colorScale, packFunc, width, height, indexToDisplay, snapshots]);
 
-  return <svg className="perfContainer" ref={svgRef} />;
+  return (
+    <div className="perf-d3-container">
+      <svg className="perf-d3-svg" ref={svgRef} />
+      {/* <span>TEST</span> */}
+    </div>
+    );
 };
 
 export default PerfView;
