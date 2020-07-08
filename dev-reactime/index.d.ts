@@ -10,21 +10,27 @@
  * @returns {void} --> no return value
  * 
  * Reactime contributors:
- * Abaas Khorrami
- * Andy Wond
- * Bryan Lee
- * Chris Flannery
- * David Chai
- * Ergi Shehu
- * Joshua Howard
- * Josh Kim
- * Prasanna Malla
- * Rajeeb Banstola
- * Rocky Lin
- * Ruth Anam
- * Ryan Dang
- * Sierra Swaby
- * Yujin Kang
+    "Abaas Khorrami",
+    "Andy Wong",
+    "Bryan Lee",
+    "Carlos Perez",
+    "Chris Flannery",
+    "David Chai",
+    "Edwin Menendez",
+    "Ergi Shehu",
+    "Gabriela Jardim Aquino",
+    "Gregory Panciera",
+    "Josh Kim",
+    "Joshua Howard",
+    "Nathanael Wa Mwenze",
+    "Prasanna Malla",
+    "Rajeeb Banstola",
+    "Raymond Kwan",
+    "Rocky Lin",
+    "Ruth Anam",
+    "Ryan Dang",
+    "Sierra Swaby",
+    "Yujin Kang"
  * 
  * 
  * NOTE: TypeScript support is in beta and still experimental.  

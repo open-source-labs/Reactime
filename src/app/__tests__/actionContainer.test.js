@@ -14,6 +14,59 @@ const state = {
   tabs: {
     87: {
       snapshots: [1, 2, 3, 4],
+      hierarchy: {
+        index: 0,
+        name: 1,
+        branch: 0,
+        stateSnapshot: {
+          state: {},
+          children: [{
+            state: { test: 'test' },
+            name: 'App',
+            componentData: { actualDuration: 3.5 },
+          }],
+        },
+        children: [{
+          index: 1,
+          name: 2,
+          branch: 0,
+          stateSnapshot: {
+            state: {},
+            children: [{
+              state: { test: 'test' },
+              name: 'App',
+              componentData: { actualDuration: 3.5 },
+            }],
+          },
+          children: [{
+            index: 2,
+            name: 3,
+            branch: 0,
+            stateSnapshot: {
+              state: {},
+              children: [{
+                state: { test: 'test' },
+                name: 'App',
+                componentData: { actualDuration: 3.5 },
+              }],
+            },
+            children: [{
+              index: 3,
+              name: 4,
+              branch: 0,
+              stateSnapshot: {
+                state: {},
+                children: [{
+                  state: { test: 'test' },
+                  name: 'App',
+                  componentData: { actualDuration: 3.5 },
+                }],
+              },
+              children: [],
+            }],
+          }],
+        }],
+      },
       sliderIndex: 0,
       viewIndex: -1,
     },

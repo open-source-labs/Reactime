@@ -11,9 +11,18 @@ describe('unit testing for Action.jsx', () => {
   let wrapper;
   const props = {
     selected: true,
-    sliderIndex: 1,
-    index: 1,
+    last: false,
+    index: 2,
+    sliderIndex: 2,
     dispatch: jest.fn(),
+    displayName: '3.0',
+    componentName: 'App',
+    componentData: {
+      actualDuration: 3.5,
+    },
+    state: { test: 'test' },
+    viewIndex: 2,
+    handleOnkeyDown: jest.fn(),
   };
   beforeEach(() => {
     wrapper = shallow(<Action {...props} />);
@@ -32,7 +41,7 @@ describe('unit testing for Action.jsx', () => {
     });
 
     test('should have a text that is equal to props.index', () => {
-      expect(wrapper.find('.action-component-text').text()).toEqual(props.index.toString());
+      expect(wrapper.find('.action-component-text').text()).toEqual(`${props.displayName}:  ${props.componentName} `);
     });
 
     test('should invoke dispatch method when clicked', () => {

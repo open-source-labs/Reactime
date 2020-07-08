@@ -28,7 +28,6 @@ class Tree {
   }
 
   addChild(state, name, componentData) {
-    //console.log('tree.js: in addChild');
     const newChild = new Tree(state, name, componentData);
     newChild.parent = this;
     this.children.push(newChild);
@@ -36,7 +35,6 @@ class Tree {
   }
 
   addSibling(state, name, componentData) {
-    // console.log('tree.js: in addSibling');
     const newSibling = new Tree(state, name, componentData);
     newSibling.parent = this.parent;
     this.parent.children.push(newSibling);
@@ -74,7 +72,6 @@ class Tree {
   // BUG FIX: Don't print the Router as a component
   // Change how the children are printed
   print() {
-    // console.log('current tree structure for *this : ', this);
     const children = ['children: '];
     // DEV: What should we push instead for components using hooks (it wouldn't be state)
     // if this.children is always initialized to empty array, when would there ever be anything to iterate through here?

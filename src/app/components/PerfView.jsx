@@ -24,7 +24,6 @@ import { schemeSet1 as colorScheme } from 'd3';
 
 
 const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
-  // console.log('***** constructor *****');
   const svgRef = useRef(null);
 
   // Figure out which snapshot index to use
@@ -35,7 +34,8 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
   // Set up color scaling function
   const colorScale = d3.scaleLinear()
     .domain([0, 7])
-    .range(['hsl(200,60%,60%)', 'hsl(255,30%,30%)'])
+    .range(['hsl(152,30%,80%)', 'hsl(228,30%,40%)'])
+    // .range(['hsl(210,30%,80%)', 'hsl(152,30%,40%)'])
     .interpolate(d3.interpolateHcl);
 
   // Set up circle-packing layout function
@@ -50,14 +50,13 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
 
   // If indexToDisplay changes, clear old tree nodes
   useEffect(() => {
-    // console.log('***** useEffect - CLEARING');
     while (svgRef.current.hasChildNodes()) {
       svgRef.current.removeChild(svgRef.current.lastChild);
     }
   }, [indexToDisplay, svgRef]);
 
   useEffect(() => {
-    console.log(`***** useEffect - MAIN -> snapshots[${indexToDisplay}]`, snapshots[indexToDisplay]);
+    // console.log(`***** useEffect - MAIN -> snapshots[${indexToDisplay}]`, snapshots[indexToDisplay]);
 
     // Error, no App-level component present
     if (snapshots[indexToDisplay].children.length < 1) return;
@@ -108,10 +107,7 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
 
     // Zoom/relocated nodes and labels based on dimensions given [x, y, r]
     function zoomViewArea(newXYR) {
-      // console.log('zoomTo -> newXYR', newXYR);
-      // if (!newXYR.every(val => Number.isNaN(val))) { console.log('NaN'); return; }
-
-      const k = (width / newXYR[2]);
+      const k = width / newXYR[2];
       view = newXYR;
       label.attr('transform', d => `translate(${(d.x - newXYR[0]) * k},${(d.y - newXYR[1]) * k})`);
       node.attr('transform', d => `translate(${(d.x - newXYR[0]) * k},${(d.y - newXYR[1]) * k})`);
@@ -120,7 +116,6 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
 
     // Transition visibility of labels
     function zoomToNode(newFocus) {
-      // console.log("zoom -> d", d);
       const transition = svg.transition()
       .duration(d3.event.altKey ? 7500 : 750)
       .tween('zoom', d => {
@@ -130,7 +125,7 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
 
       // Grab all nodes that were previously displayed, or who's parent is the new target newFocus
       // Transition their labels to visible or not
-      label.filter(function (d) { console.log('label filtering. d=', d); return d.parent === newFocus || this.style.display === 'inline'; })
+      label.filter(function (d) { return d.parent === newFocus || this.style.display === 'inline'; })
       .transition(transition)
       .style('fill-opacity', d => (d.parent === newFocus ? 1 : 0))
       .on('start', function (d) { if (d.parent === newFocus) this.style.display = 'inline'; })
