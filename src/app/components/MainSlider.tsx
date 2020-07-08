@@ -5,7 +5,7 @@ import Slider from 'rc-slider';
 import Tooltip from 'rc-tooltip';
 import PropTypes from 'prop-types';
 
-import { changeSlider, pause } from '../actions/actions';
+import { changeSlider, pause } from '../actions/actions.ts';
 import { useStoreContext } from '../store';
 
 const { Handle } = Slider;

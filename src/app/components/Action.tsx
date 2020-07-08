@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { changeView, changeSlider } from '../actions/actions.tsx';
+import { changeView, changeSlider } from '../actions/actions.ts';
 
 /* // gabi and nate :: index and delta props were removed from Action.jsx  */
 // viewIndex and handleonkeyDown added to props

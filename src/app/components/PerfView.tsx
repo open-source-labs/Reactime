@@ -20,7 +20,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import * as d3 from 'd3';
 import { schemeSet1 as colorScheme } from 'd3';
 
-// import { addNewSnapshots } from '../actions/actions';
+// import { addNewSnapshots } from '../actions/actions.ts';
 
 
 const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {

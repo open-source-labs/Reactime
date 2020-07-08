@@ -1,7 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 import { useStoreContext } from '../store.tsx';
-import { setTab } from '../actions/actions.tsx';
+import { setTab } from '../actions/actions.ts';
 
 
 const SwitchAppDropdown = () => {
