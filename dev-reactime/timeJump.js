@@ -42,7 +42,6 @@ export default (origin, mode) => {
       target.state.hooksState.forEach(hooksState => {
         if (component && component.dispatch) {
           const hooksComponent = componentActionsRecord.getComponentByIndex(hooksState[1]);
-          // console.log('dispatch going back to hooks state: ', target.state.hooksState[0]);
           hooksComponent.dispatch(target.state.hooksState[0]);
         }
       });

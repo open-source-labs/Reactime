@@ -38,10 +38,8 @@ function wrapPromise(promise) {
 }
 
 function fetchUser() {
-  console.log('fetch user...');
   return new Promise(resolve => {
     setTimeout(() => {
-      console.log('fetched user');
       resolve({
         name: 'Reactime ⌛'
       });
@@ -78,10 +76,8 @@ setInterval(() => {
 
 function fetchPosts() {
   const ringoPostsAtTheTime = ringoPosts;
-  console.log('fetch posts...');
   return new Promise(resolve => {
     setTimeout(() => {
-      console.log('fetched posts');
       resolve(ringoPostsAtTheTime);
     }, 2000);
   });

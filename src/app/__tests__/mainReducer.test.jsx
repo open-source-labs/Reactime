@@ -12,6 +12,7 @@ describe('mainReducer testing', () => {
     state = {
       tabs: {
         87: {
+          initialSnapshot: [],
           snapshots: [1, 2, 3, 4],
           sliderIndex: 2,
           viewIndex: -1,
@@ -23,10 +24,67 @@ describe('mainReducer testing', () => {
           intervalId: 87,
           playing: true,
           index: 3,
-          hierarchy: null, // should be a linked list with four nodes
-          currLocation: null, // should point to the last node in hierarchy
+          initialHierarchy: null,
+          // should be a linked list with four nodes
+          hierarchy: {
+            index: 0,
+            name: 1,
+            branch: 0,
+            stateSnapshot: {
+              state: {},
+              children: [{
+                state: { test: 'test' },
+                name: 'App',
+                componentData: { actualDuration: 3.5 },
+              }],
+            },
+            children: [{
+              index: 1,
+              name: 2,
+              branch: 0,
+              stateSnapshot: {
+                state: {},
+                children: [{
+                  state: { test: 'test' },
+                  name: 'App',
+                  componentData: { actualDuration: 3.5 },
+                }],
+              },
+              children: [{
+                index: 2,
+                name: 3,
+                branch: 0,
+                stateSnapshot: {
+                  state: {},
+                  children: [{
+                    state: { test: 'test' },
+                    name: 'App',
+                    componentData: { actualDuration: 3.5 },
+                  }],
+                },
+                children: [{
+                  index: 3,
+                  name: 4,
+                  branch: 0,
+                  stateSnapshot: {
+                    state: {},
+                    children: [{
+                      state: { test: 'test' },
+                      name: 'App',
+                      componentData: { actualDuration: 3.5 },
+                    }],
+                  },
+                  children: [],
+                }],
+              }],
+            }],
+          },
+          // currLocation: null,
+          // should point to the last node in hierarchy
+          currLocation: 4,
         },
         75: {
+          initialSnapshot: [],
           snapshots: [1, 2, 3, 4],
           sliderIndex: 3,
           viewIndex: -1,
@@ -37,6 +95,64 @@ describe('mainReducer testing', () => {
           },
           intervalId: 75,
           playing: false,
+          initialHierarchy: null,
+          // should be a linked list with four nodes
+          hierarchy: {
+            index: 0,
+            name: 1,
+            branch: 0,
+            stateSnapshot: {
+              state: {},
+              children: [{
+                state: { test: 'test' },
+                name: 'App',
+                componentData: { actualDuration: 3.5 },
+              }],
+            },
+            children: [{
+              index: 1,
+              name: 2,
+              branch: 0,
+              stateSnapshot: {
+                state: {},
+                children: [{
+                  state: { test: 'test' },
+                  name: 'App',
+                  componentData: { actualDuration: 3.5 },
+                }],
+              },
+              children: [{
+                index: 2,
+                name: 3,
+                branch: 0,
+                stateSnapshot: {
+                  state: {},
+                  children: [{
+                    state: { test: 'test' },
+                    name: 'App',
+                    componentData: { actualDuration: 3.5 },
+                  }],
+                },
+                children: [{
+                  index: 3,
+                  name: 4,
+                  branch: 0,
+                  stateSnapshot: {
+                    state: {},
+                    children: [{
+                      state: { test: 'test' },
+                      name: 'App',
+                      componentData: { actualDuration: 3.5 },
+                    }],
+                  },
+                  children: [],
+                }],
+              }],
+            }],
+          },
+          // currLocation: null,
+          // should point to the last node in hierarchy
+          currLocation: 4,
         },
       },
       currentTab: 87,
@@ -100,7 +216,7 @@ describe('mainReducer testing', () => {
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab].viewIndex).toEqual(-1);
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab].playing).toEqual(false);
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab]
-        .snapshots).toEqual(state.tabs[currentTab].snapshots.slice(0, 1));
+        .snapshots).toEqual([state.tabs[currentTab].snapshots[state.tabs[currentTab].snapshots.length - 1]]);
     });
     // should push slider back to start position
   });

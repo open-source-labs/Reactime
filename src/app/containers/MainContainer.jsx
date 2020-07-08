@@ -66,11 +66,11 @@ function MainContainer() {
     return (
       <div className="error-container">
         <a
-          href="https://www.npmjs.com/package/reactime"
+          href="reactime.io"
           target="_blank"
           rel="noopener noreferrer"
         >
-          No React application found. Please install our npm package in your app.
+          No React application found. Please visit reactime.io to more info.
         </a>
       </div>
     );
@@ -86,13 +86,15 @@ function MainContainer() {
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // gabi :: cleannign hierarchy and snapshotView from stateless data
   const statelessCleanning = obj => {
-    // console.log('statelessCleanning = obj =>', obj);
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;
     }
     if (newObj.componentData) {
       delete newObj.componentData;
+    }
+    if (newObj.parent || newObj.parent === null) {
+      delete newObj.parent;
     }
     if (newObj.state === 'stateless') {
       delete newObj.state;
@@ -106,13 +108,11 @@ function MainContainer() {
         obj.children.forEach(element => {
           if (element.state !== 'stateless' || element.children.length > 0) {
             const clean = statelessCleanning(element);
-            // console.log('clean', clean)
             newObj.children.push(clean);
           }
         });
       }
     }
-    // console.log('statelessCleanning = newObj =>', newObj);
     return newObj;
   };
   const snapshotDisplay = statelessCleanning(snapshotView);

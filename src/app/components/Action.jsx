@@ -11,6 +11,9 @@ const Action = props => {
 
   // display render time for state change in seconds and miliseconds
   const cleanTime = () => {
+    if (!componentData.actualDuration) {
+      return 'NO TIME';
+    }
     let seconds;
     let miliseconds = componentData.actualDuration;
     if (Math.floor(componentData.actualDuration) > 60) {
@@ -23,7 +26,7 @@ const Action = props => {
     } else {
       seconds = '00';
     }
-    miliseconds = Number.parseFloat(miliseconds).toFixed(2)
+    miliseconds = Number.parseFloat(miliseconds).toFixed(2);
     const arrayMiliseconds = miliseconds.split('.');
     if (arrayMiliseconds[0].length < 2) {
       arrayMiliseconds[0] = '0'.concat(arrayMiliseconds[0]);

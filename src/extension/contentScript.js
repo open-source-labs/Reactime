@@ -1,7 +1,5 @@
 // const reactimeBackend = require('../../dev-reactime/index.js');
 
-// console.log( 'this reactimeBackend:', reactimeBackend);
-
 
 let firstMessage = true;
 
@@ -11,7 +9,6 @@ window.addEventListener('message', msg => { // runs automatically every second
   // messages sent by contentscrip
   if (firstMessage) {
     // tell the background script that the tab has reloaded
-    console.log('event from window, now sending message to extension:', msg);
     chrome.runtime.sendMessage({ action: 'tabReload' });
     firstMessage = false;
   }
@@ -20,7 +17,6 @@ window.addEventListener('message', msg => { // runs automatically every second
   const { action } = msg.data;
 
   if (action === 'recordSnap') { // this is firing on page load
-    // console.log('DATA AT EXTENSION:', msg.data);
     chrome.runtime.sendMessage(msg.data);
   }
 });
