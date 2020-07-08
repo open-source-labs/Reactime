@@ -101,6 +101,11 @@ Reactime offers beta support for TypeScript applications using stateful class co
 
 ## Authors
 
+- **Carlos Perez** - [@crperezt](https://github.com/crperezt)
+- **Edwin Menendez** - [@edwinjmenendez](https://github.com/edwinjmenendez)
+- **Gabriela Jardim Aquino** - [@aquinojardim](https://github.com/aquinojardim)
+- **Gregory Panciera** - [@gpanciera](https://github.com/gpanciera)
+- **Nathanael Wa Mwenze** - [@nmwenz90](https://github.com/nmwenz90)
 - **Ryan Dang** - [@rydang](https://github.com/rydang)
 - **Bryan Lee** - [@mylee1995](https://github.com/mylee1995)
 - **Josh Kim** - [@joshua0308](https://github.com/joshua0308)

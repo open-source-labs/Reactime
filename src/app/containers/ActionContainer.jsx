@@ -15,14 +15,12 @@ const resetSlider = () => {
 function ActionContainer() {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
-  console.log('actionContainer tabs[currentTab];', tabs[currentTab]);
-  console.log('actionContainer hierarchy;', hierarchy);
+  console.log(tabs[currentTab])
   let actionsArr = [];
   const hierarchyArr = [];
 
   // gabi and nate :: delete function to traverse state from snapshots, now we are tranversing state from hiararchy and alsog getting infromation on display name and component name
   const displayArray = obj => {
-
     if (obj.stateSnapshot.children.length > 0 && obj.stateSnapshot.children[0] && obj.stateSnapshot.children[0].state && obj.stateSnapshot.children[0].name) {
       const newObj = {
         index: obj.index,

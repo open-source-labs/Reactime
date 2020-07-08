@@ -65,9 +65,8 @@ describe('Unit testing for Diff.jsx', () => {
     it('Check if Diff component inner text value is a string', () => {
       expect(typeof wrapper.text()).toEqual('string');
     });
-    xit('Check if Diff component div has a className noState ', () => {
-      console.log(wrapper.props());
-      expect(wrapper.props().className).toEqual('noState');
+    it('Check if previous and delta is defined Diff should not have text content "No state change detected. Trigger an event to change state"', () => {
+      expect(wrapper.textContent).not.toEqual('No state change detected. Trigger an event to change state');
     });
   });
 

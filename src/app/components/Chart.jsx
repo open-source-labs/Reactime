@@ -14,7 +14,7 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 
-const colors = ['#2C4870', '#519331', '#AA5039', '#8B2F5F', '#C5B738', '#858DFF', '#FF8D02','#FFCD51','#ACDAE6','#FC997E','#CF93AD','#AA3939','#AA6C39','#226666',]
+const colors = ['#95B6B7', '#475485', '#519331', '#AA5039', '#8B2F5F', '#C5B738', '#858DFF', '#FF8D02', '#FFCD51', '#ACDAE6', '#FC997E', '#CF93AD', '#AA3939', '#AA6C39', '#226666', '#2C4870'];
 
 let root = {};
 class Chart extends Component {
@@ -34,7 +34,6 @@ class Chart extends Component {
   componentDidUpdate() {
     const { hierarchy } = this.props;
     root = JSON.parse(JSON.stringify(hierarchy));
-    console.log("Chart -> componentDidUpdate -> hierarchy", hierarchy);
     this.maked3Tree();
   }
 
@@ -46,16 +45,15 @@ class Chart extends Component {
   }
 
   maked3Tree() {
-
     this.removed3Tree();
-    const margin = {
-      top: 0,
-      right: 60,
-      bottom: 200,
-      left: 120,
-    };
-    const width = 600 - margin.right - margin.left;
-    const height = 700 - margin.top - margin.bottom;
+    // const margin = {
+    //   top: 0,
+    //   right: 60,
+    //   bottom: 200,
+    //   left: 120,
+    // };
+    const width = 600; // - margin.right - margin.left;
+    const height = 600; // 700 - margin.top - margin.bottom;
     const chartContainer = d3.select(this.chartRef.current)
       .append('svg') // chartContainer is now pointing to svg
       .attr('width', width)
@@ -76,9 +74,9 @@ class Chart extends Component {
     const tree = d3.tree()
       // this assigns width of tree to be 2pi
       // .size([2 * Math.PI, radius / 1.3])
-      .nodeSize([width/10, height/10])
+      .nodeSize([width / 10, height / 10])
       // .separation(function (a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
-      .separation(function (a, b) { return (a.parent == b.parent ? 2 : 2)});
+      .separation(function (a, b) { return (a.parent == b.parent ? 2 : 2); });
 
     const d3root = tree(hierarchy);
 
@@ -92,9 +90,7 @@ class Chart extends Component {
       .append('path')
       .attr('class', 'link')
       .attr('d', d3.linkRadial()
-        .angle(d => {
-          return d.x
-        })
+        .angle(d => d.x)
         .radius(d => d.y));
 
     const node = g.selectAll('.node')
@@ -103,15 +99,14 @@ class Chart extends Component {
       .enter()
       .append('g')
       .style('fill', function (d) {
-        if(d.data.branch < colors.length){
-          return colors[d.data.branch]
-        } else {
-          let indexColors = d.data.branch - colors.length;
-          while(indexColors > colors.length){
-            indexColors = indexColors - colors.length;
-          }
-          return colors[indexColors]
+        if (d.data.branch < colors.length) {
+          return colors[d.data.branch];
         }
+        let indexColors = d.data.branch - colors.length;
+        while (indexColors > colors.length) {
+          indexColors -= colors.length;
+        }
+        return colors[indexColors];
       })
       .attr('class', 'node--internal')
       // })
@@ -207,7 +202,11 @@ class Chart extends Component {
   }
 
   render() {
-    return <div ref={this.chartRef} className="d3Container" />;
+    return (
+      <div className="history-d3-container">
+        <div ref={this.chartRef} className="history-d3-div" />
+      </div>
+    );
   }
 }
 
