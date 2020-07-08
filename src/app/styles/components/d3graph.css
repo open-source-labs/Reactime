@@ -93,22 +93,31 @@ div.tooltip {
   left: 0;
 }
 
-.perfContainer {
-  display: block;
-  /* margin: 0 -14px;
-  background-color: hsl(152,80%,80%); */
+.history-d3-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100% - 70px);
   /* border: 2px solid red; */
 }
 
-.d3divContainer {
-  /* display: flex;
+.perf-d3-container {
+  display: flex;
   flex-direction: column;
-  justify-content: space-between; */
+  justify-content: space-between;
+  height: calc(100% - 70px);
+  /* border: 2px solid red; */
+}
+
+.perf-d3-svg {
+  display: block;
 }
 
 .perf-chart-labels {
-  font: 15px sans-serif;
-  color: white;
+  font: 12px sans-serif;
+  /* color: white; */
+  /* fill: rgb(231, 231, 231); */
+  fill: #2a2f3a;
   pointer-events: none;
   text-anchor: middle;
 };
