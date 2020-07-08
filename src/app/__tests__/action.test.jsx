@@ -30,7 +30,6 @@ describe('unit testing for Action.jsx', () => {
       wrapper.setProps({ selected: false });
       expect(wrapper.hasClass('action-component selected')).toEqual(false);
     });
-
     test('should have a text that is equal to props.index', () => {
       expect(wrapper.find('.action-component-text').text()).toEqual(props.index.toString());
     });
