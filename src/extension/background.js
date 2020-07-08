@@ -276,6 +276,26 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         firstSnapshotReceived[tabId] = true;
         reloaded[tabId] = false;
 
+        // if (tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]) {
+        //   let sameState = true;
+        //   const testState = (array, compare) => {
+        //     array.forEach((element, elIndex) => {
+        //       const test1 = JSON.stringify(element.state);
+        //       const test2 = JSON.stringify(compare[elIndex].state);
+        //       if (JSON.stringify(element.state) !== JSON.stringify(compare[elIndex].state)) {
+        //         sameState = false;
+        //       }
+        //       if (element.children) {
+        //         testState(element.children, compare[elIndex].children);
+        //       }
+        //     });
+        //   };
+        //   testState(tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1].children, request.payload.children);
+        //   if (sameState) {
+        //     break;
+        //   }
+        // }
+
         tabsObj[tabId].snapshots.push(request.payload);
 
         sendToHierarchy(

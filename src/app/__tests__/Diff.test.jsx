@@ -29,9 +29,9 @@ describe('Unit testing for Diff.jsx', () => {
 
   useStoreContext.mockImplementation(() => [state]);
 
-  let delta = { children: {} }; // expect delta to be an obj
+  const delta = { children: {} }; // expect delta to be an obj
   const html = 'html'; // expect html to be a string
-  let previous = { state: 'string', children: {} }; // expect previous to be an obj
+  const previous = { state: 'string', children: {} }; // expect previous to be an obj
 
   beforeEach(() => {
     wrapper = shallow(<Diff {...props} />);

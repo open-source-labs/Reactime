@@ -169,10 +169,9 @@ export default (snap, mode) => {
     }
 
     // This grabs stateless components
-    /*
     if (!componentFound && (tag === 0 || tag === 1 || tag === 2)) {
       newState = 'stateless';
-    }*/
+    }
 
     // Adds performance metrics to the component data
     componentData = {
