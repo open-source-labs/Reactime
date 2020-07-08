@@ -1,0 +1,12 @@
+declare module 'react';
+declare module 'react-dom';
+declare module 'react-select';
+declare module 'rc-slider';
+declare module 'rc-tooltip';
+declare module 'd3';
+declare module 'immer';
+declare module 'jsondiffpatch';
+declare module 'react-html-parser';
+declare module 'react-json-tree';
+declare module 'prop-types';
+declare module 'react-router-dom';
