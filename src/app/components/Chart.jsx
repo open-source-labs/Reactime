@@ -46,14 +46,14 @@ class Chart extends Component {
 
   maked3Tree() {
     this.removed3Tree();
-    const margin = {
-      top: 0,
-      right: 60,
-      bottom: 200,
-      left: 120,
-    };
-    const width = 600 - margin.right - margin.left;
-    const height = 700 - margin.top - margin.bottom;
+    // const margin = {
+    //   top: 0,
+    //   right: 60,
+    //   bottom: 200,
+    //   left: 120,
+    // };
+    const width = 600; // - margin.right - margin.left;
+    const height = 600; // 700 - margin.top - margin.bottom;
     const chartContainer = d3.select(this.chartRef.current)
       .append('svg') // chartContainer is now pointing to svg
       .attr('width', width)
@@ -202,7 +202,11 @@ class Chart extends Component {
   }
 
   render() {
-    return <div ref={this.chartRef} className="d3Container" />;
+    return (
+      <div className="history-d3-container">
+        <div ref={this.chartRef} className="history-d3-div" />
+      </div>
+    );
   }
 }
 
