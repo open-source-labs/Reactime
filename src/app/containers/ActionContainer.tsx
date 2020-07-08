@@ -41,7 +41,7 @@ function ActionContainer() {
   if (hierarchy) displayArray(hierarchy);
 
   // Edwin: handles keyboard presses, function passes an event and index of each action-component
-  function handleOnKeyDown(e, i) {
+  function handleOnKeyDown(e:KeyboardEvent, i:number) {
     let currIndex = i;
     // up array key pressed
     if (e.keyCode === 38) {
@@ -89,7 +89,7 @@ function ActionContainer() {
       <div className="action-component exclude">
         <button
           className="empty-button"
-          onClick={() => {
+          onClick={(e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
             dispatch(emptySnapshots());
             // set slider back to zero
             resetSlider();

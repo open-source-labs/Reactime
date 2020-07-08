@@ -2,9 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { changeView, changeSlider } from '../actions/actions.ts';
 
+interface ActionProps {
+  selected: boolean;
+  last: boolean; 
+  index: number;
+  sliderIndex: number;
+  dispatch: () => void;
+  displayName: string;
+  componentName: string;
+  componentData: {actualDuration: number};
+  state: object;
+  viewIndex: number;
+  handleOnkeyDown: (e: KeyboardEvent, i: number) => void;
+}
+
 /* // gabi and nate :: index and delta props were removed from Action.jsx  */
 // viewIndex and handleonkeyDown added to props
-const Action = props => {
+const Action: React.SFC = (props: ActionProps) => {
   const {
     selected, last, index, sliderIndex, dispatch, displayName, componentName, componentData, state, viewIndex, handleOnkeyDown,
   } = props;
@@ -41,7 +55,7 @@ const Action = props => {
   return (
     <div
       // Edwin: invoking keyboard functionality; functionality is in ActionContainer;
-      onKeyDown={e => handleOnkeyDown(e, viewIndex)}
+      onKeyDown={(e: KeyboardEvent) => handleOnkeyDown(e, viewIndex)}
       className={selected || last ? 'action-component selected' : 'action-component'}
       onClick={() => {
         dispatch(changeView(index));
@@ -61,7 +75,7 @@ const Action = props => {
       </button>
       <button
         className="jump-button"
-        onClick={e => {
+        onClick={(e: MouseEvent) => {
           e.stopPropagation();
           dispatch(changeSlider(index));
           dispatch(changeView(index));
@@ -73,18 +87,6 @@ const Action = props => {
       </button>
     </div>
   );
-};
-// gabi and nate :: added displayName, componentName and State props to propTypes
-Action.propTypes = {
-  sliderIndex: PropTypes.number.isRequired,
-  selected: PropTypes.bool.isRequired,
-  index: PropTypes.number.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  displayName: PropTypes.string.isRequired,
-  componentName: PropTypes.string.isRequired,
-  state: PropTypes.object.isRequired,
-  handleOnkeyDown: PropTypes.func.isRequired,
-  viewIndex: PropTypes.number.isRequired,
 };
 
 export default Action;

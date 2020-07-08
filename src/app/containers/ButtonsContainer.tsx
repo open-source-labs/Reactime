@@ -42,23 +42,23 @@ function ButtonsContainer() {
 
   return (
     <div className="buttons-container">
-      <button className="pause-button" type="button" onClick={() => dispatch(toggleMode('paused'))}>
+      <button className="pause-button" type="button" onClick={(e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => dispatch(toggleMode('paused'))}>
         {paused ? 'Resume' : 'Pause'}
       </button>
-      <button className="lock-button" type="button" onClick={() => dispatch(toggleMode('locked'))}>
+      <button className="lock-button" type="button" onClick={(e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => dispatch(toggleMode('locked'))}>
         {locked ? 'Unlock' : 'Lock'}
       </button>
       <button
         className="persist-button"
         type="button"
-        onClick={() => dispatch(toggleMode('persist'))}
+        onClick={(e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => dispatch(toggleMode('persist'))}
       >
         {persist ? 'Unpersist' : 'Persist'}
       </button>
-      <button className="export-button" type="button" onClick={() => exportHandler(snapshots)}>
+      <button className="export-button" type="button" onClick={(e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => exportHandler(snapshots)}>
         Export
       </button>
-      <button className="import-button" type="button" onClick={() => importHandler(dispatch)}>
+      <button className="import-button" type="button" onClick={(e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => importHandler(dispatch)}>
         Import
       </button>
     </div>
