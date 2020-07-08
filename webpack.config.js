@@ -44,6 +44,14 @@ const config = {
         },
       },
       {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+        resolve: {
+          extensions: ['.tsx', '.ts', '.js'],
+        },
+      },
+      {
         test: /\.scss$/,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
