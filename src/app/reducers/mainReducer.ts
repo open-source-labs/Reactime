@@ -3,7 +3,7 @@ import produce from 'immer';
 import * as types from '../constants/actionTypes.ts';
 
 
-export default (state, action) => produce(state, draft => {
+export default (state:object, action:{type:string, payload:any}) => produce((state:object, draft:{port:any, currentTab:any, tabs:object }) => {
   const { port, currentTab, tabs } = draft;
   const {
     hierarchy,
@@ -16,12 +16,12 @@ export default (state, action) => produce(state, draft => {
 
 
   // gabi and nate :: function that find the index in the hierarchy and extract the name of the equivalent index to add to the post message
-  const findName = (index, hierarchy) => {
+  const findName = (index:number, hierarchy:{index:number, name:number, children:[]}) => {
     if (hierarchy.index == index) {
       return hierarchy.name;
     }
 
-    const hierarchyChildArray = [];
+    const hierarchyChildArray:[] = [];
     for (const hierarchyChild of hierarchy.children) {
       hierarchyChildArray.push(findName(index, hierarchyChild));
     }

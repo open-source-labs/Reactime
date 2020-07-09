@@ -3,7 +3,7 @@ import React from 'react';
 import { importSnapshots, toggleMode } from '../actions/actions.ts';
 import { useStoreContext } from '../store.tsx';
 
-function exportHandler(snapshots) {
+function exportHandler(snapshots:[]) {
   // create invisible download anchor link
   const fileDownload = document.createElement('a');
 
@@ -20,11 +20,11 @@ function exportHandler(snapshots) {
   URL.revokeObjectURL(fileDownload.href);
 }
 
-function importHandler(dispatch) {
+function importHandler(dispatch:(a:()=>void)=>void) {
   const fileUpload = document.createElement('input');
   fileUpload.setAttribute('type', 'file');
 
-  fileUpload.onchange = event => {
+  fileUpload.onchange = (event:{target:{files:[]}}) => {
     const reader = new FileReader();
     reader.onload = () => dispatch(importSnapshots(JSON.parse(reader.result)));
     reader.readAsText(event.target.files[0]);
