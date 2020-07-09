@@ -4,7 +4,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import {
   MemoryRouter as Router, Route, NavLink, Switch,
 } from 'react-router-dom';
-// import { StaticRouter } from 'react-router';
+import { createBrowserHistory, createMemoryHistory } from 'history';
 
 import DiffRoute from '../components/DiffRoute.jsx';
 
@@ -16,12 +16,12 @@ const props = {
 configure({ adapter: new Adapter() });
 let wrapper;
 
-xdescribe('DiffRoute props', () => {
+describe('DiffRoute props', () => {
   it('should have a property called snapshot', () => {
-
+    expect(props).toHaveProperty('snapshot');
   });
   it('props snapshot value should be an array', () => {
-
+    expect(Array.isArray(props.snapshot)).toBe(true)
   });
 });
 
@@ -30,7 +30,7 @@ describe('DiffRoute component', () => {
     wrapper = shallow(<DiffRoute {...props} />);
   });
   it('should contain a router component', () => {
-    console.log('wrapper find route --> ', wrapper.find(Router).type());
+
     expect(wrapper.find(Router).type()).toEqual(Router);
   });
   it('div tag in Router should have a classname "navbar', () => {
@@ -43,5 +43,5 @@ describe('DiffRoute component', () => {
 
 
 // check if router component has a dive with a navlik component
-//check if navlinks go to appropriate routes
+// check if navlinks go to appropriate routes
 // check if routes in switch have appropriate props
