@@ -14,20 +14,24 @@ export default (state, action) => produce(state, draft => {
     sliderIndex,
   } = tabs[currentTab] || {};
 
-
+  // eslint-disable-next-line max-len
   // gabi and nate :: function that find the index in the hierarchy and extract the name of the equivalent index to add to the post message
-  const findName = (index, hierarchy) => {
-    if (hierarchy.index == index) {
-      return hierarchy.name;
+  // eslint-disable-next-line consistent-return
+  const findName = (index, obj) => {
+    // eslint-disable-next-line eqeqeq
+    if (obj.index == index) {
+      return obj.name;
     }
 
-    const hierarchyChildArray = [];
-    for (const hierarchyChild of hierarchy.children) {
-      hierarchyChildArray.push(findName(index, hierarchyChild));
+    const objChildArray = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for (const objChild of obj.children) {
+      objChildArray.push(findName(index, objChild));
     }
-    for (const hierarchyChildName of hierarchyChildArray) {
-      if (hierarchyChildName) {
-        return hierarchyChildName;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const objChildName of objChildArray) {
+      if (objChildName) {
+        return objChildName;
       }
     }
   };
@@ -36,6 +40,7 @@ export default (state, action) => produce(state, draft => {
     case types.MOVE_BACKWARD: {
       if (snapshots.length > 0 && sliderIndex > 0) {
         const newIndex = sliderIndex - 1;
+        // eslint-disable-next-line max-len
         // gabi and nate :: find the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
         const nameFromIndex = findName(newIndex, hierarchy);
 
@@ -56,6 +61,7 @@ export default (state, action) => produce(state, draft => {
     case types.MOVE_FORWARD: {
       if (sliderIndex < snapshots.length - 1) {
         const newIndex = sliderIndex + 1;
+        // eslint-disable-next-line max-len
         // gabi and nate :: find the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
         const nameFromIndex = findName(newIndex, hierarchy);
 
@@ -78,6 +84,7 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.SLIDER_ZERO: {
+      // eslint-disable-next-line max-len
       // gabi and nate :: reset name to 0 to send to background.js the current name in the jump action
       port.postMessage({
         action: 'jumpToSnap',
@@ -96,6 +103,7 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.CHANGE_SLIDER: {
+      // eslint-disable-next-line max-len
       // gabi and nate :: finds the name by the action.payload, parsing through the hierarchy to send to background.js the current name in the jump action
       const nameFromIndex = findName(action.payload, hierarchy);
 
@@ -119,6 +127,7 @@ export default (state, action) => produce(state, draft => {
       // gabi :: record snapshot of page initial state
       tabs[currentTab].initialSnapshot.push(tabs[currentTab].snapshots[0]);
       // gabi :: reset snapshots to page last state recorded
+      // eslint-disable-next-line max-len
       tabs[currentTab].snapshots = [tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1]];
       // gabi :: record hierarchy of page initial state
       tabs[currentTab].initialHierarchy = { ...tabs[currentTab].hierarchy };
@@ -126,6 +135,7 @@ export default (state, action) => produce(state, draft => {
       // gabi :: reset hierarchy
       tabs[currentTab].hierarchy.children = [];
       // gabi :: reset hierarchy to page last state recorded
+      // eslint-disable-next-line prefer-destructuring
       tabs[currentTab].hierarchy.stateSnapshot = tabs[currentTab].snapshots[0];
       // gabi :: reset currLocation to page last state recorded
       tabs[currentTab].currLocation = tabs[currentTab].hierarchy;

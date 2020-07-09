@@ -1,7 +1,7 @@
 import React from 'react';
 import { diff, formatters } from 'jsondiffpatch';
 import ReactHtmlParser from 'react-html-parser';
-import { useStoreContext } from '../store.tsx';
+import { useStoreContext } from '../store';
 
 interface DiffProps {
   snapshot: {state:object|string}; 

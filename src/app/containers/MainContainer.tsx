@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
-import HeadContainer from './HeadContainer.tsx';
-import ActionContainer from './ActionContainer.tsx';
-import StateContainer from './StateContainer.tsx';
-import TravelContainer from './TravelContainer.tsx';
-import ButtonsContainer from './ButtonsContainer.tsx';
+import HeadContainer from './HeadContainer';
+import ActionContainer from './ActionContainer';
+import StateContainer from './StateContainer';
+import TravelContainer from './TravelContainer';
+import ButtonsContainer from './ButtonsContainer';
 import {
   addNewSnapshots, initialConnect, setPort, setTab, deleteTab,
-} from '../actions/actions.ts';
-import { useStoreContext } from '../store.tsx';
+} from '../actions/actions';
+import { useStoreContext } from '../store';
 
 function MainContainer() {
   const [store, dispatch] = useStoreContext();
@@ -92,7 +92,7 @@ function MainContainer() {
     if (newObj.componentData) {
       delete newObj.componentData;
     }
-    
+
     if (newObj.state === 'stateless') {
       delete newObj.state;
     }
