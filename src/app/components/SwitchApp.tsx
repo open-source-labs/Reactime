@@ -7,7 +7,7 @@ import { setTab } from '../actions/actions.ts';
 const SwitchAppDropdown = () => {
   const [{ currentTab, tabs }, dispatch] = useStoreContext();
   
-  const tabsArray = [];
+  const tabsArray:[] = [];
   Object.keys(tabs).forEach(tab => {
     tabsArray.unshift({ value: tab, label: tabs[tab].title });
   });

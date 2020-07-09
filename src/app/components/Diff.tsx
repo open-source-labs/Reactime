@@ -1,12 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { diff, formatters } from 'jsondiffpatch';
 import ReactHtmlParser from 'react-html-parser';
-
 import { useStoreContext } from '../store.tsx';
 
 interface DiffProps {
-  snapshot: object; 
+  snapshot: {state:object | string}; 
   show?: boolean; 
 }
 
@@ -68,13 +66,5 @@ function Diff(props: DiffProps) {
   }
   return <div>{ReactHtmlParser(html)}</div>;
 }
-
-Diff.propTypes = {
-  snapshot: PropTypes.shape({
-    state: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    children: PropTypes.arrayOf(PropTypes.object),
-  }).isRequired,
-  show: PropTypes.bool.isRequired,
-};
 
 export default Diff;

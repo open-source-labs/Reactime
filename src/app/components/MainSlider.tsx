@@ -3,14 +3,18 @@
 import React from 'react';
 import Slider from 'rc-slider';
 import Tooltip from 'rc-tooltip';
-import PropTypes from 'prop-types';
-
 import { changeSlider, pause } from '../actions/actions.ts';
 import { useStoreContext } from '../store';
 
 const { Handle } = Slider;
 
-const handle = props => {
+interface handleProps {
+  value: number, 
+  dragging: boolean, 
+  index: number
+};
+
+const handle = (props: handleProps) => {
   const {
     value, dragging, index, ...restProps
   } = props;
@@ -28,7 +32,12 @@ const handle = props => {
   );
 };
 
-function MainSlider({ snapshotsLength }) {
+interface MainSliderProps {
+  snapshotsLength: number;
+};
+
+function MainSlider(props: MainSliderProps) {
+  const { snapshotsLength } = props
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { sliderIndex } = tabs[currentTab];
 
@@ -37,7 +46,7 @@ function MainSlider({ snapshotsLength }) {
       min={0}
       max={snapshotsLength - 1}
       value={sliderIndex}
-      onChange={index => {
+      onChange={(index:any) => {
         const newIndex = index === -1 ? 0 : index;
         dispatch(changeSlider(newIndex));
         dispatch(pause());
@@ -46,9 +55,5 @@ function MainSlider({ snapshotsLength }) {
     />
   );
 }
-
-MainSlider.propTypes = {
-  snapshotsLength: PropTypes.number.isRequired,
-};
 
 export default MainSlider;

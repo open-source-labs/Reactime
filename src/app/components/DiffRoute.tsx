@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   MemoryRouter as Router, Route, NavLink, Switch,
 } from 'react-router-dom';

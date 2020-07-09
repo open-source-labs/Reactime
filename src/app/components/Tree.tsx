@@ -1,9 +1,8 @@
 import React from 'react';
 import JSONTree from 'react-json-tree';
-import PropTypes from 'prop-types';
 
 
-const getItemString = (type, data) => {
+const getItemString = (type, data:{state:object|string, name:string, children:[]}) => {
   // check to make sure that we are on the tree node, not anything else
   if (
     Object.keys(data).length > 3
@@ -16,7 +15,11 @@ const getItemString = (type, data) => {
   return null;
 };
 
-const Tree = props => {
+interface TreeProps {
+  snapshot: {state?:object|string, children?:[]};
+}
+
+const Tree = (props:TreeProps) => {
   const { snapshot } = props;
 
   return (
@@ -27,19 +30,11 @@ const Tree = props => {
           theme={{ tree: () => ({ className: 'json-tree' }) }}
           shouldExpandNode={() => true}
           getItemString={getItemString}
-          labelRenderer={raw => (typeof raw[0] !== 'number' ? <span>{raw[0]}</span> : null)}
+          labelRenderer={(raw:[]) => (typeof raw[0] !== 'number' ? <span>{raw[0]}</span> : null)}
         />
       )}
     </>
   );
-};
-
-Tree.propTypes = {
-  snapshot: PropTypes.shape({
-    state: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    children: PropTypes.arrayOf(PropTypes.object),
-    name: PropTypes.string,
-  }).isRequired,
 };
 
 export default Tree;

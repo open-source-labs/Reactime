@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { changeView, changeSlider } from '../actions/actions.ts';
 
 interface ActionProps {
@@ -57,7 +56,7 @@ const Action = (props: ActionProps) => {
       // Edwin: invoking keyboard functionality; functionality is in ActionContainer;
       onKeyDown={(e: KeyboardEvent) => handleOnkeyDown(e, viewIndex)}
       className={selected || last ? 'action-component selected' : 'action-component'}
-      onClick={() => {
+      onClick={(e: MouseEvent) => {
         dispatch(changeView(index));
       }}
       role="presentation"
