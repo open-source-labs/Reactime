@@ -18,7 +18,7 @@ interface ActionProps {
 
 /* // gabi and nate :: index and delta props were removed from Action.jsx  */
 // viewIndex and handleonkeyDown added to props
-const Action: React.SFC = (props: ActionProps) => {
+const Action = (props: ActionProps) => {
   const {
     selected, last, index, sliderIndex, dispatch, displayName, componentName, componentData, state, viewIndex, handleOnkeyDown,
   } = props;
@@ -28,8 +28,8 @@ const Action: React.SFC = (props: ActionProps) => {
     if (!componentData.actualDuration) {
       return 'NO TIME';
     }
-    let seconds;
-    let miliseconds = componentData.actualDuration;
+    let seconds:any ;
+    let miliseconds:any = componentData.actualDuration;
     if (Math.floor(componentData.actualDuration) > 60) {
       seconds = Math.floor(componentData.actualDuration / 60);
       seconds = JSON.stringify(seconds);

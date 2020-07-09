@@ -5,7 +5,13 @@ import ReactHtmlParser from 'react-html-parser';
 
 import { useStoreContext } from '../store.tsx';
 
-function Diff({ snapshot, show }) {
+interface DiffProps {
+  snapshot: object; 
+  show?: boolean; 
+}
+
+function Diff(props: DiffProps) {
+  const { snapshot, show } = props
   const [mainState] = useStoreContext();
   const { currentTab, tabs } = mainState; // Nate:: k/v pairs of mainstate store object being created
   const { snapshots, viewIndex, sliderIndex } = tabs[currentTab];
@@ -19,16 +25,13 @@ function Diff({ snapshot, show }) {
   }
 
   // gabi :: cleanning preview from stateless data
-  const statelessCleanning = obj => {
+  const statelessCleanning = (obj:{name?:string; componentData?:object; state?: object | string;stateSnaphot?:object; children?:[]}) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;
     }
     if (newObj.componentData) {
       delete newObj.componentData;
-    }
-    if (newObj.parent || newObj.parent === null) {
-      delete newObj.parent;
     }
     if (newObj.state === 'stateless') {
       delete newObj.state;
@@ -39,7 +42,7 @@ function Diff({ snapshot, show }) {
     if (newObj.children) {
       newObj.children = [];
       if (obj.children.length > 0) {
-        obj.children.forEach(element => {
+        obj.children.forEach((element:{state?:object | string; children?:[]}) => {
           if (element.state !== 'stateless' || element.children.length > 0) {
             const clean = statelessCleanning(element);
             newObj.children.push(clean);

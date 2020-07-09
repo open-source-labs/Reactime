@@ -3,7 +3,7 @@ import MainContainer from '../containers/MainContainer.tsx';
 import { StoreContext } from '../store.tsx';
 import mainReducer from '../reducers/mainReducer.ts';
 
-const initialState = {
+const initialState:object = {
   port: null,
   currentTab: null,
   tabs: {},
