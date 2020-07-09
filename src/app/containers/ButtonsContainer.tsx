@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { importSnapshots, toggleMode } from '../actions/actions.ts';
-import { useStoreContext } from '../store.tsx';
+import { importSnapshots, toggleMode } from '../actions/actions';
+import { useStoreContext } from '../store';
 
 function exportHandler(snapshots:[]) {
   // create invisible download anchor link

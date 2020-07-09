@@ -1,5 +1,5 @@
 import React from 'react';
-import { changeView, changeSlider } from '../actions/actions.ts';
+import { changeView, changeSlider } from '../actions/actions';
 
 interface ActionProps {
   selected: boolean;

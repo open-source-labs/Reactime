@@ -5,11 +5,11 @@ import {
   NavLink,
   Switch,
 } from 'react-router-dom';
-import StateRoute from '../components/StateRoute.tsx';
-import DiffRoute from '../components/DiffRoute.tsx';
+import StateRoute from '../components/StateRoute';
+import DiffRoute from '../components/DiffRoute';
 
 interface StateContainerProps {
-  snapshot:{state?:object|string, children?:[]}; 
+  snapshot:{state:object|string, children?:[]}; 
   hierarchy:object;
   snapshots:[]; 
   viewIndex:number;

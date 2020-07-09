@@ -2,7 +2,7 @@ import React from 'react';
 import {
   MemoryRouter as Router, Route, NavLink, Switch,
 } from 'react-router-dom';
-import Diff from './Diff.tsx';
+import Diff from './Diff';
 
 
 const DiffRoute = (props: {snapshot: {state: string | object; children?:[]}}) => (

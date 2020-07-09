@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import MainSlider from '../components/MainSlider.tsx';
-import Dropdown from '../components/Dropdown.tsx';
+import MainSlider from '../components/MainSlider';
+import Dropdown from '../components/Dropdown';
 import {
   playForward, pause, startPlaying, moveForward, moveBackward, resetSlider,
-} from '../actions/actions.ts';
-import { useStoreContext } from '../store.tsx';
+} from '../actions/actions';
+import { useStoreContext } from '../store';
 
 const speeds = [
   { value: 2000, label: '0.5x' },

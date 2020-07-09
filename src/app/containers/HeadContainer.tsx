@@ -1,5 +1,5 @@
 import React from 'react';
-import SwitchAppDropdown from '../components/SwitchApp.tsx';
+import SwitchAppDropdown from '../components/SwitchApp';
 
 function HeadContainer() {
   return (

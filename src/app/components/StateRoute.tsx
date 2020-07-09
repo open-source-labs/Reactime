@@ -3,10 +3,10 @@
 import React from 'react';
 import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom';
 
-import Chart from './Chart.tsx';
-import Tree from './Tree.tsx';
-import PerfView from './PerfView.tsx';
-import ErrorHandler from './ErrorHandler.tsx';
+import Chart from './Chart';
+import Tree from './Tree';
+import PerfView from './PerfView';
+import ErrorHandler from './ErrorHandler';
 
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types

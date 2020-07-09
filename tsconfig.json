@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "outDir": "./src/extension/build/bundles/",
-    "noImplicitAny": false,
     "module": "es6",
     "target": "es5",
     "jsx": "react",

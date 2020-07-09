@@ -2,10 +2,10 @@
 /* eslint-disable no-inner-declarations */
 import React from 'react';
 import { diff } from 'jsondiffpatch';
-import Action from '../components/Action.tsx';
+import Action from '../components/Action';
 
-import { emptySnapshots, changeView, changeSlider } from '../actions/actions.ts';
-import { useStoreContext } from '../store.tsx';
+import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
+import { useStoreContext } from '../store';
 
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
