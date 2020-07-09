@@ -1,4 +1,4 @@
-import * as types from '../constants/actionTypes.ts';
+import * as types from '../constants/actionTypes';
 
 export const toggleMode = mode => ({
   type: types.TOGGLE_MODE,

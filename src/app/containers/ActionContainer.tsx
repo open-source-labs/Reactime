@@ -17,10 +17,10 @@ function ActionContainer() {
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
   console.log(tabs[currentTab])
   let actionsArr = [];
-  const hierarchyArr:[] = [];
+  const hierarchyArr:any[] = [];
 
   // gabi and nate :: delete function to traverse state from snapshots, now we are tranversing state from hiararchy and alsog getting infromation on display name and component name
-  const displayArray = (obj:{stateSnapshot:{children:[]}, name:number, branch:number, index:number, children?:[]}) => {
+  const displayArray = (obj:{stateSnapshot:{children:any[]}, name:number, branch:number, index:number, children?:[]}) => {
     if (obj.stateSnapshot.children.length > 0 && obj.stateSnapshot.children[0] && obj.stateSnapshot.children[0].state && obj.stateSnapshot.children[0].name) {
       const newObj:object = {
         index: obj.index,
@@ -63,7 +63,7 @@ function ActionContainer() {
     }
   }
 
-  actionsArr = hierarchyArr.map((snapshot:{state:object|string, displayName:string, componentName:string, componentData:object|undefined}, index) => {
+  actionsArr = hierarchyArr.map((snapshot:{state?:object|string, displayName:string, componentName:string, componentData:{actualDuration: number}|undefined}, index) => {
     const selected = index === viewIndex;
     const last = viewIndex === -1 && index === hierarchyArr.length - 1;
     return (
@@ -89,7 +89,7 @@ function ActionContainer() {
       <div className="action-component exclude">
         <button
           className="empty-button"
-          onClick={(e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+          onClick={() => {
             dispatch(emptySnapshots());
             // set slider back to zero
             resetSlider();

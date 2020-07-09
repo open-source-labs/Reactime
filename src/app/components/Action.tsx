@@ -2,17 +2,18 @@ import React from 'react';
 import { changeView, changeSlider } from '../actions/actions';
 
 interface ActionProps {
+  key: string;
   selected: boolean;
   last: boolean; 
   index: number;
   sliderIndex: number;
-  dispatch: () => void;
+  dispatch: (a:any) => void;
   displayName: string;
   componentName: string;
-  componentData: {actualDuration: number};
-  state: object;
+  componentData: {actualDuration: number}|undefined;
+  state?: object|string;
   viewIndex: number;
-  handleOnkeyDown: (e: KeyboardEvent, i: number) => void;
+  handleOnkeyDown: (e: any, i: number) => void;
 }
 
 /* // gabi and nate :: index and delta props were removed from Action.jsx  */
@@ -39,7 +40,8 @@ const Action = (props: ActionProps) => {
     } else {
       seconds = '00';
     }
-    miliseconds = Number.parseFloat(miliseconds).toFixed(2);
+    const convert:any = new Number()
+    miliseconds = convert.parseFloat(miliseconds).toFixed(2);
     const arrayMiliseconds = miliseconds.split('.');
     if (arrayMiliseconds[0].length < 2) {
       arrayMiliseconds[0] = '0'.concat(arrayMiliseconds[0]);
@@ -54,9 +56,9 @@ const Action = (props: ActionProps) => {
   return (
     <div
       // Edwin: invoking keyboard functionality; functionality is in ActionContainer;
-      onKeyDown={(e: KeyboardEvent) => handleOnkeyDown(e, viewIndex)}
+      onKeyDown={(e:any) => handleOnkeyDown(e, viewIndex)}
       className={selected || last ? 'action-component selected' : 'action-component'}
-      onClick={(e: MouseEvent) => {
+      onClick={() => {
         dispatch(changeView(index));
       }}
       role="presentation"
@@ -74,7 +76,7 @@ const Action = (props: ActionProps) => {
       </button>
       <button
         className="jump-button"
-        onClick={(e: MouseEvent) => {
+        onClick={(e:any) => {
           e.stopPropagation();
           dispatch(changeSlider(index));
           dispatch(changeView(index));

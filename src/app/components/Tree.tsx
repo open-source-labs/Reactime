@@ -2,7 +2,7 @@ import React from 'react';
 import JSONTree from 'react-json-tree';
 
 
-const getItemString = (type, data:{state:object|string, name:string, children:[]}) => {
+const getItemString = (type, data:{state?:object|string, name:string, children:[]}) => {
   // check to make sure that we are on the tree node, not anything else
   if (
     Object.keys(data).length > 3
@@ -16,7 +16,7 @@ const getItemString = (type, data:{state:object|string, name:string, children:[]
 };
 
 interface TreeProps {
-  snapshot: {state?:object|string, children?:[]};
+  snapshot: { name?: string; componentData?: object; state?: string | object; stateSnaphot?: object; children?: any[]; };
 }
 
 const Tree = (props:TreeProps) => {
@@ -30,7 +30,7 @@ const Tree = (props:TreeProps) => {
           theme={{ tree: () => ({ className: 'json-tree' }) }}
           shouldExpandNode={() => true}
           getItemString={getItemString}
-          labelRenderer={(raw:[]) => (typeof raw[0] !== 'number' ? <span>{raw[0]}</span> : null)}
+          labelRenderer={(raw:any[]) => (typeof raw[0] !== 'number' ? <span>{raw[0]}</span> : null)}
         />
       )}
     </>

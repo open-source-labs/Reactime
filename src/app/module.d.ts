@@ -8,5 +8,6 @@ declare module 'immer';
 declare module 'jsondiffpatch';
 declare module 'react-html-parser';
 declare module 'react-json-tree';
-declare module 'prop-types';
 declare module 'react-router-dom';
+declare module 'enzyme-adapter-react-16';
+declare module 'enzyme';

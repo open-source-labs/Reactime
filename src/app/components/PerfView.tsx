@@ -23,14 +23,14 @@ import { schemeSet1 as colorScheme } from 'd3';
 // import { addNewSnapshots } from '../actions/actions.ts';
 
 interface PerfViewProps {
-  snapshots:[]; 
+  snapshots:any[]; 
   viewIndex:number; 
   width: number;
   height: number;
 }
 
 const PerfView = (props:PerfViewProps) => {
-  const { snapshots, viewIndex, width = 600, height = 600 } = props
+  const { snapshots, viewIndex, width, height } = props
   const svgRef = useRef(null);
 
   // Figure out which snapshot index to use
@@ -92,7 +92,7 @@ const PerfView = (props:PerfViewProps) => {
         .attr('pointer-events', (d?:{children:[]}) => (!d.children ? 'none' : null))
         .on('mouseover', function () { d3.select(this).attr('stroke', '#000'); })
         .on('mouseout', function () { d3.select(this).attr('stroke', null); })
-        .on('click', (d:MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => curFocus !== d && (zoomToNode(d), d3.event.stopPropagation()));
+        .on('click', (d:{ x: number; y: number; r: number; }) => curFocus !== d && (zoomToNode(d), d3.event.stopPropagation()));
 
     // Generate text labels. Set (only) root to visible initially
     const label = svg.append('g')
@@ -102,8 +102,9 @@ const PerfView = (props:PerfViewProps) => {
       .enter().append('text')
         .style('fill-opacity', (d:{parent:object}) => (d.parent === packedRoot ? 1 : 0))
         .style('display', (d:{parent?:object}) => (d.parent === packedRoot ? 'inline' : 'none'))
-        .text((d:{data:{name:string, componentData?:{actualDuration:number}}}) =>  `${d.data.name}:
-          ${Number.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`);
+        .text((d:{data:{name:string, componentData?:{actualDuration:any}}}) =>  {
+          const convert:any = new Number()
+          return `${d.data.name}: ${convert.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`});
 
     // Remove any unused nodes
     label.exit().remove();

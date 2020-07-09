@@ -1,11 +1,7 @@
 import React from 'react';
 
-interface ErrorHandlerProps {
-  state: { errorOccurred: boolean }
-}
-
 class ErrorHandler extends React.Component {
-  constructor(props:ErrorHandlerProps) {
+  constructor(props:any) {
     super(props);
     this.state = { errorOccurred: false };
   }
@@ -16,7 +12,7 @@ class ErrorHandler extends React.Component {
   }
 
   render() {
-    return this.state.errorOccurred ? <div margin="8px">Unexpected Error</div> : this.props.children
+    return this.state.errorOccurred ? <div>Unexpected Error</div> : this.props.children
   }
 }
 

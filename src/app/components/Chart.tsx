@@ -15,10 +15,9 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 
 const colors = ['#95B6B7', '#475485', '#519331', '#AA5039', '#8B2F5F', '#C5B738', '#858DFF', '#FF8D02', '#FFCD51', '#ACDAE6', '#FC997E', '#CF93AD', '#AA3939', '#AA6C39', '#226666', '#2C4870'];
+
 interface ChartProps {
-  chartRef:any;
-  maked3Tree: any; 
-  removed3Tree: any;
+  hierarchy: object;
 }
 
 let root = {};

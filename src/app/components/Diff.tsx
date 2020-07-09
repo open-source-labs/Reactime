@@ -4,7 +4,7 @@ import ReactHtmlParser from 'react-html-parser';
 import { useStoreContext } from '../store';
 
 interface DiffProps {
-  snapshot: {state:object|string}; 
+  snapshot: {state?:object|string}; 
   show?: boolean|undefined; 
 }
 
@@ -23,7 +23,7 @@ function Diff(props: DiffProps) {
   }
 
   // gabi :: cleanning preview from stateless data
-  const statelessCleanning = (obj:{name?:string; componentData?:object; state?:object|string;stateSnaphot?:object; children?:[]}) => {
+  const statelessCleanning = (obj:{name?:string; componentData?:object; state?:object|string;stateSnaphot?:object; children?:any[]}) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;

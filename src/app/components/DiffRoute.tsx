@@ -5,7 +5,7 @@ import {
 import Diff from './Diff';
 
 
-const DiffRoute = (props: {snapshot: {state: string | object; children?:[]}}) => (
+const DiffRoute = (props: {snapshot: { name?: string; componentData?: object; state?: string | object; stateSnaphot?: object; children?: any[]; }}) => (
 
   <Router>
     <div className="navbar">

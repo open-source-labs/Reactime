@@ -13,7 +13,7 @@ const speeds = [
 ];
 
 // start slider movement
-function play(speed:number, playing:boolean, dispatch:(a:()=>void) => void, snapshotsLength:number, sliderIndex:number) {
+function play(speed:number, playing:boolean, dispatch:(a:any) => void, snapshotsLength:number, sliderIndex:number) {
   if (playing) {
     dispatch(pause());
   } else {
@@ -54,7 +54,7 @@ function TravelContainer(props:TravelContainerProps) {
       >
         {playing ? 'Pause' : 'Play'}
       </button>
-      <MainSlider snapshotsLength={snapshotsLength} sliderIndex={sliderIndex} dispatch={dispatch} />
+      <MainSlider snapshotsLength={snapshotsLength} />
       <button className="backward-button" onClick={() => dispatch(moveBackward())} type="button">
         {'<'}
       </button>

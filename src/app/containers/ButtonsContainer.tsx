@@ -20,14 +20,20 @@ function exportHandler(snapshots:[]) {
   URL.revokeObjectURL(fileDownload.href);
 }
 
-function importHandler(dispatch:(a:()=>void)=>void) {
+function importHandler(dispatch:(a:any)=>void) {
   const fileUpload = document.createElement('input');
   fileUpload.setAttribute('type', 'file');
 
-  fileUpload.onchange = (event:{target:{files:[]}}) => {
+  fileUpload.onchange = () => {
     const reader = new FileReader();
-    reader.onload = () => dispatch(importSnapshots(JSON.parse(reader.result)));
-    reader.readAsText(event.target.files[0]);
+    reader.onload = () => {
+      const test = reader.result.toString()
+      return dispatch(importSnapshots(JSON.parse(test)))
+    };
+    if(event.target.hasOwnProperty('files')){
+      const eventFiles:any = event.target
+      reader.readAsText(eventFiles.files[0]);
+    }
   };
 
   fileUpload.click();
@@ -42,23 +48,23 @@ function ButtonsContainer() {
 
   return (
     <div className="buttons-container">
-      <button className="pause-button" type="button" onClick={(e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => dispatch(toggleMode('paused'))}>
+      <button className="pause-button" type="button" onClick={() => dispatch(toggleMode('paused'))}>
         {paused ? 'Resume' : 'Pause'}
       </button>
-      <button className="lock-button" type="button" onClick={(e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => dispatch(toggleMode('locked'))}>
+      <button className="lock-button" type="button" onClick={() => dispatch(toggleMode('locked'))}>
         {locked ? 'Unlock' : 'Lock'}
       </button>
       <button
         className="persist-button"
         type="button"
-        onClick={(e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => dispatch(toggleMode('persist'))}
+        onClick={() => dispatch(toggleMode('persist'))}
       >
         {persist ? 'Unpersist' : 'Persist'}
       </button>
-      <button className="export-button" type="button" onClick={(e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => exportHandler(snapshots)}>
+      <button className="export-button" type="button" onClick={() => exportHandler(snapshots)}>
         Export
       </button>
-      <button className="import-button" type="button" onClick={(e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => importHandler(dispatch)}>
+      <button className="import-button" type="button" onClick={() => importHandler(dispatch)}>
         Import
       </button>
     </div>

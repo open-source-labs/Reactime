@@ -3,7 +3,7 @@ import Select from 'react-select';
 
 interface DropdownProps {
   selectedSpeed: { value: number; label: string },
-  speeds: [];
+  speeds: { value: number; label: string; }[];
   setSpeed:  () => void;
 }
 

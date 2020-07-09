@@ -9,7 +9,7 @@ import StateRoute from '../components/StateRoute';
 import DiffRoute from '../components/DiffRoute';
 
 interface StateContainerProps {
-  snapshot:{state:object|string, children?:[]}; 
+  snapshot:{ name?: string; componentData?: object; state?: string | object; stateSnaphot?: object; children?: any[]; }; 
   hierarchy:object;
   snapshots:[]; 
   viewIndex:number;

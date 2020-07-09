@@ -13,7 +13,7 @@ const NO_STATE_MSG = 'No state change detected. Trigger an event to change state
 
 
 interface StateRouteProps {
-  snapshot: {state?: object | string, children?: []}; 
+  snapshot: { name?: string; componentData?: object; state?: string | object; stateSnaphot?: object; children?: any[]; }; 
   hierarchy: object; 
   snapshots: []; 
   viewIndex: number;
@@ -41,7 +41,7 @@ const StateRoute = (props:StateRouteProps) => {
     if (hierarchy) {
       return (
         <ErrorHandler>
-          <PerfView viewIndex={viewIndex} snapshots={snapshots} />
+          <PerfView viewIndex={viewIndex} snapshots={snapshots} width={600} height={600}/>
         </ErrorHandler>
       );
     }
