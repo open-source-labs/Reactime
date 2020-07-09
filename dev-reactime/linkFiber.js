@@ -48,6 +48,7 @@
 // const componentActionsRecord = require('./masterState');
 import Tree from './tree';
 import componentActionsRecord from './masterState';
+import throttle from './helpers';
 
 const DEBUG_MODE = false;
 
@@ -223,16 +224,12 @@ export default (snap, mode) => {
     return tree;
   }
 
-  let updateSnapshotTreeCount = 0;
   function updateSnapShotTree() {
-
-    updateSnapshotTreeCount++;
-    if (updateSnapshotTreeCount > 1) alwaysLog('MULTIPLE SNAPSHOT TREE UPDATES:', updateSnapshotTreeCount);
     if (fiberRoot) {
       const { current } = fiberRoot;
       snap.tree = createTree(current);
     }
-    updateSnapshotTreeCount--;
+    sendSnapshot();
   }
 
   return async () => {    
@@ -251,20 +248,21 @@ export default (snap, mode) => {
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
+    const throttledUpdateSnapshot = throttle(updateSnapShotTree, 250);
     
     alwaysLog('fiberRoot:', fiberRoot);
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           fiberRoot = args[1];
-          updateSnapShotTree();
-          sendSnapshot();
+          throttledUpdateSnapshot();
           return original(...args);
         };
       }(devTools.onCommitFiberRoot));
     }
-    updateSnapShotTree();
-    sendSnapshot();
+
+    throttledUpdateSnapshot();
+
     // updateSnapShotTree();
     // Send the initial snapshot once the content script has started up
     // This message is sent from contentScript.js in chrome extension bundles

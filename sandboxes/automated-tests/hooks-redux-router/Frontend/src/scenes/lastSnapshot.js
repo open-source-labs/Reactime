@@ -20,6 +20,7 @@ const LastSnapshot = props => {
   useEffect(() => {
     window.addEventListener('message', ({ data: { action, payload } }) => {
       if (action === 'recordSnap') {
+        console.log('stringifying payload');
         const payloadContent = JSON.stringify(payload, replacer, 2);
 
         setCurrentSnapshot(payloadContent);

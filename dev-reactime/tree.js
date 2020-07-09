@@ -5,6 +5,7 @@
 // import * as reactWorkTags from './reactWorkTags';
 
 const Flatted = require('flatted');
+
 let copyInstances = 0;
 const circularComponentTable = new Set();
 
@@ -20,7 +21,7 @@ function scrubUnserializableMembers(tree) {
 // this is the current snapshot that is being sent to the snapshots array.
 class Tree {
   constructor(state, name = 'nameless', componentData = {}) {
-    this.state = state === 'root' ? 'root' : Flatted.parse(Flatted.stringify(state));
+    this.state = state === 'root' ? 'root' : JSON.parse(JSON.stringify(state));
     this.name = name;
     this.componentData = componentData ? JSON.parse(JSON.stringify(componentData)) : {};
     this.children = [];
@@ -42,12 +43,14 @@ class Tree {
   }
 
   cleanTreeCopy() {
+    // Clear circular component table only on first call, not recursive ones
     if (copyInstances === 0) {
       copyInstances++;
       circularComponentTable.clear();
     }
     // creates copy of present node
     let copy = new Tree(this.state, this.name, this.componentData);
+    delete copy.parent;
     circularComponentTable.add(this);
     copy = scrubUnserializableMembers(copy);
 
@@ -56,10 +59,9 @@ class Tree {
     // creates copy of each child of the present node
     copy.children = this.children.map(child => {
       if (!circularComponentTable.has(child)) {
-        return child.cleanTreeCopy()
-      } else {
-        return 'circular';
+        return child.cleanTreeCopy();
       }
+      return 'circular';
     });
 
     // returns copy
@@ -75,7 +77,7 @@ class Tree {
     const children = ['children: '];
     // DEV: What should we push instead for components using hooks (it wouldn't be state)
     // if this.children is always initialized to empty array, when would there ever be anything to iterate through here?
-    this.children.forEach(child => { 
+    this.children.forEach(child => {
       children.push(child.state || child.component.state);
     });
     if (this.name) console.log('this.name if exists: ', this.name);

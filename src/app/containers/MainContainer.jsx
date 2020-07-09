@@ -93,9 +93,6 @@ function MainContainer() {
     if (newObj.componentData) {
       delete newObj.componentData;
     }
-    if (newObj.parent || newObj.parent === null) {
-      delete newObj.parent;
-    }
     if (newObj.state === 'stateless') {
       delete newObj.state;
     }
