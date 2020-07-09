@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import produce from 'immer';
-import * as types from '../constants/actionTypes';
+import * as types from '../constants/actionTypes.ts';
 
 
 export default (state, action) => produce(state, draft => {
