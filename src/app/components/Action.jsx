@@ -11,7 +11,7 @@ const Action = props => {
 
   // display render time for state change in seconds and miliseconds
   const cleanTime = () => {
-    if (!componentData.actualDuration) {
+    if (!componentData || !componentData.actualDuration) {
       return 'NO TIME';
     }
     let seconds;
@@ -75,16 +75,16 @@ const Action = props => {
   );
 };
 // gabi and nate :: added displayName, componentName and State props to propTypes
-Action.propTypes = {
-  sliderIndex: PropTypes.number.isRequired,
-  selected: PropTypes.bool.isRequired,
-  index: PropTypes.number.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  displayName: PropTypes.string.isRequired,
-  componentName: PropTypes.string.isRequired,
-  state: PropTypes.object.isRequired,
-  handleOnkeyDown: PropTypes.func.isRequired,
-  viewIndex: PropTypes.number.isRequired,
-};
+// Action.propTypes = {
+//   sliderIndex: PropTypes.number.isRequired,
+//   selected: PropTypes.bool.isRequired,
+//   index: PropTypes.number.isRequired,
+//   dispatch: PropTypes.func.isRequired,
+//   displayName: PropTypes.string.isRequired,
+//   componentName: PropTypes.string.isRequired,
+//   state: PropTypes.object.isRequired,
+//   handleOnkeyDown: PropTypes.func.isRequired,
+//   viewIndex: PropTypes.number.isRequired,
+// };
 
 export default Action;

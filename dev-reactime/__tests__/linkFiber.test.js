@@ -2,10 +2,10 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import linkFiberStart from '../linkFiber';
-import 'expect-puppeteer';
-import 'puppeteer';
+// import 'expect-puppeteer';
+import puppeteer from 'puppeteer';
 
-// const SERVER = require('puppeteerServer');
+const SERVER = require('./puppeteerServer');
 
 const APP = 'http://localhost:3002';
 
@@ -31,13 +31,25 @@ class App extends Component {
 describe('unit test for linkFiber', () => {
   beforeAll(async () => {
     await SERVER;
+    const args = puppeteer.defaultArgs().filter(arg => String(arg).toLowerCase() !== '--disable-extensions');
     browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox',
+      args: args.concat(['--no-sandbox', '--disable-setuid-sandbox',
+        '---extensions-on-chrome-urls',
         '--whitelisted-extension-id=fmkadmapgofadopljbjfkapdkoienihi',
-        '--whitelisted-extension-id=hilpbahfbckghckaiafiiinjkeagmfhn'],
+        '--whitelisted-extension-id=hilpbahfbckghckaiafiiinjkeagmfhn',
+        '--load-extension=/mnt/d/Libraries/Documents/codeRepos/reactime/src/extension/build']),
+      devtools: true,
+      ignoreDefaultArgs: true,
       // '--load-extension', '../../src/extension/build'],
-      headless: false,
+
+      // headless: false,
     });
+
+    const c = await puppeteer.connect({
+      browserWSEndpoint:  browser.wsEndpoint(),   //`ws://${host}:${port}/devtools/browser/<id>`,
+      ignoreHTTPSErrors: false
+    });
+
     page = await browser.newPage();
   });
 
@@ -57,10 +69,10 @@ describe('unit test for linkFiber', () => {
     };
     linkFiber = linkFiberStart(snapShot, mode);
 
-    page.waitForFunction(async linkFiber => {
+    page.waitForFunction(async lf => {
       const container = document.createElement('div');
       render(<App />, container);
-      linkFiber(container);
+      lf(container);
     }, {}, linkFiber);
   });
 

@@ -48,9 +48,9 @@
 // const componentActionsRecord = require('./masterState');
 import Tree from './tree';
 import componentActionsRecord from './masterState';
-import throttle from './helpers';
+import { throttle } from './helpers';
 
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 
 const alwaysLog = console.log;
 
@@ -70,7 +70,7 @@ export default (snap, mode) => {
   function sendSnapshot() {
     alwaysLog('sendSnapshot called');
     // Don't send messages while jumping or while paused
-    circularComponentTable.clear();
+
     if (mode.jumping || mode.paused) return;
 
     if (!snap.tree) {
@@ -93,10 +93,11 @@ export default (snap, mode) => {
   // a hooks component changes state
   function traverseHooks(memoizedState) {
     const hooksStates = [];
-    while (memoizedState && memoizedState.queue) {
+    if (memoizedState && memoizedState.queue) {
       // Carlos: these two are legacy comments, we should look into them later
       // prevents useEffect from crashing on load
       // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
+      alwaysLog('traverse hooks memoizedState', memoizedState);
       if (memoizedState.memoizedState) {
         hooksStates.push({
           component: memoizedState.queue,
@@ -165,6 +166,7 @@ export default (snap, mode) => {
             newState = { hooksState: [[state.state, hooksIndex]] };
           }
           componentFound = true;
+          console.log('currentFiber of hooks state:', currentFiber);
         });
       }
     }
@@ -227,6 +229,7 @@ export default (snap, mode) => {
   function updateSnapShotTree() {
     if (fiberRoot) {
       const { current } = fiberRoot;
+      circularComponentTable.clear();
       snap.tree = createTree(current);
     }
     sendSnapshot();

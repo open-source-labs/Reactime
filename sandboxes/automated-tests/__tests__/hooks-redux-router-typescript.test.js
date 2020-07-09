@@ -43,7 +43,7 @@ describe('Sandbox Tests', () => {
       it('The parent count should be 1 after the button is clicked 2 times', async () => {
         await page.goto(APP);
         await page.$eval('#increaseButton', el => el.click());
-        //await page.$eval('#increaseButton', el => el.click());
+        await page.$eval('#increaseButton', el => el.click());
 
         const lastSnapshotJSON = await page.$eval(
           '#lastSnapshot',

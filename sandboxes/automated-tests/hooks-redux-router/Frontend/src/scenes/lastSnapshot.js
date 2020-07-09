@@ -12,7 +12,10 @@ const LastSnapshot = props => {
 
   function replacer(name, val) {
     // Ignore the key that is the name of the state variable
-    if (name === 'currentSnapshot') return undefined;
+    if (name === 'currentSnapshot') {
+      console.log('filtering currentSnapshot from display');
+      return undefined;
+    }
 
     return val;
   }
@@ -20,10 +23,10 @@ const LastSnapshot = props => {
   useEffect(() => {
     window.addEventListener('message', ({ data: { action, payload } }) => {
       if (action === 'recordSnap') {
-        console.log('stringifying payload');
-        const payloadContent = JSON.stringify(payload, replacer, 2);
-
+        console.log('stringifying payload:', payload);
+        const payloadContent = JSON.stringify(payload, replacer, 1);
         setCurrentSnapshot(payloadContent);
+        console.log('current snapshot', currentSnapshot);
       }
     });
   }, []);
