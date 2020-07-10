@@ -1,3 +1,4 @@
+// import 'core-js';
 /* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
 /* eslint-disable function-paren-newline */

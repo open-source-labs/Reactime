@@ -20,14 +20,21 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import * as d3 from 'd3';
 import { schemeSet1 as colorScheme } from 'd3';
 
-// import { addNewSnapshots } from '../actions/actions';
+// import { addNewSnapshots } from '../actions/actions.ts';
 
+interface PerfViewProps {
+  snapshots:any[]; 
+  viewIndex:number; 
+  width: number;
+  height: number;
+}
 
-const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
+const PerfView = (props:PerfViewProps) => {
+  const { snapshots, viewIndex, width, height } = props
   const svgRef = useRef(null);
 
   // Figure out which snapshot index to use
-  let indexToDisplay = null;
+  let indexToDisplay: number | null = null;
   if (viewIndex < 0) indexToDisplay = snapshots.length - 1;
   else indexToDisplay = viewIndex;
 
@@ -39,13 +46,13 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
     .interpolate(d3.interpolateHcl);
 
   // Set up circle-packing layout function
-  const packFunc = useCallback(data => {
+  const packFunc = useCallback((data:object) => {
     return d3.pack()
     .size([width, height])
     // .radius(d => { return d.r; })
     .padding(3)(d3.hierarchy(data)
-                    .sum(d => { return d.componentData.actualDuration || 0; })
-                    .sort((a, b) => { return b.value - a.value; }));
+                    .sum((d:{componentData?:{actualDuration?:number}}) => { return d.componentData.actualDuration || 0; })
+                    .sort((a:{value:number}, b:{value:number}) => { return b.value - a.value; }));
   }, [width, height]);
 
   // If indexToDisplay changes, clear old tree nodes
@@ -81,11 +88,11 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
       .selectAll('circle')
       .data(packedRoot.descendants().slice(1))
       .enter().append('circle')
-        .attr('fill', d => (d.children ? colorScale(d.depth) : 'white'))
-        .attr('pointer-events', d => (!d.children ? 'none' : null))
+        .attr('fill', (d:{children:[]; depth:number}) => (d.children ? colorScale(d.depth) : 'white'))
+        .attr('pointer-events', (d?:{children:[]}) => (!d.children ? 'none' : null))
         .on('mouseover', function () { d3.select(this).attr('stroke', '#000'); })
         .on('mouseout', function () { d3.select(this).attr('stroke', null); })
-        .on('click', d => curFocus !== d && (zoomToNode(d), d3.event.stopPropagation()));
+        .on('click', (d:{ x: number; y: number; r: number; }) => curFocus !== d && (zoomToNode(d), d3.event.stopPropagation()));
 
     // Generate text labels. Set (only) root to visible initially
     const label = svg.append('g')
@@ -93,10 +100,10 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
       .selectAll('text')
       .data(packedRoot.descendants())
       .enter().append('text')
-        .style('fill-opacity', d => (d.parent === packedRoot ? 1 : 0))
-        .style('display', d => (d.parent === packedRoot ? 'inline' : 'none'))
-        .text(d =>  `${d.data.name}: \
-          ${Number.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`);
+        .style('fill-opacity', (d:{parent:object}) => (d.parent === packedRoot ? 1 : 0))
+        .style('display', (d:{parent?:object}) => (d.parent === packedRoot ? 'inline' : 'none'))
+        .text((d:{data:{name:string, componentData?:{actualDuration:any}}}) =>  {
+          return `${d.data.name}: ${Number.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`});
 
     // Remove any unused nodes
     label.exit().remove();
@@ -115,21 +122,21 @@ const PerfView = ({ snapshots, viewIndex, width = 600, height = 600 }) => {
     }
 
     // Transition visibility of labels
-    function zoomToNode(newFocus) {
+    function zoomToNode(newFocus:{x:number; y:number; r:number}) {
       const transition = svg.transition()
       .duration(d3.event.altKey ? 7500 : 750)
-      .tween('zoom', d => {
+      .tween('zoom', (d:object)=> {
         const i = d3.interpolateZoom(view, [newFocus.x, newFocus.y, newFocus.r * 2]);
         return t => zoomViewArea(i(t));
       });
 
       // Grab all nodes that were previously displayed, or who's parent is the new target newFocus
       // Transition their labels to visible or not
-      label.filter(function (d) { return d.parent === newFocus || this.style.display === 'inline'; })
+      label.filter(function (d:{parent:object}) { return d.parent === newFocus || this.style.display === 'inline'; })
       .transition(transition)
-      .style('fill-opacity', d => (d.parent === newFocus ? 1 : 0))
-      .on('start', function (d) { if (d.parent === newFocus) this.style.display = 'inline'; })
-      .on('end', function (d) { if (d.parent !== newFocus) this.style.display = 'none'; });
+      .style('fill-opacity', (d:{parent:object}) => (d.parent === newFocus ? 1 : 0))
+      .on('start', function (d:{parent:object}) { if (d.parent === newFocus) this.style.display = 'inline'; })
+      .on('end', function (d:{parent:object}) { if (d.parent !== newFocus) this.style.display = 'none'; });
 
       curFocus = newFocus;
     }

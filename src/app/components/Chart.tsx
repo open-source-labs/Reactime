@@ -16,9 +16,13 @@ import * as d3 from 'd3';
 
 const colors = ['#95B6B7', '#475485', '#519331', '#AA5039', '#8B2F5F', '#C5B738', '#858DFF', '#FF8D02', '#FFCD51', '#ACDAE6', '#FC997E', '#CF93AD', '#AA3939', '#AA6C39', '#226666', '#2C4870'];
 
+interface ChartProps {
+  hierarchy: object;
+}
+
 let root = {};
 class Chart extends Component {
-  constructor(props) {
+  constructor(props:ChartProps) {
     super(props);
     this.chartRef = React.createRef();
     this.maked3Tree = this.maked3Tree.bind(this);
@@ -76,7 +80,7 @@ class Chart extends Component {
       // .size([2 * Math.PI, radius / 1.3])
       .nodeSize([width / 10, height / 10])
       // .separation(function (a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
-      .separation(function (a, b) { return (a.parent == b.parent ? 2 : 2); });
+      .separation(function (a:{parent:object}, b:{parent:object}) { return (a.parent == b.parent ? 2 : 2); });
 
     const d3root = tree(hierarchy);
 
@@ -90,15 +94,15 @@ class Chart extends Component {
       .append('path')
       .attr('class', 'link')
       .attr('d', d3.linkRadial()
-        .angle(d => d.x)
-        .radius(d => d.y));
+        .angle((d:{x:number}) => d.x)
+        .radius((d:{y:number}) => d.y));
 
     const node = g.selectAll('.node')
       // root.descendants gets an array of of all nodes
       .data(d3root.descendants())
       .enter()
       .append('g')
-      .style('fill', function (d) {
+      .style('fill', function (d:{data:{branch:number}}) {
         if (d.data.branch < colors.length) {
           return colors[d.data.branch];
         }
@@ -114,13 +118,13 @@ class Chart extends Component {
       // .attr('class', function (d) {
       //   return 'node' + (d.children ? ' node--internal' : ' node--leaf');
       // })
-      .attr('transform', function (d) {
+      .attr('transform', function (d:{x:number, y:number}) {
         return 'translate(' + reinfeldTidierAlgo(d.x, d.y) + ')';
       });
 
     node.append('circle')
       .attr('r', 15)
-      .on('mouseover', function (d) {
+      .on('mouseover', function (d:any) {
         d3.select(this)
           .transition(100)
           .duration(20)
@@ -135,7 +139,7 @@ class Chart extends Component {
           .style('top', (d3.event.pageY - 65) + 'px');
       })
       // eslint-disable-next-line no-unused-vars
-      .on('mouseout', function (d) {
+      .on('mouseout', function (d:any) {
         d3.select(this)
           .transition()
           .duration(300)
@@ -149,7 +153,7 @@ class Chart extends Component {
       .append('text')
       // adjusts the y coordinates for the node text
       .attr('dy', '0.5em')
-      .attr('x', function (d) {
+      .attr('x', function (d:{x:number; children?:[]}) {
         // this positions how far the text is from leaf nodes (ones without children)
         // negative number before the colon moves the text of rightside nodes,
         // positive number moves the text for the leftside nodes
@@ -157,8 +161,8 @@ class Chart extends Component {
       })
       .attr('text-anchor', 'middle')
       // this arranges the angle of the text
-      .attr('transform', function (d) { return 'rotate(' + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 1 / Math.PI + ')'; })
-      .text(function (d) {
+      .attr('transform', function (d:{x:number, y:number}) { return 'rotate(' + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 1 / Math.PI + ')'; })
+      .text(function (d:{data:{name:number, branch:number}}) {
         // gabi and nate :: display the name of of specific patch
         return `${d.data.name}.${d.data.branch}`;
       });
@@ -179,7 +183,7 @@ class Chart extends Component {
       g.attr('cursor', 'grabbing');
     }
 
-    function dragged(d) {
+    function dragged(d:{x:number, y:number}) {
       d3.select(this).attr('dx', d.x = d3.event.x).attr('dy', d.y = d3.event.y);
     }
 
@@ -196,7 +200,7 @@ class Chart extends Component {
       .attr('class', 'tooltip')
       .style('opacity', 0);
 
-    function reinfeldTidierAlgo(x, y) {
+    function reinfeldTidierAlgo(x:number, y:number) {
       return [(y = +y) * Math.cos(x -= Math.PI / 2), y * Math.sin(x)];
     }
   }

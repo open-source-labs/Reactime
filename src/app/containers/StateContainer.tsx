@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import {
   MemoryRouter as Router,
   Route,
@@ -9,13 +8,16 @@ import {
 import StateRoute from '../components/StateRoute';
 import DiffRoute from '../components/DiffRoute';
 
+interface StateContainerProps {
+  snapshot:{ name?: string; componentData?: object; state?: string | object; stateSnaphot?: object; children?: any[]; }; 
+  hierarchy:object;
+  snapshots:[]; 
+  viewIndex:number;
+}
+
 // eslint-disable-next-line react/prop-types
-const StateContainer = ({ 
-  snapshot, 
-  hierarchy,
-  snapshots, 
-  viewIndex,
-}) => {
+const StateContainer = (props:StateContainerProps) => {
+  const { snapshot, hierarchy, snapshots, viewIndex } = props
   const [Text, setText] = useState('State');
   return (
     <Router>
@@ -59,13 +61,6 @@ const StateContainer = ({
       </div>
     </Router>
   );
-};
-
-StateContainer.propTypes = {
-  snapshot: PropTypes.shape({
-    state: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    children: PropTypes.arrayOf(PropTypes.object),
-  }).isRequired,
 };
 
 export default StateContainer;

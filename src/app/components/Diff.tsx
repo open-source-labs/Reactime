@@ -1,11 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { diff, formatters } from 'jsondiffpatch';
 import ReactHtmlParser from 'react-html-parser';
-
 import { useStoreContext } from '../store';
 
-function Diff({ snapshot, show }) {
+interface DiffProps {
+  snapshot: {state?:object|string}; 
+  show?: boolean|undefined; 
+}
+
+function Diff(props: DiffProps) {
+  const { snapshot, show } = props
   const [mainState] = useStoreContext();
   const { currentTab, tabs } = mainState; // Nate:: k/v pairs of mainstate store object being created
   const { snapshots, viewIndex, sliderIndex } = tabs[currentTab];
@@ -19,16 +23,13 @@ function Diff({ snapshot, show }) {
   }
 
   // gabi :: cleanning preview from stateless data
-  const statelessCleanning = obj => {
+  const statelessCleanning = (obj:{name?:string; componentData?:object; state?:object|string;stateSnaphot?:object; children?:any[]}) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;
     }
     if (newObj.componentData) {
       delete newObj.componentData;
-    }
-    if (newObj.parent || newObj.parent === null) {
-      delete newObj.parent;
     }
     if (newObj.state === 'stateless') {
       delete newObj.state;
@@ -39,7 +40,7 @@ function Diff({ snapshot, show }) {
     if (newObj.children) {
       newObj.children = [];
       if (obj.children.length > 0) {
-        obj.children.forEach(element => {
+        obj.children.forEach((element:{state?:object | string; children?:[]}) => {
           if (element.state !== 'stateless' || element.children.length > 0) {
             const clean = statelessCleanning(element);
             newObj.children.push(clean);
@@ -65,13 +66,5 @@ function Diff({ snapshot, show }) {
   }
   return <div>{ReactHtmlParser(html)}</div>;
 }
-
-Diff.propTypes = {
-  snapshot: PropTypes.shape({
-    state: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    children: PropTypes.arrayOf(PropTypes.object),
-  }).isRequired,
-  show: PropTypes.bool.isRequired,
-};
 
 export default Diff;

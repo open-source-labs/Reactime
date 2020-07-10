@@ -1,3 +1,4 @@
+import 'core-js';
 /* eslint-disable indent */
 /* eslint-disable brace-style */
 /* eslint-disable comma-dangle */
