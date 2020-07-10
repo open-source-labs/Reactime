@@ -60,7 +60,6 @@ export default (snap, mode) => {
   let fiberRoot = null;
 
   function sendSnapshot() {
-    alwaysLog('sendSnapshot called');
     // Don't send messages while jumping or while paused
 
     if (mode.jumping || mode.paused) return;
@@ -89,7 +88,7 @@ export default (snap, mode) => {
       // Carlos: these two are legacy comments, we should look into them later
       // prevents useEffect from crashing on load
       // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
-      alwaysLog('traverse hooks memoizedState', memoizedState);
+      // console.log('traverse hooks memoizedState', memoizedState);
       if (memoizedState.memoizedState) {
         hooksStates.push({
           component: memoizedState.queue,
@@ -131,7 +130,7 @@ export default (snap, mode) => {
     let componentFound = false;
 
     // Check if node is a stateful setState component
-    if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag ===2)) { // { || tag === 2)) {
+    if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
       // Save component's state and setState() function to our record for future
       // time-travel state changing. Add record index to snapshot so we can retrieve.
       componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
@@ -166,6 +165,7 @@ export default (snap, mode) => {
     }
 
     // This grabs stateless components
+    
     if (!componentFound && (tag === 0 || tag === 1 || tag === 2)) {
       newState = 'stateless';
     }
@@ -247,7 +247,7 @@ export default (snap, mode) => {
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
     const throttledUpdateSnapshot = throttle(updateSnapShotTree, 250);
     
-    alwaysLog('fiberRoot:', fiberRoot);
+    console.log('fiberRoot:', fiberRoot);
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
