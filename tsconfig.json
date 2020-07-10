@@ -5,6 +5,7 @@
     "target": "es5",
     "jsx": "react",
     "allowJs": true,
-    "types": ["chrome", "jest", "node"]
+    "types": ["chrome", "jest", "node"],
+    "esModuleInterop": true
   }
 }
