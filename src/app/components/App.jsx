@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import MainContainer from '../containers/MainContainer';
 import { StoreContext } from '../store';
-import mainReducer from '../reducers/mainReducer';
+import mainReducer from '../reducers/mainReducer'
 
 const initialState = {
   port: null,
