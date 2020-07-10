@@ -3,7 +3,7 @@
  * @function linkFiber
  */
 import 'core-js';
-// import 'regenerator-runtime/runtime';
+import 'regenerator-runtime/runtime';
 import linkFiberStart from './linkFiber';
 import timeJumpStart from './timeJump';
 
