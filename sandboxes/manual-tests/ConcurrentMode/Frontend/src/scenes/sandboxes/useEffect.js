@@ -46,7 +46,7 @@ const UseEffect = () => {
       </div>
 
       <div className="font-weight-bold">
-        UseEffect triggers an interval that changes this state variable =>{' '}
+        UseEffect triggers an interval that changes this state variable → {' '}
         <UseEffectAndState />
       </div>
     </>

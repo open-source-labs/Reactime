@@ -1,8 +1,13 @@
 import React from 'react';
 import Select from 'react-select';
-import PropTypes from 'prop-types';
 
-const Dropdown = props => {
+interface DropdownProps {
+  selectedSpeed: { value: number; label: string },
+  speeds: { value: number; label: string; }[];
+  setSpeed:  () => void;
+}
+
+const Dropdown = (props: DropdownProps) => {
   const { speeds, setSpeed, selectedSpeed } = props;
   return (
     <Select
@@ -14,12 +19,6 @@ const Dropdown = props => {
       menuPlacement="top"
     />
   );
-};
-
-Dropdown.propTypes = {
-  selectedSpeed: PropTypes.shape({ value: PropTypes.number, label: PropTypes.string }).isRequired,
-  speeds: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setSpeed: PropTypes.func.isRequired,
 };
 
 export default Dropdown;

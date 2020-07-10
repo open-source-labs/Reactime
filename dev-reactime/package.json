@@ -50,6 +50,7 @@
   "license": "MIT",
   "dependencies": {
     "acorn": "^7.1.0",
+    "core-js": "^3.6.5",
     "acorn-jsx": "^5.0.2",
     "fs": "0.0.1-security"
   }

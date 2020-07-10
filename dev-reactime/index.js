@@ -3,14 +3,14 @@
  * @function linkFiber
  */
 import 'core-js';
-import 'regenerator-runtime/runtime';
+// import 'regenerator-runtime/runtime';
 import linkFiberStart from './linkFiber';
 import timeJumpStart from './timeJump';
 
 // * State snapshot object initialized here
 const snapShot = { 
   tree: null,
-  unfilteredTree: null
+  unfilteredTree: null,
 };
 
 const mode = {

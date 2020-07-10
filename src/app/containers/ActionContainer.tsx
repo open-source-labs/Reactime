@@ -17,12 +17,12 @@ function ActionContainer() {
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
   console.log(tabs[currentTab])
   let actionsArr = [];
-  const hierarchyArr = [];
+  const hierarchyArr:any[] = [];
 
   // gabi and nate :: delete function to traverse state from snapshots, now we are tranversing state from hiararchy and alsog getting infromation on display name and component name
-  const displayArray = obj => {
+  const displayArray = (obj:{stateSnapshot:{children:any[]}, name:number, branch:number, index:number, children?:[]}) => {
     if (obj.stateSnapshot.children.length > 0 && obj.stateSnapshot.children[0] && obj.stateSnapshot.children[0].state && obj.stateSnapshot.children[0].name) {
-      const newObj = {
+      const newObj:object = {
         index: obj.index,
         displayName: `${obj.name}.${obj.branch}`,
         state: obj.stateSnapshot.children[0].state,
@@ -41,7 +41,7 @@ function ActionContainer() {
   if (hierarchy) displayArray(hierarchy);
 
   // Edwin: handles keyboard presses, function passes an event and index of each action-component
-  function handleOnKeyDown(e, i) {
+  function handleOnKeyDown(e:KeyboardEvent, i:number) {
     let currIndex = i;
     // up array key pressed
     if (e.keyCode === 38) {
@@ -63,7 +63,7 @@ function ActionContainer() {
     }
   }
 
-  actionsArr = hierarchyArr.map((snapshot, index) => {
+  actionsArr = hierarchyArr.map((snapshot:{state?:object|string, displayName:string, componentName:string, componentData:{actualDuration: number}|undefined}, index) => {
     const selected = index === viewIndex;
     const last = viewIndex === -1 && index === hierarchyArr.length - 1;
     return (

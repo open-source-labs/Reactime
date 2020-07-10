@@ -10,6 +10,7 @@ configure({ adapter: new Adapter() });
 describe('unit testing for Action.jsx', () => {
   let wrapper;
   const props = {
+    key:'actions2',
     selected: true,
     last: false,
     index: 2,

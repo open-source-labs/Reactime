@@ -1,5 +1,5 @@
+// import 'core-js';
 // const reactimeBackend = require('../../dev-reactime/index.js');
-
 
 let firstMessage = true;
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { importSnapshots, toggleMode } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-function exportHandler(snapshots) {
+function exportHandler(snapshots:[]) {
   // create invisible download anchor link
   const fileDownload = document.createElement('a');
 
@@ -20,14 +20,20 @@ function exportHandler(snapshots) {
   URL.revokeObjectURL(fileDownload.href);
 }
 
-function importHandler(dispatch) {
+function importHandler(dispatch:(a:any)=>void) {
   const fileUpload = document.createElement('input');
   fileUpload.setAttribute('type', 'file');
 
-  fileUpload.onchange = event => {
+  fileUpload.onchange = () => {
     const reader = new FileReader();
-    reader.onload = () => dispatch(importSnapshots(JSON.parse(reader.result)));
-    reader.readAsText(event.target.files[0]);
+    reader.onload = () => {
+      const test = reader.result.toString()
+      return dispatch(importSnapshots(JSON.parse(test)))
+    };
+    if(event.target.hasOwnProperty('files')){
+      const eventFiles:any = event.target
+      reader.readAsText(eventFiles.files[0]);
+    }
   };
 
   fileUpload.click();
