@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './styles.sass';
-import SetStateChild from './setStateChild';
+// import SetStateChild from './setStateChild';
+const SetStateChild = require('./setStateChild').default;
 import { AnyAction } from 'redux';
 
 interface StateInterface {
