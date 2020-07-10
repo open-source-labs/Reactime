@@ -103,8 +103,7 @@ const PerfView = (props:PerfViewProps) => {
         .style('fill-opacity', (d:{parent:object}) => (d.parent === packedRoot ? 1 : 0))
         .style('display', (d:{parent?:object}) => (d.parent === packedRoot ? 'inline' : 'none'))
         .text((d:{data:{name:string, componentData?:{actualDuration:any}}}) =>  {
-          const convert:any = new Number()
-          return `${d.data.name}: ${convert.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`});
+          return `${d.data.name}: ${Number.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`});
 
     // Remove any unused nodes
     label.exit().remove();

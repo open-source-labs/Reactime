@@ -40,8 +40,7 @@ const Action = (props: ActionProps) => {
     } else {
       seconds = '00';
     }
-    const convert:any = new Number()
-    miliseconds = convert.parseFloat(miliseconds).toFixed(2);
+    miliseconds = Number.parseFloat(miliseconds).toFixed(2);
     const arrayMiliseconds = miliseconds.split('.');
     if (arrayMiliseconds[0].length < 2) {
       arrayMiliseconds[0] = '0'.concat(arrayMiliseconds[0]);
