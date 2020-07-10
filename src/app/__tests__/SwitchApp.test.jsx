@@ -16,33 +16,56 @@ describe('Unit testing for SwitchApp.jsx', () => {
 
   const state = {
     currentTab: 100,
-    tabs: { 100: { snapshots: [1, 2, 3, 4], viewIndex: 1, sliderIndex: 1 } },
+    tabs: { 100: { snapshots: [1, 2, 3, 4], viewIndex: 1, sliderIndex: 1, title: 'component'} },
   };
-  const tabsArray = [];
-  const currTab = {
+  const dropdownCurrTabLabel = {
     value: 100,
-    label: {},
+    label: 'component',
   };
-
+  // nate and edwin: mockImplementation creates a mock function call
   const dispatch = jest.fn();
-  useStoreContext.mockImplementation(() => [dispatch, state]);
+
+  // nate and edwin: mockImplementation creates a mock state
+  useStoreContext.mockImplementation(() => [state, dispatch]);
 
   beforeEach(() => {
     wrapper = shallow(<SwitchApp />);
+    dispatch.mockClear();
   });
 
-  describe('currentTab', () => {
-    it('should have properties value and label', () => {
-      expect(currTab).toHaveProperty('value');
-      expect(currTab).toHaveProperty('label');
+  describe('SwitchApp Component', () => {
+    beforeEach(() => {
+      wrapper.find('.tab-select-container').simulate('change', {});
+    });
+    // console.log('dispatch mock calls', dispatch.mock.calls);
+    it('SwitchApp component returns <Select /> from react-select library', () => {
+      expect(wrapper.find('.tab-select-container').type()).toEqual(Select);
+      expect(wrapper.find('.tab-select-container').props().className).toBe('tab-select-container');
+      expect(wrapper.find('.tab-select-container').props().value).toEqual(dropdownCurrTabLabel);
+    });
+    it('OnChange should run dispatch function', () => {
+      expect(dispatch.mock.calls.length).toBe(1);
+    })
+    it('options prop should be an array', () => {
+      expect(Array.isArray(wrapper.find('.tab-select-container').props().options)).toBeTruthy();
+      expect(wrapper.find('.tab-select-container').props().options[0]).toHaveProperty('value');
+      expect(wrapper.find('.tab-select-container').props().options[0]).toHaveProperty('label');
     });
   });
 
-// check if currTab has properties value, label
-// currentTab should be a number
-// tab should be an object
-// check if onChange if the function runs
-// className should be tab-select-container
-// options should be an array
-// value prop should be equal to a number
-})       
+  describe('dropdownCurrTabLabel', () => {
+    it('should have properties value and label', () => {
+      expect(dropdownCurrTabLabel).toHaveProperty('value');
+      expect(dropdownCurrTabLabel).toHaveProperty('label');
+    });
+  });
+
+  describe('state', () => {
+    it('currentTab value should be a number', () => {
+      expect(typeof state.currentTab).toEqual('number');
+    });
+    it('tabs value should be an object', () => {
+      expect(typeof state.tabs).toEqual('object');
+    });
+  });
+});
