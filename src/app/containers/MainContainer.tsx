@@ -4,7 +4,6 @@ import ActionContainer from './ActionContainer';
 import StateContainer from './StateContainer';
 import TravelContainer from './TravelContainer';
 import ButtonsContainer from './ButtonsContainer';
-
 import {
   addNewSnapshots, initialConnect, setPort, setTab, deleteTab,
 } from '../actions/actions';
@@ -22,11 +21,11 @@ function MainContainer() {
     const port = chrome.runtime.connect();
 
     // listen for a message containing snapshots from the background script
-    port.onMessage.addListener(message => {
+    port.onMessage.addListener((message:{action:string, payload:object, sourceTab:number}) => {
       const { action, payload, sourceTab } = message;
       let maxTab;
       if (!sourceTab) {
-        const tabsArray = Object.keys(payload);
+        const tabsArray:any = Object.keys(payload);
         maxTab = Math.max(...tabsArray);
       }
       switch (action) {
@@ -85,7 +84,7 @@ function MainContainer() {
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // gabi :: cleannign hierarchy and snapshotView from stateless data
-  const statelessCleanning = obj => {
+  const statelessCleanning = (obj:{name?:string; componentData?:object; state?:object|string;stateSnaphot?:object; children?:any[]}) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;
@@ -93,9 +92,7 @@ function MainContainer() {
     if (newObj.componentData) {
       delete newObj.componentData;
     }
-    if (newObj.parent || newObj.parent === null) {
-      delete newObj.parent;
-    }
+
     if (newObj.state === 'stateless') {
       delete newObj.state;
     }
@@ -105,7 +102,7 @@ function MainContainer() {
     if (newObj.children) {
       newObj.children = [];
       if (obj.children.length > 0) {
-        obj.children.forEach(element => {
+        obj.children.forEach((element:{state?:object|string, children?:[]}) => {
           if (element.state !== 'stateless' || element.children.length > 0) {
             const clean = statelessCleanning(element);
             newObj.children.push(clean);

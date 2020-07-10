@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import MainSlider from '../components/MainSlider';
 import Dropdown from '../components/Dropdown';
 import {
@@ -14,7 +13,7 @@ const speeds = [
 ];
 
 // start slider movement
-function play(speed, playing, dispatch, snapshotsLength, sliderIndex) {
+function play(speed:number, playing:boolean, dispatch:(a:any) => void, snapshotsLength:number, sliderIndex:number) {
   if (playing) {
     dispatch(pause());
   } else {
@@ -36,7 +35,12 @@ function play(speed, playing, dispatch, snapshotsLength, sliderIndex) {
   }
 }
 
-function TravelContainer({ snapshotsLength }) {
+interface TravelContainerProps {
+  snapshotsLength: number,
+}
+
+function TravelContainer(props:TravelContainerProps) {
+  const { snapshotsLength } = props
   const [selectedSpeed, setSpeed] = useState(speeds[1]);
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { sliderIndex, playing } = tabs[currentTab];
@@ -50,7 +54,7 @@ function TravelContainer({ snapshotsLength }) {
       >
         {playing ? 'Pause' : 'Play'}
       </button>
-      <MainSlider snapshotsLength={snapshotsLength} sliderIndex={sliderIndex} dispatch={dispatch} />
+      <MainSlider snapshotsLength={snapshotsLength} />
       <button className="backward-button" onClick={() => dispatch(moveBackward())} type="button">
         {'<'}
       </button>
@@ -61,9 +65,5 @@ function TravelContainer({ snapshotsLength }) {
     </div>
   );
 }
-
-TravelContainer.propTypes = {
-  snapshotsLength: PropTypes.number.isRequired,
-};
 
 export default TravelContainer;

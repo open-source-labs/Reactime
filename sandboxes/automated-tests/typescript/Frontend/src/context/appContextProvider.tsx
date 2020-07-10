@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import AppContext from './appContext';
 
 interface ContextProps {
-  children: React.ReactNode;
+  children: any;
 }
 
 function AppContextProvider(props: ContextProps) {
