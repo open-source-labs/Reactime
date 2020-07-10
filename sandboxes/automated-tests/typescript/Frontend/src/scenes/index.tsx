@@ -22,7 +22,7 @@ const Scenes = () => {
   const [activeSandbox, setActiveSandbox] = useState('UseState');
 
   function changeSandbox(
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    event: any
   ) {
     const { innerText } = event.target as HTMLElement;
     setActiveSandbox(innerText);

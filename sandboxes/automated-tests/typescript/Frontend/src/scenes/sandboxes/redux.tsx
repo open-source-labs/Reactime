@@ -20,7 +20,7 @@ type Props = StateProps & DispatchProps;
 const mapStateToProps = (state: RootState) => ({
   count: state.core.count
 });
-const mapDispatchToProps = (dispatch: Dispatch<CoreActionTypes>) => {
+const mapDispatchToProps = (dispatch:any) => {
   return {
     increaseCount: () => dispatch(actions.increaseCount())
   };
