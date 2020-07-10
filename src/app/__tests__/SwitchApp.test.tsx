@@ -2,7 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import SwitchApp from '../components/SwitchApp.jsx';
+import SwitchApp from '../components/SwitchApp';
 
 import { useStoreContext } from '../store';
 

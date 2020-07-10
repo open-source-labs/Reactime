@@ -1,7 +1,7 @@
 import React from 'react';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import Diff from '../components/Diff.jsx';
+const Diff = require('../components/Diff').default;
 
 import { useStoreContext } from '../store';
 
