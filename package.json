@@ -75,7 +75,10 @@
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^1.7.0",
+    "express": "^4.17.1",
     "jest": "^24.9.0",
+    "jest-puppeteer": "^4.4.0",
+    "puppeteer": "^5.0.0",
     "jest-cli": "^24.9.0",
     "jest-runner-eslint": "^0.7.7",
     "node-sass": "^4.14.1",
@@ -91,6 +94,8 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
+    "acorn": "^7.3.1",
+    "acorn-jsx": "^5.2.0",
     "bower": "^1.8.8",
     "d3": "^5.16.0",
     "d3-zoom": "^1.8.3",

@@ -92,7 +92,6 @@ function MainContainer() {
     if (newObj.componentData) {
       delete newObj.componentData;
     }
-
     if (newObj.state === 'stateless') {
       delete newObj.state;
     }

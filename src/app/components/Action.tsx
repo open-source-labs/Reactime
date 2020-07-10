@@ -25,7 +25,7 @@ const Action = (props: ActionProps) => {
 
   // display render time for state change in seconds and miliseconds
   const cleanTime = () => {
-    if (!componentData.actualDuration) {
+    if (!componentData || !componentData.actualDuration) {
       return 'NO TIME';
     }
     let seconds:any ;
