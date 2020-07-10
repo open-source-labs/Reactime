@@ -4,7 +4,8 @@ const ChromeExtensionReloader = require('webpack-chrome-extension-reloader'); //
 const config = {
   // use a "multi-main entry" to inject multiple dependent files together and graph their dependencies into one "chunk"
   entry: {
-    app: './src/app/index.js',
+    // app: './src/app/index.js',
+    app: './src/app/index.tsx',
     background: './src/extension/background.js',
     content: './src/extension/contentScript.js',
     backend: './dev-reactime/index.js',
@@ -41,6 +42,14 @@ const config = {
               },
             ],
           },
+        },
+      },
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+        resolve: {
+          extensions: ['.tsx', '.ts', '.js'],
         },
       },
       {

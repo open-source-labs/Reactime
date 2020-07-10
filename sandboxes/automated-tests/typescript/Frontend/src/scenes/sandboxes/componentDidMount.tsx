@@ -7,7 +7,7 @@ interface StateInterface {
 }
 
 class ComponentDidMount extends Component<{}, StateInterface> {
-  private countInterval: NodeJS.Timer;
+  // private countInterval: NodeJS.Timer;
 
   constructor({}) {
     super({});

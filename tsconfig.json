@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./Frontend/public",
+    "outDir": "./src/extension/build/bundles/",
     "module": "es6",
     "target": "es5",
     "jsx": "react",
