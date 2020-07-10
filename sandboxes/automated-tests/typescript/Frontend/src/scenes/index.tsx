@@ -9,8 +9,10 @@ import UseContext from './sandboxes/useContext';
 import UseMemo from './sandboxes/useMemo';
 import Redux from './sandboxes/redux';
 import Router from './sandboxes/router';
-import SetState from './sandboxes/setState';
-import ComponentDidMount from './sandboxes/componentDidMount';
+// import SetState from './sandboxes/setState';
+const SetState = require('./sandboxes/setState').default;
+// import ComponentDidMount from './sandboxes/componentDidMount';
+const ComponentDidMount = require('./sandboxes/componentDidMount').default;
 import AppContextProvider from '../context/appContextProvider';
 import LastSnapshot from './lastSnapshot';
 

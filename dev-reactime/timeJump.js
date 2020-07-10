@@ -1,3 +1,4 @@
+import 'core-js';
 /**
  * This file contains necessary functionality for time-travel feature
  *
