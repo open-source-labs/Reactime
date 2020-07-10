@@ -10,13 +10,16 @@ configure({ adapter: new Adapter() });
 
 jest.mock('../store');
 
-
 describe('Unit testing for SwitchApp.jsx', () => {
   let wrapper;
 
   const state = {
     currentTab: 100,
-    tabs: { 100: { snapshots: [1, 2, 3, 4], viewIndex: 1, sliderIndex: 1, title: 'component'} },
+    tabs: {
+      100: {
+        snapshots: [1, 2, 3, 4], viewIndex: 1, sliderIndex: 1, title: 'component',
+      },
+    },
   };
   const dropdownCurrTabLabel = {
     value: 100,
@@ -45,7 +48,7 @@ describe('Unit testing for SwitchApp.jsx', () => {
     });
     it('OnChange should run dispatch function', () => {
       expect(dispatch.mock.calls.length).toBe(1);
-    })
+    });
     it('options prop should be an array', () => {
       expect(Array.isArray(wrapper.find('.tab-select-container').props().options)).toBeTruthy();
       expect(wrapper.find('.tab-select-container').props().options[0]).toHaveProperty('value');
