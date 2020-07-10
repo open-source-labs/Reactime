@@ -10,9 +10,15 @@ import './styles.sass';
 const LastSnapshot = props => {
   const [currentSnapshot, setCurrentSnapshot] = useState('');
 
+  const [testState, setTestState] = useState(25);
+  const [testState2, setTestState2] = useState(50);
+
   function replacer(name, val) {
     // Ignore the key that is the name of the state variable
-    if (name === 'currentSnapshot') return undefined;
+    if (name === 'currentSnapshot') {
+      console.log('filtering currentSnapshot from display');
+      return undefined;
+    }
 
     return val;
   }
@@ -20,9 +26,12 @@ const LastSnapshot = props => {
   useEffect(() => {
     window.addEventListener('message', ({ data: { action, payload } }) => {
       if (action === 'recordSnap') {
-        const payloadContent = JSON.stringify(payload, replacer, 2);
-
+        console.log('stringifying payload:', payload);
+        const payloadContent = JSON.stringify(payload, replacer, 1);
         setCurrentSnapshot(payloadContent);
+        setTestState((state) => state*2);
+        setTestState2((state) => state*2);
+        console.log('current snapshot', currentSnapshot);
       }
     });
   }, []);

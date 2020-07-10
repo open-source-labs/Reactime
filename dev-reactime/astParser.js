@@ -1,3 +1,4 @@
+import 'core-js';
 /* eslint-disable no-inner-declarations, no-loop-func */
 // eslint-disable-next-line import/newline-after-import
 const acorn = require('acorn'); // javascript parser

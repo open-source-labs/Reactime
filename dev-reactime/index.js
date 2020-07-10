@@ -10,7 +10,7 @@ import timeJumpStart from './timeJump';
 // * State snapshot object initialized here
 const snapShot = { 
   tree: null,
-  unfilteredTree: null
+  unfilteredTree: null,
 };
 
 const mode = {
