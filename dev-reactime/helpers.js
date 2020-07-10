@@ -1,8 +1,12 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable no-inner-declarations, no-loop-func */
 // eslint-disable-next-line import/newline-after-import
-import acorn from 'acorn'; // javascript parser
-import jsx from 'acorn-jsx';
+const acorn = require('acorn');
+const jsx = require('acorn-jsx');
+// import { acorn } from 'acorn'; // javascript parser
+// import { jsx } from 'acorn-jsx';
+
+const JSXParser = acorn.Parser.extend(jsx());
 
 // Returns a throttled version of an input function
 // The returned throttled function only executes at most once every t milliseconds
@@ -35,10 +39,11 @@ export const throttle = (f, t) => {
 
 // Helper function to grab the getters/setters from `elementType`
 export const getHooksNames = elementType => {
-  const JSXParser = acorn.Parser.extend(jsx());
+
   // Initialize empty object to store the setters and getter
   let ast = JSXParser.parse(elementType);
   const hookState = {};
+  const hooksNames = {};
 
   while (Object.hasOwnProperty.call(ast, 'body')) {
     let tsCount = 0; // Counter for the number of TypeScript hooks seen (to distinguish in masterState)
@@ -51,8 +56,8 @@ export const getHooksNames = elementType => {
      * Check within each function declaration if there are hook declarations */
     ast.forEach(functionDec => {
       let body;
-      if (functionDec.expression) body = functionDec.expression.body.body;
-      else body = functionDec.body.body;
+      if (functionDec.expression && functionDec.expression.body) body = functionDec.expression.body.body;
+      else body = functionDec.body ? functionDec.body.body : [];
       // Traverse through the function's funcDecs and Expression Statements
       body.forEach(elem => {
         if (elem.type === 'VariableDeclaration') {
@@ -69,7 +74,15 @@ export const getHooksNames = elementType => {
                 statements.unshift(`_useWildcard${tsCount}`);
                 tsCount += 1;
               });
-            } else statements.push(hook.id.name);
+            } else {
+              if (hook.init.object && hook.init.object.name) {
+                const varName = hook.init.object.name;
+                if (!hooksNames[varName] && varName.match(/_use/)) {
+                  hooksNames[varName] = hook.id.name;
+                }
+              }
+              statements.push(hook.id.name);
+            }
           });
         }
       });
@@ -80,5 +93,5 @@ export const getHooksNames = elementType => {
       });
     });
   }
-  return hookState;
+  return Object.values(hooksNames);
 };

@@ -9,24 +9,13 @@
  * that is invoked on
  * @param snap --> Current snapshot
  * @param mode --> Current mode (jumping i.e. time-traveling, locked, or paused)
- * and @returns a function to be invoked on the rootContainer HTMLElement
+ * and @returns a function to be invoked by index.js to initiate snapshot monitoring
  *
  * @function updateSnapShotTree
  * --> Middleware #1: Updates snap object with latest snapshot
  *
  * @function sendSnapshot
  * --> Middleware #2: Gets a copy of the current snap.tree and posts a message to the window
- *
- * @function changeSetState
- * @param component : stateNode property on a stateful class component's FiberNode object
- * --> Binds class component setState method to the component
- * --> Injects middleware into class component's setState method
- *
- * @function changeUseState
- * @param component : memoizedState property on a stateful functional component's FiberNode object
- * --> Binds functional component dispatch method to the component
- * --> Injects middleware into component's dispatch method
- * Note: dispatch is hook equivalent to setState()
  *
  * @function traverseHooks
  * @param memoizedState : memoizedState property on a stateful fctnl component's FiberNode object
@@ -46,11 +35,14 @@
 
 // const Tree = require('./tree').default;
 // const componentActionsRecord = require('./masterState');
+import acorn from 'acorn'; // javascript parser
+import jsx from 'acorn-jsx';
 import Tree from './tree';
 import componentActionsRecord from './masterState';
-import { throttle } from './helpers';
 
-const DEBUG_MODE = true;
+import { throttle, getHooksNames } from './helpers';
+
+const DEBUG_MODE = false;
 
 const alwaysLog = console.log;
 
@@ -93,7 +85,7 @@ export default (snap, mode) => {
   // a hooks component changes state
   function traverseHooks(memoizedState) {
     const hooksStates = [];
-    if (memoizedState && memoizedState.queue) {
+    while (memoizedState && memoizedState.queue) {
       // Carlos: these two are legacy comments, we should look into them later
       // prevents useEffect from crashing on load
       // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
@@ -156,14 +148,16 @@ export default (snap, mode) => {
         // We then store them along with the corresponding memoizedState.queue,
         // which includes the dispatch() function we use to change their state.
         const hooksStates = traverseHooks(memoizedState);
-        hooksStates.forEach(state => {
+        const hooksNames = getHooksNames(elementType.toString());
+        console.log('hooks names:', hooksNames);
+        hooksStates.forEach((state, i) => {
           hooksIndex = componentActionsRecord.saveNew(state.state, state.component);
           if (newState && newState.hooksState) {
-            newState.hooksState.push([state.state, hooksIndex]);
+            newState.hooksState.push([{ [hooksNames[i]]: state.state }, hooksIndex]);
           } else if (newState) {
-            newState.hooksState = [[state.state, hooksIndex]];
+            newState.hooksState = [{ [hooksNames[i]]: state.state }, hooksIndex];
           } else {
-            newState = { hooksState: [[state.state, hooksIndex]] };
+            newState = { hooksState: [{ [hooksNames[i]]: state.state }, hooksIndex] };
           }
           componentFound = true;
           console.log('currentFiber of hooks state:', currentFiber);

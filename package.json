@@ -49,8 +49,6 @@
     "@babel/plugin-proposal-decorators": "^7.4.4",
     "@babel/preset-env": "^7.10.3",
     "@babel/preset-react": "^7.0.0",
-    "acorn": "^7.3.1",
-    "acorn-jsx": "^5.2.0",
     "babel-loader": "^8.0.6",
     "core-js": "^3.6.5",
     "css-loader": "^3.2.0",
@@ -79,6 +77,8 @@
     "webpack-cli": "^3.3.6"
   },
   "dependencies": {
+    "acorn": "^7.3.1",
+    "acorn-jsx": "^5.2.0",
     "bower": "^1.8.8",
     "d3": "^5.16.0",
     "d3-zoom": "^1.8.3",

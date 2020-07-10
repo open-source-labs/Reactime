@@ -10,6 +10,9 @@ import './styles.sass';
 const LastSnapshot = props => {
   const [currentSnapshot, setCurrentSnapshot] = useState('');
 
+  const [testState, setTestState] = useState(25);
+  const [testState2, setTestState2] = useState(50);
+
   function replacer(name, val) {
     // Ignore the key that is the name of the state variable
     if (name === 'currentSnapshot') {
@@ -26,6 +29,8 @@ const LastSnapshot = props => {
         console.log('stringifying payload:', payload);
         const payloadContent = JSON.stringify(payload, replacer, 1);
         setCurrentSnapshot(payloadContent);
+        setTestState((state) => state*2);
+        setTestState2((state) => state*2);
         console.log('current snapshot', currentSnapshot);
       }
     });
