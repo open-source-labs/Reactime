@@ -2,7 +2,6 @@
 import produce from 'immer';
 import * as types from '../constants/actionTypes.ts';
 
-
 export default (state, action) => produce(state, draft => {
   const { port, currentTab, tabs } = draft;
   const {
