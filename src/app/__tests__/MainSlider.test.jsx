@@ -11,7 +11,9 @@ import { useStoreContext } from '../store';
 configure({ adapter: new Adapter() });
 
 jest.mock('../store');
+// the handle function in MainSlider returns out a Tooltip Component
 const handle = Tooltip;
+
 describe('Unit testing for MainSlider.jsx', () => {
   let wrapper;
   const props = {
@@ -52,6 +54,7 @@ describe('Unit testing for MainSlider.jsx', () => {
 
   describe('Testing for handle functional component', () => {
     // this doesnt work, not sure how to implement yet
+    // the handle function should return a Tooltip component
     // eslint-disable-next-line jest/no-test-prefixes
     // eslint-disable-next-line jest/no-disabled-tests
     it.skip('handle prop should return <Tooltip /> component from rc-tooltip library', () => {
