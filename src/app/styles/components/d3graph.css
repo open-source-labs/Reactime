@@ -114,11 +114,11 @@ div.tooltip {
 }
 
 .perf-chart-labels {
-  font: 12px sans-serif;
+  font: 1.3em sans-serif;
+  /* font-size: calc(12px + .8vw); */
   /* color: white; */
   /* fill: rgb(231, 231, 231); */
   fill: #2a2f3a;
   pointer-events: none;
   text-anchor: middle;
 };
-
