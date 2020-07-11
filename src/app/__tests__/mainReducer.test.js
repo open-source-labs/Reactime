@@ -4,7 +4,6 @@ import {
   toggleMode, addNewSnapshots, initialConnect, setPort, emptySnapshots, changeView, changeSlider, moveBackward, moveForward, playForward, pause, startPlaying, importSnapshots, setTab, deleteTab,
 } from '../actions/actions';
 
-
 describe('mainReducer testing', () => {
   let state;
   let currentTab;
