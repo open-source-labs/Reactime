@@ -3,11 +3,10 @@
 import React from 'react';
 import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom';
 
-// import Chart from './Chart';
+
 const Chart = require('./Chart').default;
 import Tree from './Tree';
 import PerfView from './PerfView';
-// import ErrorHandler from './ErrorHandler';
 const ErrorHandler = require('./ErrorHandler').default;
 
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
