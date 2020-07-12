@@ -8,7 +8,7 @@ const config = {
     app: './src/app/index.tsx',
     background: './src/extension/background.js',
     content: './src/extension/contentScript.js',
-    backend: './dev-reactime/index.js',
+    backend: './dev-reactime/index.ts',
   },
   output: {
     path: path.resolve(__dirname, 'src/extension/build/bundles'),

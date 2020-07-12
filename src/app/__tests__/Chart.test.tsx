@@ -5,7 +5,8 @@
 import React from 'react';
 import { configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import Chart from '../components/Chart';
+const Chart = require('../components/Chart').default;
+
 // Unit test cases for d3 functionality
 configure({ adapter: new Adapter() });
 // Test the life cycle methods in Chart

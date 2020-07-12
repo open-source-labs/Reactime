@@ -8,6 +8,7 @@ import { useStoreContext } from '../store';
 import { emptySnapshots } from '../actions/actions';
 import Action from '../components/Action';
 
+
 configure({ adapter: new Adapter() });
 
 const state = {

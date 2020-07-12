@@ -46,8 +46,10 @@ class Node {
     // eslint-disable-next-line no-multi-assign
     // eslint-disable-next-line no-plusplus
     // gabi and nate :: continue the order of number of total state changes
+    // eslint-disable-next-line no-plusplus
     this.index = tabObj.index++;
     // gabi and nate :: continue the order of number of states changed from that parent
+    // eslint-disable-next-line no-multi-assign
     this.name = tabObj.currParent += 1;
     // gabi and nate :: mark from what branch this node is originated
     this.branch = tabObj.currBranch;

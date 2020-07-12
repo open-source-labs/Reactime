@@ -65,7 +65,6 @@ describe('testing the bottom buttons', () => {
     });
   });
 
-
   describe('lock button testing', () => {
     beforeEach(() => {
       wrapper.find('.lock-button').simulate('click');

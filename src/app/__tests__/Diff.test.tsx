@@ -1,7 +1,7 @@
 import React from 'react';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import Diff from '../components/Diff.jsx';
+const Diff = require('../components/Diff').default;
 
 import { useStoreContext } from '../store';
 
@@ -19,13 +19,12 @@ describe('Unit testing for Diff.jsx', () => {
       }],
 
     }],
-  }
+  };
 
   const state = {
     currentTab: 100,
     tabs: { 100: { snapshots: [1, 2, 3, 4], viewIndex: 1, sliderIndex: 1 } },
   };
-
 
   useStoreContext.mockImplementation(() => [state]);
 
@@ -34,6 +33,7 @@ describe('Unit testing for Diff.jsx', () => {
   const previous = { state: 'string', children: {} }; // expect previous to be an obj
 
   beforeEach(() => {
+    // eslint-disable-next-line react/jsx-props-no-spreading
     wrapper = shallow(<Diff {...props} />);
   });
 
@@ -69,5 +69,4 @@ describe('Unit testing for Diff.jsx', () => {
       expect(wrapper.textContent).not.toEqual('No state change detected. Trigger an event to change state');
     });
   });
-
 });
