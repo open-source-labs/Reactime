@@ -30,7 +30,7 @@ Just one step needed [**Chrome extension**](https://chrome.google.com/webstore/d
 
 1. Install the Reactime [extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) from Chrome Web Store. Alternatively, use `src/extension/build/build.zip` for manual installation in [Developer mode](https://developer.chrome.com/extensions/faq#faq-dev-01). Turn on 'Allow access to file URLs' in extension details page if testing locally.
 
-*** for old version instaling [readme-Oldversion.md] click here ***
+*** for old version instaling [click here](https://github.com/open-source-labs/reactime/blob/master/readme-OldVersion.md) ***
 
 ## How to Use
 
