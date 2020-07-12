@@ -43,17 +43,7 @@ import componentActionsRecord from './masterState';
 
 import { throttle, getHooksNames } from './helpers';
 
-const DEBUG_MODE = false;
-
-const alwaysLog = console.log;
-
-console.log = (original => { 
-  return (...args) => {
-    if (DEBUG_MODE) original(...args);
-  }
-})(console.log);
-
-
+let doWork = true;
 const circularComponentTable = new Set();
 
 // module.exports = (snap, mode) => {
@@ -149,7 +139,7 @@ export default (snap, mode) => {
         // which includes the dispatch() function we use to change their state.
         const hooksStates = traverseHooks(memoizedState);
         const hooksNames = getHooksNames(elementType.toString());
-        console.log('hooks names:', hooksNames);
+        // console.log('hooks names:', hooksNames);
         hooksStates.forEach((state, i) => {
           hooksIndex = componentActionsRecord.saveNew(state.state, state.component);
           if (newState && newState.hooksState) {
@@ -160,7 +150,7 @@ export default (snap, mode) => {
             newState = { hooksState: [{ [hooksNames[i]]: state.state }, hooksIndex] };
           }
           componentFound = true;
-          console.log('currentFiber of hooks state:', currentFiber);
+          // console.log('currentFiber of hooks state:', currentFiber);
         });
       }
     }
@@ -210,14 +200,14 @@ export default (snap, mode) => {
       createTree(sibling, newNode, true);
     }
 
-    if (circularComponentTable.has(child)) {
+    /* if (circularComponentTable.has(child)) {
       console.log('found circular child, exiting tree loop');
     }
 
     if (circularComponentTable.has(sibling)) {
       console.log('found circular sibling, exiting tree loop');
     }
-
+ */
     return tree;
   }
 
@@ -228,6 +218,11 @@ export default (snap, mode) => {
       snap.tree = createTree(current);
     }
     sendSnapshot();
+  }
+
+  function onVisibilityChange() {
+    doWork = !document.hidden;
+    console.log('doWork is:', doWork);
   }
 
   return async () => {    
@@ -248,12 +243,12 @@ export default (snap, mode) => {
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
     const throttledUpdateSnapshot = throttle(updateSnapShotTree, 250);
     
-    console.log('fiberRoot:', fiberRoot);
+    document.addEventListener('visibilitychange', onVisibilityChange);
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           fiberRoot = args[1];
-          throttledUpdateSnapshot();
+          if (doWork) throttledUpdateSnapshot();
           return original(...args);
         };
       }(devTools.onCommitFiberRoot));
