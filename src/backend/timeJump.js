@@ -22,7 +22,7 @@ export default (origin, mode) => {
   // Recursively change state of tree
   // Carlos: target is past state we are travelling to
 
-  function jump(target, originNode = origin.tree) {
+  function jump(target) {
     // Set the state of the origin tree if the component is stateful
     if (!target) return;
     if (target.state === 'stateless') target.children.forEach(child => jump(child));
