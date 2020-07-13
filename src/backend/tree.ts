@@ -8,10 +8,7 @@ import 'core-js';
 const Flatted = require('flatted');
 
 let copyInstances: number = 0;
-const circularComponentTable = new Set<Tree>();
-
-
-
+const circularComponentTable = new Set<Tree> ();
 
 // removes unserializable state data such as functions
 function scrubUnserializableMembers(tree: Tree): Tree {
