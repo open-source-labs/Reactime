@@ -32,7 +32,10 @@ interface Data{
   }
 }
 
-// * State snapshot object initialized here
+/**
+ * State snapshot object initialized here
+ * @param snapshot takes a snapshot of the fiber
+ */
 const snapShot: Snapshot = { 
   tree: null,
   unfilteredTree: null,
