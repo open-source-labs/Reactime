@@ -12,6 +12,7 @@
   "dependencies": {
     "big.js": "^5.2.2",
     "github-fork-ribbon-css": "^0.2.1",
+    "jest": "^26.1.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "reactime": "^2.10.0"
