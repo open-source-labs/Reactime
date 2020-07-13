@@ -38,12 +38,12 @@ import 'core-js';
 // const componentActionsRecord = require('./masterState');
 import acorn from 'acorn'; // javascript parser
 import jsx from 'acorn-jsx';
-import Tree from './tree.ts';
+import Tree from './tree';
 import componentActionsRecord from './masterState';
 
 import { throttle, getHooksNames } from './helpers';
 
-let doWork: boolean = true;
+let doWork = true;
 const circularComponentTable = new Set();
 
 // module.exports = (snap, mode) => {
@@ -117,7 +117,7 @@ export default (snap, mode) => {
     } = currentFiber;
 
     let newState = null;
-    let componentData = {};
+    let componentData: any= {};
     let componentFound = false;
 
     // Check if node is a stateful setState component
