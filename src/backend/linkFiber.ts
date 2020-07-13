@@ -43,7 +43,7 @@ import componentActionsRecord from './masterState';
 
 import { throttle, getHooksNames } from './helpers';
 
-let doWork = true;
+let doWork: boolean = true;
 const circularComponentTable = new Set();
 
 // module.exports = (snap, mode) => {
