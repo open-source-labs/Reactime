@@ -54,10 +54,10 @@ div.tooltip {
   max-width: 250px;
   overflow-wrap: break-word;
   padding: 6px;
-  color: #320a5c;
+  color: #1a2229;
   font-size: 12px;
   font-family: "Overpass Mono", monospace;
-  background: #9cf4df;
+  background: #6699C4;
   border-radius: 8px;
   pointer-events: none;
 }
