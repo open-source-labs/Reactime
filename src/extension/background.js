@@ -58,7 +58,6 @@ class Node {
   }
 }
 
-// Carlos: no clue what is the purpose of this thing
 function sendToHierarchy(tabObj, newNode) {
   if (!tabObj.currLocation) {
     tabObj.currLocation = newNode;
@@ -90,7 +89,7 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
     return;
     // if not, recurse on each one of the children
   }
-  // Carlos: this can be made more efficient with for loop and exiting when node found
+  
   if (rootNode.children) { // Carlos: remove if, redundant
     rootNode.children.forEach(child => {
       changeCurrLocation(tabObj, child, index, name);
