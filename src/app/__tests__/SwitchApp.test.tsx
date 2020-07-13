@@ -40,7 +40,6 @@ describe('Unit testing for SwitchApp.jsx', () => {
     beforeEach(() => {
       wrapper.find('.tab-select-container').simulate('change', {});
     });
-    // console.log('dispatch mock calls', dispatch.mock.calls);
     it('SwitchApp component returns <Select /> from react-select library', () => {
       expect(wrapper.find('.tab-select-container').type()).toEqual(Select);
       expect(wrapper.find('.tab-select-container').props().className).toBe('tab-select-container');

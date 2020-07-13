@@ -54,10 +54,10 @@ div.tooltip {
   max-width: 250px;
   overflow-wrap: break-word;
   padding: 6px;
-  color: #320a5c;
+  color: #1a2229;
   font-size: 12px;
   font-family: "Overpass Mono", monospace;
-  background: #9cf4df;
+  background: #6699C4;
   border-radius: 8px;
   pointer-events: none;
 }
@@ -65,8 +65,8 @@ div.tooltip {
  .d3-tip {
   line-height: 1;
   padding: 6px;
-  background: #9cf4df;
-  color: #320a5c;
+  background: #6699C4;
+  color: #1a2229;
   border-radius: 4px;
   font-size: 13px;
   max-width: 400px;
@@ -80,7 +80,7 @@ div.tooltip {
   display: inline;
   font-size: 15px;
   line-height: 1;
-  color: #9cf4df;
+  color: #6699C4;
   content: "\25BC";
   position: absolute;
   text-align: center;
