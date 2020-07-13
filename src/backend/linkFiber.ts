@@ -38,7 +38,7 @@ import 'core-js';
 // const componentActionsRecord = require('./masterState');
 import acorn from 'acorn'; // javascript parser
 import jsx from 'acorn-jsx';
-import Tree from './tree';
+import Tree from './tree.ts';
 import componentActionsRecord from './masterState';
 
 import { throttle, getHooksNames } from './helpers';
