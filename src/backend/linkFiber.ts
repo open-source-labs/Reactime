@@ -160,7 +160,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
     let newNode = null;
     // We want to add this fiber node to the snapshot
-    const snapshotState = newState.state || newState.hooksState ;
+    // const snapshotState = newState.state || newState.hooksState ;
     if (componentFound || newState === 'stateless') {
       if (fromSibling) {
         newNode = tree.addSibling(newState,
