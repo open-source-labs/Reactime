@@ -239,6 +239,7 @@ export default (snap, mode) => {
     }
  */
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    console.log('this is __REACT_DEVTOOLS_GLOBAL_HOOK__', devTools)
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
     const throttledUpdateSnapshot = throttle(updateSnapShotTree, 250);
