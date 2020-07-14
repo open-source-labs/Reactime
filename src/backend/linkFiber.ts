@@ -74,8 +74,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       // Carlos: these two are legacy comments, we should look into them later
       // prevents useEffect from crashing on load
       // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
-      // console.log('traverse hooks memoizedState', memoizedState);
-      if (memoizedState.memoizedState) {
+      if (memoizedState.memoizedState && memoizedState.queue.lastRenderedReducer && memoizedState.queue.lastRenderedReducer.name === 'basicStateReducer') {
         hooksStates.push({
           component: memoizedState.queue,
           state: memoizedState.memoizedState,
@@ -109,13 +108,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     } = currentFiber;
 
     let newState: any;
-    let componentData: ComponentData = {}; /* = {
-      index: -1,
-      actualDuration: 0,
-      actualStartTime: 0,
-      selfBaseDuration: 0,
-      treeBaseDuration: 0,
-    };*/
+    let componentData: ComponentData = {};
     let componentFound = false;
 
     // Check if node is a stateful setState component
@@ -168,7 +161,6 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
     let newNode = null;
     // We want to add this fiber node to the snapshot
-    //const snapshotState = newState.state || newState.hooksState;
     if (componentFound || newState === 'stateless') {
       if (fromSibling) {
         newNode = tree.addSibling(newState,
@@ -211,7 +203,6 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
   function onVisibilityChange(): void {
     doWork = !document.hidden;
-    console.log('doWork is:', doWork);
   }
 
   return () => {
