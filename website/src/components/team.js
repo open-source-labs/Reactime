@@ -321,7 +321,7 @@ const Layout = ({ children }) => {
                 {bios.Edwin ? (
                   <div className="content">
                     <p>
-                    Edwin is a driven software engineer from Los Angeles, CA who is passionate about solving real life problems and making a difference in the engineering field. He is passionate about contributing to open source software, continuing to improve software, and has a passion for solving algorithms,. Edwin is experienced in Node.js, Express, React, JavaScript, and Python. Aside from coding, some of Edwin's interests include playing basketball, watching the NBA, Lakers Fan, loves to make people laugh, loves talking about math and physics, and traveling around the world trying to find the best burger place!
+                    Edwin is a driven software engineer from Los Angeles, CA who is passionate about solving real life problems and making a difference in the engineering field. He is passionate about contributing to open source software, continuing to improve software, and has a passion for solving algorithms,. Edwin is experienced in Node.js, Express, React, JavaScript, and Python. Aside from coding, some of Edwin's interests include playing basketball, watching the NBA (Lakers Fan) loves to make people laugh, loves talking about math and physics, and traveling around the world trying to find the best burger place!
                     </p>
                   </div>
                 ) : null}
@@ -362,7 +362,7 @@ const Layout = ({ children }) => {
                 {bios.Gabriela ? (
                   <div className="content">
                     <p>
-                      Gabriela is an fullstack developer based in Los Angeles.
+                    Gabriela is a multicultural fullstack developer with a passion for React and build tools to help others. She has an ability to learn complex topics, on a fast and simply away. She has an unstoppable creator that loves to paint, sculpt and write. Gabi recently gave talks about React Router and author a blog about her coding journey and new developers technologies.
                     </p>
                   </div>
                 ) : null}
