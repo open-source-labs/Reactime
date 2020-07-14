@@ -181,6 +181,7 @@ chrome.runtime.onConnect.addListener(port => {
 
 // background.js recieves message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender) => {
+  console.log('this is request from background', request)
   // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
   if (request.type === 'SIGN_CONNECT') {
     return true;
