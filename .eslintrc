@@ -1,7 +1,11 @@
 {
-  "extends": ["airbnb", "plugin:jest/recommended"],
+  "extends": [
+    "airbnb", 
+    "plugin:jest/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"],
   "root": true,
-  "plugins": ["jest", "react", "react-hooks"],
+  "plugins": ["jest", "react", "react-hooks", "@typescript-eslint"],
   "rules": {
     "arrow-parens": [2, "as-needed"],
     "import/no-unresolved": "off",

@@ -16,7 +16,7 @@ interface ActionProps {
   handleOnkeyDown: (e: any, i: number) => void;
 }
 
-/* // gabi and nate :: index and delta props were removed from Action.jsx  */
+/* // gabi :: index and delta props were removed from Action.jsx  */
 // viewIndex and handleonkeyDown added to props
 const Action = (props: ActionProps) => {
   const {
