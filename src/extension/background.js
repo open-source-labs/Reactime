@@ -347,40 +347,42 @@ chrome.tabs.onRemoved.addListener(tabId => {
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 
   // check if the tab title changed to see if tab need to restart
-  if (changeInfo.title && changeInfo.title !== tabsObj[tabId].title){
+  if (changeInfo && tabsObj[tabId]){
+    if(changeInfo.title && changeInfo.title !== tabsObj[tabId].title){
 
-    // tell devtools which tab to delete
-    if (portsArr.length > 0) {
-      portsArr.forEach(bg =>
-        bg.postMessage({
-          action: 'deleteTab',
-          payload: tabId,
-        }),
-      );
+      // tell devtools which tab to delete
+      if (portsArr.length > 0) {
+        portsArr.forEach(bg =>
+          bg.postMessage({
+            action: 'deleteTab',
+            payload: tabId,
+          }),
+        );
+      }
+
+      // delete the tab from the tabsObj
+      delete tabsObj[tabId];
+      delete reloaded[tabId];
+      delete firstSnapshotReceived[tabId];
+
+      // recreate the tab on the tabsObj
+      tabsObj[tabId] = createTabObj(changeInfo.title);
+
+      // reinject the script to the tab
+      chrome.tabs.executeScript(tabId, {
+        code: `
+        // Function will attach script to the dom 
+        const injectScript = (file, tag) => {
+          const htmlBody = document.getElementsByTagName(tag)[0];
+          const script = document.createElement('script');
+          script.setAttribute('type', 'text/javascript');
+          script.setAttribute('src', file);
+          htmlBody.appendChild(script);
+        };
+        injectScript(chrome.runtime.getURL('bundles/backend.bundle.js'), 'body');
+      `,
+      });
     }
-
-    // delete the tab from the tabsObj
-    delete tabsObj[tabId];
-    delete reloaded[tabId];
-    delete firstSnapshotReceived[tabId];
-
-    // recreate the tab on the tabsObj
-    tabsObj[tabId] = createTabObj(changeInfo.title);
-
-    // reinject the script to the tab
-    chrome.tabs.executeScript(tabId, {
-      code: `
-      // Function will attach script to the dom 
-      const injectScript = (file, tag) => {
-        const htmlBody = document.getElementsByTagName(tag)[0];
-        const script = document.createElement('script');
-        script.setAttribute('type', 'text/javascript');
-        script.setAttribute('src', file);
-        htmlBody.appendChild(script);
-      };
-      injectScript(chrome.runtime.getURL('bundles/backend.bundle.js'), 'body');
-    `,
-    });
   }
 });
 
