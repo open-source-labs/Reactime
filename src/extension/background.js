@@ -181,7 +181,6 @@ chrome.runtime.onConnect.addListener(port => {
 
 // background.js recieves message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender) => {
-  console.log('this is request from background', request)
   // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
   if (request.type === 'SIGN_CONNECT') {
     return true;
@@ -346,11 +345,10 @@ chrome.tabs.onRemoved.addListener(tabId => {
 
 // when a new url is loaded on the same tab, this remove the tabid from the tabsObj, recreate the tab and inject the script 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-  console.log('this is tabId from background on Updates', tabId)
-  console.log('this is changeInfo from background on Updates', changeInfo)
-  console.log('this is tabsObj[tabId].title from background on Updates', tabsObj[tabId].title)
+
+  // check if the tab title changed to see if tab need to restart
   if (changeInfo.title && changeInfo.title !== tabsObj[tabId].title){
-    console.log('need restart tab object')
+
     // tell devtools which tab to delete
     if (portsArr.length > 0) {
       portsArr.forEach(bg =>
