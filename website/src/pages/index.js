@@ -131,12 +131,12 @@ has never
         <strong>Simple Installation</strong>
       </h2>
       <h6>
-        <a
+        {/* <a
           style={{ textDecoration: 'none', color: styles.redCode }}
           href="https://www.youtube.com/watch?v=lmG1X7Kf6zo&t="
         >
           Youtube Tutorial
-        </a>
+        </a> */}
       </h6>
     </Installation>
     <Team>
