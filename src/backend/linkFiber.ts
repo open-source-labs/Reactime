@@ -37,12 +37,14 @@ import 'core-js';
 // const Tree = require('./tree').default;
 // const componentActionsRecord = require('./masterState');
 
-import { Snapshot, Mode, SnapshotNode, MsgData, ComponentData, HookStates, Fiber, WorkTag, State } from './types/backendTypes'
+import {
+ Snapshot, Mode, SnapshotNode, MsgData, ComponentData, HookStates, Fiber, WorkTag, State
+} from './types/backendTypes';
 import Tree from './tree';
 import componentActionsRecord from './masterState';
 import { throttle, getHooksNames } from './helpers';
 
-let doWork: boolean = true;
+let doWork = true;
 const circularComponentTable = new Set();
 
 // module.exports = (snap, mode) => {
@@ -57,7 +59,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       snap.tree = new Tree('root', 'root');
     }
     const payload = snap.tree.cleanTreeCopy();// snap.tree.getCopy();
-  
+
     window.postMessage({
       action: 'recordSnap',
       payload,
@@ -86,7 +88,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
   }
 
   // This runs after every Fiber commit. It creates a new snapshot
-  function createTree(currentFiber: Fiber, tree: Tree = new Tree('root', 'root'), fromSibling: boolean = false) {
+  function createTree(currentFiber: Fiber, tree: Tree = new Tree('root', 'root'), fromSibling = false) {
     // Base case: child or sibling pointed to null
     if (!currentFiber) return null;
     if (!tree) return tree;
@@ -108,7 +110,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
     let newState: any;
     let componentData: ComponentData;
-    let componentFound: boolean = false;
+    let componentFound = false;
 
     // Check if node is a stateful setState component
     if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
@@ -144,7 +146,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     }
 
     // This grabs stateless components
-    
+
     if (!componentFound && (tag === 0 || tag === 1 || tag === 2)) {
       newState = 'stateless';
     }
@@ -160,7 +162,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
     let newNode = null;
     // We want to add this fiber node to the snapshot
-    // const snapshotState = newState.state || newState.hooksState ;
+    //const snapshotState = newState.state || newState.hooksState;
     if (componentFound || newState === 'stateless') {
       if (fromSibling) {
         newNode = tree.addSibling(newState,
@@ -175,7 +177,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       newNode = tree;
     }
 
-    // Recurse on children    
+    // Recurse on children
     if (child && !circularComponentTable.has(child)) {
       // If this node had state we appended to the children array,
       // so attach children to the newly appended child.
@@ -206,7 +208,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     console.log('doWork is:', doWork);
   }
 
-  return () => {    
+  return () => {
 /*     const container = document.getElementById('root');
     if (container._internalRoot) {
       fiberRoot = container._internalRoot;
@@ -223,7 +225,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
     const throttledUpdateSnapshot = throttle(updateSnapShotTree, 140);
-    
+
     document.addEventListener('visibilitychange', onVisibilityChange);
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
