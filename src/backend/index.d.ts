@@ -8,7 +8,7 @@
  * --> the async @function returned from linkFiber.js
  * @param {container} --> the div element corresponding to your root container
  * @returns {void} --> no return value
- * 
+ *
  * Reactime contributors:
     "Abaas Khorrami",
     "Andy Wong",
@@ -31,10 +31,10 @@
     "Ryan Dang",
     "Sierra Swaby",
     "Yujin Kang"
- * 
- * 
- * NOTE: TypeScript support is in beta and still experimental.  
- * 
+ *
+ *
+ * NOTE: TypeScript support is in beta and still experimental.
+ *
  */
 
 declare module "reactime" {
