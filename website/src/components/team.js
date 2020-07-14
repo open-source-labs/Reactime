@@ -321,7 +321,7 @@ const Layout = ({ children }) => {
                 {bios.Edwin ? (
                   <div className="content">
                     <p>
-                      Edwin is an fullstack developer based in Los Angeles.
+                    Edwin is a driven software engineer from Los Angeles, CA who is passionate about solving real life problems and making a difference in the engineering field. He is passionate about contributing to open source software, continuing to improve software, and has a passion for solving algorithms,. Edwin is experienced in Node.js, Express, React, JavaScript, and Python. Aside from coding, some of Edwin's interests include playing basketball, watching the NBA, Lakers Fan, loves to make people laugh, loves talking about math and physics, and traveling around the world trying to find the best burger place!
                     </p>
                   </div>
                 ) : null}
