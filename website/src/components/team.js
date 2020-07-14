@@ -252,7 +252,7 @@ const Layout = ({ children }) => {
                 {bios.Carlos ? (
                   <div className="content">
                     <p>
-                      Carlos is an fullstack developer based in Los Angeles.
+                    Carlos is a full-stack developer with a passion for optimized code and test-driven development. He is experienced in React, Node.js, SQL and NoSQL, and recently gave a sponsored talk on caching techniques in web development. In his free time, he enjoys playing with his dog (Penny), mindfulness meditation, gaming, and outdoors activities.
                     </p>
                   </div>
                 ) : null}
