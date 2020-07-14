@@ -9,7 +9,10 @@ window.addEventListener('message', msg => { // runs automatically every second
   // messages sent by contentscrip
   if (firstMessage) {
     // tell the background script that the tab has reloaded
-    chrome.runtime.sendMessage({ action: 'tabReload' });
+    chrome.runtime.sendMessage({
+      action: 'tabReload', 
+      payload: msg
+    });
     firstMessage = false;
   }
 
