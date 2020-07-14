@@ -36,7 +36,7 @@ import 'core-js';
 // const componentActionsRecord = require('./masterState');
 
 import {
- Snapshot, Mode, SnapshotNode, MsgData, ComponentData, HookStates, Fiber, WorkTag, State
+ Snapshot, Mode, ComponentData, HookStates, Fiber
 } from './types/backendTypes';
 import Tree from './tree';
 import componentActionsRecord from './masterState';
@@ -113,13 +113,15 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     } = currentFiber;
 
     let newState: any;
-    let componentData: ComponentData = {}; /* = {
+    let componentData: ComponentData = {};
+    /* = {
       index: -1,
       actualDuration: 0,
       actualStartTime: 0,
       selfBaseDuration: 0,
       treeBaseDuration: 0,
-    };*/
+    };
+    */
     let componentFound = false;
 
     // Check if node is a stateful setState component
@@ -172,7 +174,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
     let newNode = null;
     // We want to add this fiber node to the snapshot
-    //const snapshotState = newState.state || newState.hooksState;
+    // const snapshotState = newState.state || newState.hooksState;
     if (componentFound || newState === 'stateless') {
       if (fromSibling) {
         newNode = tree.addSibling(newState,
@@ -215,7 +217,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
   function onVisibilityChange(): void {
     doWork = !document.hidden;
-    console.log('doWork is:', doWork);
+    // console.log('doWork is:', doWork);
   }
 
   return () => {
@@ -240,6 +242,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
+          // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
           if (doWork) throttledUpdateSnapshot();
           return original(...args);

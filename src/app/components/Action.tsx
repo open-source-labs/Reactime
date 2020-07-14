@@ -3,19 +3,19 @@ import { changeView, changeSlider } from '../actions/actions';
 
 /**
  * @template ActionProps Props for the action component
- * 
  */
+
 interface ActionProps {
   key: string;
   selected: boolean;
-  last: boolean; 
+  last: boolean;
   index: number;
   sliderIndex: number;
   dispatch: (a:any) => void;
   displayName: string;
   componentName: string;
   componentData: {actualDuration: number}|undefined;
-  state?: object|string;
+  state?: Record<string,unknown>;
   viewIndex: number;
   handleOnkeyDown: (e: any, i: number) => void;
 }
@@ -36,9 +36,10 @@ interface ActionProps {
  */
 /* // gabi :: index and delta props were removed from Action.jsx  */
 // viewIndex and handleonkeyDown added to props
-const Action = (props: ActionProps) => {
+const Action = (props: ActionProps): unknown => {
   const {
-    selected, last, index, sliderIndex, dispatch, displayName, componentName, componentData, state, viewIndex, handleOnkeyDown,
+    selected, last, index, sliderIndex, dispatch, displayName, componentName,
+    componentData, state, viewIndex, handleOnkeyDown, key,
   } = props;
 
   /**
@@ -49,8 +50,8 @@ const Action = (props: ActionProps) => {
     if (!componentData || !componentData.actualDuration) {
       return 'NO TIME';
     }
-    let seconds:any ;
-    let miliseconds:any = componentData.actualDuration;
+    let seconds:number| string;
+    let miliseconds: any = componentData.actualDuration;
     if (Math.floor(componentData.actualDuration) > 60) {
       seconds = Math.floor(componentData.actualDuration / 60);
       seconds = JSON.stringify(seconds);
@@ -66,7 +67,7 @@ const Action = (props: ActionProps) => {
     if (arrayMiliseconds[0].length < 2) {
       arrayMiliseconds[0] = '0'.concat(arrayMiliseconds[0]);
     }
-    if (index == 0) {
+    if (index === 0) {
       return `${seconds}:${arrayMiliseconds[0]}.${arrayMiliseconds[1]}`;
     }
     return `+${seconds}:${arrayMiliseconds[0]}.${arrayMiliseconds[1]}`;
@@ -76,7 +77,7 @@ const Action = (props: ActionProps) => {
   return (
     <div
       // Invoking keyboard functionality; functionality is in ActionContainer;
-      onKeyDown={(e:any) => handleOnkeyDown(e, viewIndex)}
+      onKeyDown={(e:string) => handleOnkeyDown(e, viewIndex)}
       className={selected || last ? 'action-component selected' : 'action-component'}
       onClick={() => {
         dispatch(changeView(index));
@@ -96,7 +97,7 @@ const Action = (props: ActionProps) => {
       </button>
       <button
         className="jump-button"
-        onClick={(e:any) => {
+        onClick={(e: any): void => {
           e.stopPropagation();
           dispatch(changeSlider(index));
           dispatch(changeView(index));

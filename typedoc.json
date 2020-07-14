@@ -2,6 +2,6 @@
     "mode": "modules",
     "out": "docs",
     "includes": ["./src/backend"],
-    "exclude": ["**/__tests__/**", "**/**/**/build/**"],
+    "exclude": ["**/__tests__/**", "**/**/**/build/**", "**/types/**"],
     "name": "Reactime 4.0"
 }

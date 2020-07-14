@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Mode | Reactime 4.0</title>
+	<title>DiffRouteProps | Reactime 4.0</title>
 	<meta name="description" content="Documentation for Reactime 4.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_backend_index_.html">&quot;backend/index&quot;</a>
+					<a href="../modules/_app_components_diffroute_.html">&quot;app/components/DiffRoute&quot;</a>
 				</li>
 				<li>
-					<a href="_backend_index_.mode.html">Mode</a>
+					<a href="_app_components_diffroute_.diffrouteprops.html">DiffRouteProps</a>
 				</li>
 			</ul>
-			<h1>Interface Mode</h1>
+			<h1>Interface DiffRouteProps</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Mode</span>
+						<span class="target">DiffRouteProps</span>
 					</li>
 				</ul>
 			</section>
@@ -84,9 +84,7 @@
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_backend_index_.mode.html#jumping" class="tsd-kind-icon">jumping</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_backend_index_.mode.html#locked" class="tsd-kind-icon">locked</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_backend_index_.mode.html#paused" class="tsd-kind-icon">paused</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_app_components_diffroute_.diffrouteprops.html#snapshot" class="tsd-kind-icon">snapshot</a></li>
 							</ul>
 						</section>
 					</div>
@@ -95,32 +93,12 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-					<a name="jumping" class="tsd-anchor"></a>
-					<h3>jumping</h3>
-					<div class="tsd-signature tsd-kind-icon">jumping<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="snapshot" class="tsd-anchor"></a>
+					<h3>snapshot</h3>
+					<div class="tsd-signature tsd-kind-icon">snapshot<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">{ </span>children<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>componentData<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>state<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">; </span>stateSnaphot<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/603ef4b/src/backend/index.ts#L17">backend/index.ts:17</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-					<a name="locked" class="tsd-anchor"></a>
-					<h3>locked</h3>
-					<div class="tsd-signature tsd-kind-icon">locked<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/603ef4b/src/backend/index.ts#L19">backend/index.ts:19</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-					<a name="paused" class="tsd-anchor"></a>
-					<h3>paused</h3>
-					<div class="tsd-signature tsd-kind-icon">paused<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/603ef4b/src/backend/index.ts#L18">backend/index.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/2aa145e/src/app/components/DiffRoute.tsx#L8">app/components/DiffRoute.tsx:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -133,53 +111,26 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/_backend_index_.html">&quot;backend/index&quot;</a>
+						<a href="../modules/_app_components_diffroute_.html">&quot;app/components/<wbr>Diff<wbr>Route&quot;</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="_backend_index_.data.html" class="tsd-kind-icon">Data</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="_backend_index_.mode.html" class="tsd-kind-icon">Mode</a>
+						<a href="_app_components_diffroute_.diffrouteprops.html" class="tsd-kind-icon">Diff<wbr>Route<wbr>Props</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-								<a href="_backend_index_.mode.html#jumping" class="tsd-kind-icon">jumping</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-								<a href="_backend_index_.mode.html#locked" class="tsd-kind-icon">locked</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-								<a href="_backend_index_.mode.html#paused" class="tsd-kind-icon">paused</a>
+								<a href="_app_components_diffroute_.diffrouteprops.html#snapshot" class="tsd-kind-icon">snapshot</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="_backend_index_.node.html" class="tsd-kind-icon">Node</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="_backend_index_.snapshot.html" class="tsd-kind-icon">Snapshot</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../modules/_backend_index_.html#linkfiber" class="tsd-kind-icon">link<wbr>Fiber</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../modules/_backend_index_.html#timejump" class="tsd-kind-icon">time<wbr>Jump</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../modules/_backend_index_.html#getrouteurl" class="tsd-kind-icon">get<wbr>RouteURL</a>
-					</li>
-					<li class=" tsd-kind-object-literal tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../modules/_backend_index_.html#mode-1" class="tsd-kind-icon">mode</a>
-					</li>
-					<li class=" tsd-kind-object-literal tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../modules/_backend_index_.html#snapshot-1" class="tsd-kind-icon">snap<wbr>Shot</a>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/_app_components_diffroute_.html#diffroute" class="tsd-kind-icon">Diff<wbr>Route</a>
 					</li>
 				</ul>
 			</nav>

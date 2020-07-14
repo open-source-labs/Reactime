@@ -4,17 +4,17 @@ import ReactHtmlParser from 'react-html-parser';
 import { useStoreContext } from '../store';
 
 interface DiffProps {
-  snapshot: {state?:object|string}; 
+  snapshot: {state?:Record<string, unknown>};
   show?: boolean|undefined; 
 }
 /**
- * Displays tree showing specific two versions of tree 
+ * Displays tree showing specific two versions of tree
  * one with specific state changes, the other the whole tree
  * @param props props from maincontainer
  * @returns a diff tree or a string stating no state changes have happened
  */
 function Diff(props: DiffProps) {
-  const { snapshot, show } = props
+  const { snapshot, show } = props;
   const [mainState] = useStoreContext();
   const { currentTab, tabs } = mainState; // k/v pairs of mainstate store object being created
   const { snapshots, viewIndex, sliderIndex } = tabs[currentTab];
@@ -55,7 +55,7 @@ function Diff(props: DiffProps) {
     }
     return newObj;
   };
-  
+
   // displays stateful data
   const previousDisplay = statelessCleanning(previous);
   // diff function returns a comparison of two objects, one has an updated change
@@ -68,8 +68,8 @@ function Diff(props: DiffProps) {
   else formatters.html.hideUnchanged();
 
   if (previous === undefined || delta === undefined) {
-    console.log('reacthtml parser -->', ReactHtmlParser(html), typeof ReactHtmlParser(html))
-    return <div className='noState'> No state change detected. Trigger an event to change state </div>;
+    // console.log('reacthtml parser -->', ReactHtmlParser(html), typeof ReactHtmlParser(html));
+    return <div className="noState"> No state change detected. Trigger an event to change state </div>;
   }
   return <div>{ReactHtmlParser(html)}</div>;
 }

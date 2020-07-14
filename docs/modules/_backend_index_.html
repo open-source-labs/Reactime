@@ -71,15 +71,6 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section tsd-is-not-exported">
-							<h3>Interfaces</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported"><a href="../interfaces/_backend_index_.data.html" class="tsd-kind-icon">Data</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported"><a href="../interfaces/_backend_index_.mode.html" class="tsd-kind-icon">Mode</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported"><a href="../interfaces/_backend_index_.node.html" class="tsd-kind-icon">Node</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported"><a href="../interfaces/_backend_index_.snapshot.html" class="tsd-kind-icon">Snapshot</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Variables</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported"><a href="_backend_index_.html#linkfiber" class="tsd-kind-icon">link<wbr>Fiber</a></li>
@@ -95,8 +86,8 @@
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Object literals</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-object-literal tsd-parent-kind-module tsd-is-not-exported"><a href="_backend_index_.html#mode-1" class="tsd-kind-icon">mode</a></li>
-								<li class="tsd-kind-object-literal tsd-parent-kind-module tsd-is-not-exported"><a href="_backend_index_.html#snapshot-1" class="tsd-kind-icon">snap<wbr>Shot</a></li>
+								<li class="tsd-kind-object-literal tsd-parent-kind-module tsd-is-not-exported"><a href="_backend_index_.html#mode" class="tsd-kind-icon">mode</a></li>
+								<li class="tsd-kind-object-literal tsd-parent-kind-module tsd-is-not-exported"><a href="_backend_index_.html#snapshot" class="tsd-kind-icon">snap<wbr>Shot</a></li>
 							</ul>
 						</section>
 					</div>
@@ -107,12 +98,27 @@
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
 					<a name="linkfiber" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> link<wbr>Fiber</h3>
-					<div class="tsd-signature tsd-kind-icon">link<wbr>Fiber<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">(Anonymous function)</span><span class="tsd-signature-symbol"> = linkFiberStart(snapShot, mode)</span></div>
+					<div class="tsd-signature tsd-kind-icon">link<wbr>Fiber<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> = linkFiberStart(snapShot, mode)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/603ef4b/src/backend/index.ts#L56">backend/index.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/2aa145e/src/backend/index.ts#L24">backend/index.ts:24</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-variable tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
 					<a name="timejump" class="tsd-anchor"></a>
@@ -120,7 +126,7 @@
 					<div class="tsd-signature tsd-kind-icon">time<wbr>Jump<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">(Anonymous function)</span><span class="tsd-signature-symbol"> = timeJumpStart(snapShot, mode)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/603ef4b/src/backend/index.ts#L58">backend/index.ts:58</a></li>
+							<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/2aa145e/src/backend/index.ts#L25">backend/index.ts:25</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -131,19 +137,19 @@
 					<a name="getrouteurl" class="tsd-anchor"></a>
 					<h3>get<wbr>RouteURL</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>RouteURL<span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><a href="../interfaces/_backend_index_.node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>RouteURL<span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SnapshotNode</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/603ef4b/src/backend/index.ts#L62">backend/index.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/2aa145e/src/backend/index.ts#L27">backend/index.ts:27</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>node: <a href="../interfaces/_backend_index_.node.html" class="tsd-signature-type">Node</a></h5>
+									<h5>node: <span class="tsd-signature-type">SnapshotNode</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -154,81 +160,71 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 				<h2>Object literals</h2>
 				<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-module tsd-is-not-exported">
-					<a name="mode-1" class="tsd-anchor"></a>
+					<a name="mode" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> mode</h3>
 					<div class="tsd-signature tsd-kind-icon">mode<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/603ef4b/src/backend/index.ts#L44">backend/index.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/2aa145e/src/backend/index.ts#L18">backend/index.ts:18</a></li>
 						</ul>
 					</aside>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-						<a name="mode-1.jumping" class="tsd-anchor"></a>
+						<a name="mode.jumping" class="tsd-anchor"></a>
 						<h3>jumping</h3>
 						<div class="tsd-signature tsd-kind-icon">jumping<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> = false</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/603ef4b/src/backend/index.ts#L45">backend/index.ts:45</a></li>
+								<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/2aa145e/src/backend/index.ts#L19">backend/index.ts:19</a></li>
 							</ul>
 						</aside>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-						<a name="mode-1.locked" class="tsd-anchor"></a>
+						<a name="mode.locked" class="tsd-anchor"></a>
 						<h3>locked</h3>
 						<div class="tsd-signature tsd-kind-icon">locked<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> = false</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/603ef4b/src/backend/index.ts#L47">backend/index.ts:47</a></li>
+								<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/2aa145e/src/backend/index.ts#L21">backend/index.ts:21</a></li>
 							</ul>
 						</aside>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-						<a name="mode-1.paused" class="tsd-anchor"></a>
+						<a name="mode.paused" class="tsd-anchor"></a>
 						<h3>paused</h3>
 						<div class="tsd-signature tsd-kind-icon">paused<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> = false</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/603ef4b/src/backend/index.ts#L46">backend/index.ts:46</a></li>
+								<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/2aa145e/src/backend/index.ts#L20">backend/index.ts:20</a></li>
 							</ul>
 						</aside>
 					</section>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-module tsd-is-not-exported">
-					<a name="snapshot-1" class="tsd-anchor"></a>
+					<a name="snapshot" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> snap<wbr>Shot</h3>
 					<div class="tsd-signature tsd-kind-icon">snap<wbr>Shot<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/603ef4b/src/backend/index.ts#L39">backend/index.ts:39</a></li>
+							<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/2aa145e/src/backend/index.ts#L13">backend/index.ts:13</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>State snapshot object initialized here</p>
-						</div>
-						<dl class="tsd-comment-tags">
-							<dt>param</dt>
-							<dd><p>takes a snapshot of the fiber</p>
-							</dd>
-						</dl>
-					</div>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-						<a name="snapshot-1.tree" class="tsd-anchor"></a>
+						<a name="snapshot.tree" class="tsd-anchor"></a>
 						<h3>tree</h3>
 						<div class="tsd-signature tsd-kind-icon">tree<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/603ef4b/src/backend/index.ts#L40">backend/index.ts:40</a></li>
+								<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/2aa145e/src/backend/index.ts#L14">backend/index.ts:14</a></li>
 							</ul>
 						</aside>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-						<a name="snapshot-1.unfilteredtree" class="tsd-anchor"></a>
+						<a name="snapshot.unfilteredtree" class="tsd-anchor"></a>
 						<h3>unfiltered<wbr>Tree</h3>
 						<div class="tsd-signature tsd-kind-icon">unfiltered<wbr>Tree<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/603ef4b/src/backend/index.ts#L41">backend/index.ts:41</a></li>
+								<li>Defined in <a href="https://github.com/nmwenz90/reactime/blob/2aa145e/src/backend/index.ts#L15">backend/index.ts:15</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -248,18 +244,6 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../interfaces/_backend_index_.data.html" class="tsd-kind-icon">Data</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../interfaces/_backend_index_.mode.html" class="tsd-kind-icon">Mode</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../interfaces/_backend_index_.node.html" class="tsd-kind-icon">Node</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../interfaces/_backend_index_.snapshot.html" class="tsd-kind-icon">Snapshot</a>
-					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
 						<a href="_backend_index_.html#linkfiber" class="tsd-kind-icon">link<wbr>Fiber</a>
 					</li>
@@ -270,10 +254,10 @@
 						<a href="_backend_index_.html#getrouteurl" class="tsd-kind-icon">get<wbr>RouteURL</a>
 					</li>
 					<li class=" tsd-kind-object-literal tsd-parent-kind-module tsd-is-not-exported">
-						<a href="_backend_index_.html#mode-1" class="tsd-kind-icon">mode</a>
+						<a href="_backend_index_.html#mode" class="tsd-kind-icon">mode</a>
 					</li>
 					<li class=" tsd-kind-object-literal tsd-parent-kind-module tsd-is-not-exported">
-						<a href="_backend_index_.html#snapshot-1" class="tsd-kind-icon">snap<wbr>Shot</a>
+						<a href="_backend_index_.html#snapshot" class="tsd-kind-icon">snap<wbr>Shot</a>
 					</li>
 				</ul>
 			</nav>

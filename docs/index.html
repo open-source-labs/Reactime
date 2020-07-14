@@ -69,7 +69,7 @@
 				</p>
 				<h1 align="center">State Debugger for React</h1>
 				<p><a href="https://github.com/oslabs-beta/reactime"><img src="https://img.shields.io/github/license/oslabs-beta/reactime" alt="GitHub"></a> <a href="https://travis-ci.com/oslabs-beta/reactime"><img src="https://travis-ci.com/oslabs-beta/reactime.svg?branch=master" alt="Build Status"></a> <a href="http://badge.fury.io/js/reactime"><img src="https://badge.fury.io/js/reactime.svg" alt="npm version"></a> <a href="https://david-dm.org/oslabs-beta/reactime#info=dependencies"><img src="https://david-dm.org/oslabs-beta/reactime.svg" alt="Dependencies"></a> <a href="https://david-dm.org/oslabs-beta/reactime?type=dev"><img src="https://david-dm.org/oslabs-beta/reactime/dev-status.svg" alt="DevDependencies"></a> <a href="https://snyk.io/test/github/oslabs-beta/reactime"><img src="https://snyk.io/test/github/oslabs-beta/reactime/badge.svg" alt="Vulnerabilities"></a></p>
-				<p><img src="./demo.gif" alt="demo"></p>
+				<p><img src="./MyMovie.gif" alt="demo"></p>
 				<p>Reactime is a debugging tool for React developers. It records state whenever it is changed and allows the user to jump to any previously recorded state.</p>
 				<p>This tool is for React apps using stateful components and prop drilling, and has beta support for Context API, conditional state routing, Hooks (useState, useEffect) and functional components.</p>
 				<p>The latest release extends the core functionality by including support for TypeScript applications, improving the user experience through more declarative titles in the actions panel, and extending support for components with conditional state fields. The testing suite has also been expanded with the inclusion of a Sandbox utility to aid future expansion as well as additional E2E and integration tests with Puppeteer and React Testing Library.</p>
@@ -82,31 +82,11 @@
 				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
 					<h2>Installation</h2>
 				</a>
-				<p>Two parts are required for this tool to function: a <a href="https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga"><strong>Chrome extension</strong></a> and an <a href="https://www.npmjs.com/package/reactime"><strong>NPM package</strong></a>.</p>
+				<p>Just one step needed <a href="https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga"><strong>Chrome extension</strong></a> and an <a href="https://www.npmjs.com/package/reactime"><strong>NPM package</strong></a>.</p>
 				<ol>
-					<li><p>Install the Reactime <a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">extension</a> from Chrome Web Store. Alternatively, use <code>src/extension/build/build.zip</code> for manual installation in <a href="https://developer.chrome.com/extensions/faq#faq-dev-01">Developer mode</a>. Turn on &#39;Allow access to file URLs&#39; in extension details page if testing locally.</p>
-					</li>
-					<li><p>Install the <a href="https://www.npmjs.com/package/reactime">NPM package</a> in your application&#39;s root directory. </p>
-					</li>
+					<li>Install the Reactime <a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">extension</a> from Chrome Web Store. Alternatively, use <code>src/extension/build/build.zip</code> for manual installation in <a href="https://developer.chrome.com/extensions/faq#faq-dev-01">Developer mode</a>. Turn on &#39;Allow access to file URLs&#39; in extension details page if testing locally.</li>
 				</ol>
-				<pre><code><span class="hljs-built_in">npm</span> i reactime</code></pre><ol start="3">
-					<li>Call the library method on your root container after rendering your App.</li>
-				</ol>
-				<pre><code><span class="hljs-keyword">import</span> reactime <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;reactime&#x27;</span>;
-
-<span class="hljs-keyword">const</span> rootContainer = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;root&#x27;</span>);
-ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span></span>, rootContainer);
-
-reactime(rootContainer);</code></pre><ol start="4">
-					<li>For experimental concurrent mode support.</li>
-				</ol>
-				<pre><code><span class="hljs-keyword">import</span> reactime <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;reactime&#x27;</span>;
-
-<span class="hljs-keyword">const</span> rootContainer = ReactDOM.createRoot(<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;root&#x27;</span>));
-rootContainer.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span></span>);
-reactime(rootContainer);</code></pre><ol start="5">
-					<li>Done! That&#39;s all you have to do to link your React project to our library.</li>
-				</ol>
+				<p><strong>* for old version instaling <a href="https://github.com/open-source-labs/reactime/blob/master/readme-OldVersion.md">click here</a> *</strong></p>
 				<a href="#how-to-use" id="how-to-use" style="color: inherit; text-decoration: none;">
 					<h2>How to Use</h2>
 				</a>
