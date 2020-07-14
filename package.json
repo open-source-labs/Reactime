@@ -16,7 +16,8 @@
     "build": "webpack --mode production",
     "dev": "webpack --mode development --watch",
     "test": "jest --verbose --coverage --watchAll",
-    "docker-test-lint": "eslint --ext .js --ext .jsx src"
+    "docker-test-lint": "eslint --ext .js --ext .jsx src",
+    "docs": "typedoc --json docs --inputFiles src/app --inputFiles src/backend --readme docs/readme.md"
   },
   "keywords": [
     "react",
@@ -81,6 +82,7 @@
     "jest-diff": "^26.1.0",
     "jest-puppeteer": "^4.4.0",
     "jest-runner-eslint": "^0.7.7",
+    "minimatch": "^3.0.4",
     "node-sass": "^4.14.1",
     "puppeteer": "^5.0.0",
     "sass": "^1.26.10",

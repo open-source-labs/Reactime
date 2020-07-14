@@ -43,6 +43,12 @@ import componentActionsRecord from './masterState';
 
 import { throttle, getHooksNames } from './helpers';
 
+declare global {
+  interface Window {
+    __REACT_DEVTOOLS_GLOBAL_HOOK__?: any;
+  }
+}
+
 let doWork = true;
 const circularComponentTable = new Set();
 
@@ -65,7 +71,7 @@ export default (snap, mode) => {
       window.postMessage({
         action: 'recordSnap',
         payload,
-      });
+      }, '*');
     // } catch (e) {
     //   console.log('failed to send postMessage:', e);
     // }

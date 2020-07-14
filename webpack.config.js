@@ -67,7 +67,7 @@ const config = {
   plugins: [
     new TypedocWebpackPlugin({
       name: 'Contoso',
-      mode: 'file',
+      mode: 'modules',
       theme: './typedoc-theme/',
       includeDeclarations: false,
       ignoreCompilerErrors: true,
