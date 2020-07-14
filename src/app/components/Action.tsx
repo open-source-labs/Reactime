@@ -26,13 +26,16 @@ interface ActionProps {
  * @param displayName : Label showing sequence number of state change, reflects changes in Chart.tsx
  * @param componentName : Displays the name of compenent's state being changed
  * @param last : The last index in the array
- * @param sliderIndex: Index of the slider in the array of state changes (clicking the block changes the slider, related to MainSlider.tsx slider)
+ * @param sliderIndex: Index of the slider in the array of state changes
+ * (clicking the block changes the slider, related to MainSlider.tsx slider)
  * @param componentData: Displays react fiber data
  * @param viewIndex:  Index of the tab in the array when timejump is made
  * @method dispatch Executes actions that changes state in reactime
  * @method handleOnkeyDown Executes key commands
- * 
+ *
  */
+/* // gabi :: index and delta props were removed from Action.jsx  */
+// viewIndex and handleonkeyDown added to props
 const Action = (props: ActionProps) => {
   const {
     selected, last, index, sliderIndex, dispatch, displayName, componentName, componentData, state, viewIndex, handleOnkeyDown,

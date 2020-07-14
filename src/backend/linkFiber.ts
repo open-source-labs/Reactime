@@ -34,11 +34,12 @@ import 'core-js';
 
 // const Tree = require('./tree').default;
 // const componentActionsRecord = require('./masterState');
-import acorn from 'acorn'; // javascript parser
-import jsx from 'acorn-jsx';
+
+import {
+ Snapshot, Mode, SnapshotNode, MsgData, ComponentData, HookStates, Fiber, WorkTag, State
+} from './types/backendTypes';
 import Tree from './tree';
 import componentActionsRecord from './masterState';
-
 import { throttle, getHooksNames } from './helpers';
 
 declare global {
@@ -51,12 +52,11 @@ let doWork = true;
 const circularComponentTable = new Set();
 
 // module.exports = (snap, mode) => {
-export default (snap, mode) => {
+export default (snap: Snapshot, mode: Mode): ()=>void => {
   let fiberRoot = null;
 
-  function sendSnapshot() {
+  function sendSnapshot(): void {
     // Don't send messages while jumping or while paused
-
     if (mode.jumping || mode.paused) return;
 
     if (!snap.tree) {
@@ -64,21 +64,16 @@ export default (snap, mode) => {
     }
     const payload = snap.tree.cleanTreeCopy();// snap.tree.getCopy();
 
-    // try {
-      // await window.postMessage({
-      window.postMessage({
-        action: 'recordSnap',
-        payload,
-      }, '*');
-    // } catch (e) {
-    //   console.log('failed to send postMessage:', e);
-    // }
+    window.postMessage({
+      action: 'recordSnap',
+      payload,
+    }, '*');
   }
 
   // Carlos: Injects instrumentation to update our state tree every time
   // a hooks component changes state
-  function traverseHooks(memoizedState) {
-    const hooksStates = [];
+  function traverseHooks(memoizedState: any): HookStates {
+    const hooksStates: HookStates = [];
     while (memoizedState && memoizedState.queue) {
       // Carlos: these two are legacy comments, we should look into them later
       // prevents useEffect from crashing on load
@@ -96,11 +91,8 @@ export default (snap, mode) => {
     return hooksStates;
   }
 
-  // Carlos: This runs after EVERY Fiber commit. It creates a new snapshot,
-  //
-
-  let ctRunning = 0;
-  function createTree(currentFiber, tree = new Tree('root', 'root'), fromSibling = false) {
+  // This runs after every Fiber commit. It creates a new snapshot
+  function createTree(currentFiber: Fiber, tree: Tree = new Tree('root', 'root'), fromSibling = false) {
     // Base case: child or sibling pointed to null
     if (!currentFiber) return null;
     if (!tree) return tree;
@@ -120,8 +112,14 @@ export default (snap, mode) => {
       treeBaseDuration,
     } = currentFiber;
 
-    let newState = null;
-    let componentData: any= {};
+    let newState: any;
+    let componentData: ComponentData = {}; /* = {
+      index: -1,
+      actualDuration: 0,
+      actualStartTime: 0,
+      selfBaseDuration: 0,
+      treeBaseDuration: 0,
+    };*/
     let componentFound = false;
 
     // Check if node is a stateful setState component
@@ -143,7 +141,6 @@ export default (snap, mode) => {
         // which includes the dispatch() function we use to change their state.
         const hooksStates = traverseHooks(memoizedState);
         const hooksNames = getHooksNames(elementType.toString());
-        // console.log('hooks names:', hooksNames);
         hooksStates.forEach((state, i) => {
           hooksIndex = componentActionsRecord.saveNew(state.state, state.component);
           if (newState && newState.hooksState) {
@@ -154,13 +151,12 @@ export default (snap, mode) => {
             newState = { hooksState: [{ [hooksNames[i]]: state.state }, hooksIndex] };
           }
           componentFound = true;
-          // console.log('currentFiber of hooks state:', currentFiber);
         });
       }
     }
 
     // This grabs stateless components
-    
+
     if (!componentFound && (tag === 0 || tag === 1 || tag === 2)) {
       newState = 'stateless';
     }
@@ -175,6 +171,8 @@ export default (snap, mode) => {
     };
 
     let newNode = null;
+    // We want to add this fiber node to the snapshot
+    //const snapshotState = newState.state || newState.hooksState;
     if (componentFound || newState === 'stateless') {
       if (fromSibling) {
         newNode = tree.addSibling(newState,
@@ -190,7 +188,6 @@ export default (snap, mode) => {
     }
 
     // Recurse on children
-    
     if (child && !circularComponentTable.has(child)) {
       // If this node had state we appended to the children array,
       // so attach children to the newly appended child.
@@ -204,18 +201,10 @@ export default (snap, mode) => {
       createTree(sibling, newNode, true);
     }
 
-    /* if (circularComponentTable.has(child)) {
-      console.log('found circular child, exiting tree loop');
-    }
-
-    if (circularComponentTable.has(sibling)) {
-      console.log('found circular sibling, exiting tree loop');
-    }
- */
     return tree;
   }
 
-  function updateSnapShotTree() {
+  function updateSnapShotTree(): void {
     if (fiberRoot) {
       const { current } = fiberRoot;
       circularComponentTable.clear();
@@ -224,12 +213,12 @@ export default (snap, mode) => {
     sendSnapshot();
   }
 
-  function onVisibilityChange() {
+  function onVisibilityChange(): void {
     doWork = !document.hidden;
     console.log('doWork is:', doWork);
   }
 
-  return async () => {    
+  return () => {
 /*     const container = document.getElementById('root');
     if (container._internalRoot) {
       fiberRoot = container._internalRoot;
@@ -245,8 +234,8 @@ export default (snap, mode) => {
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-    const throttledUpdateSnapshot = throttle(updateSnapShotTree, 250);
-    
+    const throttledUpdateSnapshot = throttle(updateSnapShotTree, 140);
+
     document.addEventListener('visibilitychange', onVisibilityChange);
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {

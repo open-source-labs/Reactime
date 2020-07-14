@@ -7,7 +7,7 @@
 [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime) [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime) [![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime) [![Dependencies](https://david-dm.org/oslabs-beta/reactime.svg)](https://david-dm.org/oslabs-beta/reactime#info=dependencies) [![DevDependencies](https://david-dm.org/oslabs-beta/reactime/dev-status.svg)](https://david-dm.org/oslabs-beta/reactime?type=dev) [![Vulnerabilities](https://snyk.io/test/github/oslabs-beta/reactime/badge.svg)](https://snyk.io/test/github/oslabs-beta/reactime)
 
 
-![demo](./MyMovie.gif)
+![demo](./demo.gif)
 
 
 
@@ -26,11 +26,38 @@ Reactime was nominated for the Productivity Booster award at [React Open Source 
 
 ## Installation
 
-Just one step needed [**Chrome extension**](https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga) and an [**NPM package**](https://www.npmjs.com/package/reactime).
+Two parts are required for this tool to function: a [**Chrome extension**](https://chrome.google.com/webstore/detail/react-time-travel/cgibknllccemdnfhfpmjhffpjfeidjga) and an [**NPM package**](https://www.npmjs.com/package/reactime).
 
 1. Install the Reactime [extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) from Chrome Web Store. Alternatively, use `src/extension/build/build.zip` for manual installation in [Developer mode](https://developer.chrome.com/extensions/faq#faq-dev-01). Turn on 'Allow access to file URLs' in extension details page if testing locally.
 
-*** for old version instaling [click here](https://github.com/open-source-labs/reactime/blob/master/readme-OldVersion.md) ***
+2. Install the [NPM package](https://www.npmjs.com/package/reactime) in your application's root directory. 
+
+```
+npm i reactime
+```
+
+3. Call the library method on your root container after rendering your App.
+
+```
+import reactime from 'reactime';
+
+const rootContainer = document.getElementById('root');
+ReactDOM.render(<App />, rootContainer);
+
+reactime(rootContainer);
+```
+
+4. For experimental concurrent mode support.
+
+```
+import reactime from 'reactime';
+
+const rootContainer = ReactDOM.createRoot(document.getElementById('root'));
+rootContainer.render(<App />);
+reactime(rootContainer);
+```
+
+5. Done! That's all you have to do to link your React project to our library.
 
 ## How to Use
 
@@ -76,7 +103,7 @@ Reactime offers beta support for TypeScript applications using stateful class co
 - **Carlos Perez** - [@crperezt](https://github.com/crperezt)
 - **Edwin Menendez** - [@edwinjmenendez](https://github.com/edwinjmenendez)
 - **Gabriela Jardim Aquino** - [@aquinojardim](https://github.com/aquinojardim)
-- **Greg Panciera** - [@gpanciera](https://github.com/gpanciera)
+- **Gregory Panciera** - [@gpanciera](https://github.com/gpanciera)
 - **Nathanael Wa Mwenze** - [@nmwenz90](https://github.com/nmwenz90)
 - **Ryan Dang** - [@rydang](https://github.com/rydang)
 - **Bryan Lee** - [@mylee1995](https://github.com/mylee1995)

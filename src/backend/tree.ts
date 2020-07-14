@@ -3,18 +3,14 @@ import 'core-js';
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
-// import * as reactWorkTags from './reactWorkTags';
 
-const Flatted = require('flatted');
-/**
- * @var copyInstances : Number of copies of Instances
- */
-let copyInstances: number = 0;
-const circularComponentTable = new Set<Tree> ();
-/**
- * @function scrubUnserializableMembers : Removes unserializable state data such as functions
- */
-// 
+// import * as reactWorkTags from './reactWorkTags';
+// const Flatted = require('flatted');
+
+let copyInstances = 0;
+const circularComponentTable = new Set<Tree>();
+
+// removes unserializable state data such as functions
 function scrubUnserializableMembers(tree: Tree): Tree {
   Object.entries(tree.state).forEach(keyValuePair => {
     if (typeof keyValuePair[1] === 'function') tree.state[keyValuePair[0]] = 'function';
@@ -36,40 +32,31 @@ class Tree {
    * @param parent generates a new tree (recursive call)
    */
   state: string | {};
+
   name: string;
+
   componentData: {};
+
   children: (Tree | string)[] ;
+
   parent: Tree
-  constructor(state : string | {}, name: string = 'nameless', componentData: {} = {}) {
+
+  constructor(state : string | {}, name = 'nameless', componentData: {} = {}) {
     this.state = state === 'root' ? 'root' : JSON.parse(JSON.stringify(state));
     this.name = name;
     this.componentData = componentData ? JSON.parse(JSON.stringify(componentData)) : {};
     this.children = [];
     this.parent = null; // ref to parent so we can add siblings
   }
-  /**
-   * 
-   * @function addChild : Pushes a new child tree in the children array
-   * 
-   */
-  addChild(state: string | {} , name: string, componentData: {}): Tree {
-    /**
-     * @var newChild creates a new Child Tree
-     */
+
+  addChild(state: string | {}, name: string, componentData: {}): Tree {
     const newChild: Tree = new Tree(state, name, componentData);
     newChild.parent = this;
     this.children.push(newChild);
     return newChild;
   }
-  /**
-   * 
-   * @function addSibling : Adds a sibing to the current tree
-   * 
-   */
-  addSibling(state: string | {} , name: string, componentData: {}): Tree {
-    /**
-     * @var newSibling: creates a new Sibling Tree
-     */
+
+  addSibling(state: string | {}, name: string, componentData: {}): Tree {
     const newSibling: Tree = new Tree(state, name, componentData);
     newSibling.parent = this.parent;
     this.parent.children.push(newSibling);
@@ -97,14 +84,14 @@ class Tree {
     // copy.children = this.children;
 
     // creates copy of each child of the present node
-    
+
     copy.children = this.children.map((child: Tree): Tree | string => {
-        if (!circularComponentTable.has(child)) {
-         return child.cleanTreeCopy();
-        }
-        return 'circular';
+      if (!circularComponentTable.has(child)) {
+        return child.cleanTreeCopy();
+      }
+      return 'circular';
     });
-    
+
 
     // returns copy
     copyInstances--;
