@@ -29,7 +29,7 @@ class Tree {
    * @param state : the tree's current state
    * @param name : the tree's name
    * @param componentData : Data in the component tree
-   * @param parent generates a new tree (recursive call)
+   * @parent generates a new tree (recursive call)
    */
   state: string | {};
 
@@ -68,7 +68,7 @@ class Tree {
   cleanTreeCopy(): Tree {
     /**
      * @object circularComponentTable : Clears circular component table only on first call, not recursive ones
-     * @method clear clears component table
+     * 
      */
     // 
     if (copyInstances === 0) {
@@ -97,6 +97,26 @@ class Tree {
     copyInstances--;
     return copy;
   }
+
+  // print out the tree structure in the console
+  // DEV: Process may be different for useState components
+  // BUG FIX: Don't print the Router as a component
+  // Change how the children are printed
+//   print() {
+//     const children = ['children: '];
+//     // DEV: What should we push instead for components using hooks (it wouldn't be state)
+//     // if this.children is always initialized to empty array, when would there ever be anything to iterate through here?
+//     this.children.forEach((child: any) => {
+//       children.push(child.state || child.component.state);
+//     });
+//     if (this.name) console.log('this.name if exists: ', this.name);
+//     if (children.length === 1) {
+//       console.log(`children length 1. ${this.state ? 'this.state: ' : 'this.component.state: '}`, this.state || this.component.state);
+//     } else console.log(`children length !== 1. ${this.state ? 'this.state: ' : 'this.component.state, children: '}`, this.state || this.component.state, ...children);
+//     this.children.forEach((child: any) => {
+//       child.print();
+//     });
+//   }
 }
 
 export default Tree;
