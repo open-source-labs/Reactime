@@ -36,13 +36,6 @@ import 'core-js';
 
 // const Tree = require('./tree').default;
 // const componentActionsRecord = require('./masterState');
-<<<<<<< HEAD
-import acorn from 'acorn'; // javascript parser
-import jsx from 'acorn-jsx';
-import Tree from './tree';
-import componentActionsRecord from './masterState';
-=======
->>>>>>> 24e511f2f701fa79d7fdee42f580beed7a058630
 
 import {
  Snapshot, Mode, SnapshotNode, MsgData, ComponentData, HookStates, Fiber, WorkTag, State
@@ -115,13 +108,8 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       treeBaseDuration,
     } = currentFiber;
 
-<<<<<<< HEAD
-    let newState = null;
-    let componentData: any= {};
-=======
     let newState: any;
     let componentData: ComponentData;
->>>>>>> 24e511f2f701fa79d7fdee42f580beed7a058630
     let componentFound = false;
 
     // Check if node is a stateful setState component
