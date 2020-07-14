@@ -3,7 +3,7 @@ import JSONTree from 'react-json-tree';
 
 const getItemString = (type, data:{state?:object|string, name:string, children:[]}) => {
   if (data && data.name) {
-    return <span>{name}</span>;
+    return <span>{data.name}</span>;
   }
   return <span />;
 };
