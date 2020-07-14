@@ -31,6 +31,7 @@ interface PerfViewProps {
 
 const PerfView = (props:PerfViewProps) => {
   const { snapshots, viewIndex, width, height } = props
+  let adjustedSize = Math.min(width, height);
   const svgRef = useRef(null);
 
   // Figure out which snapshot index to use
@@ -41,19 +42,18 @@ const PerfView = (props:PerfViewProps) => {
   // Set up color scaling function
   const colorScale = d3.scaleLinear()
     .domain([0, 7])
-    .range(['hsl(200,60%,60%)', 'hsl(255,30%,30%)'])
-    // .range(['hsl(152,30%,80%)', 'hsl(228,30%,40%)'])
+    .range(['hsl(200,60%,60%)', 'hsl(255,30%,60%)'])
     .interpolate(d3.interpolateHcl);
 
   // Set up circle-packing layout function
   const packFunc = useCallback((data:object) => {
     return d3.pack()
-    .size([width, height])
+    .size([adjustedSize, adjustedSize])
     // .radius(d => { return d.r; })
     .padding(3)(d3.hierarchy(data)
                     .sum((d:{componentData?:{actualDuration?:number}}) => { return d.componentData.actualDuration || 0; })
                     .sort((a:{value:number}, b:{value:number}) => { return b.value - a.value; }));
-  }, [width, height]);
+  }, [adjustedSize]);
 
   // If indexToDisplay changes, clear old tree nodes
   useEffect(() => {
@@ -79,8 +79,12 @@ const PerfView = (props:PerfViewProps) => {
     let view;
 
     // Set up viewBox dimensions and onClick for parent svg
+ 
+    // console.log("PerfView -> height", height)
+    // console.log("PerfView -> width", width)
+    // console.log("PerfView -> adjustedSize", adjustedSize)
     const svg = d3.select(svgRef.current)
-      .attr('viewBox', `-${width / 2} -${height / 2} ${width} ${height}`)
+      .attr('viewBox', `-${adjustedSize / 2} -${adjustedSize / 2} ${width} ${height}`)
       .on('click', () => zoomToNode(packedRoot));
 
     // Connect circles below root to data
