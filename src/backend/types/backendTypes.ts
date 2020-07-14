@@ -27,11 +27,11 @@ export interface MsgData {
 }
 
 export interface ComponentData {
-  index: number;
-  actualDuration: number;
-  actualStartTime: number;
-  selfBaseDuration: number;
-  treeBaseDuration: number;
+  index?: number;
+  actualDuration?: number;
+  actualStartTime?: number;
+  selfBaseDuration?: number;
+  treeBaseDuration?: number;
 }
 
 interface HookStateItem {
