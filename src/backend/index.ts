@@ -6,7 +6,7 @@ import 'core-js';
 import 'regenerator-runtime/runtime';
 import linkFiberStart from './linkFiber';
 import timeJumpStart from './timeJump';
-import { Snapshot, Mode, SnapshotNode, MsgData } from './types/backendTypes'
+import { Snapshot, Mode, SnapshotNode, MsgData } from './types/backendTypes';
 import { Interface } from 'readline';
 
 // * State snapshot object initialized here
