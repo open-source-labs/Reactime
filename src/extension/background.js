@@ -245,6 +245,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
           tabsObj[tabId].snapshots.splice(1);
           // gabi :: reset hierarchy to page initial state
           if (tabsObj[tabId].hierarchy) {
+            //test
             tabsObj[tabId].hierarchy.children = [];
             // gabi :: reset currParent plus current state
             tabsObj[tabId].currParent = 1;
@@ -361,6 +362,59 @@ chrome.tabs.onRemoved.addListener(tabId => {
   delete tabsObj[tabId];
   delete reloaded[tabId];
   delete firstSnapshotReceived[tabId];
+});
+
+// when tab is reload, remove the tabid from the tabsObj
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  console.log('this is tabId from background on Updates', tabId)
+  console.log('this is changeInfo from background on Updates', changeInfo)
+  console.log('this is tabsObj[tabId].title from background on Updates', tabsObj[tabId].title)
+  if (changeInfo.title && changeInfo.title !== tabsObj[tabId].title){
+    console.log('need restart tab object')
+    // tell devtools which tab to delete
+    if (portsArr.length > 0) {
+      portsArr.forEach(bg =>
+        bg.postMessage({
+          action: 'deleteTab',
+          payload: tabId,
+        }),
+      );
+    }
+    // delete the tab from the tabsObj
+    delete tabsObj[tabId];
+    delete reloaded[tabId];
+    delete firstSnapshotReceived[tabId];
+    console.log('deleted tab')
+    tabsObj[tabId] = createTabObj(changeInfo.title);
+    chrome.tabs.executeScript(tabId, {
+      code: `
+      // Function will attach script to the dom 
+      const injectScript = (file, tag) => {
+        const htmlBody = document.getElementsByTagName(tag)[0];
+        const script = document.createElement('script');
+        script.setAttribute('type', 'text/javascript');
+        script.setAttribute('src', file);
+        htmlBody.appendChild(script);
+      };
+      injectScript(chrome.runtime.getURL('bundles/backend.bundle.js'), 'body');
+    `,
+    });
+    console.log('recreate tab')
+  }
+  // tell devtools which tab to delete
+  // if (portsArr.length > 0) {
+  //   portsArr.forEach(bg =>
+  //     bg.postMessage({
+  //       action: 'deleteTab',
+  //       payload: tabId,
+  //     }),
+  //   );
+  // }
+
+  // // delete the tab from the tabsObj
+  // delete tabsObj[tabId];
+  // delete reloaded[tabId];
+  // delete firstSnapshotReceived[tabId];
 });
 
 // when tab is view change, put the tabid as the current tab
