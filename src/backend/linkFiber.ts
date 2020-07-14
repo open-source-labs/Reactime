@@ -109,7 +109,13 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     } = currentFiber;
 
     let newState: any;
-    let componentData: ComponentData;
+    let componentData: ComponentData = {}; /* = {
+      index: -1,
+      actualDuration: 0,
+      actualStartTime: 0,
+      selfBaseDuration: 0,
+      treeBaseDuration: 0,
+    };*/
     let componentFound = false;
 
     // Check if node is a stateful setState component
