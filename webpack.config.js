@@ -2,7 +2,8 @@ const path = require('path');
 const ChromeExtensionReloader = require('webpack-chrome-extension-reloader'); // enable hot reloading while developing a chrome extension
 
 const config = {
-  // use a "multi-main entry" to inject multiple dependent files together and graph their dependencies into one "chunk"
+  // use a "multi-main entry" to inject multiple dependent files together
+  // and graph their dependencies into one "chunk"
   entry: {
     // app: './src/app/index.js',
     app: './src/app/index.tsx',

@@ -3,12 +3,12 @@ import 'core-js';
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
+
 // import * as reactWorkTags from './reactWorkTags';
+// const Flatted = require('flatted');
 
-const Flatted = require('flatted');
-
-let copyInstances: number = 0;
-const circularComponentTable = new Set<Tree> ();
+let copyInstances = 0;
+const circularComponentTable = new Set<Tree>();
 
 // removes unserializable state data such as functions
 function scrubUnserializableMembers(tree: Tree): Tree {
@@ -21,11 +21,16 @@ function scrubUnserializableMembers(tree: Tree): Tree {
 // this is the current snapshot that is being sent to the snapshots array.
 class Tree {
   state: string | {};
+
   name: string;
+
   componentData: {};
+
   children: (Tree | string)[] ;
+
   parent: Tree
-  constructor(state : string | {}, name: string = 'nameless', componentData: {} = {}) {
+
+  constructor(state : string | {}, name = 'nameless', componentData: {} = {}) {
     this.state = state === 'root' ? 'root' : JSON.parse(JSON.stringify(state));
     this.name = name;
     this.componentData = componentData ? JSON.parse(JSON.stringify(componentData)) : {};
@@ -33,14 +38,14 @@ class Tree {
     this.parent = null; // ref to parent so we can add siblings
   }
 
-  addChild(state: string | {} , name: string, componentData: {}): Tree {
+  addChild(state: string | {}, name: string, componentData: {}): Tree {
     const newChild: Tree = new Tree(state, name, componentData);
     newChild.parent = this;
     this.children.push(newChild);
     return newChild;
   }
 
-  addSibling(state: string | {} , name: string, componentData: {}): Tree {
+  addSibling(state: string | {}, name: string, componentData: {}): Tree {
     const newSibling: Tree = new Tree(state, name, componentData);
     newSibling.parent = this.parent;
     this.parent.children.push(newSibling);
@@ -62,14 +67,14 @@ class Tree {
     // copy.children = this.children;
 
     // creates copy of each child of the present node
-    
+
     copy.children = this.children.map((child: Tree): Tree | string => {
-        if (!circularComponentTable.has(child)) {
-         return child.cleanTreeCopy();
-        }
-        return 'circular';
+      if (!circularComponentTable.has(child)) {
+        return child.cleanTreeCopy();
+      }
+      return 'circular';
     });
-    
+
 
     // returns copy
     copyInstances--;
