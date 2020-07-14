@@ -38,17 +38,20 @@ export default (origin, mode) => {
         // Iterate through new children after state has been set
       }, () => target.children.forEach(child => jump(child)));
     }
-    
+
+    // Check for hooks state and set it with dispatch()
     if (target.state.hooksState) {
-      target.state.hooksState.forEach(hooksState => {
-        if (component && component.dispatch) {
-          const hooksComponent = componentActionsRecord.getComponentByIndex(hooksState[1]);
-          hooksComponent.dispatch(target.state.hooksState[0]);
-        }
-      });
+      const hooksComponent = componentActionsRecord.getComponentByIndex(target.state.hooksState[1]);
+      // const [hooksState] = [target.state.hooksState];
+      const hooksState = Object.values(target.state.hooksState[0])[0];
+      if (hooksComponent && hooksComponent.dispatch) {
+        //hooksComponent.dispatch(Object.values(target.state.hooksState[0])[0]);
+        console.log('setting hooksState of component id:', target.state.hooksState[1], 'to:', hooksState)
+        hooksComponent.dispatch(hooksState);
+      }
       target.children.forEach(child => jump(child));
     }
-    
+
     if ((!component || !component.state) && !target.state.hooksState) {
       target.children.forEach(child => jump(child));
     }

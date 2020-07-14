@@ -3,9 +3,9 @@ import 'core-js';
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
-// import * as reactWorkTags from './reactWorkTags';
 
-const Flatted = require('flatted');
+// import * as reactWorkTags from './reactWorkTags';
+//const Flatted = require('flatted');
 
 let copyInstances: number = 0;
 const circularComponentTable = new Set<Tree> ();
