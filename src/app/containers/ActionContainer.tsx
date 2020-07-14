@@ -22,7 +22,7 @@ function ActionContainer() {
   // gabi and nate :: delete function to traverse state from snapshots, now we are tranversing state from hiararchy and alsog getting infromation on display name and component name
   const displayArray = (obj:{stateSnapshot:{children:any[]}, name:number, branch:number, index:number, children?:[]}) => {
     if (obj.stateSnapshot.children.length > 0 && obj.stateSnapshot.children[0] && obj.stateSnapshot.children[0].state && obj.stateSnapshot.children[0].name) {
-      const newObj:object = {
+      const newObj:Record<string, unknown> = {
         index: obj.index,
         displayName: `${obj.name}.${obj.branch}`,
         state: obj.stateSnapshot.children[0].state,
@@ -63,7 +63,7 @@ function ActionContainer() {
     }
   }
 
-  actionsArr = hierarchyArr.map((snapshot:{state?:object|string, displayName:string, componentName:string, componentData:{actualDuration: number}|undefined}, index) => {
+  actionsArr = hierarchyArr.map((snapshot:{state?: Record<string, unknown>, key: string, displayName:string, componentName:string, componentData:{actualDuration: number}|undefined}, index) => {
     const selected = index === viewIndex;
     const last = viewIndex === -1 && index === hierarchyArr.length - 1;
     return (
