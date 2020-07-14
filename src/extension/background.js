@@ -280,26 +280,6 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         firstSnapshotReceived[tabId] = true;
         reloaded[tabId] = false;
 
-        // if (tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]) {
-        //   let sameState = true;
-        //   const testState = (array, compare) => {
-        //     array.forEach((element, elIndex) => {
-        //       const test1 = JSON.stringify(element.state);
-        //       const test2 = JSON.stringify(compare[elIndex].state);
-        //       if (JSON.stringify(element.state) !== JSON.stringify(compare[elIndex].state)) {
-        //         sameState = false;
-        //       }
-        //       if (element.children) {
-        //         testState(element.children, compare[elIndex].children);
-        //       }
-        //     });
-        //   };
-        //   testState(tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1].children, request.payload.children);
-        //   if (sameState) {
-        //     break;
-        //   }
-        // }
-
         tabsObj[tabId].snapshots.push(request.payload);
 
         sendToHierarchy(
@@ -364,8 +344,8 @@ chrome.tabs.onRemoved.addListener(tabId => {
   delete firstSnapshotReceived[tabId];
 });
 
-// when tab is reload, remove the tabid from the tabsObj
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+// when a new url is loaded on the same tab, this remove the tabid from the tabsObj, recreate the tab and inject the script 
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   console.log('this is tabId from background on Updates', tabId)
   console.log('this is changeInfo from background on Updates', changeInfo)
   console.log('this is tabsObj[tabId].title from background on Updates', tabsObj[tabId].title)
@@ -380,12 +360,16 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         }),
       );
     }
+
     // delete the tab from the tabsObj
     delete tabsObj[tabId];
     delete reloaded[tabId];
     delete firstSnapshotReceived[tabId];
-    console.log('deleted tab')
+
+    // recreate the tab on the tabsObj
     tabsObj[tabId] = createTabObj(changeInfo.title);
+
+    // reinject the script to the tab
     chrome.tabs.executeScript(tabId, {
       code: `
       // Function will attach script to the dom 
@@ -399,22 +383,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       injectScript(chrome.runtime.getURL('bundles/backend.bundle.js'), 'body');
     `,
     });
-    console.log('recreate tab')
   }
-  // tell devtools which tab to delete
-  // if (portsArr.length > 0) {
-  //   portsArr.forEach(bg =>
-  //     bg.postMessage({
-  //       action: 'deleteTab',
-  //       payload: tabId,
-  //     }),
-  //   );
-  // }
-
-  // // delete the tab from the tabsObj
-  // delete tabsObj[tabId];
-  // delete reloaded[tabId];
-  // delete firstSnapshotReceived[tabId];
 });
 
 // when tab is view change, put the tabid as the current tab
