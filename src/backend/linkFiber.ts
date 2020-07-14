@@ -5,9 +5,7 @@ import 'core-js';
 /**
  * This file contains core module functionality.
  *
- * It exports an anonymous
- * @function
- * that is invoked on
+ * It exports an anonymous function that is invoked on
  * @param snap --> Current snapshot
  * @param mode --> Current mode (jumping i.e. time-traveling, locked, or paused)
  * and @returns a function to be invoked by index.js to initiate snapshot monitoring

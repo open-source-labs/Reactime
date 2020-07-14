@@ -17,7 +17,7 @@
   "include": ["./src/app", "./src/backend"],
   "exclude": ["./src/app/__tests__", "./src/backend/__tests__"],
   "typeDocOptions": {
-    "mode": "modules",
+    "mode": "file",
     "out": "docs"
   },
 }

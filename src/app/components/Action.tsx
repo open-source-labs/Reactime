@@ -1,6 +1,10 @@
 import React from 'react';
 import { changeView, changeSlider } from '../actions/actions';
 
+/**
+ * @template ActionProps Props for the action component
+ * 
+ */
 interface ActionProps {
   key: string;
   selected: boolean;
@@ -16,14 +20,28 @@ interface ActionProps {
   handleOnkeyDown: (e: any, i: number) => void;
 }
 
-/* // gabi and nate :: index and delta props were removed from Action.jsx  */
-// viewIndex and handleonkeyDown added to props
+/**
+ * @function Action
+ * @param selected : The selected action in the array of state changes
+ * @param displayName : Label showing sequence number of state change, reflects changes in Chart.tsx
+ * @param componentName : Displays the name of compenent's state being changed
+ * @param last : The last index in the array
+ * @param sliderIndex: Index of the slider in the array of state changes (clicking the block changes the slider, related to MainSlider.tsx slider)
+ * @param componentData: Displays react fiber data
+ * @param viewIndex:  Index of the tab in the array when timejump is made
+ * @method dispatch Executes actions that changes state in reactime
+ * @method handleOnkeyDown Executes key commands
+ * 
+ */
 const Action = (props: ActionProps) => {
   const {
     selected, last, index, sliderIndex, dispatch, displayName, componentName, componentData, state, viewIndex, handleOnkeyDown,
   } = props;
 
-  // display render time for state change in seconds and miliseconds
+  /**
+   * @function cleanTime: Displays render times for state changes
+   * @returns render display time in seconds in miliseconds
+   */
   const cleanTime = () => {
     if (!componentData || !componentData.actualDuration) {
       return 'NO TIME';
@@ -54,7 +72,7 @@ const Action = (props: ActionProps) => {
 
   return (
     <div
-      // Edwin: invoking keyboard functionality; functionality is in ActionContainer;
+      // Invoking keyboard functionality; functionality is in ActionContainer;
       onKeyDown={(e:any) => handleOnkeyDown(e, viewIndex)}
       className={selected || last ? 'action-component selected' : 'action-component'}
       onClick={() => {

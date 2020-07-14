@@ -7,11 +7,16 @@ interface DiffProps {
   snapshot: {state?:object|string}; 
   show?: boolean|undefined; 
 }
-
+/**
+ * Displays tree showing specific two versions of tree 
+ * one with specific state changes, the other the whole tree
+ * @param props props from maincontainer
+ * @returns a diff tree or a string stating no state changes have happened
+ */
 function Diff(props: DiffProps) {
   const { snapshot, show } = props
   const [mainState] = useStoreContext();
-  const { currentTab, tabs } = mainState; // Nate:: k/v pairs of mainstate store object being created
+  const { currentTab, tabs } = mainState; // k/v pairs of mainstate store object being created
   const { snapshots, viewIndex, sliderIndex } = tabs[currentTab];
   let previous;
 
@@ -22,7 +27,7 @@ function Diff(props: DiffProps) {
     previous = snapshots[sliderIndex - 1];
   }
 
-  // gabi :: cleanning preview from stateless data
+  // cleanning preview from stateless data
   const statelessCleanning = (obj:{name?:string; componentData?:object; state?:object|string;stateSnaphot?:object; children?:any[]}) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
@@ -50,13 +55,14 @@ function Diff(props: DiffProps) {
     }
     return newObj;
   };
-  // gabi :: just display stateful data
+  
+  // displays stateful data
   const previousDisplay = statelessCleanning(previous);
-  // Nate:: diff function returns a comparison of two objects, one has an updated change
-  // gabi :: just display stateful data
+  // diff function returns a comparison of two objects, one has an updated change
+  // just displays stateful data
   const delta = diff(previousDisplay, snapshot);
   // returns html in string
-  // gabi :: just display stateful data
+  // just displays stateful data
   const html = formatters.html.format(delta, previousDisplay);
   if (show) formatters.html.showUnchanged();
   else formatters.html.hideUnchanged();
