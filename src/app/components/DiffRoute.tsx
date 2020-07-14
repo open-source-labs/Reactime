@@ -4,8 +4,17 @@ import {
 } from 'react-router-dom';
 import Diff from './Diff';
 
+interface DiffRouteProps{
+  snapshot: Record<string, {
+    name?: string;
+    componentData?: Record <string, unknown>;
+    state?: string | unknown
+    stateSnaphot?: Record<string, unknown>;
+    children?: unknown[];
+  }>;
+}
 
-const DiffRoute = (props: {snapshot: { name?: string; componentData?: object; state?: string | object; stateSnaphot?: object; children?: any[]; }}) => (
+const DiffRoute = (props: DiffRouteProps): unknown => (
 
   <Router>
     <div className="navbar">

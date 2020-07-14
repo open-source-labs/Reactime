@@ -14,14 +14,21 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 
+/**
+ * @var colors: Colors array for the diffrerent node branches, each color is for a different branch
+ */
 const colors = ['#95B6B7', '#475485', '#519331', '#AA5039', '#8B2F5F', '#C5B738', '#858DFF', '#FF8D02', '#FFCD51', '#ACDAE6', '#FC997E', '#CF93AD', '#AA3939', '#AA6C39', '#226666', '#2C4870'];
 
 interface ChartProps {
-  hierarchy: object;
+  hierarchy: Record<string, unknown>;
 }
 
 let root = {};
 class Chart extends Component {
+  /**
+   * 
+   * @method maked3Tree :Creates a new D3 Tree 
+   */
   constructor(props:ChartProps) {
     super(props);
     this.chartRef = React.createRef();
@@ -48,7 +55,11 @@ class Chart extends Component {
     }
   }
 
-  maked3Tree() {
+  /**
+   * @method maked3Tree Creates a new Tree Chart
+   * @var
+   */
+  maked3Tree(): void {
     this.removed3Tree();
     // const margin = {
     //   top: 0,
