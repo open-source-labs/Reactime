@@ -46,8 +46,10 @@ class Node {
     // eslint-disable-next-line no-multi-assign
     // eslint-disable-next-line no-plusplus
     // gabi and nate :: continue the order of number of total state changes
+    // eslint-disable-next-line no-plusplus
     this.index = tabObj.index++;
     // gabi and nate :: continue the order of number of states changed from that parent
+    // eslint-disable-next-line no-multi-assign
     this.name = tabObj.currParent += 1;
     // gabi and nate :: mark from what branch this node is originated
     this.branch = tabObj.currBranch;
@@ -56,7 +58,6 @@ class Node {
   }
 }
 
-// Carlos: no clue what is the purpose of this thing
 function sendToHierarchy(tabObj, newNode) {
   if (!tabObj.currLocation) {
     tabObj.currLocation = newNode;
@@ -88,7 +89,7 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
     return;
     // if not, recurse on each one of the children
   }
-  // Carlos: this can be made more efficient with for loop and exiting when node found
+
   if (rootNode.children) { // Carlos: remove if, redundant
     rootNode.children.forEach(child => {
       changeCurrLocation(tabObj, child, index, name);
@@ -243,6 +244,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
           tabsObj[tabId].snapshots.splice(1);
           // gabi :: reset hierarchy to page initial state
           if (tabsObj[tabId].hierarchy) {
+            // test
             tabsObj[tabId].hierarchy.children = [];
             // gabi :: reset currParent plus current state
             tabsObj[tabId].currParent = 1;
@@ -276,26 +278,6 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       if (!firstSnapshotReceived[tabId]) {
         firstSnapshotReceived[tabId] = true;
         reloaded[tabId] = false;
-
-        // if (tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]) {
-        //   let sameState = true;
-        //   const testState = (array, compare) => {
-        //     array.forEach((element, elIndex) => {
-        //       const test1 = JSON.stringify(element.state);
-        //       const test2 = JSON.stringify(compare[elIndex].state);
-        //       if (JSON.stringify(element.state) !== JSON.stringify(compare[elIndex].state)) {
-        //         sameState = false;
-        //       }
-        //       if (element.children) {
-        //         testState(element.children, compare[elIndex].children);
-        //       }
-        //     });
-        //   };
-        //   testState(tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1].children, request.payload.children);
-        //   if (sameState) {
-        //     break;
-        //   }
-        // }
 
         tabsObj[tabId].snapshots.push(request.payload);
 
@@ -359,6 +341,32 @@ chrome.tabs.onRemoved.addListener(tabId => {
   delete tabsObj[tabId];
   delete reloaded[tabId];
   delete firstSnapshotReceived[tabId];
+});
+
+// when a new url is loaded on the same tab, this remove the tabid from the tabsObj, recreate the tab and inject the script
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  // check if the tab title changed to see if tab need to restart
+  if (changeInfo && tabsObj[tabId]) {
+    if (changeInfo.title && changeInfo.title !== tabsObj[tabId].title) {
+      // tell devtools which tab to delete
+      if (portsArr.length > 0) {
+        portsArr.forEach(bg =>
+          bg.postMessage({
+            action: 'deleteTab',
+            payload: tabId,
+          }),
+        );
+      }
+
+      // delete the tab from the tabsObj
+      delete tabsObj[tabId];
+      delete reloaded[tabId];
+      delete firstSnapshotReceived[tabId];
+
+      // recreate the tab on the tabsObj
+      tabsObj[tabId] = createTabObj(changeInfo.title);
+    }
+  }
 });
 
 // when tab is view change, put the tabid as the current tab

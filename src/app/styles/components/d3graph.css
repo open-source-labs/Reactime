@@ -102,9 +102,9 @@ div.tooltip {
 }
 
 .perf-d3-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: space-between; */
   height: calc(100% - 70px);
   /* border: 2px solid red; */
 }
@@ -114,11 +114,12 @@ div.tooltip {
 }
 
 .perf-chart-labels {
-  font: 12px sans-serif;
+  font: 1.3em sans-serif;
+  font-weight: bold;
+  /* font-size: calc(12px + .8vw); */
   /* color: white; */
   /* fill: rgb(231, 231, 231); */
   fill: #2a2f3a;
   pointer-events: none;
   text-anchor: middle;
 };
-

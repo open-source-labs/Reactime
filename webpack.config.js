@@ -1,14 +1,17 @@
 const path = require('path');
 const ChromeExtensionReloader = require('webpack-chrome-extension-reloader'); // enable hot reloading while developing a chrome extension
+const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
+
 
 const config = {
-  // use a "multi-main entry" to inject multiple dependent files together and graph their dependencies into one "chunk"
+  // use a "multi-main entry" to inject multiple dependent files together
+  // and graph their dependencies into one "chunk"
   entry: {
     // app: './src/app/index.js',
     app: './src/app/index.tsx',
     background: './src/extension/background.js',
-    content: './src/extension/contentScript.js',
-    backend: './dev-reactime/index.js',
+    content: './src/extension/contentScript.ts',
+    backend: './src/backend/index.ts',
   },
   output: {
     path: path.resolve(__dirname, 'src/extension/build/bundles'),
@@ -62,7 +65,15 @@ const config = {
       },
     ],
   },
-  plugins: [],
+  plugins: [
+    new TypedocWebpackPlugin({
+      name: 'Contoso',
+      mode: 'modules',
+      theme: './typedoc-theme/',
+      includeDeclarations: false,
+      ignoreCompilerErrors: true,
+    }),
+  ],
 };
 
 module.exports = (env, argv) => {

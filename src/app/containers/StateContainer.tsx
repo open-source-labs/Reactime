@@ -9,15 +9,20 @@ import StateRoute from '../components/StateRoute';
 import DiffRoute from '../components/DiffRoute';
 
 interface StateContainerProps {
-  snapshot:{ name?: string; componentData?: object; state?: string | object; stateSnaphot?: object; children?: any[]; }; 
-  hierarchy:object;
-  snapshots:[]; 
+  snapshot: Record<number,
+  { name?: string; componentData?: Record<string, unknown>;
+    state?: Record<string, unknown>; stateSnaphot?: Record<string, unknown>; children?: unknown[]; }
+  > ;
+  hierarchy:Record<string, unknown>;
+  snapshots:[];
   viewIndex:number;
 }
 
 // eslint-disable-next-line react/prop-types
-const StateContainer = (props:StateContainerProps) => {
-  const { snapshot, hierarchy, snapshots, viewIndex } = props
+const StateContainer = (props:StateContainerProps): unknown => {
+  const {
+    snapshot, hierarchy, snapshots, viewIndex,
+  } = props;
   const [Text, setText] = useState('State');
   return (
     <Router>

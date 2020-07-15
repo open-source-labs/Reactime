@@ -6,13 +6,11 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable func-names */
 /* eslint-disable no-shadow */
-/* eslint-disable no-multi-spaces */
 /* eslint-disable newline-per-chained-call */
 /* eslint-disable object-curly-newline */
 /* eslint-disable object-property-newline */
 /* eslint-disable class-methods-use-this */
 // eslint-disable-next-line object-curly-newline
-/* eslint-disable comma-dangle */
 /* eslint-disable indent */
 /* eslint-disable no-console */
 
@@ -23,14 +21,16 @@ import { schemeSet1 as colorScheme } from 'd3';
 // import { addNewSnapshots } from '../actions/actions.ts';
 
 interface PerfViewProps {
-  snapshots:any[]; 
-  viewIndex:number; 
+  snapshots:any[];
+  viewIndex:number;
   width: number;
   height: number;
+  setNoRenderData: any;
 }
 
 const PerfView = (props:PerfViewProps) => {
-  const { snapshots, viewIndex, width, height } = props
+  const { snapshots, viewIndex, width, height, setNoRenderData } = props;
+  const adjustedSize = Math.min(width, height);
   const svgRef = useRef(null);
 
   // Figure out which snapshot index to use
@@ -41,19 +41,22 @@ const PerfView = (props:PerfViewProps) => {
   // Set up color scaling function
   const colorScale = d3.scaleLinear()
     .domain([0, 7])
-    .range(['hsl(152,30%,80%)', 'hsl(228,30%,40%)'])
-    // .range(['hsl(210,30%,80%)', 'hsl(152,30%,40%)'])
+    .range(['hsl(200,60%,60%)', 'hsl(255,30%,40%)'])
     .interpolate(d3.interpolateHcl);
 
   // Set up circle-packing layout function
   const packFunc = useCallback((data:object) => {
     return d3.pack()
-    .size([width, height])
+    .size([adjustedSize, adjustedSize])
     // .radius(d => { return d.r; })
     .padding(3)(d3.hierarchy(data)
                     .sum((d:{componentData?:{actualDuration?:number}}) => { return d.componentData.actualDuration || 0; })
                     .sort((a:{value:number}, b:{value:number}) => { return b.value - a.value; }));
-  }, [width, height]);
+  }, [adjustedSize]);
+
+  function handleNoRenderData(isNoRenderData) {
+    setNoRenderData(isNoRenderData);
+  }
 
   // If indexToDisplay changes, clear old tree nodes
   useEffect(() => {
@@ -70,7 +73,7 @@ const PerfView = (props:PerfViewProps) => {
 
     // Generate tree with our data
     const packedRoot = packFunc(snapshots[indexToDisplay]);
-    console.log('PerfView -> packedRoot', packedRoot);
+    // console.log('PerfView -> packedRoot', packedRoot);
 
     // Set initial focus to root node
     let curFocus = packedRoot;
@@ -78,9 +81,9 @@ const PerfView = (props:PerfViewProps) => {
     // View [x, y, r]
     let view;
 
-    // Set up viewBox dimensions and onClick for parent svg
+    // Set up viewBox dimensions and onClick for parent svg 
     const svg = d3.select(svgRef.current)
-      .attr('viewBox', `-${width / 2} -${height / 2} ${width} ${height}`)
+      .attr('viewBox', `-${adjustedSize / 2} -${adjustedSize / 2} ${width} ${height}`)
       .on('click', () => zoomToNode(packedRoot));
 
     // Connect circles below root to data
@@ -102,8 +105,12 @@ const PerfView = (props:PerfViewProps) => {
       .enter().append('text')
         .style('fill-opacity', (d:{parent:object}) => (d.parent === packedRoot ? 1 : 0))
         .style('display', (d:{parent?:object}) => (d.parent === packedRoot ? 'inline' : 'none'))
-        .text((d:{data:{name:string, componentData?:{actualDuration:any}}}) =>  {
-          return `${d.data.name}: ${Number.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`});
+        .text((d:{data:{name:string, componentData?:{actualDuration:any}}}) => {
+          // console.log("PerfView -> d.data", d.data);
+          if (!d.data.componentData.actualDuration) handleNoRenderData(true);
+          else handleNoRenderData(false);
+          return `${d.data.name}: ${Number.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`;
+        });
 
     // Remove any unused nodes
     label.exit().remove();
@@ -151,7 +158,3 @@ const PerfView = (props:PerfViewProps) => {
 };
 
 export default PerfView;
-
-
-    // d3.quantize(d3.interpolateHcl('#60c96e', '#4d4193'), 10);
-        // const colorScale = d3.scaleOrdinal(colorScheme);
