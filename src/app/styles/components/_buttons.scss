@@ -8,14 +8,31 @@
   margin-left: 20px; 
 }
 
+.action-component:hover .time-button {
+  display: none;
+}
+
 .action-component:hover .jump-button {
   opacity: 1;
   transform: rotateX(0deg);
   transition: opacity 300ms, transform 0.15s linear;
 }
 
+.time-button {
+  outline: none;
+  height: 20px;
+  margin-bottom: 8px;
+  width: 70px;
+  border: none;
+  border-radius: 3px;
+  background-color: #565A61;
+  font: normal 11px monaco, Consolas, "Lucida Console", monospace, Arial, sans-serif;
+  color: #B0B0B0;
+}
+
 .jump-button {
   @extend %button-shared;
+  margin-bottom: 8px;
   width: 50px;
   opacity: 0;
   transform: rotateX(90deg);

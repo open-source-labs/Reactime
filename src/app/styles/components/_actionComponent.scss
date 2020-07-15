@@ -9,8 +9,12 @@
   border-bottom-width: 1px;
   border-color: $border-color;
   cursor: pointer;
-  text-overflow: ellipsis;
+  overflow: hidden;
   @extend %disable-highlight
+}
+
+.action-component-text{
+  margin-bottom: 8px;
 }
 
 .action-component.selected {

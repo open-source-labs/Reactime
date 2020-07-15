@@ -1,0 +1,57 @@
+{
+  "name": "dev-reactime",
+  "version": "4.0.0",
+  "description": "A library that helps debug React by memorizing the state of components with every render.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/open-source-labs/reactime"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\""
+  },
+  "types": "./index.d.ts",
+  "peerDependencies": {
+    "react": "~16.0.0",
+    "react-dom": "~16.0.0"
+  },
+  "keywords": [
+    "react",
+    "state",
+    "useState",
+    "setState",
+    "debug",
+    "reactime",
+    "react devtool"
+  ],
+  "contributors": [
+    "Abaas Khorrami",
+    "Andy Wong",
+    "Bryan Lee",
+    "Carlos Perez",
+    "Chris Flannery",
+    "David Chai",
+    "Edwin Menendez",
+    "Ergi Shehu",
+    "Gabriela Jardim Aquino",
+    "Gregory Panciera",
+    "Josh Kim",
+    "Joshua Howard",
+    "Nathanael Wa Mwenze",
+    "Prasanna Malla",
+    "Rajeeb Banstola",
+    "Raymond Kwan",
+    "Rocky Lin",
+    "Ruth Anam",
+    "Ryan Dang",
+    "Sierra Swaby",
+    "Yujin Kang"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "acorn": "^7.1.0",
+    "core-js": "^3.6.5",
+    "acorn-jsx": "^5.0.2",
+    "fs": "0.0.1-security"
+  }
+}
