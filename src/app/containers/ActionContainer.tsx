@@ -1,3 +1,8 @@
+/* eslint-disable brace-style */
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-inner-declarations */
 import React from 'react';
@@ -15,7 +20,6 @@ const resetSlider = () => {
 function ActionContainer() {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
-  console.log(tabs[currentTab])
   let actionsArr = [];
   const hierarchyArr:any[] = [];
 
@@ -27,7 +31,7 @@ function ActionContainer() {
         displayName: `${obj.name}.${obj.branch}`,
         state: obj.stateSnapshot.children[0].state,
         componentName: obj.stateSnapshot.children[0].name,
-        componentData: JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}' ? '' : obj.stateSnapshot.children[0].componentData
+        componentData: JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}' ? '' : obj.stateSnapshot.children[0].componentData,
       };
       hierarchyArr.push(newObj);
     }

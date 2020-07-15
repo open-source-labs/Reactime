@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable no-param-reassign */
 import produce from 'immer';
 import * as types from '../constants/actionTypes.ts';

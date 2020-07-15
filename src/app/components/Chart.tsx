@@ -23,7 +23,6 @@ import * as d3 from 'd3';
 const colors = ['#95B6B7', '#475485', '#519331', '#AA5039', '#8B2F5F', '#C5B738', '#858DFF', '#FF8D02', '#FFCD51', '#ACDAE6', '#FC997E', '#CF93AD', '#AA3939', '#AA6C39', '#226666', '#2C4870'];
 
 const filter = (data:any[]) => {
-  console.log('data from filter', data)
   if (data[0].children && data[0].state === 'stateless') {
     return filter(data[0].children);
   }
