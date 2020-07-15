@@ -9,7 +9,7 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-function MainContainer() {
+function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
 
@@ -21,7 +21,7 @@ function MainContainer() {
     const port = chrome.runtime.connect();
 
     // listen for a message containing snapshots from the background script
-    port.onMessage.addListener((message:{action:string, payload:object, sourceTab:number}) => {
+    port.onMessage.addListener((message:{action:string, payload:Record<string, unknown>, sourceTab:number}) => {
       const { action, payload, sourceTab } = message;
       let maxTab;
       if (!sourceTab) {
@@ -84,7 +84,8 @@ function MainContainer() {
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // gabi :: cleannign hierarchy and snapshotView from stateless data
-  const statelessCleanning = (obj:{name?:string; componentData?:object; state?:object|string;stateSnaphot?:object; children?:any[]}) => {
+  const statelessCleanning = (
+    obj:{name?:string; componentData?:object; state?:string|any;stateSnaphot?:object; children?:any[];}) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;
@@ -95,6 +96,12 @@ function MainContainer() {
     if (newObj.state === 'stateless') {
       delete newObj.state;
     }
+    if (newObj.state.hooksState) {
+      newObj.state.hooksState.forEach(s => {
+        delete s.componentData;
+      });
+    }
+
     if (newObj.stateSnaphot) {
       newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
     }

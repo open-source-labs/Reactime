@@ -5,9 +5,7 @@ import 'core-js';
 /**
  * This file contains core module functionality.
  *
- * It exports an anonymous
- * @function
- * that is invoked on
+ * It exports an anonymous function that is invoked on
  * @param snap --> Current snapshot
  * @param mode --> Current mode (jumping i.e. time-traveling, locked, or paused)
  * and @returns a function to be invoked by index.js to initiate snapshot monitoring
@@ -38,11 +36,17 @@ import 'core-js';
 // const componentActionsRecord = require('./masterState');
 
 import {
- Snapshot, Mode, SnapshotNode, MsgData, ComponentData, HookStates, Fiber, WorkTag, State
+ Snapshot, Mode, ComponentData, HookStates, Fiber
 } from './types/backendTypes';
 import Tree from './tree';
 import componentActionsRecord from './masterState';
 import { throttle, getHooksNames } from './helpers';
+
+declare global {
+  interface Window {
+    __REACT_DEVTOOLS_GLOBAL_HOOK__?: any;
+  }
+}
 
 let doWork = true;
 const circularComponentTable = new Set();
@@ -74,8 +78,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       // Carlos: these two are legacy comments, we should look into them later
       // prevents useEffect from crashing on load
       // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
-      // console.log('traverse hooks memoizedState', memoizedState);
-      if (memoizedState.memoizedState) {
+      if (memoizedState.memoizedState && memoizedState.queue.lastRenderedReducer && memoizedState.queue.lastRenderedReducer.name === 'basicStateReducer') {
         hooksStates.push({
           component: memoizedState.queue,
           state: memoizedState.memoizedState,
@@ -108,14 +111,21 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       treeBaseDuration,
     } = currentFiber;
 
+<<<<<<< HEAD
+    let newState: any = {};
+    let componentData: ComponentData = {};
+=======
     let newState: any;
-    let componentData: ComponentData = {}; /* = {
+    let componentData: ComponentData = {};
+    /* = {
       index: -1,
       actualDuration: 0,
       actualStartTime: 0,
       selfBaseDuration: 0,
       treeBaseDuration: 0,
-    };*/
+    };
+    */
+>>>>>>> master
     let componentFound = false;
 
     // Check if node is a stateful setState component
@@ -140,11 +150,15 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
         hooksStates.forEach((state, i) => {
           hooksIndex = componentActionsRecord.saveNew(state.state, state.component);
           if (newState && newState.hooksState) {
-            newState.hooksState.push([{ [hooksNames[i]]: state.state }, hooksIndex]);
+            newState.hooksState.push({ [hooksNames[i]]: state.state, componentData: { index: hooksIndex } });
+            // newState.hooksState.push([{ [hooksNames[i]]: state.state }, hooksIndex]);
           } else if (newState) {
-            newState.hooksState = [{ [hooksNames[i]]: state.state }, hooksIndex];
+            newState.hooksState = [{ [hooksNames[i]]: state.state, componentData: { index: hooksIndex } }];
+            // newState.hooksState = [{ [hooksNames[i]]: state.state }, hooksIndex];
           } else {
-            newState = { hooksState: [{ [hooksNames[i]]: state.state }, hooksIndex] };
+            // newState = { hooksState: [{ [hooksNames[i]]: state.state }, hooksIndex] };
+            newState = { hooksState: [] };
+            newState.hooksState.push({ [hooksNames[i]]: state.state, componentData: { index: hooksIndex } });
           }
           componentFound = true;
         });
@@ -168,7 +182,10 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
     let newNode = null;
     // We want to add this fiber node to the snapshot
-    //const snapshotState = newState.state || newState.hooksState;
+<<<<<<< HEAD
+=======
+    // const snapshotState = newState.state || newState.hooksState;
+>>>>>>> master
     if (componentFound || newState === 'stateless') {
       if (fromSibling) {
         newNode = tree.addSibling(newState,
@@ -179,6 +196,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
           elementType ? elementType.name : 'nameless',
           componentData);
       }
+      if (newState !== 'stateless') console.log('state updated:', newState);
     } else {
       newNode = tree;
     }
@@ -211,7 +229,10 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
   function onVisibilityChange(): void {
     doWork = !document.hidden;
-    console.log('doWork is:', doWork);
+<<<<<<< HEAD
+=======
+    // console.log('doWork is:', doWork);
+>>>>>>> master
   }
 
   return () => {
@@ -236,8 +257,14 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
+          // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
-          if (doWork) throttledUpdateSnapshot();
+          console.log('in CFR committed fiber');
+          if (doWork) {
+            console.log('in CFR: updating snapshot');
+            throttledUpdateSnapshot();
+          }
+          console.log('in CFR updated snapshot');
           return original(...args);
         };
       }(devTools.onCommitFiberRoot));

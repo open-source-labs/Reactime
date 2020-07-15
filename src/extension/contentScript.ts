@@ -1,7 +1,7 @@
 // import 'core-js';
 // const reactimeBackend = require('../../dev-reactime/index.js');
 
-let firstMessage = true;
+let firstMessage: boolean = true;
 
 // listening for messages from npm package
 window.addEventListener('message', msg => { // runs automatically every second
@@ -14,7 +14,7 @@ window.addEventListener('message', msg => { // runs automatically every second
   }
 
   // post initial Message to background.js
-  const { action } = msg.data;
+  const { action }: { action: string } = msg.data;
 
   if (action === 'recordSnap') { // this is firing on page load
     chrome.runtime.sendMessage(msg.data);
@@ -24,15 +24,15 @@ window.addEventListener('message', msg => { // runs automatically every second
 // listening for messages from the UI
 chrome.runtime.onMessage.addListener(request => { // seems to never fire
   // send the message to npm package
-  const { action } = request;
+  const { action }: { action: string } = request;
   switch (action) {
     case 'jumpToSnap':
       chrome.runtime.sendMessage(request);
-      window.postMessage(request);
+      window.postMessage(request, '*');
       break;
     case 'setLock':
     case 'setPause':
-      window.postMessage(request);
+      window.postMessage(request, '*');
       break;
     default:
       break;
