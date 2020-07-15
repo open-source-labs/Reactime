@@ -55,7 +55,6 @@ const PerfView = (props:PerfViewProps) => {
   }, [adjustedSize]);
 
   function handleNoRenderData(isNoRenderData) {
-    console.log("lick balls", isNoRenderData);
     setNoRenderData(isNoRenderData);
   }
 
@@ -74,7 +73,7 @@ const PerfView = (props:PerfViewProps) => {
 
     // Generate tree with our data
     const packedRoot = packFunc(snapshots[indexToDisplay]);
-    console.log('PerfView -> packedRoot', packedRoot);
+    // console.log('PerfView -> packedRoot', packedRoot);
 
     // Set initial focus to root node
     let curFocus = packedRoot;
@@ -107,7 +106,7 @@ const PerfView = (props:PerfViewProps) => {
         .style('fill-opacity', (d:{parent:object}) => (d.parent === packedRoot ? 1 : 0))
         .style('display', (d:{parent?:object}) => (d.parent === packedRoot ? 'inline' : 'none'))
         .text((d:{data:{name:string, componentData?:{actualDuration:any}}}) => {
-          console.log("PerfView -> d.data", d.data);
+          // console.log("PerfView -> d.data", d.data);
           if (!d.data.componentData.actualDuration) handleNoRenderData(true);
           else handleNoRenderData(false);
           return `${d.data.name}: ${Number.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`;
