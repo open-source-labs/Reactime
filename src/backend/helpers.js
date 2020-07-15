@@ -17,8 +17,10 @@ export const throttle = (f, t) => {
     if (isOnCooldown && isCallQueued) return;
     if (isOnCooldown) {
       isCallQueued = true;
+      console.log('snapshot update already queued');
       return;
     }
+    console.log('no queue, updating snapshot from trigger func');
     f();
     isOnCooldown = true;
     isCallQueued = false;
@@ -27,11 +29,14 @@ export const throttle = (f, t) => {
       if (isCallQueued) {
         isCallQueued = false;
         isOnCooldown = true; // not needed I think
+        console.log('calling queued call');
+        f();
         setTimeout(runAfterTimeout, t);
         return;
       }
       isOnCooldown = false;
     };
+    console.log('queueing snapshot update');
     setTimeout(runAfterTimeout, t);
   };
   return throttledFunc;

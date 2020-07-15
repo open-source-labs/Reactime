@@ -78,8 +78,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       // Carlos: these two are legacy comments, we should look into them later
       // prevents useEffect from crashing on load
       // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
-      // console.log('traverse hooks memoizedState', memoizedState);
-      if (memoizedState.memoizedState) {
+      if (memoizedState.memoizedState && memoizedState.queue.lastRenderedReducer && memoizedState.queue.lastRenderedReducer.name === 'basicStateReducer') {
         hooksStates.push({
           component: memoizedState.queue,
           state: memoizedState.memoizedState,
@@ -112,6 +111,10 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       treeBaseDuration,
     } = currentFiber;
 
+<<<<<<< HEAD
+    let newState: any = {};
+    let componentData: ComponentData = {};
+=======
     let newState: any;
     let componentData: ComponentData = {};
     /* = {
@@ -122,6 +125,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       treeBaseDuration: 0,
     };
     */
+>>>>>>> master
     let componentFound = false;
 
     // Check if node is a stateful setState component
@@ -146,11 +150,15 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
         hooksStates.forEach((state, i) => {
           hooksIndex = componentActionsRecord.saveNew(state.state, state.component);
           if (newState && newState.hooksState) {
-            newState.hooksState.push([{ [hooksNames[i]]: state.state }, hooksIndex]);
+            newState.hooksState.push({ [hooksNames[i]]: state.state, componentData: { index: hooksIndex } });
+            // newState.hooksState.push([{ [hooksNames[i]]: state.state }, hooksIndex]);
           } else if (newState) {
-            newState.hooksState = [{ [hooksNames[i]]: state.state }, hooksIndex];
+            newState.hooksState = [{ [hooksNames[i]]: state.state, componentData: { index: hooksIndex } }];
+            // newState.hooksState = [{ [hooksNames[i]]: state.state }, hooksIndex];
           } else {
-            newState = { hooksState: [{ [hooksNames[i]]: state.state }, hooksIndex] };
+            // newState = { hooksState: [{ [hooksNames[i]]: state.state }, hooksIndex] };
+            newState = { hooksState: [] };
+            newState.hooksState.push({ [hooksNames[i]]: state.state, componentData: { index: hooksIndex } });
           }
           componentFound = true;
         });
@@ -174,7 +182,10 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
     let newNode = null;
     // We want to add this fiber node to the snapshot
+<<<<<<< HEAD
+=======
     // const snapshotState = newState.state || newState.hooksState;
+>>>>>>> master
     if (componentFound || newState === 'stateless') {
       if (fromSibling) {
         newNode = tree.addSibling(newState,
@@ -185,6 +196,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
           elementType ? elementType.name : 'nameless',
           componentData);
       }
+      if (newState !== 'stateless') console.log('state updated:', newState);
     } else {
       newNode = tree;
     }
@@ -217,7 +229,10 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
   function onVisibilityChange(): void {
     doWork = !document.hidden;
+<<<<<<< HEAD
+=======
     // console.log('doWork is:', doWork);
+>>>>>>> master
   }
 
   return () => {
@@ -244,7 +259,12 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
         return function (...args) {
           // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
-          if (doWork) throttledUpdateSnapshot();
+          console.log('in CFR committed fiber');
+          if (doWork) {
+            console.log('in CFR: updating snapshot');
+            throttledUpdateSnapshot();
+          }
+          console.log('in CFR updated snapshot');
           return original(...args);
         };
       }(devTools.onCommitFiberRoot));
