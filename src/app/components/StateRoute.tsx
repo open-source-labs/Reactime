@@ -1,27 +1,29 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 import React from 'react';
 import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom';
-
-
-const Chart = require('./Chart').default;
 import Tree from './Tree';
 import PerfView from './PerfView';
+
+const Chart = require('./Chart').default;
 const ErrorHandler = require('./ErrorHandler').default;
 
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types
 
-
 interface StateRouteProps {
-  snapshot: { name?: string; componentData?: object; state?: string | object; stateSnaphot?: object; children?: any[]; }; 
-  hierarchy: object; 
-  snapshots: []; 
+  snapshot: { name?: string; componentData?: object; state?: string | object; stateSnaphot?: object; children?: any[]; };
+  hierarchy: object;
+  snapshots: [];
   viewIndex: number;
 }
 
 const StateRoute = (props:StateRouteProps) => {
-  const { snapshot, hierarchy, snapshots, viewIndex } = props
+  const { snapshot, hierarchy, snapshots, viewIndex } = props;
   // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was initialize involk render chart
   const renderChart = () => {
     if (hierarchy) {
@@ -42,7 +44,7 @@ const StateRoute = (props:StateRouteProps) => {
     if (hierarchy) {
       return (
         <ErrorHandler>
-          <PerfView viewIndex={viewIndex} snapshots={snapshots} width={600} height={1000}/>
+          <PerfView viewIndex={viewIndex} snapshots={snapshots} width={600} height={1000} />
         </ErrorHandler>
       );
     }
@@ -53,13 +55,13 @@ const StateRoute = (props:StateRouteProps) => {
     <Router>
       <div className="navbar">
         <NavLink className="router-link" activeClassName="is-active" exact to="/">
-        Tree
+          Tree
         </NavLink>
         <NavLink className="router-link" activeClassName="is-active" to="/chart">
-        History
+          History
         </NavLink>
         <NavLink className="router-link" activeClassName="is-active" to="/performance">
-        Performance
+          Performance
         </NavLink>
       </div>
       <Switch>

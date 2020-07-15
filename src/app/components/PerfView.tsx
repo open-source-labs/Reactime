@@ -1,3 +1,8 @@
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/no-this-in-sfc */
 /* eslint-disable no-unused-vars */
@@ -23,15 +28,15 @@ import { schemeSet1 as colorScheme } from 'd3';
 // import { addNewSnapshots } from '../actions/actions.ts';
 
 interface PerfViewProps {
-  snapshots:any[]; 
-  viewIndex:number; 
+  snapshots:any[];
+  viewIndex:number;
   width: number;
   height: number;
 }
 
 const PerfView = (props:PerfViewProps) => {
-  const { snapshots, viewIndex, width, height } = props
-  let adjustedSize = Math.min(width, height);
+  const { snapshots, viewIndex, width, height } = props;
+  const adjustedSize = Math.min(width, height);
   const svgRef = useRef(null);
 
   // Figure out which snapshot index to use
@@ -79,7 +84,7 @@ const PerfView = (props:PerfViewProps) => {
     let view;
 
     // Set up viewBox dimensions and onClick for parent svg
- 
+
     // console.log("PerfView -> height", height)
     // console.log("PerfView -> width", width)
     // console.log("PerfView -> adjustedSize", adjustedSize)
@@ -107,7 +112,8 @@ const PerfView = (props:PerfViewProps) => {
         .style('fill-opacity', (d:{parent:object}) => (d.parent === packedRoot ? 1 : 0))
         .style('display', (d:{parent?:object}) => (d.parent === packedRoot ? 'inline' : 'none'))
         .text((d:{data:{name:string, componentData?:{actualDuration:any}}}) =>  {
-          return `${d.data.name}: ${Number.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`});
+          return `${d.data.name}: ${Number.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`;
+});
 
     // Remove any unused nodes
     label.exit().remove();
@@ -129,7 +135,7 @@ const PerfView = (props:PerfViewProps) => {
     function zoomToNode(newFocus:{x:number; y:number; r:number}) {
       const transition = svg.transition()
       .duration(d3.event.altKey ? 7500 : 750)
-      .tween('zoom', (d:object)=> {
+      .tween('zoom', (d:object) => {
         const i = d3.interpolateZoom(view, [newFocus.x, newFocus.y, newFocus.r * 2]);
         return t => zoomViewArea(i(t));
       });
@@ -144,7 +150,7 @@ const PerfView = (props:PerfViewProps) => {
 
       curFocus = newFocus;
     }
-  }, [colorScale, packFunc, width, height, indexToDisplay, snapshots]);
+  }, [colorScale, packFunc, width, height, indexToDisplay, snapshots, adjustedSize]);
 
   return (
     <div className="perf-d3-container">
@@ -155,7 +161,6 @@ const PerfView = (props:PerfViewProps) => {
 };
 
 export default PerfView;
-
 
     // d3.quantize(d3.interpolateHcl('#60c96e', '#4d4193'), 10);
         // const colorScale = d3.scaleOrdinal(colorScheme);

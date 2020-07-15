@@ -1,3 +1,8 @@
+/* eslint-disable arrow-body-style */
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/ban-types */
 import React from 'react';
 import JSONTree from 'react-json-tree';
 
@@ -15,8 +20,6 @@ interface TreeProps {
 const Tree = (props:TreeProps) => {
   const { snapshot } = props;
 
-  console.log('Tree -> snapshot', snapshot);
-
   return (
     <>
       {snapshot && (
@@ -26,7 +29,7 @@ const Tree = (props:TreeProps) => {
           shouldExpandNode={() => true}
           getItemString={getItemString}
           labelRenderer={(raw:any[]) => {
-            return (typeof raw[0] !== 'number' ? <span>{raw[0]}</span> : null)
+            return (typeof raw[0] !== 'number' ? <span>{raw[0]}</span> : null);
           }}
         />
       )}
