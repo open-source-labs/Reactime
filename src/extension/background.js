@@ -237,29 +237,29 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       // dont remove snapshots if persisting
       if (!persist) {
         if (empty) {
-          // gabi :: reset snapshots to page initial state recorded when empted
+          // resets snapshots to page initial state recorded when emptied
           tabsObj[tabId].snapshots = tabsObj[tabId].initialSnapshot;
-          // gabi :: reset hierarchy to page initial state recorded when empted
+          // resets hierarchy to page initial state recorded when emptied
           tabsObj[tabId].hierarchy = tabsObj[tabId].initialHierarchy;
         } else {
-          // gabi :: reset snapshots to page initial state
+          // resets snapshots to page initial state
           tabsObj[tabId].snapshots.splice(1);
-          // gabi :: reset hierarchy to page initial state
+          // checks if hierarchy before reset
           if (tabsObj[tabId].hierarchy) {
-            // test
+            // resets hierarchy to page initial state
             tabsObj[tabId].hierarchy.children = [];
-            // gabi :: reset currParent plus current state
+            // resets currParent plus current state
             tabsObj[tabId].currParent = 1;
           } else {
-            // gabi :: reset currParent
+            // resets currParent
             tabsObj[tabId].currParent = 0;
           }
         }
-        // gabi :: reset currLocation to page initial state
+        // resets currLocation to page initial state
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
-        // gabi :: reset index
+        // resets index
         tabsObj[tabId].index = 0;
-        // gabi :: reset currBranch
+        // resets currBranch
         tabsObj[tabId].currBranch = 0;
 
         // send a message to devtools
