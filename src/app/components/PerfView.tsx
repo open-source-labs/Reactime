@@ -54,8 +54,9 @@ const PerfView = (props:PerfViewProps) => {
                     .sort((a:{value:number}, b:{value:number}) => { return b.value - a.value; }));
   }, [adjustedSize]);
 
-  function onNoRenderData() {
-    setNoRenderData(false);
+  function handleNoRenderData(isNoRenderData) {
+    console.log("lick balls", isNoRenderData);
+    setNoRenderData(isNoRenderData);
   }
 
   // If indexToDisplay changes, clear old tree nodes
@@ -105,8 +106,12 @@ const PerfView = (props:PerfViewProps) => {
       .enter().append('text')
         .style('fill-opacity', (d:{parent:object}) => (d.parent === packedRoot ? 1 : 0))
         .style('display', (d:{parent?:object}) => (d.parent === packedRoot ? 'inline' : 'none'))
-        .text((d:{data:{name:string, componentData?:{actualDuration:any}}}) =>  {
-          return `${d.data.name}: ${Number.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`});
+        .text((d:{data:{name:string, componentData?:{actualDuration:any}}}) => {
+          console.log("PerfView -> d.data", d.data);
+          if (!d.data.componentData.actualDuration) handleNoRenderData(true);
+          else handleNoRenderData(false);
+          return `${d.data.name}: ${Number.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`;
+        });
 
     // Remove any unused nodes
     label.exit().remove();
