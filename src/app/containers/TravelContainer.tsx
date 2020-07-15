@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable max-len */
 import React, { useState } from 'react';
 import MainSlider from '../components/MainSlider';
 import Dropdown from '../components/Dropdown';
@@ -40,7 +43,7 @@ interface TravelContainerProps {
 }
 
 function TravelContainer(props:TravelContainerProps) {
-  const { snapshotsLength } = props
+  const { snapshotsLength } = props;
   const [selectedSpeed, setSpeed] = useState(speeds[1]);
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { sliderIndex, playing } = tabs[currentTab];

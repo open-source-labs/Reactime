@@ -1,3 +1,7 @@
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable no-restricted-globals */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from 'react';
 
 import { importSnapshots, toggleMode } from '../actions/actions';
@@ -27,11 +31,11 @@ function importHandler(dispatch:(a:any)=>void) {
   fileUpload.onchange = () => {
     const reader = new FileReader();
     reader.onload = () => {
-      const test = reader.result.toString()
-      return dispatch(importSnapshots(JSON.parse(test)))
+      const test = reader.result.toString();
+      return dispatch(importSnapshots(JSON.parse(test)));
     };
-    if(event.target.hasOwnProperty('files')){
-      const eventFiles:any = event.target
+    if (event.target.hasOwnProperty('files')) {
+      const eventFiles:any = event.target;
       reader.readAsText(eventFiles.files[0]);
     }
   };

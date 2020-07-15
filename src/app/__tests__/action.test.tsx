@@ -1,16 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import Action from '../components/Action';
 import { changeView, changeSlider } from '../actions/actions';
 
-configure({ adapter: new Adapter() });
+const Action = require('../components/Action').default;
+
+configure({ adapter: new (Adapter as any)() });
 
 describe('unit testing for Action.jsx', () => {
   let wrapper;
   const props = {
-    key:'actions2',
+    key: 'actions2',
     selected: true,
     last: false,
     index: 2,

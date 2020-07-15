@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable react/jsx-filename-extension */
 import { shallow, configure } from 'enzyme';
 import React from 'react';
@@ -13,7 +16,7 @@ import ButtonsContainer from '../containers/ButtonsContainer';
 
 const chrome = require('sinon-chrome');
 
-configure({ adapter: new Adapter() });
+configure({ adapter: new (Adapter as any)() });
 
 const state = {
   tabs: {},

@@ -1,4 +1,10 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable no-shadow */
+/* eslint-disable max-len */
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable linebreak-style */
 /* eslint-disable no-inner-declarations, no-loop-func */
 // eslint-disable-next-line import/newline-after-import
 const acorn = require('acorn');
@@ -44,7 +50,6 @@ export const throttle = (f, t) => {
 
 // Helper function to grab the getters/setters from `elementType`
 export const getHooksNames = elementType => {
-
   // Initialize empty object to store the setters and getter
   let ast = JSXParser.parse(elementType);
   const hookState = {};

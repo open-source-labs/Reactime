@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable consistent-return */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/order */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * 'reactime' module has a single export
  * @function linkFiber
@@ -6,11 +11,13 @@ import 'core-js';
 import 'regenerator-runtime/runtime';
 import linkFiberStart from './linkFiber';
 import timeJumpStart from './timeJump';
-import { Snapshot, Mode, SnapshotNode, MsgData } from './types/backendTypes';
+import {
+  Snapshot, Mode, SnapshotNode, MsgData,
+} from './types/backendTypes';
 import { Interface } from 'readline';
 
 // * State snapshot object initialized here
-const snapShot: Snapshot = { 
+const snapShot: Snapshot = {
   tree: null,
   unfilteredTree: null,
 };

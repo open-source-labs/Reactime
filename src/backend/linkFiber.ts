@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable max-len */
 import 'core-js';
 /* eslint-disable indent */
 /* eslint-disable brace-style */
@@ -36,6 +38,7 @@ import 'core-js';
 // const componentActionsRecord = require('./masterState');
 
 import {
+ // eslint-disable-next-line @typescript-eslint/no-unused-vars
  Snapshot, Mode, ComponentData, HookStates, Fiber
 } from './types/backendTypes';
 import Tree from './tree';
@@ -111,8 +114,15 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       treeBaseDuration,
     } = currentFiber;
 
-    let newState: any = {};
-    let componentData: ComponentData = {};
+    let newState: any | {hooksState?: any[]} = {};
+    let componentData: {
+      hooksState?: any[],
+      hooksIndex?: number,
+      index?: number,
+      actualDuration?: number,
+      actualStartTime?: number,
+      selfBaseDuration?: number,
+      treeBaseDuration?: number} = {};
     let componentFound = false;
 
     // Check if node is a stateful setState component
@@ -167,7 +177,6 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
     let newNode = null;
     // We want to add this fiber node to the snapshot
-    // const snapshotState = newState.state || newState.hooksState;
     if (componentFound || newState === 'stateless') {
       if (fromSibling) {
         newNode = tree.addSibling(newState,
@@ -178,7 +187,6 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
           elementType ? elementType.name : 'nameless',
           componentData);
       }
-      // if (newState !== 'stateless') console.log('state updated:', newState);
     } else {
       newNode = tree;
     }
@@ -238,12 +246,9 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
         return function (...args) {
           // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
-          // console.log('in CFR committed fiber');
           if (doWork) {
-            // console.log('in CFR: updating snapshot');
             throttledUpdateSnapshot();
           }
-          // console.log('in CFR updated snapshot');
           return original(...args);
         };
       }(devTools.onCommitFiberRoot));
