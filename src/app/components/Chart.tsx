@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable eqeqeq */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-mixed-operators */
@@ -10,7 +14,6 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/no-string-refs */
 
-
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 
@@ -19,6 +22,14 @@ import * as d3 from 'd3';
  */
 const colors = ['#95B6B7', '#475485', '#519331', '#AA5039', '#8B2F5F', '#C5B738', '#858DFF', '#FF8D02', '#FFCD51', '#ACDAE6', '#FC997E', '#CF93AD', '#AA3939', '#AA6C39', '#226666', '#2C4870'];
 
+const filter = (data:any[]) => {
+  console.log('data from filter', data)
+  if (data[0].children && data[0].state === 'stateless') {
+    return filter(data[0].children);
+  }
+  return JSON.stringify(data[0].state);
+};
+
 interface ChartProps {
   hierarchy: Record<string, unknown>;
 }
@@ -26,8 +37,7 @@ interface ChartProps {
 let root = {};
 class Chart extends Component {
   /**
-   * 
-   * @method maked3Tree :Creates a new D3 Tree 
+   * @method maked3Tree :Creates a new D3 Tree
    */
   constructor(props:ChartProps) {
     super(props);
@@ -80,6 +90,7 @@ class Chart extends Component {
 
     // if we consider the container for our radial node graph as a box encapsulating
     // half of this container width is essentially the radius of our radial node graph
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const radius = width / 2;
 
     // d3.hierarchy constructs a root node from the specified hierarchical data
@@ -145,11 +156,12 @@ class Chart extends Component {
           .duration(50)
           .style('opacity', 0.9);
 
-        tooltipDiv.html(JSON.stringify(d.data.stateSnapshot.children[0].state), this)
+        tooltipDiv.html(filter(d.data.stateSnapshot.children), this)
           .style('left', (d3.event.pageX - 90) + 'px')
           .style('top', (d3.event.pageY - 65) + 'px');
       })
       // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .on('mouseout', function (d:any) {
         d3.select(this)
           .transition()
