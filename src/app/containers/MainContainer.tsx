@@ -9,7 +9,7 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-function MainContainer() {
+function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
 
@@ -21,7 +21,7 @@ function MainContainer() {
     const port = chrome.runtime.connect();
 
     // listen for a message containing snapshots from the background script
-    port.onMessage.addListener((message:{action:string, payload:object, sourceTab:number}) => {
+    port.onMessage.addListener((message:{action:string, payload:Record<string, unknown>, sourceTab:number}) => {
       const { action, payload, sourceTab } = message;
       let maxTab;
       if (!sourceTab) {

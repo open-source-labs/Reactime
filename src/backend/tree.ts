@@ -18,8 +18,19 @@ function scrubUnserializableMembers(tree: Tree): Tree {
   return tree;
 }
 
-// this is the current snapshot that is being sent to the snapshots array.
+/**
+ * 
+ * This is the current snapshot that is being sent to the snapshots array.
+ * 
+ */
 class Tree {
+  /**
+   * Create a Tree
+   * @param state : the tree's current state
+   * @param name : the tree's name
+   * @param componentData : Data in the component tree
+   * @parent generates a new tree (recursive call)
+   */
   state: string | {};
 
   name: string;
@@ -51,9 +62,15 @@ class Tree {
     this.parent.children.push(newSibling);
     return newSibling;
   }
-
+  /**
+   * @function cleanTreeCopy : Adds a sibing to the current tree
+   */
   cleanTreeCopy(): Tree {
-    // Clear circular component table only on first call, not recursive ones
+    /**
+     * @object circularComponentTable : Clears circular component table only on first call, not recursive ones
+     * 
+     */
+    // 
     if (copyInstances === 0) {
       copyInstances++;
       circularComponentTable.clear();

@@ -5,9 +5,7 @@ import 'core-js';
 /**
  * This file contains core module functionality.
  *
- * It exports an anonymous
- * @function
- * that is invoked on
+ * It exports an anonymous function that is invoked on
  * @param snap --> Current snapshot
  * @param mode --> Current mode (jumping i.e. time-traveling, locked, or paused)
  * and @returns a function to be invoked by index.js to initiate snapshot monitoring
@@ -38,11 +36,17 @@ import 'core-js';
 // const componentActionsRecord = require('./masterState');
 
 import {
- Snapshot, Mode, SnapshotNode, MsgData, ComponentData, HookStates, Fiber, WorkTag, State
+ Snapshot, Mode, ComponentData, HookStates, Fiber
 } from './types/backendTypes';
 import Tree from './tree';
 import componentActionsRecord from './masterState';
 import { throttle, getHooksNames } from './helpers';
+
+declare global {
+  interface Window {
+    __REACT_DEVTOOLS_GLOBAL_HOOK__?: any;
+  }
+}
 
 let doWork = true;
 const circularComponentTable = new Set();
@@ -107,8 +111,21 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       treeBaseDuration,
     } = currentFiber;
 
+<<<<<<< HEAD
     let newState: any = {};
     let componentData: ComponentData = {};
+=======
+    let newState: any;
+    let componentData: ComponentData = {};
+    /* = {
+      index: -1,
+      actualDuration: 0,
+      actualStartTime: 0,
+      selfBaseDuration: 0,
+      treeBaseDuration: 0,
+    };
+    */
+>>>>>>> master
     let componentFound = false;
 
     // Check if node is a stateful setState component
@@ -165,6 +182,10 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
     let newNode = null;
     // We want to add this fiber node to the snapshot
+<<<<<<< HEAD
+=======
+    // const snapshotState = newState.state || newState.hooksState;
+>>>>>>> master
     if (componentFound || newState === 'stateless') {
       if (fromSibling) {
         newNode = tree.addSibling(newState,
@@ -208,6 +229,10 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
   function onVisibilityChange(): void {
     doWork = !document.hidden;
+<<<<<<< HEAD
+=======
+    // console.log('doWork is:', doWork);
+>>>>>>> master
   }
 
   return () => {
@@ -232,6 +257,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
+          // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
           console.log('in CFR committed fiber');
           if (doWork) {
