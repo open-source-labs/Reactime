@@ -24,7 +24,9 @@ interface StateRouteProps {
 
 const StateRoute = (props:StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
-  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was initialize involk render chart
+  // the hierarchy gets set on the first click in the page
+  // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
+  // if true involk render chart with hierarchy
   const renderChart = () => {
     if (hierarchy) {
       return <Chart hierarchy={hierarchy} />;
@@ -32,7 +34,9 @@ const StateRoute = (props:StateRouteProps) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
-  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if snapshot was initialize involk render chart
+  // the hierarchy gets set on the first click in the page
+  // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
+  // if true involk render Tree with snapshot
   const renderTree = () => {
     if (hierarchy) {
       return <Tree snapshot={snapshot} />;
@@ -40,6 +44,9 @@ const StateRoute = (props:StateRouteProps) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
+  // the hierarchy gets set on the first click in the page
+  // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
+  // if true involk render Performance graphic with snapshots
   const renderPerfView = () => {
     if (hierarchy) {
       return (
