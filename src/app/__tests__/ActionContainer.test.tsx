@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-filename-extension */
 
 import { shallow, configure } from 'enzyme';
@@ -8,8 +9,7 @@ import { useStoreContext } from '../store';
 import { emptySnapshots } from '../actions/actions';
 import Action from '../components/Action';
 
-
-configure({ adapter: new Adapter() });
+configure({ adapter: new (Adapter as any)() });
 
 const state = {
   tabs: {
