@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable import/order */
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/jsx-filename-extension */
 import React, { Component } from 'react';
 import { render } from 'react-dom';
@@ -7,7 +11,7 @@ import puppeteer from 'puppeteer';
 
 const SERVER = require('./puppeteerServer');
 
-const APP = 'http://localhost:3002';
+const APP = 'http://localhost:5000';
 
 let linkFiber;
 let mode;
@@ -46,8 +50,8 @@ describe('unit test for linkFiber', () => {
     });
 
     const c = await puppeteer.connect({
-      browserWSEndpoint:  browser.wsEndpoint(),   //`ws://${host}:${port}/devtools/browser/<id>`,
-      ignoreHTTPSErrors: false
+      browserWSEndpoint: browser.wsEndpoint(), // `ws://${host}:${port}/devtools/browser/<id>`,
+      ignoreHTTPSErrors: false,
     });
 
     page = await browser.newPage();
@@ -58,7 +62,6 @@ describe('unit test for linkFiber', () => {
 
     await browser.close();
   });
-
 
   beforeEach(() => {
     snapShot = { tree: null };
@@ -80,7 +83,7 @@ describe('unit test for linkFiber', () => {
     // linkFiber mutates the snapshot
 
     expect(typeof snapShot.tree).toBe('object');
-    //expect(snapShot.tree.component.state).toBe('root');
+    // expect(snapShot.tree.component.state).toBe('root');
     expect(snapShot.tree.state).toBe('root');
     expect(snapShot.tree.children).toHaveLength(1);
     expect(snapShot.tree.children[0].component.state.foo).toBe('bar');

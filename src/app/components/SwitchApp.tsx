@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from 'react';
 import Select from 'react-select';
 import { useStoreContext } from '../store';
 import { setTab } from '../actions/actions';
 
-
 const SwitchAppDropdown = () => {
   const [{ currentTab, tabs }, dispatch] = useStoreContext();
-  
+
   const tabsArray:any[] = [];
   Object.keys(tabs).forEach(tab => {
     tabsArray.unshift({ value: tab, label: tabs[tab].title });
