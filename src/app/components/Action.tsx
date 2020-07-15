@@ -1,3 +1,6 @@
+/* eslint-disable react/require-default-props */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react/no-unused-prop-types */
 import React from 'react';
 import { changeView, changeSlider } from '../actions/actions';
 
@@ -15,7 +18,7 @@ interface ActionProps {
   displayName: string;
   componentName: string;
   componentData: {actualDuration: number}|undefined;
-  state?: Record<string,unknown>;
+  state?: Record<string, unknown>;
   viewIndex: number;
   handleOnkeyDown: (e: any, i: number) => void;
 }
@@ -34,12 +37,12 @@ interface ActionProps {
  * @method handleOnkeyDown Executes key commands
  *
  */
-/* // gabi :: index and delta props were removed from Action.jsx  */
+// index and delta props were removed from Action.jsx  */
 // viewIndex and handleonkeyDown added to props
 const Action = (props: ActionProps): unknown => {
   const {
     selected, last, index, sliderIndex, dispatch, displayName, componentName,
-    componentData, state, viewIndex, handleOnkeyDown,
+    componentData, viewIndex, handleOnkeyDown,
   } = props;
 
   /**
@@ -87,7 +90,7 @@ const Action = (props: ActionProps): unknown => {
       tabIndex={index}
     >
       <div className="action-component-text">
-        {`${displayName}:  ${componentName} `}
+        {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `}
       </div>
       <button
         className="time-button"
