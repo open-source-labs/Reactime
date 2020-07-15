@@ -111,10 +111,6 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       treeBaseDuration,
     } = currentFiber;
 
-<<<<<<< HEAD
-    let newState: any = {};
-    let componentData: ComponentData = {};
-=======
     let newState: any;
     let componentData: ComponentData = {};
     /* = {
@@ -125,7 +121,6 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       treeBaseDuration: 0,
     };
     */
->>>>>>> master
     let componentFound = false;
 
     // Check if node is a stateful setState component
@@ -182,10 +177,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
     let newNode = null;
     // We want to add this fiber node to the snapshot
-<<<<<<< HEAD
-=======
     // const snapshotState = newState.state || newState.hooksState;
->>>>>>> master
     if (componentFound || newState === 'stateless') {
       if (fromSibling) {
         newNode = tree.addSibling(newState,
@@ -229,10 +221,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
 
   function onVisibilityChange(): void {
     doWork = !document.hidden;
-<<<<<<< HEAD
-=======
     // console.log('doWork is:', doWork);
->>>>>>> master
   }
 
   return () => {

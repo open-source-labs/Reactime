@@ -6,13 +6,11 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable func-names */
 /* eslint-disable no-shadow */
-/* eslint-disable no-multi-spaces */
 /* eslint-disable newline-per-chained-call */
 /* eslint-disable object-curly-newline */
 /* eslint-disable object-property-newline */
 /* eslint-disable class-methods-use-this */
 // eslint-disable-next-line object-curly-newline
-/* eslint-disable comma-dangle */
 /* eslint-disable indent */
 /* eslint-disable no-console */
 
@@ -23,15 +21,16 @@ import { schemeSet1 as colorScheme } from 'd3';
 // import { addNewSnapshots } from '../actions/actions.ts';
 
 interface PerfViewProps {
-  snapshots:any[]; 
-  viewIndex:number; 
+  snapshots:any[];
+  viewIndex:number;
   width: number;
   height: number;
+  setNoRenderData: any;
 }
 
 const PerfView = (props:PerfViewProps) => {
-  const { snapshots, viewIndex, width, height } = props
-  let adjustedSize = Math.min(width, height);
+  const { snapshots, viewIndex, width, height, setNoRenderData } = props;
+  const adjustedSize = Math.min(width, height);
   const svgRef = useRef(null);
 
   // Figure out which snapshot index to use
@@ -42,7 +41,7 @@ const PerfView = (props:PerfViewProps) => {
   // Set up color scaling function
   const colorScale = d3.scaleLinear()
     .domain([0, 7])
-    .range(['hsl(200,60%,60%)', 'hsl(255,30%,60%)'])
+    .range(['hsl(200,60%,60%)', 'hsl(255,30%,40%)'])
     .interpolate(d3.interpolateHcl);
 
   // Set up circle-packing layout function
@@ -54,6 +53,10 @@ const PerfView = (props:PerfViewProps) => {
                     .sum((d:{componentData?:{actualDuration?:number}}) => { return d.componentData.actualDuration || 0; })
                     .sort((a:{value:number}, b:{value:number}) => { return b.value - a.value; }));
   }, [adjustedSize]);
+
+  function onNoRenderData() {
+    setNoRenderData(false);
+  }
 
   // If indexToDisplay changes, clear old tree nodes
   useEffect(() => {
@@ -78,11 +81,7 @@ const PerfView = (props:PerfViewProps) => {
     // View [x, y, r]
     let view;
 
-    // Set up viewBox dimensions and onClick for parent svg
- 
-    // console.log("PerfView -> height", height)
-    // console.log("PerfView -> width", width)
-    // console.log("PerfView -> adjustedSize", adjustedSize)
+    // Set up viewBox dimensions and onClick for parent svg 
     const svg = d3.select(svgRef.current)
       .attr('viewBox', `-${adjustedSize / 2} -${adjustedSize / 2} ${width} ${height}`)
       .on('click', () => zoomToNode(packedRoot));
@@ -155,7 +154,3 @@ const PerfView = (props:PerfViewProps) => {
 };
 
 export default PerfView;
-
-
-    // d3.quantize(d3.interpolateHcl('#60c96e', '#4d4193'), 10);
-        // const colorScale = d3.scaleOrdinal(colorScheme);
