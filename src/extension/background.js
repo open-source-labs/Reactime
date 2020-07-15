@@ -198,7 +198,9 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     || action === 'injectScript'
   ) {
     isReactTimeTravel = true;
-  } else return true;
+  } else {
+    return true;
+  }
 
   // everytime we get a new tabid, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) {
