@@ -42,7 +42,7 @@ const StateRoute = (props:StateRouteProps) => {
     if (hierarchy) {
       return (
         <ErrorHandler>
-          <PerfView viewIndex={viewIndex} snapshots={snapshots} width={600} height={600}/>
+          <PerfView viewIndex={viewIndex} snapshots={snapshots} width={600} height={1000}/>
         </ErrorHandler>
       );
     }

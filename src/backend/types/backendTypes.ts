@@ -28,6 +28,7 @@ export interface MsgData {
 
 export interface ComponentData {
   index?: number;
+  hooksIndex?: number;
   actualDuration?: number;
   actualStartTime?: number;
   selfBaseDuration?: number;

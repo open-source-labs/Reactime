@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable max-len */
 import React, { useEffect } from 'react';
 import HeadContainer from './HeadContainer';
 import ActionContainer from './ActionContainer';
@@ -9,7 +12,7 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-function MainContainer() {
+function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
 
@@ -21,7 +24,7 @@ function MainContainer() {
     const port = chrome.runtime.connect();
 
     // listen for a message containing snapshots from the background script
-    port.onMessage.addListener((message:{action:string, payload:object, sourceTab:number}) => {
+    port.onMessage.addListener((message:{action:string, payload:Record<string, unknown>, sourceTab:number}) => {
       const { action, payload, sourceTab } = message;
       let maxTab;
       if (!sourceTab) {
@@ -84,7 +87,7 @@ function MainContainer() {
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // gabi :: cleannign hierarchy and snapshotView from stateless data
-  const statelessCleanning = (obj:{name?:string; componentData?:object; state?:object|string;stateSnaphot?:object; children?:any[]}) => {
+  const statelessCleaning = (obj:{name?:string; componentData?:object; state?:string|any;stateSnaphot?:object; children?:any[]}) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;
@@ -96,14 +99,14 @@ function MainContainer() {
       delete newObj.state;
     }
     if (newObj.stateSnaphot) {
-      newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
+      newObj.stateSnaphot = statelessCleaning(obj.stateSnaphot);
     }
     if (newObj.children) {
       newObj.children = [];
       if (obj.children.length > 0) {
         obj.children.forEach((element:{state?:object|string, children?:[]}) => {
           if (element.state !== 'stateless' || element.children.length > 0) {
-            const clean = statelessCleanning(element);
+            const clean = statelessCleaning(element);
             newObj.children.push(clean);
           }
         });
@@ -111,8 +114,8 @@ function MainContainer() {
     }
     return newObj;
   };
-  const snapshotDisplay = statelessCleanning(snapshotView);
-  const hierarchyDisplay = statelessCleanning(hierarchy);
+  const snapshotDisplay = statelessCleaning(snapshotView);
+  const hierarchyDisplay = statelessCleaning(hierarchy);
   return (
     <div className="main-container">
       <HeadContainer />
