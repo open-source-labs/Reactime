@@ -185,7 +185,7 @@ class Chart extends Component {
       // this arranges the angle of the text
       .attr('transform', function (d:{x:number, y:number}) { return 'rotate(' + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 1 / Math.PI + ')'; })
       .text(function (d:{data:{name:number, branch:number}}) {
-        // gabi and nate :: display the name of of specific patch
+        // display the name of the specific patch
         return `${d.data.name}.${d.data.branch}`;
       });
 

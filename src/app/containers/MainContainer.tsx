@@ -91,10 +91,14 @@ function MainContainer(): any {
 
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
+<<<<<<< HEAD
   // gabi :: cleannign hierarchy and snapshotView from stateless data
 <<<<<<< HEAD
   const statelessCleaning = (obj:{name?:string; componentData?:object; state?:string|any;stateSnaphot?:object; children?:any[]}) => {
 =======
+=======
+  // cleaning hierarchy and snapshotView from stateless data
+>>>>>>> 29b7e5c02da60d028fb077bed40d0036b68d33a2
   const statelessCleaning = (obj:{name?:string; componentData?:object; state?:string|any;stateSnaphot?:object; children?:any[];}) => {
 >>>>>>> f3bccc55dda838763bff1bef0a510e5470cbe693
     const newObj = { ...obj };
