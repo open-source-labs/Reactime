@@ -90,7 +90,7 @@ const Action = (props: ActionProps): unknown => {
       tabIndex={index}
     >
       <div className="action-component-text">
-        {`${displayName}:  ${componentName} `}
+        {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `}
       </div>
       <button
         className="time-button"
