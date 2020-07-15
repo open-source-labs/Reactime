@@ -39,11 +39,6 @@ function Diff(props: DiffProps) {
     if (newObj.state === 'stateless') {
       delete newObj.state;
     }
-    if (newObj.state.hooksState) {
-      newObj.state.hooksState.forEach(s => {
-        delete s.componentData;
-      });
-    }
     if (newObj.stateSnaphot) {
       newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
     }

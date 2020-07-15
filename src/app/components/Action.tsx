@@ -39,7 +39,7 @@ interface ActionProps {
 const Action = (props: ActionProps): unknown => {
   const {
     selected, last, index, sliderIndex, dispatch, displayName, componentName,
-    componentData, state, viewIndex, handleOnkeyDown, key,
+    componentData, viewIndex, handleOnkeyDown,
   } = props;
 
   /**
