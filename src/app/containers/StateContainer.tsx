@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useState } from 'react';
 import {
   MemoryRouter as Router,
@@ -59,7 +60,7 @@ const StateContainer = (props:StateContainerProps): unknown => {
             path="/"
             render={() => {
               setText('State');
-              return <StateRoute viewIndex={viewIndex} snapshot={snapshot} hierarchy={hierarchy} snapshots={snapshots}/>;
+              return <StateRoute viewIndex={viewIndex} snapshot={snapshot} hierarchy={hierarchy} snapshots={snapshots} />;
             }}
           />
         </Switch>
