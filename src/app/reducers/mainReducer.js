@@ -18,7 +18,7 @@ export default (state, action) => produce(state, draft => {
   // eslint-disable-next-line consistent-return
   const findName = (index, obj) => {
     // eslint-disable-next-line eqeqeq
-    if (obj.index == index) {
+    if (obj && obj.index == index) {
       return obj.name;
     }
 
