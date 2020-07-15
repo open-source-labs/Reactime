@@ -84,7 +84,14 @@ function MainContainer() {
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // gabi :: cleannign hierarchy and snapshotView from stateless data
-  const statelessCleanning = (obj:{name?:string; componentData?:object; state?:object|string;stateSnaphot?:object; children?:any[]}) => {
+  const statelessCleanning = (
+    obj:{
+      name?:string;
+      componentData?:object;
+      state?:{hooksState?: any | {componentData?: any}[]} | string;
+      stateSnaphot?:object; 
+      children?:any[];
+    }) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;
@@ -95,6 +102,14 @@ function MainContainer() {
     if (newObj.state === 'stateless') {
       delete newObj.state;
     }
+    if (newObj.state && newObj.state.hooksState) {
+      if (Array.isArray(newObj.state.hooksState)) {
+        newObj.state.hooksState.forEach(s => {
+          delete s.componentData;
+        });
+      }
+    }
+
     if (newObj.stateSnaphot) {
       newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
     }

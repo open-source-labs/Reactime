@@ -28,6 +28,7 @@ export default (origin, mode) => {
     // Set the state of the origin tree if the component is stateful
 
     if (!target) return;
+
     if (target.state === 'stateless') target.children.forEach(child => jump(child));
     const component = componentActionsRecord.getComponentByIndex(target.componentData.index);
     if (component && component.setState) {
@@ -43,15 +44,23 @@ export default (origin, mode) => {
     }
 
     // Check for hooks state and set it with dispatch()
-    if (target.state.hooksState) {
-      const hooksComponent = componentActionsRecord.getComponentByIndex(target.state.hooksState[1]);
-      // const [hooksState] = [target.state.hooksState];
-      const hooksState = Object.values(target.state.hooksState[0])[0];
-      if (hooksComponent && hooksComponent.dispatch) {
-        // hooksComponent.dispatch(Object.values(target.state.hooksState[0])[0]);
-        hooksComponent.dispatch(hooksState);
-      }
-      target.children.forEach(child => jump(child));
+    if (target.state && target.state.hooksState) {
+      console.log('SNAPSHOT TARGET: ', target);
+      // const hooksComponent = componentActionsRecord.getComponentByIndex(target.state.hooksState[1]);
+      target.state.hooksState.forEach(hook => {
+        console.log('HOOK IS:', JSON.stringify(hook));
+        if (!hook.componentData) return;
+        const hooksComponent = componentActionsRecord.getComponentByIndex(hook.componentData.index);
+        // const [hooksState] = [target.state.hooksState];
+        delete hook.componentData;
+        const hooksState = Object.values(hook);
+        if (hooksComponent && hooksComponent.dispatch) {
+          // hooksComponent.dispatch(Object.values(target.state.hooksState[0])[0]);
+          hooksComponent.dispatch(hooksState);
+        }
+      });
+      //target.children.forEach(child => jump(child));
+
     }
 
     target.children.forEach(child => {

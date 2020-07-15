@@ -107,7 +107,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       treeBaseDuration,
     } = currentFiber;
 
-    let newState: any;
+    let newState: any = {};
     let componentData: ComponentData = {};
     let componentFound = false;
 
@@ -133,11 +133,15 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
         hooksStates.forEach((state, i) => {
           hooksIndex = componentActionsRecord.saveNew(state.state, state.component);
           if (newState && newState.hooksState) {
-            newState.hooksState.push([{ [hooksNames[i]]: state.state }, hooksIndex]);
+            newState.hooksState.push({ [hooksNames[i]]: state.state, componentData: { index: hooksIndex } });
+            // newState.hooksState.push([{ [hooksNames[i]]: state.state }, hooksIndex]);
           } else if (newState) {
-            newState.hooksState = [{ [hooksNames[i]]: state.state }, hooksIndex];
+            newState.hooksState = [{ [hooksNames[i]]: state.state, componentData: { index: hooksIndex } }];
+            // newState.hooksState = [{ [hooksNames[i]]: state.state }, hooksIndex];
           } else {
-            newState = { hooksState: [{ [hooksNames[i]]: state.state }, hooksIndex] };
+            // newState = { hooksState: [{ [hooksNames[i]]: state.state }, hooksIndex] };
+            newState = { hooksState: [] };
+            newState.hooksState.push({ [hooksNames[i]]: state.state, componentData: { index: hooksIndex } });
           }
           componentFound = true;
         });
