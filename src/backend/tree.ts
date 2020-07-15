@@ -18,10 +18,18 @@ function scrubUnserializableMembers(tree: Tree): Tree {
   return tree;
 }
 
+function serializeState(state) {
+  try {
+    return JSON.parse(JSON.stringify(state));
+  } catch (e) {
+    return 'circularState';
+  };
+}
+
 /**
- * 
+ *
  * This is the current snapshot that is being sent to the snapshots array.
- * 
+ *
  */
 class Tree {
   /**
@@ -42,7 +50,7 @@ class Tree {
   parent: Tree
 
   constructor(state : string | {}, name = 'nameless', componentData: {} = {}) {
-    this.state = state === 'root' ? 'root' : JSON.parse(JSON.stringify(state));
+    this.state = state === 'root' ? 'root' : serializeState(state); // JSON.parse(JSON.stringify(state));
     this.name = name;
     this.componentData = componentData ? JSON.parse(JSON.stringify(componentData)) : {};
     this.children = [];
@@ -62,15 +70,16 @@ class Tree {
     this.parent.children.push(newSibling);
     return newSibling;
   }
+
   /**
    * @function cleanTreeCopy : Adds a sibing to the current tree
    */
   cleanTreeCopy(): Tree {
     /**
      * @object circularComponentTable : Clears circular component table only on first call, not recursive ones
-     * 
+     *
      */
-    // 
+    //
     if (copyInstances === 0) {
       copyInstances++;
       circularComponentTable.clear();

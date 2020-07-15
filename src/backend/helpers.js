@@ -51,7 +51,12 @@ export const throttle = (f, t) => {
 // Helper function to grab the getters/setters from `elementType`
 export const getHooksNames = elementType => {
   // Initialize empty object to store the setters and getter
-  let ast = JSXParser.parse(elementType);
+  let ast;
+  try {
+    ast = JSXParser.parse(elementType);
+  } catch(e) {
+    return ['unknown'];
+  }
   const hookState = {};
   const hooksNames = {};
 
