@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "outDir": "./Frontend/public",
+    "module": "es6",
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "types": ["chrome", "jest", "node"]
+  }
+}
