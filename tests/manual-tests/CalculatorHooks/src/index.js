@@ -7,5 +7,5 @@ import "github-fork-ribbon-css/gh-fork-ribbon.css";
 
 const rootContainer = document.getElementById('root'); 
 ReactDOM.render(<App />, rootContainer); 
-// gabi :: uncomment the line below to test Reactime 3.3 or older 
+// uncomment the line below to test Reactime 3.3 or older 
 // reactime(rootContainer);
