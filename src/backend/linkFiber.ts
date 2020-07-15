@@ -237,8 +237,10 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-    const throttledUpdateSnapshot = throttle(updateSnapShotTree, 140);
+
+    const throttledUpdateSnapshot = throttle(updateSnapShotTree, 70);
     document.addEventListener('visibilitychange', onVisibilityChange);
+
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
