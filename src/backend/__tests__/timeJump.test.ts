@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable max-classes-per-file */
-const timeJumpRequire = require('../timeJump');
+import timeJumpRequire from '../timeJump';
 
 class Component {
+  mockfn: (state) => void
+
+  state: Record<string, unknown>
+
   constructor(mockfn) {
     this.mockfn = mockfn;
   }
@@ -15,6 +19,12 @@ class Component {
 }
 
 class FiberNode {
+  private state: Record<null, unknown>;
+
+  children: FiberNode[];
+
+  component: Component
+
   constructor(mockfn, state) {
     this.state = state;
     this.children = [];
@@ -23,8 +33,8 @@ class FiberNode {
 }
 
 describe('unit testing for timeJump.js', () => {
-  let timeJump;
-  let snapShot;
+  let timeJump: (target) => void;
+  let snapShot: Record<string, FiberNode>;
   let mode;
   let mockFuncs;
 
@@ -33,11 +43,11 @@ describe('unit testing for timeJump.js', () => {
     mockFuncs = [];
     for (let i = 0; i < 4; i += 1) mockFuncs.push(jest.fn());
 
-    const tree = new FiberNode(mockFuncs[0]);
+    const tree: FiberNode = new FiberNode(mockFuncs[0], '*');
     tree.children = [
-      new FiberNode(mockFuncs[1]),
-      new FiberNode(mockFuncs[2]),
-      new FiberNode(mockFuncs[3]),
+      new FiberNode(mockFuncs[1], '*'),
+      new FiberNode(mockFuncs[2], '*'),
+      new FiberNode(mockFuncs[3], '*'),
     ];
 
     snapShot = { tree };
@@ -57,7 +67,7 @@ describe('unit testing for timeJump.js', () => {
       new FiberNode(null, states[3]),
     ];
 
-    beforeEach(() => {
+    beforeEach((): void => {
       timeJump(target);
     });
     test('timeJump should call setState on each state in origin', () => {
@@ -73,7 +83,7 @@ describe('unit testing for timeJump.js', () => {
     const logMode = jest.fn();
     logMode.mockImplementation(() => expect(mode.jumping).toBe(true));
 
-    snapShot.tree = new FiberNode(logMode);
+    snapShot.tree = new FiberNode(logMode, null);
     const target = new FiberNode(null, 'test');
     timeJump(target);
     expect(logMode).toHaveBeenCalled();
