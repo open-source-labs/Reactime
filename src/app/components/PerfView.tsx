@@ -81,7 +81,7 @@ const PerfView = (props:PerfViewProps) => {
     // View [x, y, r]
     let view;
 
-    // Set up viewBox dimensions and onClick for parent svg 
+    // Set up viewBox dimensions and onClick for parent svg
     const svg = d3.select(svgRef.current)
       .attr('viewBox', `-${adjustedSize / 2} -${adjustedSize / 2} ${width} ${height}`)
       .on('click', () => zoomToNode(packedRoot));
@@ -117,7 +117,9 @@ const PerfView = (props:PerfViewProps) => {
     node.exit().remove();
 
     // Zoom size of nodes and labels to focus view on root node
-    zoomViewArea([packedRoot.x, packedRoot.y, packedRoot.r * 2]);
+    if ((!Number.isNaN(packedRoot.x)) && (!Number.isNaN(packedRoot.y)) && (!Number.isNaN(packedRoot.r))) {
+      zoomViewArea([packedRoot.x, packedRoot.y, packedRoot.r * 2]);
+    }
 
     // Zoom/relocated nodes and labels based on dimensions given [x, y, r]
     function zoomViewArea(newXYR) {
@@ -132,7 +134,7 @@ const PerfView = (props:PerfViewProps) => {
     function zoomToNode(newFocus:{x:number; y:number; r:number}) {
       const transition = svg.transition()
       .duration(d3.event.altKey ? 7500 : 750)
-      .tween('zoom', (d:object)=> {
+      .tween('zoom', (d:object) => {
         const i = d3.interpolateZoom(view, [newFocus.x, newFocus.y, newFocus.r * 2]);
         return t => zoomViewArea(i(t));
       });
@@ -147,7 +149,7 @@ const PerfView = (props:PerfViewProps) => {
 
       curFocus = newFocus;
     }
-  }, [colorScale, packFunc, width, height, indexToDisplay, snapshots]);
+  }, [colorScale, packFunc, width, height, indexToDisplay, snapshots, adjustedSize, handleNoRenderData]);
 
   return (
     <div className="perf-d3-container">
