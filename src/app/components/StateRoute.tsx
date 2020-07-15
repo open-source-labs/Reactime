@@ -1,27 +1,33 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/jsx-first-prop-new-line */
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable react/jsx-indent-props */
+/* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-import React from 'react';
+import React, { useState } from 'react';
 import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom';
-
-
-const Chart = require('./Chart').default;
 import Tree from './Tree';
 import PerfView from './PerfView';
+import { spawn } from 'child_process';
+
+const Chart = require('./Chart').default;
 const ErrorHandler = require('./ErrorHandler').default;
 
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types
 
-
 interface StateRouteProps {
-  snapshot: { name?: string; componentData?: object; state?: string | object; stateSnaphot?: object; children?: any[]; }; 
-  hierarchy: object; 
-  snapshots: []; 
+  snapshot: { name?: string; componentData?: object; state?: string | object; stateSnaphot?: object; children?: any[]; };
+  hierarchy: object;
+  snapshots: [];
   viewIndex: number;
 }
 
 const StateRoute = (props:StateRouteProps) => {
-  const { snapshot, hierarchy, snapshots, viewIndex } = props
+  const { snapshot, hierarchy, snapshots, viewIndex } = props;
+  const [noRenderData, setNoRenderData] = useState(false);
+
   // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was initialize involk render chart
   const renderChart = () => {
     if (hierarchy) {
@@ -38,28 +44,39 @@ const StateRoute = (props:StateRouteProps) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
+  let perfChart;
+  if (!noRenderData) {
+    perfChart = (
+      <PerfView viewIndex={viewIndex}
+        snapshots={snapshots}
+        setNoRenderData={setNoRenderData}
+        width={600}
+        height={1000}
+      />
+    );
+  } else { 
+    perfChart = <div className="no-data-message">Rendering Data is not available for this application</div>; 
+  }
+
   const renderPerfView = () => {
-    if (hierarchy) {
-      return (
-        <ErrorHandler>
-          <PerfView viewIndex={viewIndex} snapshots={snapshots} width={600} height={1000}/>
-        </ErrorHandler>
-      );
-    }
-    return <div className="noState">{NO_STATE_MSG}</div>;
+    return (
+      <ErrorHandler>
+        {perfChart}
+      </ErrorHandler>
+    );
   };
 
   return (
     <Router>
       <div className="navbar">
         <NavLink className="router-link" activeClassName="is-active" exact to="/">
-        Tree
+          Tree
         </NavLink>
         <NavLink className="router-link" activeClassName="is-active" to="/chart">
-        History
+          History
         </NavLink>
         <NavLink className="router-link" activeClassName="is-active" to="/performance">
-        Performance
+          Performance
         </NavLink>
       </div>
       <Switch>
