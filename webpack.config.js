@@ -1,6 +1,6 @@
 const path = require('path');
 const ChromeExtensionReloader = require('webpack-chrome-extension-reloader'); // enable hot reloading while developing a chrome extension
-const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
+// const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
 
 
 const config = {
@@ -66,13 +66,13 @@ const config = {
     ],
   },
   plugins: [
-    new TypedocWebpackPlugin({
-      name: 'Contoso',
-      mode: 'modules',
-      theme: './typedoc-theme/',
-      includeDeclarations: false,
-      ignoreCompilerErrors: true,
-    }),
+    // new TypedocWebpackPlugin({
+    //   name: 'Contoso',
+    //   mode: 'modules',
+    //   theme: './typedoc-theme/',
+    //   includeDeclarations: false,
+    //   ignoreCompilerErrors: true,
+    // }),
   ],
 };
 
