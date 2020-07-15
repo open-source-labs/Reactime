@@ -171,6 +171,7 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
           elementType ? elementType.name : 'nameless',
           componentData);
       }
+      if (newState !== 'stateless') console.log('state updated:', newState);
     } else {
       newNode = tree;
     }
@@ -228,7 +229,12 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           fiberRoot = args[1];
-          if (doWork) throttledUpdateSnapshot();
+          console.log('in CFR committed fiber');
+          if (doWork) {
+            console.log('in CFR: updating snapshot');
+            throttledUpdateSnapshot();
+          }
+          console.log('in CFR updated snapshot');
           return original(...args);
         };
       }(devTools.onCommitFiberRoot));
