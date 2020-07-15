@@ -14,8 +14,7 @@ interface TreeProps {
 
 const Tree = (props:TreeProps) => {
   const { snapshot } = props;
-
-  console.log('Tree -> snapshot', snapshot);
+  // console.log('Tree -> snapshot', snapshot);
 
   return (
     <>
