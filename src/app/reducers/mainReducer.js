@@ -25,8 +25,10 @@ export default (state, action) => produce(state, draft => {
 
     const objChildArray = [];
     // eslint-disable-next-line no-restricted-syntax
-    for (const objChild of obj.children) {
-      objChildArray.push(findName(index, objChild));
+    if (obj) {
+      for (const objChild of obj.children) {
+        objChildArray.push(findName(index, objChild));
+      }
     }
     // eslint-disable-next-line no-restricted-syntax
     for (const objChildName of objChildArray) {
