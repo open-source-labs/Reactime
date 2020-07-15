@@ -37,7 +37,7 @@ interface ActionProps {
  * @method handleOnkeyDown Executes key commands
  *
  */
-/* // gabi :: index and delta props were removed from Action.jsx  */
+// index and delta props were removed from Action.jsx  */
 // viewIndex and handleonkeyDown added to props
 const Action = (props: ActionProps): unknown => {
   const {
