@@ -1,3 +1,8 @@
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable react/require-default-props */
 import React from 'react';
 import { diff, formatters } from 'jsondiffpatch';
 import ReactHtmlParser from 'react-html-parser';
@@ -5,7 +10,7 @@ import { useStoreContext } from '../store';
 
 interface DiffProps {
   snapshot: {state?:Record<string, unknown>};
-  show?: boolean|undefined; 
+  show?: boolean|undefined;
 }
 /**
  * Displays tree showing specific two versions of tree
@@ -28,7 +33,7 @@ function Diff(props: DiffProps) {
   }
 
   // cleanning preview from stateless data
-  const statelessCleanning = (obj:{name?:string; componentData?:object; state?:object|string;stateSnaphot?:object; children?:any[]}) => {
+  const statelessCleanning = (obj:{name?:string; componentData?:object; state?:string|any;stateSnaphot?:object; children?:any[]}) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;
