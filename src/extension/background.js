@@ -17,19 +17,19 @@ function createTabObj(title) {
     title,
     // snapshots is an array of ALL state snapshots for statefull and stateless components the reactime tab working on a specific user application
     snapshots: [],
-    // gabi :: record initial snapshot to refresh page in case empty function is called
+    // records initial snapshot to refresh page in case empty function is called
     initialSnapshot: [],
-    // gabi and nate :: index here is the tab index that show total amount of state changes
+    // index here is the tab index that shows total amount of state changes
     index: 0,
     //* this is our pointer so we know what the current state the user is checking (this accounts for time travel aka when user clicks jump on the UI)
     currLocation: null,
-    // gabi and nate :: point the node that will generate the next child set by newest node or jump
+    // points the node that will generate the next child set by newest node or jump
     currParent: 0,
-    // gabi and nate :: points to the current branch
+    // points to the current branch
     currBranch: 0,
     //* inserting a new property to build out our hierarchy dataset for d3
     hierarchy: null,
-    // gabi :: record initial hierarchy to refresh page in case empty function is called
+    // records initial hierarchy to refresh page in case empty function is called
     initialHierarchy: null,
     mode: {
       persist: false,
@@ -45,13 +45,13 @@ class Node {
     // eslint-disable-next-line no-param-reassign
     // eslint-disable-next-line no-multi-assign
     // eslint-disable-next-line no-plusplus
-    // gabi and nate :: continue the order of number of total state changes
+    // continues the order of number of total state changes
     // eslint-disable-next-line no-plusplus
     this.index = tabObj.index++;
-    // gabi and nate :: continue the order of number of states changed from that parent
+    // continues the order of number of states changed from that parent
     // eslint-disable-next-line no-multi-assign
     this.name = tabObj.currParent += 1;
-    // gabi and nate :: mark from what branch this node is originated
+    // marks from what branch this node is originated
     this.branch = tabObj.currBranch;
     this.stateSnapshot = obj;
     this.children = [];
@@ -64,11 +64,11 @@ function sendToHierarchy(tabObj, newNode) {
     tabObj.hierarchy = newNode;
   } else {
     tabObj.currLocation.children.push(newNode);
-    // gabi and nate :: if the node's children's array is empty
+    // if the node's children's array is empty
     if (tabObj.currLocation.children.length > 1) {
-      // gabi and nate :: increment the value of the nodes branch by 1
+      // increment the value of the nodes branch by 1
       newNode.branch += 1;
-      // gabi and nate :: reassign value of current branch the newNode branch value
+      // reassign value of current branch as the newNode branch value
       tabObj.currBranch = newNode.branch;
     }
     tabObj.currLocation = newNode;
@@ -76,11 +76,11 @@ function sendToHierarchy(tabObj, newNode) {
 }
 
 function changeCurrLocation(tabObj, rootNode, index, name) {
-  // gabi and nate :: index comes from the app's main reducer to locate the right current location on tabObj
+  // index comes from the app's main reducer to locate the right current location on tabObj
   // check if current node has the index wanted
   if (rootNode.index === index) {
     tabObj.currLocation = rootNode;
-    // gabi and nate :: index of current location from where the next node will be a child
+    // index of current location from where the next node will be a child
     tabObj.currParent = name;
     return;
   }
@@ -90,7 +90,7 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
     // if not, recurse on each one of the children
   }
 
-  if (rootNode.children) { // Carlos: remove if, redundant
+  if (rootNode.children) {
     rootNode.children.forEach(child => {
       changeCurrLocation(tabObj, child, index, name);
     });
