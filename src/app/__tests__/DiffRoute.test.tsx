@@ -1,17 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import React from 'react';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import {
-  MemoryRouter as Router, Route, NavLink, Switch,
-} from 'react-router-dom';
+import { MemoryRouter as Router, Switch } from 'react-router-dom';
+
 const DiffRoute = require('../components/DiffRoute').default;
 
 const props = {
   snapshot: [{}],
 };
 
-
-configure({ adapter: new Adapter() });
+configure({ adapter: new (Adapter as any)() });
 let wrapper;
 
 describe('DiffRoute props', () => {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable max-len */
 import mainReducer from '../reducers/mainReducer';
 import {
@@ -156,7 +157,7 @@ describe('mainReducer testing', () => {
       },
       currentTab: 87,
       port: {
-        postMessage: () => { },
+        postMessage: () => {},
       },
     };
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 // import 'core-js';
 // const reactimeBackend = require('../../dev-reactime/index.js');
 

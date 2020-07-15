@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable jest/no-disabled-tests */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/button-has-type */
@@ -56,8 +57,6 @@ describe('AST Unit Tests', () => {
     });
   });
 });
-
-
 
 /* /*
 console.log('getHooksNames: ', getHooksNames(`function LastSnapshot(props) {

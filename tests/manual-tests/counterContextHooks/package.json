@@ -1,0 +1,46 @@
+{
+  "name": "react-hooks-context-app",
+  "description": "An example project demonstrating how to manage global state using React Hooks and the Context API",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "author": {
+    "email": "micwanyoike@gmail.com",
+    "name": "Michael Wanyoike"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brandiqa/react-hooks-context-app.git"
+  },
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.9.0",
+    "@testing-library/react": "^10.0.4",
+    "@testing-library/user-event": "^10.4.0",
+    "fomantic-ui-css": "^2.8.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1",
+    "semantic-ui-react": "^0.88.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

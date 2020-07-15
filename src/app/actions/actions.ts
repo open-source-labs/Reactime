@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import * as types from '../constants/actionTypes';
 
 export const toggleMode = mode => ({

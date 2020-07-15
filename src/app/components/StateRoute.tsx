@@ -1,15 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react/jsx-first-prop-new-line */
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable react/jsx-indent-props */
-/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 import React, { useState } from 'react';
 import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom';
 import Tree from './Tree';
 import PerfView from './PerfView';
-import { spawn } from 'child_process';
 
 const Chart = require('./Chart').default;
 const ErrorHandler = require('./ErrorHandler').default;
@@ -28,7 +26,9 @@ const StateRoute = (props:StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
   const [noRenderData, setNoRenderData] = useState(false);
 
-  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if hierarchy was initialize involk render chart
+  // the hierarchy gets set on the first click in the page
+  // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
+  // if true involk render chart with hierarchy
   const renderChart = () => {
     if (hierarchy) {
       return <Chart hierarchy={hierarchy} />;
@@ -36,7 +36,9 @@ const StateRoute = (props:StateRouteProps) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
-  // gabi :: the hierarchy get set on the first click in the page, when page in refreshed we don't have a hierarchy so we need to check if snapshot was initialize involk render chart
+  // the hierarchy gets set on the first click in the page
+  // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
+  // if true involk render Tree with snapshot
   const renderTree = () => {
     if (hierarchy) {
       return <Tree snapshot={snapshot} />;
@@ -47,24 +49,23 @@ const StateRoute = (props:StateRouteProps) => {
   let perfChart;
   if (!noRenderData) {
     perfChart = (
-      <PerfView viewIndex={viewIndex}
+      <PerfView
+        viewIndex={viewIndex}
         snapshots={snapshots}
         setNoRenderData={setNoRenderData}
         width={600}
         height={1000}
       />
     );
-  } else { 
-    perfChart = <div className="no-data-message">Rendering Data is not available for this application</div>; 
+  } else {
+    perfChart = <div className="no-data-message">Rendering Data is not available for this application</div>;
   }
 
-  const renderPerfView = () => {
-    return (
-      <ErrorHandler>
-        {perfChart}
-      </ErrorHandler>
-    );
-  };
+  const renderPerfView = () => (
+    <ErrorHandler>
+      {perfChart}
+    </ErrorHandler>
+  );
 
   return (
     <Router>

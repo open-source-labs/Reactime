@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import 'core-js';
 /* eslint-disable no-plusplus */
 /* eslint-disable guard-for-in */
@@ -18,7 +19,6 @@ export default {
     ? componentActionsRecord[inputIndex].component
     : undefined),
 };
-
 
 /* const masterState = [];
 const hooksComponentsActions = {};

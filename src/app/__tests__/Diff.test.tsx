@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import React from 'react';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-const Diff = require('../components/Diff').default;
-
 import { useStoreContext } from '../store';
 
-configure({ adapter: new Adapter() });
+const Diff = require('../components/Diff').default;
+
+configure({ adapter: new (Adapter as any)() });
 
 jest.mock('../store');
 

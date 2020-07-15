@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 import React from 'react';
@@ -9,10 +11,10 @@ import { useStoreContext } from '../store';
 const { Handle } = Slider;
 
 interface handleProps {
-  value: number, 
-  dragging: boolean, 
+  value: number,
+  dragging: boolean,
   index: number
-};
+}
 
 const handle = (props: handleProps) => {
   const {
@@ -34,10 +36,10 @@ const handle = (props: handleProps) => {
 
 interface MainSliderProps {
   snapshotsLength: number;
-};
+}
 
 function MainSlider(props: MainSliderProps) {
-  const { snapshotsLength } = props
+  const { snapshotsLength } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { sliderIndex } = tabs[currentTab];
 

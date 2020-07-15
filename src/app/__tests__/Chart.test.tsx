@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-named-as-default-member */
@@ -5,10 +7,12 @@
 import React from 'react';
 import { configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+
 const Chart = require('../components/Chart').default;
 
 // Unit test cases for d3 functionality
-configure({ adapter: new Adapter() });
+configure({ adapter: new (Adapter as any)() });
+
 // Test the life cycle methods in Chart
 describe('Life cycle methods in Chart', () => {
   let wrapper;

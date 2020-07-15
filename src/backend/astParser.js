@@ -1,3 +1,6 @@
+/* eslint-disable no-shadow */
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import 'core-js';
 /* eslint-disable no-inner-declarations, no-loop-func */
 // eslint-disable-next-line import/newline-after-import

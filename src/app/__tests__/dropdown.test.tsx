@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import Dropdown from '../components/Dropdown';
 
-configure({ adapter: new Adapter() });
+const Dropdown = require('../components/Dropdown').default;
+
+configure({ adapter: new (Adapter as any)() });
 
 describe('unit testing for Dropdown.jsx', () => {
   let wrapper;
