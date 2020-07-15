@@ -1,3 +1,6 @@
+/* eslint-disable react/require-default-props */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react/no-unused-prop-types */
 import React from 'react';
 import { changeView, changeSlider } from '../actions/actions';
 
@@ -15,7 +18,7 @@ interface ActionProps {
   displayName: string;
   componentName: string;
   componentData: {actualDuration: number}|undefined;
-  state?: Record<string,unknown>;
+  state?: Record<string, unknown>;
   viewIndex: number;
   handleOnkeyDown: (e: any, i: number) => void;
 }
