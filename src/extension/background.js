@@ -137,29 +137,29 @@ chrome.runtime.onConnect.addListener(port => {
     const { action, payload, tabId } = msg;
     switch (action) {
       case 'import': // create a snapshot property on tabId and set equal to tabs object
-        // gabi :: may need do something like filter payload from stateless
+        // may need do something like filter payload from stateless
         tabsObj[tabId].snapshots = payload;
         return true;
       case 'emptySnap':
-        // gabi :: activate empty mode
+        // activates empty mode
         tabsObj[tabId].mode.empty = true;
-        // gabi :: record snapshot of page initial state
+        // records snapshot of page initial state
         tabsObj[tabId].initialSnapshot.push(tabsObj[tabId].snapshots[0]);
-        // gabi :: reset snapshots to page last state recorded
+        // reset snapshots to page last state recorded
         tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]];
-        // gabi :: record hierarchy of page initial state
+        // records hierarchy of page initial state
         tabsObj[tabId].initialHierarchy = { ...tabsObj[tabId].hierarchy, children: [] };
-        // gabi :: reset hierarchy
+        // resets hierarchy
         tabsObj[tabId].hierarchy.children = [];
-        // gabi :: reset hierarchy to page last state recorded
+        // resets hierarchy to page last state recorded
         tabsObj[tabId].hierarchy.stateSnapshot = { ...tabsObj[tabId].snapshots[0] };
-        // gabi :: reset currLocation to page last state recorded
+        // resets currLocation to page last state recorded
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
-        // gabi :: reset index
+        // resets index
         tabsObj[tabId].index = 0;
-        // gabi :: reset currParent plus current state
+        // resets currParent plus current state
         tabsObj[tabId].currParent = 1;
-        // gabi :: reset currBranch
+        // resets currBranch
         tabsObj[tabId].currBranch = 0;
         return true;
       case 'setLock':
