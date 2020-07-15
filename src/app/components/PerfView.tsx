@@ -123,7 +123,9 @@ const PerfView = (props:PerfViewProps) => {
     node.exit().remove();
 
     // Zoom size of nodes and labels to focus view on root node
-    zoomViewArea([packedRoot.x, packedRoot.y, packedRoot.r * 2]);
+    if ((!Number.isNaN(packedRoot.x)) && (!Number.isNaN(packedRoot.y)) && (!Number.isNaN(packedRoot.r))) {
+      zoomViewArea([packedRoot.x, packedRoot.y, packedRoot.r * 2]);
+    }
 
     // Zoom/relocated nodes and labels based on dimensions given [x, y, r]
     function zoomViewArea(newXYR) {
