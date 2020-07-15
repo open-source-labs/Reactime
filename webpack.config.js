@@ -10,7 +10,7 @@ const config = {
     // app: './src/app/index.js',
     app: './src/app/index.tsx',
     background: './src/extension/background.js',
-    content: './src/extension/contentScript.js',
+    content: './src/extension/contentScript.ts',
     backend: './src/backend/index.ts',
   },
   output: {

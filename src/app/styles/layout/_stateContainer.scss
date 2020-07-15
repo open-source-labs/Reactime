@@ -40,6 +40,14 @@
   @extend %disable-highlight
 }
 
+
+.no-data-message {
+  font: 1.2em sans-serif;
+  padding: 10px;
+  // margin: 10px;
+  color: hsl(0%, 50%, 50%);
+}
+
 .state-container {
   .main-navbar-text {
     margin: 6px;
