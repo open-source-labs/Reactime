@@ -38,6 +38,7 @@ import 'core-js';
 // const componentActionsRecord = require('./masterState');
 
 import {
+ // eslint-disable-next-line @typescript-eslint/no-unused-vars
  Snapshot, Mode, ComponentData, HookStates, Fiber
 } from './types/backendTypes';
 import Tree from './tree';
@@ -114,7 +115,14 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     } = currentFiber;
 
     let newState: any | {hooksState?: any[]} = {};
-    let componentData: ComponentData = {};
+    let componentData: {
+      hooksState?: any[],
+      hooksIndex?: number,
+      index?: number,
+      actualDuration?: number,
+      actualStartTime?: number,
+      selfBaseDuration?: number,
+      treeBaseDuration?: number} = {};
     let componentFound = false;
 
     // Check if node is a stateful setState component
@@ -138,16 +146,14 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
         const hooksNames = getHooksNames(elementType.toString());
         hooksStates.forEach((state, i) => {
           hooksIndex = componentActionsRecord.saveNew(state.state, state.component);
+          componentData.hooksIndex = hooksIndex;
           if (newState && newState.hooksState) {
-            newState.hooksState.push({ [hooksNames[i]]: state.state, componentData: { index: hooksIndex } });
-            // newState.hooksState.push([{ [hooksNames[i]]: state.state }, hooksIndex]);
+            newState.hooksState.push({ [hooksNames[i]]: state.state });
           } else if (newState) {
-            newState.hooksState = [{ [hooksNames[i]]: state.state, componentData: { index: hooksIndex } }];
-            // newState.hooksState = [{ [hooksNames[i]]: state.state }, hooksIndex];
+            newState.hooksState = [{ [hooksNames[i]]: state.state }];
           } else {
-            // newState = { hooksState: [{ [hooksNames[i]]: state.state }, hooksIndex] };
             newState = { hooksState: [] };
-            newState.hooksState.push({ [hooksNames[i]]: state.state, componentData: { index: hooksIndex } });
+            newState.hooksState.push({ [hooksNames[i]]: state.state });
           }
           componentFound = true;
         });
@@ -232,7 +238,6 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
     const throttledUpdateSnapshot = throttle(updateSnapShotTree, 140);
-
     document.addEventListener('visibilitychange', onVisibilityChange);
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
