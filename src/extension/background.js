@@ -89,7 +89,7 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
     return;
     // if not, recurse on each one of the children
   }
-  
+
   if (rootNode.children) { // Carlos: remove if, redundant
     rootNode.children.forEach(child => {
       changeCurrLocation(tabObj, child, index, name);
@@ -244,7 +244,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
           tabsObj[tabId].snapshots.splice(1);
           // gabi :: reset hierarchy to page initial state
           if (tabsObj[tabId].hierarchy) {
-            //test
+            // test
             tabsObj[tabId].hierarchy.children = [];
             // gabi :: reset currParent plus current state
             tabsObj[tabId].currParent = 1;
@@ -343,13 +343,11 @@ chrome.tabs.onRemoved.addListener(tabId => {
   delete firstSnapshotReceived[tabId];
 });
 
-// when a new url is loaded on the same tab, this remove the tabid from the tabsObj, recreate the tab and inject the script 
+// when a new url is loaded on the same tab, this remove the tabid from the tabsObj, recreate the tab and inject the script
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-
   // check if the tab title changed to see if tab need to restart
-  if (changeInfo && tabsObj[tabId]){
-    if(changeInfo.title && changeInfo.title !== tabsObj[tabId].title){
-
+  if (changeInfo && tabsObj[tabId]) {
+    if (changeInfo.title && changeInfo.title !== tabsObj[tabId].title) {
       // tell devtools which tab to delete
       if (portsArr.length > 0) {
         portsArr.forEach(bg =>
@@ -367,21 +365,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 
       // recreate the tab on the tabsObj
       tabsObj[tabId] = createTabObj(changeInfo.title);
-
-      // reinject the script to the tab
-      chrome.tabs.executeScript(tabId, {
-        code: `
-        // Function will attach script to the dom 
-        const injectScript = (file, tag) => {
-          const htmlBody = document.getElementsByTagName(tag)[0];
-          const script = document.createElement('script');
-          script.setAttribute('type', 'text/javascript');
-          script.setAttribute('src', file);
-          htmlBody.appendChild(script);
-        };
-        injectScript(chrome.runtime.getURL('bundles/backend.bundle.js'), 'body');
-      `,
-      });
     }
   }
 });
