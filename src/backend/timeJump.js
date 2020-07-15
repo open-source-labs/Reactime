@@ -45,22 +45,13 @@ export default (origin, mode) => {
 
     // Check for hooks state and set it with dispatch()
     if (target.state && target.state.hooksState) {
-      console.log('SNAPSHOT TARGET: ', target);
-      // const hooksComponent = componentActionsRecord.getComponentByIndex(target.state.hooksState[1]);
       target.state.hooksState.forEach(hook => {
-        console.log('HOOK IS:', JSON.stringify(hook));
-        if (!hook.componentData) return;
-        const hooksComponent = componentActionsRecord.getComponentByIndex(hook.componentData.index);
-        // const [hooksState] = [target.state.hooksState];
-        delete hook.componentData;
-        const hooksState = Object.values(hook);
+        const hooksComponent = componentActionsRecord.getComponentByIndex(target.componentData.hooksIndex);
+        const hookState = Object.values(hook);
         if (hooksComponent && hooksComponent.dispatch) {
-          // hooksComponent.dispatch(Object.values(target.state.hooksState[0])[0]);
-          hooksComponent.dispatch(hooksState);
+          hooksComponent.dispatch(hookState[0]);
         }
       });
-      //target.children.forEach(child => jump(child));
-
     }
 
     target.children.forEach(child => {
