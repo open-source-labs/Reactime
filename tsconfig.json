@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "./src/extension/build/bundles/",
+    "module": "es6",
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "types": ["chrome", "jest", "node"],
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["./src/app", "./src/backend"],
+  "exclude": ["./src/app/__tests__", "./src/backend/__tests__"],
+  "typeDocOptions": {
+    "mode": "file",
+    "out": "docs"
+  },
+}
