@@ -21,6 +21,7 @@ let browser;
 let page;
 
 class App extends Component {
+  state: { foo: string; };
   constructor(props) {
     super(props);
     this.state = { foo: 'bar' };
