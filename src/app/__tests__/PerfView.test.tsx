@@ -1,12 +1,12 @@
 import React from 'react';
-import { configure, mount } from 'enzyme';
+import { configure, shallow } from 'enzyme';
 // import { act } from 'react-dom/test-utils';
 import Adapter from 'enzyme-adapter-react-16';
-import PerfView from '../components/PerfView';
+const PerfView =  require('../components/PerfView').default
 // import { iterator } from 'core-js/fn/symbol';
 
 // Unit test cases for PerfView
-configure({ adapter: new Adapter() });
+configure({ adapter: new (Adapter as any)() });
 
 // Test props and basic rendering
 describe('PerfView Component ', () => {
@@ -101,17 +101,15 @@ describe('PerfView Component ', () => {
   snapshots.push(snapshot0);
   snapshots.push(snapshot1);
 
+  const props = {
+    viewIndex: -1,
+    snapshots: snapshots,
+    width: 600,
+    height: 600,
+  }
+
   beforeEach(() => {
-    wrapper = mount(<PerfView viewIndex={-1} snapshots={snapshots} width={600} height={600} />);
-  });
-
-  it('allows us to set viewIndex prop', () => {
-    expect(wrapper.props().viewIndex).toEqual(-1);
-
-    wrapper.setProps({ viewIndex: 0 });
-    expect(wrapper.props().viewIndex).toEqual(0);
-
-    // wrapper.setProps({ viewIndex: 1000 });
+    wrapper = shallow(<PerfView viewIndex={props.viewIndex} snapshots={props.snapshots} width={props.width} height={props.height} />);
   });
 
   it('renders a single svg element', () => {

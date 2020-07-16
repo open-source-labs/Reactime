@@ -2,7 +2,7 @@
 // import 'core-js';
 // const reactimeBackend = require('../../dev-reactime/index.js');
 
-firstMessage = true;
+let firstMessage = true;
 
 // listening for messages from npm package
 window.addEventListener('message', msg => { // runs automatically every second
