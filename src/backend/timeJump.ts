@@ -32,7 +32,10 @@ export default (origin, mode) => {
 
     if (!target) return;
 
-    if (target.state === 'stateless') target.children.forEach(child => jump(child));
+    if (target.state === 'stateless') {
+      target.children.forEach(child => jump(child));
+      return;
+    }
     const component = componentActionsRecord.getComponentByIndex(target.componentData.index);
     if (component && component.setState) {
       component.setState(prevState => {
