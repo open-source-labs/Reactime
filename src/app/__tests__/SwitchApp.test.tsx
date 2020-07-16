@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import Select from 'react-select';
 import { configure, shallow } from 'enzyme';
@@ -6,7 +7,7 @@ import SwitchApp from '../components/SwitchApp';
 
 import { useStoreContext } from '../store';
 
-configure({ adapter: new Adapter() });
+configure({ adapter: new (Adapter as any)() });
 
 jest.mock('../store');
 

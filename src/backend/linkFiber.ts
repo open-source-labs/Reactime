@@ -252,15 +252,5 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     }
 
     throttledUpdateSnapshot();
-
-    // updateSnapShotTree();
-    // Send the initial snapshot once the content script has started up
-    // This message is sent from contentScript.js in chrome extension bundles
-    // window.addEventListener('message', ({ data: { action } }) => {
-    //   if (action === 'contentScriptStarted') {
-    //     // console.log('content script started received at linkFiber.js')
-    //     sendSnapshot();
-    //   }
-    // });
   };
 };
