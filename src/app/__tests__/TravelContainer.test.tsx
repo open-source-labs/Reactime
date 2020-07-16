@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-filename-extension */
 import { shallow, configure } from 'enzyme';
 import React from 'react';
@@ -8,7 +9,7 @@ import Dropdown from '../components/Dropdown';
 import { useStoreContext } from '../store';
 import { moveBackward, moveForward } from '../actions/actions';
 
-configure({ adapter: new Adapter() });
+configure({ adapter: new (Adapter as any)() });
 
 const state = {
   tabs: {
