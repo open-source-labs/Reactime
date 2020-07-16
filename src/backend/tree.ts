@@ -33,7 +33,8 @@ function serializeState(state) {
  */
 class Tree {
   /**
-   * Create a Tree
+   * This is the current snapshot that is being sent to the snapshots array.
+   * Creates a Tree
    * @param state : the tree's current state
    * @param name : the tree's name
    * @param componentData : Data in the component tree
