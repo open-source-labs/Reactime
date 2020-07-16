@@ -25,10 +25,10 @@ describe('Unit testing for SwitchApp.jsx', () => {
     value: 100,
     label: 'component',
   };
-  // nate and edwin: mockImplementation creates a mock function call
+  // mockImplementation creates a mock function call
   const dispatch = jest.fn();
 
-  // nate and edwin: mockImplementation creates a mock state
+  // mockImplementation creates a mock state
   useStoreContext.mockImplementation(() => [state, dispatch]);
 
   beforeEach(() => {
