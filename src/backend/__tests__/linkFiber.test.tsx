@@ -1,3 +1,5 @@
+/* eslint-disable react/state-in-constructor */
+/* eslint-disable lines-between-class-members */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable import/order */
@@ -21,6 +23,7 @@ let browser;
 let page;
 
 class App extends Component {
+  state: { foo: string; };
   constructor(props) {
     super(props);
     this.state = { foo: 'bar' };

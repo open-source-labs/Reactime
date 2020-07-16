@@ -1,3 +1,6 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/ban-types */
 import 'core-js';
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable max-classes-per-file */
@@ -23,7 +26,7 @@ function serializeState(state) {
     return JSON.parse(JSON.stringify(state));
   } catch (e) {
     return 'circularState';
-  };
+  }
 }
 
 /**

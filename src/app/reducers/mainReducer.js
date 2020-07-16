@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable no-param-reassign */
 import produce from 'immer';
@@ -24,14 +26,12 @@ export default (state, action) => produce(state, draft => {
     }
 
     const objChildArray = [];
-    // eslint-disable-next-line no-restricted-syntax
     if (obj) {
-      for (const objChild of obj.children) {
+      for (let objChild of obj.children) {
         objChildArray.push(findName(index, objChild));
       }
     }
-    // eslint-disable-next-line no-restricted-syntax
-    for (const objChildName of objChildArray) {
+    for (let objChildName of objChildArray) {
       if (objChildName) {
         return objChildName;
       }

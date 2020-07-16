@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-props-no-spreading */
 import { shallow, configure } from 'enzyme';
 import React from 'react';
@@ -8,7 +9,7 @@ import MainSlider from '../components/MainSlider';
 
 import { useStoreContext } from '../store';
 
-configure({ adapter: new Adapter() });
+configure({ adapter: new (Adapter as any)() });
 
 jest.mock('../store');
 // the handle function in MainSlider returns out a Tooltip Component
