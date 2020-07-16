@@ -1,3 +1,6 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Tree from '../tree';
 
 export interface Snapshot{
@@ -40,7 +43,7 @@ interface HookStateItem {
   component: any;
 }
 
-export interface HookStates extends Array<HookStateItem> {}
+export type HookStates = Array<HookStateItem>
 
 export interface State {
   state?: {} | number;

@@ -1,8 +1,12 @@
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import React from 'react';
 import { configure, shallow } from 'enzyme';
 // import { act } from 'react-dom/test-utils';
 import Adapter from 'enzyme-adapter-react-16';
-const PerfView =  require('../components/PerfView').default
+
+const PerfView = require('../components/PerfView').default;
 // import { iterator } from 'core-js/fn/symbol';
 
 // Unit test cases for PerfView
@@ -103,10 +107,10 @@ describe('PerfView Component ', () => {
 
   const props = {
     viewIndex: -1,
-    snapshots: snapshots,
+    snapshots,
     width: 600,
     height: 600,
-  }
+  };
 
   beforeEach(() => {
     wrapper = shallow(<PerfView viewIndex={props.viewIndex} snapshots={props.snapshots} width={props.width} height={props.height} />);

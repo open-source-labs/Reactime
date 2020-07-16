@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 // Type definitions for reactime v3.1
 // Project: <https://github.com/open-source-labs/reactime>
 // Definitions by: Abaas Khorrami <https://github.com/dubalol>
