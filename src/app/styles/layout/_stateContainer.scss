@@ -40,10 +40,9 @@
   @extend %disable-highlight
 }
 
-
 .no-data-message {
-  font: 1.2em sans-serif;
-  color: white;
+  color: $text-color;
+  font: normal 13px $text-font-stack;
   padding: 10px;
 }
 
