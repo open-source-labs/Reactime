@@ -73,14 +73,11 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     }, '*');
   }
 
-  // Carlos: Injects instrumentation to update our state tree every time
+  // Injects instrumentation to update our state tree every time
   // a hooks component changes state
   function traverseHooks(memoizedState: any): HookStates {
     const hooksStates: HookStates = [];
     while (memoizedState && memoizedState.queue) {
-      // Carlos: these two are legacy comments, we should look into them later
-      // prevents useEffect from crashing on load
-      // if (memoizedState.next.queue === null) { // prevents double pushing snapshot updates
       if (memoizedState.memoizedState && memoizedState.queue.lastRenderedReducer && memoizedState.queue.lastRenderedReducer.name === 'basicStateReducer') {
         hooksStates.push({
           component: memoizedState.queue,
