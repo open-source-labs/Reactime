@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/ban-types */
@@ -6,25 +7,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/no-this-in-sfc */
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-plusplus */
 /* eslint-disable func-names */
 /* eslint-disable no-shadow */
 /* eslint-disable newline-per-chained-call */
-/* eslint-disable object-curly-newline */
 /* eslint-disable object-property-newline */
 /* eslint-disable class-methods-use-this */
 // eslint-disable-next-line object-curly-newline
 /* eslint-disable indent */
-/* eslint-disable no-console */
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import * as d3 from 'd3';
-import { schemeSet1 as colorScheme } from 'd3';
-
-// import { addNewSnapshots } from '../actions/actions.ts';
+// import { schemeSet1 as colorScheme } from 'd3';
 
 interface PerfViewProps {
   snapshots:any[];
@@ -54,10 +50,13 @@ const PerfView = (props:PerfViewProps) => {
   const packFunc = useCallback((data:object) => {
     return d3.pack()
     .size([adjustedSize, adjustedSize])
-    // .radius(d => { return d.r; })
     .padding(3)(d3.hierarchy(data)
-                    .sum((d:{componentData?:{actualDuration?:number}}) => { return d.componentData.actualDuration || 0; })
-                    .sort((a:{value:number}, b:{value:number}) => { return b.value - a.value; }));
+      .sum((d:{componentData?:{actualDuration?:number}}) => {
+        return d.componentData.actualDuration || 0;
+      })
+      .sort((a:{value:number}, b:{value:number}) => {
+        return b.value - a.value;
+      }));
   }, [adjustedSize]);
 
   function handleNoRenderData(isNoRenderData) {
@@ -118,7 +117,9 @@ const PerfView = (props:PerfViewProps) => {
     node.exit().remove();
 
     // Zoom size of nodes and labels to focus view on root node
-    if ((!Number.isNaN(packedRoot.x)) && (!Number.isNaN(packedRoot.y)) && (!Number.isNaN(packedRoot.r))) {
+    if ((!Number.isNaN(packedRoot.x))
+        && (!Number.isNaN(packedRoot.y))
+        && (!Number.isNaN(packedRoot.r))) {
       zoomViewArea([packedRoot.x, packedRoot.y, packedRoot.r * 2]);
     }
 
@@ -142,11 +143,17 @@ const PerfView = (props:PerfViewProps) => {
 
       // Grab all nodes that were previously displayed, or who's parent is the new target newFocus
       // Transition their labels to visible or not
-      label.filter(function (d:{parent:object}) { return d.parent === newFocus || this.style.display === 'inline'; })
+      label.filter(function (d:{parent:object}) {
+        return d.parent === newFocus || this.style.display === 'inline';
+      })
       .transition(transition)
       .style('fill-opacity', (d:{parent:object}) => (d.parent === newFocus ? 1 : 0))
-      .on('start', function (d:{parent:object}) { if (d.parent === newFocus) this.style.display = 'inline'; })
-      .on('end', function (d:{parent:object}) { if (d.parent !== newFocus) this.style.display = 'none'; });
+      .on('start', function (d:{parent:object}) {
+        if (d.parent === newFocus) this.style.display = 'inline';
+      })
+      .on('end', function (d:{parent:object}) {
+        if (d.parent !== newFocus) this.style.display = 'none';
+      });
 
       curFocus = newFocus;
     }
@@ -155,7 +162,6 @@ const PerfView = (props:PerfViewProps) => {
   return (
     <div className="perf-d3-container">
       <svg className="perf-d3-svg" ref={svgRef} />
-      {/* <span>TEST</span> */}
     </div>
     );
 };
