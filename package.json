@@ -15,7 +15,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "dev": "webpack --mode development --watch",
-    "test": "jest --verbose --coverage --watchAll",
+    "test": "jest --verbose --coverage --watchAll --forceExit",
     "docker-test-lint": "eslint --ext .js --ext .jsx src",
     "docs": "typedoc --json docs --inputFiles src/app --inputFiles src/backend --readme docs/readme.md"
   },

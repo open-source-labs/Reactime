@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable max-classes-per-file */
 import timeJumpRequire from '../timeJump';
+// const timeJumpRequire = require('../timeJump');
 
 class Component {
   mockfn: (state) => void
@@ -39,9 +40,10 @@ describe('unit testing for timeJump.js', () => {
   let mockFuncs;
 
   beforeEach(() => {
+    const mockFunc = jest.fn();
     mode = { jumping: false };
     mockFuncs = [];
-    for (let i = 0; i < 4; i += 1) mockFuncs.push(jest.fn());
+    for (let i = 0; i < 4; i += 1) mockFuncs.push(mockFunc);
 
     const tree: FiberNode = new FiberNode(mockFuncs[0], '*');
     tree.children = [
@@ -52,8 +54,8 @@ describe('unit testing for timeJump.js', () => {
 
     snapShot = { tree };
     timeJump = timeJumpRequire(snapShot, mode);
+    mockFunc.mockClear()
   });
-
   test('calling the initial require should return a function', () => {
     expect(typeof timeJumpRequire).toBe('function');
   });
