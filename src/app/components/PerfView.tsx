@@ -72,15 +72,11 @@ const PerfView = (props:PerfViewProps) => {
   }, [indexToDisplay, svgRef]);
 
   useEffect(() => {
-    // console.log(`***** useEffect - MAIN -> snapshots[${indexToDisplay}]`, snapshots[indexToDisplay]);
-
     // Error, no App-level component present
     if (snapshots[indexToDisplay].children.length < 1) return;
 
     // Generate tree with our data
     const packedRoot = packFunc(snapshots[indexToDisplay]);
-    // console.log('PerfView -> packedRoot', packedRoot);
-
     // Set initial focus to root node
     let curFocus = packedRoot;
 
@@ -112,7 +108,6 @@ const PerfView = (props:PerfViewProps) => {
         .style('fill-opacity', (d:{parent:object}) => (d.parent === packedRoot ? 1 : 0))
         .style('display', (d:{parent?:object}) => (d.parent === packedRoot ? 'inline' : 'none'))
         .text((d:{data:{name:string, componentData?:{actualDuration:any}}}) => {
-          // console.log("PerfView -> d.data", d.data);
           if (!d.data.componentData.actualDuration) handleNoRenderData(true);
           else handleNoRenderData(false);
           return `${d.data.name}: ${Number.parseFloat(d.data.componentData.actualDuration || 0).toFixed(2)}ms`;
