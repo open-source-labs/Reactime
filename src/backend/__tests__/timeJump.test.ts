@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable max-classes-per-file */
 import timeJumpRequire from '../timeJump';
+// import { ComponentData } from '../types/backendTypes';
 // const timeJumpRequire = require('../timeJump');
 
 class Component {
@@ -33,7 +34,7 @@ class FiberNode {
   }
 }
 
-describe('unit testing for timeJump.js', () => {
+describe('unit testing for timeJump.ts', () => {
   let timeJump: (target) => void;
   let snapShot: Record<string, FiberNode>;
   let mode;
