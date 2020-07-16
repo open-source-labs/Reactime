@@ -106,7 +106,6 @@ div.tooltip {
   /* flex-direction: column; */
   /* justify-content: space-between; */
   height: calc(100% - 70px);
-  /* border: 2px solid red; */
 }
 
 .perf-d3-svg {
@@ -115,10 +114,8 @@ div.tooltip {
 
 .perf-chart-labels {
   font: 1.3em sans-serif;
-  font-weight: bold;
-  /* font-size: calc(12px + .8vw); */
-  /* color: white; */
-  /* fill: rgb(231, 231, 231); */
+  /* font-size: min(max(16px, 4vw), 22px); */
+  /* font-family: monaco, Consolas, 'Lucida Console', monospace, Arial, sans-serif; */
   fill: #2a2f3a;
   pointer-events: none;
   text-anchor: middle;
