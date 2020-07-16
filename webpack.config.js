@@ -86,6 +86,8 @@ module.exports = (env, argv) => {
         },
       }),
     );
+  } else {
+    config.mode = 'production';
   }
   return config;
 };

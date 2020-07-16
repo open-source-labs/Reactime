@@ -46,7 +46,7 @@ function ActionContainer() {
   // if true involk displayArray to display the hierarchy
   if (hierarchy) displayArray(hierarchy);
 
-  // Edwin: handles keyboard presses, function passes an event and index of each action-component
+  // handles keyboard presses, function passes an event and index of each action-component
   function handleOnKeyDown(e:KeyboardEvent, i:number) {
     let currIndex = i;
     // up array key pressed
