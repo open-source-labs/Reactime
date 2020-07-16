@@ -50,7 +50,7 @@ export const getHooksNames = elementType => {
   let ast;
   try {
     ast = JSXParser.parse(elementType);
-  } catch(e) {
+  } catch (e) {
     return ['unknown'];
   }
   const hookState = {};

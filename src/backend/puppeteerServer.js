@@ -9,6 +9,5 @@ const app = express();
 app.use(express.static(path.resolve(__dirname)));
 
 const server = app.listen(5000);
-// () => {console.log('Express listening on port 5000');}
 
 module.exports = server;
