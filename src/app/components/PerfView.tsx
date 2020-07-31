@@ -41,10 +41,15 @@ const PerfView = (props:PerfViewProps) => {
   else indexToDisplay = viewIndex;
 
   // Set up color scaling function
-  const colorScale = d3.scaleLinear()
-    .domain([0, 7])
-    .range(['hsl(200,60%,60%)', 'hsl(255,30%,40%)'])
-    .interpolate(d3.interpolateHcl);
+  const colorScale = d3.scaleOrdinal()
+    .domain([0, 8])
+    .range(['#4a91c7', '#5b9bce', '#6ba6d5', '#7bb0dc', '#8abbe3', '#99c6ea', '#a8d0f1', '#b7dbf8', '#c6e6ff']);
+
+  // Alternate color scaling function
+  // const colorScale = d3.scaleLinear()
+  //   .domain([0, 7])
+  //   .range(['hsl(200,60%,60%)', 'hsl(255,30%,40%)'])
+  //   .interpolate(d3.interpolateHcl);
 
   // Set up circle-packing layout function
   const packFunc = useCallback((data:object) => {

@@ -58,7 +58,7 @@ const StateRoute = (props:StateRouteProps) => {
       />
     );
   } else {
-    perfChart = <div className="no-data-message">Rendering Data is not available for this application</div>;
+    perfChart = <div className="no-data-message">Application must be running in development mode in order to view performance data</div>;
   }
 
   const renderPerfView = () => (
