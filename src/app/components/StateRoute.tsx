@@ -5,26 +5,48 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 import React, { useState } from 'react';
-import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom';
+import {
+  MemoryRouter as Router,
+  Route,
+  NavLink,
+  Switch,
+} from 'react-router-dom';
 import Tree from './Tree';
+import Map from './Map';
 import PerfView from './PerfView';
 
 const Chart = require('./Chart').default;
+
 const ErrorHandler = require('./ErrorHandler').default;
 
-const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
+const NO_STATE_MSG =
+  'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types
 
 interface StateRouteProps {
-  snapshot: { name?: string; componentData?: object; state?: string | object; stateSnaphot?: object; children?: any[]; };
+  snapshot: {
+    name?: string;
+    componentData?: object;
+    state?: string | object;
+    stateSnaphot?: object;
+    children?: any[];
+  };
   hierarchy: object;
   snapshots: [];
   viewIndex: number;
 }
 
-const StateRoute = (props:StateRouteProps) => {
+const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
   const [noRenderData, setNoRenderData] = useState(false);
+
+  //Test Map
+  const renderMap = () => {
+    if (hierarchy) {
+      return <Map snapshot={snapshot} />;
+    }
+    return <div className="noState">{NO_STATE_MSG}</div>;
+  };
 
   // the hierarchy gets set on the first click in the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
@@ -58,29 +80,47 @@ const StateRoute = (props:StateRouteProps) => {
       />
     );
   } else {
-    perfChart = <div className="no-data-message">Application must be running in development mode in order to view performance data</div>;
+    perfChart = (
+      <div className="no-data-message">
+        Application must be running in development mode in order to view
+        performance data
+      </div>
+    );
   }
 
-  const renderPerfView = () => (
-    <ErrorHandler>
-      {perfChart}
-    </ErrorHandler>
-  );
+  const renderPerfView = () => <ErrorHandler>{perfChart}</ErrorHandler>;
 
   return (
     <Router>
       <div className="navbar">
-        <NavLink className="router-link" activeClassName="is-active" exact to="/">
+        <NavLink
+          className="router-link"
+          activeClassName="is-active"
+          exact
+          to="/"
+        >
           Tree
         </NavLink>
-        <NavLink className="router-link" activeClassName="is-active" to="/chart">
+        <NavLink
+          className="router-link"
+          activeClassName="is-active"
+          to="/chart"
+        >
           History
         </NavLink>
-        <NavLink className="router-link" activeClassName="is-active" to="/performance">
+        <NavLink className="router-link" activeClassName="is-active" to="/map">
+          Map
+        </NavLink>
+        <NavLink
+          className="router-link"
+          activeClassName="is-active"
+          to="/performance"
+        >
           Performance
         </NavLink>
       </div>
       <Switch>
+        <Route path="/map" render={renderMap} />
         <Route path="/chart" render={renderChart} />
         <Route path="/performance" render={renderPerfView} />
         <Route path="/" render={renderTree} />
