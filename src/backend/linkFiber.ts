@@ -36,7 +36,7 @@ import 'core-js';
 
 // const Tree = require('./tree').default;
 // const componentActionsRecord = require('./masterState');
-
+import { useGotoRecoilSnapshot, RecoilRoot, useRecoilSnapshot } from 'recoil';
 import {
  // eslint-disable-next-line @typescript-eslint/no-unused-vars
  Snapshot, Mode, ComponentData, HookStates, Fiber
@@ -44,6 +44,9 @@ import {
 import Tree from './tree';
 import componentActionsRecord from './masterState';
 import { throttle, getHooksNames } from './helpers';
+import ReactDOM from 'react-dom';
+
+console.log(ReactDOM);
 
 declare global {
   interface Window {
@@ -234,10 +237,13 @@ export default (snap: Snapshot, mode: Mode): ()=>void => {
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-
+    console.log(fiberRoot);
     const throttledUpdateSnapshot = throttle(updateSnapShotTree, 70);
     document.addEventListener('visibilitychange', onVisibilityChange);
 
+    let snapshot = useRecoilSnapshot();
+    console.log('here is an example of snapshot', snapshot);
+    console.log(RecoilRoot);
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
