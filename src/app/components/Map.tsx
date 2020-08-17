@@ -18,9 +18,9 @@ const Map = (props) => {
   // this state allows the canvas to stay at the zoom level on multiple re-renders
   const [{ x, y, k }, setZoomState]: any = useState({ x: 0, y: 0, k: 0 });
 
-  // useEffect(() => {
-  //   setZoomState(d3.zoomTransform(d3.select('#canvas').node()));
-  // }, [snapshot]);
+  useEffect(() => {
+    setZoomState(d3.zoomTransform(d3.select('#canvas').node()));
+  }, [snapshot]);
 
   // this only clears the canvas if Visualizer is already rendered on the extension
   useEffect(() => {
@@ -37,7 +37,7 @@ const Map = (props) => {
       .append('g')
       .attr('transform', `translate(${x}, ${y}), scale(${k})`); // sets the canvas to the saved zoomState
 
-    //RE-WRITE ALGORITHIM
+    //RE-WRITE ALGORITHIM For All Possible Snapshot Formats
 
     // appState is the object that is passed into d3.hierarchy
     // const childrenArr = [];
@@ -46,6 +46,7 @@ const Map = (props) => {
     //     childrenArr.push(el)
     //   );
     // }
+  
     // console.log('CHILDREN', childrenArr);
 
     const appState: any = {
@@ -126,7 +127,6 @@ const Map = (props) => {
       .attr('stroke', '#646464')
       .attr('stroke-width', 2);
 
-    console.log('142');
     // adding a mouseOver event handler to each node
     // only add popup text on nodes with no children
     // display the data in the node on hover
