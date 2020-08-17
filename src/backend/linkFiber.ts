@@ -94,6 +94,9 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
           component: memoizedState.queue,
           state: memoizedState.memoizedState,
         });
+        //console.log('MEMOIZED PROPS ------>', memoizedProps);
+        console.log('MEMOIZEDSTATE QUEUE------>', memoizedState.queue);
+        console.log('HOOK STATE ------->', hooksStates);
       }
       memoizedState =
         memoizedState.next !== memoizedState ? memoizedState.next : null;
@@ -158,14 +161,14 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     if (window[`$recoilDebugStates`]) {
       isRecoil = true;
     }
-     const atomArray = [];
+    const atomArray = [];
     // fiberRoot.current.child.child.memoizedProps.value.current
     //   .getState()
     //   .currentTree.atomValues.forEach((values, keys) => {
     //     console.log('keys,', keys, 'values', values.contents);
     //     atomArray.push(values.contents);
     //   });
-    atomArray.push(memoizedProps)
+    atomArray.push(memoizedProps);
 
     console.log('1st ATOM ARRAY', atomArray);
 
@@ -178,14 +181,20 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
           memoizedState.queue.lastRenderedReducer.name === 'basicStateReducer'
         ) {
           // console.log('MEM STATE', memoizedState);
-          hooksStates.push({
-            component: memoizedState.queue,
-            state: memoizedProps,
-          });
+          if (Object.entries(memoizedProps).length !== 0) {
+            hooksStates.push({
+              component: memoizedState.queue,
+              state: memoizedProps,
+            });
+          }
+          console.log('MEMOIZED PROPS ------>', memoizedProps);
+          console.log('MEMOIZEDSTATE QUEUE------>', memoizedState.queue);
+          console.log('HOOK STATE ------->', hooksStates);
         }
         memoizedState =
           memoizedState.next !== memoizedState ? memoizedState.next : null;
       }
+
       return hooksStates;
     }
 
@@ -201,20 +210,22 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
         // which includes the dispatch() function we use to change their state.
 
         const hooksStates = traverseRecoilHooks(memoizedState);
+        console.log("HOOK STATE BEFORE LOOPING", hooksStates)
         const hooksNames = getHooksNames(elementType.toString());
         hooksStates.forEach((state, i) => {
+          console.log('STATE IN SAVE NEW LOOP', state);
           hooksIndex = componentActionsRecord.saveNew(
             state.state,
             state.component
           );
           componentData.hooksIndex = hooksIndex;
+
           if (newState && newState.hooksState) {
-            newState.hooksState.push({ [hooksNames[i]]: state.state });
+            newState.push(state.state);
           } else if (newState) {
-            newState.hooksState = [{ [hooksNames[i]]: state.state }];
+            newState = [ state.state ];
           } else {
-            newState = { hooksState: [] };
-            newState.hooksState.push({ [hooksNames[i]]: state.state });
+            newState.push(state.state );
           }
           componentFound = true;
         });
@@ -223,7 +234,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
 
     // Check if node is a hooks useState function
     //REGULAR REACT HOOKS
-    if (memoizedState && (tag === 0 || tag === 1 || tag === 2 || tag === 10)) {
+    if (memoizedState && (tag === 0 || tag === 1 || tag === 2 || tag === 10) && isRecoil === false) {
       if (memoizedState.queue) {
         console.log('Regular Hooks');
         // Hooks states are stored as a linked list using memoizedState.next,
@@ -311,7 +322,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     }
 
     console.log('Fiber', fiberRoot.current);
-    
+
     console.log('SNAP.TREE->', snap.tree);
 
     sendSnapshot();

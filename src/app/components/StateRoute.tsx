@@ -67,9 +67,12 @@ const StateRoute = (props: StateRouteProps) => {
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
-
+  console.log('NORENDER DATA', noRenderData);
   let perfChart;
-  if (!noRenderData) {
+  if (true) {
+    console.log('ViewINDex', viewIndex);
+    console.log('snapshots', snapshots);
+    console.log('setnorenderdata', setNoRenderData);
     perfChart = (
       <PerfView
         viewIndex={viewIndex}
@@ -79,14 +82,15 @@ const StateRoute = (props: StateRouteProps) => {
         height={1000}
       />
     );
-  } else {
-    perfChart = (
-      <div className="no-data-message">
-        Application must be running in development mode in order to view
-        performance data
-      </div>
-    );
   }
+  // else {
+  //   perfChart = (
+  //     <div className="no-data-message">
+  //       Application must be running in development mode in order to view
+  //       performance data
+  //     </div>
+  //   );
+  // }
 
   const renderPerfView = () => <ErrorHandler>{perfChart}</ErrorHandler>;
 
