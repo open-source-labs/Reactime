@@ -104,6 +104,7 @@ export const getHooksNames = (elementType) => {
       // el !== undefined &&
       // Iterate array and determine getter/setters based on pattern
       // console.log('abc');
+      console.log(3);
       statements.forEach((el, i) => {
         if (el.match(/_use/)) hookState[el] = statements[i + 2];
       });
