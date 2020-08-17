@@ -18,9 +18,9 @@ const Map = (props) => {
   // this state allows the canvas to stay at the zoom level on multiple re-renders
   const [{ x, y, k }, setZoomState]: any = useState({ x: 0, y: 0, k: 0 });
 
-  useEffect(() => {
-    setZoomState(d3.zoomTransform(d3.select('#canvas').node()));
-  }, [snapshot]);
+  // useEffect(() => {
+  //   setZoomState(d3.zoomTransform(d3.select('#canvas').node()));
+  // }, [snapshot]);
 
   // this only clears the canvas if Visualizer is already rendered on the extension
   useEffect(() => {
@@ -37,32 +37,38 @@ const Map = (props) => {
       .append('g')
       .attr('transform', `translate(${x}, ${y}), scale(${k})`); // sets the canvas to the saved zoomState
 
-    // atomState is the object that is passed into d3.hierarchy
-    const childrenArr = [];
-    if (snapshot.children[0].state.hooksState) {
-      snapshot.children[0].state.hooksState[0].undefined.forEach((el) =>
-        childrenArr.push(el)
-      );
-    }
-    console.log(childrenArr);
+    //RE-WRITE ALGORITHIM
 
-    const atomState: any = {
+    // appState is the object that is passed into d3.hierarchy
+    // const childrenArr = [];
+    // if (snapshot.children[0].state.hooksState) {
+    //   snapshot.children[0].state.hooksState.forEach((el) =>
+    //     childrenArr.push(el)
+    //   );
+    // }
+    // console.log('CHILDREN', childrenArr);
+
+    const appState: any = {
       name: ' Root',
       // pass in parsed data here
       // call the helper function passing in the most recent snapshot
-      children: childrenArr,
+      children: snapshot.children,
     };
 
-    console.log('STATE', atomState);
+    console.log('STATE', appState);
     // creating the tree map
     const treeMap: any = d3.tree().nodeSize([width, height]);
 
     // creating the nodes of the tree
     // pass
-    const hierarchyNodes: any = d3.hierarchy(atomState);
+    const hierarchyNodes: any = d3.hierarchy(appState);
+
+    console.log('Hierarchy NODES', hierarchyNodes);
 
     // calling the tree function with nodes created from data
     const finalMap: any = treeMap(hierarchyNodes);
+
+    console.log('FINAL MAP', finalMap);
 
     // renders a flat array of objects containing all parent-child links
     // renders the paths onto the component
