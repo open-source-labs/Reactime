@@ -45,7 +45,7 @@ export const throttle = (f, t) => {
 };
 
 // Helper function to grab the getters/setters from `elementType`
-export const getHooksNames = elementType => {
+export const getHooksNames = (elementType) => {
   // Initialize empty object to store the setters and getter
   let ast;
   try {
@@ -65,21 +65,22 @@ export const getHooksNames = elementType => {
      * Other types: "BlockStatement" / "ExpressionStatement" / "ReturnStatement"
      * Iterate through AST of every function declaration
      * Check within each function declaration if there are hook declarations */
-    ast.forEach(functionDec => {
+    ast.forEach((functionDec) => {
       let body;
-      if (functionDec.expression && functionDec.expression.body) body = functionDec.expression.body.body;
+      if (functionDec.expression && functionDec.expression.body)
+        body = functionDec.expression.body.body;
       else body = functionDec.body ? functionDec.body.body : [];
       // Traverse through the function's funcDecs and Expression Statements
-      body.forEach(elem => {
+      body.forEach((elem) => {
         if (elem.type === 'VariableDeclaration') {
-          elem.declarations.forEach(hook => {
+          elem.declarations.forEach((hook) => {
             // * TypeScript hooks appear to have no "VariableDeclarator"
             // * with id.name of _useState, _useState2, etc...
             // * hook.id.type relevant for TypeScript applications
             // *
             // * Works for useState hooks
             if (hook.id.type === 'ArrayPattern') {
-              hook.id.elements.forEach(hook => {
+              hook.id.elements.forEach((hook) => {
                 statements.push(hook.name);
                 // * Unshift a wildcard name to achieve similar functionality as before
                 statements.unshift(`_useWildcard${tsCount}`);
@@ -92,7 +93,9 @@ export const getHooksNames = elementType => {
                   hooksNames[varName] = hook.id.name;
                 }
               }
-              statements.push(hook.id.name);
+              if (hook.id.name !== undefined) {
+                statements.push(hook.id.name);
+              }
             }
           });
         }
