@@ -40,6 +40,7 @@ const PerfView = (props: PerfViewProps) => {
   // snapshots.forEach((snapshot) => snapshot.children[0].children.shift());
   // console.log('SNAPSHOTS -------------------------->', snapshots);
   // Figure out which snapshot index to use
+  
   let indexToDisplay: number | null = null;
   if (viewIndex < 0) indexToDisplay = snapshots.length - 1;
   else indexToDisplay = viewIndex;

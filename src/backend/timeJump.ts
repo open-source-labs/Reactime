@@ -33,36 +33,44 @@ export default (origin, mode) => {
     if (!target) return;
 
     if (target.state === 'stateless') {
-      target.children.forEach(child => jump(child));
+      target.children.forEach((child) => jump(child));
       return;
     }
-    const component = componentActionsRecord.getComponentByIndex(target.componentData.index);
+    const component = componentActionsRecord.getComponentByIndex(
+      target.componentData.index
+    );
     if (component && component.setState) {
-      component.setState(prevState => {
-        Object.keys(prevState).forEach(key => {
-          if (target.state[key] === undefined) {
-            target.state[key] = undefined;
-          }
-        });
-        return target.state;
-        // Iterate through new children after state has been set
-      }, () => target.children.forEach(child => jump(child)));
+      component.setState(
+        (prevState) => {
+          Object.keys(prevState).forEach((key) => {
+            if (target.state[key] === undefined) {
+              target.state[key] = undefined;
+            }
+          });
+          return target.state;
+          // Iterate through new children after state has been set
+        },
+        () => target.children.forEach((child) => jump(child))
+      );
     }
 
     console.log('TARGET', target);
     // Check for hooks state and set it with dispatch()
     if (target.state && target.state.hooksState) {
-      target.state.hooksState.forEach(hook => {
-        const hooksComponent = componentActionsRecord.getComponentByIndex(target.componentData.hooksIndex);
+      target.state.hooksState.forEach((hook) => {
+        const hooksComponent = componentActionsRecord.getComponentByIndex(
+          target.componentData.hooksIndex
+        );
         const hookState = Object.values(hook);
+        console.log('target', target);
         if (hooksComponent && hooksComponent.dispatch) {
-          // console.log('attempt to dispatch this', hooksComponent, hookState[0]);
+
           hooksComponent.dispatch(hookState[0]);
         }
       });
     }
 
-    target.children.forEach(child => {
+    target.children.forEach((child) => {
       if (!circularComponentTable.has(child)) {
         circularComponentTable.add(child);
         jump(child);

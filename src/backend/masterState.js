@@ -6,10 +6,11 @@ import 'core-js';
 
 const componentActionsRecord = {};
 let index = 0;
-
 // module.exports = {
 export default {
   saveNew: (state, component) => {
+  //console.log("COMPONENET ACTION RECORDS",componentActionsRecord)
+
     componentActionsRecord[index] = { state, component };
     index++;
     return index - 1;
