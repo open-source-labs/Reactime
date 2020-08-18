@@ -18,21 +18,7 @@ export default {
     : undefined),
 };
 
-/* const masterState = [];
-const hooksComponentsActions = {};
-
-module.exports = {
-  saveState: state => {
-    for (const key in state) {
-      masterState.push(state[key]);
-    }
-    return masterState;
-  },
-  returnState: () => masterState,
-  saveHooksComponent: stateAndAction => {
-    for (const elementName in stateAndAction) {
-      hooksComponentsActions[elementName] = stateAndAction[elementName];
-    }
-  },
-};
- */
+class twoHaha {
+  private componenActionsRecord : Array<any>;
+  private index = 0; 
+}
