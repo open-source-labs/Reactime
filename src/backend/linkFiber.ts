@@ -59,7 +59,6 @@ const circularComponentTable = new Set();
 
 export default (snap: Snapshot, mode: Mode): (() => void) => {
   let fiberRoot = null;
-
   function sendSnapshot(): void {
     // Don't send messages while jumping or while paused
     if (mode.jumping || mode.paused) return;
