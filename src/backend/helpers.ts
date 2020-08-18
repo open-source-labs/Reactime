@@ -62,7 +62,7 @@ export const getHooksNames = (elementType : string) : Array<string> => {
   while (Object.hasOwnProperty.call(ast, 'body')) {
     let tsCount : number = 0; // Counter for the number of TypeScript hooks seen (to distinguish in masterState)
     ast = ast.body;
-    const statements : Array<any> = [];
+    const statements : Array<string> = [];
 
     /** All module exports always start off as a single 'FunctionDeclaration' type
      * Other types: "BlockStatement" / "ExpressionStatement" / "ReturnStatement"
