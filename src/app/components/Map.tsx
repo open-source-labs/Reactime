@@ -12,15 +12,15 @@ const Map = (props) => {
   console.log('MAP SNAPSHOT', snapshot);
 
   // set the heights and width of the tree to be passed into treeMap function
-  const width: number = 600;
-  const height: number = 1100;
+  const width: number = 1100;
+  const height: number = 600;
 
   // this state allows the canvas to stay at the zoom level on multiple re-renders
   const [{ x, y, k }, setZoomState]: any = useState({ x: 0, y: 0, k: 0 });
 
   useEffect(() => {
     setZoomState(d3.zoomTransform(d3.select('#canvas').node()));
-  }, [snapshot]);
+  }, [snapshot.children]);
 
   // this only clears the canvas if Visualizer is already rendered on the extension
   useEffect(() => {
@@ -31,9 +31,9 @@ const Map = (props) => {
       .select('#canvas')
       .attr('width', width)
       .attr('height', height);
-
     // creating a pseudo-class for reusability
     const g: any = svgContainer
+
       .append('g')
       .attr('transform', `translate(${x}, ${y}), scale(${k})`); // sets the canvas to the saved zoomState
 
@@ -46,13 +46,12 @@ const Map = (props) => {
     //     childrenArr.push(el)
     //   );
     // }
-  
+
     // console.log('CHILDREN', childrenArr);
 
     const appState: any = {
       name: ' Root',
       // pass in parsed data here
-      // call the helper function passing in the most recent snapshot
       children: snapshot.children,
     };
 
@@ -96,6 +95,7 @@ const Map = (props) => {
     // returns a flat array of objects containing all the nodes and their information
     // renders nodes onto the canvas
     let nodes: any = hierarchyNodes.descendants();
+    console.log("NODES",nodes)
 
     // const node is used to create all the nodes
     // this segment places all the nodes on the canvas
@@ -111,13 +111,16 @@ const Map = (props) => {
       .attr('class', 'atomNodes');
 
     // for each node that got created, append a circle element
-    node.append('circle').attr('fill', '#c300ff').attr('r', 50);
+    node
+      .append('circle')
+      .attr('fill', (d: any) => (d.children ? '#3214db' : '#c300ff'))
+      .attr('r', 50);
 
     // for each node that got created, append a text element that displays the name of the node
     node
       .append('text')
       .attr('dy', '.31em')
-      .attr('x', (d: any) => (d.children ? -75 : 75))
+      .attr('x', (d: any) => (d.children ? -50 : 50))
       .attr('text-anchor', (d: any) => (d.children ? 'end' : 'start'))
       .text((d: any) => d.data.name)
       .style('font-size', `2rem`)
@@ -136,9 +139,10 @@ const Map = (props) => {
           .append('text')
           .text(JSON.stringify(d.data, undefined, 2))
           .style('fill', 'white')
-          .attr('x', 75)
-          .attr('y', 60)
+          .attr('x', -999)
+          .attr('y', 100)
           .style('font-size', '3rem')
+          .style('text-align', 'center')
           .attr('stroke', '#646464')
           .attr('id', `popup${i}`);
       }
@@ -166,7 +170,7 @@ const Map = (props) => {
           [0, 0],
           [width, height],
         ])
-        .scaleExtent([0, 8])
+        .scaleExtent([0, 5])
         .on('zoom', zoomed)
     );
 
@@ -192,7 +196,6 @@ const Map = (props) => {
     }
   });
 
-  console.log('208');
   return (
     <div data-testid="canvas">
       <div className="Visualizer">

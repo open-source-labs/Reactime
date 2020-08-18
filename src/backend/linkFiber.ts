@@ -91,6 +91,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
           component: memoizedState.queue,
           state: memoizedState.memoizedState,
         });
+
       }
       memoizedState =
         memoizedState.next !== memoizedState ? memoizedState.next : null;
@@ -177,6 +178,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
               state: memoizedProps,
             });
           }
+
         }
         memoizedState =
           memoizedState.next !== memoizedState ? memoizedState.next : null;
@@ -197,18 +199,29 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
         // which includes the dispatch() function we use to change their state.
         const hooksStates = traverseRecoilHooks(memoizedState);
         hooksStates.forEach((state, i) => {
+
           hooksIndex = componentActionsRecord.saveNew(
             state.state,
             state.component
           );
           componentData.hooksIndex = hooksIndex;
 
+          // if (newState && newState.hooksState) {
+          //   newState.hooksState.push({ [hooksNames[i]]: state.state });
+          // } else if (newState) {
+          //   newState.hooksState = [{ [hooksNames[i]]: state.state }];
+          // } else {
+          //   newState = { hooksState: [] };
+          //   newState.hooksState.push({ [hooksNames[i]]: state.state });
+          // }
+
+          //improves tree visualization but breaks jump
           if (newState && newState.hooksState) {
             newState.push(state.state);
           } else if (newState) {
-            newState = [ state.state ];
+            newState = [state.state];
           } else {
-            newState.push(state.state );
+            newState.push(state.state);
           }
           componentFound = true;
         });
@@ -217,8 +230,13 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
 
     // Check if node is a hooks useState function
     //REGULAR REACT HOOKS
-    if (memoizedState && (tag === 0 || tag === 1 || tag === 2 || tag === 10) && isRecoil === false) {
+    if (
+      memoizedState &&
+      (tag === 0 || tag === 1 || tag === 2 || tag === 10) &&
+      isRecoil === false
+    ) {
       if (memoizedState.queue) {
+
         // Hooks states are stored as a linked list using memoizedState.next,
         // so we must traverse through the list and get the states.
         // We then store them along with the corresponding memoizedState.queue,
@@ -301,6 +319,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       circularComponentTable.clear();
       snap.tree = createTree(current);
     }
+
 
     sendSnapshot();
   }
