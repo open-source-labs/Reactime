@@ -8,6 +8,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import * as d3 from 'd3';
 
 const Map = (props) => {
+  // Current snapshot
   const { snapshot } = props;
   console.log('MAP SNAPSHOT', snapshot);
 
@@ -17,13 +18,19 @@ const Map = (props) => {
 
   // this state allows the canvas to stay at the zoom level on multiple re-renders
   const [{ x, y, k }, setZoomState]: any = useState({ x: 0, y: 0, k: 0 });
-
   useEffect(() => {
     setZoomState(d3.zoomTransform(d3.select('#canvas').node()));
   }, [snapshot.children]);
 
-  // this only clears the canvas if Visualizer is already rendered on the extension
+  // Create D3 Tree Diagram 
   useEffect(() => {
+
+    const appState: any = {
+      name: ' Root',
+      children: snapshot.children,
+    };
+    console.log('STATE', appState);
+
     document.getElementById('canvas').innerHTML = '';
 
     // creating the main svg container for d3 elements
@@ -31,51 +38,27 @@ const Map = (props) => {
       .select('#canvas')
       .attr('width', width)
       .attr('height', height);
+
     // creating a pseudo-class for reusability
     const g: any = svgContainer
-
       .append('g')
       .attr('transform', `translate(${x}, ${y}), scale(${k})`); // sets the canvas to the saved zoomState
 
-    //RE-WRITE ALGORITHIM For All Possible Snapshot Formats
-
-    // appState is the object that is passed into d3.hierarchy
-    // const childrenArr = [];
-    // if (snapshot.children[0].state.hooksState) {
-    //   snapshot.children[0].state.hooksState.forEach((el) =>
-    //     childrenArr.push(el)
-    //   );
-    // }
-
-    // console.log('CHILDREN', childrenArr);
-
-    const appState: any = {
-      name: ' Root',
-      // pass in parsed data here
-      children: snapshot.children,
-    };
-
-    console.log('STATE', appState);
+   
     // creating the tree map
     const treeMap: any = d3.tree().nodeSize([width, height]);
 
     // creating the nodes of the tree
-    // pass
     const hierarchyNodes: any = d3.hierarchy(appState);
-
-    console.log('Hierarchy NODES', hierarchyNodes);
 
     // calling the tree function with nodes created from data
     const finalMap: any = treeMap(hierarchyNodes);
 
-    console.log('FINAL MAP', finalMap);
-
     // renders a flat array of objects containing all parent-child links
     // renders the paths onto the component
     let paths: any = finalMap.links();
-    console.log('PATHS', paths);
 
-    // this creates the paths to each atom and its contents in the tree
+    // this creates the paths to each node and its contents in the tree
     g.append('g')
       .attr('fill', 'none')
       .attr('stroke', '#646464')
@@ -93,11 +76,8 @@ const Map = (props) => {
       );
 
     // returns a flat array of objects containing all the nodes and their information
-    // renders nodes onto the canvas
     let nodes: any = hierarchyNodes.descendants();
-    console.log("NODES",nodes)
 
-    // const node is used to create all the nodes
     // this segment places all the nodes on the canvas
     const node: any = g
       .append('g')
@@ -130,8 +110,7 @@ const Map = (props) => {
       .attr('stroke', '#646464')
       .attr('stroke-width', 2);
 
-    // adding a mouseOver event handler to each node
-    // only add popup text on nodes with no children
+
     // display the data in the node on hover
     node.on('mouseover', function (d: any, i: number): any {
       if (!d.children) {
