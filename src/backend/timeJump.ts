@@ -49,7 +49,7 @@ export default (origin, mode) => {
       }, () => target.children.forEach(child => jump(child)));
     }
 
-    console.log('TARGET', target);
+    // console.log('TARGET', target);
     // Check for hooks state and set it with dispatch()
     if (target.state && target.state.hooksState) {
       target.state.hooksState.forEach(hook => {

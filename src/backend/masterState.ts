@@ -3,7 +3,15 @@ import 'core-js';
 /* eslint-disable no-plusplus */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
-const componentActionsRecord : Array<any> = [];
+
+// import {Hook}
+import {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  HookStateItem,
+  HookStates
+} from './types/backendTypes';
+
+const componentActionsRecord: HookStates = [];
 let index : number = 0;
 
 export default {
@@ -12,8 +20,8 @@ export default {
     index++;
     return index - 1;
   },
-  getRecordByIndex: (inputIndex : number) : any => componentActionsRecord[inputIndex],
-  getComponentByIndex: (inputIndex: number) : any => (componentActionsRecord[inputIndex]
+  getRecordByIndex: (inputIndex: number): HookStateItem => componentActionsRecord[inputIndex],
+  getComponentByIndex: (inputIndex: number): any => (componentActionsRecord[inputIndex]
     ? componentActionsRecord[inputIndex].component
     : undefined),
 };
