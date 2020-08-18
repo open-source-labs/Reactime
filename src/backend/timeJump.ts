@@ -49,12 +49,14 @@ export default (origin, mode) => {
       }, () => target.children.forEach(child => jump(child)));
     }
 
+    console.log('TARGET', target);
     // Check for hooks state and set it with dispatch()
     if (target.state && target.state.hooksState) {
       target.state.hooksState.forEach(hook => {
         const hooksComponent = componentActionsRecord.getComponentByIndex(target.componentData.hooksIndex);
         const hookState = Object.values(hook);
         if (hooksComponent && hooksComponent.dispatch) {
+          // console.log('attempt to dispatch this', hooksComponent, hookState[0]);
           hooksComponent.dispatch(hookState[0]);
         }
       });

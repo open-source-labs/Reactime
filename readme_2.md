@@ -3,12 +3,12 @@ This documentation explains the architecture of Reactime v4.
 
 ![demo](./AppStructureDiagram.png)
 
-In the src folder, there are three directory: app, backend, and extension. 
+In the src folder, there are three directories: app, backend, and extension. 
 
 
-The app folder is responsible a SPA application that you see when you open the chrome dev tools under the reactime tab. 
+The app folder is responsible a SPA that you see when you open the chrome dev tools under the Reactime tab. 
 
-The backend folder is responsible for generating data and handle time jump request from the background.js scripts in extension. 
+The backend folder is responsible for generating data and handle time-jump request from the background.js scripts in extension. 
 
 The extension folder is where the contentscript.js and background.js located. These two files belongs to Chrome internal to help us handle requests both from the web browser and from the chrome dev tools. Unsure what contentscripts and backgroundscripts are? The details implementation are documented in the files themselves. 
 
@@ -25,7 +25,7 @@ Just to reiterate, contentscript is use to read and modify information that is r
 
 The general flow of data is described in the following steps:
 
-1. When the background bundle is loaded from the browser, it injects a script into the dom. This script uses a technique called [throttle](https://medium.com/@bitupon.211/debounce-and-throttle-160affa5457b) to get the data of the state to send to the contentscript every specified miliseconds.
+1. When the background bundle is loaded from the browser, it injects a script into the dom. This script uses a technique called [throttle](https://medium.com/@bitupon.211/debounce-and-throttle-160affa5457b) to get the data of the state of the app to send to the contentscript every specified miliseconds (in our case, it's 70ms).
 
 
 2. This contentscript always listens to the messages being sent from the interface of the browser. The recieved data will immediately be sent to the background script which then update an object that persist in background script called **tabsObj**. Each time tabsObj is updated, the most recent version will be sent to the interface of reactime dev tools written the app folder.
