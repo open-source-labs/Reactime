@@ -28,7 +28,6 @@ export const throttle = (f : Function, t: number) : Function => {
     f();
     isOnCooldown = true;
     isCallQueued = false;
-    console.log(5);
     const runAfterTimeout = () : any => {
       if (isCallQueued) {
         isCallQueued = false;
