@@ -54,6 +54,7 @@ export default (origin, mode) => {
       );
     }
 
+    console.log('TARGET', target);
     // Check for hooks state and set it with dispatch()
     if (target.state && target.state.hooksState) {
       target.state.hooksState.forEach((hook) => {
@@ -63,8 +64,7 @@ export default (origin, mode) => {
         const hookState = Object.values(hook);
         console.log('target', target);
         if (hooksComponent && hooksComponent.dispatch) {
-          console.log('HOOKS COMPONENT', hooksComponent);
-          console.log('HOOKS STATE of Zero', hookState[0]);
+
           hooksComponent.dispatch(hookState[0]);
         }
       });

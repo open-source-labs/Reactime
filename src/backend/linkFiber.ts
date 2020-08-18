@@ -36,7 +36,7 @@ import 'core-js';
 
 // const Tree = require('./tree').default;
 // const componentActionsRecord = require('./masterState');
-
+import { useGotoRecoilSnapshot, RecoilRoot, useRecoilSnapshot } from 'recoil';
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Snapshot,
@@ -48,6 +48,7 @@ import {
 import Tree from './tree';
 import componentActionsRecord from './masterState';
 import { throttle, getHooksNames } from './helpers';
+import ReactDOM from 'react-dom';
 
 declare global {
   interface Window {
@@ -58,7 +59,6 @@ declare global {
 let doWork = true;
 const circularComponentTable = new Set();
 
-// module.exports = (snap, mode) => {
 export default (snap: Snapshot, mode: Mode): (() => void) => {
   let fiberRoot = null;
 
@@ -94,9 +94,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
           component: memoizedState.queue,
           state: memoizedState.memoizedState,
         });
-        //console.log('MEMOIZED PROPS ------>', memoizedProps);
-        // console.log('MEMOIZEDSTATE QUEUE------>', memoizedState.queue);
-        // console.log('HOOK STATE ------->', hooksStates);
+
       }
       memoizedState =
         memoizedState.next !== memoizedState ? memoizedState.next : null;
@@ -155,7 +153,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     }
 
     let hooksIndex;
-    // RECOIL
     let isRecoil = false;
 
     if (window[`$recoilDebugStates`]) {
@@ -170,7 +167,8 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     //   });
     atomArray.push(memoizedProps);
 
-    //console.log('1st ATOM ARRAY', atomArray);
+
+    // console.log('1st ATOM ARRAY', atomArray);
 
     function traverseRecoilHooks(memoizedState: any): HookStates {
       const hooksStates: HookStates = [];
@@ -180,7 +178,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
           memoizedState.queue.lastRenderedReducer &&
           memoizedState.queue.lastRenderedReducer.name === 'basicStateReducer'
         ) {
-          // console.log('MEM STATE', memoizedState);
           if (Object.entries(memoizedProps).length !== 0) {
             hooksStates.push({
               component: memoizedState.queue,
@@ -188,9 +185,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
             });
           }
 
-          // console.log('MEMOIZED PROPS ------>', memoizedProps);
-          // console.log('MEMOIZEDSTATE QUEUE------>', memoizedState.queue);
-          // console.log('HOOK STATE ------->', hooksStates);
         }
         memoizedState =
           memoizedState.next !== memoizedState ? memoizedState.next : null;
@@ -211,10 +205,10 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
         // which includes the dispatch() function we use to change their state.
 
         const hooksStates = traverseRecoilHooks(memoizedState);
-       // console.log('HOOK STATE BEFORE LOOPING', hooksStates);
+
         const hooksNames = getHooksNames(elementType.toString());
         hooksStates.forEach((state, i) => {
-         // console.log('STATE IN SAVE NEW LOOP', state);
+
           hooksIndex = componentActionsRecord.saveNew(
             state.state,
             state.component
@@ -251,7 +245,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       isRecoil === false
     ) {
       if (memoizedState.queue) {
-        //console.log('Regular Hooks');
+
         // Hooks states are stored as a linked list using memoizedState.next,
         // so we must traverse through the list and get the states.
         // We then store them along with the corresponding memoizedState.queue,
@@ -278,7 +272,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     }
 
     // This grabs stateless components
-
     if (!componentFound && (tag === 0 || tag === 1 || tag === 2)) {
       newState = 'stateless';
     }
@@ -336,9 +329,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       snap.tree = createTree(current);
     }
 
-    // console.log('Fiber', fiberRoot.current);
-
-    // console.log('SNAP.TREE->', snap.tree);
 
     sendSnapshot();
   }
@@ -364,11 +354,10 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
 
-    console.log('FIBER ROOT', fiberRoot.current);
+    // console.log('FIBER ROOT', fiberRoot.current);
 
     const throttledUpdateSnapshot = throttle(updateSnapShotTree, 70);
     document.addEventListener('visibilitychange', onVisibilityChange);
-
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
