@@ -100,8 +100,7 @@ export const getHooksNames = (elementType) => {
           });
         }
       });
-
-      // Iterate array and determine getter/setters based on pattern
+      
       statements.forEach((el, i) => {
         if (el.match(/_use/)) hookState[el] = statements[i + 2];
       });

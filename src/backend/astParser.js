@@ -45,13 +45,19 @@ module.exports = elementType => {
                 tsCount += 1;
               });
             } else statements.push(hook.id.name);
+
+            // if (hook.id.name !== undefined){
+            //   statements.push(hook.id.name);
+            // }
+
           });
         }
       });
+      console.log(statements);
 
       // Iterate array and determine getter/setters based on pattern
       statements.forEach((el, i) => {
-        if (el.match(/_use/)) hookState[el] = statements[i + 2];
+        if (el !== undefined && el.match(/_use/)) hookState[el] = statements[i + 2];
       });
     });
   }
