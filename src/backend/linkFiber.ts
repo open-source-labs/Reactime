@@ -36,7 +36,6 @@ import 'core-js';
 
 // const Tree = require('./tree').default;
 // const componentActionsRecord = require('./masterState');
-import { useGotoRecoilSnapshot, RecoilRoot, useRecoilSnapshot } from 'recoil';
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Snapshot,
@@ -48,7 +47,6 @@ import {
 import Tree from './tree';
 import componentActionsRecord from './masterState';
 import { throttle, getHooksNames } from './helpers';
-import ReactDOM from 'react-dom';
 
 declare global {
   interface Window {
@@ -61,7 +59,6 @@ const circularComponentTable = new Set();
 
 export default (snap: Snapshot, mode: Mode): (() => void) => {
   let fiberRoot = null;
-
   function sendSnapshot(): void {
     // Don't send messages while jumping or while paused
     if (mode.jumping || mode.paused) return;
@@ -167,9 +164,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     //   });
     atomArray.push(memoizedProps);
 
-
-    // console.log('1st ATOM ARRAY', atomArray);
-
     function traverseRecoilHooks(memoizedState: any): HookStates {
       const hooksStates: HookStates = [];
       while (memoizedState && memoizedState.queue) {
@@ -203,10 +197,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
         // so we must traverse through the list and get the states.
         // We then store them along with the corresponding memoizedState.queue,
         // which includes the dispatch() function we use to change their state.
-
         const hooksStates = traverseRecoilHooks(memoizedState);
-
-        const hooksNames = getHooksNames(elementType.toString());
         hooksStates.forEach((state, i) => {
 
           hooksIndex = componentActionsRecord.saveNew(
@@ -353,8 +344,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-
-    // console.log('FIBER ROOT', fiberRoot.current);
 
     const throttledUpdateSnapshot = throttle(updateSnapShotTree, 70);
     document.addEventListener('visibilitychange', onVisibilityChange);
