@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Tree from '../tree';
 
+
 export interface Snapshot {
   tree: Tree;
   unfilteredTree: null;
@@ -38,7 +39,7 @@ export interface ComponentData {
   treeBaseDuration?: number;
 }
 
-interface HookStateItem {
+export interface HookStateItem {
   state: any;
   component: any;
 }
