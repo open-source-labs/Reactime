@@ -54,7 +54,7 @@ export default (origin, mode) => {
       );
     }
 
-    console.log('TARGET', target);
+    // console.log('TARGET', target);
     // Check for hooks state and set it with dispatch()
     if (target.state && target.state.hooksState) {
       target.state.hooksState.forEach((hook) => {
