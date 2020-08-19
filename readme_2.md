@@ -25,7 +25,6 @@ src/
 │   │                         #
 │   ├── __tests__/            #
 │   ├── types/                # Typescript interfaces
-│   ├── astParser.js          # TODO: Remove? Duplicate in helpers.js.
 │   ├── helpers.js            # 
 │   ├── index.ts              # Starting point for backend functionality 
 │   ├── index.d.ts            # 
@@ -96,4 +95,4 @@ The general flow of data is described in the following steps:
 2. The content script always listens for messages being passed from the extension's target application. Upon receiving data from the target app, the content script will immediately forward this data to the background script which then updates an object called `tabsObj`. Each time `tabsObj` is updated, its latest version will be passed to Reactime, where it is processed for displaying to the user by the *app* folder scripts.
 
 3. Likewise, when Reactime emits an action due to user interaction -- a "jump" request for example --  a message will be passed from Reactime via the background script to the content script. Then, the content script will pass a message to the target application containing a payload that represents the state the user wants the DOM to reflect or "jump" to.
-    - One important thing to note here is that this jump action must be dispatched in *backend* land, because only there do we have direct access to the DOM.
+    - One important thing to note here is that this jump action must be dispatched in the target application (i.e. *backend* land), because only there do we have direct access to the DOM.
