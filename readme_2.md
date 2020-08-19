@@ -9,6 +9,7 @@ In the *src* folder, there are three directories we care about: *app*, *backend*
 ```
 src/
 ├── app/                      # Frontend code
+│   │                         #
 │   ├── __tests__/            #
 │   ├── actions/              # Redux action creators
 │   ├── components/           # React components
@@ -21,6 +22,7 @@ src/
 │   └── store.tsx             #
 │
 ├── backend/                  # "Backend" code
+│   │                         #
 │   ├── __tests__/            #
 │   ├── types/                # Typescript interfaces
 │   ├── astParser.js          # TODO: Remove? Duplicate in helpers.js.
@@ -37,7 +39,7 @@ src/
 │   └── tree.ts               # Custom structure to send to background
 │
 ├── extension/                # Chrome Extension code
-│   │
+│   │                         #
 │   ├── build/                # Destination for bundles
 │   │                         # and manifest.json (Chrome config file)
 │   │                         #
@@ -56,8 +58,8 @@ src/
     - These two files help us handle requests both from the web browser and from the Reactime extension itself
 
 Still unsure about what contents scripts and background scripts do for Reactime, or for a chrome extensions in general?
-The implementation details [can be found](./src/extension/background.js) [in the files](./src/extension/contentScript.ts) themselves.<br />
-We also encourage you to dive into [the official Chrome Developer Docs](https://developer.chrome.com/home).<br />Some relevant sections are reproduced below:
+  - The implementation details [can be found](./src/extension/background.js) [in the files](./src/extension/contentScript.ts) themselves.
+  - We also encourage you to dive into [the official Chrome Developer Docs](https://developer.chrome.com/home). Some relevant sections are reproduced below:
 
 > Content scripts are files that run in the context of web pages. 
 >
@@ -89,8 +91,9 @@ The general flow of data is described in the following steps:
 
 ![demo](./AppStructureDiagram.png)
 
-1. When the background bundle is loaded by the browser, it executes a script injection into the dom. (see previous section on the backend folder) This script uses a technique called [throttle](https://medium.com/@bitupon.211/debounce-and-throttle-160affa5457b) to get the data of the state of the app to send to the content script every specified miliseconds (in our case, this interval is 70ms).
+1. When the background bundle is loaded by the browser, it executes a script injection into the dom. (see section on *backend*). This script uses a technique called [throttle](https://medium.com/@bitupon.211/debounce-and-throttle-160affa5457b) to send state data from the app to the content script every specified milliseconds (in our case, this interval is 70ms).
 
-2. This content script always listens for messages being sent from the interface of the browser. The received data will immediately be sent to the background script which then updates an object it persists called `tabsObj`. Each time tabsObj is updated, the most recent version will be sent to the interface of reactime dev tools written the *app* folder.
+2. The content script always listens for messages being passed from the extension's target application. Upon receiving data from the target app, the content script will immediately forward this data to the background script which then updates an object called `tabsObj`. Each time `tabsObj` is updated, its latest version will be passed to Reactime, where it is processed for displaying to the user by the *app* folder scripts.
 
-3. Likewise, when there an action is emitted from Reactime -- a "jump" request for example --  a request will be made to the background script which is proxied over to the content script. This content script will talk to the browser interface to request the *state* that the user wants to jump to. One important thing to note here is that the jump action will be dispatched in backend script land, because it has direct access to the DOM.
+3. Likewise, when Reactime emits an action due to user interaction -- a "jump" request for example --  a message will be passed from Reactime via the background script to the content script. Then, the content script will pass a message to the target application containing a payload that represents the state the user wants the DOM to reflect or "jump" to.
+    - One important thing to note here is that this jump action must be dispatched in *backend* land, because only there do we have direct access to the DOM.
