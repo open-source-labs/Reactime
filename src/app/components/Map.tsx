@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/ban-types */
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 
 const Map = (props) => {
@@ -93,7 +93,7 @@ const Map = (props) => {
     // for each node that got created, append a circle element
     node
       .append('circle')
-      .attr('fill', (d: any) => (d.children ? '#3214db' : '#c300ff'))
+      .attr('fill', (d: any) => (d.children ? '#95B6B7' : '#46edf2'))
       .attr('r', 50);
 
     // for each node that got created, append a text element that displays the name of the node
