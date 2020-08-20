@@ -261,6 +261,8 @@ class Chart extends Component {
     function zoomed(d: any) {
       g.attr('transform', d3.event.transform);
     }
+
+    // Drag
     function dragstarted() {
       d3.select(this).raise();
       g.attr('cursor', 'grabbing');
