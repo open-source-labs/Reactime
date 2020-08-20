@@ -142,16 +142,24 @@ const Map = (props) => {
     );
 
     // allows the canvas to be zoom-able
-    svgContainer.call(
-      d3
-        .zoom()
-        .extent([
-          [0, 0],
-          [width, height],
-        ])
-        .scaleExtent([0, 5])
-        .on('zoom', zoomed)
-    );
+ // d3 zoom functionality
+ let zoom = d3.zoom().on('zoom', zoomed);
+ svgContainer.call(
+   zoom.transform,
+   // Changes the initial view, (left, top)
+   d3.zoomIdentity.translate(150, 250).scale(0.2),
+ );
+ // allows the canvas to be zoom-able
+ svgContainer.call(
+   d3
+     .zoom()
+     .scaleExtent([0.05, 0.9]) // [zoomOut, zoomIn]
+     .on('zoom', zoomed),
+ );
+ // helper function that allows for zooming
+ function zoomed(d: any) {
+   g.attr('transform', d3.event.transform);
+ }
 
     // helper functions that help with dragging functionality
     function dragStarted(): any {
@@ -169,10 +177,7 @@ const Map = (props) => {
       g.attr('cursor', 'grab');
     }
 
-    // helper function that allows for zooming
-    function zoomed(): any {
-      g.attr('transform', d3.event.transform);
-    }
+    
   });
 
   return (

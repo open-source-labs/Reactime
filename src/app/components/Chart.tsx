@@ -84,13 +84,13 @@ class Chart extends Component {
     // };
     const width = 600; // - margin.right - margin.left;
     const height = 600; // 700 - margin.top - margin.bottom;
-    const chartContainer = d3
+    const svgContainer = d3
       .select(this.chartRef.current)
-      .append('svg') // chartContainer is now pointing to svg
+      .append('svg') // svgContainer is now pointing to svg
       .attr('width', width)
       .attr('height', height);
 
-    const g = chartContainer
+    const g = svgContainer
       .append('g')
       // this is changing where the graph is located physically
       .attr('transform', `translate(${width / 2 + 4}, ${height / 2 + 2})`);
@@ -159,21 +159,6 @@ class Chart extends Component {
         return colors[indexColors];
       })
       .attr('class', 'node--internal')
-      // })
-      //  assigning class to the node based on whether node has children or not
-      // .attr('class', function (d) {
-      //   return 'node' + (d.children ? ' node--internal' : ' node--leaf');
-      // })
-      // .style('fill', function (d) {
-
-      //   if (loadTime!== undefined ){
-
-      //     if (loadTime > 16){
-      //     return '#ff0000'
-      //     }
-      //   }
-
-      // })
       .attr('transform', function (d: { x: number; y: number }) {
         return 'translate(' + reinfeldTidierAlgo(d.x, d.y) + ')';
       });
@@ -258,17 +243,24 @@ class Chart extends Component {
         .on('end', dragended)
     );
 
-    chartContainer.call(
+    // d3 zoom functionality
+    let zoom = d3.zoom().on('zoom', zoomed);
+    svgContainer.call(
+      zoom.transform,
+      // Changes the initial view, (left, top)
+      d3.zoomIdentity.translate(width/2, height/2).scale(1)
+    );
+    // allows the canvas to be zoom-able
+    svgContainer.call(
       d3
         .zoom()
-        .extent([
-          [0, 0],
-          [width, height],
-        ])
-        .scaleExtent([0, 8]) // scaleExtent([minimum scale factor, maximum scale factor])
+        .scaleExtent([0, 0.9]) // [zoomOut, zoomIn]
         .on('zoom', zoomed)
     );
-
+    // helper function that allows for zooming
+    function zoomed(d: any) {
+      g.attr('transform', d3.event.transform);
+    }
     function dragstarted() {
       d3.select(this).raise();
       g.attr('cursor', 'grabbing');
@@ -282,10 +274,6 @@ class Chart extends Component {
 
     function dragended() {
       g.attr('cursor', 'grab');
-    }
-
-    function zoomed() {
-      g.attr('transform', d3.event.transform);
     }
 
     // define the div for the tooltip
