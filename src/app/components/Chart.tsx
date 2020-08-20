@@ -30,8 +30,6 @@ const filterHooks = (data: any[]) => {
   return JSON.stringify(data[0].state);
 };
 
-//const filterRecoil = (data: any[]) => {};
-
 interface ChartProps {
   hierarchy: Record<string, unknown>;
 }
@@ -76,14 +74,9 @@ class Chart extends Component {
    */
   maked3Tree(): void {
     this.removed3Tree();
-    // const margin = {
-    //   top: 0,
-    //   right: 60,
-    //   bottom: 200,
-    //   left: 120,
-    // };
-    const width = 600; // - margin.right - margin.left;
-    const height = 600; // 700 - margin.top - margin.bottom;
+  
+    const width = 800; 
+    const height = 600; 
     const svgContainer = d3
       .select(this.chartRef.current)
       .append('svg') // svgContainer is now pointing to svg
