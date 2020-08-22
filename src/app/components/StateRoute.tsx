@@ -43,7 +43,7 @@ const StateRoute = (props: StateRouteProps) => {
   //Test Map
   const renderMap = () => {
     if (hierarchy) {
-      return <Map snapshot={snapshot} snapshots={snapshots} />;
+      return <Map snapshots={snapshots} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
@@ -83,7 +83,7 @@ const StateRoute = (props: StateRouteProps) => {
       />
     );
   }
-  
+
   //This will intermitently block Recoil PerfCharts from rendering
   // else {
   //   perfChart = (

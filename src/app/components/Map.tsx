@@ -8,9 +8,8 @@ import React, { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 
 const Map = (props) => {
- 
-  const { snapshot, snapshots} = props;
-  const lastSnap = snapshots.length -1
+  const { snapshots } = props;
+  const lastSnap = snapshots.length - 1;
 
   // set the heights and width of the tree to be passed into treeMap function
   const width: number = 900;
@@ -20,11 +19,10 @@ const Map = (props) => {
   const [{ x, y, k }, setZoomState]: any = useState({ x: 0, y: 0, k: 0 });
   useEffect(() => {
     setZoomState(d3.zoomTransform(d3.select('#canvas').node()));
-  }, [snapshot.children]);
+  }, [snapshots[lastSnap]]);
 
   // Create D3 Tree Diagram
   useEffect(() => {
-
     document.getElementById('canvas').innerHTML = '';
 
     // creating the main svg container for d3 elements
@@ -136,11 +134,11 @@ const Map = (props) => {
     // allows the canvas to be zoom-able
     // d3 zoom functionality
     let zoom = d3.zoom().on('zoom', zoomed);
-    svgContainer.call(
-      zoom.transform,
-      // Changes the initial view, (left, top)
-      d3.zoomIdentity.translate(150, 250).scale(0.2)
-    );
+    // svgContainer.call(
+    //   zoom.transform,
+    //   // Changes the initial view, (left, top)
+    //   d3.zoomIdentity.translate(150, 250).scale(0.2)
+    // );
     // allows the canvas to be zoom-able
     svgContainer.call(
       d3
@@ -168,6 +166,9 @@ const Map = (props) => {
     function dragEnded(): any {
       g.attr('cursor', 'grab');
     }
+
+
+  
   });
 
   return (
