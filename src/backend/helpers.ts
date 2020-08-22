@@ -16,10 +16,10 @@ const JSXParser = acorn.Parser.extend(jsx());
 
 // Returns a throttled version of an input function
 // The returned throttled function only executes at most once every t milliseconds
-export const throttle = (f : Function, t: number) : Function => {
-  let isOnCooldown : boolean = false;
-  let isCallQueued : boolean = false;
-  const throttledFunc = () : any => {
+export const throttle = (f: Function, t: number): Function => {
+  let isOnCooldown: boolean = false;
+  let isCallQueued: boolean = false;
+  const throttledFunc = (): any => {
     if (isOnCooldown && isCallQueued) return;
     if (isOnCooldown) {
       isCallQueued = true;
@@ -28,7 +28,7 @@ export const throttle = (f : Function, t: number) : Function => {
     f();
     isOnCooldown = true;
     isCallQueued = false;
-    const runAfterTimeout = () : any => {
+    const runAfterTimeout = (): any => {
       if (isCallQueued) {
         isCallQueued = false;
         isOnCooldown = true; // not needed I think
@@ -44,9 +44,9 @@ export const throttle = (f : Function, t: number) : Function => {
 };
 
 // Helper function to grab the getters/setters from `elementType`
-export const getHooksNames = (elementType : string) : Array<string> => {
+export const getHooksNames = (elementType: string): Array<string> => {
   // Initialize empty object to store the setters and getter
-  let ast : any;
+  let ast: any;
   try {
     ast = JSXParser.parse(elementType);
   } catch (e) {
@@ -59,23 +59,23 @@ export const getHooksNames = (elementType : string) : Array<string> => {
   const hooksNames: any = {};
 
   while (Object.hasOwnProperty.call(ast, 'body')) {
-    let tsCount : number = 0; // Counter for the number of TypeScript hooks seen (to distinguish in masterState)
+    let tsCount: number = 0; // Counter for the number of TypeScript hooks seen (to distinguish in masterState)
     ast = ast.body;
-    const statements : Array<string> = [];
+    const statements: Array<string> = [];
 
     /** All module exports always start off as a single 'FunctionDeclaration' type
      * Other types: "BlockStatement" / "ExpressionStatement" / "ReturnStatement"
      * Iterate through AST of every function declaration
      * Check within each function declaration if there are hook declarations */
     ast.forEach((functionDec) => {
-      let body : any;
+      let body: any;
       if (functionDec.expression && functionDec.expression.body)
         body = functionDec.expression.body.body;
       else body = functionDec.body ? functionDec.body.body : [];
       // Traverse through the function's funcDecs and Expression Statements
-      body.forEach((elem : any) => {
+      body.forEach((elem: any) => {
         if (elem.type === 'VariableDeclaration') {
-          elem.declarations.forEach((hook : any) => {
+          elem.declarations.forEach((hook: any) => {
             // * TypeScript hooks appear to have no "VariableDeclarator"
             // * with id.name of _useState, _useState2, etc...
             // * hook.id.type relevant for TypeScript applications
@@ -83,14 +83,13 @@ export const getHooksNames = (elementType : string) : Array<string> => {
             // * Works for useState hooks
             if (hook.id.type === 'ArrayPattern') {
               hook.id.elements.forEach((hook) => {
+                statements.push(`_useWildcard${tsCount}`);
                 statements.push(hook.name);
-                // * Unshift a wildcard name to achieve similar functionality as before
-                statements.unshift(`_useWildcard${tsCount}`);
                 tsCount += 1;
               });
             } else {
               if (hook.init.object && hook.init.object.name) {
-                const varName : any = hook.init.object.name;
+                const varName: any = hook.init.object.name;
                 if (!hooksNames[varName] && varName.match(/_use/)) {
                   hooksNames[varName] = hook.id.name;
                 }
@@ -104,9 +103,10 @@ export const getHooksNames = (elementType : string) : Array<string> => {
       });
 
       statements.forEach((el, i) => {
-        if (el.match(/_use/)) hookState[el] = statements[i + 2];
+        if (el.match(/_use/)) hooksNames[el] = statements[i + 1];
       });
     });
   }
+
   return Object.values(hooksNames);
 };
