@@ -15,7 +15,7 @@ import Tree from './Tree';
 import Map from './Map';
 import PerfView from './PerfView';
 
-const Chart = require('./Chart').default;
+const History = require('./History').default;
 
 const ErrorHandler = require('./ErrorHandler').default;
 
@@ -51,9 +51,9 @@ const StateRoute = (props: StateRouteProps) => {
   // the hierarchy gets set on the first click in the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
   // if true involk render chart with hierarchy
-  const renderChart = () => {
+  const renderHistory = () => {
     if (hierarchy) {
-      return <Chart hierarchy={hierarchy} />;
+      return <History hierarchy={hierarchy} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
@@ -67,7 +67,7 @@ const StateRoute = (props: StateRouteProps) => {
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
-  console.log('NORENDER DATA', noRenderData);
+
   let perfChart;
   if (true) {
     console.log('ViewINDex', viewIndex);
@@ -110,7 +110,7 @@ const StateRoute = (props: StateRouteProps) => {
         <NavLink
           className="router-link"
           activeClassName="is-active"
-          to="/chart"
+          to="/history"
         >
           History
         </NavLink>
@@ -127,7 +127,7 @@ const StateRoute = (props: StateRouteProps) => {
       </div>
       <Switch>
         <Route path="/map" render={renderMap} />
-        <Route path="/chart" render={renderChart} />
+        <Route path="/history" render={renderHistory} />
         <Route path="/performance" render={renderPerfView} />
         <Route path="/" render={renderTree} />
       </Switch>
