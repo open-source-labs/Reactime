@@ -40,16 +40,14 @@ const Map = (props) => {
 
     // creating the tree map
     const treeMap: any = d3.tree().nodeSize([width, height]);
-
     // creating the nodes of the tree
     const hierarchyNodes: any = d3.hierarchy(snapshots[lastSnap]);
-
     // calling the tree function with nodes created from data
     const finalMap: any = treeMap(hierarchyNodes);
-
-    // renders a flat array of objects containing all parent-child links
     // renders the paths onto the component
     let paths: any = finalMap.links();
+    // returns a flat array of objects containing all the nodes and their information
+    let nodes: any = hierarchyNodes.descendants();
 
     // this creates the paths to each node and its contents in the tree
     g.append('g')
@@ -68,8 +66,7 @@ const Map = (props) => {
           .y((d: any) => d.x)
       );
 
-    // returns a flat array of objects containing all the nodes and their information
-    let nodes: any = hierarchyNodes.descendants();
+  
 
     // this segment places all the nodes on the canvas
     const node: any = g
@@ -124,6 +121,31 @@ const Map = (props) => {
       d3.select(`#popup${i}`).remove();
     });
 
+    
+
+    //______________ZOOM______________\\
+
+    // Sets starting zoom but breaks keeping currents zoom on state change
+
+    // let zoom = d3.zoom().on('zoom', zoomed);
+    // svgContainer.call(
+    //   zoom.transform,
+    //   // Changes the initial view, (left, top)
+    //   d3.zoomIdentity.translate(150, 250).scale(0.2)
+    // );
+
+    // allows the canvas to be zoom-able
+    svgContainer.call(
+      d3
+        .zoom()
+        .scaleExtent([0.05, 0.9]) // [zoomOut, zoomIn]
+        .on('zoom', zoomed)
+    );
+    function zoomed(d: any) {
+      g.attr('transform', d3.event.transform);
+    }
+
+    //_____________DRAG_____________\\
     // allows the canvas to be draggable
     node.call(
       d3
@@ -133,38 +155,15 @@ const Map = (props) => {
         .on('end', dragEnded)
     );
 
-    // allows the canvas to be zoom-able
-    // d3 zoom functionality
-    let zoom = d3.zoom().on('zoom', zoomed);
-    svgContainer.call(
-      zoom.transform,
-      // Changes the initial view, (left, top)
-      d3.zoomIdentity.translate(150, 250).scale(0.2)
-    );
-    // allows the canvas to be zoom-able
-    svgContainer.call(
-      d3
-        .zoom()
-        .scaleExtent([0.05, 0.9]) // [zoomOut, zoomIn]
-        .on('zoom', zoomed)
-    );
-    // helper function that allows for zooming
-    function zoomed(d: any) {
-      g.attr('transform', d3.event.transform);
-    }
-
-    // helper functions that help with dragging functionality
     function dragStarted(): any {
       d3.select(this).raise();
       g.attr('cursor', 'grabbing');
     }
-
     function dragged(d: any): any {
       d3.select(this)
         .attr('dx', (d.x = d3.event.x))
         .attr('dy', (d.y = d3.event.y));
     }
-
     function dragEnded(): any {
       g.attr('cursor', 'grab');
     }
