@@ -91,9 +91,8 @@ export const getHooksNames = (elementType: string): Array<string> => {
             // * Works for useState hooks
             if (hook.id.type === 'ArrayPattern') {
               hook.id.elements.forEach((hook) => {
+                statements.push(`_useWildcard${tsCount}`);
                 statements.push(hook.name);
-                // * Unshift a wildcard name to achieve similar functionality as before
-                statements.unshift(`_useWildcard${tsCount}`);
                 tsCount += 1;
               });
             } else {
@@ -111,7 +110,7 @@ export const getHooksNames = (elementType: string): Array<string> => {
         }
       });
       statements.forEach((el, i) => {
-        if (el.match(/_use/)) hooksNames[el] = statements[i + 2];
+        if (el.match(/_use/)) hooksNames[el] = statements[i + 1];
       });
     });
   }
