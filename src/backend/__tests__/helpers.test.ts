@@ -5,13 +5,13 @@
 /* eslint-disable react/jsx-filename-extension */
 /* eslint-disable jest/valid-describe */
 /* eslint-disable react/react-in-jsx-scope */
-import { configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+// import { configure } from 'enzyme';
+// import Adapter from 'enzyme-adapter-react-16';
 // import toJson from 'enzyme-to-json';
 import { throttle, getHooksNames } from '../helpers';
 
 // Newer Enzyme versions require an adapter to a particular version of React
-configure({ adapter: new Adapter() });
+// configure({ adapter: new Adapter() });
 
 // Replace any setTimeout functions with jest timer
 jest.useFakeTimers();
@@ -41,9 +41,7 @@ describe('AST Unit Tests', () => {
       jest.advanceTimersByTime(20);
       throttledMockFunc();
       expect(mockFunc).toHaveBeenCalledTimes(1);
-
       jest.advanceTimersByTime(941);
-
       expect(mockFunc).toHaveBeenCalledTimes(2);
     });
 
@@ -51,9 +49,7 @@ describe('AST Unit Tests', () => {
       // Because we haven't invoked returned function from throttle
       // mock func should not have been called yet
       expect(mockFunc).not.toHaveBeenCalled();
-
       throttledMockFunc();
-
       expect(mockFunc).toHaveBeenCalledTimes(1);
     });
   });

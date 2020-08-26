@@ -66,6 +66,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     if (!snap.tree) {
       snap.tree = new Tree('root', 'root');
     }
+
     const payload = snap.tree.cleanTreeCopy(); // snap.tree.getCopy();
 
     window.postMessage(
@@ -309,7 +310,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       circularComponentTable.add(sibling);
       createTree(sibling, newNode, true);
     }
-
+    
     return tree;
   }
 
@@ -318,9 +319,8 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       const { current } = fiberRoot;
       circularComponentTable.clear();
       snap.tree = createTree(current);
+      console.log(snap.tree);
     }
-
-
     sendSnapshot();
   }
 
