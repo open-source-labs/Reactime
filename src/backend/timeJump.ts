@@ -75,8 +75,6 @@ export default (origin, mode) => {
         jump(child);
       }
     });
-
-    // }
   }
 
   return (target, firstCall = false) => {
