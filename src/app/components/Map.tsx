@@ -12,14 +12,14 @@ const Map = (props) => {
   const { snapshot, snapshots } = props;
   const lastSnap = snapshots.length - 1;
 
-  let width = 1800;
-  let height = 900;
-  let margin = { top: 10, right: 120, bottom: 10, left: 120 };
-  let dy = 100;
-  let dx = 76;
-  let data = snapshots[lastSnap];
-  let tree = d3.tree().nodeSize([dx, dy]);
-  let diagonal = d3
+  const width = 2000;
+  const height = 600;
+  const margin = { top: 10, right: 120, bottom: 10, left: 120 };
+  const dy = 100;
+  const dx = 76;
+  const data = snapshots[lastSnap];
+  const tree = d3.tree().nodeSize([dx, dy]);
+  const diagonal = d3
     .linkHorizontal()
     .x((d) => d.y)
     .y((d) => d.x);
@@ -27,12 +27,11 @@ const Map = (props) => {
  
 
   useEffect(() => {
-    
+    document.getElementById('canvas').innerHTML = '_';
     return makeChart();
   });
 
   const makeChart = () => {
-    document.getElementById('canvas').innerHTML = '';
 
     const root = d3.hierarchy(data);
 
@@ -41,23 +40,13 @@ const Map = (props) => {
     root.descendants().forEach((d, i) => {
       d.id = i;
       d._children = d.children;
-      // if (d.depth && d.data.name.length !== 7) d.children = null;
+       if (d.depth === 9) d.children = null;
     });
 
     console.log("root", root)
-    // const svgContainer: any = d3
-    //   .select('#canvas')
-    //   .attr('width', width)
-    //   .attr('height', height);
-
-    // const svg = d3
-    //   .create('svg')
-    //   .attr('viewBox', [-margin.left, -margin.top, width, dx])
-    //   .style('font', '10px sans-serif')
-    //   .style('user-select', 'none');
-
+   
     const svg = d3
-       .select('#canvas')
+      .select('#canvas')
       .attr('width', width)
       .attr('height', height)
     //   .attr('viewBox', [-margin.left, -margin.top, width, dx])
@@ -68,7 +57,7 @@ const Map = (props) => {
       .append('g')
       .attr('fill', 'none')
       .attr('stroke', '#555')
-      .attr('stroke-opacity', 0.4)
+      .attr('stroke-opacity', 0.9)
       .attr('stroke-width', 1.5);
 
     const gNode = svg
@@ -92,7 +81,7 @@ const Map = (props) => {
         if (node.x > right.x) right = node;
       });
 
-      const height = right.x - left.x + margin.top + margin.bottom;
+     const height = right.x - left.x + margin.top + margin.bottom;
 
       const transition = svg
         .transition()
@@ -109,7 +98,7 @@ const Map = (props) => {
         .append('g')
         .attr('transform', (d) => `translate(${source.y0},${source.x0})`)
         .attr('fill-opacity', 0)
-        .attr('stroke-linejoin', 'round')
+       // .attr('stroke-linejoin', 'round')
         .attr('stroke-opacity', 1)
         .on('click', (d) => {
           d.children = d.children ? null : d._children;
@@ -118,10 +107,11 @@ const Map = (props) => {
 
       nodeEnter
         .append('circle')
-        .attr('r', 15)
+        .attr('r', 10)
         .attr('fill', (d) => (d._children ?  '#46edf2': '#95B6B7' ))
-        .attr('stroke-linejoin', 'round')
-        .attr('stroke-width', 10);
+        //.attr('stroke-linejoin', 'round')
+        .attr('stroke-width', 10)
+        .attr('stroke-opacity', 1);
        
 
       nodeEnter
@@ -130,15 +120,15 @@ const Map = (props) => {
           .attr('x', (d: any) => (d.children ? -50 : 50))
           .attr('text-anchor', (d: any) => (d.children ? 'end' : 'start'))
           .text((d: any) => d.data.name)
-          .style('font-size', `1rem`)
+          .style('font-size', `.8rem`)
           .style('fill', 'white')
           .clone(true)
           .lower()
+          .attr("stroke-linejoin", "round")
           .attr('stroke', '#646464')
           .attr('stroke-width', 2);
         
 
-        console.log("119")
       // Transition nodes to their new position.
       const nodeUpdate = node
         .merge(nodeEnter)
@@ -163,7 +153,7 @@ const Map = (props) => {
       const linkEnter = link
         .enter()
         .append('path')
-        .selectAll('path')
+        //.selectAll('path')
         .attr('d', (d) => {
           const o = { x: source.x0, y: source.y0 };
           return diagonal({ source: o, target: o });
@@ -187,6 +177,9 @@ const Map = (props) => {
         d.x0 = d.x;
         d.y0 = d.y;
       });
+
+    }
+  
          //______________ZOOM______________\\
 
     // Sets starting zoom but breaks keeping currents zoom on state change
@@ -198,20 +191,19 @@ const Map = (props) => {
     //   d3.zoomIdentity.translate(150, 250).scale(0.2)
     // );
 
-    // allows the canvas to be zoom-able
+  // allows the canvas to be zoom-able
     svg.call(
       d3
         .zoom()
-        .scaleExtent([0.05, 0.9]) // [zoomOut, zoomIn]
+        .scaleExtent([0.15, 1.5]) // [zoomOut, zoomIn]
         .on('zoom', zoomed)
     );
     function zoomed(d: any) {
       svg.attr('transform', d3.event.transform);
     }
 
-    //_____________DRAG_____________\\
-    // allows the canvas to be draggable
-   svg.call(
+      // allows the canvas to be draggable
+    svg.call(
       d3
         .drag()
         .on('start', dragStarted)
@@ -221,7 +213,7 @@ const Map = (props) => {
 
     function dragStarted(): any {
       d3.select(this).raise();
-      svg.attr('cursor', 'grabbing');
+     svg.attr('cursor', 'grabbing');
     }
     function dragged(d: any): any {
       d3.select(this)
@@ -231,8 +223,8 @@ const Map = (props) => {
     function dragEnded(): any {
       svg.attr('cursor', 'grab');
     }
-    }
-   
+
+
 
     update(root);
   };
@@ -390,12 +382,10 @@ const Map = (props) => {
   //   }
   // });
 
-  console.log("Return")
   return (
     <div data-testid="canvas">
   
         <svg id="canvas"></svg>
-        hi
       </div>
    
   );
