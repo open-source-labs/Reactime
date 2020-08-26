@@ -75,7 +75,7 @@ describe('AST Unit Tests', () => {
       expect(getHooksNames(elementType)).toEqual(['testCount', 'setTestCount']);
     });
 
-    it('Should output the right number of properties when taking in multiple function definitions', () => {
+    it('Should output the right number of properties when given multiple hooks', () => {
       const elementType = `function SingleUseFakeComponent() { 
                             const [testCount, setTestCount] = useState(0);
                             const [biscuitCount, setBiscuitCount] = useState(0);
