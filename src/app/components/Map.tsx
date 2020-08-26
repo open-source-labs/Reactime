@@ -8,12 +8,12 @@ import React, { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 
 const Map = (props) => {
-  // Current snapshot
-  const { snapshot } = props;
-  console.log('MAP SNAPSHOT', snapshot);
+ 
+  const { snapshot, snapshots} = props;
+  const lastSnap = snapshots.length -1
 
   // set the heights and width of the tree to be passed into treeMap function
-  const width: number = 1100;
+  const width: number = 900;
   const height: number = 600;
 
   // this state allows the canvas to stay at the zoom level on multiple re-renders
@@ -22,14 +22,8 @@ const Map = (props) => {
     setZoomState(d3.zoomTransform(d3.select('#canvas').node()));
   }, [snapshot.children]);
 
-  // Create D3 Tree Diagram 
+  // Create D3 Tree Diagram
   useEffect(() => {
-
-    const appState: any = {
-      name: ' Root',
-      children: snapshot.children,
-    };
-    console.log('STATE', appState);
 
     document.getElementById('canvas').innerHTML = '';
 
@@ -44,12 +38,11 @@ const Map = (props) => {
       .append('g')
       .attr('transform', `translate(${x}, ${y}), scale(${k})`); // sets the canvas to the saved zoomState
 
-   
     // creating the tree map
     const treeMap: any = d3.tree().nodeSize([width, height]);
 
     // creating the nodes of the tree
-    const hierarchyNodes: any = d3.hierarchy(appState);
+    const hierarchyNodes: any = d3.hierarchy(snapshots[lastSnap]);
 
     // calling the tree function with nodes created from data
     const finalMap: any = treeMap(hierarchyNodes);
@@ -110,7 +103,6 @@ const Map = (props) => {
       .attr('stroke', '#646464')
       .attr('stroke-width', 2);
 
-
     // display the data in the node on hover
     node.on('mouseover', function (d: any, i: number): any {
       if (!d.children) {
@@ -142,24 +134,24 @@ const Map = (props) => {
     );
 
     // allows the canvas to be zoom-able
- // d3 zoom functionality
- let zoom = d3.zoom().on('zoom', zoomed);
- svgContainer.call(
-   zoom.transform,
-   // Changes the initial view, (left, top)
-   d3.zoomIdentity.translate(150, 250).scale(0.2),
- );
- // allows the canvas to be zoom-able
- svgContainer.call(
-   d3
-     .zoom()
-     .scaleExtent([0.05, 0.9]) // [zoomOut, zoomIn]
-     .on('zoom', zoomed),
- );
- // helper function that allows for zooming
- function zoomed(d: any) {
-   g.attr('transform', d3.event.transform);
- }
+    // d3 zoom functionality
+    let zoom = d3.zoom().on('zoom', zoomed);
+    svgContainer.call(
+      zoom.transform,
+      // Changes the initial view, (left, top)
+      d3.zoomIdentity.translate(150, 250).scale(0.2)
+    );
+    // allows the canvas to be zoom-able
+    svgContainer.call(
+      d3
+        .zoom()
+        .scaleExtent([0.05, 0.9]) // [zoomOut, zoomIn]
+        .on('zoom', zoomed)
+    );
+    // helper function that allows for zooming
+    function zoomed(d: any) {
+      g.attr('transform', d3.event.transform);
+    }
 
     // helper functions that help with dragging functionality
     function dragStarted(): any {
@@ -176,8 +168,6 @@ const Map = (props) => {
     function dragEnded(): any {
       g.attr('cursor', 'grab');
     }
-
-    
   });
 
   return (
