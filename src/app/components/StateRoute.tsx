@@ -43,7 +43,7 @@ const StateRoute = (props: StateRouteProps) => {
   //Test Map
   const renderMap = () => {
     if (hierarchy) {
-      return <Map snapshot={snapshot} snapshots={snapshots} />;
+      return <Map viewIndex={viewIndex} snapshots={snapshots} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
@@ -67,12 +67,10 @@ const StateRoute = (props: StateRouteProps) => {
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
-  console.log('NORENDER DATA', noRenderData);
+  
   let perfChart;
   if (true) {
-    console.log('ViewINDex', viewIndex);
-    console.log('snapshots', snapshots);
-    console.log('setnorenderdata', setNoRenderData);
+    
     perfChart = (
       <PerfView
         viewIndex={viewIndex}

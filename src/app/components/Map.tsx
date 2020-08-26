@@ -9,32 +9,37 @@ import * as d3 from 'd3';
 
 
 const Map = (props) => {
-  const { snapshot, snapshots } = props;
-  const lastSnap = snapshots.length - 1;
-
-  const width = 2000;
-  const height = 600;
-  const margin = { top: 10, right: 120, bottom: 10, left: 120 };
-  const dy = 100;
-  const dx = 76;
-  const data = snapshots[lastSnap];
-  const tree = d3.tree().nodeSize([dx, dy]);
-  const diagonal = d3
-    .linkHorizontal()
-    .x((d) => d.y)
-    .y((d) => d.x);
-
- 
+  const { viewIndex, snapshots } = props;
+  
+  let lastSnap: number | null = null;
+  if (viewIndex < 0) lastSnap = snapshots.length - 1;
+  else lastSnap = viewIndex;
+  
+  
+  const width: number = 900;
+  const height: number = 600;
+  let data = snapshots[lastSnap];
+  
 
   useEffect(() => {
-    document.getElementById('canvas').innerHTML = '_';
-    return makeChart();
+    document.getElementById('canvas').innerHTML = '_'; 
+    return makeChart(data);
   });
 
-  const makeChart = () => {
-
+  const makeChart = React.useCallback ( (data) => {
+    
+    // Establish Constants
+    const margin = { top: 10, right: 120, bottom: 10, left: 120 };
+    const dy = 100;
+    const dx = 100;
+    const tree = d3.tree().nodeSize([dx, dy]);
+    const diagonal = d3
+      .linkHorizontal()
+      .x((d) => d.y)
+      .y((d) => d.x);
     const root = d3.hierarchy(data);
 
+    // Determine descendants of root node use d.depth conditional to how many levels deep to display on first render
     root.x0 = dy / 2;
     root.y0 = 0;
     root.descendants().forEach((d, i) => {
@@ -43,16 +48,18 @@ const Map = (props) => {
        if (d.depth === 9) d.children = null;
     });
 
-    console.log("root", root)
-   
-    const svg = d3
+    
+   // Create Container for D3 Visualizations
+    const svgContainer = d3
       .select('#canvas')
       .attr('width', width)
       .attr('height', height)
-    //   .attr('viewBox', [-margin.left, -margin.top, width, dx])
-    // .style('font', '10px sans-serif')
-    //   .style('user-select', 'none');
 
+    // create inner container to help with drag and zoom 
+    const svg: any = svgContainer
+    .append('g')
+    
+    // create links
     const gLink = svg
       .append('g')
       .attr('fill', 'none')
@@ -60,11 +67,13 @@ const Map = (props) => {
       .attr('stroke-opacity', 0.9)
       .attr('stroke-width', 1.5);
 
+    // create nodes
     const gNode = svg
       .append('g')
       .attr('cursor', 'pointer')
       .attr('pointer-events', 'all');
 
+    // declare re render funciton to handle collapse and expansion of nodes
     function update(source) {
       const duration = d3.event && d3.event.altKey ? 2500 : 250;
       const nodes = root.descendants().reverse();
@@ -72,8 +81,6 @@ const Map = (props) => {
 
       // Compute the new tree layout.
       tree(root);
-
-      console.log("tree",tree(root))
       let left = root;
       let right = root;
       root.eachBefore((node) => {
@@ -81,8 +88,10 @@ const Map = (props) => {
         if (node.x > right.x) right = node;
       });
 
-     const height = right.x - left.x + margin.top + margin.bottom;
+      //use nodes to detrmine height
+      const height = right.x - left.x + margin.top + margin.bottom;
 
+      // transition between past and present
       const transition = svg
         .transition()
         .duration(duration)
@@ -98,37 +107,59 @@ const Map = (props) => {
         .append('g')
         .attr('transform', (d) => `translate(${source.y0},${source.x0})`)
         .attr('fill-opacity', 0)
-       // .attr('stroke-linejoin', 'round')
         .attr('stroke-opacity', 1)
         .on('click', (d) => {
           d.children = d.children ? null : d._children;
           update(d);
         });
-
+      
+      // paint circles, color based on children
       nodeEnter
         .append('circle')
         .attr('r', 10)
         .attr('fill', (d) => (d._children ?  '#46edf2': '#95B6B7' ))
-        //.attr('stroke-linejoin', 'round')
         .attr('stroke-width', 10)
         .attr('stroke-opacity', 1);
-       
-
+      
+      // append node names
       nodeEnter
       .append('text')
           .attr('dy', '.31em')
-          .attr('x', (d: any) => (d.children ? -50 : 50))
-          .attr('text-anchor', (d: any) => (d.children ? 'end' : 'start'))
-          .text((d: any) => d.data.name)
-          .style('font-size', `.8rem`)
+          .attr('x', '-10')
+          .attr('y', '-5')
+          .attr('text-anchor','end' )
+          .text((d: any) => d.data.name.slice(0,14))
+          .style('font-size', `.6rem`)
           .style('fill', 'white')
           .clone(true)
           .lower()
           .attr("stroke-linejoin", "round")
           .attr('stroke', '#646464')
-          .attr('stroke-width', 2);
-        
+          .attr('stroke-width', 1);
 
+             // display the data in the node on hover
+             
+      nodeEnter.on('mouseover', function (d: any, i: number): any {
+        if (!d.children) {
+          d3.select(this)
+            .append('text')
+            .text(()=>{
+              console.log(d)
+              return JSON.stringify(d.data)})
+            .style('fill', 'white')
+            .attr('x',0)
+            .attr('y', 0)
+            .style('font-size', '.6rem')
+            .style('text-align', 'center')
+            .attr('stroke', '#646464')
+            .attr('id', `popup${i}`);
+         }
+      });
+      
+      nodeEnter.on('mouseout', function (d: any, i: number): any {
+        d3.select(`#popup${i}`).remove();
+      });
+        
       // Transition nodes to their new position.
       const nodeUpdate = node
         .merge(nodeEnter)
@@ -153,7 +184,6 @@ const Map = (props) => {
       const linkEnter = link
         .enter()
         .append('path')
-        //.selectAll('path')
         .attr('d', (d) => {
           const o = { x: source.x0, y: source.y0 };
           return diagonal({ source: o, target: o });
@@ -182,17 +212,16 @@ const Map = (props) => {
   
          //______________ZOOM______________\\
 
-    // Sets starting zoom but breaks keeping currents zoom on state change
+    // Sets starting zoom 
+    let zoom = d3.zoom().on('zoom', zoomed);
+    svgContainer.call(
+      zoom.transform,
+      // Changes the initial view, (left, top)
+      d3.zoomIdentity.translate(150, 250).scale(0.6)
+    );
 
-    // let zoom = d3.zoom().on('zoom', zoomed);
-    // svgContainer.call(
-    //   zoom.transform,
-    //   // Changes the initial view, (left, top)
-    //   d3.zoomIdentity.translate(150, 250).scale(0.2)
-    // );
-
-  // allows the canvas to be zoom-able
-    svg.call(
+    // allows the canvas to be zoom-able
+    svgContainer.call(
       d3
         .zoom()
         .scaleExtent([0.15, 1.5]) // [zoomOut, zoomIn]
@@ -210,7 +239,6 @@ const Map = (props) => {
         .on('drag', dragged)
         .on('end', dragEnded)
     );
-
     function dragStarted(): any {
       d3.select(this).raise();
      svg.attr('cursor', 'grabbing');
@@ -223,11 +251,10 @@ const Map = (props) => {
     function dragEnded(): any {
       svg.attr('cursor', 'grab');
     }
-
-
-
+    
+    // call update on node click
     update(root);
-  };
+  }, [data]);
   // // set the heights and width of the tree to be passed into treeMap function
   // const width: number = 900;
   // const height: number = 600;
