@@ -61,9 +61,40 @@ describe('Tree unit test', () => {
       expect(newTree.children[1]).toEqual(returnSibling);
     })
 
-    it('its children can recognize the parent, () => {
+    it('both of the children has the parent as this tree', () => {
       expect(returnChild.parent).toEqual(newTree);
       expect(returnSibling.parent).toEqual(newTree);
+    })  
+  })
+
+
+  describe('Adding sibling', () => {
+    let newTree = new Tree({});
+    let returnChild = newTree.addChild('stateful', 'child', {});
+    let returnSibling = returnChild.addSibling('stateful', 'child', {});
+    it('the tree now has 2 children', () => {
+      expect(newTree.children.length).toBe(2);
+    })
+
+    it('both of the children has the parent as this tree', () => {
+      expect(newTree.children[0]).toEqual(returnChild);
+      expect(newTree.children[1]).toEqual(returnSibling);
+    })
+
+    it('both of the children has the parent as this tree', () => {
+      expect(returnChild.parent).toEqual(newTree);
+      expect(returnSibling.parent).toEqual(newTree);
+    })  
+  })
+
+
+  describe('Copy & clean tree', () => {
+    let newTree = new Tree({});
+    let returnChild = newTree.addChild('stateful', 'child', {});
+    let returnSibling = returnChild.addSibling('stateful', 'child', {});
+    let copy = newTree.cleanTreeCopy();
+    it('its copy has 2 children', () => {
+      expect(copy.children.length).toEqual(2);
     })
   })
 })

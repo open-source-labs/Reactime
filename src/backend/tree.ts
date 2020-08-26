@@ -97,15 +97,13 @@ class Tree {
     // copy.children = this.children;
 
     // creates copy of each child of the present node
-
     copy.children = this.children.map((child: Tree): Tree | string => {
       if (!circularComponentTable.has(child)) {
         return child.cleanTreeCopy();
       }
       return 'circular';
     });
-
-
+    
     // returns copy
     copyInstances--;
     return copy;
