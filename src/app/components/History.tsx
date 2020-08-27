@@ -31,7 +31,7 @@ const filterHooks = (data: any[]) => {
 };
 
 interface HistoryProps {
-  hierarchy: Record<string, unknown>;
+  hierarchy:any;
 }
 
 let root = {};

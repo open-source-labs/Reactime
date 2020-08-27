@@ -31,7 +31,19 @@ describe('Life cycle methods in History', () => {
       index : 0,
       name : 1,
       stateSnapshot : {
-        children:[{}],
+        children:[
+          {
+          children: [],
+          componentData: {
+            actualDuration : 1.0,
+            actualStartTime : 1.0,
+            selfBaseDuration : 1.0,
+            treeBaseDuration : 1.0,
+        },
+        name: 'root',
+        state: 'stateless'
+      }
+    ],
         componentData: {},
         name: "root",
         state: "root"
@@ -40,6 +52,7 @@ describe('Life cycle methods in History', () => {
   };
   // Set up wrapper
   beforeEach(() => {
+    console.log(props)
     wrapper = mount(<History {...props} />);
   });
   // test componentDidMount
