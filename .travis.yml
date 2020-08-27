@@ -11,5 +11,4 @@ git:
 install:
   - npm install
 script:
-  - npm run test
-  - exit
+  - npm run test && 
