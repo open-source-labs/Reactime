@@ -19,8 +19,7 @@ const History = require('./History').default;
 
 const ErrorHandler = require('./ErrorHandler').default;
 
-const NO_STATE_MSG =
-  'No state change detected. Trigger an event to change state';
+const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types
 
 interface StateRouteProps {
@@ -44,6 +43,7 @@ const StateRoute = (props: StateRouteProps) => {
     y: 250,
     k: 0.75,
   });
+
   //Map
   const renderComponentMap = () => {
     if (hierarchy) {

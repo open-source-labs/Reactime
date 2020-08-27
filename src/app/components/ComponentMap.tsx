@@ -4,12 +4,21 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/ban-types */
 
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import * as d3 from 'd3';
 
-const ComponentMap = (props) => {
+interface componentMapProps {
+  x: number;
+  y: number;
+  k: number;
+  setZoomState: any;
+  snapshots: [];
+  viewIndex: number;
+}
+
+const ComponentMap = (props: componentMapProps) => {
   //import props
-  const { viewIndex, snapshots ,x ,y, k, setZoomState} = props;
+  const { viewIndex, snapshots ,x , y, k, setZoomState} = props;
   let lastSnap: number | null = null;
   if (viewIndex < 0) lastSnap = snapshots.length - 1;
   else lastSnap = viewIndex;
@@ -17,7 +26,7 @@ const ComponentMap = (props) => {
   //external constants
   const width: number = 900;
   const height: number = 600;
-  let data = snapshots[lastSnap];
+  let data: Object = snapshots[lastSnap];
 
   useEffect(() => {
     document.getElementById('canvas').innerHTML = '_';

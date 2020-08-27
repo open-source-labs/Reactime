@@ -74,8 +74,8 @@ class History extends Component {
   maked3Tree(): void {
     this.removed3Tree();
 
-    const width = 800;
-    const height = 600;
+    const width : number = 800;
+    const height : number = 600;
     const svgContainer = d3
       .select(this.HistoryRef.current)
       .append('svg') // svgContainer is now pointing to svg
