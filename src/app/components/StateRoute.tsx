@@ -15,6 +15,8 @@ import Tree from './Tree';
 import Map from './Map';
 import PerfView from './PerfView';
 
+
+
 const Chart = require('./Chart').default;
 
 const ErrorHandler = require('./ErrorHandler').default;
@@ -39,11 +41,15 @@ interface StateRouteProps {
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
   const [noRenderData, setNoRenderData] = useState(false);
-
-  //Test Map
+  const [{ x, y, k }, setZoomState]: any = useState({
+    x: 150,
+    y: 250,
+    k: 0.75,
+  });
+  //Map
   const renderMap = () => {
     if (hierarchy) {
-      return <Map snapshot={snapshot} snapshots={snapshots} />;
+      return <Map viewIndex={viewIndex} snapshots={snapshots} x={x} y={y} k={k} setZoomState={setZoomState} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
@@ -67,12 +73,10 @@ const StateRoute = (props: StateRouteProps) => {
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
-  console.log('NORENDER DATA', noRenderData);
+  
   let perfChart;
   if (true) {
-    console.log('ViewINDex', viewIndex);
-    console.log('snapshots', snapshots);
-    console.log('setnorenderdata', setNoRenderData);
+    
     perfChart = (
       <PerfView
         viewIndex={viewIndex}
@@ -126,7 +130,7 @@ const StateRoute = (props: StateRouteProps) => {
         </NavLink>
       </div>
       <Switch>
-        <Route path="/map" render={renderMap} />
+        <Route path="/map" render={renderMap}  />
         <Route path="/chart" render={renderChart} />
         <Route path="/performance" render={renderPerfView} />
         <Route path="/" render={renderTree} />
