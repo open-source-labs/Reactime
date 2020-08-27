@@ -44,7 +44,8 @@ const Map = (props) => {
       root.descendants().forEach((d, i) => {
         d.id = i;
         d._children = d.children;
-        if (d.depth === 9) d.children = null;
+        // use to limit depth of children rendered
+        //if (d.depth === 5) d.children = null;
       });
 
       // Create Container for D3 Visualizations
@@ -233,29 +234,7 @@ const Map = (props) => {
           .drag()
          
       );
-      // function dragStarted(): any {
-      //   d3.select(this).raise();
-      //   svg.attr('cursor', 'grabbing');
-      // }
-      // function dragged(d: any): any {
-      //   d3.select(this)
-      //     .attr('dx', (d.x = d3.event.x))
-      //     .attr('dy', (d.y = d3.event.y));
-      // }
-      // function dragEnded(): any {
-      //   svg.attr('cursor', 'grab');
-      // }
-
-      // Zoom Data from Canvas
-
-      // let test: any = document.getElementById('canvas').children[0];
-      // console.log('from canvas', test.transform);
-      // let newX = test.transform.baseVal[0].matrix.e
-      // let newY = test.transform.baseVal[0].matrix.f
-      // let newK = test.transform.baseVal[1].matrix.a
-      // console.log(newX)
-      // console.log(newY)
-      // console.log(newK)
+    
 
       // call update on node click
       update(root);

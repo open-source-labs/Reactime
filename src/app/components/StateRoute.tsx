@@ -49,7 +49,7 @@ const StateRoute = (props: StateRouteProps) => {
   //Map
   const renderMap = () => {
     if (hierarchy) {
-      return <Map viewIndex={viewIndex} snapshots={snapshots} />;
+      return <Map viewIndex={viewIndex} snapshots={snapshots} x={x} y={y} k={k} setZoomState={setZoomState} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
@@ -130,7 +130,7 @@ const StateRoute = (props: StateRouteProps) => {
         </NavLink>
       </div>
       <Switch>
-        <Route path="/map" render ={(props) => <Map viewIndex={viewIndex} snapshots={snapshots} x={x} y={y} k={k} setZoomState={setZoomState}/> } />
+        <Route path="/map" render={renderMap}  />
         <Route path="/chart" render={renderChart} />
         <Route path="/performance" render={renderPerfView} />
         <Route path="/" render={renderTree} />
