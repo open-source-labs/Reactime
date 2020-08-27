@@ -3,10 +3,14 @@ node_js:
   - 12
 dist: trusty
 cache: npm
-branches:
-  only:
-  - implementtravisci
+git:
+  submodules: false
+# branches:
+#   only:
+#   - implementtravisci
 install:
   - npm install
 script:
   - npm run test
+after_failure:
+  - exit
