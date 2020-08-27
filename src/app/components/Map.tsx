@@ -75,7 +75,7 @@ const Map = (props) => {
 
       // declare re render funciton to handle collapse and expansion of nodes
       const update = (source) => {
-        const duration = 0;
+        const duration = 250;
         const nodes = root.descendants().reverse();
         const links = root.links();
 
