@@ -12,7 +12,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import Tree from './Tree';
-import Map from './Map';
+import ComponentMap from './ComponentMap';
 import PerfView from './PerfView';
 
 const History = require('./History').default;
@@ -45,9 +45,9 @@ const StateRoute = (props: StateRouteProps) => {
     k: 0.75,
   });
   //Map
-  const renderMap = () => {
+  const renderComponentMap = () => {
     if (hierarchy) {
-      return <Map viewIndex={viewIndex} snapshots={snapshots} x={x} y={y} k={k} setZoomState={setZoomState} />;
+      return <ComponentMap viewIndex={viewIndex} snapshots={snapshots} x={x} y={y} k={k} setZoomState={setZoomState} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
@@ -128,7 +128,7 @@ const StateRoute = (props: StateRouteProps) => {
         </NavLink>
       </div>
       <Switch>
-        <Route path="/map" render={renderMap} />
+        <Route path="/map" render={renderComponentMap} />
         <Route path="/history" render={renderHistory} />
         <Route path="/performance" render={renderPerfView} />
         <Route path="/" render={renderTree} />

@@ -7,7 +7,7 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import * as d3 from 'd3';
 
-const Map = (props) => {
+const ComponentMap = (props) => {
   //import props
   const { viewIndex, snapshots ,x ,y, k, setZoomState} = props;
   let lastSnap: number | null = null;
@@ -75,7 +75,7 @@ const Map = (props) => {
 
       // declare re render funciton to handle collapse and expansion of nodes
       const update = (source) => {
-        const duration = 0;
+        const duration = 250;
         const nodes = root.descendants().reverse();
         const links = root.links();
 
@@ -236,118 +236,11 @@ const Map = (props) => {
       );
     
 
-<<<<<<< HEAD
-    // returns a flat array of objects containing all the nodes and their information
-    let nodes: any = hierarchyNodes.descendants();
-
-    // this segment places all the nodes on the canvas
-    const node: any = g
-      .append('g')
-      .attr('stroke-linejoin', 'round') // no clue what this does
-      .attr('stroke-width', 1)
-      .selectAll('g')
-      .data(nodes)
-      .enter()
-      .append('g')
-      .attr('transform', (d: any) => `translate(${d.y}, ${d.x})`)
-      .attr('class', 'atomNodes');
-
-    // for each node that got created, append a circle element
-    node
-      .append('circle')
-      .attr('fill', (d: any) => (d.children ? '#95B6B7' : '#46edf2'))
-      .attr('r', 50);
-
-    // for each node that got created, append a text element that displays the name of the node
-    node
-      .append('text')
-      .attr('dy', '.31em')
-      .attr('x', (d: any) => (d.children ? -50 : 50))
-      .attr('text-anchor', (d: any) => (d.children ? 'end' : 'start'))
-      .text((d: any) => d.data.name)
-      .style('font-size', `2rem`)
-      .style('fill', 'white')
-      .clone(true)
-      .lower()
-      .attr('stroke', '#646464')
-      .attr('stroke-width', 2);
-
-    // display the data in the node on hover
-    node.on('mouseover', function (d: any, i: number): any {
-      if (!d.children) {
-        d3.select(this)
-          .append('text')
-          .text(JSON.stringify(d.data, undefined, 2))
-          .style('fill', 'white')
-          .attr('x', -999)
-          .attr('y', 100)
-          .style('font-size', '3rem')
-          .style('text-align', 'center')
-          .attr('stroke', '#646464')
-          .attr('id', `popup${i}`);
-      }
-    });
-
-    // add mouseOut event handler that removes the popup text
-    node.on('mouseout', function (d: any, i: number): any {
-      d3.select(`#popup${i}`).remove();
-    });
-
-    // allows the canvas to be draggable
-    node.call(
-      d3
-        .drag()
-        .on('start', dragStarted)
-        .on('drag', dragged)
-        .on('end', dragEnded)
-    );
-
-    // allows the canvas to be zoom-able
-    // d3 zoom functionality
-    let zoom = d3.zoom().on('zoom', zoomed);
-    // svgContainer.call(
-    //   zoom.transform,
-    //   // Changes the initial view, (left, top)
-    //   d3.zoomIdentity.translate(150, 250).scale(0.2)
-    // );
-    // allows the canvas to be zoom-able
-    svgContainer.call(
-      d3
-        .zoom()
-        .scaleExtent([0.05, 0.9]) // [zoomOut, zoomIn]
-        .on('zoom', zoomed)
-    );
-    // helper function that allows for zooming
-    function zoomed(d: any) {
-      g.attr('transform', d3.event.transform);
-    }
-
-    // helper functions that help with dragging functionality
-    function dragStarted(): any {
-      d3.select(this).raise();
-      g.attr('cursor', 'grabbing');
-    }
-
-    function dragged(d: any): any {
-      d3.select(this)
-        .attr('dx', (d.x = d3.event.x))
-        .attr('dy', (d.y = d3.event.y));
-    }
-
-    function dragEnded(): any {
-      g.attr('cursor', 'grab');
-    }
-
-
-  
-  });
-=======
       // call update on node click
       update(root);
     },
     [data]
   );
->>>>>>> master
 
   return (
     <div data-testid="canvas">
@@ -358,4 +251,4 @@ const Map = (props) => {
   );
 };
 
-export default Map;
+export default ComponentMap;
