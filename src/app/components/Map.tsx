@@ -9,7 +9,7 @@ import * as d3 from 'd3';
 
 const Map = (props) => {
   //import props
-  const { viewIndex, snapshots } = props;
+  const { viewIndex, snapshots ,x ,y, k, setZoomState} = props;
   let lastSnap: number | null = null;
   if (viewIndex < 0) lastSnap = snapshots.length - 1;
   else lastSnap = viewIndex;
@@ -18,17 +18,6 @@ const Map = (props) => {
   const width: number = 900;
   const height: number = 600;
   let data = snapshots[lastSnap];
-
-  const [{ x, y, k }, setZoomState]: any = useState({
-    x: 150,
-    y: 250,
-    k: 0.75,
-  });
-
-  // useEffect(() => {
-  //   setZoomState(d3.zoomTransform(d3.select('#canvas').node()));
-  // }, [data]);
-
 
   useEffect(() => {
     document.getElementById('canvas').innerHTML = '_';
