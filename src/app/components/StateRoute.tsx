@@ -39,11 +39,15 @@ interface StateRouteProps {
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
   const [noRenderData, setNoRenderData] = useState(false);
-
-  //Test Map
+  const [{ x, y, k }, setZoomState]: any = useState({
+    x: 150,
+    y: 250,
+    k: 0.75,
+  });
+  //Map
   const renderMap = () => {
     if (hierarchy) {
-      return <Map snapshots={snapshots} />;
+      return <Map viewIndex={viewIndex} snapshots={snapshots} x={x} y={y} k={k} setZoomState={setZoomState} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
@@ -67,12 +71,10 @@ const StateRoute = (props: StateRouteProps) => {
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
-
+  
   let perfChart;
   if (true) {
-    console.log('ViewINDex', viewIndex);
-    console.log('snapshots', snapshots);
-    console.log('setnorenderdata', setNoRenderData);
+    
     perfChart = (
       <PerfView
         viewIndex={viewIndex}
