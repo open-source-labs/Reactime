@@ -73,7 +73,7 @@ class History extends Component {
    */
   maked3Tree(): void {
     this.removed3Tree();
-
+    console.log("HIEARARCHY", this.props.hierarchy)
     const width : number = 800;
     const height : number = 600;
     const svgContainer = d3
