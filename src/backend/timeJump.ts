@@ -64,7 +64,6 @@ export default (origin, mode) => {
         const hookState = Object.values(hook);
         console.log('target', target);
         if (hooksComponent && hooksComponent.dispatch) {
-
           hooksComponent.dispatch(hookState[0]);
         }
       });
@@ -76,8 +75,6 @@ export default (origin, mode) => {
         jump(child);
       }
     });
-
-    // }
   }
 
   return (target, firstCall = false) => {
