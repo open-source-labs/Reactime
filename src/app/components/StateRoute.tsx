@@ -40,7 +40,7 @@ const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
   const [noRenderData, setNoRenderData] = useState(false);
 
-  //Test Map
+  //Map
   const renderMap = () => {
     if (hierarchy) {
       return <Map viewIndex={viewIndex} snapshots={snapshots} />;
