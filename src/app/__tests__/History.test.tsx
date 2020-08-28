@@ -7,21 +7,40 @@
 import React from 'react';
 import { configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import History from '../components/History';
 
-const Chart = require('../components/Chart').default;
 
 // Unit test cases for d3 functionality
 configure({ adapter: new (Adapter as any)() });
 
-// Test the life cycle methods in Chart
-describe('Life cycle methods in Chart', () => {
+// Test the life cycle methods in History
+describe('Life cycle methods in History', () => {
   let wrapper;
   const props = {
-    hierarchy: 0,
+    hierarchy: {
+      branch: 0,
+      children : [
+        {
+          index:1,
+          name:2,
+          branch:0,
+          stateSnapshot:{},
+          children: []
+        }
+      ],
+      index : 0,
+      name : 1,
+      stateSnapshot : {
+        children:[{}],
+        componentData: {},
+        name: "root",
+        state: "root"
+      }
+    },
   };
   // Set up wrapper
   beforeEach(() => {
-    wrapper = mount(<Chart {...props} />);
+    wrapper = mount(<History {...props} />);
   });
   // test componentDidMount
   it('should call componentDidMount once', () => {
@@ -65,7 +84,7 @@ describe('Root object', () => {
   };
   // Set up wrapper
   beforeEach(() => {
-    wrapper = mount(<Chart {...props} />);
+    wrapper = mount(<History {...props} />);
   });
 
   // eslint-disable-next-line jest/no-disabled-tests
@@ -85,7 +104,7 @@ describe('maked3Tree method', () => {
   };
   // Set up wrapper
   beforeEach(() => {
-    wrapper = mount(<Chart {...props} />);
+    wrapper = mount(<History {...props} />);
   });
   // Test the invocation of removed3Tree within maked3Tree
   it('should call removed3Tree once', () => {

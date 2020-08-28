@@ -30,19 +30,19 @@ const filterHooks = (data: any[]) => {
   return JSON.stringify(data[0].state);
 };
 
-interface ChartProps {
+interface HistoryProps {
   hierarchy: Record<string, unknown>;
 }
 
 let root = {};
-class Chart extends Component {
+class History extends Component {
   /**
    * @method maked3Tree :Creates a new D3 Tree
    */
-  constructor(props: ChartProps) {
+  constructor(props: HistoryProps) {
     super(props);
     // what React.createRef() is doing.
-    this.chartRef = React.createRef();
+    this.HistoryRef = React.createRef();
     this.maked3Tree = this.maked3Tree.bind(this);
     this.removed3Tree = this.removed3Tree.bind(this);
     this.isRecoil = false;
@@ -50,7 +50,6 @@ class Chart extends Component {
 
   componentDidMount() {
     const { hierarchy } = this.props;
-    console.log('HIERARCHYYYYY', hierarchy);
     root = JSON.parse(JSON.stringify(hierarchy));
     this.maked3Tree();
   }
@@ -62,23 +61,23 @@ class Chart extends Component {
   }
 
   removed3Tree() {
-    const { current } = this.chartRef;
+    const { current } = this.HistoryRef;
     while (current.hasChildNodes()) {
       current.removeChild(current.lastChild);
     }
   }
 
   /**
-   * @method maked3Tree Creates a new Tree Chart
+   * @method maked3Tree Creates a new Tree History
    * @var
    */
   maked3Tree(): void {
     this.removed3Tree();
-  
-    const width = 800; 
-    const height = 600; 
+    console.log("HIEARARCHY", this.props.hierarchy)
+    const width : number = 800;
+    const height : number = 600;
     const svgContainer = d3
-      .select(this.chartRef.current)
+      .select(this.HistoryRef.current)
       .append('svg') // svgContainer is now pointing to svg
       .attr('width', width)
       .attr('height', height);
@@ -88,19 +87,13 @@ class Chart extends Component {
       // this is changing where the graph is located physically
       .attr('transform', `translate(${width / 2 + 4}, ${height / 2 + 2})`);
 
-    // if we consider the container for our radial node graph as a box encapsulating
-    // half of this container width is essentially the radius of our radial node graph
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const radius = width / 2;
-
     // d3.hierarchy constructs a root node from the specified hierarchical data
     // (our object titled dataset), which must be an object representing the root node
     const hierarchy = d3.hierarchy(root);
 
     const tree = d3
       .tree()
-      // this assigns width of tree to be 2pi
-      // .size([2 * Math.PI, radius / 1.3])
+
       .nodeSize([width / 10, height / 10])
       // .separation(function (a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
       .separation(function (a: { parent: object }, b: { parent: object }) {
@@ -227,21 +220,12 @@ class Chart extends Component {
         return `${d.data.name}.${d.data.branch}`;
       });
 
-    // allows svg to be dragged around
-    node.call(
-      d3
-        .drag()
-        .on('start', dragstarted)
-        .on('drag', dragged)
-        .on('end', dragended)
-    );
-
-    // d3 zoom functionality
+    // Zoom Functions
     let zoom = d3.zoom().on('zoom', zoomed);
     svgContainer.call(
       zoom.transform,
       // Changes the initial view, (left, top)
-      d3.zoomIdentity.translate(width/2, height/2).scale(1)
+      d3.zoomIdentity.translate(width / 2, height / 2).scale(1)
     );
     // allows the canvas to be zoom-able
     svgContainer.call(
@@ -255,7 +239,15 @@ class Chart extends Component {
       g.attr('transform', d3.event.transform);
     }
 
-    // Drag
+    // DRAG FUNCTIONS
+    node.call(
+      d3
+        .drag()
+        .on('start', dragstarted)
+        .on('drag', dragged)
+        .on('end', dragended)
+    );
+    
     function dragstarted() {
       d3.select(this).raise();
       g.attr('cursor', 'grabbing');
@@ -286,10 +278,10 @@ class Chart extends Component {
   render() {
     return (
       <div className="history-d3-container">
-        <div ref={this.chartRef} className="history-d3-div" />
+        <div ref={this.HistoryRef} className="history-d3-div" />
       </div>
     );
   }
 }
 
-export default Chart;
+export default History;

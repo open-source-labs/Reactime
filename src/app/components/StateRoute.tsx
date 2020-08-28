@@ -12,17 +12,14 @@ import {
   Switch,
 } from 'react-router-dom';
 import Tree from './Tree';
-import Map from './Map';
+import ComponentMap from './ComponentMap';
 import PerfView from './PerfView';
 
-
-
-const Chart = require('./Chart').default;
+const History = require('./History').default;
 
 const ErrorHandler = require('./ErrorHandler').default;
 
-const NO_STATE_MSG =
-  'No state change detected. Trigger an event to change state';
+const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types
 
 interface StateRouteProps {
@@ -46,10 +43,11 @@ const StateRoute = (props: StateRouteProps) => {
     y: 250,
     k: 0.75,
   });
+
   //Map
-  const renderMap = () => {
+  const renderComponentMap = () => {
     if (hierarchy) {
-      return <Map viewIndex={viewIndex} snapshots={snapshots} x={x} y={y} k={k} setZoomState={setZoomState} />;
+      return <ComponentMap viewIndex={viewIndex} snapshots={snapshots} x={x} y={y} k={k} setZoomState={setZoomState} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
@@ -57,9 +55,9 @@ const StateRoute = (props: StateRouteProps) => {
   // the hierarchy gets set on the first click in the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
   // if true involk render chart with hierarchy
-  const renderChart = () => {
+  const renderHistory = () => {
     if (hierarchy) {
-      return <Chart hierarchy={hierarchy} />;
+      return <History hierarchy={hierarchy} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
@@ -87,7 +85,7 @@ const StateRoute = (props: StateRouteProps) => {
       />
     );
   }
-  
+
   //This will intermitently block Recoil PerfCharts from rendering
   // else {
   //   perfChart = (
@@ -114,7 +112,7 @@ const StateRoute = (props: StateRouteProps) => {
         <NavLink
           className="router-link"
           activeClassName="is-active"
-          to="/chart"
+          to="/history"
         >
           History
         </NavLink>
@@ -130,8 +128,8 @@ const StateRoute = (props: StateRouteProps) => {
         </NavLink>
       </div>
       <Switch>
-        <Route path="/map" render={renderMap}  />
-        <Route path="/chart" render={renderChart} />
+        <Route path="/map" render={renderComponentMap} />
+        <Route path="/history" render={renderHistory} />
         <Route path="/performance" render={renderPerfView} />
         <Route path="/" render={renderTree} />
       </Switch>
