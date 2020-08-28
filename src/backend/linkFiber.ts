@@ -156,6 +156,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     if (window[`$recoilDebugStates`]) {
       isRecoil = true;
     }
+
     const atomArray = [];
     // fiberRoot.current.child.child.memoizedProps.value.current
     //   .getState()
@@ -359,7 +360,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
         };
       })(devTools.onCommitFiberRoot);
     }
-
     throttledUpdateSnapshot();
   };
 };
