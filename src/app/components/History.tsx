@@ -43,7 +43,7 @@ function History(props) {
   let { hierarchy } = props;
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
-  let HistoryRef = root; //React.createRef(root);
+  let HistoryRef = React.createRef(root); //React.createRef(root);
 
   useEffect(() => {
     maked3Tree();
