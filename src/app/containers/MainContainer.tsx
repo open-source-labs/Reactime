@@ -12,6 +12,16 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
+const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
+  protocol: "https",
+  debug: true,
+});
+
+document.addEventListener("click", (e) => {
+  mixpanel.track("click heard ", e.target);
+})
+
+
 function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;

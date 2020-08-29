@@ -1,0 +1,20 @@
+{
+  "name": "mixpanel",
+  "homepage": "https://github.com/mixpanel/mixpanel-js",
+  "description": "Mixpanel JavaScript Library",
+  "main": "mixpanel-jslib-snippet.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mixpanel/mixpanel-js.git"
+  },
+  "keywords": [
+    "mixpanel",
+    "mixpaneljs",
+    "mixpanel-js"
+  ],
+  "license": "Apache-2.0",
+  "ignore": [
+    "tests",
+    "vendor"
+  ]
+}

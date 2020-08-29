@@ -1,0 +1,31 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "rules": {
+        "camelcase": "error",
+        "eol-last": "error",
+        "eqeqeq": "error",
+        "indent":
+            [2, 4, {"SwitchCase": 1}],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "no-console": "off",
+        "no-trailing-spaces": "error",
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ]
+    }
+}

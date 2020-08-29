@@ -16,6 +16,13 @@ import {
 } from './types/backendTypes';
 import { Interface } from 'readline';
 
+const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
+  protocol: "https",
+  debug: true
+});
+
+mixpanel.track( "TEST ");
+
 // * State snapshot object initialized here
 const snapShot: Snapshot = {
   tree: null,
@@ -47,6 +54,8 @@ function getRouteURL(node: SnapshotNode): string {
 window.addEventListener('message', ({ data: { action, payload } } : MsgData) => {
   switch (action) {
     case 'jumpToSnap':
+      console.log(" attempting mixpanel jump log ");
+      mixpanel.track(" Testing Time Jump ");
       timeJump(payload, true); // * This sets state with given payload
       // Get the pathname from payload and add new entry to browser history
       // MORE: https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
