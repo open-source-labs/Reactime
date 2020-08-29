@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 
 /**
@@ -34,50 +34,38 @@ interface HistoryProps {
   hierarchy: Record<string, unknown>;
 }
 
-let root = {};
-class History extends Component {
-  /**
-   * @method maked3Tree :Creates a new D3 Tree
-   */
-  constructor(props: HistoryProps) {
-    super(props);
-    // what React.createRef() is doing.
-    this.HistoryRef = React.createRef();
-    this.maked3Tree = this.maked3Tree.bind(this);
-    this.removed3Tree = this.removed3Tree.bind(this);
-    this.isRecoil = false;
-  }
 
-  componentDidMount() {
-    const { hierarchy } = this.props;
-    root = JSON.parse(JSON.stringify(hierarchy));
-    this.maked3Tree();
-  }
+/**
+ * @method maked3Tree :Creates a new D3 Tree
+ */
 
-  componentDidUpdate() {
-    const { hierarchy } = this.props;
-    root = JSON.parse(JSON.stringify(hierarchy));
-    this.maked3Tree();
-  }
+function History(props) {
+  let { hierarchy } = props;
+  let root = JSON.parse(JSON.stringify(hierarchy));
+  let isRecoil = false;
+  let HistoryRef = React.createRef(root); //React.createRef(root);
 
-  removed3Tree() {
-    const { current } = this.HistoryRef;
+  useEffect(() => {
+    maked3Tree();
+  }, [root]);
+
+  let removed3Tree = function () {
+    const { current } = HistoryRef;
     while (current.hasChildNodes()) {
       current.removeChild(current.lastChild);
     }
-  }
+  };
 
   /**
    * @method maked3Tree Creates a new Tree History
    * @var
    */
-  maked3Tree(): void {
-    this.removed3Tree();
-    console.log("HIEARARCHY", this.props.hierarchy)
-    const width : number = 800;
-    const height : number = 600;
+  let maked3Tree = function () {
+    removed3Tree();
+    const width: number = 800;
+    const height: number = 600;
     const svgContainer = d3
-      .select(this.HistoryRef.current)
+      .select(HistoryRef.current)
       .append('svg') // svgContainer is now pointing to svg
       .attr('width', width)
       .attr('height', height);
@@ -93,9 +81,7 @@ class History extends Component {
 
     const tree = d3
       .tree()
-
       .nodeSize([width / 10, height / 10])
-      // .separation(function (a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
       .separation(function (a: { parent: object }, b: { parent: object }) {
         return a.parent == b.parent ? 2 : 2;
       });
@@ -159,17 +145,9 @@ class History extends Component {
 
         if (d.data.stateSnapshot.children[0].name === 'RecoilRoot') {
           console.log('enter');
-          this.isRecoil = true;
+          isRecoil = true;
         }
-        console.log('isRecoil', this.isRecoil);
-
-        console.log('d.data', d.data);
-        console.log('d.data.stateSnapshot', d.data.stateSnapshot);
-        console.log(
-          'd.data.stateSnapshot.children',
-          d.data.stateSnapshot.children
-        );
-        if (!this.isRecoil) {
+        if (!isRecoil) {
           tooltipDiv
             .html(filterHooks(d.data.stateSnapshot.children), this)
             .style('left', d3.event.pageX - 90 + 'px')
@@ -247,7 +225,7 @@ class History extends Component {
         .on('drag', dragged)
         .on('end', dragended)
     );
-    
+
     function dragstarted() {
       d3.select(this).raise();
       g.attr('cursor', 'grabbing');
@@ -273,15 +251,13 @@ class History extends Component {
     function reinfeldTidierAlgo(x: number, y: number) {
       return [(y = +y) * Math.cos((x -= Math.PI / 2)), y * Math.sin(x)];
     }
-  }
+  };
 
-  render() {
-    return (
-      <div className="history-d3-container">
-        <div ref={this.HistoryRef} className="history-d3-div" />
-      </div>
-    );
-  }
+  return (
+    <div className="history-d3-container">
+      <div ref={HistoryRef} className="history-d3-div" />
+    </div>
+  );
 }
 
 export default History;

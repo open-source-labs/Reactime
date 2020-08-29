@@ -2,12 +2,12 @@
 
 import * as d3 from 'd3'
 
-describe('D3 Canvas Testing', ()=> {
+describe('D3Canvas Testing', ()=> {
   const getCanvas = () => {
     return d3.select('#canvas')
   }
 
-  it ('should render', ()=>{
+  it ('should exist', ()=>{
     expect(getCanvas()).not.toBeNull();
   })
 
@@ -18,7 +18,7 @@ describe('D3 Node Testing', ()=> {
     return d3.select('g')
   }
 
-  it ('should render', () => {
+  it ('should exist', () => {
     expect(getNodes()).not.toBeNull();
   })
 

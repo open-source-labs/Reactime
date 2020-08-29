@@ -18,7 +18,7 @@ interface componentMapProps {
 
 const ComponentMap = (props: componentMapProps) => {
   //import props
-  const { viewIndex, snapshots ,x , y, k, setZoomState} = props;
+  const { viewIndex, snapshots, x, y, k, setZoomState } = props;
   let lastSnap: number | null = null;
   if (viewIndex < 0) lastSnap = snapshots.length - 1;
   else lastSnap = viewIndex;
@@ -144,24 +144,27 @@ const ComponentMap = (props: componentMapProps) => {
           .attr('stroke-width', 1);
 
         //TODO -> Alter incoming snapshots so there is useful data to show on hover.
-        // nodeEnter.on('mouseover', function (d: any, i: number): any {
-        //   if (!d.children) {
-        //     d3.select(this)
-        //       .append('text')
-        //       .text(()=>{
-        //         return JSON.stringify(d.data)})
-        //       .style('fill', 'white')
-        //       .attr('x',0)
-        //       .attr('y', 0)
-        //       .style('font-size', '.6rem')
-        //       .style('text-align', 'center')
-        //       .attr('stroke', '#646464')
-        //       .attr('id', `popup${i}`);
-        //    }
-        // });
-        // nodeEnter.on('mouseout', function (d: any, i: number): any {
-        //   d3.select(`#popup${i}`).remove();
-        // });
+        nodeEnter.on('mouseover', function (d: any, i: number): any {
+          if (!d.children) {
+            console.log(d);
+            console.log(d.data);
+            d3.select(this)
+              .append('text')
+              .text(() => {
+                return JSON.stringify(d.data.state);
+              })
+              .attr('x', -25)
+              .attr('y', 20)
+              .style('font-size', `.6rem`)
+              .style('fill', 'white')
+              .attr('stroke', 'white')
+              .attr('stroke-width', .5)
+              .attr('id', `popup${i}`);
+          }
+        });
+        nodeEnter.on('mouseout', function (d: any, i: number): any {
+          d3.select(`#popup${i}`).remove();
+        });
 
         // Transition nodes to their new position.
         const nodeUpdate = node
@@ -229,21 +232,18 @@ const ComponentMap = (props: componentMapProps) => {
           .zoom()
           .scaleExtent([0.15, 1.5]) // [zoomOut, zoomIn]
           .on('zoom', zoomed)
-          
       );
       function zoomed(d: any) {
-        svg.attr('transform', d3.event.transform)
-        .on('mouseup', setZoomState(d3.zoomTransform(d3.select('#canvas').node()))
-        );
+        svg
+          .attr('transform', d3.event.transform)
+          .on(
+            'mouseup',
+            setZoomState(d3.zoomTransform(d3.select('#canvas').node()))
+          );
       }
 
       // allows the canvas to be draggable
-      svg.call(
-        d3
-          .drag()
-         
-      );
-    
+      svg.call(d3.drag());
 
       // call update on node click
       update(root);
@@ -253,9 +253,7 @@ const ComponentMap = (props: componentMapProps) => {
 
   return (
     <div data-testid="canvas">
-      <svg
-        id="canvas"
-      ></svg>
+      <svg id="canvas"></svg>
     </div>
   );
 };
