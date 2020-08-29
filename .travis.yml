@@ -1,4 +1,14 @@
-services:
-  - docker
+language: node_js
+node_js:
+  - 12
+dist: trusty
+cache: npm
+git:
+  submodules: false
+# branches:
+#   only:
+#   - implementtravisci
+install:
+  - npm install
 script:
-  - docker-compose up --abort-on-container-exit
+  - npm run test
