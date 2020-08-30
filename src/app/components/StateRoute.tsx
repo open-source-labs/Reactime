@@ -39,7 +39,10 @@ interface StateRouteProps {
 
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
-  let isRecoil = snapshot.children[0].name === 'RecoilRoot';
+  // let isRecoil = true;
+  // console.log('snapshot', snapshot)
+  // console.log(snapshot.AtomsRelationship)
+  let isRecoil = snapshot.AtomsRelationship ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
   const [{ x, y, k }, setZoomState]: any = useState({
     x: 150,
@@ -142,7 +145,7 @@ const StateRoute = (props: StateRouteProps) => {
       </div>
       <Switch>
         <Route path="/map" render={renderComponentMap} />
-        <Route path="/history" render={isRecoil ? renderAtomsRelationship:  renderHistory} />
+        <Route path="/history" render={renderHistory} />
         <Route path="/relationship" render={renderAtomsRelationship} />
         <Route path="/performance" render={renderPerfView} />
         <Route path="/" render={renderTree} />
