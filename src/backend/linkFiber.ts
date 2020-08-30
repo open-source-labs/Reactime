@@ -72,7 +72,7 @@ function getRecoilState() : any {
   nodeToNodeSubsKeys.forEach( 
     node => {
       nodeToNodeSubs.get(node).forEach(
-        nodeSubs => allAtomsRelationship.push([node, nodeSubs, 2])
+        nodeSubs => allAtomsRelationship.push([node, nodeSubs, 1])
       )
     }
   )
@@ -186,13 +186,13 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       if (pointer?.memoizedState[1]?.[0].current) {
         let atomName = pointer.memoizedState[1]?.[0].current.keys().next().value;
         console.log('atom', pointer.memoizedState[1]?.[0].current.keys().next().value);
-        allAtomsRelationship.push([atomName, elementType?.name, 2])
+        allAtomsRelationship.push([atomName, elementType?.name, 1])
       }
 
       if (pointer?.memoizedState[1]?.[0].key) {
         let atomName = pointer.memoizedState[1]?.[0].key;
         console.log('atom', pointer.memoizedState[1]?.[0].key);
-        allAtomsRelationship.push([atomName, elementType?.name, 2])
+        allAtomsRelationship.push([atomName, elementType?.name, 1])
       }
     }
 
