@@ -177,7 +177,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       console.log('Name here', elementType?.name)
       // console.log('Here is the state', memoizedState);
       let pointer = memoizedState;
-      while (pointer !== null && pointer?.next !== null){
+      while (pointer !== null && pointer !== undefined && pointer.next !== null ){
         pointer = pointer.next;
       }
       // console.log('traverse the memoizedState 1', pointer.memoizedState);
