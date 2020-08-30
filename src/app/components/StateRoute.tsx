@@ -14,8 +14,7 @@ import {
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
 import PerfView from './PerfView';
-import AtomsRelationship from './AtomsRelationship'
-
+import AtomsRelationship from './AtomsRelationship.jsx';
 
 const History = require('./History').default;
 
@@ -65,7 +64,7 @@ const StateRoute = (props: StateRouteProps) => {
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
-
+  console.log(3);
   const renderAtomsRelationship = () => {
     if (hierarchy) {
       return <AtomsRelationship hierarchy={hierarchy} />;
