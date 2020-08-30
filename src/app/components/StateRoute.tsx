@@ -30,7 +30,7 @@ interface StateRouteProps {
     state?: string | object;
     stateSnaphot?: object;
     children?: any[];
-    AtomsRelationship: any[];
+    AtomsRelationship?: any[];
   };
   hierarchy: object;
   snapshots: [];
