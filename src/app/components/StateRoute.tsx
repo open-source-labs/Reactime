@@ -14,6 +14,7 @@ import {
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
 import PerfView from './PerfView';
+import AtomsRelationship from './AtomsRelationship.jsx';
 
 const History = require('./History').default;
 
@@ -37,6 +38,7 @@ interface StateRouteProps {
 
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
+  let isRecoil = snapshot.children[0].name === 'RecoilRoot';
   const [noRenderData, setNoRenderData] = useState(false);
   const [{ x, y, k }, setZoomState]: any = useState({
     x: 150,
@@ -52,12 +54,20 @@ const StateRoute = (props: StateRouteProps) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
+
   // the hierarchy gets set on the first click in the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
   // if true involk render chart with hierarchy
   const renderHistory = () => {
     if (hierarchy) {
       return <History hierarchy={hierarchy} />;
+    }
+    return <div className="noState">{NO_STATE_MSG}</div>;
+  };
+  console.log(3);
+  const renderAtomsRelationship = () => {
+    if (hierarchy) {
+      return <AtomsRelationship hierarchy={hierarchy} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
@@ -129,7 +139,7 @@ const StateRoute = (props: StateRouteProps) => {
       </div>
       <Switch>
         <Route path="/map" render={renderComponentMap} />
-        <Route path="/history" render={renderHistory} />
+        <Route path="/history" render={isRecoil ? renderAtomsRelationship:  renderHistory} />
         <Route path="/performance" render={renderPerfView} />
         <Route path="/" render={renderTree} />
       </Switch>
