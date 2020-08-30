@@ -177,19 +177,19 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       console.log('Name here', elementType?.name)
       // console.log('Here is the state', memoizedState);
       let pointer = memoizedState;
-      while (pointer.next !== null){
+      while (pointer !== null && pointer?.next !== null){
         pointer = pointer.next;
       }
       // console.log('traverse the memoizedState 1', pointer.memoizedState);
       // // 2nd 
       // console.log('traverse the memoizedState 2', pointer.memoizedState[1]?.[0]);
-      if (pointer.memoizedState[1]?.[0].current) {
+      if (pointer?.memoizedState[1]?.[0].current) {
         let atomName = pointer.memoizedState[1]?.[0].current.keys().next().value;
         console.log('atom', pointer.memoizedState[1]?.[0].current.keys().next().value);
         allAtomsRelationship.push([atomName, elementType?.name, 2])
       }
 
-      if (pointer.memoizedState[1]?.[0].key) {
+      if (pointer?.memoizedState[1]?.[0].key) {
         let atomName = pointer.memoizedState[1]?.[0].key;
         console.log('atom', pointer.memoizedState[1]?.[0].key);
         allAtomsRelationship.push([atomName, elementType?.name, 2])

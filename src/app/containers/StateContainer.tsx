@@ -16,7 +16,7 @@ interface StateContainerProps {
     AtomsRelationship?: any[]
   }
   > ;
-  AtomsRelationship: any[];
+  AtomsRelationship?: any[];
   hierarchy:Record<string, unknown>;
   snapshots:[];
   viewIndex:number;
