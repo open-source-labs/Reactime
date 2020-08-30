@@ -54,6 +54,7 @@ declare global {
   }
 }
 
+let isRecoil = false;
 let doWork = true;
 const circularComponentTable = new Set();
 let allAtomsRelationship = [];
@@ -107,11 +108,13 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     const payload = snap.tree.cleanTreeCopy(); // snap.tree.getCopy();
     // console.log('here is payload', payload);
     // console.log('here is recoil state', window[`$recoilDebugStates`]);
-    getRecoilState();
+    isRecoil ? getRecoilState() : ' ' ;
+    
     console.log('all atoms state', allAtomsRelationship)
     // payload.recoilState = window[`$recoilDebugStates`];
-    payload.AtomsRelationship = allAtomsRelationship;
 
+    isRecoil ? payload.AtomsRelationship = allAtomsRelationship : ' ';
+    
     window.postMessage(
       {
         action: 'recordSnap',
@@ -170,7 +173,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       treeBaseDuration,
     } = currentFiber;
 
-    if (elementType?.name) {
+    if (elementType?.name && isRecoil) {
       console.log('Name here', elementType?.name)
       // console.log('Here is the state', memoizedState);
       let pointer = memoizedState;
@@ -218,7 +221,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     }
 
     let hooksIndex;
-    let isRecoil = false;
 
     if (window[`$recoilDebugStates`]) {
       isRecoil = true;

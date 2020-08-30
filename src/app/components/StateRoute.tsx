@@ -30,6 +30,7 @@ interface StateRouteProps {
     state?: string | object;
     stateSnaphot?: object;
     children?: any[];
+    AtomsRelationship: any[];
   };
   hierarchy: object;
   snapshots: [];
@@ -64,12 +65,9 @@ const StateRoute = (props: StateRouteProps) => {
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
-  console.log(3);
+
   const renderAtomsRelationship = () => {
-    if (hierarchy) {
-      return <AtomsRelationship hierarchy={hierarchy} />;
-    }
-    return <div className="noState">{NO_STATE_MSG}</div>;
+    return <AtomsRelationship atomsRel={snapshot.AtomsRelationship} />;
   };
 
   // the hierarchy gets set on the first click in the page
@@ -129,6 +127,11 @@ const StateRoute = (props: StateRouteProps) => {
         <NavLink className="router-link" activeClassName="is-active" to="/map">
           Map
         </NavLink>
+        
+        {isRecoil && <NavLink className="router-link" activeClassName="is-active" to="/relationship">
+          Atoms Relationship
+        </NavLink>}
+
         <NavLink
           className="router-link"
           activeClassName="is-active"
@@ -140,6 +143,7 @@ const StateRoute = (props: StateRouteProps) => {
       <Switch>
         <Route path="/map" render={renderComponentMap} />
         <Route path="/history" render={isRecoil ? renderAtomsRelationship:  renderHistory} />
+        <Route path="/relationship" render={renderAtomsRelationship} />
         <Route path="/performance" render={renderPerfView} />
         <Route path="/" render={renderTree} />
       </Switch>
