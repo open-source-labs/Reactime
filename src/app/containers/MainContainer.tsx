@@ -12,14 +12,37 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
-  protocol: "https",
-  debug: true,
-});
+import MPID from "../user_id/user_id";
 
-document.addEventListener("click", (e) => {
-  mixpanel.track("click heard ", e.target);
-})
+const cookie = require("cookie");
+const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
+  debug: true,
+  protocol: "https"
+});
+console.log("MP ", Object.keys(mixpanel));
+
+//attempt to read cookies
+let user = new MPID();
+let user_cookie = cookie.parse(document.cookie)?.reactime;
+let d_id = () => user_cookie ? user_cookie.slice(0, 20) : null;
+//set current user cookie if it does not exist in cookies;
+if(!user_cookie) {
+  console.log(" set cookie ");
+  document.cookie = cookie.serialize( "reactime", user.setCookie() );
+  console.log("DC ", document.cookie);
+  user_cookie = user.getCookie();
+  mixpanel.people.set(d_id(), {"times": 1})
+}else{  
+  console.log(" increment user visits ");
+  mixpanel.people.increment(d_id(), "times");
+}
+
+function mpClickTrack(e) {
+  console.log( "click event ", e.target, "cookie", user_cookie, "d_id ", d_id );
+  mixpanel.track({ event: "click", {"$distinct_id": d_id } } );
+}
+
+document.addEventListener("click", mpClickTrack);
 
 
 function MainContainer(): any {

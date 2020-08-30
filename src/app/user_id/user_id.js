@@ -1,28 +1,27 @@
 const crypto = require("crypto");
-const cookieParser = require("cookie-parser");
-
+const cookie = require("cookie");
 
 class MPID{
-  constructor(cookies){
-    this.cookies = cookies;
-    this.user = null;
-    this.hasCookie = false; 
-  }
-
-  getCookie(){
-      //if they have a cookie use it as mixpanel id. 
-      //use this id      
-      this.user = cookieParser.JSONCookie(this.user);
+  constructor(){
+    this.cookie = null;
+    this.hasCookie = false;    
   }
 
   setCookie(){
+    console.log(" Set Cookie ");
     //create a string of random data    
-    this.user = crypto.randomBytes(128).toString('hex');
-    //if hasCookie is false create a cookie.
-    document.cookie = this.user;    
+    this.cookie = crypto.randomBytes(64).toString('hex');
+    return this.cookie;
   }
-  
+
+  getCookie(){
+    console.log(" get Cookie");    
+    return this.cookie;
+  }
 }
+
+
+export default MPID;
 
 //example:
 // 1. User opens app. 
