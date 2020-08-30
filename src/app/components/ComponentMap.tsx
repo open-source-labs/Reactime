@@ -145,9 +145,7 @@ const ComponentMap = (props: componentMapProps) => {
 
         //TODO -> Alter incoming snapshots so there is useful data to show on hover.
         nodeEnter.on('mouseover', function (d: any, i: number): any {
-          if (!d.children) {
-            console.log(d);
-            console.log(d.data);
+       
             d3.select(this)
               .append('text')
               .text(() => {
@@ -160,7 +158,7 @@ const ComponentMap = (props: componentMapProps) => {
               .attr('stroke', 'white')
               .attr('stroke-width', .5)
               .attr('id', `popup${i}`);
-          }
+          
         });
         nodeEnter.on('mouseout', function (d: any, i: number): any {
           d3.select(`#popup${i}`).remove();
