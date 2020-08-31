@@ -57,8 +57,8 @@ function History(props) {
    */
   let maked3Tree = function () {
     removed3Tree();
-    const width: number = 800;
-    const height: number = 600;
+    const width: any = 800;
+    const height: any = 600;
     const svgContainer = d3
       .select(HistoryRef.current)
       .append('svg') // svgContainer is now pointing to svg
@@ -249,9 +249,9 @@ function History(props) {
   };
 
   return (
-    <div className="history-d3-container">
-      <div ref={HistoryRef} className="history-d3-div" />
-    </div>
+    <>
+      <div ref={HistoryRef} className="history-d3-div" id="historyContainer"/>
+    </>
   );
 }
 

@@ -24,8 +24,8 @@ const ComponentMap = (props: componentMapProps) => {
   else lastSnap = viewIndex;
 
   //external constants
-  const width: number = 900;
-  const height: number = 600;
+  const width: any = '100vw';
+  const height: any = '100vh';
   let data: Object = snapshots[lastSnap];
 
   useEffect(() => {
@@ -123,7 +123,7 @@ const ComponentMap = (props: componentMapProps) => {
         nodeEnter
           .append('circle')
           .attr('r', 10)
-          .attr('fill', (d) => (d._children ? '#46edf2' : '#95B6B7'))
+          .attr('fill', (d) => (d._children ? '#4e9dcc' : '#95B6B7'))
           .attr('stroke-width', 10)
           .attr('stroke-opacity', 1);
 
@@ -250,7 +250,7 @@ const ComponentMap = (props: componentMapProps) => {
   );
 
   return (
-    <div data-testid="canvas">
+    <div data-testid="canvas" id="componentMapContainer">
       <svg id="canvas"></svg>
     </div>
   );

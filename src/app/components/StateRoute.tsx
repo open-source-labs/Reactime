@@ -49,7 +49,7 @@ const StateRoute = (props: StateRouteProps) => {
   const [{ x, y, k }, setZoomState]: any = useState({
     x: 150,
     y: 250,
-    k: 0.75,
+    k: 1,
   });
 
   //Map
@@ -135,7 +135,7 @@ const StateRoute = (props: StateRouteProps) => {
         </NavLink>
         
         {isRecoil && <NavLink className="router-link" activeClassName="is-active" to="/relationship">
-          Atoms Relationship
+        Relationships
         </NavLink>}
 
         <NavLink

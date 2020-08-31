@@ -14,7 +14,7 @@ function AtomsRelationship(props) {
 
 
   return (
-    <div className="history-d3-container">
+    <div className="history-d3-container" id="atomsContainer">
      {atomsRel && (
        <Chart
         width={'100%'}

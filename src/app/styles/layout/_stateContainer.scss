@@ -1,10 +1,18 @@
 .state-container {
   font-size: 12px;
-  overflow: hidden;
+  overflow: auto;
   
   background-color: $brand-color;
 }
-
+#componentMapContainer{
+  overflow: hidden;
+}
+#historyContainer{
+  overflow: hidden;
+}
+#atomsContainer{
+  overflow: hidden;
+}
 .state-container .navbar {
 
   background-color: $navbar-color;
@@ -78,7 +86,7 @@
 
   .router-link {
     height: 100%;
-    width: 33%;
+    width: 30%;
     display: flex;
     justify-content: center;
     align-items: center;
