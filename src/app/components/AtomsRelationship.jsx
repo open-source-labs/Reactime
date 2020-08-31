@@ -1,7 +1,8 @@
 import React, { Component, useEffect, useState, Fragment } from 'react';
 // import * as d3 from 'd3';
 // import {sankey} from 'sankey';
-import { Chart } from 'react-google-charts';
+import { Chart } from 'react-google-charts'
+
 // import { Fragment } from '../../backend/types/backendTypes';
 
 /**
@@ -40,7 +41,7 @@ function AtomsRelationship(props) {
     } else {
       setAtoms(atomsAndComp);
     }
-  }, [atomAndSelectorCheck, atomAndCompCheck])
+  }, [atomAndSelectorCheck, atomAndCompCheck, props])
 
   return (
     <div className="history-d3-container">
