@@ -8,7 +8,7 @@ class MPID{
   constructor(){
     this.cookie = null;    
     this.distinct_id = null;
-    this.hasCookie = false;    
+    this.debug = false;    
   }
 
   setCookie(){
@@ -20,7 +20,7 @@ class MPID{
     if(this.cookie){
       return this.cookie;    
     }else{
-      throw new Error("Unable to set cookie. Cookie or Distinct Id is falsey");
+      throw new Error("Unable to set cookie. Cookie is falsey");
     }
 
   }

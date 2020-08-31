@@ -19,28 +19,6 @@ const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
   protocol: "https"
 });
 
-//console.log("MP ", Object.keys(mixpanel));
-//attempt to read cookies
-const user = new MPID();
-
-//set current user cookie if it does not exist in cookies;
-if(user.checkDocumentCookie(document)) {
-  console.log("Reactime cookie found ");   
-  user.getCookie();
-  mixpanel.people.increment(user.get_dId(), "times");
-}else{
-  console.log("No reactime cookie found. Attempting set cookie.");
-  user.setCookie();
-  mixpanel.people.set(user.get_dId(), { "times": 1 });
-}
-
-
-
-function mpClickTrack(e) {
-  mixpanel.track("click", { distinct_id : user.distinct_id, where : e?.target?.innerText } );
-};
-
-document.addEventListener("click", mpClickTrack);
 
 
 function MainContainer(): any {
@@ -94,6 +72,42 @@ function MainContainer(): any {
     // assign port to state so it could be used by other components
     dispatch(setPort(port));
   });
+
+  /**
+   * get set cookies for mixpanel analytics
+   **/
+  useEffect( () => {
+    //console.log("MP ", Object.keys(mixpanel));
+    //attempt to read cookies
+    const user = new MPID();
+    /**
+     * If developing turn tracking off by setting user.debug to true;
+     * End goal: set user.debug variable in npm run dev
+     */
+    user.debug = true;
+
+    if (!user.debug) {
+      //set current user cookie if it does not exist in cookies;
+      if (user.checkDocumentCookie(document)) {        
+        user.getCookie();
+        mixpanel.people.increment(user.get_dId(), "times");
+      } else {        
+        user.setCookie();
+        mixpanel.people.set(user.get_dId(), { times: 1 });
+      }
+    }
+
+    function mpClickTrack(e) {
+      if (!user.debug) {
+        mixpanel.track("click", {
+          distinct_id: user.distinct_id,
+          where: e?.target?.innerText,
+        });
+      }
+    }
+
+    document.addEventListener("click", mpClickTrack);
+  }, [])
 
   if (!tabs[currentTab]) {
     return (
