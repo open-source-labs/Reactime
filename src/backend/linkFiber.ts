@@ -60,13 +60,8 @@ const circularComponentTable = new Set();
 let allAtomsRelationship = [];
 
 function getRecoilState() : any {
-  // get the last state snapshot
   const RecoilSnapshotsLength = window[`$recoilDebugStates`].length;
   const lastRecoilSnapshot = window[`$recoilDebugStates`][RecoilSnapshotsLength - 1];
-  console.log(lastRecoilSnapshot);
-
-  // get all atom - selector pairs, and save them as nodes
-  // in the from to weight format
   const nodeToNodeSubs = lastRecoilSnapshot.nodeToNodeSubscriptions;
   let nodeToNodeSubsKeys = lastRecoilSnapshot.nodeToNodeSubscriptions.keys();
   nodeToNodeSubsKeys.forEach( 
@@ -76,21 +71,6 @@ function getRecoilState() : any {
       )
     }
   )
-
-  // get all atom - component pairs, and save them as nodes
-  // in the from to weight format
-
-  // const nodeToCompSubs = lastRecoilSnapshot.nodeToComponentSubscriptions;
-  // console.log(nodeToCompSubs);
-  // let nodeToCompSubsKeys = lastRecoilSnapshot.nodeToComponentSubscriptions.keys();
-  // nodeToCompSubsKeys.forEach( 
-  //   node => {
-  //     console.log(node);
-  //     // nodeToCompSubsKeys.get(node).forEach(
-  //     //   nodeSubs => allAtomsRelationship.push([node, nodeSubs, 2])
-  //     // )
-  //   }
-  // )
 }
 
 
@@ -399,18 +379,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
   }
 
   return () => {
-    /*     const container = document.getElementById('root');
-    if (container._internalRoot) {
-      fiberRoot = container._internalRoot;
-    } else {
-      const {
-        _reactRootContainer: { _internalRoot },
-        _reactRootContainer,
-      } = container;
-      // Only assign internal root if it actually exists
-      fiberRoot = _internalRoot || _reactRootContainer;
-    }
- */
+
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
