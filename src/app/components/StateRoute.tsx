@@ -32,7 +32,7 @@ interface StateRouteProps {
     children?: any[];
     AtomsRelationship?: any[];
   };
-  hierarchy: object;
+  hierarchy: any;
   snapshots: [];
   viewIndex: number;
 }
@@ -44,6 +44,8 @@ const StateRoute = (props: StateRouteProps) => {
   // console.log(snapshot.AtomsRelationship)
   let isRecoil = snapshot.AtomsRelationship ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
+
+  // component map zoom state
   const [{ x, y, k }, setZoomState]: any = useState({
     x: 150,
     y: 250,
@@ -63,10 +65,11 @@ const StateRoute = (props: StateRouteProps) => {
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
   // if true involk render chart with hierarchy
   const renderHistory = () => {
-    if (hierarchy) {
+    if (hierarchy.children.length > 0) {
+
       return <History hierarchy={hierarchy} />;
     }
-    return <div className="noState">{NO_STATE_MSG}</div>;
+    return <div className="noState">Application not compatible with history</div>;
   };
 
   const renderAtomsRelationship = () => {

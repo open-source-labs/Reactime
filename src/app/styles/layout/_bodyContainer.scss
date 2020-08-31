@@ -1,5 +1,6 @@
 .body-container {
   height: 94%;
+  overflow: hidden;
   display: grid;
   grid-template-columns: 1fr 2fr;
   grid-template-rows: 8fr 1fr;
