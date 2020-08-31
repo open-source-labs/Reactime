@@ -13,7 +13,6 @@ import {
 import { useStoreContext } from '../store';
 import MPID from "../user_id/user_id";
 
-const cookie = require("cookie");
 const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
   debug: true,
   protocol: "https"
@@ -77,8 +76,9 @@ function MainContainer(): any {
    * get set cookies for mixpanel analytics
    **/
   useEffect( () => {
-    //console.log("MP ", Object.keys(mixpanel));
-    //attempt to read cookies
+    /**
+     * create new user and attempt to read cookies
+    */     
     const user = new MPID();
     /**
      * If developing turn tracking off by setting user.debug to true;

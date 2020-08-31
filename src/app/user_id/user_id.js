@@ -9,7 +9,6 @@ class MPID{
   }
 
   setCookie(){
-    console.log(" Set Cookie ");
     //create a string of random data        
     this.cookie = cookie.serialize("reactime", crypto.randomBytes(64).toString('hex') );
     this.distinct_id = this.cookie?.reactime?.slice(0, 20);
@@ -22,9 +21,7 @@ class MPID{
 
   }
 
-  getCookie(){
-    console.log(" get Cookie");
-    
+  getCookie(){    
     if(this.cookie){   
       return this.cookie;
     }else{
@@ -34,19 +31,14 @@ class MPID{
   }
 
   checkDocumentCookie(doc){
-    console.log(" Check Document Cookie ", cookie.parse( doc.cookie ));
     let parsedCookie = cookie.parse(doc.cookie);
     
     if( parsedCookie?.reactime ){      
-      console.log( "reactime cookie found" );
-      this.cookie = parsedCookie?.reactime;
-      
-      if(!this.distinct_id){
-        console.log(" set dId");
+      this.cookie = parsedCookie?.reactime;      
+      if(!this.distinct_id){        
         this.distinct_id = parsedCookie?.reactime?.slice(0, 20);
       }    
-    }else{
-      console.log("No reactime cookie found. Attempting setCookie");
+    }else{      
       this.setCookie();
       return false;
     }
