@@ -30,7 +30,7 @@ if(user.checkDocumentCookie(document)) {
   mixpanel.people.increment(user.get_dId(), "times");
 }else{
   console.log("No reactime cookie found. Attempting set cookie.");
-  this.setCookie();
+  user.setCookie();
   mixpanel.people.set(user.get_dId(), { "times": 1 });
 }
 

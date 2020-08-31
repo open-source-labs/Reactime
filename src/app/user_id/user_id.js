@@ -17,7 +17,7 @@ class MPID{
     this.cookie = cookie.serialize("reactime", crypto.randomBytes(64).toString('hex') );
     this.distinct_id = this.cookie?.reactime?.slice(0, 20);
     
-    if(this.cookie && this.distinct_id){
+    if(this.cookie){
       return this.cookie;    
     }else{
       throw new Error("Unable to set cookie. Cookie or Distinct Id is falsey");
