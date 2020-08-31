@@ -1,9 +1,6 @@
 const crypto = require("crypto");
 const cookie = require("cookie");
-const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
-  debug: true,
-  protocol: "https"
-});
+
 class MPID{
   constructor(){
     this.cookie = null;    
