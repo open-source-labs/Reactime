@@ -1,6 +1,9 @@
 const crypto = require("crypto");
 const cookie = require("cookie");
-
+const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
+  debug: true,
+  protocol: "https"
+});
 class MPID{
   constructor(){
     this.cookie = null;    
@@ -8,37 +11,58 @@ class MPID{
     this.hasCookie = false;    
   }
 
-  setCookie(doc){
+  setCookie(){
     console.log(" Set Cookie ");
-    //create a string of random data    
+    //create a string of random data        
     this.cookie = cookie.serialize("reactime", crypto.randomBytes(64).toString('hex') );
-    doc.cookie = this.cookie;
-    console.log(" Check if Cookie set ", doc.cookie);
-    return this.cookie;
+    this.distinct_id = this.cookie?.reactime?.slice(0, 20);
+    
+    if(this.cookie && this.distinct_id){
+      return this.cookie;    
+    }else{
+      throw new Error("Unable to set cookie. Cookie or Distinct Id is falsey");
+    }
+
   }
 
   getCookie(){
-    console.log(" get Cookie");    
-    return this.cookie;
+    console.log(" get Cookie");
+    
+    if(this.cookie){   
+      return this.cookie;
+    }else{
+      throw new Error("Cookie truthy, but unreturnable");
+    }
+  
   }
 
   checkDocumentCookie(doc){
     console.log(" Check Document Cookie ", cookie.parse( doc.cookie ));
-    if( doc.cookie ){
-      console.log( "doc cookie parsed: ", cookie.parse(doc.cookie)?.reactime );
-      let a = cookie.parse(doc.cookie)?.reactime;
-      if(a){
-        return true;
-      }else{
-        return false;
-      }
+    let parsedCookie = cookie.parse(doc.cookie);
+    
+    if( parsedCookie?.reactime ){      
+      console.log( "reactime cookie found" );
+      this.cookie = parsedCookie?.reactime;
+      
+      if(!this.distinct_id){
+        console.log(" set dId");
+        this.distinct_id = parsedCookie?.reactime?.slice(0, 20);
+      }    
     }else{
+      console.log("No reactime cookie found. Attempting setCookie");
+      this.setCookie();
       return false;
     }
   }
 
   get_dId(){
-    return this.cookie ? this.cookie.slice(0, 20) : null;
+    try{
+      if(this.distinct_id ) {        
+        return this.distinct_id;
+      }
+    }catch( e ){
+      throw new Error(`unable to set cookie. Reason: ${e}. `);
+    }
   }
 }
 

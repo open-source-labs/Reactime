@@ -9,8 +9,8 @@ describe("Test new user class constructor", () => {
     expect(user).toBeInstanceOf(MPID);
   })
 
-  xit("new user cookie should be set", () => {
-    
+  it("new user cookie should be set", () => {
+    expect(user.setCookie()).toHaveLength();  
   })
 
   it("checkDocumentCookie should return a boolean", () => {

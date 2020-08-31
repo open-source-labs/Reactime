@@ -24,21 +24,21 @@ const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
 const user = new MPID();
 
 //set current user cookie if it does not exist in cookies;
-if(!user.checkDocumentCookie(document)) {
-  console.log(" set user cookie ");
-  user.setCookie(document);
-  mixpanel.people.set( user.get_dId(), {"times": 1} );
+if(user.checkDocumentCookie(document)) {
+  console.log("Reactime user cookie defined. Check dId ");  
+  if( user.distinct_id ){
+    try{
+      user.setCookie();
+    }catch(e){
+      mixpanel.track(`Cannot set user cookie ${e}`);
+    }
+  }else{
 
-}else{  
-  //if a user visits increment the visit count;
-  //probably not necessary because of mixpanel, but .set() was acting strangely so this
-  // is an experiment to figure it out. 
-  console.log (" increment times ");
-  mixpanel.people.increment( user.get_dId(), "times" );
+  }
 }
 
 function mpClickTrack(e) {
-  mixpanel.track( { event: "click" } );
+  mixpanel.track({ event: "click", properties: { "$distinct_id": user.distinct_id } });
 };
 
 document.addEventListener("click", mpClickTrack);
