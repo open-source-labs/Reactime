@@ -25,20 +25,19 @@ const user = new MPID();
 
 //set current user cookie if it does not exist in cookies;
 if(user.checkDocumentCookie(document)) {
-  console.log("Reactime user cookie defined. Check dId ");  
-  if( user.distinct_id ){
-    try{
-      user.setCookie();
-    }catch(e){
-      mixpanel.track(`Cannot set user cookie ${e}`);
-    }
-  }else{
-
-  }
+  console.log("Reactime cookie found ");   
+  user.getCookie();
+  mixpanel.people.increment(user.get_dId(), "times");
+}else{
+  console.log("No reactime cookie found. Attempting set cookie.");
+  this.setCookie();
+  mixpanel.people.set(user.get_dId(), { "times": 1 });
 }
 
+
+
 function mpClickTrack(e) {
-  mixpanel.track({ event: "click", properties: { "$distinct_id": user.distinct_id } });
+  mixpanel.track("click", { distinct_id : user.distinct_id, where : e?.target?.innerText } );
 };
 
 document.addEventListener("click", mpClickTrack);
