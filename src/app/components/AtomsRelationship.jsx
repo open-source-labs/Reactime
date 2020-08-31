@@ -10,15 +10,19 @@ import { Chart } from 'react-google-charts';
 function AtomsRelationship(props) {
   console.log('Props', props.atomsRel);
 
+  const {atomsRel} = props
+
+
   return (
     <div className="history-d3-container">
-      <Chart
+     {atomsRel && (
+       <Chart
         width={'100%'}
         height={'100%'}
         chartType="Sankey"
         options={{
           sankey: {
-            link: { color: { fill: '#c6e6f', fillOpacity: 0.1 } },
+            link: { color: { fill: '#gray', fillOpacity: 0.1 } },
             node: {
               colors: [
                 '#4a91c7',
@@ -31,18 +35,23 @@ function AtomsRelationship(props) {
                 '#b7dbf8',
                 '#c6e6ff',
                 '#46edf2',
+                '#76f5f3',
                 '#95B6B7',
+                '#76dcde',
+                '#5fdaed',
               ],
+
               label: { color: '#fff', fontSize: '14' },
               nodePadding: 50,
               width: 15,
             },
           },
+          tooltip: { textStyle: { color: 'gray', fontSize: 12 }},
         }}
         loader={<div>Loading Chart</div>}
-        data={[['Atom', 'Selector', ''], ...props.atomsRel]}
+        data={[['Atom', 'Selector', ''], ...atomsRel]}
         rootProps={{ 'data-testid': '1' }}
-      />
+      />)}
     </div>
   );
 }
