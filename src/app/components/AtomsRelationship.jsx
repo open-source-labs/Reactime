@@ -14,7 +14,7 @@ function AtomsRelationship(props) {
 
 
   return (
-    <div className="history-d3-container">
+    <div className="history-d3-container" id="atomsContainer">
      {atomsRel && (
        <Chart
         width={'100%'}
@@ -41,12 +41,12 @@ function AtomsRelationship(props) {
                 '#5fdaed',
               ],
 
-              label: { color: '#fff', fontSize: '14' },
+              label: { color: '#fff', fontSize: '13', fontName: 'Monaco', },
               nodePadding: 50,
               width: 15,
             },
           },
-          tooltip: { textStyle: { color: 'gray', fontSize: 12 }},
+          tooltip: { textStyle: { color: 'white', fontSize: 0.1, }},
         }}
         loader={<div>Loading Chart</div>}
         data={[['Atom', 'Selector', ''], ...atomsRel]}
