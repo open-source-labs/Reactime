@@ -27,47 +27,30 @@ declare global {
     __REACT_DEVTOOLS_GLOBAL_HOOK__?: any;
   }
 }
-
 let fiberRoot = null;
-let isRecoil = false;
 let doWork = true;
 const circularComponentTable = new Set();
 let allAtomsRelationship = [];
+let isRecoil = false;
+
+// Simple check for whether our target app uses Recoil
+if (window[`$recoilDebugStates`]) {
+  isRecoil = true;
+}
 
 function getRecoilState(): any {
-  // get the last state snapshot
   const RecoilSnapshotsLength = window[`$recoilDebugStates`].length;
   const lastRecoilSnapshot = window[`$recoilDebugStates`][RecoilSnapshotsLength - 1];
-  console.log(lastRecoilSnapshot);
-
-  // get all atom - selector pairs, and save them as nodes
-  // in the from to weight format
   const nodeToNodeSubs = lastRecoilSnapshot.nodeToNodeSubscriptions;
-  let nodeToNodeSubsKeys = lastRecoilSnapshot.nodeToNodeSubscriptions.keys();
+  const nodeToNodeSubsKeys = lastRecoilSnapshot.nodeToNodeSubscriptions.keys();
   nodeToNodeSubsKeys.forEach(
     node => {
       nodeToNodeSubs.get(node).forEach(
-        nodeSubs => allAtomsRelationship.push([node, nodeSubs, 1])
-      )
+        nodeSubs => allAtomsRelationship.push([node, nodeSubs, 'atoms and selectors'])
+      );
     }
-  )
-
-  // get all atom - component pairs, and save them as nodes
-  // in the from to weight format
-
-  // const nodeToCompSubs = lastRecoilSnapshot.nodeToComponentSubscriptions;
-  // console.log(nodeToCompSubs);
-  // let nodeToCompSubsKeys = lastRecoilSnapshot.nodeToComponentSubscriptions.keys();
-  // nodeToCompSubsKeys.forEach( 
-  //   node => {
-  //     console.log(node);
-  //     // nodeToCompSubsKeys.get(node).forEach(
-  //     //   nodeSubs => allAtomsRelationship.push([node, nodeSubs, 2])
-  //     // )
-  //   }
-  // )
+  );
 }
-
 
 /**
  * @method sendSnapshot
@@ -85,15 +68,11 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
     snap.tree = new Tree('root', 'root');
   }
 
-  const payload = snap.tree.cleanTreeCopy(); // snap.tree.getCopy();
-  // console.log('here is payload', payload);
-  // console.log('here is recoil state', window[`$recoilDebugStates`]);
-  isRecoil ? getRecoilState() : ' ';
-
-  console.log('all atoms state', allAtomsRelationship)
-  // payload.recoilState = window[`$recoilDebugStates`];
-
-  isRecoil ? payload.AtomsRelationship = allAtomsRelationship : ' ';
+  const payload = snap.tree.cleanTreeCopy();
+  if (isRecoil) {
+    getRecoilState();
+    payload.AtomsRelationship = allAtomsRelationship;
+  }
 
   window.postMessage(
     {
@@ -116,7 +95,6 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
     const { current } = fiberRoot;
     circularComponentTable.clear();
     snap.tree = createTree(current);
-
   }
   sendSnapshot(snap, mode);
 }
@@ -212,25 +190,19 @@ function createTree(
   } = currentFiber;
 
   if (elementType?.name && isRecoil) {
-    console.log('Name here', elementType?.name)
-    // console.log('Here is the state', memoizedState);
     let pointer = memoizedState;
     while (pointer !== null && pointer !== undefined && pointer.next !== null) {
       pointer = pointer.next;
     }
-    // console.log('traverse the memoizedState 1', pointer.memoizedState);
-    // // 2nd 
-    // console.log('traverse the memoizedState 2', pointer.memoizedState[1]?.[0]);
+
     if (pointer?.memoizedState[1]?.[0].current) {
       const atomName = pointer.memoizedState[1]?.[0].current.keys().next().value;
-      console.log('atom', pointer.memoizedState[1]?.[0].current.keys().next().value);
-      allAtomsRelationship.push([atomName, elementType?.name, 1]);
+      allAtomsRelationship.push([atomName, elementType?.name, 'atoms and components']);
     }
 
     if (pointer?.memoizedState[1]?.[0].key) {
       const atomName = pointer.memoizedState[1]?.[0].key;
-      console.log('atom', pointer.memoizedState[1]?.[0].key);
-      allAtomsRelationship.push([atomName, elementType?.name, 1]);
+      allAtomsRelationship.push([atomName, elementType?.name, 'atoms and components']);
     }
   }
 
@@ -260,10 +232,7 @@ function createTree(
 
   let hooksIndex;
 
-  // Simple check for whether our target app uses Recoil
-  if (window[`$recoilDebugStates`]) {
-    isRecoil = true;
-  }
+
 
   const atomArray = [];
   atomArray.push(memoizedProps);

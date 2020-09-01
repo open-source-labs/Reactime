@@ -39,9 +39,7 @@ interface StateRouteProps {
 
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
-  // let isRecoil = true;
-  // console.log('snapshot', snapshot)
-  // console.log(snapshot.AtomsRelationship)
+
   let isRecoil = snapshot.AtomsRelationship ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
 
@@ -66,10 +64,9 @@ const StateRoute = (props: StateRouteProps) => {
   // if true involk render chart with hierarchy
   const renderHistory = () => {
     if (hierarchy.children.length > 0) {
-
       return <History hierarchy={hierarchy} />;
     }
-    return <div className="noState">Application not compatible with history</div>;
+    return <div className="noState">History graph will render on first state change</div>;
   };
 
   const renderAtomsRelationship = () => {
@@ -85,10 +82,10 @@ const StateRoute = (props: StateRouteProps) => {
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
-  
+
   let perfChart;
   if (true) {
-    
+
     perfChart = (
       <PerfView
         viewIndex={viewIndex}
@@ -133,9 +130,9 @@ const StateRoute = (props: StateRouteProps) => {
         <NavLink className="router-link" activeClassName="is-active" to="/map">
           Map
         </NavLink>
-        
+
         {isRecoil && <NavLink className="router-link" activeClassName="is-active" to="/relationship">
-        Relationships
+          Relationships
         </NavLink>}
 
         <NavLink

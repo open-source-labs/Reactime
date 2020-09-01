@@ -1,21 +1,40 @@
-import React, { Component, useEffect, useState } from 'react';
-// import * as d3 from 'd3';
-// import {sankey} from 'sankey';
-import { Chart } from 'react-google-charts';
-
-/**
- * @method maked3Tree :Creates a new D3 Tree
- */
+import React, { Component, useEffect, useState, Fragment } from 'react';
+import { Chart } from 'react-google-charts'
 
 function AtomsRelationship(props) {
-  console.log('Props', props.atomsRel);
-
   const {atomsRel} = props
 
+  const atomsAndComp = atomsRel.filter(e => e[2] !== 'atoms and selectors').map(e => { 
+    let copy = [...e];
+    copy[2] = 1; 
+    return [...copy] 
+  });
+
+  const atomsAndSelectors = atomsRel.filter(e => e[2] === 'atoms and selectors').map(e => {
+    let copy = [...e];
+    copy[2] = 1;
+    return [...copy]
+  });
+
+  const copyatomsRel = atomsRel.map(e => { let copy = [...e]; copy[2] = 1; return copy; });
+  const [atoms, setAtoms] = useState([...copyatomsRel]);
+  const [atomAndSelectorCheck, setAtomAndSelectorCheck] = useState(false);
+  const [atomAndCompCheck, setAtomAndCompCheck] = useState(false);
+
+  useEffect( () => {
+    if ((!atomAndSelectorCheck && !atomAndCompCheck) || (atomAndSelectorCheck && atomAndCompCheck)) {
+      setAtoms(copyatomsRel);
+    } else if (atomAndSelectorCheck) {
+      setAtoms(atomsAndSelectors);
+    } else {
+      setAtoms(atomsAndComp);
+    }
+  }, [atomAndSelectorCheck, atomAndCompCheck, props])
 
   return (
-    <div className="history-d3-container" id="atomsContainer">
-     {atomsRel && (
+    <div className="history-d3-container">
+      {atoms && (
+      <Fragment>
        <Chart
         width={'100%'}
         height={'100%'}
@@ -49,9 +68,19 @@ function AtomsRelationship(props) {
           tooltip: { textStyle: { color: 'white', fontSize: 0.1, }},
         }}
         loader={<div>Loading Chart</div>}
-        data={[['Atom', 'Selector', ''], ...atomsRel]}
+            data={[['Atom', 'Selector', ''], ...atoms]}
         rootProps={{ 'data-testid': '1' }}
-      />)}
+      />
+      <div>
+            <input type="checkbox" id='atomscomps' onClick={e => setAtomAndCompCheck(atomAndCompCheck ? false: true)}/>
+            <label htmlFor="atomscomps"> Only Show Atoms (or Selectors) and Components </label>
+            <input type="checkbox" id='atomsselectors' onClick={e => setAtomAndSelectorCheck(atomAndSelectorCheck ? false : true)} />
+            <label htmlFor="atomsselectors"> Only Show Atoms and Selectors </label>
+      </div>
+        </Fragment>
+      )
+        
+      }
     </div>
   );
 }
