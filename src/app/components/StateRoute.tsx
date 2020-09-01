@@ -39,9 +39,7 @@ interface StateRouteProps {
 
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
-  // let isRecoil = true;
-  // console.log('snapshot', snapshot)
-  // console.log(snapshot.AtomsRelationship)
+
   let isRecoil = snapshot.AtomsRelationship ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
 

@@ -1,34 +1,22 @@
 import React, { Component, useEffect, useState, Fragment } from 'react';
-// import * as d3 from 'd3';
-// import {sankey} from 'sankey';
 import { Chart } from 'react-google-charts'
 
-// import { Fragment } from '../../backend/types/backendTypes';
-
-/**
- * @method maked3Tree :Creates a new D3 Tree
- */
-
 function AtomsRelationship(props) {
-
   const {atomsRel} = props
-
 
   const atomsAndComp = atomsRel.filter(e => e[2] !== 'atoms and selectors').map(e => { 
     let copy = [...e];
     copy[2] = 1; 
     return [...copy] 
-  })
+  });
+
   const atomsAndSelectors = atomsRel.filter(e => e[2] === 'atoms and selectors').map(e => {
     let copy = [...e];
     copy[2] = 1;
     return [...copy]
-  })  
-  const copyatomsRel = atomsRel.map(e => { let copy = [...e]; copy[2] = 1; return copy; });
+  });
 
-  // console.log('atoms and selectors', atomsAndSelectors);
-  // console.log('copy Atom rel', copyatomsRel);
-  // console.log('initial atom rel', atomsRel);
+  const copyatomsRel = atomsRel.map(e => { let copy = [...e]; copy[2] = 1; return copy; });
   const [atoms, setAtoms] = useState([...copyatomsRel]);
   const [atomAndSelectorCheck, setAtomAndSelectorCheck] = useState(false);
   const [atomAndCompCheck, setAtomAndCompCheck] = useState(false);
@@ -46,7 +34,6 @@ function AtomsRelationship(props) {
   return (
     <div className="history-d3-container">
       {atoms && (
-      //  <div>
       <Fragment>
        <Chart
         width={'100%'}

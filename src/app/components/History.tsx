@@ -140,7 +140,6 @@ function History(props) {
         tooltipDiv.transition().duration(50).style('opacity', 0.9);
 
         if (d.data.stateSnapshot.children[0].name === 'RecoilRoot') {
-          console.log('enter');
           isRecoil = true;
         }
         if (!isRecoil) {
