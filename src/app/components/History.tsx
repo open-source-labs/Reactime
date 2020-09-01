@@ -68,7 +68,7 @@ function History(props) {
     const g = svgContainer
       .append('g')
       // this is changing where the graph is located physically
-      .attr('transform', `translate(${width / 2 + 4}, ${height / 2 + 2})`);
+      .attr('transform', `translate(${width / 2 + 4}, ${height / 2 + 2})`)
 
     // d3.hierarchy constructs a root node from the specified hierarchical data
     // (our object titled dataset), which must be an object representing the root node
@@ -83,6 +83,7 @@ function History(props) {
 
     const d3root = tree(hierarchy);
 
+    
     g.selectAll('.link')
       // root.links() gets an array of all the links,
       // where each element is an object containing a
@@ -112,7 +113,7 @@ function History(props) {
 
         if (loadTime !== undefined) {
           if (loadTime > 16) {
-            return '#ff0000';
+            return '#d62b2b';
           }
         }
 

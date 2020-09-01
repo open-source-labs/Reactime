@@ -135,7 +135,7 @@ const ComponentMap = (props: componentMapProps) => {
           .attr('y', '-5')
           .attr('text-anchor', 'end')
           .text((d: any) => d.data.name.slice(0, 14)) // Limits Characters in Display
-          .style('font-size', `.6rem`)
+          .style('font-size', `.7rem`)
           .style('fill', 'white')
           .clone(true)
           .lower()

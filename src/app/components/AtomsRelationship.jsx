@@ -41,7 +41,7 @@ function AtomsRelationship(props) {
                 '#5fdaed',
               ],
 
-              label: { color: '#fff', fontSize: '14' },
+              label: { color: '#fff', fontSize: '13' },
               nodePadding: 50,
               width: 15,
             },
