@@ -35,18 +35,10 @@ const PerfView = (props: PerfViewProps) => {
   let { snapshots } = props;
   const adjustedSize = Math.min(width, height);
   const svgRef = useRef(null);
-
-  //NEEDS REWRITE FOR RECOIL
-  // snapshots.forEach((snapshot) => snapshot.children[0].children.shift());
-  // console.log('SNAPSHOTS -------------------------->', snapshots);
-  // Figure out which snapshot index to use
   
   let indexToDisplay: number | null = null;
   if (viewIndex < 0) indexToDisplay = snapshots.length - 1;
   else indexToDisplay = viewIndex;
-
-  //console.log('SNAPSHOTS IN PERF VIEW', snapshots);
-  //console.log('VIEW INDEX', indexToDisplay);
 
   // Set up color scaling function
   const colorScale = d3

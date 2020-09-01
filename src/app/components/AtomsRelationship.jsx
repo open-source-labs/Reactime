@@ -8,10 +8,8 @@ import { Chart } from 'react-google-charts';
  */
 
 function AtomsRelationship(props) {
-  console.log('Props', props.atomsRel);
 
   const {atomsRel} = props
-
 
   return (
     <div className="history-d3-container" id="atomsContainer">
