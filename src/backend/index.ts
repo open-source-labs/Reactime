@@ -14,8 +14,6 @@ import timeJumpStart from './timeJump';
 import {
   Snapshot, Mode, SnapshotNode, MsgData,
 } from './types/backendTypes';
-import { Interface } from 'readline';
-
 
 // * State snapshot object initialized here
 const snapShot: Snapshot = {
@@ -45,9 +43,9 @@ function getRouteURL(node: SnapshotNode): string {
 }
 
 // * Event listener for time-travel actions
-window.addEventListener('message', ({ data: { action, payload } } : MsgData) => {
+window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
   switch (action) {
-    case 'jumpToSnap':      
+    case 'jumpToSnap':
       timeJump(payload, true); // * This sets state with given payload
       // Get the pathname from payload and add new entry to browser history
       // MORE: https://developer.mozilla.org/en-US/docs/Web/API/History/pushState

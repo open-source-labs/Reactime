@@ -7,13 +7,10 @@ import 'core-js';
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
 
-// import * as reactWorkTags from './reactWorkTags';
-// const Flatted = require('flatted');
-
 let copyInstances = 0;
 const circularComponentTable = new Set<Tree>();
 
-// removes unserializable state data such as functions
+// Removes unserializable state data such as functions
 function scrubUnserializableMembers(tree: Tree): Tree {
   Object.entries(tree.state).forEach(keyValuePair => {
     if (typeof keyValuePair[1] === 'function') tree.state[keyValuePair[0]] = 'function';
@@ -30,38 +27,32 @@ function serializeState(state) {
 }
 
 /**
- *
  * This is the current snapshot that is being sent to the snapshots array.
- *
+ * Creates a Tree
+ * @param state : the tree's current state
+ * @param name : the tree's name
+ * @param componentData : Data in the component tree
+ * @parent generates a new tree (recursive call)
  */
 class Tree {
-  /**
-   * This is the current snapshot that is being sent to the snapshots array.
-   * Creates a Tree
-   * @param state : the tree's current state
-   * @param name : the tree's name
-   * @param componentData : Data in the component tree
-   * @parent generates a new tree (recursive call)
-   */
   state: string | {};
 
   name: string;
 
   componentData: {};
 
-  children: (Tree | string)[] ;
+  children: (Tree | string)[];
 
   parent: Tree
 
-  AtomsRelationship : any;
+  AtomsRelationship: any;
 
-  constructor(state : string | {}, name = 'nameless', componentData: {} = {}) {
-    this.state = state === 'root' ? 'root' : serializeState(state); // JSON.parse(JSON.stringify(state));
+  constructor(state: string | {}, name = 'nameless', componentData: {} = {}) {
+    this.state = state === 'root' ? 'root' : serializeState(state);
     this.name = name;
     this.componentData = componentData ? JSON.parse(JSON.stringify(componentData)) : {};
     this.children = [];
     this.parent = null; // ref to parent so we can add siblings
-    // this.recoilState = null;
   }
 
   addChild(state: string | {}, name: string, componentData: {}): Tree {
@@ -86,7 +77,6 @@ class Tree {
      * @object circularComponentTable : Clears circular component table only on first call, not recursive ones
      *
      */
-    //
     if (copyInstances === 0) {
       copyInstances++;
       circularComponentTable.clear();
@@ -97,8 +87,6 @@ class Tree {
     circularComponentTable.add(this);
     copy = scrubUnserializableMembers(copy);
 
-    // copy.children = this.children;
-
     // creates copy of each child of the present node
     copy.children = this.children.map((child: Tree): Tree | string => {
       if (!circularComponentTable.has(child)) {
@@ -106,8 +94,7 @@ class Tree {
       }
       return 'circular';
     });
-    
-    // returns copy
+
     copyInstances--;
     return copy;
   }

@@ -249,7 +249,7 @@ function createTree(
       // We then store them along with the corresponding memoizedState.queue,
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseRecoilHooks(memoizedState, memoizedProps);
-      hooksStates.forEach((state) => {
+      hooksStates.forEach(state => {
         hooksIndex = componentActionsRecord.saveNew(
           state.state,
           state.component

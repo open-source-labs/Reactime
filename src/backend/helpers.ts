@@ -9,7 +9,9 @@
 // eslint-disable-next-line import/newline-after-import
 const acorn = require('acorn');
 const jsx = require('acorn-jsx');
+
 const JSXParser = acorn.Parser.extend(jsx());
+
 /**
  * @method throttle
  * @param f A function to throttle
@@ -19,8 +21,8 @@ const JSXParser = acorn.Parser.extend(jsx());
  */
 export const throttle = (f: Function, t: number): Function => {
   // Initialize boolean flags for callback, throttledFunc
-  let isOnCooldown: boolean = false;
-  let isCallQueued: boolean = false;
+  let isOnCooldown = false;
+  let isCallQueued = false;
 
   // Wrap the passed-in function, f, in a callback function that "throttles"
   // (puts a limit on) the number of calls that can be made to function, f
@@ -67,7 +69,7 @@ export const throttle = (f: Function, t: number): Function => {
 /**
  * @method getHooksNames
  * @param elementType The fiber `type`, A stringified function of the component the Fiber whose hooks we want corresponds to
- * @returns An array of strings 
+ * @returns An array of strings
  */
 export const getHooksNames = (elementType: string): Array<string> => {
   // Initialize empty object to store the setters and getter
@@ -82,7 +84,7 @@ export const getHooksNames = (elementType: string): Array<string> => {
 
   // Begin search for hook names, only if ast has a body property.
   while (Object.hasOwnProperty.call(ast, 'body')) {
-    let tsCount: number = 0; // Counter for the number of TypeScript hooks seen (to distinguish in masterState)
+    let tsCount = 0; // Counter for the number of TypeScript hooks seen (to distinguish in masterState)
     ast = ast.body;
 
     // Statements get all the names of the hooks. For example: useCount, useWildcard, ...
@@ -91,7 +93,7 @@ export const getHooksNames = (elementType: string): Array<string> => {
      * Other types: "BlockStatement" / "ExpressionStatement" / "ReturnStatement"
      * Iterate through AST of every function declaration
      * Check within each function declaration if there are hook declarations */
-    ast.forEach((functionDec) => {
+    ast.forEach(functionDec => {
       let body: any;
       if (functionDec.expression && functionDec.expression.body) body = functionDec.expression.body.body;
       else body = functionDec.body ? functionDec.body.body : [];
