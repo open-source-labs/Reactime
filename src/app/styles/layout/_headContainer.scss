@@ -24,7 +24,7 @@
   .tab-select__menu {
     border-style: none;
     width: 300px;
-    background-color: $light-grey-one;
+    background-color: $brand-color;
     z-index: 2;
     @extend %disable-highlight;
   }
