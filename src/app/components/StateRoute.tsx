@@ -14,6 +14,7 @@ import {
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
 import PerfView from './PerfView';
+import AtomsRelationship from './AtomsRelationship.jsx';
 
 const History = require('./History').default;
 
@@ -29,15 +30,22 @@ interface StateRouteProps {
     state?: string | object;
     stateSnaphot?: object;
     children?: any[];
+    AtomsRelationship?: any[];
   };
-  hierarchy: object;
+  hierarchy: any;
   snapshots: [];
   viewIndex: number;
 }
 
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
+  // let isRecoil = true;
+  // console.log('snapshot', snapshot)
+  // console.log(snapshot.AtomsRelationship)
+  let isRecoil = snapshot.AtomsRelationship ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
+
+  // component map zoom state
   const [{ x, y, k }, setZoomState]: any = useState({
     x: 150,
     y: 250,
@@ -52,14 +60,20 @@ const StateRoute = (props: StateRouteProps) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
+
   // the hierarchy gets set on the first click in the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
   // if true involk render chart with hierarchy
   const renderHistory = () => {
-    if (hierarchy) {
+    if (hierarchy.children.length > 0) {
+
       return <History hierarchy={hierarchy} />;
     }
-    return <div className="noState">{NO_STATE_MSG}</div>;
+    return <div className="noState">Application not compatible with history</div>;
+  };
+
+  const renderAtomsRelationship = () => {
+    return <AtomsRelationship atomsRel={snapshot.AtomsRelationship} />;
   };
 
   // the hierarchy gets set on the first click in the page
@@ -119,6 +133,11 @@ const StateRoute = (props: StateRouteProps) => {
         <NavLink className="router-link" activeClassName="is-active" to="/map">
           Map
         </NavLink>
+        
+        {isRecoil && <NavLink className="router-link" activeClassName="is-active" to="/relationship">
+          Atoms Relationship
+        </NavLink>}
+
         <NavLink
           className="router-link"
           activeClassName="is-active"
@@ -130,6 +149,7 @@ const StateRoute = (props: StateRouteProps) => {
       <Switch>
         <Route path="/map" render={renderComponentMap} />
         <Route path="/history" render={renderHistory} />
+        <Route path="/relationship" render={renderAtomsRelationship} />
         <Route path="/performance" render={renderPerfView} />
         <Route path="/" render={renderTree} />
       </Switch>
