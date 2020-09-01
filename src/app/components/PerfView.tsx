@@ -56,12 +56,6 @@ const PerfView = (props: PerfViewProps) => {
       '#c6e6ff',
     ]);
 
-  // Alternate color scaling function
-  // const colorScale = d3.scaleLinear()
-  //   .domain([0, 7])
-  //   .range(['hsl(200,60%,60%)', 'hsl(255,30%,40%)'])
-  //   .interpolate(d3.interpolateHcl);
-
   // Set up circle-packing layout function
   const packFunc = useCallback(
     (data: object) => {

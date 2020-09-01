@@ -108,8 +108,13 @@ function History(props) {
       .enter()
       .append('g')
       .style('fill', function (d) {
-        let loadTime =
-          d.data.stateSnapshot.children[0].componentData.actualDuration;
+        let loadTime;
+        if (d.data.stateSnapshot.children[0].componentData.actualDuration){
+          loadTime = d.data.stateSnapshot.children[0].componentData.actualDuration;
+        } else{
+          loadTime = 1;
+        }
+          
 
         if (loadTime !== undefined) {
           if (loadTime > 16) {
