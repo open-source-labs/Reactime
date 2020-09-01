@@ -40,7 +40,7 @@ interface StateRouteProps {
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
 
-  let isRecoil = snapshot.AtomsRelationship ? true : false;
+  const isRecoil = snapshot.AtomsRelationship ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
 
   // component map zoom state
@@ -50,7 +50,7 @@ const StateRoute = (props: StateRouteProps) => {
     k: 1,
   });
 
-  //Map
+  // Map
   const renderComponentMap = () => {
     if (hierarchy) {
       return <ComponentMap viewIndex={viewIndex} snapshots={snapshots} x={x} y={y} k={k} setZoomState={setZoomState} />;
@@ -58,21 +58,17 @@ const StateRoute = (props: StateRouteProps) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
-
   // the hierarchy gets set on the first click in the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
   // if true involk render chart with hierarchy
   const renderHistory = () => {
     if (hierarchy.children.length > 0) {
-
       return <History hierarchy={hierarchy} />;
     }
-    return <div className="noState">Application not compatible with history</div>;
+    return <div className="noState">History graph will render on first state change</div>;
   };
 
-  const renderAtomsRelationship = () => {
-    return <AtomsRelationship atomsRel={snapshot.AtomsRelationship} />;
-  };
+  const renderAtomsRelationship = () => <AtomsRelationship atomsRel={snapshot.AtomsRelationship} />;
 
   // the hierarchy gets set on the first click in the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
@@ -83,30 +79,16 @@ const StateRoute = (props: StateRouteProps) => {
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
-  
-  let perfChart;
-  if (true) {
-    
-    perfChart = (
-      <PerfView
-        viewIndex={viewIndex}
-        snapshots={snapshots}
-        setNoRenderData={setNoRenderData}
-        width={600}
-        height={1000}
-      />
-    );
-  }
 
-  //This will intermitently block Recoil PerfCharts from rendering
-  // else {
-  //   perfChart = (
-  //     <div className="no-data-message">
-  //       Application must be running in development mode in order to view
-  //       performance data
-  //     </div>
-  //   );
-  // }
+  const perfChart = (
+    <PerfView
+      viewIndex={viewIndex}
+      snapshots={snapshots}
+      setNoRenderData={setNoRenderData}
+      width={600}
+      height={1000}
+    />
+  );
 
   const renderPerfView = () => <ErrorHandler>{perfChart}</ErrorHandler>;
 
@@ -131,10 +113,13 @@ const StateRoute = (props: StateRouteProps) => {
         <NavLink className="router-link" activeClassName="is-active" to="/map">
           Map
         </NavLink>
-        
-        {isRecoil && <NavLink className="router-link" activeClassName="is-active" to="/relationship">
-        Relationships
-        </NavLink>}
+
+        {isRecoil
+          && (
+            <NavLink className="router-link" activeClassName="is-active" to="/relationship">
+              Relationships
+            </NavLink>
+          )}
 
         <NavLink
           className="router-link"

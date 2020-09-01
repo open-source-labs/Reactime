@@ -6,70 +6,63 @@ import 'core-js';
  * This file contains necessary functionality for time-travel feature
  *
  * It exports an anonymous
- * @function
- * that is invoked on
- * @param target --> a target snapshot portraying some past state
- * and recursively sets state for any stateful components.
+ * @function timeJump
+ * @param origin The latest snapshot, linked to the fiber (changes to origin will change app)
+ * @param mode The current mode (i.e. jumping, time-traveling, locked, or paused)
+ * @returns A function that takes a target snapshot and a boolean flag checking for firstCall, then invokes `jump` on that target snapshot
  *
+ * The target snapshot portrays some past state we want to travel to.
+ * `jump` recursively sets state for any stateful components.
  */
 
 /* eslint-disable no-param-reassign */
 
-// const componentActionsRecord = require('./masterState');
 import componentActionsRecord from './masterState';
 
 const circularComponentTable = new Set();
 
-// Carlos: origin is latest snapshot, linking to the fiber,
-// so changes to origin change app
-// module.exports = (origin, mode) => {
 export default (origin, mode) => {
   // Recursively change state of tree
-  // Carlos: target is past state we are travelling to
-
+  // Set the state of the origin tree if the component is stateful
   function jump(target, firstCall = false) {
-    // Set the state of the origin tree if the component is stateful
-
     if (!target) return;
 
     if (target.state === 'stateless') {
-      target.children.forEach((child) => jump(child));
+      target.children.forEach(child => jump(child));
       return;
     }
     const component = componentActionsRecord.getComponentByIndex(
-      target.componentData.index
+      target.componentData.index,
     );
     if (component && component.setState) {
       component.setState(
-        (prevState) => {
-          Object.keys(prevState).forEach((key) => {
+        prevState => {
+          Object.keys(prevState).forEach(key => {
             if (target.state[key] === undefined) {
               target.state[key] = undefined;
             }
           });
           return target.state;
-          // Iterate through new children after state has been set
         },
-        () => target.children.forEach((child) => jump(child))
+        // Iterate through new children after state has been set
+        () => target.children.forEach(child => jump(child))
       );
     }
 
-    // console.log('TARGET', target);
     // Check for hooks state and set it with dispatch()
     if (target.state && target.state.hooksState) {
-      target.state.hooksState.forEach((hook) => {
+      target.state.hooksState.forEach(hook => {
         const hooksComponent = componentActionsRecord.getComponentByIndex(
-          target.componentData.hooksIndex
+          target.componentData.hooksIndex,
         );
         const hookState = Object.values(hook);
-        console.log('target', target);
         if (hooksComponent && hooksComponent.dispatch) {
           hooksComponent.dispatch(hookState[0]);
         }
       });
     }
 
-    target.children.forEach((child) => {
+    target.children.forEach(child => {
       if (!circularComponentTable.has(child)) {
         circularComponentTable.add(child);
         jump(child);

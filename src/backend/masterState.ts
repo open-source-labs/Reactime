@@ -8,14 +8,14 @@ import 'core-js';
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   HookStateItem,
-  HookStates
+  HookStates,
 } from './types/backendTypes';
 
 const componentActionsRecord: HookStates = [];
-let index : number = 0;
+let index = 0;
 
 export default {
-  saveNew: (state, component) : number => {
+  saveNew: (state, component): number => {
     componentActionsRecord[index] = { state, component };
     index++;
     return index - 1;
