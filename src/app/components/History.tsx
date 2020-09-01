@@ -30,10 +30,6 @@ const filterHooks = (data: any[]) => {
   return JSON.stringify(data[0].state);
 };
 
-interface HistoryProps {
-  hierarchy: Record<string, unknown>;
-}
-
 
 /**
  * @method maked3Tree :Creates a new D3 Tree
@@ -44,7 +40,6 @@ function History(props) {
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
   let HistoryRef = React.createRef(root); //React.createRef(root);
-
   useEffect(() => {
     maked3Tree();
   }, [root]);
@@ -62,8 +57,8 @@ function History(props) {
    */
   let maked3Tree = function () {
     removed3Tree();
-    const width: number = 800;
-    const height: number = 600;
+    const width: any = 800;
+    const height: any = 600;
     const svgContainer = d3
       .select(HistoryRef.current)
       .append('svg') // svgContainer is now pointing to svg
@@ -73,7 +68,7 @@ function History(props) {
     const g = svgContainer
       .append('g')
       // this is changing where the graph is located physically
-      .attr('transform', `translate(${width / 2 + 4}, ${height / 2 + 2})`);
+      .attr('transform', `translate(${width / 2 + 4}, ${height / 2 + 2})`)
 
     // d3.hierarchy constructs a root node from the specified hierarchical data
     // (our object titled dataset), which must be an object representing the root node
@@ -88,6 +83,7 @@ function History(props) {
 
     const d3root = tree(hierarchy);
 
+    
     g.selectAll('.link')
       // root.links() gets an array of all the links,
       // where each element is an object containing a
@@ -117,7 +113,7 @@ function History(props) {
 
         if (loadTime !== undefined) {
           if (loadTime > 16) {
-            return '#ff0000';
+            return '#d62b2b';
           }
         }
 
@@ -254,9 +250,9 @@ function History(props) {
   };
 
   return (
-    <div className="history-d3-container">
-      <div ref={HistoryRef} className="history-d3-div" />
-    </div>
+    <>
+      <div ref={HistoryRef} className="history-d3-div" id="historyContainer"/>
+    </>
   );
 }
 

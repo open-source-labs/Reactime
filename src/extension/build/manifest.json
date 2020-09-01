@@ -4,7 +4,7 @@
   "devtools_page": "devtools.html",
   "description": "A Chrome extension that helps debug React applications by memorizing the state of components with every render.",
   "manifest_version": 2,
-  "content_security_policy": "script-src 'self' 'unsafe-eval' ; object-src 'self'",
+  "content_security_policy":"script-src 'self' https://www.gstatic.com:* 'unsafe-eval'; object-src 'self'",
   "background": {
     "scripts": ["bundles/background.bundle.js"],
     "persistent": false
@@ -18,4 +18,5 @@
   ],
   "web_accessible_resources" : ["bundles/backend.bundle.js"],
   "permissions": ["contextMenus", "tabs", "activeTab", "<all_urls>"]
+  
 }

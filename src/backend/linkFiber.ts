@@ -29,8 +29,45 @@ declare global {
 }
 
 let fiberRoot = null;
+let isRecoil = false;
 let doWork = true;
 const circularComponentTable = new Set();
+let allAtomsRelationship = [];
+
+function getRecoilState(): any {
+  // get the last state snapshot
+  const RecoilSnapshotsLength = window[`$recoilDebugStates`].length;
+  const lastRecoilSnapshot = window[`$recoilDebugStates`][RecoilSnapshotsLength - 1];
+  console.log(lastRecoilSnapshot);
+
+  // get all atom - selector pairs, and save them as nodes
+  // in the from to weight format
+  const nodeToNodeSubs = lastRecoilSnapshot.nodeToNodeSubscriptions;
+  let nodeToNodeSubsKeys = lastRecoilSnapshot.nodeToNodeSubscriptions.keys();
+  nodeToNodeSubsKeys.forEach(
+    node => {
+      nodeToNodeSubs.get(node).forEach(
+        nodeSubs => allAtomsRelationship.push([node, nodeSubs, 1])
+      )
+    }
+  )
+
+  // get all atom - component pairs, and save them as nodes
+  // in the from to weight format
+
+  // const nodeToCompSubs = lastRecoilSnapshot.nodeToComponentSubscriptions;
+  // console.log(nodeToCompSubs);
+  // let nodeToCompSubsKeys = lastRecoilSnapshot.nodeToComponentSubscriptions.keys();
+  // nodeToCompSubsKeys.forEach( 
+  //   node => {
+  //     console.log(node);
+  //     // nodeToCompSubsKeys.get(node).forEach(
+  //     //   nodeSubs => allAtomsRelationship.push([node, nodeSubs, 2])
+  //     // )
+  //   }
+  // )
+}
+
 
 /**
  * @method sendSnapshot
@@ -49,6 +86,14 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   }
 
   const payload = snap.tree.cleanTreeCopy(); // snap.tree.getCopy();
+  // console.log('here is payload', payload);
+  // console.log('here is recoil state', window[`$recoilDebugStates`]);
+  isRecoil ? getRecoilState() : ' ';
+
+  console.log('all atoms state', allAtomsRelationship)
+  // payload.recoilState = window[`$recoilDebugStates`];
+
+  isRecoil ? payload.AtomsRelationship = allAtomsRelationship : ' ';
 
   window.postMessage(
     {
@@ -57,6 +102,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
     },
     '*'
   );
+  allAtomsRelationship = [];
 }
 
 /**
@@ -70,6 +116,7 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
     const { current } = fiberRoot;
     circularComponentTable.clear();
     snap.tree = createTree(current);
+
   }
   sendSnapshot(snap, mode);
 }
@@ -138,6 +185,7 @@ function traverseHooks(memoizedState: any): HookStates {
  * 2. Create an instance of custom Tree class
  * 3. Build a new state snapshot
  */
+// This runs after every Fiber commit. It creates a new snapshot
 function createTree(
   currentFiber: Fiber,
   tree: Tree = new Tree('root', 'root'),
@@ -162,6 +210,29 @@ function createTree(
     selfBaseDuration,
     treeBaseDuration,
   } = currentFiber;
+
+  if (elementType?.name && isRecoil) {
+    console.log('Name here', elementType?.name)
+    // console.log('Here is the state', memoizedState);
+    let pointer = memoizedState;
+    while (pointer !== null && pointer !== undefined && pointer.next !== null) {
+      pointer = pointer.next;
+    }
+    // console.log('traverse the memoizedState 1', pointer.memoizedState);
+    // // 2nd 
+    // console.log('traverse the memoizedState 2', pointer.memoizedState[1]?.[0]);
+    if (pointer?.memoizedState[1]?.[0].current) {
+      const atomName = pointer.memoizedState[1]?.[0].current.keys().next().value;
+      console.log('atom', pointer.memoizedState[1]?.[0].current.keys().next().value);
+      allAtomsRelationship.push([atomName, elementType?.name, 1]);
+    }
+
+    if (pointer?.memoizedState[1]?.[0].key) {
+      const atomName = pointer.memoizedState[1]?.[0].key;
+      console.log('atom', pointer.memoizedState[1]?.[0].key);
+      allAtomsRelationship.push([atomName, elementType?.name, 1]);
+    }
+  }
 
   let newState: any | { hooksState?: any[] } = {};
   let componentData: {
@@ -188,7 +259,6 @@ function createTree(
   }
 
   let hooksIndex;
-  let isRecoil = false;
 
   // Simple check for whether our target app uses Recoil
   if (window[`$recoilDebugStates`]) {
