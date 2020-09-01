@@ -54,11 +54,49 @@ declare global {
   }
 }
 
+let isRecoil = false;
 let doWork = true;
 const circularComponentTable = new Set();
+let allAtomsRelationship = [];
+
+function getRecoilState() : any {
+  // get the last state snapshot
+  const RecoilSnapshotsLength = window[`$recoilDebugStates`].length;
+  const lastRecoilSnapshot = window[`$recoilDebugStates`][RecoilSnapshotsLength - 1];
+  console.log(lastRecoilSnapshot);
+
+  // get all atom - selector pairs, and save them as nodes
+  // in the from to weight format
+  const nodeToNodeSubs = lastRecoilSnapshot.nodeToNodeSubscriptions;
+  let nodeToNodeSubsKeys = lastRecoilSnapshot.nodeToNodeSubscriptions.keys();
+  nodeToNodeSubsKeys.forEach( 
+    node => {
+      nodeToNodeSubs.get(node).forEach(
+        nodeSubs => allAtomsRelationship.push([node, nodeSubs, 1])
+      )
+    }
+  )
+
+  // get all atom - component pairs, and save them as nodes
+  // in the from to weight format
+
+  // const nodeToCompSubs = lastRecoilSnapshot.nodeToComponentSubscriptions;
+  // console.log(nodeToCompSubs);
+  // let nodeToCompSubsKeys = lastRecoilSnapshot.nodeToComponentSubscriptions.keys();
+  // nodeToCompSubsKeys.forEach( 
+  //   node => {
+  //     console.log(node);
+  //     // nodeToCompSubsKeys.get(node).forEach(
+  //     //   nodeSubs => allAtomsRelationship.push([node, nodeSubs, 2])
+  //     // )
+  //   }
+  // )
+}
+
 
 export default (snap: Snapshot, mode: Mode): (() => void) => {
   let fiberRoot = null;
+
   function sendSnapshot(): void {
     // Don't send messages while jumping or while paused
     if (mode.jumping || mode.paused) return;
@@ -68,7 +106,15 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     }
 
     const payload = snap.tree.cleanTreeCopy(); // snap.tree.getCopy();
+    // console.log('here is payload', payload);
+    // console.log('here is recoil state', window[`$recoilDebugStates`]);
+    isRecoil ? getRecoilState() : ' ' ;
+    
+    console.log('all atoms state', allAtomsRelationship)
+    // payload.recoilState = window[`$recoilDebugStates`];
 
+    isRecoil ? payload.AtomsRelationship = allAtomsRelationship : ' ';
+    
     window.postMessage(
       {
         action: 'recordSnap',
@@ -76,6 +122,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       },
       '*'
     );
+    allAtomsRelationship = [];
   }
 
   // Injects instrumentation to update our state tree every time
@@ -126,6 +173,29 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       treeBaseDuration,
     } = currentFiber;
 
+    if (elementType?.name && isRecoil) {
+      console.log('Name here', elementType?.name)
+      // console.log('Here is the state', memoizedState);
+      let pointer = memoizedState;
+      while (pointer !== null && pointer !== undefined && pointer.next !== null ){
+        pointer = pointer.next;
+      }
+      // console.log('traverse the memoizedState 1', pointer.memoizedState);
+      // // 2nd 
+      // console.log('traverse the memoizedState 2', pointer.memoizedState[1]?.[0]);
+      if (pointer?.memoizedState[1]?.[0].current) {
+        let atomName = pointer.memoizedState[1]?.[0].current.keys().next().value;
+        console.log('atom', pointer.memoizedState[1]?.[0].current.keys().next().value);
+        allAtomsRelationship.push([atomName, elementType?.name, 1])
+      }
+
+      if (pointer?.memoizedState[1]?.[0].key) {
+        let atomName = pointer.memoizedState[1]?.[0].key;
+        console.log('atom', pointer.memoizedState[1]?.[0].key);
+        allAtomsRelationship.push([atomName, elementType?.name, 1])
+      }
+    }
+
     let newState: any | { hooksState?: any[] } = {};
     let componentData: {
       hooksState?: any[];
@@ -151,7 +221,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     }
 
     let hooksIndex;
-    let isRecoil = false;
 
     if (window[`$recoilDebugStates`]) {
       isRecoil = true;
@@ -320,7 +389,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       const { current } = fiberRoot;
       circularComponentTable.clear();
       snap.tree = createTree(current);
-      console.log(snap.tree);
+      
     }
     sendSnapshot();
   }

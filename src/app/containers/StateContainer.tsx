@@ -12,8 +12,11 @@ import DiffRoute from '../components/DiffRoute';
 interface StateContainerProps {
   snapshot: Record<number,
   { name?: string; componentData?: Record<string, unknown>;
-    state?: Record<string, unknown>; stateSnaphot?: Record<string, unknown>; children?: unknown[]; }
+    state?: Record<string, unknown>; stateSnaphot?: Record<string, unknown>; children?: unknown[]; 
+    AtomsRelationship?: any[]
+  }
   > ;
+  AtomsRelationship?: any[];
   hierarchy:Record<string, unknown>;
   snapshots:[];
   viewIndex:number;

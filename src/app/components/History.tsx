@@ -30,10 +30,6 @@ const filterHooks = (data: any[]) => {
   return JSON.stringify(data[0].state);
 };
 
-interface HistoryProps {
-  hierarchy: Record<string, unknown>;
-}
-
 
 /**
  * @method maked3Tree :Creates a new D3 Tree
@@ -44,7 +40,6 @@ function History(props) {
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
   let HistoryRef = React.createRef(root); //React.createRef(root);
-
   useEffect(() => {
     maked3Tree();
   }, [root]);
