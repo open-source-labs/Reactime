@@ -12,6 +12,8 @@ import Action from '../components/Action';
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
 
+
+
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
   if (slider) { slider.setAttribute('style', 'left: 0'); }

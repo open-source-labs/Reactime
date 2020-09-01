@@ -17,6 +17,10 @@ const config = {
     path: path.resolve(__dirname, 'src/extension/build/bundles'),
     filename: '[name].bundle.js',
   },
+  node: {    
+    net: 'empty',
+    tls: 'empty'
+  },
   module: {
     rules: [
       {

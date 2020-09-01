@@ -4,15 +4,10 @@
   
   background-color: $brand-color;
 }
-#componentMapContainer{
+#componentMapContainer, #historyContainer, #atomsContainer  {
   overflow: hidden;
 }
-#historyContainer{
-  overflow: hidden;
-}
-#atomsContainer{
-  overflow: hidden;
-}
+
 .state-container .navbar {
 
   background-color: $navbar-color;
@@ -66,6 +61,7 @@
   .main-navbar-text {
     margin: 6px;
   }
+
   .main-router-link {
     height: 80%;
     width: 80px;
@@ -76,6 +72,7 @@
     text-decoration: none;
     color: $text-color;
   }
+
   .main-router-link:hover {
     background-color: $light-grey-three;
   }
@@ -94,6 +91,7 @@
     text-decoration: none;
     color: $text-color;
   }
+
   .router-link:hover {
     background-color: $light-grey-three;
   }
@@ -101,4 +99,49 @@
   .router-link.is-active {
     background-color: $brand-color;
   }
+  .navbar {
+    background-color: $navbar-color;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 30px;
+  }
+
+  .main-navbar{
+
+    background-color: #565A61;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 40px;
+    margin: 6px;
+  }
+
+  .main-navbar-container{
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+    background-color: #565A61;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+  }
+}
+
+.navbar {
+  // prevent navbar from scrolling with state/tree display
+  top: 0px;
+  left: 0px;
+  z-index: 1;
+  @extend %disable-highlight
+}
+
+.no-data-message {
+  color: $text-color;
+  font: normal 13px $text-font-stack;
+  padding: 10px;
 }
