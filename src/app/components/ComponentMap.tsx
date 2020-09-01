@@ -252,7 +252,7 @@ const ComponentMap = (props: componentMapProps) => {
   );
 
   return (
-    <div data-testid="canvas">
+    <div id="map-canvas-container" data-testid="canvas">
       <svg id="canvas"></svg>
     </div>
   );
