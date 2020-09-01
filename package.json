@@ -120,6 +120,7 @@
     "react-dom": "^16.13.1",
     "react-google-chart": "^0.1.2",
     "react-google-charts": "^3.0.15",
+    "react-google-charts-ts": "^0.1.1",
     "react-html-parser": "^2.0.2",
     "react-json-tree": "^0.11.2",
     "react-router-dom": "^5.2.0",
