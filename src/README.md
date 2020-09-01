@@ -57,7 +57,7 @@ src/
     - These two files help us handle requests both from the web browser and from the Reactime extension itself
 
 Still unsure about what contents scripts and background scripts do for Reactime, or for a chrome extensions in general?
-  - The implementation details [can be found](./src/extension/background.js) [in the files](./src/extension/contentScript.ts) themselves.
+  - The implementation details [can be found](./extension/background.js) [in the files](./extension/contentScript.ts) themselves.
   - We also encourage you to dive into [the official Chrome Developer Docs](https://developer.chrome.com/home). Some relevant sections are reproduced below:
 
 > Content scripts are files that run in the context of web pages. 
@@ -88,7 +88,7 @@ Still unsure about what contents scripts and background scripts do for Reactime,
 
 The general flow of data is described in the following steps:
 
-![demo](./AppStructureDiagram.png)
+![demo](../archive/AppStructureDiagram.png)
 
 1. When the background bundle is loaded by the browser, it executes a script injection into the dom. (see section on *backend*). This script uses a technique called [throttle](https://medium.com/@bitupon.211/debounce-and-throttle-160affa5457b) to send state data from the app to the content script every specified milliseconds (in our case, this interval is 70ms).
 
