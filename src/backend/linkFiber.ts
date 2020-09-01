@@ -60,37 +60,17 @@ const circularComponentTable = new Set();
 let allAtomsRelationship = [];
 
 function getRecoilState() : any {
-  // get the last state snapshot
   const RecoilSnapshotsLength = window[`$recoilDebugStates`].length;
   const lastRecoilSnapshot = window[`$recoilDebugStates`][RecoilSnapshotsLength - 1];
-  console.log(lastRecoilSnapshot);
-
-  // get all atom - selector pairs, and save them as nodes
-  // in the from to weight format
   const nodeToNodeSubs = lastRecoilSnapshot.nodeToNodeSubscriptions;
   let nodeToNodeSubsKeys = lastRecoilSnapshot.nodeToNodeSubscriptions.keys();
   nodeToNodeSubsKeys.forEach( 
     node => {
       nodeToNodeSubs.get(node).forEach(
-        nodeSubs => allAtomsRelationship.push([node, nodeSubs, 1])
+        nodeSubs => allAtomsRelationship.push([node, nodeSubs, 'atoms and selectors'])
       )
     }
   )
-
-  // get all atom - component pairs, and save them as nodes
-  // in the from to weight format
-
-  // const nodeToCompSubs = lastRecoilSnapshot.nodeToComponentSubscriptions;
-  // console.log(nodeToCompSubs);
-  // let nodeToCompSubsKeys = lastRecoilSnapshot.nodeToComponentSubscriptions.keys();
-  // nodeToCompSubsKeys.forEach( 
-  //   node => {
-  //     console.log(node);
-  //     // nodeToCompSubsKeys.get(node).forEach(
-  //     //   nodeSubs => allAtomsRelationship.push([node, nodeSubs, 2])
-  //     // )
-  //   }
-  // )
 }
 
 
@@ -186,13 +166,13 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       if (pointer?.memoizedState[1]?.[0].current) {
         let atomName = pointer.memoizedState[1]?.[0].current.keys().next().value;
         console.log('atom', pointer.memoizedState[1]?.[0].current.keys().next().value);
-        allAtomsRelationship.push([atomName, elementType?.name, 1])
+        allAtomsRelationship.push([atomName, elementType?.name, 'atoms and components'])
       }
 
       if (pointer?.memoizedState[1]?.[0].key) {
         let atomName = pointer.memoizedState[1]?.[0].key;
         console.log('atom', pointer.memoizedState[1]?.[0].key);
-        allAtomsRelationship.push([atomName, elementType?.name, 1])
+        allAtomsRelationship.push([atomName, elementType?.name, 'atoms and components'])
       }
     }
 
@@ -276,17 +256,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
             state.component
           );
           componentData.hooksIndex = hooksIndex;
-
-          // if (newState && newState.hooksState) {
-          //   newState.hooksState.push({ [hooksNames[i]]: state.state });
-          // } else if (newState) {
-          //   newState.hooksState = [{ [hooksNames[i]]: state.state }];
-          // } else {
-          //   newState = { hooksState: [] };
-          //   newState.hooksState.push({ [hooksNames[i]]: state.state });
-          // }
-
-          //improves tree visualization but breaks jump
           if (newState && newState.hooksState) {
             newState.push(state.state);
           } else if (newState) {
@@ -399,18 +368,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
   }
 
   return () => {
-    /*     const container = document.getElementById('root');
-    if (container._internalRoot) {
-      fiberRoot = container._internalRoot;
-    } else {
-      const {
-        _reactRootContainer: { _internalRoot },
-        _reactRootContainer,
-      } = container;
-      // Only assign internal root if it actually exists
-      fiberRoot = _internalRoot || _reactRootContainer;
-    }
- */
+
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
