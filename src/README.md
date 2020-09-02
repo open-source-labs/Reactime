@@ -3,13 +3,12 @@
 ## Brief
 Our mission at Reactime is to maintain and iterate constantly, but never at the expense of future developers.<br />We know how hard it is to quickly get up to speed and onboard in a new codebase.<br />So, here are some helpful pointers to help you hit the ground running. 🏃🏾💨
 
-### Main Structure
+## Main Structure
 
 In the *src* folder, there are three directories we care about: *app*, *backend*, and *extension*. 
 ```
 src/
 ├── app/                      # Frontend code
-│   │                         #
 │   ├── __tests__/            #
 │   ├── actions/              # Redux action creators
 │   ├── components/           # React components
@@ -17,12 +16,13 @@ src/
 │   ├── containers/           # More React components
 │   ├── reducers/             # Redux mechanism for updating state
 │   ├── styles/               #
-│   ├── index.tsx             # App component 
+│   ├── user_id/              # Mixpanel data collection code
+│   ├── index.tsx             # Starting point for root App component 
 │   ├── module.d.ts           #
 │   └── store.tsx             #
 │
-├── backend/                  # "Backend" code
-│   │                         #
+├── backend/                  # "Backend" code (injected into target app)
+│   │                         # Focus especially on linkFiber, timeJump, tree, and helpers
 │   ├── __tests__/            #
 │   ├── types/                # Typescript interfaces
 │   ├── helpers.js            # 
@@ -33,17 +33,14 @@ src/
 │   ├── module.d.ts           #
 │   ├── package.json          #
 │   ├── puppeteerServer.js    #
-│   ├── readme.md             # 
-│   ├── timeJump.ts           # Rerenders DOM based on snapshot from background
+│   ├── timeJump.ts           # Rerenders DOM based on snapshot from background script
 │   └── tree.ts               # Custom structure to send to background
 │
 ├── extension/                # Chrome Extension code
+│   ├── build/                # Destination for bundles and manifest.json (Chrome config file)
 │   │                         #
-│   ├── build/                # Destination for bundles
-│   │                         # and manifest.json (Chrome config file)
-│   │                         #
-│   ├── background.js         # 
-│   └── contentScript.ts      # 
+│   ├── background.js         # Chrome Background Script
+│   └── contentScript.ts      # Chrome Content Script
 └──
 ```
 
@@ -84,11 +81,11 @@ Still unsure about what contents scripts and background scripts do for Reactime,
 - In other words, a background script works as a sort of middleman, directly maintaining connection with its parent extension, and acting as a proxy enabling communication between it and the content script. 
 
 
-### Data Flow
+## Data Flow
 
 The general flow of data is described in the following steps:
 
-![demo](../archive/AppStructureDiagram.png)
+![demo](../assets/AppStructureDiagram.png)
 
 1. When the background bundle is loaded by the browser, it executes a script injection into the dom. (see section on *backend*). This script uses a technique called [throttle](https://medium.com/@bitupon.211/debounce-and-throttle-160affa5457b) to send state data from the app to the content script every specified milliseconds (in our case, this interval is 70ms).
 
