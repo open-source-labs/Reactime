@@ -71,6 +71,7 @@
     "@typescript-eslint/eslint-plugin": "^3.6.1",
     "@typescript-eslint/parser": "^3.6.1",
     "babel-loader": "^8.1.0",
+    "babel-preset-airbnb": "^5.0.0",
     "core-js": "^3.6.5",
     "css-loader": "^3.6.0",
     "enzyme": "^3.11.0",
