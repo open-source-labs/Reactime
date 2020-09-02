@@ -14,7 +14,7 @@ import { useStoreContext } from '../store';
 import MPID from "../user_id/user_id";
 
 const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
-  debug: true,
+  debug: false,
   protocol: "https"
 });
 
