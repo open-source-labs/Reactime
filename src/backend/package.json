@@ -50,8 +50,12 @@
   "license": "MIT",
   "dependencies": {
     "acorn": "^7.1.0",
-    "core-js": "^3.6.5",
     "acorn-jsx": "^5.0.2",
-    "fs": "0.0.1-security"
+    "cookie-parser": "^1.4.5",
+    "core-js": "^3.6.5",
+    "crypto": "^1.0.1",
+    "fs": "0.0.1-security",
+    "mixpanel": "^0.11.0",
+    "mixpanel-browser": "^2.39.0"
   }
 }

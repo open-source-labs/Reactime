@@ -3,7 +3,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Tree from '../tree';
 
-export interface Snapshot{
+
+export interface Snapshot {
   tree: Tree;
   unfilteredTree: null;
 }
@@ -17,16 +18,16 @@ export interface Mode {
 export interface SnapshotNode {
   name: string;
   state: {
-    location?: any
+    location?: any;
   };
   children: any[];
 }
 
 export interface MsgData {
   data: {
-    action: string,
-    payload: any,
-  }
+    action: string;
+    payload: any;
+  };
 }
 
 export interface ComponentData {
@@ -38,12 +39,12 @@ export interface ComponentData {
   treeBaseDuration?: number;
 }
 
-interface HookStateItem {
+export interface HookStateItem {
   state: any;
   component: any;
 }
 
-export type HookStates = Array<HookStateItem>
+export type HookStates = Array<HookStateItem>;
 
 export interface State {
   state?: {} | number;
@@ -104,22 +105,21 @@ export const OffscreenComponent = 23;
 export const LegacyHiddenComponent = 24;
 
 export type Fiber = {
-
   // Tag identifying the type of fiber.
-  tag: WorkTag,
+  tag: WorkTag;
 
   // Unique identifier of this child.
-  key: null | string,
+  key: null | string;
 
   // The value of element.type which is used to preserve the identity during
   // reconciliation of this child.
-  elementType: any,
+  elementType: any;
 
   // The resolved function/class/ associated with this fiber.
-  type: any,
+  type: any;
 
   // The local state associated with this fiber.
-  stateNode: any,
+  stateNode: any;
 
   // Conceptual aliases
   // parent : Instance -> return The parent happens to be the same as the
@@ -134,16 +134,18 @@ export type Fiber = {
   // return: Fiber | null,
 
   // Singly Linked List Tree Structure.
-  child: Fiber | null,
-  sibling: Fiber | null,
-  index: number,
+  child: Fiber | null;
+  sibling: Fiber | null;
+  index: number;
 
   // Input is the data coming into process this fiber. Arguments. Props.
   // pendingProps: any, // This type will be more specific once we overload the tag.
   // memoizedProps: any, // The props used to create the output.
 
   // The state used to create the output
-  memoizedState: any,
+  memoizedState: any;
+
+  memoizedProps: any;
 
   // Singly linked list fast path to the next fiber with side-effects.
   // nextEffect: Fiber | null,
@@ -157,20 +159,20 @@ export type Fiber = {
   // This tells us how well the tree makes use of sCU for memoization.
   // It is reset to 0 each time we render and only updated when we don't bailout.
   // This field is only set when the enableProfilerTimer flag is enabled.
-  actualDuration?: number,
+  actualDuration?: number;
 
   // If the Fiber is currently active in the "render" phase,
   // This marks the time at which the work began.
   // This field is only set when the enableProfilerTimer flag is enabled.
-  actualStartTime?: number,
+  actualStartTime?: number;
 
   // Duration of the most recent render time for this Fiber.
   // This value is not updated when we bailout for memoization purposes.
   // This field is only set when the enableProfilerTimer flag is enabled.
-  selfBaseDuration?: number,
+  selfBaseDuration?: number;
 
   // Sum of base times for all descendants of this Fiber.
   // This value bubbles up during the "complete" phase.
   // This field is only set when the enableProfilerTimer flag is enabled.
-  treeBaseDuration?: number,
+  treeBaseDuration?: number;
 };

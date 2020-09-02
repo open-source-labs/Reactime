@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 // import 'core-js';
-// const reactimeBackend = require('../../dev-reactime/index.js');
 
 let firstMessage = true;
 
-// listening for messages from npm package
+// listening for window messages
 window.addEventListener('message', msg => { // runs automatically every second
   // window listener picks up the message it sends, so we should filter
   // messages sent by contentscrip
