@@ -4,17 +4,17 @@
 
 <h1 align="center"><b>State Debugger for React</b></h1>
 
-[![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime) [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime) [![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime) [![Dependencies](https://david-dm.org/oslabs-beta/reactime.svg)](https://david-dm.org/oslabs-beta/reactime#info=dependencies) [![DevDependencies](https://david-dm.org/oslabs-beta/reactime/dev-status.svg)](https://david-dm.org/oslabs-beta/reactime?type=dev) [![Vulnerabilities](https://snyk.io/test/github/oslabs-beta/reactime/badge.svg)](https://snyk.io/test/github/oslabs-beta/reactime)
+[![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime) [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime) [![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime) [![Dependencies](https://david-dm.org/oslabs-beta/reactime.svg)](https://david-dm.org/oslabs-beta/reactime#info=dependencies) [![DevDependencies](https://david-dm.org/oslabs-beta/reactime/dev-status.svg)](https://david-dm.org/oslabs-beta/reactime?type=dev) [![Vulnerabilities](https://snyk.io/test/github/oslabs-beta/reactime/badge.svg)](https://snyk.io/test/github/oslabs-beta/reactime)![BabelPresetPrefs](https://img.shields.io/badge/babel%20preset-airbnb-ff69b4)![LintPrefs](https://img.shields.io/badge/linted%20with-eslint-blueviolet)
 
-
-![demo](./archive/MyMovie.gif)
+![demo](./assets/recoil-demo.gif) &nbsp;&nbsp;
+![demo](./assets/hooks-demo.gif)
 
 👑   Nominated for the Productivity Booster award at [React Open Source Awards 2020](https://osawards.com/react/)! 👑  
 
 
-<b>Reactime</b> is a debugging tool for React developers. It records state whenever it is changed and allows the user to jump to any previously recorded state.
+<b>Reactime</b> is a debugging tool for React developers. It records a snapshot whenever a target application's state is changed and allows the user to jump to any previously recorded state.
 
-Reactime is for React apps using stateful components and Hooks, with beta support for Recoil and Context API.
+Currently, Reactime supports React apps using stateful components and Hooks, with beta support for Recoil and Context API.
 
 Reactime 5.0 beta extends the core functionality by including support for [Recoil](https://recoiljs.org/). The latest release incorporates additional visualizations for component relationships as well as atom-selector relationships for Recoil applications. Reactime 5.0 includes expanded [typedoc](https://typedoc.org/api/) documentation for developers looking to contribute to the source code. 
 
@@ -57,6 +57,10 @@ Using the actions sidebar, a user can jump to any previous recorded snapshots. H
 ### TypeScript Support
 
 Reactime offers beta support for TypeScript applications using stateful class components and functional components.  Further testing and development is required for custom hooks, Context API, and Concurrent Mode.
+
+### Documentation
+
+After cloning this repository, developers can simply run `npm run docs` at the root level and serve the dynamically generated `/docs/index.html` file on a browser. Doing so will provide a readable, extensible, and interactive GUI view of the structure and interfaces of the codebase.
 
 ### Additional Features
 
