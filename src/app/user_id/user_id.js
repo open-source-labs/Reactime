@@ -12,7 +12,6 @@ class MPID{
     //create a string of random data        
     this.cookie = cookie.serialize("reactime", crypto.randomBytes(64).toString('hex') );
     this.distinct_id = this.cookie?.reactime?.slice(0, 20);
-    
     if(this.cookie){
       return this.cookie;    
     }else{
@@ -22,7 +21,8 @@ class MPID{
   }
 
   getCookie(){    
-    if(this.cookie){   
+    if(this.cookie){
+      //this.distinct_id = parsedCookie?.reactime?.slice(0, 20);   
       return this.cookie;
     }else{
       throw new Error("Cookie truthy, but unreturnable");
@@ -37,7 +37,8 @@ class MPID{
       this.cookie = parsedCookie?.reactime;      
       if(!this.distinct_id){        
         this.distinct_id = parsedCookie?.reactime?.slice(0, 20);
-      }    
+      }
+      return true;    
     }else{      
       this.setCookie();
       return false;
@@ -48,6 +49,9 @@ class MPID{
     try{
       if(this.distinct_id ) {        
         return this.distinct_id;
+      }else{
+
+        //return this.checkDocumentCookie
       }
     }catch( e ){
       throw new Error(`unable to set cookie. Reason: ${e}. `);
