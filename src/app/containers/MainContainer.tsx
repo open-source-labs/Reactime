@@ -89,10 +89,9 @@ function MainContainer(): any {
     if (!user.debug) {
       //set current user cookie if it does not exist in cookies;
       if (user.checkDocumentCookie(document)) {
-        user.getCookie();
         mixpanel.people.increment(user.get_dId(), "times");
       } else {
-        user.setCookie();
+        document.cookie = user.setCookie();
         mixpanel.people.set(user.get_dId(), { times: 1 });
       }
     }
