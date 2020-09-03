@@ -135,7 +135,7 @@ const StateRoute = (props: StateRouteProps) => {
             activeClassName="is-active"
             to="/relationship"
           >
-            Relationships
+            Data Flow
           </NavLink>
         )}
 
