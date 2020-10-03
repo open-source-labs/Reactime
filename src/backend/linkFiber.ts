@@ -21,6 +21,7 @@ import Tree from './tree';
 import componentActionsRecord from './masterState';
 import { throttle, getHooksNames } from './helpers';
 import { Console } from 'console';
+import AtomsRelationship from '../app/components/AtomsRelationship';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -31,14 +32,12 @@ declare global {
 let fiberRoot = null;
 let doWork = true;
 const circularComponentTable = new Set();
-let allAtomsRelationship = [];
 let isRecoil = false;
 
 // Simple check for whether our target app uses Recoil
 if (window[`$recoilDebugStates`]) {
   isRecoil = true;
 }
-
 function getRecoilState(): any {
   const RecoilSnapshotsLength = window[`$recoilDebugStates`].length;
   const lastRecoilSnapshot =
@@ -155,6 +154,7 @@ function traverseHooks(memoizedState: any): HookStates {
   return hooksStates;
 }
 
+let allAtomsRelationship = [];
 /**
  * @method createTree
  * @param currentFiber A Fiber object
@@ -178,6 +178,7 @@ function createTree(
 
   // These have the newest state. We update state and then
   // called updateSnapshotTree()
+
   const {
     sibling,
     stateNode,
@@ -192,14 +193,21 @@ function createTree(
     treeBaseDuration,
   } = currentFiber;
 
+  if(typeof currentFiber.elementType === "function" && currentFiber.elementType.name === "RecoilRoot"){
+    // console.log(currentFiber.memoizedState.next.memoizedState.current.getState())
+  }
+
+
+
   if (
     currentFiber.memoizedState &&
     currentFiber.memoizedState.next &&
     currentFiber.memoizedState.next.memoizedState &&
     currentFiber.memoizedState.next.memoizedState.deps
   ) {
-  
+    // console.log(currentFiber)
     let pointer = currentFiber.memoizedState.next;
+  
     while (pointer !== null){
       if(!Array.isArray(pointer.memoizedState)){
         let componentName = currentFiber.elementType.name
@@ -208,6 +216,13 @@ function createTree(
       }
       pointer = pointer.next
     }
+
+    if(currentFiber.memoizedState.next.memoizedState.deps[1].current){
+      let getState = currentFiber.memoizedState.next.memoizedState.deps[1].current.getState()
+      console.log(getState.graphsByVersion.entries())
+    }
+
+
   }
 
   let newState: any | { hooksState?: any[] } = {};
