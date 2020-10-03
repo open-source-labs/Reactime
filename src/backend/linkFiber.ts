@@ -20,6 +20,7 @@ import {
 import Tree from './tree';
 import componentActionsRecord from './masterState';
 import { throttle, getHooksNames } from './helpers';
+import { Console } from 'console';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -197,32 +198,17 @@ function createTree(
     currentFiber.memoizedState.next.memoizedState &&
     currentFiber.memoizedState.next.memoizedState.deps
   ) {
-    let pointer = currentFiber.memoizedState.next);
-    
+  
+    let pointer = currentFiber.memoizedState.next;
     while (pointer !== null){
       if(!Array.isArray(pointer.memoizedState)){
-        console.log(pointer)
+        let componentName = currentFiber.elementType.name
+        let atomName = pointer.memoizedState.deps[0]['key']
+        allAtomsRelationship.push([atomName, componentName,'atoms and components']);
       }
       pointer = pointer.next
     }
   }
-
-  // if (elementType?.name && isRecoil) {
-  //   let pointer = memoizedState;
-  //   while (pointer !== null && pointer !== undefined && pointer.next !== null) {
-  //     pointer = pointer.next;
-  //   }
-
-  //   if (pointer?.memoizedState[1]?.[0].current) {
-  //     const atomName = pointer.memoizedState[1]?.[0].current.keys().next().value;
-  //     allAtomsRelationship.push([atomName, elementType?.name, 'atoms and components']);
-  //   }
-
-  //   if (pointer?.memoizedState[1]?.[0].key) {
-  //     const atomName = pointer.memoizedState[1]?.[0].key;
-  //     allAtomsRelationship.push([atomName, elementType?.name, 'atoms and components']);
-  //   }
-  // }
 
   let newState: any | { hooksState?: any[] } = {};
   let componentData: {
