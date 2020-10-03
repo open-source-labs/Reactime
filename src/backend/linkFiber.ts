@@ -40,16 +40,17 @@ if (window[`$recoilDebugStates`]) {
 
 function getRecoilState(): any {
   const RecoilSnapshotsLength = window[`$recoilDebugStates`].length;
-  const lastRecoilSnapshot = window[`$recoilDebugStates`][RecoilSnapshotsLength - 1];
+  const lastRecoilSnapshot =
+    window[`$recoilDebugStates`][RecoilSnapshotsLength - 1];
   const nodeToNodeSubs = lastRecoilSnapshot.nodeToNodeSubscriptions;
   const nodeToNodeSubsKeys = lastRecoilSnapshot.nodeToNodeSubscriptions.keys();
-  nodeToNodeSubsKeys.forEach(
-    node => {
-      nodeToNodeSubs.get(node).forEach(
-        nodeSubs => allAtomsRelationship.push([node, nodeSubs, 'atoms and selectors'])
+  nodeToNodeSubsKeys.forEach((node) => {
+    nodeToNodeSubs
+      .get(node)
+      .forEach((nodeSubs) =>
+        allAtomsRelationship.push([node, nodeSubs, 'atoms and selectors'])
       );
-    }
-  );
+  });
 }
 
 /**
@@ -105,13 +106,16 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
  * @param memoizedProps Property containing props on a stateful fctnl component's FiberNode object
  * @return An array of array of HookStateItem objects (state and component properties)
  */
-function traverseRecoilHooks(memoizedState: any, memoizedProps: any): HookStates {
+function traverseRecoilHooks(
+  memoizedState: any,
+  memoizedProps: any
+): HookStates {
   const hooksStates: HookStates = [];
   while (memoizedState && memoizedState.queue) {
     if (
-      memoizedState.memoizedState
-      && memoizedState.queue.lastRenderedReducer
-      && memoizedState.queue.lastRenderedReducer.name === 'basicStateReducer'
+      memoizedState.memoizedState &&
+      memoizedState.queue.lastRenderedReducer &&
+      memoizedState.queue.lastRenderedReducer.name === 'basicStateReducer'
     ) {
       if (Object.entries(memoizedProps).length !== 0) {
         hooksStates.push({
@@ -120,7 +124,8 @@ function traverseRecoilHooks(memoizedState: any, memoizedProps: any): HookStates
         });
       }
     }
-    memoizedState = memoizedState.next !== memoizedState ? memoizedState.next : null;
+    memoizedState =
+      memoizedState.next !== memoizedState ? memoizedState.next : null;
   }
 
   return hooksStates;
@@ -131,21 +136,20 @@ function traverseRecoilHooks(memoizedState: any, memoizedProps: any): HookStates
  * @param memoizedState memoizedState property on a stateful fctnl component's FiberNode object
  * @return An array of array of HookStateItem objects
  *
- * Helper function to traverse through memoizedState and inject instrumentation to update our state tree 
+ * Helper function to traverse through memoizedState and inject instrumentation to update our state tree
  * every time a hooks component changes state
  */
 function traverseHooks(memoizedState: any): HookStates {
   const hooksStates: HookStates = [];
   while (memoizedState && memoizedState.queue) {
-    if (
-      memoizedState.memoizedState
-    ) {
+    if (memoizedState.memoizedState) {
       hooksStates.push({
         component: memoizedState.queue,
         state: memoizedState.memoizedState,
       });
     }
-    memoizedState = memoizedState.next !== memoizedState ? memoizedState.next : null;
+    memoizedState =
+      memoizedState.next !== memoizedState ? memoizedState.next : null;
   }
   return hooksStates;
 }
@@ -187,22 +191,38 @@ function createTree(
     treeBaseDuration,
   } = currentFiber;
 
-  if (elementType?.name && isRecoil) {
-    let pointer = memoizedState;
-    while (pointer !== null && pointer !== undefined && pointer.next !== null) {
-      pointer = pointer.next;
-    }
-
-    if (pointer?.memoizedState[1]?.[0].current) {
-      const atomName = pointer.memoizedState[1]?.[0].current.keys().next().value;
-      allAtomsRelationship.push([atomName, elementType?.name, 'atoms and components']);
-    }
-
-    if (pointer?.memoizedState[1]?.[0].key) {
-      const atomName = pointer.memoizedState[1]?.[0].key;
-      allAtomsRelationship.push([atomName, elementType?.name, 'atoms and components']);
+  if (
+    currentFiber.memoizedState &&
+    currentFiber.memoizedState.next &&
+    currentFiber.memoizedState.next.memoizedState &&
+    currentFiber.memoizedState.next.memoizedState.deps
+  ) {
+    let pointer = currentFiber.memoizedState.next);
+    
+    while (pointer !== null){
+      if(!Array.isArray(pointer.memoizedState)){
+        console.log(pointer)
+      }
+      pointer = pointer.next
     }
   }
+
+  // if (elementType?.name && isRecoil) {
+  //   let pointer = memoizedState;
+  //   while (pointer !== null && pointer !== undefined && pointer.next !== null) {
+  //     pointer = pointer.next;
+  //   }
+
+  //   if (pointer?.memoizedState[1]?.[0].current) {
+  //     const atomName = pointer.memoizedState[1]?.[0].current.keys().next().value;
+  //     allAtomsRelationship.push([atomName, elementType?.name, 'atoms and components']);
+  //   }
+
+  //   if (pointer?.memoizedState[1]?.[0].key) {
+  //     const atomName = pointer.memoizedState[1]?.[0].key;
+  //     allAtomsRelationship.push([atomName, elementType?.name, 'atoms and components']);
+  //   }
+  // }
 
   let newState: any | { hooksState?: any[] } = {};
   let componentData: {
@@ -230,16 +250,14 @@ function createTree(
 
   let hooksIndex;
 
-
-
   const atomArray = [];
   atomArray.push(memoizedProps);
 
   // RECOIL HOOKS
   if (
-    memoizedState
-    && (tag === 0 || tag === 1 || tag === 2 || tag === 10)
-    && isRecoil === true
+    memoizedState &&
+    (tag === 0 || tag === 1 || tag === 2 || tag === 10) &&
+    isRecoil === true
   ) {
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
@@ -247,7 +265,7 @@ function createTree(
       // We then store them along with the corresponding memoizedState.queue,
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseRecoilHooks(memoizedState, memoizedProps);
-      hooksStates.forEach(state => {
+      hooksStates.forEach((state) => {
         hooksIndex = componentActionsRecord.saveNew(
           state.state,
           state.component
@@ -270,9 +288,9 @@ function createTree(
   // Check if node is a hooks useState function
   // REGULAR REACT HOOKS
   if (
-    memoizedState
-    && (tag === 0 || tag === 1 || tag === 2 || tag === 10)
-    && isRecoil === false
+    memoizedState &&
+    (tag === 0 || tag === 1 || tag === 2 || tag === 10) &&
+    isRecoil === false
   ) {
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
@@ -368,7 +386,10 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
 
-    const throttledUpdateSnapshot = throttle(() => updateSnapShotTree(snap, mode), 70);
+    const throttledUpdateSnapshot = throttle(
+      () => updateSnapShotTree(snap, mode),
+      70
+    );
     document.addEventListener('visibilitychange', onVisibilityChange);
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
@@ -380,7 +401,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
           }
           return original(...args);
         };
-      }(devTools.onCommitFiberRoot));
+      })(devTools.onCommitFiberRoot);
     }
     throttledUpdateSnapshot();
   };
