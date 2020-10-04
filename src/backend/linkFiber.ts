@@ -167,6 +167,9 @@ let allAtomsRelationship = [];
  * 3. Build a new state snapshot
  */
 // This runs after every Fiber commit. It creates a new snapshot
+
+let recoilobj = {};
+
 function createTree(
   currentFiber: Fiber,
   tree: Tree = new Tree('root', 'root'),
@@ -193,11 +196,12 @@ function createTree(
     treeBaseDuration,
   } = currentFiber;
 
-  if(typeof currentFiber.elementType === "function" && currentFiber.elementType.name === "RecoilRoot"){
+  if (
+    typeof currentFiber.elementType === 'function' &&
+    currentFiber.elementType.name === 'RecoilRoot'
+  ) {
     // console.log(currentFiber.memoizedState.next.memoizedState.current.getState())
   }
-
-
 
   if (
     currentFiber.memoizedState &&
@@ -207,23 +211,58 @@ function createTree(
   ) {
     // console.log(currentFiber)
     let pointer = currentFiber.memoizedState.next;
-  
-    while (pointer !== null){
-      if(!Array.isArray(pointer.memoizedState)){
-        let componentName = currentFiber.elementType.name
-        let atomName = pointer.memoizedState.deps[0]['key']
-        allAtomsRelationship.push([atomName, componentName,'atoms and components']);
+
+    while (pointer !== null) {
+      if (!Array.isArray(pointer.memoizedState)) {
+        let componentName = currentFiber.elementType.name;
+        let atomName = pointer.memoizedState.deps[0]['key'];
+        allAtomsRelationship.push([
+          atomName,
+          componentName,
+          'atoms and components',
+        ]);
       }
-      pointer = pointer.next
+      pointer = pointer.next;
     }
 
-    if(currentFiber.memoizedState.next.memoizedState.deps[1].current){
+    if (currentFiber.memoizedState.next.memoizedState.deps[1].current) {
       let getState = currentFiber.memoizedState.next.memoizedState.deps[1].current.getState()
-      console.log(getState.graphsByVersion.entries())
-    }
+        .graphsByVersion;
 
+       getState.entries()
+          .forEach((value) => {
+            value[1].nodeDeps.entries()
+            .forEach((obj) => {
 
-  }
+              console.log
+
+              // if(!recoilobj[obj[0]]){
+              //   recoilobj[obj[0]] = obj[1].
+              // }
+            })
+          })
+
+        // console.log(getState.values()
+        //    .forEach((value) => {
+        //     console.log(value.nodeDeps
+        //    )
+        //   })
+        // )
+          
+      // //       console.log(key)
+           
+           
+      // // //       console.log(
+      // // //         // value[1].nodeDeps
+      // // //           // .entries()
+      // // //           // .forEach((value, key) => {
+      // // //           //   console.log(value)
+      // // //           //   // console.log(value[0])
+      // // //           //   // console.log(value[1])
+      // // //           // })
+      // // //       )
+          }
+        }
 
   let newState: any | { hooksState?: any[] } = {};
   let componentData: {
