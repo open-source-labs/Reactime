@@ -233,36 +233,20 @@ function createTree(
           .forEach((value) => {
             value[1].nodeDeps.entries()
             .forEach((obj) => {
-
-              console.log
-
-              // if(!recoilobj[obj[0]]){
-              //   recoilobj[obj[0]] = obj[1].
-              // }
+              if(!recoilobj[obj[0]]){
+                recoilobj[obj[0]] = []
+              }
+              obj[1].values()
+                .forEach(((selector) => {
+                  if(!recoilobj[obj[0]].includes(selector)){
+                    recoilobj[obj[0]].push(selector)
+                  }
+                  }))                                          
+               })
             })
-          })
-
-        // console.log(getState.values()
-        //    .forEach((value) => {
-        //     console.log(value.nodeDeps
-        //    )
-        //   })
-        // )
-          
-      // //       console.log(key)
-           
-           
-      // // //       console.log(
-      // // //         // value[1].nodeDeps
-      // // //           // .entries()
-      // // //           // .forEach((value, key) => {
-      // // //           //   console.log(value)
-      // // //           //   // console.log(value[0])
-      // // //           //   // console.log(value[1])
-      // // //           // })
-      // // //       )
           }
-        }
+      console.log(recoilobj)
+    }
 
   let newState: any | { hooksState?: any[] } = {};
   let componentData: {
