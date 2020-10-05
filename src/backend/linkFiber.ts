@@ -202,22 +202,24 @@ function createTree(
     currentFiber.memoizedState.next &&
     currentFiber.memoizedState.next.memoizedState &&
     currentFiber.memoizedState.next.memoizedState.deps &&
-    isRecoil
+    isRecoil &&
+    currentFiber.tag !== 15
   ) {
-    let pointer = currentFiber.memoizedState.next;
 
-    //pointer helps us find multiple states which are linked as a linkedlist 
+    let pointer = currentFiber.memoizedState.next;
+    let componentName = currentFiber.elementType.name
+    
+    if(!recoilObj[componentName]){
+    recoilObj[componentName] = [];
     while (pointer !== null) {      
-      if (!Array.isArray(pointer.memoizedState)) {         
-        let componentName = currentFiber.elementType.name
-        let atomName = pointer.memoizedState.deps[0]['key'];        
-        allAtomsRelationship.push([
-          atomName,
-          componentName,
-          'atoms and components',
-        ]);
+      if (!Array.isArray(pointer.memoizedState)) {                           
+        let atomName = pointer.memoizedState.deps[0]['key'];           
+          recoilObj[componentName].push(
+            atomName,
+          );
+        }
+    pointer = pointer.next;
       }
-      pointer = pointer.next;
     }
 
     if (currentFiber.memoizedState.next.memoizedState.deps[1].current) {
@@ -237,7 +239,6 @@ function createTree(
         });
       });
     } 
-    
   }
 
   let newState: any | { hooksState?: any[] } = {};
