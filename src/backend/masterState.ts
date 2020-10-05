@@ -16,7 +16,6 @@ let index = 0;
 
 export default {
   saveNew: (state, component): number => {
-    console.log('this is creating our snapshots of state, INSIDE MASTERSTATE, COMPONENTACTIONS RECORD:', componentActionsRecord)
     componentActionsRecord[index] = { state, component };
     index++;
     return index - 1;
