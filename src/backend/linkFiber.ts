@@ -40,20 +40,21 @@ let initialstart = false;
 if (window[`$recoilDebugStates`]) {
   isRecoil = true;
 }
-function getRecoilState(): any {
-  const RecoilSnapshotsLength = window[`$recoilDebugStates`].length;
-  const lastRecoilSnapshot =
-    window[`$recoilDebugStates`][RecoilSnapshotsLength - 1];
-  const nodeToNodeSubs = lastRecoilSnapshot.nodeToNodeSubscriptions;
-  const nodeToNodeSubsKeys = lastRecoilSnapshot.nodeToNodeSubscriptions.keys();
-  nodeToNodeSubsKeys.forEach((node) => {
-    nodeToNodeSubs
-      .get(node)
-      .forEach((nodeSubs) =>
-        allAtomsRelationship.push([node, nodeSubs, 'atoms and selectors'])
-      );
-  });
-}
+
+// function getRecoilState(): any {
+//   const RecoilSnapshotsLength = window[`$recoilDebugStates`].length;
+//   const lastRecoilSnapshot =
+//     window[`$recoilDebugStates`][RecoilSnapshotsLength - 1];
+//   const nodeToNodeSubs = lastRecoilSnapshot.nodeToNodeSubscriptions;
+//   const nodeToNodeSubsKeys = lastRecoilSnapshot.nodeToNodeSubscriptions.keys();
+//   nodeToNodeSubsKeys.forEach((node) => {
+//     nodeToNodeSubs
+//       .get(node)
+//       .forEach((nodeSubs) =>
+//         allAtomsRelationship.push([node, nodeSubs, 'atoms and selectors'])
+//       );
+//   });
+// }
 
 /**
  * @method sendSnapshot
@@ -72,10 +73,13 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   }
 
   const payload = snap.tree.cleanTreeCopy();
+
   if (isRecoil) {
-    getRecoilState();
-    payload.AtomsRelationship = allAtomsRelationship;
+    // getRecoilState();
+    payload.AtomsComponents = atomsComponents;
+    payload.AtomsSelectors = atomsSelectors;
   }
+
 
   window.postMessage(
     {

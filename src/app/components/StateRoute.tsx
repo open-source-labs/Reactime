@@ -31,7 +31,9 @@ interface StateRouteProps {
     state?: string | object;
     stateSnaphot?: object;
     children?: any[];
-    AtomsRelationship?: any[];
+    AtomsComponents?: any;
+    AtomsSelectors?: any;
+
   };
   hierarchy: any;
   snapshots: [];
@@ -41,7 +43,7 @@ interface StateRouteProps {
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
 
-  const isRecoil = snapshot.AtomsRelationship ? true : false;
+  const isRecoil = snapshot.AtomsComponents ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
 
   // component map zoom state
@@ -79,7 +81,7 @@ const StateRoute = (props: StateRouteProps) => {
   };
 
   const renderAtomsRelationship = () => (
-    <AtomsRelationship atomsRel={snapshot.AtomsRelationship} />
+    <AtomsRelationship atomsRel={snapshot.AtomsComponents} />
   );
 
   // the hierarchy gets set on the first click in the page
