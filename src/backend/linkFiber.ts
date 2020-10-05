@@ -170,6 +170,9 @@ function createTree(
   fromSibling = false
 ) {
   // Base case: child or sibling pointed to null
+  if (currentFiber.tag === 5) {
+    console.log(currentFiber.stateNode)
+  }
   if (!currentFiber) return null;
   if (!tree) return tree;
 
@@ -226,6 +229,8 @@ function createTree(
       stateNode.state,
       stateNode
     );
+    console.log(componentData)
+    // console.log('stateNode inside of line 232:', stateNode)
     newState = stateNode.state;
     componentFound = true;
   }
@@ -342,6 +347,7 @@ function createTree(
     // so attach children to the newly appended child.
     // Otherwise, attach children to this same node.
     circularComponentTable.add(child);
+    // console.log(createTree(child, newNode))
     createTree(child, newNode);
   }
   // Recurse on siblings
@@ -369,7 +375,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-
+    console.log(fiberRoot); 
     const throttledUpdateSnapshot = throttle(() => updateSnapShotTree(snap, mode), 70);
     document.addEventListener('visibilitychange', onVisibilityChange);
     if (reactInstance && reactInstance.version) {

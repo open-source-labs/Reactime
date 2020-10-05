@@ -23,7 +23,7 @@ const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
 function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
-
+  console.log('inside MainContainer'); 
   // add event listeners to background script
   useEffect(() => {
     // only open port once
