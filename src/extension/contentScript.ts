@@ -25,8 +25,10 @@ window.addEventListener('message', msg => { // runs automatically every second
 chrome.runtime.onMessage.addListener(request => { // seems to never fire
   // send the message to npm package
   const { action }: { action: string } = request;
+  console.log(request); 
   switch (action) {
     case 'jumpToSnap':
+      console.log('This is the request inside of jumpToSnap inside of the contentScripts, request:', request); 
       chrome.runtime.sendMessage(request);
       window.postMessage(request, '*');
       break;
@@ -34,6 +36,9 @@ chrome.runtime.onMessage.addListener(request => { // seems to never fire
     case 'setPause':
       window.postMessage(request, '*');
       break;
+    case 'onHover': 
+      //wtf does this do??
+      window.postMessage(request, '*'); 
     default:
       break;
   }
