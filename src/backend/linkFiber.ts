@@ -76,8 +76,8 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
 
   if (isRecoil) {
     // getRecoilState();
-    payload.AtomsComponents = atomsComponents;
-    payload.AtomsSelectors = atomsSelectors;
+    payload.atomsComponents = atomsComponents;
+    payload.atomSelectors = atomsSelectors;
   }
 
 

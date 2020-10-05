@@ -29,8 +29,6 @@ const StateContainer = (props:StateContainerProps): unknown => {
   } = props;
   const [Text, setText] = useState('State');
 
-  console.log(props)
-  
   return (
     <Router>
       <div className="state-container">
