@@ -33,6 +33,8 @@ let fiberRoot = null;
 let doWork = true;
 const circularComponentTable = new Set();
 let isRecoil = false;
+let allAtomsRelationship = [];
+let initialstart = false;
 
 // Simple check for whether our target app uses Recoil
 if (window[`$recoilDebugStates`]) {
@@ -154,7 +156,6 @@ function traverseHooks(memoizedState: any): HookStates {
   return hooksStates;
 }
 
-let allAtomsRelationship = [];
 /**
  * @method createTree
  * @param currentFiber A Fiber object
@@ -167,8 +168,8 @@ let allAtomsRelationship = [];
  * 3. Build a new state snapshot
  */
 // This runs after every Fiber commit. It creates a new snapshot
-
-let recoilObj = {};
+let atomsSelectors = {};
+let atomsComponents = {};
 
 function createTree(
   currentFiber: Fiber,
@@ -196,49 +197,50 @@ function createTree(
     treeBaseDuration,
   } = currentFiber;
 
-  //Checks Recoil Atom and Selector Relationships 
+  //Checks Recoil Atom and Selector Relationships
   if (
     currentFiber.memoizedState &&
     currentFiber.memoizedState.next &&
     currentFiber.memoizedState.next.memoizedState &&
     currentFiber.memoizedState.next.memoizedState.deps &&
     isRecoil &&
-    currentFiber.tag !== 15
+    currentFiber.tag === 0 &&
+    currentFiber.key === null //prevents capturing the same Fiber nodes but different key values that result from being changed
   ) {
-
     let pointer = currentFiber.memoizedState.next;
-    let componentName = currentFiber.elementType.name
-    
-    if(!recoilObj[componentName]){
-    recoilObj[componentName] = [];
-    while (pointer !== null) {      
-      if (!Array.isArray(pointer.memoizedState)) {                           
-        let atomName = pointer.memoizedState.deps[0]['key'];           
-          recoilObj[componentName].push(
-            atomName,
-          );
+    let componentName = currentFiber.elementType.name;
+
+    if (!atomsComponents[componentName]) {
+      atomsComponents[componentName] = [];
+      while (pointer !== null) {
+        if (!Array.isArray(pointer.memoizedState)) {
+          let atomName = pointer.memoizedState.deps[0]['key'];
+          atomsComponents[componentName].push(atomName);
         }
-    pointer = pointer.next;
+        pointer = pointer.next;
       }
     }
 
-    if (currentFiber.memoizedState.next.memoizedState.deps[1].current) {
+    if (
+      currentFiber.memoizedState.next.memoizedState.deps[1].current &&
+      !initialstart
+    ) {
       let getState = currentFiber.memoizedState.next.memoizedState.deps[1].current.getState()
         .graphsByVersion;
-
       getState.entries().forEach((value) => {
         value[1].nodeDeps.entries().forEach((obj) => {
-          if (!recoilObj[obj[0]]) {
-            recoilObj[obj[0]] = [];
+          if (!atomsSelectors[obj[0]]) {
+            atomsSelectors[obj[0]] = [];
           }
           obj[1].values().forEach((selector) => {
-            if (!recoilObj[obj[0]].includes(selector)) {
-              recoilObj[obj[0]].push(selector);
+            if (!atomsSelectors[obj[0]].includes(selector)) {
+              atomsSelectors[obj[0]].push(selector);
             }
           });
         });
       });
-    } 
+      initialstart = true;
+    }
   }
 
   let newState: any | { hooksState?: any[] } = {};
