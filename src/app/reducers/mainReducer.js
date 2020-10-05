@@ -46,9 +46,6 @@ export default (state, action) => produce(state, draft => {
         // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
         const nameFromIndex = findName(newIndex, hierarchy);
         port.postMessage({
-          test: 'heres a test from the reducer'
-        })
-        port.postMessage({
           action: 'jumpToSnap',
           payload: snapshots[newIndex],
           index: newIndex,
