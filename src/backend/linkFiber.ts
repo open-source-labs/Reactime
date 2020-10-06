@@ -173,6 +173,7 @@ function createTree(
   // if (currentFiber.tag === 5) {
   //   console.log(currentFiber.stateNode)
   // }
+
   if (!currentFiber) return null;
   if (!tree) return tree;
 
