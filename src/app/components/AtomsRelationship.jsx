@@ -10,18 +10,60 @@ const white = '#ffffff';
 export const green = '#79d259';
 const aqua = '#37ac8c';
 const merlinsbeard = '#f7f7f3';
-export const background = '#306c90';
+export const background = '#242529';
 
 // interface NodeShape {
 //   name: string;
 //   children?: NodeShape[];
-//  
+//
+
+function clusterDataPopulate(props) {
+  let data = {};
+
+  let atomCompObj = reorganizedObj(props);
+
+  console.log(atomCompObj);
+  console.log(props);
+
+  if (props[0].name) {
+    console.log('entered')
+    data.name = props[0].name;
+  }
+
+  for(let key in atomCompObj){
+    if(!data.children){
+      data.children = []
+      data.children.push({name: key})
+    } else {
+      data.children.push({name: key})
+    }      
+  }
+   console.log(data)
+}
+
+function reorganizedObj(props) {
+  let atomsComponentObj = props[0].atomsComponents;
+  let reorganizedObj = {};
+
+  for (const key in atomsComponentObj) {
+    for (let i = 0; i < atomsComponentObj[key].length; i++) {
+      if (!reorganizedObj[atomsComponentObj[key][i]]) {
+        reorganizedObj[atomsComponentObj[key][i]] = [key];
+      } else {
+        reorganizedObj[atomsComponentObj[key][i]].push(key);
+      }
+    }
+  }
+
+  return reorganizedObj;
+}
 
 const clusterData = {
-  name: '$',
+  name: 'root',
+
   children: [
     {
-      name: 'A',
+      name: 'darkMode',
       children: [
         { name: 'A1' },
         { name: 'A2' },
@@ -35,10 +77,12 @@ const clusterData = {
         },
       ],
     },
+
     {
       name: 'B',
       children: [{ name: 'B1' }, { name: 'B2' }, { name: 'B3' }],
     },
+
     {
       name: 'X',
       children: [
@@ -90,7 +134,13 @@ function RootNode({ node }) {
 
   return (
     <Group top={node.y} left={node.x}>
-      <rect width={width} height={height} y={centerY} x={centerX} fill="url('#top')" />
+      <rect
+        width={width}
+        height={height}
+        y={centerY}
+        x={centerX}
+        fill="url('#top')"
+      />
       <text
         dy=".33em"
         fontSize={9}
@@ -113,17 +163,24 @@ const defaultMargin = { top: 40, left: 50, right: 50, bottom: 40 };
 //   margin?: { top: number; right: number; bottom: number; left: number };
 // };
 
-export default function Example({ width, height, margin = defaultMargin }) {
+export default function Example({
+  width,
+  height,
+  margin = defaultMargin,
+  snapshots,
+}) {
   const data = useMemo(() => hierarchy(clusterData), []);
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
+
+  clusterDataPopulate(snapshots);
 
   return width < 10 ? null : (
     <svg width={width} height={height}>
       <LinearGradient id="top" from={green} to={aqua} />
       <rect width={width} height={height} rx={14} fill={background} />
       <Cluster root={data} size={[xMax, yMax]}>
-        {cluster => (
+        {(cluster) => (
           <Group top={margin.top} left={margin.left}>
             {cluster.links().map((link, i) => (
               <LinkVertical
@@ -142,4 +199,5 @@ export default function Example({ width, height, margin = defaultMargin }) {
         )}
       </Cluster>
     </svg>
-  )};
+  );
+}

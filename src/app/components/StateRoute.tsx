@@ -87,7 +87,8 @@ const StateRoute = (props: StateRouteProps) => {
     <ParentSize>{({ width, height }) => 
     <Example 
     width={width} 
-    height={height} />}
+    height={height}
+    snapshots = {snapshots} />}
     </ParentSize>
     
     //   atomsComponents={snapshot.atomsComponents}
