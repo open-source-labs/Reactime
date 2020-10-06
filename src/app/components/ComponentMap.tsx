@@ -24,7 +24,7 @@ const ComponentMap = (props: componentMapProps) => {
   let lastSnap: number | null = null;
   if (viewIndex < 0) lastSnap = snapshots.length - 1;
   else lastSnap = viewIndex;
-
+  console.log('inside ComnponentMap, snapshots:', snapshots)
   //external constants
   const width: any = '100vw';
   const height: any = '100vh';
