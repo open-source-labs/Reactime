@@ -29,7 +29,7 @@ const ComponentMap = (props: componentMapProps) => {
   const width: any = '100vw';
   const height: any = '100vh';
   let data: Object = snapshots[lastSnap];
-
+  console.log('inside ComponentMap, data', data)
   useEffect(() => {
     document.getElementById('canvas').innerHTML = '_';
     setZoomState(d3.zoomTransform(d3.select('#canvas').node()));

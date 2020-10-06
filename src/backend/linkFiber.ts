@@ -341,7 +341,7 @@ function createTree(
   } else {
     newNode = tree;
   }
-
+  console.log('inside LinkFiber, circularComponentTable:',  circularComponentTable); 
   // Recurse on children
   if (child && !circularComponentTable.has(child)) {
     // If this node had state we appended to the children array,
