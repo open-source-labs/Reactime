@@ -16,7 +16,7 @@ import ComponentMap from './ComponentMap';
 import PerfView from './PerfView';
 import AtomsRelationship from './AtomsRelationship.jsx';
 import Example from './AtomsRelationship.jsx';
-import ParentSize from '@visx/responsive';
+import { ParentSize } from '@visx/responsive'
 
 const History = require('./History').default;
 
@@ -83,9 +83,12 @@ const StateRoute = (props: StateRouteProps) => {
   };
 
   const renderAtomsRelationship = () => (
-    <Example
-    width={500}
-    height={500} />
+
+    <ParentSize>{({ width, height }) => 
+    <Example 
+    width={width} 
+    height={height} />}
+    </ParentSize>
     
     //   atomsComponents={snapshot.atomsComponents}
     //   atomSelectors={snapshot.atomSelectors}
