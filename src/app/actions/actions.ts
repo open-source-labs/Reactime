@@ -77,3 +77,8 @@ export const deleteTab = tab => ({
 export const resetSlider = () => ({
   type: types.SLIDER_ZERO,
 });
+
+export const onHover = () => ({
+  type: types.ON_HOVER, 
+  payload: 'PAYLOAD FROM onHover inside of action.ts'
+})
