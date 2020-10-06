@@ -39,6 +39,17 @@ export default (state, action) => produce(state, draft => {
   };
 
   switch (action.type) {
+    case types.ON_HOVER: {
+      console.log(currentTab);
+      console.log('onHover Firedin side of the reducer');
+      port.postMessage({
+        action: 'onHover',
+        payload: 'payload from Reducer ON_HOVER',
+        tabId: currentTab,
+      })
+      break; 
+    }
+
     case types.MOVE_BACKWARD: {
       if (snapshots.length > 0 && sliderIndex > 0) {
         const newIndex = sliderIndex - 1;

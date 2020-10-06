@@ -38,6 +38,7 @@ chrome.runtime.onMessage.addListener(request => { // seems to never fire
       break;
     case 'onHover': 
       //wtf does this do??
+      console.log('onHover fired inside of ContentScripts'); 
       window.postMessage(request, '*'); 
     default:
       break;

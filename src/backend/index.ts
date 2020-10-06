@@ -45,11 +45,9 @@ function getRouteURL(node: SnapshotNode): string {
 // * Event listener for time-travel actions
 window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
   switch (action) {
-    
-
     case 'jumpToSnap':
       // console.log('action:', action); 
-      // console.log('payload', payload); 
+      console.log('payload', payload); 
       // console.log('payload.name:', payload.name)
       // console.log(test)
       timeJump(payload, true); // * This sets state with given payload
@@ -66,7 +64,7 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       mode.paused = payload;
       break;
     case 'onHover':
-      console.log('WE MADE IT ALL THE WAY FROM THE FRONTEND! HERE\'S THE PAYLOAD:');
+      console.log('WE MADE IT ALL THE WAY FROM THE FRONTEND! HERE\'S THE PAYLOAD:', payload);
       break;
     default:
       break;
