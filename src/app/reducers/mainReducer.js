@@ -2,7 +2,7 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable no-param-reassign */
-import produce from 'immer';
+import {produce, original} from 'immer';
 import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
@@ -202,6 +202,7 @@ export default (state, action) => produce(state, draft => {
     }
     case types.INITIAL_CONNECT: {
       const { payload } = action;
+      console.log('inside reducer INITIAL_CONNECT, payload:', payload);
       Object.keys(payload).forEach(tab => {
         // check if tab exists in memory
         // add new tab

@@ -25,11 +25,12 @@ const ComponentMap = (props: componentMapProps) => {
   if (viewIndex < 0) lastSnap = snapshots.length - 1;
   else lastSnap = viewIndex;
   console.log('inside ComnponentMap, snapshots:', snapshots)
+  console.log('lastSnap:', lastSnap)
   //external constants
   const width: any = '100vw';
   const height: any = '100vh';
   let data: Object = snapshots[lastSnap];
-  console.log('inside ComponentMap, data', data)
+  console.log('INSIDE OF COMPONENTMAP, data:', data); 
   useEffect(() => {
     document.getElementById('canvas').innerHTML = '_';
     setZoomState(d3.zoomTransform(d3.select('#canvas').node()));
