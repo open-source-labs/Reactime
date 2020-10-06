@@ -20,25 +20,28 @@ export const background = '#242529';
 function clusterDataPopulate(props) {
   let data = {};
 
+  console.log(props)
   let atomCompObj = reorganizedObj(props);
 
   console.log(atomCompObj);
-  console.log(props);
 
   if (props[0].name) {
-    console.log('entered')
     data.name = props[0].name;
   }
 
+  let counter = 0
   for(let key in atomCompObj){
-    if(!data.children){
-      data.children = []
-      data.children.push({name: key})
-    } else {
-      data.children.push({name: key})
-    }      
-  }
-   console.log(data)
+    if(!data.children) data.children = []
+    data.children.push({name: key})
+      if(atomCompObj[key].length){
+        for(let i=0; i<atomCompObj[key].length;i++){
+          if(!data.children[counter].children) data.children[counter].children = []
+          data.children[counter].children.push ({name:atomCompObj[key][i]})
+          }
+        }
+        counter++        
+      }
+  console.log(data)
 }
 
 function reorganizedObj(props) {
@@ -54,13 +57,12 @@ function reorganizedObj(props) {
       }
     }
   }
-
   return reorganizedObj;
 }
 
 const clusterData = {
   name: 'root',
-
+  
   children: [
     {
       name: 'darkMode',
@@ -77,11 +79,14 @@ const clusterData = {
         },
       ],
     },
+    
+
 
     {
       name: 'B',
       children: [{ name: 'B1' }, { name: 'B2' }, { name: 'B3' }],
     },
+
 
     {
       name: 'X',

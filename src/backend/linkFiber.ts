@@ -374,7 +374,7 @@ function createTree(
   } else {
     newNode = tree;
   }
-
+  
   // Recurse on children
   if (child && !circularComponentTable.has(child)) {
     // If this node had state we appended to the children array,
