@@ -24,13 +24,11 @@ const ComponentMap = (props: componentMapProps) => {
   let lastSnap: number | null = null;
   if (viewIndex < 0) lastSnap = snapshots.length - 1;
   else lastSnap = viewIndex;
-  console.log('inside ComnponentMap, snapshots:', snapshots)
-  console.log('lastSnap:', lastSnap)
   //external constants
   const width: any = '100vw';
   const height: any = '100vh';
   let data: Object = snapshots[lastSnap];
-  console.log('INSIDE OF COMPONENTMAP, data:', data); 
+
   useEffect(() => {
     document.getElementById('canvas').innerHTML = '_';
     setZoomState(d3.zoomTransform(d3.select('#canvas').node()));
@@ -149,7 +147,7 @@ const ComponentMap = (props: componentMapProps) => {
 
         //TODO -> Alter incoming snapshots so there is useful data to show on hover.
         nodeEnter.on('mouseover', function (d: any, i: number): any {
-            console.log('mousing over')
+            //onHover is an action in progress 
             dispatch(onHover());
             d3.select(this)
               .append('text')
