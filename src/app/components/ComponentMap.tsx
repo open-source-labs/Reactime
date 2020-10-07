@@ -145,20 +145,18 @@ const ComponentMap = (props: componentMapProps) => {
 
         //TODO -> Alter incoming snapshots so there is useful data to show on hover.
         nodeEnter.on('mouseover', function (d: any, i: number): any {
-       
-            d3.select(this)
-              .append('text')
-              .text(() => {
-                return JSON.stringify(d.data.state);
-              })
-              .attr('x', -25)
-              .attr('y', 20)
-              .style('font-size', `.6rem`)
-              .style('fill', 'white')
-              .attr('stroke', 'white')
-              .attr('stroke-width', .5)
-              .attr('id', `popup${i}`);
-          
+          d3.select(this)
+            .append('text')
+            .text(() => {
+              return JSON.stringify(d.data.state);
+            })
+            .attr('x', -25)
+            .attr('y', 20)
+            .style('font-size', `.6rem`)
+            .style('fill', 'white')
+            .attr('stroke', 'white')
+            .attr('stroke-width', 0.5)
+            .attr('id', `popup${i}`);
         });
         nodeEnter.on('mouseout', function (d: any, i: number): any {
           d3.select(`#popup${i}`).remove();
@@ -221,7 +219,7 @@ const ComponentMap = (props: componentMapProps) => {
       svgContainer.call(
         zoom.transform,
         // Changes the initial view, (left, top)
-        d3.zoomIdentity.translate(x, y).scale(k)
+        d3.zoomIdentity.translate(x, y).scale(k),
       );
 
       // allows the canvas to be zoom-able
@@ -229,14 +227,14 @@ const ComponentMap = (props: componentMapProps) => {
         d3
           .zoom()
           .scaleExtent([0.15, 1.5]) // [zoomOut, zoomIn]
-          .on('zoom', zoomed)
+          .on('zoom', zoomed),
       );
       function zoomed(d: any) {
         svg
           .attr('transform', d3.event.transform)
           .on(
             'mouseup',
-            setZoomState(d3.zoomTransform(d3.select('#canvas').node()))
+            setZoomState(d3.zoomTransform(d3.select('#canvas').node())),
           );
       }
 
@@ -246,12 +244,12 @@ const ComponentMap = (props: componentMapProps) => {
       // call update on node click
       update(root);
     },
-    [data]
+    [data],
   );
 
   return (
-    <div data-testid="canvas" id="componentMapContainer">
-      <svg id="canvas"></svg>
+    <div data-testid='canvas' id='componentMapContainer'>
+      <svg id='canvas'></svg>
     </div>
   );
 };
