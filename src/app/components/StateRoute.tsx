@@ -54,7 +54,6 @@ const StateRoute = (props: StateRouteProps) => {
 
   // Map
   const renderComponentMap = () => {
-    console.log('inside renderComponenetMap, inside State.Route.tsx')
     if (hierarchy) {
       return (
         <ComponentMap
