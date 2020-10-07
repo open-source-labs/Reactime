@@ -7,7 +7,7 @@ interface DropdownProps {
   setSpeed: () => void;
 }
 
-const Dropdown = (props: DropdownProps): unknown => {
+const Dropdown = (props: DropdownProps): JSX.Element => {
   const { speeds, setSpeed, selectedSpeed } = props;
   return (
     <Select

@@ -23,7 +23,6 @@ const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
 function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
-
   // add event listeners to background script
   useEffect(() => {
     // only open port once
@@ -127,7 +126,6 @@ function MainContainer(): any {
     snapshots,
     hierarchy,
   } = tabs[currentTab];
-
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // cleaning hierarchy and snapshotView from stateless data

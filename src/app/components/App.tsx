@@ -10,7 +10,7 @@ const initialState:{port: null|number,
     tabs: {},
   };
 
-function App(): unknown {
+function App(): JSX.Element {
   return (
     <StoreContext.Provider value={useReducer(mainReducer, initialState)}>
       <MainContainer />
