@@ -6,7 +6,6 @@ import { pointRadial } from 'd3-shape';
 import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
-import { chartDefaultProps } from 'react-google-charts/dist/default-props';
 
 interface TreeNode {
   name: string;
@@ -61,13 +60,16 @@ export type LinkTypesProps = {
   width: number;
   height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
+  snapshots: any;
 };
 
 export default function Example({
   width: totalWidth,
   height: totalHeight,
   margin = defaultMargin,
+  snapshots: snapshots,
 }: LinkTypesProps) {
+  console.log('snapshots passed in', snapshots);
   const [layout, setLayout] = useState<string>('cartesian');
   const [orientation, setOrientation] = useState<string>('horizontal');
   const [linkType, setLinkType] = useState<string>('diagonal');
@@ -114,8 +116,8 @@ export default function Example({
         setStepPercent={setStepPercent}
       />
       <svg width={totalWidth} height={totalHeight}>
-        <LinearGradient id='links-gradient' from='#fd9b93' to='#fe6e9e' />
-        <rect width={totalWidth} height={totalHeight} rx={14} fill='#242529' />
+        <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
+        <rect width={totalWidth} height={totalHeight} rx={14} fill="#242529" />
         <Group top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(data, (d) => (d.isExpanded ? null : d.children))}
@@ -129,9 +131,9 @@ export default function Example({
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    stroke='rgb(254,110,158,0.6)'
-                    strokeWidth='1'
-                    fill='none'
+                    stroke="rgb(254,110,158,0.6)"
+                    strokeWidth="1"
+                    fill="none"
                   />
                 ))}
 
@@ -172,7 +174,7 @@ export default function Example({
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          fill='#272b4d'
+                          fill="#272b4d"
                           stroke={node.data.children ? '#03c0dc' : '#26deb0'}
                           strokeWidth={1}
                           strokeDasharray={node.data.children ? '0' : '2,2'}
@@ -186,10 +188,10 @@ export default function Example({
                         />
                       )}
                       <text
-                        dy='.33em'
+                        dy=".33em"
                         fontSize={9}
-                        fontFamily='Arial'
-                        textAnchor='middle'
+                        fontFamily="Arial"
+                        textAnchor="middle"
                         style={{ pointerEvents: 'none' }}
                         fill={
                           node.depth === 0

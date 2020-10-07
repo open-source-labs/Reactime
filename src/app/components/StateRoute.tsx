@@ -72,7 +72,7 @@ const StateRoute = (props: StateRouteProps) => {
         // />
       );
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
   // the hierarchy gets set on the first click in the page
@@ -82,7 +82,7 @@ const StateRoute = (props: StateRouteProps) => {
     if (hierarchy) {
       return <History hierarchy={hierarchy} />;
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
   const renderAtomsRelationship = () => (
@@ -96,7 +96,7 @@ const StateRoute = (props: StateRouteProps) => {
     if (hierarchy) {
       return <Tree snapshot={snapshot} />;
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
   const renderPerfView = () => {
@@ -111,55 +111,55 @@ const StateRoute = (props: StateRouteProps) => {
         />
       );
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
   return (
     <Router>
-      <div className='navbar'>
+      <div className="navbar">
         <NavLink
-          className='router-link'
-          activeClassName='is-active'
+          className="router-link"
+          activeClassName="is-active"
           exact
-          to='/'
+          to="/"
         >
           Tree
         </NavLink>
         <NavLink
-          className='router-link'
-          activeClassName='is-active'
-          to='/history'
+          className="router-link"
+          activeClassName="is-active"
+          to="/history"
         >
           History
         </NavLink>
-        <NavLink className='router-link' activeClassName='is-active' to='/map'>
+        <NavLink className="router-link" activeClassName="is-active" to="/map">
           Map
         </NavLink>
 
         {isRecoil && (
           <NavLink
-            className='router-link'
-            activeClassName='is-active'
-            to='/relationship'
+            className="router-link"
+            activeClassName="is-active"
+            to="/relationship"
           >
             Data Flow
           </NavLink>
         )}
 
         <NavLink
-          className='router-link'
-          activeClassName='is-active'
-          to='/performance'
+          className="router-link"
+          activeClassName="is-active"
+          to="/performance"
         >
           Performance
         </NavLink>
       </div>
       <Switch>
-        <Route path='/map' render={renderComponentMap} />
-        <Route path='/history' render={renderHistory} />
-        <Route path='/relationship' render={renderAtomsRelationship} />
-        <Route path='/performance' render={renderPerfView} />
-        <Route path='/' render={renderTree} />
+        <Route path="/map" render={renderComponentMap} />
+        <Route path="/history" render={renderHistory} />
+        <Route path="/relationship" render={renderAtomsRelationship} />
+        <Route path="/performance" render={renderPerfView} />
+        <Route path="/" render={renderTree} />
       </Switch>
     </Router>
   );
