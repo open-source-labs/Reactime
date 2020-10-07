@@ -126,7 +126,6 @@ function MainContainer(): any {
     snapshots,
     hierarchy,
   } = tabs[currentTab];
-  console.log('inside MainContainer, hierarchy:', hierarchy)
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // cleaning hierarchy and snapshotView from stateless data
