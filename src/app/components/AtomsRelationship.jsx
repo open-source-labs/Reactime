@@ -18,44 +18,43 @@ export const background = '#242529';
 //
 
 const clusterData = {};
+let memoizeObj = {};
 
 function clusterDataPopulate(props) {
-  console.log(props)
   let atomCompObj = reorganizedObj(props);
-
-  console.log(atomCompObj);
+  console.log(atomCompObj)
 
   if (props[0].name) {
     clusterData.name = props[0].name;
   }
-
   
-  let memoizeObj = {}
-  let counter = 0
+  let counter = 0;
 
-  for(let key in atomCompObj){
-      if(atomCompObj[key].length){
-        for(let i=0; i<atomCompObj[key].length;i++){
-          
+  for (let key in atomCompObj) {
 
+    if (atomCompObj[key].length) {
+  
+      for (let i = 0; i < atomCompObj[key].length; i++) {
 
-
-
-          if(!clusterData.children) clusterData.children = []
-            clusterData.children.push({name: key})}
-          if(!clusterData.children[counter].children) {
-          clusterData.children[counter].children = []
-          clusterData.children[counter].children.push ({name:atomCompObj[key][i]})}        
-         
-          if (!memoizeObj[key]){
-          memoizeObj[key] = []
-          memoizeObj[key].push[atomCompObj[key][i]] 
-          }
+        if (!memoizeObj[key]) {
+          memoizeObj[key] = [];
+          if (!clusterData.children) clusterData.children = [];
+          clusterData.children.push({ name: key });
         }
-        counter++        
-      }
-  console.log(clusterData)
-}
+
+        if (!memoizeObj[key].includes(atomCompObj[key][i])) {
+
+          if (!clusterData.children[counter].children) clusterData.children[counter].children = []            
+            clusterData.children[counter].children.push({name: atomCompObj[key][i]});
+          }                               
+          memoizeObj[key].push(atomCompObj[key][i]);
+        }            
+      } 
+      counter++;           
+    }
+    console.log(clusterData)
+  }
+
 
 function reorganizedObj(props) {
   let atomsComponentObj = props[0].atomsComponents;
@@ -71,8 +70,7 @@ function reorganizedObj(props) {
     }
   }
   return reorganizedObj;
-}
-
+  }
 
 
 function Node({ node }) {
