@@ -137,8 +137,6 @@ function traverseHooks(memoizedState: any): HookStates {
   while (memoizedState && memoizedState.queue) {
     if (
       memoizedState.memoizedState
-      && memoizedState.queue.lastRenderedReducer
-      && memoizedState.queue.lastRenderedReducer.name === 'basicStateReducer'
     ) {
       hooksStates.push({
         component: memoizedState.queue,
