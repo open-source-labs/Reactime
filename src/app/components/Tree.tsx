@@ -49,7 +49,6 @@ interface TreeProps {
 
 const Tree = (props: TreeProps) => {
   const { snapshot } = props;
-  console.log('inside tree props:', props); 
 
   return (
     <>
