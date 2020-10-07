@@ -72,8 +72,6 @@ function Node({ node }) {
 
   if (isRoot) return <RootNode node={node} />;
 
-  console.log(node)
-
   return (
     <Group top={node.y} left={node.x}>
       {node.depth !== 0 && (
@@ -147,7 +145,7 @@ export default function Example({
 }) {
 
   clusterDataPopulate(snapshots);
-  
+
   const data = useMemo(() => hierarchy(clusterData), []);
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
@@ -156,6 +154,7 @@ export default function Example({
     <svg width={width} height={height}>
       <LinearGradient id="top" from={green} to={aqua} />
       <rect width={width} height={height} rx={14} fill={background} />
+
       <Cluster root={data} size={[xMax, yMax]}>
         {(cluster) => (
           <Group top={margin.top} left={margin.left}>
