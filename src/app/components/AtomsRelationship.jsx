@@ -72,6 +72,8 @@ function Node({ node }) {
 
   if (isRoot) return <RootNode node={node} />;
 
+  console.log(node)
+
   return (
     <Group top={node.y} left={node.x}>
       {node.depth !== 0 && (
@@ -143,11 +145,12 @@ export default function Example({
   margin = defaultMargin,
   snapshots,
 }) {
+
+  clusterDataPopulate(snapshots);
+  
   const data = useMemo(() => hierarchy(clusterData), []);
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
-
-  clusterDataPopulate(snapshots);
 
   return width < 10 ? null : (
     <svg width={width} height={height}>
