@@ -15,6 +15,7 @@ import Tree from './Tree';
 import ComponentMap from './ComponentMap';
 import PerfView from './PerfView';
 import AtomsRelationship from './AtomsRelationship.jsx';
+import { Console } from 'console';
 
 const History = require('./History').default;
 
