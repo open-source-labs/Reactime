@@ -92,7 +92,7 @@ const colorScale = scaleOrdinal<CityName, string>({
 let tooltipTimeout: number;
 
 /* EXPORT COMPONENT */
-export default function Example({
+export default function PerformanceVisx({
   width,
   height,
   events = false,
@@ -111,6 +111,8 @@ export default function Example({
 
   if (width < 10) return null;
   // bounds
+
+//   width, height
   const xMax = width;
   const yMax = height - margin.top - 100;
 

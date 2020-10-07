@@ -15,6 +15,10 @@ import Tree from './Tree';
 import ComponentMap from './ComponentMap';
 import PerfView from './PerfView';
 import AtomsRelationship from './AtomsRelationship.jsx';
+import PerformanceVisx from './PerformanceVisx.jsx';
+import ParentSize from '@visx/responsive/lib/components/ParentSize';
+
+
 
 const History = require('./History').default;
 
@@ -95,6 +99,9 @@ const StateRoute = (props: StateRouteProps) => {
   const renderPerfView = () => {
     if (hierarchy) {
       return (
+
+        // <PerformanceVisx width={600} height={1000} />
+      
         <PerfView
           viewIndex={viewIndex}
           snapshots={snapshots}

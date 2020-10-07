@@ -32,12 +32,13 @@ interface PerfViewProps {
 
 const PerfView = (props: PerfViewProps) => {
 
-
-  /* // ------------- CIRCLES ----------------------
+  // ------------- CIRCLES ----------------------
   const { viewIndex, width, height, setNoRenderData } = props;
   let { snapshots } = props;
   const adjustedSize = Math.min(width, height);
   const svgRef = useRef(null);
+
+  console.log(snapshots)
   
   let indexToDisplay: number | null = null;
   if (viewIndex < 0) indexToDisplay = snapshots.length - 1;
@@ -231,7 +232,7 @@ const PerfView = (props: PerfViewProps) => {
     handleNoRenderData,
   ]);
 
-  // ------------- CIRCLES ---------------------- */
+  // ------------- CIRCLES ----------------------
   
 
   return (
