@@ -39,7 +39,7 @@ interface ActionProps {
  */
 // index and delta props were removed from Action.jsx  */
 // viewIndex and handleonkeyDown added to props
-const Action = (props: ActionProps): unknown => {
+const Action = (props: ActionProps): JSX.Element => {
   const {
     selected, last, index, sliderIndex, dispatch, displayName, componentName,
     componentData, viewIndex, handleOnkeyDown,
@@ -80,7 +80,7 @@ const Action = (props: ActionProps): unknown => {
   return (
     <div
       // Invoking keyboard functionality; functionality is in ActionContainer;
-      onKeyDown={(e:string) => handleOnkeyDown(e, viewIndex)}
+      onKeyDown={(e) => handleOnkeyDown(e, viewIndex)}
       className={selected || last ? 'action-component selected' : 'action-component'}
       onClick={() => {
         dispatch(changeView(index));

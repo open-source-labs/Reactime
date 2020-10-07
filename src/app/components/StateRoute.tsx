@@ -13,11 +13,13 @@ import {
 } from 'react-router-dom';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
-import PerfView from './PerfView';
+// import PerfView from './PerfView';
 import AtomsRelationship from './AtomsRelationship.jsx';
-import PerformanceVisx from './PerformanceVisx.jsx';
-import ParentSize from '@visx/responsive/lib/components/ParentSize';
+import PerformanceVisx from './PerformanceVisx.tsx';
 
+import Example from './AtomsRelationship.jsx';
+import { ParentSize } from '@visx/responsive'
+import { Console } from 'console';
 
 
 const History = require('./History').default;
@@ -35,7 +37,8 @@ interface StateRouteProps {
     state?: string | object;
     stateSnaphot?: object;
     children?: any[];
-    AtomsRelationship?: any[];
+    atomsComponents?: any;
+    atomSelectors?: any;
   };
   hierarchy: any;
   snapshots: [];
@@ -45,7 +48,8 @@ interface StateRouteProps {
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
 
-  const isRecoil = snapshot.AtomsRelationship ? true : false;
+  const isRecoil = snapshot.atomsComponents ? true : false;
+  console.log(isRecoil);
   const [noRenderData, setNoRenderData] = useState(false);
 
   // component map zoom state
@@ -83,7 +87,17 @@ const StateRoute = (props: StateRouteProps) => {
   };
 
   const renderAtomsRelationship = () => (
-    <AtomsRelationship atomsRel={snapshot.AtomsRelationship} />
+
+    <ParentSize>{({ width, height })  => 
+    <Example 
+    width={width} 
+    height={height}
+    snapshots = {snapshots} />}
+    </ParentSize>
+    
+    //   atomsComponents={snapshot.atomsComponents}
+    //   atomSelectors={snapshot.atomSelectors}
+    // />
   );
 
   // the hierarchy gets set on the first click in the page
@@ -99,16 +113,17 @@ const StateRoute = (props: StateRouteProps) => {
   const renderPerfView = () => {
     if (hierarchy) {
       return (
-
-        // <PerformanceVisx width={600} height={1000} />
+        <ParentSize>{({ width, height }) => 
+        <PerformanceVisx width={width} height={height} />}
+        </ParentSize>
       
-        <PerfView
-          viewIndex={viewIndex}
-          snapshots={snapshots}
-          setNoRenderData={setNoRenderData}
-          width={600}
-          height={1000}
-        />
+        // <PerfView
+        //   viewIndex={viewIndex}
+        //   snapshots={snapshots}
+        //   setNoRenderData={setNoRenderData}
+        //   width={600}
+        //   height={1000}
+        // />
       );
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
@@ -142,7 +157,7 @@ const StateRoute = (props: StateRouteProps) => {
             activeClassName="is-active"
             to="/relationship"
           >
-            Data Flow
+            AtomsRecoil
           </NavLink>
         )}
 

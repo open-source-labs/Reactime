@@ -11,10 +11,12 @@ interface DiffRouteProps{
     state?: string | unknown
     stateSnaphot?: Record<string, unknown>;
     children?: unknown[];
+    atomSelectors?:object; 
+    atomsComponents?:object
   }>;
 }
 
-const DiffRoute = (props: DiffRouteProps): unknown => (
+const DiffRoute = (props: DiffRouteProps): JSX.Element => (
 
   <Router>
     <div className="navbar">
