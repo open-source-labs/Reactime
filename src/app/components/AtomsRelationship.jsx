@@ -17,31 +17,44 @@ export const background = '#242529';
 //   children?: NodeShape[];
 //
 
-function clusterDataPopulate(props) {
-  let data = {};
+const clusterData = {};
 
+function clusterDataPopulate(props) {
   console.log(props)
   let atomCompObj = reorganizedObj(props);
 
   console.log(atomCompObj);
 
   if (props[0].name) {
-    data.name = props[0].name;
+    clusterData.name = props[0].name;
   }
 
+  
+  let memoizeObj = {}
   let counter = 0
+
   for(let key in atomCompObj){
-    if(!data.children) data.children = []
-    data.children.push({name: key})
       if(atomCompObj[key].length){
         for(let i=0; i<atomCompObj[key].length;i++){
-          if(!data.children[counter].children) data.children[counter].children = []
-          data.children[counter].children.push ({name:atomCompObj[key][i]})
+          
+
+
+
+
+          if(!clusterData.children) clusterData.children = []
+            clusterData.children.push({name: key})}
+          if(!clusterData.children[counter].children) {
+          clusterData.children[counter].children = []
+          clusterData.children[counter].children.push ({name:atomCompObj[key][i]})}        
+         
+          if (!memoizeObj[key]){
+          memoizeObj[key] = []
+          memoizeObj[key].push[atomCompObj[key][i]] 
           }
         }
         counter++        
       }
-  console.log(data)
+  console.log(clusterData)
 }
 
 function reorganizedObj(props) {
@@ -60,44 +73,7 @@ function reorganizedObj(props) {
   return reorganizedObj;
 }
 
-const clusterData = {
-  name: 'root',
-  
-  children: [
-    {
-      name: 'darkMode',
-      children: [
-        { name: 'A1' },
-        { name: 'A2' },
-        {
-          name: 'C',
-          children: [
-            {
-              name: 'C1',
-            },
-          ],
-        },
-      ],
-    },
-    
 
-
-    {
-      name: 'B',
-      children: [{ name: 'B1' }, { name: 'B2' }, { name: 'B3' }],
-    },
-
-
-    {
-      name: 'X',
-      children: [
-        {
-          name: 'Z',
-        },
-      ],
-    },
-  ],
-};
 
 function Node({ node }) {
   const isRoot = node.depth === 0;
