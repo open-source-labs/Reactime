@@ -40,8 +40,6 @@ export default (state, action) => produce(state, draft => {
 
   switch (action.type) {
     case types.ON_HOVER: {
-      console.log(currentTab);
-      console.log('onHover Firedin side of the reducer');
       port.postMessage({
         action: 'onHover',
         payload: 'payload from Reducer ON_HOVER',
@@ -202,7 +200,6 @@ export default (state, action) => produce(state, draft => {
     }
     case types.INITIAL_CONNECT: {
       const { payload } = action;
-      console.log('inside reducer INITIAL_CONNECT, payload:', payload);
       Object.keys(payload).forEach(tab => {
         // check if tab exists in memory
         // add new tab
