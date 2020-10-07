@@ -22,39 +22,33 @@ let memoizeObj = {};
 
 function clusterDataPopulate(props) {
   let atomCompObj = reorganizedObj(props);
-  console.log(atomCompObj)
 
   if (props[0].name) {
     clusterData.name = props[0].name;
   }
-  
+
   let counter = 0;
-
   for (let key in atomCompObj) {
-
     if (atomCompObj[key].length) {
-  
       for (let i = 0; i < atomCompObj[key].length; i++) {
-
         if (!memoizeObj[key]) {
           memoizeObj[key] = [];
           if (!clusterData.children) clusterData.children = [];
           clusterData.children.push({ name: key });
         }
-
         if (!memoizeObj[key].includes(atomCompObj[key][i])) {
-
-          if (!clusterData.children[counter].children) clusterData.children[counter].children = []            
-            clusterData.children[counter].children.push({name: atomCompObj[key][i]});
-          }                               
-          memoizeObj[key].push(atomCompObj[key][i]);
-        }            
-      } 
-      counter++;           
+          if (!clusterData.children[counter].children)
+            clusterData.children[counter].children = [];
+            clusterData.children[counter].children.push({
+            name: atomCompObj[key][i],
+          });
+        }
+        memoizeObj[key].push(atomCompObj[key][i]);
+      }
     }
-    console.log(clusterData)
+    counter++;
   }
-
+}
 
 function reorganizedObj(props) {
   let atomsComponentObj = props[0].atomsComponents;
@@ -70,8 +64,7 @@ function reorganizedObj(props) {
     }
   }
   return reorganizedObj;
-  }
-
+}
 
 function Node({ node }) {
   const isRoot = node.depth === 0;
@@ -86,9 +79,9 @@ function Node({ node }) {
           r={12}
           fill={background}
           stroke={isParent ? white : citrus}
-          onClick={() => {
-            alert(`clicked: ${JSON.stringify(node.data.name)}`);
-          }}
+          // onClick={() => {
+          //   alert(`clicked: ${JSON.stringify(node.data.name)}`);
+          // }}
         />
       )}
       <text
@@ -112,7 +105,7 @@ function RootNode({ node }) {
   const centerY = -height / 2;
 
   return (
-    <Group top={node.y} left={node.x}>
+    <Group top = {node.y} left = {node.x}>
       <rect
         width={width}
         height={height}
@@ -122,6 +115,8 @@ function RootNode({ node }) {
       />
       <text
         dy=".33em"
+        top= {node.y}
+        left = {node.x}
         fontSize={9}
         fontFamily="Arial"
         textAnchor="middle"
@@ -134,7 +129,7 @@ function RootNode({ node }) {
   );
 }
 
-const defaultMargin = { top: 40, left: 50, right: 50, bottom: 40 };
+const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40};
 
 // export type DendrogramProps = {
 //   width: number;
