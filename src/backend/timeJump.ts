@@ -1,3 +1,4 @@
+import { Console } from 'console';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable max-len */
@@ -25,12 +26,14 @@ export default (origin, mode) => {
   // Recursively change state of tree
   // Set the state of the origin tree if the component is stateful
   function jump(target, firstCall = false) {
+    // console.log('INSIDE JUMP FUNCTION, TARGET', target)
     if (!target) return;
 
     if (target.state === 'stateless') {
       target.children.forEach(child => jump(child));
       return;
     }
+    console.log('COMPONENT ACTION RECORD:', circularComponentTable)
     const component = componentActionsRecord.getComponentByIndex(
       target.componentData.index,
     );

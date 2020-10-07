@@ -145,10 +145,11 @@ const ComponentMap = (props: componentMapProps) => {
 
         //TODO -> Alter incoming snapshots so there is useful data to show on hover.
         nodeEnter.on('mouseover', function (d: any, i: number): any {
-       
+            console.log('mousing over')
             d3.select(this)
               .append('text')
               .text(() => {
+                //i want to return to the node in d3 the values listed in a more readable way. Right now it's just a horizontal line of text
                 return JSON.stringify(d.data.state);
               })
               .attr('x', -25)
@@ -158,6 +159,8 @@ const ComponentMap = (props: componentMapProps) => {
               .attr('stroke', 'white')
               .attr('stroke-width', .5)
               .attr('id', `popup${i}`);
+
+              
           
         });
         nodeEnter.on('mouseout', function (d: any, i: number): any {

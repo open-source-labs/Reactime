@@ -15,6 +15,7 @@ import Tree from './Tree';
 import ComponentMap from './ComponentMap';
 import PerfView from './PerfView';
 import AtomsRelationship from './AtomsRelationship.jsx';
+import { Console } from 'console';
 
 const History = require('./History').default;
 
@@ -53,6 +54,7 @@ const StateRoute = (props: StateRouteProps) => {
 
   // Map
   const renderComponentMap = () => {
+    console.log('inside renderComponenetMap, inside State.Route.tsx')
     if (hierarchy) {
       return (
         <ComponentMap
