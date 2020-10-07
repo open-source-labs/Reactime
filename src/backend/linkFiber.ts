@@ -66,9 +66,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   if (!snap.tree) {
     snap.tree = new Tree('root', 'root');
   }
-  // console.log('inside of inside of linkFiber.ts, before cleanTreeCopy(), snap:', snap);
   const payload = snap.tree.cleanTreeCopy();
-  // console.log('inside of linkFiber.ts, after cleanTreeCopy() payload:', payload);
   if (isRecoil) {
     getRecoilState();
     payload.AtomsRelationship = allAtomsRelationship;
@@ -96,7 +94,6 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
     circularComponentTable.clear();
     snap.tree = createTree(current);
   }
-  console.log('SNAP.TREE:', snap.tree)
   sendSnapshot(snap, mode);
 }
 
@@ -171,9 +168,6 @@ function createTree(
   fromSibling = false
 ) {
   // Base case: child or sibling pointed to null
-  // if (currentFiber.tag === 5) {
-  //   console.log(currentFiber)
-  // }
 
   if (!currentFiber) return null;
   if (!tree) return tree;
@@ -232,15 +226,11 @@ function createTree(
       stateNode
     );
 
-    // console.log(componentData)
-    // console.log('stateNode inside of line 232:', stateNode)
     newState = stateNode.state;
     componentFound = true;
   }
 
   let hooksIndex;
-
-
 
   const atomArray = [];
   atomArray.push(memoizedProps);
@@ -327,7 +317,6 @@ function createTree(
   let newNode = null;
   // We want to add this fiber node to the snapshot
   if (componentFound || newState === 'stateless') {
-    console.log('INSIDE LINKFIBER, CURRENTFIBER:', currentFiber); 
     if (fromSibling) {
       newNode = tree.addSibling(
         newState,
@@ -344,21 +333,16 @@ function createTree(
   } else {
     newNode = tree;
   }
-  // console.log('inside LinkFiber, circularComponentTable:',  circularComponentTable); 
   // Recurse on children
   if (child && !circularComponentTable.has(child)) {
-    // if (currentFiber.tag === 5) console.log('inside recursive call in linkFiber', currentFiber);
     // If this node had state we appended to the children array,
     // so attach children to the newly appended child.
     // Otherwise, attach children to this same node.
-    
     circularComponentTable.add(child);
-    // console.log(createTree(child, newNode))
     createTree(child, newNode);
   }
   // Recurse on siblings
   if (sibling && !circularComponentTable.has(sibling)) {
-    // if (currentFiber.tag === 5) console.log('inside recursive call in linkFiber', currentFiber);
     circularComponentTable.add(sibling);
     createTree(sibling, newNode, true);
   }
