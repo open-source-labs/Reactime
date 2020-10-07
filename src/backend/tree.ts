@@ -45,9 +45,9 @@ class Tree {
 
   parent: Tree
 
-  AtomsComponents: any;
+  atomsComponents: any;
 
-  AtomsSelectors: any;
+  atomSelectors: any;
 
   constructor(state: string | {}, name = 'nameless', componentData: {} = {}) {
     this.state = state === 'root' ? 'root' : serializeState(state);

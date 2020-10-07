@@ -15,7 +15,10 @@ import Tree from './Tree';
 import ComponentMap from './ComponentMap';
 import PerfView from './PerfView';
 import AtomsRelationship from './AtomsRelationship.jsx';
+import Example from './AtomsRelationship.jsx';
+import { ParentSize } from '@visx/responsive'
 import { Console } from 'console';
+
 
 const History = require('./History').default;
 
@@ -32,9 +35,8 @@ interface StateRouteProps {
     state?: string | object;
     stateSnaphot?: object;
     children?: any[];
-    AtomsComponents?: any;
-    AtomsSelectors?: any;
-
+    atomsComponents?: any;
+    atomSelectors?: any;
   };
   hierarchy: any;
   snapshots: [];
@@ -44,7 +46,8 @@ interface StateRouteProps {
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
 
-  const isRecoil = snapshot.AtomsComponents ? true : false;
+  const isRecoil = snapshot.atomsComponents ? true : false;
+  console.log(isRecoil);
   const [noRenderData, setNoRenderData] = useState(false);
 
   // component map zoom state
@@ -82,7 +85,17 @@ const StateRoute = (props: StateRouteProps) => {
   };
 
   const renderAtomsRelationship = () => (
-    <AtomsRelationship atomsRel={snapshot.AtomsComponents} />
+
+    <ParentSize>{({ width, height })  => 
+    <Example 
+    width={width} 
+    height={height}
+    snapshots = {snapshots} />}
+    </ParentSize>
+    
+    //   atomsComponents={snapshot.atomsComponents}
+    //   atomSelectors={snapshot.atomSelectors}
+    // />
   );
 
   // the hierarchy gets set on the first click in the page
@@ -138,7 +151,7 @@ const StateRoute = (props: StateRouteProps) => {
             activeClassName="is-active"
             to="/relationship"
           >
-            Data Flow
+            AtomsRecoil
           </NavLink>
         )}
 

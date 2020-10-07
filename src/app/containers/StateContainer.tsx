@@ -13,24 +13,23 @@ interface StateContainerProps {
   snapshot: Record<number,
   { name?: string; componentData?: Record<string, unknown>;
     state?: Record<string, unknown>; stateSnaphot?: Record<string, unknown>; children?: unknown[]; 
-    AtomsRelationship?: any[]
+    AtomsRelationship?: any[]; atomSelectors?:object; atomsComponents?:object
   }
   > ;
   AtomsRelationship?: any[];
   hierarchy:Record<string, unknown>;
   snapshots:[];
   viewIndex:number;
+  
 }
 
 // eslint-disable-next-line react/prop-types
-const StateContainer = (props:StateContainerProps): unknown => {
+const StateContainer = (props:StateContainerProps): JSX.Element => {
   const {
     snapshot, hierarchy, snapshots, viewIndex,
   } = props;
   const [Text, setText] = useState('State');
 
-  console.log(props)
-  
   return (
     <Router>
       <div className="state-container">
