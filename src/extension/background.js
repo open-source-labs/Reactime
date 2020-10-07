@@ -324,6 +324,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     default:
       break;
   }
+  console.log('inside background.js, tabsObj:', tabsObj); 
   return true; // attempt to fix close port error
 });
 

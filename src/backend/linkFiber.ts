@@ -63,11 +63,9 @@ function getRecoilState(): any {
 function sendSnapshot(snap: Snapshot, mode: Mode): void {
   // Don't send messages while jumping or while paused
   if (mode.jumping || mode.paused) return;
-
   if (!snap.tree) {
     snap.tree = new Tree('root', 'root');
   }
-
   const payload = snap.tree.cleanTreeCopy();
   if (isRecoil) {
     getRecoilState();
@@ -170,6 +168,7 @@ function createTree(
   fromSibling = false
 ) {
   // Base case: child or sibling pointed to null
+
   if (!currentFiber) return null;
   if (!tree) return tree;
 
@@ -226,13 +225,12 @@ function createTree(
       stateNode.state,
       stateNode
     );
+
     newState = stateNode.state;
     componentFound = true;
   }
 
   let hooksIndex;
-
-
 
   const atomArray = [];
   atomArray.push(memoizedProps);
@@ -335,7 +333,6 @@ function createTree(
   } else {
     newNode = tree;
   }
-
   // Recurse on children
   if (child && !circularComponentTable.has(child)) {
     // If this node had state we appended to the children array,
@@ -369,7 +366,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-
     const throttledUpdateSnapshot = throttle(() => updateSnapShotTree(snap, mode), 70);
     document.addEventListener('visibilitychange', onVisibilityChange);
     if (reactInstance && reactInstance.version) {

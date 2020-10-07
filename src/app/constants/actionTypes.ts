@@ -13,3 +13,4 @@ export const NEW_SNAPSHOTS = 'NEW_SNAPSHOTS';
 export const SET_TAB = 'SET_TAB';
 export const DELETE_TAB = 'DELETE_TAB';
 export const SLIDER_ZERO = 'SLIDER_ZERO';
+export const ON_HOVER = 'ON_HOVER'; 
