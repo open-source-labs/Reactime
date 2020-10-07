@@ -4,18 +4,17 @@ import { SeriesPoint } from "@visx/shape/lib/types";
 import { Group } from "@visx/group";
 import { Grid } from "@visx/grid";
 import { AxisBottom } from "@visx/axis";
-// import cityTemperature from "./cityTemperature";
-import snapshots from "./snapshots";
 import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
-import { timeParse, timeFormat } from "d3-time-format";
 import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
 import { LegendOrdinal } from "@visx/legend";
+import snapshots from "./snapshots";
+
 
 /* TYPESCRIPT */
 type CityName = "New York" | "San Francisco" | "Austin";
-
+type snapshot = any;
 type TooltipData = {
-  bar: SeriesPoint<snapshots>;
+  bar: SeriesPoint<snapshot>;
   key: CityName;
   index: number;
   height: number;
@@ -48,12 +47,9 @@ const tooltipStyles = {
 
 /* DATA PREP */
 const data = [...snapshots];
-console.log('data', data)
 
 // array of all object keys
 const keys = Object.keys(data[0]).filter((d) => d !== "snapshot") as CityName[];
-console.log('keys', keys)
-
 
 // ARRAY OF TOTAL VALUES PER SNAPSHOT
 const temperatureTotals = data.reduce((allTotals, currentDate) => {
@@ -65,18 +61,13 @@ const temperatureTotals = data.reduce((allTotals, currentDate) => {
   return allTotals;
 }, [] as number[]);
 
-// console.log(temperatureTotals)
-
-const parseDate = timeParse("%Y-%m-%d");
-const format = timeFormat("%b %d");
-const formatDate = (date: string) => format(parseDate(date) as Date);
 
 /*  ACCESSORS */
-const getDate = (d: CityTemperature) => d.snapshot;
+const getSnapshot = (d: snapshot) => d.snapshot;
 
 /* SCALE */
 const dateScale = scaleBand<string>({
-  domain: data.map(getDate),
+  domain: data.map(getSnapshot),
   padding: 0.2
 });
 const temperatureScale = scaleLinear<number>({
@@ -87,7 +78,6 @@ const colorScale = scaleOrdinal<CityName, string>({
   domain: keys,
   range: [purple1, purple2, purple3, purple4]
 });
-
 
 let tooltipTimeout: number;
 
@@ -112,7 +102,7 @@ export default function PerformanceVisx({
   if (width < 10) return null;
   // bounds
 
-//   width, height
+  //  width, height
   const xMax = width;
   const yMax = height - margin.top - 100;
 
@@ -120,8 +110,7 @@ export default function PerformanceVisx({
   temperatureScale.range([yMax, 0]);
 
   return width < 10 ? null : (
-    // relative position is needed for correct tooltip positioning
-
+  // relative position is needed for correct tooltip positioning
 
     <div style={{ position: "relative" }}>
       <svg ref={containerRef} width={width} height={height}>
@@ -145,17 +134,15 @@ export default function PerformanceVisx({
           xOffset={dateScale.bandwidth() / 2}
         />
         <Group top={margin.top}>
-          <BarStack <CityTemperature, CityName>
+          <BarStack <snapshot, CityName>
             data={data}
             keys={keys}
-            x={getDate}
+            x={getSnapshot}
             xScale={dateScale}
             yScale={temperatureScale}
             color={colorScale}
           >
-            {(barStacks) =>
-              barStacks.map((barStack) =>
-                barStack.bars.map((bar) => (
+            {(barStacks) => barStacks.map(barStack => barStack.bars.map((bar => (
                   <rect
                     key={`bar-stack-${barStack.index}-${bar.index}`}
                     x={bar.x}
@@ -171,18 +158,18 @@ export default function PerformanceVisx({
                         hideTooltip();
                       }, 300);
                     }}
-                    onMouseMove={(event) => {
+                    onMouseMove={event => {
                       if (tooltipTimeout) clearTimeout(tooltipTimeout);
                       const top = event.clientY - margin.top - bar.height;
                       const left = bar.x + bar.width / 2;
                       showTooltip({
                         tooltipData: bar,
                         tooltipTop: top,
-                        tooltipLeft: left
+                        tooltipLeft: left,
                       });
                     }}
                   />
-                ))
+                )),
               )
             }
           </BarStack>
@@ -196,7 +183,7 @@ export default function PerformanceVisx({
           tickLabelProps={() => ({
             fill: purple1,
             fontSize: 11,
-            textAnchor: "middle"
+            textAnchor: 'middle',
           })}
         />
       </svg>
@@ -211,14 +198,12 @@ export default function PerformanceVisx({
           fontSize: "14px"
         }}
       >
-        
         <LegendOrdinal
           scale={colorScale}
           direction="row"
           labelMargin="0 15px 0 0"
         />
       </div> */}
-      
       {/* FOR HOVER OVER DISPLAY */}
       {tooltipOpen && tooltipData && (
         <TooltipInPortal
@@ -230,9 +215,11 @@ export default function PerformanceVisx({
           <div style={{ color: colorScale(tooltipData.key) }}>
             <strong>{tooltipData.key}</strong>
           </div>
-          <div>{tooltipData.bar.data[tooltipData.key]}℉</div>
           <div>
-            <small>{formatDate(getDate(tooltipData.bar.data))}</small>
+            {tooltipData.bar.data[tooltipData.key]}
+          </div>
+          <div>
+            <small>{getSnapshot(tooltipData.bar.data)}</small>
           </div>
         </TooltipInPortal>
       )}
