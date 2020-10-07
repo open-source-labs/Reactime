@@ -1,115 +1,179 @@
-import React, { Component, useEffect, useState, Fragment } from 'react';
-import { Chart } from 'react-google-charts';
+import React, { useMemo } from 'react';
+import { Group } from '@visx/group';
+import { Cluster, hierarchy } from '@visx/hierarchy';
+//import { HierarchyPointNode, HierarchyPointLink } from '@visx/hierarchy/lib/types';
+import { LinkVertical } from '@visx/shape';
+import { LinearGradient } from '@visx/gradient';
 
-function AtomsRelationship(props) {
-  const { atomsRel } = props;
+const citrus = '#ddf163';
+const white = '#ffffff';
+export const green = '#79d259';
+const aqua = '#37ac8c';
+const merlinsbeard = '#f7f7f3';
+export const background = '#242529';
 
-  const atomsAndComp = atomsRel
-    .filter((e) => e[2] !== 'atoms and selectors')
-    .map((e) => {
-      let copy = [...e];
-      copy[2] = 1;
-      return [...copy];
-    });
+// interface NodeShape {
+//   name: string;
+//   children?: NodeShape[];
+//
 
-  const atomsAndSelectors = atomsRel
-    .filter((e) => e[2] === 'atoms and selectors')
-    .map((e) => {
-      let copy = [...e];
-      copy[2] = 1;
-      return [...copy];
-    });
+const clusterData = {};
+let memoizeObj = {};
 
-  const copyatomsRel = atomsRel.map((e) => {
-    let copy = [...e];
-    copy[2] = 1;
-    return copy;
-  });
-  const [atoms, setAtoms] = useState([...copyatomsRel]);
-  const [atomAndSelectorCheck, setAtomAndSelectorCheck] = useState(false);
-  const [atomAndCompCheck, setAtomAndCompCheck] = useState(false);
+function clusterDataPopulate(props) {
+  let atomCompObj = reorganizedObj(props);
 
-  useEffect(() => {
-    if (
-      (!atomAndSelectorCheck && !atomAndCompCheck) ||
-      (atomAndSelectorCheck && atomAndCompCheck)
-    ) {
-      setAtoms(copyatomsRel);
-    } else if (atomAndSelectorCheck) {
-      setAtoms(atomsAndSelectors);
-    } else {
-      setAtoms(atomsAndComp);
+  if (props[0].name) {
+    clusterData.name = props[0].name;
+  }
+
+  let counter = 0;
+  for (let key in atomCompObj) {
+    if (atomCompObj[key].length) {
+      for (let i = 0; i < atomCompObj[key].length; i++) {
+        if (!memoizeObj[key]) {
+          memoizeObj[key] = [];
+          if (!clusterData.children) clusterData.children = [];
+          clusterData.children.push({ name: key });
+        }
+        if (!memoizeObj[key].includes(atomCompObj[key][i])) {
+          if (!clusterData.children[counter].children)
+            clusterData.children[counter].children = [];
+            clusterData.children[counter].children.push({
+            name: atomCompObj[key][i],
+          });
+        }
+        memoizeObj[key].push(atomCompObj[key][i]);
+      }
     }
-  }, [atomAndSelectorCheck, atomAndCompCheck, props]);
+    counter++;
+  }
+}
+
+function reorganizedObj(props) {
+  let atomsComponentObj = props[0].atomsComponents;
+  let reorganizedObj = {};
+
+  for (const key in atomsComponentObj) {
+    for (let i = 0; i < atomsComponentObj[key].length; i++) {
+      if (!reorganizedObj[atomsComponentObj[key][i]]) {
+        reorganizedObj[atomsComponentObj[key][i]] = [key];
+      } else {
+        reorganizedObj[atomsComponentObj[key][i]].push(key);
+      }
+    }
+  }
+  return reorganizedObj;
+}
+
+function Node({ node }) {
+  const isRoot = node.depth === 0;
+  const isParent = !!node.children;
+
+  if (isRoot) return <RootNode node={node} />;
 
   return (
-    <div className="history-d3-container">
-      {atoms && (
-        <Fragment>
-          <Chart
-            width={'100%'}
-            height={'98%'}
-            chartType="Sankey"
-            options={{
-              sankey: {
-                link: { color: { fill: '#gray', fillOpacity: 0.1 } },
-                node: {
-                  colors: [
-                    '#4a91c7',
-                    '#5b9bce',
-                    '#6ba6d5',
-                    '#7bb0dc',
-                    '#8abbe3',
-                    '#99c6ea',
-                    '#a8d0f1',
-                    '#b7dbf8',
-                    '#c6e6ff',
-                    '#46edf2',
-                    '#76f5f3',
-                    '#95B6B7',
-                    '#76dcde',
-                    '#5fdaed',
-                  ],
-
-                  label: { color: '#fff', fontSize: '13', fontName: 'Monaco' },
-                  nodePadding: 50,
-                  width: 15,
-                },
-              },
-              tooltip: { textStyle: { color: 'white', fontSize: 0.1 } },
-            }}
-            loader={<div>Loading Chart</div>}
-            data={[['Atom', 'Selector', ''], ...atoms]}
-            rootProps={{ 'data-testid': '1' }}
-          />
-          <div>
-            <input
-              type="checkbox"
-              id="atomscomps"
-              onClick={(e) =>
-                setAtomAndCompCheck(atomAndCompCheck ? false : true)
-              }
-            />
-            <label htmlFor="atomscomps">
-              {' '}
-              Only Show Atoms (or Selectors) and Components{' '}
-            </label>
-            <input
-              type="checkbox"
-              id="atomsselectors"
-              onClick={(e) =>
-                setAtomAndSelectorCheck(atomAndSelectorCheck ? false : true)
-              }
-            />
-            <label htmlFor="atomsselectors">
-              {' '}
-              Only Show Atoms and Selectors{' '}
-            </label>
-          </div>
-        </Fragment>
+    <Group top={node.y} left={node.x}>
+      {node.depth !== 0 && (
+        <circle
+          r={12}
+          fill={background}
+          stroke={isParent ? white : citrus}
+          // onClick={() => {
+          //   alert(`clicked: ${JSON.stringify(node.data.name)}`);
+          // }}
+        />
       )}
-    </div>
+      <text
+        dy=".33em"
+        fontSize={9}
+        fontFamily="Arial"
+        textAnchor="middle"
+        style={{ pointerEvents: 'none' }}
+        fill={isParent ? white : citrus}
+      >
+        {node.data.name}
+      </text>
+    </Group>
   );
 }
 
-export default AtomsRelationship;
+function RootNode({ node }) {
+  const width = 40;
+  const height = 20;
+  const centerX = -width / 2;
+  const centerY = -height / 2;
+
+  return (
+    <Group top = {node.y} left = {node.x}>
+      <rect
+        width={width}
+        height={height}
+        y={centerY}
+        x={centerX}
+        fill="url('#top')"
+      />
+      <text
+        dy=".33em"
+        top= {node.y}
+        left = {node.x}
+        fontSize={9}
+        fontFamily="Arial"
+        textAnchor="middle"
+        style={{ pointerEvents: 'none' }}
+        fill={background}
+      >
+        {node.data.name}
+      </text>
+    </Group>
+  );
+}
+
+const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40};
+
+// export type DendrogramProps = {
+//   width: number;
+//   height: number;
+//   margin?: { top: number; right: number; bottom: number; left: number };
+// };
+
+export default function Example({
+  width,
+  height,
+  margin = defaultMargin,
+  snapshots,
+}) {
+
+  clusterDataPopulate(snapshots);
+
+  const data = useMemo(() => hierarchy(clusterData), []);
+  const xMax = width - margin.left - margin.right;
+  const yMax = height - margin.top - margin.bottom;
+
+  return width < 10 ? null : (
+    <svg width={width} height={height}>
+      <LinearGradient id="top" from={green} to={aqua} />
+      <rect width={width} height={height} rx={14} fill={background} />
+
+      <Cluster root={data} size={[xMax, yMax]}>
+        {(cluster) => (
+          <Group top={margin.top} left={margin.left}>
+            {cluster.links().map((link, i) => (
+              <LinkVertical
+                key={`cluster-link-${i}`}
+                data={link}
+                stroke={merlinsbeard}
+                strokeWidth="1"
+                strokeOpacity={0.2}
+                fill="none"
+              />
+            ))}
+            {cluster.descendants().map((node, i) => (
+              <Node key={`cluster-node-${i}`} node={node} />
+            ))}
+          </Group>
+        )}
+      </Cluster>
+    </svg>
+  );
+}
