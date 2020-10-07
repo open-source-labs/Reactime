@@ -28,6 +28,9 @@ const StateContainer = (props:StateContainerProps): unknown => {
     snapshot, hierarchy, snapshots, viewIndex,
   } = props;
   const [Text, setText] = useState('State');
+
+  console.log(props)
+  
   return (
     <Router>
       <div className="state-container">
