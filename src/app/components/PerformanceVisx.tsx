@@ -59,7 +59,8 @@ const traverse = (snapshot, perfSnapshot) => {
   if (!snapshot.children[0]) return
   for (let i = 0; i < snapshot.children.length; i++){
     if (snapshot.children[i].componentData.actualDuration){
-    perfSnapshot[snapshot.children[i].name+i] = snapshot.children[i].componentData.actualDuration
+    const renderTime = Number(Number.parseFloat(snapshot.children[i].componentData.actualDuration).toPrecision(5))
+    perfSnapshot[snapshot.children[i].name+-[i+1]] = renderTime
     }
     traverse(snapshot.children[i], perfSnapshot)
   }
