@@ -47,7 +47,6 @@ const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
 
   const isRecoil = snapshot.atomsComponents ? true : false;
-  console.log(isRecoil);
   const [noRenderData, setNoRenderData] = useState(false);
 
   // component map zoom state
@@ -80,11 +79,8 @@ const StateRoute = (props: StateRouteProps) => {
   const renderHistory = () => {
     if (hierarchy) {
       return (
-        <div>
-          {/* <History hierarchy={hierarchy}> */}
-          <Legendary />
-          {/* </History> */}
-        </div>
+        <History hierarchy={hierarchy} />
+        // <Legendary />
       );
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
