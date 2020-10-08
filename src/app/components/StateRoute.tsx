@@ -48,6 +48,8 @@ interface StateRouteProps {
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
 
+  console.log(hierarchy)
+
   const isRecoil = snapshot.atomsComponents ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
 
@@ -113,11 +115,12 @@ const StateRoute = (props: StateRouteProps) => {
     if (hierarchy) {
       return (
         <ParentSize>{({ width, height }) => 
-        <PerformanceVisx 
-          width={width} 
-          height={height}
-          snapshots={snapshots}
-        />}
+          <PerformanceVisx 
+            width={width} 
+            height={height}
+            snapshots={snapshots}
+            hierarchy={hierarchy}
+          />}
         </ParentSize>
       
         // <PerfView

@@ -30,6 +30,7 @@ export type BarStackProps = {
   margin?: { top: number; right: number; bottom: number; left: number };
   events?: boolean;
   snapshots?: any;
+  hierarchy?: any;
 };
 
 /* DEFAULT STYLING */
@@ -49,7 +50,7 @@ const tooltipStyles = {
 /* DATA PREP FUNCTIONS */
 const getPerfMetrics = snapshots => {
   return snapshots.reduce((perfSnapshots, curSnapshot,idx)=> {
-    return perfSnapshots.concat(traverse(curSnapshot, {snapshot:idx+1}))
+    return perfSnapshots.concat(traverse(curSnapshot, {snapshot:++idx}))
   }, [])
 }
 
@@ -63,6 +64,15 @@ const traverse = (snapshot, perfSnapshot = {}) => {
   return perfSnapshot;
 }
 
+const getSnapshotIds = (obj, snapshotIds = []) => {
+  snapshotIds.push(`${obj.name}.${obj.branch}`);
+if (obj.children) {
+  obj.children.forEach(child => {
+    getSnapshotIds(child, snapshotIds);
+  });
+}
+return snapshotIds
+};
 
 /* EXPORT COMPONENT */
 export default function PerformanceVisx({
@@ -70,7 +80,8 @@ export default function PerformanceVisx({
   height,
   events = false,
   margin = defaultMargin,
-  snapshots
+  snapshots,
+  hierarchy,
 }: BarStackProps)
 
 {
@@ -84,9 +95,9 @@ export default function PerformanceVisx({
   } = useTooltip<TooltipData>();
 
     /* DATA PREP */
-    const data = getPerfMetrics(snapshots);
-    console.log(data)
-
+    // const data = getPerfMetrics(snapshots);
+    const data = [...snapshots]
+    console.log('cleaned data', getPerfMetrics(snapshots, getSnapshotIds(hierarchy)))
 
   // array of all object keys
 const keys = Object.keys(data[0]).filter((d) => d !== "snapshot") as CityName[];
