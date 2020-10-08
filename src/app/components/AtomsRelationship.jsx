@@ -89,6 +89,7 @@ function Node({ node }) {
         fontSize={9}
         fontFamily="Arial"
         textAnchor="middle"
+        y = "-20"
         style={{ pointerEvents: 'none' }}
         fill={isParent ? white : citrus}
       >
