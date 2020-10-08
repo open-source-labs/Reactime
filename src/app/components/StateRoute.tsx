@@ -80,8 +80,11 @@ const StateRoute = (props: StateRouteProps) => {
   const renderHistory = () => {
     if (hierarchy) {
       return (
-        <History hierarchy={hierarchy} />;
-        <Legendary />
+        <div>
+          {/* <History hierarchy={hierarchy}> */}
+          <Legendary />
+          {/* </History> */}
+        </div>
       );
     }
     return <div className="noState">{NO_STATE_MSG}</div>;

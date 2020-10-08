@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState } from 'react';
 import * as d3 from 'd3';
-import Example from './legend';
+import Legendary from './legend';
 
 /**
  * @var colors: Colors array for the diffrerent node branches, each color is for a different branch
@@ -255,7 +255,7 @@ function History(props) {
   return (
     <>
       <div ref={HistoryRef} className="history-d3-div" id="historyContainer" />
-      {/* <Example /> */}
+      {/* <Legendary /> */}
     </>
   );
 }
