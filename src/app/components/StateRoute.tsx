@@ -13,15 +13,14 @@ import {
 } from 'react-router-dom';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
-import PerfView from './PerfView';
+// import PerfView from './PerfView';
 import AtomsRelationship from './AtomsRelationship.jsx';
+import PerformanceVisx from './PerformanceVisx.tsx';
+
 import Example from './AtomsRelationship.jsx';
 import { ParentSize } from '@visx/responsive';
 import { Console } from 'console';
-<<<<<<< HEAD
 import Legendary from './legend';
-=======
->>>>>>> staging
 
 const History = require('./History').default;
 
@@ -49,11 +48,9 @@ interface StateRouteProps {
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
 
-  const isRecoil = snapshot.atomsComponents ? true : false;
-<<<<<<< HEAD
-=======
+  console.log(hierarchy)
 
->>>>>>> staging
+  const isRecoil = snapshot.atomsComponents ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
 
   // component map zoom state
@@ -74,7 +71,7 @@ const StateRoute = (props: StateRouteProps) => {
         </ParentSize>
       );
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
   // the hierarchy gets set on the first click in the page
@@ -93,22 +90,17 @@ const StateRoute = (props: StateRouteProps) => {
         </div>
       );
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
   const renderAtomsRelationship = () => (
-    <ParentSize>
-      {({ width, height }) => (
-        <Example width={width} height={height} snapshots={snapshots} />
-      )}
-    </ParentSize>
-<<<<<<< HEAD
 
-    //   atomsComponents={snapshot.atomsComponents}
-    //   atomSelectors={snapshot.atomSelectors}
-    // />
-=======
->>>>>>> staging
+    <ParentSize>{({ width, height })  => 
+    <Example 
+    width={width} 
+    height={height}
+    snapshots={snapshots} />}
+    </ParentSize>
   );
 
   // the hierarchy gets set on the first click in the page
@@ -118,70 +110,79 @@ const StateRoute = (props: StateRouteProps) => {
     if (hierarchy) {
       return <Tree snapshot={snapshot} />;
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
   const renderPerfView = () => {
     if (hierarchy) {
       return (
-        <PerfView
-          viewIndex={viewIndex}
-          snapshots={snapshots}
-          setNoRenderData={setNoRenderData}
-          width={600}
-          height={1000}
-        />
+        <ParentSize>{({ width, height }) => 
+          <PerformanceVisx 
+            width={width} 
+            height={height}
+            snapshots={snapshots}
+            hierarchy={hierarchy}
+          />}
+        </ParentSize>
+      
+        // <PerfView
+        //   viewIndex={viewIndex}
+        //   snapshots={snapshots}
+        //   setNoRenderData={setNoRenderData}
+        //   width={600}
+        //   height={1000}
+        // />
       );
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
   return (
     <Router>
-      <div className='navbar'>
+      <div className="navbar">
         <NavLink
-          className='router-link'
-          activeClassName='is-active'
+          className="router-link"
+          activeClassName="is-active"
           exact
-          to='/'
+          to="/"
         >
           Tree
         </NavLink>
         <NavLink
-          className='router-link'
-          activeClassName='is-active'
-          to='/history'
+          className="router-link"
+          activeClassName="is-active"
+          to="/history"
         >
           History
         </NavLink>
-        <NavLink className='router-link' activeClassName='is-active' to='/map'>
+        <NavLink className="router-link" activeClassName="is-active" to="/map">
           Map
         </NavLink>
 
         {isRecoil && (
           <NavLink
-            className='router-link'
-            activeClassName='is-active'
-            to='/relationship'
+            className="router-link"
+            activeClassName="is-active"
+            to="/relationship"
           >
             AtomsRecoil
           </NavLink>
         )}
 
         <NavLink
-          className='router-link'
-          activeClassName='is-active'
-          to='/performance'
+          className="router-link"
+          activeClassName="is-active"
+          to="/performance"
         >
           Performance
         </NavLink>
       </div>
       <Switch>
-        <Route path='/map' render={renderComponentMap} />
-        <Route path='/history' render={renderHistory} />
-        <Route path='/relationship' render={renderAtomsRelationship} />
-        <Route path='/performance' render={renderPerfView} />
-        <Route path='/' render={renderTree} />
+        <Route path="/map" render={renderComponentMap} />
+        <Route path="/history" render={renderHistory} />
+        <Route path="/relationship" render={renderAtomsRelationship} />
+        <Route path="/performance" render={renderPerfView} />
+        <Route path="/" render={renderTree} />
       </Switch>
     </Router>
   );

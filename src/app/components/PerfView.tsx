@@ -31,10 +31,30 @@ interface PerfViewProps {
 }
 
 const PerfView = (props: PerfViewProps) => {
+
+  // ------------- CIRCLES ----------------------
   const { viewIndex, width, height, setNoRenderData } = props;
   let { snapshots } = props;
   const adjustedSize = Math.min(width, height);
   const svgRef = useRef(null);
+
+  console.log(snapshots)
+
+  // const performances = []  
+  // snapshot = {
+  //   component1: 10,
+  //   component2: 24,
+  //   component3: 35,
+  //   others: 32
+  // }
+
+  const performances = snapshots.reduce((acc,cur)=>{
+    const snapshot = {};
+    while (snapshot.keys.lenght 
+  }, []
+  // iterate snapshots array
+    // if i.children exists
+      // 
   
   let indexToDisplay: number | null = null;
   if (viewIndex < 0) indexToDisplay = snapshots.length - 1;
@@ -85,7 +105,7 @@ const PerfView = (props: PerfViewProps) => {
   }, [indexToDisplay, svgRef]);
 
   useEffect(() => {
-    // Error, no App-level component present
+    // Error, no App-level component presentnpm r
     if (snapshots[indexToDisplay].children.length < 1) return;
 
     // Generate tree with our data
@@ -227,6 +247,9 @@ const PerfView = (props: PerfViewProps) => {
     adjustedSize,
     handleNoRenderData,
   ]);
+
+  // ------------- CIRCLES ----------------------
+  
 
   return (
     <div className="perf-d3-container">

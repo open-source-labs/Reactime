@@ -34,9 +34,8 @@ const filterHooks = (data: any[]) => {
  * @method maked3Tree :Creates a new D3 Tree
  */
 
-export default function History(props) {
+function History(props) {
   let { hierarchy } = props;
-  console.log('hierarchy is', hierarchy);
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
   let HistoryRef = React.createRef(root); //React.createRef(root);
@@ -251,9 +250,12 @@ export default function History(props) {
       return [(y = +y) * Math.cos((x -= Math.PI / 2)), y * Math.sin(x)];
     }
   };
+
   return (
     <>
       <div ref={HistoryRef} className="history-d3-div" id="historyContainer" />
     </>
   );
 }
+
+export default History;
