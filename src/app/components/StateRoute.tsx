@@ -18,10 +18,7 @@ import AtomsRelationship from './AtomsRelationship.jsx';
 import Example from './AtomsRelationship.jsx';
 import { ParentSize } from '@visx/responsive';
 import { Console } from 'console';
-<<<<<<< HEAD
 import Legendary from './legend';
-=======
->>>>>>> staging
 
 const History = require('./History').default;
 
@@ -50,10 +47,6 @@ const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
 
   const isRecoil = snapshot.atomsComponents ? true : false;
-<<<<<<< HEAD
-=======
-
->>>>>>> staging
   const [noRenderData, setNoRenderData] = useState(false);
 
   // component map zoom state
@@ -102,13 +95,6 @@ const StateRoute = (props: StateRouteProps) => {
         <Example width={width} height={height} snapshots={snapshots} />
       )}
     </ParentSize>
-<<<<<<< HEAD
-
-    //   atomsComponents={snapshot.atomsComponents}
-    //   atomSelectors={snapshot.atomSelectors}
-    // />
-=======
->>>>>>> staging
   );
 
   // the hierarchy gets set on the first click in the page
