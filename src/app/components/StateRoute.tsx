@@ -18,9 +18,10 @@ import AtomsRelationship from './AtomsRelationship.jsx';
 import Example from './AtomsRelationship.jsx';
 import { ParentSize } from '@visx/responsive';
 import { Console } from 'console';
+import { History } from './History';
 import Legendary from './legend';
 
-const History = require('./History').default;
+// const History = require('./History');
 
 const ErrorHandler = require('./ErrorHandler').default;
 
@@ -77,10 +78,17 @@ const StateRoute = (props: StateRouteProps) => {
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
   // if true involk render chart with hierarchy
   const renderHistory = () => {
+    console.log('hierarchy in stateroute is', hierarchy);
     if (hierarchy) {
       return (
-        <History hierarchy={hierarchy} />
-        // <Legendary />
+        <div>
+          <div>
+            <Legendary />
+          </div>
+          <div>
+            <History hierarchy={hierarchy} />
+          </div>
+        </div>
       );
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
