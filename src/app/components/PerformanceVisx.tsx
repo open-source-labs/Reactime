@@ -39,7 +39,7 @@ const purple1 = "#6c5efb";
 const purple2 = "#c998ff";
 const purple4 = "#00ffff ";
 const purple3 = "#a44afe";
-const background = "#eaedff";
+const background = "#242529";
 const defaultMargin = { top: 40, right: 0, bottom: 0, left: 0 };
 const tooltipStyles = {
   ...defaultStyles,
