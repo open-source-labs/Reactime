@@ -7,7 +7,7 @@ import { AxisBottom } from "@visx/axis";
 import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
 import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
 // import { LegendOrdinal } from "@visx/legend";
-import { schemeSet1 } from "d3-scale-chromatic";
+import { schemeSet1,schemeSet3 } from "d3-scale-chromatic";
 // import snapshots from "./snapshots";
 
 
@@ -39,6 +39,7 @@ const purple1 = "#6c5efb";
 const purple2 = "#c998ff";
 const purple4 = "#00ffff ";
 const purple3 = "#a44afe";
+const tickColor = '#679DCA';
 const background = "#242529";
 const defaultMargin = { top: 40, right: 0, bottom: 0, left: 0 };
 const tooltipStyles = {
@@ -121,7 +122,7 @@ const temperatureScale = scaleLinear<number>({
 });
 const colorScale = scaleOrdinal<CityName, string>({
   domain: keys,
-  range: schemeSet1
+  range: schemeSet3
 });
 
 let tooltipTimeout: number;
@@ -217,10 +218,10 @@ const dateScale = scaleBand<string>({
           top={yMax + margin.top}
           scale={dateScale}
           // tickFormat={formatDate}
-          stroke={purple4}
-          tickStroke={purple4}
+          stroke={tickColor}
+          tickStroke={tickColor}
           tickLabelProps={() => ({
-            fill: purple1,
+            fill: tickColor,
             fontSize: 11,
             textAnchor: 'middle',
           })}

@@ -51,13 +51,7 @@ const StateRoute = (props: StateRouteProps) => {
   console.log(hierarchy)
 
   const isRecoil = snapshot.atomsComponents ? true : false;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 
->>>>>>> staging
->>>>>>> master
   const [noRenderData, setNoRenderData] = useState(false);
 
   // component map zoom state
@@ -101,27 +95,17 @@ const StateRoute = (props: StateRouteProps) => {
   };
 
   const renderAtomsRelationship = () => (
-<<<<<<< HEAD
 
     <ParentSize>{({ width, height })  => 
     <Example 
     width={width} 
     height={height}
     snapshots={snapshots} />}
-=======
-    <ParentSize>
-      {({ width, height }) => (
-        <Example width={width} height={height} snapshots={snapshots} />
-      )}
->>>>>>> master
     </ParentSize>
-<<<<<<< HEAD
 
     //   atomsComponents={snapshot.atomsComponents}
     //   atomSelectors={snapshot.atomSelectors}
     // />
-=======
->>>>>>> staging
   );
 
   // the hierarchy gets set on the first click in the page
