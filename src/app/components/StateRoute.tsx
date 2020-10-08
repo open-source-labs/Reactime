@@ -18,7 +18,6 @@ import AtomsRelationship from './AtomsRelationship.jsx';
 import Example from './AtomsRelationship.jsx';
 import { ParentSize } from '@visx/responsive';
 import { Console } from 'console';
-// import { History } from './History';
 import Legendary from './legend';
 
 const History = require('./History').default;
@@ -61,21 +60,14 @@ const StateRoute = (props: StateRouteProps) => {
   const renderComponentMap = () => {
     if (hierarchy) {
       return (
-        <div>
-          <div>
-            <Legendary hierarchy={hierarchy} />
-          </div>
-          <div>
-            <ComponentMap
-              viewIndex={viewIndex}
-              snapshots={snapshots}
-              x={x}
-              y={y}
-              k={k}
-              setZoomState={setZoomState}
-            />
-          </div>
-        </div>
+        <ComponentMap
+          viewIndex={viewIndex}
+          snapshots={snapshots}
+          x={x}
+          y={y}
+          k={k}
+          setZoomState={setZoomState}
+        />
       );
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
