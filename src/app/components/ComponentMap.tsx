@@ -31,7 +31,7 @@ export default function ComponentMap({
   const [linkType, setLinkType] = useState<string>('diagonal');
   const [stepPercent, setStepPercent] = useState<number>(0.5);
   const forceUpdate = useForceUpdate();
-
+  // setting the margins for the Map to render in the tab
   const innerWidth = totalWidth - margin.left - margin.right;
   const innerHeight = totalHeight - margin.top - margin.bottom;
 
@@ -39,6 +39,7 @@ export default function ComponentMap({
   let sizeWidth: number;
   let sizeHeight: number;
 
+  // rendering for the different tab selections
   if (layout === 'polar') {
     origin = {
       x: innerWidth / 2,
@@ -56,7 +57,7 @@ export default function ComponentMap({
       sizeHeight = innerWidth;
     }
   }
-
+  // controls for the map
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
   return totalWidth < 10 ? null : (
     <div>
@@ -70,6 +71,7 @@ export default function ComponentMap({
         setLinkType={setLinkType}
         setStepPercent={setStepPercent}
       />
+
       <svg width={totalWidth} height={totalHeight}>
         <LinearGradient id='links-gradient' from='#fd9b93' to='#fe6e9e' />
         <rect width={totalWidth} height={totalHeight} rx={14} fill='#242529' />
@@ -94,7 +96,7 @@ export default function ComponentMap({
 
                 {tree.descendants().map((node, key) => {
                   const width = 40;
-                  const height = 20;
+                  const height = 15;
 
                   let top: number;
                   let left: number;
