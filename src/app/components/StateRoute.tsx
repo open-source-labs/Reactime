@@ -16,9 +16,9 @@ import ComponentMap from './ComponentMap';
 import PerfView from './PerfView';
 import AtomsRelationship from './AtomsRelationship.jsx';
 import Example from './AtomsRelationship.jsx';
-import { ParentSize } from '@visx/responsive'
+import { ParentSize } from '@visx/responsive';
 import { Console } from 'console';
-
+import Legendary from './legend';
 
 const History = require('./History').default;
 
@@ -79,20 +79,21 @@ const StateRoute = (props: StateRouteProps) => {
   // if true involk render chart with hierarchy
   const renderHistory = () => {
     if (hierarchy) {
-      return <History hierarchy={hierarchy} />;
+      return (
+        <History hierarchy={hierarchy} />;
+        <Legendary />
+      );
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
   const renderAtomsRelationship = () => (
-
-    <ParentSize>{({ width, height })  => 
-    <Example 
-    width={width} 
-    height={height}
-    snapshots = {snapshots} />}
+    <ParentSize>
+      {({ width, height }) => (
+        <Example width={width} height={height} snapshots={snapshots} />
+      )}
     </ParentSize>
-    
+
     //   atomsComponents={snapshot.atomsComponents}
     //   atomSelectors={snapshot.atomSelectors}
     // />
