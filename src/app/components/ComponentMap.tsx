@@ -6,6 +6,8 @@
 
 import React, { useEffect, useCallback } from 'react';
 import * as d3 from 'd3';
+import { useStoreContext } from '../store'
+import { onHover } from '../actions/actions'
 
 interface componentMapProps {
   x: number;
@@ -22,7 +24,6 @@ const ComponentMap = (props: componentMapProps) => {
   let lastSnap: number | null = null;
   if (viewIndex < 0) lastSnap = snapshots.length - 1;
   else lastSnap = viewIndex;
-
   //external constants
   const width: any = '100vw';
   const height: any = '100vh';
@@ -34,6 +35,7 @@ const ComponentMap = (props: componentMapProps) => {
     return makeChart(data);
   }, [data]);
 
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const makeChart = useCallback(
     (data) => {
       // Establish Constants
@@ -145,10 +147,12 @@ const ComponentMap = (props: componentMapProps) => {
 
         //TODO -> Alter incoming snapshots so there is useful data to show on hover.
         nodeEnter.on('mouseover', function (d: any, i: number): any {
-       
+            //onHover is an action in progress 
+            dispatch(onHover());
             d3.select(this)
               .append('text')
               .text(() => {
+                //i want to return to the node in d3 the values listed in a more readable way. Right now it's just a horizontal line of text
                 return JSON.stringify(d.data.state);
               })
               .attr('x', -25)
@@ -158,6 +162,8 @@ const ComponentMap = (props: componentMapProps) => {
               .attr('stroke', 'white')
               .attr('stroke-width', .5)
               .attr('id', `popup${i}`);
+
+              
           
         });
         nodeEnter.on('mouseout', function (d: any, i: number): any {
