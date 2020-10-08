@@ -106,7 +106,6 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@visx/axis": "^1.0.0",
     "@visx/grid": "^1.0.0",
     "@visx/legend": "^1.0.0",
@@ -116,15 +115,7 @@
     "@visx/gradient": "^1.0.0",
     "@visx/group": "^1.0.0",
     "@visx/hierarchy": "^1.0.0",
-=======
     "@visx/glyph": "^1.0.0",
-    "@visx/gradient": "^1.0.0",
-    "@visx/group": "^1.0.0",
-    "@visx/hierarchy": "^1.0.0",
-    "@visx/legend": "^1.0.0",
-    "@visx/responsive": "^1.0.0",
-    "@visx/scale": "^1.0.0",
->>>>>>> master
     "@visx/shape": "^1.0.0",
     "acorn": "^7.3.1",
     "acorn-jsx": "^5.2.0",
