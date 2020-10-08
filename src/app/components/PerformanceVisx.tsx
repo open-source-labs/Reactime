@@ -7,7 +7,7 @@ import { AxisBottom } from "@visx/axis";
 import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
 import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
 import { LegendOrdinal } from "@visx/legend";
-import snapshots from "./snapshots";
+// import snapshots from "./snapshots";
 
 
 /* TYPESCRIPT */
@@ -29,6 +29,7 @@ export type BarStackProps = {
   height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
   events?: boolean;
+  snapshots?: any;
 };
 
 /* DEFAULT STYLING */
@@ -45,10 +46,49 @@ const tooltipStyles = {
   color: "white"
 };
 
-/* DATA PREP */
-const data = [...snapshots];
+/* DATA PREP FUNCTIONS */
+const getPerfMetrics = snapshots => {
+  return snapshots.reduce((perfSnapshots, curSnapshot,idx)=> {
+    return perfSnapshots.concat(traverse(curSnapshot, {snapshot:idx+1}))
+  }, [])
+}
 
-// array of all object keys
+const traverse = (snapshot, perfSnapshot = {}) => {
+  if (!snapshot.children[0]) return;
+  perfSnapshot[snapshot.name] = snapshot.componentData.actualDuration;
+  for (let i = 0; i < snapshot.children.length; i++){
+    perfSnapshot[snapshot.children[i].name+i] = snapshot.children[i].componentData.actualDuration;
+    traverse(snapshot.children[i], perfSnapshot);
+  }
+  return perfSnapshot;
+}
+
+
+/* EXPORT COMPONENT */
+export default function PerformanceVisx({
+  width,
+  height,
+  events = false,
+  margin = defaultMargin,
+  snapshots
+}: BarStackProps)
+
+{
+  const {
+    tooltipOpen,
+    tooltipLeft,
+    tooltipTop,
+    tooltipData,
+    hideTooltip,
+    showTooltip
+  } = useTooltip<TooltipData>();
+
+    /* DATA PREP */
+    const data = getPerfMetrics(snapshots);
+    console.log(data)
+
+
+  // array of all object keys
 const keys = Object.keys(data[0]).filter((d) => d !== "snapshot") as CityName[];
 
 // ARRAY OF TOTAL VALUES PER SNAPSHOT
@@ -61,15 +101,6 @@ const temperatureTotals = data.reduce((allTotals, currentDate) => {
   return allTotals;
 }, [] as number[]);
 
-
-/*  ACCESSORS */
-const getSnapshot = (d: snapshot) => d.snapshot;
-
-/* SCALE */
-const dateScale = scaleBand<string>({
-  domain: data.map(getSnapshot),
-  padding: 0.2
-});
 const temperatureScale = scaleLinear<number>({
   domain: [0, Math.max(...temperatureTotals)],
   nice: true
@@ -81,21 +112,15 @@ const colorScale = scaleOrdinal<CityName, string>({
 
 let tooltipTimeout: number;
 
-/* EXPORT COMPONENT */
-export default function PerformanceVisx({
-  width,
-  height,
-  events = false,
-  margin = defaultMargin
-}: BarStackProps) {
-  const {
-    tooltipOpen,
-    tooltipLeft,
-    tooltipTop,
-    tooltipData,
-    hideTooltip,
-    showTooltip
-  } = useTooltip<TooltipData>();
+
+/*  ACCESSORS */
+const getSnapshot = (d: snapshot) => d.snapshot;
+
+/* SCALE */
+const dateScale = scaleBand<string>({
+  domain: data.map(getSnapshot),
+  padding: 0.2
+});
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
 
@@ -171,7 +196,7 @@ export default function PerformanceVisx({
                   />
                 )),
               )
-            }
+            } 
           </BarStack>
         </Group>
         <AxisBottom
