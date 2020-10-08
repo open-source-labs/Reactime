@@ -3,52 +3,52 @@ import { scaleOrdinal } from '@visx/scale';
 import { LegendOrdinal, LegendItem, LegendLabel } from '@visx/legend';
 
 // implement algorithm to check snapshot history and their respective colors
-const ordinalColorScale = scaleOrdinal<number, string>({
-  domain: [1.0, 2.0, 3.0, 4.0, 4.1, 4.2, 5.0, 5.1, 5.2],
-  // sync in with the snapshot color chosen in history tab already
-  range: ['#66d981', '#71f5ef', '#4899f1', '#7d81f6'],
-});
 
 const legendGlyphSize = 12;
 
 export default function Legendary(props: any) {
   // { events = false }: { events?: boolean }) {
-  const displayArray = (obj: {
-    stateSnapshot: { children: any[] };
-    name: number;
-    branch: number;
-    index: number;
-    children?: [];
-  }) => {
-    if (
-      obj.stateSnapshot.children.length > 0 &&
-      obj.stateSnapshot.children[0] &&
-      obj.stateSnapshot.children[0].state &&
-      obj.stateSnapshot.children[0].name
-    ) {
-      const newObj: Record<string, unknown> = {
-        index: obj.index,
-        displayName: `${obj.name}.${obj.branch}`,
-        state: obj.stateSnapshot.children[0].state,
-        componentName: obj.stateSnapshot.children[0].name,
-        componentData:
-          JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}'
-            ? ''
-            : obj.stateSnapshot.children[0].componentData,
-      };
-      hierarchyArr.push(newObj);
-    }
+
+  console.log('successfully invoke Legendary function call');
+  const { hierarchy } = props;
+  console.log('and hierarchy being passed in is', hierarchy);
+
+  const getSnapshotIds = (obj, snapshotIds = []) => {
+    console.log('obj.name is', obj.name);
+    snapshotIds.push(`${obj.name}.${obj.branch}`);
     if (obj.children) {
-      obj.children.forEach((element) => {
-        displayArray(element);
+      obj.children.forEach((child) => {
+        getSnapshotIds(child, snapshotIds);
       });
     }
+    return snapshotIds;
   };
-  // the hierarchy gets set on the first click in the page
-  // when page in refreshed we may not have a hierarchy so we need to check if hierarchy was initialized
-  // if true involk displayArray to display the hierarchy
-  // if (hierarchy) displayArray(hierarchy);
-  console.log('Inside Legendary, props is', props);
+
+  const snap = getSnapshotIds(hierarchy);
+  console.log('passing hierarchy as an object to getSnapshotIds is -->', snap);
+
+  const ordinalColorScale = scaleOrdinal<number, string>({
+    domain: snap,
+    // sync in with the snapshot color chosen in history tab already
+    range: [
+      '#95B6B7',
+      '#475485',
+      '#519331',
+      '#AA5039',
+      '#8B2F5F',
+      '#C5B738',
+      '#858DFF',
+      '#FF8D02',
+      '#FFCD51',
+      '#ACDAE6',
+      '#FC997E',
+      '#CF93AD',
+      '#AA3939',
+      '#AA6C39',
+      '#226666',
+      '#2C4870',
+    ],
+  });
 
   return (
     <div className="legends">
