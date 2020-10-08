@@ -55,14 +55,15 @@ const getPerfMetrics = (snapshots, snapshotsIds) => {
   }, [])
 }
 
-const traverse = (snapshot, perfSnapshot = {}) => {
-  if (!snapshot.children[0]) return;
-  perfSnapshot[snapshot.name] = snapshot.componentData.actualDuration;
+const traverse = (snapshot, perfSnapshot) => {
+  if (!snapshot.children[0]) return
   for (let i = 0; i < snapshot.children.length; i++){
-    perfSnapshot[snapshot.children[i].name+i] = snapshot.children[i].componentData.actualDuration;
-    traverse(snapshot.children[i], perfSnapshot);
+    if (snapshot.children[i].componentData.actualDuration){
+    perfSnapshot[snapshot.children[i].name+i] = snapshot.children[i].componentData.actualDuration
+    }
+    traverse(snapshot.children[i], perfSnapshot)
   }
-  return perfSnapshot;
+  return perfSnapshot
 }
 
 const getSnapshotIds = (obj, snapshotIds = []) => {
@@ -97,11 +98,11 @@ export default function PerformanceVisx({
 
     /* DATA PREP */
     // const data = getPerfMetrics(snapshots);
-    const data = [...snapshots]
-    console.log('cleaned data', getPerfMetrics(snapshots, getSnapshotIds(hierarchy)))
+    const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy))
+    console.log(data)
 
   // array of all object keys
-const keys = Object.keys(data[0]).filter((d) => d !== "snapshot") as CityName[];
+const keys = Object.keys(data[0]).filter((d) => d !== "snapshotId") as CityName[];
 
 // ARRAY OF TOTAL VALUES PER SNAPSHOT
 const temperatureTotals = data.reduce((allTotals, currentDate) => {
@@ -119,14 +120,14 @@ const temperatureScale = scaleLinear<number>({
 });
 const colorScale = scaleOrdinal<CityName, string>({
   domain: keys,
-  range: [purple1, purple2, purple3, purple4]
+  range: schemeSet1
 });
 
 let tooltipTimeout: number;
 
 
 /*  ACCESSORS */
-const getSnapshot = (d: snapshot) => d.snapshot;
+const getSnapshot = (d: snapshot) => d.snapshotId;
 
 /* SCALE */
 const dateScale = scaleBand<string>({
