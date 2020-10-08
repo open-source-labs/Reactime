@@ -3,263 +3,176 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/ban-types */
+import React, { useState } from 'react';
+import { Group } from '@visx/group';
+import { hierarchy, Tree } from '@visx/hierarchy';
+import { LinearGradient } from '@visx/gradient';
+import { pointRadial } from 'd3-shape';
+import useForceUpdate from './useForceUpdate';
+import LinkControls from './LinkControls';
+import getLinkComponent from './getLinkComponent';
 
-import React, { useEffect, useCallback } from 'react';
-import * as d3 from 'd3';
-import { useStoreContext } from '../store'
-import { onHover } from '../actions/actions'
+const defaultMargin = { top: 30, left: 30, right: 30, bottom: 70 };
 
-interface componentMapProps {
-  x: number;
-  y: number;
-  k: number;
-  setZoomState: any;
+export type LinkTypesProps = {
+  width: number;
+  height: number;
+  margin?: { top: number; right: number; bottom: number; left: number };
   snapshots: [];
-  viewIndex: number;
-}
-
-const ComponentMap = (props: componentMapProps) => {
-  //import props
-  const { viewIndex, snapshots, x, y, k, setZoomState } = props;
-  let lastSnap: number | null = null;
-  if (viewIndex < 0) lastSnap = snapshots.length - 1;
-  else lastSnap = viewIndex;
-  //external constants
-  const width: any = '100vw';
-  const height: any = '100vh';
-  let data: Object = snapshots[lastSnap];
-
-  useEffect(() => {
-    document.getElementById('canvas').innerHTML = '_';
-    setZoomState(d3.zoomTransform(d3.select('#canvas').node()));
-    return makeChart(data);
-  }, [data]);
-
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const makeChart = useCallback(
-    (data) => {
-      // Establish Constants
-      const margin = { top: 10, right: 120, bottom: 10, left: 120 };
-      const dy = 120;
-      const dx = 100;
-      const tree = d3.tree().nodeSize([dx, dy]);
-      const diagonal = d3
-        .linkHorizontal()
-        .x((d) => d.y)
-        .y((d) => d.x);
-      const root = d3.hierarchy(data);
-
-      // Determine descendants of root node use d.depth conditional to how many levels deep to display on first render
-      root.x0 = dy / 2;
-      root.y0 = 0;
-      root.descendants().forEach((d, i) => {
-        d.id = i;
-        d._children = d.children;
-        // use to limit depth of children rendered
-        //if (d.depth === 5) d.children = null;
-      });
-
-      // Create Container for D3 Visualizations
-      const svgContainer = d3
-        .select('#canvas')
-        .attr('width', width)
-        .attr('height', height);
-
-      // create inner container to help with drag and zoom
-      const svg: any = svgContainer
-        .append('g')
-        .attr('transform', `translate(${x}, ${y}), scale(${k})`); // sets the canvas to the saved zoomState
-
-      // create links
-      const gLink = svg
-        .append('g')
-        .attr('fill', 'none')
-        .attr('stroke', '#555')
-        .attr('stroke-opacity', 0.9)
-        .attr('stroke-width', 1.5);
-
-      // create nodes
-      const gNode = svg
-        .append('g')
-        .attr('cursor', 'pointer')
-        .attr('pointer-events', 'all');
-
-      // declare re render funciton to handle collapse and expansion of nodes
-      const update = (source) => {
-        const duration = 250;
-        const nodes = root.descendants().reverse();
-        const links = root.links();
-
-        // Compute the new tree layout.
-        tree(root);
-        let left = root;
-        let right = root;
-        root.eachBefore((node) => {
-          if (node.x < left.x) left = node;
-          if (node.x > right.x) right = node;
-        });
-
-        //use nodes to detrmine height
-        const height = right.x - left.x + margin.top + margin.bottom;
-
-        const transition = svg
-          .transition()
-          .duration(duration)
-          .attr('viewBox', [-margin.left, left.x - margin.top, width, height]);
-        // Update the nodes…
-        const node = gNode.selectAll('g').data(nodes, (d) => d.id);
-
-        // Enter any new nodes at the parent's previous position.
-        const nodeEnter = node
-          .enter()
-          .append('g')
-          .attr('transform', (d) => `translate(${source.y0},${source.x0})`)
-          .attr('fill-opacity', 0)
-          .attr('stroke-opacity', 1)
-          .on('click', (d) => {
-            d.children = d.children ? null : d._children;
-            update(d);
-          });
-
-        // paint circles, color based on children
-        nodeEnter
-          .append('circle')
-          .attr('r', 10)
-          .attr('fill', (d) => (d._children ? '#4e9dcc' : '#95B6B7'))
-          .attr('stroke-width', 10)
-          .attr('stroke-opacity', 1);
-
-        // append node names
-        nodeEnter
-          .append('text')
-          .attr('dy', '.31em')
-          .attr('x', '-10')
-          .attr('y', '-5')
-          .attr('text-anchor', 'end')
-          .text((d: any) => d.data.name.slice(0, 14)) // Limits Characters in Display
-          .style('font-size', `.7rem`)
-          .style('fill', 'white')
-          .clone(true)
-          .lower()
-          .attr('stroke-linejoin', 'round')
-          .attr('stroke', '#646464')
-          .attr('stroke-width', 1);
-
-        //TODO -> Alter incoming snapshots so there is useful data to show on hover.
-        nodeEnter.on('mouseover', function (d: any, i: number): any {
-            //onHover is an action in progress 
-            dispatch(onHover());
-            d3.select(this)
-              .append('text')
-              .text(() => {
-                //i want to return to the node in d3 the values listed in a more readable way. Right now it's just a horizontal line of text
-                return JSON.stringify(d.data.state);
-              })
-              .attr('x', -25)
-              .attr('y', 20)
-              .style('font-size', `.6rem`)
-              .style('fill', 'white')
-              .attr('stroke', 'white')
-              .attr('stroke-width', .5)
-              .attr('id', `popup${i}`);
-
-              
-          
-        });
-        nodeEnter.on('mouseout', function (d: any, i: number): any {
-          d3.select(`#popup${i}`).remove();
-        });
-
-        // Transition nodes to their new position.
-        const nodeUpdate = node
-          .merge(nodeEnter)
-          .transition(transition)
-          .attr('transform', (d) => `translate(${d.y},${d.x})`)
-          .attr('fill-opacity', 1)
-          .attr('stroke-opacity', 1);
-
-        // Transition exiting nodes to the parent's new position.
-        const nodeExit = node
-          .exit()
-          .transition(transition)
-          .remove()
-          .attr('transform', (d) => `translate(${source.y},${source.x})`)
-          .attr('fill-opacity', 0)
-          .attr('stroke-opacity', 0);
-
-        // Update the links…
-        const link = gLink.selectAll('path').data(links, (d) => d.target.id);
-
-        // Enter any new links at the parent's previous position.
-        const linkEnter = link
-          .enter()
-          .append('path')
-          .attr('d', (d) => {
-            const o = { x: source.x0, y: source.y0 };
-            return diagonal({ source: o, target: o });
-          });
-
-        // Transition links to their new position.
-        link.merge(linkEnter).transition(transition).attr('d', diagonal);
-
-        // Transition exiting nodes to the parent's new position.
-        link
-          .exit()
-          .transition(transition)
-          .remove()
-          .attr('d', (d) => {
-            const o = { x: source.x, y: source.y };
-            return diagonal({ source: o, target: o });
-          });
-
-        // Stash the old positions for transition.
-        root.eachBefore((d) => {
-          d.x0 = d.x;
-          d.y0 = d.y;
-        });
-      };
-
-      //______________ZOOM______________\\
-
-      // Sets starting zoom
-      let zoom = d3.zoom().on('zoom', zoomed);
-
-      svgContainer.call(
-        zoom.transform,
-        // Changes the initial view, (left, top)
-        d3.zoomIdentity.translate(x, y).scale(k)
-      );
-
-      // allows the canvas to be zoom-able
-      svgContainer.call(
-        d3
-          .zoom()
-          .scaleExtent([0.15, 1.5]) // [zoomOut, zoomIn]
-          .on('zoom', zoomed)
-      );
-      function zoomed(d: any) {
-        svg
-          .attr('transform', d3.event.transform)
-          .on(
-            'mouseup',
-            setZoomState(d3.zoomTransform(d3.select('#canvas').node()))
-          );
-      }
-
-      // allows the canvas to be draggable
-      svg.call(d3.drag());
-
-      // call update on node click
-      update(root);
-    },
-    [data]
-  );
-
-  return (
-    <div data-testid="canvas" id="componentMapContainer">
-      <svg id="canvas"></svg>
-    </div>
-  );
 };
 
-export default ComponentMap;
+export default function ComponentMap({
+  // importing props
+  width: totalWidth,
+  height: totalHeight,
+  margin = defaultMargin,
+  snapshots: snapshots,
+}: LinkTypesProps) {
+  // preparing the data to be used for render
+  const lastNode = snapshots.length - 1;
+  const data = snapshots[lastNode];
+  const [layout, setLayout] = useState<string>('cartesian');
+  const [orientation, setOrientation] = useState<string>('horizontal');
+  const [linkType, setLinkType] = useState<string>('diagonal');
+  const [stepPercent, setStepPercent] = useState<number>(0.5);
+  const forceUpdate = useForceUpdate();
+  // setting the margins for the Map to render in the tab
+  const innerWidth = totalWidth - margin.left - margin.right;
+  const innerHeight = totalHeight - margin.top - margin.bottom;
+
+  let origin: { x: number; y: number };
+  let sizeWidth: number;
+  let sizeHeight: number;
+
+  // rendering for the different tab selections
+  if (layout === 'polar') {
+    origin = {
+      x: innerWidth / 2,
+      y: innerHeight / 2,
+    };
+    sizeWidth = 2 * Math.PI;
+    sizeHeight = Math.min(innerWidth, innerHeight) / 2;
+  } else {
+    origin = { x: 0, y: 0 };
+    if (orientation === 'vertical') {
+      sizeWidth = innerWidth;
+      sizeHeight = innerHeight;
+    } else {
+      sizeWidth = innerHeight;
+      sizeHeight = innerWidth;
+    }
+  }
+  // controls for the map
+  const LinkComponent = getLinkComponent({ layout, linkType, orientation });
+  return totalWidth < 10 ? null : (
+    <div>
+      <LinkControls
+        layout={layout}
+        orientation={orientation}
+        linkType={linkType}
+        stepPercent={stepPercent}
+        setLayout={setLayout}
+        setOrientation={setOrientation}
+        setLinkType={setLinkType}
+        setStepPercent={setStepPercent}
+      />
+
+      <svg width={totalWidth} height={totalHeight}>
+        <LinearGradient id='links-gradient' from='#fd9b93' to='#fe6e9e' />
+        <rect width={totalWidth} height={totalHeight} rx={14} fill='#242529' />
+        <Group top={margin.top} left={margin.left}>
+          <Tree
+            root={hierarchy(data, (d) => (d.isExpanded ? null : d.children))}
+            size={[sizeWidth, sizeHeight]}
+            separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
+          >
+            {(tree) => (
+              <Group top={origin.y} left={origin.x}>
+                {tree.links().map((link, i) => (
+                  <LinkComponent
+                    key={i}
+                    data={link}
+                    percent={stepPercent}
+                    stroke='rgb(254,110,158,0.6)'
+                    strokeWidth='1'
+                    fill='none'
+                  />
+                ))}
+
+                {tree.descendants().map((node, key) => {
+                  const width = 40;
+                  const height = 15;
+
+                  let top: number;
+                  let left: number;
+                  if (layout === 'polar') {
+                    const [radialX, radialY] = pointRadial(node.x, node.y);
+                    top = radialY;
+                    left = radialX;
+                  } else if (orientation === 'vertical') {
+                    top = node.y;
+                    left = node.x;
+                  } else {
+                    top = node.x;
+                    left = node.y;
+                  }
+
+                  return (
+                    <Group top={top} left={left} key={key}>
+                      {node.depth === 0 && (
+                        <circle
+                          r={12}
+                          fill="url('#links-gradient')"
+                          onClick={() => {
+                            node.data.isExpanded = !node.data.isExpanded;
+                            console.log(node);
+                            forceUpdate();
+                          }}
+                        />
+                      )}
+                      {node.depth !== 0 && (
+                        <rect
+                          height={height}
+                          width={width}
+                          y={-height / 2}
+                          x={-width / 2}
+                          fill='#272b4d'
+                          stroke={node.data.children ? '#03c0dc' : '#26deb0'}
+                          strokeWidth={1}
+                          strokeDasharray={node.data.children ? '0' : '2,2'}
+                          strokeOpacity={node.data.children ? 1 : 0.6}
+                          rx={node.data.children ? 0 : 10}
+                          onClick={() => {
+                            node.data.isExpanded = !node.data.isExpanded;
+                            console.log(node);
+                            forceUpdate();
+                          }}
+                        />
+                      )}
+                      <text
+                        dy='.33em'
+                        fontSize={9}
+                        fontFamily='Arial'
+                        textAnchor='middle'
+                        style={{ pointerEvents: 'none' }}
+                        fill={
+                          node.depth === 0
+                            ? '#71248e'
+                            : node.children
+                            ? 'white'
+                            : '#26deb0'
+                        }
+                      >
+                        {node.data.name}
+                      </text>
+                    </Group>
+                  );
+                })}
+              </Group>
+            )}
+          </Tree>
+        </Group>
+      </svg>
+    </div>
+  );
+}
