@@ -9,12 +9,9 @@ const legendGlyphSize = 12;
 export default function Legendary(props: any) {
   // { events = false }: { events?: boolean }) {
 
-  console.log('successfully invoke Legendary function call');
   const { hierarchy } = props;
-  console.log('and hierarchy being passed in is', hierarchy);
 
   const getSnapshotIds = (obj, snapshotIds = []) => {
-    console.log('obj.name is', obj.name);
     snapshotIds.push(`${obj.name}.${obj.branch}`);
     if (obj.children) {
       obj.children.forEach((child) => {
@@ -25,7 +22,6 @@ export default function Legendary(props: any) {
   };
 
   const snap = getSnapshotIds(hierarchy);
-  console.log('passing hierarchy as an object to getSnapshotIds is -->', snap);
 
   const ordinalColorScale = scaleOrdinal<number, string>({
     domain: snap,
