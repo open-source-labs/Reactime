@@ -1,3 +1,8 @@
+/* eslint-disable arrow-body-style */
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/ban-types */
 import React, { useState } from 'react';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';

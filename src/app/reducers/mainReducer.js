@@ -2,7 +2,7 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable no-param-reassign */
-import produce from 'immer';
+import {produce, original} from 'immer';
 import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
@@ -39,19 +39,28 @@ export default (state, action) => produce(state, draft => {
   };
 
   switch (action.type) {
+    case types.ON_HOVER: {
+      port.postMessage({
+        action: 'onHover',
+        payload: 'payload from Reducer ON_HOVER',
+        tabId: currentTab,
+      })
+      break; 
+    }
+
     case types.MOVE_BACKWARD: {
       if (snapshots.length > 0 && sliderIndex > 0) {
         const newIndex = sliderIndex - 1;
         // eslint-disable-next-line max-len
         // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
         const nameFromIndex = findName(newIndex, hierarchy);
-
         port.postMessage({
           action: 'jumpToSnap',
           payload: snapshots[newIndex],
           index: newIndex,
           name: nameFromIndex,
           tabId: currentTab,
+          newProp: 'newPropFromReducer'
         });
         clearInterval(intervalId);
 

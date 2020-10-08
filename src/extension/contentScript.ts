@@ -34,6 +34,8 @@ chrome.runtime.onMessage.addListener(request => { // seems to never fire
     case 'setPause':
       window.postMessage(request, '*');
       break;
+    case 'onHover': 
+      window.postMessage(request, '*'); 
     default:
       break;
   }
