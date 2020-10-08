@@ -6,7 +6,8 @@ import { Grid } from "@visx/grid";
 import { AxisBottom } from "@visx/axis";
 import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
 import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
-import { LegendOrdinal } from "@visx/legend";
+// import { LegendOrdinal } from "@visx/legend";
+import { schemeSet1 } from "d3-scale-chromatic";
 // import snapshots from "./snapshots";
 
 
@@ -48,9 +49,9 @@ const tooltipStyles = {
 };
 
 /* DATA PREP FUNCTIONS */
-const getPerfMetrics = snapshots => {
+const getPerfMetrics = (snapshots, snapshotsIds) => {
   return snapshots.reduce((perfSnapshots, curSnapshot,idx)=> {
-    return perfSnapshots.concat(traverse(curSnapshot, {snapshot:++idx}))
+    return perfSnapshots.concat(traverse(curSnapshot, {snapshotId:snapshotsIds[idx]}))
   }, [])
 }
 
