@@ -61,14 +61,21 @@ const StateRoute = (props: StateRouteProps) => {
   const renderComponentMap = () => {
     if (hierarchy) {
       return (
-        <ComponentMap
-          viewIndex={viewIndex}
-          snapshots={snapshots}
-          x={x}
-          y={y}
-          k={k}
-          setZoomState={setZoomState}
-        />
+        <div>
+          <div>
+            <Legendary hierarchy={hierarchy} />
+          </div>
+          <div>
+            <ComponentMap
+              viewIndex={viewIndex}
+              snapshots={snapshots}
+              x={x}
+              y={y}
+              k={k}
+              setZoomState={setZoomState}
+            />
+          </div>
+        </div>
       );
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
@@ -78,12 +85,11 @@ const StateRoute = (props: StateRouteProps) => {
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
   // if true involk render chart with hierarchy
   const renderHistory = () => {
-    console.log('hierarchy in stateroute is', hierarchy);
     if (hierarchy) {
       return (
         <div>
           <div>
-            <Legendary />
+            <Legendary hierarchy={hierarchy} />
           </div>
           <div>
             <History hierarchy={hierarchy} />
