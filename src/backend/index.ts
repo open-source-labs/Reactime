@@ -49,7 +49,6 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       timeJump(payload, true); // * This sets state with given payload
       // Get the pathname from payload and add new entry to browser history
       // MORE: https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
-
       // try to modify workInProgress tree from here
       // window.history.pushState('', '', getRouteURL(payload));
       break;
@@ -58,6 +57,9 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       break;
     case 'setPause':
       mode.paused = payload;
+      break;
+    case 'onHover':
+      // console.log('WE MADE IT ALL THE WAY FROM THE FRONTEND! HERE\'S THE PAYLOAD:', payload);
       break;
     default:
       break;

@@ -17,6 +17,8 @@ import PerfView from './PerfView';
 import AtomsRelationship from './AtomsRelationship.jsx';
 import Example from './AtomsRelationship.jsx';
 import { ParentSize } from '@visx/responsive'
+import { Console } from 'console';
+
 
 const History = require('./History').default;
 

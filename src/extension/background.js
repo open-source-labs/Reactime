@@ -305,6 +305,11 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         break;
       }
 
+      // DUPLICATE SNAPSHOT CHECK
+      const previousSnap = tabsObj[tabId].currLocation.stateSnapshot.children[0].componentData.actualDuration;
+      const incomingSnap = request.payload.children[0].componentData.actualDuration;
+      if (previousSnap === incomingSnap) break;
+
       // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
       if (reloaded[tabId]) {
         reloaded[tabId] = false;
@@ -331,6 +336,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     default:
       break;
   }
+  console.log('inside background.js, tabsObj:', tabsObj); 
   return true; // attempt to fix close port error
 });
 
