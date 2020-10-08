@@ -30,13 +30,13 @@ const filterHooks = (data: any[]) => {
   return JSON.stringify(data[0].state);
 };
 
-
 /**
  * @method maked3Tree :Creates a new D3 Tree
  */
 
-function History(props) {
+export default function History(props) {
   let { hierarchy } = props;
+  console.log('hierarchy is', hierarchy);
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
   let HistoryRef = React.createRef(root); //React.createRef(root);
@@ -68,7 +68,7 @@ function History(props) {
     const g = svgContainer
       .append('g')
       // this is changing where the graph is located physically
-      .attr('transform', `translate(${width / 2 + 4}, ${height / 2 + 2})`)
+      .attr('transform', `translate(${width / 2 + 4}, ${height / 2 + 2})`);
 
     // d3.hierarchy constructs a root node from the specified hierarchical data
     // (our object titled dataset), which must be an object representing the root node
@@ -83,7 +83,6 @@ function History(props) {
 
     const d3root = tree(hierarchy);
 
-    
     g.selectAll('.link')
       // root.links() gets an array of all the links,
       // where each element is an object containing a
@@ -109,12 +108,12 @@ function History(props) {
       .append('g')
       .style('fill', function (d) {
         let loadTime;
-        if (d.data.stateSnapshot.children[0].componentData.actualDuration){
-          loadTime = d.data.stateSnapshot.children[0].componentData.actualDuration;
-        } else{
+        if (d.data.stateSnapshot.children[0].componentData.actualDuration) {
+          loadTime =
+            d.data.stateSnapshot.children[0].componentData.actualDuration;
+        } else {
           loadTime = 1;
         }
-          
 
         if (loadTime !== undefined) {
           if (loadTime > 16) {
@@ -252,12 +251,9 @@ function History(props) {
       return [(y = +y) * Math.cos((x -= Math.PI / 2)), y * Math.sin(x)];
     }
   };
-
   return (
     <>
-      <div ref={HistoryRef} className="history-d3-div" id="historyContainer"/>
+      <div ref={HistoryRef} className="history-d3-div" id="historyContainer" />
     </>
   );
 }
-
-export default History;
