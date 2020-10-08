@@ -13,8 +13,10 @@ import {
 } from 'react-router-dom';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
-import PerfView from './PerfView';
+// import PerfView from './PerfView';
 import AtomsRelationship from './AtomsRelationship.jsx';
+import PerformanceVisx from './PerformanceVisx.tsx';
+
 import Example from './AtomsRelationship.jsx';
 import { ParentSize } from '@visx/responsive';
 import { Console } from 'console';
@@ -45,6 +47,8 @@ interface StateRouteProps {
 
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
+
+  console.log(hierarchy)
 
   const isRecoil = snapshot.atomsComponents ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
@@ -90,10 +94,12 @@ const StateRoute = (props: StateRouteProps) => {
   };
 
   const renderAtomsRelationship = () => (
-    <ParentSize>
-      {({ width, height }) => (
-        <Example width={width} height={height} snapshots={snapshots} />
-      )}
+
+    <ParentSize>{({ width, height })  => 
+    <Example 
+    width={width} 
+    height={height}
+    snapshots={snapshots} />}
     </ParentSize>
   );
 
@@ -110,13 +116,22 @@ const StateRoute = (props: StateRouteProps) => {
   const renderPerfView = () => {
     if (hierarchy) {
       return (
-        <PerfView
-          viewIndex={viewIndex}
-          snapshots={snapshots}
-          setNoRenderData={setNoRenderData}
-          width={600}
-          height={1000}
-        />
+        <ParentSize>{({ width, height }) => 
+          <PerformanceVisx 
+            width={width} 
+            height={height}
+            snapshots={snapshots}
+            hierarchy={hierarchy}
+          />}
+        </ParentSize>
+      
+        // <PerfView
+        //   viewIndex={viewIndex}
+        //   snapshots={snapshots}
+        //   setNoRenderData={setNoRenderData}
+        //   width={600}
+        //   height={1000}
+        // />
       );
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
