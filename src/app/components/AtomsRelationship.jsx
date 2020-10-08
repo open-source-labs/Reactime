@@ -8,8 +8,8 @@ import { LinearGradient } from '@visx/gradient';
 const blue = '#acdbdf';
 const white = '#f0ece2';
 
-export const red = '#D7816A';
-const orange = '#BD4F6C';
+export const lightorange = '#F9D976';
+const orange = '#F39F86';
 
 const merlinsbeard = '#f7f7f3';
 export const background = '#242529';
@@ -158,7 +158,7 @@ export default function Example({
 
   return width < 10 ? null : (
     <svg width={width} height={height}>
-      <LinearGradient id="top" from={red} to={orange} />
+      <LinearGradient id="top" from={lightorange} to={orange} />
 
       <rect width={width} height={height} rx={14} fill={background} />
 
