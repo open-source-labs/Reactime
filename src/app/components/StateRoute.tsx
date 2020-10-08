@@ -91,7 +91,7 @@ const StateRoute = (props: StateRouteProps) => {
     <Example 
     width={width} 
     height={height}
-    snapshots = {snapshots} />}
+    snapshots={snapshots} />}
     </ParentSize>
     
     //   atomsComponents={snapshot.atomsComponents}
@@ -113,7 +113,11 @@ const StateRoute = (props: StateRouteProps) => {
     if (hierarchy) {
       return (
         <ParentSize>{({ width, height }) => 
-        <PerformanceVisx width={width} height={height} />}
+        <PerformanceVisx 
+          width={width} 
+          height={height}
+          snapshots={snapshots}
+        />}
         </ParentSize>
       
         // <PerfView
