@@ -48,7 +48,7 @@ export default function Legendary({ events = false }: { events?: boolean }) {
           .legends {
             font-family: arial;
             font-weight: 900;
-            background-color: black;
+            background-color: ${242529};
             border-radius: 14px;
             padding: 24px 24px 24px 32px;
             overflow-y: auto;

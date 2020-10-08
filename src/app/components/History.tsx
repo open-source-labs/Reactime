@@ -34,7 +34,7 @@ const filterHooks = (data: any[]) => {
  * @method maked3Tree :Creates a new D3 Tree
  */
 
-function History(props) {
+export default function History(props) {
   let { hierarchy } = props;
   console.log('hierarchy is', hierarchy);
   let root = JSON.parse(JSON.stringify(hierarchy));
@@ -257,5 +257,3 @@ function History(props) {
     </>
   );
 }
-
-export { History, Legendary };

@@ -18,10 +18,10 @@ import AtomsRelationship from './AtomsRelationship.jsx';
 import Example from './AtomsRelationship.jsx';
 import { ParentSize } from '@visx/responsive';
 import { Console } from 'console';
-import { History } from './History';
+// import { History } from './History';
 import Legendary from './legend';
 
-// const History = require('./History');
+const History = require('./History').default;
 
 const ErrorHandler = require('./ErrorHandler').default;
 
