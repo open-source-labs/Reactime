@@ -54,7 +54,6 @@ export default function LinkControls({
       >
         <option value='diagonal'>Diagonal</option>
         <option value='step'>Step</option>
-        <option value='curve'>Curve</option>
         <option value='line'>Line</option>
       </select>
       {linkType === 'step' && layout !== 'polar' && (
