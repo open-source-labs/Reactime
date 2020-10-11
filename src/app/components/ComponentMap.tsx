@@ -125,7 +125,6 @@ export default function ComponentMap({
                           fill="url('#links-gradient')"
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
-                            console.log(node);
                             forceUpdate();
                           }}
                         />
@@ -144,7 +143,6 @@ export default function ComponentMap({
                           rx={node.data.children ? 0 : 10}
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
-                            console.log(node);
                             forceUpdate();
                           }}
                         />
