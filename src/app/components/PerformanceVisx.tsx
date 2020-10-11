@@ -37,7 +37,7 @@ export type BarStackProps = {
 /* DEFAULT STYLING */
 const axisColor = '#679DCA';
 const background = "#242529";
-const defaultMargin = { top: 40, right: 0, bottom: 0, left: 0 };
+const defaultMargin = { top: 40, right: 30, bottom: 0, left: 35 };
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
@@ -136,7 +136,7 @@ const colorScale = scaleOrdinal<CityName, string>({
 
 // setting max dimensions and scale ranges
 if (width < 10) return null;
-const xMax = width;
+const xMax = width - margin.left - margin.right
 const yMax = height - margin.top - 100;
 snapshotIdScale.rangeRound([0, xMax]);
 renderingScale.range([yMax, 0]);
@@ -165,7 +165,7 @@ renderingScale.range([yMax, 0]);
           strokeOpacity={0.1}
           xOffset={snapshotIdScale.bandwidth() / 2}
         />
-        <Group top={margin.top}>
+        <Group top={margin.top} left={margin.left}>
           <BarStack <snapshot, CityName>
             data={data}
             keys={keys}
@@ -182,6 +182,7 @@ renderingScale.range([yMax, 0]);
                     height={bar.height}
                     width={bar.width}
                     fill={bar.color}
+                    /* TIP TOOL EVENT HANDLERS */
                     onClick={() => {
                       if (events) alert(`clicked: ${JSON.stringify(bar)}`);
                     }}
@@ -208,6 +209,7 @@ renderingScale.range([yMax, 0]);
         </Group>
         <AxisBottom
           top={yMax + margin.top}
+          left={margin.left}
           scale={snapshotIdScale}
           stroke={axisColor}
           tickStroke={axisColor}
