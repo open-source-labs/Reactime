@@ -9,10 +9,10 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
 // import { LegendOrdinal } from "@visx/legend";
 import { schemeSet1,schemeSet3 } from "d3-scale-chromatic";
 // import snapshots from "./snapshots";
+import useForceUpdate from './useForceUpdate';
 
 
 /* TYPESCRIPT */
-type CityName = "New York" | "San Francisco" | "Austin";
 type snapshot = any;
 type TooltipData = {
   bar: SeriesPoint<snapshot>;
@@ -98,26 +98,23 @@ export default function PerformanceVisx({
     showTooltip
   } = useTooltip<TooltipData>();
 
-    /* DATA PREP */
-    // const data = getPerfMetrics(snapshots);
-    const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy))
-    console.log(data)
-
-  // array of all object keys
+// data prep
+const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy))
 const keys = Object.keys(data[0]).filter((d) => d !== "snapshotId") as CityName[];
+console.log(data)
 
 // ARRAY OF TOTAL VALUES PER SNAPSHOT
-const temperatureTotals = data.reduce((allTotals, currentDate) => {
-  const totalTemperature = keys.reduce((dailyTotal, k) => {
-    dailyTotal += Number(currentDate[k]);
-    return dailyTotal;
+const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
+  const curRenderTotal = keys.reduce((acc, cur) => {
+    acc += Number(curSnapshot[cur]);
+    return acc;
   }, 0);
-  allTotals.push(totalTemperature);
-  return allTotals;
+  totalRender.push(curRenderTotal);
+  return totalRender;
 }, [] as number[]);
 
 const temperatureScale = scaleLinear<number>({
-  domain: [0, Math.max(...temperatureTotals)],
+  domain: [0, Math.max(...totalRenderArr)],
   nice: true
 });
 const colorScale = scaleOrdinal<CityName, string>({
