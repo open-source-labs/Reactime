@@ -115,7 +115,7 @@ const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
 // data accessor (used to generate scales) and formatter (add units for on hover box)
 const getSnapshotId = (d: snapshot) => d.snapshotId;
 const formatSnapshotId = id => 'Snapshot ID: ' + id;  
-const formatRenderTime = time => time + ' ms';
+const formatRenderTime = time => time + ' ms ';
 
 // create visualization scales with filtered data 
 const snapshotIdScale = scaleBand<string>({
@@ -215,10 +215,13 @@ renderingScale.range([yMax, 0]);
         stroke={axisColor}
         tickStroke={axisColor}
         strokeWidth={2}
+        numTicks={8}
+        hideZero={true}
         tickLabelProps={() => ({
           fill: axisColor,
           fontSize: 11,
-          verticalAnchor: 'start',
+          verticalAnchor: 'middle',
+          textAnchor: 'end'
         })}
          />
         <AxisBottom
@@ -234,6 +237,9 @@ renderingScale.range([yMax, 0]);
             textAnchor: 'middle',
           })}
         />
+        <Text x="-100" y="15"  transform="rotate(-90)" fontSize={10} fill="#00FFFF">
+          Rendering Time
+          </Text>
         
       </svg>
       
