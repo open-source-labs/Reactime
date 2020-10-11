@@ -35,11 +35,7 @@ export type BarStackProps = {
 };
 
 /* DEFAULT STYLING */
-const purple1 = "#6c5efb";
-const purple2 = "#c998ff";
-const purple4 = "#00ffff ";
-const purple3 = "#a44afe";
-const tickColor = '#679DCA';
+const axisColor = '#679DCA';
 const background = "#242529";
 const defaultMargin = { top: 40, right: 0, bottom: 0, left: 0 };
 const tooltipStyles = {
@@ -88,8 +84,6 @@ export default function PerformanceVisx({
   hierarchy,
 }: BarStackProps)
 
-let tooltipTimeout: number;
-
 {
   const {
     tooltipOpen,
@@ -99,6 +93,8 @@ let tooltipTimeout: number;
     hideTooltip,
     showTooltip
   } = useTooltip<TooltipData>();
+
+let tooltipTimeout: number;
 
 // filter and structure incoming data for VISX 
 const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy))
@@ -115,41 +111,39 @@ const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
   return totalRender;
 }, [] as number[]);
 
+// data accessor (used to generate scales) and formatter (add units for on hover box)
+const getSnapshotId = (d: snapshot) => d.snapshotId;
+const formatSnapshotId = id => 'Snapshot ID: ' + id;  
+const formatRenderTime = time => time + ' ms';
 
-
-  // data accessor - used for generating scales 
-  const getSnapshotId = (d: snapshot) => d.snapshotId;
-
-  // create visualization scales with filtered data 
-  const snapshotIdScale = scaleBand<string>({
+// create visualization scales with filtered data 
+const snapshotIdScale = scaleBand<string>({
   domain: data.map(getSnapshotId),
   padding: 0.2
-  });
+});
 
-  const renderingScale = scaleLinear<number>({
+const renderingScale = scaleLinear<number>({
   domain: [0, Math.max(...totalRenderArr)],
   nice: true
-  });
+});
 
-  const colorScale = scaleOrdinal<CityName, string>({
+const colorScale = scaleOrdinal<CityName, string>({
   domain: keys,
   range: schemeSet3
-  });
+});
 
-
-  // initial set-up for Tool Tip (aka the on hover bar)
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
 
-  // setting max dimensions and scale ranges
-  if (width < 10) return null;
-  const xMax = width;
-  const yMax = height - margin.top - 100;
-
-  snapshotIdScale.rangeRound([0, xMax]);
-  renderingScale.range([yMax, 0]);
+// setting max dimensions and scale ranges
+if (width < 10) return null;
+const xMax = width;
+const yMax = height - margin.top - 100;
+snapshotIdScale.rangeRound([0, xMax]);
+renderingScale.range([yMax, 0]);
 
   return width < 10 ? null : (
   // relative position is needed for correct tooltip positioning
+
     <div style={{ position: "relative" }}>
       <svg ref={containerRef} width={width} height={height}>
         <rect
@@ -215,17 +209,17 @@ const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
         <AxisBottom
           top={yMax + margin.top}
           scale={snapshotIdScale}
-          // tickFormat={formatDate}
-          stroke={tickColor}
-          tickStroke={tickColor}
+          stroke={axisColor}
+          tickStroke={axisColor}
           tickLabelProps={() => ({
-            fill: tickColor,
+            fill: axisColor,
             fontSize: 11,
             textAnchor: 'middle',
           })}
         />
       </svg>
 
+      // OPTIONAL legend
       {/* <div
         style={{
           position: "absolute",
@@ -242,6 +236,7 @@ const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
           labelMargin="0 15px 0 0"
         />
       </div> */}
+
       {/* FOR HOVER OVER DISPLAY */}
       {tooltipOpen && tooltipData && (
         <TooltipInPortal
@@ -254,10 +249,10 @@ const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
             <strong>{tooltipData.key}</strong>
           </div>
           <div>
-            {tooltipData.bar.data[tooltipData.key]}
+            {formatRenderTime(tooltipData.bar.data[tooltipData.key])}
           </div>
           <div>
-            <small>{getSnapshotId(tooltipData.bar.data)}</small>
+            <small>{formatSnapshotId(getSnapshotId(tooltipData.bar.data))}</small>
           </div>
         </TooltipInPortal>
       )}
