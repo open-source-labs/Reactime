@@ -38,7 +38,7 @@ export type BarStackProps = {
 /* DEFAULT STYLING */
 const axisColor = '#679DCA';
 const background = "#242529";
-const defaultMargin = { top: 40, right: 30, bottom: 0, left: 35 };
+const defaultMargin = { top: 60, right: 30, bottom: 0, left: 50 };
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
@@ -138,7 +138,7 @@ const colorScale = scaleOrdinal<CityName, string>({
 // setting max dimensions and scale ranges
 if (width < 10) return null;
 const xMax = width - margin.left - margin.right
-const yMax = height - margin.top - 100;
+const yMax = height - margin.top - 150;
 snapshotIdScale.rangeRound([0, xMax]);
 renderingScale.range([yMax, 0]);
 
@@ -215,8 +215,6 @@ renderingScale.range([yMax, 0]);
         stroke={axisColor}
         tickStroke={axisColor}
         strokeWidth={2}
-        numTicks={8}
-        hideZero={true}
         tickLabelProps={() => ({
           fill: axisColor,
           fontSize: 11,
@@ -237,14 +235,15 @@ renderingScale.range([yMax, 0]);
             textAnchor: 'middle',
           })}
         />
-        <Text x="-100" y="15"  transform="rotate(-90)" fontSize={10} fill="#00FFFF">
-          Rendering Time
-          </Text>
+        <Text x={-xMax / 2} y="15"  transform="rotate(-90)" fontSize={10} fill="#FFFFFF">
+        Rendering Time (ms)
+        </Text>
+        <Text x={xMax / 2} y={yMax + 100} fontSize={10} fill="#FFFFFF">
+        Snapshot Id
+        </Text> 
         
       </svg>
       
-
-      // OPTIONAL legend
       {/* <div
         style={{
           position: "absolute",
