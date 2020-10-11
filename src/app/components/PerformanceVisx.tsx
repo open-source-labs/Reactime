@@ -3,10 +3,11 @@ import { BarStack } from "@visx/shape";
 import { SeriesPoint } from "@visx/shape/lib/types";
 import { Group } from "@visx/group";
 import { Grid } from "@visx/grid";
-import { AxisBottom } from "@visx/axis";
+import { AxisBottom, AxisLeft } from "@visx/axis";
 import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
 import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
 // import { LegendOrdinal } from "@visx/legend";
+import { Text } from '@visx/text';
 import { schemeSet1,schemeSet3 } from "d3-scale-chromatic";
 // import snapshots from "./snapshots";
 import useForceUpdate from './useForceUpdate';
@@ -207,19 +208,35 @@ renderingScale.range([yMax, 0]);
             } 
           </BarStack>
         </Group>
+        <AxisLeft 
+        top={margin.top}
+        left={margin.left}
+        scale={renderingScale}
+        stroke={axisColor}
+        tickStroke={axisColor}
+        strokeWidth={2}
+        tickLabelProps={() => ({
+          fill: axisColor,
+          fontSize: 11,
+          verticalAnchor: 'start',
+        })}
+         />
         <AxisBottom
           top={yMax + margin.top}
           left={margin.left}
           scale={snapshotIdScale}
           stroke={axisColor}
           tickStroke={axisColor}
+          strokeWidth={2}
           tickLabelProps={() => ({
             fill: axisColor,
             fontSize: 11,
             textAnchor: 'middle',
           })}
         />
+        
       </svg>
+      
 
       // OPTIONAL legend
       {/* <div
