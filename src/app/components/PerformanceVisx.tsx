@@ -88,6 +88,8 @@ export default function PerformanceVisx({
   hierarchy,
 }: BarStackProps)
 
+let tooltipTimeout: number;
+
 {
   const {
     tooltipOpen,
@@ -98,12 +100,12 @@ export default function PerformanceVisx({
     showTooltip
   } = useTooltip<TooltipData>();
 
-// data prep
+// filter and structure incoming data for VISX 
 const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy))
 const keys = Object.keys(data[0]).filter((d) => d !== "snapshotId") as CityName[];
 console.log(data)
 
-// ARRAY OF TOTAL VALUES PER SNAPSHOT
+// create array of total render times for each snapshot
 const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
   const curRenderTotal = keys.reduce((acc, cur) => {
     acc += Number(curSnapshot[cur]);
@@ -113,42 +115,41 @@ const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
   return totalRender;
 }, [] as number[]);
 
-const temperatureScale = scaleLinear<number>({
+
+
+  // data accessor - used for generating scales 
+  const getSnapshotId = (d: snapshot) => d.snapshotId;
+
+  // create visualization scales with filtered data 
+  const snapshotIdScale = scaleBand<string>({
+  domain: data.map(getSnapshotId),
+  padding: 0.2
+  });
+
+  const renderingScale = scaleLinear<number>({
   domain: [0, Math.max(...totalRenderArr)],
   nice: true
-});
-const colorScale = scaleOrdinal<CityName, string>({
+  });
+
+  const colorScale = scaleOrdinal<CityName, string>({
   domain: keys,
   range: schemeSet3
-});
-
-let tooltipTimeout: number;
+  });
 
 
-/*  ACCESSORS */
-const getSnapshot = (d: snapshot) => d.snapshotId;
-
-/* SCALE */
-const dateScale = scaleBand<string>({
-  domain: data.map(getSnapshot),
-  padding: 0.2
-});
-
+  // initial set-up for Tool Tip (aka the on hover bar)
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
 
+  // setting max dimensions and scale ranges
   if (width < 10) return null;
-  // bounds
-
-  //  width, height
   const xMax = width;
   const yMax = height - margin.top - 100;
 
-  dateScale.rangeRound([0, xMax]);
-  temperatureScale.range([yMax, 0]);
+  snapshotIdScale.rangeRound([0, xMax]);
+  renderingScale.range([yMax, 0]);
 
   return width < 10 ? null : (
   // relative position is needed for correct tooltip positioning
-
     <div style={{ position: "relative" }}>
       <svg ref={containerRef} width={width} height={height}>
         <rect
@@ -162,21 +163,21 @@ const dateScale = scaleBand<string>({
         <Grid
           top={margin.top}
           left={margin.left}
-          xScale={dateScale}
-          yScale={temperatureScale}
+          xScale={snapshotIdScale}
+          yScale={renderingScale}
           width={xMax}
           height={yMax}
           stroke="black"
           strokeOpacity={0.1}
-          xOffset={dateScale.bandwidth() / 2}
+          xOffset={snapshotIdScale.bandwidth() / 2}
         />
         <Group top={margin.top}>
           <BarStack <snapshot, CityName>
             data={data}
             keys={keys}
-            x={getSnapshot}
-            xScale={dateScale}
-            yScale={temperatureScale}
+            x={getSnapshotId}
+            xScale={snapshotIdScale}
+            yScale={renderingScale}
             color={colorScale}
           >
             {(barStacks) => barStacks.map(barStack => barStack.bars.map((bar => (
@@ -213,7 +214,7 @@ const dateScale = scaleBand<string>({
         </Group>
         <AxisBottom
           top={yMax + margin.top}
-          scale={dateScale}
+          scale={snapshotIdScale}
           // tickFormat={formatDate}
           stroke={tickColor}
           tickStroke={tickColor}
@@ -256,7 +257,7 @@ const dateScale = scaleBand<string>({
             {tooltipData.bar.data[tooltipData.key]}
           </div>
           <div>
-            <small>{getSnapshot(tooltipData.bar.data)}</small>
+            <small>{getSnapshotId(tooltipData.bar.data)}</small>
           </div>
         </TooltipInPortal>
       )}
