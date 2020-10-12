@@ -47,10 +47,8 @@ interface StateRouteProps {
 
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
-
   const isRecoil = snapshot.atomsComponents ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
-
   // component map zoom state
   const [{ x, y, k }, setZoomState]: any = useState({
     x: 150,

@@ -21,52 +21,106 @@ const root = '#d2f5e3';
 //
 
 const clusterData = {};
-let memoizeObj = {};
+ let memoizeObjSelectors = {};
 
 function clusterDataPopulate(props) {
-  let atomCompObj = reorganizedObj(props);
-
+  let atomCompObj = reorganizedCompObj(props);
+  console.log(props)
+  console.log(atomCompObj)
+  
+  //this is to set the root name property 
   if (props[0].name) {
     clusterData.name = props[0].name;
   }
 
-  let counter = 0;
+  //internal counter for the array 
+  let ocounter = 0;
+  let icounter = 0
   for (let key in atomCompObj) {
-    if (atomCompObj[key].length) {
-      for (let i = 0; i < atomCompObj[key].length; i++) {
-        if (!memoizeObj[key]) {
-          memoizeObj[key] = [];
-          if (!clusterData.children) clusterData.children = [];
-          clusterData.children.push({ name: key });
-        }
-        if (!memoizeObj[key].includes(atomCompObj[key][i])) {
-          if (!clusterData.children[counter].children)
-            clusterData.children[counter].children = [];
-          clusterData.children[counter].children.push({
-            name: atomCompObj[key][i],
-          });
-        }
-        memoizeObj[key].push(atomCompObj[key][i]);
+
+    if(props[0].atomSelectors[key]){
+      if(!clusterData.children){
+        clusterData.children = []  
+      }
+      //need to handle duplicates 
+        clusterData.children.push({ name: key });
+
+       if(props[0].atomSelectors[key].length){
+        for(let i=0; i<props[0].atomSelectors[key].length;i++){
+         if(!clusterData.children[ocounter].children){
+          clusterData.children[ocounter].children = []
+         }               
+          clusterData.children[ocounter].children.push({
+            name: props[0].atomSelectors[key][i]
+        })
+          for(let i=0;i<clusterData.children[ocounter].children[icounter])
+        
       }
     }
-    counter++;
+    outercounter++
+   }
   }
+
+  console.log(clusterData)
 }
 
-function reorganizedObj(props) {
+
+
+  //   if (atomCompObj[key].length) {
+  //     for (let i = 0; i < atomCompObj[key].length; i++) {
+        
+  //       if (!memoizeObj[key]) {
+  //         memoizeObj[key] = [];
+  //         if (!clusterData.children && !props[0].atomSelectors[key]) clusterData.children = [];
+  //         clusterData.children.push({ name: key });
+  //       }
+
+
+  //       if (!memoizeObj[key].includes(atomCompObj[key][i])) {
+  //         if (!clusterData.children[counter].children)
+  //           clusterData.children[counter].children = [];
+  //         clusterData.children[counter].children.push({
+  //           name: atomCompObj[key][i],
+  //         });
+  //       }
+  //       memoizeObj[key].push(atomCompObj[key][i]);
+  //     }
+  //   }
+  //   counter++;
+  // }
+  // console.log(clusterData)
+
+
+function reorganizedCompObj(props) {
   let atomsComponentObj = props[0].atomsComponents;
-  let reorganizedObj = {};
+  let reorganizedCompObj = {};
 
   for (const key in atomsComponentObj) {
     for (let i = 0; i < atomsComponentObj[key].length; i++) {
-      if (!reorganizedObj[atomsComponentObj[key][i]]) {
-        reorganizedObj[atomsComponentObj[key][i]] = [key];
+      if (!reorganizedCompObj[atomsComponentObj[key][i]]) {
+        reorganizedCompObj[atomsComponentObj[key][i]] = [key];
       } else {
-        reorganizedObj[atomsComponentObj[key][i]].push(key);
+        reorganizedCompObj[atomsComponentObj[key][i]].push(key);
       }
     }
   }
-  return reorganizedObj;
+  return reorganizedCompObj;
+}
+
+function reorganizedFamObj(props) {
+  let atomsComponentObj = props[0].atomsComponents;
+  let reorganizedCompObj = {};
+
+  for (const key in atomsComponentObj) {
+    for (let i = 0; i < atomsComponentObj[key].length; i++) {
+      if (!reorganizedCompObj[atomsComponentObj[key][i]]) {
+        reorganizedCompObj[atomsComponentObj[key][i]] = [key];
+      } else {
+        reorganizedCompObj[atomsComponentObj[key][i]].push(key);
+      }
+    }
+  }
+  return reorganizedCompObj;
 }
 
 function Node({ node }) {
