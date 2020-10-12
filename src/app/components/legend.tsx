@@ -4,27 +4,81 @@ import { LegendOrdinal, LegendItem, LegendLabel } from '@visx/legend';
 
 // implement algorithm to check snapshot history and their respective colors
 
-const legendGlyphSize = 12;
+const legendGlyphSize = 8;
 
 export default function Legendary(props: any) {
   // { events = false }: { events?: boolean }) {
 
   const { hierarchy } = props;
 
+  function colorRanger(snapshotIdsArray) {
+    // create object to store branch ranges
+    const resultRangeColor = {};
+
+    for (let i = 0; i < snapshotIdsArray.length; i += 1) {
+      const current = snapshotIdsArray[i];
+
+      let key = current - Math.floor(current);
+      // console.log(key.toFixed(1))
+      key = key.toFixed(2);
+
+      if (current % 1 === 0) {
+        key = current - Math.floor(current);
+        if (!resultRangeColor[key]) resultRangeColor[key] = [current];
+        else resultRangeColor[key].push(current);
+      } else if (current - Math.floor(current) !== 0) {
+        if (!resultRangeColor[key]) resultRangeColor[key] = [current];
+        else resultRangeColor[key].push(current);
+      }
+    }
+    return objectToArray(resultRangeColor);
+  }
+
+  // reduce or map method on this?
+  function objectToArray(snapObj) {
+    console.log(
+      'mid step: object that we are going to pass into the array is',
+      snapObj
+    );
+    let newArr = [];
+    let arrValues = Object.values(snapObj);
+    // console.log(arrValues);
+    // console.log(arrValues[0].length);
+    // console.log(arrValues[0][arrValues[0]]);
+
+    for (let i = 0; i < arrValues.length; i += 1) {
+      let len = arrValues[i].length;
+      let tempVal = `${arrValues[i][0]} - ${arrValues[i][len - 1]}`;
+      newArr.push(tempVal);
+    }
+    console.log(
+      'later step: the array that is created from passing in the object is',
+      newArr
+    );
+    return newArr;
+  }
+
   const getSnapshotIds = (obj, snapshotIds = []) => {
+    console.log('the hierarchy object is: ', hierarchy);
     snapshotIds.push(`${obj.name}.${obj.branch}`);
     if (obj.children) {
       obj.children.forEach((child) => {
         getSnapshotIds(child, snapshotIds);
       });
     }
-    return snapshotIds;
+    // console.log('after recursive call, snapshotIds are: ', snapshotIds);
+    // return snapshotIds;
+    const resultRange = colorRanger(snapshotIds);
+    // console.log(resultRange);
+    return resultRange;
   };
 
   const snap = getSnapshotIds(hierarchy);
+  console.log('the snap that we are receiving now is: ', snap);
 
   const ordinalColorScale = scaleOrdinal<number, string>({
     domain: snap,
+    // maybe think of having each element be a string of the range? ooooooh
     // sync in with the snapshot color chosen in history tab already
     range: [
       '#95B6B7',
