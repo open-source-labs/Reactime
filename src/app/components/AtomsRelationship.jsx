@@ -33,81 +33,14 @@ function clusterDataPopulate(props) {
     clusterData.name = props[0].name;
   }
 
-  //internal counter for the array 
-  let ocounter = 0;
-  let icounter = 0
-  for (let key in atomCompObj) {
-
-    if(props[0].atomSelectors[key]){
-      if(!clusterData.children){
-        clusterData.children = []  
-      }
-      //need to handle duplicates 
-        clusterData.children.push({ name: key });
-
-       if(props[0].atomSelectors[key].length){
-        for(let i=0; i<props[0].atomSelectors[key].length;i++){
-         if(!clusterData.children[ocounter].children){
-          clusterData.children[ocounter].children = []
-         }               
-          clusterData.children[ocounter].children.push({
-            name: props[0].atomSelectors[key][i]
-        })
-          for(let i=0;i<clusterData.children[ocounter].children[icounter])
-        
-      }
-    }
-    outercounter++
-   }
+  //we'll first handle AtomSelectors 
+  if(!Object.entries(props[0].atomSelectors).length === 0){
+    
   }
-
-  console.log(clusterData)
+  
 }
-
-
-
-  //   if (atomCompObj[key].length) {
-  //     for (let i = 0; i < atomCompObj[key].length; i++) {
-        
-  //       if (!memoizeObj[key]) {
-  //         memoizeObj[key] = [];
-  //         if (!clusterData.children && !props[0].atomSelectors[key]) clusterData.children = [];
-  //         clusterData.children.push({ name: key });
-  //       }
-
-
-  //       if (!memoizeObj[key].includes(atomCompObj[key][i])) {
-  //         if (!clusterData.children[counter].children)
-  //           clusterData.children[counter].children = [];
-  //         clusterData.children[counter].children.push({
-  //           name: atomCompObj[key][i],
-  //         });
-  //       }
-  //       memoizeObj[key].push(atomCompObj[key][i]);
-  //     }
-  //   }
-  //   counter++;
-  // }
-  // console.log(clusterData)
-
 
 function reorganizedCompObj(props) {
-  let atomsComponentObj = props[0].atomsComponents;
-  let reorganizedCompObj = {};
-
-  for (const key in atomsComponentObj) {
-    for (let i = 0; i < atomsComponentObj[key].length; i++) {
-      if (!reorganizedCompObj[atomsComponentObj[key][i]]) {
-        reorganizedCompObj[atomsComponentObj[key][i]] = [key];
-      } else {
-        reorganizedCompObj[atomsComponentObj[key][i]].push(key);
-      }
-    }
-  }
-  return reorganizedCompObj;
-}
-
-function reorganizedFamObj(props) {
   let atomsComponentObj = props[0].atomsComponents;
   let reorganizedCompObj = {};
 
