@@ -40,15 +40,15 @@ export default function Legendary(props: any) {
       'mid step: object that we are going to pass into the array is',
       snapObj
     );
-    let newArr = [];
-    let arrValues = Object.values(snapObj);
+    const newArr = [];
+    const arrValues = Object.values(snapObj);
     // console.log(arrValues);
     // console.log(arrValues[0].length);
     // console.log(arrValues[0][arrValues[0]]);
 
     for (let i = 0; i < arrValues.length; i += 1) {
-      let len = arrValues[i].length;
-      let tempVal = `${arrValues[i][0]} - ${arrValues[i][len - 1]}`;
+      const len = arrValues[i].length;
+      const tempVal = `${arrValues[i][0]} - ${arrValues[i][len - 1]}`;
       newArr.push(tempVal);
     }
     console.log(
@@ -110,9 +110,10 @@ export default function Legendary(props: any) {
                 <LegendItem
                   key={`legend-quantile-${i}`}
                   margin="0 5px"
-                  // onClick={() => {
-                  //   if (events) alert(`clicked: ${JSON.stringify(label)}`);
-                  // }}
+                  onClick={() => {
+                    // if (Event) alert(`clicked: ${JSON.stringify(label)}`);
+                    if (Event) alert('clicked: YO BRILLIANT GENIOS');
+                  }}
                 >
                   <svg width={10} height={10}>
                     <rect
@@ -134,9 +135,10 @@ export default function Legendary(props: any) {
       <style jsx>
         {`
           .legends {
+            width: 200px;
             font-family: arial;
             font-weight: 900;
-            background-color: 242529;
+            // background-color: 242529;
             border-radius: 14px;
             padding: 24px 24px 24px 32px;
             overflow-y: auto;
@@ -162,6 +164,7 @@ function LegendVisual({
       <style jsx>
         {`
           .legend {
+            with: 120px;
             line-height: 0.9em;
             color: #efefef;
             font-size: 9px;
