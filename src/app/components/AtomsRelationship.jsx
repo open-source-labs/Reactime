@@ -34,8 +34,37 @@ function clusterDataPopulate(props) {
   }
 
   //we'll first handle AtomSelectors 
-  if(!Object.entries(props[0].atomSelectors).length === 0){
-    
+  if(Object.entries(props[0].atomSelectors).length !== 0){
+    if(!clusterData.children) clusterData.children = []
+    for(let key in props[0].atomSelectors){
+      let outerobj = {}  
+      outerobj.name = key 
+
+      if(props[0].atomSelectors[key].length){
+      for(let i=0; i<props[0].atomSelectors[key].length;i++){
+        if(!outerobj.children) outerobj.children = []
+        let innerobj = {}
+        innerobj.name = props[0].atomSelectors[key][i]
+
+        //if atoms contain components 
+        if(atomCompObj[props[0].atomSelectors[key][i]]){
+          for(let j=0; j<atomCompObj[props[0].atomSelectors[key][i]].length;j++){
+            if(!innerobj.children) innerobj.children = []
+            innerobj.children.push({name:atomCompObj[props[0].atomSelectors[key][i]]})
+          }
+        }
+        
+        outerobj.children.push(innerobj)
+        //selector to component directly 
+        if(atomCompObj[key]){
+          outerobj.children.push({name:key})
+        }
+
+
+      }
+    }
+
+    }
   }
   
 }
