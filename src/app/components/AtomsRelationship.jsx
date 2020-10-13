@@ -5,12 +5,15 @@ import { Cluster, hierarchy } from '@visx/hierarchy';
 import { LinkVertical } from '@visx/shape';
 import { LinearGradient } from '@visx/gradient';
 
-const citrus = '#ddf163';
-const white = '#ffffff';
-export const green = '#79d259';
-const aqua = '#37ac8c';
+const blue = '#acdbdf';
+const white = '#f0ece2';
+
+export const lightorange = '#F9D976';
+const orange = '#F39F86';
+
 const merlinsbeard = '#f7f7f3';
 export const background = '#242529';
+const root = '#d2f5e3';
 
 // interface NodeShape {
 //   name: string;
@@ -39,7 +42,7 @@ function clusterDataPopulate(props) {
         if (!memoizeObj[key].includes(atomCompObj[key][i])) {
           if (!clusterData.children[counter].children)
             clusterData.children[counter].children = [];
-            clusterData.children[counter].children.push({
+          clusterData.children[counter].children.push({
             name: atomCompObj[key][i],
           });
         }
@@ -77,8 +80,8 @@ function Node({ node }) {
       {node.depth !== 0 && (
         <circle
           r={12}
-          fill={background}
-          stroke={isParent ? white : citrus}
+          fill={isParent ? white : blue}
+          stroke={isParent ? white : blue}
           // onClick={() => {
           //   alert(`clicked: ${JSON.stringify(node.data.name)}`);
           // }}
@@ -89,8 +92,9 @@ function Node({ node }) {
         fontSize={9}
         fontFamily="Arial"
         textAnchor="middle"
+        y = "-20"
         style={{ pointerEvents: 'none' }}
-        fill={isParent ? white : citrus}
+        fill={isParent ? white : blue}
       >
         {node.data.name}
       </text>
@@ -105,18 +109,21 @@ function RootNode({ node }) {
   const centerY = -height / 2;
 
   return (
-    <Group top = {node.y} left = {node.x}>
+    <Group top={node.y} left={node.x}>
       <rect
         width={width}
         height={height}
+        fill={root}
         y={centerY}
         x={centerX}
+        rx="10"
+        ry="10"
         fill="url('#top')"
       />
       <text
         dy=".33em"
-        top= {node.y}
-        left = {node.x}
+        top={node.y}
+        left={node.x}
         fontSize={9}
         fontFamily="Arial"
         textAnchor="middle"
@@ -129,7 +136,7 @@ function RootNode({ node }) {
   );
 }
 
-const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40};
+const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40 };
 
 // export type DendrogramProps = {
 //   width: number;
@@ -143,7 +150,6 @@ export default function Example({
   margin = defaultMargin,
   snapshots,
 }) {
-
   clusterDataPopulate(snapshots);
 
   const data = useMemo(() => hierarchy(clusterData), []);
@@ -152,7 +158,8 @@ export default function Example({
 
   return width < 10 ? null : (
     <svg width={width} height={height}>
-      <LinearGradient id="top" from={green} to={aqua} />
+      <LinearGradient id="top" from={lightorange} to={orange} />
+
       <rect width={width} height={height} rx={14} fill={background} />
 
       <Cluster root={data} size={[xMax, yMax]}>

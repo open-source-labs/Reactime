@@ -12,8 +12,6 @@ import Action from '../components/Action';
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-
-
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
   if (slider) { slider.setAttribute('style', 'left: 0'); }
@@ -25,6 +23,7 @@ function ActionContainer() {
   let actionsArr = [];
   const hierarchyArr:any[] = [];
 
+  // function to traverse state from hiararchy and also getting information on display name and component name
   // function to traverse state from hiararchy and also getting information on display name and component name
   const displayArray = (obj:{stateSnapshot:{children:any[]}, name:number, branch:number, index:number, children?:[]}) => {
     if (obj.stateSnapshot.children.length > 0 && obj.stateSnapshot.children[0] && obj.stateSnapshot.children[0].state && obj.stateSnapshot.children[0].name) {
