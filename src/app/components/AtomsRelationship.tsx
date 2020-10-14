@@ -104,7 +104,6 @@ function clusterDataPopulate(props:StateRouteProps) {
 }
 
 
-
 function reorganizedCompObj(props) {
   let atomsComponentObj = props[0].atomsComponents;
   let reorganizedCompObj = {};
