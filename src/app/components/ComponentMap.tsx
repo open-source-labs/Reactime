@@ -62,7 +62,7 @@ export default function ComponentMap({
       sizeHeight = innerWidth;
     }
   }
-  // controls for the map
+  // render controls for the map
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
   return totalWidth < 10 ? null : (
     <div>
@@ -144,7 +144,7 @@ export default function ComponentMap({
                           rx={node.data.children ? 0 : 10}
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
-                            console.log(node);
+
                             forceUpdate();
                           }}
                         />
