@@ -21,8 +21,8 @@ const root = '#d2f5e3';
 //
 
 const clusterData = {};
- let memoizeObjSelectors = {};
-
+ 
+let isFired = false 
 function clusterDataPopulate(props) {
   let atomCompObj = reorganizedCompObj(props);
   console.log(props)
@@ -36,12 +36,14 @@ function clusterDataPopulate(props) {
   //we'll first handle AtomSelectors 
   if(Object.entries(props[0].atomSelectors).length !== 0){
     if(!clusterData.children) clusterData.children = []
+   
     for(let key in props[0].atomSelectors){
       let outerobj = {}  
       outerobj.name = key 
 
       if(props[0].atomSelectors[key].length){
       for(let i=0; i<props[0].atomSelectors[key].length;i++){
+
         if(!outerobj.children) outerobj.children = []
         let innerobj = {}
         innerobj.name = props[0].atomSelectors[key][i]
@@ -53,20 +55,22 @@ function clusterDataPopulate(props) {
             innerobj.children.push({name:atomCompObj[props[0].atomSelectors[key][i]]})
           }
         }
-        
         outerobj.children.push(innerobj)
-        //selector to component directly 
-        if(atomCompObj[key]){
-          outerobj.children.push({name:key})
-        }
-
-
       }
     }
 
+    // selector to component directly 
+        if(atomCompObj[key] && atomCompObj[key].length){
+          for (let i=0; i<atomCompObj[key].length;i++){
+            outerobj.children.push({name:atomCompObj[key][i]})
+          }
+        }
+        
+    clusterData.children.push(outerobj)
     }
   }
-  
+  console.log(clusterData)
+  isFired = true 
 }
 
 function reorganizedCompObj(props) {
@@ -166,8 +170,11 @@ export default function Example({
   margin = defaultMargin,
   snapshots,
 }) {
-  clusterDataPopulate(snapshots);
 
+  if(!isFired){
+    clusterDataPopulate(snapshots);
+  }
+  
   const data = useMemo(() => hierarchy(clusterData), []);
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
