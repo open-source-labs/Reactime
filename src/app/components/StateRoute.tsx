@@ -13,13 +13,10 @@ import {
 } from 'react-router-dom';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
-// import PerfView from './PerfView';
-import AtomsRelationship from './AtomsRelationship';
 import PerformanceVisx from './PerformanceVisx';
-
+import Legend from './AtomsRelationshipLegend'
 import Example from './AtomsRelationship';
 import { ParentSize } from '@visx/responsive';
-import { Console } from 'console';
 import Legendary from './legend';
 
 const History = require('./History').default;
@@ -90,12 +87,14 @@ const StateRoute = (props: StateRouteProps) => {
   };
 
   const renderAtomsRelationship = () => (
-
     <ParentSize>{({ width, height })  => 
+    <>
+    <Legend />
     <Example 
     width={width} 
     height={height}
     snapshots={snapshots} />}
+    </>
     </ParentSize>
   );
 

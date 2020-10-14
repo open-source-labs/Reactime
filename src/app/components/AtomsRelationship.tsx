@@ -6,16 +6,16 @@ import { LinkVertical } from '@visx/shape';
 import { LinearGradient } from '@visx/gradient';
 import { StateRouteProps} from './StateRoute'
 
-const blue = '#acdbdf';
-const selectWhite = '#f0ece2';
+export const blue = '#acdbdf';
+export const selectWhite = '#f0ece2';
 
 export const lightgreen = '#0BAB64';
-const green = '#3BB78F'
-const orange = '#FED8B1';
+export const green = '#3BB78F'
+export const orange = '#FED8B1';
 
-const merlinsbeard = '#f7f7f3';
+export const merlinsbeard = '#f7f7f3';
 export const background = '#242529';
-const root = '#d2f5e3';
+export const root = '#d2f5e3';
 
 interface clusterShape {
   name?:string;
@@ -218,7 +218,7 @@ function SelectorNode({ node }) {
   );
 }
 
-const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40 };
+const defaultMargin = { top: 0, left: 0, right: 0, bottom: 40 };
 
 // export type DendrogramProps = {
 //   width: number;
