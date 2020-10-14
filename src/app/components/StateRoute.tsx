@@ -14,10 +14,10 @@ import {
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
 // import PerfView from './PerfView';
-import AtomsRelationship from './AtomsRelationship.jsx';
-import PerformanceVisx from './PerformanceVisx.tsx';
+import AtomsRelationship from './AtomsRelationship';
+import PerformanceVisx from './PerformanceVisx';
 
-import Example from './AtomsRelationship.jsx';
+import Example from './AtomsRelationship';
 import { ParentSize } from '@visx/responsive';
 import { Console } from 'console';
 import Legendary from './legend';
@@ -30,7 +30,7 @@ const NO_STATE_MSG =
   'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types
 
-interface StateRouteProps {
+export interface StateRouteProps {
   snapshot: {
     name?: string;
     componentData?: object;

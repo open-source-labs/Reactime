@@ -4,28 +4,44 @@ import { Cluster, hierarchy } from '@visx/hierarchy';
 //import { HierarchyPointNode, HierarchyPointLink } from '@visx/hierarchy/lib/types';
 import { LinkVertical } from '@visx/shape';
 import { LinearGradient } from '@visx/gradient';
+import { StateRouteProps} from './StateRoute'
 
 const blue = '#acdbdf';
-const white = '#f0ece2';
+const selectWhite = '#f0ece2';
 
 export const lightgreen = '#0BAB64';
 const green = '#3BB78F'
-const selectOrange = '#F39F86';
+const orange = '#FED8B1';
 
 const merlinsbeard = '#f7f7f3';
 export const background = '#242529';
 const root = '#d2f5e3';
 
-// interface NodeShape {
-//   name: string;
-//   children?: NodeShape[];
-//
+interface clusterShape {
+  name?:string;
+  children?: clusterShape[]
+} 
 
-const clusterData = {};
-const selectorsCache = {}
+interface outerObjShape {
+  name?:string;
+  children?: outerObjShape[]
+} 
+
+interface innerObjShape {
+  name?:string;
+  children?: innerObjShape[]
+} 
+
+interface selectorsCache {
+  [key:string]: any
+}
+
+
+const clusterData : clusterShape = {};
+const selectorsCache :selectorsCache = {}
  
 let initialFire = false 
-function clusterDataPopulate(props) {
+function clusterDataPopulate(props:StateRouteProps) {
   let atomCompObj = reorganizedCompObj(props);
   
   //this is to set the root name property 
@@ -38,7 +54,7 @@ function clusterDataPopulate(props) {
     if(!clusterData.children) clusterData.children = []
    
     for(let key in props[0].atomSelectors){
-      let outerobj = {}  
+      let outerobj:outerObjShape = {}  
       outerobj.name = key
       selectorsCache[key] = true 
 
@@ -46,7 +62,7 @@ function clusterDataPopulate(props) {
       for(let i=0; i<props[0].atomSelectors[key].length;i++){
 
         if(!outerobj.children) outerobj.children = []
-        let innerobj = {}
+        let innerobj:innerObjShape = {}
         innerobj.name = props[0].atomSelectors[key][i]
         selectorsCache[props[0].atomSelectors[key][i]] = true
 
@@ -73,7 +89,7 @@ function clusterDataPopulate(props) {
   }
   
   for (let key in atomCompObj){
-    let outObj = {};
+    let outObj:outerObjShape = {};
     if(!selectorsCache[key]){
       outObj.name = key
       for (let i=0; i<atomCompObj[key].length;i++){
@@ -84,7 +100,10 @@ function clusterDataPopulate(props) {
     }    
   }
   initialFire = true 
+
 }
+
+
 
 function reorganizedCompObj(props) {
   let atomsComponentObj = props[0].atomsComponents;
@@ -115,8 +134,8 @@ function Node({ node }) {
       {node.depth !== 0 && (
         <circle
           r={12}
-          fill={isParent ? white : blue}
-          stroke={isParent ? white : blue}
+          fill={isParent ? orange : blue}
+          stroke={isParent ? orange : blue}
           // onClick={() => {
           //   alert(`clicked: ${JSON.stringify(node.data.name)}`);
           // }}
@@ -129,7 +148,7 @@ function Node({ node }) {
         textAnchor="middle"
         y = "-20"
         style={{ pointerEvents: 'none' }}
-        fill={isParent ? white : blue}
+        fill={isParent ? orange : blue}
       >
         {node.data.name}
       </text>
@@ -178,8 +197,8 @@ function SelectorNode({ node }) {
       {node.depth !== 0 && (
         <circle
           r={12}
-          fill={selectOrange}
-          stroke={selectOrange}
+          fill={selectWhite}
+          stroke={selectWhite}
           // onClick={() => {
           //   alert(`clicked: ${JSON.stringify(node.data.name)}`);
           // }}
@@ -192,7 +211,7 @@ function SelectorNode({ node }) {
         textAnchor="middle"
         y = "-20"
         style={{ pointerEvents: 'none' }}
-        fill={orange}
+        fill={selectWhite}
       >
         {node.data.name}
       </text>
