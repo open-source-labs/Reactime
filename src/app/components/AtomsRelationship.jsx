@@ -21,12 +21,11 @@ const root = '#d2f5e3';
 //
 
 const clusterData = {};
+const selectorsCache = {}
  
 let isFired = false 
 function clusterDataPopulate(props) {
   let atomCompObj = reorganizedCompObj(props);
-  console.log(props)
-  console.log(atomCompObj)
   
   //this is to set the root name property 
   if (props[0].name) {
@@ -39,7 +38,8 @@ function clusterDataPopulate(props) {
    
     for(let key in props[0].atomSelectors){
       let outerobj = {}  
-      outerobj.name = key 
+      outerobj.name = key
+      selectorsCache[key] = true 
 
       if(props[0].atomSelectors[key].length){
       for(let i=0; i<props[0].atomSelectors[key].length;i++){
@@ -47,6 +47,7 @@ function clusterDataPopulate(props) {
         if(!outerobj.children) outerobj.children = []
         let innerobj = {}
         innerobj.name = props[0].atomSelectors[key][i]
+        selectorsCache[props[0].atomSelectors[key][i]] = true
 
         //if atoms contain components 
         if(atomCompObj[props[0].atomSelectors[key][i]]){
@@ -69,7 +70,19 @@ function clusterDataPopulate(props) {
     clusterData.children.push(outerobj)
     }
   }
-  console.log(clusterData)
+  
+  for (let key in atomCompObj){
+    let outObj = {};
+    if(!selectorsCache[key]){
+      outObj.name = key
+      for (let i=0; i<atomCompObj[key].length;i++){
+        if(!outObj.children) outObj.children = []
+        outObj.children.push({name:atomCompObj[key][i]})
+      }
+      clusterData.children.push(outObj)
+    }    
+  }
+
   isFired = true 
 }
 
