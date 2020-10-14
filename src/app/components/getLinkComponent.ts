@@ -13,6 +13,7 @@ import {
   LinkRadialLine,
 } from '@visx/shape';
 
+// conditional's to adjust the controls for the componentMap drop downs
 export default function getLinkComponent({
   layout,
   linkType,
