@@ -8,8 +8,9 @@ import { LinearGradient } from '@visx/gradient';
 const blue = '#acdbdf';
 const white = '#f0ece2';
 
-export const lightorange = '#F9D976';
-const orange = '#F39F86';
+export const lightgreen = '#0BAB64';
+const green = '#3BB78F'
+const selectOrange = '#F39F86';
 
 const merlinsbeard = '#f7f7f3';
 export const background = '#242529';
@@ -23,7 +24,7 @@ const root = '#d2f5e3';
 const clusterData = {};
 const selectorsCache = {}
  
-let isFired = false 
+let initialFire = false 
 function clusterDataPopulate(props) {
   let atomCompObj = reorganizedCompObj(props);
   
@@ -82,8 +83,7 @@ function clusterDataPopulate(props) {
       clusterData.children.push(outObj)
     }    
   }
-
-  isFired = true 
+  initialFire = true 
 }
 
 function reorganizedCompObj(props) {
@@ -103,10 +103,12 @@ function reorganizedCompObj(props) {
 }
 
 function Node({ node }) {
+  const selector = node.depth === 1 && node.height === 2
   const isRoot = node.depth === 0;
   const isParent = !!node.children;
 
   if (isRoot) return <RootNode node={node} />;
+  if (selector) return <SelectorNode node = {node}/>;
 
   return (
     <Group top={node.y} left={node.x}>
@@ -169,6 +171,35 @@ function RootNode({ node }) {
   );
 }
 
+function SelectorNode({ node }) {
+
+    return (
+      <Group top={node.y} left={node.x}>
+      {node.depth !== 0 && (
+        <circle
+          r={12}
+          fill={selectOrange}
+          stroke={selectOrange}
+          // onClick={() => {
+          //   alert(`clicked: ${JSON.stringify(node.data.name)}`);
+          // }}
+        />
+      )}
+      <text
+        dy=".33em"
+        fontSize={9}
+        fontFamily="Arial"
+        textAnchor="middle"
+        y = "-20"
+        style={{ pointerEvents: 'none' }}
+        fill={orange}
+      >
+        {node.data.name}
+      </text>
+    </Group>
+  );
+}
+
 const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40 };
 
 // export type DendrogramProps = {
@@ -184,7 +215,7 @@ export default function Example({
   snapshots,
 }) {
 
-  if(!isFired){
+  if(!initialFire){
     clusterDataPopulate(snapshots);
   }
   
@@ -194,7 +225,7 @@ export default function Example({
 
   return width < 10 ? null : (
     <svg width={width} height={height}>
-      <LinearGradient id="top" from={lightorange} to={orange} />
+      <LinearGradient id="top" from={lightgreen} to={green} />
 
       <rect width={width} height={height} rx={14} fill={background} />
 
