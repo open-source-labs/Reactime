@@ -1,6 +1,8 @@
 import React, { Component, useEffect, useState } from 'react';
 import * as d3 from 'd3';
-
+import Legendary from './legend';
+import { changeView, changeSlider } from '../actions/actions';
+import { useStoreContext } from '../store';
 /**
  * @var colors: Colors array for the diffrerent node branches, each color is for a different branch
  */
@@ -201,7 +203,7 @@ function History(props) {
     svgContainer.call(
       zoom.transform,
       // Changes the initial view, (left, top)
-      d3.zoomIdentity.translate(width / 2, height / 2).scale(1)
+      d3.zoomIdentity.translate(width / 3, height / 4).scale(1)
     );
     // allows the canvas to be zoom-able
     svgContainer.call(
@@ -253,7 +255,15 @@ function History(props) {
 
   return (
     <>
-      <div ref={HistoryRef} className="history-d3-div" id="historyContainer" />
+      <div>
+        <Legendary hierarchy={hierarchy} />
+        <div
+          ref={HistoryRef}
+          className="history-d3-div"
+          id="historyContainer"
+          position="absolute"
+        />
+      </div>
     </>
   );
 }

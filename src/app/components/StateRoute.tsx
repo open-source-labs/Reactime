@@ -48,7 +48,7 @@ interface StateRouteProps {
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
 
-  console.log(hierarchy)
+  console.log(hierarchy);
 
   const isRecoil = snapshot.atomsComponents ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
@@ -81,12 +81,12 @@ const StateRoute = (props: StateRouteProps) => {
     if (hierarchy) {
       return (
         <div>
-          <div>
-            <Legendary hierarchy={hierarchy} />
-          </div>
-          <div>
-            <History hierarchy={hierarchy} />
-          </div>
+          {/* <div> */}
+          <History hierarchy={hierarchy} />
+          {/* <Legendary hierarchy={hierarchy} /> */}
+          {/* </div> */}
+          {/* <div> */}
+          {/* </div> */}
         </div>
       );
     }
@@ -94,12 +94,10 @@ const StateRoute = (props: StateRouteProps) => {
   };
 
   const renderAtomsRelationship = () => (
-
-    <ParentSize>{({ width, height })  => 
-    <Example 
-    width={width} 
-    height={height}
-    snapshots={snapshots} />}
+    <ParentSize>
+      {({ width, height }) => (
+        <Example width={width} height={height} snapshots={snapshots} />
+      )}
     </ParentSize>
   );
 
@@ -116,15 +114,17 @@ const StateRoute = (props: StateRouteProps) => {
   const renderPerfView = () => {
     if (hierarchy) {
       return (
-        <ParentSize>{({ width, height }) => 
-          <PerformanceVisx 
-            width={width} 
-            height={height}
-            snapshots={snapshots}
-            hierarchy={hierarchy}
-          />}
+        <ParentSize>
+          {({ width, height }) => (
+            <PerformanceVisx
+              width={width}
+              height={height}
+              snapshots={snapshots}
+              hierarchy={hierarchy}
+            />
+          )}
         </ParentSize>
-      
+
         // <PerfView
         //   viewIndex={viewIndex}
         //   snapshots={snapshots}

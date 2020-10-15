@@ -19,7 +19,6 @@ export default function Legendary(props: any) {
       const current = snapshotIdsArray[i];
 
       let key = current - Math.floor(current);
-      // console.log(key.toFixed(1))
       key = key.toFixed(2);
 
       if (current % 1 === 0) {
@@ -105,7 +104,7 @@ export default function Legendary(props: any) {
       <LegendVisual title="State Snapshots">
         <LegendOrdinal scale={ordinalColorScale}>
           {(labels) => (
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               {labels.map((label, i) => (
                 <LegendItem
                   key={`legend-quantile-${i}`}
@@ -135,12 +134,12 @@ export default function Legendary(props: any) {
       <style jsx>
         {`
           .legends {
-            width: 200px;
+            width: 25%;
             font-family: arial;
             font-weight: 900;
-            // background-color: 242529;
+            // background-color: white;
             border-radius: 14px;
-            padding: 24px 24px 24px 32px;
+            padding: 2px 2px 2px 2px;
             overflow-y: auto;
             flex-grow: 1;
           }
@@ -164,6 +163,9 @@ function LegendVisual({
       <style jsx>
         {`
           .legend {
+            position: absolute;
+            top: 50;
+            left: 50;
             with: 120px;
             line-height: 0.9em;
             color: #efefef;
