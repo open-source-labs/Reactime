@@ -5,6 +5,7 @@ import { Cluster, hierarchy } from '@visx/hierarchy';
 import { LinkVertical } from '@visx/shape';
 import { LinearGradient } from '@visx/gradient';
 import { StateRouteProps} from './StateRoute'
+import Legend from './AtomsRelationshipLegend'
 
 export const blue = '#acdbdf';
 export const selectWhite = '#f0ece2';
@@ -190,7 +191,6 @@ function RootNode({ node }) {
 }
 
 function SelectorNode({ node }) {
-
     return (
       <Group top={node.y} left={node.x}>
       {node.depth !== 0 && (
@@ -218,7 +218,7 @@ function SelectorNode({ node }) {
   );
 }
 
-const defaultMargin = { top: 0, left: 0, right: 0, bottom: 40 };
+const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40 };
 
 // export type DendrogramProps = {
 //   width: number;
@@ -242,11 +242,16 @@ export default function Example({
   const yMax = height - margin.top - margin.bottom;
 
   return width < 10 ? null : (
+    <>
+    <div>
+      <Legend 
+      hierarchy = {hierarchy} />
+    </div>
     <svg width={width} height={height}>
+      
       <LinearGradient id="top" from={lightgreen} to={green} />
 
       <rect width={width} height={height} rx={14} fill={background} />
-
       <Cluster root={data} size={[xMax, yMax]}>
         {(cluster) => (
           <Group top={margin.top} left={margin.left}>
@@ -267,5 +272,6 @@ export default function Example({
         )}
       </Cluster>
     </svg>
+    </>
   );
 }

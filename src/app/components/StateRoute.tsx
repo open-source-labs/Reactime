@@ -89,11 +89,11 @@ const StateRoute = (props: StateRouteProps) => {
   const renderAtomsRelationship = () => (
     <ParentSize>{({ width, height })  => 
     <>
-    <Legend />
+    {/* <Legend /> */}
     <Example 
     width={width} 
     height={height}
-    snapshots={snapshots} />}
+    snapshots={snapshots} />
     </>
     </ParentSize>
   );

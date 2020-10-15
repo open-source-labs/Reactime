@@ -6,27 +6,23 @@ import {
   LegendLabel,
 } from '@visx/legend';
 
-import {
-  green,
-  selectWhite,
-  orange,
-  blue
-} from './AtomsRelationship'
 
 const ordinalColorScale = scaleOrdinal({
-  domain: ['root', 'selectors', 'atoms', 'components'],
-  range: [ green, selectWhite, orange, blue],
+  domain: ['Root', 'Selectors', 'Atoms', 'Components'],
+  range: [ '#3BB78F', '#f0ece2', '#FED8B1', '#acdbdf'],
 });
 
-const legendGlyphSize = 10;
+const legendGlyphSize = 15;
 
 export default function Legend({ events = false }: { events?: boolean }) {
   return (
     <div className="legends">
       <LegendDemo title="Recoil Relationships">
-        <LegendOrdinal scale={ordinalColorScale} labelFormat={label => `${label.toUpperCase()}`}>
+        <LegendOrdinal scale={ordinalColorScale} labelFormat={label => `${label}`}>
           {labels => (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div 
+            style={{ display: 'flex', flexDirection: 'column' }}
+            >
               {labels.map((label, i) => (
                 <LegendItem
                   key={`legend-quantile-${i}`}
@@ -41,11 +37,9 @@ export default function Legend({ events = false }: { events?: boolean }) {
                     r={legendGlyphSize / 2}
                     cx={legendGlyphSize / 2}
                     cy={legendGlyphSize / 2}
-                    // width={legendGlyphSize} 
-                    // height={legendGlyphSize} 
                     />
                   </svg>
-                  <LegendLabel align="left" margin="0 0 0 4px">
+                  <LegendLabel align="left" margin="4px 0px 4px 4px">
                     {label.text}
                   </LegendLabel>
                 </LegendItem>
@@ -54,19 +48,19 @@ export default function Legend({ events = false }: { events?: boolean }) {
           )}
         </LegendOrdinal>
       </LegendDemo>
-      <style jsx>{`
-        .legends {
-          font-family: arial;
-          font-weight: 900;
-          border-radius: 14px;
-          padding: 24px 24px 24px 32px;
-          overflow-y: auto;
-          flex-grow: 1;
-        }
-        .chart h2 {
-          margin-left: 10px;
-        }
-      `}</style>
+      <style jsx>
+        {`
+          .legends {
+            width: 25%;
+            font-family: arial;
+            font-weight: 900;;
+            border-radius: 14px;
+            padding: 2px 2px 2px 2px;
+            overflow-y: auto;
+            flex-grow: 1;
+          }
+        `}
+      </style>
     </div>
   );
 }
@@ -78,15 +72,16 @@ function LegendDemo({ title, children }: { title: string; children: React.ReactN
       {children}
       <style jsx>{`
         .legend {
-          line-height: 0.9em;
-          color: #efefef;
-          font-size: 10px;
-          font-family: arial;
-          padding: 10px 10px;
-          float: left;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          border-radius: 8px;
-          margin: 5px 5px;
+         position: absolute;
+            top: 50;
+            left: 50;
+            line-height: 0.9em;
+            color: #efefef;
+            font-size: 9px;
+            font-family: arial;
+            padding: 10px 10px;
+            float: left;
+            margin: 5px 5px;
         }
         .title {
           font-size: 12px;
