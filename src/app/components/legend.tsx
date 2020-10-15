@@ -137,7 +137,7 @@ export default function Legendary(props: any) {
             width: 25%;
             font-family: arial;
             font-weight: 900;
-            // background-color: white;
+            // background-color: 242529;
             border-radius: 14px;
             padding: 2px 2px 2px 2px;
             overflow-y: auto;
@@ -164,8 +164,6 @@ function LegendVisual({
         {`
           .legend {
             position: absolute;
-            top: 50;
-            left: 50;
             with: 120px;
             line-height: 0.9em;
             color: #efefef;
