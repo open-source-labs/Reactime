@@ -37,10 +37,11 @@ const filterHooks = (data: any[]) => {
  */
 
 function History(props) {
-  let { hierarchy } = props;
+  const { hierarchy, dispatch, sliderIndex, viewIndex } = props;
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
   let HistoryRef = React.createRef(root); //React.createRef(root);
+  console.log(`HistoryRef is ${HistoryRef}`);
   useEffect(() => {
     maked3Tree();
   }, [root]);
@@ -138,41 +139,75 @@ function History(props) {
 
     node
       .append('circle')
-      .attr('r', 15)
+      .attr('r', 13)
       .on('mouseover', function (d: any) {
-        d3.select(this).transition(100).duration(20).attr('r', 25);
-
-        tooltipDiv.transition().duration(50).style('opacity', 0.9);
-
-        if (d.data.stateSnapshot.children[0].name === 'RecoilRoot') {
-          isRecoil = true;
-        }
-        if (!isRecoil) {
-          tooltipDiv
-            .html(filterHooks(d.data.stateSnapshot.children), this)
-            .style('left', d3.event.pageX - 90 + 'px')
-            .style('top', d3.event.pageY - 65 + 'px');
-        } else {
-          tooltipDiv
-            .html(
-              'Load Time : ' +
-                JSON.stringify(
-                  d.data.stateSnapshot.children[0].componentData.actualDuration
-                ).substring(0, 5) +
-                ' ms',
-              this
-            )
-            .style('left', d3.event.pageX - 90 + 'px')
-            .style('top', d3.event.pageY - 65 + 'px');
-        }
+        d3.select(this).transition(100).duration(20).attr('r', 20);
       })
-      // eslint-disable-next-line no-unused-vars
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .on('mouseout', function (d: any) {
-        d3.select(this).transition().duration(300).attr('r', 15);
+      .on('click', function (d: any) {
+        // console.log('here in d3 world, its litty');
+        // console.log(
+        //   `D is: ${d}
+        //   \nd.data is: ${d.data}
+        //   \nd.data.stateSnaphot is: ${d.data.stateSnaphot}
+        //   \nCurrently what is being sent to toolTipDiv is: ${d.data.stateSnapshot.children}`
+        // );
+        const index = parseInt(`${d.data.name}.${d.data.branch}`);
+        // const index2 = parseInt(index);
 
-        tooltipDiv.transition().duration(400).style('opacity', 0);
+        // alert('now just need to dispatch timeJump');
+        dispatch(changeSlider(index));
+        dispatch(changeView(index));
+        // alert(`El is: ${el}
+        // \n and typeof el is ${typeof el}
+        // \n and typeof el2 is ${typeof el2}
+        // `);
+        // alert(`YOU CLIKCED ON ME YAY, here is your information boss:
+        // \n d.data.name is${d.data.name}
+        // \n d.data.branch is${d.data.branch}
+        // \n while d.data.name.d.data.branch is ${d.data.name}.${d.data.branch}`);
+        // onclick of node, we want to dispatch to change the slider
+        // payload we pass in should be index
+      })
+      .on('mouseout', function (d: any) {
+        d3.select(this).transition().duration(300).attr('r', 13);
       });
+
+    // .on('mouseover', function (d: any) {
+    //   d3.select(this).transition(100).delay(200).attr('r', 25);
+
+    //   tooltipDiv.transition().duration(50).style('opacity', 0.9);
+
+    //   if (d.data.stateSnapshot.children[0].name === 'RecoilRoot') {
+    //     isRecoil = true;
+    //   }
+    //   if (!isRecoil) {
+    //     tooltipDiv
+    //       .html(filterHooks(d.data.stateSnapshot.children), this)
+    //       .style('left', d3.event.pageX - 120 + 'px')
+    //       .style('top', d3.event.pageY - 65 + 'px');
+    //   } else {
+    //     tooltipDiv
+    //       .html(
+    //         'Load Time : ' +
+    //           JSON.stringify(
+    //             d.data.stateSnapshot.children[0].componentData.actualDuration
+    //           ).substring(0, 5) +
+    //           ' ms',
+    //         this
+    //       )
+    //       .style('left', d3.event.pageX - 90 + 'px')
+    //       .style('top', d3.event.pageY - 65 + 'px');
+    //   }
+    //   console.log('tooltipDiv is: ', tooltipDiv);
+    // })
+    // // eslint-disable-next-line no-unused-vars
+    // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // .on('mouseout', function (d: any) {
+    //   d3.select(this).transition().delay(300).attr('r', 15);
+
+    //   tooltipDiv.transition().duration(400).style('opacity', 0);
+    // });
+
     node
       .append('text')
       // adjusts the y coordinates for the node text
@@ -195,6 +230,7 @@ function History(props) {
       })
       .text(function (d: { data: { name: number; branch: number } }) {
         // display the name of the specific patch
+        // return `${d.data.name}.${d.data.branch}`;
         return `${d.data.name}.${d.data.branch}`;
       });
 
@@ -261,7 +297,7 @@ function History(props) {
           ref={HistoryRef}
           className="history-d3-div"
           id="historyContainer"
-          position="absolute"
+          // position="absolute"
         />
       </div>
     </>
