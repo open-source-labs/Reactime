@@ -184,11 +184,14 @@ function createTree(
 
   if (!currentFiber) return null;
   if (!tree) return tree;
-  
+  console.log(currentFiber);
     if (currentFiber.tag === 0 || currentFiber.tag === 1 || currentFiber.tag === 2) {
       if (currentFiber.child && currentFiber.child.stateNode) {
           console.log(currentFiber.child.stateNode);
-          currentFiber.child.stateNode.setAttribute("id", "fromLinkFiber" + rtidCounter);
+          rtid = "fromLinkFiber" + rtidCounter
+          // if (currentFiber.child.stateNode.setAttribute) {
+            currentFiber.child.stateNode.setAttribute("id", rtid);
+          // }
       }
       rtidCounter++;
   }
@@ -370,6 +373,7 @@ function createTree(
   // We want to add this fiber node to the snapshot
   if (componentFound || newState === 'stateless') {
     if (fromSibling) {
+      console.log(rtid)
       newNode = tree.addSibling(
         newState,
         elementType ? elementType.name : 'nameless',
@@ -377,6 +381,7 @@ function createTree(
         rtid
       );
     } else {
+      console.log(rtid)
       newNode = tree.addChild(
         newState,
         elementType ? elementType.name : 'nameless',
