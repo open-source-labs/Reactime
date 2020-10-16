@@ -11,6 +11,8 @@ import { pointRadial } from 'd3-shape';
 import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
+import { onHover } from '../actions/actions'
+import { useStoreContext } from '../store'
 
 const defaultMargin = { top: 30, left: 30, right: 30, bottom: 70 };
 
@@ -28,6 +30,8 @@ export default function ComponentMap({
   margin = defaultMargin,
   snapshots: snapshots,
 }: LinkTypesProps) {
+
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
   // preparing the data to be used for render
   const lastNode = snapshots.length - 1;
   const data = snapshots[lastNode];
@@ -147,6 +151,7 @@ export default function ComponentMap({
                             console.log(node);
                             forceUpdate();
                           }}
+                          onMouseEnter={()=>dispatch(onHover(node.data.rtid))}
                         />
                       )}
                       <text
