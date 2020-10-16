@@ -35,10 +35,10 @@ export default function Legendary(props: any) {
 
   // reduce or map method on this?
   function objectToArray(snapObj) {
-    console.log(
-      'mid step: object that we are going to pass into the array is',
-      snapObj
-    );
+    // console.log(
+    //   'mid step: object that we are going to pass into the array is',
+    //   snapObj
+    // );
     const newArr = [];
     const arrValues = Object.values(snapObj);
     // console.log(arrValues);
@@ -50,15 +50,15 @@ export default function Legendary(props: any) {
       const tempVal = `${arrValues[i][0]} - ${arrValues[i][len - 1]}`;
       newArr.push(tempVal);
     }
-    console.log(
-      'later step: the array that is created from passing in the object is',
-      newArr
-    );
+    // console.log(
+    //   'later step: the array that is created from passing in the object is',
+    //   newArr
+    // );
     return newArr;
   }
 
   const getSnapshotIds = (obj, snapshotIds = []) => {
-    console.log('the hierarchy object is: ', hierarchy);
+    // console.log('the hierarchy object is: ', hierarchy);
     snapshotIds.push(`${obj.name}.${obj.branch}`);
     if (obj.children) {
       obj.children.forEach((child) => {
@@ -73,7 +73,7 @@ export default function Legendary(props: any) {
   };
 
   const snap = getSnapshotIds(hierarchy);
-  console.log('the snap that we are receiving now is: ', snap);
+  // console.log('the snap that we are receiving now is: ', snap);
 
   const ordinalColorScale = scaleOrdinal<number, string>({
     domain: snap,
