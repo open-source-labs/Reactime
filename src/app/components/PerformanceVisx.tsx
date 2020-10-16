@@ -6,11 +6,8 @@ import { Grid } from "@visx/grid";
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
 import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
-// import { LegendOrdinal } from "@visx/legend";
 import { Text } from '@visx/text';
 import { schemeSet1,schemeSet3 } from "d3-scale-chromatic";
-// import snapshots from "./snapshots";
-import useForceUpdate from './useForceUpdate';
 
 
 /* TYPESCRIPT */
@@ -46,16 +43,18 @@ const tooltipStyles = {
   color: "white"
 };
 
-/* DATA PREP FUNCTIONS */
+/* DATA HANDLING FUNCTIONS */
 const getPerfMetrics = (snapshots, snapshotsIds) => {
-  return snapshots.reduce((perfSnapshots, curSnapshot,idx)=> {
+  return snapshots.reduce((perfSnapshots, curSnapshot, idx)=> {
     return perfSnapshots.concat(traverse(curSnapshot, {snapshotId:snapshotsIds[idx]}))
   }, [])
 }
 
+// traverse the snapshot for all components and their rendering time
 const traverse = (snapshot, perfSnapshot) => {
   if (!snapshot.children[0]) return
   for (let i = 0; i < snapshot.children.length; i++){
+    // perfSnapshot.state = snapshot.children[i].state
     if (snapshot.children[i].componentData.actualDuration){
     const renderTime = Number(Number.parseFloat(snapshot.children[i].componentData.actualDuration).toPrecision(5))
     perfSnapshot[snapshot.children[i].name+-[i+1]] = renderTime
@@ -74,6 +73,8 @@ if (obj.children) {
 }
 return snapshotIds
 };
+
+
 
 /* EXPORT COMPONENT */
 export default function PerformanceVisx({
@@ -100,7 +101,8 @@ let tooltipTimeout: number;
 // filter and structure incoming data for VISX 
 const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy))
 const keys = Object.keys(data[0]).filter((d) => d !== "snapshotId") as CityName[];
-console.log(data)
+console.log('data', data)
+console.log('snapshots', snapshots)
 
 // create array of total render times for each snapshot
 const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
@@ -117,7 +119,7 @@ const getSnapshotId = (d: snapshot) => d.snapshotId;
 const formatSnapshotId = id => 'Snapshot ID: ' + id;  
 const formatRenderTime = time => time + ' ms ';
 
-// create visualization scales with filtered data 
+// create visualization SCALES with filtered data 
 const snapshotIdScale = scaleBand<string>({
   domain: data.map(getSnapshotId),
   padding: 0.2
@@ -141,6 +143,12 @@ const xMax = width - margin.left - margin.right
 const yMax = height - margin.top - 150;
 snapshotIdScale.rangeRound([0, xMax]);
 renderingScale.range([yMax, 0]);
+
+// console.log('totalRenderArr', totalRenderArr)
+// console.log('renderingScale domain', renderingScale.domain)
+// console.log('renderingscale range', renderingScale)
+console.log('height', height)
+// console.log(yMax)
 
   return width < 10 ? null : (
   // relative position is needed for correct tooltip positioning
@@ -175,23 +183,23 @@ renderingScale.range([yMax, 0]);
             yScale={renderingScale}
             color={colorScale}
           >
-            {(barStacks) => barStacks.map(barStack => barStack.bars.map((bar => (
+            {(barStacks) => barStacks.map(barStack => barStack.bars.map(((bar,idx) => (
                   <rect
                     key={`bar-stack-${barStack.index}-${bar.index}`}
                     x={bar.x}
                     y={bar.y}
-                    height={bar.height}
+                    height={bar.height === 0 ? idx + 1 : bar.height}
                     width={bar.width}
                     fill={bar.color}
                     /* TIP TOOL EVENT HANDLERS */
-                    onClick={() => {
-                      if (events) alert(`clicked: ${JSON.stringify(bar)}`);
-                    }}
+                    
+                    // Hides tool tip once cursor moves off the current rect
                     onMouseLeave={() => {
                       tooltipTimeout = window.setTimeout(() => {
                         hideTooltip();
                       }, 300);
                     }}
+                    // Cursor position in window updates position of the tool tip 
                     onMouseMove={event => {
                       if (tooltipTimeout) clearTimeout(tooltipTimeout);
                       const top = event.clientY - margin.top - bar.height;
@@ -208,7 +216,7 @@ renderingScale.range([yMax, 0]);
             } 
           </BarStack>
         </Group>
-        <AxisLeft 
+        <AxisLeft
         top={margin.top}
         left={margin.left}
         scale={renderingScale}
