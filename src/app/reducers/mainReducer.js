@@ -42,7 +42,7 @@ export default (state, action) => produce(state, draft => {
     case types.ON_HOVER: {
       port.postMessage({
         action: 'onHover',
-        payload: 'payload from Reducer ON_HOVER',
+        payload: action.payload,
         tabId: currentTab,
       })
       break; 
@@ -199,6 +199,7 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.INITIAL_CONNECT: {
+      console.log(action.paylooad)
       const { payload } = action;
       Object.keys(payload).forEach(tab => {
         // check if tab exists in memory
