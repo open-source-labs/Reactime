@@ -6,6 +6,8 @@ import { LegendOrdinal, LegendItem, LegendLabel } from '@visx/legend';
 
 const legendGlyphSize = 8;
 
+type snapHierarchy = {};
+
 export default function LegendKey(props: `Record<string, unknown>`) {
   const { hierarchy } = props;
 

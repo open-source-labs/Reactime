@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import LegendKey from './Legend';
 import { changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
+import { string } from 'prop-types';
 /**
  * @var colors: Colors array for the diffrerent node branches, each color is for a different branch
  */
@@ -40,6 +41,7 @@ function History(props) {
   const { hierarchy, dispatch, sliderIndex, viewIndex } = props;
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
+  console.log('before makedTree, hierarchy is, ', hierarchy);
   let HistoryRef = React.createRef(root); //React.createRef(root);
   useEffect(() => {
     maked3Tree();
@@ -74,7 +76,7 @@ function History(props) {
     // d3.hierarchy constructs a root node from the specified hierarchical data
     // (our object titled dataset), which must be an object representing the root node
     const hierarchy = d3.hierarchy(root);
-
+    console.log('after maked3tree, hierarchy is now: ', hierarchy);
     const tree = d3
       .tree()
       .nodeSize([width / 10, height / 10])
