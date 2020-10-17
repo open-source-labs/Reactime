@@ -236,7 +236,7 @@ function History(props) {
       return [(y = +y) * Math.cos((x -= Math.PI / 2)), y * Math.sin(x)];
     }
   };
-
+  console.log('have we hit maked3dtree');
   // below we are rendering the LegendKey component and passing hierarchy as props
   // then rendering each node in History tab to render using D3
   return (
