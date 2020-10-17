@@ -54,7 +54,7 @@ const tooltipStyles = {
   color: "white"
 };
 
-/* DATA HANDLING FUNCTIONS */
+/* DATA HANDLING HELPER FUNCTIONS */
 const getPerfMetrics = (snapshots, snapshotsIds) => {
   return snapshots.reduce((perfSnapshots, curSnapshot, idx)=> {
     return perfSnapshots.concat(traverse(curSnapshot, {snapshotId:snapshotsIds[idx]}))
@@ -120,11 +120,6 @@ const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy))
 const keys = Object.keys(data[0]).filter((d) => d !== "snapshotId") as CityName[];
 const allComponentStates = traverse(snapshots[0])
 
-console.log(keys)
-console.log('data', data)
-console.log('snapshots', snapshots)
-console.log(allComponentStates)
-
 // create array of total render times for each snapshot
 const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
   const curRenderTotal = keys.reduce((acc, cur) => {
@@ -164,12 +159,6 @@ const xMax = width - margin.left - margin.right
 const yMax = height - margin.top - 150;
 snapshotIdScale.rangeRound([0, xMax]);
 renderingScale.range([yMax, 0]);
-
-// console.log('totalRenderArr', totalRenderArr)
-// console.log('renderingScale domain', renderingScale.domain)
-// console.log('renderingscale range', renderingScale)
-console.log('height', height)
-// console.log(yMax)
 
   return width < 10 ? null : (
   // relative position is needed for correct tooltip positioning
@@ -263,31 +252,10 @@ console.log('height', height)
             textAnchor: 'middle',
           })}
         />
-        <Text x={-xMax / 2} y="15"  transform="rotate(-90)" fontSize={10} fill="#FFFFFF">
-        Rendering Time (ms)
-        </Text>
-        <Text x={xMax / 2} y={yMax + 100} fontSize={10} fill="#FFFFFF">
-        Snapshot Id
-        </Text> 
-        
+        <Text x={-xMax / 2} y="15"  transform="rotate(-90)" fontSize={10} fill="#FFFFFF"> Rendering Time (ms) </Text>
+        <Text x={xMax / 2} y={yMax + 100} fontSize={10} fill="#FFFFFF"> Snapshot Id </Text>         
       </svg>
       
-      {/* <div
-        style={{
-          position: "absolute",
-          top: margin.top / 2 - 10,
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          fontSize: "14px"
-        }}
-      >
-        <LegendOrdinal
-          scale={colorScale}
-          direction="row"
-          labelMargin="0 15px 0 0"
-        />
-      </div> */}
 
       {/* FOR HOVER OVER DISPLAY */}
       {tooltipOpen && tooltipData && (
