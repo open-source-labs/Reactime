@@ -7,7 +7,18 @@ import { AxisBottom, AxisLeft } from "@visx/axis";
 import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
 import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
 import { Text } from '@visx/text';
-import { schemeSet1,schemeSet3 } from "d3-scale-chromatic";
+import { schemeSet3 } from "d3-scale-chromatic";
+
+
+/* NOTES
+Current issues
+1. Not fully compatible with recoil apps. Reference the recoil-todo-test. 
+Barstacks display inconsistently...however, almost always displays upon initial test app load or 
+when empty button is clicked. Updating state after initial app load typically makes bars disappear.
+However, cycling between updating state and then emptying sometimes fixes the stack bars. Important to note - all snapshots 
+do render (check HTML doc) within the chrome extension but they do not display because height is not consistently passed to each bar.
+This side effect is only seen in recoil apps...
+ */
 
 
 /* TYPESCRIPT */
@@ -32,10 +43,10 @@ export type BarStackProps = {
   hierarchy?: any;
 };
 
-/* DEFAULT STYLING */
+/* DEFAULTS */
+const defaultMargin = { top: 60, right: 30, bottom: 0, left: 50 };
 const axisColor = '#679DCA';
 const background = "#242529";
-const defaultMargin = { top: 60, right: 30, bottom: 0, left: 50 };
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
@@ -50,15 +61,17 @@ const getPerfMetrics = (snapshots, snapshotsIds) => {
   }, [])
 }
 
-// traverse can either return all component rendering times or type of state component depending if 2nd argument is passed
+// traverses a single snapshot either returning all component rendering times OR all component state types. Depends on 2nd arg
 const traverse = (snapshot, data = {}) => {
   if (!snapshot.children[0]) return
   for (let i = 0; i < snapshot.children.length; i++){
     const componentName = snapshot.children[i].name+-[i+1]
+    // Get component Type
     if (!data.snapshotId){
       if(snapshot.children[i].state !== 'stateless') data[componentName] = 'STATEFUL'
       else data[componentName] = snapshot.children[i].state;
     } 
+    // Get component Rendering Time
     else if (snapshot.children[i].componentData.actualDuration){
       const renderTime = Number(Number.parseFloat(snapshot.children[i].componentData.actualDuration).toPrecision(5));
       data[componentName] = renderTime;
@@ -127,7 +140,7 @@ const getSnapshotId = (d: snapshot) => d.snapshotId;
 const formatSnapshotId = id => 'Snapshot ID: ' + id;  
 const formatRenderTime = time => time + ' ms ';
 
-// create visualization SCALES with filtered data 
+// create visualization SCALES with cleaned data 
 const snapshotIdScale = scaleBand<string>({
   domain: data.map(getSnapshotId),
   padding: 0.2
@@ -143,7 +156,7 @@ const colorScale = scaleOrdinal<CityName, string>({
   range: schemeSet3
 });
 
-  const { containerRef, TooltipInPortal } = useTooltipInPortal();
+const { containerRef, TooltipInPortal } = useTooltipInPortal();
 
 // setting max dimensions and scale ranges
 if (width < 10) return null;
@@ -200,7 +213,6 @@ console.log('height', height)
                     width={bar.width}
                     fill={bar.color}
                     /* TIP TOOL EVENT HANDLERS */
-                    
                     // Hides tool tip once cursor moves off the current rect
                     onMouseLeave={() => {
                       tooltipTimeout = window.setTimeout(() => {
@@ -285,18 +297,11 @@ console.log('height', height)
           left={tooltipLeft}
           style={tooltipStyles}
         >
-          <div style={{ color: colorScale(tooltipData.key) }}>
-            <strong>{tooltipData.key}</strong>
-          </div>
-
+        // Displays: component name, component state type, render time, snapshotID
+          <div style={{ color: colorScale(tooltipData.key) }}> <strong>{tooltipData.key}</strong> </div>
           <div>{allComponentStates[tooltipData.key]}</div>
-
-          <div>
-            {formatRenderTime(tooltipData.bar.data[tooltipData.key])}
-          </div>
-          <div>
-            <small>{formatSnapshotId(getSnapshotId(tooltipData.bar.data))}</small>
-          </div>
+          <div> {formatRenderTime(tooltipData.bar.data[tooltipData.key])} </div>
+          <div> <small>{formatSnapshotId(getSnapshotId(tooltipData.bar.data))}</small></div>
         </TooltipInPortal>
       )}
     </div>
