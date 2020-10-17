@@ -60,7 +60,17 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       break;
     case 'onHover':
 
-
+      if(Array.isArray(payload)){ 
+        for (let i=0; i<payload.length;i++){
+          let element = document.getElementById(payload[i])
+          if (element !== null) {
+                element.style.backgroundColor = '#C0D9D9'; 
+                setTimeout( () => {
+                  element.style.backgroundColor = "";
+                }, 500)
+              }
+        }
+      }
 
       // if (payload !== null) {
       //   let element = document.getElementById(payload)
