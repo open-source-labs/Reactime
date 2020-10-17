@@ -20,8 +20,8 @@ This side effect is only seen in recoil apps...
  */
 
 /* TYPESCRIPT */
+type margin = { top: number; right: number; bottom: number; left: number };
 type snapshot = any;
-
 type TooltipData = {
   bar: SeriesPoint<snapshot>;
   key: CityName;
@@ -37,16 +37,14 @@ type TooltipData = {
 type BarStackProps = {
   width: number;
   height: number;
-  margin?: { top: number; right: number; bottom: number; left: number };
-  events?: boolean;
-  snapshots?: any;
-  hierarchy?: any;
+  snapshots: [];
+  hierarchy: any;
 };
 
+
+
 /* DEFAULTS */
-const defaultMargin = {
-  top: 60, right: 30, bottom: 0, left: 50,
-};
+const margin = { top: 60, right: 30, bottom: 0, left: 50 };
 const axisColor = '#679DCA';
 const background = '#242529';
 const tooltipStyles = {
@@ -92,14 +90,11 @@ const getSnapshotIds = (obj, snapshotIds = []) => {
 };
 
 /* EXPORT COMPONENT */
-export default function PerformanceVisx({
-  width,
-  height,
-  events = false,
-  margin = defaultMargin,
-  snapshots,
-  hierarchy,
-}: BarStackProps) {
+
+const PerformanceVisx = (props: BarStackProps) => {
+
+  const { width, height, snapshots, hierarchy } = props;
+
   const {
     tooltipOpen,
     tooltipLeft,
@@ -117,6 +112,10 @@ export default function PerformanceVisx({
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   const keys = Object.keys(data[0]).filter(d => d !== 'snapshotId') as CityName[];
   const allComponentStates = traverse(snapshots[0]);
+
+  console.log(snapshots);
+  console.log(hierarchy);
+  console.log('margin', margin);
 
   // create array of total render times for each snapshot
   const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
@@ -156,8 +155,8 @@ export default function PerformanceVisx({
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
+  // if performance tab is too small it will not return VISX component
   return width < 10 ? null : (
-  // relative position is needed for correct tooltip positioning
 
     <div style={{ position: 'relative' }}>
       <svg ref={containerRef} width={width} height={height}>
@@ -277,4 +276,6 @@ export default function PerformanceVisx({
       )}
     </div>
   );
-}
+};
+
+export default PerformanceVisx;
