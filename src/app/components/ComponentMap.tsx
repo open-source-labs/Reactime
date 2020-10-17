@@ -151,12 +151,12 @@ export default function ComponentMap({
                             node.data.isExpanded = !node.data.isExpanded;
                             forceUpdate();
                           }}
+                          
                           onMouseEnter={()=> {
-
-                            if(node.data.recoilDomNode){
+                            if(Object.keys(node.data.recoilDomNode).length > 0){
                               dispatch(onHover(node.data.recoilDomNode[node.data.name]))
                             } else {
-                              dispatch(onHover(rtid))
+                              dispatch(onHover(node.data.rtid))
                             }
                                                     
                           }

@@ -59,7 +59,8 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       mode.paused = payload;
       break;
     case 'onHover':
-
+      console.log(payload);
+      
       if(Array.isArray(payload)){ 
         for (let i=0; i<payload.length;i++){
           let element = document.getElementById(payload[i])
@@ -69,6 +70,14 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
                   element.style.backgroundColor = "";
                 }, 500)
               }
+        }
+      } else {
+        let element = document.getElementById(payload)
+        if (element !== null) {
+          element.style.backgroundColor = '#C0D9D9'; 
+          setTimeout( () => {
+            element.style.backgroundColor = "";
+          }, 500)
         }
       }
 
