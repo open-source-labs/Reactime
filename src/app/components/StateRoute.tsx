@@ -18,6 +18,7 @@ import ComponentMap from './ComponentMap';
 import AtomsRelationship from './AtomsRelationship.jsx';
 import PerformanceVisx from './PerformanceVisx';
 import ZoomI from './zoomFt';
+// import History from './History'
 
 import { changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
@@ -84,16 +85,14 @@ const StateRoute = (props: StateRouteProps) => {
         <div>
           <ParentSize>
             {({ width, height }) => (
-              <ZoomI>
-                <History
-                  width={width}
-                  height={height}
-                  hierarchy={hierarchy}
-                  dispatch={dispatch}
-                  sliderIndex={sliderIndex}
-                  viewIndex={viewIndex}
-                />
-              </ZoomI>
+              <History
+                width={width}
+                height={height}
+                hierarchy={hierarchy}
+                dispatch={dispatch}
+                sliderIndex={sliderIndex}
+                viewIndex={viewIndex}
+              />
             )}
           </ParentSize>
         </div>
