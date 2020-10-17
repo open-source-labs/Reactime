@@ -38,7 +38,7 @@ let allAtomsRelationship = [];
 let initialstart = false;
 let rtidCounter = 0; 
 let rtid = null;
-let recoilStateNode = {};
+let recoilDomNode = {};
 
 // Simple check for whether our target app uses Recoil
 if (window[`$recoilDebugStates`]) {
@@ -80,9 +80,9 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
     // getRecoilState();
     payload.atomsComponents = atomsComponents;
     payload.atomSelectors = atomsSelectors;
+    payload.recoilDomNode = recoilDomNode
   }
 
-  console.log(recoilStateNode)
   window.postMessage(
     {
       action: 'recordSnap',
@@ -382,50 +382,56 @@ function createTree(
       
       if(isRecoil){
         if(currentFiber.elementType.name){
-          if(!recoilStateNode[currentFiber.elementType.name]){
-            recoilStateNode[currentFiber.elementType.name] = [];
+          if(!recoilDomNode[currentFiber.elementType.name]){
+            recoilDomNode[currentFiber.elementType.name] = [];
           }
         }
+
         let pointer = currentFiber
+
         while(pointer !== null){
             if(pointer.stateNode !== null){
             rtid = "fromLinkFiber" + rtidCounter++
-            recoilStateNode[currentFiber.elementType.name].push(pointer.stateNode)
+            recoilDomNode[currentFiber.elementType.name].push(rtid)
             pointer.stateNode.setAttribute("id", rtid)
           }
             
             pointer = pointer.child
           }
       }
+
       newNode = tree.addSibling(
         newState,
         elementType ? elementType.name : 'nameless',
         componentData,
-        rtid
+        rtid,
+        recoilDomNode
       );
     } else {
       
       if(isRecoil){
         if(currentFiber.elementType.name){
-          if(!recoilStateNode[currentFiber.elementType.name]){
-            recoilStateNode[currentFiber.elementType.name] = [];
+          if(!recoilDomNode[currentFiber.elementType.name]){
+            recoilDomNode[currentFiber.elementType.name] = [];
           }
         }
         let pointer = currentFiber
         while(pointer !== null){
             if(pointer.stateNode !== null){
             rtid = "fromLinkFiber" + rtidCounter++
-            recoilStateNode[currentFiber.elementType.name].push(pointer.stateNode)
+            recoilDomNode[currentFiber.elementType.name].push(rtid)
             pointer.stateNode.setAttribute("id", rtid)        
           }          
             pointer = pointer.child
           }
       }
+      
       newNode = tree.addChild(
         newState,
         elementType ? elementType.name : 'nameless',
         componentData,
-        rtid
+        rtid, 
+        recoilDomNode
       );
     }
   } else {

@@ -15,7 +15,6 @@ window.addEventListener('message', msg => { // runs automatically every second
 
   // post initial Message to background.js
   const { action }: { action: string } = msg.data;
-
   if (action === 'recordSnap') { // this is firing on page load
     chrome.runtime.sendMessage(msg.data);
   }

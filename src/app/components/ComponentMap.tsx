@@ -35,6 +35,7 @@ export default function ComponentMap({
   // preparing the data to be used for render
   const lastNode = snapshots.length - 1;
   const data = snapshots[lastNode];
+
   const [layout, setLayout] = useState<string>('cartesian');
   const [orientation, setOrientation] = useState<string>('horizontal');
   const [linkType, setLinkType] = useState<string>('diagonal');
@@ -129,7 +130,7 @@ export default function ComponentMap({
                           fill="url('#links-gradient')"
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
-                            console.log(node);
+                            console.log('node',node);
                             forceUpdate();
                           }}
                         />
@@ -151,7 +152,7 @@ export default function ComponentMap({
                             console.log(node);
                             forceUpdate();
                           }}
-                          onMouseEnter={()=>dispatch(onHover(node.data.rtid))}
+                          onMouseEnter={()=> {dispatch(onHover(node.data.rtid))}
                         />
                       )}
                       <text
