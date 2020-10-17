@@ -12,9 +12,10 @@ import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 
-// setting the base margins for the Map to render in the window.
+// setting the base margins for the Map to render in the Chrome extension window.
 const defaultMargin = { top: 30, left: 30, right: 30, bottom: 30 };
 
+// export these types because this will only be used on this page, interface not needed as it will not be re-used.
 export type LinkTypesProps = {
   width: number;
   height: number;
@@ -30,7 +31,8 @@ export default function ComponentMap({
   snapshots: snapshots,
 }: LinkTypesProps) {
   console.log(totalHeight);
-  // preparing the data to be used for render
+
+  // This is where we select the last object in the snapshots array from props to allow hierarchy to parse the data for render on the component map per hierarchy layout specifications.
   const lastNode = snapshots.length - 1;
   const data = snapshots[lastNode];
   // importing custom hooks for the selection tabs.
@@ -68,9 +70,9 @@ export default function ComponentMap({
   }
 
   // render controls for the map
-
+  // svg - complete layout of self contained component map
   // Tree is rendering each component from the component tree.
-  // rect- Contains both text and rectangle node information for rendering each component.
+  // rect- Contains both text and rectangle node information for rendering each component on the map.
   // circle- setup and layout for the root node.
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
   return totalWidth < 10 ? null : (
@@ -93,7 +95,7 @@ export default function ComponentMap({
           <Tree
             root={hierarchy(data, (d) => (d.isExpanded ? null : d.children))}
             size={[sizeWidth, sizeHeight]}
-            separation={(a, b) => (a.parent === b.parent ? 1000 : 0) / a.depth}
+            separation={(a, b) => (a.parent === b.parent ? 10 : 0) / a.depth}
           >
             {(tree) => (
               <Group top={origin.y} left={origin.x}>
@@ -134,7 +136,6 @@ export default function ComponentMap({
                           fill="url('#links-gradient')"
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
-                            console.log(node);
                             forceUpdate();
                           }}
                         />
