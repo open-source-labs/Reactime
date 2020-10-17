@@ -398,6 +398,12 @@ function createTree(
             
             pointer = pointer.child
           }
+      } else {
+        if (currentFiber.child && currentFiber.child.stateNode) {
+          rtid = "fromLinkFiber" + rtidCounter
+            currentFiber.child.stateNode.setAttribute("id", rtid);
+          }
+          rtidCounter++;
       }
 
       newNode = tree.addSibling(
@@ -424,6 +430,12 @@ function createTree(
           }          
             pointer = pointer.child
           }
+      } else {
+        if (currentFiber.child && currentFiber.child.stateNode) {
+          rtid = "fromLinkFiber" + rtidCounter
+            currentFiber.child.stateNode.setAttribute("id", rtid);
+          }
+          rtidCounter++;
       }
       
       newNode = tree.addChild(

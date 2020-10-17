@@ -152,7 +152,13 @@ export default function ComponentMap({
                             forceUpdate();
                           }}
                           onMouseEnter={()=> {
-                            dispatch(onHover(node.data.recoilDomNode[node.data.name]))                        
+
+                            if(node.data.recoilDomNode){
+                              dispatch(onHover(node.data.recoilDomNode[node.data.name]))
+                            } else {
+                              dispatch(onHover(rtid))
+                            }
+                                                    
                           }
                         />
                       )}
