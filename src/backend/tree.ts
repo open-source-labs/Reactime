@@ -49,23 +49,26 @@ class Tree {
 
   atomSelectors: any;
 
-  constructor(state: string | {}, name = 'nameless', componentData: {} = {}) {
+  rtid: any; 
+
+  constructor(state: string | {}, name = 'nameless', componentData: {} = {}, rtid: any = null) {
     this.state = state === 'root' ? 'root' : serializeState(state);
     this.name = name;
     this.componentData = componentData ? JSON.parse(JSON.stringify(componentData)) : {};
     this.children = [];
     this.parent = null; // ref to parent so we can add siblings
+    this.rtid = rtid
   }
 
-  addChild(state: string | {}, name: string, componentData: {}): Tree {
-    const newChild: Tree = new Tree(state, name, componentData);
+  addChild(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
+    const newChild: Tree = new Tree(state, name, componentData, rtid);
     newChild.parent = this;
     this.children.push(newChild);
     return newChild;
   }
 
-  addSibling(state: string | {}, name: string, componentData: {}): Tree {
-    const newSibling: Tree = new Tree(state, name, componentData);
+  addSibling(state: string | {}, name: string, componentData: {},  rtid: any): Tree {
+    const newSibling: Tree = new Tree(state, name, componentData, rtid);
     newSibling.parent = this.parent;
     this.parent.children.push(newSibling);
     return newSibling;
@@ -84,7 +87,7 @@ class Tree {
       circularComponentTable.clear();
     }
     // creates copy of present node
-    let copy: Tree = new Tree(this.state, this.name, this.componentData);
+    let copy: Tree = new Tree(this.state, this.name, this.componentData, this.rtid);
     delete copy.parent;
     circularComponentTable.add(this);
     copy = scrubUnserializableMembers(copy);
