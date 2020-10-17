@@ -5,6 +5,9 @@ import { Zoom } from '@visx/zoom';
 import { localPoint } from '@visx/event';
 import { RectClipPath } from '@visx/clip-path';
 import { scaleLinear } from '@visx/scale';
+import LegendKey from './legend';
+import History from './History';
+// import { hierarchy } from '@visx/hierarchy';
 
 const bg = '';
 const points = [...new Array(1000)];
@@ -21,14 +24,15 @@ const initialTransform = {
   skewY: 0,
 };
 
-export type ZoomIProps = {
-  width: number;
-  height: number;
-};
+// export type ZoomIProps = {
+//   width: number;
+//   height: number;
+// };
 
-export default function ZoomI({ width, height }: ZoomIProps) {
+export default function ZoomI(props: any) {
   const [showMiniMap, setShowMiniMap] = useState<boolean>(true);
-
+  // const { width, height, hierarchy, dispatch, sliderIndex, viewIndex } = props;
+  const { width, height } = props;
   // const genenerator: GenPhyllotaxisFunction = genPhyllotaxis({
   //   radius: 10,
   //   width,
@@ -56,18 +60,7 @@ export default function ZoomI({ width, height }: ZoomIProps) {
             >
               <RectClipPath id="zoom-clip" width={width} height={height} />
               <rect width={width} height={height} rx={14} fill={bg} />
-              <g transform={zoom.toString()}>
-                {phyllotaxis.map(({ x, y }, i) => (
-                  // <React.Fragment key={`dot-${i}`}>
-                  //   <circle
-                  //     cx={x}
-                  //     cy={y}
-                  //     r={i > 500 ? sizeScale(1000 - i) : sizeScale(i)}
-                  //     // fill={interpolateRainbow(colorScale(i) ?? 0)}
-                  //   />
-                  </React.Fragment>
-                ))}
-              </g>
+              <g transform={zoom.toString()}>{/* invoke them here */}</g>
               <rect
                 width={width}
                 height={height}
@@ -88,38 +81,6 @@ export default function ZoomI({ width, height }: ZoomIProps) {
                   zoom.scale({ scaleX: 1.1, scaleY: 1.1, point });
                 }}
               />
-              {showMiniMap && (
-                <g
-                  clipPath="url(#zoom-clip)"
-                  transform={`
-                    scale(0.25)
-                    translate(${width * 4 - width - 60}, ${
-                    height * 4 - height - 60
-                  })
-                  `}
-                >
-                  <rect width={width} height={height} fill="#1a1a1a" />
-                  {phyllotaxis.map(({ x, y }, i) => (
-                    // <React.Fragment key={`dot-sm-${i}`}>
-                    //   <circle
-                    //     cx={x}
-                    //     cy={y}
-                    //     r={i > 500 ? sizeScale(1000 - i) : sizeScale(i)}
-                    //     // fill={interpolateRainbow(colorScale(i) ?? 0)}
-                    //   />
-                    </React.Fragment>
-                  ))}
-                  <rect
-                    width={width}
-                    height={height}
-                    fill="white"
-                    fillOpacity={0.2}
-                    stroke="white"
-                    strokeWidth={4}
-                    transform={zoom.toStringInvert()}
-                  />
-                </g>
-              )}
             </svg>
             <div className="controls">
               <button

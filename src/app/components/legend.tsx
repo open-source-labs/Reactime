@@ -6,10 +6,12 @@ import { LegendOrdinal, LegendItem, LegendLabel } from '@visx/legend';
 
 const legendGlyphSize = 8;
 
-type snapHierarchy = {};
+type snapHierarchy = {`Record<string, unknown>`}  
+};
 
-export default function LegendKey(props: `Record<string, unknown>`) {
+export default function LegendKey(props: snapHierarchy) {
   const { hierarchy } = props;
+  console.log('which ends up being, hierarchy: ', hierarchy);
 
   // We are taking the array of displayNames and sifting through them and placing each set of
   // branches as a key in an object, { '.0': [1.0, 2.0, 3.0, 4.0], '.1': [1.1, 2.1, 3.1,...], '.2': [....]}
