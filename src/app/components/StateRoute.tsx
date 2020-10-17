@@ -17,6 +17,7 @@ import ComponentMap from './ComponentMap';
 // import PerfView from './PerfView';
 import AtomsRelationship from './AtomsRelationship.jsx';
 import PerformanceVisx from './PerformanceVisx';
+import ZoomI from './zoomFt';
 
 import { changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
@@ -76,21 +77,23 @@ const StateRoute = (props: StateRouteProps) => {
   // the hierarchy gets set on the first click in the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
   // if true involk render chart with hierarchy
-  //* we wrap History in a ParentSize div, in order to make use of Visx's Zoom funcationality
+  //* we wrap History in a ParentSize div, in order to make use of Visx's Zoom functionality
   const renderHistory = () => {
     if (hierarchy) {
       return (
         <div>
           <ParentSize>
             {({ width, height }) => (
-              <History
-                width={width}
-                height={height}
-                hierarchy={hierarchy}
-                dispatch={dispatch}
-                sliderIndex={sliderIndex}
-                viewIndex={viewIndex}
-              />
+              <ZoomI>
+                <History
+                  width={width}
+                  height={height}
+                  hierarchy={hierarchy}
+                  dispatch={dispatch}
+                  sliderIndex={sliderIndex}
+                  viewIndex={viewIndex}
+                />
+              </ZoomI>
             )}
           </ParentSize>
         </div>
