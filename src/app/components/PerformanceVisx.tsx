@@ -10,19 +10,21 @@ import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
 
 /* NOTES
-Current issues
-1. Not fully compatible with recoil apps. Reference the recoil-todo-test.
+Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
 Barstacks display inconsistently...however, almost always displays upon initial test app load or
 when empty button is clicked. Updating state after initial app load typically makes bars disappear.
-However, cycling between updating state and then emptying sometimes fixes the stack bars. Important to note - all snapshots
-do render (check HTML doc) within the chrome extension but they do not display because height is not consistently passed to each bar.
-This side effect is only seen in recoil apps...
+However, cycling between updating state and then emptying sometimes fixes the stack bars. Important
+to note - all snapshots do render (check HTML doc) within the chrome extension but they do
+not display because height is not consistently passed to each bar. This side effect is only
+seen in recoil apps...
  */
 
 /* TYPESCRIPT */
-type margin = { top: number; right: number; bottom: number; left: number };
 type snapshot = any;
-type TooltipData = {
+
+interface margin { top: number; right: number; bottom: number; left: number };
+
+interface TooltipData {
   bar: SeriesPoint<snapshot>;
   key: CityName;
   index: number;
@@ -31,17 +33,15 @@ type TooltipData = {
   x: number;
   y: number;
   color: string;
-};
+}
 
 // typescript for PROPS from StateRoute.tsx
-type BarStackProps = {
+interface BarStackProps {
   width: number;
   height: number;
   snapshots: [];
   hierarchy: any;
-};
-
-
+}
 
 /* DEFAULTS */
 const margin = { top: 60, right: 30, bottom: 0, left: 50 };
@@ -56,10 +56,7 @@ const tooltipStyles = {
 
 /* DATA HANDLING HELPER FUNCTIONS */
 
-// Returns an array of objects (snapshots) with key-value pairs of each component and corresponding render time
-const getPerfMetrics = (snapshots, snapshotsIds) => snapshots.reduce((perfSnapshots, curSnapshot, idx) => perfSnapshots.concat(traverse(curSnapshot, { snapshotId: snapshotsIds[idx] })), []);
-
-// traverses a single snapshot - returns either all component rendering times OR all component state types. Depends on 2nd arg
+// traverses a snapshot - returns all rendering times OR component state types. Depends on 2nd arg
 const traverse = (snapshot, data = {}) => {
   if (!snapshot.children[0]) return;
   for (let i = 0; i < snapshot.children.length; i++) {
@@ -89,6 +86,13 @@ const getSnapshotIds = (obj, snapshotIds = []) => {
   return snapshotIds;
 };
 
+// Returns array of snapshot objs each with components and corresponding render times
+const getPerfMetrics = (snapshots, snapshotsIds) => {
+  snapshots.reduce((perfSnapshots, curSnapshot, idx) => {
+    perfSnapshots.concat(traverse(curSnapshot, { snapshotId: snapshotsIds[idx] }));
+  }, []);
+};
+
 /* EXPORT COMPONENT */
 
 const PerformanceVisx = (props: BarStackProps) => {
@@ -96,12 +100,7 @@ const PerformanceVisx = (props: BarStackProps) => {
   const { width, height, snapshots, hierarchy } = props;
 
   const {
-    tooltipOpen,
-    tooltipLeft,
-    tooltipTop,
-    tooltipData,
-    hideTooltip,
-    showTooltip,
+    tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip,
   } = useTooltip<TooltipData>();
 
   let tooltipTimeout: number;
