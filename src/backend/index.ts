@@ -59,20 +59,23 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       mode.paused = payload;
       break;
     case 'onHover':
-      if (payload !== null) {
-        let element = document.getElementById(payload)
 
-        if (element !== null) {
 
-          element.style.backgroundColor = '#C0D9D9'; 
-          setTimeout( () => {
-            element.style.backgroundColor = "";
-          }, 500)
-        }
+
+      // if (payload !== null) {
+      //   let element = document.getElementById(payload)
+
+      //   if (element !== null) {
+
+      //     element.style.backgroundColor = '#C0D9D9'; 
+      //     setTimeout( () => {
+      //       element.style.backgroundColor = "";
+      //     }, 500)
+      //   }
       
-        // console.log('WE MADE IT ALL THE WAY FROM THE FRONTEND! HERE\'S THE PAYLOAD:', payload);
-        // console.log(element);
-      }
+      //   // console.log('WE MADE IT ALL THE WAY FROM THE FRONTEND! HERE\'S THE PAYLOAD:', payload);
+      //   // console.log(element);
+      // }
       break;
     default:
       break;

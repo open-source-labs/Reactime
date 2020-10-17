@@ -149,10 +149,11 @@ export default function ComponentMap({
                           rx={node.data.children ? 0 : 10}
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
-                            console.log(node);
                             forceUpdate();
                           }}
-                          onMouseEnter={()=> {dispatch(onHover(node.data.rtid))}
+                          onMouseEnter={()=> {
+                            dispatch(onHover(node.data.recoilDomNode[node.data.name]))                        
+                          }
                         />
                       )}
                       <text
