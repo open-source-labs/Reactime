@@ -50,18 +50,22 @@ const getPerfMetrics = (snapshots, snapshotsIds) => {
   }, [])
 }
 
-// traverse the snapshot for all components and their rendering time
-const traverse = (snapshot, perfSnapshot) => {
+// traverse can either return all component rendering times or type of state component depending if 2nd argument is passed
+const traverse = (snapshot, data = {}) => {
   if (!snapshot.children[0]) return
   for (let i = 0; i < snapshot.children.length; i++){
-    // perfSnapshot.state = snapshot.children[i].state
-    if (snapshot.children[i].componentData.actualDuration){
-    const renderTime = Number(Number.parseFloat(snapshot.children[i].componentData.actualDuration).toPrecision(5))
-    perfSnapshot[snapshot.children[i].name+-[i+1]] = renderTime
+    const componentName = snapshot.children[i].name+-[i+1]
+    if (!data.snapshotId){
+      if(snapshot.children[i].state !== 'stateless') data[componentName] = 'STATEFUL'
+      else data[componentName] = snapshot.children[i].state;
+    } 
+    else if (snapshot.children[i].componentData.actualDuration){
+      const renderTime = Number(Number.parseFloat(snapshot.children[i].componentData.actualDuration).toPrecision(5));
+      data[componentName] = renderTime;
     }
-    traverse(snapshot.children[i], perfSnapshot)
+    traverse(snapshot.children[i], data)
   }
-  return perfSnapshot
+  return data
 }
 
 const getSnapshotIds = (obj, snapshotIds = []) => {
@@ -92,7 +96,7 @@ export default function PerformanceVisx({
     tooltipLeft,
     tooltipTop,
     tooltipData,
-    hideTooltip,
+    hideTooltip,ƒ
     showTooltip
   } = useTooltip<TooltipData>();
 
@@ -101,8 +105,12 @@ let tooltipTimeout: number;
 // filter and structure incoming data for VISX 
 const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy))
 const keys = Object.keys(data[0]).filter((d) => d !== "snapshotId") as CityName[];
+const allComponentStates = traverse(snapshots[0])
+
+console.log(keys)
 console.log('data', data)
 console.log('snapshots', snapshots)
+console.log(allComponentStates)
 
 // create array of total render times for each snapshot
 const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
@@ -280,6 +288,9 @@ console.log('height', height)
           <div style={{ color: colorScale(tooltipData.key) }}>
             <strong>{tooltipData.key}</strong>
           </div>
+
+          <div>{allComponentStates[tooltipData.key]}</div>
+
           <div>
             {formatRenderTime(tooltipData.bar.data[tooltipData.key])}
           </div>
