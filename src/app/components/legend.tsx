@@ -6,79 +6,59 @@ import { LegendOrdinal, LegendItem, LegendLabel } from '@visx/legend';
 
 const legendGlyphSize = 8;
 
-export default function Legendary(props: any) {
-  // { events = false }: { events?: boolean }) {
-
+export default function LegendKey(props: `Record<string, unknown>`) {
   const { hierarchy } = props;
 
+  // We are taking the array of displayNames and sifting through them and placing each set of
+  // branches as a key in an object, { '.0': [1.0, 2.0, 3.0, 4.0], '.1': [1.1, 2.1, 3.1,...], '.2': [....]}
+  // we then take that and place it in an array, with each element being a range of the values in that branch -> ['1.0-4.0', '1.1-6.1',...]
   function colorRanger(snapshotIdsArray) {
-    // create object to store branch ranges
     const resultRangeColor = {};
 
     for (let i = 0; i < snapshotIdsArray.length; i += 1) {
       const current = snapshotIdsArray[i];
-
       let key = current - Math.floor(current);
       key = key.toFixed(2);
 
       if (current % 1 === 0) {
         key = current - Math.floor(current);
-        if (!resultRangeColor[key]) resultRangeColor[key] = [current];
-        else resultRangeColor[key].push(current);
+        resultRangeColor[key]
+          ? resultRangeColor[key].push(current)
+          : (resultRangeColor[key] = [current]);
       } else if (current - Math.floor(current) !== 0) {
-        if (!resultRangeColor[key]) resultRangeColor[key] = [current];
-        else resultRangeColor[key].push(current);
+        resultRangeColor[key]
+          ? resultRangeColor[key].push(current)
+          : (resultRangeColor[key] = [current]);
       }
     }
-    return objectToArray(resultRangeColor);
-  }
-
-  // reduce or map method on this?
-  function objectToArray(snapObj) {
-    // console.log(
-    //   'mid step: object that we are going to pass into the array is',
-    //   snapObj
-    // );
-    const newArr = [];
-    const arrValues = Object.values(snapObj);
-    // console.log(arrValues);
-    // console.log(arrValues[0].length);
-    // console.log(arrValues[0][arrValues[0]]);
+    // now we convert the object to an array, each index being a string of the range of the branch
+    const branchesArr = [];
+    const arrValues = Object.values(resultRangeColor);
 
     for (let i = 0; i < arrValues.length; i += 1) {
       const len = arrValues[i].length;
       const tempVal = `${arrValues[i][0]} - ${arrValues[i][len - 1]}`;
-      newArr.push(tempVal);
+      branchesArr.push(tempVal);
     }
-    // console.log(
-    //   'later step: the array that is created from passing in the object is',
-    //   newArr
-    // );
-    return newArr;
+    return branchesArr;
   }
 
   const getSnapshotIds = (obj, snapshotIds = []) => {
-    // console.log('the hierarchy object is: ', hierarchy);
     snapshotIds.push(`${obj.name}.${obj.branch}`);
     if (obj.children) {
       obj.children.forEach((child) => {
         getSnapshotIds(child, snapshotIds);
       });
     }
-    // console.log('after recursive call, snapshotIds are: ', snapshotIds);
-    // return snapshotIds;
     const resultRange = colorRanger(snapshotIds);
-    // console.log(resultRange);
     return resultRange;
   };
 
+  // invoking getSnaphshotIds, which will ultimately return our array of split up branches
   const snap = getSnapshotIds(hierarchy);
-  // console.log('the snap that we are receiving now is: ', snap);
 
   const ordinalColorScale = scaleOrdinal<number, string>({
     domain: snap,
-    // maybe think of having each element be a string of the range? ooooooh
-    // sync in with the snapshot color chosen in history tab already
     range: [
       '#95B6B7',
       '#475485',
@@ -110,8 +90,7 @@ export default function Legendary(props: any) {
                   key={`legend-quantile-${i}`}
                   margin="0 5px"
                   onClick={() => {
-                    // if (Event) alert(`clicked: ${JSON.stringify(label)}`);
-                    if (Event) alert('clicked: YO BRILLIANT GENIOS');
+                    // if (Event) alert('clicked: YO BRILLIANT GENIUS');
                   }}
                 >
                   <svg width={10} height={10}>
