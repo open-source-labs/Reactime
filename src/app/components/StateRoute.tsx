@@ -16,14 +16,12 @@ import ComponentMap from './ComponentMap';
 // import PerfView from './PerfView';
 import AtomsRelationship from './AtomsRelationship.jsx';
 import PerformanceVisx from './PerformanceVisx.tsx';
-
 import Example from './AtomsRelationship.jsx';
 import { ParentSize } from '@visx/responsive';
 import { Console } from 'console';
 import Legendary from './legend';
 
 const History = require('./History').default;
-
 const ErrorHandler = require('./ErrorHandler').default;
 
 const NO_STATE_MSG =
@@ -47,8 +45,6 @@ interface StateRouteProps {
 
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
-
-  console.log(hierarchy)
 
   const isRecoil = snapshot.atomsComponents ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
