@@ -81,13 +81,14 @@ const StateRoute = (props: StateRouteProps) => {
   //* we wrap History in a ParentSize div, in order to make use of Visx's Zoom functionality
   const renderHistory = () => {
     if (hierarchy) {
+      // console.log(`width is ${width} and height is ${height}`);
       return (
         <div>
           <ParentSize>
             {({ width, height }) => (
               <History
-                width={width}
-                height={height}
+                width={535}
+                height={481}
                 hierarchy={hierarchy}
                 dispatch={dispatch}
                 sliderIndex={sliderIndex}
