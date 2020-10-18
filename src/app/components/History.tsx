@@ -7,8 +7,9 @@ import { changeView, changeSlider } from '../actions/actions';
 import { Zoom } from '@visx/zoom';
 import { localPoint } from '@visx/event';
 import { RectClipPath } from '@visx/clip-path';
+import ZoomI from './zoomFt';
 
-// Visx Zoom feature stuff
+//* Visx Zoom feature stuff
 const bg = '';
 const points = [...new Array(1000)];
 
@@ -57,14 +58,17 @@ const filterHooks = (data: any[]) => {
  * @method maked3Tree :Creates a new D3 Tree
  */
 
-function History(props) {
+function History(props: any) {
   //visx zoom first
-  const [showMiniMap, setShowMiniMap] = useState<boolean>(true);
+  // const [showMiniMap, setShowMiniMap] = useState<boolean>(true);
 
   const { width, height, hierarchy, dispatch, sliderIndex, viewIndex } = props;
+  console.log(
+    `inside History tab -> width is ${width} and height is ${height}`
+  );
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
-  console.log('before makedTree, hierarchy is, ', hierarchy);
+  // console.log('before makedTree, hierarchy is, ', hierarchy);
   let HistoryRef = React.createRef(root); //React.createRef(root);
   useEffect(() => {
     maked3Tree();
@@ -99,7 +103,7 @@ function History(props) {
     // d3.hierarchy constructs a root node from the specified hierarchical data
     // (our object titled dataset), which must be an object representing the root node
     const hierarchy = d3.hierarchy(root);
-    console.log('after maked3tree, hierarchy is now: ', hierarchy);
+    // console.log('after maked3tree, hierarchy is now: ', hierarchy);
     const tree = d3
       .tree()
       .nodeSize([width / 10, height / 10])
@@ -259,20 +263,20 @@ function History(props) {
       return [(y = +y) * Math.cos((x -= Math.PI / 2)), y * Math.sin(x)];
     }
   };
-  console.log('have we hit maked3dtree');
+  // console.log('have we hit maked3dtree');
   // below we are rendering the LegendKey component and passing hierarchy as props
   // then rendering each node in History tab to render using D3
   return (
     <>
-      <div>
-        <LegendKey hierarchy={hierarchy} />
-        <div
-          ref={HistoryRef}
-          className="history-d3-div"
-          id="historyContainer"
-          // position="absolute"
-        />
-      </div>
+      <LegendKey hierarchy={hierarchy} />
+      {/* <ZoomI width={width} height={height}> */}
+      <div
+        ref={HistoryRef}
+        className="history-d3-div"
+        id="historyContainer"
+        // position="absolute"
+      />
+      {/* </ZoomI> */}
     </>
   );
 }
