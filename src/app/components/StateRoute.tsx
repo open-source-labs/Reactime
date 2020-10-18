@@ -15,9 +15,11 @@ import Tree from './Tree';
 import ComponentMap from './ComponentMap';
 import PerformanceVisx from './PerformanceVisx';
 import Legend from './AtomsRelationshipLegend'
-import Example from './AtomsRelationship';
+// import Example from './AtomsRelationship';
 import { ParentSize } from '@visx/responsive';
 import Legendary from './legend';
+// import atomsRelationship from './AtomsRelationship';
+import AtomsRelationship from './AtomsRelationship'
 
 const History = require('./History').default;
 
@@ -60,7 +62,10 @@ const StateRoute = (props: StateRouteProps) => {
       return (
         <ParentSize>
           {({ width, height }) => (
-            <ComponentMap snapshots={snapshots} width={width} height={height} />
+            <ComponentMap 
+            snapshots={snapshots} 
+            width={width} 
+            height={height} />
           )}
         </ParentSize>
       );
@@ -90,13 +95,12 @@ const StateRoute = (props: StateRouteProps) => {
   const renderAtomsRelationship = () => (
     <ParentSize>{({ width, height })  => 
     <>
-    {/* <Legend /> */}
-    <Example 
+    <AtomsRelationship 
     width={width} 
     height={height}
     snapshots={snapshots} />
     </>
-    </ParentSize>
+    }</ParentSize>
   );
 
   // the hierarchy gets set on the first click in the page

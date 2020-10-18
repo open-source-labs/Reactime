@@ -241,7 +241,7 @@ const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40 };
 //   margin?: { top: number; right: number; bottom: number; left: number };
 // };
 
-export default function Example({
+export default function AtomsRelationship({
   width,
   height,
   margin = defaultMargin,
