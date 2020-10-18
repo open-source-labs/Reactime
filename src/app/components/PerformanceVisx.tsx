@@ -26,7 +26,7 @@ interface margin { top: number; right: number; bottom: number; left: number };
 
 interface TooltipData {
   bar: SeriesPoint<snapshot>;
-  key: CityName;
+  key: string;
   index: number;
   height: number;
   width: number;
@@ -56,8 +56,13 @@ const tooltipStyles = {
 
 /* DATA HANDLING HELPER FUNCTIONS */
 
-// traverses a snapshot - returns all rendering times OR component state types. Depends on 2nd arg
-const traverse = (snapshot, data = {}) => {
+// traverses a snapshot - returns object of rendering times OR component state types. Depends on 2nd arg
+
+interface data {
+  snapshotId?: string;
+}
+
+const traverse = (snapshot, data: data = {}) => {
   if (!snapshot.children[0]) return;
   for (let i = 0; i < snapshot.children.length; i++) {
     const componentName = snapshot.children[i].name + -[i + 1];
@@ -87,14 +92,13 @@ const getSnapshotIds = (obj, snapshotIds = []) => {
 };
 
 // Returns array of snapshot objs each with components and corresponding render times
-const getPerfMetrics = (snapshots, snapshotsIds) => {
-  snapshots.reduce((perfSnapshots, curSnapshot, idx) => {
-    perfSnapshots.concat(traverse(curSnapshot, { snapshotId: snapshotsIds[idx] }));
+const getPerfMetrics = (snapshots, snapshotsIds):any[] => {
+  return snapshots.reduce((perfSnapshots, curSnapshot, idx) => {
+    return perfSnapshots.concat(traverse(curSnapshot, { snapshotId: snapshotsIds[idx] }));
   }, []);
 };
 
 /* EXPORT COMPONENT */
-
 const PerformanceVisx = (props: BarStackProps) => {
 
   const { width, height, snapshots, hierarchy } = props;
@@ -108,13 +112,12 @@ const PerformanceVisx = (props: BarStackProps) => {
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
 
   // filter and structure incoming data for VISX
-  const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
-  const keys = Object.keys(data[0]).filter(d => d !== 'snapshotId') as CityName[];
-  const allComponentStates = traverse(snapshots[0]);
 
-  console.log(snapshots);
-  console.log(hierarchy);
-  console.log('margin', margin);
+  const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
+
+  const keys = Object.keys(data[0]).filter(d => d !== 'snapshotId') as [];
+
+  const allComponentStates = traverse(snapshots[0]);
 
   // create array of total render times for each snapshot
   const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
@@ -142,7 +145,7 @@ const PerformanceVisx = (props: BarStackProps) => {
     nice: true,
   });
 
-  const colorScale = scaleOrdinal<CityName, string>({
+  const colorScale = scaleOrdinal<string>({
     domain: keys,
     range: schemeSet3,
   });
@@ -179,7 +182,7 @@ const PerformanceVisx = (props: BarStackProps) => {
           xOffset={snapshotIdScale.bandwidth() / 2}
         />
         <Group top={margin.top} left={margin.left}>
-          <BarStack <snapshot, CityName>
+          <BarStack
             data={data}
             keys={keys}
             x={getSnapshotId}
