@@ -9,11 +9,11 @@ import LegendKey from './legend';
 import History from './History';
 // import { hierarchy } from '@visx/hierarchy';
 
-const bg = '';
-const points = [...new Array(1000)];
+// const bg = '';
+// const points = [...new Array(1000)];
 
-const colorScale = scaleLinear<number>({ range: [0, 1], domain: [0, 1000] });
-const sizeScale = scaleLinear<number>({ domain: [0, 600], range: [0.5, 8] });
+// const colorScale = scaleLinear<number>({ range: [0, 1], domain: [0, 1000] });
+// const sizeScale = scaleLinear<number>({ domain: [0, 600], range: [0.5, 8] });
 
 const initialTransform = {
   scaleX: 1.27,
@@ -32,7 +32,7 @@ const initialTransform = {
 export default function ZoomI(props: any) {
   const [showMiniMap, setShowMiniMap] = useState<boolean>(true);
   // const { width, height, hierarchy, dispatch, sliderIndex, viewIndex } = props;
-  const { width, height } = props;
+  const { width, height, hierarchy, dispatch, sliderIndex, viewIndex } = props;
   // const genenerator: GenPhyllotaxisFunction = genPhyllotaxis({
   //   radius: 10,
   //   width,
@@ -51,6 +51,12 @@ export default function ZoomI(props: any) {
         scaleYMax={4}
         transformMatrix={initialTransform}
       >
+        {/* <div
+          ref={HistoryRef}
+          className="history-d3-div"
+          id="historyContainer"
+          // position="absolute"
+        /> */}
         {(zoom) => (
           <div className="relative">
             <svg
@@ -58,9 +64,12 @@ export default function ZoomI(props: any) {
               height={height}
               style={{ cursor: zoom.isDragging ? 'grabbing' : 'grab' }}
             >
-              <RectClipPath id="zoom-clip" width={width} height={height} />
-              <rect width={width} height={height} rx={14} fill={bg} />
-              <g transform={zoom.toString()}>{/* invoke them here */}</g>
+              <RectClipPath id="zoom-clip" width={800} height={600} />
+              <rect width={width} height={height} />
+              <g transform={zoom.toString()}>
+                {/* invoke them here */}
+                <h1 color="yellowgreen">Hello</h1>
+              </g>
               <rect
                 width={width}
                 height={height}
@@ -174,3 +183,21 @@ export default function ZoomI(props: any) {
     </>
   );
 }
+
+/*
+return (
+    <>
+    <Zoom>
+      <div>
+        <LegendKey hierarchy={hierarchy} />
+        <div
+          ref={HistoryRef}
+          className="history-d3-div"
+          id="historyContainer"
+          // position="absolute"
+        />
+      </div>
+      </Zoom>
+    </>
+  );
+*/
