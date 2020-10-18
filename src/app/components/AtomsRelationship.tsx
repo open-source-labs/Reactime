@@ -5,6 +5,8 @@ import { Cluster, hierarchy } from '@visx/hierarchy';
 import { LinkVertical } from '@visx/shape';
 import { LinearGradient } from '@visx/gradient';
 import { StateRouteProps} from './StateRoute'
+import { onHover } from '../actions/actions'
+import { useStoreContext } from '../store'
 import Legend from './AtomsRelationshipLegend'
 
 export const blue = '#acdbdf';
@@ -39,7 +41,7 @@ interface selectorsCache {
 
 
 const clusterData : clusterShape = {};
-const selectorsCache :selectorsCache = {}
+const selectorsCache :selectorsCache = {};
  
 let initialFire = false 
 function clusterDataPopulate(props:StateRouteProps) {
@@ -122,6 +124,7 @@ function reorganizedCompObj(props) {
 }
 
 function Node({ node }) {
+  const [dispatch] = useStoreContext();
   const selector = node.depth === 1 && node.height === 2
   const isRoot = node.depth === 0;
   const isParent = !!node.children;
@@ -136,9 +139,14 @@ function Node({ node }) {
           r={12}
           fill={isParent ? orange : blue}
           stroke={isParent ? orange : blue}
-          // onClick={() => {
-          //   alert(`clicked: ${JSON.stringify(node.data.name)}`);
-          // }}
+          onMouseEnter={()=> {
+            console.log('hi')
+            // if(Object.keys(node.data.recoilDomNode).length > 0){
+            //   dispatch(onHover(node.data.recoilDomNode[node.data.name]))
+            // } else {
+            //   dispatch(onHover(node.data.rtid))
+            // }                                      
+          }}
         />
       )}
       <text
@@ -191,6 +199,7 @@ function RootNode({ node }) {
 }
 
 function SelectorNode({ node }) {
+  const [dispatch] = useStoreContext();
     return (
       <Group top={node.y} left={node.x}>
       {node.depth !== 0 && (
@@ -198,9 +207,15 @@ function SelectorNode({ node }) {
           r={12}
           fill={selectWhite}
           stroke={selectWhite}
-          // onClick={() => {
-          //   alert(`clicked: ${JSON.stringify(node.data.name)}`);
-          // }}
+          onMouseEnter={()=> {
+
+            console.log('hi')
+            // if(Object.keys(node.data.recoilDomNode).length > 0){
+            //   dispatch(onHover(node.data.recoilDomNode[node.data.name]))
+            // } else {
+            //   dispatch(onHover(node.data.rtid))
+            // }                                      
+          }}
         />
       )}
       <text
@@ -262,11 +277,12 @@ export default function Example({
                 stroke={merlinsbeard}
                 strokeWidth="1"
                 strokeOpacity={0.2}
-                fill="none"
+                fill="none"                
               />
             ))}
             {cluster.descendants().map((node, i) => (
-              <Node key={`cluster-node-${i}`} node={node} />
+              <Node key={`cluster-node-${i}`} 
+              node={node} />
             ))}
           </Group>
         )}
