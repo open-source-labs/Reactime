@@ -66,23 +66,22 @@ const tooltipStyles = {
 
 /* DATA HANDLING HELPER FUNCTIONS */
 
-// traverses a snapshot - returns object of rendering times OR component state types. Depends on 2nd arg
-
+// traverses a snapshot for data: rendering time, component type, or rtid 
 const traverse = (snapshot, fetchData, data = {}) => {
   if (!snapshot.children[0]) return;
   snapshot.children.forEach((child, idx) => {
     const componentName = child.name + -[idx + 1];
     // Get component Type
-    if (fetchData === 'componentType') {
+    if (fetchData === 'getComponentType') {
       if (child.state !== 'stateless') data[componentName] = 'STATEFUL';
       else data[componentName] = child.state;
     }
     // Get component Rendering Time
-    else if (fetchData === 'renderTime') {
+    else if (fetchData === 'getRenderTime') {
       const renderTime = Number(Number.parseFloat(child.componentData.actualDuration).toPrecision(5));
       data[componentName] = renderTime;
     }
-    else if (fetchData === 'rtid') {
+    else if (fetchData === 'getRtid') {
       data[componentName] = child.rtid;
     }
     traverse(snapshot.children[idx], fetchData, data);
@@ -103,7 +102,7 @@ const getSnapshotIds = (obj, snapshotIds = []) => {
 // Returns array of snapshot objs each with components and corresponding render times
 const getPerfMetrics = (snapshots, snapshotsIds):any[] => {
   return snapshots.reduce((perfSnapshots, curSnapshot, idx) => {
-    return perfSnapshots.concat(traverse(curSnapshot, 'renderTime', { snapshotId: snapshotsIds[idx] }));
+    return perfSnapshots.concat(traverse(curSnapshot, 'getRenderTime', { snapshotId: snapshotsIds[idx] }));
   }, []);
 };
 
@@ -123,12 +122,10 @@ const PerformanceVisx = (props: BarStackProps) => {
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
 
   // filter and structure incoming data for VISX
-
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
-
   const keys = Object.keys(data[0]).filter(d => d !== 'snapshotId');
-
   const allComponentStates = traverse(snapshots[0]);
+  const allComponentRtids = traverse(snapshots[-1], 'getRtids');
 
   // create array of total render times for each snapshot
   const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
