@@ -150,7 +150,7 @@ function Node({ node, snapshots, dispatch, bothObj}) {
   const isParent = !!node.children;
   
   if (isRoot) return <RootNode node={node} />;
-  if (selector) return <SelectorNode node = {node} snapshots = {snapshots} bothObj = {bothObj}/>;
+  if (selector) return <SelectorNode node = {node} snapshots = {snapshots} bothObj = {bothObj} dispatch = {dispatch}/>;
 
   return (
     <Group top={node.y} left={node.x}>
@@ -160,12 +160,9 @@ function Node({ node, snapshots, dispatch, bothObj}) {
           fill={isParent ? orange : blue}
           stroke={isParent ? orange : blue}
           onMouseEnter={()=> {
-            console.log(bothObj)
-            console.log(clusterData)
-            console.log(snapshots[0].recoilDomNode)
-            console.log(node.data.name)
-            // console.log(snapshots[0].recoilDomNode[node.data.name])
-            // dispatch(onHover(snapshots[0].recoilDomNode[node.data.name]))                                  
+            for (let i=0; i<bothObj[node.data.name].length; i++){
+              dispatch(onHover(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+            }                            
           }}
         />
       )}
@@ -220,7 +217,6 @@ function RootNode({ node }) {
 }
 
 function SelectorNode({ node, snapshots, dispatch, bothObj}) {
-  // const [dispatch] = useStoreContext();
     return (
       <Group top={node.y} left={node.x}>
       {node.depth !== 0 && (
@@ -229,12 +225,9 @@ function SelectorNode({ node, snapshots, dispatch, bothObj}) {
           fill={selectWhite}
           stroke={selectWhite}
           onMouseEnter={()=> {
-            console.log(bothObj)
-            console.log(clusterData)
-            console.log(snapshots[0].recoilDomNode)
-            console.log(node.data.name)
-            // console.log(snapshots[0].recoilDomNode[node.data.name])
-            // dispatch(onHover(snapshots[0].recoilDomNode[node.data.name]))                         
+            for (let i=0; i<bothObj[node.data.name].length; i++){
+              dispatch(onHover(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+            }                     
           }}
         />
       )}
@@ -280,7 +273,8 @@ export default function AtomsRelationship({
   
   let filtered = removeDup(bothObj)
 
-  const [dispatch] = useStoreContext();
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+
   if(!initialFire){
     clusterDataPopulate(snapshots);
   }
@@ -316,7 +310,7 @@ export default function AtomsRelationship({
             {cluster.descendants().map((node, i) => (
               <Node key={`cluster-node-${i}`} 
               node={node}
-              bothObj = {bothObj}
+              bothObj = {filtered}
               snapshots = {snapshots}
               dispatch = {dispatch} />
             ))}
