@@ -9,6 +9,7 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
 import snapshots from './snapshots';
+import { onHover, onHoverExit } from '../actions/actions'
 
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
@@ -112,6 +113,7 @@ const PerformanceVisx = (props: BarStackProps) => {
   const { width, height, snapshots, hierarchy } = props;
 
   console.log('snapshots', snapshots);
+  console.log('hierarchy', hierarchy)
 
   const {
     tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip,
@@ -124,8 +126,12 @@ const PerformanceVisx = (props: BarStackProps) => {
   // filter and structure incoming data for VISX
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   const keys = Object.keys(data[0]).filter(d => d !== 'snapshotId');
-  const allComponentStates = traverse(snapshots[-1], 'getComponentType');
-  const allComponentRtids = traverse(snapshots[-1], 'getRtids');
+  const allComponentStates = traverse(snapshots[0], 'getComponentType');
+  const allComponentRtids = traverse(snapshots[snapshots.length-1], 'getRtid');
+
+  console.log('data', data)
+  console.log('allComponentState', allComponentStates)
+  console.log('allComponentRtids', allComponentRtids)
 
   // create array of total render times for each snapshot
   const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
