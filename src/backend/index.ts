@@ -59,7 +59,36 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       mode.paused = payload;
       break;
     case 'onHover':
-      // console.log('WE MADE IT ALL THE WAY FROM THE FRONTEND! HERE\'S THE PAYLOAD:', payload);
+      // console.log(payload);
+      
+      if(Array.isArray(payload)){ 
+        for (let i=0; i<payload.length;i++){
+          let element = document.getElementById(payload[i])
+          if (element !== null) {
+                element.style.backgroundColor = '#C0D9D9'; 
+              }
+        }
+      } else {
+        let element = document.getElementById(payload)
+        if (element !== null) {
+          element.style.backgroundColor = '#C0D9D9'; 
+        }
+      }
+      break;
+    case 'onHoverExit': 
+            if(Array.isArray(payload)){ 
+        for (let i=0; i<payload.length;i++){
+          let element = document.getElementById(payload[i])
+          if (element !== null) {
+                element.style.backgroundColor = ''; 
+              }
+        }
+      } else {
+        let element = document.getElementById(payload)
+        if (element !== null) {
+          element.style.backgroundColor = ''; 
+        }
+      }
       break;
     default:
       break;

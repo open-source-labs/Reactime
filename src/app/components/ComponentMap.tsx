@@ -11,6 +11,8 @@ import { pointRadial } from 'd3-shape';
 import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
+import { onHover, onHoverExit } from '../actions/actions'
+import { useStoreContext } from '../store'
 
 const defaultMargin = { top: 30, left: 30, right: 30, bottom: 70 };
 
@@ -28,9 +30,12 @@ export default function ComponentMap({
   margin = defaultMargin,
   snapshots: snapshots,
 }: LinkTypesProps) {
+
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
   // preparing the data to be used for render
   const lastNode = snapshots.length - 1;
   const data = snapshots[lastNode];
+
   const [layout, setLayout] = useState<string>('cartesian');
   const [orientation, setOrientation] = useState<string>('horizontal');
   const [linkType, setLinkType] = useState<string>('diagonal');
@@ -125,7 +130,6 @@ export default function ComponentMap({
                           fill="url('#links-gradient')"
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
-                            console.log(node);
                             forceUpdate();
                           }}
                         />
@@ -144,9 +148,22 @@ export default function ComponentMap({
                           rx={node.data.children ? 0 : 10}
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
-                            console.log(node);
                             forceUpdate();
                           }}
+                          onMouseLeave={()=> {
+                            if(Object.keys(node.data.recoilDomNode).length > 0){
+                              dispatch(onHoverExit(node.data.recoilDomNode[node.data.name]))
+                            } else {
+                              dispatch(onHoverExit(node.data.rtid))
+                            }
+                          }}
+                          onMouseEnter={()=> {
+                            if(Object.keys(node.data.recoilDomNode).length > 0){
+                              dispatch(onHover(node.data.recoilDomNode[node.data.name]))
+                            } else {
+                              dispatch(onHover(node.data.rtid))
+                            }   
+                          }
                         />
                       )}
                       <text
