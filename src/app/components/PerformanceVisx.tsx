@@ -20,8 +20,6 @@ seen in recoil apps...
  */
 
 /* TYPESCRIPT */
-type snapshot = any;
-
 interface margin { top: number; right: number; bottom: number; left: number };
 
 interface TooltipData {
@@ -35,12 +33,23 @@ interface TooltipData {
   color: string;
 }
 
+interface data {
+  snapshotId?: string;
+}
+
 // typescript for PROPS from StateRoute.tsx
 interface BarStackProps {
   width: number;
   height: number;
   snapshots: [];
   hierarchy: any;
+}
+
+interface snapshot {
+  children: [];
+  componentData: any;
+  name: string;
+  state: string;
 }
 
 /* DEFAULTS */
@@ -57,10 +66,6 @@ const tooltipStyles = {
 /* DATA HANDLING HELPER FUNCTIONS */
 
 // traverses a snapshot - returns object of rendering times OR component state types. Depends on 2nd arg
-
-interface data {
-  snapshotId?: string;
-}
 
 const traverse = (snapshot, data: data = {}) => {
   if (!snapshot.children[0]) return;
@@ -115,7 +120,7 @@ const PerformanceVisx = (props: BarStackProps) => {
 
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
 
-  const keys = Object.keys(data[0]).filter(d => d !== 'snapshotId') as [];
+  const keys = Object.keys(data[0]).filter(d => d !== 'snapshotId');
 
   const allComponentStates = traverse(snapshots[0]);
 
