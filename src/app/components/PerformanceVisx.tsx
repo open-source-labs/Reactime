@@ -8,6 +8,7 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
+import snapshots from './snapshots';
 
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
@@ -67,22 +68,25 @@ const tooltipStyles = {
 
 // traverses a snapshot - returns object of rendering times OR component state types. Depends on 2nd arg
 
-const traverse = (snapshot, data: data = {}) => {
+const traverse = (snapshot, fetchData, data = {}) => {
   if (!snapshot.children[0]) return;
-  for (let i = 0; i < snapshot.children.length; i++) {
-    const componentName = snapshot.children[i].name + -[i + 1];
+  snapshot.children.forEach((child, idx) => {
+    const componentName = child.name + -[idx + 1];
     // Get component Type
-    if (!data.snapshotId) {
-      if (snapshot.children[i].state !== 'stateless') data[componentName] = 'STATEFUL';
-      else data[componentName] = snapshot.children[i].state;
+    if (fetchData === 'componentType') {
+      if (child.state !== 'stateless') data[componentName] = 'STATEFUL';
+      else data[componentName] = child.state;
     }
     // Get component Rendering Time
-    else if (snapshot.children[i].componentData.actualDuration) {
-      const renderTime = Number(Number.parseFloat(snapshot.children[i].componentData.actualDuration).toPrecision(5));
+    else if (fetchData === 'renderTime') {
+      const renderTime = Number(Number.parseFloat(child.componentData.actualDuration).toPrecision(5));
       data[componentName] = renderTime;
     }
-    traverse(snapshot.children[i], data);
-  }
+    else if (fetchData === 'rtid') {
+      data[componentName] = child.rtid;
+    }
+    traverse(snapshot.children[idx], fetchData, data);
+  })
   return data;
 };
 
@@ -99,7 +103,7 @@ const getSnapshotIds = (obj, snapshotIds = []) => {
 // Returns array of snapshot objs each with components and corresponding render times
 const getPerfMetrics = (snapshots, snapshotsIds):any[] => {
   return snapshots.reduce((perfSnapshots, curSnapshot, idx) => {
-    return perfSnapshots.concat(traverse(curSnapshot, { snapshotId: snapshotsIds[idx] }));
+    return perfSnapshots.concat(traverse(curSnapshot, 'renderTime', { snapshotId: snapshotsIds[idx] }));
   }, []);
 };
 
@@ -107,6 +111,8 @@ const getPerfMetrics = (snapshots, snapshotsIds):any[] => {
 const PerformanceVisx = (props: BarStackProps) => {
 
   const { width, height, snapshots, hierarchy } = props;
+
+  console.log('snapshots', snapshots);
 
   const {
     tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip,
@@ -206,6 +212,7 @@ const PerformanceVisx = (props: BarStackProps) => {
                     /* TIP TOOL EVENT HANDLERS */
                     // Hides tool tip once cursor moves off the current rect
                 onMouseLeave={() => {
+                  console.log('datafrommouse', data)
                   tooltipTimeout = window.setTimeout(() => {
                     hideTooltip();
                   }, 300);
