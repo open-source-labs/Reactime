@@ -15,10 +15,8 @@ import Tree from './Tree';
 import ComponentMap from './ComponentMap';
 import PerformanceVisx from './PerformanceVisx';
 import Legend from './AtomsRelationshipLegend'
-// import Example from './AtomsRelationship';
 import { ParentSize } from '@visx/responsive';
 import Legendary from './legend';
-// import atomsRelationship from './AtomsRelationship';
 import AtomsRelationship from './AtomsRelationship'
 
 const History = require('./History').default;

@@ -42,7 +42,10 @@ interface selectorsCache {
 
 const clusterData : clusterShape = {};
 const selectorsCache :selectorsCache = {};
- 
+const bothObj = {}; 
+
+console.log('bothObj', bothObj)
+
 let initialFire = false 
 function clusterDataPopulate(props:StateRouteProps) {
   let atomCompObj = reorganizedCompObj(props);
@@ -60,10 +63,14 @@ function clusterDataPopulate(props:StateRouteProps) {
       let outerobj:outerObjShape = {}  
       outerobj.name = key
       selectorsCache[key] = true 
+      
+      if(!bothObj[key]){
+        bothObj[key] = []
+      }
+
 
       if(props[0].atomSelectors[key].length){
       for(let i=0; i<props[0].atomSelectors[key].length;i++){
-
         if(!outerobj.children) outerobj.children = []
         let innerobj:innerObjShape = {}
         innerobj.name = props[0].atomSelectors[key][i]
@@ -72,8 +79,15 @@ function clusterDataPopulate(props:StateRouteProps) {
         //if atoms contain components 
         if(atomCompObj[props[0].atomSelectors[key][i]]){
           for(let j=0; j<atomCompObj[props[0].atomSelectors[key][i]].length;j++){
+            if(!bothObj[props[0].atomSelectors[key][i]]){
+              bothObj[props[0].atomSelectors[key][i]] = []
+            }
+              bothObj[props[0].atomSelectors[key][i]].push(atomCompObj[props[0].atomSelectors[key][i]][0])
+
             if(!innerobj.children) innerobj.children = []
             innerobj.children.push({name:atomCompObj[props[0].atomSelectors[key][i]]})
+            bothObj[key].push(atomCompObj[props[0].atomSelectors[key][i]][0])
+            
           }
         }
         outerobj.children.push(innerobj)
@@ -84,6 +98,11 @@ function clusterDataPopulate(props:StateRouteProps) {
         if(atomCompObj[key] && atomCompObj[key].length){
           for (let i=0; i<atomCompObj[key].length;i++){
             outerobj.children.push({name:atomCompObj[key][i]})
+
+            if(!bothObj[key]){
+              bothObj[key] = []
+            } 
+            bothObj[key].push(atomCompObj[key][i])
           }
         }
         
@@ -95,9 +114,11 @@ function clusterDataPopulate(props:StateRouteProps) {
     let outObj:outerObjShape = {};
     if(!selectorsCache[key]){
       outObj.name = key
+      if(!bothObj[key]) bothObj[key] = []
       for (let i=0; i<atomCompObj[key].length;i++){
         if(!outObj.children) outObj.children = []
         outObj.children.push({name:atomCompObj[key][i]})
+        bothObj[key].push(atomCompObj[key][i])
       }
       clusterData.children.push(outObj)
     }    
@@ -123,14 +144,14 @@ function reorganizedCompObj(props) {
   return reorganizedCompObj;
 }
 
-function Node({ node }) {
-  const [dispatch] = useStoreContext();
+function Node({ node, snapshots, dispatch}) {
+  // const [dispatch] = useStoreContext();
   const selector = node.depth === 1 && node.height === 2
   const isRoot = node.depth === 0;
   const isParent = !!node.children;
-
+  
   if (isRoot) return <RootNode node={node} />;
-  if (selector) return <SelectorNode node = {node}/>;
+  if (selector) return <SelectorNode node = {node} snapshots = {snapshots}/>;
 
   return (
     <Group top={node.y} left={node.x}>
@@ -140,12 +161,11 @@ function Node({ node }) {
           fill={isParent ? orange : blue}
           stroke={isParent ? orange : blue}
           onMouseEnter={()=> {
-            console.log('hi')
-            // if(Object.keys(node.data.recoilDomNode).length > 0){
-            //   dispatch(onHover(node.data.recoilDomNode[node.data.name]))
-            // } else {
-            //   dispatch(onHover(node.data.rtid))
-            // }                                      
+            console.log(clusterData)
+            console.log(snapshots[0].recoilDomNode)
+            console.log(node.data.name)
+            // console.log(snapshots[0].recoilDomNode[node.data.name])
+            // dispatch(onHover(snapshots[0].recoilDomNode[node.data.name]))                                  
           }}
         />
       )}
@@ -165,6 +185,7 @@ function Node({ node }) {
 }
 
 function RootNode({ node }) {
+  
   const width = 40;
   const height = 20;
   const centerX = -width / 2;
@@ -198,8 +219,8 @@ function RootNode({ node }) {
   );
 }
 
-function SelectorNode({ node }) {
-  const [dispatch] = useStoreContext();
+function SelectorNode({ node, snapshots, dispatch}) {
+  // const [dispatch] = useStoreContext();
     return (
       <Group top={node.y} left={node.x}>
       {node.depth !== 0 && (
@@ -208,13 +229,11 @@ function SelectorNode({ node }) {
           fill={selectWhite}
           stroke={selectWhite}
           onMouseEnter={()=> {
-
-            console.log('hi')
-            // if(Object.keys(node.data.recoilDomNode).length > 0){
-            //   dispatch(onHover(node.data.recoilDomNode[node.data.name]))
-            // } else {
-            //   dispatch(onHover(node.data.rtid))
-            // }                                      
+            console.log(clusterData)
+            console.log(snapshots[0].recoilDomNode)
+            console.log(node.data.name)
+            // console.log(snapshots[0].recoilDomNode[node.data.name])
+            // dispatch(onHover(snapshots[0].recoilDomNode[node.data.name]))                         
           }}
         />
       )}
@@ -247,7 +266,7 @@ export default function AtomsRelationship({
   margin = defaultMargin,
   snapshots,
 }) {
-
+  const [dispatch] = useStoreContext();
   if(!initialFire){
     clusterDataPopulate(snapshots);
   }
@@ -282,7 +301,9 @@ export default function AtomsRelationship({
             ))}
             {cluster.descendants().map((node, i) => (
               <Node key={`cluster-node-${i}`} 
-              node={node} />
+              node={node}
+              snapshots = {snapshots}
+              dispatch = {dispatch} />
             ))}
           </Group>
         )}
