@@ -124,7 +124,7 @@ const PerformanceVisx = (props: BarStackProps) => {
   // filter and structure incoming data for VISX
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   const keys = Object.keys(data[0]).filter(d => d !== 'snapshotId');
-  const allComponentStates = traverse(snapshots[0]);
+  const allComponentStates = traverse(snapshots[-1], 'getComponentType');
   const allComponentRtids = traverse(snapshots[-1], 'getRtids');
 
   // create array of total render times for each snapshot
