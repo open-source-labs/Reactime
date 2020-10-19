@@ -5,7 +5,7 @@ import { Cluster, hierarchy } from '@visx/hierarchy';
 import { LinkVertical } from '@visx/shape';
 import { LinearGradient } from '@visx/gradient';
 import { StateRouteProps} from './StateRoute'
-import { onHover } from '../actions/actions'
+import { onHover, onHoverExit } from '../actions/actions'
 import { useStoreContext } from '../store'
 import Legend from './AtomsRelationshipLegend'
 
@@ -159,6 +159,11 @@ function Node({ node, snapshots, dispatch, bothObj}) {
           r={12}
           fill={isParent ? orange : blue}
           stroke={isParent ? orange : blue}
+          onMouseLeave={()=> {
+            for (let i=0; i<bothObj[node.data.name].length; i++){
+              dispatch(onHoverExit(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+            }
+          }}
           onMouseEnter={()=> {
             for (let i=0; i<bothObj[node.data.name].length; i++){
               dispatch(onHover(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
@@ -224,6 +229,11 @@ function SelectorNode({ node, snapshots, dispatch, bothObj}) {
           r={12}
           fill={selectWhite}
           stroke={selectWhite}
+          onMouseLeave={()=> {
+            for (let i=0; i<bothObj[node.data.name].length; i++){
+              dispatch(onHoverExit(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+            }
+          }}
           onMouseEnter={()=> {
             for (let i=0; i<bothObj[node.data.name].length; i++){
               dispatch(onHover(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))

@@ -83,3 +83,8 @@ export const onHover = (rtid) => ({
   //the payload should be something to relate the component we're hovering and highlight that component on the DOM
   payload: rtid
 })
+
+export const onHoverExit = (rtid) => ({
+  type: types.ON_HOVER_EXIT,
+  payload: rtid
+})

@@ -36,6 +36,8 @@ chrome.runtime.onMessage.addListener(request => { // seems to never fire
     case 'onHover': 
       window.postMessage(request, '*'); 
     default:
+    case 'onHoverExit': 
+      window.postMessage(request, '*'); 
       break;
   }
   return true; // attempt to fix port closing console error

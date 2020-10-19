@@ -44,6 +44,7 @@ function getRouteURL(node: SnapshotNode): string {
 
 // * Event listener for time-travel actions
 window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
+  console.log('payload',action)
   switch (action) {
     case 'jumpToSnap':
       timeJump(payload, true); // * This sets state with given payload
@@ -58,43 +59,35 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
     case 'setPause':
       mode.paused = payload;
       break;
-    case 'onHover':
-      console.log(payload);
-      
+    case 'onHover':    
       if(Array.isArray(payload)){ 
         for (let i=0; i<payload.length;i++){
           let element = document.getElementById(payload[i])
           if (element !== null) {
                 element.style.backgroundColor = '#C0D9D9'; 
-                setTimeout( () => {
-                  element.style.backgroundColor = "";
-                }, 500)
               }
         }
       } else {
         let element = document.getElementById(payload)
         if (element !== null) {
           element.style.backgroundColor = '#C0D9D9'; 
-          setTimeout( () => {
-            element.style.backgroundColor = "";
-          }, 500)
         }
       }
-
-      // if (payload !== null) {
-      //   let element = document.getElementById(payload)
-
-      //   if (element !== null) {
-
-      //     element.style.backgroundColor = '#C0D9D9'; 
-      //     setTimeout( () => {
-      //       element.style.backgroundColor = "";
-      //     }, 500)
-      //   }
-      
-      //   // console.log('WE MADE IT ALL THE WAY FROM THE FRONTEND! HERE\'S THE PAYLOAD:', payload);
-      //   // console.log(element);
-      // }
+      break;
+    case 'onHoverExit': 
+        if(Array.isArray(payload)){ 
+        for (let i=0; i<payload.length;i++){
+          let element = document.getElementById(payload[i])
+          if (element !== null) {
+                element.style.backgroundColor = ''; 
+              }
+        }
+      } else {
+        let element = document.getElementById(payload)
+        if (element !== null) {
+          element.style.backgroundColor = ''; 
+        }
+      }
       break;
     default:
       break;
