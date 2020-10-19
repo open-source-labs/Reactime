@@ -44,7 +44,6 @@ const clusterData : clusterShape = {};
 const selectorsCache :selectorsCache = {};
 const bothObj = {}; 
 
-console.log('bothObj', bothObj)
 
 let initialFire = false 
 function clusterDataPopulate(props:StateRouteProps) {
@@ -144,14 +143,14 @@ function reorganizedCompObj(props) {
   return reorganizedCompObj;
 }
 
-function Node({ node, snapshots, dispatch}) {
+function Node({ node, snapshots, dispatch, bothObj}) {
   // const [dispatch] = useStoreContext();
   const selector = node.depth === 1 && node.height === 2
   const isRoot = node.depth === 0;
   const isParent = !!node.children;
   
   if (isRoot) return <RootNode node={node} />;
-  if (selector) return <SelectorNode node = {node} snapshots = {snapshots}/>;
+  if (selector) return <SelectorNode node = {node} snapshots = {snapshots} bothObj = {bothObj}/>;
 
   return (
     <Group top={node.y} left={node.x}>
@@ -161,6 +160,7 @@ function Node({ node, snapshots, dispatch}) {
           fill={isParent ? orange : blue}
           stroke={isParent ? orange : blue}
           onMouseEnter={()=> {
+            console.log(bothObj)
             console.log(clusterData)
             console.log(snapshots[0].recoilDomNode)
             console.log(node.data.name)
@@ -219,7 +219,7 @@ function RootNode({ node }) {
   );
 }
 
-function SelectorNode({ node, snapshots, dispatch}) {
+function SelectorNode({ node, snapshots, dispatch, bothObj}) {
   // const [dispatch] = useStoreContext();
     return (
       <Group top={node.y} left={node.x}>
@@ -229,6 +229,7 @@ function SelectorNode({ node, snapshots, dispatch}) {
           fill={selectWhite}
           stroke={selectWhite}
           onMouseEnter={()=> {
+            console.log(bothObj)
             console.log(clusterData)
             console.log(snapshots[0].recoilDomNode)
             console.log(node.data.name)
@@ -252,6 +253,15 @@ function SelectorNode({ node, snapshots, dispatch}) {
   );
 }
 
+function removeDup(bothObj){
+  let filteredObj = {}
+  for (let key in bothObj){
+    let array = bothObj[key].filter((a,b) => bothObj[key].indexOf(a) === b)
+    filteredObj[key] = array 
+  }
+  return filteredObj
+}
+
 const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40 };
 
 // export type DendrogramProps = {
@@ -266,6 +276,10 @@ export default function AtomsRelationship({
   margin = defaultMargin,
   snapshots,
 }) {
+
+  
+  let filtered = removeDup(bothObj)
+
   const [dispatch] = useStoreContext();
   if(!initialFire){
     clusterDataPopulate(snapshots);
@@ -302,6 +316,7 @@ export default function AtomsRelationship({
             {cluster.descendants().map((node, i) => (
               <Node key={`cluster-node-${i}`} 
               node={node}
+              bothObj = {bothObj}
               snapshots = {snapshots}
               dispatch = {dispatch} />
             ))}
