@@ -2,24 +2,8 @@ import React, { Component, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import LegendKey from './legend';
 import { changeView, changeSlider } from '../actions/actions';
-// import { useStoreContext } from '../store';
-// import { string } from 'prop-types';
-import { Zoom } from '@visx/zoom';
-import { localPoint } from '@visx/event';
-import { RectClipPath } from '@visx/clip-path';
-// import ZoomI from './zoomFt';
-
-// const colorScale = scaleLinear<number>({ range: [0, 1], domain: [0, 1000] });
-// const sizeScale = scaleLinear<number>({ domain: [0, 600], range: [0.5, 8] });
-
-const initialTransform = {
-  scaleX: 1.27,
-  scaleY: 1.27,
-  translateX: -211.62,
-  translateY: 162.59,
-  skewX: 0,
-  skewY: 0,
-};
+import { useStoreContext } from '../store';
+import { string } from 'prop-types';
 
 /**
  * @var colors: Colors array for the diffrerent node branches, each color is for a different branch
@@ -55,13 +39,8 @@ const filterHooks = (data: any[]) => {
  */
 
 function History(props: any) {
-  //visx zoom first
-  const [showMiniMap, setShowMiniMap] = useState<boolean>(true);
-
   const { width, height, hierarchy, dispatch, sliderIndex, viewIndex } = props;
-  console.log(
-    `inside History tab -> width is ${width} and height is ${height}`
-  );
+
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
   // console.log('before makedTree, hierarchy is, ', hierarchy);
