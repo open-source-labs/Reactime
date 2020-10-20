@@ -80,7 +80,12 @@ const StateRoute = (props: StateRouteProps) => {
   //* we wrap History in a ParentSize div, in order to make use of Visx's Zoom functionality
   const renderHistory = () => {
     if (hierarchy) {
-      return <History hierarchy={hierarchy} />;
+      return (<History
+      hierarchy={hierarchy}
+      dispatch={dispatch}
+      sliderIndex={sliderIndex}
+      viewIndex={viewIndex}
+      />)
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
