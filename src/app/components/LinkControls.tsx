@@ -25,6 +25,7 @@ export default function LinkControls({
 }: Props) {
   return (
     <div style={controlStyles}>
+      {/* Controls for the layout selection */}
       <label>Layout:</label>
       &nbsp;
       <select
