@@ -109,6 +109,8 @@ const StateRoute = (props: StateRouteProps) => {
               width={width}
               height={height}
               snapshots={snapshots}
+              changeSlider={changeSlider}
+              changeView={changeView}
               hierarchy={hierarchy}
             />
           )}
