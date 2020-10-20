@@ -17,7 +17,7 @@ import ComponentMap from './ComponentMap';
 // import PerfView from './PerfView';
 import AtomsRelationship from './AtomsRelationship.jsx';
 import PerformanceVisx from './PerformanceVisx';
-import ZoomI from './zoomFt';
+// import ZoomI from './zoomFt';
 // import History from './History'
 
 import { changeView, changeSlider } from '../actions/actions';
@@ -81,23 +81,7 @@ const StateRoute = (props: StateRouteProps) => {
   //* we wrap History in a ParentSize div, in order to make use of Visx's Zoom functionality
   const renderHistory = () => {
     if (hierarchy) {
-      // console.log(`width is ${width} and height is ${height}`);
-      return (
-        <div>
-          <ParentSize>
-            {({ width, height }) => (
-              <History
-                width={535}
-                height={481}
-                hierarchy={hierarchy}
-                dispatch={dispatch}
-                sliderIndex={sliderIndex}
-                viewIndex={viewIndex}
-              />
-            )}
-          </ParentSize>
-        </div>
-      );
+      return <History hierarchy={hierarchy} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
