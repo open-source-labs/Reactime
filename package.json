@@ -108,6 +108,8 @@
   },
   "dependencies": {
     "@visx/axis": "^1.0.0",
+    "@visx/clip-path": "^1.0.0",
+    "@visx/event": "^1.0.0",
     "@visx/glyph": "^1.0.0",
     "@visx/gradient": "^1.0.0",
     "@visx/grid": "^1.0.0",
@@ -119,6 +121,7 @@
     "@visx/shape": "^1.0.0",
     "@visx/text": "^1.0.0",
     "@visx/tooltip": "^1.0.0",
+    "@visx/zoom": "^1.0.0",
     "acorn": "^7.3.1",
     "acorn-jsx": "^5.2.0",
     "bower": "^1.8.8",
