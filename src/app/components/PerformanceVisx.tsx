@@ -112,6 +112,7 @@ const getPerfMetrics = (snapshots, snapshotsIds):any[] => {
 /* EXPORT COMPONENT */
 const PerformanceVisx = (props: BarStackProps) => {
 
+  // hook used to dispatch onhover action in rect
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
 
   const { width, height, snapshots, hierarchy } = props;
@@ -219,7 +220,7 @@ const PerformanceVisx = (props: BarStackProps) => {
                     /* TIP TOOL EVENT HANDLERS */
                     // Hides tool tip once cursor moves off the current rect
                 onMouseLeave={() => {
-                  // dispatch(onHoverExit(allComponentRtids[bar.key])
+                  dispatch(onHoverExit(allComponentRtids[bar.key])
                   tooltipTimeout = window.setTimeout(() => {
                     hideTooltip();
                   }, 300);
