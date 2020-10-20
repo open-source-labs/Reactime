@@ -15,13 +15,16 @@ import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
 // import PerfView from './PerfView';
-import AtomsRelationship from './AtomsRelationship.jsx';
-import PerformanceVisx from './PerformanceVisx';
-// import ZoomI from './zoomFt';
-// import History from './History'
 
 import { changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
+import AtomsRelationship from './AtomsRelationship';
+import PerformanceVisx from './PerformanceVisx';
+
+import Example from './AtomsRelationship';
+import { ParentSize } from '@visx/responsive';
+import { Console } from 'console';
+import Legendary from './legend';
 
 const History = require('./History').default;
 
@@ -31,7 +34,7 @@ const NO_STATE_MSG =
   'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types
 
-interface StateRouteProps {
+export interface StateRouteProps {
   snapshot: {
     name?: string;
     componentData?: object;
@@ -48,12 +51,11 @@ interface StateRouteProps {
 
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
+
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
-
   const isRecoil = snapshot.atomsComponents ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
-
   // component map zoom state
   const [{ x, y, k }, setZoomState]: any = useState({
     x: 150,

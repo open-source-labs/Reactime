@@ -230,7 +230,7 @@ function createTree(
     ) {
       let getState = currentFiber.memoizedState.next.memoizedState.deps[1].current.getState()
         .graphsByVersion;
-      getState.entries().forEach((value) => {
+        getState.entries().forEach((value) => {
         value[1].nodeDeps.entries().forEach((obj) => {
           if (!atomsSelectors[obj[0]]) {
             atomsSelectors[obj[0]] = [];
