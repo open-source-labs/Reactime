@@ -38,7 +38,7 @@ export default function ComponentMap({
   const [stepPercent, setStepPercent] = useState<number>(0.5);
   // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
   const forceUpdate = useForceUpdate();
-  // setting the margins for the Map to render in the tab
+  // setting the margins for the Map to render in the tab window.
   const innerWidth = totalWidth - margin.left - margin.right;
   const innerHeight = totalHeight - margin.top - margin.bottom;
 
@@ -132,6 +132,7 @@ export default function ComponentMap({
                           }}
                         />
                       )}
+                      {/* This creates the rectangle boxes for each component and sets it relative position to other parent nodes of the same level.   */}
                       {node.depth !== 0 && (
                         <rect
                           height={height}
@@ -150,6 +151,7 @@ export default function ComponentMap({
                           }}
                         />
                       )}
+                      {/* Display text inside of each component node */}
                       <text
                         dy='.33em'
                         fontSize={9}
