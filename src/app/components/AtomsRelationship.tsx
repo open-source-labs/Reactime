@@ -161,12 +161,16 @@ function Node({ node, snapshots, dispatch, bothObj}) {
           stroke={isParent ? orange : blue}
           onMouseLeave={()=> {
             for (let i=0; i<bothObj[node.data.name].length; i++){
-              dispatch(onHoverExit(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+              if(snapshots[0].recoilDomNode[bothObj[node.data.name][i]].length){
+                dispatch(onHoverExit(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+                }
             }
           }}
           onMouseEnter={()=> {
             for (let i=0; i<bothObj[node.data.name].length; i++){
-              dispatch(onHover(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+              if(snapshots[0].recoilDomNode[bothObj[node.data.name][i]].length){
+                dispatch(onHover(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+                }
             }                            
           }}
         />
@@ -231,12 +235,16 @@ function SelectorNode({ node, snapshots, dispatch, bothObj}) {
           stroke={selectWhite}
           onMouseLeave={()=> {
             for (let i=0; i<bothObj[node.data.name].length; i++){
-              dispatch(onHoverExit(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+              if(snapshots[0].recoilDomNode[bothObj[node.data.name][i]].length){
+                dispatch(onHoverExit(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+              }              
             }
           }}
           onMouseEnter={()=> {
             for (let i=0; i<bothObj[node.data.name].length; i++){
+              if(snapshots[0].recoilDomNode[bothObj[node.data.name][i]].length){
               dispatch(onHover(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+              }
             }                     
           }}
         />
