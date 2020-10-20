@@ -2,8 +2,6 @@ import React, { Component, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import LegendKey from './legend';
 import { changeView, changeSlider } from '../actions/actions';
-import { useStoreContext } from '../store';
-import { string } from 'prop-types';
 
 /**
  * @var colors: Colors array for the diffrerent node branches, each color is for a different branch
