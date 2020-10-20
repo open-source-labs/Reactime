@@ -20,7 +20,7 @@
 
 Currently, Reactime supports React apps using stateful components and Hooks, with beta support for Recoil and Context API.
 
-Reactime 5.0 beta extends the core functionality by including support for [Recoil](https://recoiljs.org/). The latest release incorporates additional visualizations for component relationships as well as atom-selector relationships for Recoil applications. Reactime 5.0 includes expanded [typedoc](https://typedoc.org/api/) documentation for developers looking to contribute to the source code. 
+Reactime verision 6.0 beta extends the core functionality by including support for [Recoil](https://recoiljs.org/). The latest release incorporates additional visualizations for component relationships as well as atom-selector relationships for Recoil applications. Reactime 6.0 includes expanded [typedoc](https://typedoc.org/api/) documentation for developers looking to contribute to the source code. 
 
 After installing Reactime, you can test its functionalities with the following demo repositories:
 
