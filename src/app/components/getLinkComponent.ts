@@ -13,6 +13,7 @@ import {
   LinkRadialLine,
 } from '@visx/shape';
 
+// conditional's to adjust the controls for the componentMap drop downs
 export default function getLinkComponent({
   layout,
   linkType,
@@ -27,8 +28,6 @@ export default function getLinkComponent({
   if (layout === 'polar') {
     if (linkType === 'step') {
       LinkComponent = LinkRadialStep;
-    } else if (linkType === 'curve') {
-      LinkComponent = LinkRadialCurve;
     } else if (linkType === 'line') {
       LinkComponent = LinkRadialLine;
     } else {
@@ -37,8 +36,6 @@ export default function getLinkComponent({
   } else if (orientation === 'vertical') {
     if (linkType === 'step') {
       LinkComponent = LinkVerticalStep;
-    } else if (linkType === 'curve') {
-      LinkComponent = LinkVerticalCurve;
     } else if (linkType === 'line') {
       LinkComponent = LinkVerticalLine;
     } else {
@@ -46,8 +43,6 @@ export default function getLinkComponent({
     }
   } else if (linkType === 'step') {
     LinkComponent = LinkHorizontalStep;
-  } else if (linkType === 'curve') {
-    LinkComponent = LinkHorizontalCurve;
   } else if (linkType === 'line') {
     LinkComponent = LinkHorizontalLine;
   } else {

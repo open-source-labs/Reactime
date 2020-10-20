@@ -1,5 +1,25 @@
 import React, { Component, useEffect, useState } from 'react';
 import * as d3 from 'd3';
+import LegendKey from './legend';
+import { changeView, changeSlider } from '../actions/actions';
+// import { useStoreContext } from '../store';
+// import { string } from 'prop-types';
+import { Zoom } from '@visx/zoom';
+import { localPoint } from '@visx/event';
+import { RectClipPath } from '@visx/clip-path';
+// import ZoomI from './zoomFt';
+
+// const colorScale = scaleLinear<number>({ range: [0, 1], domain: [0, 1000] });
+// const sizeScale = scaleLinear<number>({ domain: [0, 600], range: [0.5, 8] });
+
+const initialTransform = {
+  scaleX: 1.27,
+  scaleY: 1.27,
+  translateX: -211.62,
+  translateY: 162.59,
+  skewX: 0,
+  skewY: 0,
+};
 
 /**
  * @var colors: Colors array for the diffrerent node branches, each color is for a different branch
@@ -34,10 +54,17 @@ const filterHooks = (data: any[]) => {
  * @method maked3Tree :Creates a new D3 Tree
  */
 
-function History(props) {
-  let { hierarchy } = props;
+function History(props: any) {
+  //visx zoom first
+  const [showMiniMap, setShowMiniMap] = useState<boolean>(true);
+
+  const { width, height, hierarchy, dispatch, sliderIndex, viewIndex } = props;
+  console.log(
+    `inside History tab -> width is ${width} and height is ${height}`
+  );
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
+  // console.log('before makedTree, hierarchy is, ', hierarchy);
   let HistoryRef = React.createRef(root); //React.createRef(root);
   useEffect(() => {
     maked3Tree();
@@ -72,7 +99,7 @@ function History(props) {
     // d3.hierarchy constructs a root node from the specified hierarchical data
     // (our object titled dataset), which must be an object representing the root node
     const hierarchy = d3.hierarchy(root);
-
+    // console.log('after maked3tree, hierarchy is now: ', hierarchy);
     const tree = d3
       .tree()
       .nodeSize([width / 10, height / 10])
@@ -134,43 +161,24 @@ function History(props) {
         return 'translate(' + reinfeldTidierAlgo(d.x, d.y) + ')';
       });
 
+    // here we the node circle is created and given a radius size, we are also giving it a mouseover and onClick  functionality
+    // mouseover will highlight the node while onClick will dispatch changeSlider and changeView actions. This will act as a timeJump request.
+    //
     node
       .append('circle')
-      .attr('r', 15)
-      .on('mouseover', function (d: any) {
-        d3.select(this).transition(100).duration(20).attr('r', 25);
-
-        tooltipDiv.transition().duration(50).style('opacity', 0.9);
-
-        if (d.data.stateSnapshot.children[0].name === 'RecoilRoot') {
-          isRecoil = true;
-        }
-        if (!isRecoil) {
-          tooltipDiv
-            .html(filterHooks(d.data.stateSnapshot.children), this)
-            .style('left', d3.event.pageX - 90 + 'px')
-            .style('top', d3.event.pageY - 65 + 'px');
-        } else {
-          tooltipDiv
-            .html(
-              'Load Time : ' +
-                JSON.stringify(
-                  d.data.stateSnapshot.children[0].componentData.actualDuration
-                ).substring(0, 5) +
-                ' ms',
-              this
-            )
-            .style('left', d3.event.pageX - 90 + 'px')
-            .style('top', d3.event.pageY - 65 + 'px');
-        }
+      .attr('r', 13)
+      .on('mouseover', function (d: `Record<string, unknown>`) {
+        d3.select(this).transition(100).duration(20).attr('r', 20);
       })
-      // eslint-disable-next-line no-unused-vars
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .on('click', function (d: `Record<string, unknown>`) {
+        const index = parseInt(`${d.data.name}.${d.data.branch}`);
+        dispatch(changeSlider(index));
+        dispatch(changeView(index));
+      })
       .on('mouseout', function (d: any) {
-        d3.select(this).transition().duration(300).attr('r', 15);
-
-        tooltipDiv.transition().duration(400).style('opacity', 0);
+        d3.select(this).transition().duration(300).attr('r', 13);
       });
+
     node
       .append('text')
       // adjusts the y coordinates for the node text
@@ -193,6 +201,7 @@ function History(props) {
       })
       .text(function (d: { data: { name: number; branch: number } }) {
         // display the name of the specific patch
+        // return `${d.data.name}.${d.data.branch}`;
         return `${d.data.name}.${d.data.branch}`;
       });
 
@@ -201,7 +210,7 @@ function History(props) {
     svgContainer.call(
       zoom.transform,
       // Changes the initial view, (left, top)
-      d3.zoomIdentity.translate(width / 2, height / 2).scale(1)
+      d3.zoomIdentity.translate(width / 3, height / 4).scale(1)
     );
     // allows the canvas to be zoom-able
     svgContainer.call(
@@ -250,10 +259,21 @@ function History(props) {
       return [(y = +y) * Math.cos((x -= Math.PI / 2)), y * Math.sin(x)];
     }
   };
+  // console.log('have we hit maked3dtree');
+  // below we are rendering the LegendKey component and passing hierarchy as props
+  // then rendering each node in History tab to render using D3
 
   return (
     <>
-      <div ref={HistoryRef} className="history-d3-div" id="historyContainer" />
+      <div>
+        <LegendKey hierarchy={hierarchy} />
+        <div
+          ref={HistoryRef}
+          className="history-d3-div"
+          id="historyContainer"
+          // position="absolute"
+        />
+      </div>
     </>
   );
 }

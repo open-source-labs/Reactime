@@ -11,9 +11,13 @@ import { pointRadial } from 'd3-shape';
 import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
+import { onHover, onHoverExit } from '../actions/actions'
+import { useStoreContext } from '../store'
 
-const defaultMargin = { top: 30, left: 30, right: 30, bottom: 70 };
+// setting the base margins for the Map to render in the Chrome extension window.
+const defaultMargin = { top: 30, left: 30, right: 30, bottom: 30 };
 
+// export these types because this will only be used on this page, interface not needed as it will not be re-used.
 export type LinkTypesProps = {
   width: number;
   height: number;
@@ -28,23 +32,27 @@ export default function ComponentMap({
   margin = defaultMargin,
   snapshots: snapshots,
 }: LinkTypesProps) {
-  // selecting the last element of the snapshots array object to meet the data structure of the visx map
+
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  // This is where we select the last object in the snapshots array from props to allow hierarchy to parse the data for render on the component map per hierarchy layout specifications.
   const lastNode = snapshots.length - 1;
   const data = snapshots[lastNode];
-  // custom hooks to setup the entire map on the are prescribed for the map
+  // importing custom hooks for the selection tabs.
   const [layout, setLayout] = useState<string>('cartesian');
   const [orientation, setOrientation] = useState<string>('horizontal');
   const [linkType, setLinkType] = useState<string>('diagonal');
-  const [stepPercent, setStepPercent] = useState<number>(0.5);
+  const [stepPercent, setStepPercent] = useState<number>(10);
   // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
   const forceUpdate = useForceUpdate();
   // setting the margins for the Map to render in the tab window.
+
   const innerWidth = totalWidth - margin.left - margin.right;
   const innerHeight = totalHeight - margin.top - margin.bottom;
 
   let origin: { x: number; y: number };
   let sizeWidth: number;
   let sizeHeight: number;
+
 
   // This sets the starting position for the root node on the maps display. the polar layout sets the root node to the relative center of the display box based on the size of the browser window.
   // the else conditional statements determines the root nodes location either in the left middle or top middle of the browser window relative to the size of the browser.
@@ -65,7 +73,12 @@ export default function ComponentMap({
       sizeHeight = innerWidth;
     }
   }
-  // controls for the map
+
+  // render controls for the map
+  // svg - complete layout of self contained component map
+  // Tree is rendering each component from the component tree.
+  // rect- Contains both text and rectangle node information for rendering each component on the map.
+  // circle- setup and layout for the root node.
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
   return totalWidth < 10 ? null : (
     <div>
@@ -87,7 +100,7 @@ export default function ComponentMap({
           <Tree
             root={hierarchy(data, (d) => (d.isExpanded ? null : d.children))}
             size={[sizeWidth, sizeHeight]}
-            separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
+            separation={(a, b) => (a.parent === b.parent ? 10 : 0) / a.depth}
           >
             {(tree) => (
               <Group top={origin.y} left={origin.x}>
@@ -101,7 +114,7 @@ export default function ComponentMap({
                     fill='none'
                   />
                 ))}
-
+                translate
                 {tree.descendants().map((node, key) => {
                   const width = 40;
                   const height = 15;
@@ -149,6 +162,20 @@ export default function ComponentMap({
                             node.data.isExpanded = !node.data.isExpanded;
                             forceUpdate();
                           }}
+                          onMouseLeave={()=> {
+                            if(Object.keys(node.data.recoilDomNode).length > 0){
+                              dispatch(onHoverExit(node.data.recoilDomNode[node.data.name]))
+                            } else {
+                              dispatch(onHoverExit(node.data.rtid))
+                            }
+                          }}
+                          onMouseEnter={()=> {
+                            if(Object.keys(node.data.recoilDomNode).length > 0){
+                              dispatch(onHover(node.data.recoilDomNode[node.data.name]))
+                            } else {
+                              dispatch(onHover(node.data.rtid))
+                            }   
+                          }
                         />
                       )}
                       {/* Display text inside of each component node */}
