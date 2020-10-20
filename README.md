@@ -12,8 +12,8 @@
 [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime) [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime) [![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime) [![Vulnerabilities](https://snyk.io/test/github/oslabs-beta/reactime/badge.svg)](https://snyk.io/test/github/oslabs-beta/reactime)![BabelPresetPrefs](https://img.shields.io/badge/babel%20preset-airbnb-ff69b4)![LintPrefs](https://img.shields.io/badge/linted%20with-eslint-blueviolet)
 
 <p align="center">
-<img src="./assets/hooks-demo.gif" />
-<img src="./assets/recoil-demo.gif" />
+<img src="./assets/react-calculator-demo.gif" />
+<img src="./assets/recoil-todo-demo.gif" />
 </p>
 
 <b>Reactime</b> is a debugging tool for React developers. It records a snapshot whenever a target application's state is changed and allows the user to jump to any previously recorded state.
