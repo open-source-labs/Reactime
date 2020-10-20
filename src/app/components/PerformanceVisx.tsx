@@ -117,9 +117,6 @@ const PerformanceVisx = (props: BarStackProps) => {
 
   const { width, height, snapshots, hierarchy } = props;
 
-  console.log('snapshots', snapshots);
-  console.log('hierarchy', hierarchy)
-
   const {
     tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip,
   } = useTooltip<TooltipData>();
@@ -133,10 +130,6 @@ const PerformanceVisx = (props: BarStackProps) => {
   const keys = Object.keys(data[0]).filter(d => d !== 'snapshotId');
   const allComponentStates = traverse(snapshots[0], 'getComponentType');
   const allComponentRtids = traverse(snapshots[snapshots.length-1], 'getRtid');
-
-  console.log('data', data)
-  console.log('allComponentState', allComponentStates)
-  console.log('allComponentRtids', allComponentRtids)
 
   // create array of total render times for each snapshot
   const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
@@ -227,7 +220,6 @@ const PerformanceVisx = (props: BarStackProps) => {
                 }}
                     // Cursor position in window updates position of the tool tip
                 onMouseMove={event => {
-                  console.log(allComponentRtids[bar.key])
                   dispatch(onHover(allComponentRtids[bar.key]))
                   if (tooltipTimeout) clearTimeout(tooltipTimeout);
                   const top = event.clientY - margin.top - bar.height;
