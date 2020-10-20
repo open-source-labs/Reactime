@@ -1,7 +1,8 @@
+import { link } from 'fs';
 import React from 'react';
 
 const controlStyles = { fontSize: 10 };
-
+// props for orientation controls
 type Props = {
   layout: string;
   orientation: string;
@@ -12,7 +13,7 @@ type Props = {
   setLinkType: (linkType: string) => void;
   setStepPercent: (percent: number) => void;
 };
-
+// below are the control options for each of the drop downs.
 export default function LinkControls({
   layout,
   orientation,
@@ -54,7 +55,6 @@ export default function LinkControls({
       >
         <option value='diagonal'>Diagonal</option>
         <option value='step'>Step</option>
-        <option value='curve'>Curve</option>
         <option value='line'>Line</option>
       </select>
       {linkType === 'step' && layout !== 'polar' && (
@@ -65,7 +65,7 @@ export default function LinkControls({
             onClick={(e) => e.stopPropagation()}
             type='range'
             min={0}
-            max={1}
+            max={5}
             step={0.1}
             onChange={(e) => setStepPercent(Number(e.target.value))}
             value={stepPercent}
