@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
@@ -9,7 +9,9 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
 import snapshots from './snapshots';
-import { onHover, onHoverExit } from '../actions/actions'
+import { onHover, onHoverExit } from '../actions/actions';
+import { useStoreContext } from '../store'
+
 
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
@@ -109,6 +111,8 @@ const getPerfMetrics = (snapshots, snapshotsIds):any[] => {
 
 /* EXPORT COMPONENT */
 const PerformanceVisx = (props: BarStackProps) => {
+
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
 
   const { width, height, snapshots, hierarchy } = props;
 
@@ -215,13 +219,15 @@ const PerformanceVisx = (props: BarStackProps) => {
                     /* TIP TOOL EVENT HANDLERS */
                     // Hides tool tip once cursor moves off the current rect
                 onMouseLeave={() => {
-                  console.log('datafrommouse', data)
+                  // dispatch(onHoverExit(allComponentRtids[bar.key])
                   tooltipTimeout = window.setTimeout(() => {
                     hideTooltip();
                   }, 300);
                 }}
                     // Cursor position in window updates position of the tool tip
                 onMouseMove={event => {
+                  console.log(allComponentRtids[bar.key])
+                  dispatch(onHover(allComponentRtids[bar.key]))
                   if (tooltipTimeout) clearTimeout(tooltipTimeout);
                   const top = event.clientY - margin.top - bar.height;
                   const left = bar.x + bar.width / 2;
