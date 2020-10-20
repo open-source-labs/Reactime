@@ -18,11 +18,9 @@ import { useStoreContext } from '../store';
 import PerformanceVisx from './PerformanceVisx';
 import Legend from './AtomsRelationshipLegend'
 import { ParentSize } from '@visx/responsive';
-import Legendary from './legend';
 import AtomsRelationship from './AtomsRelationship'
 
 const History = require('./History').default;
-
 const ErrorHandler = require('./ErrorHandler').default;
 
 const NO_STATE_MSG =
