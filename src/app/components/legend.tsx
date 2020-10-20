@@ -36,9 +36,10 @@ export default function LegendKey(props: snapHierarchy) {
       }
     }
     // now we convert the object to an array, each index being a string of the range of the branch
+    // initializing array and new array with the values from resultRangeColor
     const branchesArr = [];
     const arrValues = Object.values(resultRangeColor);
-
+    //iterate through and values and combine them into a string of range for each branch
     for (let i = 0; i < arrValues.length; i += 1) {
       const len = arrValues[i].length;
       const tempVal = `${arrValues[i][0]} - ${arrValues[i][len - 1]}`;
@@ -47,6 +48,7 @@ export default function LegendKey(props: snapHierarchy) {
     return branchesArr;
   }
 
+  // this is where we invoke the function to return an array of range of branches for legendKey
   const getSnapshotIds = (obj, snapshotIds = []) => {
     snapshotIds.push(`${obj.name}.${obj.branch}`);
     if (obj.children) {
