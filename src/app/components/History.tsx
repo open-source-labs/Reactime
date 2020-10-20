@@ -36,6 +36,8 @@ const filterHooks = (data: any[]) => {
  * @method maked3Tree :Creates a new D3 Tree
  */
 
+// main function exported to StateRoute
+// below we destructure the props
 function History(props: any) {
   const { width, height, hierarchy, dispatch, sliderIndex, viewIndex } = props;
 
