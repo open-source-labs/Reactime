@@ -11,9 +11,13 @@ import {
   NavLink,
   Switch,
 } from 'react-router-dom';
+import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
 // import PerfView from './PerfView';
+
+import { changeView, changeSlider } from '../actions/actions';
+import { useStoreContext } from '../store';
 import AtomsRelationship from './AtomsRelationship';
 import PerformanceVisx from './PerformanceVisx';
 
@@ -47,6 +51,9 @@ export interface StateRouteProps {
 
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
+
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
   const isRecoil = snapshot.atomsComponents ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
   // component map zoom state
@@ -73,29 +80,19 @@ const StateRoute = (props: StateRouteProps) => {
   // the hierarchy gets set on the first click in the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
   // if true involk render chart with hierarchy
+  //* we wrap History in a ParentSize div, in order to make use of Visx's Zoom functionality
   const renderHistory = () => {
     if (hierarchy) {
-      return (
-        <div>
-          <div>
-            <Legendary hierarchy={hierarchy} />
-          </div>
-          <div>
-            <History hierarchy={hierarchy} />
-          </div>
-        </div>
-      );
+      return <History hierarchy={hierarchy} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
   const renderAtomsRelationship = () => (
-
-    <ParentSize>{({ width, height })  => 
-    <Example 
-    width={width} 
-    height={height}
-    snapshots={snapshots} />}
+    <ParentSize>
+      {({ width, height }) => (
+        <Example width={width} height={height} snapshots={snapshots} />
+      )}
     </ParentSize>
   );
 
@@ -112,15 +109,17 @@ const StateRoute = (props: StateRouteProps) => {
   const renderPerfView = () => {
     if (hierarchy) {
       return (
-        <ParentSize>{({ width, height }) => 
-          <PerformanceVisx 
-            width={width} 
-            height={height}
-            snapshots={snapshots}
-            hierarchy={hierarchy}
-          />}
+        <ParentSize>
+          {({ width, height }) => (
+            <PerformanceVisx
+              width={width}
+              height={height}
+              snapshots={snapshots}
+              hierarchy={hierarchy}
+            />
+          )}
         </ParentSize>
-      
+
         // <PerfView
         //   viewIndex={viewIndex}
         //   snapshots={snapshots}
