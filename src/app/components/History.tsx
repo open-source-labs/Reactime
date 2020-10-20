@@ -140,8 +140,9 @@ function History(props: any) {
       });
 
     // here we the node circle is created and given a radius size, we are also giving it a mouseover and onClick  functionality
-    // mouseover will highlight the node while onClick will dispatch changeSlider and changeView actions. This will act as a timeJump request.
-    //
+    // mouseover will highlight the node
+    // the onCLick of a selected node will dispatch changeSlider and changeView actions. This will act as a timeJump request.
+    // further optimization would improve the onclick feature, onclick seems to only register on the lower half of the node
     node
       .append('circle')
       .attr('r', 13)
