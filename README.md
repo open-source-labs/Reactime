@@ -1,8 +1,13 @@
 <p align="center">
-  <img src ="./assets/readme-logo-300.png" width="300"/>
+  <img src ="./assets/readme-logo-300-no-version.png" width="300"/>
 </p>
+<h1 align="center">
+  State Debugger for React
 
-<h1 align="center"><b>State Debugger for React</b></h1>
+  <br>Nominated for the Productivity Booster award 
+  <br><a href="https://osawards.com/react/">👑 React Open Source Awards 2020 👑</a>
+</h1>
+
 
 [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime) [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime) [![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime) [![Vulnerabilities](https://snyk.io/test/github/oslabs-beta/reactime/badge.svg)](https://snyk.io/test/github/oslabs-beta/reactime)![BabelPresetPrefs](https://img.shields.io/badge/babel%20preset-airbnb-ff69b4)![LintPrefs](https://img.shields.io/badge/linted%20with-eslint-blueviolet)
 
@@ -10,9 +15,6 @@
 <img src="./assets/hooks-demo.gif" />
 <img src="./assets/recoil-demo.gif" />
 </p>
-
-👑   Nominated for the Productivity Booster award at [React Open Source Awards 2020](https://osawards.com/react/)! 👑  
-
 
 <b>Reactime</b> is a debugging tool for React developers. It records a snapshot whenever a target application's state is changed and allows the user to jump to any previously recorded state.
 
