@@ -43,7 +43,7 @@ function History(props: any) {
 
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
-  // console.log('before makedTree, hierarchy is, ', hierarchy);
+
   let HistoryRef = React.createRef(root); //React.createRef(root);
   useEffect(() => {
     maked3Tree();
@@ -78,7 +78,6 @@ function History(props: any) {
     // d3.hierarchy constructs a root node from the specified hierarchical data
     // (our object titled dataset), which must be an object representing the root node
     const hierarchy = d3.hierarchy(root);
-    // console.log('after maked3tree, hierarchy is now: ', hierarchy);
     const tree = d3
       .tree()
       .nodeSize([width / 10, height / 10])
@@ -238,7 +237,7 @@ function History(props: any) {
       return [(y = +y) * Math.cos((x -= Math.PI / 2)), y * Math.sin(x)];
     }
   };
-  // console.log('have we hit maked3dtree');
+
   // below we are rendering the LegendKey component and passing hierarchy as props
   // then rendering each node in History tab to render using D3
 
