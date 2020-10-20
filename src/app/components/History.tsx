@@ -154,6 +154,7 @@ function History(props: Record<string, unknown>) {
         dispatch(changeSlider(index));
         dispatch(changeView(index));
       })
+      // think about how I can convert this any to typescript
       .on('mouseout', function (d: any) {
         d3.select(this).transition().duration(300).attr('r', 13);
       });
@@ -198,7 +199,7 @@ function History(props: Record<string, unknown>) {
         .scaleExtent([0, 0.9]) // [zoomOut, zoomIn]
         .on('zoom', zoomed)
     );
-    // helper function that allows for zooming
+    // helper function that allows for zooming ( think about how I can convert this any to typescript)
     function zoomed(d: any) {
       g.attr('transform', d3.event.transform);
     }

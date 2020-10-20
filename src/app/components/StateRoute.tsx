@@ -11,13 +11,13 @@ import {
   NavLink,
   Switch,
 } from 'react-router-dom';
+import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
 import { changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
 import PerformanceVisx from './PerformanceVisx';
 import Legend from './AtomsRelationshipLegend';
-import { ParentSize } from '@visx/responsive';
 import AtomsRelationship from './AtomsRelationship';
 
 const History = require('./History').default;
