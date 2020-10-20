@@ -36,6 +36,7 @@ export default function LinkControls({
         <option value='polar'>Polar</option>
       </select>
       &nbsp;&nbsp;
+      {/* Controls for the Orientation selection, this dropdown will be disabled when the polar layout is selected as it is not needed */}
       <label>Orientation:</label>
       &nbsp;
       <select
