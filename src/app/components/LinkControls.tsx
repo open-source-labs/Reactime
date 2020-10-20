@@ -1,6 +1,6 @@
 import { link } from 'fs';
 import React from 'react';
-
+// Font size of the Controls label and Dropdowns
 const controlStyles = { fontSize: 10 };
 // props for orientation controls
 type Props = {
@@ -26,7 +26,9 @@ export default function LinkControls({
 }: Props) {
   return (
     <div style={controlStyles}>
-      <label>Layout:</label>&nbsp;
+      {/* Controls for the layout selection */}
+      <label>Layout:</label>
+      &nbsp;
       <select
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => setLayout(e.target.value)}
@@ -36,31 +38,38 @@ export default function LinkControls({
         <option value='polar'>Polar</option>
       </select>
       &nbsp;&nbsp;
-      <label>Orientation:</label>&nbsp;
+      {/* Controls for the Orientation selection, this dropdown will be disabled when the polar layout is selected as it is not needed */}
+      <label>Orientation:</label>
+      &nbsp;
       <select
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => setOrientation(e.target.value)}
         value={orientation}
         disabled={layout === 'polar'}
       >
-        <option value='vertical'>Vertical</option>
         <option value='horizontal'>Horizontal</option>
+        <option value='vertical'>Vertical</option>
       </select>
       &nbsp;&nbsp;
-      <label>Link:</label>&nbsp;
+      {/* Controls for the link selections. When Cartesian and Horizontal are selection the link has been disabled as it was causing a rendering issue */}
+      <label>Link:</label>
+      &nbsp;
       <select
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => setLinkType(e.target.value)}
         value={linkType}
+        disabled={layout === 'cartesian' && orientation === 'horizontal'}
       >
         <option value='diagonal'>Diagonal</option>
         <option value='step'>Step</option>
         <option value='line'>Line</option>
       </select>
+      {/* This is the slider control for the step option */}
       {linkType === 'step' && layout !== 'polar' && (
         <>
           &nbsp;&nbsp;
-          <label>Step:</label>&nbsp;
+          <label>Step:</label>
+          &nbsp;
           <input
             onClick={(e) => e.stopPropagation()}
             type='range'
