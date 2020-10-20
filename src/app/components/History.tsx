@@ -38,7 +38,7 @@ const filterHooks = (data: any[]) => {
 
 // main function exported to StateRoute
 // below we destructure the props
-function History(props: any) {
+function History(props: Record<string, unknown>) {
   const { width, height, hierarchy, dispatch, sliderIndex, viewIndex } = props;
 
   let root = JSON.parse(JSON.stringify(hierarchy));
@@ -62,8 +62,8 @@ function History(props: any) {
    */
   let maked3Tree = function () {
     removed3Tree();
-    const width: any = 800;
-    const height: any = 600;
+    const width: number = 800;
+    const height: number = 600;
     const svgContainer = d3
       .select(HistoryRef.current)
       .append('svg') // svgContainer is now pointing to svg
