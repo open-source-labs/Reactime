@@ -11,14 +11,14 @@ import {
   NavLink,
   Switch,
 } from 'react-router-dom';
+import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
 import { changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
 import PerformanceVisx from './PerformanceVisx';
-import Legend from './AtomsRelationshipLegend'
-import { ParentSize } from '@visx/responsive';
-import AtomsRelationship from './AtomsRelationship'
+import Legend from './AtomsRelationshipLegend';
+import AtomsRelationship from './AtomsRelationship';
 
 const History = require('./History').default;
 const ErrorHandler = require('./ErrorHandler').default;
@@ -44,8 +44,6 @@ export interface StateRouteProps {
 
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
-
-
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
   const isRecoil = snapshot.atomsComponents ? true : false;
@@ -59,46 +57,49 @@ const StateRoute = (props: StateRouteProps) => {
 
   // Map
   const renderComponentMap = () => {
-    
     if (hierarchy) {
       return (
         <ParentSize>
           {({ width, height }) => (
-            <ComponentMap 
-            snapshots={snapshots} 
-            width={width} 
-            height={height} />
+            <ComponentMap snapshots={snapshots} width={width} height={height} />
           )}
         </ParentSize>
       );
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
-  // the hierarchy gets set on the first click in the page
+  // the hierarchy gets set upon the first click on the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
-  // if true invoke render chart with hierarchy
+  // if true, we invoke teh D3 render chart with hierarchy
+  // by invoking History component, and passing in all the props required to render D3 elements and perform timeJump from clicking of node
+  // otherwise we an alert to the user that no state was found.
   const renderHistory = () => {
     if (hierarchy) {
-      return (<History
-      hierarchy={hierarchy}
-      dispatch={dispatch}
-      sliderIndex={sliderIndex}
-      viewIndex={viewIndex}
-      />)
+      return (
+        <History
+          hierarchy={hierarchy}
+          dispatch={dispatch}
+          sliderIndex={sliderIndex}
+          viewIndex={viewIndex}
+        />
+      );
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
   const renderAtomsRelationship = () => (
-    <ParentSize>{({ width, height })  => 
-    <>
-    <AtomsRelationship 
-    width={width} 
-    height={height}
-    snapshots={snapshots} />
-    </>
-    }</ParentSize>
+    <ParentSize>
+      {({ width, height }) => (
+        <>
+          <AtomsRelationship
+            width={width}
+            height={height}
+            snapshots={snapshots}
+          />
+        </>
+      )}
+    </ParentSize>
   );
 
   // the hierarchy gets set on the first click in the page
@@ -108,7 +109,7 @@ const StateRoute = (props: StateRouteProps) => {
     if (hierarchy) {
       return <Tree snapshot={snapshot} />;
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
   const renderPerfView = () => {
@@ -120,6 +121,8 @@ const StateRoute = (props: StateRouteProps) => {
               width={width}
               height={height}
               snapshots={snapshots}
+              changeSlider={changeSlider}
+              changeView={changeView}
               hierarchy={hierarchy}
             />
           )}
@@ -134,55 +137,55 @@ const StateRoute = (props: StateRouteProps) => {
         // />
       );
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
   return (
     <Router>
-      <div className='navbar'>
+      <div className="navbar">
         <NavLink
-          className='router-link'
-          activeClassName='is-active'
+          className="router-link"
+          activeClassName="is-active"
           exact
-          to='/'
+          to="/"
         >
           Tree
         </NavLink>
         <NavLink
-          className='router-link'
-          activeClassName='is-active'
-          to='/history'
+          className="router-link"
+          activeClassName="is-active"
+          to="/history"
         >
           History
         </NavLink>
-        <NavLink className='router-link' activeClassName='is-active' to='/map'>
+        <NavLink className="router-link" activeClassName="is-active" to="/map">
           Map
         </NavLink>
 
         {isRecoil && (
           <NavLink
-            className='router-link'
-            activeClassName='is-active'
-            to='/relationship'
+            className="router-link"
+            activeClassName="is-active"
+            to="/relationship"
           >
             AtomsRecoil
           </NavLink>
         )}
 
         <NavLink
-          className='router-link'
-          activeClassName='is-active'
-          to='/performance'
+          className="router-link"
+          activeClassName="is-active"
+          to="/performance"
         >
           Performance
         </NavLink>
       </div>
       <Switch>
-        <Route path='/map' render={renderComponentMap} />
-        <Route path='/history' render={renderHistory} />
-        <Route path='/relationship' render={renderAtomsRelationship} />
-        <Route path='/performance' render={renderPerfView} />
-        <Route path='/' render={renderTree} />
+        <Route path="/map" render={renderComponentMap} />
+        <Route path="/history" render={renderHistory} />
+        <Route path="/relationship" render={renderAtomsRelationship} />
+        <Route path="/performance" render={renderPerfView} />
+        <Route path="/" render={renderTree} />
       </Switch>
     </Router>
   );

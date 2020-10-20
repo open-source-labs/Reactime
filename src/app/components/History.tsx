@@ -2,24 +2,6 @@ import React, { Component, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import LegendKey from './legend';
 import { changeView, changeSlider } from '../actions/actions';
-// import { useStoreContext } from '../store';
-// import { string } from 'prop-types';
-import { Zoom } from '@visx/zoom';
-import { localPoint } from '@visx/event';
-import { RectClipPath } from '@visx/clip-path';
-// import ZoomI from './zoomFt';
-
-// const colorScale = scaleLinear<number>({ range: [0, 1], domain: [0, 1000] });
-// const sizeScale = scaleLinear<number>({ domain: [0, 600], range: [0.5, 8] });
-
-const initialTransform = {
-  scaleX: 1.27,
-  scaleY: 1.27,
-  translateX: -211.62,
-  translateY: 162.59,
-  skewX: 0,
-  skewY: 0,
-};
 
 /**
  * @var colors: Colors array for the diffrerent node branches, each color is for a different branch
@@ -54,17 +36,14 @@ const filterHooks = (data: any[]) => {
  * @method maked3Tree :Creates a new D3 Tree
  */
 
-function History(props: any) {
-  //visx zoom first
-  const [showMiniMap, setShowMiniMap] = useState<boolean>(true);
-
+// main function exported to StateRoute
+// below we destructure the props
+function History(props: Record<string, unknown>) {
   const { width, height, hierarchy, dispatch, sliderIndex, viewIndex } = props;
-  console.log(
-    `inside History tab -> width is ${width} and height is ${height}`
-  );
+
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
-  // console.log('before makedTree, hierarchy is, ', hierarchy);
+
   let HistoryRef = React.createRef(root); //React.createRef(root);
   useEffect(() => {
     maked3Tree();
@@ -83,8 +62,8 @@ function History(props: any) {
    */
   let maked3Tree = function () {
     removed3Tree();
-    const width: any = 800;
-    const height: any = 600;
+    const width: number = 800;
+    const height: number = 600;
     const svgContainer = d3
       .select(HistoryRef.current)
       .append('svg') // svgContainer is now pointing to svg
@@ -99,7 +78,6 @@ function History(props: any) {
     // d3.hierarchy constructs a root node from the specified hierarchical data
     // (our object titled dataset), which must be an object representing the root node
     const hierarchy = d3.hierarchy(root);
-    // console.log('after maked3tree, hierarchy is now: ', hierarchy);
     const tree = d3
       .tree()
       .nodeSize([width / 10, height / 10])
@@ -162,21 +140,23 @@ function History(props: any) {
       });
 
     // here we the node circle is created and given a radius size, we are also giving it a mouseover and onClick  functionality
-    // mouseover will highlight the node while onClick will dispatch changeSlider and changeView actions. This will act as a timeJump request.
-    //
+    // mouseover will highlight the node
+    // the onCLick of a selected node will dispatch changeSlider and changeView actions. This will act as a timeJump request.
+    // further optimization would improve the onclick feature, onclick seems to only register on the lower half of the node
     node
       .append('circle')
-      .attr('r', 13)
+      .attr('r', 14)
       .on('mouseover', function (d: `Record<string, unknown>`) {
-        d3.select(this).transition(100).duration(20).attr('r', 20);
+        d3.select(this).transition(90).duration(18).attr('r', 21);
       })
       .on('click', function (d: `Record<string, unknown>`) {
         const index = parseInt(`${d.data.name}.${d.data.branch}`);
         dispatch(changeSlider(index));
         dispatch(changeView(index));
       })
+      // think about how I can convert this any to typescript
       .on('mouseout', function (d: any) {
-        d3.select(this).transition().duration(300).attr('r', 13);
+        d3.select(this).transition().duration(300).attr('r', 14);
       });
 
     node
@@ -219,7 +199,7 @@ function History(props: any) {
         .scaleExtent([0, 0.9]) // [zoomOut, zoomIn]
         .on('zoom', zoomed)
     );
-    // helper function that allows for zooming
+    // helper function that allows for zooming ( think about how I can convert this any to typescript)
     function zoomed(d: any) {
       g.attr('transform', d3.event.transform);
     }
@@ -259,10 +239,9 @@ function History(props: any) {
       return [(y = +y) * Math.cos((x -= Math.PI / 2)), y * Math.sin(x)];
     }
   };
-  // console.log('have we hit maked3dtree');
-  // below we are rendering the LegendKey component and passing hierarchy as props
-  // then rendering each node in History tab to render using D3
 
+  // below we are rendering the LegendKey component and passing hierarchy as props
+  // then rendering each node in History tab to render using D3, which will share area with LegendKey
   return (
     <>
       <div>

@@ -11,11 +11,11 @@ type snapHierarchy = {`Record<string, unknown>`}
 
 export default function LegendKey(props: snapHierarchy) {
   const { hierarchy } = props;
-  // console.log('which ends up being, hierarchy: ', hierarchy);
 
-  // We are taking the array of displayNames and sifting through them and placing each set of
-  // branches as a key in an object, { '.0': [1.0, 2.0, 3.0, 4.0], '.1': [1.1, 2.1, 3.1,...], '.2': [....]}
-  // we then take that and place it in an array, with each element being a range of the values in that branch -> ['1.0-4.0', '1.1-6.1',...]
+  // we are sifting through array of displayNames and sorting them into key value pairs in an object, based on the branch they are on:
+  // { '.0': [1.0, 2.0, 3.0, 4.0], '.1': [1.1, 2.1, 3.1,...], '.2': [....]}
+  // then we create an array, with each index being strings showing the range of the branch, see below:
+  // ['1.0-4.0', '1.1-6.1',...]
   function colorRanger(snapshotIdsArray) {
     const resultRangeColor = {};
 
@@ -36,9 +36,10 @@ export default function LegendKey(props: snapHierarchy) {
       }
     }
     // now we convert the object to an array, each index being a string of the range of the branch
+    // initializing array and new array with the values from resultRangeColor
     const branchesArr = [];
     const arrValues = Object.values(resultRangeColor);
-
+    //iterate through and values and combine them into a string of range for each branch
     for (let i = 0; i < arrValues.length; i += 1) {
       const len = arrValues[i].length;
       const tempVal = `${arrValues[i][0]} - ${arrValues[i][len - 1]}`;
@@ -47,6 +48,7 @@ export default function LegendKey(props: snapHierarchy) {
     return branchesArr;
   }
 
+  // this is where we invoke the function to return an array of range of branches for legendKey
   const getSnapshotIds = (obj, snapshotIds = []) => {
     snapshotIds.push(`${obj.name}.${obj.branch}`);
     if (obj.children) {
