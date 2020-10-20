@@ -4,12 +4,48 @@ import { LegendOrdinal, LegendItem, LegendLabel } from '@visx/legend';
 
 // implement algorithm to check snapshot history and their respective colors
 
-const legendGlyphSize = 12;
+const legendGlyphSize = 8;
 
-export default function Legendary(props: any) {
-  // { events = false }: { events?: boolean }) {
+type snapHierarchy = {`Record<string, unknown>`}  
+};
 
+export default function LegendKey(props: snapHierarchy) {
   const { hierarchy } = props;
+  // console.log('which ends up being, hierarchy: ', hierarchy);
+
+  // We are taking the array of displayNames and sifting through them and placing each set of
+  // branches as a key in an object, { '.0': [1.0, 2.0, 3.0, 4.0], '.1': [1.1, 2.1, 3.1,...], '.2': [....]}
+  // we then take that and place it in an array, with each element being a range of the values in that branch -> ['1.0-4.0', '1.1-6.1',...]
+  function colorRanger(snapshotIdsArray) {
+    const resultRangeColor = {};
+
+    for (let i = 0; i < snapshotIdsArray.length; i += 1) {
+      const current = snapshotIdsArray[i];
+      let key = current - Math.floor(current);
+      key = key.toFixed(2);
+
+      if (current % 1 === 0) {
+        key = current - Math.floor(current);
+        resultRangeColor[key]
+          ? resultRangeColor[key].push(current)
+          : (resultRangeColor[key] = [current]);
+      } else if (current - Math.floor(current) !== 0) {
+        resultRangeColor[key]
+          ? resultRangeColor[key].push(current)
+          : (resultRangeColor[key] = [current]);
+      }
+    }
+    // now we convert the object to an array, each index being a string of the range of the branch
+    const branchesArr = [];
+    const arrValues = Object.values(resultRangeColor);
+
+    for (let i = 0; i < arrValues.length; i += 1) {
+      const len = arrValues[i].length;
+      const tempVal = `${arrValues[i][0]} - ${arrValues[i][len - 1]}`;
+      branchesArr.push(tempVal);
+    }
+    return branchesArr;
+  }
 
   const getSnapshotIds = (obj, snapshotIds = []) => {
     snapshotIds.push(`${obj.name}.${obj.branch}`);
@@ -18,14 +54,15 @@ export default function Legendary(props: any) {
         getSnapshotIds(child, snapshotIds);
       });
     }
-    return snapshotIds;
+    const resultRange = colorRanger(snapshotIds);
+    return resultRange;
   };
 
+  // invoking getSnaphshotIds, which will ultimately return our array of split up branches
   const snap = getSnapshotIds(hierarchy);
 
   const ordinalColorScale = scaleOrdinal<number, string>({
     domain: snap,
-    // sync in with the snapshot color chosen in history tab already
     range: [
       '#95B6B7',
       '#475485',
@@ -51,14 +88,14 @@ export default function Legendary(props: any) {
       <LegendVisual title="State Snapshots">
         <LegendOrdinal scale={ordinalColorScale}>
           {(labels) => (
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               {labels.map((label, i) => (
                 <LegendItem
                   key={`legend-quantile-${i}`}
                   margin="0 5px"
-                  // onClick={() => {
-                  //   if (events) alert(`clicked: ${JSON.stringify(label)}`);
-                  // }}
+                  onClick={() => {
+                    // if (Event) alert('clicked: YO BRILLIANT GENIUS');
+                  }}
                 >
                   <svg width={10} height={10}>
                     <rect
@@ -80,11 +117,13 @@ export default function Legendary(props: any) {
       <style jsx>
         {`
           .legends {
+            position: center;
+            width: 25%;
             font-family: arial;
             font-weight: 900;
-            background-color: 242529;
+            // background-color: 242529;
             border-radius: 14px;
-            padding: 24px 24px 24px 32px;
+            padding: 2px 2px 2px 2px;
             overflow-y: auto;
             flex-grow: 1;
           }
@@ -108,6 +147,8 @@ function LegendVisual({
       <style jsx>
         {`
           .legend {
+            position: absolute;
+            with: 120px;
             line-height: 0.9em;
             color: #efefef;
             font-size: 9px;

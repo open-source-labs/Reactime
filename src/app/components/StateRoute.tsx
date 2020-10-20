@@ -13,24 +13,21 @@ import {
 } from 'react-router-dom';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
-// import PerfView from './PerfView';
-import AtomsRelationship from './AtomsRelationship.jsx';
-import PerformanceVisx from './PerformanceVisx.tsx';
-
-import Example from './AtomsRelationship.jsx';
+import { changeView, changeSlider } from '../actions/actions';
+import { useStoreContext } from '../store';
+import PerformanceVisx from './PerformanceVisx';
+import Legend from './AtomsRelationshipLegend'
 import { ParentSize } from '@visx/responsive';
-import { Console } from 'console';
-import Legendary from './legend';
+import AtomsRelationship from './AtomsRelationship'
 
 const History = require('./History').default;
-
 const ErrorHandler = require('./ErrorHandler').default;
 
 const NO_STATE_MSG =
   'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types
 
-interface StateRouteProps {
+export interface StateRouteProps {
   snapshot: {
     name?: string;
     componentData?: object;
@@ -48,18 +45,29 @@ interface StateRouteProps {
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
 
-  console.log(hierarchy);
 
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
   const isRecoil = snapshot.atomsComponents ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
+  // component map zoom state
+  const [{ x, y, k }, setZoomState]: any = useState({
+    x: 150,
+    y: 250,
+    k: 1,
+  });
 
   // Map
   const renderComponentMap = () => {
+    
     if (hierarchy) {
       return (
         <ParentSize>
           {({ width, height }) => (
-            <ComponentMap snapshots={snapshots} width={width} height={height} />
+            <ComponentMap 
+            snapshots={snapshots} 
+            width={width} 
+            height={height} />
           )}
         </ParentSize>
       );
@@ -72,26 +80,25 @@ const StateRoute = (props: StateRouteProps) => {
   // if true invoke render chart with hierarchy
   const renderHistory = () => {
     if (hierarchy) {
-      return (
-        <div>
-          <div>
-            <Legendary hierarchy={hierarchy} />
-          </div>
-          <div>
-            <History hierarchy={hierarchy} />
-          </div>
-        </div>
-      );
+      return (<History
+      hierarchy={hierarchy}
+      dispatch={dispatch}
+      sliderIndex={sliderIndex}
+      viewIndex={viewIndex}
+      />)
     }
     return <div className='noState'>{NO_STATE_MSG}</div>;
   };
 
   const renderAtomsRelationship = () => (
-    <ParentSize>
-      {({ width, height }) => (
-        <Example width={width} height={height} snapshots={snapshots} />
-      )}
-    </ParentSize>
+    <ParentSize>{({ width, height })  => 
+    <>
+    <AtomsRelationship 
+    width={width} 
+    height={height}
+    snapshots={snapshots} />
+    </>
+    }</ParentSize>
   );
 
   // the hierarchy gets set on the first click in the page

@@ -11,6 +11,8 @@ import { pointRadial } from 'd3-shape';
 import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
+import { onHover, onHoverExit } from '../actions/actions'
+import { useStoreContext } from '../store'
 
 // setting the base margins for the Map to render in the Chrome extension window.
 const defaultMargin = { top: 30, left: 30, right: 30, bottom: 30 };
@@ -30,12 +32,13 @@ export default function ComponentMap({
   margin = defaultMargin,
   snapshots: snapshots,
 }: LinkTypesProps) {
-  console.log(totalHeight);
 
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
   // This is where we select the last object in the snapshots array from props to allow hierarchy to parse the data for render on the component map per hierarchy layout specifications.
   const lastNode = snapshots.length - 1;
   const data = snapshots[lastNode];
   // importing custom hooks for the selection tabs.
+
   const [layout, setLayout] = useState<string>('cartesian');
   const [orientation, setOrientation] = useState<string>('horizontal');
   const [linkType, setLinkType] = useState<string>('diagonal');
@@ -154,9 +157,22 @@ export default function ComponentMap({
                           rx={node.data.children ? 0 : 10}
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
-
                             forceUpdate();
                           }}
+                          onMouseLeave={()=> {
+                            if(Object.keys(node.data.recoilDomNode).length > 0){
+                              dispatch(onHoverExit(node.data.recoilDomNode[node.data.name]))
+                            } else {
+                              dispatch(onHoverExit(node.data.rtid))
+                            }
+                          }}
+                          onMouseEnter={()=> {
+                            if(Object.keys(node.data.recoilDomNode).length > 0){
+                              dispatch(onHover(node.data.recoilDomNode[node.data.name]))
+                            } else {
+                              dispatch(onHover(node.data.rtid))
+                            }   
+                          }
                         />
                       )}
                       <text
