@@ -78,8 +78,13 @@ export const resetSlider = () => ({
   type: types.SLIDER_ZERO,
 });
 
-export const onHover = () => ({
+export const onHover = (rtid) => ({
   type: types.ON_HOVER, 
   //the payload should be something to relate the component we're hovering and highlight that component on the DOM
-  payload: 'PAYLOAD FROM onHover inside of action.ts'
+  payload: rtid
+})
+
+export const onHoverExit = (rtid) => ({
+  type: types.ON_HOVER_EXIT,
+  payload: rtid
 })

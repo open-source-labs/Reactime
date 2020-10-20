@@ -5,17 +5,20 @@ import { Cluster, hierarchy } from '@visx/hierarchy';
 import { LinkVertical } from '@visx/shape';
 import { LinearGradient } from '@visx/gradient';
 import { StateRouteProps} from './StateRoute'
+import { onHover, onHoverExit } from '../actions/actions'
+import { useStoreContext } from '../store'
+import Legend from './AtomsRelationshipLegend'
 
-const blue = '#acdbdf';
-const selectWhite = '#f0ece2';
+export const blue = '#acdbdf';
+export const selectWhite = '#f0ece2';
 
 export const lightgreen = '#0BAB64';
-const green = '#3BB78F'
-const orange = '#FED8B1';
+export const green = '#3BB78F'
+export const orange = '#FED8B1';
 
-const merlinsbeard = '#f7f7f3';
+export const merlinsbeard = '#f7f7f3';
 export const background = '#242529';
-const root = '#d2f5e3';
+export const root = '#d2f5e3';
 
 interface clusterShape {
   name?:string;
@@ -38,8 +41,10 @@ interface selectorsCache {
 
 
 const clusterData : clusterShape = {};
-const selectorsCache :selectorsCache = {}
- 
+const selectorsCache :selectorsCache = {};
+const bothObj = {}; 
+
+
 let initialFire = false 
 function clusterDataPopulate(props:StateRouteProps) {
   let atomCompObj = reorganizedCompObj(props);
@@ -57,10 +62,14 @@ function clusterDataPopulate(props:StateRouteProps) {
       let outerobj:outerObjShape = {}  
       outerobj.name = key
       selectorsCache[key] = true 
+      
+      if(!bothObj[key]){
+        bothObj[key] = []
+      }
+
 
       if(props[0].atomSelectors[key].length){
       for(let i=0; i<props[0].atomSelectors[key].length;i++){
-
         if(!outerobj.children) outerobj.children = []
         let innerobj:innerObjShape = {}
         innerobj.name = props[0].atomSelectors[key][i]
@@ -69,8 +78,15 @@ function clusterDataPopulate(props:StateRouteProps) {
         //if atoms contain components 
         if(atomCompObj[props[0].atomSelectors[key][i]]){
           for(let j=0; j<atomCompObj[props[0].atomSelectors[key][i]].length;j++){
+            if(!bothObj[props[0].atomSelectors[key][i]]){
+              bothObj[props[0].atomSelectors[key][i]] = []
+            }
+              bothObj[props[0].atomSelectors[key][i]].push(atomCompObj[props[0].atomSelectors[key][i]][0])
+
             if(!innerobj.children) innerobj.children = []
             innerobj.children.push({name:atomCompObj[props[0].atomSelectors[key][i]]})
+            bothObj[key].push(atomCompObj[props[0].atomSelectors[key][i]][0])
+            
           }
         }
         outerobj.children.push(innerobj)
@@ -81,6 +97,11 @@ function clusterDataPopulate(props:StateRouteProps) {
         if(atomCompObj[key] && atomCompObj[key].length){
           for (let i=0; i<atomCompObj[key].length;i++){
             outerobj.children.push({name:atomCompObj[key][i]})
+
+            if(!bothObj[key]){
+              bothObj[key] = []
+            } 
+            bothObj[key].push(atomCompObj[key][i])
           }
         }
         
@@ -92,9 +113,11 @@ function clusterDataPopulate(props:StateRouteProps) {
     let outObj:outerObjShape = {};
     if(!selectorsCache[key]){
       outObj.name = key
+      if(!bothObj[key]) bothObj[key] = []
       for (let i=0; i<atomCompObj[key].length;i++){
         if(!outObj.children) outObj.children = []
         outObj.children.push({name:atomCompObj[key][i]})
+        bothObj[key].push(atomCompObj[key][i])
       }
       clusterData.children.push(outObj)
     }    
@@ -120,13 +143,14 @@ function reorganizedCompObj(props) {
   return reorganizedCompObj;
 }
 
-function Node({ node }) {
+function Node({ node, snapshots, dispatch, bothObj}) {
+  // const [dispatch] = useStoreContext();
   const selector = node.depth === 1 && node.height === 2
   const isRoot = node.depth === 0;
   const isParent = !!node.children;
-
+  
   if (isRoot) return <RootNode node={node} />;
-  if (selector) return <SelectorNode node = {node}/>;
+  if (selector) return <SelectorNode node = {node} snapshots = {snapshots} bothObj = {bothObj} dispatch = {dispatch}/>;
 
   return (
     <Group top={node.y} left={node.x}>
@@ -135,9 +159,16 @@ function Node({ node }) {
           r={12}
           fill={isParent ? orange : blue}
           stroke={isParent ? orange : blue}
-          // onClick={() => {
-          //   alert(`clicked: ${JSON.stringify(node.data.name)}`);
-          // }}
+          onMouseLeave={()=> {
+            for (let i=0; i<bothObj[node.data.name].length; i++){
+              dispatch(onHoverExit(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+            }
+          }}
+          onMouseEnter={()=> {
+            for (let i=0; i<bothObj[node.data.name].length; i++){
+              dispatch(onHover(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+            }                            
+          }}
         />
       )}
       <text
@@ -156,6 +187,7 @@ function Node({ node }) {
 }
 
 function RootNode({ node }) {
+  
   const width = 40;
   const height = 20;
   const centerX = -width / 2;
@@ -189,8 +221,7 @@ function RootNode({ node }) {
   );
 }
 
-function SelectorNode({ node }) {
-
+function SelectorNode({ node, snapshots, dispatch, bothObj}) {
     return (
       <Group top={node.y} left={node.x}>
       {node.depth !== 0 && (
@@ -198,9 +229,16 @@ function SelectorNode({ node }) {
           r={12}
           fill={selectWhite}
           stroke={selectWhite}
-          // onClick={() => {
-          //   alert(`clicked: ${JSON.stringify(node.data.name)}`);
-          // }}
+          onMouseLeave={()=> {
+            for (let i=0; i<bothObj[node.data.name].length; i++){
+              dispatch(onHoverExit(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+            }
+          }}
+          onMouseEnter={()=> {
+            for (let i=0; i<bothObj[node.data.name].length; i++){
+              dispatch(onHover(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
+            }                     
+          }}
         />
       )}
       <text
@@ -218,6 +256,15 @@ function SelectorNode({ node }) {
   );
 }
 
+function removeDup(bothObj){
+  let filteredObj = {}
+  for (let key in bothObj){
+    let array = bothObj[key].filter((a,b) => bothObj[key].indexOf(a) === b)
+    filteredObj[key] = array 
+  }
+  return filteredObj
+}
+
 const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40 };
 
 // export type DendrogramProps = {
@@ -226,12 +273,17 @@ const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40 };
 //   margin?: { top: number; right: number; bottom: number; left: number };
 // };
 
-export default function Example({
+export default function AtomsRelationship({
   width,
   height,
   margin = defaultMargin,
   snapshots,
 }) {
+
+  
+  let filtered = removeDup(bothObj)
+
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
 
   if(!initialFire){
     clusterDataPopulate(snapshots);
@@ -242,11 +294,16 @@ export default function Example({
   const yMax = height - margin.top - margin.bottom;
 
   return width < 10 ? null : (
+    <>
+    <div>
+      <Legend 
+      hierarchy = {hierarchy} />
+    </div>
     <svg width={width} height={height}>
+      
       <LinearGradient id="top" from={lightgreen} to={green} />
 
       <rect width={width} height={height} rx={14} fill={background} />
-
       <Cluster root={data} size={[xMax, yMax]}>
         {(cluster) => (
           <Group top={margin.top} left={margin.left}>
@@ -257,15 +314,20 @@ export default function Example({
                 stroke={merlinsbeard}
                 strokeWidth="1"
                 strokeOpacity={0.2}
-                fill="none"
+                fill="none"                
               />
             ))}
             {cluster.descendants().map((node, i) => (
-              <Node key={`cluster-node-${i}`} node={node} />
+              <Node key={`cluster-node-${i}`} 
+              node={node}
+              bothObj = {filtered}
+              snapshots = {snapshots}
+              dispatch = {dispatch} />
             ))}
           </Group>
         )}
       </Cluster>
     </svg>
+    </>
   );
 }

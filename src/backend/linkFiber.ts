@@ -22,6 +22,7 @@ import componentActionsRecord from './masterState';
 import { throttle, getHooksNames } from './helpers';
 import { Console } from 'console';
 import AtomsRelationship from '../app/components/AtomsRelationship';
+import { isNull } from 'util';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -35,6 +36,9 @@ const circularComponentTable = new Set();
 let isRecoil = false;
 let allAtomsRelationship = [];
 let initialstart = false;
+let rtidCounter = 0; 
+let rtid = null;
+let recoilDomNode = {};
 
 // Simple check for whether our target app uses Recoil
 if (window[`$recoilDebugStates`]) {
@@ -76,8 +80,8 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
     // getRecoilState();
     payload.atomsComponents = atomsComponents;
     payload.atomSelectors = atomsSelectors;
+    payload.recoilDomNode = recoilDomNode
   }
-
 
   window.postMessage(
     {
@@ -183,6 +187,17 @@ function createTree(
   if (!currentFiber) return null;
   if (!tree) return tree;
 
+    if (currentFiber.tag === 0 || currentFiber.tag === 1 || currentFiber.tag === 2) {
+      if (currentFiber.child && currentFiber.child.stateNode) {
+          // console.log('Sanjays algo', currentFiber)
+          rtid = "fromLinkFiber" + rtidCounter
+          // if (currentFiber.child.stateNode.setAttribute) {
+            currentFiber.child.stateNode.setAttribute("id", rtid);
+          // }
+      }
+      rtidCounter++;
+  }
+    
   // These have the newest state. We update state and then
   // called updateSnapshotTree()
 
@@ -200,6 +215,7 @@ function createTree(
     treeBaseDuration,
   } = currentFiber;
 
+  
   //Checks Recoil Atom and Selector Relationships
   if (
     currentFiber.memoizedState &&
@@ -282,6 +298,7 @@ function createTree(
     (tag === 0 || tag === 1 || tag === 2 || tag === 10) &&
     isRecoil === true
   ) {
+    // console.log('Recoil Hooks Algo', currentFiber)
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
       // so we must traverse through the list and get the states.
@@ -315,6 +332,7 @@ function createTree(
     (tag === 0 || tag === 1 || tag === 2 || tag === 10) &&
     isRecoil === false
   ) {
+    // console.log('Regular Hooks Algo', currentFiber)
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
       // so we must traverse through the list and get the states.
@@ -343,6 +361,7 @@ function createTree(
 
   // This grabs stateless components
   if (!componentFound && (tag === 0 || tag === 1 || tag === 2)) {
+    // console.log('Stateless Algo', currentFiber)
     newState = 'stateless';
   }
 
@@ -356,19 +375,75 @@ function createTree(
   };
 
   let newNode = null;
+
   // We want to add this fiber node to the snapshot
   if (componentFound || newState === 'stateless') {
     if (fromSibling) {
+      
+      if(isRecoil){
+        if(currentFiber.elementType.name){
+          if(!recoilDomNode[currentFiber.elementType.name]){
+            recoilDomNode[currentFiber.elementType.name] = [];
+          }
+        }
+
+        let pointer = currentFiber
+
+        while(pointer !== null){
+            if(pointer.stateNode !== null){
+            rtid = "fromLinkFiber" + rtidCounter++
+            recoilDomNode[currentFiber.elementType.name].push(rtid)
+            pointer.stateNode.setAttribute("id", rtid)
+          }
+            
+            pointer = pointer.child
+          }
+      } else {
+        if (currentFiber.child && currentFiber.child.stateNode) {
+          rtid = "fromLinkFiber" + rtidCounter
+            currentFiber.child.stateNode.setAttribute("id", rtid);
+          }
+          rtidCounter++;
+      }
+
       newNode = tree.addSibling(
         newState,
         elementType ? elementType.name : 'nameless',
-        componentData
+        componentData,
+        rtid,
+        recoilDomNode
       );
     } else {
+      
+      if(isRecoil){
+        if(currentFiber.elementType.name){
+          if(!recoilDomNode[currentFiber.elementType.name]){
+            recoilDomNode[currentFiber.elementType.name] = [];
+          }
+        }
+        let pointer = currentFiber
+        while(pointer !== null){
+            if(pointer.stateNode !== null){
+            rtid = "fromLinkFiber" + rtidCounter++
+            recoilDomNode[currentFiber.elementType.name].push(rtid)
+            pointer.stateNode.setAttribute("id", rtid)        
+          }          
+            pointer = pointer.child
+          }
+      } else {
+        if (currentFiber.child && currentFiber.child.stateNode) {
+          rtid = "fromLinkFiber" + rtidCounter
+            currentFiber.child.stateNode.setAttribute("id", rtid);
+          }
+          rtidCounter++;
+      }
+      
       newNode = tree.addChild(
         newState,
         elementType ? elementType.name : 'nameless',
-        componentData
+        componentData,
+        rtid, 
+        recoilDomNode
       );
     }
   } else {
@@ -382,13 +457,13 @@ function createTree(
     // Otherwise, attach children to this same node.
     circularComponentTable.add(child);
     createTree(child, newNode);
+    
   }
   // Recurse on siblings
   if (sibling && !circularComponentTable.has(sibling)) {
     circularComponentTable.add(sibling);
     createTree(sibling, newNode, true);
   }
-
   return tree;
 }
 

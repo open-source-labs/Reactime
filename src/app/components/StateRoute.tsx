@@ -11,20 +11,15 @@ import {
   NavLink,
   Switch,
 } from 'react-router-dom';
-import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
-// import PerfView from './PerfView';
-
 import { changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
-import AtomsRelationship from './AtomsRelationship';
 import PerformanceVisx from './PerformanceVisx';
-
-import Example from './AtomsRelationship';
+import Legend from './AtomsRelationshipLegend'
 import { ParentSize } from '@visx/responsive';
-import { Console } from 'console';
 import Legendary from './legend';
+import AtomsRelationship from './AtomsRelationship'
 
 const History = require('./History').default;
 
@@ -65,11 +60,15 @@ const StateRoute = (props: StateRouteProps) => {
 
   // Map
   const renderComponentMap = () => {
+    
     if (hierarchy) {
       return (
         <ParentSize>
           {({ width, height }) => (
-            <ComponentMap snapshots={snapshots} width={width} height={height} />
+            <ComponentMap 
+            snapshots={snapshots} 
+            width={width} 
+            height={height} />
           )}
         </ParentSize>
       );
@@ -89,11 +88,14 @@ const StateRoute = (props: StateRouteProps) => {
   };
 
   const renderAtomsRelationship = () => (
-    <ParentSize>
-      {({ width, height }) => (
-        <Example width={width} height={height} snapshots={snapshots} />
-      )}
-    </ParentSize>
+    <ParentSize>{({ width, height })  => 
+    <>
+    <AtomsRelationship 
+    width={width} 
+    height={height}
+    snapshots={snapshots} />
+    </>
+    }</ParentSize>
   );
 
   // the hierarchy gets set on the first click in the page

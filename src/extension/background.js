@@ -4,6 +4,8 @@
 /* eslint-disable function-paren-newline */
 /* eslint-disable implicit-arrow-linebreak */
 
+import snapshots from "../app/components/snapshots";
+
 // store ports in an array
 const portsArr = [];
 const reloaded = {};
@@ -282,9 +284,12 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       break;
     }
     case 'recordSnap': {
+      
       const sourceTab = tabId;
       // first snapshot received from tab
       if (!firstSnapshotReceived[tabId]) {
+
+
         firstSnapshotReceived[tabId] = true;
         reloaded[tabId] = false;
 
@@ -336,7 +341,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     default:
       break;
   }
-  console.log('inside background.js, tabsObj:', tabsObj); 
+  // console.log('inside background.js, tabsObj:', tabsObj); 
   return true; // attempt to fix close port error
 });
 

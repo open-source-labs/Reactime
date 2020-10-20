@@ -39,10 +39,19 @@ export default (state, action) => produce(state, draft => {
   };
 
   switch (action.type) {
+    case types.ON_HOVER_EXIT: {
+      port.postMessage({
+        action: 'onHoverExit',
+        payload: action.payload,
+        tabId: currentTab,
+      })
+      break; 
+    }
+
     case types.ON_HOVER: {
       port.postMessage({
         action: 'onHover',
-        payload: 'payload from Reducer ON_HOVER',
+        payload: action.payload,
         tabId: currentTab,
       })
       break; 
