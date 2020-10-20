@@ -22,19 +22,21 @@ export type LinkTypesProps = {
 };
 
 export default function ComponentMap({
-  // importing props
+  // imported props to be used to display the dendrogram
   width: totalWidth,
   height: totalHeight,
   margin = defaultMargin,
   snapshots: snapshots,
 }: LinkTypesProps) {
-  // preparing the data to be used for render
+  // selecting the last element of the snapshots array object to meet the data structure of the visx map
   const lastNode = snapshots.length - 1;
   const data = snapshots[lastNode];
+  // custom hooks to setup the entire map on the are prescribed for the map
   const [layout, setLayout] = useState<string>('cartesian');
   const [orientation, setOrientation] = useState<string>('horizontal');
   const [linkType, setLinkType] = useState<string>('diagonal');
   const [stepPercent, setStepPercent] = useState<number>(0.5);
+  // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
   const forceUpdate = useForceUpdate();
   // setting the margins for the Map to render in the tab
   const innerWidth = totalWidth - margin.left - margin.right;
