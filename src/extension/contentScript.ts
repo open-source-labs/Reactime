@@ -15,7 +15,6 @@ window.addEventListener('message', msg => { // runs automatically every second
 
   // post initial Message to background.js
   const { action }: { action: string } = msg.data;
-
   if (action === 'recordSnap') { // this is firing on page load
     chrome.runtime.sendMessage(msg.data);
   }
@@ -37,6 +36,8 @@ chrome.runtime.onMessage.addListener(request => { // seems to never fire
     case 'onHover': 
       window.postMessage(request, '*'); 
     default:
+    case 'onHoverExit': 
+      window.postMessage(request, '*'); 
       break;
   }
   return true; // attempt to fix port closing console error
