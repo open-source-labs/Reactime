@@ -25,7 +25,8 @@ export default function LinkControls({
 }: Props) {
   return (
     <div style={controlStyles}>
-      <label>Layout:</label>&nbsp;
+      <label>Layout:</label>
+      &nbsp;
       <select
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => setLayout(e.target.value)}
@@ -35,7 +36,8 @@ export default function LinkControls({
         <option value='polar'>Polar</option>
       </select>
       &nbsp;&nbsp;
-      <label>Orientation:</label>&nbsp;
+      <label>Orientation:</label>
+      &nbsp;
       <select
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => setOrientation(e.target.value)}
@@ -46,20 +48,24 @@ export default function LinkControls({
         <option value='horizontal'>Horizontal</option>
       </select>
       &nbsp;&nbsp;
-      <label>Link:</label>&nbsp;
+      <label>Link:</label>
+      &nbsp;
       <select
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => setLinkType(e.target.value)}
         value={linkType}
+        disabled={layout === 'cartesian' && orientation === 'horizontal'}
       >
         <option value='diagonal'>Diagonal</option>
         <option value='step'>Step</option>
         <option value='line'>Line</option>
       </select>
+      {/* This is the slider control for the step option */}
       {linkType === 'step' && layout !== 'polar' && (
         <>
           &nbsp;&nbsp;
-          <label>Step:</label>&nbsp;
+          <label>Step:</label>
+          &nbsp;
           <input
             onClick={(e) => e.stopPropagation()}
             type='range'
