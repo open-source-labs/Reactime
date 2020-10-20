@@ -69,9 +69,9 @@ const StateRoute = (props: StateRouteProps) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
-  // the hierarchy gets set on the first click in the page
+  // the hierarchy gets set upon the first click on the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
-  // if true invoke render chart with hierarchy
+  // if true, we invoke teh D3 render chart with hierarchy
   const renderHistory = () => {
     if (hierarchy) {
       return (
