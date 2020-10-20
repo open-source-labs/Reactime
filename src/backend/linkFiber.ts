@@ -187,16 +187,6 @@ function createTree(
   if (!currentFiber) return null;
   if (!tree) return tree;
 
-    if (currentFiber.tag === 0 || currentFiber.tag === 1 || currentFiber.tag === 2) {
-      if (currentFiber.child && currentFiber.child.stateNode) {
-          // console.log('Sanjays algo', currentFiber)
-          rtid = "fromLinkFiber" + rtidCounter
-          // if (currentFiber.child.stateNode.setAttribute) {
-            currentFiber.child.stateNode.setAttribute("id", rtid);
-          // }
-      }
-      rtidCounter++;
-  }
     
   // These have the newest state. We update state and then
   // called updateSnapshotTree()
@@ -399,7 +389,7 @@ function createTree(
             pointer = pointer.child
           }
       } else {
-        if (currentFiber.child && currentFiber.child.stateNode) {
+        if (currentFiber.child && currentFiber.child.stateNode && currentFiber.child.stateNode.setAttribute) {
           rtid = "fromLinkFiber" + rtidCounter
             currentFiber.child.stateNode.setAttribute("id", rtid);
           }
@@ -431,7 +421,7 @@ function createTree(
             pointer = pointer.child
           }
       } else {
-        if (currentFiber.child && currentFiber.child.stateNode) {
+        if (currentFiber.child && currentFiber.child.stateNode && currentFiber.child.stateNode.setAttribute) {
           rtid = "fromLinkFiber" + rtidCounter
             currentFiber.child.stateNode.setAttribute("id", rtid);
           }
