@@ -72,6 +72,8 @@ const StateRoute = (props: StateRouteProps) => {
   // the hierarchy gets set upon the first click on the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
   // if true, we invoke teh D3 render chart with hierarchy
+  // by invoking History component, and passing in all the props required to render D3 elements and perform timeJump from clicking of node
+  // otherwise we an alert to the user that no state was found.
   const renderHistory = () => {
     if (hierarchy) {
       return (
