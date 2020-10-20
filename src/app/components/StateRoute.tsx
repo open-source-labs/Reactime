@@ -13,18 +13,12 @@ import {
 } from 'react-router-dom';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
-<<<<<<< HEAD
-import AtomsRelationship from './AtomsRelationship.jsx';
-import PerformanceVisx from './PerformanceVisx';
-
-=======
->>>>>>> 2380810a0290431d0f1fed0a54a092fb7164b85a
 import { changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
 import PerformanceVisx from './PerformanceVisx';
-import Legend from './AtomsRelationshipLegend'
+import Legend from './AtomsRelationshipLegend';
 import { ParentSize } from '@visx/responsive';
-import AtomsRelationship from './AtomsRelationship'
+import AtomsRelationship from './AtomsRelationship';
 
 const History = require('./History').default;
 const ErrorHandler = require('./ErrorHandler').default;
@@ -50,13 +44,6 @@ export interface StateRouteProps {
 
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
-<<<<<<< HEAD
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
-=======
-
->>>>>>> 2380810a0290431d0f1fed0a54a092fb7164b85a
-
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
   const isRecoil = snapshot.atomsComponents ? true : false;
@@ -70,15 +57,11 @@ const StateRoute = (props: StateRouteProps) => {
 
   // Map
   const renderComponentMap = () => {
-    
     if (hierarchy) {
       return (
         <ParentSize>
           {({ width, height }) => (
-            <ComponentMap 
-            snapshots={snapshots} 
-            width={width} 
-            height={height} />
+            <ComponentMap snapshots={snapshots} width={width} height={height} />
           )}
         </ParentSize>
       );
@@ -104,14 +87,17 @@ const StateRoute = (props: StateRouteProps) => {
   };
 
   const renderAtomsRelationship = () => (
-    <ParentSize>{({ width, height })  => 
-    <>
-    <AtomsRelationship 
-    width={width} 
-    height={height}
-    snapshots={snapshots} />
-    </>
-    }</ParentSize>
+    <ParentSize>
+      {({ width, height }) => (
+        <>
+          <AtomsRelationship
+            width={width}
+            height={height}
+            snapshots={snapshots}
+          />
+        </>
+      )}
+    </ParentSize>
   );
 
   // the hierarchy gets set on the first click in the page
