@@ -12,8 +12,9 @@ type snapHierarchy = {`Record<string, unknown>`}
 export default function LegendKey(props: snapHierarchy) {
   const { hierarchy } = props;
 
-  // We are taking the array of displayNames and sifting through them and placing each set of
-  // branches as a key in an object, { '.0': [1.0, 2.0, 3.0, 4.0], '.1': [1.1, 2.1, 3.1,...], '.2': [....]}
+  // we are sifting through array of displayNames and sorting them into key value pairs in an object, based on the branch they are on:
+  // { '.0': [1.0, 2.0, 3.0, 4.0], '.1': [1.1, 2.1, 3.1,...], '.2': [....]}
+  // then we create an array, with each index being strings showing the range of the branch,
   // we then take that and place it in an array, with each element being a range of the values in that branch -> ['1.0-4.0', '1.1-6.1',...]
   function colorRanger(snapshotIdsArray) {
     const resultRangeColor = {};
