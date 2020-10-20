@@ -44,10 +44,11 @@ export default function LinkControls({
         value={orientation}
         disabled={layout === 'polar'}
       >
-        <option value='vertical'>Vertical</option>
         <option value='horizontal'>Horizontal</option>
+        <option value='vertical'>Vertical</option>
       </select>
       &nbsp;&nbsp;
+      {/* Controls for the link selections. When Cartesian and Horizontal are selection the link has been disabled as it was causing a rendering issue */}
       <label>Link:</label>
       &nbsp;
       <select
