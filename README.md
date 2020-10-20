@@ -1,24 +1,26 @@
 <p align="center">
-  <img src ="./assets/readme-logo-300.png" width="300"/>
+  <img src ="./assets/readme-logo-300-no-version.png" width="300"/>
 </p>
+<h1 align="center">
+  State Debugger for React
 
-<h1 align="center"><b>State Debugger for React</b></h1>
+  <br>Nominated for the Productivity Booster award 
+  <br><a href="https://osawards.com/react/">👑 React Open Source Awards 2020 👑</a>
+</h1>
+
 
 [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime) [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime) [![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime) [![Vulnerabilities](https://snyk.io/test/github/oslabs-beta/reactime/badge.svg)](https://snyk.io/test/github/oslabs-beta/reactime)![BabelPresetPrefs](https://img.shields.io/badge/babel%20preset-airbnb-ff69b4)![LintPrefs](https://img.shields.io/badge/linted%20with-eslint-blueviolet)
 
 <p align="center">
-<img src="./assets/hooks-demo.gif" />
-<img src="./assets/recoil-demo.gif" />
+<img src="./assets/react-calculator-demo.gif" />
+<img src="./assets/recoil-todo-demo.gif" />
 </p>
-
-👑   Nominated for the Productivity Booster award at [React Open Source Awards 2020](https://osawards.com/react/)! 👑  
-
 
 <b>Reactime</b> is a debugging tool for React developers. It records a snapshot whenever a target application's state is changed and allows the user to jump to any previously recorded state.
 
 Currently, Reactime supports React apps using stateful components and Hooks, with beta support for Recoil and Context API.
 
-Reactime 5.0 beta extends the core functionality by including support for [Recoil](https://recoiljs.org/). The latest release incorporates additional visualizations for component relationships as well as atom-selector relationships for Recoil applications. Reactime 5.0 includes expanded [typedoc](https://typedoc.org/api/) documentation for developers looking to contribute to the source code. 
+Reactime verision 6.0 beta extends the core functionality by including support for [Recoil](https://recoiljs.org/). The latest release incorporates additional visualizations for component relationships as well as atom-selector relationships for Recoil applications. Reactime 6.0 includes expanded [typedoc](https://typedoc.org/api/) documentation for developers looking to contribute to the source code. 
 
 After installing Reactime, you can test its functionalities with the following demo repositories:
 
@@ -78,6 +80,11 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - declarative titles in the actions sidebar
 
 ## <b>Authors</b>
+- **Alex Landeros** - [@AlexanderLanderos](https://github.com/AlexanderLanderos)
+- **Chris Guizzetti** - [@guizzettic](https://github.com/guizzettic)
+- **Jason Victor** - [@theqwertypusher](https://github.com/Theqwertypusher)
+- **Sanjay Lavingia** - [@sanjaylavingia](https://github.com/sanjaylavingia)
+- **Vincent Nguyen** - [@guizzettic](https://github.com/VNguyenCode)
 - **Haejin Jo** - [@haejinjo](https://github.com/haejinjo)
 - **Hien Nguyen** - [@hienqn](https://github.com/hienqn)
 - **Jack Crish** - [@JackC27](https://github.com/JackC27)

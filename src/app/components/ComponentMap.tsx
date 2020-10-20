@@ -24,7 +24,7 @@ export type LinkTypesProps = {
 };
 
 export default function ComponentMap({
-  // importing props
+  // imported props to be used to display the dendrogram
   width: totalWidth,
   height: totalHeight,
   margin = defaultMargin,
@@ -36,13 +36,15 @@ export default function ComponentMap({
   const lastNode = snapshots.length - 1;
   const data = snapshots[lastNode];
   // importing custom hooks for the selection tabs.
-
   const [layout, setLayout] = useState<string>('cartesian');
   const [orientation, setOrientation] = useState<string>('horizontal');
   const [linkType, setLinkType] = useState<string>('diagonal');
-  const [stepPercent, setStepPercent] = useState<number>(0.5);
+
+  const [stepPercent, setStepPercent] = useState<number>(10);
+  // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
   const forceUpdate = useForceUpdate();
-  // setting the margins for the Map to render in the tab
+  // setting the margins for the Map to render in the tab window.
+
   const innerWidth = totalWidth - margin.left - margin.right;
   const innerHeight = totalHeight - margin.top - margin.bottom;
 
@@ -50,7 +52,9 @@ export default function ComponentMap({
   let sizeWidth: number;
   let sizeHeight: number;
 
-  // rendering for the different tab selections
+  // This sets the starting position for the root node on the maps display. the polar layout sets the root node to the relative center of the display box based on the size of the browser window.
+  // the else conditional statements determines the root nodes location either in the left middle or top middle of the browser window relative to the size of the browser.
+
   if (layout === 'polar') {
     origin = {
       x: innerWidth / 2,
@@ -136,6 +140,7 @@ export default function ComponentMap({
                           }}
                         />
                       )}
+                      {/* This creates the rectangle boxes for each component and sets it relative position to other parent nodes of the same level.   */}
                       {node.depth !== 0 && (
                         <rect
                           height={height}
@@ -168,6 +173,7 @@ export default function ComponentMap({
                           }
                         />
                       )}
+                      {/* Display text inside of each component node */}
                       <text
                         dy='.33em'
                         fontSize={9}
