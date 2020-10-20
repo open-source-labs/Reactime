@@ -80,6 +80,11 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - declarative titles in the actions sidebar
 
 ## <b>Authors</b>
+- **Alex Landeros** - [@AlexanderLanderos](https://github.com/AlexanderLanderos)
+- **Chris Guizzetti** - [@guizzettic](https://github.com/guizzettic)
+- **Jason Victor** - [@theqwertypusher](https://github.com/Theqwertypusher)
+- **Sanjay Lavingia** - [@sanjaylavingia](https://github.com/sanjaylavingia)
+- **Vincent Nguyen** - [@guizzettic](https://github.com/VNguyenCode)
 - **Haejin Jo** - [@haejinjo](https://github.com/haejinjo)
 - **Hien Nguyen** - [@hienqn](https://github.com/hienqn)
 - **Jack Crish** - [@JackC27](https://github.com/JackC27)
