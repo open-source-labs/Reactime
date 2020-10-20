@@ -7,11 +7,7 @@ import { changeView, changeSlider } from '../actions/actions';
 import { Zoom } from '@visx/zoom';
 import { localPoint } from '@visx/event';
 import { RectClipPath } from '@visx/clip-path';
-import ZoomI from './zoomFt';
-
-//* Visx Zoom feature stuff
-const bg = '';
-const points = [...new Array(1000)];
+// import ZoomI from './zoomFt';
 
 // const colorScale = scaleLinear<number>({ range: [0, 1], domain: [0, 1000] });
 // const sizeScale = scaleLinear<number>({ domain: [0, 600], range: [0.5, 8] });
@@ -60,7 +56,7 @@ const filterHooks = (data: any[]) => {
 
 function History(props: any) {
   //visx zoom first
-  // const [showMiniMap, setShowMiniMap] = useState<boolean>(true);
+  const [showMiniMap, setShowMiniMap] = useState<boolean>(true);
 
   const { width, height, hierarchy, dispatch, sliderIndex, viewIndex } = props;
   console.log(
@@ -266,17 +262,18 @@ function History(props: any) {
   // console.log('have we hit maked3dtree');
   // below we are rendering the LegendKey component and passing hierarchy as props
   // then rendering each node in History tab to render using D3
+
   return (
     <>
-      <LegendKey hierarchy={hierarchy} />
-      {/* <ZoomI width={width} height={height}> */}
-      <div
-        ref={HistoryRef}
-        className="history-d3-div"
-        id="historyContainer"
-        // position="absolute"
-      />
-      {/* </ZoomI> */}
+      <div>
+        <LegendKey hierarchy={hierarchy} />
+        <div
+          ref={HistoryRef}
+          className="history-d3-div"
+          id="historyContainer"
+          // position="absolute"
+        />
+      </div>
     </>
   );
 }
