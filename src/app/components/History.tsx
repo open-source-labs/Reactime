@@ -145,9 +145,9 @@ function History(props: Record<string, unknown>) {
     // further optimization would improve the onclick feature, onclick seems to only register on the lower half of the node
     node
       .append('circle')
-      .attr('r', 13)
+      .attr('r', 14)
       .on('mouseover', function (d: `Record<string, unknown>`) {
-        d3.select(this).transition(100).duration(20).attr('r', 20);
+        d3.select(this).transition(90).duration(18).attr('r', 21);
       })
       .on('click', function (d: `Record<string, unknown>`) {
         const index = parseInt(`${d.data.name}.${d.data.branch}`);
@@ -156,7 +156,7 @@ function History(props: Record<string, unknown>) {
       })
       // think about how I can convert this any to typescript
       .on('mouseout', function (d: any) {
-        d3.select(this).transition().duration(300).attr('r', 13);
+        d3.select(this).transition().duration(300).attr('r', 14);
       });
 
     node
