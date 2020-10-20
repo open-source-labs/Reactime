@@ -46,7 +46,8 @@ export default function ComponentMap({
   let sizeWidth: number;
   let sizeHeight: number;
 
-  // rendering for the different tab selections
+  // This sets the starting position for the root node on the maps display. the polar layout sets the root node to the relative center of the display box based on the size of the browser window.
+  // the else conditional statements determines the root nodes location either in the left middle or top middle of the browser window relative to the size of the browser.
   if (layout === 'polar') {
     origin = {
       x: innerWidth / 2,
