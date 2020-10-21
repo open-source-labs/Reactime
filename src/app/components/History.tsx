@@ -1,5 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import * as d3 from 'd3';
+import LegendKey from './legend';
+import { changeView, changeSlider } from '../actions/actions';
 
 /**
  * @var colors: Colors array for the diffrerent node branches, each color is for a different branch
@@ -30,15 +32,18 @@ const filterHooks = (data: any[]) => {
   return JSON.stringify(data[0].state);
 };
 
-
 /**
  * @method maked3Tree :Creates a new D3 Tree
  */
 
-function History(props) {
-  let { hierarchy } = props;
+// main function exported to StateRoute
+// below we destructure the props
+function History(props: Record<string, unknown>) {
+  const { width, height, hierarchy, dispatch, sliderIndex, viewIndex } = props;
+
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
+
   let HistoryRef = React.createRef(root); //React.createRef(root);
   useEffect(() => {
     maked3Tree();
@@ -57,8 +62,8 @@ function History(props) {
    */
   let maked3Tree = function () {
     removed3Tree();
-    const width: any = 800;
-    const height: any = 600;
+    const width: number = 800;
+    const height: number = 600;
     const svgContainer = d3
       .select(HistoryRef.current)
       .append('svg') // svgContainer is now pointing to svg
@@ -68,12 +73,11 @@ function History(props) {
     const g = svgContainer
       .append('g')
       // this is changing where the graph is located physically
-      .attr('transform', `translate(${width / 2 + 4}, ${height / 2 + 2})`)
+      .attr('transform', `translate(${width / 2 + 4}, ${height / 2 + 2})`);
 
     // d3.hierarchy constructs a root node from the specified hierarchical data
     // (our object titled dataset), which must be an object representing the root node
     const hierarchy = d3.hierarchy(root);
-
     const tree = d3
       .tree()
       .nodeSize([width / 10, height / 10])
@@ -83,7 +87,6 @@ function History(props) {
 
     const d3root = tree(hierarchy);
 
-    
     g.selectAll('.link')
       // root.links() gets an array of all the links,
       // where each element is an object containing a
@@ -109,12 +112,12 @@ function History(props) {
       .append('g')
       .style('fill', function (d) {
         let loadTime;
-        if (d.data.stateSnapshot.children[0].componentData.actualDuration){
-          loadTime = d.data.stateSnapshot.children[0].componentData.actualDuration;
-        } else{
+        if (d.data.stateSnapshot.children[0].componentData.actualDuration) {
+          loadTime =
+            d.data.stateSnapshot.children[0].componentData.actualDuration;
+        } else {
           loadTime = 1;
         }
-          
 
         if (loadTime !== undefined) {
           if (loadTime > 16) {
@@ -136,43 +139,26 @@ function History(props) {
         return 'translate(' + reinfeldTidierAlgo(d.x, d.y) + ')';
       });
 
+    // here we the node circle is created and given a radius size, we are also giving it a mouseover and onClick  functionality
+    // mouseover will highlight the node
+    // the onCLick of a selected node will dispatch changeSlider and changeView actions. This will act as a timeJump request.
+    // further optimization would improve the onclick feature, onclick seems to only register on the lower half of the node
     node
       .append('circle')
-      .attr('r', 15)
-      .on('mouseover', function (d: any) {
-        d3.select(this).transition(100).duration(20).attr('r', 25);
-
-        tooltipDiv.transition().duration(50).style('opacity', 0.9);
-
-        if (d.data.stateSnapshot.children[0].name === 'RecoilRoot') {
-          isRecoil = true;
-        }
-        if (!isRecoil) {
-          tooltipDiv
-            .html(filterHooks(d.data.stateSnapshot.children), this)
-            .style('left', d3.event.pageX - 90 + 'px')
-            .style('top', d3.event.pageY - 65 + 'px');
-        } else {
-          tooltipDiv
-            .html(
-              'Load Time : ' +
-                JSON.stringify(
-                  d.data.stateSnapshot.children[0].componentData.actualDuration
-                ).substring(0, 5) +
-                ' ms',
-              this
-            )
-            .style('left', d3.event.pageX - 90 + 'px')
-            .style('top', d3.event.pageY - 65 + 'px');
-        }
+      .attr('r', 14)
+      .on('mouseover', function (d: `Record<string, unknown>`) {
+        d3.select(this).transition(90).duration(18).attr('r', 21);
       })
-      // eslint-disable-next-line no-unused-vars
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .on('click', function (d: `Record<string, unknown>`) {
+        const index = parseInt(`${d.data.name}.${d.data.branch}`);
+        dispatch(changeSlider(index));
+        dispatch(changeView(index));
+      })
+      // think about how I can convert this any to typescript
       .on('mouseout', function (d: any) {
-        d3.select(this).transition().duration(300).attr('r', 15);
-
-        tooltipDiv.transition().duration(400).style('opacity', 0);
+        d3.select(this).transition().duration(300).attr('r', 14);
       });
+
     node
       .append('text')
       // adjusts the y coordinates for the node text
@@ -195,6 +181,7 @@ function History(props) {
       })
       .text(function (d: { data: { name: number; branch: number } }) {
         // display the name of the specific patch
+        // return `${d.data.name}.${d.data.branch}`;
         return `${d.data.name}.${d.data.branch}`;
       });
 
@@ -203,7 +190,7 @@ function History(props) {
     svgContainer.call(
       zoom.transform,
       // Changes the initial view, (left, top)
-      d3.zoomIdentity.translate(width / 2, height / 2).scale(1)
+      d3.zoomIdentity.translate(width / 3, height / 4).scale(1)
     );
     // allows the canvas to be zoom-able
     svgContainer.call(
@@ -212,7 +199,7 @@ function History(props) {
         .scaleExtent([0, 0.9]) // [zoomOut, zoomIn]
         .on('zoom', zoomed)
     );
-    // helper function that allows for zooming
+    // helper function that allows for zooming ( think about how I can convert this any to typescript)
     function zoomed(d: any) {
       g.attr('transform', d3.event.transform);
     }
@@ -253,9 +240,19 @@ function History(props) {
     }
   };
 
+  // below we are rendering the LegendKey component and passing hierarchy as props
+  // then rendering each node in History tab to render using D3, which will share area with LegendKey
   return (
     <>
-      <div ref={HistoryRef} className="history-d3-div" id="historyContainer"/>
+      <div>
+        <LegendKey hierarchy={hierarchy} />
+        <div
+          ref={HistoryRef}
+          className="history-d3-div"
+          id="historyContainer"
+          // position="absolute"
+        />
+      </div>
     </>
   );
 }

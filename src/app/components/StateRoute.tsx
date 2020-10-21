@@ -11,27 +11,31 @@ import {
   NavLink,
   Switch,
 } from 'react-router-dom';
+import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap';
-import PerfView from './PerfView';
-import AtomsRelationship from './AtomsRelationship.jsx';
+import { changeView, changeSlider } from '../actions/actions';
+import { useStoreContext } from '../store';
+import PerformanceVisx from './PerformanceVisx';
+import Legend from './AtomsRelationshipLegend';
+import AtomsRelationship from './AtomsRelationship';
 
 const History = require('./History').default;
-
 const ErrorHandler = require('./ErrorHandler').default;
 
 const NO_STATE_MSG =
   'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types
 
-interface StateRouteProps {
+export interface StateRouteProps {
   snapshot: {
     name?: string;
     componentData?: object;
     state?: string | object;
     stateSnaphot?: object;
     children?: any[];
-    AtomsRelationship?: any[];
+    atomsComponents?: any;
+    atomSelectors?: any;
   };
   hierarchy: any;
   snapshots: [];
@@ -40,10 +44,10 @@ interface StateRouteProps {
 
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex } = props;
-
-  const isRecoil = snapshot.AtomsRelationship ? true : false;
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
+  const isRecoil = snapshot.atomsComponents ? true : false;
   const [noRenderData, setNoRenderData] = useState(false);
-
   // component map zoom state
   const [{ x, y, k }, setZoomState]: any = useState({
     x: 150,
@@ -55,36 +59,52 @@ const StateRoute = (props: StateRouteProps) => {
   const renderComponentMap = () => {
     if (hierarchy) {
       return (
-        <ComponentMap
+        <ParentSize>
+          {({ width, height }) => (
+            <ComponentMap snapshots={snapshots} width={width} height={height} />
+          )}
+        </ParentSize>
+      );
+    }
+    return <div className="noState">{NO_STATE_MSG}</div>;
+  };
+
+  // the hierarchy gets set upon the first click on the page
+  // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
+  // if true, we invoke teh D3 render chart with hierarchy
+  // by invoking History component, and passing in all the props required to render D3 elements and perform timeJump from clicking of node
+  // otherwise we an alert to the user that no state was found.
+  const renderHistory = () => {
+    if (hierarchy) {
+      return (
+        <History
+          hierarchy={hierarchy}
+          dispatch={dispatch}
+          sliderIndex={sliderIndex}
           viewIndex={viewIndex}
-          snapshots={snapshots}
-          x={x}
-          y={y}
-          k={k}
-          setZoomState={setZoomState}
         />
       );
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
-  // the hierarchy gets set on the first click in the page
-  // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
-  // if true involk render chart with hierarchy
-  const renderHistory = () => {
-    if (hierarchy) {
-      return <History hierarchy={hierarchy} />;
-    }
-    return <div className="noState">{NO_STATE_MSG}</div>;
-  };
-
   const renderAtomsRelationship = () => (
-    <AtomsRelationship atomsRel={snapshot.AtomsRelationship} />
+    <ParentSize>
+      {({ width, height }) => (
+        <>
+          <AtomsRelationship
+            width={width}
+            height={height}
+            snapshots={snapshots}
+          />
+        </>
+      )}
+    </ParentSize>
   );
 
   // the hierarchy gets set on the first click in the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
-  // if true involk render Tree with snapshot
+  // if true invoke render Tree with snapshot
   const renderTree = () => {
     if (hierarchy) {
       return <Tree snapshot={snapshot} />;
@@ -95,13 +115,26 @@ const StateRoute = (props: StateRouteProps) => {
   const renderPerfView = () => {
     if (hierarchy) {
       return (
-        <PerfView
-          viewIndex={viewIndex}
-          snapshots={snapshots}
-          setNoRenderData={setNoRenderData}
-          width={600}
-          height={1000}
-        />
+        <ParentSize>
+          {({ width, height }) => (
+            <PerformanceVisx
+              width={width}
+              height={height}
+              snapshots={snapshots}
+              changeSlider={changeSlider}
+              changeView={changeView}
+              hierarchy={hierarchy}
+            />
+          )}
+        </ParentSize>
+
+        // <PerfView
+        //   viewIndex={viewIndex}
+        //   snapshots={snapshots}
+        //   setNoRenderData={setNoRenderData}
+        //   width={600}
+        //   height={1000}
+        // />
       );
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
@@ -135,7 +168,7 @@ const StateRoute = (props: StateRouteProps) => {
             activeClassName="is-active"
             to="/relationship"
           >
-            Data Flow
+            AtomsRecoil
           </NavLink>
         )}
 

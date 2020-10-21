@@ -44,12 +44,12 @@ function getRouteURL(node: SnapshotNode): string {
 
 // * Event listener for time-travel actions
 window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
+  console.log('payload',action)
   switch (action) {
     case 'jumpToSnap':
       timeJump(payload, true); // * This sets state with given payload
       // Get the pathname from payload and add new entry to browser history
       // MORE: https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
-
       // try to modify workInProgress tree from here
       // window.history.pushState('', '', getRouteURL(payload));
       break;
@@ -58,6 +58,36 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       break;
     case 'setPause':
       mode.paused = payload;
+      break;
+    case 'onHover':    
+      if(Array.isArray(payload)){ 
+        for (let i=0; i<payload.length;i++){
+          let element = document.getElementById(payload[i])
+          if (element !== null) {
+                element.style.backgroundColor = '#C0D9D9'; 
+              }
+        }
+      } else {
+        let element = document.getElementById(payload)
+        if (element !== null) {
+          element.style.backgroundColor = '#C0D9D9'; 
+        }
+      }
+      break;
+    case 'onHoverExit': 
+        if(Array.isArray(payload)){ 
+        for (let i=0; i<payload.length;i++){
+          let element = document.getElementById(payload[i])
+          if (element !== null) {
+                element.style.backgroundColor = ''; 
+              }
+        }
+      } else {
+        let element = document.getElementById(payload)
+        if (element !== null) {
+          element.style.backgroundColor = ''; 
+        }
+      }
       break;
     default:
       break;

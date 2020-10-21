@@ -6,7 +6,7 @@ import SwitchAppDropdown from '../components/SwitchApp';
 function HeadContainer() {
   return (
     <div className="head-container">
-      <img src="../assets/logo.png" height="30px" />
+      <img src="../assets/logo-no-version.png" height="30px" />
       <SwitchAppDropdown />
     </div>
   );

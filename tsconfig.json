@@ -6,6 +6,7 @@
     "jsx": "react",
     "removeComments": true,  
     "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "typeRoots": [
       "./node_modules/@types"
     ],
@@ -13,7 +14,7 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
   },
   "include": ["./src/app", "./src/backend", "./src/extension"],
   "exclude": ["./src/app/__tests__", "./src/backend/__tests__"],
