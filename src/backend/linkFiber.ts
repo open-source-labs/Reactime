@@ -288,7 +288,6 @@ function createTree(
     (tag === 0 || tag === 1 || tag === 2 || tag === 10) &&
     isRecoil === true
   ) {
-    // console.log('Recoil Hooks Algo', currentFiber)
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
       // so we must traverse through the list and get the states.
@@ -322,7 +321,6 @@ function createTree(
     (tag === 0 || tag === 1 || tag === 2 || tag === 10) &&
     isRecoil === false
   ) {
-    // console.log('Regular Hooks Algo', currentFiber)
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
       // so we must traverse through the list and get the states.
@@ -351,7 +349,6 @@ function createTree(
 
   // This grabs stateless components
   if (!componentFound && (tag === 0 || tag === 1 || tag === 2)) {
-    // console.log('Stateless Algo', currentFiber)
     newState = 'stateless';
   }
 
