@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
-import 'core-js';
+// import 'core-js';
 /* eslint-disable indent */
 /* eslint-disable brace-style */
 /* eslint-disable comma-dangle */
@@ -100,6 +100,11 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
  * Middleware: Updates snap object with latest snapshot, using @sendSnapshot
  */
 function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
+  // this is the currently active root fiber(the mutable root of the tree)
+  let fiberRootCurrent = fiberRoot.current;
+  console.log("fiber root props: ", Object.entries(fiberRootCurrent));
+  console.log("fiberroot sibling:", fiberRootCurrent.sibling, "fiberroot stateNode:", fiberRootCurrent.stateNode, "fiberroot child:", fiberRootCurrent.child, "fiberroot memoizedState:", fiberRootCurrent.memoizedState, "fiberroot memoizedProps:", fiberRootCurrent.memoizedProps, "fiberRootCurrent.elementType:",fiberRootCurrent.elementType, "fiberRootCurrent.tag: ", fiberRootCurrent.tag, "fiberRootCurrent.actualDuration: ", fiberRootCurrent.actualDuration, "fiberRootCurrent.actualStartTime: ", fiberRootCurrent.actualStartTime, "fiberRootCurrent.selfBaseDuration: ", fiberRootCurrent.selfBaseDuration, "fiberRootCurrent.treeBaseDuration:", fiberRootCurrent.treeBaseDuration);
+
   if (fiberRoot) {
     const { current } = fiberRoot;
     circularComponentTable.clear();
@@ -465,17 +470,21 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
   function onVisibilityChange(): void {
     doWork = !document.hidden;
   }
-
+  // this code hasnt changed since reactime 4.0
+  // https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8
   return () => {
+    // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-    
+   console.log("fiberRoot in export default: " + Object.entries(fiberRoot));
     const throttledUpdateSnapshot = throttle(() => updateSnapShotTree(snap, mode), 70);
     document.addEventListener('visibilitychange', onVisibilityChange);
+
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
+          console.log("args in onCommitFiberRoot: ", args)
           // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
           if (doWork) {

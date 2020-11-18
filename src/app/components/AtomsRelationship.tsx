@@ -1,3 +1,5 @@
+
+
 import React, { useMemo } from 'react';
 import { Group } from '@visx/group';
 import { Cluster, hierarchy } from '@visx/hierarchy';
@@ -207,12 +209,12 @@ function RootNode({ node }) {
         x={centerX}
         rx="10"
         ry="10"
-        fill="url('#top')"
+        // fill="url('#top')"
       />
       <text
         dy=".33em"
-        top={node.y}
-        left={node.x}
+        // top={node.y}
+        // left={node.x}
         fontSize={9}
         fontFamily="Arial"
         textAnchor="middle"
@@ -305,7 +307,8 @@ export default function AtomsRelationship({
     <>
     <div>
       <Legend 
-      hierarchy = {hierarchy} />
+      // hierarchy = {hierarchy}
+      />
     </div>
     <svg width={width} height={height}>
       

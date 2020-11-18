@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/ban-types */
-import 'core-js';
+// import 'core-js';
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-console */
@@ -64,6 +64,7 @@ class Tree {
   }
 
   addChild(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode:any): Tree {
+    console.log("arguments in addChild: "+ arguments.length)
     const newChild: Tree = new Tree(state, name, componentData, rtid, recoilDomNode);
     newChild.parent = this;
     this.children.push(newChild);

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint react/jsx-handler-names: "off" */
 import React, { useState } from 'react';
 // import { interpolateRainbow } from 'd3-scale-chromatic';

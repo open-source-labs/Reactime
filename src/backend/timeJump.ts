@@ -2,7 +2,6 @@ import { Console } from 'console';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable max-len */
-import 'core-js';
 /**
  * This file contains necessary functionality for time-travel feature
  *
