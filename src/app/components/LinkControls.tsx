@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from 'react';
 // Font size of the Controls label and Dropdowns
 const controlStyles = { fontSize: 10 };

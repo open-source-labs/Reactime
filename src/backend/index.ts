@@ -6,8 +6,8 @@
 /**
  * 'reactime' module has a single export
  * @function linkFiber
- */
-import 'core-js';
+*/
+
 import 'regenerator-runtime/runtime';
 import linkFiberStart from './linkFiber';
 import timeJumpStart from './timeJump';
@@ -26,8 +26,9 @@ const mode: Mode = {
   paused: false,
   locked: false,
 };
-
+console.log("linkFiberStart in index.ts:" + linkFiberStart);
 const linkFiber = linkFiberStart(snapShot, mode);
+console.log('linkFiber in index.ts: ' + linkFiber);
 const timeJump = timeJumpStart(snapShot, mode);
 
 function getRouteURL(node: SnapshotNode): string {
@@ -44,6 +45,7 @@ function getRouteURL(node: SnapshotNode): string {
 
 // * Event listener for time-travel actions
 window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
+  console.log('linkFiber in index.ts: ' + linkFiber);
   switch (action) {
     case 'jumpToSnap':
       timeJump(payload, true); // * This sets state with given payload

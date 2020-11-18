@@ -1,5 +1,13 @@
-// linkFiber checking TYPE of state (stateful, hooks, context, recoil)
-// and build current copy of the tree 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable max-len */
+// import 'core-js';
+/* eslint-disable indent */
+/* eslint-disable brace-style */
+/* eslint-disable comma-dangle */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable func-names */
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-param-reassign */
 
 //import typescript types
 import {
@@ -91,7 +99,11 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
 
  //updating tree depending on current mode on the panel (pause, locked etc) 
 function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
-  //Every React application has one or more DOM elements that act as containers. React creates a fiber root object for each of those containers. This fiber root is where React holds the reference to a fiber tree. It is stored in the current property of the fiber root
+  // this is the currently active root fiber(the mutable root of the tree)
+  let fiberRootCurrent = fiberRoot.current;
+  console.log("fiber root props: ", Object.entries(fiberRootCurrent));
+  console.log("fiberroot sibling:", fiberRootCurrent.sibling, "fiberroot stateNode:", fiberRootCurrent.stateNode, "fiberroot child:", fiberRootCurrent.child, "fiberroot memoizedState:", fiberRootCurrent.memoizedState, "fiberroot memoizedProps:", fiberRootCurrent.memoizedProps, "fiberRootCurrent.elementType:",fiberRootCurrent.elementType, "fiberRootCurrent.tag: ", fiberRootCurrent.tag, "fiberRootCurrent.actualDuration: ", fiberRootCurrent.actualDuration, "fiberRootCurrent.actualStartTime: ", fiberRootCurrent.actualStartTime, "fiberRootCurrent.selfBaseDuration: ", fiberRootCurrent.selfBaseDuration, "fiberRootCurrent.treeBaseDuration:", fiberRootCurrent.treeBaseDuration);
+
   if (fiberRoot) {
     const { current } = fiberRoot;
     //Clears circular component table
@@ -467,18 +479,22 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
   function onVisibilityChange(): void {
     doWork = !document.hidden;
   }
-
+  // this code hasnt changed since reactime 4.0
+  // https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8
   return () => {
+    // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-    
+   console.log("fiberRoot in export default: " + Object.entries(fiberRoot));
     const throttledUpdateSnapshot = throttle(() => updateSnapShotTree(snap, mode), 70);
     document.addEventListener('visibilitychange', onVisibilityChange);
+
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
-          
+          console.log("args in onCommitFiberRoot: ", args)
+          // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
           if (doWork) {
             throttledUpdateSnapshot();

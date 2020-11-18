@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable arrow-body-style */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-explicit-any */

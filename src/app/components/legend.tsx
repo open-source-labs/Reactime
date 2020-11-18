@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from 'react';
 import { scaleOrdinal } from '@visx/scale';
 import { LegendOrdinal, LegendItem, LegendLabel } from '@visx/legend';
@@ -6,7 +8,8 @@ import { LegendOrdinal, LegendItem, LegendLabel } from '@visx/legend';
 
 const legendGlyphSize = 8;
 
-type snapHierarchy = {`Record<string, unknown>`};
+type snapHierarchy = {};
+//type snapHierarchy = {`Record<string, unknown>`};
 
 export default function LegendKey(props: snapHierarchy) {
   const { hierarchy } = props;

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { scaleOrdinal } from '@visx/scale';
 import {

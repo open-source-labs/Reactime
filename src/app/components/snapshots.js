@@ -1,4 +1,4 @@
-const snapshots = [
+ const snapshots = [
 {
     snapshot: 10,
     component1: 32,

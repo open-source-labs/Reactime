@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
+// @ts-nocheck
 import React, { useEffect } from 'react';
 import HeadContainer from './HeadContainer';
 import ActionContainer from './ActionContainer';
