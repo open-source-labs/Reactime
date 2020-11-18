@@ -46,7 +46,7 @@ export default (origin, mode) => {
           return target.state;
         },
         // Iterate through new children after state has been set
-        () => target.children.forEach(child => jump(child))
+        () => target.children.forEach(child => jump(child)),
       );
     }
 

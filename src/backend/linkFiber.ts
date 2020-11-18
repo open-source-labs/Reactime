@@ -11,18 +11,26 @@ import 'core-js';
 
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //tree
   Snapshot,
+  //jump, pause, lock
   Mode,
   ComponentData,
+  //array of state and component
   HookStates,
+  //object with tree structure
   Fiber,
 } from './types/backendTypes';
+//import function that creates a tree
 import Tree from './tree';
+//passes data down to its components
 import componentActionsRecord from './masterState';
+// throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
+// getHooksNames - helper function to grab the getters/setters from `elementType`
 import { throttle, getHooksNames } from './helpers';
-import { Console } from 'console';
+// import { Console } from 'console';
 import AtomsRelationship from '../app/components/AtomsRelationship';
-import { isNull } from 'util';
+// import { isNull } from 'util';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -36,7 +44,7 @@ const circularComponentTable = new Set();
 let isRecoil = false;
 let allAtomsRelationship = [];
 let initialstart = false;
-let rtidCounter = 0; 
+let rtidCounter = 0;
 let rtid = null;
 let recoilDomNode = {};
 
@@ -71,6 +79,7 @@ if (window[`$recoilDebugStates`]) {
 function sendSnapshot(snap: Snapshot, mode: Mode): void {
   // Don't send messages while jumping or while paused
   if (mode.jumping || mode.paused) return;
+   // If there is no current tree  creates a new one
   if (!snap.tree) {
     snap.tree = new Tree('root', 'root');
   }
@@ -82,7 +91,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
     payload.atomSelectors = atomsSelectors;
     payload.recoilDomNode = recoilDomNode
   }
-
+//method safely enables cross-origin communication between Window objects; e.g., between a page and a pop-up that it spawned, or between a page and an iframe embedded within it.
   window.postMessage(
     {
       action: 'recordSnap',
@@ -187,7 +196,6 @@ function createTree(
   if (!currentFiber) return null;
   if (!tree) return tree;
 
-    
   // These have the newest state. We update state and then
   // called updateSnapshotTree()
 
@@ -205,16 +213,16 @@ function createTree(
     treeBaseDuration,
   } = currentFiber;
 
-  
-  //Checks Recoil Atom and Selector Relationships
+  // Checks Recoil Atom and Selector Relationships
   if (
-    currentFiber.memoizedState &&
-    currentFiber.memoizedState.next &&
-    currentFiber.memoizedState.next.memoizedState &&
-    currentFiber.memoizedState.next.memoizedState.deps &&
-    isRecoil &&
-    currentFiber.tag === 0 &&
-    currentFiber.key === null //prevents capturing the same Fiber nodes but different key values that result from being changed
+    currentFiber.memoizedState
+    && currentFiber.memoizedState.next
+    && currentFiber.memoizedState.next.memoizedState
+    && currentFiber.memoizedState.next.memoizedState.deps
+    && isRecoil
+    && currentFiber.tag === 0
+    && currentFiber.key === null
+    // prevents capturing the same Fiber nodes but different key values that result from being changed
   ) {
     let pointer = currentFiber.memoizedState.next;
     let componentName = currentFiber.elementType.name;
@@ -284,8 +292,8 @@ function createTree(
 
   // RECOIL HOOKS
   if (
-    memoizedState &&
-    (tag === 0 || tag === 1 || tag === 2 || tag === 10) &&
+    memoizedState
+    && (tag === 0 || tag === 1 || tag === 2 || tag === 10) &&
     isRecoil === true
   ) {
     if (memoizedState.queue) {
@@ -317,8 +325,8 @@ function createTree(
   // Check if node is a hooks useState function
   // REGULAR REACT HOOKS
   if (
-    memoizedState &&
-    (tag === 0 || tag === 1 || tag === 2 || tag === 10) &&
+    memoizedState
+    && (tag === 0 || tag === 1 || tag === 2 || tag === 10) &&
     isRecoil === false
   ) {
     if (memoizedState.queue) {
@@ -366,24 +374,21 @@ function createTree(
   // We want to add this fiber node to the snapshot
   if (componentFound || newState === 'stateless') {
     if (fromSibling) {
-      
-      if(isRecoil){
-        if(currentFiber.elementType.name){
-          if(!recoilDomNode[currentFiber.elementType.name]){
+      if (isRecoil) {
+        if (currentFiber.elementType.name) {
+          if (!recoilDomNode[currentFiber.elementType.name]) {
             recoilDomNode[currentFiber.elementType.name] = [];
           }
         }
 
-        let pointer = currentFiber
-
-        while(pointer !== null){
-            if(pointer.stateNode !== null){
+        let pointer = currentFiber;
+        while (pointer !== null) {
+            if (pointer.stateNode !== null) {
             rtid = "fromLinkFiber" + rtidCounter++
-            recoilDomNode[currentFiber.elementType.name].push(rtid)
-            pointer.stateNode.setAttribute("id", rtid)
+            recoilDomNode[currentFiber.elementType.name].push(rtid);
+            pointer.stateNode.setAttribute("id", rtid);
           }
-            
-            pointer = pointer.child
+            pointer = pointer.child;
           }
       } else {
         if (currentFiber.child && currentFiber.child.stateNode && currentFiber.child.stateNode.setAttribute) {
@@ -401,20 +406,19 @@ function createTree(
         recoilDomNode
       );
     } else {
-      
-      if(isRecoil){
-        if(currentFiber.elementType.name){
-          if(!recoilDomNode[currentFiber.elementType.name]){
+      if (isRecoil) {
+        if (currentFiber.elementType.name) {
+          if (!recoilDomNode[currentFiber.elementType.name]) {
             recoilDomNode[currentFiber.elementType.name] = [];
           }
         }
         let pointer = currentFiber
-        while(pointer !== null){
-            if(pointer.stateNode !== null){
+        while (pointer !== null) {
+            if (pointer.stateNode !== null) {
             rtid = "fromLinkFiber" + rtidCounter++
             recoilDomNode[currentFiber.elementType.name].push(rtid)
-            pointer.stateNode.setAttribute("id", rtid)        
-          }          
+            pointer.stateNode.setAttribute("id", rtid)
+          } 
             pointer = pointer.child
           }
       } else {
@@ -423,8 +427,7 @@ function createTree(
             currentFiber.child.stateNode.setAttribute("id", rtid);
           }
           rtidCounter++;
-      }
-      
+      } 
       newNode = tree.addChild(
         newState,
         elementType ? elementType.name : 'nameless',

@@ -59,12 +59,12 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       mode.paused = payload;
       break;
     case 'onHover':    
-      if(Array.isArray(payload)){ 
-        for (let i=0; i<payload.length;i++){
+      if (Array.isArray(payload)) {
+        for (let i = 0; i < payload.length; i + 1) {
           let element = document.getElementById(payload[i])
           if (element !== null) {
-                element.style.backgroundColor = '#C0D9D9'; 
-              }
+             element.style.backgroundColor = '#C0D9D9'; 
+             }
         }
       } else {
         let element = document.getElementById(payload)
