@@ -1,24 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable max-len */
-import 'core-js';
-/* eslint-disable indent */
-/* eslint-disable brace-style */
-/* eslint-disable comma-dangle */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable func-names */
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-param-reassign */
+// linkFiber checking TYPE of state (stateful, hooks, context, recoil)
+// and build current copy of the tree 
 
+//import typescript types
 import {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  
+  //tree
   Snapshot,
+  //jump, pause, lock
   Mode,
+
   ComponentData,
+  // array of state and component
   HookStates,
+  // object with tree structure
   Fiber,
 } from './types/backendTypes';
+//import function that creates a tree
 import Tree from './tree';
+//passes the data down to its components ?
 import componentActionsRecord from './masterState';
+
+// throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
+//getHooksNames - helper function to grab the getters/setters from `elementType`
 import { throttle, getHooksNames } from './helpers';
 import { Console } from 'console';
 import AtomsRelationship from '../app/components/AtomsRelationship';
@@ -45,20 +48,6 @@ if (window[`$recoilDebugStates`]) {
   isRecoil = true;
 }
 
-// function getRecoilState(): any {
-//   const RecoilSnapshotsLength = window[`$recoilDebugStates`].length;
-//   const lastRecoilSnapshot =
-//     window[`$recoilDebugStates`][RecoilSnapshotsLength - 1];
-//   const nodeToNodeSubs = lastRecoilSnapshot.nodeToNodeSubscriptions;
-//   const nodeToNodeSubsKeys = lastRecoilSnapshot.nodeToNodeSubscriptions.keys();
-//   nodeToNodeSubsKeys.forEach((node) => {
-//     nodeToNodeSubs
-//       .get(node)
-//       .forEach((nodeSubs) =>
-//         allAtomsRelationship.push([node, nodeSubs, 'atoms and selectors'])
-//       );
-//   });
-// }
 
 /**
  * @method sendSnapshot
@@ -71,18 +60,18 @@ if (window[`$recoilDebugStates`]) {
 function sendSnapshot(snap: Snapshot, mode: Mode): void {
   // Don't send messages while jumping or while paused
   if (mode.jumping || mode.paused) return;
+  // If there is no current tree  creates a new one
   if (!snap.tree) {
     snap.tree = new Tree('root', 'root');
   }
   const payload = snap.tree.cleanTreeCopy();
-
+ // if it's Recoil - run different actions?
   if (isRecoil) {
-    // getRecoilState();
     payload.atomsComponents = atomsComponents;
     payload.atomSelectors = atomsSelectors;
     payload.recoilDomNode = recoilDomNode
   }
-
+//method safely enables cross-origin communication between Window objects; e.g., between a page and a pop-up that it spawned, or between a page and an iframe embedded within it.
   window.postMessage(
     {
       action: 'recordSnap',
@@ -99,12 +88,18 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
  * @param mode The current mode (i.e. jumping, time-traveling, locked, or paused)
  * Middleware: Updates snap object with latest snapshot, using @sendSnapshot
  */
+
+ //updating tree depending on current mode on the panel (pause, locked etc) 
 function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
+  //Every React application has one or more DOM elements that act as containers. React creates a fiber root object for each of those containers. This fiber root is where React holds the reference to a fiber tree. It is stored in the current property of the fiber root
   if (fiberRoot) {
     const { current } = fiberRoot;
+    //Clears circular component table
     circularComponentTable.clear();
+    //creates snapshot that is a tree based on properties in fiberRoot object
     snap.tree = createTree(current);
   }
+  //sends the updated tree back
   sendSnapshot(snap, mode);
 }
 
@@ -114,8 +109,12 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
  * @param memoizedProps Property containing props on a stateful fctnl component's FiberNode object
  * @return An array of array of HookStateItem objects (state and component properties)
  */
+
+// if type of state - Recoil hooks
 function traverseRecoilHooks(
+  //State of the fiber that was used to create the output. When processing updates it reflects the state that’s currently rendered on the screen.
   memoizedState: any,
+  //Props of the fiber that were used to create the output during the previous render.
   memoizedProps: any
 ): HookStates {
   const hooksStates: HookStates = [];
@@ -177,6 +176,8 @@ function traverseHooks(memoizedState: any): HookStates {
 let atomsSelectors = {};
 let atomsComponents = {};
 
+// Every time a state change is made in the accompanying app, the extension creates a 
+// Tree “snapshot” of the current state, and adds it to the current “cache” of snapshots in the extension
 function createTree(
   currentFiber: Fiber,
   tree: Tree = new Tree('root', 'root'),
@@ -195,6 +196,7 @@ function createTree(
     sibling,
     stateNode,
     child,
+    //with memoizedState we can grab the root type and construct an Abstract Syntax Tree from the hooks structure using Acorn in order to extract the hook getters and match them with their corresponding setters in an object
     memoizedState,
     memoizedProps,
     elementType,
@@ -476,7 +478,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
-          // eslint-disable-next-line prefer-destructuring
+          
           fiberRoot = args[1];
           if (doWork) {
             throttledUpdateSnapshot();

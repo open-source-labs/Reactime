@@ -48,7 +48,7 @@ export default function Legend({ events = false }: { events?: boolean }) {
           )}
         </LegendOrdinal>
       </LegendDemo>
-      <style jsx>
+      <style>
         {`
           .legends {
             width: 25%;
@@ -65,7 +65,7 @@ export default function Legend({ events = false }: { events?: boolean }) {
   );
 }
 
-function LegendDemo({ title, children }: { title: string; children: React.ReactNode }) {
+function LegendDemo({ title, children }: { title: string; children: React.reactNode }) {
   return (
     <div className="legend">
       <div className="title">{title}</div>
