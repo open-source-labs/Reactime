@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { Component, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import LegendKey from './legend';

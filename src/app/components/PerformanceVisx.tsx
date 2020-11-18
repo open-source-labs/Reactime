@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
@@ -210,13 +211,13 @@ const PerformanceVisx = (props: BarStackProps) => {
                 height={bar.height === 0 ? idx + 1 : bar.height}
                 width={bar.width}
                 fill={bar.color}
-                    /* TIP TOOL EVENT HANDLERS */
-                    // Hides tool tip once cursor moves off the current rect
+                /* TIP TOOL EVENT HANDLERS */
+                // Hides tool tip once cursor moves off the current rect
                 onMouseLeave={() => {
-                  dispatch(onHoverExit(allComponentRtids[bar.key])
+                  dispatch(onHoverExit(allComponentRtids[bar.key]),
                   tooltipTimeout = window.setTimeout(() => {
-                    hideTooltip();
-                  }, 300);
+                    hideTooltip()
+                  }, 300))
                 }}
                     // Cursor position in window updates position of the tool tip
                 onMouseMove={event => {
