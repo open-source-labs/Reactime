@@ -1,18 +1,12 @@
-// import 'core-js'; 
-/* eslint-disable max-len */
-/* eslint-disable no-param-reassign */
-/* eslint-disable function-paren-newline */
-/* eslint-disable implicit-arrow-linebreak */
-
-import snapshots from "../app/components/snapshots";
-
+// import snapshots from "../app/components/snapshots";
+import 'core-js';
 // store ports in an array
 const portsArr = [];
 const reloaded = {};
 const firstSnapshotReceived = {};
 // there will be the same number of objects in here as there are reactime tabs open for each user application being worked on
 const tabsObj = {};
-
+console.log("hello from background")
 function createTabObj(title) {
   // update tabsObj
   return {
@@ -25,7 +19,7 @@ function createTabObj(title) {
     index: 0,
     //* this is our pointer so we know what the current state the user is checking (this accounts for time travel aka when user clicks jump on the UI)
     currLocation: null,
-    // points the node that will generate the next child set by newest node or jump
+    // points to the node that will generate the next child set by newest node or jump
     currParent: 0,
     // points to the current branch
     currBranch: 0,
@@ -44,14 +38,9 @@ function createTabObj(title) {
 
 class Node {
   constructor(obj, tabObj) {
-    // eslint-disable-next-line no-param-reassign
-    // eslint-disable-next-line no-multi-assign
-    // eslint-disable-next-line no-plusplus
     // continues the order of number of total state changes
-    // eslint-disable-next-line no-plusplus
     this.index = tabObj.index++;
     // continues the order of number of states changed from that parent
-    // eslint-disable-next-line no-multi-assign
     this.name = tabObj.currParent += 1;
     // marks from what branch this node is originated
     this.branch = tabObj.currBranch;
@@ -76,9 +65,9 @@ function sendToHierarchy(tabObj, newNode) {
     tabObj.currLocation = newNode;
   }
 }
-
+// used for map visualization
 function changeCurrLocation(tabObj, rootNode, index, name) {
-  // index comes from the app's main reducer to locate the right current location on tabObj
+  // index comes from the app's main reducer to locate the correct current location on tabObj
   // check if current node has the index wanted
   if (rootNode.index === index) {
     tabObj.currLocation = rootNode;
@@ -99,7 +88,7 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   }
 }
 
-// establishing connection with devtools
+// establishing incoming connection with devtools
 chrome.runtime.onConnect.addListener((port) => {
   // port is one end of the connection - an object
 
@@ -124,7 +113,7 @@ chrome.runtime.onConnect.addListener((port) => {
     }
   });
 
-  // receive snapshot from devtools and send it to contentScript -
+  // listen for message containing a snapshot from devtools and send it to contentScript -
   port.onMessage.addListener((msg) => {
     // msg is action denoting a time jump in devtools
 
@@ -182,13 +171,13 @@ chrome.runtime.onConnect.addListener((port) => {
         break;
       default:
     }
-
+    // one time request sent to content s
     chrome.tabs.sendMessage(tabId, msg);
     return true; // attempt to fix message port closing error, consider return Promise
   });
 });
 
-// background.js recieves message from contentScript.js
+// background.js listening for a  message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender) => {
   // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
   if (request.type === 'SIGN_CONNECT') {
@@ -199,7 +188,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   const { action, index, name } = request;
   let isReactTimeTravel = false;
 
-  // Filter out tabs that don't have reactime
+  // Filter out tabs that don't have reactime, tabs that dont use react?
   if (
     action === 'tabReload' ||
     action === 'recordSnap' ||
@@ -251,6 +240,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
           // resets hierarchy to page initial state recorded when emptied
           tabsObj[tabId].hierarchy = tabsObj[tabId].initialHierarchy;
         } else {
+          // triggered with new tab opened
           // resets snapshots to page initial state
           tabsObj[tabId].snapshots.splice(1);
           // checks if hierarchy before reset
@@ -346,6 +336,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
 // when tab is closed, remove the tabid from the tabsObj
 chrome.tabs.onRemoved.addListener((tabId) => {
+  console.log('tab is deleted.')
   // tell devtools which tab to delete
   if (portsArr.length > 0) {
     portsArr.forEach((bg) =>
@@ -364,6 +355,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 
 // when a new url is loaded on the same tab, this remove the tabid from the tabsObj, recreate the tab and inject the script
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  console.log("new site loaded.")
   // check if the tab title changed to see if tab need to restart
   if (changeInfo && tabsObj[tabId]) {
     if (changeInfo.title && changeInfo.title !== tabsObj[tabId].title) {
@@ -388,8 +380,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   }
 });
 
-// when tab is view change, put the tabid as the current tab
+// when tab view is changed, put the tabid as the current tab
 chrome.tabs.onActivated.addListener((info) => {
+  console.log("tab view has changed")
   // tell devtools which tab to be the current
   if (portsArr.length > 0) {
     portsArr.forEach((bg) =>
@@ -414,6 +407,7 @@ chrome.runtime.onInstalled.addListener(() => {
 // when context menu is clicked, listen for the menuItemId,
 // if user clicked on reactime, open the devtools window
 chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
+  console.log('inspect clicked reactime')
   const options = {
     type: 'panel',
     left: 0,

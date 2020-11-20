@@ -28,7 +28,7 @@ function MainContainer(): any {
   useEffect(() => {
     // only open port once
     if (currentPort) return;
-    // open connection with background script
+    // open long-lived connection with background script
     const port = chrome.runtime.connect();
 
     // listen for a message containing snapshots from the background script

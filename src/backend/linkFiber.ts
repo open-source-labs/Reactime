@@ -41,6 +41,7 @@ let rtid = null;
 let recoilDomNode = {};
 
 // Simple check for whether our target app uses Recoil
+// can these be regular 
 if (window[`$recoilDebugStates`]) {
   isRecoil = true;
 }
@@ -102,8 +103,8 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
 function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
   // this is the currently active root fiber(the mutable root of the tree)
   let fiberRootCurrent = fiberRoot.current;
-  console.log("fiber root props: ", Object.entries(fiberRootCurrent));
-  console.log("fiberroot sibling:", fiberRootCurrent.sibling, "fiberroot stateNode:", fiberRootCurrent.stateNode, "fiberroot child:", fiberRootCurrent.child, "fiberroot memoizedState:", fiberRootCurrent.memoizedState, "fiberroot memoizedProps:", fiberRootCurrent.memoizedProps, "fiberRootCurrent.elementType:",fiberRootCurrent.elementType, "fiberRootCurrent.tag: ", fiberRootCurrent.tag, "fiberRootCurrent.actualDuration: ", fiberRootCurrent.actualDuration, "fiberRootCurrent.actualStartTime: ", fiberRootCurrent.actualStartTime, "fiberRootCurrent.selfBaseDuration: ", fiberRootCurrent.selfBaseDuration, "fiberRootCurrent.treeBaseDuration:", fiberRootCurrent.treeBaseDuration);
+  // console.log("fiber root props: ", Object.entries(fiberRootCurrent));
+  // console.log("fiberroot sibling:", fiberRootCurrent.sibling, "fiberroot stateNode:", fiberRootCurrent.stateNode, "fiberroot child:", fiberRootCurrent.child, "fiberroot memoizedState:", fiberRootCurrent.memoizedState, "fiberroot memoizedProps:", fiberRootCurrent.memoizedProps, "fiberRootCurrent.elementType:",fiberRootCurrent.elementType, "fiberRootCurrent.tag: ", fiberRootCurrent.tag, "fiberRootCurrent.actualDuration: ", fiberRootCurrent.actualDuration, "fiberRootCurrent.actualStartTime: ", fiberRootCurrent.actualStartTime, "fiberRootCurrent.selfBaseDuration: ", fiberRootCurrent.selfBaseDuration, "fiberRootCurrent.treeBaseDuration:", fiberRootCurrent.treeBaseDuration);
 
   if (fiberRoot) {
     const { current } = fiberRoot;
@@ -269,7 +270,7 @@ function createTree(
   } = {};
   let componentFound = false;
 
-  // Check if node is a stateful setState component
+  // Check if node is a stateful class component
   if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
     // Save component's state and setState() function to our record for future
     // time-travel state changing. Add record index to snapshot so we can retrieve.
@@ -344,6 +345,7 @@ function createTree(
         } else if (newState) {
           newState.hooksState = [{ [hooksNames[i]]: state.state }];
         } else {
+          // possibly app breaks somewhere if newState and hooksState do not exist?
           newState = { hooksState: [] };
           newState.hooksState.push({ [hooksNames[i]]: state.state });
         }
@@ -370,6 +372,7 @@ function createTree(
 
   // We want to add this fiber node to the snapshot
   if (componentFound || newState === 'stateless') {
+    // where does this get changed to true?
     if (fromSibling) {
       
       if(isRecoil){
@@ -397,7 +400,7 @@ function createTree(
           }
           rtidCounter++;
       }
-
+      // tree object from tree.ts, with addSibling
       newNode = tree.addSibling(
         newState,
         elementType ? elementType.name : 'nameless',
@@ -477,15 +480,17 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-   console.log("fiberRoot in export default: " + Object.entries(fiberRoot));
+  //  console.log("fiberRoot in export default: " + Object.entries(fiberRoot));
     const throttledUpdateSnapshot = throttle(() => updateSnapShotTree(snap, mode), 70);
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     if (reactInstance && reactInstance.version) {
+      // when is this being called...
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           console.log("args in onCommitFiberRoot: ", args)
           // eslint-disable-next-line prefer-destructuring
+
           fiberRoot = args[1];
           if (doWork) {
             throttledUpdateSnapshot();
