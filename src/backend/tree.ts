@@ -64,7 +64,7 @@ class Tree {
   }
 
   addChild(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode:any): Tree {
-    console.log("arguments in addChild: "+ arguments.length)
+    // console.log("arguments in addChild: "+ arguments.length)
     const newChild: Tree = new Tree(state, name, componentData, rtid, recoilDomNode);
     newChild.parent = this;
     this.children.push(newChild);

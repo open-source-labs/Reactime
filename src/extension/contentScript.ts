@@ -21,7 +21,7 @@ window.addEventListener('message', msg => { // runs automatically every second
 });
 
 // listening for messages from the UI
-chrome.runtime.onMessage.addListener(request => { // seems to never fire
+chrome.runtime.onMessage.addListener(request => {
   // send the message to npm package
   const { action }: { action: string } = request;
   switch (action) {
