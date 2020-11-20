@@ -49,7 +49,7 @@ let rtid = null;
 let recoilDomNode = {};
 
 // Simple check for whether our target app uses Recoil
-if (window[`$recoilDebugStates`]) {
+if (window['$recoilDebugStates']) {
   isRecoil = true;
 }
 
