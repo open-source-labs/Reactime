@@ -3,7 +3,7 @@
     "outDir": "./src/extension/build/bundles/",
     "module": "es6",
     "target": "es5",
-    "jsx": "react-jsx",
+    "jsx": "react",
     "removeComments": true,  
     "allowJs": true,
     "allowSyntheticDefaultImports": true,

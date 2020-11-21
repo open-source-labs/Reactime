@@ -11,42 +11,25 @@
 
 //import typescript types
 import {
-<<<<<<< HEAD
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-=======
   
->>>>>>> 52f9d4a32f499e676e8986eccb3e504c4859a3a7
   //tree
   Snapshot,
   //jump, pause, lock
   Mode,
 
   ComponentData,
-<<<<<<< HEAD
-  //array of state and component
-  HookStates,
-  //object with tree structure
-=======
   // array of state and component
   HookStates,
   // object with tree structure
->>>>>>> 52f9d4a32f499e676e8986eccb3e504c4859a3a7
   Fiber,
 } from './types/backendTypes';
 //import function that creates a tree
 import Tree from './tree';
-<<<<<<< HEAD
-//passes data down to its components
-import componentActionsRecord from './masterState';
-// throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
-// getHooksNames - helper function to grab the getters/setters from `elementType`
-=======
 //passes the data down to its components ?
 import componentActionsRecord from './masterState';
 
 // throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
 //getHooksNames - helper function to grab the getters/setters from `elementType`
->>>>>>> 52f9d4a32f499e676e8986eccb3e504c4859a3a7
 import { throttle, getHooksNames } from './helpers';
 // import { Console } from 'console';
 import AtomsRelationship from '../app/components/AtomsRelationship';
@@ -69,12 +52,8 @@ let rtid = null;
 let recoilDomNode = {};
 
 // Simple check for whether our target app uses Recoil
-<<<<<<< HEAD
-if (window['$recoilDebugStates']) {
-=======
 // can these be regular 
 if (window[`$recoilDebugStates`]) {
->>>>>>> 3c151d3be552bc7e569a3692841d2c7f9616aa72
   isRecoil = true;
 }
 
@@ -104,11 +83,7 @@ if (window[`$recoilDebugStates`]) {
 function sendSnapshot(snap: Snapshot, mode: Mode): void {
   // Don't send messages while jumping or while paused
   if (mode.jumping || mode.paused) return;
-<<<<<<< HEAD
-   // If there is no current tree  creates a new one
-=======
   // If there is no current tree  creates a new one
->>>>>>> 52f9d4a32f499e676e8986eccb3e504c4859a3a7
   if (!snap.tree) {
     snap.tree = new Tree('root', 'root');
   }
