@@ -39,7 +39,7 @@ const PerfView = (props: PerfViewProps) => {
   const adjustedSize = Math.min(width, height);
   const svgRef = useRef(null);
 
-  console.log(snapshots)
+  // console.log(snapshots)
 
   // const performances = []  
   // snapshot = {

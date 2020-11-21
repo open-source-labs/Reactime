@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 import React, { useState } from 'react';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
@@ -149,7 +149,7 @@ export default function ComponentMap({
                           fill="url('#links-gradient')"
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
-                            console.log(node);
+                            // console.log(node);
                             forceUpdate();
                           }}
                         />

@@ -6,13 +6,13 @@ import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
+// import { scaleBand, scaleLinear, scaleOrdinal } from 'd3-scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
 import snapshots from './snapshots';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store'
-
 
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
@@ -51,6 +51,7 @@ interface BarStackProps {
 }
 
 interface snapshot {
+  snapshotId?: string;
   children: [];
   componentData: any;
   name: string;
@@ -93,7 +94,7 @@ const traverse = (snapshot, fetchData, data = {}) => {
   return data;
 };
 
-const getSnapshotIds = (obj, snapshotIds = []) => {
+const getSnapshotIds = (obj, snapshotIds = []):string[] => {
   snapshotIds.push(`${obj.name}.${obj.branch}`);
   if (obj.children) {
     obj.children.forEach(child => {
@@ -121,7 +122,9 @@ const PerformanceVisx = (props: BarStackProps) => {
   const {
     tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip,
   } = useTooltip<TooltipData>();
-
+  // console.log('tooltipData at line 125: ', tooltipData)
+  // console.log('tooltipTop at line 126: ', tooltipTop)
+  // console.log('tooltipLeft at line 127: ', tooltipLeft);
   let tooltipTimeout: number;
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
@@ -130,6 +133,7 @@ const PerformanceVisx = (props: BarStackProps) => {
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   const keys = Object.keys(data[0]).filter(d => d !== 'snapshotId');
   const allComponentStates = traverse(snapshots[0], 'getComponentType');
+  // console.log('snapshots:', snapshots);
   const allComponentRtids = traverse(snapshots[snapshots.length-1], 'getRtid');
 
   // create array of total render times for each snapshot
@@ -144,8 +148,10 @@ const PerformanceVisx = (props: BarStackProps) => {
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSnapshotId = (d: snapshot) => d.snapshotId;
-  const formatSnapshotId = id => `Snapshot ID: ${id}`;
-  const formatRenderTime = time => `${time} ms `;
+  
+  const formatSnapshotId = (id) => `Snapshot ID: ${id}`;
+  
+  const formatRenderTime = (time) => `${time} ms `;
 
   // create visualization SCALES with cleaned data
   const snapshotIdScale = scaleBand<string>({
@@ -158,6 +164,7 @@ const PerformanceVisx = (props: BarStackProps) => {
     nice: true,
   });
 
+  // console.log('schemSet3: ', schemeSet3, 'typed: ', typeof schemeSet3);
   const colorScale = scaleOrdinal<string>({
     domain: keys,
     range: schemeSet3,
@@ -169,10 +176,10 @@ const PerformanceVisx = (props: BarStackProps) => {
   const yMax = height - margin.top - 150;
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
-
+  // console.log('snapshotIdScale: ', snapshotIdScale);
+  // console.log('tooltipbar:', tooltipData);
   // if performance tab is too small it will not return VISX component
   return width < 10 ? null : (
-
     <div style={{ position: 'relative' }}>
       <svg ref={containerRef} width={width} height={height}>
         <rect
@@ -203,36 +210,40 @@ const PerformanceVisx = (props: BarStackProps) => {
             yScale={renderingScale}
             color={colorScale}
           >
-            {barStacks => barStacks.map(barStack => barStack.bars.map(((bar, idx) => (
-              <rect
-                key={`bar-stack-${barStack.index}-${bar.index}`}
-                x={bar.x}
-                y={bar.y}
-                height={bar.height === 0 ? idx + 1 : bar.height}
-                width={bar.width}
-                fill={bar.color}
-                /* TIP TOOL EVENT HANDLERS */
-                // Hides tool tip once cursor moves off the current rect
-                onMouseLeave={() => {
-                  dispatch(onHoverExit(allComponentRtids[bar.key]),
-                  tooltipTimeout = window.setTimeout(() => {
-                    hideTooltip()
-                  }, 300))
-                }}
-                    // Cursor position in window updates position of the tool tip
-                onMouseMove={event => {
-                  dispatch(onHover(allComponentRtids[bar.key]))
-                  if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                  const top = event.clientY - margin.top - bar.height;
-                  const left = bar.x + bar.width / 2;
-                  showTooltip({
-                    tooltipData: bar,
-                    tooltipTop: top,
-                    tooltipLeft: left,
-                  });
-                }}
-              />
-            ))))}
+            {barStacks => 
+              barStacks.map(barStack => 
+                barStack.bars.map(((bar, idx) => (
+                  <rect
+                    key={`bar-stack-${barStack.index}-${bar.index}`}
+                    x={bar.x}
+                    y={bar.y}
+                    height={bar.height === 0 ? idx + 1 : bar.height}
+                    width={bar.width}
+                    fill={bar.color}
+                    /* TIP TOOL EVENT HANDLERS */
+                    // Hides tool tip once cursor moves off the current rect
+                    onMouseLeave={() => {
+                      dispatch(onHoverExit(allComponentRtids[bar.key]),
+                      tooltipTimeout = window.setTimeout(() => {
+                        hideTooltip()
+                      }, 300))
+                    }}
+                        // Cursor position in window updates position of the tool tip
+                    onMouseMove={event => {
+                      dispatch(onHover(allComponentRtids[bar.key]))
+                      if (tooltipTimeout) clearTimeout(tooltipTimeout);
+                      const top = event.clientY - margin.top - bar.height;
+                      const left = bar.x + bar.width / 2;
+                      showTooltip({
+                        tooltipData: bar,
+                        tooltipTop: top,
+                        tooltipLeft: left,
+                      });
+                    }}
+                  />
+                )))
+              )
+            }
           </BarStack>
         </Group>
         <AxisLeft

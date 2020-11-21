@@ -7,11 +7,6 @@ import {
   
 } from '@visx/legend';
 
-// declare namespace React {
-//   type ReactNode = JSX.Element;
-// }
-
-
 const ordinalColorScale = scaleOrdinal({
   domain: ['Root', 'Selectors', 'Atoms', 'Components'],
   range: [ '#3BB78F', '#f0ece2', '#FED8B1', '#acdbdf'],

@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable react/require-default-props */
-// @ts-nocheck
 import React from 'react';
 import { diff, formatters } from 'jsondiffpatch';
 import ReactHtmlParser from 'react-html-parser';
