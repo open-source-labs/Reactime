@@ -1,11 +1,15 @@
-// @ts-nocheck
 import React from 'react';
 import { scaleOrdinal } from '@visx/scale';
 import {
   LegendOrdinal,
   LegendItem,
   LegendLabel,
+  
 } from '@visx/legend';
+
+// declare namespace React {
+//   type ReactNode = JSX.Element;
+// }
 
 
 const ordinalColorScale = scaleOrdinal({
@@ -66,12 +70,12 @@ export default function Legend({ events = false }: { events?: boolean }) {
   );
 }
 
-function LegendDemo({ title, children }: { title: string; children: React.reactNode }) {
+function LegendDemo({ title, children }: { title: string; children: JSX.Element }) {
   return (
     <div className="legend">
       <div className="title">{title}</div>
       {children}
-      <style jsx>{`
+      <style>{`
         .legend {
          position: absolute;
             top: 50;

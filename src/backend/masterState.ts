@@ -7,8 +7,8 @@
 // import {Hook}
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  HookStateItem,
-  HookStates,
+  HookStateItem, // obj with state and component
+  HookStates, // array of hook state items
 } from './types/backendTypes';
 
 const componentActionsRecord: HookStates = [];

@@ -27,28 +27,25 @@ const mode: Mode = {
   locked: false,
 };
 // console.log("linkFiberStart in index.ts:" + linkFiberStart);
-const linkFiber = linkFiberStart(snapShot, mode); // grabbing existing tree from react devtools
+const linkFiber = linkFiberStart(snapShot, mode);
 // console.log('linkFiber in index.ts: ' + linkFiber);
 const timeJump = timeJumpStart(snapShot, mode);
 
-/* 
-function getRouteURL(node: SnapshotNode): string {
-  if (node.name === 'Router') {
-    return node.state.location.pathname;
-  }
-  if (node.children && node.children.length >= 1) {
-    const tempNode: any[] = node.children;
-    for (let index = 0; index < tempNode.length; index += 1) {
-      return getRouteURL(tempNode[index]); // Carlos: ???
-    }
-  }
-}
-*/
+// function getRouteURL(node: SnapshotNode): string {
+//   if (node.name === 'Router') {
+//     return node.state.location.pathname;
+//   }
+//   if (node.children && node.children.length >= 1) {
+//     const tempNode: any[] = node.children;
+//     for (let index = 0; index < tempNode.length; index += 1) {
+//       return getRouteURL(tempNode[index]); // Carlos: ???
+//     }
+//   }
+// }
+
 // * Event listener for time-travel actions
 window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
   // console.log('linkFiber in index.ts: ' + linkFiber);
-  // console.log('action:', action);
-  // console.log('payload:', payload);
   switch (action) {
     case 'jumpToSnap':
       timeJump(payload, true); // * This sets state with given payload
@@ -97,5 +94,5 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       break;
   }
 });
-
+// connect to dev tools and new fiber 
 linkFiber();

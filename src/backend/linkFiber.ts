@@ -52,8 +52,8 @@ let rtid = null;
 let recoilDomNode = {};
 
 // Simple check for whether our target app uses Recoil
-if (window['$recoilDebugStates']) {
-  console.log('this is a recoil app!');
+// can these be regular 
+if (window[`$recoilDebugStates`]) {
   isRecoil = true;
 }
 
@@ -294,7 +294,7 @@ function createTree(
   } = {};
   let componentFound = false;
 
-  // Check if node is a stateful setState component
+  // Check if node is a stateful class component
   if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
     // Save component's state and setState() function to our record for future
     // time-travel state changing. Add record index to snapshot so we can retrieve.
@@ -369,6 +369,7 @@ function createTree(
         } else if (newState) {
           newState.hooksState = [{ [hooksNames[i]]: state.state }];
         } else {
+          // possibly app breaks somewhere if newState and hooksState do not exist?
           newState = { hooksState: [] };
           newState.hooksState.push({ [hooksNames[i]]: state.state });
         }
@@ -395,6 +396,7 @@ function createTree(
 
   // We want to add this fiber node to the snapshot
   if (componentFound || newState === 'stateless') {
+    // where does this get changed to true?
     if (fromSibling) {
       
       if(isRecoil){
@@ -422,7 +424,7 @@ function createTree(
           }
           rtidCounter++;
       }
-
+      // tree object from tree.ts, with addSibling
       newNode = tree.addSibling(
         newState,
         elementType ? elementType.name : 'nameless',
@@ -507,10 +509,12 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     if (reactInstance && reactInstance.version) {
+      // when is this being called...
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           // console.log("args in onCommitFiberRoot: ", args)
           // eslint-disable-next-line prefer-destructuring
+
           fiberRoot = args[1];
           if (doWork) {
             throttledUpdateSnapshot();
