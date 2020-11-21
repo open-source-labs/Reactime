@@ -15,6 +15,25 @@ import getLinkComponent from './getLinkComponent';
 import { onHover, onHoverExit } from '../actions/actions'
 import { useStoreContext } from '../store'
 
+const root = hierarchy({
+  name: 'root',
+  children: [
+    { name: 'child #1' },
+    {
+      name: 'child #2',
+      children: [{ name: 'grandchild #1' }, { name: 'grandchild #2' }, { name: 'grandchild #3' }],
+    },
+  ],
+});
+
+interface TreeNode {
+  name: string;
+  isExpanded?: boolean;
+  children?: TreeNode[];
+}
+
+type HierarchyNode = HierarchyPointNode<TreeNode>;
+
 const defaultMargin = { top: 30, left: 30, right: 30, bottom: 70 };
 
 export type LinkTypesProps = {
