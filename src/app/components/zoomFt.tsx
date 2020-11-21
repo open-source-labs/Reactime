@@ -1,5 +1,5 @@
-// @ts-nocheck
 /* eslint react/jsx-handler-names: "off" */
+// @ts-nocheck
 import React, { useState } from 'react';
 // import { interpolateRainbow } from 'd3-scale-chromatic';
 import { Zoom } from '@visx/zoom';
@@ -31,7 +31,7 @@ const initialTransform = {
 // };
 
 export default function ZoomI(props: any) {
-  const [showMiniMap, setShowMiniMap] = useState<boolean>(true);
+  const [showMiniMap, setShowMiniMap] = useState(true);
   // const { width, height, hierarchy, dispatch, sliderIndex, viewIndex } = props;
   const { width, height, hierarchy, dispatch, sliderIndex, viewIndex } = props;
   // const genenerator: GenPhyllotaxisFunction = genPhyllotaxis({

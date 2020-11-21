@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import {
   MemoryRouter as Router, Route, NavLink, Switch,

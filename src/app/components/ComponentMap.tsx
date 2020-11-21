@@ -1,8 +1,3 @@
-/* eslint-disable arrow-body-style */
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/ban-types */
 // @ts-nocheck
 import React, { useState } from 'react';
 import { Group } from '@visx/group';
@@ -14,6 +9,24 @@ import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import { onHover, onHoverExit } from '../actions/actions'
 import { useStoreContext } from '../store'
+
+const root = hierarchy({
+  name: 'root',
+  children: [
+    { name: 'child #1' },
+    {
+      name: 'child #2',
+      children: [{ name: 'grandchild #1' }, { name: 'grandchild #2' }, { name: 'grandchild #3' }],
+    },
+  ],
+});
+interface TreeNode {
+  name: string;
+  isExpanded?: boolean;
+  children?: TreeNode[];
+}
+
+type HierarchyNode = HierarchyPointNode<TreeNode>;
 
 const defaultMargin = { top: 30, left: 30, right: 30, bottom: 70 };
 
@@ -35,13 +48,13 @@ export default function ComponentMap({
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   // This is where we select the last object in the snapshots array from props to allow hierarchy to parse the data for render on the component map per hierarchy layout specifications.
   const lastNode = snapshots.length - 1;
-  const data = snapshots[lastNode];
+  const data: {} = snapshots[lastNode];
   // importing custom hooks for the selection tabs.
-  const [layout, setLayout] = useState<string>('cartesian');
-  const [orientation, setOrientation] = useState<string>('horizontal');
-  const [linkType, setLinkType] = useState<string>('diagonal');
+  const [layout, setLayout] = useState('cartesian');
+  const [orientation, setOrientation] = useState('horizontal');
+  const [linkType, setLinkType] = useState('diagonal');
 
-  const [stepPercent, setStepPercent] = useState<number>(10);
+  const [stepPercent, setStepPercent] = useState(10);
   // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
   const forceUpdate = useForceUpdate();
   // setting the margins for the Map to render in the tab window.
@@ -136,7 +149,7 @@ export default function ComponentMap({
                           fill="url('#links-gradient')"
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
-                            console.log(node);
+                            // console.log(node);
                             forceUpdate();
                           }}
                         />

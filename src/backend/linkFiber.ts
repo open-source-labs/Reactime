@@ -9,24 +9,44 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
 
+//import typescript types
 import {
+<<<<<<< HEAD
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+=======
+  
+>>>>>>> 52f9d4a32f499e676e8986eccb3e504c4859a3a7
   //tree
   Snapshot,
   //jump, pause, lock
   Mode,
+
   ComponentData,
+<<<<<<< HEAD
   //array of state and component
   HookStates,
   //object with tree structure
+=======
+  // array of state and component
+  HookStates,
+  // object with tree structure
+>>>>>>> 52f9d4a32f499e676e8986eccb3e504c4859a3a7
   Fiber,
 } from './types/backendTypes';
 //import function that creates a tree
 import Tree from './tree';
+<<<<<<< HEAD
 //passes data down to its components
 import componentActionsRecord from './masterState';
 // throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
 // getHooksNames - helper function to grab the getters/setters from `elementType`
+=======
+//passes the data down to its components ?
+import componentActionsRecord from './masterState';
+
+// throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
+//getHooksNames - helper function to grab the getters/setters from `elementType`
+>>>>>>> 52f9d4a32f499e676e8986eccb3e504c4859a3a7
 import { throttle, getHooksNames } from './helpers';
 // import { Console } from 'console';
 import AtomsRelationship from '../app/components/AtomsRelationship';
@@ -84,14 +104,18 @@ if (window[`$recoilDebugStates`]) {
 function sendSnapshot(snap: Snapshot, mode: Mode): void {
   // Don't send messages while jumping or while paused
   if (mode.jumping || mode.paused) return;
+<<<<<<< HEAD
    // If there is no current tree  creates a new one
+=======
+  // If there is no current tree  creates a new one
+>>>>>>> 52f9d4a32f499e676e8986eccb3e504c4859a3a7
   if (!snap.tree) {
     snap.tree = new Tree('root', 'root');
   }
   const payload = snap.tree.cleanTreeCopy();
-
+ // if it's Recoil - run different actions?
   if (isRecoil) {
-    // getRecoilState();
+    // getRecoilState()
     payload.atomsComponents = atomsComponents;
     payload.atomSelectors = atomsSelectors;
     payload.recoilDomNode = recoilDomNode
@@ -113,6 +137,8 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
  * @param mode The current mode (i.e. jumping, time-traveling, locked, or paused)
  * Middleware: Updates snap object with latest snapshot, using @sendSnapshot
  */
+
+ //updating tree depending on current mode on the panel (pause, locked etc) 
 function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
   // this is the currently active root fiber(the mutable root of the tree)
   let fiberRootCurrent = fiberRoot.current;
@@ -121,9 +147,12 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
 
   if (fiberRoot) {
     const { current } = fiberRoot;
+    //Clears circular component table
     circularComponentTable.clear();
+    //creates snapshot that is a tree based on properties in fiberRoot object
     snap.tree = createTree(current);
   }
+  //sends the updated tree back
   sendSnapshot(snap, mode);
 }
 
@@ -133,8 +162,12 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
  * @param memoizedProps Property containing props on a stateful fctnl component's FiberNode object
  * @return An array of array of HookStateItem objects (state and component properties)
  */
+
+// if type of state - Recoil hooks
 function traverseRecoilHooks(
+  //State of the fiber that was used to create the output. When processing updates it reflects the state that’s currently rendered on the screen.
   memoizedState: any,
+  //Props of the fiber that were used to create the output during the previous render.
   memoizedProps: any
 ): HookStates {
   const hooksStates: HookStates = [];
@@ -196,6 +229,8 @@ function traverseHooks(memoizedState: any): HookStates {
 let atomsSelectors = {};
 let atomsComponents = {};
 
+// Every time a state change is made in the accompanying app, the extension creates a 
+// Tree “snapshot” of the current state, and adds it to the current “cache” of snapshots in the extension
 function createTree(
   currentFiber: Fiber,
   tree: Tree = new Tree('root', 'root'),
@@ -213,6 +248,7 @@ function createTree(
     sibling,
     stateNode,
     child,
+    //with memoizedState we can grab the root type and construct an Abstract Syntax Tree from the hooks structure using Acorn in order to extract the hook getters and match them with their corresponding setters in an object
     memoizedState,
     memoizedProps,
     elementType,
@@ -495,7 +531,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       // when is this being called...
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
-          console.log("args in onCommitFiberRoot: ", args)
+          // console.log("args in onCommitFiberRoot: ", args)
           // eslint-disable-next-line prefer-destructuring
 
           fiberRoot = args[1];
