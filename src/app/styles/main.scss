@@ -4,12 +4,14 @@
   font-family: 'Roboto', sans-serif;
 }
 
+
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
+  height: 8px;
 }
 
-/* Track */
+/* Track */ 
 ::-webkit-scrollbar-track {
   background: rgb(20, 20, 20); 
 }
