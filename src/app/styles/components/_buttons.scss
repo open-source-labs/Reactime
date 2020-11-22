@@ -2,7 +2,7 @@
 .empty-button {
 	padding: 3px;
 	outline: transparent;
-	color: black;
+	color: white;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -14,10 +14,11 @@
 	font: 300 14px 'Roboto', sans-serif;
 	font-size: $button-text-size;
 	width: 120px;
-	background: linear-gradient(145deg, #ff6569, #e65558);
+	background-color: transparent;
 }
 .empty-button:hover {
 	color: black;
+	background: linear-gradient(145deg, #ff6569, #e65558);
 	box-shadow: inset 5px 5px 10px #d95053, inset -5px -5px 10px #ff6c71;
 }
 
