@@ -1,7 +1,18 @@
 /// fontFamily: 'monaco, Consolas, Lucida Console, monospace'
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 /// @type List
-$text-font-stack: Monaco, Consolas, 'Lucida Console', monospace, Arial,
+$text-font-stack: 'Roboto',
   sans-serif !default;
+
+/// @type Color
+$fiery-rose: #ff6569;
+
+/// @type Color 
+$blue-color-gradient: linear-gradient(145deg, #69e5ff, #58c1e2);
+
+/// @type Color: 
+$box-shadow-blue: inset 5px 5px 10px #53b6d5, 
+inset -5px -5px 10px #71f6ff;
 
 /// @type Color
 $text-color: rgb(231, 231, 231);
@@ -25,10 +36,10 @@ $navbar-color: rgb(68, 72, 78) !default;
 $head-color: #242529 !default;
 
 /// @type Color
-$border-color: rgba(190, 190, 190, 0.5) !default;
+$border-color: rgb(41, 41, 41) !default;
 
 /// @type Color
 $highlight-color: rgba(224, 224, 224, 0.5) !default;
 
 /// @type Font Size
-$button-text-size: 10px;
+$button-text-size: 12px;
