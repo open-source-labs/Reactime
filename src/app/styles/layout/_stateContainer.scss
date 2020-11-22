@@ -1,7 +1,6 @@
 .state-container {
   font-size: 12px;
   overflow: auto;
-  
   background-color: $brand-color;
 }
 #componentMapContainer, #historyContainer, #atomsContainer  {
@@ -10,7 +9,7 @@
 
 .state-container .navbar {
 
-  background-color: $navbar-color;
+  background-color: rgba(51,51,51,1);
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -20,12 +19,12 @@
 
 .state-container .main-navbar{
 
-  background-color: red;
+  background-color: rgba(51,51,51,1);
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  height: 40px;
+  height: 35px;
   margin: 6px;
 }
 
@@ -34,12 +33,12 @@
   top: 0px;
   left: 0px;
   z-index: 1;
-  background-color: #565A61;
+  background-color: rgba(51,51,51,1);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  height: 40px;
+  height: 35px;
 }
 
 .navbar {
@@ -60,6 +59,7 @@
 .state-container {
   .main-navbar-text {
     margin: 6px;
+    font-size: 14px;
   }
 
   .main-router-link {
@@ -112,12 +112,12 @@
 
   .main-navbar{
   
-    background-color: #3d4249;
+    background-color: rgba(51,51,51,1);
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    height: 40px;
+    height: 35px;
     margin: 6px;
   }
 
@@ -125,7 +125,7 @@
     top: 0px;
     left: 0px;
     z-index: 1;
-    background-color: #3d4249;
+    background-color: rgba(51,51,51,1);
     display: flex;
     flex-direction: row;
     justify-content: space-between;

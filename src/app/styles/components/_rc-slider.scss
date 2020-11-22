@@ -44,19 +44,18 @@
 }
 .rc-slider-handle:focus {
   border-color: #57c5f7;
-  box-shadow: 0 0 0 5px #96dbfa;
+  // box-shadow: 0 0 0 5px #96dbfa;
   outline: none;
 }
 .rc-slider-handle-click-focused:focus {
   border-color: #96dbfa;
-  box-shadow: unset;
 }
 .rc-slider-handle:hover {
   border-color: #57c5f7;
 }
 .rc-slider-handle:active {
+  background: #e4494b;
   border-color: #57c5f7;
-  box-shadow: 0 0 5px #57c5f7;
   cursor: -webkit-grabbing;
   cursor: grabbing;
 }
@@ -236,7 +235,7 @@
   text-decoration: none;
   background-color: #6c6c6c;
   border-radius: 6px;
-  box-shadow: 0 0 4px #d9d9d9;
+  // box-shadow: 0 0 4px #d9d9d9;
 }
 .rc-slider-tooltip-arrow {
   position: absolute;

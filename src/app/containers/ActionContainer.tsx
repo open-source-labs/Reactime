@@ -9,6 +9,7 @@
 import React from 'react';
 import { diff } from 'jsondiffpatch';
 import Action from '../components/Action';
+import SwitchAppDropdown from '../components/SwitchApp';
 
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
@@ -94,6 +95,7 @@ function ActionContainer() {
 
   return (
     <div className="action-container">
+      <SwitchAppDropdown />
       <div className="action-component exclude">
         <button
           className="empty-button"

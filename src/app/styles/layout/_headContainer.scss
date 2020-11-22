@@ -5,27 +5,33 @@
 
 .head-container {
   height: 5%;
-  background-color: $head-color;
+  background: linear-gradient(90deg, rgba(41,41,41,1) 0%, rgba(51,51,51,1) 50%, rgba(41,41,41,1) 100%);
 }
 
 .head-container {
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 }
 
-.tab-select-container {
-  font-size: 12px;
-  min-width: 90px;
-  margin: 2px 7px;
+div .tab-select-container {
+  background-color: rgba(51,51,51,1);
+  font-size: 14px;
+  height: 40px;
+  width: 100%;
+  margin-bottom: 0;
 }
 
 .tab-select-container:focus {
+  background-color: rgba(51,51,51,1);
+
   outline: none;
 }
 
 .tab-select-container:active {
+  background-color: rgba(51,51,51,1);
+
   outline: none;
   border-color: transparent;
 }
@@ -35,31 +41,41 @@ svg {
 }
 
 .tab-select-container {
+  background-color: rgba(51,51,51,1);
   height: 70%;
+
   .tab-select__control:focus {
     outline: none;
+  }
+  div.tab-select-container.css-2b097c-container {
+    background-color: rgba(51,51,51,1);
+    margin: 0;
   }
 
   .tab-select__control,
   .tab-select__menu {
+    background-color: rgba(51,51,51,1);
     outline: none;
     font-size: 14px;
     border-style: none;
-    width: 300px;
     background-color: $brand-color;
     z-index: 2;
+    margin-bottom: 0;
     @extend %disable-highlight;
   }
   .tab-select__single-value {
     color: white;
   }
   .tab-select__value-container {
+    background-color: rgba(51,51,51,1);
+    margin: 0;
     padding: 0px;
   }
   .tab-select__value-container:focus {
    outline: none;
   }
   .tab-select__option:hover {
+    margin-top: 0;
     background-color: $light-grey-three;
     color: black;
   }
@@ -76,6 +92,9 @@ svg {
     margin-bottom: 3px;
   }
 
+  .css-1uccc91-singleValue {
+    margin-left: 8px;
+  }
   // removes the cursor from blinking
   .css-w8afj7-Input {
     color: transparent;
@@ -86,5 +105,16 @@ svg {
   .css-1pahdxg-control {
     min-height: initial;
     height: 100%;
+    background-color: rgba(51,51,51,1);
+    border: none;
+    outline: none;
+    margin-bottom: 0;
+    border-radius: 0;
   }
+  .css-yk16xz-control:focus,
+  .css-1pahdxg-control:focus {
+    outline: none;
+    border-radius: 0;
+  } 
 }
+
