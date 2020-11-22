@@ -1,6 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 .empty-button {
-	@extend %button-shared;
+	padding: 5px;
+	outline: transparent;
+	color: black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-style: solid;
+	border-color: transparent;
+	border-radius: 3px;
+	cursor: pointer;
+	line-height: 1.5em;
+	font: 300 14px 'Roboto', sans-serif;
+	font-size: $button-text-size;
 	width: 120px;
+	background: linear-gradient(145deg, #ff6569, #e65558);
+}
+.empty-button:hover {
+	color: black;
+	box-shadow: inset 5px 5px 10px #d95053, inset -5px -5px 10px #ff6c71;
 }
 
 .state-dropdown {
@@ -25,46 +43,72 @@
 	width: 70px;
 	border: none;
 	border-radius: 3px;
-	background-color: #565a61;
-	font: normal 11px monaco, Consolas, 'Lucida Console', monospace, Arial,
-		sans-serif;
+	background: linear-gradient(145deg, #5c6068, #4d5157);
+	font: normal 11px 'Roboto', sans-serif;
 	color: #b0b0b0;
 }
 
 .jump-button {
-	@extend %button-shared;
+	outline: none;
+	height: 20px;
 	margin-bottom: 8px;
-	width: 50px;
-	opacity: 0;
+	width: 70px;
+	border: transparent;
+	border-radius: 3px;
+	background-color: #565a61;
+	font: normal 11px 'Roboto', sans-serif;
+	color: #b0b0b0;
 	transform: rotateX(90deg);
 	transition: opacity 300ms, transform 0.15s linear;
+	opacity: 0;
 }
 
 .jump-button:hover {
 	// remove the blue border when button is clicked
-	background-color: $highlight-color;
+	color: black;
+	background-color: $fiery-rose;
+
+	cursor: pointer;
 }
 
 .empty-button:hover {
+	color: white;
 	background-color: $highlight-color;
 }
 
 .play-button {
 	@extend %button-shared;
+	font-weight: lighter;
 	width: 100px;
+	height: 25px;
 	margin: 0 1% 0 2%;
+	border-color: transparent;
+	background: $blue-color-gradient;
+}
+.play-button:hover {
+	box-shadow: $box-shadow-blue;
 }
 
 .backward-button {
 	@extend %button-shared;
 	width: 30px;
 	margin: 7px;
+	border-color: transparent;
+	background: $blue-color-gradient;
 }
 
 .forward-button {
 	@extend %button-shared;
 	width: 30px;
 	margin: 7px;
+	border-color: transparent;
+	background: $blue-color-gradient;
+	box-shadow: 5px 5px 10px #1f1f23, -5px -5px 10px #292b2f;
+}
+
+.forward-button:hover,
+.backward-button:hover {
+	box-shadow: $box-shadow-blue;
 }
 
 .import-button,
@@ -73,28 +117,33 @@
 .pause-button,
 .persist-button {
 	@extend %button-shared;
+	border-color: transparent;
+	background: $blue-color-gradient;
+}
+.import-button:hover,
+.export-button:hover,
+.lock-button:hover,
+.pause-button:hover,
+.persist-button:hover {
+	@extend %button-shared;
+	box-shadow: $box-shadow-blue;
 }
 
 %button-shared {
+	padding: 5px;
 	outline: none;
-	// background-color: $brand-color;
-	color: white;
+	background-color: $brand-color;
+	color: black;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 20px;
-	// border-style: solid;
-	// border-width: 1px;
-	// border-radius: 3px;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 3px;
 	cursor: pointer;
-	// line-height: 1.5em;
-	font: normal 13px monaco, Consolas, 'Lucida Console', monospace, Arial,
-		sans-serif;
+	line-height: 1.5em;
+	font: 300 14px 'Roboto', sans-serif;
 	font-size: $button-text-size;
-	padding: 1em;
-	border-radius: 51px;
-	background: #00fbff;
-	box-shadow: inset -30px -30px 100px #00a1a3, inset 30px 30px 100px #00ffff;
 
 	@extend %disable-highlight;
 }

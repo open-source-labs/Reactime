@@ -1,3 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
 .head-container {
   height: 5%;
   background-color: $head-color;
@@ -16,12 +21,29 @@
   margin: 2px 7px;
 }
 
+.tab-select-container:focus {
+  outline: none;
+}
+
+.tab-select-container:active {
+  outline: none;
+  border-color: transparent;
+}
+
+svg {
+  color: #58c1e2;
+}
+
 .tab-select-container {
   height: 70%;
+  .tab-select__control:focus {
+    outline: none;
+  }
 
   .tab-select__control,
-  .tab-select__control--is-focused,
   .tab-select__menu {
+    outline: none;
+    font-size: 14px;
     border-style: none;
     width: 300px;
     background-color: $brand-color;
@@ -34,12 +56,17 @@
   .tab-select__value-container {
     padding: 0px;
   }
+  .tab-select__value-container:focus {
+   outline: none;
+  }
   .tab-select__option:hover {
-    background-color: #2683ff;
+    background-color: $light-grey-three;
+    color: black;
   }
   .tab-select__option--is-selected,
   .tab-select__option--is-focused {
     background-color: transparent;
+    outline: transparent;
   }
   .tab-select__indicator {
     padding: 0;

@@ -25,7 +25,7 @@
   left: 0;
   height: 4px;
   border-radius: 6px;
-  background-color: #427aa1;
+  background-color: $fiery-rose;
 }
 .rc-slider-handle {
   position: absolute;
@@ -38,7 +38,7 @@
   cursor: grab;
   border-radius: 50%;
   // border: solid 2px #96dbfa;
-  background-color: #427aa1;
+  background: linear-gradient(145deg, #ff6569, #e65558);;
   -ms-touch-action: pan-x;
       touch-action: pan-x;
 }

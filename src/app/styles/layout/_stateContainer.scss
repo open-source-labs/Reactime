@@ -20,7 +20,7 @@
 
 .state-container .main-navbar{
 
-  background-color: #565A61;
+  background-color: red;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -68,17 +68,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $navbar-color;
+    background: linear-gradient(145deg, #585d65, #4a4e55);
     text-decoration: none;
     color: $text-color;
+    border-radius: 3px;
   }
 
   .main-router-link:hover {
-    background-color: $light-grey-three;
+    background: #585d65;
   }
 
   .main-router-link.is-active {
-    background-color: $brand-color;
+    background: $blue-color-gradient;
+    color: black;
   }
 
   .router-link {
@@ -87,7 +89,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $navbar-color;
+    background-color: #51565e;
     text-decoration: none;
     color: $text-color;
   }
@@ -109,8 +111,8 @@
   }
 
   .main-navbar{
-
-    background-color: #565A61;
+  
+    background-color: #3d4249;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -123,7 +125,7 @@
     top: 0px;
     left: 0px;
     z-index: 1;
-    background-color: #565A61;
+    background-color: #3d4249;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
