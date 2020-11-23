@@ -165,8 +165,6 @@ export default function ComponentMap({
                           y={-height / 2}
                           x={-width / 2}
                           fill='#272b4d'
-                          //changed all the node.data.children to node.children and was causing pb rendering and expanding
-                          // stroke={node.children ? '#03c0dc' : '#26deb0'}
                           stroke={node.children ? '#62d6fb' : '#F5F47E'}
                           strokeWidth={1}
                           strokeDasharray={node.children ? '0' : '2,2'}
