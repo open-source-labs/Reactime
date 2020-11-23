@@ -53,7 +53,6 @@ export default function ComponentMap({
   const [layout, setLayout] = useState('cartesian');
   const [orientation, setOrientation] = useState('horizontal');
   const [linkType, setLinkType] = useState('diagonal');
-
   const [stepPercent, setStepPercent] = useState(10);
   // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
   const forceUpdate = useForceUpdate();
@@ -103,7 +102,7 @@ export default function ComponentMap({
 
       <svg width={totalWidth} height={totalHeight}>
         <LinearGradient id='links-gradient' from='#fd9b93' to='#fe6e9e' />
-        <rect width={totalWidth} height={totalHeight} rx={14} fill='#242529' />
+        <rect width={totalWidth} height={totalHeight} rx={14} fill='#242529'/>
         <Group top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(data, (d) => (d.isExpanded ? null : d.children))}
@@ -117,15 +116,16 @@ export default function ComponentMap({
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    stroke='rgb(254,110,158,0.6)'
+                    // stroke='rgb(254,110,158,0.6)'
+                    stroke='#ff6569'
                     strokeWidth='1'
                     fill='none'
                   />
                 ))}
 
                 {tree.descendants().map((node, key) => {
-                  const width = 40;
-                  const height = 15;
+                  const width = 55;
+                  const height = 20;
 
                   let top: number;
                   let left: number;
@@ -162,15 +162,17 @@ export default function ComponentMap({
                           y={-height / 2}
                           x={-width / 2}
                           fill='#272b4d'
-                          stroke={node.data.children ? '#03c0dc' : '#26deb0'}
+                          //changed all the node.data.children to node.children and was causing pb rendering and expanding
+                          stroke={node.children ? '#03c0dc' : '#26deb0'}
                           strokeWidth={1}
-                          strokeDasharray={node.data.children ? '0' : '2,2'}
-                          strokeOpacity={node.data.children ? 1 : 0.6}
-                          rx={node.data.children ? 0 : 10}
+                          strokeDasharray={node.children ? '0' : '2,2'}
+                          strokeOpacity={node.children ? 1 : 0.6}
+                          rx={node.children ? 4 : 10}                         
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
                             forceUpdate();
                           }}
+                          //check with recoil 
                           onMouseLeave={()=> {
                             if(Object.keys(node.data.recoilDomNode).length > 0){
                               dispatch(onHoverExit(node.data.recoilDomNode[node.data.name]))
@@ -191,7 +193,7 @@ export default function ComponentMap({
                       <text
                         dy='.33em'
                         fontSize={9}
-                        fontFamily='Arial'
+                        fontFamily='Roboto'
                         textAnchor='middle'
                         style={{ pointerEvents: 'none' }}
                         fill={

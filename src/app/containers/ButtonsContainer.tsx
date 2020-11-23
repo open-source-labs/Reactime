@@ -8,7 +8,7 @@ import React from 'react';
 import { importSnapshots, toggleMode } from '../actions/actions';
 import { useStoreContext } from '../store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUpload, faQuestion, faDownload, faMapMarker, faRedoAlt, faUnlock, faLock} from '@fortawesome/free-solid-svg-icons'
+import { faUpload, faQuestion, faDownload, faMapMarker, faMapPin, faRedoAlt, faUnlock, faLock} from '@fortawesome/free-solid-svg-icons'
 
 function exportHandler(snapshots:[]) {
   // create invisible download anchor link
@@ -80,7 +80,7 @@ function ButtonsContainer() {
 				type="button"
 				onClick={() => dispatch(toggleMode('persist'))}
 			>
-        {persist? <FontAwesomeIcon icon={faRedoAlt} /> : <FontAwesomeIcon icon={faMapMarker} /> }
+        {persist? <FontAwesomeIcon icon={faRedoAlt} /> : <FontAwesomeIcon icon={faMapPin} /> }
 				{persist ? 'Unpersist' : 'Persist'}
 			</button>
 			<button

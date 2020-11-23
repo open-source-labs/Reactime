@@ -6,7 +6,6 @@ import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
-// import { scaleBand, scaleLinear, scaleOrdinal } from 'd3-scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
@@ -60,13 +59,17 @@ interface snapshot {
 
 /* DEFAULTS */
 const margin = { top: 60, right: 30, bottom: 0, left: 50 };
-const axisColor = '#679DCA';
+// const axisColor = '#679DCA';
+const axisColor = '#58c1e2';
 const background = '#242529';
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
   backgroundColor: 'rgba(0,0,0,0.9)',
   color: 'white',
+  fontSize: '14px',
+  lineHeight: '18px',
+  fontFamily: 'Roboto'
 };
 
 /* DATA HANDLING HELPER FUNCTIONS */
@@ -78,7 +81,7 @@ const traverse = (snapshot, fetchData, data = {}) => {
     const componentName = child.name + -[idx + 1];
     // Get component Type
     if (fetchData === 'getComponentType') {
-      if (child.state !== 'stateless') data[componentName] = 'STATEFUL';
+      if (child.state !== 'stateless') data[componentName] = 'stateful';
       else data[componentName] = child.state;
     }
     // Get component Rendering Time
@@ -122,9 +125,6 @@ const PerformanceVisx = (props: BarStackProps) => {
   const {
     tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip,
   } = useTooltip<TooltipData>();
-  // console.log('tooltipData at line 125: ', tooltipData)
-  // console.log('tooltipTop at line 126: ', tooltipTop)
-  // console.log('tooltipLeft at line 127: ', tooltipLeft);
   let tooltipTimeout: number;
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
@@ -133,7 +133,6 @@ const PerformanceVisx = (props: BarStackProps) => {
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   const keys = Object.keys(data[0]).filter(d => d !== 'snapshotId');
   const allComponentStates = traverse(snapshots[0], 'getComponentType');
-  // console.log('snapshots:', snapshots);
   const allComponentRtids = traverse(snapshots[snapshots.length-1], 'getRtid');
 
   // create array of total render times for each snapshot
@@ -164,7 +163,6 @@ const PerformanceVisx = (props: BarStackProps) => {
     nice: true,
   });
 
-  // console.log('schemSet3: ', schemeSet3, 'typed: ', typeof schemeSet3);
   const colorScale = scaleOrdinal<string>({
     domain: keys,
     range: schemeSet3,
@@ -176,8 +174,7 @@ const PerformanceVisx = (props: BarStackProps) => {
   const yMax = height - margin.top - 150;
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
-  // console.log('snapshotIdScale: ', snapshotIdScale);
-  // console.log('tooltipbar:', tooltipData);
+
   // if performance tab is too small it will not return VISX component
   return width < 10 ? null : (
     <div style={{ position: 'relative' }}>
@@ -273,8 +270,8 @@ const PerformanceVisx = (props: BarStackProps) => {
             textAnchor: 'middle',
           })}
         />
-        <Text x={-xMax / 2} y="15" transform="rotate(-90)" fontSize={10} fill="#FFFFFF"> Rendering Time (ms) </Text>
-        <Text x={xMax / 2} y={yMax + 100} fontSize={10} fill="#FFFFFF"> Snapshot Id </Text>
+        <Text x={-xMax / 2} y="15" transform="rotate(-90)" fontSize={12} fill="#FFFFFF"> Rendering Time (ms) </Text>
+        <Text x={xMax / 2} y={yMax + 100} fontSize={12} fill="#FFFFFF"> Snapshot Id </Text>
       </svg>
 
       {/* FOR HOVER OVER DISPLAY */}
