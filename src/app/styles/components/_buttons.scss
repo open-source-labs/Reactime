@@ -113,6 +113,7 @@
 }
 
 .import-button,
+.howToUse-button,
 .export-button,
 .lock-button,
 .pause-button,
@@ -122,6 +123,7 @@
 	background: $blue-color-gradient;
 }
 .import-button:hover,
+.howToUse-button:hover,
 .export-button:hover,
 .lock-button:hover,
 .pause-button:hover,
@@ -130,6 +132,15 @@
 	box-shadow: $box-shadow-blue;
 }
 
+.svg-inline--fa {
+	color: #40404094;
+	margin-right: 0.75em;
+	display: inline-block;
+	font-size: inherit;
+	height: 0.75em;
+	overflow: visible;
+	vertical-align: -0.125em;
+}
 %button-shared {
 	padding: 5px;
 	outline: none;

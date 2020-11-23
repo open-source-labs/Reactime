@@ -7,6 +7,8 @@ import React from 'react';
 
 import { importSnapshots, toggleMode } from '../actions/actions';
 import { useStoreContext } from '../store';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUpload, faQuestion, faDownload, faMapMarker, faRedoAlt, faUnlock, faLock} from '@fortawesome/free-solid-svg-icons'
 
 function exportHandler(snapshots:[]) {
   // create invisible download anchor link
@@ -44,6 +46,11 @@ function importHandler(dispatch:(a:any)=>void) {
   fileUpload.click();
 }
 
+function howToUseHandler() {
+  window.open('https://github.com/open-source-labs/reactime', '_blank');
+  return null;
+}
+
 function ButtonsContainer() {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
@@ -52,28 +59,55 @@ function ButtonsContainer() {
   } = tabs[currentTab];
 
   return (
-    <div className="buttons-container">
-      <button className="pause-button" type="button" onClick={() => dispatch(toggleMode('paused'))}>
-        {paused ? 'Resume' : 'Pause'}
-      </button>
-      <button className="lock-button" type="button" onClick={() => dispatch(toggleMode('locked'))}>
-        {locked ? 'Unlock' : 'Lock'}
-      </button>
-      <button
-        className="persist-button"
-        type="button"
-        onClick={() => dispatch(toggleMode('persist'))}
-      >
-        {persist ? 'Unpersist' : 'Persist'}
-      </button>
-      <button className="export-button" type="button" onClick={() => exportHandler(snapshots)}>
-        Export
-      </button>
-      <button className="import-button" type="button" onClick={() => importHandler(dispatch)}>
-        Import
-      </button>
-    </div>
-  );
+		<div className="buttons-container">
+			<button
+				className="pause-button"
+				type="button"
+				onClick={() => dispatch(toggleMode('paused'))}
+			>
+        {paused? <FontAwesomeIcon icon={faUnlock} /> : <FontAwesomeIcon icon={faLock} />}
+				{paused ? 'Unlock' : 'Lock'}
+			</button>
+			{/* <button
+				className="lock-button"
+				type="button"
+				onClick={() => dispatch(toggleMode('locked'))}
+			>
+				{locked ? 'Unlocked': 'Locked'}
+			</button> */}
+			<button
+				className="persist-button"
+				type="button"
+				onClick={() => dispatch(toggleMode('persist'))}
+			>
+        {persist? <FontAwesomeIcon icon={faRedoAlt} /> : <FontAwesomeIcon icon={faMapMarker} /> }
+				{persist ? 'Unpersist' : 'Persist'}
+			</button>
+			<button
+				className="export-button"
+				type="button"
+				onClick={() => exportHandler(snapshots)}
+			>
+				<FontAwesomeIcon icon={faDownload} />
+				Download
+			</button>
+			<button
+				className="import-button"
+				type="button"
+				onClick={() => importHandler(dispatch)}
+			>
+				<FontAwesomeIcon icon={faUpload} />
+				Upload
+			</button>
+			<button
+				className="howToUse-button"
+				type="button"
+				onClick={() => howToUseHandler()}
+			>
+				<FontAwesomeIcon icon={faQuestion} /> How to use
+			</button>
+		</div>
+	);
 }
 
 export default ButtonsContainer;
