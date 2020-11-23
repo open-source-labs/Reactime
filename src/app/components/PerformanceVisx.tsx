@@ -60,7 +60,7 @@ interface snapshot {
 /* DEFAULTS */
 const margin = { top: 60, right: 30, bottom: 0, left: 50 };
 // const axisColor = '#679DCA';
-const axisColor = '#58c1e2';
+const axisColor = '#62d6fb';
 const background = '#242529';
 const tooltipStyles = {
   ...defaultStyles,
@@ -251,7 +251,7 @@ const PerformanceVisx = (props: BarStackProps) => {
           tickStroke={axisColor}
           strokeWidth={2}
           tickLabelProps={() => ({
-            fill: axisColor,
+            fill: 'rgb(231, 231, 231)',
             fontSize: 11,
             verticalAnchor: 'middle',
             textAnchor: 'end',
@@ -265,7 +265,7 @@ const PerformanceVisx = (props: BarStackProps) => {
           tickStroke={axisColor}
           strokeWidth={2}
           tickLabelProps={() => ({
-            fill: axisColor,
+            fill: 'rgb(231, 231, 231)',
             fontSize: 11,
             textAnchor: 'middle',
           })}

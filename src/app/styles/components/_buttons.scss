@@ -66,7 +66,8 @@
 
 .jump-button:hover {
 	// remove the blue border when button is clicked
-	color: black;
+	color: white;
+	// color: black;
 	background-color: $fiery-rose;
 
 	cursor: pointer;
@@ -78,38 +79,43 @@
 }
 
 .play-button {
-	@extend %button-shared;
-	font-weight: lighter;
 	width: 100px;
 	height: 25px;
 	margin: 0 1% 0 2%;
+	color: $brand-color;
 	border-color: transparent;
 	background: $blue-color-gradient;
+	border-radius: 5px;
 }
 .play-button:hover {
-	box-shadow: $box-shadow-blue;
+	background: $blue-color-gradient;
+	transform: translate3d(0, -3px, 0);
 }
 
 .backward-button {
-	@extend %button-shared;
 	width: 30px;
+	height: 25px;
 	margin: 7px;
+	color: $brand-color;
 	border-color: transparent;
 	background: $blue-color-gradient;
+	border-radius: 5px;
 }
 
 .forward-button {
-	@extend %button-shared;
 	width: 30px;
+	height: 25px;
 	margin: 7px;
+	color: $brand-color;
 	border-color: transparent;
 	background: $blue-color-gradient;
-	box-shadow: 5px 5px 10px #1f1f23, -5px -5px 10px #292b2f;
+	border-radius: 5px;
 }
 
 .forward-button:hover,
 .backward-button:hover {
-	box-shadow: $box-shadow-blue;
+	background: $blue-color-gradient;
+	transform: translate3d(0, -3px, 0);
 }
 
 .import-button,
@@ -119,6 +125,7 @@
 .pause-button,
 .persist-button {
 	@extend %button-shared;
+	color: white;
 	border-color: transparent;
 	background: $blue-color-gradient;
 }
@@ -129,11 +136,13 @@
 .pause-button:hover,
 .persist-button:hover {
 	@extend %button-shared;
-	box-shadow: $box-shadow-blue;
+	color: #62d6fb;
+	box-shadow: 1px 1px 2px 1px rgba(30, 86, 171, 0.25);
+	transform: translate3d(0, -3px, 0);
 }
 
 .svg-inline--fa {
-	color: #40404094;
+	color: #62d6fb;
 	margin-right: 0.75em;
 	display: inline-block;
 	font-size: inherit;
@@ -144,18 +153,18 @@
 %button-shared {
 	padding: 5px;
 	outline: none;
-	background-color: $brand-color;
-	color: black;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 3px;
 	cursor: pointer;
 	line-height: 1.5em;
 	font: 300 14px 'Roboto', sans-serif;
 	font-size: $button-text-size;
+
+	background: rgb(36, 37, 41);
+	border-radius: 5px;
+	position: relative;
+	border: 1px solid rgba(184, 196, 194, 0.25);
 
 	@extend %disable-highlight;
 }

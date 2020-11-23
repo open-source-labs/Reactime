@@ -1,149 +1,153 @@
 .state-container {
-  font-size: 12px;
-  overflow: auto;
-  background-color: $brand-color;
+	font-size: 12px;
+	overflow: auto;
+	background-color: $brand-color;
 }
-#componentMapContainer, #historyContainer, #atomsContainer  {
-  overflow: hidden;
+#componentMapContainer,
+#historyContainer,
+#atomsContainer {
+	overflow: hidden;
 }
 
 .state-container .navbar {
-
-  background-color: rgba(51,51,51,1);
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  height: 30px;
+	background-color: rgba(51, 51, 51, 1);
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	height: 30px;
 }
 
-.state-container .main-navbar{
-
-  background-color: rgba(51,51,51,1);
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  height: 35px;
-  margin: 6px;
+.state-container .main-navbar {
+	background-color: rgba(51, 51, 51, 1);
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	height: 35px;
+	margin: 6px;
 }
 
-.state-container .main-navbar-container{
-  position: sticky ;
-  top: 0px;
-  left: 0px;
-  z-index: 1;
-  background-color: rgba(51,51,51,1);
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  height: 35px;
+.state-container .main-navbar-container {
+	position: sticky;
+	top: 0px;
+	left: 0px;
+	z-index: 1;
+	background-color: rgba(51, 51, 51, 1);
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	height: 35px;
 }
 
 .navbar {
-  // prevent navbar from scrolling with state/tree display
-  position: sticky ;
-  top: 0px;
-  left: 0px;
-  z-index: 1;
-  @extend %disable-highlight
+	// prevent navbar from scrolling with state/tree display
+	position: sticky;
+	top: 0px;
+	left: 0px;
+	z-index: 1;
+	@extend %disable-highlight;
 }
 
 .no-data-message {
-  color: $text-color;
-  font: normal 13px $text-font-stack;
-  padding: 10px;
+	color: $text-color;
+	font: normal 13px $text-font-stack;
+	padding: 10px;
 }
 
 .state-container {
-  .main-navbar-text {
-    margin: 6px;
-    font-size: 14px;
-  }
+	.main-navbar-text {
+		margin: 6px;
+		font-size: 14px;
+	}
 
-  .main-router-link {
-    height: 80%;
-    width: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(145deg, #585d65, #4a4e55);
-    text-decoration: none;
-    color: $text-color;
-    border-radius: 3px;
-  }
+	.main-router-link {
+		height: 75%;
+		width: 75px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-decoration: none;
+		color: $text-color;
 
-  .main-router-link:hover {
-    background: #585d65;
-  }
+		background: rgb(36, 37, 41);
+		border-radius: 5px;
+		border: 1px solid rgba(184, 196, 194, 0.25);
+	}
 
-  .main-router-link.is-active {
-    background: $blue-color-gradient;
-    color: black;
-  }
+	.main-router-link:hover {
+		background: #585d65;
+	}
 
-  .router-link {
-    height: 100%;
-    width: 30%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #51565e;
-    text-decoration: none;
-    color: $text-color;
-  }
+	.main-router-link.is-active {
+		background: #62d6fb;
+		color: $brand-color;
+		margin: 3px;
+		border-radius: 5px;
+		border: 1px solid rgb(36, 37, 41);
+	}
 
-  .router-link:hover {
-    background-color: $light-grey-three;
-  }
+	.router-link {
+		height: 100%;
+		width: 34%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #51565e;
+		text-decoration: none;
+		color: $text-color;
+	}
 
-  .router-link.is-active {
-    background-color: $brand-color;
-  }
-  .navbar {
-    background-color: $navbar-color;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    height: 30px;
-  }
+	.router-link:hover {
+		background-color: $light-grey-three;
+	}
 
-  .main-navbar{
-  
-    background-color: rgba(51,51,51,1);
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    height: 35px;
-    margin: 6px;
-  }
+	.router-link.is-active {
+		background-color: $brand-color;
+	}
+	.navbar {
+		background-color: $navbar-color;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-evenly;
+		align-items: center;
+		height: 30px;
+	}
 
-  .main-navbar-container{
-    top: 0px;
-    left: 0px;
-    z-index: 1;
-    background-color: rgba(51,51,51,1);
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    height: 40px;
-  }
+	.main-navbar {
+		background-color: rgba(51, 51, 51, 1);
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+		height: 35px;
+		margin: 6px;
+	}
+
+	.main-navbar-container {
+		top: 0px;
+		left: 0px;
+		z-index: 1;
+		background-color: rgba(51, 51, 51, 1);
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		height: 40px;
+	}
 }
 
 .navbar {
-  // prevent navbar from scrolling with state/tree display
-  top: 0px;
-  left: 0px;
-  z-index: 1;
-  @extend %disable-highlight
+	// prevent navbar from scrolling with state/tree display
+	top: 0px;
+	left: 0px;
+	z-index: 1;
+	@extend %disable-highlight;
 }
 
 .no-data-message {
-  color: $text-color;
-  font: normal 13px $text-font-stack;
-  padding: 10px;
+	color: $text-color;
+	font: normal 13px $text-font-stack;
+	padding: 10px;
 }

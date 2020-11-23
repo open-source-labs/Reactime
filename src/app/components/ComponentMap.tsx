@@ -7,8 +7,9 @@ import { pointRadial } from 'd3-shape';
 import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
-import { onHover, onHoverExit } from '../actions/actions'
-import { useStoreContext } from '../store'
+import { onHover, onHoverExit } from '../actions/actions';
+import { useStoreContext } from '../store';
+
 
 const root = hierarchy({
   name: 'root',
@@ -100,6 +101,7 @@ export default function ComponentMap({
         setStepPercent={setStepPercent}
       />
 
+
       <svg width={totalWidth} height={totalHeight}>
         <LinearGradient id='links-gradient' from='#fd9b93' to='#fe6e9e' />
         <rect width={totalWidth} height={totalHeight} rx={14} fill='#242529'/>
@@ -147,6 +149,7 @@ export default function ComponentMap({
                         <circle
                           r={12}
                           fill="url('#links-gradient')"
+                          stroke="#e7e7e7"
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
                             // console.log(node);
@@ -163,7 +166,8 @@ export default function ComponentMap({
                           x={-width / 2}
                           fill='#272b4d'
                           //changed all the node.data.children to node.children and was causing pb rendering and expanding
-                          stroke={node.children ? '#03c0dc' : '#26deb0'}
+                          // stroke={node.children ? '#03c0dc' : '#26deb0'}
+                          stroke={node.children ? '#62d6fb' : '#F5F47E'}
                           strokeWidth={1}
                           strokeDasharray={node.children ? '0' : '2,2'}
                           strokeOpacity={node.children ? 1 : 0.6}
@@ -200,8 +204,8 @@ export default function ComponentMap({
                           node.depth === 0
                             ? '#71248e'
                             : node.children
-                            ? 'white'
-                            : '#26deb0'
+                            ? '#B1EDE8'
+                            : '#F5F47E'
                         }
                       >
                         {node.data.name}

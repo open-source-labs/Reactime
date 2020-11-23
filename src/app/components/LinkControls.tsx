@@ -63,22 +63,21 @@ export default function LinkControls({
 				<option value="vertical">Vertical</option>
 			</select>
 			&nbsp;&nbsp;
-			{/* Controls for the link selections. When Cartesian and Horizontal are selection the link has been disabled as it was causing a rendering issue */}
-			{/* <label>Link:</label>
+			{/* Controls for the link selections. */}
+			<label>Link:</label>
 			&nbsp;
 			<select
 				onClick={(e) => e.stopPropagation()}
 				onChange={(e) => setLinkType(e.target.value)}
 				value={linkType}
-				disabled={layout === 'cartesian' && orientation === 'horizontal'}
+				style={dropDownStyle}
 			>
 				<option value="diagonal">Diagonal</option>
 				<option value="step">Step</option>
-				<option value="curve">Curve</option>
 				<option value="line">Line</option>
-			</select> */}
+			</select>
 			{/* This is the slider control for the step option */}
-			{/* {linkType === 'step' && layout !== 'polar' && (
+			{linkType === 'step' && layout !== 'polar' && (
 				<>
 					&nbsp;&nbsp;
 					<label>Step:</label>
@@ -94,7 +93,7 @@ export default function LinkControls({
 						disabled={linkType !== 'step' || layout === 'polar'}
 					/>
 				</>
-			)} */}
+			)}
 		</div>
 	);
 }
