@@ -15,12 +15,12 @@ const JSXParser = acorn.Parser.extend(jsx());
 
 /**
  * @method throttle
- * @param f A function to throttle
- * @param t A number of milliseconds to use as throttling interval
- * @returns A function that limits input function, `f`, from being called more than once every `t` milliseconds
+ * @param callback A function to throttle
+ * @param ms A number of milliseconds to use as throttling interval
+ * @returns A function that limits input function, `callback`, from being called more than once every `ms` milliseconds
  *
  */
-export const throttle = (f: Function, t: number): Function => {
+export const throttle = (callback: Function, ms: number): Function => {
   // Initialize boolean flags for callback, throttledFunc
   let isOnCooldown = false;
   let isCallQueued = false;
@@ -42,7 +42,7 @@ export const throttle = (f: Function, t: number): Function => {
 
     // CASE 3: If we are ready to "fire":
     // Execute the function, f, immediately
-    f();
+    callback();
     // Initiate a new cooldown period and reset the "call queue"
     isOnCooldown = true;
     isCallQueued = false;
@@ -53,14 +53,14 @@ export const throttle = (f: Function, t: number): Function => {
       if (isCallQueued) {
         isCallQueued = false;
         isOnCooldown = true; // not needed I think
-        f();
-        setTimeout(runAfterTimeout, t);
+        callback();
+        setTimeout(runAfterTimeout, ms);
         return;
       }
       isOnCooldown = false;
     };
 
-    setTimeout(runAfterTimeout, t);
+    setTimeout(runAfterTimeout, ms);
   };
 
   return throttledFunc;

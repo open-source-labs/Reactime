@@ -16,7 +16,6 @@ import {
   Snapshot,
   //jump, pause, lock
   Mode,
-
   ComponentData,
   // array of state and component
   HookStates,
@@ -37,7 +36,7 @@ import AtomsRelationship from '../app/components/AtomsRelationship';
 
 // Set global variables to use in exported module and helper functions
 declare global {
-  interface Window {
+    interface Window {
     __REACT_DEVTOOLS_GLOBAL_HOOK__?: any;
   }
 }
@@ -56,22 +55,23 @@ let recoilDomNode = {};
 if (window[`$recoilDebugStates`]) {
   isRecoil = true;
 }
-
-// function getRecoilState(): any {
-//   const RecoilSnapshotsLength = window[`$recoilDebugStates`].length;
-//   const lastRecoilSnapshot =
-//     window[`$recoilDebugStates`][RecoilSnapshotsLength - 1];
-//   const nodeToNodeSubs = lastRecoilSnapshot.nodeToNodeSubscriptions;
-//   const nodeToNodeSubsKeys = lastRecoilSnapshot.nodeToNodeSubscriptions.keys();
-//   nodeToNodeSubsKeys.forEach((node) => {
-//     nodeToNodeSubs
-//       .get(node)
-//       .forEach((nodeSubs) =>
-//         allAtomsRelationship.push([node, nodeSubs, 'atoms and selectors'])
-//       );
-//   });
-// }
-
+// function for recoil apps (unused as of 11.22.2020) 
+/*
+function getRecoilState(): any {
+  const RecoilSnapshotsLength = window[`$recoilDebugStates`].length;
+  const lastRecoilSnapshot =
+    window[`$recoilDebugStates`][RecoilSnapshotsLength - 1];
+  const nodeToNodeSubs = lastRecoilSnapshot.nodeToNodeSubscriptions;
+  const nodeToNodeSubsKeys = lastRecoilSnapshot.nodeToNodeSubscriptions.keys();
+  nodeToNodeSubsKeys.forEach((node) => {
+    nodeToNodeSubs
+      .get(node)
+      .forEach((nodeSubs) =>
+        allAtomsRelationship.push([node, nodeSubs, 'atoms and selectors'])
+      );
+  });
+}
+*/
 /**
  * @method sendSnapshot
  * @param snap The current snapshot
@@ -116,9 +116,6 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
  //updating tree depending on current mode on the panel (pause, locked etc) 
 function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
   // this is the currently active root fiber(the mutable root of the tree)
-  let fiberRootCurrent = fiberRoot.current;
-  // console.log("fiber root props: ", Object.entries(fiberRootCurrent));
-  // console.log("fiberroot sibling:", fiberRootCurrent.sibling, "fiberroot stateNode:", fiberRootCurrent.stateNode, "fiberroot child:", fiberRootCurrent.child, "fiberroot memoizedState:", fiberRootCurrent.memoizedState, "fiberroot memoizedProps:", fiberRootCurrent.memoizedProps, "fiberRootCurrent.elementType:",fiberRootCurrent.elementType, "fiberRootCurrent.tag: ", fiberRootCurrent.tag, "fiberRootCurrent.actualDuration: ", fiberRootCurrent.actualDuration, "fiberRootCurrent.actualStartTime: ", fiberRootCurrent.actualStartTime, "fiberRootCurrent.selfBaseDuration: ", fiberRootCurrent.selfBaseDuration, "fiberRootCurrent.treeBaseDuration:", fiberRootCurrent.treeBaseDuration);
 
   if (fiberRoot) {
     const { current } = fiberRoot;
@@ -183,8 +180,7 @@ function traverseHooks(memoizedState: any): HookStates {
         state: memoizedState.memoizedState,
       });
     }
-    memoizedState =
-      memoizedState.next !== memoizedState ? memoizedState.next : null;
+    memoizedState = (memoizedState.next !== memoizedState) ?  memoizedState.next : null;
   }
   return hooksStates;
 }
@@ -212,13 +208,10 @@ function createTree(
   fromSibling = false
 ) {
   // Base case: child or sibling pointed to null
-
   if (!currentFiber) return null;
   if (!tree) return tree;
-
   // These have the newest state. We update state and then
   // called updateSnapshotTree()
-
   const {
     sibling,
     stateNode,
@@ -234,7 +227,7 @@ function createTree(
     treeBaseDuration,
   } = currentFiber;
 
-  // Checks Recoil Atom and Selector Relationships
+  //Checks Recoil Atom and Selector Relationships
   if (
     currentFiber.memoizedState
     && currentFiber.memoizedState.next
@@ -301,13 +294,10 @@ function createTree(
       stateNode.state,
       stateNode
     );
-
     newState = stateNode.state;
     componentFound = true;
   }
-
   let hooksIndex;
-
   const atomArray = [];
   atomArray.push(memoizedProps);
 
@@ -323,7 +313,8 @@ function createTree(
       // We then store them along with the corresponding memoizedState.queue,
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseRecoilHooks(memoizedState, memoizedProps);
-      hooksStates.forEach((state) => {
+      console.log("hookStates: ", hooksStates);
+      hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(
           state.state,
           state.component
@@ -331,13 +322,27 @@ function createTree(
         componentData.hooksIndex = hooksIndex;
 
         // Improves tree visualization but breaks jump ?
-        if (newState && newState.hooksState) {
-          newState.push(state.state);
-        } else if (newState) {
-          newState = [state.state];
-        } else {
-          newState.push(state.state);
+        // if (!newState) {
+          
+        // }
+        // newState.push(state.state);
+          // console.log('newState in Recoil: ', newState);
+          // console.log('state.state: ', state.state);
+        /* what is this supposed to do??? currently doesn't work?? and makes no sense, newState is an object, how can you push state.state into an object?? */
+        // if (newState && newState.hooksState) {
+        //   newState.push(state.state);
+        // } else if (newState) {
+        //   newState = [state.state];
+        // } else {
+        //   newState.push(state.state);
+        // }
+        // componentFound = true;
+        if (!newState) {
+          newState = { hooksState: [] };
+        } else if (!newState.hooksState) {
+          newState.hooksState = [];
         }
+        newState.hooksState.push({ [i]: state.state });
         componentFound = true;
       });
     }
@@ -351,6 +356,7 @@ function createTree(
     isRecoil === false
   ) {
     if (memoizedState.queue) {
+      console.log("line 357...")
       // Hooks states are stored as a linked list using memoizedState.next,
       // so we must traverse through the list and get the states.
       // We then store them along with the corresponding memoizedState.queue,
@@ -363,15 +369,12 @@ function createTree(
           state.component
         );
         componentData.hooksIndex = hooksIndex;
-        if (newState && newState.hooksState) {
-          newState.hooksState.push({ [hooksNames[i]]: state.state });
-        } else if (newState) {
-          newState.hooksState = [{ [hooksNames[i]]: state.state }];
-        } else {
-          // possibly app breaks somewhere if newState and hooksState do not exist?
+        if (!newState) {
           newState = { hooksState: [] };
-          newState.hooksState.push({ [hooksNames[i]]: state.state });
+        } else if (!newState.hooksState) {
+          newState.hooksState = [];
         }
+        newState.hooksState.push({ [hooksNames[i]]: state.state });
         componentFound = true;
       });
     }
@@ -396,30 +399,33 @@ function createTree(
   // We want to add this fiber node to the snapshot
   if (componentFound || newState === 'stateless') {
     // where does this get changed to true?
-    if (fromSibling) {
-      if (isRecoil) {
-        if (currentFiber.elementType.name) {
-          if (!recoilDomNode[currentFiber.elementType.name]) {
-            recoilDomNode[currentFiber.elementType.name] = [];
-          }
+    if (isRecoil) {
+      // do this down below too
+      if(currentFiber.elementType.name){
+        if(!recoilDomNode[currentFiber.elementType.name]){
+          recoilDomNode[currentFiber.elementType.name] = [];
         }
-
-        let pointer = currentFiber;
-        while (pointer !== null) {
-            if (pointer.stateNode !== null) {
-            rtid = "fromLinkFiber" + rtidCounter++
-            recoilDomNode[currentFiber.elementType.name].push(rtid);
-            pointer.stateNode.setAttribute("id", rtid);
-          }
-            pointer = pointer.child;
-          }
-      } else {
-        if (currentFiber.child && currentFiber.child.stateNode && currentFiber.child.stateNode.setAttribute) {
-          rtid = "fromLinkFiber" + rtidCounter
-            currentFiber.child.stateNode.setAttribute("id", rtid);
-          }
-          rtidCounter++;
       }
+      let pointer = currentFiber
+      // end of repeat code 
+
+      while (pointer !== null) {
+          if(pointer.stateNode !== null){
+          rtid = "fromLinkFiber" + rtidCounter++
+          recoilDomNode[currentFiber.elementType.name].push(rtid)
+          pointer.stateNode.setAttribute("id", rtid)
+        }
+          pointer = pointer.child
+        }
+    } else {
+      if (currentFiber.child && currentFiber.child.stateNode && currentFiber.child.stateNode.setAttribute) {
+        rtid = "fromLinkFiber" + rtidCounter
+          currentFiber.child.stateNode.setAttribute("id", rtid);
+        }
+        rtidCounter++;
+    }
+    // checking if tree fromSibling is true
+    if (fromSibling) {
       // tree object from tree.ts, with addSibling
       newNode = tree.addSibling(
         newState,
@@ -428,29 +434,7 @@ function createTree(
         rtid,
         recoilDomNode
       );
-    } else {
-      if (isRecoil) {
-        if (currentFiber.elementType.name) {
-          if (!recoilDomNode[currentFiber.elementType.name]) {
-            recoilDomNode[currentFiber.elementType.name] = [];
-          }
-        }
-        let pointer = currentFiber
-        while (pointer !== null) {
-            if (pointer.stateNode !== null) {
-            rtid = "fromLinkFiber" + rtidCounter++
-            recoilDomNode[currentFiber.elementType.name].push(rtid)
-            pointer.stateNode.setAttribute("id", rtid)
-          } 
-            pointer = pointer.child
-          }
-      } else {
-        if (currentFiber.child && currentFiber.child.stateNode && currentFiber.child.stateNode.setAttribute) {
-          rtid = "fromLinkFiber" + rtidCounter
-            currentFiber.child.stateNode.setAttribute("id", rtid);
-          }
-          rtidCounter++;
-      } 
+    } else {      
       newNode = tree.addChild(
         newState,
         elementType ? elementType.name : 'nameless',
