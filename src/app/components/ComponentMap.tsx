@@ -29,7 +29,7 @@ interface TreeNode {
 
 type HierarchyNode = HierarchyPointNode<TreeNode>;
 
-const defaultMargin = { top: 30, left: 30, right: 30, bottom: 70 };
+const defaultMargin = { top: 30, left: 30, right: 55, bottom: 70 };
 
 export type LinkTypesProps = {
   width: number;
@@ -125,9 +125,15 @@ export default function ComponentMap({
                 ))}
 
                 {tree.descendants().map((node, key) => {
-                  const width = 65;
+                  // const width = (node.data.name.length) + 70;
+                  const widthFunc = (name) => {
+                    let nodeLength = name.length;
+                    if (nodeLength < 5) return nodeLength + 40;
+                    if (nodeLength < 10) return nodeLength + 60;
+                    return nodeLength + 70;
+                  } 
+                  const width = widthFunc(node.data.name);
                   const height = 25;
-              
 
                   let top: number;
                   let left: number;
@@ -194,7 +200,7 @@ export default function ComponentMap({
                       {/* Display text inside of each component node */}
                       <text
                         dy='.33em'
-                        fontSize={8}
+                        fontSize={10}
                         fontFamily='Roboto'
                         textAnchor='middle'
                         style={{ pointerEvents: 'none' }}
