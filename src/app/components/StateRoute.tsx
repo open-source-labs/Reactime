@@ -21,7 +21,7 @@ import PerformanceVisx from './PerformanceVisx';
 import Legend from './AtomsRelationshipLegend';
 import AtomsRelationship from './AtomsRelationship';
 
-// const History = require('./History').default;
+const History = require('./History').default;
 const ErrorHandler = require('./ErrorHandler').default;
 
 const NO_STATE_MSG =
@@ -75,19 +75,19 @@ const StateRoute = (props: StateRouteProps) => {
   // if true, we invoke teh D3 render chart with hierarchy
   // by invoking History component, and passing in all the props required to render D3 elements and perform timeJump from clicking of node
   // otherwise we an alert to the user that no state was found.
-  // const renderHistory = () => {
-  //   if (hierarchy) {
-  //     return (
-  //       <History
-  //         hierarchy={hierarchy}
-  //         dispatch={dispatch}
-  //         sliderIndex={sliderIndex}
-  //         viewIndex={viewIndex}
-  //       />
-  //     );
-  //   }
-  //   return <div className="noState">{NO_STATE_MSG}</div>;
-  // };
+  const renderHistory = () => {
+    if (hierarchy) {
+      return (
+        <History
+          hierarchy={hierarchy}
+          dispatch={dispatch}
+          sliderIndex={sliderIndex}
+          viewIndex={viewIndex}
+        />
+      );
+    }
+    return <div className="noState">{NO_STATE_MSG}</div>;
+  };
 
   const renderAtomsRelationship = () => (
     <ParentSize>
@@ -152,13 +152,13 @@ const StateRoute = (props: StateRouteProps) => {
         >
           Tree
         </NavLink>
-        {/* <NavLink
+        <NavLink
           className="router-link"
           activeClassName="is-active"
           to="/history"
         >
           History
-        </NavLink> */}
+        </NavLink>
         <NavLink className="router-link" activeClassName="is-active" to="/map">
           Map
         </NavLink>
@@ -183,7 +183,7 @@ const StateRoute = (props: StateRouteProps) => {
       </div>
       <Switch>
         <Route path="/map" render={renderComponentMap} />
-        {/* <Route path="/history" render={renderHistory} /> */}
+        <Route path="/history" render={renderHistory} />
         <Route path="/relationship" render={renderAtomsRelationship} />
         <Route path="/performance" render={renderPerfView} />
         <Route path="/" render={renderTree} />
