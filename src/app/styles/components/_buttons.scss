@@ -87,6 +87,7 @@
 	background: $blue-color-gradient;
 	border-radius: 5px;
 }
+
 .play-button:hover {
 	background: $blue-color-gradient;
 	transform: translate3d(0, -3px, 0);
@@ -110,6 +111,12 @@
 	border-color: transparent;
 	background: $blue-color-gradient;
 	border-radius: 5px;
+}
+.play-button:focus,
+.backward-button:focus,
+.forward-button:focus {
+	outline: none;
+	box-shadow: $box-shadow-blue;
 }
 
 .forward-button:hover,
