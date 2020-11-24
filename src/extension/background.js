@@ -50,43 +50,16 @@ class Node {
 	}
 }
 
-// class NewNode {
-// 	constructor(obj, tabObj) {
-// 		// continues the order of number of total state changes
-// 		this.index = tabObj.index++;
-// 		// continues the order of number of states changed from that parent
-// 		this.name = tabObj.currParent;
-// 		// marks from what branch this node is originated
-// 		this.branch = tabObj.currBranch += 1;
-// 		this.stateSnapshot = obj;
-// 		this.children = [];
-// 	}
-// }
-
 function sendToHierarchy(tabObj, newNode) {
 	if (!tabObj.currLocation) {
-		console.log('tabObj.currLocation does not exist');
 		tabObj.currLocation = newNode;
 		tabObj.hierarchy = newNode;
 	} else {
-		console.log(
-			'tabObj.currLocation  exist' + Object.entries(tabObj.currLocation)
-		);
 		tabObj.currLocation.children.push(newNode);
-		console.log(
-			'tabObj.currLocation.children ' +
-				Object.entries(tabObj.currLocation.children)
-		);
-		console.log(
-			'tabObj.currLocation.children.length ' +
-				tabObj.currLocation.children.length
-		);
 		// if the node's children's array is empty
 		if (tabObj.currLocation.children.length > 1) {
-			console.log('tabObj.currLocation exist and children is more than one');
 			// increment the value of the nodes branch by 1
 			newNode.branch += 1;
-
 			// reassign value of current branch as the newNode branch value
 			tabObj.currBranch = newNode.branch;
 		}

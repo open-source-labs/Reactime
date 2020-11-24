@@ -118,7 +118,6 @@ export default function ComponentMap({
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    // stroke='rgb(254,110,158,0.6)'
                     stroke='#ff6569'
                     strokeWidth='1'
                     fill='none'
@@ -126,8 +125,9 @@ export default function ComponentMap({
                 ))}
 
                 {tree.descendants().map((node, key) => {
-                  const width = 55;
-                  const height = 20;
+                  const width = 65;
+                  const height = 25;
+              
 
                   let top: number;
                   let left: number;
@@ -149,7 +149,7 @@ export default function ComponentMap({
                         <circle
                           r={12}
                           fill="url('#links-gradient')"
-                          stroke="#e7e7e7"
+                          stroke="#ff6569"
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
                             // console.log(node);
@@ -164,11 +164,11 @@ export default function ComponentMap({
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          fill='#272b4d'
-                          stroke={node.children ? '#62d6fb' : '#F5F47E'}
+                          fill= {node.children ? '#161521' : '#62d6fb'}
+                          stroke={node.children ? '#62d6fb' : '#161521'}
                           strokeWidth={1}
                           strokeDasharray={node.children ? '0' : '2,2'}
-                          strokeOpacity={node.children ? 1 : 0.6}
+                          strokeOpazcity='1'
                           rx={node.children ? 4 : 10}                         
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
@@ -194,16 +194,16 @@ export default function ComponentMap({
                       {/* Display text inside of each component node */}
                       <text
                         dy='.33em'
-                        fontSize={9}
+                        fontSize={8}
                         fontFamily='Roboto'
                         textAnchor='middle'
                         style={{ pointerEvents: 'none' }}
                         fill={
                           node.depth === 0
-                            ? '#71248e'
+                            ? '#161521'
                             : node.children
-                            ? '#B1EDE8'
-                            : '#F5F47E'
+                            ? 'white'
+                            : '#161521'
                         }
                       >
                         {node.data.name}
