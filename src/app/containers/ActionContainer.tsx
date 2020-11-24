@@ -26,7 +26,6 @@ function ActionContainer() {
   const hierarchyArr:any[] = [];
 
   // function to traverse state from hiararchy and also getting information on display name and component name
-  // function to traverse state from hiararchy and also getting information on display name and component name
   const displayArray = (obj:{stateSnapshot:{children:any[]}, name:number, branch:number, index:number, children?:[]}) => {
     if (obj.stateSnapshot.children.length > 0 && obj.stateSnapshot.children[0] && obj.stateSnapshot.children[0].state && obj.stateSnapshot.children[0].name) {
       const newObj:Record<string, unknown> = {
@@ -36,6 +35,9 @@ function ActionContainer() {
         componentName: obj.stateSnapshot.children[0].name,
         componentData: JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}' ? '' : obj.stateSnapshot.children[0].componentData,
       };
+      console.log('displayArray obj.name: ' + obj.name)
+      console.log('displayArray obj.branch: ' + obj.branch)
+      console.log('break')
       hierarchyArr.push(newObj);
     }
     if (obj.children) {
