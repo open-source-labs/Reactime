@@ -22,32 +22,8 @@ window.addEventListener('message', msg => { // runs automatically every second
 });
 
 // listening for messages from the UI of the extension
-chrome.runtime.onMessage.addListener(request => {
-
-  console.log("hello from content script! " + request.action);
-  
+chrome.runtime.onMessage.addListener(request => {  
   const { action }: { action: string } = request;
-  // DELETE THIS
-  // switch (action) {
-  //   case 'jumpToSnap':
-  //     // sends single msg to event listeners within the extension
-  //     chrome.runtime.sendMessage(request);
-  //     // message coming from injected script in web page
-  //     // '*' == target window origin required for event to be dispatched, '*' = no preference
-  //     window.postMessage(request, '*');
-  //     break;
-  //   case 'setLock':
-  //   case 'setPause':
-  //     window.postMessage(request, '*');
-  //     break;
-  //   case 'onHover': 
-  //     window.postMessage(request, '*'); 
-  //   default:
-  //   case 'onHoverExit': 
-  //     window.postMessage(request, '*'); 
-  //     break;
-  // }
-  // DELETE ABOVE
   if (action) {
     if (action === 'jumpToSnap') {
       // sends single msg to event listeners within the extension
