@@ -163,6 +163,7 @@ const PerformanceVisx = (props: BarStackProps) => {
     nice: true,
   });
 
+
   const colorScale = scaleOrdinal<string>({
     domain: keys,
     range: schemeSet3,
