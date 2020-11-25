@@ -67,11 +67,11 @@ export default function LegendKey(props: any) {
   const ordinalColorScale = scaleOrdinal<number, string>({
     domain: snap,
     range: [
-      '#95B6B7',
-      '#475485',
-      '#519331',
-      '#AA5039',
-      '#8B2F5F',
+      '#eb4d70', 
+      '#f19938', 
+      '#6ce18b',
+      '#78f6ef', 
+      '#9096f8',
       '#C5B738',
       '#858DFF',
       '#FF8D02',

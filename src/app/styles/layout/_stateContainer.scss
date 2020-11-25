@@ -16,6 +16,7 @@
 	justify-content: flex-start;
 	align-items: center;
 	height: 30px;
+	position: static;
 }
 
 .state-container .main-navbar {
@@ -110,7 +111,7 @@
 		background-color: $navbar-color;
 		display: flex;
 		flex-direction: row;
-		justify-content: space-evenly;
+		justify-content: start;
 		align-items: center;
 		height: 30px;
 	}
@@ -136,14 +137,6 @@
 		align-items: center;
 		height: 40px;
 	}
-}
-
-.navbar {
-	// prevent navbar from scrolling with state/tree display
-	top: 0px;
-	left: 0px;
-	z-index: 1;
-	@extend %disable-highlight;
 }
 
 .no-data-message {

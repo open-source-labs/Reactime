@@ -1,17 +1,18 @@
-
+// @ts-nocheck
 import React, { Component, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import LegendKey from './legend';
-// import { changeView, changeSlider } from '../actions/actions';
+//added back  line 6 , 160- 12
+import { changeView, changeSlider } from '../actions/actions';
 /**
  * @var colors: Colors array for the diffrerent node branches, each color is for a different branch
  */
 const colors = [
-  '#95B6B7',
-  '#475485',
-  '#519331',
-  '#AA5039',
-  '#8B2F5F',
+  '#eb4d70', 
+  '#f19938', 
+  '#6ce18b', 
+  '#78f6ef', 
+  '#9096f8',
   '#C5B738',
   '#858DFF',
   '#FF8D02',
@@ -151,9 +152,9 @@ function History(props: Record<string, unknown>) {
         d3.select(this).transition(90).duration(18).attr('r', 21);
       })
       .on('click', function (d: `Record<string, unknown>`) {
-        // const index = parseInt(`${d.data.name}.${d.data.branch}`);
-        // dispatch(changeSlider(index));
-        // dispatch(changeView(index));
+        const index = parseInt(`${d.data.name}.${d.data.branch}`);
+        dispatch(changeSlider(index));
+        dispatch(changeView(index));
       })
       // think about how I can convert this any to typescript
       .on('mouseout', function () {
@@ -183,8 +184,6 @@ function History(props: Record<string, unknown>) {
       .text(function (d: { data: { name: number; branch: number } }) {
         // display the name of the specific patch
         // return `${d.data.name}.${d.data.branch}`;
-          console.log('D.DATA.NAME: ', d.data.name);
-          console.log('D.DATA.BRANCH:', d.data.branch);
         return `${d.data.name}.${d.data.branch}`;
       });
 

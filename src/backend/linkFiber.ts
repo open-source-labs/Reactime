@@ -313,7 +313,7 @@ function createTree(
       // We then store them along with the corresponding memoizedState.queue,
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseRecoilHooks(memoizedState, memoizedProps);
-      console.log("hookStates: ", hooksStates);
+      // console.log("hookStates: ", hooksStates);
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(
           state.state,
@@ -356,7 +356,7 @@ function createTree(
     isRecoil === false
   ) {
     if (memoizedState.queue) {
-      console.log("line 357...")
+      // console.log("line 357...")
       // Hooks states are stored as a linked list using memoizedState.next,
       // so we must traverse through the list and get the states.
       // We then store them along with the corresponding memoizedState.queue,
