@@ -60,17 +60,22 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
     case 'setPause':
       mode.paused = payload;
       break;
-    case 'onHover':    
+    case 'onHover':
+      // console.log("curr payload ", payload); 
       if (Array.isArray(payload)) {
+        // console.log('inside array is array if block')
         for (let i = 0; i < payload.length; i + 1) {
+          // console.log("current payload value: ", payload[i]);
           let element = document.getElementById(payload[i])
           if (element !== null) {
              element.style.backgroundColor = '#C0D9D9'; 
              }
         }
       } else {
-        let element = document.getElementById(payload)
+        let element = document.querySelector(`.${payload}`);
+        // console.log("element: ", element);
         if (element !== null) {
+          // console.log("element style: ", element.style)
           element.style.backgroundColor = '#C0D9D9'; 
         }
       }
@@ -78,13 +83,14 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
     case 'onHoverExit': 
         if(Array.isArray(payload)){ 
         for (let i=0; i<payload.length;i++){
-          let element = document.getElementById(payload[i])
+          let element = document.querySelector(`.${payload}`);
           if (element !== null) {
-                element.style.backgroundColor = ''; 
-              }
+            element.style.backgroundColor = ''; 
+          }
         }
       } else {
-        let element = document.getElementById(payload)
+        let element = document.querySelector(`.${payload}`);
+        // console.log("element style: ", element.style)
         if (element !== null) {
           element.style.backgroundColor = ''; 
         }
