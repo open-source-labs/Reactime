@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import HeadContainer from './HeadContainer';
 import ActionContainer from './ActionContainer';
@@ -18,7 +17,6 @@ const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
   debug: false,
   protocol: "https"
 });
-
 
 
 function MainContainer(): any {
