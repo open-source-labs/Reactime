@@ -356,7 +356,6 @@ function createTree(
     isRecoil === false
   ) {
     if (memoizedState.queue) {
-      console.log("line 357...")
       // Hooks states are stored as a linked list using memoizedState.next,
       // so we must traverse through the list and get the states.
       // We then store them along with the corresponding memoizedState.queue,
@@ -411,17 +410,37 @@ function createTree(
 
       while (pointer !== null) {
           if(pointer.stateNode !== null){
-          rtid = "fromLinkFiber" + rtidCounter++
-          recoilDomNode[currentFiber.elementType.name].push(rtid)
-          pointer.stateNode.setAttribute("id", rtid)
+            rtid = "fromLinkFiber" + rtidCounter++;
+            recoilDomNode[currentFiber.elementType.name].push(rtid)
+            // check if rtid is already present
+            //  remove existing rtid before adding a new one
+            if (pointer.stateNode.classList.length > 0) {
+              let lastClass = pointer.stateNode.classList[pointer.stateNode.classList.length -1];
+              console.log("last class: ", lastClass, "linkFiber class? ",    lastClass.includes("fromLinkFiber"));
+              if (lastClass.includes("fromLinkFiber")) {
+                pointer.stateNode.classList.remove(lastClass);
+              }
+            }
+            
+            pointer.stateNode.classList.add(rtid)
         }
           pointer = pointer.child
         }
     } else {
       if (currentFiber.child && currentFiber.child.stateNode && currentFiber.child.stateNode.setAttribute) {
-        rtid = "fromLinkFiber" + rtidCounter
-          currentFiber.child.stateNode.setAttribute("id", rtid);
+
+        rtid = "fromLinkFiber" + rtidCounter;
+        // check if rtid is already present
+        //  remove existing rtid before adding a new one
+        if (currentFiber.child.stateNode.classList.length > 0) {
+          let lastClass = currentFiber.child.stateNode.classList[currentFiber.child.stateNode.classList.length -1];
+          console.log("lastClass: ", lastClass, "linkFiber class? ", lastClass.includes("fromLinkFiber"));
+          if (lastClass.includes("fromLinkFiber")) {
+            currentFiber.child.stateNode.classList.remove(lastClass);
+          }
         }
+        currentFiber.child.stateNode.classList.add(rtid);
+      }
         rtidCounter++;
     }
     // checking if tree fromSibling is true
