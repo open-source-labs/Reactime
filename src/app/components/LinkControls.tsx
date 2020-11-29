@@ -7,7 +7,7 @@ const controlStyles = {
 };
 
 const dropDownStyle = {
-  margin: '0.5em',
+	margin: '0.5em',
   fontSize: '12px',
   borderRadius: '4px', 
   backgroundColor: 'rgb(231, 231, 231)'
