@@ -18,11 +18,21 @@ const SwitchAppDropdown = () => {
     label: tabs[currentTab].title,
   };
 
+  const customStyles = {
+    menu: (provided, state) => {
+      const outline = state.isSelected ? 'transparent' : 'transparent';
+      const margin = 0;
+
+      return {...provided, outline, margin};
+    }
+  }
+
   return (
     <Select
       className="tab-select-container"
       classNamePrefix="tab-select"
       value={currTab}
+      styles={customStyles}
       onChange={e => {
         dispatch(setTab(parseInt(e.value, 10)));
       }}

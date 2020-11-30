@@ -14,11 +14,10 @@
 	font: 300 14px 'Roboto', sans-serif;
 	font-size: $button-text-size;
 	width: 120px;
-	background-color: transparent;
+	background: linear-gradient(145deg, #ff6569, #e65558);
 }
 .empty-button:hover {
 	color: black;
-	background: linear-gradient(145deg, #ff6569, #e65558);
 	box-shadow: inset 5px 5px 10px #d95053, inset -5px -5px 10px #ff6c71;
 }
 
