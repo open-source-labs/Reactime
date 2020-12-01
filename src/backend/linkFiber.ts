@@ -14,7 +14,7 @@ import {
   
   //tree
   Snapshot,
-  //jump, pause, lock
+  //jump, pause
   Mode,
   ComponentData,
   // array of state and component
@@ -75,7 +75,7 @@ function getRecoilState(): any {
 /**
  * @method sendSnapshot
  * @param snap The current snapshot
- * @param mode The current mode (i.e. jumping, time-traveling, locked, or paused)
+ * @param mode The current mode (i.e. jumping, time-traveling, or paused)
  * @return Nothing.
  *
  * Middleware: Gets a copy of the current snap.tree and posts a recordSnap message to the window
@@ -109,11 +109,11 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
 /**
  * @function updateSnapShotTree
  * @param snap The current snapshot
- * @param mode The current mode (i.e. jumping, time-traveling, locked, or paused)
+ * @param mode The current mode (i.e. jumping, time-traveling, or paused)
  * Middleware: Updates snap object with latest snapshot, using @sendSnapshot
  */
 
- //updating tree depending on current mode on the panel (pause, locked etc) 
+ //updating tree depending on current mode on the panel (pause, etc) 
 function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
   // this is the currently active root fiber(the mutable root of the tree)
 
@@ -486,7 +486,7 @@ function createTree(
 /**
  * @method linkFiber
  * @param snap The current snapshot
- * @param mode The current mode (i.e. jumping, time-traveling, locked, or paused)
+ * @param mode The current mode (i.e. jumping, time-traveling, or paused)
  * @return a function to be invoked by index.js that initiates snapshot monitoring
  * linkFiber contains core module functionality, exported as an anonymous function.
  */

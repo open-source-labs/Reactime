@@ -127,7 +127,6 @@
 .import-button,
 .howToUse-button,
 .export-button,
-.lock-button,
 .pause-button,
 .persist-button {
 	@extend %button-shared;
@@ -138,7 +137,6 @@
 .import-button:hover,
 .howToUse-button:hover,
 .export-button:hover,
-.lock-button:hover,
 .pause-button:hover,
 .persist-button:hover {
 	@extend %button-shared;
