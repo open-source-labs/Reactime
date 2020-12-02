@@ -30,7 +30,6 @@ function createTabObj(title) {
 		initialHierarchy: null,
 		mode: {
 			persist: false,
-			locked: false,
 			paused: false,
 			empty: false,
 		},
@@ -162,9 +161,6 @@ chrome.runtime.onConnect.addListener((port) => {
 				// resets currBranch
 				tabsObj[tabId].currBranch = 0;
 				return true;
-			case 'setLock':
-				tabsObj[tabId].mode.locked = payload;
-				break;
 			case 'setPause':
 				tabsObj[tabId].mode.paused = payload;
 				break;
@@ -232,7 +228,6 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 			break;
 		}
 		case 'tabReload': {
-			tabsObj[tabId].mode.locked = false;
 			tabsObj[tabId].mode.paused = false;
 			// dont remove snapshots if persisting
 			if (!persist) {

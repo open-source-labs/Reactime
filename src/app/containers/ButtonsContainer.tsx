@@ -55,7 +55,7 @@ function ButtonsContainer() {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
     snapshots,
-    mode: { paused, locked, persist },
+    mode: { paused, persist },
   } = tabs[currentTab];
 
   return (
@@ -68,13 +68,6 @@ function ButtonsContainer() {
         {paused? <FontAwesomeIcon icon={faUnlock} /> : <FontAwesomeIcon icon={faLock} />}
 				{paused ? 'Unlock' : 'Lock'}
 			</button>
-			{/* <button
-				className="lock-button"
-				type="button"
-				onClick={() => dispatch(toggleMode('locked'))}
-			>
-				{locked ? 'Unlocked': 'Locked'}
-			</button> */}
 			<button
 				className="persist-button"
 				type="button"

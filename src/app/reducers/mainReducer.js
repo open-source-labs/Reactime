@@ -185,9 +185,6 @@ export default (state, action) => produce(state, draft => {
         case 'paused':
           actionText = 'setPause';
           break;
-        case 'locked':
-          actionText = 'setLock';
-          break;
         case 'persist':
           actionText = 'setPersist';
           break;

@@ -217,7 +217,7 @@ const PerformanceVisx = (props: BarStackProps) => {
                     key={`bar-stack-${barStack.index}-${bar.index}`}
                     x={bar.x}
                     y={bar.y}
-                    height={bar.height === 0 ? idx + 1 : bar.height}
+                    height={bar.height === 0 ? null : bar.height}
                     width={bar.width}
                     fill={bar.color}
                     /* TIP TOOL EVENT HANDLERS */

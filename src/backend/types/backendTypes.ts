@@ -12,7 +12,6 @@ export interface Snapshot {
 export interface Mode {
   jumping: boolean;
   paused: boolean;
-  locked: boolean;
 }
 
 export interface SnapshotNode {

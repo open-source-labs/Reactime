@@ -24,7 +24,6 @@ const snapShot: Snapshot = {
 const mode: Mode = {
   jumping: false,
   paused: false,
-  locked: false,
 };
 // console.log("linkFiberStart in index.ts:" + linkFiberStart);
 const linkFiber = linkFiberStart(snapShot, mode);
@@ -54,9 +53,6 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       // try to modify workInProgress tree from here
       // window.history.pushState('', '', getRouteURL(payload));
       break;
-    case 'setLock':
-      mode.locked = payload;
-      break;
     case 'setPause':
       mode.paused = payload;
       break;
@@ -72,7 +68,7 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
              }
         }
       } else {
-        let element = document.querySelector(`.${payload}`);
+        let element: HTMLElement = document.querySelector(`.${payload}`);
         // console.log("element: ", element);
         if (element !== null) {
           // console.log("element style: ", element.style)
@@ -83,13 +79,13 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
     case 'onHoverExit': 
         if(Array.isArray(payload)){ 
         for (let i=0; i<payload.length;i++){
-          let element = document.querySelector(`.${payload}`);
+          let element: HTMLElement = document.querySelector(`.${payload}`);
           if (element !== null) {
             element.style.backgroundColor = ''; 
           }
         }
       } else {
-        let element = document.querySelector(`.${payload}`);
+        let element: HTMLElement = document.querySelector(`.${payload}`);
         // console.log("element style: ", element.style)
         if (element !== null) {
           element.style.backgroundColor = ''; 
