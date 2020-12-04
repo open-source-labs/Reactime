@@ -73,7 +73,7 @@ function Diff(props: DiffProps) {
   else formatters.html.hideUnchanged();
 
   if (previous === undefined || delta === undefined) {
-    return <div className="no-data-message"> No state change detected. Trigger an event to change state </div>;
+    return <div className="no-data-message"> No state change detected. Trigger an event to change state. </div>;
   }
   return <div>{ReactHtmlParser(html)}</div>;
 }

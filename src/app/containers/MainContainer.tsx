@@ -19,7 +19,6 @@ const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
 });
 
 
-
 function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
@@ -27,7 +26,7 @@ function MainContainer(): any {
   useEffect(() => {
     // only open port once
     if (currentPort) return;
-    // open connection with background script
+    // open long-lived connection with background script
     const port = chrome.runtime.connect();
 
     // listen for a message containing snapshots from the background script
@@ -111,7 +110,7 @@ function MainContainer(): any {
     return (
       <div className="error-container">
         <a
-          href="reactime.io"
+          href="https://reactime.io/"
           target="_blank"
           rel="noopener noreferrer"
         >

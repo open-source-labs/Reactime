@@ -1,8 +1,4 @@
-/* eslint-disable arrow-body-style */
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/ban-types */
+// @ts-nocheck
 import React, { useState } from 'react';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
@@ -11,10 +7,29 @@ import { pointRadial } from 'd3-shape';
 import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
-import { onHover, onHoverExit } from '../actions/actions'
-import { useStoreContext } from '../store'
+import { onHover, onHoverExit } from '../actions/actions';
+import { useStoreContext } from '../store';
 
-const defaultMargin = { top: 30, left: 30, right: 30, bottom: 70 };
+
+const root = hierarchy({
+  name: 'root',
+  children: [
+    { name: 'child #1' },
+    {
+      name: 'child #2',
+      children: [{ name: 'grandchild #1' }, { name: 'grandchild #2' }, { name: 'grandchild #3' }],
+    },
+  ],
+});
+interface TreeNode {
+  name: string;
+  isExpanded?: boolean;
+  children?: TreeNode[];
+}
+
+type HierarchyNode = HierarchyPointNode<TreeNode>;
+
+const defaultMargin = { top: 30, left: 30, right: 55, bottom: 70 };
 
 export type LinkTypesProps = {
   width: number;
@@ -34,13 +49,12 @@ export default function ComponentMap({
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   // This is where we select the last object in the snapshots array from props to allow hierarchy to parse the data for render on the component map per hierarchy layout specifications.
   const lastNode = snapshots.length - 1;
-  const data = snapshots[lastNode];
+  const data: {} = snapshots[lastNode];
   // importing custom hooks for the selection tabs.
-  const [layout, setLayout] = useState<string>('cartesian');
-  const [orientation, setOrientation] = useState<string>('horizontal');
-  const [linkType, setLinkType] = useState<string>('diagonal');
-
-  const [stepPercent, setStepPercent] = useState<number>(10);
+  const [layout, setLayout] = useState('cartesian');
+  const [orientation, setOrientation] = useState('horizontal');
+  const [linkType, setLinkType] = useState('diagonal');
+  const [stepPercent, setStepPercent] = useState(10);
   // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
   const forceUpdate = useForceUpdate();
   // setting the margins for the Map to render in the tab window.
@@ -87,9 +101,10 @@ export default function ComponentMap({
         setStepPercent={setStepPercent}
       />
 
+
       <svg width={totalWidth} height={totalHeight}>
         <LinearGradient id='links-gradient' from='#fd9b93' to='#fe6e9e' />
-        <rect width={totalWidth} height={totalHeight} rx={14} fill='#242529' />
+        <rect width={totalWidth} height={totalHeight} rx={14} fill='#242529'/>
         <Group top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(data, (d) => (d.isExpanded ? null : d.children))}
@@ -103,15 +118,22 @@ export default function ComponentMap({
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    stroke='rgb(254,110,158,0.6)'
+                    stroke='#ff6569'
                     strokeWidth='1'
                     fill='none'
                   />
                 ))}
 
                 {tree.descendants().map((node, key) => {
-                  const width = 40;
-                  const height = 15;
+                  // const width = (node.data.name.length) + 70;
+                  const widthFunc = (name) => {
+                    let nodeLength = name.length;
+                    if (nodeLength < 5) return nodeLength + 40;
+                    if (nodeLength < 10) return nodeLength + 60;
+                    return nodeLength + 70;
+                  } 
+                  const width = widthFunc(node.data.name);
+                  const height = 25;
 
                   let top: number;
                   let left: number;
@@ -133,9 +155,10 @@ export default function ComponentMap({
                         <circle
                           r={12}
                           fill="url('#links-gradient')"
+                          stroke="#ff6569"
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
-                            console.log(node);
+                            // console.log(node);
                             forceUpdate();
                           }}
                         />
@@ -147,16 +170,17 @@ export default function ComponentMap({
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          fill='#272b4d'
-                          stroke={node.data.children ? '#03c0dc' : '#26deb0'}
+                          fill= {node.children ? '#161521' : '#62d6fb'}
+                          stroke={node.children ? '#62d6fb' : '#161521'}
                           strokeWidth={1}
-                          strokeDasharray={node.data.children ? '0' : '2,2'}
-                          strokeOpacity={node.data.children ? 1 : 0.6}
-                          rx={node.data.children ? 0 : 10}
+                          strokeDasharray={node.children ? '0' : '2,2'}
+                          strokeOpazcity='1'
+                          rx={node.children ? 4 : 10}                         
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
                             forceUpdate();
                           }}
+                          //check with recoil 
                           onMouseLeave={()=> {
                             if(Object.keys(node.data.recoilDomNode).length > 0){
                               dispatch(onHoverExit(node.data.recoilDomNode[node.data.name]))
@@ -170,22 +194,22 @@ export default function ComponentMap({
                             } else {
                               dispatch(onHover(node.data.rtid))
                             }   
-                          }
+                          }}
                         />
                       )}
                       {/* Display text inside of each component node */}
                       <text
                         dy='.33em'
-                        fontSize={9}
-                        fontFamily='Arial'
+                        fontSize={10}
+                        fontFamily='Roboto'
                         textAnchor='middle'
                         style={{ pointerEvents: 'none' }}
                         fill={
                           node.depth === 0
-                            ? '#71248e'
+                            ? '#161521'
                             : node.children
                             ? 'white'
-                            : '#26deb0'
+                            : '#161521'
                         }
                       >
                         {node.data.name}

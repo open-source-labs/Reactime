@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
@@ -11,7 +12,6 @@ import { schemeSet3 } from 'd3-scale-chromatic';
 import snapshots from './snapshots';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store'
-
 
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
@@ -50,6 +50,7 @@ interface BarStackProps {
 }
 
 interface snapshot {
+  snapshotId?: string;
   children: [];
   componentData: any;
   name: string;
@@ -58,25 +59,30 @@ interface snapshot {
 
 /* DEFAULTS */
 const margin = { top: 60, right: 30, bottom: 0, left: 50 };
-const axisColor = '#679DCA';
+// const axisColor = '#679DCA';
+const axisColor = '#62d6fb';
 const background = '#242529';
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
   backgroundColor: 'rgba(0,0,0,0.9)',
   color: 'white',
+  fontSize: '14px',
+  lineHeight: '18px',
+  fontFamily: 'Roboto'
 };
 
 /* DATA HANDLING HELPER FUNCTIONS */
 
 // traverses a snapshot for data: rendering time, component type, or rtid 
 const traverse = (snapshot, fetchData, data = {}) => {
+  console.log("data in beg of traverse: ", data )
   if (!snapshot.children[0]) return;
   snapshot.children.forEach((child, idx) => {
     const componentName = child.name + -[idx + 1];
     // Get component Type
     if (fetchData === 'getComponentType') {
-      if (child.state !== 'stateless') data[componentName] = 'STATEFUL';
+      if (child.state !== 'stateless') data[componentName] = 'stateful';
       else data[componentName] = child.state;
     }
     // Get component Rendering Time
@@ -89,10 +95,11 @@ const traverse = (snapshot, fetchData, data = {}) => {
     }
     traverse(snapshot.children[idx], fetchData, data);
   })
+  console.log("data in end of traverse: ", data )
   return data;
 };
 
-const getSnapshotIds = (obj, snapshotIds = []) => {
+const getSnapshotIds = (obj, snapshotIds = []):string[] => {
   snapshotIds.push(`${obj.name}.${obj.branch}`);
   if (obj.children) {
     obj.children.forEach(child => {
@@ -120,7 +127,6 @@ const PerformanceVisx = (props: BarStackProps) => {
   const {
     tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip,
   } = useTooltip<TooltipData>();
-
   let tooltipTimeout: number;
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
@@ -143,8 +149,10 @@ const PerformanceVisx = (props: BarStackProps) => {
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSnapshotId = (d: snapshot) => d.snapshotId;
-  const formatSnapshotId = id => `Snapshot ID: ${id}`;
-  const formatRenderTime = time => `${time} ms `;
+  
+  const formatSnapshotId = (id) => `Snapshot ID: ${id}`;
+  
+  const formatRenderTime = (time) => `${time} ms `;
 
   // create visualization SCALES with cleaned data
   const snapshotIdScale = scaleBand<string>({
@@ -156,6 +164,7 @@ const PerformanceVisx = (props: BarStackProps) => {
     domain: [0, Math.max(...totalRenderArr)],
     nice: true,
   });
+
 
   const colorScale = scaleOrdinal<string>({
     domain: keys,
@@ -171,7 +180,6 @@ const PerformanceVisx = (props: BarStackProps) => {
 
   // if performance tab is too small it will not return VISX component
   return width < 10 ? null : (
-
     <div style={{ position: 'relative' }}>
       <svg ref={containerRef} width={width} height={height}>
         <rect
@@ -202,36 +210,40 @@ const PerformanceVisx = (props: BarStackProps) => {
             yScale={renderingScale}
             color={colorScale}
           >
-            {barStacks => barStacks.map(barStack => barStack.bars.map(((bar, idx) => (
-              <rect
-                key={`bar-stack-${barStack.index}-${bar.index}`}
-                x={bar.x}
-                y={bar.y}
-                height={bar.height === 0 ? idx + 1 : bar.height}
-                width={bar.width}
-                fill={bar.color}
+            {barStacks => 
+              barStacks.map(barStack => 
+                barStack.bars.map(((bar, idx) => (
+                  <rect
+                    key={`bar-stack-${barStack.index}-${bar.index}`}
+                    x={bar.x}
+                    y={bar.y}
+                    height={bar.height === 0 ? null : bar.height}
+                    width={bar.width}
+                    fill={bar.color}
                     /* TIP TOOL EVENT HANDLERS */
                     // Hides tool tip once cursor moves off the current rect
-                onMouseLeave={() => {
-                  dispatch(onHoverExit(allComponentRtids[bar.key])
-                  tooltipTimeout = window.setTimeout(() => {
-                    hideTooltip();
-                  }, 300);
-                }}
-                    // Cursor position in window updates position of the tool tip
-                onMouseMove={event => {
-                  dispatch(onHover(allComponentRtids[bar.key]))
-                  if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                  const top = event.clientY - margin.top - bar.height;
-                  const left = bar.x + bar.width / 2;
-                  showTooltip({
-                    tooltipData: bar,
-                    tooltipTop: top,
-                    tooltipLeft: left,
-                  });
-                }}
-              />
-            ))))}
+                    onMouseLeave={() => {
+                      dispatch(onHoverExit(allComponentRtids[bar.key]),
+                      tooltipTimeout = window.setTimeout(() => {
+                        hideTooltip()
+                      }, 300))
+                    }}
+                        // Cursor position in window updates position of the tool tip
+                    onMouseMove={event => {
+                      dispatch(onHover(allComponentRtids[bar.key]))
+                      if (tooltipTimeout) clearTimeout(tooltipTimeout);
+                      const top = event.clientY - margin.top - bar.height;
+                      const left = bar.x + bar.width / 2;
+                      showTooltip({
+                        tooltipData: bar,
+                        tooltipTop: top,
+                        tooltipLeft: left,
+                      });
+                    }}
+                  />
+                )))
+              )
+            }
           </BarStack>
         </Group>
         <AxisLeft
@@ -242,7 +254,7 @@ const PerformanceVisx = (props: BarStackProps) => {
           tickStroke={axisColor}
           strokeWidth={2}
           tickLabelProps={() => ({
-            fill: axisColor,
+            fill: 'rgb(231, 231, 231)',
             fontSize: 11,
             verticalAnchor: 'middle',
             textAnchor: 'end',
@@ -256,13 +268,13 @@ const PerformanceVisx = (props: BarStackProps) => {
           tickStroke={axisColor}
           strokeWidth={2}
           tickLabelProps={() => ({
-            fill: axisColor,
+            fill: 'rgb(231, 231, 231)',
             fontSize: 11,
             textAnchor: 'middle',
           })}
         />
-        <Text x={-xMax / 2} y="15" transform="rotate(-90)" fontSize={10} fill="#FFFFFF"> Rendering Time (ms) </Text>
-        <Text x={xMax / 2} y={yMax + 100} fontSize={10} fill="#FFFFFF"> Snapshot Id </Text>
+        <Text x={-xMax / 2} y="15" transform="rotate(-90)" fontSize={12} fill="#FFFFFF"> Rendering Time (ms) </Text>
+        <Text x={xMax / 2} y={yMax + 100} fontSize={12} fill="#FFFFFF"> Snapshot Id </Text>
       </svg>
 
       {/* FOR HOVER OVER DISPLAY */}

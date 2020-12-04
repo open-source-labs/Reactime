@@ -38,13 +38,9 @@
  *
  */
 
-
-
 declare module "reactime" {
   function linkFiber(
     container: HTMLElement,
   ): void;
   export = linkFiber;
 }
-
-

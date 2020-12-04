@@ -6,8 +6,8 @@
 /**
  * 'reactime' module has a single export
  * @function linkFiber
- */
-import 'core-js';
+*/
+
 import 'regenerator-runtime/runtime';
 import linkFiberStart from './linkFiber';
 import timeJumpStart from './timeJump';
@@ -24,26 +24,27 @@ const snapShot: Snapshot = {
 const mode: Mode = {
   jumping: false,
   paused: false,
-  locked: false,
 };
-
+// console.log("linkFiberStart in index.ts:" + linkFiberStart);
 const linkFiber = linkFiberStart(snapShot, mode);
+// console.log('linkFiber in index.ts: ' + linkFiber);
 const timeJump = timeJumpStart(snapShot, mode);
 
-function getRouteURL(node: SnapshotNode): string {
-  if (node.name === 'Router') {
-    return node.state.location.pathname;
-  }
-  if (node.children && node.children.length >= 1) {
-    const tempNode: any[] = node.children;
-    for (let index = 0; index < tempNode.length; index += 1) {
-      return getRouteURL(tempNode[index]); // Carlos: ???
-    }
-  }
-}
+// function getRouteURL(node: SnapshotNode): string {
+//   if (node.name === 'Router') {
+//     return node.state.location.pathname;
+//   }
+//   if (node.children && node.children.length >= 1) {
+//     const tempNode: any[] = node.children;
+//     for (let index = 0; index < tempNode.length; index += 1) {
+//       return getRouteURL(tempNode[index]); // Carlos: ???
+//     }
+//   }
+// }
 
 // * Event listener for time-travel actions
 window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
+  // console.log('linkFiber in index.ts: ' + linkFiber);
   switch (action) {
     case 'jumpToSnap':
       timeJump(payload, true); // * This sets state with given payload
@@ -52,23 +53,25 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       // try to modify workInProgress tree from here
       // window.history.pushState('', '', getRouteURL(payload));
       break;
-    case 'setLock':
-      mode.locked = payload;
-      break;
     case 'setPause':
       mode.paused = payload;
       break;
-    case 'onHover':    
-      if(Array.isArray(payload)){ 
-        for (let i=0; i<payload.length;i++){
+    case 'onHover':
+      // console.log("curr payload ", payload); 
+      if (Array.isArray(payload)) {
+        // console.log('inside array is array if block')
+        for (let i = 0; i < payload.length; i + 1) {
+          // console.log("current payload value: ", payload[i]);
           let element = document.getElementById(payload[i])
           if (element !== null) {
-                element.style.backgroundColor = '#C0D9D9'; 
-              }
+             element.style.backgroundColor = '#C0D9D9'; 
+             }
         }
       } else {
-        let element = document.getElementById(payload)
+        let element: HTMLElement = document.querySelector(`.${payload}`);
+        // console.log("element: ", element);
         if (element !== null) {
+          // console.log("element style: ", element.style)
           element.style.backgroundColor = '#C0D9D9'; 
         }
       }
@@ -76,13 +79,14 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
     case 'onHoverExit': 
         if(Array.isArray(payload)){ 
         for (let i=0; i<payload.length;i++){
-          let element = document.getElementById(payload[i])
+          let element: HTMLElement = document.querySelector(`.${payload}`);
           if (element !== null) {
-                element.style.backgroundColor = ''; 
-              }
+            element.style.backgroundColor = ''; 
+          }
         }
       } else {
-        let element = document.getElementById(payload)
+        let element: HTMLElement = document.querySelector(`.${payload}`);
+        // console.log("element style: ", element.style)
         if (element !== null) {
           element.style.backgroundColor = ''; 
         }
@@ -92,5 +96,5 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       break;
   }
 });
-
+// connect to dev tools and new fiber 
 linkFiber();

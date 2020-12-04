@@ -1662,7 +1662,7 @@ a:hover {
 }
 
 code, pre {
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: 'Roboto', sans-serif;
   padding: 0.2em;
   margin: 0;
   font-size: 14px;

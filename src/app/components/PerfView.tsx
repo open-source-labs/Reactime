@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable object-curly-newline */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable max-len */
@@ -38,7 +39,7 @@ const PerfView = (props: PerfViewProps) => {
   const adjustedSize = Math.min(width, height);
   const svgRef = useRef(null);
 
-  console.log(snapshots)
+  // console.log(snapshots)
 
   // const performances = []  
   // snapshot = {
@@ -48,10 +49,10 @@ const PerfView = (props: PerfViewProps) => {
   //   others: 32
   // }
 
-  const performances = snapshots.reduce((acc,cur)=>{
+  const performances = snapshots.reduce((acc,cur) => {
     const snapshot = {};
-    while (snapshot.keys.lenght 
-  }, []
+    // while (snapshot.keys.length) 
+    // }, [])
   // iterate snapshots array
     // if i.children exists
       // 
@@ -59,7 +60,7 @@ const PerfView = (props: PerfViewProps) => {
   let indexToDisplay: number | null = null;
   if (viewIndex < 0) indexToDisplay = snapshots.length - 1;
   else indexToDisplay = viewIndex;
-
+  });
   // Set up color scaling function
   const colorScale = d3
     .scaleOrdinal()
@@ -75,7 +76,7 @@ const PerfView = (props: PerfViewProps) => {
       '#b7dbf8',
       '#c6e6ff',
     ]);
-
+  
   // Set up circle-packing layout function
   const packFunc = useCallback(
     (data: object) => {
@@ -92,7 +93,7 @@ const PerfView = (props: PerfViewProps) => {
     },
     [adjustedSize]
   );
-
+  
   function handleNoRenderData(isNoRenderData) {
     setNoRenderData(isNoRenderData);
   }
@@ -247,7 +248,7 @@ const PerfView = (props: PerfViewProps) => {
     adjustedSize,
     handleNoRenderData,
   ]);
-
+  
   // ------------- CIRCLES ----------------------
   
 

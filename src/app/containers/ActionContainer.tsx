@@ -5,9 +5,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-inner-declarations */
+// @ts-nocheck
 import React from 'react';
 import { diff } from 'jsondiffpatch';
 import Action from '../components/Action';
+import SwitchAppDropdown from '../components/SwitchApp';
 
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
@@ -24,7 +26,6 @@ function ActionContainer() {
   const hierarchyArr:any[] = [];
 
   // function to traverse state from hiararchy and also getting information on display name and component name
-  // function to traverse state from hiararchy and also getting information on display name and component name
   const displayArray = (obj:{stateSnapshot:{children:any[]}, name:number, branch:number, index:number, children?:[]}) => {
     if (obj.stateSnapshot.children.length > 0 && obj.stateSnapshot.children[0] && obj.stateSnapshot.children[0].state && obj.stateSnapshot.children[0].name) {
       const newObj:Record<string, unknown> = {
@@ -34,6 +35,9 @@ function ActionContainer() {
         componentName: obj.stateSnapshot.children[0].name,
         componentData: JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}' ? '' : obj.stateSnapshot.children[0].componentData,
       };
+      console.log('displayArray obj.name: ' + obj.name)
+      console.log('displayArray obj.branch: ' + obj.branch)
+      console.log('break')
       hierarchyArr.push(newObj);
     }
     if (obj.children) {
@@ -93,6 +97,7 @@ function ActionContainer() {
 
   return (
     <div className="action-container">
+      <SwitchAppDropdown />
       <div className="action-component exclude">
         <button
           className="empty-button"

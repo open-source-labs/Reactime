@@ -1,17 +1,18 @@
+// @ts-nocheck
 import React, { Component, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import LegendKey from './legend';
+//added back  line 6 , 160- 12
 import { changeView, changeSlider } from '../actions/actions';
-
 /**
  * @var colors: Colors array for the diffrerent node branches, each color is for a different branch
  */
 const colors = [
-  '#95B6B7',
-  '#475485',
-  '#519331',
-  '#AA5039',
-  '#8B2F5F',
+  '#eb4d70', 
+  '#f19938', 
+  '#6ce18b', 
+  '#78f6ef', 
+  '#9096f8',
   '#C5B738',
   '#858DFF',
   '#FF8D02',
@@ -77,6 +78,7 @@ function History(props: Record<string, unknown>) {
 
     // d3.hierarchy constructs a root node from the specified hierarchical data
     // (our object titled dataset), which must be an object representing the root node
+    
     const hierarchy = d3.hierarchy(root);
     const tree = d3
       .tree()
@@ -155,7 +157,7 @@ function History(props: Record<string, unknown>) {
         dispatch(changeView(index));
       })
       // think about how I can convert this any to typescript
-      .on('mouseout', function (d: any) {
+      .on('mouseout', function () {
         d3.select(this).transition().duration(300).attr('r', 14);
       });
 
