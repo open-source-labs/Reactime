@@ -5,7 +5,7 @@ let firstMessage = true;
 window.addEventListener('message', msg => { // runs automatically every second
   // window listener picks up the message it sends, so we should filter
   // messages sent by contentscript
-  // console.log("msg source in content script: " + Object.entries(msg.source));
+  
   if (firstMessage) {
     // one-time request tells the background script that the tab has reloaded
     chrome.runtime.sendMessage({ action: 'tabReload' });
@@ -14,7 +14,6 @@ window.addEventListener('message', msg => { // runs automatically every second
   
   // post initial Message to background.js
   const { action }: { action: string } = msg.data;
-  console.log("action in addEvent Listener: ", action);
   if (action === 'recordSnap') {
     // this is firing on page load
     chrome.runtime.sendMessage(msg.data);
