@@ -11,12 +11,6 @@
 
 [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime) [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime) [![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime) ![BabelPresetPrefs](https://img.shields.io/badge/babel%20preset-airbnb-ff69b4) ![LintPrefs](https://img.shields.io/badge/linted%20with-eslint-blueviolet)
 
-<h3 align="center">
-<br>
-  <a href="./README.rus.md">РУССКАЯ ВЕРСИЯ</a> &nbsp; &nbsp; &nbsp;   <a href="./README.fr.md">VERSION FRANÇAISE</a>
-  <br>
-</h3>
-<br>
 
 <p align="center">
 <img src="./assets/reactime7.gif" />
