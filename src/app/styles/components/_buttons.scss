@@ -14,11 +14,11 @@
 	font: 300 14px 'Roboto', sans-serif;
 	font-size: $button-text-size;
 	width: 120px;
-	background: linear-gradient(145deg, #ff6569, #e65558);
+	background: $red-color-gradient;
 }
 .empty-button:hover {
 	color: black;
-	box-shadow: inset 5px 5px 10px #d95053, inset -5px -5px 10px #ff6c71;
+	box-shadow: $box-shadow-red;
 }
 
 .state-dropdown {
@@ -43,7 +43,7 @@
 	width: 70px;
 	border: none;
 	border-radius: 3px;
-	background: linear-gradient(145deg, #5c6068, #4d5157);
+	background: $grey-color-gradient;
 	font: normal 11px 'Roboto', sans-serif;
 	color: #b0b0b0;
 }
@@ -66,7 +66,6 @@
 .jump-button:hover {
 	// remove the blue border when button is clicked
 	color: white;
-	// color: black;
 	background-color: $fiery-rose;
 
 	cursor: pointer;
@@ -127,7 +126,6 @@
 .import-button,
 .howToUse-button,
 .export-button,
-.lock-button,
 .pause-button,
 .persist-button {
 	@extend %button-shared;
@@ -138,7 +136,6 @@
 .import-button:hover,
 .howToUse-button:hover,
 .export-button:hover,
-.lock-button:hover,
 .pause-button:hover,
 .persist-button:hover {
 	@extend %button-shared;
@@ -148,7 +145,7 @@
 }
 
 .svg-inline--fa {
-	color: #62d6fb;
+	color: $blue-brand;
 	margin-right: 0.75em;
 	display: inline-block;
 	font-size: inherit;
@@ -167,10 +164,10 @@
 	font: 300 14px 'Roboto', sans-serif;
 	font-size: $button-text-size;
 
-	background: rgb(36, 37, 41);
+	background: $brand-color;
 	border-radius: 5px;
 	position: relative;
-	border: 1px solid rgba(184, 196, 194, 0.25);
+	border: 1px solid #b8c4c240;
 
 	@extend %disable-highlight;
 }

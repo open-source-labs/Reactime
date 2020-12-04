@@ -76,6 +76,7 @@ const tooltipStyles = {
 
 // traverses a snapshot for data: rendering time, component type, or rtid 
 const traverse = (snapshot, fetchData, data = {}) => {
+  console.log("data in beg of traverse: ", data )
   if (!snapshot.children[0]) return;
   snapshot.children.forEach((child, idx) => {
     const componentName = child.name + -[idx + 1];
@@ -94,6 +95,7 @@ const traverse = (snapshot, fetchData, data = {}) => {
     }
     traverse(snapshot.children[idx], fetchData, data);
   })
+  console.log("data in end of traverse: ", data )
   return data;
 };
 
@@ -215,7 +217,7 @@ const PerformanceVisx = (props: BarStackProps) => {
                     key={`bar-stack-${barStack.index}-${bar.index}`}
                     x={bar.x}
                     y={bar.y}
-                    height={bar.height === 0 ? idx + 1 : bar.height}
+                    height={bar.height === 0 ? null : bar.height}
                     width={bar.width}
                     fill={bar.color}
                     /* TIP TOOL EVENT HANDLERS */

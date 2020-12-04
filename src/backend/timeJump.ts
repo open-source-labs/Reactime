@@ -8,7 +8,7 @@ import { Console } from 'console';
  * It exports an anonymous
  * @function timeJump
  * @param origin The latest snapshot, linked to the fiber (changes to origin will change app)
- * @param mode The current mode (i.e. jumping, time-traveling, locked, or paused)
+ * @param mode The current mode (i.e. jumping, time-traveling, or paused)
  * @returns A function that takes a target snapshot and a boolean flag checking for firstCall, then invokes `jump` on that target snapshot
  *
  * The target snapshot portrays some past state we want to travel to.

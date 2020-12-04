@@ -69,7 +69,6 @@ describe('unit test for linkFiber', () => {
     mode = {
       jumping: false,
       paused: false,
-      locked: false,
     };
     linkFiber = linkFiberStart(snapShot, mode);
 

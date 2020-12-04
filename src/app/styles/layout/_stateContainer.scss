@@ -10,7 +10,7 @@
 }
 
 .state-container .navbar {
-	background-color: rgba(51, 51, 51, 1);
+	background-color: $background-color;
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
@@ -20,7 +20,7 @@
 }
 
 .state-container .main-navbar {
-	background-color: rgba(51, 51, 51, 1);
+	background-color: $background-color;
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
@@ -34,7 +34,7 @@
 	top: 0px;
 	left: 0px;
 	z-index: 1;
-	background-color: rgba(51, 51, 51, 1);
+	background-color: $background-color;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -72,17 +72,17 @@
 		text-decoration: none;
 		color: $text-color;
 
-		background: rgb(36, 37, 41);
+		background: $brand-color;
 		border-radius: 5px;
 		border: 1px solid rgba(184, 196, 194, 0.25);
 	}
 
 	.main-router-link:hover {
-		background: #585d65;
+		background: $light-background-color;
 	}
 
 	.main-router-link.is-active {
-		background: #62d6fb;
+		background: $blue-brand;
 		color: $brand-color;
 		margin: 3px;
 		border-radius: 5px;
@@ -95,7 +95,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background-color: #51565e;
+		background-color: $medium-background-color;
 		text-decoration: none;
 		color: $text-color;
 	}
@@ -117,7 +117,7 @@
 	}
 
 	.main-navbar {
-		background-color: rgba(51, 51, 51, 1);
+		background-color: $background-color;
 		display: flex;
 		flex-direction: row;
 		justify-content: flex-start;
@@ -130,7 +130,7 @@
 		top: 0px;
 		left: 0px;
 		z-index: 1;
-		background-color: rgba(51, 51, 51, 1);
+		background-color: $background-color;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
