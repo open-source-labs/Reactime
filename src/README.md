@@ -49,8 +49,12 @@ src/
 
 1. The *app* folder is responsible for the Single Page Application that you see when you open the chrome dev tools under the Reactime tab. 
 
+![FRONTEND DATA FLOW](../assets/frontend.jpg)
+
 2. The *backend* folder contains the set of all scripts that we inject into our "target" application via `background.js`
     - In Reactime, its main role is to generate data and handle time-jump requests from the background script in our *extension* folder.
+
+![BACKEND DATA FLOW](../assets/backend.jpg)
 
 3. The *extension* folder is where the `contentScript.js` and `background.js` are located. 
     - Like regular web apps, Chrome Extensions are event-based. The background script is where one typically monitors for browser triggers (e.g. events like closing a tab, for example). The content script is what allows us to read or write to our target web application, usually as a result of [messages passed](https://developer.chrome.com/extensions/messaging) from the background script.
@@ -60,7 +64,7 @@ src/
 
 The general flow of data is described in the following steps:
 
-![demo](../assets/AppStructureDiagram.png)
+![GENERAL DATA FLOW](../assets/dataflow.jpg)
 
 1. When the background bundle is loaded by the browser, it executes a script injection into the dom. (see section on *backend*). This script uses a technique called [throttle](https://medium.com/@bitupon.211/debounce-and-throttle-160affa5457b) to send state data from the app to the content script every specified milliseconds (in our case, this interval is 70ms).
 
@@ -69,6 +73,27 @@ The general flow of data is described in the following steps:
 3. Likewise, when Reactime emits an action due to user interaction -- a "jump" request for example --  a message will be passed from Reactime via the background script to the content script. Then, the content script will pass a message to the target application containing a payload that represents the state the user wants the DOM to reflect or "jump" to.
     - One important thing to note here is that this jump action must be dispatched in the target application (i.e. *backend* land), because only there do we have direct access to the DOM.
 
+## Console.log
+
+Navigation between different console.log panels can be confusing when running Reactime. We created a short instruction where you can find the results for your console.log
+
+### <b> /src/extension </b>
+Console.logs from the Extension folder you can find here: 
+- Chrome Extension (Developer mode)
+- Background page 
+![extension](../assets/extension-console.gif)
+
+### <b> /src/app </b>
+Console.logs from the App folder you can find here: 
+- Chrome Browser
+- Inspect
+![frontend](../assets/console-log.gif)
+
+### <b> /src/backend </b>
+Console.logs from the App folder you can find here: 
+- Open the Reactime extension in Chrome
+- Click "Inspect" on Reactime
+![backend](../assets/reactime-console.gif)
 
 ## Chrome Developer Resources
 Still unsure about what content scripts and background scripts do for Reactime, or for a chrome extensions in general?
