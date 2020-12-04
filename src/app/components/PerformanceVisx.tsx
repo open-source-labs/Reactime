@@ -175,6 +175,7 @@ const PerformanceVisx = (props: BarStackProps) => {
     return dataArr;
   };
   const barstackData = getBarstackData(data);
+ console.log("barstackData : ", barstackData)
 
   // create array of total render times for each snapshot
   const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
