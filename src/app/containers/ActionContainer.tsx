@@ -35,9 +35,6 @@ function ActionContainer() {
         componentName: obj.stateSnapshot.children[0].name,
         componentData: JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}' ? '' : obj.stateSnapshot.children[0].componentData,
       };
-      console.log('displayArray obj.name: ' + obj.name)
-      console.log('displayArray obj.branch: ' + obj.branch)
-      console.log('break')
       hierarchyArr.push(newObj);
     }
     if (obj.children) {

@@ -40,7 +40,7 @@ describe('testing the bottom buttons', () => {
     dispatch.mockClear();
     useStoreContext.mockClear();
     currentTab.mode = {
-      locked: false,
+      // locked: false,
       paused: false,
       persist: false,
     };
@@ -59,32 +59,31 @@ describe('testing the bottom buttons', () => {
     });
 
     test('pause button displays state', () => {
-      expect(wrapper.find('.pause-button').text()).toBe('Pause');
+      expect(wrapper.find('.pause-button').text()).toBe('<FontAwesomeIcon />Lock');
       state.tabs[state.currentTab].mode.paused = true;
       wrapper = shallow(<ButtonsContainer />);
-      expect(wrapper.find('.pause-button').text()).toBe('Resume');
-    });
+      expect(wrapper.find('.pause-button').text()).toBe('<FontAwesomeIcon />Unlock');
+    }); 
   });
+  // describe('lock button testing', () => {
+  //   beforeEach(() => {
+  //     wrapper.find('.lock-button').simulate('click');
+  //   });
+  //   test('lock button dispatches upon click', () => {
+  //     expect(dispatch.mock.calls.length).toBe(1);
+  //   });
 
-  describe('lock button testing', () => {
-    beforeEach(() => {
-      wrapper.find('.lock-button').simulate('click');
-    });
-    test('lock button dispatches upon click', () => {
-      expect(dispatch.mock.calls.length).toBe(1);
-    });
+  //   test('lock button dispatches toggleMode action', () => {
+  //     expect(dispatch.mock.calls[0][0]).toEqual(toggleMode('locked'));
+  //   });
 
-    test('lock button dispatches toggleMode action', () => {
-      expect(dispatch.mock.calls[0][0]).toEqual(toggleMode('locked'));
-    });
-
-    test('lock button displays state', () => {
-      expect(wrapper.find('.lock-button').text()).toBe('Lock');
-      state.tabs[state.currentTab].mode.locked = true;
-      wrapper = shallow(<ButtonsContainer />);
-      expect(wrapper.find('.lock-button').text()).toBe('Unlock');
-    });
-  });
+  //   test('lock button displays state', () => {
+  //     expect(wrapper.find('.lock-button').text()).toBe('Lock');
+  //     state.tabs[state.currentTab].mode.locked = true;
+  //     wrapper = shallow(<ButtonsContainer />);
+  //     expect(wrapper.find('.lock-button').text()).toBe('Unlock');
+  //   });
+  // });
 
   describe('persist button testing', () => {
     beforeEach(() => {
@@ -100,10 +99,10 @@ describe('testing the bottom buttons', () => {
     });
 
     test('persist button displays state', () => {
-      expect(wrapper.find('.persist-button').text()).toBe('Persist');
+      expect(wrapper.find('.persist-button').text()).toBe('<FontAwesomeIcon />Persist');
       state.tabs[state.currentTab].mode.persist = true;
       wrapper = shallow(<ButtonsContainer />);
-      expect(wrapper.find('.persist-button').text()).toBe('Unpersist');
+      expect(wrapper.find('.persist-button').text()).toBe('<FontAwesomeIcon />Unpersist');
     });
   });
 });

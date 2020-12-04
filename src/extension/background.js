@@ -7,7 +7,6 @@ const firstSnapshotReceived = {};
 // there will be the same number of objects in here as there are reactime tabs open for each user application being worked on
 const tabsObj = {};
 
-console.log('hello from background');
 function createTabObj(title) {
 	// update tabsObj
 	return {
@@ -342,7 +341,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
 // when tab is closed, remove the tabid from the tabsObj
 chrome.tabs.onRemoved.addListener((tabId) => {
-	console.log('tab is deleted.');
+	
 	// tell devtools which tab to delete
 	if (portsArr.length > 0) {
 		portsArr.forEach((bg) =>
@@ -361,7 +360,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 
 // when a new url is loaded on the same tab, this remove the tabid from the tabsObj, recreate the tab and inject the script
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-	console.log('new site loaded.');
+	
 	// check if the tab title changed to see if tab need to restart
 	if (changeInfo && tabsObj[tabId]) {
 		if (changeInfo.title && changeInfo.title !== tabsObj[tabId].title) {
@@ -388,7 +387,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 
 // when tab view is changed, put the tabid as the current tab
 chrome.tabs.onActivated.addListener((info) => {
-	console.log('tab view has changed');
+	
 	// tell devtools which tab to be the current
 	if (portsArr.length > 0) {
 		portsArr.forEach((bg) =>
@@ -413,7 +412,7 @@ chrome.runtime.onInstalled.addListener(() => {
 // when context menu is clicked, listen for the menuItemId,
 // if user clicked on reactime, open the devtools window
 chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
-	console.log('inspect clicked reactime');
+	
 	const options = {
 		type: 'panel',
 		left: 0,
