@@ -12,7 +12,7 @@ import { schemeSet3 } from 'd3-scale-chromatic';
 import snapshots from './snapshots';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store'
-
+import RenderingFrequency from './RenderingFrequency'
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
 Barstacks display inconsistently...however, almost always displays upon initial test app load or
@@ -179,9 +179,33 @@ const PerformanceVisx = (props: BarStackProps) => {
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
+
+//   let cards = []
+//  const updateData = object => {
+//   //  for (let key in data.componentData) { 
+//    for (let key in object) { 
+//     let componentKey = object[key]
+//     // let componentKey = data.componentData[key]
+//      let averageRendering= (componentKey['totalRenderTime']/ componentKey['renderFrequency']).toPrecision(3)
+//      cards.push(<RenderingFrequency  
+//       key={componentKey['rtid']}
+//       name={key} 
+//       renderTimes={componentKey['renderFrequency']}
+//       state={componentKey['stateType']} 
+//       average={averageRendering}
+//       />)
+//    }
+//  return cards 
+//  }
+// updateData(data.componentData)
+
+
+
+
   // if performance tab is too small it will not return VISX component
   return width < 10 ? null : (
     <div style={{ position: 'relative' }}>
+      <RenderingFrequency data={data.componentData}/>
       <svg ref={containerRef} width={width} height={height}>
         <rect
           x={0}
