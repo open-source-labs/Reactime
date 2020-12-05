@@ -60,6 +60,9 @@ src/
     - Like regular web apps, Chrome Extensions are event-based. The background script is where one typically monitors for browser triggers (e.g. events like closing a tab, for example). The content script is what allows us to read or write to our target web application, usually as a result of [messages passed](https://developer.chrome.com/extensions/messaging) from the background script.
     - These two files help us handle requests both from the web browser and from the Reactime extension itself
 
+
+## Diagramming
+All the diagrams of data flows are avaliable on [MIRO](https://miro.com/app/board/o9J_lejUqLQ=/)
 ## Data Flow Architecture
 
 The general flow of data is described in the following steps:
@@ -81,18 +84,21 @@ Navigation between different console.log panels can be confusing when running Re
 Console.logs from the Extension folder you can find here: 
 - Chrome Extension (Developer mode)
 - Background page 
-![extension](../assets/extension-console.gif)
+
+![extension](../assets/extension-console.gif) 
 
 ### <b> /src/app </b>
 Console.logs from the App folder you can find here: 
 - Chrome Browser
 - Inspect
+
 ![frontend](../assets/console-log.gif)
 
 ### <b> /src/backend </b>
 Console.logs from the App folder you can find here: 
 - Open the Reactime extension in Chrome
 - Click "Inspect" on Reactime
+
 ![backend](../assets/reactime-console.gif)
 
 ## Chrome Developer Resources
