@@ -71,16 +71,17 @@ const tooltipStyles = {
 };
 
 /* DATA HANDLING HELPER FUNCTIONS */
-const traverse = (snapshot, data) => {
+const traverse = (snapshot, data, currMaxTotalRender = 0) => {
   if (!snapshot.children[0]) return;
-
+  // data.maxTotalRender
   // loop through snapshots
   snapshot.children.forEach((child, idx) => {
     const componentName = child.name + -[idx + 1];
 
     // Get component Rendering Time
     const renderTime = Number(Number.parseFloat(child.componentData.actualDuration).toPrecision(5));
-    
+    // sums render time for all children
+    currMaxTotalRender += renderTime;
     // components as keys and set the value to their rendering time 
     data['barStack'][data.barStack.length - 1][componentName] = renderTime; 
     
@@ -103,8 +104,10 @@ const traverse = (snapshot, data) => {
     data.componentData[componentName].totalRenderTime += renderTime;
     // Get rtid for the hovering feature 
     data.componentData[componentName].rtid = child.rtid;
-    traverse(snapshot.children[idx], data);
+    traverse(snapshot.children[idx], data, currMaxTotalRender);
   })
+  // reassigns total render time to max render time
+  data.maxTotalRender = Math.max(currMaxTotalRender, data.maxTotalRender);
   return data;
 };
 
@@ -119,10 +122,11 @@ const getSnapshotIds = (obj, snapshotIds = []): string[] => {
 };
 
 // Returns array of snapshot objs each with components and corresponding render times
-const getPerfMetrics = (snapshots, snapshotsIds): any[] => {
+const getPerfMetrics = (snapshots, snapshotsIds): {} => {
   const perfData = {
     barStack: [],
     componentData: {},
+    maxTotalRender: 0
   };
   snapshots.forEach((snapshot, i) => {
     perfData.barStack.push({snapshotId: snapshotsIds[i]});
@@ -147,16 +151,6 @@ const PerformanceVisx = (props: BarStackProps) => {
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   const keys = Object.keys(data.componentData);
 
-  // create array of total render times for each snapshot
-  const totalRenderArr = data.barStack.reduce((totalRender, curSnapshot) => {
-    const curRenderTotal = keys.reduce((acc, cur) => {
-      acc += Number(curSnapshot[cur]);
-      return acc;
-    }, 0);
-    totalRender.push(curRenderTotal);
-    return totalRender;
-  }, [] as number[]);
-
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSnapshotId = (d: snapshot) => d.snapshotId;
   const formatSnapshotId = (id) => `Snapshot ID: ${id}`;
@@ -169,10 +163,9 @@ const PerformanceVisx = (props: BarStackProps) => {
   });
 
   const renderingScale = scaleLinear<number>({
-    domain: [0, Math.max(...totalRenderArr)],
+    domain: [0, data.maxTotalRender],
     nice: true,
   });
-
 
   const colorScale = scaleOrdinal<string>({
     domain: keys,
@@ -220,7 +213,13 @@ const PerformanceVisx = (props: BarStackProps) => {
           >
             {barStacks =>
               barStacks.map(barStack =>
-                barStack.bars.map(((bar, idx) => (
+                barStack.bars.map(((bar, idx) => {
+                  // hides new components if components don't exist in previous snapshots
+                  if (Number.isNaN(bar.bar[1])) {
+                    console.log('bar is NaN: ', bar.bar);
+                    bar.height = 0;
+                  }
+                  return (
                   <rect
                     key={`bar-stack-${barStack.index}-${bar.index}`}
                     x={bar.x}
@@ -231,6 +230,7 @@ const PerformanceVisx = (props: BarStackProps) => {
                     /* TIP TOOL EVENT HANDLERS */
                     // Hides tool tip once cursor moves off the current rect
                     onMouseLeave={() => {
+                      console.log('bar: ', bar)
                       dispatch(onHoverExit(data.componentData[bar.key].rtid),
                         tooltipTimeout = window.setTimeout(() => {
                           hideTooltip()
@@ -249,7 +249,7 @@ const PerformanceVisx = (props: BarStackProps) => {
                       });
                     }}
                   />
-                )))
+                )}))
               )
             }
           </BarStack>
