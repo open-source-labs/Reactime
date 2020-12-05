@@ -30,7 +30,7 @@
 
 <h5 align="center">
 <br>
-  <a href="./README.rus.md">РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp; <a href="./README.fr.md">VERSION FRANÇAISE</a>
+  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a>
   <br>
 </h5>
 <br>
@@ -40,7 +40,7 @@
 </p>
 
 <p align="center">
-  <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.io">Website</a> • <a href="#readmore">Read More</a>
+  <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.io">Website</a> • <a href="#read-more">Read More</a>
 </p>
 
 Currently, Reactime supports React apps using stateful components and Hooks, with beta support for Recoil and Context API.
@@ -110,16 +110,16 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 
 ### <b>Additional Features</b>
 
-- identifying unnecessary re-renders
-- hover functionality to view tooltip details on state visualizations
-- ability to pan and zoom on state visualizations
-- a dropdown to support development of projects on multiple tabs
-- a slider to move through snapshots quickly
-- a play button to move through snapshots automatically
-- a lock button, which stops recording each snapshot
-- a persist button to keep snapshots upon refresh (handy when changing code and debugging)
-- download/upload the current snapshots in memory
-- declarative titles in the actions sidebar
+* identifying unnecessary re-renders
+* hover functionality to view tooltip details on state visualizations
+* ability to pan and zoom on state visualizations
+* a dropdown to support development of projects on multiple tabs
+* a slider to move through snapshots quickly
+* a play button to move through snapshots automatically
+* a lock button, which stops recording each snapshot
+* a persist button to keep snapshots upon refresh (handy when changing code and debugging)
+* download/upload the current snapshots in memory
+* declarative titles in the actions sidebar
 
 ## <b>Read More</b>
 
