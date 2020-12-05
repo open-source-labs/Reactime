@@ -122,7 +122,7 @@ const getSnapshotIds = (obj, snapshotIds = []): string[] => {
 };
 
 // Returns array of snapshot objs each with components and corresponding render times
-const getPerfMetrics = (snapshots, snapshotsIds): any[] => {
+const getPerfMetrics = (snapshots, snapshotsIds): {} => {
   const perfData = {
     barStack: [],
     componentData: {},
