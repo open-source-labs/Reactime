@@ -48,7 +48,6 @@ interface BarStackProps {
   snapshots: [];
   hierarchy: any;
 }
-
 interface snapshot {
   snapshotId?: string;
   children: [];
@@ -59,7 +58,6 @@ interface snapshot {
 
 /* DEFAULTS */
 const margin = { top: 60, right: 30, bottom: 0, left: 50 };
-// const axisColor = '#679DCA';
 const axisColor = '#62d6fb';
 const background = '#242529';
 const tooltipStyles = {
@@ -73,51 +71,42 @@ const tooltipStyles = {
 };
 
 /* DATA HANDLING HELPER FUNCTIONS */
-
-const traverse = (snapshot, data = {}) => {
+const traverse = (snapshot, data) => {
   if (!snapshot.children[0]) return;
+
+  // loop through snapshots
   snapshot.children.forEach((child, idx) => {
     const componentName = child.name + -[idx + 1];
-    if (!data.hasOwnProperty(componentName)) {
-      data[componentName] = {};
-    }
-    // Get component Type
-    if (child.state !== 'stateless') data[componentName].componentState = 'stateful';
-    else data[componentName].componentState = child.state;
+
     // Get component Rendering Time
     const renderTime = Number(Number.parseFloat(child.componentData.actualDuration).toPrecision(5));
-    data[componentName].renderTime = renderTime;
-    // Get rtid
-    data[componentName].rtid = child.rtid;
+    
+    // components as keys and set the value to their rendering time 
+    data['barStack'][data.barStack.length - 1][componentName] = renderTime; 
+    
+    // Get component stateType
+    if (!data.componentData[componentName]) {
+      data.componentData[componentName] = {
+        stateType: 'stateless',
+        renderFrequency: 0,
+        totalRenderTime: 0,
+        rtid: ''
+      };
+      if (child.state !== 'stateless') data.componentData[componentName].stateType = 'stateful';
+    }
+    // increment render frequencies
+    if (renderTime > 0) {
+      data.componentData[componentName].renderFrequency++;
+    }
+
+   // add to total render time
+    data.componentData[componentName].totalRenderTime += renderTime;
+    // Get rtid for the hovering feature 
+    data.componentData[componentName].rtid = child.rtid;
     traverse(snapshot.children[idx], data);
   })
   return data;
 };
-
-// traverses a snapshot for data: rendering time, component type, or rtid 
-// const traverse = (snapshot, fetchData, data = {}) => {
-//   // console.log("data in beg of traverse: ", data )
-//   if (!snapshot.children[0]) return;
-//   snapshot.children.forEach((child, idx) => {
-//     const componentName = child.name + -[idx + 1];
-//     // Get component Type
-//     if (fetchData === 'getComponentType') {
-//       if (child.state !== 'stateless') data[componentName] = 'stateful';
-//       else data[componentName] = child.state;
-//     }
-//     // Get component Rendering Time
-//     else if (fetchData === 'getRenderTime') {
-//       const renderTime = Number(Number.parseFloat(child.componentData.actualDuration).toPrecision(5));
-//       data[componentName] = renderTime;
-//     }
-//     else if (fetchData === 'getRtid') {
-//       data[componentName] = child.rtid;
-//     }
-//     traverse(snapshot.children[idx], fetchData, data);
-//   })
-//   // console.log("data in end of traverse: ", data )
-//   return data;
-// };
 
 const getSnapshotIds = (obj, snapshotIds = []): string[] => {
   snapshotIds.push(`${obj.name}.${obj.branch}`);
@@ -131,58 +120,37 @@ const getSnapshotIds = (obj, snapshotIds = []): string[] => {
 
 // Returns array of snapshot objs each with components and corresponding render times
 const getPerfMetrics = (snapshots, snapshotsIds): any[] => {
-  console.log('snapshots: ', snapshots)
-  return snapshots.reduce((perfSnapshots, curSnapshot, idx) => {
-    return perfSnapshots.concat(traverse(curSnapshot, { snapshotId: snapshotsIds[idx] }));
-  }, []);
+  const perfData = {
+    barStack: [],
+    componentData: {},
+  };
+  snapshots.forEach((snapshot, i) => {
+    perfData.barStack.push({snapshotId: snapshotsIds[i]});
+    traverse(snapshot, perfData);
+  });
+  return perfData;
 };
 
 /* EXPORT COMPONENT */
 const PerformanceVisx = (props: BarStackProps) => {
   // hook used to dispatch onhover action in rect
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-
   const { width, height, snapshots, hierarchy } = props;
 
   const {
     tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip,
   } = useTooltip<TooltipData>();
   let tooltipTimeout: number;
-  console.log('tooltipdata: ', tooltipData)
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
 
   // filter and structure incoming data for VISX
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
-  console.log('data:', data);
-  const keys = Object.keys(data[0]).filter(d => d !== 'snapshotId');
-  // const allComponentStates = traverse(snapshots[0], 'getComponentType');
-  // const allComponentRtids = traverse(snapshots[snapshots.length - 1], 'getRtid');
-  // console.log('allComponentRtids: ', allComponentRtids);
-  // const allComponentRtids = data.filter()
-  const getBarstackData = (data) => {
-    const dataArr = [];
-    data.forEach(snapshot => {
-      const dataObj = {};
-      for (let key in snapshot) {
-        if (key !== 'snapshotId') {
-          dataObj[key] = snapshot[key]['renderTime'];
-        } else {
-          dataObj[key] = snapshot[key];
-        }
-      }
-      dataArr.push(dataObj);
-    });
-    return dataArr;
-  };
-  const barstackData = getBarstackData(data);
- console.log("barstackData : ", barstackData)
+  const keys = Object.keys(data.componentData);
 
   // create array of total render times for each snapshot
-  const totalRenderArr = data.reduce((totalRender, curSnapshot) => {
-    // console.log('curSnapshot: ', curSnapshot);
-    // console.log('keys: ', keys);
+  const totalRenderArr = data.barStack.reduce((totalRender, curSnapshot) => {
     const curRenderTotal = keys.reduce((acc, cur) => {
-      acc += Number(curSnapshot[cur].renderTime);
+      acc += Number(curSnapshot[cur]);
       return acc;
     }, 0);
     totalRender.push(curRenderTotal);
@@ -191,29 +159,12 @@ const PerformanceVisx = (props: BarStackProps) => {
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSnapshotId = (d: snapshot) => d.snapshotId;
-
   const formatSnapshotId = (id) => `Snapshot ID: ${id}`;
-
   const formatRenderTime = (time) => `${time} ms `;
-
-  const getTooltipStates = (data) => {
-    const snapshotObj = {};
-    data.forEach(snapshot => {
-      snapshotObj[snapshot.snapshotId] = {};
-      for (let key in snapshot) {
-        if (key !== 'snapshotId') {
-          snapshotObj[snapshot.snapshotId][key] = snapshot[key].componentState;
-        }
-      }
-    });
-    return snapshotObj;
-  }
-  const tooltipStates = getTooltipStates(data);
-  console.log('tooltipStates: ', tooltipStates);
 
   // create visualization SCALES with cleaned data
   const snapshotIdScale = scaleBand<string>({
-    domain: data.map(getSnapshotId),
+    domain: data.barStack.map(getSnapshotId),
     padding: 0.2,
   });
 
@@ -260,7 +211,7 @@ const PerformanceVisx = (props: BarStackProps) => {
         />
         <Group top={margin.top} left={margin.left}>
           <BarStack
-            data={barstackData}
+            data={data.barStack}
             keys={keys}
             x={getSnapshotId}
             xScale={snapshotIdScale}
@@ -280,17 +231,14 @@ const PerformanceVisx = (props: BarStackProps) => {
                     /* TIP TOOL EVENT HANDLERS */
                     // Hides tool tip once cursor moves off the current rect
                     onMouseLeave={() => {
-                      console.log('bar: ', bar);
-                      console.log('barstack', barStack);
-                      console.log('onHoverExit arg:', data[data.length-1][bar.key].rtid);
-                      dispatch(onHoverExit(data[data.length-1][bar.key]['rtid']),
+                      dispatch(onHoverExit(data.componentData[bar.key].rtid),
                         tooltipTimeout = window.setTimeout(() => {
                           hideTooltip()
                         }, 300))
                     }}
                     // Cursor position in window updates position of the tool tip
                     onMouseMove={event => {
-                      dispatch(onHover(data[data.length-1][bar.key]['rtid']))
+                      dispatch(onHover(data.componentData[bar.key].rtid))
                       if (tooltipTimeout) clearTimeout(tooltipTimeout);
                       const top = event.clientY - margin.top - bar.height;
                       const left = bar.x + bar.width / 2;
@@ -350,7 +298,7 @@ const PerformanceVisx = (props: BarStackProps) => {
             <strong>{tooltipData.key}</strong>
             {' '}
           </div>
-          <div>{tooltipStates[tooltipData.bar.data.snapshotId][tooltipData.key]}</div>
+          <div>{data.componentData[tooltipData.key].stateType}</div>
           <div>
             {' '}
             {formatRenderTime(tooltipData.bar.data[tooltipData.key])}
