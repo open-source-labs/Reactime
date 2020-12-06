@@ -89,6 +89,7 @@
 .play-button:hover {
 	background: $blue-color-gradient;
 	transform: translate3d(0, -3px, 0);
+	cursor: pointer;
 }
 
 .backward-button {
@@ -121,6 +122,7 @@
 .backward-button:hover {
 	background: $blue-color-gradient;
 	transform: translate3d(0, -3px, 0);
+	cursor: pointer;
 }
 
 .import-button,

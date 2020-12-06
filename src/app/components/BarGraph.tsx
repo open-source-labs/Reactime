@@ -40,7 +40,7 @@ interface TooltipData {
 }
 
 /* DEFAULTS */
-const margin = { top: 60, right: 30, bottom: 0, left: 50 };
+const margin = { top: 30, right: 30, bottom: 0, left: 50 };
 const axisColor = '#62d6fb';
 const background = '#242529';
 const tooltipStyles = {
@@ -194,7 +194,7 @@ const BarGraph = (props) => {
         })}
       />
       <Text x={-xMax / 2} y="15" transform="rotate(-90)" fontSize={12} fill="#FFFFFF"> Rendering Time (ms) </Text>
-      <Text x={xMax / 2} y={yMax + 100} fontSize={12} fill="#FFFFFF"> Snapshot Id </Text>
+      <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill="#FFFFFF"> Snapshot Id </Text>
     </svg>
     {/* FOR HOVER OVER DISPLAY */}
     {tooltipOpen && tooltipData && (
