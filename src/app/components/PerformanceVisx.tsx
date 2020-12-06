@@ -4,6 +4,7 @@ import RenderingFrequency from './RenderingFrequency';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import BarGraph from './BarGraph';
+
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
 Barstacks display inconsistently...however, almost always displays upon initial test app load or
@@ -98,7 +99,7 @@ const PerformanceVisx = (props: BarStackProps) => {
   }
   // filter and structure incoming data for VISX
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
-  const colorSlider = "#ff6569"
+  
   // style={{ position: 'relative' }}
     // if performance tab is too small it will not return VISX component
     return  (

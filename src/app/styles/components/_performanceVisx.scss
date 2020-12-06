@@ -2,3 +2,15 @@
 	display: flex;
 	justify-content: center;
 }
+
+.MuiSwitch-colorPrimary.Mui-checked  {
+	color: #62d6fb !important;
+}
+
+.MuiSwitch-switchBase {
+	color: #ff6569 !important; 
+}
+
+.MuiSwitch-track {
+	background-color: #e7e7e7 !important;
+}
