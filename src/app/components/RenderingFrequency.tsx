@@ -3,7 +3,6 @@ import React from 'react';
 
 
 const RenderingFrequency = (props) => {
-  console.log(props)
   const perfData = props.data 
 
   return (
