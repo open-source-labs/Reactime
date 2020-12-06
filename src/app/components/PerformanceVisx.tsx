@@ -4,6 +4,7 @@ import RenderingFrequency from './RenderingFrequency';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import BarGraph from './BarGraph';
+
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
 Barstacks display inconsistently...however, almost always displays upon initial test app load or
@@ -99,10 +100,11 @@ const PerformanceVisx = (props: BarStackProps) => {
   // filter and structure incoming data for VISX
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   
+  // style={{ position: 'relative' }}
     // if performance tab is too small it will not return VISX component
     return  (
-      <div style={{ position: 'relative' }}>
-        <FormControlLabel
+      <div className='renderTab'>
+        <FormControlLabel style={{"margin-left":"30px", "margin-top": "20px"}}
         control={
           <Switch
             onChange={toggleView}
@@ -113,9 +115,9 @@ const PerformanceVisx = (props: BarStackProps) => {
         label="Renders"
       />
       {/* <button onClick={toggleView}>Toggle Button</button> */}
-        <div>
+        <div style={{"display": "flex", "justify-content": "center"}}>
           {isToggled === 'frequencyCards' 
-            ? <RenderingFrequency data={data.componentData}/> 
+            ? <RenderingFrequency  data={data.componentData}/> 
             : <BarGraph data={data} width={width} height={height}/>
           }
         </div>
