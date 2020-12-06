@@ -1,9 +1,6 @@
 import React from 'react'
 
-
-
 const RenderingFrequency = (props) => {
-  console.log(props)
   const perfData = props.data 
 
   return (
@@ -25,4 +22,4 @@ const RenderingFrequency = (props) => {
   )
 }
 
-export default RenderingFrequency
+export default RenderingFrequency;
