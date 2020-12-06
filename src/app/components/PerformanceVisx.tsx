@@ -104,7 +104,7 @@ const PerformanceVisx = (props: BarStackProps) => {
     // if performance tab is too small it will not return VISX component
     return  (
       <div className='renderTab'>
-        <FormControlLabel style={{"margin-left":"30px", "margin-top": "20px"}}
+        <FormControlLabel style={{"margin-left":"30px", "margin-top": "0px"}}
         control={
           <Switch
             onChange={toggleView}
@@ -112,7 +112,7 @@ const PerformanceVisx = (props: BarStackProps) => {
             color="primary"
           />
         }
-        label="Renders"
+        label="Component Details"
       />
       {/* <button onClick={toggleView}>Toggle Button</button> */}
         <div style={{"display": "flex", "justify-content": "center"}}>

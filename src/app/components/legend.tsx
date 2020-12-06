@@ -154,7 +154,7 @@ function LegendVisual({
             with: 120px;
             line-height: 0.9em;
             color: #efefef;
-            font-size: 9px;
+            font-size: 11px;
             font-family: arial;
             padding: 10px 10px;
             float: left;
@@ -166,6 +166,7 @@ function LegendVisual({
             font-size: 12px;
             margin-bottom: 10px;
             font-weight: 100;
+            font-family: arial;
           }
         `}
       </style>
