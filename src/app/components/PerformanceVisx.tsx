@@ -91,10 +91,9 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
 const PerformanceVisx = (props: BarStackProps) => {
   // hook used to dispatch onhover action in rect
   const { width, height, snapshots, hierarchy } = props;
-  console.log('height in PerfVisx: ', height);
+
   const [isToggled, setIsToggled] = useState('barStack');
   const toggleView = () => {
-    console.log('view was changed')
     isToggled === 'frequencyCards' ? setIsToggled('barStack') : setIsToggled('frequencyCards');
   }
   // filter and structure incoming data for VISX
