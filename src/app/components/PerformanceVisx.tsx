@@ -13,8 +13,8 @@ import snapshots from './snapshots';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store'
 import RenderingFrequency from './RenderingFrequency';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import Switch from '@material-ui/core/Switch';
 
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
@@ -328,7 +328,10 @@ const PerformanceVisx = (props: BarStackProps) => {
         <div>
           {view === 'frequencyCards'  */}
             {/* ?  */}
-            <RenderingFrequency data={data.componentData}/> 
+           
+           <div id='RenderContainer'>
+             <RenderingFrequency data={data.componentData}/> 
+             </div> 
             {/* : <BarGraph data={data}/>
           }
         </div> */}
