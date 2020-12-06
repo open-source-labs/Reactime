@@ -36,7 +36,7 @@
 <br>
 
 <p align="center">
-<img src="./assets/reactime7.gif" />
+<img src="./assets/new-reactime.gif" />
 </p>
 
 <p align="center">
