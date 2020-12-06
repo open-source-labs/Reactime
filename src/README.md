@@ -49,12 +49,12 @@ src/
 
 1. The *app* folder is responsible for the Single Page Application that you see when you open the chrome dev tools under the Reactime tab. 
 
-![FRONTEND DATA FLOW](../assets/frontend.jpg)
+![FRONTEND DATA FLOW](../assets/frontend.png)
 
 2. The *backend* folder contains the set of all scripts that we inject into our "target" application via `background.js`
     - In Reactime, its main role is to generate data and handle time-jump requests from the background script in our *extension* folder.
 
-![BACKEND DATA FLOW](../assets/backend.jpg)
+![BACKEND DATA FLOW](../assets/backend.png)
 
 3. The *extension* folder is where the `contentScript.js` and `background.js` are located. 
     - Like regular web apps, Chrome Extensions are event-based. The background script is where one typically monitors for browser triggers (e.g. events like closing a tab, for example). The content script is what allows us to read or write to our target web application, usually as a result of [messages passed](https://developer.chrome.com/extensions/messaging) from the background script.
@@ -92,7 +92,7 @@ Console.logs from the App folder you can find here:
 - Chrome Browser
 - Inspect
 
-![frontend](../assets/console-log.gif)
+![frontend](../assets/console.gif)
 
 ### <b> /src/backend </b>
 Console.logs from the App folder you can find here: 
