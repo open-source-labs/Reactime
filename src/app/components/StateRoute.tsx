@@ -128,14 +128,6 @@ const StateRoute = (props: StateRouteProps) => {
             />
           )}
         </ParentSize>
-
-        // <PerfView
-        //   viewIndex={viewIndex}
-        //   snapshots={snapshots}
-        //   setNoRenderData={setNoRenderData}
-        //   width={600}
-        //   height={1000}
-        // />
       );
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
