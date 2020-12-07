@@ -1,6 +1,5 @@
 .StyledGridElement {
 	display: flex;
-	// align-content: center;
 	align-items: center;
 	justify-content: space-between;
 	background: #242529;
@@ -12,7 +11,6 @@
 	border-radius: 5px;
 	border: 1px solid rgba(184, 196, 194, 0.25);
 	box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.2);
-
 
 	h3 {
 		color: $text-color;
@@ -37,9 +35,6 @@
 		font-size: 18px;
 		line-height: 18px;
 	}
-}
-.RenderLeft {
-	// padding: 10px;
 }
 .RenderRight {
 	border-radius: 5px;

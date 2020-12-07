@@ -2,7 +2,6 @@
 import React, { Component, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import LegendKey from './legend';
-//added back  line 6 , 160- 12
 import { changeView, changeSlider } from '../actions/actions';
 /**
  * @var colors: Colors array for the diffrerent node branches, each color is for a different branch
@@ -45,7 +44,7 @@ function History(props: Record<string, unknown>) {
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
 
-  let HistoryRef = React.createRef(root); //React.createRef(root);
+  let HistoryRef = React.createRef(root); 
   useEffect(() => {
     maked3Tree();
   }, [root]);
@@ -78,7 +77,6 @@ function History(props: Record<string, unknown>) {
 
     // d3.hierarchy constructs a root node from the specified hierarchical data
     // (our object titled dataset), which must be an object representing the root node
-    
     const hierarchy = d3.hierarchy(root);
     const tree = d3
       .tree()
@@ -252,7 +250,6 @@ function History(props: Record<string, unknown>) {
           ref={HistoryRef}
           className="history-d3-div"
           id="historyContainer"
-          // position="absolute"
         />
       </div>
     </>

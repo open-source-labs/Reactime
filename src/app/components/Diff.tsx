@@ -1,8 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable react/require-default-props */
 import React from 'react';
 import { diff, formatters } from 'jsondiffpatch';
 import ReactHtmlParser from 'react-html-parser';

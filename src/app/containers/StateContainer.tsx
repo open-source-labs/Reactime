@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 // @ts-nocheck
 import React, { useState } from 'react';
 import {
