@@ -3,13 +3,13 @@
     <img src ="./assets/readme-logo-300-no-version.png" width="300"/>
     <br>
     <br>
-  React Performance Tool
+  Outil de Performance pour React
     <br>
-    <a href="https://osawards.com/react/"> Nominated for React Open Source Awards 2020 </a>
+    <a href="https://osawards.com/react/"> Nominé aux React Open Source Awards 2020 </a>
   <br>
 </h1>
 
-<h4 align="center"> Reactime is a performance and debugging tool for React developers. It records a snapshot whenever a target application's state is changed and allows the user to jump to any previously recorded state. </h4>
+<h4 align="center"> Reactime est un outil de performance et de débogage pour les développeurs React. Reactime enregistre un snapshot à chaque fois que l'état d'une application cible est modifié et permet à l'utilisateur de passer à tout état précédemment enregistré. </h4>
 
 <br>
 <p align="center">
@@ -30,105 +30,106 @@
 
 <h5 align="center">
 <br>
-  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a>
+  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.md">🇺🇸  &nbsp; ENGLISH VERSION </a>
   <br>
 </h5>
 <br>
 
 <p align="center">
-<img src="./assets/reactime7.gif" />
+<img src="./assets/new-reactime.gif" />
 </p>
 
 <p align="center">
-  <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.io">Website</a> • <a href="#readmore">Read More</a>
+  <a href="#how-to-use">Manuel</a> • <a href="#features">Caractéristiques</a> • <a href="https://reactime.io">Website</a> • <a href="#readmore">En savoir plus</a>
 </p>
 
-Currently, Reactime supports React apps using stateful components and Hooks, with beta support for Recoil and Context API.
+Actuellement, Reactime est compatible avec les applications React qui utilisent des composants à état (stateful) et Hooks, avec un support en version bêta de Recoil et de pour le Context API.
 
-<b>Reactime version 7.0</b> beta can help you to avoid unnecessary re-renders. Identifying wasted renders in your React applications is the perfect start to identifying most performance issues.
-Reactime 7.0 fixes previous version bugs and incorporates improved visualizations for component relationships. Reactime 7.0 includes expanded [typedoc](https://typedoc.org/api/) documentation for developers looking to contribute to the source code.
+<b>Reactime version 7.0</b> beta peut vous aider à éviter les ré-rendus inutiles. Identifier les rendus inutiles dans vos applications React est le point de départ idéal pour identifier la plupart des problèmes de performances.
+La version beta 7.0 de Reactime corrige les bugs des anciennes versions et intègre des visualisations améliorées pour les relations entre les composants.
+Reactime 7.0 inclut également une documentation [typedoc](https://typedoc.org/api/) plus approfondie pour les développeurs souhaitant contribuer au code source.
 
-After installing Reactime, you can test its functionalities with your React application in development mode.
+Après avoir installé Reactime, vous pouvez tester ses fonctionnalités avec votre application React en mode développement.
 
-Please note, the time jumping feature will ONLY work when your application is running in development mode. In production mode, you are able to view your application’s component map but no additional features.
+Veuillez noter que la fonction de saut de temps fonctionnera UNIQUEMENT lorsque votre application s'exécute en mode développement. En mode production, vous pouvez afficher la carte des composants de votre application, mais aucune fonctionnalité supplémentaire.
 
 ## <b>Installation</b>
 
-To get started, install the Reactime [extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) from Chrome Web Store.
+Pour commencer, installer l’[extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) Reactime depuis le Chrome Web Store.
 
-NOTE: The React Developer Tools [extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en) is also required for Reactime to run, if you do not already have it installed on your browser.
+REMARQUE: L'[extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en) React Developer Tools est également requise pour que Reactime s'exécute, si vous ne l'avez pas déjà installé sur votre navigateur.
 
-### <b>Alternative Installation</b>
+### <b>Installation Alternative</b>
 
-Use `src/extension/build/build.zip` for manual installation in [Developer mode](https://developer.chrome.com/extensions/faq#faq-dev-01). Turn on 'Allow access to file URLs' in extension details page if testing locally.
+Utilisez `src/extension/build/build.zip` pour une installation manuelle en [mode Développeur](https://developer.chrome.com/extensions/faq#faq-dev-01). Activez "Autoriser l'accès aux URL de fichiers" dans la page des détails de l'extension si vous effectuez un test local.
 
-## <b>How to Use</b>
+## <b>Manuel</b>
 
-After installing the Chrome extension, just open up your project in the browser.
+Après avoir installé l’extension Chrome Reactime, ouvrez votre application dans le navigateur.
 
-Then open up your Chrome DevTools and navigate to the Reactime panel.
+Ensuite, ouvrez vos Chrome DevTools et accédez au panneau Reactime.
 
-## <b>Troubleshooting</b>
+## <b>Diagnostic des anomalies</b>
 
-### <b>Why is Reactime telling me that no React application is found?</b>
+### <b>Que faire quand Reactime ne trouve pas d’application React?</b>
 
-Reactime initially runs using the dev tools global hook from the Chrome API. It takes time for Chrome to load this. Try refreshing your application a couple times until you see Reactime running.
+Reactime s'exécute initialement à l'aide du hook global des outils de développement de l'API Chrome. Leur chargement dans Chrome peut prendre du temps. Essayez d'actualiser votre application plusieurs fois jusqu'à ce que Reactime s'exécute.
 
-### <b>There is a black screen instead of the Reactime extension</b>
+### <b>Un écran noir s’affiche à la place de l’extension Reactime</b>
 
-Try refreshing the application you want to test and refresh the DevTools by clicking the right mouse button “Reload frame”.
+Essayez d'actualiser l'application que vous souhaitez tester et actualisez les DevTools en cliquant sur le bouton droit de la souris «Recharger le cadre».
 
-### <b>I found a bug in Reactime</b>
+### <b>J’ai trouvé un bug dans Reactime</b>
 
-Reactime is an open source project, and we’d really appreciate your help with improving user experience. Please, create a pull request (or issue) to propose and collaborate on changes to a repository.
+Reactime est un projet open source, et toute aide de vore part sera grandement appréciée pour nous aider à améliorer l'expérience utilisateur. Veuillez créer une pull request (ou un problème) pour proposer et collaborer sur les modifications apportées à un référentiel.
 
-## <b>Features</b>
+## <b>Caractéristiques</b>
 
-### Re-render Optimization
+### Optimisation du rendu
 
-One of the most common issues that affects performance in React is unnecessary render cycles. This problem can be fixed by checking your renders in the Performance tab in Chrome DevTools under the Reactime panel.
+L'un des problèmes les plus courants qui affectent les performances dans React est les cycles de rendu inutiles. Ce problème peut être résolu en vérifiant vos rendus dans l'onglet Performances de Chrome DevTools sous le panneau Reactime.
 
-### Recording
+### Enregistrement
 
-Whenever state is changed (whenever setState, useState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the Reactime panel.
+Chaque fois que l'état est changé (chaque fois que setState, useState est appelé), cette extension crée un snapshot de l'arbre d'état actuelle et l'enregistre. Chaque instantané sera affiché dans Chrome DevTools sous le panneau Reactime.
 
-### Viewing
+### Visualisation
 
-You can click on a snapshot to view your app's state. State can be visualized in a Component Graph, JSON Tree, or Performance Graph. Snapshots can be diffed with the previous snapshot, which can be viewed in Diff mode.
+Vous pouvez cliquer sur un snapshot pour afficher l'état de votre application. L'état peut être visualisé dans un graphique de composants, une arbre JSON ou un graphique de performances. Les snapshots peuvent être différents d'un snapshot précédent, et peut être visualisé en mode Diff.
 
 ### Jumping
 
-Using the actions sidebar, a user can jump to any previous recorded snapshots. Hitting the jump button on any snapshot will allow a user to view state data at any point in the history of the target application.
+À l'aide de la barre latérale des actions, un utilisateur peut accéder à n'importe quel snapshot enregistré précédemment. Appuyer sur le bouton de saut sur n'importe quel snapshot permettra à un utilisateur d'afficher les données d'état à tout moment dans l'historique de l'application cible.
 
-### TypeScript Support
+### Support pour TypeScript
 
-Reactime offers beta support for TypeScript applications using stateful class components and functional components. Further testing and development is required for custom hooks, Context API, and Concurrent Mode.
+Reactime propose un support bêta pour les applications TypeScript utilisant des composants de classe avec état et des composants fonctionnels. Des tests et un développement supplémentaires sont nécessaires pour les hooks personnalisés, l'API de contexte et le mode Concurrent.
 
 ### Documentation
 
-After cloning this repository, developers can simply run `npm run docs` at the root level and serve the dynamically generated `/docs/index.html` file on a browser. Doing so will provide a readable, extensible, and interactive GUI view of the structure and interfaces of the codebase.
+Après avoir cloné ce référentiel, les développeurs peuvent simplement exécuter `npm run docs` au niveau racine et servir le fichier `/docs/index.html` généré dynamiquement sur un navigateur. Cela fournira une vue GUI lisible, extensible et interactive de la structure et des interfaces de la base de code.
 
-### <b>Additional Features</b>
+### <b>Caractéristiques supplémentaires</b>
 
-- identifying unnecessary re-renders
-- hover functionality to view tooltip details on state visualizations
-- ability to pan and zoom on state visualizations
-- a dropdown to support development of projects on multiple tabs
-- a slider to move through snapshots quickly
-- a play button to move through snapshots automatically
-- a lock button, which stops recording each snapshot
-- a persist button to keep snapshots upon refresh (handy when changing code and debugging)
-- download/upload the current snapshots in memory
-- declarative titles in the actions sidebar
+- identifier les rendus inutiles
+- fonctionnalité de survol pour afficher les détails des info-bulles sur les visualisations d'état
+- possibilité de panoramique et de zoom sur les visualisations d'état
+- une liste déroulante pour prendre en charge le développement de projets sur plusieurs onglets
+- un curseur pour parcourir rapidement les snapshots
+- un bouton de lecture pour se déplacer automatiquement dans les snapshots
+- un bouton de verrouillage, qui arrête l'enregistrement de chaque snapshot
+- un bouton persister pour conserver les snapshots lors de l'actualisation (pratique lors du changement de code et du débogage)
+- télécharger les snapshots actuels en mémoire
+- titres déclaratifs dans la barre latérale des actions
 
-## <b>Read More</b>
+## <b>En savoir plus</b>
 
 - [Time-Travel State with Reactime](https://medium.com/better-programming/time-traveling-state-with-reactime-6-0-53fdc3ae2a20)
 - [React Fiber and Reactime](https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8)
 - [Meet Reactime - a time-traveling State Debugger for React](https://medium.com/@yujinkay/meet-reactime-a-time-traveling-state-debugger-for-react-24f0fce96802)
 - [Deep in Weeds with Reactime, Concurrent React_fiberRoot, and Browser History Caching](https://itnext.io/deep-in-the-weeds-with-reactime-concurrent-react-fiberroot-and-browser-history-caching-7ce9d7300abb)
 
-## <b>Authors</b>
+## <b>Auteurs</b>
 
 - **Becca Viner** - [@rtviner](https://github.com/rtviner)
 - **Caitlin Chan** - [@caitlinchan23](https://github.com/caitlinchan23)
@@ -167,4 +168,4 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 
 ## <b>License </b>
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de détails
