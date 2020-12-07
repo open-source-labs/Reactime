@@ -9,6 +9,6 @@ git:
 #   only:
 #   - implementtravisci
 install:
-  - travis_wait npm install
+  - npm install
 script:
   - npm run test
