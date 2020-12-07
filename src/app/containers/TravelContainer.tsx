@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable max-len */
 // @ts-nocheck
 import React, { useState } from 'react';
 import MainSlider from '../components/MainSlider';

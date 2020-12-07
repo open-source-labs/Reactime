@@ -1,10 +1,3 @@
-/* eslint-disable brace-style */
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable no-inner-declarations */
 // @ts-nocheck
 import React from 'react';
 import { diff } from 'jsondiffpatch';

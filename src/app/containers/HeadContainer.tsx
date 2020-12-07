@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 // @ts-nocheck
 import React from 'react';
 
