@@ -313,7 +313,6 @@ function createTree(
       // We then store them along with the corresponding memoizedState.queue,
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseRecoilHooks(memoizedState, memoizedProps);
-      // console.log("hookStates: ", hooksStates);
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(
           state.state,
@@ -326,8 +325,7 @@ function createTree(
           
         // }
         // newState.push(state.state);
-          // console.log('newState in Recoil: ', newState);
-          // console.log('state.state: ', state.state);
+
         /* what is this supposed to do??? currently doesn't work?? and makes no sense, newState is an object, how can you push state.state into an object?? */
         // if (newState && newState.hooksState) {
         //   newState.push(state.state);
@@ -416,7 +414,6 @@ function createTree(
             //  remove existing rtid before adding a new one
             if (pointer.stateNode.classList.length > 0) {
               let lastClass = pointer.stateNode.classList[pointer.stateNode.classList.length -1];
-              // console.log("last class: ", lastClass, "linkFiber class? ",    lastClass.includes("fromLinkFiber"));
               if (lastClass.includes("fromLinkFiber")) {
                 pointer.stateNode.classList.remove(lastClass);
               }
@@ -434,7 +431,6 @@ function createTree(
         //  remove existing rtid before adding a new one
         if (currentFiber.child.stateNode.classList.length > 0) {
           let lastClass = currentFiber.child.stateNode.classList[currentFiber.child.stateNode.classList.length -1];
-          // console.log("lastClass: ", lastClass, "linkFiber class? ", lastClass.includes("fromLinkFiber"));
           if (lastClass.includes("fromLinkFiber")) {
             currentFiber.child.stateNode.classList.remove(lastClass);
           }

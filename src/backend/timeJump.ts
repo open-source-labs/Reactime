@@ -26,7 +26,6 @@ export default (origin, mode) => {
   // Set the state of the origin tree if the component is stateful
   function jump(target, firstCall = false) {
     if (!target) return;
-    //console.log("target in jump: ", target)
     if (target.state === 'stateless') {
       target.children.forEach(child => jump(child));
       return;
@@ -35,7 +34,6 @@ export default (origin, mode) => {
     const component = componentActionsRecord.getComponentByIndex(
       target.componentData.index,
     );
-    // console.log("component in time jump: ", component)
     // check if it is a stateful class component
     // if yes, find the component by its index and assign it to a variable
     // call that components setState method to reset state to the state at the time of the jump snapshot
