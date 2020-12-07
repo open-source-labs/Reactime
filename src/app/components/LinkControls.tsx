@@ -7,10 +7,16 @@ const controlStyles = {
 };
 
 const dropDownStyle = {
+	// margin: '0.5em',
+  // fontSize: '12px',
+  // borderRadius: '4px', 
+  // backgroundColor: 'rgb(231, 231, 231)'
 	margin: '0.5em',
   fontSize: '12px',
   borderRadius: '4px', 
-  backgroundColor: 'rgb(231, 231, 231)'
+	backgroundColor: '#242529', 
+	color:'white',
+	padding:'2px'
 }
 
 type Props = {
