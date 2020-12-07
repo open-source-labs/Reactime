@@ -47,7 +47,7 @@ class App extends Component{
   }
 }
 
-describe('unit test for linkFiber', () => {
+xdescribe('unit test for linkFiber', () => {
   beforeAll(async () => {
     await SERVER;
     const args = puppeteer.defaultArgs().filter(arg => String(arg).toLowerCase() !== '--disable-extensions');
