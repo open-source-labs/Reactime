@@ -56,7 +56,6 @@ const tooltipStyles = {
 const BarGraph = (props) => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { width, height, data } = props;
-  console.log('data: ', data)
   const {
     tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip,
   } = useTooltip<TooltipData>();
@@ -92,7 +91,6 @@ const BarGraph = (props) => {
   const yMax = height - margin.top - 150;
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
-  console.log("renderingScale range: ", renderingScale.range([yMax, 0]))
  return (
   <div> 
     <svg ref={containerRef} width={width} height={height}>
@@ -143,7 +141,6 @@ const BarGraph = (props) => {
                     /* TIP TOOL EVENT HANDLERS */
                     // Hides tool tip once cursor moves off the current rect
                     onMouseLeave={() => {
-                      console.log('bar: ', bar)
                       dispatch(onHoverExit(data.componentData[bar.key].rtid),
                       tooltipTimeout = window.setTimeout(() => {
                         hideTooltip()

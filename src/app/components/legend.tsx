@@ -10,8 +10,6 @@ type snapHierarchy = {};
 //type snapHierarchy = {`Record<string, unknown>`};
 export default function LegendKey(props: any) {
   const { hierarchy } = props;
-  // console.log('this is the props' + JSON.stringify(Object.entries(props)))
-  // console.log('this is the props.hierarchy' + JSON.stringify(Object.entries(props.hierarchy)))
   // we are sifting through array of displayNames and sorting them into key value pairs in an object, based on the branch they are on:
   // { '.0': [1.0, 2.0, 3.0, 4.0], '.1': [1.1, 2.1, 3.1,...], '.2': [....]}
   // then we create an array, with each index being strings showing the range of the branch, see below:

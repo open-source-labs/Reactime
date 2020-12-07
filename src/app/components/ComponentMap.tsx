@@ -42,7 +42,7 @@ export default function ComponentMap({
   // imported props to be used to display the dendrogram
   width: totalWidth,
   height: totalHeight,
-  margin = defaultMargin,
+  margin: defaultMargin,
   snapshots: snapshots,
 }: LinkTypesProps) {
 
@@ -158,7 +158,6 @@ export default function ComponentMap({
                           stroke="#ff6569"
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
-                            // console.log(node);
                             forceUpdate();
                           }}
                         />
@@ -174,7 +173,7 @@ export default function ComponentMap({
                           stroke={node.children ? '#62d6fb' : '#161521'}
                           strokeWidth={1}
                           strokeDasharray={node.children ? '0' : '2,2'}
-                          strokeOpazcity='1'
+                          strokeOpacity='1'
                           rx={node.children ? 4 : 10}                         
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
