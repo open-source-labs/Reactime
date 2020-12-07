@@ -100,7 +100,6 @@ const PerformanceVisx = (props: BarStackProps) => {
   // filter and structure incoming data for VISX
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   
-  // style={{ position: 'relative' }}
     // if performance tab is too small it will not return VISX component
     return  (
       <div className='renderTab'>

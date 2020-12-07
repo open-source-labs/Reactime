@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable max-len */
 import React, { useEffect } from 'react';
 import HeadContainer from './HeadContainer';
 import ActionContainer from './ActionContainer';
@@ -109,6 +106,10 @@ function MainContainer(): any {
   if (!tabs[currentTab]) {
     return (
       <div className="error-container">
+        <img 
+          src="../assets/logo-no-version.png" 
+          height="50px" 
+        />
         <a
           href="https://reactime.io/"
           target="_blank"
@@ -116,6 +117,10 @@ function MainContainer(): any {
         >
           No React application found. Please visit reactime.io to more info.
         </a>
+        <p>
+          If you are using a React application, make sure tha you application is running in development mode.<br></br>
+          NOTE: The React Developer Tools extension is also required for Reactime to run, if you do not already have it installed on your browser.
+        </p>
       </div>
     );
   }

@@ -1,7 +1,3 @@
-/* eslint-disable no-prototype-builtins */
-/* eslint-disable no-restricted-globals */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 // @ts-nocheck
 import React from 'react';
 
