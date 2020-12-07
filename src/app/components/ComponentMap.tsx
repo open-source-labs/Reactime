@@ -42,7 +42,7 @@ export default function ComponentMap({
   // imported props to be used to display the dendrogram
   width: totalWidth,
   height: totalHeight,
-  margin: defaultMargin,
+  margin = defaultMargin,
   snapshots: snapshots,
 }: LinkTypesProps) {
 
@@ -50,11 +50,13 @@ export default function ComponentMap({
   // This is where we select the last object in the snapshots array from props to allow hierarchy to parse the data for render on the component map per hierarchy layout specifications.
   const lastNode = snapshots.length - 1;
   const data: {} = snapshots[lastNode];
+
   // importing custom hooks for the selection tabs.
   const [layout, setLayout] = useState('cartesian');
   const [orientation, setOrientation] = useState('horizontal');
   const [linkType, setLinkType] = useState('diagonal');
   const [stepPercent, setStepPercent] = useState(10);
+
   // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
   const forceUpdate = useForceUpdate();
   // setting the margins for the Map to render in the tab window.
@@ -101,7 +103,6 @@ export default function ComponentMap({
         setStepPercent={setStepPercent}
       />
 
-
       <svg width={totalWidth} height={totalHeight}>
         <LinearGradient id='links-gradient' from='#fd9b93' to='#fe6e9e' />
         <rect width={totalWidth} height={totalHeight} rx={14} fill='#242529'/>
@@ -125,7 +126,6 @@ export default function ComponentMap({
                 ))}
 
                 {tree.descendants().map((node, key) => {
-                  // const width = (node.data.name.length) + 70;
                   const widthFunc = (name) => {
                     let nodeLength = name.length;
                     if (nodeLength < 5) return nodeLength + 40;
@@ -162,7 +162,7 @@ export default function ComponentMap({
                           }}
                         />
                       )}
-                      {/* This creates the rectangle boxes for each component and sets it relative position to other parent nodes of the same level.   */}
+                      {/* This creates the rectangle boxes for each component and sets it relative position to other parent nodes of the same level.*/}
                       {node.depth !== 0 && (
                         <rect
                           height={height}
