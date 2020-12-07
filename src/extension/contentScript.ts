@@ -5,7 +5,7 @@ let firstMessage = true;
 window.addEventListener('message', msg => { // runs automatically every second
   // window listener picks up the message it sends, so we should filter
   // messages sent by contentscript
-  
+
   if (firstMessage) {
     // one-time request tells the background script that the tab has reloaded
     chrome.runtime.sendMessage({ action: 'tabReload' });
