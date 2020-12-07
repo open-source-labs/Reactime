@@ -25,9 +25,8 @@ const mode: Mode = {
   jumping: false,
   paused: false,
 };
-// console.log("linkFiberStart in index.ts:" + linkFiberStart);
+
 const linkFiber = linkFiberStart(snapShot, mode);
-// console.log('linkFiber in index.ts: ' + linkFiber);
 const timeJump = timeJumpStart(snapShot, mode);
 
 // function getRouteURL(node: SnapshotNode): string {
@@ -44,7 +43,6 @@ const timeJump = timeJumpStart(snapShot, mode);
 
 // * Event listener for time-travel actions
 window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
-  // console.log('linkFiber in index.ts: ' + linkFiber);
   switch (action) {
     case 'jumpToSnap':
       timeJump(payload, true); // * This sets state with given payload
@@ -57,11 +55,8 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       mode.paused = payload;
       break;
     case 'onHover':
-      // console.log("curr payload ", payload); 
       if (Array.isArray(payload)) {
-        // console.log('inside array is array if block')
         for (let i = 0; i < payload.length; i + 1) {
-          // console.log("current payload value: ", payload[i]);
           let element = document.getElementById(payload[i])
           if (element !== null) {
              element.style.backgroundColor = '#C0D9D9'; 
@@ -69,9 +64,7 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
         }
       } else {
         let element: HTMLElement = document.querySelector(`.${payload}`);
-        // console.log("element: ", element);
         if (element !== null) {
-          // console.log("element style: ", element.style)
           element.style.backgroundColor = '#C0D9D9'; 
         }
       }
@@ -86,7 +79,6 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
         }
       } else {
         let element: HTMLElement = document.querySelector(`.${payload}`);
-        // console.log("element style: ", element.style)
         if (element !== null) {
           element.style.backgroundColor = ''; 
         }

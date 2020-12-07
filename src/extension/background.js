@@ -185,6 +185,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 	const { action, index, name } = request;
 	let isReactTimeTravel = false;
 
+
 	// Filter out tabs that don't have reactime, tabs that dont use react?
 	if (
 		action === 'tabReload' ||
