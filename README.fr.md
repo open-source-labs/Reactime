@@ -30,13 +30,13 @@
 
 <h5 align="center">
 <br>
-  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.md">🇷🇺  &nbsp; ENGLISH VERSION </a>
+  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.md">🇺🇸  &nbsp; ENGLISH VERSION </a>
   <br>
 </h5>
 <br>
 
 <p align="center">
-<img src="./assets/reactime7.gif" />
+<img src="./assets/new-reactime.gif" />
 </p>
 
 <p align="center">
