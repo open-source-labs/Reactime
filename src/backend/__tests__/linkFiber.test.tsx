@@ -105,5 +105,4 @@ xdescribe('unit test for linkFiber', () => {
   });
 });
 
-
- 
+SERVER.close();
