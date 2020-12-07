@@ -70,47 +70,47 @@ Then open up your Chrome DevTools and navigate to the Reactime panel.
 
 ## <b>Troubleshooting</b>
 
-### <b>Why is Reactime telling me that no React application is found?</b>
+### ❓ <b>Why is Reactime telling me that no React application is found?</b>
 
 Reactime initially runs using the dev tools global hook from the Chrome API. It takes time for Chrome to load this. Try refreshing your application a couple times until you see Reactime running.
 
-### <b>There is a black screen instead of the Reactime extension</b>
+### ❓ <b>There is a black screen instead of the Reactime extension</b>
 
 Try refreshing the application you want to test and refresh the DevTools by clicking the right mouse button “Reload frame”.
 
-### <b>I found a bug in Reactime</b>
+### ❓ <b>I found a bug in Reactime</b>
 
 Reactime is an open source project, and we’d really appreciate your help with improving user experience. Please, create a pull request (or issue) to propose and collaborate on changes to a repository.
 
 ## <b>Features</b>
 
-### Re-render Optimization
+### 🔹 Re-render Optimization
 
 One of the most common issues that affects performance in React is unnecessary render cycles. This problem can be fixed by checking your renders in the Performance tab in Chrome DevTools under the Reactime panel.
 
-### Gatsby
+### 🔹 Gatsby
 Reactime offers fully support for Gatsy applications. You would be able to identify unnecessary renders, duration of each rendering, travel-debugging features and visual representation of the tree components. 
 
-### Next.js
+### 🔹 Next.js
 Reactime offers debugging and performance tools for Next.js apps: time-traveling debugging, preventing unnecessary components re-renders and making your application faster. 
 
-### Recording
+### 🔹 Recording
 
 Whenever state is changed (whenever setState, useState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the Reactime panel.
 
-### Viewing
+### 🔹 Viewing
 
 You can click on a snapshot to view your app's state. State can be visualized in a Component Graph, JSON Tree, or Performance Graph. Snapshots can be diffed with the previous snapshot, which can be viewed in Diff mode.
 
-### Jumping
+### 🔹 Jumping
 
 Using the actions sidebar, a user can jump to any previous recorded snapshots. Hitting the jump button on any snapshot will allow a user to view state data at any point in the history of the target application.
 
-### TypeScript Support
+### 🔹 TypeScript Support
 
 Reactime offers beta support for TypeScript applications using stateful class components and functional components. Further testing and development is required for custom hooks, Context API, and Concurrent Mode.
 
-### Documentation
+### 🔹 Documentation
 
 After cloning this repository, developers can simply run `npm run docs` at the root level and serve the dynamically generated `/docs/index.html` file on a browser. Doing so will provide a readable, extensible, and interactive GUI view of the structure and interfaces of the codebase.
 <br>
