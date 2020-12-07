@@ -86,139 +86,138 @@ const BarGraph = (props) => {
   });
 
   // setting max dimensions and scale ranges
-
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - 150;
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
- return (
-  <div> 
-    <svg ref={containerRef} width={width} height={height}>
-      {}
-      <rect
-        x={0}
-        y={0}
-        width={width}
-        height={height}
-        fill={background}
-        rx={14}
-      />
-      <Grid
-        top={margin.top}
-        left={margin.left}
-        xScale={snapshotIdScale}
-        yScale={renderingScale}
-        width={xMax}
-        height={yMax}
-        stroke="black"
-        strokeOpacity={0.1}
-        xOffset={snapshotIdScale.bandwidth() / 2}
-      />
-      <Group top={margin.top} left={margin.left}>
-        <BarStack
-          data={data.barStack}
-          keys={keys}
-          x={getSnapshotId}
+  return (
+    <div> 
+      <svg ref={containerRef} width={width} height={height}>
+        {}
+        <rect
+          x={0}
+          y={0}
+          width={width}
+          height={height}
+          fill={background}
+          rx={14}
+        />
+        <Grid
+          top={margin.top}
+          left={margin.left}
           xScale={snapshotIdScale}
           yScale={renderingScale}
-          color={colorScale}
+          width={xMax}
+          height={yMax}
+          stroke="black"
+          strokeOpacity={0.1}
+          xOffset={snapshotIdScale.bandwidth() / 2}
+        />
+        <Group top={margin.top} left={margin.left}>
+          <BarStack
+            data={data.barStack}
+            keys={keys}
+            x={getSnapshotId}
+            xScale={snapshotIdScale}
+            yScale={renderingScale}
+            color={colorScale}
+          >
+            {barStacks =>
+              barStacks.map(barStack =>
+                barStack.bars.map(((bar, idx) => {
+                  // hides new components if components don't exist in previous snapshots
+                  if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
+                    bar.height = 0;
+                  }
+                  return (
+                    <rect
+                      key={`bar-stack-${barStack.index}-${bar.index}`}
+                      x={bar.x}
+                      y={bar.y}
+                      height={bar.height === 0 ? null : bar.height}
+                      width={bar.width}
+                      fill={bar.color}
+                      /* TIP TOOL EVENT HANDLERS */
+                      // Hides tool tip once cursor moves off the current rect
+                      onMouseLeave={() => {
+                        dispatch(onHoverExit(data.componentData[bar.key].rtid),
+                        tooltipTimeout = window.setTimeout(() => {
+                          hideTooltip()
+                        }, 300))
+                      }}
+                      // Cursor position in window updates position of the tool tip
+                      onMouseMove={event => {
+                        dispatch(onHover(data.componentData[bar.key].rtid))
+                        if (tooltipTimeout) clearTimeout(tooltipTimeout);
+                        const top = event.clientY - margin.top - bar.height;
+                        const left = bar.x + bar.width / 2;
+                        showTooltip({
+                          tooltipData: bar,
+                          tooltipTop: top,
+                          tooltipLeft: left,
+                        });
+                      }}
+                    />
+                    )})))
+                  }
+          </BarStack>
+        </Group>
+        <AxisLeft
+          top={margin.top}
+          left={margin.left}
+          scale={renderingScale}
+          stroke={axisColor}
+          tickStroke={axisColor}
+          strokeWidth={2}
+          tickLabelProps={() => ({
+            fill: 'rgb(231, 231, 231)',
+            fontSize: 11,
+            verticalAnchor: 'middle',
+            textAnchor: 'end',
+          })}
+        />
+        <AxisBottom
+          top={yMax + margin.top}
+          left={margin.left}
+          scale={snapshotIdScale}
+          stroke={axisColor}
+          tickStroke={axisColor}
+          strokeWidth={2}
+          tickLabelProps={() => ({
+            fill: 'rgb(231, 231, 231)',
+            fontSize: 11,
+            textAnchor: 'middle',
+          })}
+        />
+        <Text x={-xMax / 2} y="15" transform="rotate(-90)" fontSize={12} fill="#FFFFFF"> Rendering Time (ms) </Text>
+        <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill="#FFFFFF"> Snapshot Id </Text>
+      </svg>
+      {/* FOR HOVER OVER DISPLAY */}
+      {tooltipOpen && tooltipData && (
+        <TooltipInPortal
+          key={Math.random()} // update tooltip bounds each render
+          top={tooltipTop}
+          left={tooltipLeft}
+          style={tooltipStyles}
         >
-          {barStacks =>
-            barStacks.map(barStack =>
-              barStack.bars.map(((bar, idx) => {
-                // hides new components if components don't exist in previous snapshots
-                if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
-                  bar.height = 0;
-                }
-                return (
-                  <rect
-                    key={`bar-stack-${barStack.index}-${bar.index}`}
-                    x={bar.x}
-                    y={bar.y}
-                    height={bar.height === 0 ? null : bar.height}
-                    width={bar.width}
-                    fill={bar.color}
-                    /* TIP TOOL EVENT HANDLERS */
-                    // Hides tool tip once cursor moves off the current rect
-                    onMouseLeave={() => {
-                      dispatch(onHoverExit(data.componentData[bar.key].rtid),
-                      tooltipTimeout = window.setTimeout(() => {
-                        hideTooltip()
-                      }, 300))
-                    }}
-                    // Cursor position in window updates position of the tool tip
-                    onMouseMove={event => {
-                      dispatch(onHover(data.componentData[bar.key].rtid))
-                      if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                      const top = event.clientY - margin.top - bar.height;
-                      const left = bar.x + bar.width / 2;
-                      showTooltip({
-                        tooltipData: bar,
-                        tooltipTop: top,
-                        tooltipLeft: left,
-                      });
-                    }}
-                  />
-                  )})))
-                }
-        </BarStack>
-      </Group>
-      <AxisLeft
-        top={margin.top}
-        left={margin.left}
-        scale={renderingScale}
-        stroke={axisColor}
-        tickStroke={axisColor}
-        strokeWidth={2}
-        tickLabelProps={() => ({
-          fill: 'rgb(231, 231, 231)',
-          fontSize: 11,
-          verticalAnchor: 'middle',
-          textAnchor: 'end',
-        })}
-      />
-      <AxisBottom
-        top={yMax + margin.top}
-        left={margin.left}
-        scale={snapshotIdScale}
-        stroke={axisColor}
-        tickStroke={axisColor}
-        strokeWidth={2}
-        tickLabelProps={() => ({
-          fill: 'rgb(231, 231, 231)',
-          fontSize: 11,
-          textAnchor: 'middle',
-        })}
-      />
-      <Text x={-xMax / 2} y="15" transform="rotate(-90)" fontSize={12} fill="#FFFFFF"> Rendering Time (ms) </Text>
-      <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill="#FFFFFF"> Snapshot Id </Text>
-    </svg>
-    {/* FOR HOVER OVER DISPLAY */}
-    {tooltipOpen && tooltipData && (
-      <TooltipInPortal
-        key={Math.random()} // update tooltip bounds each render
-        top={tooltipTop}
-        left={tooltipLeft}
-        style={tooltipStyles}
-      >
-        <div style={{ color: colorScale(tooltipData.key) }}>
-        {' '}
-        <strong>{tooltipData.key}</strong>
-        {' '}
-        </div>
-        <div>{data.componentData[tooltipData.key].stateType}</div>
-        <div>
+          <div style={{ color: colorScale(tooltipData.key) }}>
           {' '}
-          {formatRenderTime(tooltipData.bar.data[tooltipData.key])}
+          <strong>{tooltipData.key}</strong>
           {' '}
-        </div>
-        <div>
-          {' '}
-          <small>{formatSnapshotId(getSnapshotId(tooltipData.bar.data))}</small>
-        </div>
-      </TooltipInPortal>
-    )}
-  </div>
+          </div>
+          <div>{data.componentData[tooltipData.key].stateType}</div>
+          <div>
+            {' '}
+            {formatRenderTime(tooltipData.bar.data[tooltipData.key])}
+            {' '}
+          </div>
+          <div>
+            {' '}
+            <small>{formatSnapshotId(getSnapshotId(tooltipData.bar.data))}</small>
+          </div>
+        </TooltipInPortal>
+      )}
+    </div>
 )};
 
 export default BarGraph;

@@ -1,9 +1,6 @@
-
-
 import React, { useMemo } from 'react';
 import { Group } from '@visx/group';
 import { Cluster, hierarchy } from '@visx/hierarchy';
-//import { HierarchyPointNode, HierarchyPointLink } from '@visx/hierarchy/lib/types';
 import { LinkVertical } from '@visx/shape';
 import { LinearGradient } from '@visx/gradient';
 import { StateRouteProps} from './StateRoute'
@@ -69,7 +66,6 @@ function clusterDataPopulate(props:StateRouteProps) {
         bothObj[key] = []
       }
 
-
       if(props[0].atomSelectors[key].length){
       for(let i=0; i<props[0].atomSelectors[key].length;i++){
         if(!outerobj.children) outerobj.children = []
@@ -88,7 +84,6 @@ function clusterDataPopulate(props:StateRouteProps) {
             if(!innerobj.children) innerobj.children = []
             innerobj.children.push({name:atomCompObj[props[0].atomSelectors[key][i]]})
             bothObj[key].push(atomCompObj[props[0].atomSelectors[key][i]][0])
-            
           }
         }
         outerobj.children.push(innerobj)
@@ -105,8 +100,7 @@ function clusterDataPopulate(props:StateRouteProps) {
             } 
             bothObj[key].push(atomCompObj[key][i])
           }
-        }
-        
+        }   
     clusterData.children.push(outerobj)
     }
   }
@@ -125,9 +119,7 @@ function clusterDataPopulate(props:StateRouteProps) {
     }    
   }
   initialFire = true 
-
 }
-
 
 function reorganizedCompObj(props) {
   let atomsComponentObj = props[0].atomsComponents;
@@ -146,7 +138,6 @@ function reorganizedCompObj(props) {
 }
 
 function Node({ node, snapshots, dispatch, bothObj}) {
-  // const [dispatch] = useStoreContext();
   const selector = node.depth === 1 && node.height === 2
   const isRoot = node.depth === 0;
   const isParent = !!node.children;
@@ -209,12 +200,9 @@ function RootNode({ node }) {
         x={centerX}
         rx="10"
         ry="10"
-        // fill="url('#top')"
       />
       <text
         dy=".33em"
-        // top={node.y}
-        // left={node.x}
         fontSize={9}
         fontFamily="Arial"
         textAnchor="middle"
@@ -277,12 +265,6 @@ function removeDup(bothObj){
 
 const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40 };
 
-// export type DendrogramProps = {
-//   width: number;
-//   height: number;
-//   margin?: { top: number; right: number; bottom: number; left: number };
-// };
-
 export default function AtomsRelationship({
   width,
   height,
@@ -306,9 +288,7 @@ export default function AtomsRelationship({
   return width < 10 ? null : (
     <>
     <div>
-      <Legend 
-      // hierarchy = {hierarchy}
-      />
+      <Legend />
     </div>
     <svg width={width} height={height}>
       
