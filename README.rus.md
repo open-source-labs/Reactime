@@ -14,13 +14,13 @@
 
 <h5 align="center">
 <br>
-  <a href="./README.md">🇷🇺  &nbsp; ENGLISH VERSION </a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a>
+  <a href="./README.md">🇺🇸 &nbsp; ENGLISH VERSION </a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a>
   <br>
 </h5>
 <br>
 
 <p align="center">
-<img src="./assets/reactime7.gif" />
+<img src="./assets/new-reactime.gif" />
 </p>
 
 <b>Reactime</b> - расширение для дебаггинга/отладки React приложений. Оно создает снэпшоты при каждом изменении состояния (state) и позволяет пользованию прыгать на любое предыдущее состояние (state). 
