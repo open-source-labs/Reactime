@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Provider } from 'react-redux';
 import store from '../redux/store';
-// import { connect } from 'react-redux';
 import './styles.sass';
 import UseState from './sandboxes/useState';
 import UseEffect from './sandboxes/useEffect';
@@ -12,10 +11,6 @@ import Router from './sandboxes/router';
 import SetState from './sandboxes/setState';
 import ComponentDidMount from './sandboxes/componentDidMount';
 import AppContextProvider from '../context/appContextProvider';
-
-// import * as actions from '../redux/actions/actions';
-// const mapStateToProps = state => ({});
-// const mapDispatchToProps = dispatch => ({});
 
 const Scenes = () => {
   const [activeSandbox, setActiveSandbox] = useState('UseState');

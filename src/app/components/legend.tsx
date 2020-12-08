@@ -94,9 +94,6 @@ export default function LegendKey(props: any) {
                 <LegendItem
                   key={`legend-quantile-${i}`}
                   margin="0 5px"
-                  onClick={() => {
-                    // if (Event) alert('clicked: YO BRILLIANT GENIUS');
-                  }}
                 >
                   <svg width={10} height={10}>
                     <rect
@@ -122,7 +119,6 @@ export default function LegendKey(props: any) {
             width: 25%;
             font-family: arial;
             font-weight: 900;
-            // background-color: 242529;
             border-radius: 14px;
             padding: 2px 2px 2px 2px;
             overflow-y: auto;

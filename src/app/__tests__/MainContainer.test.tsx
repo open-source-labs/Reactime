@@ -48,7 +48,7 @@ beforeEach(() => {
 describe('MainContainer rendering', () => {
   test('With no snapshots, should not render any containers', () => {
     expect(wrapper.text()).toEqual(
-      'No React application found. Please visit reactime.io to more info.',
+      'No React application found. Please visit reactime.io to more info.If you are using a React application, make sure tha you application is running in development mode.NOTE: The React Developer Tools extension is also required for Reactime to run, if you do not already have it installed on your browser.',
     );
     expect(wrapper.find(HeadContainer).length).toBe(0);
     expect(wrapper.find(ActionContainer).length).toBe(0);

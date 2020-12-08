@@ -11,7 +11,6 @@
 
 //import typescript types
 import {
-  
   //tree
   Snapshot,
   //jump, pause
@@ -30,9 +29,7 @@ import componentActionsRecord from './masterState';
 // throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
 //getHooksNames - helper function to grab the getters/setters from `elementType`
 import { throttle, getHooksNames } from './helpers';
-// import { Console } from 'console';
 import AtomsRelationship from '../app/components/AtomsRelationship';
-// import { isNull } from 'util';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -116,7 +113,6 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
  //updating tree depending on current mode on the panel (pause, etc) 
 function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
   // this is the currently active root fiber(the mutable root of the tree)
-
   if (fiberRoot) {
     const { current } = fiberRoot;
     //Clears circular component table
@@ -321,12 +317,10 @@ function createTree(
         componentData.hooksIndex = hooksIndex;
 
         // Improves tree visualization but breaks jump ?
-        // if (!newState) {
-          
-        // }
+        // if (!newState) {}
         // newState.push(state.state);
 
-        /* what is this supposed to do??? currently doesn't work?? and makes no sense, newState is an object, how can you push state.state into an object?? */
+        /* what is this supposed to do? currently doesn't work? and makes no sense, newState is an object, how can you push state.state into an object? */
         // if (newState && newState.hooksState) {
         //   newState.push(state.state);
         // } else if (newState) {
@@ -395,7 +389,7 @@ function createTree(
 
   // We want to add this fiber node to the snapshot
   if (componentFound || newState === 'stateless') {
-    // where does this get changed to true?
+
     if (isRecoil) {
       // do this down below too
       if(currentFiber.elementType.name){
@@ -490,24 +484,19 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
   function onVisibilityChange(): void {
     doWork = !document.hidden;
   }
-  // this code hasnt changed since reactime 4.0
-  // https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8
   return () => {
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-  //  console.log("fiberRoot in export default: " + Object.entries(fiberRoot));
+
     const throttledUpdateSnapshot = throttle(() => updateSnapShotTree(snap, mode), 70);
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     if (reactInstance && reactInstance.version) {
-      // when is this being called...
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
-          // console.log("args in onCommitFiberRoot: ", args)
           // eslint-disable-next-line prefer-destructuring
-
           fiberRoot = args[1];
           if (doWork) {
             throttledUpdateSnapshot();
