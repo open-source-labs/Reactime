@@ -9,7 +9,7 @@
   <br>
 </h1>
 
-<h4 align="center"> Reactime is a performance and debugging tool for React developers <b>(compatible with Gatsby and Next.js)</b>. It records a snapshot whenever a target application's state is changed and allows the user to jump to any previously recorded state, detect the amount of renders of each component and average time of rendering.</h4>
+<h4 align="center"> Reactime is a performance and debugging tool for React developers <b>(compatible with Gatsby and Next.js)</b>. It records a snapshot whenever a target application's state is changed and allows the user to jump to any previously recorded state. It also detects the amount of renders of each component and average time of rendering.</h4>
 
 <br>
 <p align="center">
