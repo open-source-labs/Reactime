@@ -25,3 +25,7 @@
   display: flex;
   justify-content: center;
 }
+
+.action-component:focus {
+  outline:  none;
+}

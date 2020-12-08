@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable max-len */
 import React, { useEffect } from 'react';
 import HeadContainer from './HeadContainer';
 import ActionContainer from './ActionContainer';
@@ -19,7 +16,6 @@ const mixpanel = require("mixpanel").init("12fa2800ccbf44a5c36c37bc9776e4c0", {
 });
 
 
-
 function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
@@ -27,7 +23,7 @@ function MainContainer(): any {
   useEffect(() => {
     // only open port once
     if (currentPort) return;
-    // open connection with background script
+    // open long-lived connection with background script
     const port = chrome.runtime.connect();
 
     // listen for a message containing snapshots from the background script
@@ -110,13 +106,21 @@ function MainContainer(): any {
   if (!tabs[currentTab]) {
     return (
       <div className="error-container">
+        <img 
+          src="../assets/logo-no-version.png" 
+          height="50px" 
+        />
         <a
-          href="reactime.io"
+          href="https://reactime.io/"
           target="_blank"
           rel="noopener noreferrer"
         >
           No React application found. Please visit reactime.io to more info.
         </a>
+        <p>
+          If you are using a React application, make sure tha you application is running in development mode.<br></br>
+          NOTE: The React Developer Tools extension is also required for Reactime to run, if you do not already have it installed on your browser.
+        </p>
       </div>
     );
   }

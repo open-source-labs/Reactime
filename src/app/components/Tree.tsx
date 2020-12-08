@@ -1,8 +1,4 @@
-/* eslint-disable arrow-body-style */
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/ban-types */
+
 import React from 'react';
 import JSONTree from 'react-json-tree';
 

@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/ban-types */
-import 'core-js';
+// import 'core-js';
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-console */
@@ -49,9 +49,9 @@ class Tree {
 
   atomSelectors: any;
 
-  rtid: any; 
+  rtid: any;
 
-  recoilDomNode: any; 
+  recoilDomNode: any;
 
   constructor(state: string | {}, name = 'nameless', componentData: {} = {}, rtid: any = null, recoilDomNode:any = null) {
     this.state = state === 'root' ? 'root' : serializeState(state);
@@ -59,8 +59,8 @@ class Tree {
     this.componentData = componentData ? JSON.parse(JSON.stringify(componentData)) : {};
     this.children = [];
     this.parent = null; // ref to parent so we can add siblings
-    this.rtid = rtid
-    this.recoilDomNode = recoilDomNode
+    this.rtid = rtid;
+    this.recoilDomNode = recoilDomNode;
   }
 
   addChild(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode:any): Tree {
@@ -70,8 +70,8 @@ class Tree {
     return newChild;
   }
 
-  addSibling(state: string | {}, name: string, componentData: {},  rtid: any, recoilDomNode:any): Tree {
-    const newSibling: Tree = new Tree(state, name, componentData, rtid,recoilDomNode);
+  addSibling(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode: any): Tree {
+    const newSibling: Tree = new Tree(state, name, componentData, rtid, recoilDomNode);
     newSibling.parent = this.parent;
     this.parent.children.push(newSibling);
     return newSibling;

@@ -5,8 +5,6 @@
 /* eslint-disable max-classes-per-file */
 import timeJumpRequire from '../timeJump';
 import componentActionsRecord from '../masterState';
-// import { ComponentData } from '../types/backendTypes';
-// const timeJumpRequire = require('../timeJump');
 
 class Component {
   mockfn: (state) => void
@@ -65,7 +63,6 @@ describe('unit testing for timeJump.ts', () => {
 
     snapShot = { tree };
     timeJump = timeJumpRequire(snapShot, mode);
-    // mockFunc.mockClear()
   });
   test('calling the initial require should return a function', () => {
     expect(typeof timeJumpRequire).toBe('function');

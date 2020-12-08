@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import 'core-js';
+
 /* eslint-disable no-plusplus */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
@@ -7,8 +7,8 @@ import 'core-js';
 // import {Hook}
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  HookStateItem,
-  HookStates,
+  HookStateItem, // obj with state and component
+  HookStates, // array of hook state items
 } from './types/backendTypes';
 
 const componentActionsRecord: HookStates = [];

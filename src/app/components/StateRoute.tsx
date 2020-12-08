@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
@@ -127,14 +128,6 @@ const StateRoute = (props: StateRouteProps) => {
             />
           )}
         </ParentSize>
-
-        // <PerfView
-        //   viewIndex={viewIndex}
-        //   snapshots={snapshots}
-        //   setNoRenderData={setNoRenderData}
-        //   width={600}
-        //   height={1000}
-        // />
       );
     }
     return <div className="noState">{NO_STATE_MSG}</div>;

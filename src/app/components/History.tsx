@@ -1,17 +1,17 @@
+// @ts-nocheck
 import React, { Component, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import LegendKey from './legend';
 import { changeView, changeSlider } from '../actions/actions';
-
 /**
  * @var colors: Colors array for the diffrerent node branches, each color is for a different branch
  */
 const colors = [
-  '#95B6B7',
-  '#475485',
-  '#519331',
-  '#AA5039',
-  '#8B2F5F',
+  '#eb4d70', 
+  '#f19938', 
+  '#6ce18b', 
+  '#78f6ef', 
+  '#9096f8',
   '#C5B738',
   '#858DFF',
   '#FF8D02',
@@ -44,7 +44,7 @@ function History(props: Record<string, unknown>) {
   let root = JSON.parse(JSON.stringify(hierarchy));
   let isRecoil = false;
 
-  let HistoryRef = React.createRef(root); //React.createRef(root);
+  let HistoryRef = React.createRef(root); 
   useEffect(() => {
     maked3Tree();
   }, [root]);
@@ -155,7 +155,7 @@ function History(props: Record<string, unknown>) {
         dispatch(changeView(index));
       })
       // think about how I can convert this any to typescript
-      .on('mouseout', function (d: any) {
+      .on('mouseout', function () {
         d3.select(this).transition().duration(300).attr('r', 14);
       });
 
@@ -250,7 +250,6 @@ function History(props: Record<string, unknown>) {
           ref={HistoryRef}
           className="history-d3-div"
           id="historyContainer"
-          // position="absolute"
         />
       </div>
     </>

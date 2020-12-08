@@ -1,13 +1,8 @@
-/* eslint-disable brace-style */
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable no-inner-declarations */
+// @ts-nocheck
 import React from 'react';
 import { diff } from 'jsondiffpatch';
 import Action from '../components/Action';
+import SwitchAppDropdown from '../components/SwitchApp';
 
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
@@ -23,7 +18,6 @@ function ActionContainer() {
   let actionsArr = [];
   const hierarchyArr:any[] = [];
 
-  // function to traverse state from hiararchy and also getting information on display name and component name
   // function to traverse state from hiararchy and also getting information on display name and component name
   const displayArray = (obj:{stateSnapshot:{children:any[]}, name:number, branch:number, index:number, children?:[]}) => {
     if (obj.stateSnapshot.children.length > 0 && obj.stateSnapshot.children[0] && obj.stateSnapshot.children[0].state && obj.stateSnapshot.children[0].name) {
@@ -93,6 +87,7 @@ function ActionContainer() {
 
   return (
     <div className="action-container">
+      <SwitchAppDropdown />
       <div className="action-component exclude">
         <button
           className="empty-button"
