@@ -40,7 +40,6 @@ describe('testing the bottom buttons', () => {
     dispatch.mockClear();
     useStoreContext.mockClear();
     currentTab.mode = {
-      // locked: false,
       paused: false,
       persist: false,
     };
@@ -65,25 +64,6 @@ describe('testing the bottom buttons', () => {
       expect(wrapper.find('.pause-button').text()).toBe('<FontAwesomeIcon />Unlock');
     }); 
   });
-  // describe('lock button testing', () => {
-  //   beforeEach(() => {
-  //     wrapper.find('.lock-button').simulate('click');
-  //   });
-  //   test('lock button dispatches upon click', () => {
-  //     expect(dispatch.mock.calls.length).toBe(1);
-  //   });
-
-  //   test('lock button dispatches toggleMode action', () => {
-  //     expect(dispatch.mock.calls[0][0]).toEqual(toggleMode('locked'));
-  //   });
-
-  //   test('lock button displays state', () => {
-  //     expect(wrapper.find('.lock-button').text()).toBe('Lock');
-  //     state.tabs[state.currentTab].mode.locked = true;
-  //     wrapper = shallow(<ButtonsContainer />);
-  //     expect(wrapper.find('.lock-button').text()).toBe('Unlock');
-  //   });
-  // });
 
   describe('persist button testing', () => {
     beforeEach(() => {

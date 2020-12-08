@@ -27,7 +27,7 @@ function Diff(props: DiffProps) {
     previous = snapshots[sliderIndex - 1];
   }
 
-  // cleanning preview from stateless data
+  // cleaning preview from stateless data
   const statelessCleanning = (obj:{name?:string; componentData?:object; state?:string|any;stateSnaphot?:object; children?:any[]}) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {

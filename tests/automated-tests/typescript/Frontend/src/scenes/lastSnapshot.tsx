@@ -1,12 +1,6 @@
 /* eslint-disable no-undef */
 import React, { useState, useEffect } from 'react';
-// import { connect } from 'react-redux';
 import './styles.sass';
-// import { AnyAction } from 'redux';
-
-// import * as actions from '../redux/actions/actions';
-// const mapStateToProps = state => ({});
-// const mapDispatchToProps = dispatch => ({});
 
 const LastSnapshot = () => {
   const [currentSnapshot, setCurrentSnapshot] = useState('');

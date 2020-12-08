@@ -37,21 +37,13 @@ export default (origin, mode) => {
     // check if it is a stateful class component
     // if yes, find the component by its index and assign it to a variable
     // call that components setState method to reset state to the state at the time of the jump snapshot
-    // if (target.state && !target.state.hooksState)
     if (component && component.setState) {
       component.setState(
         prevState => {
-          // console.log("prevState: ", prevState);
           Object.keys(prevState).forEach(key => {
-            // console.log("target state object at key: ", target.state[key])
-            // what is this edge case??
             if (!target.state[key] === undefined) {
               target.state[key] = undefined;
             }
-            // does this do the same?
-            // if (!target.state[key]) {
-            //   target.state[key];
-            // }
           });
           return target.state;
         },
@@ -63,13 +55,11 @@ export default (origin, mode) => {
     // Check for hooks state and set it with dispatch()
     if (target.state && target.state.hooksState) {
       target.state.hooksState.forEach(hook => {
-        // console.log("hook: ", hook);
         const hooksComponent = componentActionsRecord.getComponentByIndex(
           target.componentData.hooksIndex,
         );
-        // console.log("hooksComponent: ", hooksComponent);
         const hookState = Object.values(hook);
-        // console.log("hookstate in hooks if block: ", hookState);
+
         if (hooksComponent && hooksComponent.dispatch) {
           hooksComponent.dispatch(hookState[0]);
         }
