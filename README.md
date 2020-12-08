@@ -45,7 +45,7 @@
 
 Currently, Reactime supports React apps using stateful components and Hooks, including frameworks like Gatsby and Next.js, with beta support for Recoil and Context API.
 
-<b>Reactime version 7.0</b> beta can help you to avoid unnecessary re-renders. Identifying wasted renders in your React applications is the perfect start to identifying most performance issues.
+<b>Reactime version 7.0</b> can help you to avoid unnecessary re-renders. Identifying wasted renders in your React applications is the perfect start to identifying most performance issues.
 Reactime 7.0 fixes previous version bugs and incorporates improved visualizations for component relationships. Reactime 7.0 includes expanded [typedoc](https://typedoc.org/api/) documentation for developers looking to contribute to the source code.
 
 After installing Reactime, you can test its functionalities with your React application in development mode.
