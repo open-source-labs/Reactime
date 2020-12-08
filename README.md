@@ -9,7 +9,7 @@
   <br>
 </h1>
 
-<h4 align="center"> Reactime is a performance and debugging tool for React developers <b>(compatible with Gatsy and Next.js)</b>. It records a snapshot whenever a target application's state is changed and allows the user to jump to any previously recorded state, detect the amount of renders of each component and average time of rendering.</h4>
+<h4 align="center"> Reactime is a performance and debugging tool for React developers <b>(compatible with Gatsby and Next.js)</b>. It records a snapshot whenever a target application's state is changed and allows the user to jump to any previously recorded state, detect the amount of renders of each component and average time of rendering.</h4>
 
 <br>
 <p align="center">
@@ -89,7 +89,7 @@ Reactime is an open source project, and we’d really appreciate your help with 
 One of the most common issues that affects performance in React is unnecessary render cycles. This problem can be fixed by checking your renders in the Performance tab in Chrome DevTools under the Reactime panel.
 
 ### 🔹 Gatsby
-Reactime offers fully support for Gatsy applications. You would be able to identify unnecessary renders, duration of each rendering, travel-debugging features and visual representation of the tree components. 
+Reactime offers fully support for Gatsby applications. You would be able to identify unnecessary renders, duration of each rendering, travel-debugging features and visual representation of the tree components. 
 
 ### 🔹 Next.js
 Reactime offers debugging and performance tools for Next.js apps: time-traveling debugging, preventing unnecessary components re-renders and making your application faster. 
