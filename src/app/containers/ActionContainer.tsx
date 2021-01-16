@@ -9,29 +9,45 @@ import { useStoreContext } from '../store';
 
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
-  if (slider) { slider.setAttribute('style', 'left: 0'); }
+  if (slider) {
+    slider.setAttribute('style', 'left: 0');
+  }
 };
 
 function ActionContainer() {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
   let actionsArr = [];
-  const hierarchyArr:any[] = [];
+  const hierarchyArr: any[] = [];
 
   // function to traverse state from hiararchy and also getting information on display name and component name
-  const displayArray = (obj:{stateSnapshot:{children:any[]}, name:number, branch:number, index:number, children?:[]}) => {
-    if (obj.stateSnapshot.children.length > 0 && obj.stateSnapshot.children[0] && obj.stateSnapshot.children[0].state && obj.stateSnapshot.children[0].name) {
-      const newObj:Record<string, unknown> = {
+  const displayArray = (obj: {
+    stateSnapshot: { children: any[] };
+    name: number;
+    branch: number;
+    index: number;
+    children?: [];
+  }) => {
+    if (
+      obj.stateSnapshot.children.length > 0 &&
+      obj.stateSnapshot.children[0] &&
+      obj.stateSnapshot.children[0].state &&
+      obj.stateSnapshot.children[0].name
+    ) {
+      const newObj: Record<string, unknown> = {
         index: obj.index,
         displayName: `${obj.name}.${obj.branch}`,
         state: obj.stateSnapshot.children[0].state,
         componentName: obj.stateSnapshot.children[0].name,
-        componentData: JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}' ? '' : obj.stateSnapshot.children[0].componentData,
+        componentData:
+          JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}'
+            ? ''
+            : obj.stateSnapshot.children[0].componentData,
       };
       hierarchyArr.push(newObj);
     }
     if (obj.children) {
-      obj.children.forEach(element => {
+      obj.children.forEach((element) => {
         displayArray(element);
       });
     }
@@ -42,7 +58,7 @@ function ActionContainer() {
   if (hierarchy) displayArray(hierarchy);
 
   // handles keyboard presses, function passes an event and index of each action-component
-  function handleOnKeyDown(e:KeyboardEvent, i:number) {
+  function handleOnKeyDown(e: KeyboardEvent, i: number) {
     let currIndex = i;
     // up array key pressed
     if (e.keyCode === 38) {
@@ -64,26 +80,37 @@ function ActionContainer() {
     }
   }
 
-  actionsArr = hierarchyArr.map((snapshot:{state?: Record<string, unknown>, key: string, displayName:string, componentName:string, componentData:{actualDuration: number}|undefined}, index) => {
-    const selected = index === viewIndex;
-    const last = viewIndex === -1 && index === hierarchyArr.length - 1;
-    return (
-      <Action
-        key={`action${index}`}
-        index={index}
-        state={snapshot.state}
-        displayName={snapshot.displayName}
-        componentName={snapshot.componentName}
-        componentData={snapshot.componentData}
-        selected={selected}
-        last={last}
-        dispatch={dispatch}
-        sliderIndex={sliderIndex}
-        handleOnkeyDown={handleOnKeyDown}
-        viewIndex={viewIndex}
-      />
-    );
-  });
+  actionsArr = hierarchyArr.map(
+    (
+      snapshot: {
+        state?: Record<string, unknown>;
+        key: string;
+        displayName: string;
+        componentName: string;
+        componentData: { actualDuration: number } | undefined;
+      },
+      index
+    ) => {
+      const selected = index === viewIndex;
+      const last = viewIndex === -1 && index === hierarchyArr.length - 1;
+      return (
+        <Action
+          key={`action${index}`}
+          index={index}
+          state={snapshot.state}
+          displayName={snapshot.displayName}
+          componentName={snapshot.componentName}
+          componentData={snapshot.componentData}
+          selected={selected}
+          last={last}
+          dispatch={dispatch}
+          sliderIndex={sliderIndex}
+          handleOnkeyDown={handleOnKeyDown}
+          viewIndex={viewIndex}
+        />
+      );
+    }
+  );
 
   return (
     <div className="action-container">
