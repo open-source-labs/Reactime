@@ -4,8 +4,15 @@ import RenderingFrequency from './RenderingFrequency';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import BarGraph from './BarGraph';
+import BarGraphComparison from './BarGraphComparison';
 import { save } from '../actions/actions';
 import { useStoreContext } from '../store';
+import {
+  MemoryRouter as Router,
+  Route,
+  NavLink,
+  ReactSwitch as Switch,
+} from 'react-router-dom';
 
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
@@ -28,7 +35,7 @@ interface BarStackProps {
 /* DATA HANDLING HELPER FUNCTIONS */
 const traverse = (snapshot, data, currTotalRender = 0) => {
   if (!snapshot.children[0]) return;
-  console.log('data in PerformanceVisx >>>', data);
+  // console.log('data in PerformanceVisx >>>', data);
   // loop through snapshots
   snapshot.children.forEach((child, idx) => {
     const componentName = child.name + -[idx + 1];
@@ -105,16 +112,37 @@ const PerformanceVisx = (props: BarStackProps) => {
   // const [dispatch] = useStoreContext();
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
 
-  console.log('tabs',tabs)
-  console.log('currentTabs', currentTab)
+  const [detailsView, setDetailsView] = useState('barStack');
+  const [comparisonView, setComparisonView] = useState('barStack');
+  const [comparisonData, setComparisonData] = useState();
 
-  const [isToggled, setIsToggled] = useState('barStack');
-  const toggleView = () => {
-    isToggled === 'frequencyCards'
-      ? setIsToggled('barStack')
-      : setIsToggled('frequencyCards');
+  const allStorage = () => {
+    const values = [];
+    const keys = Object.keys(localStorage);
+    let i = keys.length;
+
+    while (i--) {
+      const series = localStorage.getItem(keys[i]);
+      values.push(JSON.parse(series));
+    }
+    return values;
   };
-  
+
+  const toggleComponentDetailsView = () => {
+    detailsView === 'frequencyCards'
+      ? setDetailsView('barStack')
+      : setDetailsView('frequencyCards');
+  };
+
+  //let allStorageData;
+
+  const toggleComparisonView = () => {
+    setComparisonData(allStorage());
+    comparisonView === 'barStack'
+      ? setComparisonView('barStackComparison')
+      : setComparisonView('barStack');
+  };
+
   // filter and structure incoming data for VISX
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
 
@@ -122,30 +150,97 @@ const PerformanceVisx = (props: BarStackProps) => {
     currentTab,
     title: tabs[currentTab]['title'],
     data,
-  }
+  };
 
   // Extract individual data from chrome.locals.storage and visualize
   // Need to setup dropdown menu .  Fill dropdown with tabsID (sessions)
   // When you select dropdown, change view with ReactRouter
   // have side-by-side comparison with visx bargraphs in alternate view
 
+  let view;
+
+  const currentView = () => {
+    if (detailsView === 'barStack' && comparisonView === 'barStack') {
+      view = (
+        <BarGraph
+          comparison={comparisonData}
+          data={data}
+          width={width}
+          height={height}
+        />
+      );
+    } else if (
+      detailsView === 'frequencyCards' &&
+      comparisonView === 'barStack'
+    ) {
+      view = <RenderingFrequency data={data.componentData} />;
+    } else if (
+      detailsView === 'barStack' &&
+      comparisonView === 'barStackComparison'
+    ) {
+      view = (
+        <BarGraphComparison
+          comparison={comparisonData}
+          data={data}
+          width={width}
+          height={height}
+        />
+      );
+    }
+    return view;
+  };
+  console.log('comparison data in Perfomance', comparisonData);
   // if performance tab is too small it will not return VISX component
   return (
     <div className="renderTab">
       <FormControlLabel
-        style={{ 'margin-left': '30px', 'margin-top': '0px' }}
+        style={{ marginLeft: '30px', marginTop: '0px' }}
         control={
-          <Switch onChange={toggleView} name="checkedB" color="primary" />
+          <Switch
+            onChange={toggleComponentDetailsView}
+            name="checkedB"
+            color="primary"
+          />
         }
         label="Component Details"
       />
+      <FormControlLabel
+        style={{ marginLeft: '30px', marginTop: '0px' }}
+        control={
+          <Switch
+            onChange={toggleComparisonView}
+            name="checkedB"
+            color="primary"
+          />
+        }
+        label="Comparison View"
+      />
+
       <button onClick={() => dispatch(save(toStorage))}>Save Series</button>
+
       <div style={{ display: 'flex', 'justify-content': 'center' }}>
-        {isToggled === 'frequencyCards' ? (
-          <RenderingFrequency data={data.componentData} />
-        ) : (
-          <BarGraph data={data} width={width} height={height} />
-        )}
+        {/* {detailsView === 'frequencyCards' ? (
+            <RenderingFrequency data={data.componentData} />
+          ) : (
+            <BarGraph data={data} width={width} height={height} />
+          )} */}
+        {/* {
+                if (detailsView === 'barStack' && 
+                comparisonView === 'barStack') {
+                   return (<BarGraph data={data} width={width} height={height} />);
+                } else if (
+                  detailsView === 'frequencyCards' &&
+                  comparisonView === 'barStack'
+                )  {
+                   return (<RenderingFrequency data={data.componentData} />);
+                } else if (
+                  detailsView === 'barStack' &&
+                  comparisonView === 'barStackComparison'
+                ) {
+                  return (<BarGraph data={data} width={width} height={height} />);
+                }
+          } */}
+        {currentView()}
       </div>
     </div>
   );

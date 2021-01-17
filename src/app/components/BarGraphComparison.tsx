@@ -17,6 +17,9 @@ import { useStoreContext } from '../store';
 interface data {
   snapshotId?: string;
 }
+interface series {
+  seriesId?: any;
+}
 
 interface margin {
   top: number;
@@ -33,6 +36,7 @@ interface snapshot {
   state: string;
 }
 
+// On-hover data.
 interface TooltipData {
   bar: SeriesPoint<snapshot>;
   key: string;
@@ -58,9 +62,12 @@ const tooltipStyles = {
   fontFamily: 'Roboto',
 };
 
-const BarGraph = (props) => {
+const BarGraphComparison = (props) => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { width, height, data } = props;
+  const { width, height, data, comparison } = props;
+  console.log('props in BGComparison.tsx', props);
+  console.log('comparison in BGComparison.tsx', comparison);
+
   const {
     tooltipOpen,
     tooltipLeft,
@@ -70,18 +77,25 @@ const BarGraph = (props) => {
     showTooltip,
   } = useTooltip<TooltipData>();
   let tooltipTimeout: number;
+
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
 
   const keys = Object.keys(data.componentData);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSnapshotId = (d: snapshot) => d.snapshotId;
+  const getSeriesId = (d: series) => d.currentTab;
   const formatSnapshotId = (id) => `Snapshot ID: ${id}`;
   const formatRenderTime = (time) => `${time} ms `;
-
+  const tabsComparison = [
+    !comparison ? null : `Series: ${comparison[0]['currentTab']}`,
+    `Series: ${currentTab}`,
+  ];
   // create visualization SCALES with cleaned data
   const snapshotIdScale = scaleBand<string>({
-    domain: data.barStack.map(getSnapshotId),
+    // domain: comparison.map(getSeriesId),
+    // domain: .map(getSnapshotId),
+    domain: getSnapshotId(data.barStack[0]),
     padding: 0.2,
   });
 
@@ -89,7 +103,7 @@ const BarGraph = (props) => {
     domain: [0, data.maxTotalRender],
     nice: true,
   });
-
+  ``;
   const colorScale = scaleOrdinal<string>({
     domain: keys,
     range: schemeSet3,
@@ -100,6 +114,8 @@ const BarGraph = (props) => {
   const yMax = height - margin.top - 150;
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
+
+  // console.log('getSeriesID', getSeriesId());
   return (
     <div>
       <svg ref={containerRef} width={width} height={height}>
@@ -125,54 +141,103 @@ const BarGraph = (props) => {
         />
         <Group top={margin.top} left={margin.left}>
           <BarStack
+            // OG Barstack
+            // data={!comparison ? [] : comparison}
             data={data.barStack}
             keys={keys}
+            // x={getSnapshotId}
             x={getSnapshotId}
             xScale={snapshotIdScale}
             yScale={renderingScale}
             color={colorScale}
           >
             {(barStacks) =>
-              barStacks.map((barStack) =>
-                barStack.bars.map((bar, idx) => {
-                  // hides new components if components don't exist in previous snapshots
-                  if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
-                    bar.height = 0;
-                  }
-                  return (
-                    <rect
-                      key={`bar-stack-${barStack.index}-${bar.index}`}
-                      x={bar.x}
-                      y={bar.y}
-                      height={bar.height === 0 ? null : bar.height}
-                      width={bar.width}
-                      fill={bar.color}
-                      /* TIP TOOL EVENT HANDLERS */
-                      // Hides tool tip once cursor moves off the current rect
-                      onMouseLeave={() => {
-                        dispatch(
-                          onHoverExit(data.componentData[bar.key].rtid),
-                          (tooltipTimeout = window.setTimeout(() => {
-                            hideTooltip();
-                          }, 300))
-                        );
-                      }}
-                      // Cursor position in window updates position of the tool tip
-                      onMouseMove={(event) => {
-                        dispatch(onHover(data.componentData[bar.key].rtid));
-                        if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                        const top = event.clientY - margin.top - bar.height;
-                        const left = bar.x + bar.width / 2;
-                        showTooltip({
-                          tooltipData: bar,
-                          tooltipTop: top,
-                          tooltipLeft: left,
-                        });
-                      }}
-                    />
-                  );
-                })
-              )
+              barStacks.map((barStack) => {
+                const bar = barStack.bars[0];
+
+                return (
+                  <rect
+                    key={`bar-stack-${bar.index}-NewView`}
+                    x={300}
+                    y={bar.y}
+                    height={bar.height === 0 ? null : bar.height}
+                    width={bar.width}
+                    fill={bar.color}
+                    /* TIP TOOL EVENT HANDLERS */
+                    // Hides tool tip once cursor moves off the current rect
+                    onMouseLeave={() => {
+                      dispatch(
+                        onHoverExit(data.componentData[bar.key].rtid),
+                        (tooltipTimeout = window.setTimeout(() => {
+                          hideTooltip();
+                        }, 300))
+                      );
+                    }}
+                    // Cursor position in window updates position of the tool tip
+                    onMouseMove={(event) => {
+                      dispatch(onHover(data.componentData[bar.key].rtid));
+                      if (tooltipTimeout) clearTimeout(tooltipTimeout);
+                      const top = event.clientY - margin.top - bar.height;
+                      const left = bar.x + bar.width / 2;
+                      showTooltip({
+                        tooltipData: bar,
+                        tooltipTop: top,
+                        tooltipLeft: left,
+                      });
+                    }}
+                  />
+                );
+              })
+            }
+          </BarStack>
+          <BarStack
+            // Comparison Barstack
+            data={!comparison ? ['1', '2'] : comparison[0].data.barStack}
+            // data={data.barStack}
+            keys={keys}
+            // x={getSnapshotId}
+            x={getSnapshotId}
+            xScale={snapshotIdScale}
+            yScale={renderingScale}
+            color={colorScale}
+          >
+            {(barStacks) =>
+              barStacks.map((barStack) => {
+                const bar = barStack.bars[0];
+
+                return (
+                  <rect
+                    key={`bar-stack-${bar.index}-${bar.index}`}
+                    x={bar.x + 50}
+                    y={bar.y}
+                    height={bar.height === 0 ? null : bar.height}
+                    width={bar.width}
+                    fill={bar.color}
+                    /* TIP TOOL EVENT HANDLERS */
+                    // Hides tool tip once cursor moves off the current rect
+                    onMouseLeave={() => {
+                      dispatch(
+                        onHoverExit(data.componentData[bar.key].rtid),
+                        (tooltipTimeout = window.setTimeout(() => {
+                          hideTooltip();
+                        }, 300))
+                      );
+                    }}
+                    // Cursor position in window updates position of the tool tip
+                    onMouseMove={(event) => {
+                      dispatch(onHover(data.componentData[bar.key].rtid));
+                      if (tooltipTimeout) clearTimeout(tooltipTimeout);
+                      const top = event.clientY - margin.top - bar.height;
+                      const left = bar.x + bar.width / 2;
+                      showTooltip({
+                        tooltipData: bar,
+                        tooltipTop: top,
+                        tooltipLeft: left,
+                      });
+                    }}
+                  />
+                );
+              })
             }
           </BarStack>
         </Group>
@@ -215,7 +280,7 @@ const BarGraph = (props) => {
         </Text>
         <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill="#FFFFFF">
           {' '}
-          Snapshot Id{' '}
+          Series ID{' '}
         </Text>
       </svg>
       {/* FOR HOVER OVER DISPLAY */}
@@ -244,4 +309,4 @@ const BarGraph = (props) => {
   );
 };
 
-export default BarGraph;
+export default BarGraphComparison;
