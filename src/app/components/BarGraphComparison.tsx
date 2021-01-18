@@ -9,6 +9,7 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
+import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -116,15 +117,70 @@ const BarGraphComparison = (props) => {
   const yMax = height - margin.top - 150;
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
-  const filterSeries = (comparisonArray) => {
-    return comparisonArray.map((sessionName, idx) => {
-      return <MenuItem>{sessionName}</MenuItem>;
-    });
+  // const filterSeries = (comparisonArray) => {
+  //   return comparisonArray.map((sessionName, idx) => {
+  //     return <MenuItem>{sessionName}</MenuItem>;
+  //   });
+  // };
+  // Dropdown to select series.
+  const useStyles = makeStyles((theme) => ({
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+      color: 'white',
+    },
+  }));
+
+  const classes = useStyles();
+  const [series, setSeries] = React.useState(0);
+  const [open, setOpen] = React.useState(false);
+
+  const handleChange = (event) => {
+    console.log('Series is : ', series);
+    setSeries(event.target.value);
+    console.log('Series is after click:', series);
   };
-  // console.log('getSeriesID', getSeriesId());
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  //this function creates a dropdown selection for each series of snapshots saved
+  // const filterSeries = (comparisonArray) => {
+  //   return comparisonArray.map((sessionName, idx) => {
+  //     return <MenuItem>{sessionName}</MenuItem>;
+  //   });
+  // };
+
   return (
     <div>
       <h1>{`Current Snapshot: ${currentIndex + 1}`}</h1>
+      <FormControl className={classes.formControl}>
+        <InputLabel id="demo-controlled-open-select-label">
+          Select Series
+        </InputLabel>
+        <Select
+          labelId="demo-controlled-open-select-label whi"
+          id="demo-controlled-open-select"
+          open={open}
+          onClose={handleClose}
+          onOpen={handleOpen}
+          value={series}
+          onChange={handleChange}
+        >
+          {comparison.map((tabElem, index) => {
+            return (
+              <MenuItem value={index}>
+                {`Series ${tabElem.currentTab}`}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
       <svg ref={containerRef} width={width} height={height}>
         {}
         <rect
@@ -200,7 +256,7 @@ const BarGraphComparison = (props) => {
           </BarStack>
           <BarStack
             // Comparison Barstack
-            data={!comparison ? [] : comparison[0].data.barStack}
+            data={!comparison ? [] : comparison[series].data.barStack}
             // data={data.barStack}
             keys={keys}
             // x={getSnapshotId}
@@ -211,7 +267,10 @@ const BarGraphComparison = (props) => {
           >
             {(barStacks) =>
               barStacks.map((barStack, idx) => {
-                if (barStacks.length === 0) return <h1>No Comparison</h1>;
+                if (!barStack.bars[currentIndex]) {
+                  return <h1>No Comparison</h1>;
+                }
+                console.log('barStacks in Comparison', barStacks);
                 const bar = barStack.bars[currentIndex];
                 return (
                   <rect
