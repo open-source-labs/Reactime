@@ -9,6 +9,10 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
 import snapshots from './snapshots';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store';
@@ -65,9 +69,12 @@ const tooltipStyles = {
 const BarGraphComparison = (props) => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { width, height, data, comparison } = props;
-  console.log('props in BGComparison.tsx', props);
-  console.log('comparison in BGComparison.tsx', comparison);
 
+  console.log('comparison >>>', comparison);
+
+  // console.log('tabs in BGComp >>>', tabs);
+  const currentIndex = tabs[currentTab].sliderIndex;
+  console.log('sliderIndx outside of bargraph >>>', currentIndex);
   const {
     tooltipOpen,
     tooltipLeft,
@@ -87,15 +94,10 @@ const BarGraphComparison = (props) => {
   const getSeriesId = (d: series) => d.currentTab;
   const formatSnapshotId = (id) => `Snapshot ID: ${id}`;
   const formatRenderTime = (time) => `${time} ms `;
-  const tabsComparison = [
-    !comparison ? null : `Series: ${comparison[0]['currentTab']}`,
-    `Series: ${currentTab}`,
-  ];
+
   // create visualization SCALES with cleaned data
   const snapshotIdScale = scaleBand<string>({
-    // domain: comparison.map(getSeriesId),
-    // domain: .map(getSnapshotId),
-    domain: getSnapshotId(data.barStack[0]),
+    domain: getSnapshotId(data.barStack[currentIndex]),
     padding: 0.2,
   });
 
@@ -114,10 +116,15 @@ const BarGraphComparison = (props) => {
   const yMax = height - margin.top - 150;
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
-
+  const filterSeries = (comparisonArray) => {
+    return comparisonArray.map((sessionName, idx) => {
+      return <MenuItem>{sessionName}</MenuItem>;
+    });
+  };
   // console.log('getSeriesID', getSeriesId());
   return (
     <div>
+      <h1>{`Current Snapshot: ${currentIndex + 1}`}</h1>
       <svg ref={containerRef} width={width} height={height}>
         {}
         <rect
@@ -152,12 +159,13 @@ const BarGraphComparison = (props) => {
             color={colorScale}
           >
             {(barStacks) =>
-              barStacks.map((barStack) => {
-                const bar = barStack.bars[0];
+              barStacks.map((barStack, idx) => {
+                const bar = barStack.bars[currentIndex];
+                console.log('data.barStack >>>', data.barStack);
 
                 return (
                   <rect
-                    key={`bar-stack-${bar.index}-NewView`}
+                    key={`bar-stack-${idx}-NewView`}
                     x={300}
                     y={bar.y}
                     height={bar.height === 0 ? null : bar.height}
@@ -192,7 +200,7 @@ const BarGraphComparison = (props) => {
           </BarStack>
           <BarStack
             // Comparison Barstack
-            data={!comparison ? ['1', '2'] : comparison[0].data.barStack}
+            data={!comparison ? [] : comparison[0].data.barStack}
             // data={data.barStack}
             keys={keys}
             // x={getSnapshotId}
@@ -202,12 +210,12 @@ const BarGraphComparison = (props) => {
             color={colorScale}
           >
             {(barStacks) =>
-              barStacks.map((barStack) => {
-                const bar = barStack.bars[0];
-
+              barStacks.map((barStack, idx) => {
+                if (barStacks.length === 0) return <h1>No Comparison</h1>;
+                const bar = barStack.bars[currentIndex];
                 return (
                   <rect
-                    key={`bar-stack-${bar.index}-${bar.index}`}
+                    key={`bar-stack-${idx}-${bar.index}`}
                     x={bar.x + 50}
                     y={bar.y}
                     height={bar.height === 0 ? null : bar.height}
