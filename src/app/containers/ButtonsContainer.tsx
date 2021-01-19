@@ -49,6 +49,8 @@ function howToUseHandler() {
 
 function ButtonsContainer() {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  console.log('useStore in ButtonsContainer', useStoreContext())
+  console.log('dispatch in ButtonsContainer', useStoreContext().dispatch)
   const {
     snapshots,
     mode: { paused, persist },
