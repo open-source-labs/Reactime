@@ -104,7 +104,10 @@ export default function ComponentMap({
     hideTooltip,
   } = useTooltip();
 
-  const { containerRef, TooltipInPortal } = useTooltipInPortal();
+  const { containerRef, TooltipInPortal } = useTooltipInPortal({
+    detectBounds: true,
+    scroll: true,
+  });
 
   const tooltipStyles = {
     ...defaultStyles,
