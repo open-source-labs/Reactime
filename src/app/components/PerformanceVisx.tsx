@@ -204,15 +204,6 @@ const PerformanceVisx = (props: BarStackProps) => {
         }
         label="Component Details"
       />
-<<<<<<< HEAD
-      {/* <button onClick={toggleView}>Toggle Button</button> */}
-        <div style={{"display": "flex", "justifyContent": "center"}}>
-          {isToggled === 'frequencyCards' 
-            ? <RenderingFrequency  data={data.componentData}/> 
-            : <BarGraph data={data} width={width} height={height}/>
-          }
-        </div>
-=======
       <FormControlLabel
         style={{ marginLeft: '30px', marginTop: '0px' }}
         control={
@@ -251,7 +242,6 @@ const PerformanceVisx = (props: BarStackProps) => {
           } */}
         {currentView()}
       </div>
->>>>>>> 0f97009ab7f54519912a8097347f4b2e964549cb
     </div>
   );
 };
