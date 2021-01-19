@@ -10,24 +10,28 @@ import StateRoute from '../components/StateRoute';
 import DiffRoute from '../components/DiffRoute';
 
 interface StateContainerProps {
-  snapshot: Record<number,
-  { name?: string; componentData?: Record<string, unknown>;
-    state?: Record<string, unknown>; stateSnaphot?: Record<string, unknown>; children?: unknown[]; 
-    AtomsRelationship?: any[]; atomSelectors?:object; atomsComponents?:object
-  }
-  > ;
+  snapshot: Record<
+    number,
+    {
+      name?: string;
+      componentData?: Record<string, unknown>;
+      state?: Record<string, unknown>;
+      stateSnaphot?: Record<string, unknown>;
+      children?: unknown[];
+      AtomsRelationship?: any[];
+      atomSelectors?: object;
+      atomsComponents?: object;
+    }
+  >;
   AtomsRelationship?: any[];
-  hierarchy:Record<string, unknown>;
-  snapshots:[];
-  viewIndex:number;
-  
+  hierarchy: Record<string, unknown>;
+  snapshots: [];
+  viewIndex: number;
 }
 
 // eslint-disable-next-line react/prop-types
-const StateContainer = (props:StateContainerProps): JSX.Element => {
-  const {
-    snapshot, hierarchy, snapshots, viewIndex,
-  } = props;
+const StateContainer = (props: StateContainerProps): JSX.Element => {
+  const { snapshot, hierarchy, snapshots, viewIndex } = props;
   const [Text, setText] = useState('State');
 
   return (
@@ -65,7 +69,14 @@ const StateContainer = (props:StateContainerProps): JSX.Element => {
             path="/"
             render={() => {
               setText('State');
-              return <StateRoute viewIndex={viewIndex} snapshot={snapshot} hierarchy={hierarchy} snapshots={snapshots} />;
+              return (
+                <StateRoute
+                  viewIndex={viewIndex}
+                  snapshot={snapshot}
+                  hierarchy={hierarchy}
+                  snapshots={snapshots}
+                />
+              );
             }}
           />
         </Switch>
