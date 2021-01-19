@@ -1,22 +1,27 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import * as types from '../constants/actionTypes';
 
-export const toggleMode = mode => ({
+export const save = (tabsObj) => ({
+  type: types.SAVE,
+  payload: tabsObj,
+});
+
+export const toggleMode = (mode) => ({
   type: types.TOGGLE_MODE,
   payload: mode,
 });
 
-export const addNewSnapshots = tabsObj => ({
+export const addNewSnapshots = (tabsObj) => ({
   type: types.NEW_SNAPSHOTS,
   payload: tabsObj,
 });
 
-export const initialConnect = tabsObj => ({
+export const initialConnect = (tabsObj) => ({
   type: types.INITIAL_CONNECT,
   payload: tabsObj,
 });
 
-export const setPort = port => ({
+export const setPort = (port) => ({
   type: types.SET_PORT,
   payload: port,
 });
@@ -25,12 +30,12 @@ export const emptySnapshots = () => ({
   type: types.EMPTY,
 });
 
-export const changeView = index => ({
+export const changeView = (index) => ({
   type: types.CHANGE_VIEW,
   payload: index,
 });
 
-export const changeSlider = index => ({
+export const changeSlider = (index) => ({
   type: types.CHANGE_SLIDER,
   payload: index,
 });
@@ -54,22 +59,22 @@ export const pause = () => ({
   type: types.PAUSE,
 });
 
-export const startPlaying = intervalId => ({
+export const startPlaying = (intervalId) => ({
   type: types.PLAY,
   payload: intervalId,
 });
 
-export const importSnapshots = newSnaps => ({
+export const importSnapshots = (newSnaps) => ({
   type: types.IMPORT,
   payload: newSnaps,
 });
 
-export const setTab = tab => ({
+export const setTab = (tab) => ({
   type: types.SET_TAB,
   payload: tab,
 });
 
-export const deleteTab = tab => ({
+export const deleteTab = (tab) => ({
   type: types.DELETE_TAB,
   payload: tab,
 });
@@ -79,12 +84,12 @@ export const resetSlider = () => ({
 });
 
 export const onHover = (rtid) => ({
-  type: types.ON_HOVER, 
+  type: types.ON_HOVER,
   //the payload should be something to relate the component we're hovering and highlight that component on the DOM
-  payload: rtid
-})
+  payload: rtid,
+});
 
 export const onHoverExit = (rtid) => ({
   type: types.ON_HOVER_EXIT,
-  payload: rtid
-})
+  payload: rtid,
+});
