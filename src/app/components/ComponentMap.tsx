@@ -8,7 +8,7 @@ import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import { localPoint } from '@visx/event';
-import { useTooltip, useTooltipInPortal, TooltipWithBounds } from '@visx/tooltip';
+import { useTooltip, useTooltipInPortal, TooltipWithBounds, defaultStyles } from '@visx/tooltip';
 import { onHover, onHoverExit } from '../actions/actions'; 
 import { useStoreContext } from '../store';
 
@@ -106,17 +106,15 @@ export default function ComponentMap({
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
 
-  //mousing controls
-  const handleMouseOver = (event) => {
-    console.log("mouse entered");
-    const coords = localPoint(event.target.ownerSVGElement, event);
-    console.log("I'm coords", coords);
-    showTooltip({
-      tooltipLeft: coords.x,
-      tooltipTop: coords.y,
-      tooltipData: "test"
-    });
-  }
+  const tooltipStyles = {
+    ...defaultStyles,
+    minWidth: 60,
+    backgroundColor: 'rgba(0,0,0,0.9)',
+    color: 'white',
+    fontSize: '14px',
+    lineHeight: '18px',
+    fontFamily: 'Roboto',
+  };
 
 
   // controls for the map
@@ -180,6 +178,19 @@ export default function ComponentMap({
                     left = node.y;
                   }
 
+                  //mousing controls
+                  const handleMouseOver = (event) => {
+                    () => dispatch(onHover(node.data.rtid));
+                    const coords = localPoint(event.target.ownerSVGElement, event);
+                    console.log("I'm node.data.rtid", node.data.rtid);
+                    showTooltip({
+                      tooltipLeft: coords.x,
+                      tooltipTop: coords.y,
+                      tooltipData: "test"
+                    });
+                  }
+
+
                   return (
                     <Group top={top} left={left} key={key}>
                       {node.depth === 0 && (
@@ -241,16 +252,17 @@ export default function ComponentMap({
           </Tree>
         </Group>
       </svg>
-     tooltipOpen && tooltipData && (
+     {tooltipOpen && tooltipData && (
         <TooltipInPortal
           // set this to random so it correctly updates with parent bounds
           key={Math.random()}
           top={tooltipTop}
           left={tooltipLeft}
+          style={tooltipStyles}
         >
           Tooltip Data: <strong>{tooltipData}</strong>
         </TooltipInPortal>
-     )
+     )}
     </div>
   );
 }
