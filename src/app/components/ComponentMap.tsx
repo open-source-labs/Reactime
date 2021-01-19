@@ -7,6 +7,7 @@ import { pointRadial } from 'd3-shape';
 import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
+import { localPoint } from '@visx/event';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store';
 
@@ -89,6 +90,10 @@ export default function ComponentMap({
       sizeHeight = innerWidth;
     }
   }
+
+  //mousing controls
+  const handleMouseOver = () => console.log("mouse entered");
+
   // controls for the map
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
   return totalWidth < 10 ? null : (
@@ -181,30 +186,8 @@ export default function ComponentMap({
                             forceUpdate();
                           }}
                           //check with recoil
-                          onMouseLeave={() => {
-                            if (
-                              Object.keys(node.data.recoilDomNode).length > 0
-                            ) {
-                              dispatch(
-                                onHoverExit(
-                                  node.data.recoilDomNode[node.data.name]
-                                )
-                              );
-                            } else {
-                              dispatch(onHoverExit(node.data.rtid));
-                            }
-                          }}
-                          onMouseEnter={() => {
-                            if (
-                              Object.keys(node.data.recoilDomNode).length > 0
-                            ) {
-                              dispatch(
-                                onHover(node.data.recoilDomNode[node.data.name])
-                              );
-                            } else {
-                              dispatch(onHover(node.data.rtid));
-                            }
-                          }}
+                          onMouseOver={handleMouseOver}
+                          onMouseOut={hideTooltip}
                         />
                       )}
                       {/* Display text inside of each component node */}
