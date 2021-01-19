@@ -8,7 +8,8 @@ import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import { localPoint } from '@visx/event';
-import { onHover, onHoverExit } from '../actions/actions';
+import { useTooltip, useTooltipInPortal, TooltipWithBounds } from '@visx/tooltip';
+import { onHover, onHoverExit } from '../actions/actions'; 
 import { useStoreContext } from '../store';
 
 const root = hierarchy({
@@ -30,6 +31,7 @@ interface TreeNode {
   isExpanded?: boolean;
   children?: TreeNode[];
 }
+
 
 type HierarchyNode = HierarchyPointNode<TreeNode>;
 
@@ -91,8 +93,31 @@ export default function ComponentMap({
     }
   }
 
+
+  //Tooltip stuff: 
+  const {
+    tooltipData,
+    tooltipLeft,
+    tooltipTop,
+    tooltipOpen,
+    showTooltip,
+    hideTooltip,
+  } = useTooltip();
+
+  const { containerRef, TooltipInPortal } = useTooltipInPortal();
+
   //mousing controls
-  const handleMouseOver = () => console.log("mouse entered");
+  const handleMouseOver = (event) => {
+    console.log("mouse entered");
+    const coords = localPoint(event.target.ownerSVGElement, event);
+    console.log("I'm coords", coords);
+    showTooltip({
+      tooltipLeft: coords.x,
+      tooltipTop: coords.y,
+      tooltipData: "test"
+    });
+  }
+
 
   // controls for the map
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
@@ -109,7 +134,7 @@ export default function ComponentMap({
         setStepPercent={setStepPercent}
       />
 
-      <svg width={totalWidth} height={totalHeight}>
+      <svg ref={containerRef} width={totalWidth} height={totalHeight}>
         <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
         <rect width={totalWidth} height={totalHeight} rx={14} fill="#242529" />
         <Group top={margin.top} left={margin.left}>
@@ -185,7 +210,7 @@ export default function ComponentMap({
                             node.data.isExpanded = !node.data.isExpanded;
                             forceUpdate();
                           }}
-                          //check with recoil
+                          //Tooltip event handlers
                           onMouseOver={handleMouseOver}
                           onMouseOut={hideTooltip}
                         />
@@ -215,6 +240,16 @@ export default function ComponentMap({
           </Tree>
         </Group>
       </svg>
+     tooltipOpen && tooltipData && (
+        <TooltipInPortal
+          // set this to random so it correctly updates with parent bounds
+          key={Math.random()}
+          top={tooltipTop}
+          left={tooltipLeft}
+        >
+          Tooltip Data: <strong>{tooltipData}</strong>
+        </TooltipInPortal>
+     )
     </div>
   );
 }
