@@ -1,27 +1,31 @@
 // @ts-nocheck
-import React, { useState } from 'react';
-import { Group } from '@visx/group';
-import { hierarchy, Tree } from '@visx/hierarchy';
-import { LinearGradient } from '@visx/gradient';
-import { pointRadial } from 'd3-shape';
-import useForceUpdate from './useForceUpdate';
-import LinkControls from './LinkControls';
-import getLinkComponent from './getLinkComponent';
-import { localPoint } from '@visx/event';
-import { useTooltip, useTooltipInPortal, TooltipWithBounds } from '@visx/tooltip';
-import { onHover, onHoverExit } from '../actions/actions'; 
-import { useStoreContext } from '../store';
+import React, { useState } from "react";
+import { Group } from "@visx/group";
+import { hierarchy, Tree } from "@visx/hierarchy";
+import { LinearGradient } from "@visx/gradient";
+import { pointRadial } from "d3-shape";
+import useForceUpdate from "./useForceUpdate";
+import LinkControls from "./LinkControls";
+import getLinkComponent from "./getLinkComponent";
+import { localPoint } from "@visx/event";
+import {
+  useTooltip,
+  useTooltipInPortal,
+  TooltipWithBounds,
+} from "@visx/tooltip";
+import { onHover, onHoverExit } from "../actions/actions";
+import { useStoreContext } from "../store";
 
 const root = hierarchy({
-  name: 'root',
+  name: "root",
   children: [
-    { name: 'child #1' },
+    { name: "child #1" },
     {
-      name: 'child #2',
+      name: "child #2",
       children: [
-        { name: 'grandchild #1' },
-        { name: 'grandchild #2' },
-        { name: 'grandchild #3' },
+        { name: "grandchild #1" },
+        { name: "grandchild #2" },
+        { name: "grandchild #3" },
       ],
     },
   ],
@@ -31,7 +35,6 @@ interface TreeNode {
   isExpanded?: boolean;
   children?: TreeNode[];
 }
-
 
 type HierarchyNode = HierarchyPointNode<TreeNode>;
 
@@ -57,9 +60,9 @@ export default function ComponentMap({
   const data: {} = snapshots[lastNode];
 
   // importing custom hooks for the selection tabs.
-  const [layout, setLayout] = useState('cartesian');
-  const [orientation, setOrientation] = useState('horizontal');
-  const [linkType, setLinkType] = useState('diagonal');
+  const [layout, setLayout] = useState("cartesian");
+  const [orientation, setOrientation] = useState("horizontal");
+  const [linkType, setLinkType] = useState("diagonal");
   const [stepPercent, setStepPercent] = useState(10);
 
   // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
@@ -75,7 +78,7 @@ export default function ComponentMap({
 
   // This sets the starting position for the root node on the maps display. the polar layout sets the root node to the relative center of the display box based on the size of the browser window.
   // the else conditional statements determines the root nodes location either in the left middle or top middle of the browser window relative to the size of the browser.
-  if (layout === 'polar') {
+  if (layout === "polar") {
     origin = {
       x: innerWidth / 2,
       y: innerHeight / 2,
@@ -84,7 +87,7 @@ export default function ComponentMap({
     sizeHeight = Math.min(innerWidth, innerHeight) / 2;
   } else {
     origin = { x: 0, y: 0 };
-    if (orientation === 'vertical') {
+    if (orientation === "vertical") {
       sizeWidth = innerWidth;
       sizeHeight = innerHeight;
     } else {
@@ -93,8 +96,7 @@ export default function ComponentMap({
     }
   }
 
-
-  //Tooltip stuff: 
+  //Tooltip stuff:
   const {
     tooltipData,
     tooltipLeft,
@@ -108,16 +110,15 @@ export default function ComponentMap({
 
   //mousing controls
   const handleMouseOver = (event) => {
-    console.log("mouse entered");
+    // console.log("mouse entered");
     const coords = localPoint(event.target.ownerSVGElement, event);
-    console.log("I'm coords", coords);
+    // console.log("I'm coords", coords);
     showTooltip({
       tooltipLeft: coords.x,
       tooltipTop: coords.y,
-      tooltipData: "test"
+      tooltipData: "test",
     });
-  }
-
+  };
 
   // controls for the map
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
@@ -168,11 +169,11 @@ export default function ComponentMap({
 
                   let top: number;
                   let left: number;
-                  if (layout === 'polar') {
+                  if (layout === "polar") {
                     const [radialX, radialY] = pointRadial(node.x, node.y);
                     top = radialY;
                     left = radialX;
-                  } else if (orientation === 'vertical') {
+                  } else if (orientation === "vertical") {
                     top = node.y;
                     left = node.x;
                   } else {
@@ -200,10 +201,10 @@ export default function ComponentMap({
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          fill={node.children ? '#161521' : '#62d6fb'}
-                          stroke={node.children ? '#62d6fb' : '#161521'}
+                          fill={node.children ? "#161521" : "#62d6fb"}
+                          stroke={node.children ? "#62d6fb" : "#161521"}
                           strokeWidth={1}
-                          strokeDasharray={node.children ? '0' : '2,2'}
+                          strokeDasharray={node.children ? "0" : "2,2"}
                           strokeOpacity="1"
                           rx={node.children ? 4 : 10}
                           onClick={() => {
@@ -222,13 +223,13 @@ export default function ComponentMap({
                         fontSize={10}
                         fontFamily="Roboto"
                         textAnchor="middle"
-                        style={{ pointerEvents: 'none' }}
+                        style={{ pointerEvents: "none" }}
                         fill={
                           node.depth === 0
-                            ? '#161521'
+                            ? "#161521"
                             : node.children
-                            ? 'white'
-                            : '#161521'
+                            ? "white"
+                            : "#161521"
                         }
                       >
                         {node.data.name}
@@ -241,7 +242,7 @@ export default function ComponentMap({
           </Tree>
         </Group>
       </svg>
-     tooltipOpen && tooltipData && (
+      {tooltipOpen && tooltipData && (
         <TooltipInPortal
           // set this to random so it correctly updates with parent bounds
           key={Math.random()}
@@ -250,7 +251,7 @@ export default function ComponentMap({
         >
           Tooltip Data: <strong>{tooltipData}</strong>
         </TooltipInPortal>
-     )
+      )}
     </div>
   );
 }
