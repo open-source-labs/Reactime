@@ -119,6 +119,11 @@ export default function ComponentMap({
     fontFamily: 'Roboto',
   };
 
+  const formatRenderTime = (time) => {
+    time = time.toFixed(3);
+    return `${time} ms `;
+  }
+
 
   // controls for the map
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
@@ -167,6 +172,8 @@ export default function ComponentMap({
                   const width = widthFunc(node.data.name);
                   const height = 25;
 
+
+
                   let top: number;
                   let left: number;
                   if (layout === 'polar') {
@@ -185,11 +192,13 @@ export default function ComponentMap({
                   const handleMouseOver = (event) => {
                     () => dispatch(onHover(node.data.rtid));
                     const coords = localPoint(event.target.ownerSVGElement, event);
-                    console.log("I'm node.data.rtid", node.data.rtid);
+                    const tooltipObj = Object.assign({}, node.data);
+                    if (typeof tooltipObj.state === 'object') tooltipObj.state = 'stateful';
+                    console.log("tooltipObj", tooltipObj)
                     showTooltip({
                       tooltipLeft: coords.x,
                       tooltipTop: coords.y,
-                      tooltipData: "test"
+                      tooltipData: tooltipObj
                     });
                   }
 
@@ -263,7 +272,13 @@ export default function ComponentMap({
           left={tooltipLeft}
           style={tooltipStyles}
         >
-          Tooltip Data: <strong>{tooltipData}</strong>
+            <div style={{ }}>
+            {' '}
+            <strong>{tooltipData.name}</strong>{' '}
+          </div>
+          <div>State: {tooltipData.state}</div>
+          <div> Render time: {formatRenderTime(tooltipData.componentData.actualDuration)} </div>
+
         </TooltipInPortal>
      )}
     </div>
