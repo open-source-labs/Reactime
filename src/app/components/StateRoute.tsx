@@ -139,12 +139,13 @@ const StateRoute = (props: StateRouteProps) => {
       <NavLink
           className="router-link"
           activeClassName="is-active"
-          exact
-          to="/"
+          exact to="/"
         >
           Performance
         </NavLink>
-        <NavLink className="router-link" activeClassName="is-active" to="/map">
+        <NavLink className="router-link" 
+        activeClassName="is-active" 
+        to="/map">
           Map
         </NavLink>
         <NavLink
@@ -177,8 +178,8 @@ const StateRoute = (props: StateRouteProps) => {
         <Route path="/map" render={renderComponentMap} />
         <Route path="/history" render={renderHistory} />
         <Route path="/relationship" render={renderAtomsRelationship} />
-        <Route path="/" render={renderPerfView} />
         <Route path="/tree" render={renderTree} />
+        <Route path="/" render={renderPerfView} />
       </Switch>
     </Router>
   );
