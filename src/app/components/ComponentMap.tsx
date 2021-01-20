@@ -1,22 +1,4 @@
 // @ts-nocheck
-<<<<<<< HEAD
-import React, { useState } from "react";
-import { Group } from "@visx/group";
-import { hierarchy, Tree } from "@visx/hierarchy";
-import { LinearGradient } from "@visx/gradient";
-import { pointRadial } from "d3-shape";
-import useForceUpdate from "./useForceUpdate";
-import LinkControls from "./LinkControls";
-import getLinkComponent from "./getLinkComponent";
-import { localPoint } from "@visx/event";
-import {
-  useTooltip,
-  useTooltipInPortal,
-  TooltipWithBounds,
-} from "@visx/tooltip";
-import { onHover, onHoverExit } from "../actions/actions";
-import { useStoreContext } from "../store";
-=======
 import React, { useState } from 'react';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
@@ -29,7 +11,6 @@ import { localPoint } from '@visx/event';
 import { useTooltip, useTooltipInPortal, TooltipWithBounds, defaultStyles } from '@visx/tooltip';
 import { onHover, onHoverExit } from '../actions/actions'; 
 import { useStoreContext } from '../store';
->>>>>>> 0e939e7bb8e045845438bf4ffa8825db5fe14cac
 
 const root = hierarchy({
   name: "root",
@@ -219,7 +200,6 @@ export default function ComponentMap({
                     });
                   }
 
-
                   return (
                     <Group top={top} left={left} key={key}>
                       {node.depth === 0 && (
@@ -254,6 +234,8 @@ export default function ComponentMap({
                           //test feature
                           onMouseOver={handleMouseOver}
                           onMouseOut={hideTooltip}
+                          onMouseEnter={() => dispatch(onHover(node.data.rtid))}
+                          onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
                         />
                       )}
                       {/* Display text inside of each component node */}

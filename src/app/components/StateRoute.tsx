@@ -139,10 +139,12 @@ const StateRoute = (props: StateRouteProps) => {
         <NavLink
           className="router-link"
           activeClassName="is-active"
-          exact
-          to="/"
+          exact to="/"
         >
-          Tree
+          Performance
+        </NavLink>
+        <NavLink className="router-link" activeClassName="is-active" to="/map">
+          Map
         </NavLink>
         <NavLink
           className="router-link"
@@ -151,10 +153,13 @@ const StateRoute = (props: StateRouteProps) => {
         >
           History
         </NavLink>
-        <NavLink className="router-link" activeClassName="is-active" to="/map">
-          Map
+        <NavLink
+          className="router-link"
+          activeClassName="is-active"
+          to="/tree"
+        >
+          Tree
         </NavLink>
-
         {isRecoil && (
           <NavLink
             className="router-link"
@@ -164,21 +169,13 @@ const StateRoute = (props: StateRouteProps) => {
             AtomsRecoil
           </NavLink>
         )}
-
-        <NavLink
-          className="router-link"
-          activeClassName="is-active"
-          to="/performance"
-        >
-          Performance
-        </NavLink>
       </div>
       <Switch>
         <Route path="/map" render={renderComponentMap} />
         <Route path="/history" render={renderHistory} />
         <Route path="/relationship" render={renderAtomsRelationship} />
-        <Route path="/performance" render={renderPerfView} />
-        <Route path="/" render={renderTree} />
+        <Route path="/tree" render={renderTree} />
+        <Route path="/" render={renderPerfView} />
       </Switch>
     </Router>
   );
