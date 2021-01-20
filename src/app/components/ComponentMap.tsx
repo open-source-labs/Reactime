@@ -1,20 +1,21 @@
 // @ts-nocheck
-import React, { useState } from "react";
-import { Group } from "@visx/group";
-import { hierarchy, Tree } from "@visx/hierarchy";
-import { LinearGradient } from "@visx/gradient";
-import { pointRadial } from "d3-shape";
-import useForceUpdate from "./useForceUpdate";
-import LinkControls from "./LinkControls";
-import getLinkComponent from "./getLinkComponent";
-import { localPoint } from "@visx/event";
+import React, { useState } from 'react';
+import { Group } from '@visx/group';
+import { hierarchy, Tree } from '@visx/hierarchy';
+import { LinearGradient } from '@visx/gradient';
+import { pointRadial } from 'd3-shape';
+import useForceUpdate from './useForceUpdate';
+import LinkControls from './LinkControls';
+import getLinkComponent from './getLinkComponent';
+import { localPoint } from '@visx/event';
 import {
   useTooltip,
   useTooltipInPortal,
   TooltipWithBounds,
-} from "@visx/tooltip";
-import { onHover, onHoverExit } from "../actions/actions";
-import { useStoreContext } from "../store";
+  defaultStyles,
+} from '@visx/tooltip';
+import { onHover, onHoverExit } from '../actions/actions';
+import { useStoreContext } from '../store';
 
 const root = hierarchy({
   name: "root",
@@ -106,18 +107,24 @@ export default function ComponentMap({
     hideTooltip,
   } = useTooltip();
 
-  const { containerRef, TooltipInPortal } = useTooltipInPortal();
+  const { containerRef, TooltipInPortal } = useTooltipInPortal({
+    detectBounds: true,
+    scroll: true,
+  });
 
-  //mousing controls
-  const handleMouseOver = (event) => {
-    // console.log("mouse entered");
-    const coords = localPoint(event.target.ownerSVGElement, event);
-    // console.log("I'm coords", coords);
-    showTooltip({
-      tooltipLeft: coords.x,
-      tooltipTop: coords.y,
-      tooltipData: "test",
-    });
+  const tooltipStyles = {
+    ...defaultStyles,
+    minWidth: 60,
+    backgroundColor: 'rgba(0,0,0,0.9)',
+    color: 'white',
+    fontSize: '14px',
+    lineHeight: '18px',
+    fontFamily: 'Roboto',
+  };
+
+  const formatRenderTime = (time) => {
+    time = time.toFixed(3);
+    return `${time} ms `;
   };
 
   // controls for the map
@@ -180,6 +187,24 @@ export default function ComponentMap({
                     top = node.x;
                     left = node.y;
                   }
+
+                  //mousing controls
+                  const handleMouseOver = (event) => {
+                    () => dispatch(onHover(node.data.rtid));
+                    const coords = localPoint(
+                      event.target.ownerSVGElement,
+                      event
+                    );
+                    const tooltipObj = Object.assign({}, node.data);
+                    if (typeof tooltipObj.state === 'object')
+                      tooltipObj.state = 'stateful';
+                    console.log('tooltipObj', tooltipObj);
+                    showTooltip({
+                      tooltipLeft: coords.x,
+                      tooltipTop: coords.y,
+                      tooltipData: tooltipObj,
+                    });
+                  };
 
                   return (
                     <Group top={top} left={left} key={key}>
@@ -248,8 +273,18 @@ export default function ComponentMap({
           key={Math.random()}
           top={tooltipTop}
           left={tooltipLeft}
+          style={tooltipStyles}
         >
-          Tooltip Data: <strong>{tooltipData}</strong>
+          <div style={{}}>
+            {' '}
+            <strong>{tooltipData.name}</strong>{' '}
+          </div>
+          <div>State: {tooltipData.state}</div>
+          <div>
+            {' '}
+            Render time:{' '}
+            {formatRenderTime(tooltipData.componentData.actualDuration)}{' '}
+          </div>
         </TooltipInPortal>
       )}
     </div>
