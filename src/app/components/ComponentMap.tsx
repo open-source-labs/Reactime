@@ -8,7 +8,7 @@ import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import { localPoint } from '@visx/event';
-import { useTooltip, useTooltipInPortal, TooltipWithBounds } from '@visx/tooltip';
+import { useTooltip, useTooltipInPortal, TooltipWithBounds, defaultStyles } from '@visx/tooltip';
 import { onHover, onHoverExit } from '../actions/actions'; 
 import { useStoreContext } from '../store';
 
@@ -104,18 +104,24 @@ export default function ComponentMap({
     hideTooltip,
   } = useTooltip();
 
-  const { containerRef, TooltipInPortal } = useTooltipInPortal();
+  const { containerRef, TooltipInPortal } = useTooltipInPortal({
+    detectBounds: true,
+    scroll: true,
+  });
 
-  //mousing controls
-  const handleMouseOver = (event) => {
-    console.log("mouse entered");
-    const coords = localPoint(event.target.ownerSVGElement, event);
-    console.log("I'm coords", coords);
-    showTooltip({
-      tooltipLeft: coords.x,
-      tooltipTop: coords.y,
-      tooltipData: "test"
-    });
+  const tooltipStyles = {
+    ...defaultStyles,
+    minWidth: 60,
+    backgroundColor: 'rgba(0,0,0,0.9)',
+    color: 'white',
+    fontSize: '14px',
+    lineHeight: '18px',
+    fontFamily: 'Roboto',
+  };
+
+  const formatRenderTime = (time) => {
+    time = time.toFixed(3);
+    return `${time} ms `;
   }
 
 
@@ -166,6 +172,8 @@ export default function ComponentMap({
                   const width = widthFunc(node.data.name);
                   const height = 25;
 
+
+
                   let top: number;
                   let left: number;
                   if (layout === 'polar') {
@@ -179,6 +187,21 @@ export default function ComponentMap({
                     top = node.x;
                     left = node.y;
                   }
+
+                  //mousing controls
+                  const handleMouseOver = (event) => {
+                    () => dispatch(onHover(node.data.rtid));
+                    const coords = localPoint(event.target.ownerSVGElement, event);
+                    const tooltipObj = Object.assign({}, node.data);
+                    if (typeof tooltipObj.state === 'object') tooltipObj.state = 'stateful';
+                    console.log("tooltipObj", tooltipObj)
+                    showTooltip({
+                      tooltipLeft: coords.x,
+                      tooltipTop: coords.y,
+                      tooltipData: tooltipObj
+                    });
+                  }
+
 
                   return (
                     <Group top={top} left={left} key={key}>
@@ -241,16 +264,23 @@ export default function ComponentMap({
           </Tree>
         </Group>
       </svg>
-     tooltipOpen && tooltipData && (
+     {tooltipOpen && tooltipData && (
         <TooltipInPortal
           // set this to random so it correctly updates with parent bounds
           key={Math.random()}
           top={tooltipTop}
           left={tooltipLeft}
+          style={tooltipStyles}
         >
-          Tooltip Data: <strong>{tooltipData}</strong>
+            <div style={{ }}>
+            {' '}
+            <strong>{tooltipData.name}</strong>{' '}
+          </div>
+          <div>State: {tooltipData.state}</div>
+          <div> Render time: {formatRenderTime(tooltipData.componentData.actualDuration)} </div>
+
         </TooltipInPortal>
-     )
+     )}
     </div>
   );
 }
