@@ -126,19 +126,6 @@ export default function ComponentMap({
     scroll: true,
   });
 
-<<<<<<< HEAD
-  //mousing controls
-  const handleMouseOver = (event) => {
-    // console.log("mouse entered");
-    const coords = localPoint(event.target.ownerSVGElement, event);
-    // console.log("I'm coords", coords);
-    showTooltip({
-      tooltipLeft: coords.x,
-      tooltipTop: coords.y,
-      tooltipData: "test",
-    });
-  };
-=======
   const tooltipStyles = {
     ...defaultStyles,
     minWidth: 60,
@@ -154,7 +141,6 @@ export default function ComponentMap({
     return `${time} ms `;
   }
 
->>>>>>> 0e939e7bb8e045845438bf4ffa8825db5fe14cac
 
   // controls for the map
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
@@ -295,11 +281,7 @@ export default function ComponentMap({
           </Tree>
         </Group>
       </svg>
-<<<<<<< HEAD
-      {tooltipOpen && tooltipData && (
-=======
      {tooltipOpen && tooltipData && (
->>>>>>> 0e939e7bb8e045845438bf4ffa8825db5fe14cac
         <TooltipInPortal
           // set this to random so it correctly updates with parent bounds
           key={Math.random()}
@@ -315,11 +297,7 @@ export default function ComponentMap({
           <div> Render time: {formatRenderTime(tooltipData.componentData.actualDuration)} </div>
 
         </TooltipInPortal>
-<<<<<<< HEAD
-      )}
-=======
      )}
->>>>>>> 0e939e7bb8e045845438bf4ffa8825db5fe14cac
     </div>
   );
 }
