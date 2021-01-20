@@ -1,4 +1,5 @@
 // @ts-nocheck
+<<<<<<< HEAD
 import React, { useState } from "react";
 import { Group } from "@visx/group";
 import { hierarchy, Tree } from "@visx/hierarchy";
@@ -15,6 +16,20 @@ import {
 } from "@visx/tooltip";
 import { onHover, onHoverExit } from "../actions/actions";
 import { useStoreContext } from "../store";
+=======
+import React, { useState } from 'react';
+import { Group } from '@visx/group';
+import { hierarchy, Tree } from '@visx/hierarchy';
+import { LinearGradient } from '@visx/gradient';
+import { pointRadial } from 'd3-shape';
+import useForceUpdate from './useForceUpdate';
+import LinkControls from './LinkControls';
+import getLinkComponent from './getLinkComponent';
+import { localPoint } from '@visx/event';
+import { useTooltip, useTooltipInPortal, TooltipWithBounds, defaultStyles } from '@visx/tooltip';
+import { onHover, onHoverExit } from '../actions/actions'; 
+import { useStoreContext } from '../store';
+>>>>>>> 0e939e7bb8e045845438bf4ffa8825db5fe14cac
 
 const root = hierarchy({
   name: "root",
@@ -106,8 +121,12 @@ export default function ComponentMap({
     hideTooltip,
   } = useTooltip();
 
-  const { containerRef, TooltipInPortal } = useTooltipInPortal();
+  const { containerRef, TooltipInPortal } = useTooltipInPortal({
+    detectBounds: true,
+    scroll: true,
+  });
 
+<<<<<<< HEAD
   //mousing controls
   const handleMouseOver = (event) => {
     // console.log("mouse entered");
@@ -119,6 +138,23 @@ export default function ComponentMap({
       tooltipData: "test",
     });
   };
+=======
+  const tooltipStyles = {
+    ...defaultStyles,
+    minWidth: 60,
+    backgroundColor: 'rgba(0,0,0,0.9)',
+    color: 'white',
+    fontSize: '14px',
+    lineHeight: '18px',
+    fontFamily: 'Roboto',
+  };
+
+  const formatRenderTime = (time) => {
+    time = time.toFixed(3);
+    return `${time} ms `;
+  }
+
+>>>>>>> 0e939e7bb8e045845438bf4ffa8825db5fe14cac
 
   // controls for the map
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
@@ -167,6 +203,8 @@ export default function ComponentMap({
                   const width = widthFunc(node.data.name);
                   const height = 25;
 
+
+
                   let top: number;
                   let left: number;
                   if (layout === "polar") {
@@ -180,6 +218,21 @@ export default function ComponentMap({
                     top = node.x;
                     left = node.y;
                   }
+
+                  //mousing controls
+                  const handleMouseOver = (event) => {
+                    () => dispatch(onHover(node.data.rtid));
+                    const coords = localPoint(event.target.ownerSVGElement, event);
+                    const tooltipObj = Object.assign({}, node.data);
+                    if (typeof tooltipObj.state === 'object') tooltipObj.state = 'stateful';
+                    console.log("tooltipObj", tooltipObj)
+                    showTooltip({
+                      tooltipLeft: coords.x,
+                      tooltipTop: coords.y,
+                      tooltipData: tooltipObj
+                    });
+                  }
+
 
                   return (
                     <Group top={top} left={left} key={key}>
@@ -242,16 +295,31 @@ export default function ComponentMap({
           </Tree>
         </Group>
       </svg>
+<<<<<<< HEAD
       {tooltipOpen && tooltipData && (
+=======
+     {tooltipOpen && tooltipData && (
+>>>>>>> 0e939e7bb8e045845438bf4ffa8825db5fe14cac
         <TooltipInPortal
           // set this to random so it correctly updates with parent bounds
           key={Math.random()}
           top={tooltipTop}
           left={tooltipLeft}
+          style={tooltipStyles}
         >
-          Tooltip Data: <strong>{tooltipData}</strong>
+            <div style={{ }}>
+            {' '}
+            <strong>{tooltipData.name}</strong>{' '}
+          </div>
+          <div>State: {tooltipData.state}</div>
+          <div> Render time: {formatRenderTime(tooltipData.componentData.actualDuration)} </div>
+
         </TooltipInPortal>
+<<<<<<< HEAD
       )}
+=======
+     )}
+>>>>>>> 0e939e7bb8e045845438bf4ffa8825db5fe14cac
     </div>
   );
 }
