@@ -139,6 +139,7 @@ const StateRoute = (props: StateRouteProps) => {
       <NavLink
           className="router-link"
           activeClassName="is-active"
+          exact
           to="/"
         >
           Performance
@@ -156,7 +157,6 @@ const StateRoute = (props: StateRouteProps) => {
         <NavLink
           className="router-link"
           activeClassName="is-active"
-          exact
           to="/tree"
         >
           Tree
