@@ -76,6 +76,18 @@ const traverse = (snapshot, data, currTotalRender = 0) => {
   return data;
 };
 
+const allStorage = () => {
+  const values = [];
+  const keys = Object.keys(localStorage);
+  let i = keys.length;
+
+  while (i--) {
+    const series = localStorage.getItem(keys[i]);
+    values.push(JSON.parse(series));
+  }
+  return values;
+};
+
 const getSnapshotIds = (obj, snapshotIds = []): string[] => {
   snapshotIds.push(`${obj.name}.${obj.branch}`);
   if (obj.children) {
@@ -115,18 +127,6 @@ const PerformanceVisx = (props: BarStackProps) => {
   const [detailsView, setDetailsView] = useState('barStack');
   const [comparisonView, setComparisonView] = useState('barStack');
   const [comparisonData, setComparisonData] = useState();
-
-  const allStorage = () => {
-    const values = [];
-    const keys = Object.keys(localStorage);
-    let i = keys.length;
-
-    while (i--) {
-      const series = localStorage.getItem(keys[i]);
-      values.push(JSON.parse(series));
-    }
-    return values;
-  };
 
   const toggleComponentDetailsView = () => {
     detailsView === 'frequencyCards'

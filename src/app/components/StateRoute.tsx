@@ -136,14 +136,16 @@ const StateRoute = (props: StateRouteProps) => {
   return (
     <Router>
       <div className="navbar">
-        <NavLink
+      <NavLink
           className="router-link"
           activeClassName="is-active"
           exact to="/"
         >
           Performance
         </NavLink>
-        <NavLink className="router-link" activeClassName="is-active" to="/map">
+        <NavLink className="router-link" 
+        activeClassName="is-active" 
+        to="/map">
           Map
         </NavLink>
         <NavLink
