@@ -188,7 +188,7 @@ export default function ComponentMap({
                     left = node.y;
                   }
 
-                  //mousing controls
+                  //mousing controls & Tooltip display logic
                   const handleMouseOver = (event) => {
                     () => dispatch(onHover(node.data.rtid));
                     const coords = localPoint(
@@ -240,6 +240,8 @@ export default function ComponentMap({
                           //test feature
                           onMouseOver={handleMouseOver}
                           onMouseOut={hideTooltip}
+                          onMouseEnter={() => dispatch(onHover(node.data.rtid))}
+                          onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
                         />
                       )}
                       {/* Display text inside of each component node */}
