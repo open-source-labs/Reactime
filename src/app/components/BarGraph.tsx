@@ -70,7 +70,10 @@ const BarGraph = (props) => {
     showTooltip,
   } = useTooltip<TooltipData>();
   let tooltipTimeout: number;
-  const { containerRef, TooltipInPortal } = useTooltipInPortal();
+  const { containerRef, TooltipInPortal } = useTooltipInPortal({
+    detectBounds: true,
+    scroll: true,
+  });
 
   const keys = Object.keys(data.componentData);
 
@@ -139,9 +142,10 @@ const BarGraph = (props) => {
                   if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                     bar.height = 0;
                   }
+                  console.log('bar in BarGraph.tsx', bar);
                   return (
                     <rect
-                      key={`bar-stack-${barStack.index}-${bar.index}`}
+                      key={`bar-stack-${barStack.id}-${bar.id}`}
                       x={bar.x}
                       y={bar.y}
                       height={bar.height === 0 ? null : bar.height}

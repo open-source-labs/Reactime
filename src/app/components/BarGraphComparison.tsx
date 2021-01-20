@@ -8,6 +8,7 @@ import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
+
 import { schemeSet3 } from 'd3-scale-chromatic';
 import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
@@ -18,7 +19,6 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import snapshots from './snapshots';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store';
-
 /* TYPESCRIPT */
 interface data {
   snapshotId?: string;
@@ -112,7 +112,6 @@ const BarGraphComparison = (props) => {
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSnapshotId = (d: snapshot) => d.snapshotId;
-  // const getSeriesId = (d: series) => d.currentTab;
   const formatSnapshotId = (id) => `Snapshot ID: ${id}`;
   const formatRenderTime = (time) => `${time} ms `;
 
@@ -121,8 +120,8 @@ const BarGraphComparison = (props) => {
     // domain: getSnapshotId(data.barStack[currentIndex]),
     // domain: [currentTab, comparison[series].currentTab],
     domain: [
-      `Series ${!currentTab ? null : currentTab} (Current Tab)`,
-      `Series ${!comparison[series] ? null : comparison[series].currentTab}`,
+      `Current Tab Series`,
+      `Series ${!comparison[series] ? null : series + 1}`,
     ],
     padding: 0.2,
   });
@@ -131,16 +130,14 @@ const BarGraphComparison = (props) => {
     const currentSeriesBarStacks = !comparison[series]
       ? []
       : comparison[series].data.barStack;
-    console.log(
-      'currentSeriesBarStacks index in Max func',
-      currentSeriesBarStacks[series]
-    );
-    let renderTimes = Object.values(currentSeriesBarStacks[series]);
-    renderTimes = renderTimes.slice(1);
-    // console.log('RendERrrrTimes', renderTimes);
-    const renderTotal = renderTimes.reduce((a, b) => a + b);
-    // console.log('renderTotal', renderTotal);
-    return renderTotal;
+    if (currentSeriesBarStacks.length === 0) return 0;
+    let currentMax = -Infinity;
+    for (let i = 0; i < currentSeriesBarStacks.length; i += 1) {
+      const renderTimes = Object.values(currentSeriesBarStacks[i]).slice(1);
+      const renderTotal = renderTimes.reduce((acc, curr) => acc + curr);
+      if (renderTotal > currentMax) currentMax = renderTotal;
+    }
+    return currentMax;
   };
 
   const renderingScale = scaleLinear<number>({
@@ -169,10 +166,16 @@ const BarGraphComparison = (props) => {
   const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 150,
+      minWidth: 80,
+      // padding: '0.5rem',
+      height: 30,
+    },
+    select: {
+      minWidth: 80,
       border: '1px solid grey',
       borderRadius: 4,
-      borderColor: 'grey',
+      color: 'grey',
+      height: 30,
     },
   }));
 
@@ -180,10 +183,9 @@ const BarGraphComparison = (props) => {
 
   const handleChange = (event) => {
     setSeries(event.target.value);
-    const renderTime = calculateMaxTotalRender(series);
-    console.log('handleCh renderTime', renderTime);
-    // setMaxRender(renderTime);
-    console.log('maxRender', maxRender);
+    // console.log('handleCh renderTime', renderTime);
+    // // setMaxRender(renderTime);
+    // console.log('maxRender', maxRender);
   };
 
   const handleClose = () => {
@@ -204,31 +206,52 @@ const BarGraphComparison = (props) => {
   return (
     <div>
       {/* <h1>{`Current Snapshot: ${currentIndex + 1}`}</h1> */}
-      <FormHelperText style={{ color: 'white' }}> Select Series</FormHelperText>
-      <FormControl variant="outlined" className={classes.formControl}>
-        <Select
-          style={{ color: 'white' }}
-          labelId="simple-select-outlined-label"
-          id="simple-select-outlined"
-          open={open}
-          onClose={handleClose}
-          onOpen={handleOpen}
-          value={series}
-          //data={data.barStack}
-          // value={titleFilter(comparison)}
-          onChange={handleChange}
-        >
-          {!comparison
-            ? null
-            : titleFilter(comparison).map((tabElem, index) => {
-                return (
-                  <MenuItem value={index}>
-                    {`Series ${tabElem.currentTab}`}
-                  </MenuItem>
-                );
-              })}
-        </Select>
-      </FormControl>
+      {/* <div class="dropdown dropdown-dark">
+        <select name="two" class="dropdown-select">
+          {!comparison[series] ? (
+            <option value={series}>No series available</option>
+          ) : (
+            titleFilter(comparison).map((tabElem, index) => {
+              return <option value={index}>{`Series ${index + 1}`}</option>;
+            })
+          )}
+        </select>
+      </div> */}
+      <div className="series-options-container">
+        <div className="snapshotId-container">
+          <h1 className="snashotId-header">
+            {' '}
+            Snapshot ID: {currentIndex + 1}{' '}
+          </h1>
+        </div>
+        <div className="dropdown-and-save-series-container">
+          <FormControl variant="outlined" className={classes.formControl}>
+            <Select
+              style={{ color: 'white' }}
+              labelId="simple-select-outlined-label"
+              id="simple-select-outlined"
+              className={classes.select}
+              open={open}
+              onClose={handleClose}
+              onOpen={handleOpen}
+              value={series}
+              //data={data.barStack}
+              // value={titleFilter(comparison)}
+              onChange={handleChange}
+            >
+              {!comparison[series] ? (
+                <MenuItem>No series available</MenuItem>
+              ) : (
+                titleFilter(comparison).map((tabElem, index) => {
+                  return (
+                    <MenuItem value={index}>{`Series ${index + 1}`}</MenuItem>
+                  );
+                })
+              )}
+            </Select>
+          </FormControl>
+        </div>
+      </div>
       <svg ref={containerRef} width={width} height={height}>
         {}
         <rect
@@ -268,6 +291,7 @@ const BarGraphComparison = (props) => {
                 const bar = barStack.bars[currentIndex];
                 // console.log('Y SCALEEE', barStacks);
                 // console.log('data.barStack >>>', data.barStack);
+                console.log('OG bar.x', bar.x);
 
                 return (
                   <rect
@@ -322,10 +346,11 @@ const BarGraphComparison = (props) => {
                 }
                 // console.log('barStacks in Comparison', barStacks);
                 const bar = barStack.bars[currentIndex];
+                console.log('Comparison bar.x', bar.x);
                 return (
                   <rect
                     key={`bar-stack-${idx}-${bar.index}`}
-                    x={300}
+                    x={275}
                     y={bar.y}
                     height={bar.height === 0 ? null : bar.height}
                     width={bar.width}
