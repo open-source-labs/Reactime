@@ -5,7 +5,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
-import { save } from '../actions/actions';
 import { useStoreContext } from '../store';
 import {
   MemoryRouter as Router,
@@ -146,12 +145,6 @@ const PerformanceVisx = (props: BarStackProps) => {
   // filter and structure incoming data for VISX
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
 
-  const toStorage = {
-    currentTab,
-    title: tabs[currentTab]['title'],
-    data,
-  };
-
   // Extract individual data from chrome.locals.storage and visualize
   // Need to setup dropdown menu .  Fill dropdown with tabsID (sessions)
   // When you select dropdown, change view with ReactRouter
@@ -216,9 +209,7 @@ const PerformanceVisx = (props: BarStackProps) => {
         label="Comparison View"
       />
 
-      <button onClick={() => dispatch(save(toStorage))}>Save Series</button>
-
-      <div style={{ display: 'flex', 'justify-content': 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
         {/* {detailsView === 'frequencyCards' ? (
             <RenderingFrequency data={data.componentData} />
           ) : (

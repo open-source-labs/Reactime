@@ -19,6 +19,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import snapshots from './snapshots';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store';
+import { save } from '../actions/actions';
 /* TYPESCRIPT */
 interface data {
   snapshotId?: string;
@@ -153,7 +154,7 @@ const BarGraphComparison = (props) => {
   // console.log('rendering scale invocation', renderingScale);
   // setting max dimensions and scale ranges
   const xMax = width - margin.left - margin.right;
-  const yMax = height - margin.top - 150;
+  const yMax = height - margin.top - 200;
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
@@ -172,6 +173,8 @@ const BarGraphComparison = (props) => {
     },
     select: {
       minWidth: 80,
+      fontSize: '.75rem',
+      fontWeight: '200',
       border: '1px solid grey',
       borderRadius: 4,
       color: 'grey',
@@ -196,6 +199,12 @@ const BarGraphComparison = (props) => {
     setOpen(true);
   };
 
+  const toStorage = {
+    currentTab,
+    title: tabs[currentTab]['title'],
+    data,
+  };
+
   //this function creates a dropdown selection for each series of snapshots saved
   // const filterSeries = (comparisonArray) => {
   //   return comparisonArray.map((sessionName, idx) => {
@@ -218,12 +227,11 @@ const BarGraphComparison = (props) => {
         </select>
       </div> */}
       <div className="series-options-container">
-        <div className="snapshotId-container">
-          <h1 className="snashotId-header">
-            {' '}
-            Snapshot ID: {currentIndex + 1}{' '}
-          </h1>
+        <div className="snapshotId-header">
+          {' '}
+          Snapshot ID: {currentIndex + 1}{' '}
         </div>
+
         <div className="dropdown-and-save-series-container">
           <FormControl variant="outlined" className={classes.formControl}>
             <Select
@@ -250,8 +258,16 @@ const BarGraphComparison = (props) => {
               )}
             </Select>
           </FormControl>
+
+          <button
+            className="save-series-button"
+            onClick={() => dispatch(save(toStorage))}
+          >
+            Save Series
+          </button>
         </div>
       </div>
+
       <svg ref={containerRef} width={width} height={height}>
         {}
         <rect
@@ -296,7 +312,7 @@ const BarGraphComparison = (props) => {
                 return (
                   <rect
                     key={`bar-stack-${idx}-NewView`}
-                    x={bar.x + 50}
+                    x={bar.x + 30}
                     y={bar.y}
                     height={bar.height === 0 ? null : bar.height}
                     width={bar.width}
@@ -350,7 +366,7 @@ const BarGraphComparison = (props) => {
                 return (
                   <rect
                     key={`bar-stack-${idx}-${bar.index}`}
-                    x={275}
+                    x={225}
                     y={bar.y}
                     height={bar.height === 0 ? null : bar.height}
                     width={bar.width}
