@@ -162,7 +162,6 @@ const StateRoute = (props: StateRouteProps) => {
         >
           Tree
         </NavLink>
-
         {isRecoil && (
           <NavLink
             className="router-link"
@@ -172,7 +171,6 @@ const StateRoute = (props: StateRouteProps) => {
             AtomsRecoil
           </NavLink>
         )}
-
       </div>
       <Switch>
         <Route path="/performance" render={renderPerfView} />

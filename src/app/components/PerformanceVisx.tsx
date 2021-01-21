@@ -2,16 +2,16 @@
 import React, { useState } from 'react';
 import RenderingFrequency from './RenderingFrequency';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+// import Switch from '@material-ui/core/Switch';
+import { ParentSize } from '@visx/responsive';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
-import { save } from '../actions/actions';
 import { useStoreContext } from '../store';
 import {
   MemoryRouter as Router,
   Route,
   NavLink,
-  ReactSwitch as Switch,
+  Switch,
 } from 'react-router-dom';
 
 /* NOTES
@@ -35,7 +35,7 @@ interface BarStackProps {
 /* DATA HANDLING HELPER FUNCTIONS */
 const traverse = (snapshot, data, currTotalRender = 0) => {
   if (!snapshot.children[0]) return;
-  // console.log('data in PerformanceVisx >>>', data);
+
   // loop through snapshots
   snapshot.children.forEach((child, idx) => {
     const componentName = child.name + -[idx + 1];
@@ -76,6 +76,7 @@ const traverse = (snapshot, data, currTotalRender = 0) => {
   return data;
 };
 
+// Retrieve snapshot series data from Chrome's local storage.
 const allStorage = () => {
   const values = [];
   const keys = Object.keys(localStorage);
@@ -88,6 +89,7 @@ const allStorage = () => {
   return values;
 };
 
+// Get snapshot Ids for the regular bar graph view.
 const getSnapshotIds = (obj, snapshotIds = []): string[] => {
   snapshotIds.push(`${obj.name}.${obj.branch}`);
   if (obj.children) {
@@ -98,7 +100,7 @@ const getSnapshotIds = (obj, snapshotIds = []): string[] => {
   return snapshotIds;
 };
 
-// Returns array of snapshot objs each with components and corresponding render times
+// Returns array of snapshot objs each with components and corresponding render times.
 const getPerfMetrics = (snapshots, snapshotsIds): {} => {
   const perfData = {
     barStack: [],
@@ -112,137 +114,80 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
   return perfData;
 };
 
-// interface saveData {
-//  snapshots: [];
-// }
-
 /* EXPORT COMPONENT */
 const PerformanceVisx = (props: BarStackProps) => {
   // hook used to dispatch onhover action in rect
   const { width, height, snapshots, hierarchy } = props;
-
-  // const [dispatch] = useStoreContext();
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-
   const [detailsView, setDetailsView] = useState('barStack');
   const [comparisonView, setComparisonView] = useState('barStack');
   const [comparisonData, setComparisonData] = useState();
-
-  const toggleComponentDetailsView = () => {
-    detailsView === 'frequencyCards'
-      ? setDetailsView('barStack')
-      : setDetailsView('frequencyCards');
-  };
-
-  //let allStorageData;
-
-  const toggleComparisonView = () => {
-    setComparisonData(allStorage());
-    comparisonView === 'barStack'
-      ? setComparisonView('barStackComparison')
-      : setComparisonView('barStack');
-  };
-
-  // filter and structure incoming data for VISX
+  const NO_STATE_MSG =
+    'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
 
-  const toStorage = {
-    currentTab,
-    title: tabs[currentTab]['title'],
-    data,
-  };
-
-  // Extract individual data from chrome.locals.storage and visualize
-  // Need to setup dropdown menu .  Fill dropdown with tabsID (sessions)
-  // When you select dropdown, change view with ReactRouter
-  // have side-by-side comparison with visx bargraphs in alternate view
-
-  let view;
-
-  const currentView = () => {
-    if (detailsView === 'barStack' && comparisonView === 'barStack') {
-      view = (
-        <BarGraph
-          comparison={comparisonData}
-          data={data}
-          width={width}
-          height={height}
-        />
-      );
-    } else if (
-      detailsView === 'frequencyCards' &&
-      comparisonView === 'barStack'
-    ) {
-      view = <RenderingFrequency data={data.componentData} />;
-    } else if (
-      detailsView === 'barStack' &&
-      comparisonView === 'barStackComparison'
-    ) {
-      view = (
+  const renderComparisonBargraph = () => {
+    if (hierarchy) {
+      return (
         <BarGraphComparison
-          comparison={comparisonData}
+          comparison={allStorage()}
           data={data}
           width={width}
           height={height}
         />
       );
     }
-    return view;
   };
-  console.log('comparison data in Perfomance', comparisonData);
-  // if performance tab is too small it will not return VISX component
+
+  const renderBargraph = () => {
+    if (hierarchy) {
+      return <BarGraph data={data} width={width} height={height} />;
+    }
+  };
+
+  const renderComponentDetailsView = () => {
+    if (hierarchy) {
+      return <RenderingFrequency data={data.componentData} />;
+    }
+    return <div className="noState">{NO_STATE_MSG}</div>;
+  };
+
   return (
-    <div className="renderTab">
-      <FormControlLabel
-        style={{ marginLeft: '30px', marginTop: '0px' }}
-        control={
-          <Switch
-            onChange={toggleComponentDetailsView}
-            name="checkedB"
-            color="primary"
-          />
-        }
-        label="Component Details"
-      />
-      <FormControlLabel
-        style={{ marginLeft: '30px', marginTop: '0px' }}
-        control={
-          <Switch
-            onChange={toggleComparisonView}
-            name="checkedB"
-            color="primary"
-          />
-        }
-        label="Comparison View"
-      />
-
-      <button onClick={() => dispatch(save(toStorage))}>Save Series</button>
-
-      <div style={{ display: 'flex', 'justify-content': 'center' }}>
-        {/* {detailsView === 'frequencyCards' ? (
-            <RenderingFrequency data={data.componentData} />
-          ) : (
-            <BarGraph data={data} width={width} height={height} />
-          )} */}
-        {/* {
-                if (detailsView === 'barStack' && 
-                comparisonView === 'barStack') {
-                   return (<BarGraph data={data} width={width} height={height} />);
-                } else if (
-                  detailsView === 'frequencyCards' &&
-                  comparisonView === 'barStack'
-                )  {
-                   return (<RenderingFrequency data={data.componentData} />);
-                } else if (
-                  detailsView === 'barStack' &&
-                  comparisonView === 'barStackComparison'
-                ) {
-                  return (<BarGraph data={data} width={width} height={height} />);
-                }
-          } */}
-        {currentView()}
+    <Router>
+      <div className="performance-nav-bar-container">
+        <NavLink
+          className="router-link-performance"
+          // className="router-link"
+          activeClassName="is-active"
+          exact
+          to="/"
+        >
+          Snapshots View
+        </NavLink>
+        <NavLink
+          className="router-link-performance"
+          // className="router-link"
+          activeClassName="is-active"
+          to="/comparison"
+        >
+          Comparison View
+        </NavLink>
+        <NavLink
+          className="router-link-performance"
+          // className="router-link"
+          activeClassName="is-active"
+          to="/componentdetails"
+        >
+          Component Details
+        </NavLink>
       </div>
-    </div>
+
+      <Switch>
+        <Route path="/comparison" render={renderComparisonBargraph} />
+        <Route path="/componentdetails" render={renderComponentDetailsView} />
+        <Route path="/" render={renderBargraph} />
+      </Switch>
+    </Router>
   );
 };
 

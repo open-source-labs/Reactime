@@ -142,7 +142,6 @@ const BarGraph = (props) => {
                   if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                     bar.height = 0;
                   }
-                  console.log('bar in BarGraph.tsx', bar);
                   return (
                     <rect
                       key={`bar-stack-${barStack.id}-${bar.id}`}
