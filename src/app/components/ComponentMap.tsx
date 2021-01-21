@@ -71,7 +71,7 @@ export default function ComponentMap({
 
   // setting the margins for the Map to render in the tab window.
   const innerWidth = totalWidth - margin.left - margin.right;
-  const innerHeight = totalHeight - margin.top - margin.bottom;
+  const innerHeight = totalHeight - margin.top - margin.bottom - 60;
 
   let origin: { x: number; y: number };
   let sizeWidth: number;

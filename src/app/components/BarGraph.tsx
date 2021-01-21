@@ -213,10 +213,11 @@ const BarGraph = (props) => {
           fontSize={12}
           fill="#FFFFFF"
         >
-          Rendering Time (ms)
+         Rendering Time (ms)
         </Text>
-        <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill="#FFFFFF">
-          Snapshot Id
+        <br/>
+        <Text x={(xMax / 2) + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
+         Snapshot ID
         </Text>
       </svg>
       {/* FOR HOVER OVER DISPLAY */}
