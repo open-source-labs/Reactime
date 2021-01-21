@@ -1,4 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+.save-series-button {
+  padding: 3px;
+  outline: transparent;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-style: solid;
+  border-color: transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  line-height: 1.5em;
+  font: 300 14px 'Roboto', sans-serif;
+  font-size: $button-text-size;
+  width: 120px;
+  background: $red-color-gradient;
+  height: 30px;
+}
+.save-series-button:hover {
+  box-shadow: $box-shadow-red;
+}
+
 .empty-button {
   padding: 3px;
   outline: transparent;
@@ -216,4 +238,18 @@
 
 .MuiSelect-icon {
   color: lightgrey !important;
+}
+.series-options-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 1rem;
+}
+
+.snapshotId-header {
+  font-size: 1rem;
+}
+.dropdown-and-save-series-container {
+  display: flex;
+  align-items: center;
 }
