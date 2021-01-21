@@ -142,7 +142,6 @@ const BarGraph = (props) => {
                   if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                     bar.height = 0;
                   }
-                  console.log('bar in BarGraph.tsx', bar);
                   return (
                     <rect
                       key={`bar-stack-${barStack.id}-${bar.id}`}
@@ -214,12 +213,10 @@ const BarGraph = (props) => {
           fontSize={12}
           fill="#FFFFFF"
         >
-          {' '}
-          Rendering Time (ms){' '}
+          Rendering Time (ms)
         </Text>
         <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill="#FFFFFF">
-          {' '}
-          Snapshot Id{' '}
+          Snapshot Id
         </Text>
       </svg>
       {/* FOR HOVER OVER DISPLAY */}
