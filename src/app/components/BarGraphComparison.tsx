@@ -72,31 +72,18 @@ const tooltipStyles = {
 const BarGraphComparison = (props) => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { width, height, data, comparison } = props;
-
   const [series, setSeries] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [maxRender, setMaxRender] = React.useState(data.maxTotalRender);
 
-  // console.log('comparison >>>', comparison);
-  // console.log('tabs[currentTab] >>>', tabs[currentTab]);
-  // console.log('props in comparison graph >>>', props);
-  // console.log('data >>>>>', data);
-  // change scale of graph based on clicking of forward and backwards buttons effect
-  // useEffect(() => {
-  //   console.log('setSeries is changing everytime currentIndex changes');
-  //   //change the state with setChangeSeries
-  //   setSeries(tabs[currentTab].sliderIndex);
-  // }, [tabs[currentTab].sliderIndex]);
-
-  // console.log('tabs in Bargraphs comparison >>', tabs);
   function titleFilter(comparisonArray) {
     return comparisonArray.filter(
       (elem) => elem.title === tabs[currentTab].title
     );
   }
-  // console.log('tabs in BGComp >>>', tabs);
+
   const currentIndex = tabs[currentTab].sliderIndex;
-  // console.log('sliderIndx outside of bargraph >>>', currentIndex);
+
   const {
     tooltipOpen,
     tooltipLeft,
@@ -117,16 +104,15 @@ const BarGraphComparison = (props) => {
   const formatRenderTime = (time) => `${time} ms `;
 
   // create visualization SCALES with cleaned data
+  //the domain array elements will place the bars along the x-axis
   const snapshotIdScale = scaleBand<string>({
-    // domain: getSnapshotId(data.barStack[currentIndex]),
-    // domain: [currentTab, comparison[series].currentTab],
     domain: [
       `Current Tab Series`,
       `Series ${!comparison[series] ? null : series + 1}`,
     ],
     padding: 0.2,
   });
-
+  // calculateMax
   const calculateMaxTotalRender = (series) => {
     const currentSeriesBarStacks = !comparison[series]
       ? []
@@ -151,24 +137,17 @@ const BarGraphComparison = (props) => {
     range: schemeSet3,
   });
 
-  // console.log('rendering scale invocation', renderingScale);
   // setting max dimensions and scale ranges
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - 200;
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
-  // const filterSeries = (comparisonArray) => {
-  //   return comparisonArray.map((sessionName, idx) => {
-  //     return <MenuItem>{sessionName}</MenuItem>;
-  //   });
-  // };
   // Dropdown to select series.
   const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
       minWidth: 80,
-      // padding: '0.5rem',
       height: 30,
     },
     select: {
@@ -186,9 +165,6 @@ const BarGraphComparison = (props) => {
 
   const handleChange = (event) => {
     setSeries(event.target.value);
-    // console.log('handleCh renderTime', renderTime);
-    // // setMaxRender(renderTime);
-    // console.log('maxRender', maxRender);
   };
 
   const handleClose = () => {
@@ -205,27 +181,8 @@ const BarGraphComparison = (props) => {
     data,
   };
 
-  //this function creates a dropdown selection for each series of snapshots saved
-  // const filterSeries = (comparisonArray) => {
-  //   return comparisonArray.map((sessionName, idx) => {
-  //     return <MenuItem>{sessionName}</MenuItem>;
-  //   });
-  // };
-
   return (
     <div>
-      {/* <h1>{`Current Snapshot: ${currentIndex + 1}`}</h1> */}
-      {/* <div class="dropdown dropdown-dark">
-        <select name="two" class="dropdown-select">
-          {!comparison[series] ? (
-            <option value={series}>No series available</option>
-          ) : (
-            titleFilter(comparison).map((tabElem, index) => {
-              return <option value={index}>{`Series ${index + 1}`}</option>;
-            })
-          )}
-        </select>
-      </div> */}
       <div className="series-options-container">
         <div className="snapshotId-header">
           {' '}
@@ -243,8 +200,6 @@ const BarGraphComparison = (props) => {
               onClose={handleClose}
               onOpen={handleOpen}
               value={series}
-              //data={data.barStack}
-              // value={titleFilter(comparison)}
               onChange={handleChange}
             >
               {!comparison[series] ? (
@@ -292,10 +247,8 @@ const BarGraphComparison = (props) => {
         <Group top={margin.top} left={margin.left}>
           <BarStack
             // OG Barstack
-            // data={!comparison ? [] : comparison}
             data={data.barStack}
             keys={keys}
-            // x={getSnapshotId}
             x={getSnapshotId}
             xScale={snapshotIdScale}
             yScale={renderingScale}
@@ -303,11 +256,7 @@ const BarGraphComparison = (props) => {
           >
             {(barStacks) =>
               barStacks.map((barStack, idx) => {
-                console.log('maxTotalRender 1st Barstack', data.maxTotalRender);
                 const bar = barStack.bars[currentIndex];
-                // console.log('Y SCALEEE', barStacks);
-                // console.log('data.barStack >>>', data.barStack);
-                console.log('OG bar.x', bar.x);
 
                 return (
                   <rect
@@ -347,10 +296,8 @@ const BarGraphComparison = (props) => {
           <BarStack
             // Comparison Barstack
             data={!comparison[series] ? [] : comparison[series].data.barStack}
-            // data={data.barStack}
             keys={keys}
             x={getSnapshotId}
-            // x={getSeriesId}
             xScale={snapshotIdScale}
             yScale={renderingScale}
             color={colorScale}
@@ -360,9 +307,8 @@ const BarGraphComparison = (props) => {
                 if (!barStack.bars[currentIndex]) {
                   return <h1>No Comparison</h1>;
                 }
-                // console.log('barStacks in Comparison', barStacks);
                 const bar = barStack.bars[currentIndex];
-                console.log('Comparison bar.x', bar.x);
+
                 return (
                   <rect
                     key={`bar-stack-${idx}-${bar.index}`}
@@ -433,12 +379,10 @@ const BarGraphComparison = (props) => {
           fontSize={12}
           fill="#FFFFFF"
         >
-          {' '}
-          Rendering Time (ms){' '}
+          Rendering Time (ms)
         </Text>
         <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill="#FFFFFF">
-          {' '}
-          Series ID{' '}
+          Series ID
         </Text>
       </svg>
       {/* FOR HOVER OVER DISPLAY */}

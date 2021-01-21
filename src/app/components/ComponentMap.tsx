@@ -198,7 +198,6 @@ export default function ComponentMap({
                     const tooltipObj = Object.assign({}, node.data);
                     if (typeof tooltipObj.state === 'object')
                       tooltipObj.state = 'stateful';
-                    console.log('tooltipObj', tooltipObj);
                     showTooltip({
                       tooltipLeft: coords.x,
                       tooltipTop: coords.y,
