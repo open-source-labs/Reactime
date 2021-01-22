@@ -89,7 +89,7 @@ const allStorage = () => {
   return values;
 };
 
-// Get snapshot Ids for the regular bar graph view.
+// Gets snapshot Ids for the regular bar graph view.
 const getSnapshotIds = (obj, snapshotIds = []): string[] => {
   snapshotIds.push(`${obj.name}.${obj.branch}`);
   if (obj.children) {
@@ -149,43 +149,43 @@ const PerformanceVisx = (props: BarStackProps) => {
     if (hierarchy) {
       return <RenderingFrequency data={data.componentData} />;
     }
-    return <div className="noState">{NO_STATE_MSG}</div>;
+    return <div className='noState'>{NO_STATE_MSG}</div>;
   };
 
   return (
     <Router>
-      <div className="performance-nav-bar-container">
+      <div className='performance-nav-bar-container'>
         <NavLink
-          className="router-link-performance"
+          className='router-link-performance'
           // className="router-link"
-          activeClassName="is-active"
+          activeClassName='is-active'
           exact
-          to="/"
+          to='/'
         >
           Snapshots View
         </NavLink>
         <NavLink
-          className="router-link-performance"
+          className='router-link-performance'
           // className="router-link"
-          activeClassName="is-active"
-          to="/comparison"
+          activeClassName='is-active'
+          to='/comparison'
         >
           Comparison View
         </NavLink>
         <NavLink
-          className="router-link-performance"
+          className='router-link-performance'
           // className="router-link"
-          activeClassName="is-active"
-          to="/componentdetails"
+          activeClassName='is-active'
+          to='/componentdetails'
         >
           Component Details
         </NavLink>
       </div>
 
       <Switch>
-        <Route path="/comparison" render={renderComparisonBargraph} />
-        <Route path="/componentdetails" render={renderComponentDetailsView} />
-        <Route path="/" render={renderBargraph} />
+        <Route path='/comparison' render={renderComparisonBargraph} />
+        <Route path='/componentdetails' render={renderComponentDetailsView} />
+        <Route path='/' render={renderBargraph} />
       </Switch>
     </Router>
   );

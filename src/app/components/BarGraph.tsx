@@ -74,7 +74,6 @@ const BarGraph = (props) => {
     detectBounds: true,
     scroll: true,
   });
-
   const keys = Object.keys(data.componentData);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
@@ -122,7 +121,7 @@ const BarGraph = (props) => {
           yScale={renderingScale}
           width={xMax}
           height={yMax}
-          stroke="black"
+          stroke='black'
           strokeOpacity={0.1}
           xOffset={snapshotIdScale.bandwidth() / 2}
         />
@@ -208,16 +207,16 @@ const BarGraph = (props) => {
         />
         <Text
           x={-xMax / 2}
-          y="15"
-          transform="rotate(-90)"
+          y='15'
+          transform='rotate(-90)'
           fontSize={12}
-          fill="#FFFFFF"
+          fill='#FFFFFF'
         >
-         Rendering Time (ms)
+          Rendering Time (ms)
         </Text>
-        <br/>
-        <Text x={(xMax / 2) + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
-         Snapshot ID
+        <br />
+        <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill='#FFFFFF'>
+          Snapshot ID
         </Text>
       </svg>
       {/* FOR HOVER OVER DISPLAY */}
