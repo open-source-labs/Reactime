@@ -184,7 +184,7 @@ const BarGraphComparison = (props) => {
     data,
   };
 
-  //manually assignin X -axis points with tab ID.
+  //manually assignin X -axis points with current Tab keys.
   function setXpointsComparison() {
     comparison[series].data.barStack.forEach((elem) => {
       elem.currentTab = 'comparison';
