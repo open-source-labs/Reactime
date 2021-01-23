@@ -102,7 +102,7 @@ const BarGraphComparison = (props) => {
   const getSnapshotId = (d: snapshot) => d.snapshotId;
   const formatSnapshotId = (id) => `Snapshot ID: ${id}`;
   const formatRenderTime = (time) => `${time} ms `;
-  const getTabID = (storedSeries) => storedSeries.currentTab;
+  const getCurrentTab = (storedSeries) => storedSeries.currentTab;
   // create visualization SCALES with cleaned data
   //const xAxisPoints = [...titleFilter(comparison).map(getTabID), currentTab];
   //the domain array elements will place the bars along the x-axis
@@ -185,14 +185,20 @@ const BarGraphComparison = (props) => {
   };
 
   //manually assignin X -axis points with tab ID.
-  function setXpoints() {
+  function setXpointsComparison() {
     comparison[series].data.barStack.forEach((elem) => {
       elem.currentTab = 'comparison';
     });
     //comparison[series].data.barStack.currentTab = currentTab;
     return comparison[series].data.barStack;
   }
-
+  function setXpointsCurrentTab() {
+    data.barStack.forEach((element) => {
+      element.currentTab = 'currentTab';
+    });
+    return data.barStack;
+  }
+  //console.log('set x on current bar', setXpointsCurrentTab());
   return (
     <div>
       <div className='series-options-container'>
@@ -259,9 +265,9 @@ const BarGraphComparison = (props) => {
         <Group top={margin.top} left={margin.left}>
           <BarStack
             // OG Barstack
-            data={data.barStack}
+            data={setXpointsCurrentTab()}
             keys={keys}
-            x={getSnapshotId}
+            x={getCurrentTab}
             xScale={snapshotIdScale}
             yScale={renderingScale}
             color={colorScale}
@@ -306,9 +312,9 @@ const BarGraphComparison = (props) => {
           </BarStack>
           <BarStack
             // Comparison Barstack
-            data={!comparison[series] ? [] : setXpoints()}
+            data={!comparison[series] ? [] : setXpointsComparison()}
             keys={keys}
-            x={getTabID}
+            x={getCurrentTab}
             xScale={snapshotIdScale}
             yScale={renderingScale}
             color={colorScale}
