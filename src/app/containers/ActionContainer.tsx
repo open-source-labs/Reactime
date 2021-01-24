@@ -14,11 +14,12 @@ const resetSlider = () => {
   }
 };
 
-function ActionContainer() {
+function ActionContainer(props) {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
   let actionsArr = [];
   const hierarchyArr: any[] = [];
+  const { seeActionContainer } = props;
 
   // function to traverse state from hiararchy and also getting information on display name and component name
   const displayArray = (obj: {
@@ -112,25 +113,36 @@ function ActionContainer() {
     }
   );
 
-  return (
-    <div className="action-container">
-      <SwitchAppDropdown />
-      <div className="action-component exclude">
-        <button
-          className="empty-button"
-          onClick={() => {
-            dispatch(emptySnapshots());
-            // set slider back to zero
-            resetSlider();
-          }}
-          type="button"
-        >
-          Empty
-        </button>
+  if (!seeActionContainer) {
+    return (
+      <div></div>
+    ) 
+  }
+  else {
+    console.log("ActionContainer can see prop updates");
+    //this is not logging; the prop is not being udpdated...
+    return (
+      <div className="action-container">
+        <SwitchAppDropdown />
+        <div className="action-component exclude">
+          <button
+            className="empty-button"
+            onClick={() => {
+              dispatch(emptySnapshots());
+              // set slider back to zero
+              resetSlider();
+            }}
+            type="button"
+          >
+            Empty
+          </button>
+        </div>
+        <div>{actionsArr}</div>
       </div>
-      <div>{actionsArr}</div>
-    </div>
-  );
+    );
+    
+  }
+
 }
 
 export default ActionContainer;

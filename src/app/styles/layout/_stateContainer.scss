@@ -9,6 +9,14 @@
   overflow: hidden;
 }
 
+.toggleAC {
+  color: $background-color;
+  background:  $blue-brand;
+  border-radius: 5px;
+  border: 1px solid rgba(184, 196, 194, 0.25);
+  height: 75%;
+}
+
 .state-container .navbar {
   background-color: $background-color;
   display: flex;

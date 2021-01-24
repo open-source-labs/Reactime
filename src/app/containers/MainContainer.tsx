@@ -13,6 +13,25 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 import MPID from '../user_id/user_id';
+import useForceUpdate from '../components/useForceUpdate'
+
+//logic for toggling on the action container sidebar
+let seeActionContainer: boolean = false;
+
+function toggleActionContainer(): void {
+  seeActionContainer = !seeActionContainer;
+  const bodyContainer = document.getElementById("bodyContainer");
+
+  if (seeActionContainer) {
+    bodyContainer.classList.remove("body-container1");
+    bodyContainer.classList.add("body-container2");
+  }
+  else {
+    bodyContainer.classList.remove("body-container2");
+    bodyContainer.classList.add("body-container1");
+  }
+}
+
 
 const mixpanel = require('mixpanel').init('12fa2800ccbf44a5c36c37bc9776e4c0', {
   debug: false,
@@ -177,11 +196,12 @@ function MainContainer(): any {
   const hierarchyDisplay = statelessCleaning(hierarchy);
   return (
     <div className="main-container">
-      <HeadContainer />
-      <div className="body-container">
-        <ActionContainer />
+      {/* <HeadContainer /> */}
+      <div id="bodyContainer" className="body-container1">
+        <ActionContainer seeActionContainer={seeActionContainer}/>
         {snapshots.length ? (
           <StateContainer
+            toggleActionContainer={toggleActionContainer}
             viewIndex={viewIndex}
             snapshot={snapshotDisplay}
             hierarchy={hierarchyDisplay}
