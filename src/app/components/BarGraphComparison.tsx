@@ -19,7 +19,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import snapshots from './snapshots';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store';
-import { save } from '../actions/actions';
+// import { save } from '../actions/actions';
 /* TYPESCRIPT */
 interface data {
   snapshotId?: string;
@@ -178,13 +178,7 @@ const BarGraphComparison = (props) => {
     setXpoints();
   };
 
-  const toStorage = {
-    currentTab,
-    title: tabs[currentTab]['title'],
-    data,
-  };
-
-  //manually assignin X -axis points with current Tab keys.
+  //manually assignin X -axis points with tab ID.
   function setXpointsComparison() {
     comparison[series].data.barStack.forEach((elem) => {
       elem.currentTab = 'comparison';
@@ -231,13 +225,6 @@ const BarGraphComparison = (props) => {
               )}
             </Select>
           </FormControl>
-
-          <button
-            className='save-series-button'
-            onClick={() => dispatch(save(toStorage))}
-          >
-            Save Series
-          </button>
         </div>
       </div>
 
