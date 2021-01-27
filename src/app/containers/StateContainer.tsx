@@ -23,15 +23,17 @@ interface StateContainerProps {
       atomsComponents?: object;
     }
   >;
+  toggleActionContainer?: any;
   AtomsRelationship?: any[];
   hierarchy: Record<string, unknown>;
   snapshots: [];
   viewIndex: number;
+  
 }
 
 // eslint-disable-next-line react/prop-types
 const StateContainer = (props: StateContainerProps): JSX.Element => {
-  const { snapshot, hierarchy, snapshots, viewIndex } = props;
+  const { snapshot, hierarchy, snapshots, viewIndex, toggleActionContainer } = props;
   const [Text, setText] = useState('State');
 
   return (
@@ -40,6 +42,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
         <div className="main-navbar-container">
           <div className="main-navbar-text">{Text}</div>
           <div className="main-navbar">
+            <button  className="toggleAC" onClick={()=> toggleActionContainer()}>View Time Travel</button>
             <NavLink
               className="main-router-link"
               activeClassName="is-active"
