@@ -15,6 +15,12 @@
   border-radius: 5px;
   border: 1px solid rgba(184, 196, 194, 0.25);
   height: 75%;
+  text-decoration: none;
+}
+
+.toggleAC:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 .state-container .navbar {

@@ -19,7 +19,8 @@ function ActionContainer(props) {
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
   let actionsArr = [];
   const hierarchyArr: any[] = [];
-  const { seeActionContainer } = props;
+  const { timeTravel } = props;
+  // React.useEffect(() => { console.log("component updated"); }, [timeTravel]);
 
   // function to traverse state from hiararchy and also getting information on display name and component name
   const displayArray = (obj: {
@@ -113,14 +114,17 @@ function ActionContainer(props) {
     }
   );
 
-  if (!seeActionContainer) {
+  if (!timeTravel) {
+    console.log("should be false:", timeTravel)
     return (
+      //returns an empty div when timeTravel is false
+
       <div></div>
     ) 
   }
   else {
-    console.log("ActionContainer can see prop updates");
-    //this is not logging; the prop is not being udpdated...
+    console.log("Should be true:", timeTravel);
+    // this is not logging; the prop is not being udpdated or the component is not being re-rendered.
     return (
       <div className="action-container">
         <SwitchAppDropdown />

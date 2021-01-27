@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import HeadContainer from './HeadContainer';
 import ActionContainer from './ActionContainer';
 import StateContainer from './StateContainer';
@@ -15,22 +15,8 @@ import { useStoreContext } from '../store';
 import MPID from '../user_id/user_id';
 import useForceUpdate from '../components/useForceUpdate'
 
+
 //logic for toggling on the action container sidebar
-let seeActionContainer: boolean = false;
-
-function toggleActionContainer(): void {
-  seeActionContainer = !seeActionContainer;
-  const bodyContainer = document.getElementById("bodyContainer");
-
-  if (seeActionContainer) {
-    bodyContainer.classList.remove("body-container1");
-    bodyContainer.classList.add("body-container2");
-  }
-  else {
-    bodyContainer.classList.remove("body-container2");
-    bodyContainer.classList.add("body-container1");
-  }
-}
 
 
 const mixpanel = require('mixpanel').init('12fa2800ccbf44a5c36c37bc9776e4c0', {
@@ -39,9 +25,26 @@ const mixpanel = require('mixpanel').init('12fa2800ccbf44a5c36c37bc9776e4c0', {
 });
 
 function MainContainer(): any {
+  const [timeTravel, setTimeTravel] = useState(false);
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
   // add event listeners to background script
+
+  function toggleActionContainer(): void {
+    setTimeTravel(!timeTravel)
+    const bodyContainer = document.getElementById("bodyContainer");
+  
+    if (timeTravel) {
+      bodyContainer.classList.remove("body-container2");
+      bodyContainer.classList.add("body-container1");
+     
+    }
+    else {
+      bodyContainer.classList.remove("body-container1");
+      bodyContainer.classList.add("body-container2");
+    }
+  }
+
   useEffect(() => {
     // only open port once
     if (currentPort) return;
@@ -198,7 +201,7 @@ function MainContainer(): any {
     <div className="main-container">
       {/* <HeadContainer /> */}
       <div id="bodyContainer" className="body-container1">
-        <ActionContainer seeActionContainer={seeActionContainer}/>
+        <ActionContainer timeTravel={timeTravel}/>
         {snapshots.length ? (
           <StateContainer
             toggleActionContainer={toggleActionContainer}

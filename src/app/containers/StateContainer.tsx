@@ -42,7 +42,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
         <div className="main-navbar-container">
           <div className="main-navbar-text">{Text}</div>
           <div className="main-navbar">
-            <button className="toggleAC" onClick={()=> toggleActionContainer()}>View ActionContainer</button>
+            <button  className="toggleAC" onClick={()=> toggleActionContainer()}>View Time Travel</button>
             <NavLink
               className="main-router-link"
               activeClassName="is-active"
