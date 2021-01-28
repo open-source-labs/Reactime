@@ -26,13 +26,13 @@
 
 /* if extension width is less than 500px, stack the body containers */
 @media (max-width: 500px) {
-	.body-container {
-		grid-template-rows: 3fr 5fr 1fr;
-		grid-template-columns: auto;
-		grid-template-areas:
-			'actions'
-			'states'
-			'travel'
-			'buttons';
-	}
+  .body-container {
+    grid-template-rows: 3fr 5fr 1fr;
+    grid-template-columns: auto;
+    grid-template-areas:
+      'actions'
+      'states'
+      'travel'
+      'buttons';
+  }
 }

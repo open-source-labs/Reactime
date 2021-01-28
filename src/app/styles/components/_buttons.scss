@@ -16,9 +16,13 @@
   width: 120px;
   background: $red-color-gradient;
   height: 30px;
-}
-.save-series-button:hover {
-  box-shadow: $box-shadow-red;
+  position: absolute;
+  right: 2.5rem;
+
+   &.animate {
+    background: rgb(41, 164, 41);
+  }
+
 }
 
 .empty-button {
