@@ -1,7 +1,6 @@
 import { getTTFB, getLCP, getFID, getFCP, getCLS } from "web-vitals";
 
 
-
 let firstMessage = true;
 
 // listening for window messages (from the injected script.../DOM)
@@ -42,24 +41,25 @@ chrome.runtime.onMessage.addListener(request => {
 
 const metrics = {};
 const gatherMetrics = ({ name, value }) => {
-
-  console.log('inside Content Script gather metrics', name, value)
   metrics[name] = value;
+  
 
   chrome.runtime.sendMessage({
     type: "performance:metric",
     name,
-    value,
+    value
   });
+  
 
-  const metricsHTML = Object.keys(metrics)
+
 }
 
-// getTTFB(gatherMetrics);
-// getLCP(gatherMetrics);
-// getFID(gatherMetrics);
+getTTFB(gatherMetrics);
+getLCP(gatherMetrics);
+getFID(gatherMetrics);
 getFCP(gatherMetrics);
-// getCLS(gatherMetrics);
+getCLS(gatherMetrics);
+
 
 
 chrome.runtime.sendMessage({ action: 'injectScript' });

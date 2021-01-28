@@ -155,9 +155,9 @@ function MainContainer(): any {
       </div>
     );
   }
-  const { viewIndex, sliderIndex, snapshots, hierarchy, FCP } = tabs[currentTab];
+  const { viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } = tabs[currentTab];
   // if viewIndex is -1, then use the sliderIndex instead
-  console.log('FCP in MainContainer >>>', FCP);
+  console.log('webMetrics in MainContainer >>>', webMetrics);
 
 
   const snapshotView =
@@ -208,7 +208,7 @@ function MainContainer(): any {
         {snapshots.length ? (
           <StateContainer
             toggleActionContainer={toggleActionContainer}
-            FCP={FCP}
+            webMetrics={webMetrics}
             viewIndex={viewIndex}
             snapshot={snapshotDisplay}
             hierarchy={hierarchyDisplay}

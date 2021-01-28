@@ -20,7 +20,7 @@ import { useStoreContext } from '../store';
 import PerformanceVisx from './PerformanceVisx';
 import Legend from './AtomsRelationshipLegend';
 import AtomsRelationship from './AtomsRelationship';
-import Vitals from './Vitals';
+import WebMetrics from './WebMetrics';
 
 const History = require('./History').default;
 const ErrorHandler = require('./ErrorHandler').default;
@@ -43,11 +43,11 @@ export interface StateRouteProps {
   hierarchy: any;
   snapshots: [];
   viewIndex: number;
-  FCP: any;
+  webMetrics: object;
 }
 
 const StateRoute = (props: StateRouteProps) => {
-  const { snapshot, hierarchy, snapshots, viewIndex, FCP } = props;
+  const { snapshot, hierarchy, snapshots, viewIndex, webMetrics } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
   const isRecoil = snapshot.atomsComponents ? true : false;
@@ -116,8 +116,8 @@ const StateRoute = (props: StateRouteProps) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
 
   };
-  const renderVitals = () => {
-    return <Vitals FCP={FCP}/>;
+  const renderWebMetrics = () => {
+    return <WebMetrics webMetrics={webMetrics}/>;
   };
 
   const renderPerfView = () => {
@@ -165,9 +165,9 @@ const StateRoute = (props: StateRouteProps) => {
         <NavLink
           className="router-link"
           activeClassName="is-active"
-          to="/vitals"
+          to="/webMetrics"
         >
-          Vitals
+          Web Metrics
         </NavLink>
         <NavLink
           className="router-link"
@@ -190,7 +190,7 @@ const StateRoute = (props: StateRouteProps) => {
         <Route path="/performance" render={renderPerfView} />
         <Route path="/history" render={renderHistory} />
         <Route path="/relationship" render={renderAtomsRelationship} />
-        <Route path="/vitals" render={renderVitals} />
+        <Route path="/webMetrics" render={renderWebMetrics} />
         <Route path="/tree" render={renderTree} />
         <Route path="/" render={renderComponentMap} />
       </Switch>
