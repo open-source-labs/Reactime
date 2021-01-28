@@ -5,15 +5,9 @@
   grid-template-columns: 1fr 2fr;
   grid-template-rows: 8fr 1fr;
   grid-template-areas:
-    'states states'
+    'actions states'
     'travel travel'
     'buttons buttons';
-  &.expand {
-    grid-template-areas:
-      'actions states'
-      'travel travel'
-      'buttons buttons';
-  }
 }
 
 /* if extension width is less than 500px, stack the body containers */
