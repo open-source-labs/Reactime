@@ -155,8 +155,11 @@ function MainContainer(): any {
       </div>
     );
   }
-  const { viewIndex, sliderIndex, snapshots, hierarchy } = tabs[currentTab];
+  const { viewIndex, sliderIndex, snapshots, hierarchy, FCP } = tabs[currentTab];
   // if viewIndex is -1, then use the sliderIndex instead
+  console.log('FCP in MainContainer >>>', FCP);
+
+
   const snapshotView =
     viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // cleaning hierarchy and snapshotView from stateless data
@@ -205,6 +208,7 @@ function MainContainer(): any {
         {snapshots.length ? (
           <StateContainer
             toggleActionContainer={toggleActionContainer}
+            FCP={FCP}
             viewIndex={viewIndex}
             snapshot={snapshotDisplay}
             hierarchy={hierarchyDisplay}
