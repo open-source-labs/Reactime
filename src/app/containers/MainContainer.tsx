@@ -13,11 +13,6 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 import MPID from '../user_id/user_id';
-import useForceUpdate from '../components/useForceUpdate'
-
-
-//logic for toggling on the action container sidebar
-
 
 const mixpanel = require('mixpanel').init('12fa2800ccbf44a5c36c37bc9776e4c0', {
   debug: false,
@@ -28,6 +23,7 @@ function MainContainer(): any {
   const [timeTravel, setTimeTravel] = useState(false);
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
+  ///const [sideBarView , setSideBar] = useState();
   // add event listeners to background script
 
   function toggleActionContainer(): void {
@@ -136,12 +132,12 @@ function MainContainer(): any {
 
   if (!tabs[currentTab]) {
     return (
-      <div className="error-container">
-        <img src="../assets/logo-no-version.png" height="50px" />
+      <div className='error-container'>
+        <img src='../assets/logo-no-version.png' height='50px' />
         <a
-          href="https://reactime.io/"
-          target="_blank"
-          rel="noopener noreferrer"
+          href='https://reactime.io/'
+          target='_blank'
+          rel='noopener noreferrer'
         >
           No React application found. Please visit reactime.io to more info.
         </a>
@@ -197,6 +193,27 @@ function MainContainer(): any {
   };
   const snapshotDisplay = statelessCleaning(snapshotView);
   const hierarchyDisplay = statelessCleaning(hierarchy);
+  const bodyGrid = document.getElementsByClassName('body-container');
+  let sidebarView = false;
+  const hideJumpSidebar = (e) => {
+    console.log('jump side bar func worked!', e);
+    if (!sidebarView) {
+      e.preventDefault();
+      for (let i = 0; i < bodyGrid.length; i += 1) {
+        bodyGrid[i].classList.add('expand');
+      }
+      sidebarView = true;
+      console.log('if condition worked!');
+    } else {
+      e.preventDefault();
+      for (let i = 0; i < bodyGrid.length; i += 1) {
+        bodyGrid[i].classList.remove('expand');
+      }
+      sidebarView = false;
+      console.log('else condition worked!');
+    }
+  };
+
   return (
     <div className="main-container">
       {/* <HeadContainer /> */}
@@ -213,6 +230,9 @@ function MainContainer(): any {
         ) : null}
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
+        {/* <button className='show-sidebar' onClick={(e) => hideJumpSidebar(e)}>
+          See Jump Functionality
+        </button> */}
       </div>
     </div>
   );

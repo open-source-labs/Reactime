@@ -12,6 +12,7 @@ import { schemeSet3 } from 'd3-scale-chromatic';
 import snapshots from './snapshots';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store';
+import { save } from '../actions/actions';
 
 /* TYPESCRIPT */
 interface data {
@@ -74,7 +75,6 @@ const BarGraph = (props) => {
     detectBounds: true,
     scroll: true,
   });
-
   const keys = Object.keys(data.componentData);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
@@ -103,8 +103,35 @@ const BarGraph = (props) => {
   const yMax = height - margin.top - 150;
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
+
+   const toStorage = {
+    currentTab,
+    title: tabs[currentTab]['title'],
+    data,
+   };
+  
+  const animateButton = function (e) {
+    e.preventDefault;
+    e.target.classList.add('animate');
+    e.target.innerHTML = 'Saved!';
+    setTimeout(function () {
+      e.target.innerHTML = 'Save Series';
+      e.target.classList.remove('animate');
+    }, 1000);
+  };
+  const classname = document.getElementsByClassName('save-series-button');
+  for (let i = 0; i < classname.length; i++) {
+    classname[i].addEventListener('click', animateButton, false);
+  }
   return (
     <div>
+      <button
+          className='save-series-button'
+      onClick={(e) => {
+        dispatch(save(toStorage))
+      }}>
+          Save Series
+      </button>
       <svg ref={containerRef} width={width} height={height}>
         {}
         <rect
@@ -122,7 +149,7 @@ const BarGraph = (props) => {
           yScale={renderingScale}
           width={xMax}
           height={yMax}
-          stroke="black"
+          stroke='black'
           strokeOpacity={0.1}
           xOffset={snapshotIdScale.bandwidth() / 2}
         />
@@ -178,6 +205,8 @@ const BarGraph = (props) => {
               )
             }
           </BarStack>
+
+
         </Group>
         <AxisLeft
           top={margin.top}
@@ -208,16 +237,16 @@ const BarGraph = (props) => {
         />
         <Text
           x={-xMax / 2}
-          y="15"
-          transform="rotate(-90)"
+          y='15'
+          transform='rotate(-90)'
           fontSize={12}
-          fill="#FFFFFF"
+          fill='#FFFFFF'
         >
-         Rendering Time (ms)
+          Rendering Time (ms)
         </Text>
-        <br/>
-        <Text x={(xMax / 2) + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
-         Snapshot ID
+        <br />
+        <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill='#FFFFFF'>
+          Snapshot ID
         </Text>
       </svg>
       {/* FOR HOVER OVER DISPLAY */}

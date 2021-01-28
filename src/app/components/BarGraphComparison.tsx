@@ -19,7 +19,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import snapshots from './snapshots';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store';
-import { save } from '../actions/actions';
+// import { save } from '../actions/actions';
 /* TYPESCRIPT */
 interface data {
   snapshotId?: string;
@@ -102,14 +102,14 @@ const BarGraphComparison = (props) => {
   const getSnapshotId = (d: snapshot) => d.snapshotId;
   const formatSnapshotId = (id) => `Snapshot ID: ${id}`;
   const formatRenderTime = (time) => `${time} ms `;
-
+  const getCurrentTab = (storedSeries) => storedSeries.currentTab;
   // create visualization SCALES with cleaned data
+  //const xAxisPoints = [...titleFilter(comparison).map(getTabID), currentTab];
   //the domain array elements will place the bars along the x-axis
+  const xAxisPoints = ['currentTab', 'comparison']; //[1.0.,2.0]
+  //{ currentTab : 1 },  {currentTab : 2 }
   const snapshotIdScale = scaleBand<string>({
-    domain: [
-      `Current Tab Series`,
-      `Series ${!comparison[series] ? null : series + 1}`,
-    ],
+    domain: xAxisPoints,
     padding: 0.2,
   });
   // calculateMax
@@ -165,36 +165,48 @@ const BarGraphComparison = (props) => {
 
   const handleChange = (event) => {
     setSeries(event.target.value);
+    setXpoints();
   };
 
   const handleClose = () => {
     setOpen(false);
+    setXpoints();
   };
 
   const handleOpen = () => {
     setOpen(true);
+    setXpoints();
   };
 
-  const toStorage = {
-    currentTab,
-    title: tabs[currentTab]['title'],
-    data,
-  };
-
+  //manually assignin X -axis points with tab ID.
+  function setXpointsComparison() {
+    comparison[series].data.barStack.forEach((elem) => {
+      elem.currentTab = 'comparison';
+    });
+    //comparison[series].data.barStack.currentTab = currentTab;
+    return comparison[series].data.barStack;
+  }
+  function setXpointsCurrentTab() {
+    data.barStack.forEach((element) => {
+      element.currentTab = 'currentTab';
+    });
+    return data.barStack;
+  }
+  //console.log('set x on current bar', setXpointsCurrentTab());
   return (
     <div>
-      <div className="series-options-container">
-        <div className="snapshotId-header">
+      <div className='series-options-container'>
+        <div className='snapshotId-header'>
           {' '}
           Snapshot ID: {currentIndex + 1}{' '}
         </div>
 
-        <div className="dropdown-and-save-series-container">
-          <FormControl variant="outlined" className={classes.formControl}>
+        <div className='dropdown-and-save-series-container'>
+          <FormControl variant='outlined' className={classes.formControl}>
             <Select
               style={{ color: 'white' }}
-              labelId="simple-select-outlined-label"
-              id="simple-select-outlined"
+              labelId='simple-select-outlined-label'
+              id='simple-select-outlined'
               className={classes.select}
               open={open}
               onClose={handleClose}
@@ -213,13 +225,6 @@ const BarGraphComparison = (props) => {
               )}
             </Select>
           </FormControl>
-
-          <button
-            className="save-series-button"
-            onClick={() => dispatch(save(toStorage))}
-          >
-            Save Series
-          </button>
         </div>
       </div>
 
@@ -240,16 +245,16 @@ const BarGraphComparison = (props) => {
           yScale={renderingScale}
           width={xMax}
           height={yMax}
-          stroke="black"
+          stroke='black'
           strokeOpacity={0.1}
           xOffset={snapshotIdScale.bandwidth() / 2}
         />
         <Group top={margin.top} left={margin.left}>
           <BarStack
             // OG Barstack
-            data={data.barStack}
+            data={setXpointsCurrentTab()}
             keys={keys}
-            x={getSnapshotId}
+            x={getCurrentTab}
             xScale={snapshotIdScale}
             yScale={renderingScale}
             color={colorScale}
@@ -257,11 +262,10 @@ const BarGraphComparison = (props) => {
             {(barStacks) =>
               barStacks.map((barStack, idx) => {
                 const bar = barStack.bars[currentIndex];
-
                 return (
                   <rect
                     key={`bar-stack-${idx}-NewView`}
-                    x={bar.x + 30}
+                    x={bar.x}
                     y={bar.y}
                     height={bar.height === 0 ? null : bar.height}
                     width={bar.width}
@@ -295,9 +299,9 @@ const BarGraphComparison = (props) => {
           </BarStack>
           <BarStack
             // Comparison Barstack
-            data={!comparison[series] ? [] : comparison[series].data.barStack}
+            data={!comparison[series] ? [] : setXpointsComparison()}
             keys={keys}
-            x={getSnapshotId}
+            x={getCurrentTab}
             xScale={snapshotIdScale}
             yScale={renderingScale}
             color={colorScale}
@@ -308,11 +312,10 @@ const BarGraphComparison = (props) => {
                   return <h1>No Comparison</h1>;
                 }
                 const bar = barStack.bars[currentIndex];
-
                 return (
                   <rect
                     key={`bar-stack-${idx}-${bar.index}`}
-                    x={225}
+                    x={bar.x}
                     y={bar.y}
                     height={bar.height === 0 ? null : bar.height}
                     width={bar.width}
@@ -374,14 +377,14 @@ const BarGraphComparison = (props) => {
         />
         <Text
           x={-xMax / 2}
-          y="15"
-          transform="rotate(-90)"
+          y='15'
+          transform='rotate(-90)'
           fontSize={12}
-          fill="#FFFFFF"
+          fill='#FFFFFF'
         >
           Rendering Time (ms)
         </Text>
-        <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill="#FFFFFF">
+        <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill='#FFFFFF'>
           Series ID
         </Text>
       </svg>
