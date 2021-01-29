@@ -22,6 +22,7 @@ import Legend from './AtomsRelationshipLegend';
 import AtomsRelationship from './AtomsRelationship';
 import WebMetrics from './WebMetrics';
 
+
 const History = require('./History').default;
 const ErrorHandler = require('./ErrorHandler').default;
 
@@ -117,7 +118,11 @@ const StateRoute = (props: StateRouteProps) => {
 
   };
   const renderWebMetrics = () => {
-    return <WebMetrics webMetrics={webMetrics}/>;
+    return (
+      <div>
+        <WebMetrics webMetrics={webMetrics}/>
+      </div>
+    )
   };
 
   const renderPerfView = () => {
