@@ -115,7 +115,6 @@ function ActionContainer(props) {
   );
 
   if (!timeTravel) {
-    console.log("should be false:", timeTravel)
     return (
       //returns an empty div when timeTravel is false
 
@@ -123,7 +122,6 @@ function ActionContainer(props) {
     ) 
   }
   else {
-    console.log("Should be true:", timeTravel);
     // this is not logging; the prop is not being udpdated or the component is not being re-rendered.
     return (
       <div className="action-container">

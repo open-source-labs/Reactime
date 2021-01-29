@@ -20,6 +20,8 @@ import { useStoreContext } from '../store';
 import PerformanceVisx from './PerformanceVisx';
 import Legend from './AtomsRelationshipLegend';
 import AtomsRelationship from './AtomsRelationship';
+import WebMetrics from './WebMetrics';
+
 
 const History = require('./History').default;
 const ErrorHandler = require('./ErrorHandler').default;
@@ -37,14 +39,16 @@ export interface StateRouteProps {
     children?: any[];
     atomsComponents?: any;
     atomSelectors?: any;
+   
   };
   hierarchy: any;
   snapshots: [];
   viewIndex: number;
+  webMetrics: object;
 }
 
 const StateRoute = (props: StateRouteProps) => {
-  const { snapshot, hierarchy, snapshots, viewIndex } = props;
+  const { snapshot, hierarchy, snapshots, viewIndex, webMetrics } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
   const isRecoil = snapshot.atomsComponents ? true : false;
@@ -111,6 +115,16 @@ const StateRoute = (props: StateRouteProps) => {
       return <Tree snapshot={snapshot} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
+
+  };
+  const renderWebMetrics = () => {
+    return (
+      <div>
+        <WebMetrics webMetrics={webMetrics}/>
+        <WebMetrics webMetrics={webMetrics}/>
+        <WebMetrics webMetrics={webMetrics}/>
+      </div>
+    )
   };
 
   const renderPerfView = () => {
@@ -158,6 +172,13 @@ const StateRoute = (props: StateRouteProps) => {
         <NavLink
           className="router-link"
           activeClassName="is-active"
+          to="/webMetrics"
+        >
+          Web Metrics
+        </NavLink>
+        <NavLink
+          className="router-link"
+          activeClassName="is-active"
           to="/tree"
         >
           Tree
@@ -176,6 +197,7 @@ const StateRoute = (props: StateRouteProps) => {
         <Route path="/performance" render={renderPerfView} />
         <Route path="/history" render={renderHistory} />
         <Route path="/relationship" render={renderAtomsRelationship} />
+        <Route path="/webMetrics" render={renderWebMetrics} />
         <Route path="/tree" render={renderTree} />
         <Route path="/" render={renderComponentMap} />
       </Switch>
