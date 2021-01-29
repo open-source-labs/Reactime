@@ -1,45 +1,10 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Charts from 'react-apexcharts'
 
-
-interface apexcharts {
-  state: any
-}
-
-// const WebMetrics = ({webMetrics}) => {
-//   const [data, setData] = React.useState({});
-//   const METRICS = ["TTFB", "LCP", "FID", "FCP", "CLS"];
-
-//   React.useEffect(() => {
-//     chrome.runtime.sendMessage({
-//       type: "performance:metric:request",
-//     }, (d) => {
-//       setData(d);
-//     })
-//   }, [])
-
-//   const output = [];
-//   const perfMetrics = Object.keys(webMetrics)
-//     .map((metric) => output.push(<div><div>{metric}</div><div>{Math.round(webMetrics[metric])}</div></div>));
-
-//     console.log('WM >>>', webMetrics)
-//     console.log('output>>>', output)
-// return (
-// 	<div>
-//     {output}
-//   </div>
-// )
-
-// }
-
-
-class WebMetrics extends React.Component {
-	constructor(props) {
-		super(props);
-
-		this.state = {
+const radialGraph = ({webMetrics}) => {
+		const state = {
 		
-			series: [75],
+			series: [(webMetrics.FCP / 1000) * 100],
 			options: {
 				chart: {
 					height: 350,
@@ -54,8 +19,8 @@ class WebMetrics extends React.Component {
 						endAngle: 225,
 						 hollow: {
 							margin: 0,
-							size: '70%',
-							background: '#fff',
+							size: '90%',
+							background: '#242529',
 							image: undefined,
 							imageOffsetX: 0,
 							imageOffsetY: 0,
@@ -70,7 +35,7 @@ class WebMetrics extends React.Component {
 						},
 						track: {
 							background: '#fff',
-							strokeWidth: '67%',
+							strokeWidth: '10%',
 							margin: 0, // margin is in pixels
 							dropShadow: {
 								enabled: true,
@@ -86,15 +51,15 @@ class WebMetrics extends React.Component {
 							name: {
 								offsetY: -10,
 								show: true,
-								color: '#888',
+								color: '#fff',
 								fontSize: '17px'
 							},
 							value: {
 								formatter: function(val) {
-									return parseInt(val);
+									return parseInt(webMetrics.FCP);
 								},
-								color: '#111',
-								fontSize: '36px',
+								color: '#fff',
+								fontSize: '25px',
 								show: true,
 							}
 						}
@@ -116,29 +81,23 @@ class WebMetrics extends React.Component {
 				stroke: {
 					lineCap: 'round'
 				},
-				labels: ['Percent'],
+				labels: ['FCP'],
 			},
 		
 		
     };
-    const { webMetrics} = props;
-    console.log('props', props, webMetrics)
-	}
+   
 
-
-
-	render() {
 		return (
 			
 
 <div id="card">
 	<div id="chart">
-		<Charts options={this.state.options} series={this.state.series} type="radialBar" height={350} />
+		<Charts options={state.options} series={state.series} type="radialBar" height={350} />
 	</div>
 </div>
 
 		)
-	}
 }
 
-export default WebMetrics;
+export default radialGraph;

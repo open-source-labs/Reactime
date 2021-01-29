@@ -121,6 +121,8 @@ const StateRoute = (props: StateRouteProps) => {
     return (
       <div>
         <WebMetrics webMetrics={webMetrics}/>
+        <WebMetrics webMetrics={webMetrics}/>
+        <WebMetrics webMetrics={webMetrics}/>
       </div>
     )
   };
