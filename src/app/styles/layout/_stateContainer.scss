@@ -10,12 +10,11 @@
 }
 
 .toggleAC {
-  color: $background-color;
-  background:  $blue-brand;
-  border-radius: 5px;
-  border: 1px solid rgba(184, 196, 194, 0.25);
+  color: #00dffc;
+  background: $background-color;
   height: 75%;
   text-decoration: none;
+  border: none;
 }
 
 .toggleAC:focus {

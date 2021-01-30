@@ -104,12 +104,12 @@ const BarGraph = (props) => {
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
-   const toStorage = {
+  const toStorage = {
     currentTab,
     title: tabs[currentTab]['title'],
     data,
-   };
-  
+  };
+
   const animateButton = function (e) {
     e.preventDefault;
     e.target.classList.add('animate');
@@ -126,11 +126,12 @@ const BarGraph = (props) => {
   return (
     <div>
       <button
-          className='save-series-button'
-      onClick={(e) => {
-        dispatch(save(toStorage))
-      }}>
-          Save Series
+        className='save-series-button'
+        onClick={(e) => {
+          dispatch(save(toStorage));
+        }}
+      >
+        Save Series
       </button>
       <svg ref={containerRef} width={width} height={height}>
         {}
@@ -165,6 +166,8 @@ const BarGraph = (props) => {
             {(barStacks) =>
               barStacks.map((barStack) =>
                 barStack.bars.map((bar, idx) => {
+                  console.log('barstacks >>>', barStack);
+                  console.log('bars >>>', bar);
                   // hides new components if components don't exist in previous snapshots
                   if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                     bar.height = 0;
@@ -205,8 +208,6 @@ const BarGraph = (props) => {
               )
             }
           </BarStack>
-
-
         </Group>
         <AxisLeft
           top={margin.top}

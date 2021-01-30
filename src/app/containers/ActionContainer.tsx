@@ -6,6 +6,7 @@ import SwitchAppDropdown from '../components/SwitchApp';
 
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
+import { useEffect } from 'react';
 
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
@@ -17,10 +18,9 @@ const resetSlider = () => {
 function ActionContainer(props) {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
+  const { toggleActionContainer, actionView, setActionView } = props;
   let actionsArr = [];
   const hierarchyArr: any[] = [];
-  const { timeTravel } = props;
-  // React.useEffect(() => { console.log("component updated"); }, [timeTravel]);
 
   // function to traverse state from hiararchy and also getting information on display name and component name
   const displayArray = (obj: {
@@ -113,38 +113,41 @@ function ActionContainer(props) {
       );
     }
   );
+  useEffect(() => {
+    setActionView(true);
+  }, []);
 
-  if (!timeTravel) {
-    return (
-      //returns an empty div when timeTravel is false
-
-      <div></div>
-    ) 
-  }
-  else {
-    // this is not logging; the prop is not being udpdated or the component is not being re-rendered.
-    return (
-      <div className="action-container">
-        <SwitchAppDropdown />
-        <div className="action-component exclude">
-          <button
-            className="empty-button"
-            onClick={() => {
-              dispatch(emptySnapshots());
-              // set slider back to zero
-              resetSlider();
-            }}
-            type="button"
-          >
-            Empty
-          </button>
-        </div>
-        <div>{actionsArr}</div>
+  // this is not logging; the prop is not being udpdated or the component is not being re-rendered.
+  return (
+    <div id='action-id' className='action-container'>
+      <div id='arrow'>
+        <aside className='aside'>
+          <a onClick={toggleActionContainer} className='toggle'>
+            <i></i>
+          </a>
+        </aside>
       </div>
-    );
-    
-  }
-
+      {actionView ? (
+        <div>
+          <SwitchAppDropdown />
+          <div className='action-component exclude'>
+            <button
+              className='empty-button'
+              onClick={() => {
+                dispatch(emptySnapshots());
+                // set slider back to zero
+                resetSlider();
+              }}
+              type='button'
+            >
+              Empty
+            </button>
+          </div>
+          <div>{actionsArr}</div>
+        </div>
+      ) : null}
+    </div>
+  );
 }
 
 export default ActionContainer;

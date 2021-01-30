@@ -20,26 +20,18 @@ const mixpanel = require('mixpanel').init('12fa2800ccbf44a5c36c37bc9776e4c0', {
 });
 
 function MainContainer(): any {
-  const [timeTravel, setTimeTravel] = useState(false);
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
-  ///const [sideBarView , setSideBar] = useState();
-  // add event listeners to background script
-
-  function toggleActionContainer(): void {
-    setTimeTravel(!timeTravel)
-    const bodyContainer = document.getElementById("bodyContainer");
-  
-    if (timeTravel) {
-      bodyContainer.classList.remove("body-container2");
-      bodyContainer.classList.add("body-container1");
-     
-    }
-    else {
-      bodyContainer.classList.remove("body-container1");
-      bodyContainer.classList.add("body-container2");
-    }
-  }
+  const [actionView, setActionView] = useState(true);
+  //this function handles Time Jump sidebar view
+  const toggleActionContainer = () => {
+    setActionView(!actionView);
+    const toggleElem = document.querySelector('aside');
+    toggleElem.classList.toggle('no-aside');
+  };
+  useEffect(() => {
+    setActionView(true);
+  }, []);
 
   useEffect(() => {
     // only open port once
@@ -126,7 +118,6 @@ function MainContainer(): any {
         });
       }
     }
-
     document.addEventListener('click', mpClickTrack);
   }, []);
 
@@ -151,11 +142,10 @@ function MainContainer(): any {
       </div>
     );
   }
-  const { viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } = tabs[currentTab];
+  const { viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } = tabs[
+    currentTab
+  ];
   // if viewIndex is -1, then use the sliderIndex instead
-  console.log('webMetrics in MainContainer >>>', webMetrics);
-
-
   const snapshotView =
     viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // cleaning hierarchy and snapshotView from stateless data
@@ -196,32 +186,16 @@ function MainContainer(): any {
   };
   const snapshotDisplay = statelessCleaning(snapshotView);
   const hierarchyDisplay = statelessCleaning(hierarchy);
-  const bodyGrid = document.getElementsByClassName('body-container');
-  let sidebarView = false;
-  const hideJumpSidebar = (e) => {
-    console.log('jump side bar func worked!', e);
-    if (!sidebarView) {
-      e.preventDefault();
-      for (let i = 0; i < bodyGrid.length; i += 1) {
-        bodyGrid[i].classList.add('expand');
-      }
-      sidebarView = true;
-      console.log('if condition worked!');
-    } else {
-      e.preventDefault();
-      for (let i = 0; i < bodyGrid.length; i += 1) {
-        bodyGrid[i].classList.remove('expand');
-      }
-      sidebarView = false;
-      console.log('else condition worked!');
-    }
-  };
 
   return (
-    <div className="main-container">
+    <div className='main-container'>
       {/* <HeadContainer /> */}
-      <div id="bodyContainer" className="body-container1">
-        <ActionContainer timeTravel={timeTravel}/>
+      <div id='bodyContainer' className='body-container1'>
+        <ActionContainer
+          actionView={actionView}
+          setActionView={setActionView}
+          toggleActionContainer={toggleActionContainer}
+        />
         {snapshots.length ? (
           <StateContainer
             toggleActionContainer={toggleActionContainer}
@@ -234,9 +208,6 @@ function MainContainer(): any {
         ) : null}
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
-        {/* <button className='show-sidebar' onClick={(e) => hideJumpSidebar(e)}>
-          See Jump Functionality
-        </button> */}
       </div>
     </div>
   );
