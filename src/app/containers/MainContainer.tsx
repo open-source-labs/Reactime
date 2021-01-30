@@ -151,8 +151,11 @@ function MainContainer(): any {
       </div>
     );
   }
-  const { viewIndex, sliderIndex, snapshots, hierarchy } = tabs[currentTab];
+  const { viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } = tabs[currentTab];
   // if viewIndex is -1, then use the sliderIndex instead
+  console.log('webMetrics in MainContainer >>>', webMetrics);
+
+
   const snapshotView =
     viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // cleaning hierarchy and snapshotView from stateless data
@@ -222,6 +225,7 @@ function MainContainer(): any {
         {snapshots.length ? (
           <StateContainer
             toggleActionContainer={toggleActionContainer}
+            webMetrics={webMetrics}
             viewIndex={viewIndex}
             snapshot={snapshotDisplay}
             hierarchy={hierarchyDisplay}

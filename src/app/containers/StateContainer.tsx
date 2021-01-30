@@ -24,6 +24,7 @@ interface StateContainerProps {
     }
   >;
   toggleActionContainer?: any;
+  webMetrics: object;
   AtomsRelationship?: any[];
   hierarchy: Record<string, unknown>;
   snapshots: [];
@@ -33,7 +34,7 @@ interface StateContainerProps {
 
 // eslint-disable-next-line react/prop-types
 const StateContainer = (props: StateContainerProps): JSX.Element => {
-  const { snapshot, hierarchy, snapshots, viewIndex, toggleActionContainer } = props;
+  const { snapshot, hierarchy, snapshots, viewIndex, toggleActionContainer, webMetrics } = props;
   const [Text, setText] = useState('State');
 
   return (
@@ -74,6 +75,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
               setText('State');
               return (
                 <StateRoute
+                  webMetrics={webMetrics}
                   viewIndex={viewIndex}
                   snapshot={snapshot}
                   hierarchy={hierarchy}
