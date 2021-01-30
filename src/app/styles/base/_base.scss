@@ -15,17 +15,20 @@ body {
 
 .travel-container {
   grid-area: travel;
+  transition: margin-left 15s;
 }
 .action-container {
   grid-area: actions;
+  transition: 15s;
 }
 .state-container {
   grid-area: states;
+  transition: margin-left 15s;
 }
 .buttons-container {
   grid-area: buttons;
-
-  border-color: rgba(41,41,41,1);
+  transition: margin-left 15s;
+  border-color: rgba(41, 41, 41, 1);
 }
 
 .action-container,

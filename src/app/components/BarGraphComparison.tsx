@@ -284,6 +284,9 @@ const BarGraphComparison = (props) => {
             {(barStacks) =>
               barStacks.map((barStack, idx) => {
                 const bar = barStack.bars[currentIndex];
+                if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
+                  bar.height = 0;
+                }
                 return (
                   <rect
                     key={`bar-stack-${idx}-NewView`}
@@ -334,6 +337,9 @@ const BarGraphComparison = (props) => {
                   return <h1>No Comparison</h1>;
                 }
                 const bar = barStack.bars[currentIndex];
+                if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
+                  bar.height = 0;
+                }
                 return (
                   <rect
                     key={`bar-stack-${idx}-${bar.index}`}

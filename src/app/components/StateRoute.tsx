@@ -22,7 +22,6 @@ import Legend from './AtomsRelationshipLegend';
 import AtomsRelationship from './AtomsRelationship';
 import WebMetrics from './WebMetrics';
 
-
 const History = require('./History').default;
 const ErrorHandler = require('./ErrorHandler').default;
 
@@ -39,7 +38,6 @@ export interface StateRouteProps {
     children?: any[];
     atomsComponents?: any;
     atomSelectors?: any;
-   
   };
   hierarchy: any;
   snapshots: [];
@@ -52,6 +50,7 @@ const StateRoute = (props: StateRouteProps) => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
   const isRecoil = snapshot.atomsComponents ? true : false;
+  
   const [noRenderData, setNoRenderData] = useState(false);
   // component map zoom state
   const [{ x, y, k }, setZoomState]: any = useState({
@@ -59,7 +58,7 @@ const StateRoute = (props: StateRouteProps) => {
     y: 250,
     k: 1,
   });
-
+  console.log('webMetrics in StateRoute Props >>>>', webMetrics);
   // Map
   const renderComponentMap = () => {
     if (hierarchy) {
@@ -71,7 +70,7 @@ const StateRoute = (props: StateRouteProps) => {
         </ParentSize>
       );
     }
-    return <div className="noState">{NO_STATE_MSG}</div>;
+    return <div className='noState'>{NO_STATE_MSG}</div>;
   };
 
   // the hierarchy gets set upon the first click on the page
@@ -90,7 +89,7 @@ const StateRoute = (props: StateRouteProps) => {
         />
       );
     }
-    return <div className="noState">{NO_STATE_MSG}</div>;
+    return <div className='noState'>{NO_STATE_MSG}</div>;
   };
 
   const renderAtomsRelationship = () => (
@@ -114,17 +113,16 @@ const StateRoute = (props: StateRouteProps) => {
     if (hierarchy) {
       return <Tree snapshot={snapshot} />;
     }
-    return <div className="noState">{NO_STATE_MSG}</div>;
-
+    return <div className='noState'>{NO_STATE_MSG}</div>;
   };
   const renderWebMetrics = () => {
     return (
       <div>
-        <WebMetrics webMetrics={webMetrics}/>
-        <WebMetrics webMetrics={webMetrics}/>
-        <WebMetrics webMetrics={webMetrics}/>
+        <WebMetrics webMetrics={webMetrics} />
+        <WebMetrics webMetrics={webMetrics} />
+        <WebMetrics webMetrics={webMetrics} />
       </div>
-    )
+    );
   };
 
   const renderPerfView = () => {
@@ -144,62 +142,61 @@ const StateRoute = (props: StateRouteProps) => {
         </ParentSize>
       );
     }
-    return <div className="noState">{NO_STATE_MSG}</div>;
+    return <div className='noState'>{NO_STATE_MSG}</div>;
   };
 
   return (
     <Router>
-      <div className="navbar">
-        <NavLink className="router-link" 
-        activeClassName="is-active" 
-        exact to="/">
+      <div className='navbar'>
+        <NavLink
+          className='router-link'
+          activeClassName='is-active'
+          exact
+          to='/'
+        >
           Map
         </NavLink>
         <NavLink
-          className="router-link"
-          activeClassName="is-active"
-          to="/performance"
+          className='router-link'
+          activeClassName='is-active'
+          to='/performance'
         >
           Performance
         </NavLink>
         <NavLink
-          className="router-link"
-          activeClassName="is-active"
-          to="/history"
+          className='router-link'
+          activeClassName='is-active'
+          to='/history'
         >
           History
         </NavLink>
         <NavLink
-          className="router-link"
-          activeClassName="is-active"
-          to="/webMetrics"
+          className='router-link'
+          activeClassName='is-active'
+          to='/webMetrics'
         >
           Web Metrics
         </NavLink>
-        <NavLink
-          className="router-link"
-          activeClassName="is-active"
-          to="/tree"
-        >
+        <NavLink className='router-link' activeClassName='is-active' to='/tree'>
           Tree
         </NavLink>
         {isRecoil && (
           <NavLink
-            className="router-link"
-            activeClassName="is-active"
-            to="/relationship"
+            className='router-link'
+            activeClassName='is-active'
+            to='/relationship'
           >
             AtomsRecoil
           </NavLink>
         )}
       </div>
       <Switch>
-        <Route path="/performance" render={renderPerfView} />
-        <Route path="/history" render={renderHistory} />
-        <Route path="/relationship" render={renderAtomsRelationship} />
-        <Route path="/webMetrics" render={renderWebMetrics} />
-        <Route path="/tree" render={renderTree} />
-        <Route path="/" render={renderComponentMap} />
+        <Route path='/performance' render={renderPerfView} />
+        <Route path='/history' render={renderHistory} />
+        <Route path='/relationship' render={renderAtomsRelationship} />
+        <Route path='/webMetrics' render={renderWebMetrics} />
+        <Route path='/tree' render={renderTree} />
+        <Route path='/' render={renderComponentMap} />
       </Switch>
     </Router>
   );

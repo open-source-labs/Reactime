@@ -1,28 +1,26 @@
 .body-container1 {
-	height: 94%;
-	overflow: hidden;
-	display: grid;
-	grid-template-columns: 1fr 2fr;
-	grid-template-rows: 8fr 1fr;
-	grid-template-areas:
-		'states states'
-		'travel travel'
-		'buttons buttons';
+  height: 94%;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 8fr 1fr;
+  grid-template-areas:
+    'actions states'
+    'actions travel'
+    'actions buttons';
 }
 
 .body-container2 {
-	height: 94%;
-	overflow: hidden;
-	display: grid;
-	grid-template-columns: 1fr 2fr;
-	grid-template-rows: 8fr 1fr;
-	grid-template-areas:
-		'actions states'
-		'travel travel'
-		'buttons buttons';
+  height: 94%;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 8fr 1fr;
+  grid-template-areas:
+    'actions states'
+    'travel travel'
+    'buttons buttons';
 }
-
-
 
 /* if extension width is less than 500px, stack the body containers */
 @media (max-width: 500px) {
