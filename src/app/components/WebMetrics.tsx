@@ -91,9 +91,9 @@ const radialGraph = (props) => {
 		return (
 			
 
-<div id="card">
+<div id="card" className="metric">
 	<div id="chart">
-		<Charts options={state.options} series={state.series} type="radialBar" height={250} width={250}/>
+		<Charts options={state.options} series={state.series} type="radialBar" height={200} width={200}/>
 	</div>
 </div>
 

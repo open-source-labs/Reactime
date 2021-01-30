@@ -10,9 +10,10 @@
 }
 
 .toggleAC {
-  color: #00dffc;
+  // color: #00dffc;
+  color: $blue-brand;
   background: $background-color;
-  height: 75%;
+  height: 50%;
   text-decoration: none;
   border: none;
 }
@@ -196,14 +197,27 @@
 
 // Web Metrics Container
 .web-metrics-container {
-
-  // padding: 3rem;
-  // display: grid;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 3rem;
+  // padding: 3rem;
+  // display: flex;
+  // flex-wrap: wrap;
+  // margin-top: 0.1rem;
+  // position: absolute;
   // grid-template-columns: repeat(2, 1fr);
   // grid-template-rows: repeat(2, 1fr);
+}
+
+.metric {
+  min-height: 200px;
+  min-width: 200px;
+  max-height: 200px;
+  max-width: 200px;
+}
+
+.bargraph {
+  position: relative;
+  margin-top: 1rem;
 }

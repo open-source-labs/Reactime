@@ -124,15 +124,17 @@ const BarGraph = (props) => {
     classname[i].addEventListener('click', animateButton, false);
   }
   return (
-    <div>
-      <button
-        className='save-series-button'
-        onClick={(e) => {
-          dispatch(save(toStorage));
-        }}
-      >
-        Save Series
-      </button>
+    <div className="bargraph">
+      <div className="series-options-container">
+        <button
+          className='save-series-button'
+          onClick={(e) => {
+            dispatch(save(toStorage));
+          }}
+        >
+          Save Series
+        </button>
+      </div>
       <svg ref={containerRef} width={width} height={height}>
         {}
         <rect
