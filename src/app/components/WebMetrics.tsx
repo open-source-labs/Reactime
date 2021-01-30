@@ -1,32 +1,36 @@
-import React, { useState } from 'react';
-import Charts from 'react-apexcharts'
+import React, { useState, useEffect, Component } from 'react';
+import Charts from 'react-apexcharts';
+import useForceUpdate from './useForceUpdate';
 
-const radialGraph = ({webMetrics}) => {
+const radialGraph = (props) => {
+
 		const state = {
 		
-			series: [(webMetrics.FCP / 1000) * 100],
+			series: [props.series],
 			options: {
+				colors: [props.color],
 				chart: {
-					height: 350,
+					height: 100,
+					width: 100,
 					type: 'radialBar',
 					toolbar: {
-						show: true
+						show: false,
 					}
 				},
 				plotOptions: {
 					radialBar: {
 						startAngle: -135,
-						endAngle: 225,
+						endAngle: 135,
 						 hollow: {
 							margin: 0,
-							size: '90%',
+							size: '75%',
 							background: '#242529',
 							image: undefined,
 							imageOffsetX: 0,
 							imageOffsetY: 0,
 							position: 'front',
 							dropShadow: {
-								enabled: true,
+								enabled: false,
 								top: 3,
 								left: 0,
 								blur: 4,
@@ -35,7 +39,7 @@ const radialGraph = ({webMetrics}) => {
 						},
 						track: {
 							background: '#fff',
-							strokeWidth: '10%',
+							strokeWidth: '3%',
 							margin: 0, // margin is in pixels
 							dropShadow: {
 								enabled: true,
@@ -52,52 +56,49 @@ const radialGraph = ({webMetrics}) => {
 								offsetY: -10,
 								show: true,
 								color: '#fff',
-								fontSize: '17px'
+								fontSize: '24px'
 							},
 							value: {
-								formatter: function(val) {
-									return parseInt(webMetrics.FCP);
-								},
+								formatter: props.formatted,
 								color: '#fff',
-								fontSize: '25px',
+								fontSize: '16px',
 								show: true,
 							}
 						}
 					}
 				},
 				fill: {
-					type: 'gradient',
+					type: 'solid',
 					gradient: {
 						shade: 'dark',
 						type: 'horizontal',
-						shadeIntensity: 0.5,
-						gradientToColors: ['#ABE5A1'],
-						inverseColors: true,
+						shadeIntensity: 0.1,
+						gradientToColors: [props.color],
+						inverseColors: false,
 						opacityFrom: 1,
 						opacityTo: 1,
 						stops: [0, 100]
 					}
 				},
 				stroke: {
-					lineCap: 'round'
+					lineCap: 'flat'
 				},
-				labels: ['FCP'],
-			},
-		
-		
+				labels: [props.label],
+			},		
     };
-   
+
 
 		return (
 			
 
 <div id="card">
 	<div id="chart">
-		<Charts options={state.options} series={state.series} type="radialBar" height={350} />
+		<Charts options={state.options} series={state.series} type="radialBar" height={250} width={250}/>
 	</div>
 </div>
 
 		)
 }
+
 
 export default radialGraph;

@@ -116,11 +116,32 @@ const StateRoute = (props: StateRouteProps) => {
     return <div className='noState'>{NO_STATE_MSG}</div>;
   };
   const renderWebMetrics = () => {
+    let LCPColor, FIDColor, CLSColor, FCPColor, TTFBColor;
+
+    if (webMetrics.LCP <= 2000) LCPColor = "#0bce6b";
+    if (webMetrics.LCP > 2000 && webMetrics.LCP < 4000) LCPColor = "#E56543";
+    if (webMetrics.LCP > 4000 ) LCPColor = "#fc2000";
+    if (webMetrics.FID <= 100) FIDColor = "#0bce6b";
+    if (webMetrics.FID > 100 && webMetrics.FID <= 300 ) FIDColor = "#fc5a03";
+    if (webMetrics.FID > 300 ) FIDColor = "#fc2000";
+    if (webMetrics.CLS <= 0.1) FIDColor = "#0bce6b";
+    if (webMetrics.CLS > 0.1 && webMetrics.CLS <= 0.25 ) CLSColor = "#fc5a03";
+    if (webMetrics.CLS > 0.25 ) CLSColor = "#fc2000";
+    if (webMetrics.FCP <= 9000) FCPColor = "#0bce6b";
+    if (webMetrics.FCP > 900 && webMetrics.FCP <= 1100 ) FCPColor = "#fc5a03";
+    if (webMetrics.FCP > 1100 ) FCPColor = "#fc2000";
+    if (webMetrics.TTFB <= 600) TTFBColor = "#0bce6b";
+    if (webMetrics.TTFB > 600 ) TTFBColor = "#fc2000";
+
+
+    
     return (
-      <div>
-        <WebMetrics webMetrics={webMetrics} />
-        <WebMetrics webMetrics={webMetrics} />
-        <WebMetrics webMetrics={webMetrics} />
+      <div className="web-metrics-container">
+        <WebMetrics color={LCPColor} series={(webMetrics.LCP / 2500) * 100} formatted={(val) => ((val / 100) * 2500).toFixed(2) + ' ms'} label="LCP"/>
+        <WebMetrics color={FIDColor} series={(webMetrics.FID) * 25} formatted={(val) => ((val / 25)).toFixed(2) + ' ms'} label="FID"/>
+        {/* <WebMetrics color={CLSColor} series={(webMetrics.CLS * 50) * 100} formatted={(val) => ((val / 100) / 50).toFixed(2)} label="CLS"/> */}
+        <WebMetrics color={FCPColor} series={(webMetrics.FCP / 1000) * 100} formatted={(val) => ((val / 100) * 1000).toFixed(2) + ' ms'} label="FCP"/>
+        <WebMetrics color={TTFBColor} series={(webMetrics.TTFB / 10) * 100} formatted={(val) => ((val / 100) * 10).toFixed(2) + ' ms'} label="TTFB"/>
       </div>
     );
   };

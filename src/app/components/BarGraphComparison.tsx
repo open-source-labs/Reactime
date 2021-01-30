@@ -222,7 +222,7 @@ const BarGraphComparison = (props) => {
               dispatch(deleteSeries());
             }}
           >
-            Clear Series
+            Clear All Series
           </button>
           <FormControl variant='outlined' className={classes.formControl}>
             <Select
