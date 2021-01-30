@@ -137,9 +137,12 @@ const StateRoute = (props: StateRouteProps) => {
     
     return (
       <div className="web-metrics-container">
-        <WebMetrics color={LCPColor} series={(webMetrics.LCP / 2500) * 100} formatted={(val) => ((val / 100) * 2500).toFixed(2) + ' ms'} label="LCP"/>
-        <WebMetrics color={FIDColor} series={(webMetrics.FID) * 25} formatted={(val) => ((val / 25)).toFixed(2) + ' ms'} label="FID"/>
-        {/* <WebMetrics color={CLSColor} series={(webMetrics.CLS * 50) * 100} formatted={(val) => ((val / 100) / 50).toFixed(2)} label="CLS"/> */}
+        <WebMetrics color={LCPColor} series={(webMetrics.LCP / 2500) * 100}
+          formatted={(val) => { return (Number.isNaN(val)) ? '-- ms' : (((val / 100) * 2500).toFixed(2) + ' ms')}}
+        label="LCP" />
+        <WebMetrics color={FIDColor} series={(webMetrics.FID) * 25}
+          formatted={(val) => { return (Number.isNaN(val)) ? '-- ms' : ((val / 25).toFixed(2) + ' ms')}}
+          label="FID" />
         <WebMetrics color={FCPColor} series={(webMetrics.FCP / 1000) * 100} formatted={(val) => ((val / 100) * 1000).toFixed(2) + ' ms'} label="FCP"/>
         <WebMetrics color={TTFBColor} series={(webMetrics.TTFB / 10) * 100} formatted={(val) => ((val / 100) * 10).toFixed(2) + ' ms'} label="TTFB"/>
       </div>
