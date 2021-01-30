@@ -3,11 +3,12 @@ import Charts from 'react-apexcharts';
 import useForceUpdate from './useForceUpdate';
 
 const radialGraph = (props) => {
+
 		const state = {
 		
 			series: [props.series],
 			options: {
-				colors: ['#0bce6b'],
+				colors: [props.color],
 				chart: {
 					height: 100,
 					width: 100,
@@ -22,7 +23,7 @@ const radialGraph = (props) => {
 						endAngle: 135,
 						 hollow: {
 							margin: 0,
-							size: '80%',
+							size: '75%',
 							background: '#242529',
 							image: undefined,
 							imageOffsetX: 0,
@@ -55,12 +56,12 @@ const radialGraph = (props) => {
 								offsetY: -10,
 								show: true,
 								color: '#fff',
-								fontSize: '38px'
+								fontSize: '24px'
 							},
 							value: {
 								formatter: props.formatted,
 								color: '#fff',
-								fontSize: '25px',
+								fontSize: '16px',
 								show: true,
 							}
 						}
@@ -72,7 +73,7 @@ const radialGraph = (props) => {
 						shade: 'dark',
 						type: 'horizontal',
 						shadeIntensity: 0.1,
-						gradientToColors: ['#0bce6b'],
+						gradientToColors: [props.color],
 						inverseColors: false,
 						opacityFrom: 1,
 						opacityTo: 1,
@@ -86,16 +87,6 @@ const radialGraph = (props) => {
 			},		
     };
 
-let formatted;
-
-const [webMetricsState, setWebMetricsState] = useState(props)
-
-useEffect(() => {
-	setWebMetricsState(props);
-	formatted = props.formatted;
-}, [props])
-
-// console.log("props.formatted", props.formatted)
 
 		return (
 			
