@@ -23,18 +23,11 @@ function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
   const [actionView, setActionView] = useState(true);
+  //this function handles Time Jump sidebar view
   const toggleActionContainer = () => {
-    const bodyElem = document.getElementById('bodyContainer');
-    const toggleElement = document.getElementById('side-bar-button');
-
+    const toggleElem = document.querySelector('aside');
+    toggleElem.classList.toggle('no-aside');
     setActionView(!actionView);
-    if (actionView) {
-      bodyElem.style.gridTemplateColumns = '1fr 2fr';
-      toggleElement.innerHTML = 'Close';
-    } else {
-      bodyElem.style.gridTemplateColumns = '0fr auto';
-      toggleElement.innerHTML = '☰ Open Time Travel';
-    }
   };
 
   useEffect(() => {
@@ -196,7 +189,10 @@ function MainContainer(): any {
     <div className='main-container'>
       {/* <HeadContainer /> */}
       <div id='bodyContainer' className='body-container1'>
-        <ActionContainer toggleActionContainer={toggleActionContainer} />
+        <ActionContainer
+          actionView={actionView}
+          toggleActionContainer={toggleActionContainer}
+        />
         {snapshots.length ? (
           <StateContainer
             toggleActionContainer={toggleActionContainer}

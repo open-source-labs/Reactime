@@ -297,3 +297,71 @@
   height: 30px;
   padding: 0 2rem;
 }
+/* sidebar button open and closing functionality */
+aside {
+  width: 250px;
+  background: #242529;
+  color: #fff;
+  transition: width 1s;
+}
+
+.no-aside {
+  width: 30px;
+}
+.toggle {
+  width: 40px;
+  height: 40px;
+  display: block;
+  position: relative;
+  margin-top: 1rem;
+}
+
+.toggle i,
+.toggle i::after,
+.toggle i::before {
+  position: absolute;
+  width: 27px;
+  height: 4px;
+  border-radius: 4px;
+  transition: transform 0.15s;
+  background-color: #00dffc;
+}
+
+.toggle i {
+  top: 46%;
+  left: 18%;
+  display: block;
+  background: #00dffc;
+}
+
+.toggle i::before {
+  top: -5px;
+}
+
+.toggle i::after {
+  bottom: -6px;
+}
+
+.toggle i::after,
+.toggle i::before {
+  content: '';
+  display: block;
+}
+
+.toggle i::before {
+  transform: translate3d(-8px, 0, 0) rotate(-45deg) scale(0.7, 1);
+}
+
+.toggle i::after {
+  transform: translate3d(-8px, 0, 0) rotate(45deg) scale(0.7, 1);
+}
+
+.no-aside .toggle i::before,
+.no-aside .toggle i::after {
+  transform: none;
+}
+#arrow {
+  height: 20px !important;
+  margin-bottom: 40px;
+  margin-right: 20px;
+}

@@ -17,6 +17,7 @@ const resetSlider = () => {
 function ActionContainer(props) {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
+  const { toggleActionContainer, actionView } = props;
   let actionsArr = [];
   const hierarchyArr: any[] = [];
 
@@ -115,21 +116,32 @@ function ActionContainer(props) {
   // this is not logging; the prop is not being udpdated or the component is not being re-rendered.
   return (
     <div id='action-id' className='action-container'>
-      <SwitchAppDropdown />
-      <div className='action-component exclude'>
-        <button
-          className='empty-button'
-          onClick={() => {
-            dispatch(emptySnapshots());
-            // set slider back to zero
-            resetSlider();
-          }}
-          type='button'
-        >
-          Empty
-        </button>
+      <div id = "arrow">
+        <aside className='aside'>
+          <a onClick={toggleActionContainer} className='toggle'>
+            <i></i>
+          </a>
+        </aside>
       </div>
-      <div>{actionsArr}</div>
+      {actionView ? (
+        <div>
+          <SwitchAppDropdown />
+          <div className='action-component exclude'>
+            <button
+              className='empty-button'
+              onClick={() => {
+                dispatch(emptySnapshots());
+                // set slider back to zero
+                resetSlider();
+              }}
+              type='button'
+            >
+              Empty
+            </button>
+          </div>
+          <div>{actionsArr}</div>
+        </div>
+      ) : null}
     </div>
   );
 }
