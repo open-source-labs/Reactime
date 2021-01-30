@@ -119,10 +119,12 @@ const StateRoute = (props: StateRouteProps) => {
   };
   const renderWebMetrics = () => {
     return (
-      <div>
-        <WebMetrics webMetrics={webMetrics}/>
-        <WebMetrics webMetrics={webMetrics}/>
-        <WebMetrics webMetrics={webMetrics}/>
+      <div className="web-metrics-container">
+        <WebMetrics series={(webMetrics.LCP / 2500) * 100} formatted={(val) => ((val / 100) * 2500).toFixed(2)} label="LCP"/>
+        <WebMetrics series={(webMetrics.FID) * 50} formatted={(val) => ((val / 50)).toFixed(2)} label="FID"/>
+        <WebMetrics series={(webMetrics.CLS * 50) * 100} formatted={(val) => ((val / 100) / 50).toFixed(2)} label="CLS"/>
+        <WebMetrics series={(webMetrics.FCP / 1000) * 100} formatted={(val) => ((val / 100) * 1000).toFixed(2)} label="FCP"/>
+        <WebMetrics series={(webMetrics.TTFB / 10) * 100} formatted={(val) => ((val / 100) * 10).toFixed(2)} label="TTFB"/>
       </div>
     )
   };

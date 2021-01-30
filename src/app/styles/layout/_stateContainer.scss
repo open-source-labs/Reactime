@@ -194,3 +194,14 @@
 .router-link-performance.is-active {
   font-weight: 600;
 }
+
+// Web Metrics Container
+.web-metrics-container {
+  padding: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  // grid-template-columns: repeat(3, 0.5fr);
+  // grid-template-rows: repeat(2, 1fr);
+}
