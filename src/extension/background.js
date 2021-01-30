@@ -7,6 +7,8 @@ const firstSnapshotReceived = {};
 // there will be the same number of objects in here as there are reactime tabs open for each user application being worked on
 const tabsObj = {};
 
+let metrics = {}; //for Performance Metrics 8.0
+
 function createTabObj(title) {
 	// update tabsObj
 	return {
@@ -32,6 +34,8 @@ function createTabObj(title) {
 			paused: false,
 			empty: false,
 		},
+		
+		webMetrics: {},
 	};
 }
 
@@ -175,16 +179,25 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 // background.js listening for a  message from contentScript.js
-chrome.runtime.onMessage.addListener((request, sender) => {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	// IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
 	if (request.type === 'SIGN_CONNECT') {
 		return true;
 	}
+	
+	
+	console.log('Request in Listener >>>', request)
+	console.log('Sender in Listener >>>', sender)
 	const tabTitle = sender.tab.title;
 	const tabId = sender.tab.id;
-	const { action, index, name } = request;
+	const { action, index, name, value  } = request;
 	let isReactTimeTravel = false;
 
+	if (name) {
+		metrics[name] = value;
+	};
+	
+	console.log('metrics outside', metrics);
 
 	// Filter out tabs that don't have reactime, tabs that dont use react?
 	if (
@@ -202,6 +215,8 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 	if (isReactTimeTravel && !(tabId in tabsObj)) {
 		tabsObj[tabId] = createTabObj(tabTitle);
 	}
+
+	//Performance Metrics 8.0 
 
 	const { persist, empty } = tabsObj[tabId].mode;
 
@@ -236,7 +251,10 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 					tabsObj[tabId].snapshots = tabsObj[tabId].initialSnapshot;
 					// resets hierarchy to page initial state recorded when emptied
 					tabsObj[tabId].hierarchy = tabsObj[tabId].initialHierarchy;
+
+
 				} else {
+		
 					// triggered with new tab opened
 					// resets snapshots to page initial state
 					tabsObj[tabId].snapshots.splice(1);
@@ -273,11 +291,24 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 		case 'recordSnap': {
 			const sourceTab = tabId;
 			// first snapshot received from tab
+			console.log('metrics in recordSnap case', metrics);
+			tabsObj[tabId].webMetrics = metrics;
+			
+			// metrics check
+			console.log('tabsObj >>>', tabsObj);
+
+
 			if (!firstSnapshotReceived[tabId]) {
 				firstSnapshotReceived[tabId] = true;
 				reloaded[tabId] = false;
+				
+				console.log('metrics in recordSnap case', metrics);
+				tabsObj[tabId].webMetrics = metrics;
 
 				tabsObj[tabId].snapshots.push(request.payload);
+				
+				// metrics check
+				console.log('tabsObj >>>', tabsObj);
 
 				sendToHierarchy(
 					tabsObj[tabId],

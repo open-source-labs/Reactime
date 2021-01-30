@@ -29,14 +29,32 @@ export default (state, action) =>
         }
       }
     };
- 
+
     switch (action.type) {
       case types.SAVE: {
         const data = JSON.stringify(action.payload);
         localStorage.setItem(`${action.payload.currentTab}`, data);
         break;
       }
+      case types.DELETE_SERIES: {
+        //localStorage.deleteSeries
+        console.log('we are in the delete series reducer');
+        const allStorage = () => {
+          const keys = Object.keys(localStorage);
+          let i = keys.length;
+          while (i--) {
+            localStorage.removeItem(keys[i]);
+          }
+          //return values;
+        };
+        allStorage();
 
+        Object.keys(tabs).forEach((tab) => {
+          tabs[tab] = {
+            ...tabs[tab],
+          };
+        });
+      }
       case types.ON_HOVER_EXIT: {
         port.postMessage({
           action: 'onHoverExit',

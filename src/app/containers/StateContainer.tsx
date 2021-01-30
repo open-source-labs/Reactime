@@ -24,37 +24,58 @@ interface StateContainerProps {
     }
   >;
   toggleActionContainer?: any;
+  webMetrics: object;
   AtomsRelationship?: any[];
   hierarchy: Record<string, unknown>;
   snapshots: [];
   viewIndex: number;
-  
 }
 
 // eslint-disable-next-line react/prop-types
 const StateContainer = (props: StateContainerProps): JSX.Element => {
-  const { snapshot, hierarchy, snapshots, viewIndex, toggleActionContainer } = props;
-  const [Text, setText] = useState('State');
+  const {
+    snapshot,
+    hierarchy,
+    snapshots,
+    viewIndex,
+    toggleActionContainer,
+    webMetrics,
+  } = props;
 
   return (
     <Router>
-      <div className="state-container">
-        <div className="main-navbar-container">
-          <div className="main-navbar-text">{Text}</div>
-          <div className="main-navbar">
-            <button  className="toggleAC" onClick={()=> toggleActionContainer()}>View Time Travel</button>
+      <div className='state-container'>
+        <div className='main-navbar-container'>
+          <div className='main-navbar-text'>
+            {' '}
+            {/* <button
+              id='side-bar-button'
+              className='toggleAC'
+              onClick={() => toggleActionContainer()}
+            >
+              Close
+            </button> */}
+            {/* <div className='toggleAC'>
+              <aside className='no-aside'>
+                <a className='toggle'>
+                  <i></i>
+                </a>
+              </aside>
+            </div> */}
+          </div>
+          <div className='main-navbar'>
             <NavLink
-              className="main-router-link"
-              activeClassName="is-active"
+              className='main-router-link'
+              activeClassName='is-active'
               exact
-              to="/"
+              to='/'
             >
               State
             </NavLink>
             <NavLink
-              className="main-router-link"
-              activeClassName="is-active"
-              to="/diff"
+              className='main-router-link'
+              activeClassName='is-active'
+              to='/diff'
             >
               Diff
             </NavLink>
@@ -62,18 +83,17 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
         </div>
         <Switch>
           <Route
-            path="/diff"
+            path='/diff'
             render={() => {
-              setText('Diff');
               return <DiffRoute snapshot={snapshot} />;
             }}
           />
           <Route
-            path="/"
+            path='/'
             render={() => {
-              setText('State');
               return (
                 <StateRoute
+                  webMetrics={webMetrics}
                   viewIndex={viewIndex}
                   snapshot={snapshot}
                   hierarchy={hierarchy}

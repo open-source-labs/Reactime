@@ -19,10 +19,31 @@
   position: absolute;
   right: 2.5rem;
 
-   &.animate {
+  &.animate {
     background: rgb(41, 164, 41);
   }
+}
+.delete-button {
+  padding: 3px;
+  outline: transparent;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-style: solid;
+  border-color: transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  line-height: 1.5em;
+  font: 300 14px 'Roboto', sans-serif;
+  font-size: $button-text-size;
+  width: 120px;
+  background: $red-color-gradient;
+  height: 30px;
 
+  &.animate {
+    background: rgb(41, 164, 41);
+  }
 }
 
 .empty-button {
@@ -253,7 +274,94 @@
 .snapshotId-header {
   font-size: 1rem;
 }
-.dropdown-and-save-series-container {
+.dropdown-and-delete-series-container {
   display: flex;
   align-items: center;
+}
+.close-button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+.closebtn {
+  font-size: 20px;
+  color: #818181;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+.closebtn:hover {
+  color: #f1f1f1;
+}
+.side-bar-button {
+  width: 80px;
+  height: 30px;
+  padding: 0 2rem;
+}
+/* sidebar button open and closing functionality */
+aside {
+  width: 250px;
+  background: #242529;
+  color: #fff;
+  transition: width 1s;
+}
+
+.no-aside {
+  width: 30px;
+}
+.toggle {
+  width: 40px;
+  height: 40px;
+  display: block;
+  position: relative;
+  margin-top: 1rem;
+}
+
+.toggle i,
+.toggle i::after,
+.toggle i::before {
+  position: absolute;
+  width: 27px;
+  height: 4px;
+  border-radius: 4px;
+  transition: transform 0.15s;
+  background-color: #00dffc;
+}
+
+.toggle i {
+  top: 46%;
+  left: 18%;
+  display: block;
+  background: #00dffc;
+}
+
+.toggle i::before {
+  top: -5px;
+}
+
+.toggle i::after {
+  bottom: -6px;
+}
+
+.toggle i::after,
+.toggle i::before {
+  content: '';
+  display: block;
+}
+
+.toggle i::before {
+  transform: translate3d(-8px, 0, 0) rotate(-45deg) scale(0.7, 1);
+}
+
+.toggle i::after {
+  transform: translate3d(-8px, 0, 0) rotate(45deg) scale(0.7, 1);
+}
+
+.no-aside .toggle i::before,
+.no-aside .toggle i::after {
+  transform: none;
+}
+#arrow {
+  height: 20px !important;
+  margin-bottom: 40px;
+  margin-right: 20px;
 }

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect } from 'react';
+import React, { useEffect, useForceUpdate } from 'react';
 import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
@@ -19,7 +19,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import snapshots from './snapshots';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store';
-// import { save } from '../actions/actions';
+import { deleteSeries } from '../actions/actions';
+
 /* TYPESCRIPT */
 interface data {
   snapshotId?: string;
@@ -192,6 +193,19 @@ const BarGraphComparison = (props) => {
     });
     return data.barStack;
   }
+  const animateButton = function (e) {
+    e.preventDefault;
+    e.target.classList.add('animate');
+    e.target.innerHTML = 'Deleted!';
+    setTimeout(function () {
+      e.target.innerHTML = 'Clear Series';
+      e.target.classList.remove('animate');
+    }, 1000);
+  };
+  const classname = document.getElementsByClassName('delete-button');
+  for (let i = 0; i < classname.length; i++) {
+    classname[i].addEventListener('click', animateButton, false);
+  }
   //console.log('set x on current bar', setXpointsCurrentTab());
   return (
     <div>
@@ -201,7 +215,15 @@ const BarGraphComparison = (props) => {
           Snapshot ID: {currentIndex + 1}{' '}
         </div>
 
-        <div className='dropdown-and-save-series-container'>
+        <div className='dropdown-and-delete-series-container'>
+          <button
+            className='delete-button'
+            onClick={(e) => {
+              dispatch(deleteSeries());
+            }}
+          >
+            Clear All Series
+          </button>
           <FormControl variant='outlined' className={classes.formControl}>
             <Select
               style={{ color: 'white' }}
@@ -262,6 +284,9 @@ const BarGraphComparison = (props) => {
             {(barStacks) =>
               barStacks.map((barStack, idx) => {
                 const bar = barStack.bars[currentIndex];
+                if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
+                  bar.height = 0;
+                }
                 return (
                   <rect
                     key={`bar-stack-${idx}-NewView`}
@@ -312,6 +337,9 @@ const BarGraphComparison = (props) => {
                   return <h1>No Comparison</h1>;
                 }
                 const bar = barStack.bars[currentIndex];
+                if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
+                  bar.height = 0;
+                }
                 return (
                   <rect
                     key={`bar-stack-${idx}-${bar.index}`}

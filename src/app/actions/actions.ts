@@ -5,7 +5,9 @@ export const save = (tabsObj) => ({
   type: types.SAVE,
   payload: tabsObj,
 });
-
+export const deleteSeries = () =>({
+  type: types.DELETE_SERIES,
+})
 export const toggleMode = (mode) => ({
   type: types.TOGGLE_MODE,
   payload: mode,

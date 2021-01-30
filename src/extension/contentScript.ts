@@ -1,3 +1,5 @@
+import { getTTFB, getLCP, getFID, getFCP, getCLS } from "web-vitals";
+
 
 let firstMessage = true;
 
@@ -34,5 +36,30 @@ chrome.runtime.onMessage.addListener(request => {
   }
   return true; // attempt to fix port closing console error
 });
+
+//Performance Metrics 8.0
+
+const metrics = {};
+const gatherMetrics = ({ name, value }) => {
+  metrics[name] = value;
+  
+
+  chrome.runtime.sendMessage({
+    type: "performance:metric",
+    name,
+    value
+  });
+  
+
+
+}
+
+getTTFB(gatherMetrics);
+getLCP(gatherMetrics);
+getFID(gatherMetrics);
+getFCP(gatherMetrics);
+getCLS(gatherMetrics);
+
+
 
 chrome.runtime.sendMessage({ action: 'injectScript' });
