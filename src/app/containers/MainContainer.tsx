@@ -25,10 +25,13 @@ function MainContainer(): any {
   const [actionView, setActionView] = useState(true);
   //this function handles Time Jump sidebar view
   const toggleActionContainer = () => {
+    setActionView(!actionView);
     const toggleElem = document.querySelector('aside');
     toggleElem.classList.toggle('no-aside');
-    setActionView(!actionView);
   };
+  useEffect(() => {
+    setActionView(true);
+  }, []);
 
   useEffect(() => {
     // only open port once
@@ -115,7 +118,6 @@ function MainContainer(): any {
         });
       }
     }
-
     document.addEventListener('click', mpClickTrack);
   }, []);
 
@@ -191,6 +193,7 @@ function MainContainer(): any {
       <div id='bodyContainer' className='body-container1'>
         <ActionContainer
           actionView={actionView}
+          setActionView={setActionView}
           toggleActionContainer={toggleActionContainer}
         />
         {snapshots.length ? (

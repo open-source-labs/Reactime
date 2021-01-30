@@ -6,6 +6,7 @@ import SwitchAppDropdown from '../components/SwitchApp';
 
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
+import { useEffect } from 'react';
 
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
@@ -17,7 +18,7 @@ const resetSlider = () => {
 function ActionContainer(props) {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
-  const { toggleActionContainer, actionView } = props;
+  const { toggleActionContainer, actionView, setActionView } = props;
   let actionsArr = [];
   const hierarchyArr: any[] = [];
 
@@ -112,11 +113,14 @@ function ActionContainer(props) {
       );
     }
   );
+  useEffect(() => {
+    setActionView(true);
+  }, []);
 
   // this is not logging; the prop is not being udpdated or the component is not being re-rendered.
   return (
     <div id='action-id' className='action-container'>
-      <div id = "arrow">
+      <div id='arrow'>
         <aside className='aside'>
           <a onClick={toggleActionContainer} className='toggle'>
             <i></i>
