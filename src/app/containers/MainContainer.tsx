@@ -13,11 +13,6 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 import MPID from '../user_id/user_id';
-import useForceUpdate from '../components/useForceUpdate'
-
-
-//logic for toggling on the action container sidebar
-
 
 const mixpanel = require('mixpanel').init('12fa2800ccbf44a5c36c37bc9776e4c0', {
   debug: false,
@@ -25,25 +20,18 @@ const mixpanel = require('mixpanel').init('12fa2800ccbf44a5c36c37bc9776e4c0', {
 });
 
 function MainContainer(): any {
-  const [timeTravel, setTimeTravel] = useState(false);
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
-  // add event listeners to background script
-
-  function toggleActionContainer(): void {
-    setTimeTravel(!timeTravel)
-    const bodyContainer = document.getElementById("bodyContainer");
-  
-    if (timeTravel) {
-      bodyContainer.classList.remove("body-container2");
-      bodyContainer.classList.add("body-container1");
-     
-    }
-    else {
-      bodyContainer.classList.remove("body-container1");
-      bodyContainer.classList.add("body-container2");
-    }
-  }
+  const [actionView, setActionView] = useState(true);
+  //this function handles Time Jump sidebar view
+  const toggleActionContainer = () => {
+    setActionView(!actionView);
+    const toggleElem = document.querySelector('aside');
+    toggleElem.classList.toggle('no-aside');
+  };
+  useEffect(() => {
+    setActionView(true);
+  }, []);
 
   useEffect(() => {
     // only open port once
@@ -130,18 +118,17 @@ function MainContainer(): any {
         });
       }
     }
-
     document.addEventListener('click', mpClickTrack);
   }, []);
 
   if (!tabs[currentTab]) {
     return (
-      <div className="error-container">
-        <img src="../assets/logo-no-version.png" height="50px" />
+      <div className='error-container'>
+        <img src='../assets/logo-no-version.png' height='50px' />
         <a
-          href="https://reactime.io/"
-          target="_blank"
-          rel="noopener noreferrer"
+          href='https://reactime.io/'
+          target='_blank'
+          rel='noopener noreferrer'
         >
           No React application found. Please visit reactime.io to more info.
         </a>
@@ -155,7 +142,9 @@ function MainContainer(): any {
       </div>
     );
   }
-  const { viewIndex, sliderIndex, snapshots, hierarchy } = tabs[currentTab];
+  const { viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } = tabs[
+    currentTab
+  ];
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView =
     viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
@@ -197,14 +186,20 @@ function MainContainer(): any {
   };
   const snapshotDisplay = statelessCleaning(snapshotView);
   const hierarchyDisplay = statelessCleaning(hierarchy);
+
   return (
-    <div className="main-container">
+    <div className='main-container'>
       {/* <HeadContainer /> */}
-      <div id="bodyContainer" className="body-container1">
-        <ActionContainer timeTravel={timeTravel}/>
+      <div id='bodyContainer' className='body-container1'>
+        <ActionContainer
+          actionView={actionView}
+          setActionView={setActionView}
+          toggleActionContainer={toggleActionContainer}
+        />
         {snapshots.length ? (
           <StateContainer
             toggleActionContainer={toggleActionContainer}
+            webMetrics={webMetrics}
             viewIndex={viewIndex}
             snapshot={snapshotDisplay}
             hierarchy={hierarchyDisplay}

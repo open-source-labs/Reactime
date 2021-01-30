@@ -16,3 +16,4 @@ export const SLIDER_ZERO = 'SLIDER_ZERO';
 export const ON_HOVER = 'ON_HOVER';
 export const ON_HOVER_EXIT = 'ON_HOVER_EXIT';
 export const SAVE = 'SAVE';
+export const DELETE_SERIES = 'DELETE_SERIES';

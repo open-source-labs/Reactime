@@ -12,6 +12,7 @@ import { schemeSet3 } from 'd3-scale-chromatic';
 import snapshots from './snapshots';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store';
+import { save } from '../actions/actions';
 
 /* TYPESCRIPT */
 interface data {
@@ -102,8 +103,36 @@ const BarGraph = (props) => {
   const yMax = height - margin.top - 150;
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
+
+  const toStorage = {
+    currentTab,
+    title: tabs[currentTab]['title'],
+    data,
+  };
+
+  const animateButton = function (e) {
+    e.preventDefault;
+    e.target.classList.add('animate');
+    e.target.innerHTML = 'Saved!';
+    setTimeout(function () {
+      e.target.innerHTML = 'Save Series';
+      e.target.classList.remove('animate');
+    }, 1000);
+  };
+  const classname = document.getElementsByClassName('save-series-button');
+  for (let i = 0; i < classname.length; i++) {
+    classname[i].addEventListener('click', animateButton, false);
+  }
   return (
     <div>
+      <button
+        className='save-series-button'
+        onClick={(e) => {
+          dispatch(save(toStorage));
+        }}
+      >
+        Save Series
+      </button>
       <svg ref={containerRef} width={width} height={height}>
         {}
         <rect
@@ -137,6 +166,8 @@ const BarGraph = (props) => {
             {(barStacks) =>
               barStacks.map((barStack) =>
                 barStack.bars.map((bar, idx) => {
+                  console.log('barstacks >>>', barStack);
+                  console.log('bars >>>', bar);
                   // hides new components if components don't exist in previous snapshots
                   if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                     bar.height = 0;
