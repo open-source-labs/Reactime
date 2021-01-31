@@ -37,8 +37,6 @@ export default (state, action) =>
         break;
       }
       case types.DELETE_SERIES: {
-        //localStorage.deleteSeries
-        console.log('we are in the delete series reducer');
         const allStorage = () => {
           const keys = Object.keys(localStorage);
           let i = keys.length;
@@ -253,7 +251,6 @@ export default (state, action) =>
       }
       case types.NEW_SNAPSHOTS: {
         const { payload } = action;
-
         Object.keys(tabs).forEach((tab) => {
           if (!payload[tab]) {
             delete tabs[tab];

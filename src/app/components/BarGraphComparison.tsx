@@ -105,15 +105,17 @@ const BarGraphComparison = (props) => {
   const formatRenderTime = (time) => `${time} ms `;
   const getCurrentTab = (storedSeries) => storedSeries.currentTab;
   // create visualization SCALES with cleaned data
-  //const xAxisPoints = [...titleFilter(comparison).map(getTabID), currentTab];
-  //the domain array elements will place the bars along the x-axis
-  const xAxisPoints = ['currentTab', 'comparison']; //[1.0.,2.0]
-  //{ currentTab : 1 },  {currentTab : 2 }
+  // the domain array/xAxisPoints elements will place the bars along the x-axis
+  const xAxisPoints = ['currentTab', 'comparison'];
   const snapshotIdScale = scaleBand<string>({
     domain: xAxisPoints,
     padding: 0.2,
   });
-  // calculateMax
+  // This function will iterate through the snapshots of the series,
+  // and grab the highest render times (sum of all component times).
+  // We'll then use it in the renderingScale function and compare
+  // with the render time of the current tab.
+  // The max render time will determine the Y-axis's highest number.
   const calculateMaxTotalRender = (series) => {
     const currentSeriesBarStacks = !comparison[series]
       ? []
@@ -128,11 +130,13 @@ const BarGraphComparison = (props) => {
     return currentMax;
   };
 
+  // the domain array on rendering scale will set the coordinates for Y-aix points.
   const renderingScale = scaleLinear<number>({
     domain: [0, Math.max(calculateMaxTotalRender(series), data.maxTotalRender)],
     nice: true,
   });
-
+  // the domain array will assign each key(component on test app) a different color
+  // and use range to set the color scheme each bar
   const colorScale = scaleOrdinal<string>({
     domain: keys,
     range: schemeSet3,
@@ -144,7 +148,7 @@ const BarGraphComparison = (props) => {
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
-  // Dropdown to select series.
+  // useStyles will change the styling on save series dropdown feature
   const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
@@ -198,7 +202,7 @@ const BarGraphComparison = (props) => {
     e.target.classList.add('animate');
     e.target.innerHTML = 'Deleted!';
     setTimeout(function () {
-      e.target.innerHTML = 'Clear Series';
+      e.target.innerHTML = 'Clear All Series';
       e.target.classList.remove('animate');
     }, 1000);
   };
@@ -206,29 +210,29 @@ const BarGraphComparison = (props) => {
   for (let i = 0; i < classname.length; i++) {
     classname[i].addEventListener('click', animateButton, false);
   }
-  //console.log('set x on current bar', setXpointsCurrentTab());
   return (
     <div>
-      <div className='series-options-container'>
-        <div className='snapshotId-header'>
+      <div className="series-options-container">
+        <div className="snapshotId-header">
           {' '}
           Snapshot ID: {currentIndex + 1}{' '}
         </div>
 
-        <div className='dropdown-and-delete-series-container'>
+        <div className="dropdown-and-delete-series-container">
           <button
-            className='delete-button'
+            className="delete-button"
             onClick={(e) => {
               dispatch(deleteSeries());
             }}
           >
             Clear All Series
           </button>
-          <FormControl variant='outlined' className={classes.formControl}>
+          <h4 style={{ padding: '0 1rem' }}>Compare with: </h4>
+          <FormControl variant="outlined" className={classes.formControl}>
             <Select
               style={{ color: 'white' }}
-              labelId='simple-select-outlined-label'
-              id='simple-select-outlined'
+              labelId="simple-select-outlined-label"
+              id="simple-select-outlined"
               className={classes.select}
               open={open}
               onClose={handleClose}
@@ -267,13 +271,13 @@ const BarGraphComparison = (props) => {
           yScale={renderingScale}
           width={xMax}
           height={yMax}
-          stroke='black'
+          stroke="black"
           strokeOpacity={0.1}
           xOffset={snapshotIdScale.bandwidth() / 2}
         />
         <Group top={margin.top} left={margin.left}>
           <BarStack
-            // OG Barstack
+            // Current Tab bar stack.
             data={setXpointsCurrentTab()}
             keys={keys}
             x={getCurrentTab}
@@ -283,6 +287,11 @@ const BarGraphComparison = (props) => {
           >
             {(barStacks) =>
               barStacks.map((barStack, idx) => {
+                // Uses map method to iterate through all components,
+                // creating a rect component (from visx) for each iteration.
+                // height/width/etc. are calculated by visx.
+                // to set X and Y scale, it  will used the passed in function and
+                // will run it on the array thats outputted by data
                 const bar = barStack.bars[currentIndex];
                 if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                   bar.height = 0;
@@ -323,7 +332,9 @@ const BarGraphComparison = (props) => {
             }
           </BarStack>
           <BarStack
-            // Comparison Barstack
+            // Comparison Barstack (populates based on series selected)
+            //to set X and Y scale, it  will used the passed in function and
+            // will run it on the array thats outputted by data
             data={!comparison[series] ? [] : setXpointsComparison()}
             keys={keys}
             x={getCurrentTab}
@@ -333,6 +344,9 @@ const BarGraphComparison = (props) => {
           >
             {(barStacks) =>
               barStacks.map((barStack, idx) => {
+                // Uses map method to iterate through all components,
+                // creating a rect component (from visx) for each iteration.
+                // height/width/etc. are calculated by visx.
                 if (!barStack.bars[currentIndex]) {
                   return <h1>No Comparison</h1>;
                 }
@@ -405,14 +419,14 @@ const BarGraphComparison = (props) => {
         />
         <Text
           x={-xMax / 2}
-          y='15'
-          transform='rotate(-90)'
+          y="15"
+          transform="rotate(-90)"
           fontSize={12}
-          fill='#FFFFFF'
+          fill="#FFFFFF"
         >
           Rendering Time (ms)
         </Text>
-        <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill='#FFFFFF'>
+        <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill="#FFFFFF">
           Series ID
         </Text>
       </svg>
