@@ -89,10 +89,12 @@ Reactime is an open source project, and we’d really appreciate your help with 
 One of the most common issues that affects performance in React is unnecessary render cycles. This problem can be fixed by checking your renders in the Performance tab in Chrome DevTools under the Reactime panel.
 
 ### 🔹 Gatsby
-Reactime offers fully support for Gatsby applications. You would be able to identify unnecessary renders, duration of each rendering, travel-debugging features and visual representation of the tree components. 
+
+Reactime offers fully support for Gatsby applications. You would be able to identify unnecessary renders, duration of each rendering, travel-debugging features and visual representation of the tree components.
 
 ### 🔹 Next.js
-Reactime offers debugging and performance tools for Next.js apps: time-traveling debugging, preventing unnecessary components re-renders and making your application faster. 
+
+Reactime offers debugging and performance tools for Next.js apps: time-traveling debugging, preventing unnecessary components re-renders and making your application faster.
 
 ### 🔹 Recording
 
@@ -114,6 +116,7 @@ Reactime offers beta support for TypeScript applications using stateful class co
 
 After cloning this repository, developers can simply run `npm run docs` at the root level and serve the dynamically generated `/docs/index.html` file on a browser. Doing so will provide a readable, extensible, and interactive GUI view of the structure and interfaces of the codebase.
 <br>
+
 <p align="center">
 <img src="./assets/nextjs.gif" />
 </p>
@@ -121,16 +124,16 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 
 ### <b>Additional Features</b>
 
-* identifying unnecessary re-renders
-* hover functionality to view tooltip details on state visualizations
-* ability to pan and zoom on state visualizations
-* a dropdown to support development of projects on multiple tabs
-* a slider to move through snapshots quickly
-* a play button to move through snapshots automatically
-* a lock button, which stops recording each snapshot
-* a persist button to keep snapshots upon refresh (handy when changing code and debugging)
-* download/upload the current snapshots in memory
-* declarative titles in the actions sidebar
+- identifying unnecessary re-renders
+- hover functionality to view tooltip details on state visualizations
+- ability to pan and zoom on state visualizations
+- a dropdown to support development of projects on multiple tabs
+- a slider to move through snapshots quickly
+- a play button to move through snapshots automatically
+- a lock button, which stops recording each snapshot
+- a persist button to keep snapshots upon refresh (handy when changing code and debugging)
+- download/upload the current snapshots in memory
+- declarative titles in the actions sidebar
 
 ## <b>Read More</b>
 
@@ -149,7 +152,7 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - **Chris Guizzetti** - [@guizzettic](https://github.com/guizzettic)
 - **Jason Victor** - [@theqwertypusher](https://github.com/Theqwertypusher)
 - **Sanjay Lavingia** - [@sanjaylavingia](https://github.com/sanjaylavingia)
-- **Vincent Nguyen** - [@guizzettic](https://github.com/VNguyenCode)
+- **Vincent Nguyen** - [@VNguyenCode](https://github.com/VNguyenCode)
 - **Haejin Jo** - [@haejinjo](https://github.com/haejinjo)
 - **Hien Nguyen** - [@hienqn](https://github.com/hienqn)
 - **Jack Crish** - [@JackC27](https://github.com/JackC27)

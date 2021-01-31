@@ -139,7 +139,7 @@ Après avoir cloné ce référentiel, les développeurs peuvent simplement exéc
 - **Chris Guizzetti** - [@guizzettic](https://github.com/guizzettic)
 - **Jason Victor** - [@theqwertypusher](https://github.com/Theqwertypusher)
 - **Sanjay Lavingia** - [@sanjaylavingia](https://github.com/sanjaylavingia)
-- **Vincent Nguyen** - [@guizzettic](https://github.com/VNguyenCode)
+- **Vincent Nguyen** - [@VNguyenCode](https://github.com/VNguyenCode)
 - **Haejin Jo** - [@haejinjo](https://github.com/haejinjo)
 - **Hien Nguyen** - [@hienqn](https://github.com/hienqn)
 - **Jack Crish** - [@JackC27](https://github.com/JackC27)
