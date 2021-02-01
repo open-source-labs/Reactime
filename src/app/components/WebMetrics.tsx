@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Component } from 'react';
 import Charts from 'react-apexcharts';
-import useForceUpdate from './useForceUpdate';
 
 const radialGraph = (props) => {
 
@@ -88,16 +87,13 @@ const radialGraph = (props) => {
     };
 
 
-		return (
-			
-
-<div id="card">
-	<div id="chart">
-		<Charts options={state.options} series={state.series} type="radialBar" height={250} width={250}/>
-	</div>
-</div>
-
-		)
+	return (	
+		<div id="card">
+			<div id="chart">
+				<Charts options={state.options} series={state.series} type="radialBar" height={250} width={250}/>
+			</div>
+		</div>
+	)
 }
 
 
