@@ -31,11 +31,14 @@ export default (state, action) =>
     };
 
     switch (action.type) {
+      // Save case will store the series user wants to save to the chrome local storage
       case types.SAVE: {
         const data = JSON.stringify(action.payload);
         localStorage.setItem(`${action.payload.currentTab}`, data);
         break;
       }
+      // Delete case will delete ALL stored series in chrome local storage. To see  chrome storage related data
+      // Chrome Extension Manager (chrome:extensions) --> background page link --> Application Tab
       case types.DELETE_SERIES: {
         const allStorage = () => {
           const keys = Object.keys(localStorage);
@@ -43,10 +46,8 @@ export default (state, action) =>
           while (i--) {
             localStorage.removeItem(keys[i]);
           }
-          //return values;
         };
         allStorage();
-
         Object.keys(tabs).forEach((tab) => {
           tabs[tab] = {
             ...tabs[tab],

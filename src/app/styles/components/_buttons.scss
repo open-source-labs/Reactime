@@ -315,7 +315,7 @@ aside {
   position: relative;
   margin-top: 1rem;
 }
-
+/* toggle i handles arrow animation */
 .toggle i,
 .toggle i::after,
 .toggle i::before {
@@ -365,3 +365,4 @@ aside {
   margin-bottom: 40px;
   margin-right: 20px;
 }
+/* ^ sidebar button open and closing functionality */

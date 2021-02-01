@@ -99,7 +99,9 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   // method safely enables cross-origin communication between Window objects;
   // e.g., between a page and a pop-up that it spawned, or between a page
   // and an iframe embedded within it.
-  //this postMessage will be sending the most up to date snapshot of the current React Fiber Tree
+  // this postMessage will be sending the most up-to-date snapshot of the current React Fiber Tree
+  // the postMessage action will be received on the content script to later update the tabsObj
+  // this will fire off everytime there is a change in test application
   window.postMessage(
     {
       action: 'recordSnap',
@@ -323,20 +325,6 @@ function createTree(
           state.component
         );
         componentData.hooksIndex = hooksIndex;
-
-        // Improves tree visualization but breaks jump ?
-        // if (!newState) {}
-        // newState.push(state.state);
-
-        /* what is this supposed to do? currently doesn't work? and makes no sense, newState is an object, how can you push state.state into an object? */
-        // if (newState && newState.hooksState) {
-        //   newState.push(state.state);
-        // } else if (newState) {
-        //   newState = [state.state];
-        // } else {
-        //   newState.push(state.state);
-        // }
-        // componentFound = true;
         if (!newState) {
           newState = { hooksState: [] };
         } else if (!newState.hooksState) {

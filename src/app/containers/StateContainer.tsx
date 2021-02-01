@@ -47,21 +47,6 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
       <div className='state-container'>
         <div className='main-navbar-container'>
           <div className='main-navbar-text'>
-            {' '}
-            {/* <button
-              id='side-bar-button'
-              className='toggleAC'
-              onClick={() => toggleActionContainer()}
-            >
-              Close
-            </button> */}
-            {/* <div className='toggleAC'>
-              <aside className='no-aside'>
-                <a className='toggle'>
-                  <i></i>
-                </a>
-              </aside>
-            </div> */}
           </div>
           <div className='main-navbar'>
             <NavLink

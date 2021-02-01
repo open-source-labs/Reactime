@@ -293,8 +293,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case 'recordSnap': {
       const sourceTab = tabId;
       tabsObj[tabId].webMetrics = metrics;
-
-      // metrics check
       if (!firstSnapshotReceived[tabId]) {
         firstSnapshotReceived[tabId] = true;
         reloaded[tabId] = false;

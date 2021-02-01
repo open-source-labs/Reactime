@@ -161,20 +161,9 @@
 .performance-nav-bar-container {
   background-color: $navbar-color;
   display: flex;
-  //   flex-direction: row;
-  //   justify-content: start;
-  //   align-items: center;
   height: 30px;
 }
 
-// .router-link-performance {
-//   width: 34%;
-//   // justify-content: center;
-//   // align-items: center;
-//   background-color: $medium-background-color;
-//   text-decoration: none;
-//   color: $text-color;
-// }
 .router-link-performance {
   height: 100%;
   width: 34%;
@@ -196,14 +185,9 @@
 
 // Web Metrics Container
 .web-metrics-container {
-
-  // padding: 3rem;
-  // display: grid;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 3rem;
-  // grid-template-columns: repeat(2, 1fr);
-  // grid-template-rows: repeat(2, 1fr);
 }
