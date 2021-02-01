@@ -16,7 +16,7 @@
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
   },
-  "include": ["./src/app", "./src/backend", "./src/extension"],
+  "include": ["./src/app", "./src/backend", "./src/extension", "./jest-setup.ts", "./global.d.ts"],
   "exclude": ["./src/app/__tests__", "./src/backend/__tests__"],
   "typeDocOptions": {
     "mode": "file",

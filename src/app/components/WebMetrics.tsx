@@ -1,6 +1,7 @@
 import React from 'react';
 import Charts from 'react-apexcharts';
 
+
 const radialGraph = (props) => {
   const state = {
     series: [props.series],

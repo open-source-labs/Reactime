@@ -82,8 +82,11 @@ useStoreContext.mockImplementation(() => [state, dispatch]);
 
 let wrapper;
 
+//actionView={true} must be passed in to <ActionContainer /> in beforeEach() to deal with new
+//conditional rendering in ActionContainer that shows/hides time-travel functionality
+
 beforeEach(() => {
-  wrapper = shallow(<ActionContainer />);
+  wrapper = shallow(<ActionContainer actionView={true}/>);
   useStoreContext.mockClear();
   dispatch.mockClear();
 });

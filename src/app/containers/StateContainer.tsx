@@ -24,11 +24,11 @@ interface StateContainerProps {
     }
   >;
   toggleActionContainer?: any;
-  webMetrics: object;
+  webMetrics?: object;
   AtomsRelationship?: any[];
   hierarchy: Record<string, unknown>;
-  snapshots: [];
-  viewIndex: number;
+  snapshots?: [];
+  viewIndex?: number;
 }
 
 // eslint-disable-next-line react/prop-types
@@ -38,7 +38,6 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
     hierarchy,
     snapshots,
     viewIndex,
-    toggleActionContainer,
     webMetrics,
   } = props;
 
@@ -47,6 +46,10 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
       <div className='state-container'>
         <div className='main-navbar-container'>
           <div className='main-navbar-text'>
+<<<<<<< HEAD
+=======
+            {' '}
+>>>>>>> eb57db934793cb1169b1a5946689e3df2d886d7f
           </div>
           <div className='main-navbar'>
             <NavLink
