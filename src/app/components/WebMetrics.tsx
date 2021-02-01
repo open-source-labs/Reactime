@@ -2,6 +2,7 @@ import React, { useState, useEffect, Component } from 'react';
 import Charts from 'react-apexcharts';
 import useForceUpdate from './useForceUpdate';
 
+
 const radialGraph = (props) => {
 
 		const state = {
@@ -84,7 +85,7 @@ const radialGraph = (props) => {
 					lineCap: 'flat'
 				},
 				labels: [props.label],
-			},		
+			},	
     };
 
 

@@ -117,7 +117,8 @@ function ActionContainer(props) {
     setActionView(true);
   }, []);
 
-  // this is not logging; the prop is not being udpdated or the component is not being re-rendered.
+  //the conditional logic below will cause ActionContainer.test.tsx to fail as it cannot find the Empty button
+  //UNLESS actionView={true} is passed into <ActionContainer /> in the beforeEach() call in ActionContainer.test.tsx
   return (
     <div id='action-id' className='action-container'>
       <div id='arrow'>

@@ -8,7 +8,6 @@ import Adapter from 'enzyme-adapter-react-16';
 import MainContainer from '../containers/MainContainer';
 import { useStoreContext } from '../store';
 
-import HeadContainer from '../containers/HeadContainer';
 import ActionContainer from '../containers/ActionContainer';
 import StateContainer from '../containers/StateContainer';
 import TravelContainer from '../containers/TravelContainer';
@@ -50,7 +49,6 @@ describe('MainContainer rendering', () => {
     expect(wrapper.text()).toEqual(
       'No React application found. Please visit reactime.io to more info.If you are using a React application, make sure tha you application is running in development mode.NOTE: The React Developer Tools extension is also required for Reactime to run, if you do not already have it installed on your browser.',
     );
-    expect(wrapper.find(HeadContainer).length).toBe(0);
     expect(wrapper.find(ActionContainer).length).toBe(0);
     expect(wrapper.find(StateContainer).length).toBe(0);
     expect(wrapper.find(TravelContainer).length).toBe(0);
@@ -66,7 +64,6 @@ describe('MainContainer rendering', () => {
     };
 
     wrapper = shallow(<MainContainer />);
-    expect(wrapper.find(HeadContainer).length).toBe(1);
     expect(wrapper.find(ActionContainer).length).toBe(1);
     expect(wrapper.find(StateContainer).length).toBe(1);
     expect(wrapper.find(TravelContainer).length).toBe(1);
