@@ -115,7 +115,7 @@ const StateRoute = (props: StateRouteProps) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
   const renderWebMetrics = () => {
-    let LCPColor, FIDColor, CLSColor, FCPColor, TTFBColor;
+    let LCPColor, FIDColor, FCPColor, TTFBColor;
 
     if (webMetrics.LCP <= 2000) LCPColor = "#0bce6b";
     if (webMetrics.LCP > 2000 && webMetrics.LCP < 4000) LCPColor = "#E56543";
@@ -131,30 +131,14 @@ const StateRoute = (props: StateRouteProps) => {
 
     return (
       <div className="web-metrics-container">
-        <WebMetrics
-          color={LCPColor}
-          series={(webMetrics.LCP / 2500) * 100}
-          formatted={(val) => ((val / 100) * 2500).toFixed(2) + ' ms'}
-          label="LCP"
-        />
-        <WebMetrics
-          color={FIDColor}
-          series={webMetrics.FID * 25}
-          formatted={(val) => (val / 25).toFixed(2) + " ms"}
-          label="FID"
-        />
-        <WebMetrics
-          color={FCPColor}
-          series={(webMetrics.FCP / 1000) * 100}
-          formatted={(val) => ((val / 100) * 1000).toFixed(2) + " ms"}
-          label="FCP"
-        />
-        <WebMetrics
-          color={TTFBColor}
-          series={(webMetrics.TTFB / 10) * 100}
-          formatted={(val) => ((val / 100) * 10).toFixed(2) + " ms"}
-          label="TTFB"
-        />
+        <WebMetrics color={LCPColor} series={(webMetrics.LCP / 2500) * 100}
+          formatted={(val) => { return (Number.isNaN(val)) ? '- ms' : (((val / 100) * 2500).toFixed(2) + ' ms')}}
+        label="LCP" />
+        <WebMetrics color={FIDColor} series={(webMetrics.FID) * 25}
+          formatted={(val) => { return (Number.isNaN(val)) ? '- ms' : ((val / 25).toFixed(2) + ' ms')}}
+          label="FID" />
+        <WebMetrics color={FCPColor} series={(webMetrics.FCP / 1000) * 100} formatted={(val) => ((val / 100) * 1000).toFixed(2) + ' ms'} label="FCP"/>
+        <WebMetrics color={TTFBColor} series={(webMetrics.TTFB / 10) * 100} formatted={(val) => ((val / 100) * 10).toFixed(2) + ' ms'} label="TTFB"/>
       </div>
     );
   };
