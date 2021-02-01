@@ -14,8 +14,8 @@ let  wrapper = shallow(<WebMetrics />);
 
 
 describe('WebMetrics graph testing', ()=> {
-  it ('should have 1 div with id "card" ', () => {
-    expect(wrapper.find('#card')).to.have.lengthOf(1);
+  it ('should have 1 div with class name "metric" ', () => {
+    expect(wrapper.find('.metric')).to.have.lengthOf(1);
   })
 
   it ('should have 1 div with id "chart" ', () => {
