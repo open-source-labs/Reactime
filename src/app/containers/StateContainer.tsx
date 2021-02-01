@@ -46,10 +46,6 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
       <div className='state-container'>
         <div className='main-navbar-container'>
           <div className='main-navbar-text'>
-<<<<<<< HEAD
-=======
-            {' '}
->>>>>>> eb57db934793cb1169b1a5946689e3df2d886d7f
           </div>
           <div className='main-navbar'>
             <NavLink
