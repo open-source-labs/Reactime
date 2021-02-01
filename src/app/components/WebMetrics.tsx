@@ -85,19 +85,10 @@ const radialGraph = (props) => {
       labels: [props.label],
     },
   };
-  //   const changeHoverText = () => {
-  // 	  setHoverView(true);
-  // 	// 	const hoverBoxElem = document.getElementById("hoverText");
-  //     // hoverBoxElem.innerHTML = `${state.series}`;
-  //   };
 
   return (
     <div className="metric">
-      <div
-        id="chart"
-        onMouseEnter={() => setHoverView(true)}
-        onMouseLeave={() => setHoverView(false)}
-      >
+      <div id="chart">
         <Charts
           options={state.options}
           series={state.series}
@@ -105,13 +96,6 @@ const radialGraph = (props) => {
           height={200}
           width={200}
         />
-        {hoverView ? (
-          <p>
-            {state.series} "Lorem ipsum dolor sit amet, consectetur adipiscing
-            elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-          </p>
-        ) : null}
       </div>
     </div>
   );
