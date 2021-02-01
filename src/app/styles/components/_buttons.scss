@@ -309,8 +309,8 @@ aside {
   width: 30px;
 }
 .toggle {
-  width: 40px;
-  height: 40px;
+  // width: 40px;
+  // height: 10px;
   display: block;
   position: relative;
   margin-top: 1rem;
@@ -324,14 +324,14 @@ aside {
   height: 4px;
   border-radius: 4px;
   transition: transform 0.15s;
-  background-color: #00dffc;
+  background-color:$blue-brand;
 }
 
 .toggle i {
   top: 46%;
-  left: 18%;
+  left: 4%;
   display: block;
-  background: #00dffc;
+  background:$blue-brand;
 }
 
 .toggle i::before {
@@ -361,7 +361,7 @@ aside {
   transform: none;
 }
 #arrow {
-  height: 20px !important;
+  // height: 10px !important;
   margin-bottom: 40px;
-  margin-right: 20px;
+  // margin-right: 20px;
 }

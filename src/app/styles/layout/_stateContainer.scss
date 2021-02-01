@@ -201,20 +201,25 @@
   grid-template-columns: auto auto;
   align-items: center;
   justify-content: center;
+  margin-top: 1rem;
   // padding: 3rem;
   // display: flex;
   // flex-wrap: wrap;
-  // margin-top: 0.1rem;
   // position: absolute;
   // grid-template-columns: repeat(2, 1fr);
   // grid-template-rows: repeat(2, 1fr);
 }
 
 .metric {
+  // background-color: black;
   min-height: 200px;
   min-width: 200px;
-  max-height: 200px;
-  max-width: 200px;
+}
+
+#hoverText {
+  background-color: blue;
+  position: absolute;
+  bottom: 100px;
 }
 
 .bargraph {
