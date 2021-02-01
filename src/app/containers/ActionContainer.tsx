@@ -1,9 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import { diff } from 'jsondiffpatch';
 import Action from '../components/Action';
 import SwitchAppDropdown from '../components/SwitchApp';
-
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
 import { useEffect } from 'react';

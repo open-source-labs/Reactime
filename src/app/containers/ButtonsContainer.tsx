@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React from 'react';
-
 import { importSnapshots, toggleMode } from '../actions/actions';
 import { useStoreContext } from '../store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

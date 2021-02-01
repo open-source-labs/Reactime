@@ -29,18 +29,6 @@ const mode: Mode = {
 const linkFiber = linkFiberStart(snapShot, mode);
 const timeJump = timeJumpStart(snapShot, mode);
 
-// function getRouteURL(node: SnapshotNode): string {
-//   if (node.name === 'Router') {
-//     return node.state.location.pathname;
-//   }
-//   if (node.children && node.children.length >= 1) {
-//     const tempNode: any[] = node.children;
-//     for (let index = 0; index < tempNode.length; index += 1) {
-//       return getRouteURL(tempNode[index]); // Carlos: ???
-//     }
-//   }
-// }
-
 // * Event listener for time-travel actions
 window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
   switch (action) {

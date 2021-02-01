@@ -58,7 +58,6 @@ const StateRoute = (props: StateRouteProps) => {
     y: 250,
     k: 1,
   });
-  console.log("webMetrics in StateRoute Props >>>>", webMetrics);
   // Map
   const renderComponentMap = () => {
     if (hierarchy) {
@@ -135,7 +134,7 @@ const StateRoute = (props: StateRouteProps) => {
         <WebMetrics
           color={LCPColor}
           series={(webMetrics.LCP / 2500) * 100}
-          formatted={(val) => ((val / 100) * 2500).toFixed(2) + " ms"}
+          formatted={(val) => ((val / 100) * 2500).toFixed(2) + ' ms'}
           label="LCP"
         />
         <WebMetrics

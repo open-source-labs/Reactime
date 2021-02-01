@@ -1,9 +1,7 @@
-import React, { useState, useEffect, Component } from "react";
-import Charts from "react-apexcharts";
-import useForceUpdate from "./useForceUpdate";
+import React from 'react';
+import Charts from 'react-apexcharts';
 
 const radialGraph = (props) => {
-  const [hoverView, setHoverView] = useState(false);
   const state = {
     series: [props.series],
     options: {
@@ -22,12 +20,12 @@ const radialGraph = (props) => {
           endAngle: 135,
           hollow: {
             margin: 0,
-            size: "75%",
-            background: "#242529",
+            size: '75%',
+            background: '#242529',
             image: undefined,
             imageOffsetX: 0,
             imageOffsetY: 0,
-            position: "front",
+            position: 'front',
             dropShadow: {
               enabled: false,
               top: 3,
@@ -37,8 +35,8 @@ const radialGraph = (props) => {
             },
           },
           track: {
-            background: "#fff",
-            strokeWidth: "3%",
+            background: '#fff',
+            strokeWidth: '3%',
             margin: 0, // margin is in pixels
             dropShadow: {
               enabled: true,
@@ -54,23 +52,23 @@ const radialGraph = (props) => {
             name: {
               offsetY: -10,
               show: true,
-              color: "#fff",
-              fontSize: "24px",
+              color: '#fff',
+              fontSize: '24px',
             },
             value: {
               formatter: props.formatted,
-              color: "#fff",
-              fontSize: "16px",
+              color: '#fff',
+              fontSize: '16px',
               show: true,
             },
           },
         },
       },
       fill: {
-        type: "solid",
+        type: 'solid',
         gradient: {
-          shade: "dark",
-          type: "horizontal",
+          shade: 'dark',
+          type: 'horizontal',
           shadeIntensity: 0.1,
           gradientToColors: [props.color],
           inverseColors: false,
@@ -80,7 +78,7 @@ const radialGraph = (props) => {
         },
       },
       stroke: {
-        lineCap: "flat",
+        lineCap: 'flat',
       },
       labels: [props.label],
     },
