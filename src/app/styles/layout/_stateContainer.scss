@@ -190,7 +190,6 @@
   grid-template-columns: auto auto;
   align-items: center;
   justify-content: center;
-  margin-top: 25%;
 }
 
 //container for metrics
@@ -208,4 +207,8 @@
   max-width: 150px;
   background-color: #51565e;
   border-radius: 5px;
+}
+
+.bargraph-position {
+  position: relative;
 }

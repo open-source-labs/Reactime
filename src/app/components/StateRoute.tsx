@@ -159,7 +159,7 @@ const StateRoute = (props: StateRouteProps) => {
           formatted={(val) => ((val / 100) * 1000).toFixed(2) + ' ms'}
           label='FCP'
           name='First Contentful Paint'
-          description='How long it takes browser to render first piece of DOM content.'
+          description='Measures the time it takes the browser to render the first piece of DOM content. No benchmark.'
         />
         <WebMetrics
           color={TTFBColor}
