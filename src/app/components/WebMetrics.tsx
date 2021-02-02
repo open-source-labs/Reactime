@@ -104,9 +104,11 @@ const radialGraph = (props) => {
           </div>
         </Trigger>
         <Hover type='hover'>
-          <div id='hover-box'>
-            <p> Metric : {props.name}</p>
-            <p> Tracks : {props.description}</p>
+          <div style={{ padding: '0.5rem 1rem' }} id='hover-box'>
+            <p>
+              <strong>{props.name}</strong>
+            </p>
+            <p>{props.description}</p>
           </div>
         </Hover>
       </ReactHover>

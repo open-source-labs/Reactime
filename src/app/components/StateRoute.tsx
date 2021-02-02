@@ -141,7 +141,7 @@ const StateRoute = (props: StateRouteProps) => {
           }}
           label='LCP'
           name='Largest Contentful Paint'
-          description='Time website loads largest content on screen'
+          description='Measures loading performance. The benchmark is less than 2500 ms.'
         />
         <WebMetrics
           color={FIDColor}
@@ -151,7 +151,7 @@ const StateRoute = (props: StateRouteProps) => {
           }}
           label='FID'
           name='First Input Delay'
-          description='Time from when a user first interacts with your site'
+          description='Measures interactivity. The benchmark is less than 100 ms.'
         />
         <WebMetrics
           color={FCPColor}
@@ -159,7 +159,7 @@ const StateRoute = (props: StateRouteProps) => {
           formatted={(val) => ((val / 100) * 1000).toFixed(2) + ' ms'}
           label='FCP'
           name='First Contentful Paint'
-          description='How long it takes browser to render first piece of DOM content'
+          description='How long it takes browser to render first piece of DOM content.'
         />
         <WebMetrics
           color={TTFBColor}
@@ -167,7 +167,7 @@ const StateRoute = (props: StateRouteProps) => {
           formatted={(val) => ((val / 100) * 10).toFixed(2) + ' ms'}
           label='TTFB'
           name='Time to First Byte'
-          description = 'Time at which your server sends a response'
+          description='Measures the time it takes for a browser to receive the first byte of page content. The benchmark is 600 ms.'
         />
       </div>
     );
