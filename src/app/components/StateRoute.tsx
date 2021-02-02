@@ -123,7 +123,7 @@ const StateRoute = (props: StateRouteProps) => {
     if (webMetrics.FID <= 100) FIDColor = '#0bce6b';
     if (webMetrics.FID > 100 && webMetrics.FID <= 300) FIDColor = '#fc5a03';
     if (webMetrics.FID > 300) FIDColor = '#fc2000';
-    if (webMetrics.FCP <= 9000) FCPColor = '#0bce6b';
+    if (webMetrics.FCP <= 900) FCPColor = '#0bce6b';
     if (webMetrics.FCP > 900 && webMetrics.FCP <= 1100) FCPColor = '#fc5a03';
     if (webMetrics.FCP > 1100) FCPColor = '#fc2000';
     if (webMetrics.TTFB <= 600) TTFBColor = '#0bce6b';
