@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import HeadContainer from './HeadContainer';
 import ActionContainer from './ActionContainer';
 import StateContainer from './StateContainer';
 import TravelContainer from './TravelContainer';
@@ -29,9 +28,6 @@ function MainContainer(): any {
     const toggleElem = document.querySelector('aside');
     toggleElem.classList.toggle('no-aside');
   };
-  useEffect(() => {
-    setActionView(true);
-  }, []);
 
   useEffect(() => {
     // only open port once
@@ -189,7 +185,6 @@ function MainContainer(): any {
 
   return (
     <div className='main-container'>
-      {/* <HeadContainer /> */}
       <div id='bodyContainer' className='body-container1'>
         <ActionContainer
           actionView={actionView}
@@ -198,7 +193,6 @@ function MainContainer(): any {
         />
         {snapshots.length ? (
           <StateContainer
-            toggleActionContainer={toggleActionContainer}
             webMetrics={webMetrics}
             viewIndex={viewIndex}
             snapshot={snapshotDisplay}
