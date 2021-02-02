@@ -161,6 +161,7 @@
     "react": "^16.13.1",
     "react-apexcharts": "^1.3.7",
     "react-dom": "^16.13.1",
+    "react-hover": "^2.0.0",
     "react-html-parser": "^2.0.2",
     "react-json-tree": "^0.11.2",
     "react-router-dom": "^5.2.0",
