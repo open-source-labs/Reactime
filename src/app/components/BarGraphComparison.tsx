@@ -131,7 +131,7 @@ const BarGraphComparison = (props) => {
     domain: [0, Math.max(calculateMaxTotalRender(series), data.maxTotalRender)],
     nice: true,
   });
-  // the domain array will assign each key(component on test app) a different color
+  // the domain array will assign each key a different color to make rectangle boxes
   // and use range to set the color scheme each bar
   const colorScale = scaleOrdinal<string>({
     domain: keys,
