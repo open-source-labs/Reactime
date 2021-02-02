@@ -190,7 +190,6 @@
   grid-template-columns: auto auto;
   align-items: center;
   justify-content: center;
-  margin-top: 1rem;
 }
 
 //container for metrics
@@ -202,4 +201,14 @@
 .bargraph {
   position: relative;
   margin-top: 1rem;
+}
+
+#hover-box {
+  max-width: 150px;
+  background-color: #51565e;
+  border-radius: 5px;
+}
+
+.bargraph-position {
+  position: relative;
 }
