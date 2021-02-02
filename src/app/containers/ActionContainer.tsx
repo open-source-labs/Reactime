@@ -1,9 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import { diff } from 'jsondiffpatch';
 import Action from '../components/Action';
 import SwitchAppDropdown from '../components/SwitchApp';
-
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
 import { useEffect } from 'react';
@@ -117,7 +115,8 @@ function ActionContainer(props) {
     setActionView(true);
   }, []);
 
-  // this is not logging; the prop is not being udpdated or the component is not being re-rendered.
+  //the conditional logic below will cause ActionContainer.test.tsx to fail as it cannot find the Empty button
+  //UNLESS actionView={true} is passed into <ActionContainer /> in the beforeEach() call in ActionContainer.test.tsx
   return (
     <div id='action-id' className='action-container'>
       <div id='arrow'>

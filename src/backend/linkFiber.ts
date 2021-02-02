@@ -52,7 +52,11 @@ let recoilDomNode = {};
 if (window[`$recoilDebugStates`]) {
   isRecoil = true;
 }
-// function for recoil apps (unused as of 11.22.2020)
+
+// This is deprecated Recoil code.  Recoil as of 01-03-2021
+// does not work well with Reactime.  Leaving any Recoil
+// code in codebase to assist with Recoil implementations
+// in the future.
 /*
 function getRecoilState(): any {
   const RecoilSnapshotsLength = window[`$recoilDebugStates`].length;
@@ -85,7 +89,6 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
     snap.tree = new Tree('root', 'root');
   }
   const payload = snap.tree.cleanTreeCopy();
-  console.log('payload that is sent from link fiber>>>', payload);
   // if it's Recoil - run different actions?
   if (isRecoil) {
     // getRecoilState()
@@ -93,7 +96,12 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
     payload.atomSelectors = atomsSelectors;
     payload.recoilDomNode = recoilDomNode;
   }
-  //method safely enables cross-origin communication between Window objects; e.g., between a page and a pop-up that it spawned, or between a page and an iframe embedded within it.
+  // method safely enables cross-origin communication between Window objects;
+  // e.g., between a page and a pop-up that it spawned, or between a page
+  // and an iframe embedded within it.
+  // this postMessage will be sending the most up-to-date snapshot of the current React Fiber Tree
+  // the postMessage action will be received on the content script to later update the tabsObj
+  // this will fire off everytime there is a change in test application
   window.postMessage(
     {
       action: 'recordSnap',
@@ -317,20 +325,6 @@ function createTree(
           state.component
         );
         componentData.hooksIndex = hooksIndex;
-
-        // Improves tree visualization but breaks jump ?
-        // if (!newState) {}
-        // newState.push(state.state);
-
-        /* what is this supposed to do? currently doesn't work? and makes no sense, newState is an object, how can you push state.state into an object? */
-        // if (newState && newState.hooksState) {
-        //   newState.push(state.state);
-        // } else if (newState) {
-        //   newState = [state.state];
-        // } else {
-        //   newState.push(state.state);
-        // }
-        // componentFound = true;
         if (!newState) {
           newState = { hooksState: [] };
         } else if (!newState.hooksState) {

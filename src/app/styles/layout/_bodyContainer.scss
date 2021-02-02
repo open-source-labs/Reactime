@@ -1,13 +1,13 @@
 .body-container1 {
-  height: 94%;
+  height: 100%;
   overflow: hidden;
   display: grid;
   grid-template-columns: min-content 2fr;
   grid-template-rows: 8fr 1fr;
   grid-template-areas:
     'actions states'
-    'actions travel'
-    'actions buttons';
+    'travel travel'
+    'buttons buttons';
 }
 
 
