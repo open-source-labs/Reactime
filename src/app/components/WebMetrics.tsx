@@ -1,7 +1,6 @@
 import React from 'react';
 import Charts from 'react-apexcharts';
-
-
+import ReactHover, { Trigger, Hover } from 'react-hover';
 const radialGraph = (props) => {
   const state = {
     series: [props.series],
@@ -10,7 +9,7 @@ const radialGraph = (props) => {
       chart: {
         height: 100,
         width: 100,
-        type: "radialBar",
+        type: 'radialBar',
         toolbar: {
           show: false,
         },
@@ -84,18 +83,35 @@ const radialGraph = (props) => {
       labels: [props.label],
     },
   };
+  const optionsCursorTrueWithMargin = {
+    followCursor: true,
+    shiftX: 20,
+    shiftY: 0,
+  };
 
   return (
-    <div className="metric">
-      <div id="chart">
-        <Charts
-          options={state.options}
-          series={state.series}
-          type="radialBar"
-          height={200}
-          width={200}
-        />
-      </div>
+    <div className='metric'>
+      <ReactHover options={optionsCursorTrueWithMargin}>
+        <Trigger type='trigger'>
+          <div id='chart'>
+            <Charts
+              options={state.options}
+              series={state.series}
+              type='radialBar'
+              height={200}
+              width={200}
+            />
+          </div>
+        </Trigger>
+        <Hover type='hover'>
+          <div style={{ padding: '0.5rem 1rem' }} id='hover-box'>
+            <p>
+              <strong>{props.name}</strong>
+            </p>
+            <p>{props.description}</p>
+          </div>
+        </Hover>
+      </ReactHover>
     </div>
   );
 };
