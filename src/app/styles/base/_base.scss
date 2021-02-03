@@ -18,14 +18,14 @@ body {
 }
 .action-container {
   grid-area: actions;
+  transition: 0.5s;
 }
 .state-container {
   grid-area: states;
 }
 .buttons-container {
   grid-area: buttons;
-
-  border-color: rgba(41,41,41,1);
+  border-color: rgba(41, 41, 41, 1);
 }
 
 .action-container,

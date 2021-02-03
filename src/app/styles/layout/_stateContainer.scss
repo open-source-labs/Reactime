@@ -1,146 +1,214 @@
 .state-container {
-	font-size: 12px;
-	overflow: auto;
-	background-color: $brand-color;
+  font-size: 12px;
+  overflow: auto;
+  background-color: $brand-color;
 }
 #componentMapContainer,
 #historyContainer,
 #atomsContainer {
-	overflow: hidden;
+  overflow: hidden;
+}
+
+.toggleAC {
+  // color: #00dffc;
+  color: $blue-brand;
+  background: $background-color;
+  height: 50%;
+  text-decoration: none;
+  border: none;
+}
+
+.toggleAC:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 .state-container .navbar {
-	background-color: $background-color;
-	display: flex;
-	flex-direction: row;
-	justify-content: flex-start;
-	align-items: center;
-	height: 30px;
-	position: static;
+  background-color: $background-color;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  height: 30px;
+  position: static;
 }
 
 .state-container .main-navbar {
-	background-color: $background-color;
-	display: flex;
-	flex-direction: row;
-	justify-content: flex-start;
-	align-items: center;
-	height: 35px;
-	margin: 6px;
+  background-color: $background-color;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  height: 35px;
+  margin: 6px;
 }
 
 .state-container .main-navbar-container {
-	position: sticky;
-	top: 0px;
-	left: 0px;
-	z-index: 1;
-	background-color: $background-color;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-	height: 35px;
+  position: sticky;
+  top: 0px;
+  left: 0px;
+  z-index: 1;
+  background-color: $background-color;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 35px;
 }
 
 .navbar {
-	// prevent navbar from scrolling with state/tree display
-	position: sticky;
-	top: 0px;
-	left: 0px;
-	z-index: 1;
-	@extend %disable-highlight;
+  // prevent navbar from scrolling with state/tree display
+  position: sticky;
+  top: 0px;
+  left: 0px;
+  z-index: 1;
+  @extend %disable-highlight;
 }
 
 .no-data-message {
-	color: $text-color;
-	font: normal 13px $text-font-stack;
-	padding: 10px;
+  color: $text-color;
+  font: normal 13px $text-font-stack;
+  padding: 10px;
 }
 
 .state-container {
-	.main-navbar-text {
-		margin: 6px;
-		font-size: 14px;
-	}
+  .main-navbar-text {
+    margin: 6px;
+    font-size: 14px;
+  }
 
-	.main-router-link {
-		height: 75%;
-		width: 75px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		text-decoration: none;
-		color: $text-color;
+  .main-router-link {
+    height: 75%;
+    width: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: $text-color;
 
-		background: $brand-color;
-		border-radius: 5px;
-		border: 1px solid rgba(184, 196, 194, 0.25);
-	}
+    background: $brand-color;
+    border-radius: 5px;
+    border: 1px solid rgba(184, 196, 194, 0.25);
+  }
 
-	.main-router-link:hover {
-		background: $light-background-color;
-	}
+  .main-router-link:hover {
+    background: $light-background-color;
+  }
 
-	.main-router-link.is-active {
-		background: $blue-brand;
-		color: $brand-color;
-		margin: 3px;
-		border-radius: 5px;
-		border: 1px solid rgb(36, 37, 41);
-	}
+  .main-router-link.is-active {
+    background: $blue-brand;
+    color: $brand-color;
+    margin: 3px;
+    border-radius: 5px;
+    border: 1px solid rgb(36, 37, 41);
+  }
 
-	.router-link {
-		height: 100%;
-		width: 34%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		background-color: $medium-background-color;
-		text-decoration: none;
-		color: $text-color;
-	}
+  .router-link {
+    height: 100%;
+    width: 34%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $medium-background-color;
+    text-decoration: none;
+    color: $text-color;
+  }
 
-	.router-link:hover {
-		background-color: $light-grey-three;
-	}
+  .router-link:hover {
+    background-color: $light-grey-three;
+  }
 
-	.router-link.is-active {
-		background-color: $brand-color;
-	}
-	.navbar {
-		background-color: $navbar-color;
-		display: flex;
-		flex-direction: row;
-		justify-content: start;
-		align-items: center;
-		height: 30px;
-	}
+  .router-link.is-active {
+    background-color: $brand-color;
+  }
+  .navbar {
+    background-color: $navbar-color;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    height: 30px;
+  }
 
-	.main-navbar {
-		background-color: $background-color;
-		display: flex;
-		flex-direction: row;
-		justify-content: flex-start;
-		align-items: center;
-		height: 35px;
-		margin: 6px;
-	}
+  .main-navbar {
+    background-color: $background-color;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 35px;
+    margin: 6px;
+  }
 
-	.main-navbar-container {
-		top: 0px;
-		left: 0px;
-		z-index: 1;
-		background-color: $background-color;
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: center;
-		height: 40px;
-	}
+  .main-navbar-container {
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+    background-color: $background-color;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+  }
 }
 
 .no-data-message {
-	color: $text-color;
-	font: normal 13px $text-font-stack;
-	padding: 10px;
+  color: $text-color;
+  font: normal 13px $text-font-stack;
+  padding: 10px;
+}
+
+.performance-nav-bar-container {
+  background-color: $navbar-color;
+  display: flex;
+  height: 30px;
+}
+
+.router-link-performance {
+  height: 100%;
+  width: 34%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $brand-color;
+  text-decoration: none;
+  color: $text-color;
+}
+
+.router-link-performance:hover {
+  background-color: $light-grey-four;
+}
+
+.router-link-performance.is-active {
+  font-weight: 600;
+}
+
+// Web Metrics Container
+.web-metrics-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  justify-content: center;
+}
+
+//container for metrics
+.metric {
+  min-height: 200px;
+  min-width: 200px;
+}
+
+.bargraph {
+  position: relative;
+  margin-top: 1rem;
+}
+
+#hover-box {
+  max-width: 150px;
+  background-color: #51565e;
+  border-radius: 5px;
+}
+
+.bargraph-position {
+  position: relative;
 }

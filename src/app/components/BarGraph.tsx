@@ -9,16 +9,21 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
-import snapshots from './snapshots';
 import { onHover, onHoverExit } from '../actions/actions';
-import { useStoreContext } from '../store'
+import { useStoreContext } from '../store';
+import { save } from '../actions/actions';
 
 /* TYPESCRIPT */
 interface data {
   snapshotId?: string;
 }
 
-interface margin { top: number; right: number; bottom: number; left: number };
+interface margin {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+}
 
 interface snapshot {
   snapshotId?: string;
@@ -50,18 +55,25 @@ const tooltipStyles = {
   color: 'white',
   fontSize: '14px',
   lineHeight: '18px',
-  fontFamily: 'Roboto'
+  fontFamily: 'Roboto',
 };
 
 const BarGraph = (props) => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { width, height, data } = props;
   const {
-    tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip,
+    tooltipOpen,
+    tooltipLeft,
+    tooltipTop,
+    tooltipData,
+    hideTooltip,
+    showTooltip,
   } = useTooltip<TooltipData>();
   let tooltipTimeout: number;
-  const { containerRef, TooltipInPortal } = useTooltipInPortal();
-
+  const { containerRef, TooltipInPortal } = useTooltipInPortal({
+    detectBounds: true,
+    scroll: true,
+  });
   const keys = Object.keys(data.componentData);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
@@ -90,8 +102,36 @@ const BarGraph = (props) => {
   const yMax = height - margin.top - 150;
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
+
+  const toStorage = {
+    currentTab,
+    title: tabs[currentTab]['title'],
+    data,
+  };
+
+  const animateButton = function (e) {
+    e.preventDefault;
+    e.target.classList.add('animate');
+    e.target.innerHTML = 'Saved!';
+    setTimeout(function () {
+      e.target.innerHTML = 'Save Series';
+      e.target.classList.remove('animate');
+    }, 1000);
+  };
+  const classname = document.getElementsByClassName('save-series-button');
+  for (let i = 0; i < classname.length; i++) {
+    classname[i].addEventListener('click', animateButton, false);
+  }
   return (
-    <div> 
+    <div className='bargraph-position'>
+      <button
+        className='save-series-button'
+        onClick={(e) => {
+          dispatch(save(toStorage));
+        }}
+      >
+        Save Series
+      </button>
       <svg ref={containerRef} width={width} height={height}>
         {}
         <rect
@@ -109,7 +149,7 @@ const BarGraph = (props) => {
           yScale={renderingScale}
           width={xMax}
           height={yMax}
-          stroke="black"
+          stroke='black'
           strokeOpacity={0.1}
           xOffset={snapshotIdScale.bandwidth() / 2}
         />
@@ -122,32 +162,34 @@ const BarGraph = (props) => {
             yScale={renderingScale}
             color={colorScale}
           >
-            {barStacks =>
-              barStacks.map(barStack =>
-                barStack.bars.map(((bar, idx) => {
-                  // hides new components if components don't exist in previous snapshots
+            {(barStacks) =>
+              barStacks.map((barStack) =>
+                barStack.bars.map((bar, idx) => {
+                  // Hides new components if components don't exist in previous snapshots.
                   if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                     bar.height = 0;
                   }
                   return (
                     <rect
-                      key={`bar-stack-${barStack.index}-${bar.index}`}
+                      key={`bar-stack-${barStack.id}-${bar.id}`}
                       x={bar.x}
                       y={bar.y}
                       height={bar.height === 0 ? null : bar.height}
                       width={bar.width}
                       fill={bar.color}
                       /* TIP TOOL EVENT HANDLERS */
-                      // Hides tool tip once cursor moves off the current rect
+                      // Hides tool tip once cursor moves off the current rect.
                       onMouseLeave={() => {
-                        dispatch(onHoverExit(data.componentData[bar.key].rtid),
-                        tooltipTimeout = window.setTimeout(() => {
-                          hideTooltip()
-                        }, 300))
+                        dispatch(
+                          onHoverExit(data.componentData[bar.key].rtid),
+                          (tooltipTimeout = window.setTimeout(() => {
+                            hideTooltip();
+                          }, 300))
+                        );
                       }}
-                      // Cursor position in window updates position of the tool tip
-                      onMouseMove={event => {
-                        dispatch(onHover(data.componentData[bar.key].rtid))
+                      // Cursor position in window updates position of the tool tip.
+                      onMouseMove={(event) => {
+                        dispatch(onHover(data.componentData[bar.key].rtid));
                         if (tooltipTimeout) clearTimeout(tooltipTimeout);
                         const top = event.clientY - margin.top - bar.height;
                         const left = bar.x + bar.width / 2;
@@ -158,8 +200,10 @@ const BarGraph = (props) => {
                         });
                       }}
                     />
-                    )})))
-                  }
+                  );
+                })
+              )
+            }
           </BarStack>
         </Group>
         <AxisLeft
@@ -189,8 +233,19 @@ const BarGraph = (props) => {
             textAnchor: 'middle',
           })}
         />
-        <Text x={-xMax / 2} y="15" transform="rotate(-90)" fontSize={12} fill="#FFFFFF"> Rendering Time (ms) </Text>
-        <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill="#FFFFFF"> Snapshot Id </Text>
+        <Text
+          x={-xMax / 2}
+          y='15'
+          transform='rotate(-90)'
+          fontSize={12}
+          fill='#FFFFFF'
+        >
+          Rendering Time (ms)
+        </Text>
+        <br />
+        <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill='#FFFFFF'>
+          Snapshot ID
+        </Text>
       </svg>
       {/* FOR HOVER OVER DISPLAY */}
       {tooltipOpen && tooltipData && (
@@ -201,23 +256,21 @@ const BarGraph = (props) => {
           style={tooltipStyles}
         >
           <div style={{ color: colorScale(tooltipData.key) }}>
-          {' '}
-          <strong>{tooltipData.key}</strong>
-          {' '}
+            {' '}
+            <strong>{tooltipData.key}</strong>{' '}
           </div>
           <div>{data.componentData[tooltipData.key].stateType}</div>
+          <div> {formatRenderTime(tooltipData.bar.data[tooltipData.key])} </div>
           <div>
             {' '}
-            {formatRenderTime(tooltipData.bar.data[tooltipData.key])}
-            {' '}
-          </div>
-          <div>
-            {' '}
-            <small>{formatSnapshotId(getSnapshotId(tooltipData.bar.data))}</small>
+            <small>
+              {formatSnapshotId(getSnapshotId(tooltipData.bar.data))}
+            </small>
           </div>
         </TooltipInPortal>
       )}
     </div>
-)};
+  );
+};
 
 export default BarGraph;

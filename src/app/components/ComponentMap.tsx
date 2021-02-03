@@ -7,17 +7,27 @@ import { pointRadial } from 'd3-shape';
 import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
+import { localPoint } from '@visx/event';
+import {
+  useTooltip,
+  useTooltipInPortal,
+  TooltipWithBounds,
+  defaultStyles,
+} from '@visx/tooltip';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-
 const root = hierarchy({
-  name: 'root',
+  name: "root",
   children: [
-    { name: 'child #1' },
+    { name: "child #1" },
     {
-      name: 'child #2',
-      children: [{ name: 'grandchild #1' }, { name: 'grandchild #2' }, { name: 'grandchild #3' }],
+      name: "child #2",
+      children: [
+        { name: "grandchild #1" },
+        { name: "grandchild #2" },
+        { name: "grandchild #3" },
+      ],
     },
   ],
 });
@@ -45,16 +55,15 @@ export default function ComponentMap({
   margin = defaultMargin,
   snapshots: snapshots,
 }: LinkTypesProps) {
-
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   // This is where we select the last object in the snapshots array from props to allow hierarchy to parse the data for render on the component map per hierarchy layout specifications.
   const lastNode = snapshots.length - 1;
   const data: {} = snapshots[lastNode];
 
   // importing custom hooks for the selection tabs.
-  const [layout, setLayout] = useState('cartesian');
-  const [orientation, setOrientation] = useState('horizontal');
-  const [linkType, setLinkType] = useState('diagonal');
+  const [layout, setLayout] = useState("cartesian");
+  const [orientation, setOrientation] = useState("horizontal");
+  const [linkType, setLinkType] = useState("diagonal");
   const [stepPercent, setStepPercent] = useState(10);
 
   // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
@@ -62,7 +71,7 @@ export default function ComponentMap({
 
   // setting the margins for the Map to render in the tab window.
   const innerWidth = totalWidth - margin.left - margin.right;
-  const innerHeight = totalHeight - margin.top - margin.bottom;
+  const innerHeight = totalHeight - margin.top - margin.bottom - 60;
 
   let origin: { x: number; y: number };
   let sizeWidth: number;
@@ -70,7 +79,7 @@ export default function ComponentMap({
 
   // This sets the starting position for the root node on the maps display. the polar layout sets the root node to the relative center of the display box based on the size of the browser window.
   // the else conditional statements determines the root nodes location either in the left middle or top middle of the browser window relative to the size of the browser.
-  if (layout === 'polar') {
+  if (layout === "polar") {
     origin = {
       x: innerWidth / 2,
       y: innerHeight / 2,
@@ -79,7 +88,7 @@ export default function ComponentMap({
     sizeHeight = Math.min(innerWidth, innerHeight) / 2;
   } else {
     origin = { x: 0, y: 0 };
-    if (orientation === 'vertical') {
+    if (orientation === "vertical") {
       sizeWidth = innerWidth;
       sizeHeight = innerHeight;
     } else {
@@ -87,6 +96,37 @@ export default function ComponentMap({
       sizeHeight = innerWidth;
     }
   }
+
+  //Tooltip stuff:
+  const {
+    tooltipData,
+    tooltipLeft,
+    tooltipTop,
+    tooltipOpen,
+    showTooltip,
+    hideTooltip,
+  } = useTooltip();
+
+  const { containerRef, TooltipInPortal } = useTooltipInPortal({
+    detectBounds: true,
+    scroll: true,
+  });
+
+  const tooltipStyles = {
+    ...defaultStyles,
+    minWidth: 60,
+    backgroundColor: 'rgba(0,0,0,0.9)',
+    color: 'white',
+    fontSize: '14px',
+    lineHeight: '18px',
+    fontFamily: 'Roboto',
+  };
+
+  const formatRenderTime = (time) => {
+    time = time.toFixed(3);
+    return `${time} ms `;
+  };
+
   // controls for the map
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
   return totalWidth < 10 ? null : (
@@ -102,9 +142,9 @@ export default function ComponentMap({
         setStepPercent={setStepPercent}
       />
 
-      <svg width={totalWidth} height={totalHeight}>
-        <LinearGradient id='links-gradient' from='#fd9b93' to='#fe6e9e' />
-        <rect width={totalWidth} height={totalHeight} rx={14} fill='#242529'/>
+      <svg ref={containerRef} width={totalWidth} height={totalHeight}>
+        <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
+        <rect width={totalWidth} height={totalHeight} rx={14} fill="#242529" />
         <Group top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(data, (d) => (d.isExpanded ? null : d.children))}
@@ -118,9 +158,9 @@ export default function ComponentMap({
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    stroke='#ff6569'
-                    strokeWidth='1'
-                    fill='none'
+                    stroke="#ff6569"
+                    strokeWidth="1"
+                    fill="none"
                   />
                 ))}
 
@@ -130,23 +170,40 @@ export default function ComponentMap({
                     if (nodeLength < 5) return nodeLength + 40;
                     if (nodeLength < 10) return nodeLength + 60;
                     return nodeLength + 70;
-                  } 
+                  };
                   const width = widthFunc(node.data.name);
                   const height = 25;
 
                   let top: number;
                   let left: number;
-                  if (layout === 'polar') {
+                  if (layout === "polar") {
                     const [radialX, radialY] = pointRadial(node.x, node.y);
                     top = radialY;
                     left = radialX;
-                  } else if (orientation === 'vertical') {
+                  } else if (orientation === "vertical") {
                     top = node.y;
                     left = node.x;
                   } else {
                     top = node.x;
                     left = node.y;
                   }
+
+                  //mousing controls & Tooltip display logic
+                  const handleMouseOver = (event) => {
+                    () => dispatch(onHover(node.data.rtid));
+                    const coords = localPoint(
+                      event.target.ownerSVGElement,
+                      event
+                    );
+                    const tooltipObj = Object.assign({}, node.data);
+                    if (typeof tooltipObj.state === 'object')
+                      tooltipObj.state = 'stateful';
+                    showTooltip({
+                      tooltipLeft: coords.x,
+                      tooltipTop: coords.y,
+                      tooltipData: tooltipObj,
+                    });
+                  };
 
                   return (
                     <Group top={top} left={left} key={key}>
@@ -168,46 +225,37 @@ export default function ComponentMap({
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          fill= {node.children ? '#161521' : '#62d6fb'}
-                          stroke={node.children ? '#62d6fb' : '#161521'}
+                          fill={node.children ? "#161521" : "#62d6fb"}
+                          stroke={node.children ? "#62d6fb" : "#161521"}
                           strokeWidth={1}
-                          strokeDasharray={node.children ? '0' : '2,2'}
-                          strokeOpacity='1'
-                          rx={node.children ? 4 : 10}                         
+                          strokeDasharray={node.children ? "0" : "2,2"}
+                          strokeOpacity="1"
+                          rx={node.children ? 4 : 10}
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
                             forceUpdate();
                           }}
-                          //check with recoil 
-                          onMouseLeave={()=> {
-                            if(Object.keys(node.data.recoilDomNode).length > 0){
-                              dispatch(onHoverExit(node.data.recoilDomNode[node.data.name]))
-                            } else {
-                              dispatch(onHoverExit(node.data.rtid))
-                            }
-                          }}
-                          onMouseEnter={()=> {
-                            if(Object.keys(node.data.recoilDomNode).length > 0){
-                              dispatch(onHover(node.data.recoilDomNode[node.data.name]))
-                            } else {
-                              dispatch(onHover(node.data.rtid))
-                            }   
-                          }}
+                          //Tooltip event handlers
+                          //test feature
+                          onMouseOver={handleMouseOver}
+                          onMouseOut={hideTooltip}
+                          onMouseEnter={() => dispatch(onHover(node.data.rtid))}
+                          onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
                         />
                       )}
                       {/* Display text inside of each component node */}
                       <text
-                        dy='.33em'
+                        dy=".33em"
                         fontSize={10}
-                        fontFamily='Roboto'
-                        textAnchor='middle'
-                        style={{ pointerEvents: 'none' }}
+                        fontFamily="Roboto"
+                        textAnchor="middle"
+                        style={{ pointerEvents: "none" }}
                         fill={
                           node.depth === 0
-                            ? '#161521'
+                            ? "#161521"
                             : node.children
-                            ? 'white'
-                            : '#161521'
+                            ? "white"
+                            : "#161521"
                         }
                       >
                         {node.data.name}
@@ -220,6 +268,26 @@ export default function ComponentMap({
           </Tree>
         </Group>
       </svg>
+      {tooltipOpen && tooltipData && (
+        <TooltipInPortal
+          // set this to random so it correctly updates with parent bounds
+          key={Math.random()}
+          top={tooltipTop}
+          left={tooltipLeft}
+          style={tooltipStyles}
+        >
+          <div style={{}}>
+            {' '}
+            <strong>{tooltipData.name}</strong>{' '}
+          </div>
+          <div>State: {tooltipData.state}</div>
+          <div>
+            {' '}
+            Render time:{' '}
+            {formatRenderTime(tooltipData.componentData.actualDuration)}{' '}
+          </div>
+        </TooltipInPortal>
+      )}
     </div>
   );
 }
