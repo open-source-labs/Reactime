@@ -9,7 +9,7 @@
   <br>
 </h1>
 
-<h4 align="center"> Reactime is a performance and debugging tool for React developers <b>(compatible with Gatsby and Next.js)</b>. It records a snapshot whenever a target application's state is changed and allows the user to jump to any previously recorded state. It also detects the amount of renders of each component and average time of rendering.</h4>
+<h4 align="center"> Reactime is a performance and debugging tool for React developers <b>(Beta version for Gatsby and Next.js)</b>. It records a snapshot whenever a target application's state is changed and allows the user to jump to any previously recorded state. It also detects the amount of renders of each component and average time of rendering.</h4>
 
 <br>
 <p align="center">
@@ -40,13 +40,14 @@
 </p>
 
 <p align="center">
-  <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.io">Website</a> • <a href="#read-more">Read More</a>
+  <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.io">Website</a> • <a href="#read-more">Read More</a>
 </p>
 
 Currently, Reactime supports React apps using stateful components and Hooks, including frameworks like Gatsby and Next.js, with beta support for Recoil and Context API.
 
-<b>Reactime version 7.0</b> can help you to avoid unnecessary re-renders. Identifying wasted renders in your React applications is the perfect start to identifying most performance issues.
-Reactime 7.0 fixes previous version bugs and incorporates improved visualizations for component relationships. Reactime 7.0 includes expanded [typedoc](https://typedoc.org/api/) documentation for developers looking to contribute to the source code.
+<b>Reactime version 8.0</b> allows you to run A/B testing on your application by storing a "series" of state data snapshots. At any stage in the dev cycle, devs could run Reactime again and select any past series to do an A/B test with the current series of snapshots.  With Save Series, developers have access to view trends in their App's component render times during development by comparing the previous series of snapshots.
+
+Reactime 8.0 fixes previous version bugs and incorporates improved visualizations for component relationships. Reactime 8.0 includes expanded [typedoc](https://typedoc.org/api/) documentation for developers looking to contribute to the source code.
 
 After installing Reactime, you can test its functionalities with your React application in development mode.
 
@@ -100,6 +101,14 @@ Reactime offers debugging and performance tools for Next.js apps: time-traveling
 
 Whenever state is changed (whenever setState, useState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the Reactime panel.
 
+### 🔹 Snapshot Comparison 
+
+You can save a series of state snapshots and use it to analyze changes in component render performance between current and previous series of snapshots.
+<p align="center">
+<img src="http://g.recordit.co/KNxvT94qxd.gif" />
+</p>
+<br>
+
 ### 🔹 Viewing
 
 You can click on a snapshot to view your app's state. State can be visualized in a Component Graph, JSON Tree, or Performance Graph. Snapshots can be diffed with the previous snapshot, which can be viewed in Diff mode.
@@ -143,7 +152,11 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - [Deep in Weeds with Reactime, Concurrent React_fiberRoot, and Browser History Caching](https://itnext.io/deep-in-the-weeds-with-reactime-concurrent-react-fiberroot-and-browser-history-caching-7ce9d7300abb)
 
 ## <b>Authors</b>
-
+- **Dennis Lopez** - [@DennisLpz](https://github.com/DennisLpz)
+- **Cole Styron** - [@colestyron](https://github.com/C-STYR)
+- **Ali Rahman** - [@CourageWolf](https://github.com/CourageWolf)
+- **Caner Demir** - [@demircaner](https://github.com/demircaner)
+- **Kevin Ngo** - [@kev-ngo](https://github.com/kev-ngo)
 - **Becca Viner** - [@rtviner](https://github.com/rtviner)
 - **Caitlin Chan** - [@caitlinchan23](https://github.com/caitlinchan23)
 - **Kim Mai Nguyen** - [@Nkmai](https://github.com/Nkmai)
