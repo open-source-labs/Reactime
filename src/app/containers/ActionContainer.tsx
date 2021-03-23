@@ -139,7 +139,7 @@ function ActionContainer(props) {
               }}
               type='button'
             >
-              Empty
+              Clear
             </button>
           </div>
           <div>{actionsArr}</div>
