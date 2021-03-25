@@ -501,8 +501,13 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     // nathan test
     console.log('devTools', devTools);
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
+    // nathan test
+    console.log('reactInstance', reactInstance);
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-
+    // nathan test
+    console.log('devTools.getFiberRoots(1)', devTools.getFiberRoots(1));
+    console.log('devTools.getFiberRoots(1).values()', devTools.getFiberRoots(1).values());
+    console.log('fiberRoot: ', fiberRoot);
     const throttledUpdateSnapshot = throttle(
       () => updateSnapShotTree(snap, mode),
       70
@@ -512,6 +517,8 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
+          // nathan test
+          console.log('args', args);
           // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
           if (doWork) {
