@@ -89,6 +89,9 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   if (!snap.tree) {
     snap.tree = new Tree('root', 'root');
   }
+  // nathan test breakpoint
+  console.log('snap: ', snap);
+
   const payload = snap.tree.cleanTreeCopy();
   // if it's Recoil - run different actions?
   if (isRecoil) {
@@ -105,6 +108,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   // the postMessage action will be received on the content script to later update the tabsObj
   // this will fire off everytime there is a change in test application
   window.postMessage(
+
     {
       action: 'recordSnap',
       payload,
@@ -218,7 +222,7 @@ function createTree(
   tree: Tree = new Tree('root', 'root'),
   fromSibling = false
 ) {
-    console.log('currentFiber: ', currentFiber);
+
   // Base case: child or sibling pointed to null
   if (!currentFiber) return null;
   if (!tree) return tree;
@@ -238,6 +242,9 @@ function createTree(
     selfBaseDuration,
     treeBaseDuration,
   } = currentFiber;
+
+  // console.log('currentFiber: ', currentFiber);
+  // console.log('tag', tag);
 
   //Checks Recoil Atom and Selector Relationships
   if (
@@ -498,9 +505,16 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     console.log("exporting LinkFiber!")
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    // nathan test
+    console.log('devTools', devTools);
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
+    // nathan test
+    console.log('reactInstance', reactInstance);
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-
+    // nathan test
+    console.log('devTools.getFiberRoots(1)', devTools.getFiberRoots(1));
+    console.log('devTools.getFiberRoots(1).values()', devTools.getFiberRoots(1).values());
+    console.log('fiberRoot: ', fiberRoot);
     const throttledUpdateSnapshot = throttle(
       () => updateSnapShotTree(snap, mode),
       70
@@ -510,6 +524,8 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     if (reactInstance && reactInstance.version) {
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
+          // nathan test
+          console.log('args', args);
           // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
           if (doWork) {
