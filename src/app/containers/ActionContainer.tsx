@@ -54,7 +54,7 @@ function ActionContainer(props) {
   };
   // the hierarchy gets set on the first click in the page
   // when page in refreshed we may not have a hierarchy so we need to check if hierarchy was initialized
-  // if true involk displayArray to display the hierarchy
+  // if true invoke displayArray to display the hierarchy
   if (hierarchy) displayArray(hierarchy);
 
   // handles keyboard presses, function passes an event and index of each action-component
