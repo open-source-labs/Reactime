@@ -12,6 +12,7 @@ const metrics = {};
 
 // This function will create the first instance of the test app's tabs object
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
+//console.log("hello from background.js");
 function createTabObj(title) {
   // update tabsObj
   return {
@@ -247,6 +248,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           const script = document.createElement('script');
           script.setAttribute('type', 'text/javascript');
           script.setAttribute('src', file);
+          document.title=${tabId} + '-' + document.title
           htmlBody.appendChild(script);
         };
         injectScript(chrome.runtime.getURL('bundles/backend.bundle.js'), 'body');
@@ -341,12 +343,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             tabsObj[tabId],
             new Node(request.payload, tabsObj[tabId])
           );
-        } else {
-          sendToHierarchy(
-            tabsObj[tabId],
-            new NewNode(request.payload, tabsObj[tabId])
-          );
         }
+        //  else {
+        //   sendToHierarchy(
+        //     tabsObj[tabId],
+        //     new NewNode(request.payload, tabsObj[tabId])
+        //   );
+        // }
       }
       // sends new tabs obj to devtools
       if (portsArr.length > 0) {

@@ -4,7 +4,10 @@ import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) =>
   produce(state, (draft) => {
+    console.log("export state", state)
     const { port, currentTab, tabs } = draft;
+    console.log("currentTab Reducer:", currentTab)
+    console.log("reducer action:", action)
     const { hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex } =
       tabs[currentTab] || {};
 
@@ -154,6 +157,7 @@ export default (state, action) =>
       }
       case types.EMPTY: {
         port.postMessage({ action: 'emptySnap', tabId: currentTab });
+                console.log("mainreducer line 159")
         tabs[currentTab].sliderIndex = 0;
         tabs[currentTab].viewIndex = -1;
         tabs[currentTab].playing = false;

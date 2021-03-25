@@ -82,6 +82,7 @@ function getRecoilState(): any {
  * Middleware: Gets a copy of the current snap.tree and posts a recordSnap message to the window
  */
 function sendSnapshot(snap: Snapshot, mode: Mode): void {
+  console.log('This is sendSnapshot!')
   // Don't send messages while jumping or while paused
   if (mode.jumping || mode.paused) return;
   // If there is no current tree  creates a new one
@@ -94,6 +95,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   const payload = snap.tree.cleanTreeCopy();
   // if it's Recoil - run different actions?
   if (isRecoil) {
+      console.log('This is recoil and we\'re in sendSnapshot!')
     // getRecoilState()
     payload.atomsComponents = atomsComponents;
     payload.atomSelectors = atomsSelectors;
@@ -125,6 +127,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
 
 //updating tree depending on current mode on the panel (pause, etc)
 function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
+    console.log('This is updateSnapShotTree!')
   // this is the currently active root fiber(the mutable root of the tree)
   if (fiberRoot) {
     const { current } = fiberRoot;
@@ -151,6 +154,7 @@ function traverseRecoilHooks(
   //Props of the fiber that were used to create the output during the previous render.
   memoizedProps: any
 ): HookStates {
+  console.log('This is traverseRecoilHooks!')
   const hooksStates: HookStates = [];
   while (memoizedState && memoizedState.queue) {
     if (
@@ -181,6 +185,7 @@ function traverseRecoilHooks(
  * every time a hooks component changes state
  */
 function traverseHooks(memoizedState: any): HookStates {
+  console.log('This is traverseHooks!')
   const hooksStates: HookStates = [];
   while (memoizedState && memoizedState.queue) {
     if (memoizedState.memoizedState) {
@@ -217,7 +222,7 @@ function createTree(
   tree: Tree = new Tree('root', 'root'),
   fromSibling = false
 ) {
-  
+
   // Base case: child or sibling pointed to null
   if (!currentFiber) return null;
   if (!tree) return tree;
@@ -351,6 +356,7 @@ function createTree(
     (tag === 0 || tag === 1 || tag === 2 || tag === 10) &&
     isRecoil === false
   ) {
+    console.log("Node uses regular react hooks")
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
       // so we must traverse through the list and get the states.
@@ -496,6 +502,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     doWork = !document.hidden;
   }
   return () => {
+    console.log("exporting LinkFiber!")
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     // nathan test
