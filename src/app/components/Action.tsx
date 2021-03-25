@@ -41,11 +41,14 @@ interface ActionProps {
 // index and delta props were removed from Action.jsx  */
 // viewIndex and handleonkeyDown added to props
 const Action = (props: ActionProps): JSX.Element => {
+
   const {
     selected, last, index, sliderIndex, dispatch, displayName, componentName,
     componentData, viewIndex, handleOnkeyDown,
   } = props;
 
+  // nathan test for props
+  console.log('componentName: ', componentName);
   /**
    * @function cleanTime: Displays render times for state changes
    * @returns render display time in seconds in miliseconds
@@ -91,7 +94,8 @@ const Action = (props: ActionProps): JSX.Element => {
       tabIndex={index}
     >
       <div className="action-component-text">
-        {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `}
+        {/* {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `} */}
+        {`displayName: ${displayName}`}
       </div>
       <button
         className="time-button"
