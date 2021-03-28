@@ -81,11 +81,13 @@ const allStorage = () => {
   const values = [];
   const keys = Object.keys(localStorage);
   let i = keys.length;
+  console.log('allstorage keys', keys)
 
   while (i--) {
     const series = localStorage.getItem(keys[i]);
     values.push(JSON.parse(series));
   }
+  console.log('allstorage values', values)
   return values;
 };
 

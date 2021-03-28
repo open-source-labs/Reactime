@@ -12,7 +12,7 @@ const metrics = {};
 
 // This function will create the first instance of the test app's tabs object
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
-//console.log("hello from background.js");
+// console.log("hello from background.js");
 function createTabObj(title) {
   // update tabsObj
   return {

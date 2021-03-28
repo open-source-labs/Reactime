@@ -74,8 +74,9 @@ const BarGraphComparison = (props) => {
   const [maxRender, setMaxRender] = React.useState(data.maxTotalRender);
 
   function titleFilter(comparisonArray) {
+    console.log("titleFilter comparison array", comparisonArray)
     return comparisonArray.filter(
-      (elem) => elem.title === tabs[currentTab].title
+      (elem) => elem.title.split('-')[1] === tabs[currentTab].title.split('-')[1]
     );
   }
 
@@ -165,18 +166,22 @@ const BarGraphComparison = (props) => {
   const classes = useStyles();
 
   const handleChange = (event) => {
+    console.log('in handlechange function')
+    console.log('event.target.value', event.target.value)
     setSeries(event.target.value);
-    setXpoints();
+    // setXpoints();
   };
 
   const handleClose = () => {
+    console.log('in handleclose function')
     setOpen(false);
-    setXpoints();
+    // setXpoints();
   };
 
   const handleOpen = () => {
+    console.log('in handleopen function')
     setOpen(true);
-    setXpoints();
+    // setXpoints();
   };
 
   //manually assignin X -axis points with tab ID.
