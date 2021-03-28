@@ -52,6 +52,9 @@ let recoilDomNode = {};
 if (window[`$recoilDebugStates`]) {
   isRecoil = true;
 }
+console.log('window', window);
+console.log('isrecoil', isRecoil)
+
 
 // This is deprecated Recoil code.  Recoil as of 01-03-2021
 // does not work well with Reactime.  Leaving any Recoil

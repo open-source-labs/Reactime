@@ -12,6 +12,7 @@ const initialState:{port: null|number,
   };
 
 function App(): JSX.Element {
+  console.log("window")
   return (
     <StoreContext.Provider value={useReducer(mainReducer, initialState)}>
       <MainContainer />
