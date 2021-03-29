@@ -14,6 +14,10 @@ const metrics = {};
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
 //console.log("hello from background.js");
 function createTabObj(title) {
+  // TO-DO for save button
+    // Save State
+    // Knowlege of the comparison snapshot
+    // Check for it in the reducer
   // update tabsObj
   return {
     title,
