@@ -12,7 +12,7 @@ const metrics = {};
 
 // This function will create the first instance of the test app's tabs object
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
-//console.log("hello from background.js");
+// console.log("hello from background.js");
 function createTabObj(title) {
   // TO-DO for save button
     // Save State
@@ -135,6 +135,8 @@ chrome.runtime.onConnect.addListener((port) => {
   port.onMessage.addListener((msg) => {
     // msg is action denoting a time jump in devtools
 
+    // nathan tests below
+    console.log('msg: ', msg);
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:
     // {
@@ -195,8 +197,13 @@ chrome.runtime.onConnect.addListener((port) => {
   });
 });
 
+// nathan test
+console.log('top level log in background.js');
 // background.js listening for a message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  // nathan test
+  console.log('request: ', request);
+  console.log('sender: ', sender);
   // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
   if (request.type === 'SIGN_CONNECT') {
     return true;
@@ -437,6 +444,7 @@ chrome.runtime.onInstalled.addListener(() => {
 // when context menu is clicked, listen for the menuItemId,
 // if user clicked on reactime, open the devtools window
 chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
+  console.log('this is the menuItemId: ', menuItemId);
   const options = {
     type: 'panel',
     left: 0,

@@ -20,6 +20,8 @@ function ActionContainer(props) {
   let actionsArr = [];
   const hierarchyArr: any[] = [];
 
+  
+
   // function to traverse state from hiararchy and also getting information on display name and component name
   const displayArray = (obj: {
     stateSnapshot: { children: any[] };
@@ -38,7 +40,9 @@ function ActionContainer(props) {
         index: obj.index,
         displayName: `${obj.name}.${obj.branch}`,
         state: obj.stateSnapshot.children[0].state,
-        componentName: obj.stateSnapshot.children[0].name,
+        // componentName: obj.stateSnapshot.children[0].name,
+        // nathan testing new entries for component name, original above
+        componentName: obj.stateSnapshot,
         componentData:
           JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}'
             ? ''
@@ -60,7 +64,7 @@ function ActionContainer(props) {
   // handles keyboard presses, function passes an event and index of each action-component
   function handleOnKeyDown(e: KeyboardEvent, i: number) {
     let currIndex = i;
-    // up array key pressed
+    // up arrow key pressed
     if (e.keyCode === 38) {
       currIndex -= 1;
       if (currIndex < 0) return;
@@ -109,14 +113,14 @@ function ActionContainer(props) {
           viewIndex={viewIndex}
         />
       );
-    }
+    },
   );
   useEffect(() => {
     setActionView(true);
   }, []);
 
-  //the conditional logic below will cause ActionContainer.test.tsx to fail as it cannot find the Empty button
-  //UNLESS actionView={true} is passed into <ActionContainer /> in the beforeEach() call in ActionContainer.test.tsx
+  // the conditional logic below will cause ActionContainer.test.tsx to fail as it cannot find the Empty button
+  // UNLESS actionView={true} is passed into <ActionContainer /> in the beforeEach() call in ActionContainer.test.tsx
   return (
     <div id='action-id' className='action-container'>
       <div id='arrow'>
