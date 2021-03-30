@@ -70,11 +70,14 @@ const BarGraphComparison = (props) => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { width, height, data, comparison } = props;
   const [series, setSeries] = React.useState(0);
+  const [snapshots, setSnapshots] = React.useState(0);
   const [open, setOpen] = React.useState(false);
+  const [picOpen, setPicOpen] = React.useState(false);
   const [maxRender, setMaxRender] = React.useState(data.maxTotalRender);
+  console.log('comparison:', comparison)
+  console.log('tabs:', tabs)
 
   function titleFilter(comparisonArray) {
-    console.log("titleFilter comparison array", comparisonArray)
     return comparisonArray.filter(
       (elem) => elem.title.split('-')[1] === tabs[currentTab].title.split('-')[1]
     );
@@ -93,6 +96,7 @@ const BarGraphComparison = (props) => {
   let tooltipTimeout: number;
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
+  console.log("containerRef", containerRef)
 
   const keys = Object.keys(data.componentData);
 
@@ -101,6 +105,8 @@ const BarGraphComparison = (props) => {
   const formatSnapshotId = (id) => `Snapshot ID: ${id}`;
   const formatRenderTime = (time) => `${time} ms `;
   const getCurrentTab = (storedSeries) => storedSeries.currentTab;
+
+
   // create visualization SCALES with cleaned data
   // the domain array/xAxisPoints elements will place the bars along the x-axis
   const xAxisPoints = ['currentTab', 'comparison'];
@@ -184,18 +190,36 @@ const BarGraphComparison = (props) => {
     // setXpoints();
   };
 
+  const picHandleChange = (event) => {
+    console.log('setsnapshot to', (event.target.value+1).toString() + ".0")
+    setSnapshots((event.target.value+1).toString() + ".0");
+    // setXpoints();
+  };
+
+  const picHandleClose = () => {
+    setPicOpen(false);
+    // setXpoints();
+  };
+
+  const picHandleOpen = () => {
+    setPicOpen(true);
+    // setXpoints();
+  };
+
   //manually assignin X -axis points with tab ID.
   function setXpointsComparison() {
     comparison[series].data.barStack.forEach((elem) => {
       elem.currentTab = 'comparison';
     });
     //comparison[series].data.barStack.currentTab = currentTab;
+    console.log("setXpointsComparison/comparison[series].data.barStack:", comparison[series].data.barStack)
     return comparison[series].data.barStack;
   }
   function setXpointsCurrentTab() {
     data.barStack.forEach((element) => {
       element.currentTab = 'currentTab';
     });
+    console.log("setXpointsCurrentTan/data.barStack:", data.barStack)
     return data.barStack;
   }
   const animateButton = function (e) {
@@ -214,10 +238,7 @@ const BarGraphComparison = (props) => {
   return (
     <div>
       <div className="series-options-container">
-        <div className="snapshotId-header">
-          {' '}
-          Snapshot ID: {currentIndex + 1}{' '}
-        </div>
+
 
         <div className="dropdown-and-delete-series-container">
           <button
@@ -228,7 +249,7 @@ const BarGraphComparison = (props) => {
           >
             Clear All Series
           </button>
-          <h4 style={{ padding: '0 1rem' }}>Compare with: </h4>
+          <h4 style={{ padding: '0 1rem' }}>Comparison Series: </h4>
           <FormControl variant="outlined" className={classes.formControl}>
             <Select
               style={{ color: 'white' }}
@@ -246,7 +267,31 @@ const BarGraphComparison = (props) => {
               ) : (
                 titleFilter(comparison).map((tabElem, index) => {
                   return (
-                    <MenuItem value={index}>{`Series ${index + 1}`}</MenuItem>
+                    <MenuItem value={index}>{`${currentTab} ${index + 1}`}</MenuItem>
+                  );
+                })
+              )}
+            </Select>
+          </FormControl>
+          <h4 style={{ padding: '0 1rem' }}>Comparator Snapshot? </h4>
+          <FormControl variant="outlined" className={classes.formControl}>
+            <Select
+              style={{ color: 'white' }}
+              labelId="snapshot-select"
+              id="snapshot-select"
+              className={classes.select}
+              open={picOpen}
+              onClose={picHandleClose}
+              onOpen={picHandleOpen}
+              value={snapshots} //snapshots
+              onChange={picHandleChange}
+            >
+              {!comparison[snapshots] ? (
+                <MenuItem>No snapshots available</MenuItem>
+              ) : (
+                titleFilter(comparison).map((tabElem, index) => {
+                  return (
+                    <MenuItem value={index}>{`${index + 1}`}</MenuItem>
                   );
                 })
               )}
