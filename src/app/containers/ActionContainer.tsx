@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import Action from '../components/Action';
-import { diff, formatters } from "jsondiffpatch";
+import { diff, formatters } from 'jsondiffpatch';
 import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
@@ -30,13 +30,13 @@ function ActionContainer(props) {
       children?: any[];
     }) => {
       const newObj = { ...obj };
-      if (newObj.name === "nameless") {
+      if (newObj.name === 'nameless') {
         delete newObj.name;
       }
       if (newObj.componentData) {
         delete newObj.componentData;
       }
-      if (newObj.state === "stateless") {
+      if (newObj.state === 'stateless') {
         delete newObj.state;
       }
       if (newObj.stateSnaphot) {
@@ -48,7 +48,7 @@ function ActionContainer(props) {
           obj.children.forEach(
             (element: { state?: object | string; children?: [] }) => {
               if (
-                element.state !== "stateless" ||
+                element.state !== 'stateless' ||
                 element.children.length > 0
               ) {
                 const clean = statelessCleanning(element);
@@ -69,7 +69,7 @@ function ActionContainer(props) {
     // diff function returns a comparison of two objects, one has an updated change
     // just displays stateful data
     const delta = diff(previousDisplay, snapshots[index]);
-    console.log("AC delta", delta);
+    console.log('AC delta', delta);
     // return delta
     const changedState = findStateChangeObj(delta);
     //const previousDisplayState = findStateChangeObj(previousDisplay);
@@ -92,19 +92,20 @@ function ActionContainer(props) {
   // }
 
   function findStateChangeObj(delta, changedState = []) {
-    
-    if (!delta.children) {
+    if (!delta.children && !delta.state) {
       // console.log('snapshot', snapshot);
       return changedState;
     }
     if (delta.state && delta.state[0] !== 'stateless') {
       changedState.push(delta.state);
     }
+    if (!delta.children) {
+      // console.log('snapshot', snapshot);
+      return changedState;
+    }
     // console.log('snapshot outside if', snapshot);
     return findStateChangeObj(delta.children[0], changedState);
   }
-
-  findDiff(2);
   // function to traverse state from hiararchy and also getting information on display name and component name
   const displayArray = (obj: {
     stateSnapshot: { children: any[] };
@@ -193,10 +194,11 @@ function ActionContainer(props) {
           dispatch={dispatch}
           sliderIndex={sliderIndex}
           handleOnkeyDown={handleOnKeyDown}
+          logChangedState={findDiff}
           viewIndex={viewIndex}
         />
       );
-    },
+    }
   );
   useEffect(() => {
     setActionView(true);
