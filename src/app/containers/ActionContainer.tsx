@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import Action from '../components/Action';
+import { diff, formatters } from "jsondiffpatch";
 import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
@@ -15,13 +16,95 @@ const resetSlider = () => {
 
 function ActionContainer(props) {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
+  const { hierarchy, sliderIndex, viewIndex, snapshots } = tabs[currentTab];
   const { toggleActionContainer, actionView, setActionView } = props;
   let actionsArr = [];
   const hierarchyArr: any[] = [];
 
-  
+  function findDiff(index) {
+    const statelessCleanning = (obj: {
+      name?: string;
+      componentData?: object;
+      state?: string | any;
+      stateSnaphot?: object;
+      children?: any[];
+    }) => {
+      const newObj = { ...obj };
+      if (newObj.name === "nameless") {
+        delete newObj.name;
+      }
+      if (newObj.componentData) {
+        delete newObj.componentData;
+      }
+      if (newObj.state === "stateless") {
+        delete newObj.state;
+      }
+      if (newObj.stateSnaphot) {
+        newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
+      }
+      if (newObj.children) {
+        newObj.children = [];
+        if (obj.children.length > 0) {
+          obj.children.forEach(
+            (element: { state?: object | string; children?: [] }) => {
+              if (
+                element.state !== "stateless" ||
+                element.children.length > 0
+              ) {
+                const clean = statelessCleanning(element);
+                newObj.children.push(clean);
+              }
+            }
+          );
+        }
+      }
+      // nathan test
+      return newObj;
+    };
+    // displays stateful data
+    //console.log("snapshots: ", snapshots);
+    const previousDisplay = statelessCleanning(snapshots[index - 1]);
+    //const currentDisplay = statelessCleanning(snapshots[index]);
+    //console.log("AC previos display: ", previousDisplay);
+    // diff function returns a comparison of two objects, one has an updated change
+    // just displays stateful data
+    const delta = diff(previousDisplay, snapshots[index]);
+    console.log("AC delta", delta);
+    // return delta
+    const changedState = findStateChangeObj(delta);
+    //const previousDisplayState = findStateChangeObj(previousDisplay);
+    //return formatDeltaPopUp(changedState, previousDisplayState);
+    console.log('AC Changed State: ', changedState);
+    return changedState;
+  }
 
+  // function findStateChangeObj2(delta, changedState = []) {
+  //   while (delta.children) {
+  //     Object.keys(delta.children).forEach((child) => {
+  //       if (child.state && child.state[0] !== "stateless") {
+  //         console.log('stateful child: ', child);
+  //         changedState.push(child.state);
+  //       }
+  //       return changedState.push(findStateChangeObj2(child, changedState));
+  //     });
+  //   }
+  //   return changedState;
+  // }
+
+  function findStateChangeObj(delta, changedState = []) {
+    
+    if (!delta.children) {
+      // console.log('snapshot', snapshot);
+      return changedState;
+    }
+    if (delta.state && delta.state[0] !== 'stateless') {
+      changedState.push(delta.state);
+    }
+    // console.log('snapshot outside if', snapshot);
+    return findStateChangeObj(delta.children[0], changedState);
+  }
+
+  findDiff(2);
   // function to traverse state from hiararchy and also getting information on display name and component name
   const displayArray = (obj: {
     stateSnapshot: { children: any[] };
@@ -40,9 +123,9 @@ function ActionContainer(props) {
         index: obj.index,
         displayName: `${obj.name}.${obj.branch}`,
         state: obj.stateSnapshot.children[0].state,
-        // componentName: obj.stateSnapshot.children[0].name,
+        componentName: obj.stateSnapshot.children[0].name,
         // nathan testing new entries for component name, original above
-        componentName: obj.stateSnapshot,
+        //componentName: findDiff(obj.index),
         componentData:
           JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}'
             ? ''
