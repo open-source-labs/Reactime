@@ -20,7 +20,6 @@ const mixpanel = require('mixpanel').init('12fa2800ccbf44a5c36c37bc9776e4c0', {
 
 function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
-  console.log("storecont:", useStoreContext());
   const { tabs, currentTab, port: currentPort } = store;
   const [actionView, setActionView] = useState(true);
   //this function handles Time Jump sidebar view
