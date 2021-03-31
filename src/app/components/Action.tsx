@@ -15,13 +15,14 @@ interface ActionProps {
   last: boolean;
   index: number;
   sliderIndex: number;
-  dispatch: (a:any) => void;
+  dispatch: (a: any) => void;
   displayName: string;
   componentName: string;
-  componentData: {actualDuration: number}|undefined;
+  componentData: { actualDuration: number } | undefined;
   state?: Record<string, unknown>;
   viewIndex: number;
-  handleOnkeyDown: (e: any, i: number) => void;
+  handleOnkeyDown: (e: any, i: number) => any;
+  logChangedState: (index: number) => void;
 }
 
 /**
@@ -41,10 +42,18 @@ interface ActionProps {
 // index and delta props were removed from Action.jsx  */
 // viewIndex and handleonkeyDown added to props
 const Action = (props: ActionProps): JSX.Element => {
-
   const {
-    selected, last, index, sliderIndex, dispatch, displayName, componentName,
-    componentData, viewIndex, handleOnkeyDown,
+    selected,
+    last,
+    index,
+    sliderIndex,
+    dispatch,
+    displayName,
+    componentName,
+    componentData,
+    viewIndex,
+    handleOnkeyDown,
+    logChangedState,
   } = props;
 
   // nathan test for props
@@ -57,7 +66,7 @@ const Action = (props: ActionProps): JSX.Element => {
     if (!componentData || !componentData.actualDuration) {
       return 'NO TIME';
     }
-    let seconds:number| string;
+    let seconds: number | string;
     let miliseconds: any = componentData.actualDuration;
     if (Math.floor(componentData.actualDuration) > 60) {
       seconds = Math.floor(componentData.actualDuration / 60);
@@ -85,33 +94,33 @@ const Action = (props: ActionProps): JSX.Element => {
     <div
       // Invoking keyboard functionality; functionality is in ActionContainer;
       onKeyDown={(e) => handleOnkeyDown(e, viewIndex)}
-      className={selected || last ? 'action-component selected' : 'action-component'}
+      className={
+        selected || last ? 'action-component selected' : 'action-component'
+      }
       onClick={() => {
         dispatch(changeView(index));
+        console.log(logChangedState(index));
       }}
-      role="presentation"
+      role='presentation'
       style={index > sliderIndex ? { color: '#5f6369' } : {}}
       tabIndex={index}
     >
-      <div className="action-component-text">
+      <div className='action-component-text'>
         {/* {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `} */}
         {`displayName: ${displayName}`}
       </div>
-      <button
-        className="time-button"
-        type="button"
-      >
+      <button className='time-button' type='button'>
         {displayTime}
       </button>
       <button
-        className="jump-button"
+        className='jump-button'
         onClick={(e: any): void => {
           e.stopPropagation();
           dispatch(changeSlider(index));
           dispatch(changeView(index));
         }}
         tabIndex={index}
-        type="button"
+        type='button'
       >
         Jump
       </button>
