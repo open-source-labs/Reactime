@@ -38,6 +38,8 @@ export default (state, action) =>
       case types.SAVE: {
         const data = JSON.stringify(action.payload);
         localStorage.setItem(`${action.payload.currentTab}`, data);
+        tabs[currentTab] = {...tabs[currentTab], seriesSavedStatus: true};
+        console.log('seriesSavedStatus set to true from saving series');
         break;
       }
       // Delete case will delete ALL stored series in chrome local storage. To see  chrome storage related data
@@ -56,6 +58,7 @@ export default (state, action) =>
             ...tabs[tab],
           };
         });
+        tabs[currentTab] = {...tabs[currentTab], seriesSavedStatus: false}
       }
       case types.ON_HOVER_EXIT: {
         port.postMessage({
@@ -187,6 +190,8 @@ export default (state, action) =>
         tabs[currentTab].currParent = 1;
         // resets currBranch
         tabs[currentTab].currBranch = 0;
+        // resets series saved status
+        tabs[currentTab].seriesSavedStatus = false;
         break;
       }
       case types.SET_PORT: {
@@ -265,7 +270,9 @@ export default (state, action) =>
               ...tabs[tab],
               ...payload[tab],
               sliderIndex: newSnaps.length - 1,
+              seriesSavedStatus: false,
             };
+            console.log('seriesSavedStatus set to false from new snapshot');
           }
         });
 

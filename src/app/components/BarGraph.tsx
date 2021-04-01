@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
@@ -109,19 +109,19 @@ const BarGraph = (props) => {
     data,
   };
 
-  const animateButton = function (e) {
-    e.preventDefault;
-    e.target.classList.add('animate');
-    e.target.innerHTML = 'Saved!';
-    setTimeout(function () {
-      e.target.innerHTML = 'Save Series';
-      e.target.classList.remove('animate');
-    }, 1000);
-  };
-  const classname = document.getElementsByClassName('save-series-button');
-  for (let i = 0; i < classname.length; i++) {
-    classname[i].addEventListener('click', animateButton, false);
-  }
+  // use this to animate the save series button. It
+  useEffect(() => {
+    const saveButtons = document.getElementsByClassName('save-series-button');
+    for (let i = 0; i < saveButtons.length; i++) {
+      if (tabs[currentTab].seriesSavedStatus) {
+        saveButtons[i].classList.add('animate');
+        saveButtons[i].innerHTML = 'Saved!';
+      } else {
+        saveButtons[i].innerHTML = 'Save Series';
+        saveButtons[i].classList.remove('animate');
+      };
+    };
+  });
   return (
     <div className='bargraph-position'>
       <button
