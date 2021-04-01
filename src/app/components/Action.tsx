@@ -3,6 +3,7 @@
 /* eslint-disable react/no-unused-prop-types */
 
 import React from 'react';
+import ReactHover, { Trigger, Hover } from 'react-hover';
 import { changeView, changeSlider } from '../actions/actions';
 
 /**
@@ -22,7 +23,7 @@ interface ActionProps {
   state?: Record<string, unknown>;
   viewIndex: number;
   handleOnkeyDown: (e: any, i: number) => any;
-  logChangedState: (index: number) => void;
+  logChangedState: (index: number) => any;
 }
 
 /**
@@ -90,6 +91,12 @@ const Action = (props: ActionProps): JSX.Element => {
   };
   const displayTime = cleanTime();
 
+  const optionsCursorTrueWithMargin = {
+    followCursor: true,
+    shiftX: 20,
+    shiftY: 0,
+  };
+
   return (
     <div
       // Invoking keyboard functionality; functionality is in ActionContainer;
@@ -105,25 +112,36 @@ const Action = (props: ActionProps): JSX.Element => {
       style={index > sliderIndex ? { color: '#5f6369' } : {}}
       tabIndex={index}
     >
-      <div className='action-component-text'>
-        {/* {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `} */}
-        {`displayName: ${displayName}`}
-      </div>
-      <button className='time-button' type='button'>
-        {displayTime}
-      </button>
-      <button
-        className='jump-button'
-        onClick={(e: any): void => {
-          e.stopPropagation();
-          dispatch(changeSlider(index));
-          dispatch(changeView(index));
-        }}
-        tabIndex={index}
-        type='button'
-      >
-        Jump
-      </button>
+      <ReactHover options={optionsCursorTrueWithMargin}>
+        <Trigger type='trigger'>
+          <div className='action-component-trigger' style={index > sliderIndex ? { color: '#5f6369' } : {}}> 
+            <div className='action-component-text'>
+              {/* {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `} */}
+              {`displayName: ${displayName}`}
+            </div>
+            <button className='time-button' type='button'>
+              {displayTime}
+            </button>
+            <button
+              className='jump-button'
+              onClick={(e: any): void => {
+                e.stopPropagation();
+                dispatch(changeSlider(index));
+                dispatch(changeView(index));
+              }}
+              tabIndex={index}
+              type='button'
+            >
+              Jump
+            </button>
+          </div>
+        </Trigger>
+        <Hover type='hover'>
+          <div style={{ padding: '0.5rem 1rem' }} id='hover-box'>
+            <p>{logChangedState(index)}</p>
+          </div>
+        </Hover>
+      </ReactHover>
     </div>
   );
 };

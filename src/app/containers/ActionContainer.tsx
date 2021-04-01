@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import Action from '../components/Action';
+import ReactHtmlParser from 'react-html-parser';
 import { diff, formatters } from 'jsondiffpatch';
 import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
@@ -62,7 +63,7 @@ function ActionContainer(props) {
       return newObj;
     };
     // displays stateful data
-    //console.log("snapshots: ", snapshots);
+    console.log('snapshots[index - 1]: ', snapshots[index - 1]);
     const previousDisplay = statelessCleanning(snapshots[index - 1]);
     //const currentDisplay = statelessCleanning(snapshots[index]);
     //console.log("AC previos display: ", previousDisplay);
@@ -74,10 +75,11 @@ function ActionContainer(props) {
     const changedState = findStateChangeObj(delta);
     //const previousDisplayState = findStateChangeObj(previousDisplay);
     //return formatDeltaPopUp(changedState, previousDisplayState);
-    console.log('AC Changed State: ', changedState);
-    const output = formatters.console.format(changedState);
+    console.log('AC Changed State at 0: ', changedState[0]);
+    const html = formatters.html.format(changedState[0]);
+    const output = ReactHtmlParser(html);
     console.log('AC output :', output);
-    return changedState;
+    return output;
   }
 
   function findStateChangeObj(delta, changedState = []) {
