@@ -68,28 +68,17 @@ function ActionContainer(props) {
     //console.log("AC previos display: ", previousDisplay);
     // diff function returns a comparison of two objects, one has an updated change
     // just displays stateful data
-    const delta = diff(previousDisplay, snapshots[index]);
+    const delta = diff(previousDisplay, snapshots[index]); //I dont htink stateless cleaning is necissary
     console.log('AC delta', delta);
     // return delta
     const changedState = findStateChangeObj(delta);
     //const previousDisplayState = findStateChangeObj(previousDisplay);
     //return formatDeltaPopUp(changedState, previousDisplayState);
     console.log('AC Changed State: ', changedState);
+    const output = formatters.console.format(changedState);
+    console.log('AC output :', output);
     return changedState;
   }
-
-  // function findStateChangeObj2(delta, changedState = []) {
-  //   while (delta.children) {
-  //     Object.keys(delta.children).forEach((child) => {
-  //       if (child.state && child.state[0] !== "stateless") {
-  //         console.log('stateful child: ', child);
-  //         changedState.push(child.state);
-  //       }
-  //       return changedState.push(findStateChangeObj2(child, changedState));
-  //     });
-  //   }
-  //   return changedState;
-  // }
 
   function findStateChangeObj(delta, changedState = []) {
     if (!delta.children && !delta.state) {
@@ -104,8 +93,14 @@ function ActionContainer(props) {
       return changedState;
     }
     // console.log('snapshot outside if', snapshot);
-    return findStateChangeObj(delta.children[0], changedState);
+    Object.keys(delta.children).forEach((child) => {
+      //if (isNaN(child) === false) {
+      changedState.push(...findStateChangeObj(delta.children[child]));
+      //}
+    });
+    return changedState;
   }
+
   // function to traverse state from hiararchy and also getting information on display name and component name
   const displayArray = (obj: {
     stateSnapshot: { children: any[] };
