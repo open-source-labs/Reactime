@@ -60,6 +60,7 @@ function MainContainer(): any {
           case 'sendSnapshots': {
             dispatch(setTab(sourceTab));
             // set state with the information received from the background script
+            console.log('sendSnapshots payload\n', payload); // HFConsoleLog
             dispatch(addNewSnapshots(payload));
             break;
           }
