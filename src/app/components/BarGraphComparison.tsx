@@ -267,7 +267,7 @@ const BarGraphComparison = (props) => {
               ) : (
                 titleFilter(comparison).map((tabElem, index) => {
                   return (
-                    <MenuItem value={index}>{`${currentTab} ${index + 1}`}</MenuItem>
+                    <MenuItem value={index}>{`Series ${index + 1}`}</MenuItem>
                   );
                 })
               )}
