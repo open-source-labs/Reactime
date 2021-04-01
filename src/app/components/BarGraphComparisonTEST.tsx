@@ -13,9 +13,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import { onHover, onHoverExit } from '../actions/actions';
+import { title } from 'node:process';
+import { onHover, onHoverExit, deleteSeries } from '../actions/actions';
 import { useStoreContext } from '../store';
-import { deleteSeries } from '../actions/actions';
 
 /* TYPESCRIPT */
 interface data {
@@ -70,20 +70,32 @@ const BarGraphComparison = (props) => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { width, height, data, comparison } = props;
   const [series, setSeries] = React.useState(0);
-  const [snapshots, setSnapshots] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [picOpen, setPicOpen] = React.useState(false);
   const [maxRender, setMaxRender] = React.useState(data.maxTotalRender);
-  console.log('comparison:', comparison)
-  console.log('tabs:', tabs)
+  const [snapshots, setSnapshots] = React.useState(comparison[0]);
+  const [currentSnapshot, setCurrentSnapshot] = React.useState(0);
+  console.log('snapshots ln 78:', snapshots)
+  console.log('currentSnapshot ln79:', currentSnapshot)
 
   function titleFilter(comparisonArray) {
+    // console.log('comparisonArray:', comparisonArray)
     return comparisonArray.filter(
       (elem) => elem.title.split('-')[1] === tabs[currentTab].title.split('-')[1]
     );
   }
 
+  function snapshotFilter(tabObj) {
+    return tabObj;
+  }
+
   const currentIndex = tabs[currentTab].sliderIndex;
+  // let currentComparison = comparison.map(ele => ele[data][barStack])
+
+  // console.log(currentComparison)
+    
+  //picIndex[ele][currentTab] = picIndex[ele][data][barStack]
+
 
   const {
     tooltipOpen,
@@ -96,7 +108,7 @@ const BarGraphComparison = (props) => {
   let tooltipTimeout: number;
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
-  console.log("containerRef", containerRef)
+  // console.log("containerRef", containerRef)
 
   const keys = Object.keys(data.componentData);
 
@@ -175,6 +187,7 @@ const BarGraphComparison = (props) => {
     console.log('in handlechange function')
     console.log('event.target.value', event.target.value)
     setSeries(event.target.value);
+    setSnapshots(comparison[event.target.value])
     // setXpoints();
   };
 
@@ -191,8 +204,7 @@ const BarGraphComparison = (props) => {
   };
 
   const picHandleChange = (event) => {
-    console.log('setsnapshot to', (event.target.value+1).toString() + ".0")
-    setSnapshots((event.target.value+1).toString() + ".0");
+    setCurrentSnapshot(event.target.value);
     // setXpoints();
   };
 
@@ -206,7 +218,7 @@ const BarGraphComparison = (props) => {
     // setXpoints();
   };
 
-  //manually assignin X -axis points with tab ID.
+  //manually assigning X -axis points with tab ID.
   function setXpointsComparison() {
     comparison[series].data.barStack.forEach((elem) => {
       elem.currentTab = 'comparison';
@@ -219,11 +231,11 @@ const BarGraphComparison = (props) => {
     data.barStack.forEach((element) => {
       element.currentTab = 'currentTab';
     });
-    console.log("setXpointsCurrentTan/data.barStack:", data.barStack)
+    console.log("setXpointsCurrentTab/data.barStack:", data.barStack)
     return data.barStack;
   }
   const animateButton = function (e) {
-    e.preventDefault;
+    e.preventDefault();
     e.target.classList.add('animate');
     e.target.innerHTML = 'Deleted!';
     setTimeout(function () {
@@ -238,8 +250,6 @@ const BarGraphComparison = (props) => {
   return (
     <div>
       <div className="series-options-container">
-
-
         <div className="dropdown-and-delete-series-container">
           <button
             className="delete-button"
@@ -267,13 +277,13 @@ const BarGraphComparison = (props) => {
               ) : (
                 titleFilter(comparison).map((tabElem, index) => {
                   return (
-                    <MenuItem value={index}>{`${currentTab} ${index + 1}`}</MenuItem>
+                    <MenuItem value={index}>{`${comparison[index].title} ${index + 1}`}</MenuItem>
                   );
                 })
               )}
             </Select>
           </FormControl>
-          {/* <h4 style={{ padding: '0 1rem' }}>Comparator Snapshot? </h4>
+          <h4 style={{ padding: '0 1rem' }}>Comparator Snapshot? </h4>
           <FormControl variant="outlined" className={classes.formControl}>
             <Select
               style={{ color: 'white' }}
@@ -283,20 +293,20 @@ const BarGraphComparison = (props) => {
               open={picOpen}
               onClose={picHandleClose}
               onOpen={picHandleOpen}
-              value={snapshots} //snapshots
+              value={currentSnapshot}
               onChange={picHandleChange}
             >
-              {!comparison[snapshots] ? (
+              {!snapshots ? (
                 <MenuItem>No snapshots available</MenuItem>
               ) : (
-                titleFilter(comparison).map((tabElem, index) => {
+                snapshots.data.barStack.map((tabElem, index) => {
                   return (
                     <MenuItem value={index}>{`${index + 1}`}</MenuItem>
                   );
                 })
               )}
             </Select>
-          </FormControl> */}
+          </FormControl>
         </div>
       </div>
 
@@ -338,6 +348,7 @@ const BarGraphComparison = (props) => {
                 // height/width/etc. are calculated by visx.
                 // to set X and Y scale, it  will used the passed in function and
                 // will run it on the array thats outputted by data
+                // console.log("barStack.bars:",barStack.bars)
                 const bar = barStack.bars[currentIndex];
                 if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                   bar.height = 0;
