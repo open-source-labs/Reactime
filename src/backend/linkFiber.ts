@@ -49,7 +49,7 @@ const recoilDomNode = {};
 
 // Simple check for whether our target app uses Recoil
 // can these be regular
-if (window.$recoilDebugStates) {
+if (window[`$recoilDebugStates`]) {
   isRecoil = true;
 }
 // This is deprecated Recoil code.  Recoil as of 01-03-2021
