@@ -61,8 +61,6 @@ function Diff(props: DiffProps) {
   // diff function returns a comparison of two objects, one has an updated change
   // just displays stateful data
   const delta = diff(previousDisplay, snapshot);
-  // nathan test
-  console.log('delta', delta);
   // returns html in string
   // just displays stateful data
   const html = formatters.html.format(delta, previousDisplay);

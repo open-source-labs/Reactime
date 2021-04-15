@@ -57,8 +57,6 @@ const Action = (props: ActionProps): JSX.Element => {
     logChangedState,
   } = props;
 
-  // nathan test for props
-  console.log('componentName: ', componentName);
   /**
    * @function cleanTime: Displays render times for state changes
    * @returns render display time in seconds in miliseconds
@@ -106,7 +104,6 @@ const Action = (props: ActionProps): JSX.Element => {
       }
       onClick={() => {
         dispatch(changeView(index));
-        console.log(logChangedState(index));
       }}
       role='presentation'
       style={index > sliderIndex ? { color: '#5f6369' } : {}}
@@ -116,8 +113,8 @@ const Action = (props: ActionProps): JSX.Element => {
         <Trigger type='trigger'>
           <div className='action-component-trigger' style={index > sliderIndex ? { color: '#5f6369' } : {}}> 
             <div className='action-component-text'>
-              {/* {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `} */}
-              {`displayName: ${displayName}`}
+              {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `}
+              {/* {`displayName: ${displayName}`} */}
             </div>
             <button className='time-button' type='button'>
               {displayTime}
