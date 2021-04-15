@@ -13,9 +13,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import { onHover, onHoverExit } from '../actions/actions';
+import { onHover, onHoverExit, deleteSeries } from '../actions/actions';
 import { useStoreContext } from '../store';
-import { deleteSeries } from '../actions/actions';
 
 /* TYPESCRIPT */
 interface data {
@@ -53,7 +52,9 @@ interface TooltipData {
 }
 
 /* DEFAULTS */
-const margin = { top: 30, right: 30, bottom: 0, left: 50 };
+const margin = {
+  top: 30, right: 30, bottom: 0, left: 50,
+};
 const axisColor = '#62d6fb';
 const background = '#242529';
 const tooltipStyles = {
@@ -66,20 +67,20 @@ const tooltipStyles = {
   fontFamily: 'Roboto',
 };
 
-const BarGraphComparison = (props) => {
+const BarGraphComparison = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { width, height, data, comparison } = props;
+  const {
+    width, height, data, comparison,
+  } = props;
   const [series, setSeries] = React.useState(0);
   const [snapshots, setSnapshots] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [picOpen, setPicOpen] = React.useState(false);
   const [maxRender, setMaxRender] = React.useState(data.maxTotalRender);
-  console.log('comparison:', comparison)
-  console.log('tabs:', tabs)
 
   function titleFilter(comparisonArray) {
     return comparisonArray.filter(
-      (elem) => elem.title.split('-')[1] === tabs[currentTab].title.split('-')[1]
+      elem => elem.title.split('-')[1] === tabs[currentTab].title.split('-')[1],
     );
   }
 
@@ -96,16 +97,14 @@ const BarGraphComparison = (props) => {
   let tooltipTimeout: number;
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
-  console.log("containerRef", containerRef)
 
   const keys = Object.keys(data.componentData);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSnapshotId = (d: snapshot) => d.snapshotId;
-  const formatSnapshotId = (id) => `Snapshot ID: ${id}`;
-  const formatRenderTime = (time) => `${time} ms `;
-  const getCurrentTab = (storedSeries) => storedSeries.currentTab;
-
+  const formatSnapshotId = id => `Snapshot ID: ${id}`;
+  const formatRenderTime = time => `${time} ms `;
+  const getCurrentTab = storedSeries => storedSeries.currentTab;
 
   // create visualization SCALES with cleaned data
   // the domain array/xAxisPoints elements will place the bars along the x-axis
@@ -119,7 +118,7 @@ const BarGraphComparison = (props) => {
   // We'll then use it in the renderingScale function and compare
   // with the render time of the current tab.
   // The max render time will determine the Y-axis's highest number.
-  const calculateMaxTotalRender = (series) => {
+  const calculateMaxTotalRender = series => {
     const currentSeriesBarStacks = !comparison[series]
       ? []
       : comparison[series].data.barStack;
@@ -152,7 +151,7 @@ const BarGraphComparison = (props) => {
   renderingScale.range([yMax, 0]);
 
   // useStyles will change the styling on save series dropdown feature
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles(theme => ({
     formControl: {
       margin: theme.spacing(1),
       minWidth: 80,
@@ -171,28 +170,23 @@ const BarGraphComparison = (props) => {
 
   const classes = useStyles();
 
-  const handleChange = (event) => {
-    console.log('in handlechange function')
-    console.log('event.target.value', event.target.value)
+  const handleChange = event => {
     setSeries(event.target.value);
     // setXpoints();
   };
 
   const handleClose = () => {
-    console.log('in handleclose function')
     setOpen(false);
     // setXpoints();
   };
 
   const handleOpen = () => {
-    console.log('in handleopen function')
     setOpen(true);
     // setXpoints();
   };
 
-  const picHandleChange = (event) => {
-    console.log('setsnapshot to', (event.target.value+1).toString() + ".0")
-    setSnapshots((event.target.value+1).toString() + ".0");
+  const picHandleChange = event => {
+    setSnapshots(`${(event.target.value + 1).toString()}.0`);
     // setXpoints();
   };
 
@@ -206,27 +200,25 @@ const BarGraphComparison = (props) => {
     // setXpoints();
   };
 
-  //manually assignin X -axis points with tab ID.
+  // manually assignin X -axis points with tab ID.
   function setXpointsComparison() {
-    comparison[series].data.barStack.forEach((elem) => {
+    comparison[series].data.barStack.forEach(elem => {
       elem.currentTab = 'comparison';
     });
-    //comparison[series].data.barStack.currentTab = currentTab;
-    console.log("setXpointsComparison/comparison[series].data.barStack:", comparison[series].data.barStack)
+    // comparison[series].data.barStack.currentTab = currentTab;
     return comparison[series].data.barStack;
   }
   function setXpointsCurrentTab() {
-    data.barStack.forEach((element) => {
+    data.barStack.forEach(element => {
       element.currentTab = 'currentTab';
     });
-    console.log("setXpointsCurrentTan/data.barStack:", data.barStack)
     return data.barStack;
   }
   const animateButton = function (e) {
     e.preventDefault;
     e.target.classList.add('animate');
     e.target.innerHTML = 'Deleted!';
-    setTimeout(function () {
+    setTimeout(() => {
       e.target.innerHTML = 'Clear All Series';
       e.target.classList.remove('animate');
     }, 1000);
@@ -239,11 +231,10 @@ const BarGraphComparison = (props) => {
     <div>
       <div className="series-options-container">
 
-
         <div className="dropdown-and-delete-series-container">
           <button
             className="delete-button"
-            onClick={(e) => {
+            onClick={e => {
               dispatch(deleteSeries());
             }}
           >
@@ -265,11 +256,9 @@ const BarGraphComparison = (props) => {
               {!comparison[series] ? (
                 <MenuItem>No series available</MenuItem>
               ) : (
-                titleFilter(comparison).map((tabElem, index) => {
-                  return (
-                    <MenuItem value={index}>{`Series ${index + 1}`}</MenuItem>
-                  );
-                })
+                titleFilter(comparison).map((tabElem, index) => (
+                  <MenuItem value={index}>{`Series ${index + 1}`}</MenuItem>
+                ))
               )}
             </Select>
           </FormControl>
@@ -331,55 +320,53 @@ const BarGraphComparison = (props) => {
             yScale={renderingScale}
             color={colorScale}
           >
-            {(barStacks) =>
-              barStacks.map((barStack, idx) => {
-                // Uses map method to iterate through all components,
-                // creating a rect component (from visx) for each iteration.
-                // height/width/etc. are calculated by visx.
-                // to set X and Y scale, it  will used the passed in function and
-                // will run it on the array thats outputted by data
-                const bar = barStack.bars[currentIndex];
-                if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
-                  bar.height = 0;
-                }
-                return (
-                  <rect
-                    key={`bar-stack-${idx}-NewView`}
-                    x={bar.x}
-                    y={bar.y}
-                    height={bar.height === 0 ? null : bar.height}
-                    width={bar.width}
-                    fill={bar.color}
+            {barStacks => barStacks.map((barStack, idx) => {
+              // Uses map method to iterate through all components,
+              // creating a rect component (from visx) for each iteration.
+              // height/width/etc. are calculated by visx.
+              // to set X and Y scale, it  will used the passed in function and
+              // will run it on the array thats outputted by data
+              const bar = barStack.bars[currentIndex];
+              if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
+                bar.height = 0;
+              }
+              return (
+                <rect
+                  key={`bar-stack-${idx}-NewView`}
+                  x={bar.x}
+                  y={bar.y}
+                  height={bar.height === 0 ? null : bar.height}
+                  width={bar.width}
+                  fill={bar.color}
                     /* TIP TOOL EVENT HANDLERS */
                     // Hides tool tip once cursor moves off the current rect
-                    onMouseLeave={() => {
-                      dispatch(
-                        onHoverExit(data.componentData[bar.key].rtid),
-                        (tooltipTimeout = window.setTimeout(() => {
-                          hideTooltip();
-                        }, 300))
-                      );
-                    }}
+                  onMouseLeave={() => {
+                    dispatch(
+                      onHoverExit(data.componentData[bar.key].rtid),
+                      (tooltipTimeout = window.setTimeout(() => {
+                        hideTooltip();
+                      }, 300)),
+                    );
+                  }}
                     // Cursor position in window updates position of the tool tip
-                    onMouseMove={(event) => {
-                      dispatch(onHover(data.componentData[bar.key].rtid));
-                      if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                      const top = event.clientY - margin.top - bar.height;
-                      const left = bar.x + bar.width / 2;
-                      showTooltip({
-                        tooltipData: bar,
-                        tooltipTop: top,
-                        tooltipLeft: left,
-                      });
-                    }}
-                  />
-                );
-              })
-            }
+                  onMouseMove={event => {
+                    dispatch(onHover(data.componentData[bar.key].rtid));
+                    if (tooltipTimeout) clearTimeout(tooltipTimeout);
+                    const top = event.clientY - margin.top - bar.height;
+                    const left = bar.x + bar.width / 2;
+                    showTooltip({
+                      tooltipData: bar,
+                      tooltipTop: top,
+                      tooltipLeft: left,
+                    });
+                  }}
+                />
+              );
+            })}
           </BarStack>
           <BarStack
             // Comparison Barstack (populates based on series selected)
-            //to set X and Y scale, it  will used the passed in function and
+            // to set X and Y scale, it  will used the passed in function and
             // will run it on the array thats outputted by data
             data={!comparison[series] ? [] : setXpointsComparison()}
             keys={keys}
@@ -388,52 +375,50 @@ const BarGraphComparison = (props) => {
             yScale={renderingScale}
             color={colorScale}
           >
-            {(barStacks) =>
-              barStacks.map((barStack, idx) => {
-                // Uses map method to iterate through all components,
-                // creating a rect component (from visx) for each iteration.
-                // height/width/etc. are calculated by visx.
-                if (!barStack.bars[currentIndex]) {
-                  return <h1>No Comparison</h1>;
-                }
-                const bar = barStack.bars[currentIndex];
-                if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
-                  bar.height = 0;
-                }
-                return (
-                  <rect
-                    key={`bar-stack-${idx}-${bar.index}`}
-                    x={bar.x}
-                    y={bar.y}
-                    height={bar.height === 0 ? null : bar.height}
-                    width={bar.width}
-                    fill={bar.color}
+            {barStacks => barStacks.map((barStack, idx) => {
+              // Uses map method to iterate through all components,
+              // creating a rect component (from visx) for each iteration.
+              // height/width/etc. are calculated by visx.
+              if (!barStack.bars[currentIndex]) {
+                return <h1>No Comparison</h1>;
+              }
+              const bar = barStack.bars[currentIndex];
+              if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
+                bar.height = 0;
+              }
+              return (
+                <rect
+                  key={`bar-stack-${idx}-${bar.index}`}
+                  x={bar.x}
+                  y={bar.y}
+                  height={bar.height === 0 ? null : bar.height}
+                  width={bar.width}
+                  fill={bar.color}
                     /* TIP TOOL EVENT HANDLERS */
                     // Hides tool tip once cursor moves off the current rect
-                    onMouseLeave={() => {
-                      dispatch(
-                        onHoverExit(data.componentData[bar.key].rtid),
-                        (tooltipTimeout = window.setTimeout(() => {
-                          hideTooltip();
-                        }, 300))
-                      );
-                    }}
+                  onMouseLeave={() => {
+                    dispatch(
+                      onHoverExit(data.componentData[bar.key].rtid),
+                      (tooltipTimeout = window.setTimeout(() => {
+                        hideTooltip();
+                      }, 300)),
+                    );
+                  }}
                     // Cursor position in window updates position of the tool tip
-                    onMouseMove={(event) => {
-                      dispatch(onHover(data.componentData[bar.key].rtid));
-                      if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                      const top = event.clientY - margin.top - bar.height;
-                      const left = bar.x + bar.width / 2;
-                      showTooltip({
-                        tooltipData: bar,
-                        tooltipTop: top,
-                        tooltipLeft: left,
-                      });
-                    }}
-                  />
-                );
-              })
-            }
+                  onMouseMove={event => {
+                    dispatch(onHover(data.componentData[bar.key].rtid));
+                    if (tooltipTimeout) clearTimeout(tooltipTimeout);
+                    const top = event.clientY - margin.top - bar.height;
+                    const left = bar.x + bar.width / 2;
+                    showTooltip({
+                      tooltipData: bar,
+                      tooltipTop: top,
+                      tooltipLeft: left,
+                    });
+                  }}
+                />
+              );
+            })}
           </BarStack>
         </Group>
         <AxisLeft
@@ -486,10 +471,15 @@ const BarGraphComparison = (props) => {
         >
           <div style={{ color: colorScale(tooltipData.key) }}>
             {' '}
-            <strong>{tooltipData.key}</strong>{' '}
+            <strong>{tooltipData.key}</strong>
+            {' '}
           </div>
           <div>{data.componentData[tooltipData.key].stateType}</div>
-          <div> {formatRenderTime(tooltipData.bar.data[tooltipData.key])} </div>
+          <div>
+            {' '}
+            {formatRenderTime(tooltipData.bar.data[tooltipData.key])}
+            {' '}
+          </div>
           <div>
             {' '}
             <small>

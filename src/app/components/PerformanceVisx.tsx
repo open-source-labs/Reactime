@@ -1,18 +1,18 @@
 // @ts-nocheck
 import React, { useState } from 'react';
-import RenderingFrequency from './RenderingFrequency';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import Switch from '@material-ui/core/Switch';
 import { ParentSize } from '@visx/responsive';
-import BarGraph from './BarGraph';
-import BarGraphComparison from './BarGraphComparison';
-import { useStoreContext } from '../store';
 import {
   MemoryRouter as Router,
   Route,
   NavLink,
   Switch,
 } from 'react-router-dom';
+import RenderingFrequency from './RenderingFrequency';
+// import Switch from '@material-ui/core/Switch';
+import BarGraph from './BarGraph';
+import BarGraphComparison from './BarGraphComparison';
+import { useStoreContext } from '../store';
 
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
@@ -42,12 +42,12 @@ const traverse = (snapshot, data, currTotalRender = 0) => {
 
     // Get component Rendering Time
     const renderTime = Number(
-      Number.parseFloat(child.componentData.actualDuration).toPrecision(5)
+      Number.parseFloat(child.componentData.actualDuration).toPrecision(5),
     );
     // sums render time for all children
     currTotalRender += renderTime;
     // components as keys and set the value to their rendering time
-    data['barStack'][data.barStack.length - 1][componentName] = renderTime;
+    data.barStack[data.barStack.length - 1][componentName] = renderTime;
 
     // Get component stateType
     if (!data.componentData[componentName]) {
@@ -57,8 +57,7 @@ const traverse = (snapshot, data, currTotalRender = 0) => {
         totalRenderTime: 0,
         rtid: '',
       };
-      if (child.state !== 'stateless')
-        data.componentData[componentName].stateType = 'stateful';
+      if (child.state !== 'stateless') data.componentData[componentName].stateType = 'stateful';
     }
     // increment render frequencies
     if (renderTime > 0) {
@@ -81,13 +80,13 @@ const allStorage = () => {
   const values = [];
   const keys = Object.keys(localStorage);
   let i = keys.length;
-  console.log('allstorage keys', keys)
+  console.log('allstorage keys', keys);
 
   while (i--) {
     const series = localStorage.getItem(keys[i]);
     values.push(JSON.parse(series));
   }
-  console.log('allstorage values', values)
+  console.log('allstorage values', values);
   return values;
 };
 
@@ -95,7 +94,7 @@ const allStorage = () => {
 const getSnapshotIds = (obj, snapshotIds = []): string[] => {
   snapshotIds.push(`${obj.name}.${obj.branch}`);
   if (obj.children) {
-    obj.children.forEach((child) => {
+    obj.children.forEach(child => {
       getSnapshotIds(child, snapshotIds);
     });
   }
@@ -119,13 +118,14 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
 /* EXPORT COMPONENT */
 const PerformanceVisx = (props: BarStackProps) => {
   // hook used to dispatch onhover action in rect
-  const { width, height, snapshots, hierarchy } = props;
+  const {
+    width, height, snapshots, hierarchy,
+  } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const [detailsView, setDetailsView] = useState('barStack');
   const [comparisonView, setComparisonView] = useState('barStack');
   const [comparisonData, setComparisonData] = useState();
-  const NO_STATE_MSG =
-    'No state change detected. Trigger an event to change state';
+  const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
 
   const renderComparisonBargraph = () => {
@@ -151,43 +151,43 @@ const PerformanceVisx = (props: BarStackProps) => {
     if (hierarchy) {
       return <RenderingFrequency data={data.componentData} />;
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
   return (
     <Router>
-      <div className='performance-nav-bar-container'>
+      <div className="performance-nav-bar-container">
         <NavLink
-          className='router-link-performance'
+          className="router-link-performance"
           // className="router-link"
-          activeClassName='is-active'
+          activeClassName="is-active"
           exact
-          to='/'
+          to="/"
         >
           Snapshots View
         </NavLink>
         <NavLink
-          className='router-link-performance'
+          className="router-link-performance"
           // className="router-link"
-          activeClassName='is-active'
-          to='/comparison'
+          activeClassName="is-active"
+          to="/comparison"
         >
           Comparison View
         </NavLink>
         <NavLink
-          className='router-link-performance'
+          className="router-link-performance"
           // className="router-link"
-          activeClassName='is-active'
-          to='/componentdetails'
+          activeClassName="is-active"
+          to="/componentdetails"
         >
           Component Details
         </NavLink>
       </div>
 
       <Switch>
-        <Route path='/comparison' render={renderComparisonBargraph} />
-        <Route path='/componentdetails' render={renderComponentDetailsView} />
-        <Route path='/' render={renderBargraph} />
+        <Route path="/comparison" render={renderComparisonBargraph} />
+        <Route path="/componentdetails" render={renderComponentDetailsView} />
+        <Route path="/" render={renderBargraph} />
       </Switch>
     </Router>
   );

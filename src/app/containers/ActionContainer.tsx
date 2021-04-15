@@ -63,38 +63,24 @@ function ActionContainer(props) {
       return newObj;
     };
     // displays stateful data
-    console.log('snapshots[index - 1]: ', snapshots[index - 1]);
     const previousDisplay = statelessCleanning(snapshots[index - 1]);
-    //const currentDisplay = statelessCleanning(snapshots[index]);
-    //console.log("AC previos display: ", previousDisplay);
-    // diff function returns a comparison of two objects, one has an updated change
-    // just displays stateful data
-    const delta = diff(previousDisplay, snapshots[index]); //I dont htink stateless cleaning is necissary
-    console.log('AC delta', delta);
-    // return delta
+    const delta = diff(previousDisplay, snapshots[index]); 
     const changedState = findStateChangeObj(delta);
-    //const previousDisplayState = findStateChangeObj(previousDisplay);
-    //return formatDeltaPopUp(changedState, previousDisplayState);
-    console.log('AC Changed State at 0: ', changedState[0]);
     const html = formatters.html.format(changedState[0]);
     const output = ReactHtmlParser(html);
-    console.log('AC output :', output);
     return output;
   }
 
   function findStateChangeObj(delta, changedState = []) {
     if (!delta.children && !delta.state) {
-      // console.log('snapshot', snapshot);
       return changedState;
     }
     if (delta.state && delta.state[0] !== 'stateless') {
       changedState.push(delta.state);
     }
     if (!delta.children) {
-      // console.log('snapshot', snapshot);
       return changedState;
     }
-    // console.log('snapshot outside if', snapshot);
     Object.keys(delta.children).forEach((child) => {
       //if (isNaN(child) === false) {
       changedState.push(...findStateChangeObj(delta.children[child]));
