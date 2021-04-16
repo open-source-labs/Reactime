@@ -45,9 +45,9 @@
 
 Currently, Reactime supports React apps using stateful components and Hooks, including frameworks like Gatsby and Next.js, with beta support for Recoil and Context API.
 
-<b>Reactime version 8.0</b> allows you to run A/B testing on your application by storing a "series" of state data snapshots. At any stage in the dev cycle, devs could run Reactime again and select any past series to do an A/B test with the current series of snapshots.  With Save Series, developers have access to view trends in their App's component render times during development by comparing the previous series of snapshots.
+<b>Reactime version 9.0</b> allows you to run A/B testing on your application by storing a "series" of state data snapshots. At any stage in the dev cycle, devs could run Reactime again and select any past series to do an A/B test with the current series of snapshots.  With Save Series, developers have access to view trends in their App's component render times during development by comparing the previous series of snapshots.
 
-Reactime 8.0 fixes previous version bugs and incorporates improved visualizations for component relationships. Reactime 8.0 includes expanded [typedoc](https://typedoc.org/api/) documentation for developers looking to contribute to the source code.
+Reactime 9.0 fixes previous version bugs and incorporates improved user experience for saved snapshot series. 
 
 After installing Reactime, you can test its functionalities with your React application in development mode.
 
@@ -152,6 +152,10 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - [Deep in Weeds with Reactime, Concurrent React_fiberRoot, and Browser History Caching](https://itnext.io/deep-in-the-weeds-with-reactime-concurrent-react-fiberroot-and-browser-history-caching-7ce9d7300abb)
 
 ## <b>Authors</b>
+- **Harry Fox** - [@StackOverFlowWhereArtThou](https://github.com/StackOverFlowWhereArtThou)
+- **Nathan Richardson** - [@BagelEnthusiast](https://github.com/BagelEnthusiast)
+- **David Bernstein** - [@dangitbobbeh](https://github.com/dangitbobbeh)
+- **Joseph Stern** - [@josephiswhere](https://github.com/josephiswhere)
 - **Dennis Lopez** - [@DennisLpz](https://github.com/DennisLpz)
 - **Cole Styron** - [@colestyron](https://github.com/C-STYR)
 - **Ali Rahman** - [@CourageWolf](https://github.com/CourageWolf)

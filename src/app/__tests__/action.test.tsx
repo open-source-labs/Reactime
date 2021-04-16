@@ -11,7 +11,7 @@ const Action = require('../components/Action').default;
 
 configure({ adapter: new (Adapter as any)() });
 
-describe('unit testing for Action.jsx', () => {
+describe('unit testing for Action.tsx', () => {
   let wrapper;
   const props = {
     key: 'actions2',
@@ -22,6 +22,7 @@ describe('unit testing for Action.jsx', () => {
     dispatch: jest.fn(),
     displayName: '3.0',
     componentName: 'App',
+    logChangedState: jest.fn(),
     componentData: {
       actualDuration: 3.5,
     },

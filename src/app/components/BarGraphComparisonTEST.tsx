@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import { title } from 'node:process';
 import { onHover, onHoverExit, deleteSeries } from '../actions/actions';
 import { useStoreContext } from '../store';
 
@@ -73,10 +74,11 @@ const BarGraphComparison = props => {
     width, height, data, comparison,
   } = props;
   const [series, setSeries] = React.useState(0);
-  const [snapshots, setSnapshots] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [picOpen, setPicOpen] = React.useState(false);
   const [maxRender, setMaxRender] = React.useState(data.maxTotalRender);
+  const [snapshots, setSnapshots] = React.useState(comparison[0]);
+  const [currentSnapshot, setCurrentSnapshot] = React.useState(0);
 
   function titleFilter(comparisonArray) {
     return comparisonArray.filter(
@@ -84,7 +86,14 @@ const BarGraphComparison = props => {
     );
   }
 
+  function snapshotFilter(tabObj) {
+    return tabObj;
+  }
+
   const currentIndex = tabs[currentTab].sliderIndex;
+  // let currentComparison = comparison.map(ele => ele[data][barStack])
+
+  // picIndex[ele][currentTab] = picIndex[ele][data][barStack]
 
   const {
     tooltipOpen,
@@ -97,7 +106,6 @@ const BarGraphComparison = props => {
   let tooltipTimeout: number;
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
-
   const keys = Object.keys(data.componentData);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
@@ -172,6 +180,7 @@ const BarGraphComparison = props => {
 
   const handleChange = event => {
     setSeries(event.target.value);
+    setSnapshots(comparison[event.target.value]);
     // setXpoints();
   };
 
@@ -186,7 +195,7 @@ const BarGraphComparison = props => {
   };
 
   const picHandleChange = event => {
-    setSnapshots(`${(event.target.value + 1).toString()}.0`);
+    setCurrentSnapshot(event.target.value);
     // setXpoints();
   };
 
@@ -200,7 +209,7 @@ const BarGraphComparison = props => {
     // setXpoints();
   };
 
-  // manually assignin X -axis points with tab ID.
+  // manually assigning X -axis points with tab ID.
   function setXpointsComparison() {
     comparison[series].data.barStack.forEach(elem => {
       elem.currentTab = 'comparison';
@@ -215,7 +224,7 @@ const BarGraphComparison = props => {
     return data.barStack;
   }
   const animateButton = function (e) {
-    e.preventDefault;
+    e.preventDefault();
     e.target.classList.add('animate');
     e.target.innerHTML = 'Deleted!';
     setTimeout(() => {
@@ -230,7 +239,6 @@ const BarGraphComparison = props => {
   return (
     <div>
       <div className="series-options-container">
-
         <div className="dropdown-and-delete-series-container">
           <button
             className="delete-button"
@@ -257,12 +265,12 @@ const BarGraphComparison = props => {
                 <MenuItem>No series available</MenuItem>
               ) : (
                 titleFilter(comparison).map((tabElem, index) => (
-                  <MenuItem value={index}>{`Series ${index + 1}`}</MenuItem>
+                  <MenuItem value={index}>{`${comparison[index].title} ${index + 1}`}</MenuItem>
                 ))
               )}
             </Select>
           </FormControl>
-          {/* <h4 style={{ padding: '0 1rem' }}>Comparator Snapshot? </h4>
+          <h4 style={{ padding: '0 1rem' }}>Comparator Snapshot? </h4>
           <FormControl variant="outlined" className={classes.formControl}>
             <Select
               style={{ color: 'white' }}
@@ -272,20 +280,18 @@ const BarGraphComparison = props => {
               open={picOpen}
               onClose={picHandleClose}
               onOpen={picHandleOpen}
-              value={snapshots} //snapshots
+              value={currentSnapshot}
               onChange={picHandleChange}
             >
-              {!comparison[snapshots] ? (
+              {!snapshots ? (
                 <MenuItem>No snapshots available</MenuItem>
               ) : (
-                titleFilter(comparison).map((tabElem, index) => {
-                  return (
-                    <MenuItem value={index}>{`${index + 1}`}</MenuItem>
-                  );
-                })
+                snapshots.data.barStack.map((tabElem, index) => (
+                  <MenuItem value={index}>{`${index + 1}`}</MenuItem>
+                ))
               )}
             </Select>
-          </FormControl> */}
+          </FormControl>
         </div>
       </div>
 
@@ -326,6 +332,7 @@ const BarGraphComparison = props => {
               // height/width/etc. are calculated by visx.
               // to set X and Y scale, it  will used the passed in function and
               // will run it on the array thats outputted by data
+              // console.log("barStack.bars:",barStack.bars)
               const bar = barStack.bars[currentIndex];
               if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                 bar.height = 0;

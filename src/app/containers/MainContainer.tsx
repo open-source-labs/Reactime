@@ -71,7 +71,7 @@ function MainContainer(): any {
           default:
         }
         return true;
-      }
+      },
     );
 
     port.onDisconnect.addListener(() => {

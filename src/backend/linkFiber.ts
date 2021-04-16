@@ -9,11 +9,11 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
 
-//import typescript types
+// import typescript types
 import {
-  //tree
+  // tree
   Snapshot,
-  //jump, pause
+  // jump, pause
   Mode,
   ComponentData,
   // array of state and component
@@ -21,13 +21,13 @@ import {
   // object with tree structure
   Fiber,
 } from './types/backendTypes';
-//import function that creates a tree
+// import function that creates a tree
 import Tree from './tree';
-//passes the data down to its components ?
+// passes the data down to its components ?
 import componentActionsRecord from './masterState';
 
 // throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
-//getHooksNames - helper function to grab the getters/setters from `elementType`
+// getHooksNames - helper function to grab the getters/setters from `elementType`
 import { throttle, getHooksNames } from './helpers';
 import AtomsRelationship from '../app/components/AtomsRelationship';
 
@@ -45,14 +45,13 @@ let allAtomsRelationship = [];
 let initialstart = false;
 let rtidCounter = 0;
 let rtid = null;
-let recoilDomNode = {};
+const recoilDomNode = {};
 
 // Simple check for whether our target app uses Recoil
 // can these be regular
 if (window[`$recoilDebugStates`]) {
   isRecoil = true;
 }
-
 // This is deprecated Recoil code.  Recoil as of 01-03-2021
 // does not work well with Reactime.  Leaving any Recoil
 // code in codebase to assist with Recoil implementations
@@ -88,9 +87,11 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   if (!snap.tree) {
     snap.tree = new Tree('root', 'root');
   }
+
   const payload = snap.tree.cleanTreeCopy();
   // if it's Recoil - run different actions?
   if (isRecoil) {
+      console.log('This is recoil and we\'re in sendSnapshot!');
     // getRecoilState()
     payload.atomsComponents = atomsComponents;
     payload.atomSelectors = atomsSelectors;
@@ -103,6 +104,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   // the postMessage action will be received on the content script to later update the tabsObj
   // this will fire off everytime there is a change in test application
   window.postMessage(
+
     {
       action: 'recordSnap',
       payload,
@@ -119,17 +121,17 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
  * Middleware: Updates snap object with latest snapshot, using @sendSnapshot
  */
 
-//updating tree depending on current mode on the panel (pause, etc)
+// updating tree depending on current mode on the panel (pause, etc)
 function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
   // this is the currently active root fiber(the mutable root of the tree)
   if (fiberRoot) {
     const { current } = fiberRoot;
-    //Clears circular component table
+    // Clears circular component table
     circularComponentTable.clear();
-    //creates snapshot that is a tree based on properties in fiberRoot object
+    // creates snapshot that is a tree based on properties in fiberRoot object
     snap.tree = createTree(current);
   }
-  //sends the updated tree back
+  // sends the updated tree back
   sendSnapshot(snap, mode);
 }
 
@@ -142,17 +144,17 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
 
 // if type of state - Recoil hooks
 function traverseRecoilHooks(
-  //State of the fiber that was used to create the output. When processing updates it reflects the state that’s currently rendered on the screen.
+  // State of the fiber that was used to create the output. When processing updates it reflects the state that’s currently rendered on the screen.
   memoizedState: any,
-  //Props of the fiber that were used to create the output during the previous render.
+  // Props of the fiber that were used to create the output during the previous render.
   memoizedProps: any
 ): HookStates {
   const hooksStates: HookStates = [];
   while (memoizedState && memoizedState.queue) {
     if (
-      memoizedState.memoizedState &&
-      memoizedState.queue.lastRenderedReducer &&
-      memoizedState.queue.lastRenderedReducer.name === 'basicStateReducer'
+      memoizedState.memoizedState
+      && memoizedState.queue.lastRenderedReducer
+      && memoizedState.queue.lastRenderedReducer.name === 'basicStateReducer'
     ) {
       if (Object.entries(memoizedProps).length !== 0) {
         hooksStates.push({
@@ -161,8 +163,7 @@ function traverseRecoilHooks(
         });
       }
     }
-    memoizedState =
-      memoizedState.next !== memoizedState ? memoizedState.next : null;
+    memoizedState = memoizedState.next !== memoizedState ? memoizedState.next : null;
   }
 
   return hooksStates;
@@ -185,8 +186,7 @@ function traverseHooks(memoizedState: any): HookStates {
         state: memoizedState.memoizedState,
       });
     }
-    memoizedState =
-      memoizedState.next !== memoizedState ? memoizedState.next : null;
+    memoizedState = memoizedState.next !== memoizedState ? memoizedState.next : null;
   }
   return hooksStates;
 }
@@ -222,7 +222,7 @@ function createTree(
     sibling,
     stateNode,
     child,
-    //with memoizedState we can grab the root type and construct an Abstract Syntax Tree from the hooks structure using Acorn in order to extract the hook getters and match them with their corresponding setters in an object
+    // with memoizedState we can grab the root type and construct an Abstract Syntax Tree from the hooks structure using Acorn in order to extract the hook getters and match them with their corresponding setters in an object
     memoizedState,
     memoizedProps,
     elementType,
@@ -233,25 +233,25 @@ function createTree(
     treeBaseDuration,
   } = currentFiber;
 
-  //Checks Recoil Atom and Selector Relationships
+  // Checks Recoil Atom and Selector Relationships
   if (
-    currentFiber.memoizedState &&
-    currentFiber.memoizedState.next &&
-    currentFiber.memoizedState.next.memoizedState &&
-    currentFiber.memoizedState.next.memoizedState.deps &&
-    isRecoil &&
-    currentFiber.tag === 0 &&
-    currentFiber.key === null
+    currentFiber.memoizedState
+    && currentFiber.memoizedState.next
+    && currentFiber.memoizedState.next.memoizedState
+    && currentFiber.memoizedState.next.memoizedState.deps
+    && isRecoil
+    && currentFiber.tag === 0
+    && currentFiber.key === null
     // prevents capturing the same Fiber nodes but different key values that result from being changed
   ) {
     let pointer = currentFiber.memoizedState.next;
-    let componentName = currentFiber.elementType.name;
+    const componentName = currentFiber.elementType.name;
 
     if (!atomsComponents[componentName]) {
       atomsComponents[componentName] = [];
       while (pointer !== null) {
         if (!Array.isArray(pointer.memoizedState)) {
-          let atomName = pointer.memoizedState.deps[0]['key'];
+          const atomName = pointer.memoizedState.deps[0].key;
           atomsComponents[componentName].push(atomName);
         }
         pointer = pointer.next;
@@ -259,17 +259,17 @@ function createTree(
     }
 
     if (
-      currentFiber.memoizedState.next.memoizedState.deps[1].current &&
-      !initialstart
+      currentFiber.memoizedState.next.memoizedState.deps[1].current
+      && !initialstart
     ) {
-      let getState = currentFiber.memoizedState.next.memoizedState.deps[1].current.getState()
+      const getState = currentFiber.memoizedState.next.memoizedState.deps[1].current.getState()
         .graphsByVersion;
-      getState.entries().forEach((value) => {
-        value[1].nodeDeps.entries().forEach((obj) => {
+      getState.entries().forEach(value => {
+        value[1].nodeDeps.entries().forEach(obj => {
           if (!atomsSelectors[obj[0]]) {
             atomsSelectors[obj[0]] = [];
           }
-          obj[1].values().forEach((selector) => {
+          obj[1].values().forEach(selector => {
             if (!atomsSelectors[obj[0]].includes(selector)) {
               atomsSelectors[obj[0]].push(selector);
             }
@@ -309,9 +309,9 @@ function createTree(
 
   // RECOIL HOOKS
   if (
-    memoizedState &&
-    (tag === 0 || tag === 1 || tag === 2 || tag === 10) &&
-    isRecoil === true
+    memoizedState
+    && (tag === 0 || tag === 1 || tag === 2 || tag === 10)
+    && isRecoil === true
   ) {
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
@@ -339,9 +339,9 @@ function createTree(
   // Check if node is a hooks useState function
   // REGULAR REACT HOOKS
   if (
-    memoizedState &&
-    (tag === 0 || tag === 1 || tag === 2 || tag === 10) &&
-    isRecoil === false
+    memoizedState
+    && (tag === 0 || tag === 1 || tag === 2 || tag === 10)
+    && isRecoil === false
   ) {
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
@@ -397,13 +397,12 @@ function createTree(
 
       while (pointer !== null) {
         if (pointer.stateNode !== null) {
-          rtid = 'fromLinkFiber' + rtidCounter++;
+          rtid = `fromLinkFiber${rtidCounter++}`;
           recoilDomNode[currentFiber.elementType.name].push(rtid);
           // check if rtid is already present
           //  remove existing rtid before adding a new one
           if (pointer.stateNode.classList.length > 0) {
-            let lastClass =
-              pointer.stateNode.classList[
+            const lastClass = pointer.stateNode.classList[
                 pointer.stateNode.classList.length - 1
               ];
             if (lastClass.includes('fromLinkFiber')) {
@@ -417,16 +416,15 @@ function createTree(
       }
     } else {
       if (
-        currentFiber.child &&
-        currentFiber.child.stateNode &&
-        currentFiber.child.stateNode.setAttribute
+        currentFiber.child
+        && currentFiber.child.stateNode
+        && currentFiber.child.stateNode.setAttribute
       ) {
-        rtid = 'fromLinkFiber' + rtidCounter;
+        rtid = `fromLinkFiber${rtidCounter}`;
         // check if rtid is already present
         //  remove existing rtid before adding a new one
         if (currentFiber.child.stateNode.classList.length > 0) {
-          let lastClass =
-            currentFiber.child.stateNode.classList[
+          const lastClass = currentFiber.child.stateNode.classList[
               currentFiber.child.stateNode.classList.length - 1
             ];
           if (lastClass.includes('fromLinkFiber')) {
@@ -492,7 +490,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-
     const throttledUpdateSnapshot = throttle(
       () => updateSnapShotTree(snap, mode),
       70
@@ -509,7 +506,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
           }
           return original(...args);
         };
-      })(devTools.onCommitFiberRoot);
+      }(devTools.onCommitFiberRoot));
     }
     throttledUpdateSnapshot();
   };
