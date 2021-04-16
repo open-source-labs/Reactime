@@ -22,10 +22,10 @@ describe('unit testing for Action.tsx', () => {
     dispatch: jest.fn(),
     displayName: '3.0',
     componentName: 'App',
+    logChangedState: jest.fn(),
     componentData: {
       actualDuration: 3.5,
     },
-    logChangedState: jest.fn(),
     state: { test: 'test' },
     viewIndex: 2,
     handleOnkeyDown: jest.fn(),
