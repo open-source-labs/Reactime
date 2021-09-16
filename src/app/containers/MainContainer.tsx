@@ -22,7 +22,7 @@ function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
   const [actionView, setActionView] = useState(true);
-  //this function handles Time Jump sidebar view
+  // this function handles Time Jump sidebar view
   const toggleActionContainer = () => {
     setActionView(!actionView);
     const toggleElem = document.querySelector('aside');
@@ -34,6 +34,7 @@ function MainContainer(): any {
     if (currentPort) return;
     // open long-lived connection with background script
     const port = chrome.runtime.connect();
+    console.log('THIS IS THE PORT LINE 37', port);
 
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener(
@@ -75,6 +76,7 @@ function MainContainer(): any {
     );
 
     port.onDisconnect.addListener(() => {
+      console.log('this port is disconeccting line 79');
       // disconnecting
     });
 
@@ -84,7 +86,7 @@ function MainContainer(): any {
 
   /**
    * get set cookies for mixpanel analytics
-   **/
+   * */
   useEffect(() => {
     /**
      * create new user and attempt to read cookies
@@ -97,7 +99,7 @@ function MainContainer(): any {
     user.debug = false;
 
     if (!user.debug) {
-      //set current user cookie if it does not exist in cookies;
+      // set current user cookie if it does not exist in cookies;
       if (user.checkDocumentCookie(document)) {
         mixpanel.people.increment(user.get_dId(), 'times');
       } else {
@@ -119,18 +121,19 @@ function MainContainer(): any {
 
   if (!tabs[currentTab]) {
     return (
-      <div className='error-container'>
-        <img src='../assets/logo-no-version.png' height='50px' />
+      <div className="error-container">
+        <img src="../assets/logo-no-version.png" height="50px" />
         <a
-          href='https://reactime.io/'
-          target='_blank'
-          rel='noopener noreferrer'
+          href="https://reactime.io/"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           No React application found. Please visit reactime.io to more info.
         </a>
         <p>
           If you are using a React application, make sure tha you application is
-          running in development mode.<br></br>
+          running in development mode.
+          <br />
           NOTE: The React Developer Tools extension is also required for
           Reactime to run, if you do not already have it installed on your
           browser.
@@ -138,12 +141,13 @@ function MainContainer(): any {
       </div>
     );
   }
-  const { viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } = tabs[
+  const {
+    viewIndex, sliderIndex, snapshots, hierarchy, webMetrics,
+  } = tabs[
     currentTab
   ];
   // if viewIndex is -1, then use the sliderIndex instead
-  const snapshotView =
-    viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
+  const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // cleaning hierarchy and snapshotView from stateless data
   const statelessCleaning = (obj: {
     name?: string;
@@ -174,7 +178,7 @@ function MainContainer(): any {
               const clean = statelessCleaning(element);
               newObj.children.push(clean);
             }
-          }
+          },
         );
       }
     }
@@ -184,8 +188,8 @@ function MainContainer(): any {
   const hierarchyDisplay = statelessCleaning(hierarchy);
 
   return (
-    <div className='main-container'>
-      <div id='bodyContainer' className='body-container1'>
+    <div className="main-container">
+      <div id="bodyContainer" className="body-container1">
         <ActionContainer
           actionView={actionView}
           setActionView={setActionView}

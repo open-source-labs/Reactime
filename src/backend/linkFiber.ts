@@ -49,7 +49,7 @@ const recoilDomNode = {};
 
 // Simple check for whether our target app uses Recoil
 // can these be regular
-if (window[`$recoilDebugStates`]) {
+if (window.$recoilDebugStates) {
   isRecoil = true;
 }
 // This is deprecated Recoil code.  Recoil as of 01-03-2021
@@ -193,7 +193,7 @@ function traverseHooks(memoizedState: any): HookStates {
 
 /**
  * @method createTree
- * @param currentFiber A Fiber object
+ * @param currentFiber A Fiber object dajshdgajshdgajshdgasjh
  * @param tree A Tree object, default initialized to an instance given 'root' and 'root'
  * @param fromSibling A boolean, default initialized to false
  * @return An instance of a Tree object
@@ -488,15 +488,22 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
   return () => {
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    console.log('========================================REACT DEV TOOLS===========================================', devTools);
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
+    // reactInstance returns an object of the react
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
+    console.log('THIS IS THE FIBER ROOOT', fiberRoot);
     const throttledUpdateSnapshot = throttle(
-      () => updateSnapShotTree(snap, mode),
+      () => {
+        console.log('how many times in line 497');
+        console.log('THIS IS SNAP AND MODEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE', snap, mode);
+        updateSnapShotTree(snap, mode); },
       70
     );
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     if (reactInstance && reactInstance.version) {
+      console.log('888888888888888888888THIS IS GETTING CALLED LINE 503 888888888888888888888888888888');
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           // eslint-disable-next-line prefer-destructuring

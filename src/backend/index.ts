@@ -42,33 +42,35 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
     case 'setPause':
       mode.paused = payload;
       break;
+      // maybe this isn't work react cohort 45
     case 'onHover':
       if (Array.isArray(payload)) {
         for (let i = 0; i < payload.length; i + 1) {
-          let element = document.getElementById(payload[i])
+          const element = document.getElementById(payload[i]);
           if (element !== null) {
-             element.style.backgroundColor = '#C0D9D9'; 
-             }
-        }
-      } else {
-        let element: HTMLElement = document.querySelector(`.${payload}`);
-        if (element !== null) {
-          element.style.backgroundColor = '#C0D9D9'; 
-        }
-      }
-      break;
-    case 'onHoverExit': 
-        if(Array.isArray(payload)){ 
-        for (let i=0; i<payload.length;i++){
-          let element: HTMLElement = document.querySelector(`.${payload}`);
-          if (element !== null) {
-            element.style.backgroundColor = ''; 
+            element.style.backgroundColor = '#C0D9D9';
           }
         }
       } else {
-        let element: HTMLElement = document.querySelector(`.${payload}`);
+        const element: HTMLElement = document.querySelector(`.${payload}`);
         if (element !== null) {
-          element.style.backgroundColor = ''; 
+          element.style.backgroundColor = '#C0D9D9';
+        }
+      }
+      break;
+      // maybe this isn't work react cohort 45
+    case 'onHoverExit':
+      if (Array.isArray(payload)) {
+        for (let i = 0; i < payload.length; i++) {
+          const element: HTMLElement = document.querySelector(`.${payload}`);
+          if (element !== null) {
+            element.style.backgroundColor = '';
+          }
+        }
+      } else {
+        const element: HTMLElement = document.querySelector(`.${payload}`);
+        if (element !== null) {
+          element.style.backgroundColor = '';
         }
       }
       break;
@@ -76,5 +78,5 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       break;
   }
 });
-// connect to dev tools and new fiber 
+// connect to dev tools and new fiber
 linkFiber();
