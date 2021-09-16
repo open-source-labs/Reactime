@@ -14,5 +14,5 @@ src/extension/build.pem
 bower_components
 sandboxes/manual-tests/NextJS/.next
 .vscode
-src/app/components/Map.tsx
+src/app/components/.tsx
 package-lock.json
