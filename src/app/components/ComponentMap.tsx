@@ -67,6 +67,8 @@ export default function ComponentMap({
   const [orientation, setOrientation] = useState('horizontal');
   const [linkType, setLinkType] = useState('diagonal');
   const [stepPercent, setStepPercent] = useState(10);
+  const [tooltip, setTooltip] = useState(false);
+  const [expanded, setExpanded] = useState();
 
   // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
   const forceUpdate = useForceUpdate();
@@ -193,16 +195,18 @@ export default function ComponentMap({
                   // mousing controls & Tooltip display logic
                   const handleMouseOver = event => {
                     () => dispatch(onHover(node.data.rtid));
+                    console.log('line 197', event.target.ownerSVGElement);
                     const coords = localPoint(
                       event.target.ownerSVGElement,
                       event,
                     );
                     const tooltipObj = { ...node.data };
+                    console.log('NODE DATAAAAAAAAAAAAA', node);
                     if (typeof tooltipObj.state === 'object') tooltipObj.state = 'stateful';
                     showTooltip({
                       tooltipLeft: coords.x,
                       tooltipTop: coords.y,
-                      tooltipData: tooltipObj,
+                      tooltipData: tooltipObj, // this is where the data for state and render time is displayed but does not show props functions and etc
                     });
                   };
 
@@ -227,20 +231,28 @@ export default function ComponentMap({
                           y={-height / 2}
                           x={-width / 2}
                           fill={node.children ? '#161521' : '#62d6fb'}
-                          stroke={node.children ? '#62d6fb' : '#161521'}
-                          strokeWidth={1}
-                          strokeDasharray={node.children ? '0' : '2,2'}
+                          stroke={node.data.isExpanded ? '#95fb62' : '#a69ff5'} // if already child in fill do not all stroke to change change color later but it works!!!!!!!!
+                          strokeWidth={3}
+                          strokeDasharray={node.children ? '0' : '1,2'}
                           strokeOpacity="1"
                           rx={node.children ? 4 : 10}
-                          onClick={() => {
+                          onDoubleClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
                             forceUpdate();
                           }}
                           // Tooltip event handlers
                           // test feature
-                          onMouseOver={handleMouseOver}
-                          onMouseOut={hideTooltip}
-                          onMouseEnter={() => dispatch(onHover(node.data.rtid))}
+                          // onClick = {handleMouseOver}
+                          onClick={event => {
+                            if (tooltip) { // cohort 45
+                              hideTooltip();
+                              setTooltip(false);
+                            } else {
+                              handleMouseOver(event);
+                              setTooltip(true);
+                            }
+                          }}
+                          onMouseEnter={() => dispatch(onHover(node.data.rtid))} // fix this not working
                           onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
                         />
                       )}
@@ -258,6 +270,7 @@ export default function ComponentMap({
                               ? 'white'
                               : '#161521'
                         }
+                        z
                       >
                         {node.data.name}
                       </text>
@@ -276,22 +289,25 @@ export default function ComponentMap({
           top={tooltipTop}
           left={tooltipLeft}
           style={tooltipStyles}
+          onClick={hideTooltip}
         >
-          <div style={{}}>
-            {' '}
-            <strong>{tooltipData.name}</strong>
-            {' '}
-          </div>
           <div>
-            State:
-            {tooltipData.state}
-          </div>
-          <div>
-            {' '}
-            Render time:
-            {' '}
-            {formatRenderTime(tooltipData.componentData.actualDuration)}
-            {' '}
+            <div style={{}}>
+              {' '}
+              <strong>{tooltipData.name}</strong>
+              {' '}
+            </div>
+            <div>
+              State:
+              {tooltipData.state}
+            </div>
+            <div>
+              {' '}
+              Render time:
+              {' '}
+              {formatRenderTime(tooltipData.componentData.actualDuration)}
+              {' '}
+            </div>
           </div>
         </TooltipInPortal>
       )}
