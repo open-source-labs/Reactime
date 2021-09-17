@@ -67,6 +67,7 @@ export default function ComponentMap({
   const [orientation, setOrientation] = useState('horizontal');
   const [linkType, setLinkType] = useState('diagonal');
   const [stepPercent, setStepPercent] = useState(10);
+  const [tooltip, setTooltip] = useState(false);
 
   // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
   const forceUpdate = useForceUpdate();
@@ -232,14 +233,24 @@ export default function ComponentMap({
                           strokeDasharray={node.children ? '0' : '2,2'}
                           strokeOpacity="1"
                           rx={node.children ? 4 : 10}
-                          onClick={() => {
+                          onDoubleClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
                             forceUpdate();
                           }}
                           // Tooltip event handlers
                           // test feature
-                          onMouseOver={handleMouseOver}
-                          onMouseOut={hideTooltip}
+                          //onClick = {handleMouseOver}
+                          onClick={ event => {
+                            if (tooltip) {
+                              console.log('hide hide hide');
+                              hideTooltip();
+                              setTooltip(false);
+                            } else {
+                              console.log('show show show');
+                              handleMouseOver(event);
+                              setTooltip(true);
+                            }
+                          }}
                           onMouseEnter={() => dispatch(onHover(node.data.rtid))}
                           onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
                         />
@@ -258,6 +269,7 @@ export default function ComponentMap({
                               ? 'white'
                               : '#161521'
                         }
+                        z
                       >
                         {node.data.name}
                       </text>
