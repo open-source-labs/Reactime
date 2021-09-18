@@ -59,6 +59,7 @@ export default (state, action) => produce(state, draft => {
         };
       });
       tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: false };
+      break;
     }
     case types.ON_HOVER_EXIT: {
       port.postMessage({

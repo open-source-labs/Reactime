@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // @ts-nocheck
 import React, { Component, useEffect, useState } from 'react';
 import * as d3 from 'd3';
@@ -7,10 +8,10 @@ import { changeView, changeSlider } from '../actions/actions';
  * @var colors: Colors array for the diffrerent node branches, each color is for a different branch
  */
 const colors = [
-  '#eb4d70', 
-  '#f19938', 
-  '#6ce18b', 
-  '#78f6ef', 
+  '#eb4d70',
+  '#f19938',
+  '#6ce18b',
+  '#78f6ef',
   '#9096f8',
   '#C5B738',
   '#858DFF',
@@ -39,17 +40,19 @@ const filterHooks = (data: any[]) => {
 // main function exported to StateRoute
 // below we destructure the props
 function History(props: Record<string, unknown>) {
-  const { width, height, hierarchy, dispatch, sliderIndex, viewIndex } = props;
+  const {
+    width, height, hierarchy, dispatch, sliderIndex, viewIndex,
+  } = props;
 
-  let root = JSON.parse(JSON.stringify(hierarchy));
-  let isRecoil = false;
+  const root = JSON.parse(JSON.stringify(hierarchy));
+  const isRecoil = false;
 
-  let HistoryRef = React.createRef(root); 
+  const HistoryRef = React.createRef(root);
   useEffect(() => {
     maked3Tree();
-  }, [root]);
+  }, [maked3Tree, root]);
 
-  let removed3Tree = function () {
+  const removed3Tree = function () {
     const { current } = HistoryRef;
     while (current.hasChildNodes()) {
       current.removeChild(current.lastChild);
@@ -62,8 +65,8 @@ function History(props: Record<string, unknown>) {
    */
   let maked3Tree = function () {
     removed3Tree();
-    const width: number = 800;
-    const height: number = 600;
+    const width = 800;
+    const height = 600;
     const svgContainer = d3
       .select(HistoryRef.current)
       .append('svg') // svgContainer is now pointing to svg
@@ -81,9 +84,7 @@ function History(props: Record<string, unknown>) {
     const tree = d3
       .tree()
       .nodeSize([width / 10, height / 10])
-      .separation(function (a: { parent: object }, b: { parent: object }) {
-        return a.parent == b.parent ? 2 : 2;
-      });
+      .separation((a: { parent: object }, b: { parent: object }) => (a.parent == b.parent ? 2 : 2));
 
     const d3root = tree(hierarchy);
 
@@ -101,7 +102,7 @@ function History(props: Record<string, unknown>) {
         d3
           .linkRadial()
           .angle((d: { x: number }) => d.x)
-          .radius((d: { y: number }) => d.y)
+          .radius((d: { y: number }) => d.y),
       );
 
     const node = g
@@ -110,11 +111,10 @@ function History(props: Record<string, unknown>) {
       .data(d3root.descendants())
       .enter()
       .append('g')
-      .style('fill', function (d) {
+      .style('fill', d => {
         let loadTime;
         if (d.data.stateSnapshot.children[0].componentData.actualDuration) {
-          loadTime =
-            d.data.stateSnapshot.children[0].componentData.actualDuration;
+          loadTime = d.data.stateSnapshot.children[0].componentData.actualDuration;
         } else {
           loadTime = 1;
         }
@@ -135,9 +135,7 @@ function History(props: Record<string, unknown>) {
         return colors[indexColors];
       })
       .attr('class', 'node--internal')
-      .attr('transform', function (d: { x: number; y: number }) {
-        return 'translate(' + reinfeldTidierAlgo(d.x, d.y) + ')';
-      });
+      .attr('transform', (d: { x: number; y: number }) => `translate(${reinfeldTidierAlgo(d.x, d.y)})`);
 
     // here we the node circle is created and given a radius size, we are also giving it a mouseover and onClick  functionality
     // mouseover will highlight the node
@@ -146,10 +144,10 @@ function History(props: Record<string, unknown>) {
     node
       .append('circle')
       .attr('r', 14)
-      .on('mouseover', function (d: `Record<string, unknown>`) {
+      .on('mouseover', function (d: 'Record<string, unknown>') {
         d3.select(this).transition(90).duration(18).attr('r', 21);
       })
-      .on('click', function (d: `Record<string, unknown>`) {
+      .on('click', (d: 'Record<string, unknown>') => {
         const index = parseInt(`${d.data.name}.${d.data.branch}`);
         dispatch(changeSlider(index));
         dispatch(changeView(index));
@@ -163,41 +161,37 @@ function History(props: Record<string, unknown>) {
       .append('text')
       // adjusts the y coordinates for the node text
       .attr('dy', '0.5em')
-      .attr('x', function (d: { x: number; children?: [] }) {
+      .attr('x', (d: { x: number; children?: [] }) =>
         // this positions how far the text is from leaf nodes (ones without children)
         // negative number before the colon moves the text of rightside nodes,
         // positive number moves the text for the leftside nodes
-        return d.x < Math.PI === !d.children ? 0 : 0;
-      })
+        (d.x < Math.PI === !d.children ? 0 : 0))
       .attr('text-anchor', 'middle')
       // this arranges the angle of the text
-      .attr('transform', function (d: { x: number; y: number }) {
-        return (
-          'rotate(' +
-          ((d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 1) /
-            Math.PI +
-          ')'
-        );
-      })
-      .text(function (d: { data: { name: number; branch: number } }) {
+      .attr('transform', (d: { x: number; y: number }) => (
+        `rotate(${
+          ((d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 1)
+            / Math.PI
+        })`
+      ))
+      .text((d: { data: { name: number; branch: number } }) =>
         // display the name of the specific patch
         // return `${d.data.name}.${d.data.branch}`;
-        return `${d.data.name}.${d.data.branch}`;
-      });
+        `${d.data.name}.${d.data.branch}`);
 
     // Zoom Functions
-    let zoom = d3.zoom().on('zoom', zoomed);
+    const zoom = d3.zoom().on('zoom', zoomed);
     svgContainer.call(
       zoom.transform,
       // Changes the initial view, (left, top)
-      d3.zoomIdentity.translate(width / 3, height / 4).scale(1)
+      d3.zoomIdentity.translate(width / 3, height / 4).scale(1),
     );
     // allows the canvas to be zoom-able
     svgContainer.call(
       d3
         .zoom()
         .scaleExtent([0, 0.9]) // [zoomOut, zoomIn]
-        .on('zoom', zoomed)
+        .on('zoom', zoomed),
     );
     // helper function that allows for zooming ( think about how I can convert this any to typescript)
     function zoomed(d: any) {
@@ -210,7 +204,7 @@ function History(props: Record<string, unknown>) {
         .drag()
         .on('start', dragstarted)
         .on('drag', dragged)
-        .on('end', dragended)
+        .on('end', dragended),
     );
 
     function dragstarted() {
