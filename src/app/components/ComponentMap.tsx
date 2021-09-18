@@ -196,6 +196,7 @@ export default function ComponentMap({
                   const handleMouseOver = event => {
                     () => dispatch(onHover(node.data.rtid));
                     console.log('line 197', event.target.ownerSVGElement);
+                    console.log('line 199: ', node);
                     const coords = localPoint(
                       event.target.ownerSVGElement,
                       event,
@@ -230,10 +231,15 @@ export default function ComponentMap({
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
+                          //node.children = if node has children
                           fill={node.children ? '#161521' : '#62d6fb'}
-                          stroke={node.data.isExpanded ? '#95fb62' : '#a69ff5'} // if already child in fill do not all stroke to change change color later but it works!!!!!!!!
+                          //node.data.isExpanded = if node is collapsed
+                          // stroke={(node.data.isExpanded && node.child) ? '#95fb62' : '#a69ff5'} => node.child is gone when clicked, even if it actually has children. Maybe better call node.children => node.leaf
+                          stroke={(node.data.isExpanded && node.data.children.length > 0) ? '#95fb62' : '#a69ff5'}
+
+                          // if already child in fill do not all stroke to change change color later but it works!!!!!!!!
                           strokeWidth={3}
-                          strokeDasharray={node.children ? '0' : '1,2'}
+                          // strokeDasharray={node.children ? '0' : '2,2'}
                           strokeOpacity="1"
                           rx={node.children ? 4 : 10}
                           onDoubleClick={() => {
