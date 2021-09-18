@@ -43,23 +43,22 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
 
   return (
     <Router>
-      <div className='state-container'>
-        <div className='main-navbar-container'>
-          <div className='main-navbar-text'>
-          </div>
-          <div className='main-navbar'>
+      <div className="state-container">
+        <div className="main-navbar-container">
+          <div className="main-navbar-text" />
+          <div className="main-navbar">
             <NavLink
-              className='main-router-link'
-              activeClassName='is-active'
+              className="main-router-link"
+              activeClassName="is-active"
               exact
-              to='/'
+              to="/"
             >
               State
             </NavLink>
             <NavLink
-              className='main-router-link'
-              activeClassName='is-active'
-              to='/diff'
+              className="main-router-link"
+              activeClassName="is-active"
+              to="/diff"
             >
               Diff
             </NavLink>
@@ -67,24 +66,20 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
         </div>
         <Switch>
           <Route
-            path='/diff'
-            render={() => {
-              return <DiffRoute snapshot={snapshot} />;
-            }}
+            path="/diff"
+            render={() => <DiffRoute snapshot={snapshot} />}
           />
           <Route
-            path='/'
-            render={() => {
-              return (
-                <StateRoute
-                  webMetrics={webMetrics}
-                  viewIndex={viewIndex}
-                  snapshot={snapshot}
-                  hierarchy={hierarchy}
-                  snapshots={snapshots}
-                />
-              );
-            }}
+            path="/"
+            render={() => (
+              <StateRoute
+                webMetrics={webMetrics}
+                viewIndex={viewIndex}
+                snapshot={snapshot}
+                hierarchy={hierarchy}
+                snapshots={snapshots}
+              />
+            )}
           />
         </Switch>
       </div>
