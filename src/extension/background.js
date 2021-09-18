@@ -14,9 +14,9 @@ const metrics = {};
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
 function createTabObj(title) {
   // TO-DO for save button
-    // Save State
-    // Knowlege of the comparison snapshot
-    // Check for it in the reducer
+  // Save State
+  // Knowlege of the comparison snapshot
+  // Check for it in the reducer
   // update tabsObj
   return {
     title,
@@ -98,18 +98,19 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   }
 
   if (rootNode.children) {
-    rootNode.children.forEach((child) => {
+    rootNode.children.forEach(child => {
       changeCurrLocation(tabObj, child, index, name);
     });
   }
 }
 
 // Establishing incoming connection with devtools.
-chrome.runtime.onConnect.addListener((port) => {
+chrome.runtime.onConnect.addListener(port => {
   // port is one end of the connection - an object
 
   // push every port connected to the ports array
   portsArr.push(port);
+  console.log('this is the port lets see what it is', port);
 
   // send tabs obj to the connected devtools as soon as connection to devtools is made
   if (Object.keys(tabsObj).length > 0) {
@@ -120,7 +121,7 @@ chrome.runtime.onConnect.addListener((port) => {
   }
 
   // every time devtool is closed, remove the port from portsArr
-  port.onDisconnect.addListener((e) => {
+  port.onDisconnect.addListener(e => {
     for (let i = 0; i < portsArr.length; i += 1) {
       if (portsArr[i] === e) {
         portsArr.splice(i, 1);
@@ -131,9 +132,9 @@ chrome.runtime.onConnect.addListener((port) => {
 
   // listen for message containing a snapshot from devtools and send it to contentScript -
   // (i.e. they're all related to the button actions on Reactime)
-  port.onMessage.addListener((msg) => {
+  port.onMessage.addListener(msg => {
     // msg is action denoting a time jump in devtools
-
+    console.log('this is the port on messages lets seet the message', msg);
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:
     // {
@@ -202,7 +203,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
-  const { action, index, name, value } = request;
+  const {
+    action, index, name, value,
+  } = request;
   let isReactTimeTravel = false;
 
   if (name) {
@@ -211,10 +214,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   // Filter out tabs that don't have reactime, tabs that dont use react?
   if (
-    action === 'tabReload' ||
-    action === 'recordSnap' ||
-    action === 'jumpToSnap' ||
-    action === 'injectScript'
+    action === 'tabReload'
+    || action === 'recordSnap'
+    || action === 'jumpToSnap'
+    || action === 'injectScript'
   ) {
     isReactTimeTravel = true;
   } else {
@@ -284,12 +287,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         tabsObj[tabId].currBranch = 0;
 
         // send a message to devtools
-        portsArr.forEach((bg) =>
-          bg.postMessage({
-            action: 'initialConnectSnapshots',
-            payload: tabsObj,
-          })
-        );
+        portsArr.forEach(bg => bg.postMessage({
+          action: 'initialConnectSnapshots',
+          payload: tabsObj,
+        }));
       }
       reloaded[tabId] = true;
 
@@ -305,26 +306,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         tabsObj[tabId].snapshots.push(request.payload);
         sendToHierarchy(
           tabsObj[tabId],
-          new Node(request.payload, tabsObj[tabId])
+          new Node(request.payload, tabsObj[tabId]),
         );
 
         if (portsArr.length > 0) {
-          portsArr.forEach((bg) =>
-            bg.postMessage({
-              action: 'initialConnectSnapshots',
-              payload: tabsObj,
-            })
-          );
+          portsArr.forEach(bg => bg.postMessage({
+            action: 'initialConnectSnapshots',
+            payload: tabsObj,
+          }));
         }
         break;
       }
 
       // DUPLICATE SNAPSHOT CHECK
-      const previousSnap =
-        tabsObj[tabId].currLocation.stateSnapshot.children[0].componentData
-          .actualDuration;
-      const incomingSnap =
-        request.payload.children[0].componentData.actualDuration;
+      const previousSnap = tabsObj[tabId].currLocation.stateSnapshot.children[0].componentData
+        .actualDuration;
+      const incomingSnap = request.payload.children[0].componentData.actualDuration;
       if (previousSnap === incomingSnap) break;
 
       // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
@@ -337,7 +334,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (!tabsObj[tabId][index]) {
           sendToHierarchy(
             tabsObj[tabId],
-            new Node(request.payload, tabsObj[tabId])
+            new Node(request.payload, tabsObj[tabId]),
           );
         }
         //  else {
@@ -349,13 +346,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
       // sends new tabs obj to devtools
       if (portsArr.length > 0) {
-        portsArr.forEach((bg) =>
-          bg.postMessage({
-            action: 'sendSnapshots',
-            payload: tabsObj,
-            sourceTab,
-          })
-        );
+        portsArr.forEach(bg => bg.postMessage({
+          action: 'sendSnapshots',
+          payload: tabsObj,
+          sourceTab,
+        }));
       }
       break;
     }
@@ -366,15 +361,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // when tab is closed, remove the tabid from the tabsObj
-chrome.tabs.onRemoved.addListener((tabId) => {
+chrome.tabs.onRemoved.addListener(tabId => {
   // tell devtools which tab to delete
   if (portsArr.length > 0) {
-    portsArr.forEach((bg) =>
-      bg.postMessage({
-        action: 'deleteTab',
-        payload: tabId,
-      })
-    );
+    portsArr.forEach(bg => bg.postMessage({
+      action: 'deleteTab',
+      payload: tabId,
+    }));
   }
 
   // delete the tab from the tabsObj
@@ -391,12 +384,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
     if (changeInfo.title && changeInfo.title !== tabsObj[tabId].title) {
       // tell devtools which tab to delete
       if (portsArr.length > 0) {
-        portsArr.forEach((bg) =>
-          bg.postMessage({
-            action: 'deleteTab',
-            payload: tabId,
-          })
-        );
+        portsArr.forEach(bg => bg.postMessage({
+          action: 'deleteTab',
+          payload: tabId,
+        }));
       }
 
       // delete the tab from the tabsObj
@@ -411,15 +402,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 });
 
 // when tab view is changed, put the tabid as the current tab
-chrome.tabs.onActivated.addListener((info) => {
+chrome.tabs.onActivated.addListener(info => {
   // tell devtools which tab to be the current
   if (portsArr.length > 0) {
-    portsArr.forEach((bg) =>
-      bg.postMessage({
-        action: 'changeTab',
-        payload: info,
-      })
-    );
+    portsArr.forEach(bg => bg.postMessage({
+      action: 'changeTab',
+      payload: info,
+    }));
   }
 });
 

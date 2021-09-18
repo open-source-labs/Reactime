@@ -10,7 +10,6 @@
 const acorn = require('acorn');
 const jsx = require('acorn-jsx');
 
-
 const JSXParser = acorn.Parser.extend(jsx());
 
 /**
@@ -77,6 +76,7 @@ export const getHooksNames = (elementType: string): Array<string> => {
   let ast: any;
   try {
     ast = JSXParser.parse(elementType);
+    console.log('ast line 80', ast);
   } catch (e) {
     return ['unknown'];
   }
@@ -105,7 +105,7 @@ export const getHooksNames = (elementType: string): Array<string> => {
           elem.declarations.forEach((hook: any) => {
             // Parse destructured statements pair
             if (hook.id.type === 'ArrayPattern') {
-              hook.id.elements.forEach((hook) => {
+              hook.id.elements.forEach(hook => {
                 statements.push(`_useWildcard${tsCount}`);
                 statements.push(hook.name);
                 tsCount += 1;
