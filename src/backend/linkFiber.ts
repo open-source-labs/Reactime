@@ -49,9 +49,13 @@ const recoilDomNode = {};
 
 // Simple check for whether our target app uses Recoil
 // can these be regular
-if (window.$recoilDebugStates) {
-  isRecoil = true;
-}
+
+
+// if (window.$recoilDebugStates) {
+//   isRecoil = true;
+// }
+
+
 // This is deprecated Recoil code.  Recoil as of 01-03-2021
 // does not work well with Reactime.  Leaving any Recoil
 // code in codebase to assist with Recoil implementations
@@ -91,7 +95,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   const payload = snap.tree.cleanTreeCopy();
   // if it's Recoil - run different actions?
   if (isRecoil) {
-      console.log('This is recoil and we\'re in sendSnapshot!');
+    console.log('This is recoil and we\'re in sendSnapshot!');
     // getRecoilState()
     payload.atomsComponents = atomsComponents;
     payload.atomSelectors = atomsSelectors;
@@ -403,8 +407,8 @@ function createTree(
           //  remove existing rtid before adding a new one
           if (pointer.stateNode.classList.length > 0) {
             const lastClass = pointer.stateNode.classList[
-                pointer.stateNode.classList.length - 1
-              ];
+              pointer.stateNode.classList.length - 1
+            ];
             if (lastClass.includes('fromLinkFiber')) {
               pointer.stateNode.classList.remove(lastClass);
             }
@@ -425,8 +429,8 @@ function createTree(
         //  remove existing rtid before adding a new one
         if (currentFiber.child.stateNode.classList.length > 0) {
           const lastClass = currentFiber.child.stateNode.classList[
-              currentFiber.child.stateNode.classList.length - 1
-            ];
+            currentFiber.child.stateNode.classList.length - 1
+          ];
           if (lastClass.includes('fromLinkFiber')) {
             currentFiber.child.stateNode.classList.remove(lastClass);
           }
@@ -497,7 +501,8 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       () => {
         console.log('how many times in line 497');
         console.log('THIS IS SNAP AND MODEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE', snap, mode);
-        updateSnapShotTree(snap, mode); },
+        updateSnapShotTree(snap, mode);
+      },
       70
     );
     document.addEventListener('visibilitychange', onVisibilityChange);
