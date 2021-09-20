@@ -17,27 +17,28 @@ import getLinkComponent from './getLinkComponent';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-const root = hierarchy({
-  name: 'root',
-  children: [
-    { name: 'child #1' },
-    {
-      name: 'child #2',
-      children: [
-        { name: 'grandchild #1' },
-        { name: 'grandchild #2' },
-        { name: 'grandchild #3' },
-      ],
-    },
-  ],
-});
+// const root = hierarchy({
+//   name: 'root',
+//   children: [
+//     { name: 'child #1' },
+//     {
+//       name: 'child #2',
+//       children: [
+//         { name: 'grandchild #1' },
+//         { name: 'grandchild #2' },
+//         { name: 'grandchild #3' },
+//       ],
+//     },
+//   ],
+// });
+
 interface TreeNode {
   name: string;
   isExpanded?: boolean;
   children?: TreeNode[];
 }
 
-type HierarchyNode = HierarchyPointNode<TreeNode>;
+// type HierarchyNode = HierarchyPointNode<TreeNode>;
 
 const defaultMargin = {
   top: 30, left: 30, right: 55, bottom: 70,
@@ -69,6 +70,7 @@ export default function ComponentMap({
   const [stepPercent, setStepPercent] = useState(10);
   const [tooltip, setTooltip] = useState(false);
   const [expanded, setExpanded] = useState();
+  const [selectedNode, setSelectedNode] = useState('root');
 
   // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
   const forceUpdate = useForceUpdate();
@@ -131,6 +133,36 @@ export default function ComponentMap({
     return `${time} ms `;
   };
 
+  //put all nodes into an array
+  const nodeList = [];
+
+  const collectNodes = (node) => {
+    nodeList.splice(0, nodeList.length);
+    nodeList.push(node);
+    for (let i = 0; i < nodeList.length; i++) {
+      const cur = nodeList[i];
+      if (cur.children && cur.children.length > 0) {
+        for (let child of cur.children) {
+          nodeList.push(child);
+        }
+      }
+    }
+    console.log('NODELIST in ComponentMap: ', nodeList);
+  }
+  collectNodes(snapshots[lastNode]);
+
+  //find the node that has been selected and use it as the root
+  const startNode = null;
+  const findSelectedNode = () => {
+    console.log(selectedNode);
+    for (let node of nodeList) {
+      if (node.name === selectedNode) {
+        startNode = node;
+      }
+    }
+  }
+  findSelectedNode();
+
   // controls for the map
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
   return totalWidth < 10 ? null : (
@@ -140,18 +172,22 @@ export default function ComponentMap({
         orientation={orientation}
         linkType={linkType}
         stepPercent={stepPercent}
+        snapShots={snapshots[lastNode]}
+        selectedNode={selectedNode}
         setLayout={setLayout}
         setOrientation={setOrientation}
         setLinkType={setLinkType}
         setStepPercent={setStepPercent}
+        setSelectedNode={setSelectedNode}
       />
 
       <svg ref={containerRef} width={totalWidth} height={totalHeight}>
         <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
         <rect width={totalWidth} height={totalHeight} rx={14} fill="#242529" />
         <Group top={margin.top} left={margin.left}>
+          {console.log('This is the SelectedNode:', selectedNode)}
           <Tree
-            root={hierarchy(data, d => (d.isExpanded ? null : d.children))}
+            root={hierarchy(startNode || data, d => (d.isExpanded ? null : d.children))}
             size={[sizeWidth, sizeHeight]}
             separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
           >
@@ -195,8 +231,10 @@ export default function ComponentMap({
                   // mousing controls & Tooltip display logic
                   const handleMouseOver = event => {
                     () => dispatch(onHover(node.data.rtid));
-                    console.log('line 197', event.target.ownerSVGElement);
-                    console.log('line 199: ', node);
+                    console.log('line 197 event.target', event.target.ownerSVGElement);
+                    console.log('line 199 This is DATA: ', data);
+                    console.log('line 200 This is TREE: ', tree);
+                    console.log('line 201 This is NODE: ', node);
                     const coords = localPoint(
                       event.target.ownerSVGElement,
                       event,
