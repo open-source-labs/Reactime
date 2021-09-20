@@ -33,7 +33,8 @@ type Props = {
 const nodeList = [];
 
 const collectNodes = (node) => {
-  nodeList.splice(0, nodeList.length);
+  console.log("This is the root node", node);
+  nodeList.splice(0, nodeList.length); { /* We used the .splice method here to ensure that nodeList did not accumulate with page refreshes */ }
   nodeList.push(node);
   for (let i = 0; i < nodeList.length; i++) {
     const cur = nodeList[i];
@@ -44,7 +45,6 @@ const collectNodes = (node) => {
     }
   }
   console.log('NODELIST looks like: ', nodeList);
-
 }
 
 export default function LinkControls({
@@ -72,7 +72,7 @@ export default function LinkControls({
       <select
         onClick={e => e.stopPropagation()}
         onChange={e => setLayout(e.target.value)}
-        value={layout}
+        // value={layout}
         style={dropDownStyle}
       >
         <option value="cartesian">Cartesian</option>
@@ -86,7 +86,7 @@ export default function LinkControls({
       <select
         onClick={e => e.stopPropagation()}
         onChange={e => setOrientation(e.target.value)}
-        value={orientation}
+        // value={orientation}/
         disabled={layout === 'polar'}
         style={dropDownStyle}
       >
@@ -101,7 +101,7 @@ export default function LinkControls({
       <select
         onClick={e => e.stopPropagation()}
         onChange={e => setLinkType(e.target.value)}
-        value={linkType}
+        // value={linkType}
         style={dropDownStyle}
       >
         <option value="diagonal">Diagonal</option>
@@ -111,23 +111,17 @@ export default function LinkControls({
 
       {/* Controls for the select selections. */}
       <label>Select:</label>
-      &nbsp;
-      <select
-        onClick={e => e.stopPropagation()}
+      &nbsp; {/*This is a non-breaking space - Prevents an automatic line break at this position */}
+      <input list='nodeOptions' type='text' name="nodeOptions"
         onChange={e => {
-          const val = e.target.value;
-          console.log("You selected: ", val);
           setSelectedNode(e.target.value)
         }}
-        value={selectedNode}
-        style={dropDownStyle}
-      >
-        {console.log("snapShots: ", snapShots)}
-
+      />
+      <datalist id='nodeOptions'>
         {nodeList.map(node => (
           <option value={node.name}>{node.name}</option>
         ))}
-      </select>
+      </datalist>
 
       {/* This is the slider control for the step option */}
       {linkType === 'step' && layout !== 'polar' && (
