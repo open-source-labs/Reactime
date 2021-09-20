@@ -53,9 +53,9 @@ class Tree {
 
   recoilDomNode: any;
 
-  constructor(state: string | {}, name = 'nameless', componentData: {} = {}, rtid: any = null, recoilDomNode:any = null) {
+  constructor(state: string | {}, name = 'nameless', componentData: {} = {}, rtid: any = null, recoilDomNode: any = null) {
     this.state = state === 'root' ? 'root' : serializeState(state);
-    this.name = name;
+    this.name = name === "" ? rtid : name;
     this.componentData = componentData ? JSON.parse(JSON.stringify(componentData)) : {};
     this.children = [];
     this.parent = null; // ref to parent so we can add siblings
@@ -63,7 +63,7 @@ class Tree {
     this.recoilDomNode = recoilDomNode;
   }
 
-  addChild(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode:any): Tree {
+  addChild(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode: any): Tree {
     const newChild: Tree = new Tree(state, name, componentData, rtid, recoilDomNode);
     newChild.parent = this;
     this.children.push(newChild);
