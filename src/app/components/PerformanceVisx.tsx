@@ -61,7 +61,12 @@ const traverse = (snapshot, data, currTotalRender = 0) => {
     }
     // increment render frequencies
     if (renderTime > 0) {
+      console.log('what is the child', child);
+      console.log('por que?', data.componentData[componentName]);
       data.componentData[componentName].renderFrequency++;
+    } else {
+      console.log('what is the child', child);
+      console.log('we dont increment here', data.componentData[componentName], 'and the child', child);
     }
 
     // add to total render time

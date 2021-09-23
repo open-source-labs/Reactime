@@ -62,11 +62,13 @@ function MainContainer(): any {
             dispatch(setTab(sourceTab));
             // set state with the information received from the background script
             dispatch(addNewSnapshots(payload));
+            console.log('this is the payload and this is the sendSnapshorts', sourceTab, payload);
             break;
           }
           case 'initialConnectSnapshots': {
             dispatch(setTab(maxTab));
             dispatch(initialConnect(payload));
+            console.log('this is the initial connect and settab', maxTab, payload);
             break;
           }
           default:

@@ -40,7 +40,7 @@ declare global {
 let fiberRoot = null;
 let doWork = true;
 const circularComponentTable = new Set();
-let isRecoil = false;
+const isRecoil = false;
 let allAtomsRelationship = [];
 let initialstart = false;
 let rtidCounter = 0;
@@ -50,11 +50,9 @@ const recoilDomNode = {};
 // Simple check for whether our target app uses Recoil
 // can these be regular
 
-
 // if (window.$recoilDebugStates) {
 //   isRecoil = true;
 // }
-
 
 // This is deprecated Recoil code.  Recoil as of 01-03-2021
 // does not work well with Reactime.  Leaving any Recoil
@@ -254,7 +252,8 @@ function createTree(
     selfBaseDuration,
     treeBaseDuration,
   } = currentFiber;
-  //new feature adds props/state into the component
+  // new feature adds props/state into the component
+
   if (tag === 5) {
     try {
       // console.log('this is the tree', tree);
@@ -438,7 +437,6 @@ function createTree(
       let pointer = currentFiber;
       // end of repeat code
 
-
       while (pointer !== null) {
         if (pointer.stateNode !== null) {
           rtid = `fromLinkFiber${rtidCounter++}`;
@@ -460,7 +458,6 @@ function createTree(
         pointer = pointer.child;
       }
     } else {
-
       if (
         currentFiber.child
         && currentFiber.child.stateNode
@@ -474,6 +471,7 @@ function createTree(
           const lastClass = currentFiber.child.stateNode.classList[
             currentFiber.child.stateNode.classList.length - 1
           ];
+         // console.log('show me the last class', currentFiber.child.stateNode.classList);
           if (lastClass.includes('fromLinkFiber')) {
             currentFiber.child.stateNode.classList.remove(lastClass);
           }
@@ -481,11 +479,20 @@ function createTree(
         currentFiber.child.stateNode.classList.add(rtid);
       }
       rtidCounter++;
-      console.log('rtidCounter', rtidCounter);
+      // console.log('rtidCounter', rtidCounter);
+      // console.log('checking the currentFiber', currentFiber);
     }
     // checking if tree fromSibling is true
     if (fromSibling) {
       // tree object from tree.ts, with addSibling
+      // console.log('looking through every seingle currentFiber', currentFiber);
+      // try {
+      //   console.log('hello hello this is next effect', currentFiber.nextEffect);
+      // } catch (error) {
+      //   console.log('no next effect');
+      // }
+      // console.log('we are in addsibling and this is the rtid and element name', rtid, elementType.name, 'this is the current fiber', currentFiber);
+      console.log('looking at this circuclar componnent table in sibling', circularComponentTable);
       newNode = tree.addSibling(
         newState,
         elementType ? elementType.name : 'nameless',
@@ -494,6 +501,14 @@ function createTree(
         recoilDomNode
       );
     } else {
+      // console.log('looking through every seingle currentFiber', currentFiber);
+      // try {
+      //   console.log('hello hello this is next effect', currentFiber.nextEffect);
+      // } catch (error) {
+      //   console.log('no next effect');
+      // }
+      // console.log('we are in addchild and this is the rtid and element name', rtid, elementType.name, 'this is the current fiber', currentFiber);
+      console.log('looking at this circuclar componnent table in child', circularComponentTable);
       newNode = tree.addChild(
         newState,
         elementType ? elementType.name : 'nameless',
@@ -503,6 +518,7 @@ function createTree(
       );
     }
   } else {
+    console.log('why do we go here will the duplicate come here', tree);
     newNode = tree;
   }
 
