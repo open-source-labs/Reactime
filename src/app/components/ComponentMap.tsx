@@ -121,11 +121,21 @@ export default function ComponentMap({
   const tooltipStyles = {
     ...defaultStyles,
     minWidth: 60,
+    maxWidth: 300,
     backgroundColor: 'rgba(0,0,0,0.9)',
     color: 'white',
     fontSize: '14px',
     lineHeight: '18px',
     fontFamily: 'Roboto',
+    zIndex: 100,
+  };
+
+  const scrollStyle = {
+    minWidth: '60',
+    maxWidth: '300',
+    maxHeight: '100px',
+    overflowY: 'scroll',
+    overflowWrap: 'break-word',
   };
 
   const formatRenderTime = time => {
@@ -135,6 +145,21 @@ export default function ComponentMap({
 
   //places all nodes into a flat array
   const nodeList = [];
+
+  const makePropsPretty = data => {
+    const propsFormat = [];
+    for (const key in data) {
+      console.log('this is the key', key);
+      if (typeof data[key] === 'object') {
+        const nestedObj = makePropsPretty(data[key]);
+      }
+      propsFormat.push(<p>
+        {`${JSON.stringify(key)}: ${JSON.stringify(nestedObj || data[key])}`}
+      </p>);
+    }
+    console.log('this is propsFormat', propsFormat);
+    return propsFormat;
+  };
 
   const collectNodes = (node) => {
     nodeList.splice(0, nodeList.length);
@@ -343,22 +368,25 @@ export default function ComponentMap({
               {' '}
             </div>
             <div>
-              State:
-              {tooltipData.state}
-            </div>
-            <div>
-              Props:
-              {JSON.stringify(tooltipData.componentData.props)}
-            </div>
-            <div>
               {' '}
               Render time:
               {' '}
               {formatRenderTime(tooltipData.componentData.actualDuration)}
               {' '}
             </div>
+            <div>
+              State:
+              {tooltipData.state}
+            </div>
+            <div style={scrollStyle}>
+              Props:
+              {makePropsPretty(tooltipData.componentData.props)}
+              {/* {JSON.stringify(tooltipData.componentData.props)} */}
+            </div>
           </div>
         </TooltipInPortal>
+
+
       )}
     </div>
   );

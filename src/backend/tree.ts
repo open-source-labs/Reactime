@@ -103,9 +103,8 @@ class Tree {
 
   addChild(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode: any): Tree {
     const uniqueName = this.checkForDuplicates(name);
-    // console.log('ChildName:', uniqueName);
-    this.name = uniqueName;
-    const newChild: Tree = new Tree(state, uniqueName, componentData, rtid, recoilDomNode, 'child');
+    console.log('ChildName:', uniqueName);
+    const newChild: Tree = new Tree(state, uniqueName, componentData, rtid, recoilDomNode);
     newChild.parent = this;
     this.children.push(newChild);
     // console.log('this is the name and rtid', uniqueName, rtid);
@@ -114,9 +113,8 @@ class Tree {
 
   addSibling(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode: any): Tree {
     const uniqueName = this.checkForDuplicates(name);
-    // console.log('SiblingName:', uniqueName);
-    this.name = uniqueName;
-    const newSibling: Tree = new Tree(state, uniqueName, componentData, rtid, recoilDomNode, 'sibiling');
+    console.log('SiblingName:', uniqueName);
+    const newSibling: Tree = new Tree(state, uniqueName, componentData, rtid, recoilDomNode);
     newSibling.parent = this.parent;
     this.parent.children.push(newSibling);
     // console.log('this is the name and rtid', uniqueName, rtid);
