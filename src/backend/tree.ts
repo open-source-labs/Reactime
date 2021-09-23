@@ -11,7 +11,7 @@ import { createGenerateClassName } from "@material-ui/styles";
 
 let copyInstances = 0;
 const circularComponentTable = new Set<Tree>();
-let componentNames = {}
+let componentNames = {};
 
 // Removes unserializable state data such as functions
 function scrubUnserializableMembers(tree: Tree): Tree {
@@ -90,7 +90,7 @@ class Tree {
       componentNames = {};
     }
     //check for duplicate
-    else if (componentNames[name] !== undefined) {
+    else if (componentNames[name]) {
       const count = componentNames[name] + 1;
       const newName = name + count;
       componentNames[name] = count;
