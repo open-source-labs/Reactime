@@ -11,7 +11,7 @@ import { createGenerateClassName } from "@material-ui/styles";
 
 let copyInstances = 0;
 const circularComponentTable = new Set<Tree>();
-let componentNames = {}
+let componentNames = {};
 
 // Removes unserializable state data such as functions
 function scrubUnserializableMembers(tree: Tree): Tree {
@@ -103,7 +103,6 @@ class Tree {
   addChild(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode: any): Tree {
     const uniqueName = this.checkForDuplicates(name);
     console.log("ChildName:", uniqueName);
-    this.name = uniqueName;
     const newChild: Tree = new Tree(state, uniqueName, componentData, rtid, recoilDomNode);
     newChild.parent = this;
     this.children.push(newChild);
@@ -113,7 +112,6 @@ class Tree {
   addSibling(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode: any): Tree {
     const uniqueName = this.checkForDuplicates(name);
     console.log("SiblingName:", uniqueName);
-    this.name = uniqueName;
     const newSibling: Tree = new Tree(state, uniqueName, componentData, rtid, recoilDomNode);
     newSibling.parent = this.parent;
     this.parent.children.push(newSibling);

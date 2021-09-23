@@ -474,7 +474,7 @@ function createTree(
           const lastClass = currentFiber.child.stateNode.classList[
             currentFiber.child.stateNode.classList.length - 1
           ];
-          if (lastClass.includes('fromLinkFiber')) {
+          if (typeof lastClass[lastClass.length - 1] === 'string') {
             currentFiber.child.stateNode.classList.remove(lastClass);
           }
         }
