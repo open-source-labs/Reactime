@@ -7,8 +7,11 @@
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
 
+import { createGenerateClassName } from "@material-ui/styles";
+
 let copyInstances = 0;
 const circularComponentTable = new Set<Tree>();
+let componentNames = {}
 
 // Removes unserializable state data such as functions
 function scrubUnserializableMembers(tree: Tree): Tree {
@@ -25,6 +28,7 @@ function serializeState(state) {
     return 'circularState';
   }
 }
+
 
 /**
  * This is the current snapshot that is being sent to the snapshots array.
@@ -53,9 +57,22 @@ class Tree {
 
   recoilDomNode: any;
 
+  //Duplicate names: add a unique number ID
+  //Create an object 'componentNames' to store each component name as a key and it's frequency of use as its value
+  //When a new component is made on the tree, check if the new component's name already exists in 'componentNames' (possibly with the .hasOwnProperty method)
+  //If the name already exists, add its value (an integer) to the name
+  //Also, increment the value after
+  //If not, create the new component and also a new key: value pair in 'componentNames' with the component's name as the key and 0 as its value
+  //EXAMPLE OF COMPONENTNAMES OBJECT: {editableInput: 1, Provider: 0, etc}
+
+  //Empty names:
+  //If string, rtid without 'fromLinkFiber"
+  //If object
+  //If null
+
   constructor(state: string | {}, name = 'nameless', componentData: {} = {}, rtid: any = null, recoilDomNode: any = null) {
     this.state = state === 'root' ? 'root' : serializeState(state);
-    this.name = name === "" ? rtid : name;
+    this.name = name;
     this.componentData = componentData ? JSON.parse(JSON.stringify(componentData)) : {};
     this.children = [];
     this.parent = null; // ref to parent so we can add siblings
@@ -63,22 +80,48 @@ class Tree {
     this.recoilDomNode = recoilDomNode;
   }
 
+  // Returns a unique name ready to be used
+  checkForDuplicates(name: string) {
+    //check for empty name
+    if (name === "" && typeof this.rtid === 'string') {
+      name = this.rtid.replace('fromLinkFiber', '');
+    }
+    if (this.state === 'root') {
+      componentNames = {};
+    }
+    //check for duplicate
+    else if (componentNames[name] !== undefined) {
+      const count = componentNames[name] + 1;
+      const newName = name + count;
+      componentNames[name] = count;
+      return newName;
+    }
+    componentNames[name] = 0;
+    return name;
+  }
+
   addChild(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode: any): Tree {
-    const newChild: Tree = new Tree(state, name, componentData, rtid, recoilDomNode);
+    const uniqueName = this.checkForDuplicates(name);
+    console.log("ChildName:", uniqueName);
+    this.name = uniqueName;
+    const newChild: Tree = new Tree(state, uniqueName, componentData, rtid, recoilDomNode);
     newChild.parent = this;
     this.children.push(newChild);
     return newChild;
   }
 
   addSibling(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode: any): Tree {
-    const newSibling: Tree = new Tree(state, name, componentData, rtid, recoilDomNode);
+    const uniqueName = this.checkForDuplicates(name);
+    console.log("SiblingName:", uniqueName);
+    this.name = uniqueName;
+    const newSibling: Tree = new Tree(state, uniqueName, componentData, rtid, recoilDomNode);
     newSibling.parent = this.parent;
     this.parent.children.push(newSibling);
     return newSibling;
   }
 
   /**
-   * @function cleanTreeCopy : Adds a sibing to the current tree
+   * @function cleanTreeCopy : Adds a sibling to the current tree
    */
   cleanTreeCopy(): Tree {
     /**
@@ -91,6 +134,7 @@ class Tree {
     }
     // creates copy of present node
     let copy: Tree = new Tree(this.state, this.name, this.componentData, this.rtid, this.recoilDomNode);
+    console.log('CLEANTREECOPY TEST', copy);
     delete copy.parent;
     circularComponentTable.add(this);
     copy = scrubUnserializableMembers(copy);
