@@ -133,11 +133,12 @@ export default function ComponentMap({
     return `${time} ms `;
   };
 
-  //put all nodes into an array
+  //places all nodes into a flat array
   const nodeList = [];
 
   const collectNodes = (node) => {
     nodeList.splice(0, nodeList.length);
+    console.log("Root node:", node);
     nodeList.push(node);
     for (let i = 0; i < nodeList.length; i++) {
       const cur = nodeList[i];
@@ -344,6 +345,10 @@ export default function ComponentMap({
             <div>
               State:
               {tooltipData.state}
+            </div>
+            <div>
+              Props:
+              {JSON.stringify(tooltipData.componentData.props)}
             </div>
             <div>
               {' '}

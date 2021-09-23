@@ -197,7 +197,7 @@ function traverseHooks(memoizedState: any): HookStates {
 
 /**
  * @method createTree
- * @param currentFiber A Fiber object dajshdgajshdgajshdgasjh
+ * @param currentFiber A Fiber object
  * @param tree A Tree object, default initialized to an instance given 'root' and 'root'
  * @param fromSibling A boolean, default initialized to false
  * @return An instance of a Tree object
@@ -210,6 +210,24 @@ function traverseHooks(memoizedState: any): HookStates {
 let atomsSelectors = {};
 let atomsComponents = {};
 
+function convertFunctionToString(obj: {}) {
+  const newPropData = {};
+  // const newPropData = Array.isArray(obj) === true ? {} : [];
+  for (const key in obj) {
+    if (typeof obj[key] === 'function') {
+      newPropData[key] = 'function';
+      // console.log('we changed the function', newPropData[key]);
+    } else if (typeof obj[key] === 'object') {
+      // console.log('this is going to enter a recursive call', obj[key]);
+      // convertFunctionToString(obj[key]);
+      newPropData[key] = JSON.stringify(obj[key]);
+    } else {
+      newPropData[key] = obj[key];
+    }
+  }
+  // console.log(newPropData);
+  return newPropData;
+}
 // Every time a state change is made in the accompanying app, the extension creates a
 // Tree “snapshot” of the current state, and adds it to the current “cache” of snapshots in the extension
 function createTree(
@@ -236,7 +254,28 @@ function createTree(
     selfBaseDuration,
     treeBaseDuration,
   } = currentFiber;
+  //new feature adds props/state into the component
+  if (tag === 5) {
+    try {
+      // console.log('this is the tree', tree);
 
+      if (memoizedProps.children[0]._owner.memoizedProps !== undefined) {
+        const propsData = memoizedProps.children[0]._owner.memoizedProps;
+        const newPropData = convertFunctionToString(propsData);
+        tree.componentData = {
+          ...tree.componentData,
+          props: newPropData
+        };
+      }
+      // console.log('CHECKING THE TREE FOR THE DATA', tree);
+      // console.log('looking for the owner', memoizedProps.children);
+      // console.log('this is working but whats going on', propsData,);
+      // console.log('this should display the stuff we want', memoizedProps.children[0]._owner.memoizedState);
+      // console.log('current fiber', currentFiber);
+    } catch (error) {
+      // console.log('this is the error', error);
+    }
+  }
   // Checks Recoil Atom and Selector Relationships
   if (
     currentFiber.memoizedState
@@ -399,9 +438,11 @@ function createTree(
       let pointer = currentFiber;
       // end of repeat code
 
+
       while (pointer !== null) {
         if (pointer.stateNode !== null) {
           rtid = `fromLinkFiber${rtidCounter++}`;
+          // rtid = rtidCounter++;
           recoilDomNode[currentFiber.elementType.name].push(rtid);
           // check if rtid is already present
           //  remove existing rtid before adding a new one
@@ -419,12 +460,14 @@ function createTree(
         pointer = pointer.child;
       }
     } else {
+
       if (
         currentFiber.child
         && currentFiber.child.stateNode
         && currentFiber.child.stateNode.setAttribute
       ) {
         rtid = `fromLinkFiber${rtidCounter}`;
+        // rtid = rtidCounter;
         // check if rtid is already present
         //  remove existing rtid before adding a new one
         if (currentFiber.child.stateNode.classList.length > 0) {
@@ -438,6 +481,7 @@ function createTree(
         currentFiber.child.stateNode.classList.add(rtid);
       }
       rtidCounter++;
+      console.log('rtidCounter', rtidCounter);
     }
     // checking if tree fromSibling is true
     if (fromSibling) {
@@ -463,6 +507,7 @@ function createTree(
   }
 
   // Recurse on children
+
   if (child && !circularComponentTable.has(child)) {
     // If this node had state we appended to the children array,
     // so attach children to the newly appended child.
@@ -470,6 +515,7 @@ function createTree(
     circularComponentTable.add(child);
     createTree(child, newNode);
   }
+
   // Recurse on siblings
   if (sibling && !circularComponentTable.has(sibling)) {
     circularComponentTable.add(sibling);
@@ -508,7 +554,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     if (reactInstance && reactInstance.version) {
-      console.log('888888888888888888888THIS IS GETTING CALLED LINE 503 888888888888888888888888888888');
+      // console.log('888888888888888888888 THIS IS GETTING CALLED LINE 503 888888888888888888888888888888');
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           // eslint-disable-next-line prefer-destructuring
