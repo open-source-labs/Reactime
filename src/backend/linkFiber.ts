@@ -233,6 +233,8 @@ function createTree(
   tree: Tree = new Tree('root', 'root'),
   fromSibling = false
 ) {
+
+  console.log('CurrentFiber: ', currentFiber);
   // Base case: child or sibling pointed to null
   if (!currentFiber) return null;
   if (!tree) return tree;
@@ -471,7 +473,7 @@ function createTree(
           const lastClass = currentFiber.child.stateNode.classList[
             currentFiber.child.stateNode.classList.length - 1
           ];
-          if (typeof lastClass[lastClass.length - 1] === 'string') {
+          if (lastClass.includes('fromLinkFiber')) {
             currentFiber.child.stateNode.classList.remove(lastClass);
           }
         }
