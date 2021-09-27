@@ -79,12 +79,18 @@ const StateRoute = (props: StateRouteProps) => {
   const renderHistory = () => {
     if (hierarchy) {
       return (
-        <History
-          hierarchy={hierarchy}
-          dispatch={dispatch}
-          sliderIndex={sliderIndex}
-          viewIndex={viewIndex}
-        />
+        <ParentSize>
+          {({ width, height }) => (
+            <History
+              width={width}
+              height={height}
+              hierarchy={hierarchy}
+              dispatch={dispatch}
+              sliderIndex={sliderIndex}
+              viewIndex={viewIndex}
+            />
+          )}
+        </ParentSize>
       );
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
