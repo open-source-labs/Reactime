@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
 // @ts-nocheck
 import React, { useState } from 'react';
 import { Group } from '@visx/group';
@@ -11,11 +13,15 @@ import {
   TooltipWithBounds,
   defaultStyles,
 } from '@visx/tooltip';
+import { isAbsolute } from 'path';
+import { nest } from 'jscharting';
 import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store';
+
+const exclude = ['childExpirationTime', 'staticContext', '_debugSource', 'actualDuration', 'actualStartTime', 'treeBaseDuration', '_debugID', '_debugIsCurrentlyTiming', 'selfBaseDuration', 'expirationTime', 'effectTag', 'alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
 
 // const root = hierarchy({
 //   name: 'root',
@@ -128,12 +134,13 @@ export default function ComponentMap({
     lineHeight: '18px',
     fontFamily: 'Roboto',
     zIndex: 100,
+    'pointer-events': 'all !important',
   };
 
   const scrollStyle = {
     minWidth: '60',
     maxWidth: '300',
-    maxHeight: '100px',
+    maxHeight: '200px',
     overflowY: 'scroll',
     overflowWrap: 'break-word',
   };
@@ -143,50 +150,63 @@ export default function ComponentMap({
     return `${time} ms `;
   };
 
-  //places all nodes into a flat array
+  // places all nodes into a flat array
   const nodeList = [];
 
   const makePropsPretty = data => {
     const propsFormat = [];
+    let nestedObj;
     for (const key in data) {
       console.log('this is the key', key);
-      if (typeof data[key] === 'object') {
-        const nestedObj = makePropsPretty(data[key]);
+      if (typeof data[key] === 'object' && exclude.includes(key) !== true) {
+        nestedObj = makePropsPretty(data[key]);
+        if (Array.isArray(nestedObj)) {
+          try {
+            if (nestedObj[0].$$typeof) {
+              nestedObj = null;
+            } else {
+              nestedObj = nestedObj.forEach(e => makePropsPretty(e));
+            }
+          } catch (error) {
+            console.log('not a react componenet');
+          }
+        }
       }
+      console.log('testing what data is received', 'this is nested ob', nestedObj, 'this is datakey', key, data[key]);
       propsFormat.push(<p>
-        {`${JSON.stringify(key)}: ${JSON.stringify(nestedObj || data[key])}`}
-      </p>);
+        {`${key}: ${JSON.stringify(nestedObj || data[key])}`}
+                       </p>);
     }
     console.log('this is propsFormat', propsFormat);
     return propsFormat;
   };
 
-  const collectNodes = (node) => {
+  const collectNodes = node => {
     nodeList.splice(0, nodeList.length);
-    console.log("Root node:", node);
+    console.log('Root node:', node);
     nodeList.push(node);
     for (let i = 0; i < nodeList.length; i++) {
       const cur = nodeList[i];
       if (cur.children && cur.children.length > 0) {
-        for (let child of cur.children) {
+        for (const child of cur.children) {
           nodeList.push(child);
         }
       }
     }
     console.log('NODELIST in ComponentMap: ', nodeList);
-  }
+  };
   collectNodes(snapshots[lastNode]);
 
-  //find the node that has been selected and use it as the root
+  // find the node that has been selected and use it as the root
   const startNode = null;
   const findSelectedNode = () => {
     console.log(selectedNode);
-    for (let node of nodeList) {
+    for (const node of nodeList) {
       if (node.name === selectedNode) {
         startNode = node;
       }
     }
-  }
+  };
   findSelectedNode();
 
   // controls for the map
@@ -295,9 +315,9 @@ export default function ComponentMap({
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          //node.children = if node has children
+                          // node.children = if node has children
                           fill={node.children ? '#161521' : '#62d6fb'}
-                          //node.data.isExpanded = if node is collapsed
+                          // node.data.isExpanded = if node is collapsed
                           // stroke={(node.data.isExpanded && node.child) ? '#95fb62' : '#a69ff5'} => node.child is gone when clicked, even if it actually has children. Maybe better call node.children => node.leaf
                           stroke={(node.data.isExpanded && node.data.children.length > 0) ? '#95fb62' : '#a69ff5'}
 
@@ -379,13 +399,14 @@ export default function ComponentMap({
               {tooltipData.state}
             </div>
             <div style={scrollStyle}>
-              Props:
-              {makePropsPretty(tooltipData.componentData.props)}
-              {/* {JSON.stringify(tooltipData.componentData.props)} */}
+              <div className="props">
+                Props:
+                {makePropsPretty(tooltipData.componentData.props)}
+                {/* {JSON.stringify(tooltipData.componentData.props)} */}
+              </div>
             </div>
           </div>
         </TooltipInPortal>
-
 
       )}
     </div>
