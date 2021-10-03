@@ -145,7 +145,7 @@ function MainContainer(): any {
     viewIndex, sliderIndex, snapshots, hierarchy, webMetrics,
   } = tabs[
     currentTab
-  ];
+    ];
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // cleaning hierarchy and snapshotView from stateless data
@@ -153,7 +153,7 @@ function MainContainer(): any {
     name?: string;
     componentData?: object;
     state?: string | any;
-    stateSnaphot?: object;
+    stateSnapshot?: object;
     children?: any[];
   }) => {
     const newObj = { ...obj };
@@ -166,8 +166,8 @@ function MainContainer(): any {
     if (newObj.state === 'stateless') {
       delete newObj.state;
     }
-    if (newObj.stateSnaphot) {
-      newObj.stateSnaphot = statelessCleaning(obj.stateSnaphot);
+    if (newObj.stateSnapshot) {
+      newObj.stateSnapshot = statelessCleaning(obj.stateSnapshot);
     }
     if (newObj.children) {
       newObj.children = [];

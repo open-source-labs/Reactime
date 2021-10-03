@@ -40,7 +40,7 @@ declare global {
 let fiberRoot = null;
 let doWork = true;
 const circularComponentTable = new Set();
-let isRecoil = false;
+const isRecoil = false;
 let allAtomsRelationship = [];
 let initialstart = false;
 let rtidCounter = 0;
@@ -50,11 +50,9 @@ const recoilDomNode = {};
 // Simple check for whether our target app uses Recoil
 // can these be regular
 
-
 // if (window.$recoilDebugStates) {
 //   isRecoil = true;
 // }
-
 
 // This is deprecated Recoil code.  Recoil as of 01-03-2021
 // does not work well with Reactime.  Leaving any Recoil
@@ -85,13 +83,14 @@ function getRecoilState(): any {
  * Middleware: Gets a copy of the current snap.tree and posts a recordSnap message to the window
  */
 function sendSnapshot(snap: Snapshot, mode: Mode): void {
+  console.log('DEBUG >>> sendSnapshot - mode: ', mode);
   // Don't send messages while jumping or while paused
   if (mode.jumping || mode.paused) return;
   // If there is no current tree  creates a new one
   if (!snap.tree) {
     snap.tree = new Tree('root', 'root');
   }
-
+  console.log('DEBUG >>> snap: ', snap);
   const payload = snap.tree.cleanTreeCopy();
   // if it's Recoil - run different actions?
   if (isRecoil) {
@@ -130,6 +129,7 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
   // this is the currently active root fiber(the mutable root of the tree)
   if (fiberRoot) {
     const { current } = fiberRoot;
+    console.log('DEBUG >>> current: ', current);
     // Clears circular component table
     circularComponentTable.clear();
     // creates snapshot that is a tree based on properties in fiberRoot object
@@ -235,8 +235,6 @@ function createTree(
   tree: Tree = new Tree('root', 'root'),
   fromSibling = false
 ) {
-
-  console.log('CurrentFiber: ', currentFiber);
   // Base case: child or sibling pointed to null
   if (!currentFiber) return null;
   if (!tree) return tree;
@@ -256,7 +254,8 @@ function createTree(
     selfBaseDuration,
     treeBaseDuration,
   } = currentFiber;
-  //new feature adds props/state into the component
+
+  // new feature adds props/state into the component
   if (tag === 5) {
     try {
       // console.log('this is the tree', tree);
@@ -356,7 +355,6 @@ function createTree(
   if (
     memoizedState
     && (tag === 0 || tag === 1 || tag === 2 || tag === 10)
-    && isRecoil === true
   ) {
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
@@ -440,7 +438,6 @@ function createTree(
       let pointer = currentFiber;
       // end of repeat code
 
-
       while (pointer !== null) {
         if (pointer.stateNode !== null) {
           rtid = `fromLinkFiber${rtidCounter++}`;
@@ -462,7 +459,6 @@ function createTree(
         pointer = pointer.child;
       }
     } else {
-
       if (
         currentFiber.child
         && currentFiber.child.stateNode
@@ -548,7 +544,8 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     const throttledUpdateSnapshot = throttle(
       () => {
         console.log('how many times in line 497');
-        console.log('THIS IS SNAP AND MODEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE', snap, mode);
+        console.log('DEBUG >>> THIS IS SNAP AND MODEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE', snap, mode);
+        console.log('DEBUG >>> snap is null: ', snap.tree === null);
         updateSnapShotTree(snap, mode);
       },
       70
@@ -562,12 +559,14 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
           // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
           if (doWork) {
+            console.log('DEBUG >>> onCommitFiberRoot');
             throttledUpdateSnapshot();
           }
           return original(...args);
         };
       }(devTools.onCommitFiberRoot));
     }
+    console.log('DEBUG >>> outside onCommitFiberRoot');
     throttledUpdateSnapshot();
   };
 };

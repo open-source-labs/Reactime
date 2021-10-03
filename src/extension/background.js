@@ -10,17 +10,19 @@ const tabsObj = {};
 // Will store Chrome web vital metrics and their corresponding values.
 const metrics = {};
 
+let isRecordAfterJump = false;
+
 // This function will create the first instance of the test app's tabs object
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
 function createTabObj(title) {
   // TO-DO for save button
   // Save State
-  // Knowlege of the comparison snapshot
+  // Knowledge of the comparison snapshot
   // Check for it in the reducer
   // update tabsObj
   return {
     title,
-    // snapshots is an array of ALL state snapshots for statefull and stateless components the reactime tab working on a specific user application
+    // snapshots is an array of ALL state snapshots for stateful and stateless components the Reactime tab working on a specific user application
     snapshots: [],
     // records initial snapshot to refresh page in case empty function is called
     initialSnapshot: [],
@@ -32,7 +34,8 @@ function createTabObj(title) {
     currParent: 0,
     // points to the current branch
     currBranch: 0,
-    //* inserting a new property to build out our hierarchy dataset for d3
+    currVersion: 0,
+    // inserting a new property to build out our hierarchy dataset for d3
     hierarchy: null,
     // records initial hierarchy to refresh page in case empty function is called
     initialHierarchy: null,
@@ -55,6 +58,7 @@ class Node {
     this.name = tabObj.currParent += 1;
     // marks from what branch this node is originated
     this.branch = tabObj.currBranch;
+    this.version = tabObj.currVersion;
     this.stateSnapshot = obj;
     this.children = [];
   }
@@ -63,10 +67,13 @@ class Node {
 // Adds a new node to the current location.
 // Invoked in the case 'recordSnap'.
 function sendToHierarchy(tabObj, newNode) {
+  console.log('DEBUG >>> newNode: ', newNode);
   if (!tabObj.currLocation) {
-    tabObj.currLocation = newNode;
+    console.log('DEBUG >>> !tabObj.currLocation');
     tabObj.hierarchy = newNode;
   } else {
+    console.log('DEBUG >>> currLocation.children.push: ', tabObj.currLocation);
+    // Check if currLocation.children already contains this new node
     tabObj.currLocation.children.push(newNode);
     // if the node's children's array is empty
     if (tabObj.currLocation.children.length > 1) {
@@ -75,8 +82,8 @@ function sendToHierarchy(tabObj, newNode) {
       // reassign value of current branch as the newNode branch value
       tabObj.currBranch = newNode.branch;
     }
-    tabObj.currLocation = newNode;
   }
+  tabObj.currLocation = newNode;
 }
 
 // This function is used when time jumping to a previous state,
@@ -145,6 +152,8 @@ chrome.runtime.onConnect.addListener(port => {
     // ---------------------------------------------------------------
     const { action, payload, tabId } = msg;
 
+    console.log('DEBUG >>> msg.payload: ', payload);
+
     switch (action) {
       case 'import': // create a snapshot property on tabId and set equal to tabs object
         // may need do something like filter payload from stateless
@@ -206,6 +215,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const {
     action, index, name, value,
   } = request;
+  console.log('DEBUG >>> request: ', request);
   let isReactTimeTravel = false;
 
   if (name) {
@@ -230,10 +240,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   const { persist, empty } = tabsObj[tabId].mode;
-
   switch (action) {
     case 'jumpToSnap': {
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
+      isRecordAfterJump = true;
       break;
     }
     // This injects a script into the app that you're testing Reactime on,
@@ -323,6 +333,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         .actualDuration;
       const incomingSnap = request.payload.children[0].componentData.actualDuration;
       if (previousSnap === incomingSnap) break;
+
+      // Or if it is a snap after a jump, we don't record it.
+      if (isRecordAfterJump) {
+        console.log('DEBUG >>> isRecordAfterJump: ', isRecordAfterJump);
+        sendToHierarchy(
+          tabsObj[tabId],
+          new Node(request.payload, tabsObj[tabId]),
+        );
+        isRecordAfterJump = false;
+        break;
+      }
 
       // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
       if (reloaded[tabId]) {

@@ -139,9 +139,15 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.CHANGE_VIEW: {
+      console.log('DEBUG >>> viewIndex: ', viewIndex);
+      console.log('DEBUG >>> action.payload: ', action.payload);
+      console.log('DEBUG >>> tabs[currentTab]: ', tabs[currentTab]);
       // unselect view if same index was selected
-      if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
-      else tabs[currentTab].viewIndex = action.payload;
+      // if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
+      // else tabs[currentTab].viewIndex = action.payload;
+      tabs[currentTab].viewIndex = action.payload;
+      // update currLocation
+      tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
       break;
     }
     case types.CHANGE_SLIDER: {

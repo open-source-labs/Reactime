@@ -1,12 +1,12 @@
 // @ts-nocheck
 import React from 'react';
-import Action from '../components/Action';
 import ReactHtmlParser from 'react-html-parser';
 import { diff, formatters } from 'jsondiffpatch';
+import { useEffect } from 'react';
+import Action from '../components/Action';
 import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
-import { useEffect } from 'react';
 
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
@@ -17,7 +17,10 @@ const resetSlider = () => {
 
 function ActionContainer(props) {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { hierarchy, sliderIndex, viewIndex, snapshots } = tabs[currentTab];
+  const {
+    currLocation, hierarchy, sliderIndex, viewIndex, snapshots,
+  } = tabs[currentTab];
+  console.log('DEBUG >>> tab info: ', tabs[currentTab]);
   const { toggleActionContainer, actionView, setActionView } = props;
   let actionsArr = [];
   const hierarchyArr: any[] = [];
@@ -49,13 +52,13 @@ function ActionContainer(props) {
           obj.children.forEach(
             (element: { state?: object | string; children?: [] }) => {
               if (
-                element.state !== 'stateless' ||
-                element.children.length > 0
+                element.state !== 'stateless'
+                || element.children.length > 0
               ) {
                 const clean = statelessCleanning(element);
                 newObj.children.push(clean);
               }
-            }
+            },
           );
         }
       }
@@ -64,7 +67,7 @@ function ActionContainer(props) {
     };
     // displays stateful data
     const previousDisplay = statelessCleanning(snapshots[index - 1]);
-    const delta = diff(previousDisplay, snapshots[index]); 
+    const delta = diff(previousDisplay, snapshots[index]);
     const changedState = findStateChangeObj(delta);
     const html = formatters.html.format(changedState[0]);
     const output = ReactHtmlParser(html);
@@ -81,15 +84,15 @@ function ActionContainer(props) {
     if (!delta.children) {
       return changedState;
     }
-    Object.keys(delta.children).forEach((child) => {
-      //if (isNaN(child) === false) {
+    Object.keys(delta.children).forEach(child => {
+      // if (isNaN(child) === false) {
       changedState.push(...findStateChangeObj(delta.children[child]));
-      //}
+      // }
     });
     return changedState;
   }
 
-  // function to traverse state from hiararchy and also getting information on display name and component name
+  // function to traverse state from hierarchy and also getting information on display name and component name
   const displayArray = (obj: {
     stateSnapshot: { children: any[] };
     name: number;
@@ -98,10 +101,10 @@ function ActionContainer(props) {
     children?: [];
   }) => {
     if (
-      obj.stateSnapshot.children.length > 0 &&
-      obj.stateSnapshot.children[0] &&
-      obj.stateSnapshot.children[0].state &&
-      obj.stateSnapshot.children[0].name
+      obj.stateSnapshot.children.length > 0
+      && obj.stateSnapshot.children[0]
+      && obj.stateSnapshot.children[0].state
+      && obj.stateSnapshot.children[0].name
     ) {
       const newObj: Record<string, unknown> = {
         index: obj.index,
@@ -109,7 +112,7 @@ function ActionContainer(props) {
         state: obj.stateSnapshot.children[0].state,
         componentName: obj.stateSnapshot.children[0].name,
         // nathan testing new entries for component name, original above
-        //componentName: findDiff(obj.index),
+        // componentName: findDiff(obj.index),
         componentData:
           JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}'
             ? ''
@@ -118,7 +121,7 @@ function ActionContainer(props) {
       hierarchyArr.push(newObj);
     }
     if (obj.children) {
-      obj.children.forEach((element) => {
+      obj.children.forEach(element => {
         displayArray(element);
       });
     }
@@ -160,7 +163,7 @@ function ActionContainer(props) {
         componentName: string;
         componentData: { actualDuration: number } | undefined;
       },
-      index
+      index,
     ) => {
       const selected = index === viewIndex;
       const last = viewIndex === -1 && index === hierarchyArr.length - 1;
@@ -179,37 +182,38 @@ function ActionContainer(props) {
           handleOnkeyDown={handleOnKeyDown}
           logChangedState={findDiff}
           viewIndex={viewIndex}
+          isCurrIndex={index === currLocation.index}
         />
       );
-    }
+    },
   );
   useEffect(() => {
     setActionView(true);
-  }, []);
+  }, [setActionView]);
 
   // the conditional logic below will cause ActionContainer.test.tsx to fail as it cannot find the Empty button
   // UNLESS actionView={true} is passed into <ActionContainer /> in the beforeEach() call in ActionContainer.test.tsx
   return (
-    <div id='action-id' className='action-container'>
-      <div id='arrow'>
-        <aside className='aside'>
-          <a onClick={toggleActionContainer} className='toggle'>
-            <i></i>
+    <div id="action-id" className="action-container">
+      <div id="arrow">
+        <aside className="aside">
+          <a onClick={toggleActionContainer} className="toggle">
+            <i />
           </a>
         </aside>
       </div>
       {actionView ? (
         <div>
           <SwitchAppDropdown />
-          <div className='action-component exclude'>
+          <div className="action-component exclude">
             <button
-              className='empty-button'
+              className="empty-button"
               onClick={() => {
                 dispatch(emptySnapshots());
                 // set slider back to zero
                 resetSlider();
               }}
-              type='button'
+              type="button"
             >
               Clear
             </button>
