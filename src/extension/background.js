@@ -34,7 +34,6 @@ function createTabObj(title) {
     currParent: 0,
     // points to the current branch
     currBranch: 0,
-    currVersion: 0,
     // inserting a new property to build out our hierarchy dataset for d3
     hierarchy: null,
     // records initial hierarchy to refresh page in case empty function is called
@@ -52,13 +51,13 @@ function createTabObj(title) {
 // Each node stores a history of the link fiber tree.
 class Node {
   constructor(obj, tabObj) {
+    console.log('DEBUG >>> tabObj: ', JSON.parse(JSON.stringify(tabObj)));
     // continues the order of number of total state changes
     this.index = tabObj.index++;
     // continues the order of number of states changed from that parent
     this.name = tabObj.currParent += 1;
     // marks from what branch this node is originated
     this.branch = tabObj.currBranch;
-    this.version = tabObj.currVersion;
     this.stateSnapshot = obj;
     this.children = [];
   }
@@ -67,23 +66,31 @@ class Node {
 // Adds a new node to the current location.
 // Invoked in the case 'recordSnap'.
 function sendToHierarchy(tabObj, newNode) {
-  console.log('DEBUG >>> newNode: ', newNode);
   if (!tabObj.currLocation) {
-    console.log('DEBUG >>> !tabObj.currLocation');
+    tabObj.currLocation = newNode;
     tabObj.hierarchy = newNode;
   } else {
-    console.log('DEBUG >>> currLocation.children.push: ', tabObj.currLocation);
-    // Check if currLocation.children already contains this new node
+    const currNameCount = countCurrName(tabObj.hierarchy, newNode.name);
+    console.log(`DEBUG >>> count ${newNode.name} = ${currNameCount}`);
+    newNode.branch = currNameCount;
+    tabObj.currBranch = newNode.branch;
     tabObj.currLocation.children.push(newNode);
-    // if the node's children's array is empty
-    if (tabObj.currLocation.children.length > 1) {
-      // increment the value of the nodes branch by 1
-      newNode.branch += 1;
-      // reassign value of current branch as the newNode branch value
-      tabObj.currBranch = newNode.branch;
-    }
+    tabObj.currLocation = newNode;
   }
-  tabObj.currLocation = newNode;
+}
+
+function countCurrName(rootNode, name) {
+  if (rootNode.name > name) {
+    return 0;
+  }
+  if (rootNode.name === name) {
+    return 1;
+  }
+  let branch = 0;
+  rootNode.children.forEach(child => {
+    branch += countCurrName(child, name);
+  });
+  return branch;
 }
 
 // This function is used when time jumping to a previous state,
@@ -93,7 +100,14 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   // index comes from the app's main reducer to locate the correct current location on tabObj
   // check if current node has the index wanted
   if (rootNode.index === index) {
+    console.log('DEBUG >>> jump index: ', index);
+    console.log('DEBUG >>> jump name: ', name);
+    console.log('DEBUG >>> jump hierachy: ', rootNode);
     tabObj.currLocation = rootNode;
+    // Count number of nodes in the tree with name = next name.
+    const currNameCount = countCurrName(tabObj.hierarchy, name + 1);
+    console.log('DEBUG >>> currNameCount: ', currNameCount);
+    tabObj.currBranch = currNameCount === 0 ? 0 : currNameCount - 1;
     // index of current location from where the next node will be a child
     tabObj.currParent = name;
     return;
@@ -151,8 +165,6 @@ chrome.runtime.onConnect.addListener(port => {
     // }
     // ---------------------------------------------------------------
     const { action, payload, tabId } = msg;
-
-    console.log('DEBUG >>> msg.payload: ', payload);
 
     switch (action) {
       case 'import': // create a snapshot property on tabId and set equal to tabs object
@@ -215,7 +227,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const {
     action, index, name, value,
   } = request;
-  console.log('DEBUG >>> request: ', request);
   let isReactTimeTravel = false;
 
   if (name) {
@@ -314,6 +325,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         reloaded[tabId] = false;
         tabsObj[tabId].webMetrics = metrics;
         tabsObj[tabId].snapshots.push(request.payload);
+        console.log('DEBUG >>> new Node');
         sendToHierarchy(
           tabsObj[tabId],
           new Node(request.payload, tabsObj[tabId]),
@@ -335,24 +347,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (previousSnap === incomingSnap) break;
 
       // Or if it is a snap after a jump, we don't record it.
-      if (isRecordAfterJump) {
-        console.log('DEBUG >>> isRecordAfterJump: ', isRecordAfterJump);
-        sendToHierarchy(
-          tabsObj[tabId],
-          new Node(request.payload, tabsObj[tabId]),
-        );
-        isRecordAfterJump = false;
-        break;
-      }
-
-      // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
       if (reloaded[tabId]) {
+        // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
         reloaded[tabId] = false;
+      } else if (isRecordAfterJump) {
+        console.log('DEBUG >>> test currLocation: ', tabsObj[tabId].currLocation);
+        isRecordAfterJump = false;
       } else {
         tabsObj[tabId].snapshots.push(request.payload);
         //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
-
         if (!tabsObj[tabId][index]) {
+          console.log('DEBUG >>> new Node 2?');
           sendToHierarchy(
             tabsObj[tabId],
             new Node(request.payload, tabsObj[tabId]),

@@ -37,14 +37,16 @@ interface MainSliderProps {
 function MainSlider(props: MainSliderProps) {
   const { snapshotsLength } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { sliderIndex } = tabs[currentTab];
+  const { currLocation, sliderIndex } = tabs[currentTab];
+
+  console.log('DEBUG >>> slider: ', currLocation);
 
   return (
     <Slider
       min={0}
       max={snapshotsLength - 1}
-      value={sliderIndex}
-      onChange={(index:any) => {
+      value={currLocation.index}
+      onChange={(index: any) => {
         const newIndex = index === -1 ? 0 : index;
         dispatch(changeSlider(newIndex));
         dispatch(pause());

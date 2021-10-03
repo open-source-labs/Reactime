@@ -20,7 +20,6 @@ function ActionContainer(props) {
   const {
     currLocation, hierarchy, sliderIndex, viewIndex, snapshots,
   } = tabs[currentTab];
-  console.log('DEBUG >>> tab info: ', tabs[currentTab]);
   const { toggleActionContainer, actionView, setActionView } = props;
   let actionsArr = [];
   const hierarchyArr: any[] = [];
@@ -153,20 +152,23 @@ function ActionContainer(props) {
       dispatch(changeSlider(currIndex));
     }
   }
-
+  // Sort by index.
+  hierarchyArr.sort((a, b) => a.index - b.index);
+  // console.log('DEBUG >>> hierarchyArr: ', hierarchyArr);
   actionsArr = hierarchyArr.map(
     (
       snapshot: {
         state?: Record<string, unknown>;
-        key: string;
+        index: number;
         displayName: string;
         componentName: string;
         componentData: { actualDuration: number } | undefined;
       },
-      index,
     ) => {
+      const { index } = snapshot;
       const selected = index === viewIndex;
       const last = viewIndex === -1 && index === hierarchyArr.length - 1;
+      const isCurrIndex = index === currLocation.index;
       return (
         <Action
           key={`action${index}`}
@@ -182,11 +184,12 @@ function ActionContainer(props) {
           handleOnkeyDown={handleOnKeyDown}
           logChangedState={findDiff}
           viewIndex={viewIndex}
-          isCurrIndex={index === currLocation.index}
+          isCurrIndex={isCurrIndex}
         />
       );
     },
   );
+  // console.log('DEBUG >>> actionsArr: ', actionsArr);
   useEffect(() => {
     setActionView(true);
   }, [setActionView]);

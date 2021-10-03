@@ -29,6 +29,7 @@ interface StateContainerProps {
   hierarchy: Record<string, unknown>;
   snapshots?: [];
   viewIndex?: number;
+  currLocation?: object;
 }
 
 // eslint-disable-next-line react/prop-types
@@ -39,6 +40,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
     snapshots,
     viewIndex,
     webMetrics,
+    currLocation,
   } = props;
 
   return (
@@ -78,6 +80,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
                 snapshot={snapshot}
                 hierarchy={hierarchy}
                 snapshots={snapshots}
+                currLocation={currLocation}
               />
             )}
           />

@@ -141,11 +141,10 @@ function MainContainer(): any {
       </div>
     );
   }
+  console.log('DEBUG >>> main: ', tabs[currentTab]);
   const {
-    viewIndex, sliderIndex, snapshots, hierarchy, webMetrics,
-  } = tabs[
-    currentTab
-    ];
+    currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics,
+  } = tabs[currentTab];
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // cleaning hierarchy and snapshotView from stateless data
@@ -202,6 +201,7 @@ function MainContainer(): any {
             snapshot={snapshotDisplay}
             hierarchy={hierarchyDisplay}
             snapshots={snapshots}
+            currLocation={currLocation}
           />
         ) : null}
         <TravelContainer snapshotsLength={snapshots.length} />
