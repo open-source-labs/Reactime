@@ -33,7 +33,7 @@ type Props = {
 const nodeList = [];
 
 const collectNodes = (node) => {
-  console.log("This is the root node", node);
+  // console.log("This is the root node", node);
   nodeList.splice(0, nodeList.length); { /* We used the .splice method here to ensure that nodeList did not accumulate with page refreshes */ }
   nodeList.push(node);
   for (let i = 0; i < nodeList.length; i++) {
@@ -44,7 +44,7 @@ const collectNodes = (node) => {
       }
     }
   }
-  console.log('NODELIST looks like: ', nodeList);
+  // console.log('NODELIST looks like: ', nodeList);
 }
 
 export default function LinkControls({

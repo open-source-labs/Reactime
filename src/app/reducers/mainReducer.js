@@ -3,10 +3,10 @@ import { produce, original } from 'immer';
 import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
-  console.log('export state', state);
+  // console.log('export state', state);
   const { port, currentTab, tabs } = draft;
-  console.log('currentTab Reducer:', currentTab);
-  console.log('reducer action:', action);
+  // console.log('currentTab Reducer:', currentTab);
+  // console.log('reducer action:', action);
   const {
     hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex,
   } = tabs[currentTab] || {};
