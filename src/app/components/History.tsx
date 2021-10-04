@@ -110,6 +110,7 @@ function History(props: Record<string, unknown>) {
       // .join("g")
       .attr('transform', d => `translate(${d.x},${d.y})`);
 
+
     node.append('circle')
       .attr('fill', d => {
         if (d.data.index === currLocation.index) {
@@ -121,6 +122,8 @@ function History(props: Record<string, unknown>) {
       .style('cursor', 'pointer')
       .on('click', d => {
         console.log('DEBUG >>> onclick d:', d);
+        console.log('DEBUG >>> Clicked on currlocation:', currLocation);
+        console.log('DEBUG >>> Clicked on d.data:', d.data.index);
         dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
       })

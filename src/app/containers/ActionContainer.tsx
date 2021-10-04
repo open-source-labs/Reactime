@@ -134,19 +134,19 @@ function ActionContainer(props) {
   function handleOnKeyDown(e: KeyboardEvent, i: number) {
     let currIndex = i;
     // up arrow key pressed
-    if (e.keyCode === 38) {
+    if (e.key === 'ArrowUp') {
       currIndex -= 1;
       if (currIndex < 0) return;
       dispatch(changeView(currIndex));
     }
     // down arrow key pressed
-    else if (e.keyCode === 40) {
+    else if (e.key === 'ArrowDown') {
       currIndex += 1;
       if (currIndex > hierarchyArr.length - 1) return;
       dispatch(changeView(currIndex));
     }
     // enter key pressed
-    else if (e.keyCode === 13) {
+    else if (e.key === 'Enter') {
       e.stopPropagation();
       e.preventDefault(); // needed or will trigger onClick right after
       dispatch(changeSlider(currIndex));
