@@ -113,6 +113,7 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
     componentData: {},
     maxTotalRender: 0,
   };
+  console.log('show me all of the snapshots', snapshots);
   snapshots.forEach((snapshot, i) => {
     perfData.barStack.push({ snapshotId: snapshotsIds[i] });
     traverse(snapshot, perfData);

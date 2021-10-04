@@ -261,231 +261,7 @@ export default function ComponentMap({
   };
   findSelectedNode();
 
-  const collapsedState = 'collapsedState';/// /THIS IS VIET'S CODEEEE!@
-
-  // collapsed comes from reducer state so you can grab it from cloud and use it as a value here
-  // collapsedState is just a style you create in css
-
-  // Adding overlay component to close out with tooltipwhen clicking anywhere on screen
-  //   const overlayComp = hooks => (
-  //     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-  //     <div
-  //      // className={`overlay ${(node.data.isExpanded && collapsedState)}`} // 'overlay collapsedState' or 'overlay'
-  //       className={tooltip ? 'overlay' : 'collapsedState'}
-  //       onClick={() => {
-  //         setTooltip(false);
-  //         // console.log('Testing to see if the setToolTip works');
-  //         // console.log('this is toolTip', tooltip);
-  //       }}
-  //     >
-  //       {/* onDoubleClick={() => {
-  //                               node.data.isExpanded = !node.data.isExpanded;
-  //                               forceUpdate();
-  //                             }} */}
-  //       <TooltipInPortal
-  //           // set this to random so it correctly updates with parent bounds
-  //         key={Math.random()}
-  //         top={tooltipTop}
-  //         left={tooltipLeft}
-  //         style={tooltipStyles}
-  //       >
-  //         <div>
-  //           <div style={{}}>
-  //             {' '}
-  //             <strong>{tooltipData.name}</strong>
-  //             {' '}
-  //           </div>
-  //           <div>
-  //             {' '}
-  //             Render time:
-  //             {' '}
-  //             {formatRenderTime(tooltipData.componentData.actualDuration)}
-  //             {' '}
-  //           </div>
-  //           <div>
-  //             State:
-  //             {tooltipData.state}
-  //           </div>
-  //           <div style={scrollStyle}>
-  //             Props:
-  //             {makePropsPretty(tooltipData.componentData.props)}
-  //             {/* {JSON.stringify(tooltipData.componentData.props)} */}
-  //           </div>
-  //         </div>
-  //       </TooltipInPortal>
-  //     </div>
-  //   );
-  //     // controls for the map
-  //   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
-  //   return totalWidth < 10 ? null : (
-  //     <div>
-  //       <LinkControls
-  //         layout={layout}
-  //         orientation={orientation}
-  //         linkType={linkType}
-  //         stepPercent={stepPercent}
-  //         snapShots={snapshots[lastNode]}
-  //         selectedNode={selectedNode}
-  //         setLayout={setLayout}
-  //         setOrientation={setOrientation}
-  //         setLinkType={setLinkType}
-  //         setStepPercent={setStepPercent}
-  //         setSelectedNode={setSelectedNode}
-  //       />
-
-  //       <svg ref={containerRef} width={totalWidth} height={totalHeight}>
-  //         <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
-  //         <rect width={totalWidth} height={totalHeight} rx={14} fill="#242529" />
-  //         <Group top={margin.top} left={margin.left}>
-  //           {/* {console.log('This is the SelectedNode:', selectedNode)} */}
-  //           <Tree
-  //             root={hierarchy(startNode || data, d => (d.isExpanded ? null : d.children))}
-  //             size={[sizeWidth, sizeHeight]}
-  //             separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
-  //           >
-  //             {tree => (
-  //               <Group top={origin.y} left={origin.x}>
-  //                 {tree.links().map((link, i) => (
-  //                   <LinkComponent
-  //                     key={i}
-  //                     data={link}
-  //                     percent={stepPercent}
-  //                     stroke="#ff6569"
-  //                     strokeWidth="1"
-  //                     fill="none"
-  //                   />
-  //                 ))}
-
-  //                 {tree.descendants().map((node, key) => {
-  //                   const widthFunc = name => {
-  //                     const nodeLength = name.length;
-  //                     if (nodeLength < 5) return nodeLength + 40;
-  //                     if (nodeLength < 10) return nodeLength + 60;
-  //                     return nodeLength + 70;
-  //                   };
-  //                   const width = widthFunc(node.data.name);
-  //                   const height = 25;
-
-  //                   let top: number;
-  //                   let left: number;
-  //                   if (layout === 'polar') {
-  //                     const [radialX, radialY] = pointRadial(node.x, node.y);
-  //                     top = radialY;
-  //                     left = radialX;
-  //                   } else if (orientation === 'vertical') {
-  //                     top = node.y;
-  //                     left = node.x;
-  //                   } else {
-  //                     top = node.x;
-  //                     left = node.y;
-  //                   }
-
-  //                   // mousing controls & Tooltip display logic
-  //                   const handleMouseOver = event => {
-  //                     () => dispatch(onHover(node.data.rtid));
-  //                     // console.log('line 197 event.target', event.target.ownerSVGElement);
-  //                     // console.log('line 199 This is DATA: ', data);
-  //                     // console.log('line 200 This is TREE: ', tree);
-  //                     // console.log('line 201 This is NODE: ', node);
-  //                     const coords = localPoint(
-  //                       event.target.ownerSVGElement,
-  //                       event,
-  //                     );
-  //                     const tooltipObj = { ...node.data };
-  //                     // console.log('NODE DATAAAAAAAAAAAAA', node);
-  //                     if (typeof tooltipObj.state === 'object') tooltipObj.state = 'stateful';
-  //                     showTooltip({
-  //                       tooltipLeft: coords.x,
-  //                       tooltipTop: coords.y,
-  //                       tooltipData: tooltipObj, // this is where the data for state and render time is displayed but does not show props functions and etc
-  //                     });
-  //                   };
-
-  //                   return (
-  //                     <Group top={top} left={left} key={key}>
-  //                       {node.depth === 0 && (
-  //                       <circle
-  //                         r={12}
-  //                         fill="url('#links-gradient')"
-  //                         stroke="#ff6569"
-  //                         onClick={() => {
-  //                           node.data.isExpanded = !node.data.isExpanded;
-  //                           forceUpdate();
-  //                         }}
-  //                       />
-  //                       )}
-  //                       {/* This creates the rectangle boxes for each component and sets it relative position to other parent nodes of the same level. */}
-  //                       {node.depth !== 0 && (
-  //                       <rect
-  //                         className="rect"
-  //                         height={height}
-  //                         width={width}
-  //                         y={-height / 2}
-  //                         x={-width / 2}
-  //                             // node.children = if node has children
-  //                         fill={node.children ? '#161521' : '#62d6fb'}
-  //                             // node.data.isExpanded = if node is collapsed
-  //                             // stroke={(node.data.isExpanded && node.child) ? '#95fb62' : '#a69ff5'} => node.child is gone when clicked, even if it actually has children. Maybe better call node.children => node.leaf
-  //                         stroke={(node.data.isExpanded && node.data.children.length > 0) ? '#95fb62' : '#a69ff5'}
-
-  //                             // if already child in fill do not all stroke to change change color later but it works!!!!!!!!
-  //                         strokeWidth={3}
-  //                             // strokeDasharray={node.children ? '0' : '2,2'}
-  //                         strokeOpacity="1"
-  //                         rx={node.children ? 4 : 10}
-  //                         onDoubleClick={() => {
-  //                             node.data.isExpanded = !node.data.isExpanded;
-  //                           forceUpdate();
-  //                         }}
-  //                             // Tooltip event handlers
-  //                             // test feature
-  //                             // onClick = {handleMouseOver}
-  //                         onClick={event => {
-  //                           if (tooltip) { // cohort 45
-  //                             hideTooltip();
-  //                             setTooltip(false);
-  //                           } else {
-  //                             handleMouseOver(event);
-  //                             setTooltip(true);
-  //                           }
-  //                         }}
-  //                         onMouseEnter={() => dispatch(onHover(node.data.rtid))} // fix this not working
-  //                         onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
-  //                       />
-  //                       )}
-  //                       {/* Display text inside of each component node */}
-  //                       <text
-  //                         dy=".33em"
-  //                         fontSize={10}
-  //                         fontFamily="Roboto"
-  //                         textAnchor="middle"
-  //                         style={{ pointerEvents: 'none' }}
-  //                         fill={
-  //                             node.depth === 0
-  //                               ? '#161521'
-  //                               : node.children
-  //                                 ? 'white'
-  //                                 : '#161521'
-  //                           }
-  //                       >
-  //                         {node.data.name}
-  //                       </text>
-  //                     </Group>
-  //                   );
-  //                 })}
-  //               </Group>
-  //             )}
-  //           </Tree>
-  //         </Group>
-  //       </svg>
-  //       {tooltip && tooltipData && (
-  //         overlayComp()
-  //       )}
-  //     </div>
-  //   );
-  // }
-
-  // controls for the map ////// old code!!!!!! not from viet
+  // controls for the map 
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
   return totalWidth < 10 ? null : (
     <div>
@@ -551,7 +327,7 @@ export default function ComponentMap({
                   }
 
                   // mousing controls & Tooltip display logic
-                  const handleMouseOver = event => {
+                  const handleMouseAndClickOver = event => {
                     () => dispatch(onHover(node.data.rtid));
                     console.log('line 197 event.target', event.target.ownerSVGElement);
                     console.log('line 199 This is DATA: ', data);
@@ -572,7 +348,7 @@ export default function ComponentMap({
                   };
 
                   return (
-                    <Group top={top} left={left} key={key}>
+                    <Group top={top} left={left} key={key} className="rect">
                       {node.depth === 0 && (
                         <circle
                           r={12}
@@ -583,7 +359,7 @@ export default function ComponentMap({
                             forceUpdate();
                           }}
                         />
-                      )}
+                        )}
                       {/* This creates the rectangle boxes for each component and sets it relative position to other parent nodes of the same level. */}
                       {node.depth !== 0 && (
                         <rect
@@ -604,46 +380,48 @@ export default function ComponentMap({
                           rx={node.children ? 4 : 10}
                           onDoubleClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
+                            hideTooltip();
+                            setTooltip(false);
                             forceUpdate();
                           }}
                           // Tooltip event handlers
                           // test feature
-                          // onClick = {handleMouseOver}
+                          // onClick = {handleMouseAndClickOver}
                           onClick={event => {
-                            if (!tooltip){
-                              handleMouseOver(event);
+                            if (!tooltip) {
+                              handleMouseAndClickOver(event);
                               setTooltip(true);
                             }
                             // if (tooltip) { // cohort 45
                             //   hideTooltip();
                             //   setTooltip(false);
                             // } else {
-                            //   handleMouseOver(event);
+                            //   handleMouseAndClickOver(event);
                             //   setTooltip(true);
                             // }
                           }}
                           onMouseEnter={() => dispatch(onHover(node.data.rtid))} // fix this not working
                           onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
                         />
-                      )}
+                        )}
                       {/* Display text inside of each component node */}
                       <text
-                        dy=".33em"
-                        fontSize={10}
-                        fontFamily="Roboto"
-                        textAnchor="middle"
-                        style={{ pointerEvents: 'none' }}
-                        fill={
+                          dy=".33em"
+                          fontSize={10}
+                          fontFamily="Roboto"
+                          textAnchor="middle"
+                          style={{ pointerEvents: 'none' }}
+                          fill={
                           node.depth === 0
                             ? '#161521'
                             : node.children
                               ? 'white'
                               : '#161521'
                         }
-                        z
-                      >
-                        {node.data.name}
-                      </text>
+                          z
+                        >
+                          {node.data.name}
+                        </text>
                     </Group>
                   );
                 })}
@@ -661,7 +439,11 @@ export default function ComponentMap({
           style={tooltipStyles}
           onClick={hideTooltip}
         >
-          <div>
+          <div onClick={() => {
+            setTooltip(false);
+            hideTooltip();
+          }}
+          >
             <div style={{}}>
               {' '}
               <strong>{tooltipData.name}</strong>
@@ -682,21 +464,11 @@ export default function ComponentMap({
               <div className="props">
                 Props:
                 {makePropsPretty(tooltipData.componentData.props)}
-                {/* {JSON.stringify(tooltipData.componentData.props)} */}
               </div>
             </div>
           </div>
         </TooltipInPortal>
-
       )}
-      <div
-        className={tooltip ? 'overlay' : 'collapsedState'}
-        onClick={() => {
-          setTooltip(false);
-          console.log('this is toolTip', tooltip);
-          hideTooltip()
-        }}
-      />
     </div>
   );
 }

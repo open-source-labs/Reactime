@@ -262,8 +262,6 @@ function createTree(
 
   if (tag === 5) {
     try {
-      // console.log('this is the tree', tree);
-
       if (memoizedProps.children[0]._owner.memoizedProps !== undefined) {
         const propsData = memoizedProps.children[0]._owner.memoizedProps;
         const newPropData = convertFunctionToString(propsData, tree.componentData.props ? tree.componentData.props : null);
@@ -271,18 +269,14 @@ function createTree(
           ...tree.componentData,
           props: newPropData
         };
-        console.log('this is the new tree with errthang', tree.componentData);
       }
-      // console.log('CHECKING THE TREE FOR THE DATA', tree);
-      // console.log('looking for the owner', memoizedProps.children);
-      // console.log('this is working but whats going on', propsData,);
-      // console.log('this should display the stuff we want', memoizedProps.children[0]._owner.memoizedState);
-      // console.log('current fiber', currentFiber);
     } catch (error) {
       // console.log('this is the error', error);
     }
   }
-  console.log('show me the tree', tree);
+  if(tag === 3){ 
+    console.log(currentFiber)
+  }
   // Checks Recoil Atom and Selector Relationships
   if (
     currentFiber.memoizedState
@@ -571,8 +565,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     console.log('THIS IS THE FIBER ROOOT', fiberRoot);
     const throttledUpdateSnapshot = throttle(
       () => {
-        // console.log('how many times in line 497');
-        // console.log('THIS IS SNAP AND MODEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE', snap, mode);
         updateSnapShotTree(snap, mode);
       },
       70
@@ -580,7 +572,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     if (reactInstance && reactInstance.version) {
-      // console.log('888888888888888888888 THIS IS GETTING CALLED LINE 503 888888888888888888888888888888');
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           // eslint-disable-next-line prefer-destructuring
