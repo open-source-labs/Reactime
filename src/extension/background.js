@@ -99,6 +99,8 @@ function countCurrName(rootNode, name) {
 function changeCurrLocation(tabObj, rootNode, index, name) {
   // index comes from the app's main reducer to locate the correct current location on tabObj
   // check if current node has the index wanted
+  console.log('DEBUG >>> rootNode.index: ', rootNode.index);
+  console.log('DEBUG >>> index: ', index);
   if (rootNode.index === index) {
     console.log('DEBUG >>> jump index: ', index);
     console.log('DEBUG >>> jump name: ', name);
@@ -253,6 +255,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const { persist, empty } = tabsObj[tabId].mode;
   switch (action) {
     case 'jumpToSnap': {
+      console.log('DEBUG >>> in jumpToSnap action!')
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
       isRecordAfterJump = true;
       break;
