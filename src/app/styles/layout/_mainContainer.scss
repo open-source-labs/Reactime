@@ -4,3 +4,25 @@
   background-color: $brand-color;
   overflow: hidden;
 }
+
+//  viet 
+.overlay {
+  content: " ";
+  z-index: 100;
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: transparent;
+}
+
+.collapsedState {
+  display: none;
+}
+
+.rect {
+  z-index: 101;
+}

@@ -217,11 +217,14 @@ function convertFunctionToString(newObj, oldObj) {
     if (typeof newObj[key] === 'function') {
       newPropData[key] = 'function';
       // console.log('we changed the function', newPropData[key]);
+    } else if (exclude.includes(key) === true) {
+      newPropData[key] = 'reactFiber';
+      return newPropData;
     } else if (typeof newObj[key] === 'object' && exclude.includes(key) !== true) {
-      console.log('in the recursive call', key, newObj[key], key);
+      // console.log('in the recursive call', key, newObj[key], key);
       newPropData[key] = convertFunctionToString(newObj[key], null);
     } else if (exclude.includes(key) !== true) {
-      console.log('there should be no objects here', key, typeof newObj[key], newObj[key]);
+      // console.log('there should be no objects here', key, typeof newObj[key], newObj[key]);
       newPropData[key] = newObj[key];
     }
   }

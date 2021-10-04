@@ -1,7 +1,8 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
@@ -153,37 +154,88 @@ export default function ComponentMap({
   // places all nodes into a flat array
   const nodeList = [];
 
+  // if (exclude.includes(key) === true) {
+  //   nestedObj[key] = 'react related';
+  // }
+  // if (typeof data[key] === 'object' && exclude.includes(key) !== true) {
+  //   nestedObj = makePropsPretty(data[key]);
+  //   if (Array.isArray(nestedObj)) {
+  //     try {
+  //       if (nestedObj[0].$$typeof) {
+  //         nestedObj = null;
+  //       } else {
+  //         nestedObj = nestedObj.forEach(e => makePropsPretty(e));
+  //       }
+  //     } catch (error) {
+  //       console.log('not a react componenet');
+  //     }
+  //   }
+  // }
+  // const makePropsPretty = data => {
+  //   const propsFormat = [];
+  //   let nestedObj;
+  //   for (const key in data) {
+  //     if (data[key] !== 'reactFiber' && typeof data[key] !== 'object' && exclude.includes(key) !== true) {
+  //       propsFormat.push(<p className="stateprops">
+  //         {`${key}: ${nestedObj || data[key]}`}
+  //                        </p>);
+  //     } else if (typeof data[key] === 'object' && exclude.includes(key) !== true) {
+  //       nestedObj = makePropsPretty(data[key]);
+  //       try {
+  //         if (nestedObj[0].$$typeof) {
+  //           // nestedObj = nestedObj.forEach(e => makePropsPretty(e.props.children));
+  //           nestedObj = nestedObj.forEach(e => {
+  //             console.log('this is e show the object', e);
+  //             if (typeof e.props.children === 'object') {
+  //               console.log('nested obj show me ', typeof e.props.children, e.props.children);
+  //               return e.props.children;
+  //             }
+  //             console.log('not an object in nestedobj', typeof e.props.children, e.props.children);
+  //             return e.props.children;
+  //           });
+  //           console.log('show me show show show show show show show', nestedObj);
+  //           // console.log('show me the nestedobj after the react thing', nestedObj)
+  //         } else {
+  //           nestedObj = nestedObj.forEach(e =>{
+  //             console.log('this is not a react thing so show me', e)
+  //             makePropsPretty(e)
+  //           });
+  //         }
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     }
+  //     if (nestedObj) {
+  //       propsFormat.push(nestedObj);
+  //     }
+  //   }
+  //   return propsFormat;
+  // };
+
   const makePropsPretty = data => {
     const propsFormat = [];
-    let nestedObj;
+    const nestedObj = [];
+    // console.log('show me the data we are getting', data);
     for (const key in data) {
-      console.log('this is the key', key);
-      if (typeof data[key] === 'object' && exclude.includes(key) !== true) {
-        nestedObj = makePropsPretty(data[key]);
-        if (Array.isArray(nestedObj)) {
-          try {
-            if (nestedObj[0].$$typeof) {
-              nestedObj = null;
-            } else {
-              nestedObj = nestedObj.forEach(e => makePropsPretty(e));
-            }
-          } catch (error) {
-            console.log('not a react componenet');
-          }
-        }
+      if (data[key] !== 'reactFiber' && typeof data[key] !== 'object' && exclude.includes(key) !== true) {
+        propsFormat.push(<p className="stateprops">
+          {`${key}: ${data[key]}`}
+                         </p>);
+      } else if (data[key] !== 'reactFiber' && typeof data[key] === 'object' && exclude.includes(key) !== true) {
+        const result = makePropsPretty(data[key]);
+        nestedObj.push(result);
       }
-      console.log('testing what data is received', 'this is nested ob', nestedObj, 'this is datakey', key, data[key]);
-      propsFormat.push(<p>
-        {`${key}: ${JSON.stringify(nestedObj || data[key])}`}
-                       </p>);
     }
-    console.log('this is propsFormat', propsFormat);
+    if (nestedObj) {
+      propsFormat.push(nestedObj);
+    }
+    // console.log('this is propsformat', propsFormat);
     return propsFormat;
   };
 
   const collectNodes = node => {
     nodeList.splice(0, nodeList.length);
-    console.log('Root node:', node);
+    // console.log('Root node:', node);
     nodeList.push(node);
     for (let i = 0; i < nodeList.length; i++) {
       const cur = nodeList[i];
@@ -193,14 +245,14 @@ export default function ComponentMap({
         }
       }
     }
-    console.log('NODELIST in ComponentMap: ', nodeList);
+    // console.log('NODELIST in ComponentMap: ', nodeList);
   };
   collectNodes(snapshots[lastNode]);
 
   // find the node that has been selected and use it as the root
   const startNode = null;
   const findSelectedNode = () => {
-    console.log(selectedNode);
+    // console.log(selectedNode);
     for (const node of nodeList) {
       if (node.name === selectedNode) {
         startNode = node;
@@ -209,7 +261,231 @@ export default function ComponentMap({
   };
   findSelectedNode();
 
-  // controls for the map
+  const collapsedState = 'collapsedState';/// /THIS IS VIET'S CODEEEE!@
+
+  // collapsed comes from reducer state so you can grab it from cloud and use it as a value here
+  // collapsedState is just a style you create in css
+
+  // Adding overlay component to close out with tooltipwhen clicking anywhere on screen
+  //   const overlayComp = hooks => (
+  //     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+  //     <div
+  //      // className={`overlay ${(node.data.isExpanded && collapsedState)}`} // 'overlay collapsedState' or 'overlay'
+  //       className={tooltip ? 'overlay' : 'collapsedState'}
+  //       onClick={() => {
+  //         setTooltip(false);
+  //         // console.log('Testing to see if the setToolTip works');
+  //         // console.log('this is toolTip', tooltip);
+  //       }}
+  //     >
+  //       {/* onDoubleClick={() => {
+  //                               node.data.isExpanded = !node.data.isExpanded;
+  //                               forceUpdate();
+  //                             }} */}
+  //       <TooltipInPortal
+  //           // set this to random so it correctly updates with parent bounds
+  //         key={Math.random()}
+  //         top={tooltipTop}
+  //         left={tooltipLeft}
+  //         style={tooltipStyles}
+  //       >
+  //         <div>
+  //           <div style={{}}>
+  //             {' '}
+  //             <strong>{tooltipData.name}</strong>
+  //             {' '}
+  //           </div>
+  //           <div>
+  //             {' '}
+  //             Render time:
+  //             {' '}
+  //             {formatRenderTime(tooltipData.componentData.actualDuration)}
+  //             {' '}
+  //           </div>
+  //           <div>
+  //             State:
+  //             {tooltipData.state}
+  //           </div>
+  //           <div style={scrollStyle}>
+  //             Props:
+  //             {makePropsPretty(tooltipData.componentData.props)}
+  //             {/* {JSON.stringify(tooltipData.componentData.props)} */}
+  //           </div>
+  //         </div>
+  //       </TooltipInPortal>
+  //     </div>
+  //   );
+  //     // controls for the map
+  //   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
+  //   return totalWidth < 10 ? null : (
+  //     <div>
+  //       <LinkControls
+  //         layout={layout}
+  //         orientation={orientation}
+  //         linkType={linkType}
+  //         stepPercent={stepPercent}
+  //         snapShots={snapshots[lastNode]}
+  //         selectedNode={selectedNode}
+  //         setLayout={setLayout}
+  //         setOrientation={setOrientation}
+  //         setLinkType={setLinkType}
+  //         setStepPercent={setStepPercent}
+  //         setSelectedNode={setSelectedNode}
+  //       />
+
+  //       <svg ref={containerRef} width={totalWidth} height={totalHeight}>
+  //         <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
+  //         <rect width={totalWidth} height={totalHeight} rx={14} fill="#242529" />
+  //         <Group top={margin.top} left={margin.left}>
+  //           {/* {console.log('This is the SelectedNode:', selectedNode)} */}
+  //           <Tree
+  //             root={hierarchy(startNode || data, d => (d.isExpanded ? null : d.children))}
+  //             size={[sizeWidth, sizeHeight]}
+  //             separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
+  //           >
+  //             {tree => (
+  //               <Group top={origin.y} left={origin.x}>
+  //                 {tree.links().map((link, i) => (
+  //                   <LinkComponent
+  //                     key={i}
+  //                     data={link}
+  //                     percent={stepPercent}
+  //                     stroke="#ff6569"
+  //                     strokeWidth="1"
+  //                     fill="none"
+  //                   />
+  //                 ))}
+
+  //                 {tree.descendants().map((node, key) => {
+  //                   const widthFunc = name => {
+  //                     const nodeLength = name.length;
+  //                     if (nodeLength < 5) return nodeLength + 40;
+  //                     if (nodeLength < 10) return nodeLength + 60;
+  //                     return nodeLength + 70;
+  //                   };
+  //                   const width = widthFunc(node.data.name);
+  //                   const height = 25;
+
+  //                   let top: number;
+  //                   let left: number;
+  //                   if (layout === 'polar') {
+  //                     const [radialX, radialY] = pointRadial(node.x, node.y);
+  //                     top = radialY;
+  //                     left = radialX;
+  //                   } else if (orientation === 'vertical') {
+  //                     top = node.y;
+  //                     left = node.x;
+  //                   } else {
+  //                     top = node.x;
+  //                     left = node.y;
+  //                   }
+
+  //                   // mousing controls & Tooltip display logic
+  //                   const handleMouseOver = event => {
+  //                     () => dispatch(onHover(node.data.rtid));
+  //                     // console.log('line 197 event.target', event.target.ownerSVGElement);
+  //                     // console.log('line 199 This is DATA: ', data);
+  //                     // console.log('line 200 This is TREE: ', tree);
+  //                     // console.log('line 201 This is NODE: ', node);
+  //                     const coords = localPoint(
+  //                       event.target.ownerSVGElement,
+  //                       event,
+  //                     );
+  //                     const tooltipObj = { ...node.data };
+  //                     // console.log('NODE DATAAAAAAAAAAAAA', node);
+  //                     if (typeof tooltipObj.state === 'object') tooltipObj.state = 'stateful';
+  //                     showTooltip({
+  //                       tooltipLeft: coords.x,
+  //                       tooltipTop: coords.y,
+  //                       tooltipData: tooltipObj, // this is where the data for state and render time is displayed but does not show props functions and etc
+  //                     });
+  //                   };
+
+  //                   return (
+  //                     <Group top={top} left={left} key={key}>
+  //                       {node.depth === 0 && (
+  //                       <circle
+  //                         r={12}
+  //                         fill="url('#links-gradient')"
+  //                         stroke="#ff6569"
+  //                         onClick={() => {
+  //                           node.data.isExpanded = !node.data.isExpanded;
+  //                           forceUpdate();
+  //                         }}
+  //                       />
+  //                       )}
+  //                       {/* This creates the rectangle boxes for each component and sets it relative position to other parent nodes of the same level. */}
+  //                       {node.depth !== 0 && (
+  //                       <rect
+  //                         className="rect"
+  //                         height={height}
+  //                         width={width}
+  //                         y={-height / 2}
+  //                         x={-width / 2}
+  //                             // node.children = if node has children
+  //                         fill={node.children ? '#161521' : '#62d6fb'}
+  //                             // node.data.isExpanded = if node is collapsed
+  //                             // stroke={(node.data.isExpanded && node.child) ? '#95fb62' : '#a69ff5'} => node.child is gone when clicked, even if it actually has children. Maybe better call node.children => node.leaf
+  //                         stroke={(node.data.isExpanded && node.data.children.length > 0) ? '#95fb62' : '#a69ff5'}
+
+  //                             // if already child in fill do not all stroke to change change color later but it works!!!!!!!!
+  //                         strokeWidth={3}
+  //                             // strokeDasharray={node.children ? '0' : '2,2'}
+  //                         strokeOpacity="1"
+  //                         rx={node.children ? 4 : 10}
+  //                         onDoubleClick={() => {
+  //                             node.data.isExpanded = !node.data.isExpanded;
+  //                           forceUpdate();
+  //                         }}
+  //                             // Tooltip event handlers
+  //                             // test feature
+  //                             // onClick = {handleMouseOver}
+  //                         onClick={event => {
+  //                           if (tooltip) { // cohort 45
+  //                             hideTooltip();
+  //                             setTooltip(false);
+  //                           } else {
+  //                             handleMouseOver(event);
+  //                             setTooltip(true);
+  //                           }
+  //                         }}
+  //                         onMouseEnter={() => dispatch(onHover(node.data.rtid))} // fix this not working
+  //                         onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
+  //                       />
+  //                       )}
+  //                       {/* Display text inside of each component node */}
+  //                       <text
+  //                         dy=".33em"
+  //                         fontSize={10}
+  //                         fontFamily="Roboto"
+  //                         textAnchor="middle"
+  //                         style={{ pointerEvents: 'none' }}
+  //                         fill={
+  //                             node.depth === 0
+  //                               ? '#161521'
+  //                               : node.children
+  //                                 ? 'white'
+  //                                 : '#161521'
+  //                           }
+  //                       >
+  //                         {node.data.name}
+  //                       </text>
+  //                     </Group>
+  //                   );
+  //                 })}
+  //               </Group>
+  //             )}
+  //           </Tree>
+  //         </Group>
+  //       </svg>
+  //       {tooltip && tooltipData && (
+  //         overlayComp()
+  //       )}
+  //     </div>
+  //   );
+  // }
+
+  // controls for the map ////// old code!!!!!! not from viet
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
   return totalWidth < 10 ? null : (
     <div>
@@ -334,13 +610,17 @@ export default function ComponentMap({
                           // test feature
                           // onClick = {handleMouseOver}
                           onClick={event => {
-                            if (tooltip) { // cohort 45
-                              hideTooltip();
-                              setTooltip(false);
-                            } else {
+                            if (!tooltip){
                               handleMouseOver(event);
                               setTooltip(true);
                             }
+                            // if (tooltip) { // cohort 45
+                            //   hideTooltip();
+                            //   setTooltip(false);
+                            // } else {
+                            //   handleMouseOver(event);
+                            //   setTooltip(true);
+                            // }
                           }}
                           onMouseEnter={() => dispatch(onHover(node.data.rtid))} // fix this not working
                           onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
@@ -409,6 +689,14 @@ export default function ComponentMap({
         </TooltipInPortal>
 
       )}
+      <div
+        className={tooltip ? 'overlay' : 'collapsedState'}
+        onClick={() => {
+          setTooltip(false);
+          console.log('this is toolTip', tooltip);
+          hideTooltip()
+        }}
+      />
     </div>
   );
 }
