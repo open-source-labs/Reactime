@@ -42,10 +42,12 @@ export interface StateRouteProps {
   snapshots: [];
   viewIndex: number;
   webMetrics: object;
+  currLocation: object;
 }
 
 const StateRoute = (props: StateRouteProps) => {
-  const { snapshot, hierarchy, snapshots, viewIndex, webMetrics } = props;
+  console.log(`DEBUG >>> State props: ${props}`);
+  const { snapshot, hierarchy, snapshots, viewIndex, webMetrics, currLocation } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
   const isRecoil = !!snapshot.atomsComponents;
@@ -88,6 +90,7 @@ const StateRoute = (props: StateRouteProps) => {
               dispatch={dispatch}
               sliderIndex={sliderIndex}
               viewIndex={viewIndex}
+              currLocation={currLocation}
             />
           )}
         </ParentSize>

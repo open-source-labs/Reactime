@@ -3,6 +3,7 @@
   overflow: auto;
   background-color: $brand-color;
 }
+
 #componentMapContainer,
 #historyContainer,
 #atomsContainer {
@@ -121,6 +122,7 @@
   .router-link.is-active {
     background-color: $brand-color;
   }
+
   .navbar {
     background-color: $navbar-color;
     display: flex;

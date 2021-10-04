@@ -139,12 +139,18 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.CHANGE_VIEW: {
+      console.log('DEBUG >>> viewIndex: ', viewIndex);
+      console.log('DEBUG >>> CHANGE_VIEW action.payload: ', action.payload);
+      console.log('DEBUG >>> tabs[currentTab]: ', tabs[currentTab]);
       // unselect view if same index was selected
       if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
       else tabs[currentTab].viewIndex = action.payload;
+      // update currLocation
+      // tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
       break;
     }
     case types.CHANGE_SLIDER: {
+      console.log('DEBUG >>> CHANGE_SLIDER action.payload: ', action.payload);
       // eslint-disable-next-line max-len
       // finds the name by the action.payload parsing through the hierarchy to send to background.js the current name in the jump action
       const nameFromIndex = findName(action.payload, hierarchy);
