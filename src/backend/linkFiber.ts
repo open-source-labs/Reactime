@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
 // import 'core-js';
@@ -40,7 +42,7 @@ declare global {
 let fiberRoot = null;
 let doWork = true;
 const circularComponentTable = new Set();
-let isRecoil = false;
+const isRecoil = false;
 let allAtomsRelationship = [];
 let initialstart = false;
 let rtidCounter = 0;
@@ -50,11 +52,9 @@ const recoilDomNode = {};
 // Simple check for whether our target app uses Recoil
 // can these be regular
 
-
 // if (window.$recoilDebugStates) {
 //   isRecoil = true;
 // }
-
 
 // This is deprecated Recoil code.  Recoil as of 01-03-2021
 // does not work well with Reactime.  Leaving any Recoil
@@ -209,20 +209,23 @@ function traverseHooks(memoizedState: any): HookStates {
 // This runs after every Fiber commit. It creates a new snapshot
 let atomsSelectors = {};
 let atomsComponents = {};
-
-function convertFunctionToString(obj: {}) {
-  const newPropData = {};
+const exclude = ['alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
+function convertFunctionToString(newObj, oldObj) {
+  const newPropData = oldObj || {};
   // const newPropData = Array.isArray(obj) === true ? {} : [];
-  for (const key in obj) {
-    if (typeof obj[key] === 'function') {
+  for (const key in newObj) {
+    if (typeof newObj[key] === 'function') {
       newPropData[key] = 'function';
       // console.log('we changed the function', newPropData[key]);
-    } else if (typeof obj[key] === 'object') {
-      // console.log('this is going to enter a recursive call', obj[key]);
-      // convertFunctionToString(obj[key]);
-      newPropData[key] = JSON.stringify(obj[key]);
-    } else {
-      newPropData[key] = obj[key];
+    } else if (exclude.includes(key) === true) {
+      newPropData[key] = 'reactFiber';
+      return newPropData;
+    } else if (typeof newObj[key] === 'object' && exclude.includes(key) !== true) {
+      // console.log('in the recursive call', key, newObj[key], key);
+      newPropData[key] = convertFunctionToString(newObj[key], null);
+    } else if (exclude.includes(key) !== true) {
+      // console.log('there should be no objects here', key, typeof newObj[key], newObj[key]);
+      newPropData[key] = newObj[key];
     }
   }
   // console.log(newPropData);
@@ -235,8 +238,6 @@ function createTree(
   tree: Tree = new Tree('root', 'root'),
   fromSibling = false
 ) {
-
-  console.log('CurrentFiber: ', currentFiber);
   // Base case: child or sibling pointed to null
   if (!currentFiber) return null;
   if (!tree) return tree;
@@ -256,27 +257,25 @@ function createTree(
     selfBaseDuration,
     treeBaseDuration,
   } = currentFiber;
-  //new feature adds props/state into the component
+  // new feature adds props/state into the component
+  // console.log('CurrentFiber & tag: ', tag, currentFiber);
+
   if (tag === 5) {
     try {
-      // console.log('this is the tree', tree);
-
       if (memoizedProps.children[0]._owner.memoizedProps !== undefined) {
         const propsData = memoizedProps.children[0]._owner.memoizedProps;
-        const newPropData = convertFunctionToString(propsData);
+        const newPropData = convertFunctionToString(propsData, tree.componentData.props ? tree.componentData.props : null);
         tree.componentData = {
           ...tree.componentData,
           props: newPropData
         };
       }
-      // console.log('CHECKING THE TREE FOR THE DATA', tree);
-      // console.log('looking for the owner', memoizedProps.children);
-      // console.log('this is working but whats going on', propsData,);
-      // console.log('this should display the stuff we want', memoizedProps.children[0]._owner.memoizedState);
-      // console.log('current fiber', currentFiber);
     } catch (error) {
       // console.log('this is the error', error);
     }
+  }
+  if(tag === 3){ 
+    console.log(currentFiber)
   }
   // Checks Recoil Atom and Selector Relationships
   if (
@@ -334,8 +333,14 @@ function createTree(
     actualStartTime?: number;
     selfBaseDuration?: number;
     treeBaseDuration?: number;
+    props?: any,
   } = {};
   let componentFound = false;
+  if (memoizedProps) {
+    // console.log('memoized props with the tag name', tag, memoizedProps, convertFunctionToString(memoizedProps, null));
+    // console.log('looking at memoizedProps ', memoizedProps);
+    componentData.props = convertFunctionToString(memoizedProps, null);
+  }
 
   // Check if node is a stateful class component
   if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
@@ -440,7 +445,6 @@ function createTree(
       let pointer = currentFiber;
       // end of repeat code
 
-
       while (pointer !== null) {
         if (pointer.stateNode !== null) {
           rtid = `fromLinkFiber${rtidCounter++}`;
@@ -462,7 +466,6 @@ function createTree(
         pointer = pointer.child;
       }
     } else {
-
       if (
         currentFiber.child
         && currentFiber.child.stateNode
@@ -483,11 +486,19 @@ function createTree(
         currentFiber.child.stateNode.classList.add(rtid);
       }
       rtidCounter++;
-      console.log('rtidCounter', rtidCounter);
+      // console.log('rtidCounter', rtidCounter);
+      // console.log('checking the currentFiber', currentFiber);
     }
     // checking if tree fromSibling is true
     if (fromSibling) {
       // tree object from tree.ts, with addSibling
+      // console.log('looking through every seingle currentFiber', currentFiber);
+      // try {
+      //   console.log('hello hello this is next effect', currentFiber.nextEffect);
+      // } catch (error) {
+      //   console.log('no next effect');
+      // }
+      // console.log('we are in addsibling and this is the rtid and element name', rtid, elementType.name, 'this is the current fiber', currentFiber);
       newNode = tree.addSibling(
         newState,
         elementType ? elementType.name : 'nameless',
@@ -496,6 +507,13 @@ function createTree(
         recoilDomNode
       );
     } else {
+      // console.log('looking through every seingle currentFiber', currentFiber);
+      // try {
+      //   console.log('hello hello this is next effect', currentFiber.nextEffect);
+      // } catch (error) {
+      //   console.log('no next effect');
+      // }
+      // console.log('we are in addchild and this is the rtid and element name', rtid, elementType.name, 'this is the current fiber', currentFiber);
       newNode = tree.addChild(
         newState,
         elementType ? elementType.name : 'nameless',
@@ -547,8 +565,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     console.log('THIS IS THE FIBER ROOOT', fiberRoot);
     const throttledUpdateSnapshot = throttle(
       () => {
-        console.log('how many times in line 497');
-        console.log('THIS IS SNAP AND MODEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE', snap, mode);
         updateSnapShotTree(snap, mode);
       },
       70
@@ -556,7 +572,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     if (reactInstance && reactInstance.version) {
-      // console.log('888888888888888888888 THIS IS GETTING CALLED LINE 503 888888888888888888888888888888');
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           // eslint-disable-next-line prefer-destructuring
