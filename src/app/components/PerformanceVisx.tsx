@@ -13,6 +13,8 @@ import RenderingFrequency from './RenderingFrequency';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
 import { useStoreContext } from '../store';
+// import snapshots from './snapshots';
+import { Component } from 'react';
 
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
@@ -32,8 +34,63 @@ interface BarStackProps {
   hierarchy: any;
 }
 
+
+
+// function getComponentsArr(componentName, snapshots, node) {
+//   //Input: Name of component and all snapshots
+//   //Output: One array of each individual snapshot
+
+//   //NOTE:
+//     //Every snapshot is an object with a children array with a snapshot that also has a children array etc
+//     //Children arrays more than one signify siblings 
+
+// }
+// // snapshots.map(rootNode => {
+// //     // rootNode.name
+// //   let currNode = rootNode
+// //   while (currNode) {
+// //     if (currNode.name === componentName) {
+// //       return currNode.componentData.props
+// //     } else {
+// //       currNode = currNode.children[0]
+// //       currNode = currNode.children[1]
+// //     }
+// //   }
+// // })
+
+const collectNodes = (snaps, componentName) => {
+  const componentsResult = [];
+  // console.log("This is the snapshots", snaps);
+  // componentsResult.splice(0, componentsResult.length); { /* We used the .splice method here to ensure that nodeList did not accumulate with page refreshes */ }
+  // componentsResult.push(snaps);
+
+  for (let x = 0; x < snaps.length; x++) {
+    const snapshotList = []
+    snapshotList.push(snaps[x]);
+
+    for (let i = 0; i < snapshotList.length; i++) {
+
+      const cur = snapshotList[i];
+      if (cur.name === componentName) {
+        componentsResult.push(cur.componentData.props);
+        break;
+      }
+      if (cur.children && cur.children.length > 0) {
+        for (let child of cur.children) {
+          snapshotList.push(child);
+        }
+      }
+    }
+  }  
+  //console.log('componentsResult looks like: ', componentsResult);
+  return componentsResult;
+}
+
+
+
+
 /* DATA HANDLING HELPER FUNCTIONS */
-const traverse = (snapshot, data, currTotalRender = 0) => {
+const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
   if (!snapshot.children[0]) return;
 
   // loop through snapshots
@@ -56,24 +113,26 @@ const traverse = (snapshot, data, currTotalRender = 0) => {
         renderFrequency: 0,
         totalRenderTime: 0,
         rtid: '',
+        props: {},
       };
       if (child.state !== 'stateless') data.componentData[componentName].stateType = 'stateful';
     }
     // increment render frequencies
     if (renderTime > 0) {
-      console.log('what is the child', child);
-      console.log('por que?', data.componentData[componentName]);
+      // console.log('what is the child', child);
+      // console.log('por que?', data.componentData[componentName]);
       data.componentData[componentName].renderFrequency++;
     } else {
-      console.log('what is the child', child);
-      console.log('we dont increment here', data.componentData[componentName], 'and the child', child);
+      // console.log('what is the child', child);
+      // console.log('we dont increment here', data.componentData[componentName], 'and the child', child);
     }
 
     // add to total render time
     data.componentData[componentName].totalRenderTime += renderTime;
     // Get rtid for the hovering feature
     data.componentData[componentName].rtid = child.rtid;
-    traverse(snapshot.children[idx], data, currTotalRender);
+    data.componentData[componentName].props = collectNodes(snapshots, child.name);
+    traverse(snapshot.children[idx], data, snapshots, currTotalRender);
   });
   // reassigns total render time to max render time
   data.maxTotalRender = Math.max(currTotalRender, data.maxTotalRender);
@@ -116,7 +175,7 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
   console.log('show me all of the snapshots', snapshots);
   snapshots.forEach((snapshot, i) => {
     perfData.barStack.push({ snapshotId: snapshotsIds[i] });
-    traverse(snapshot, perfData);
+    traverse(snapshot, perfData, snapshots);
   });
   return perfData;
 };
@@ -154,6 +213,9 @@ const PerformanceVisx = (props: BarStackProps) => {
   };
 
   const renderComponentDetailsView = () => {
+    console.log('show me snapshots', snapshots)
+    console.log('what is heirarchy', hierarchy);
+    console.log('this is the info for rendering frequency', data.componentData);
     if (hierarchy) {
       return <RenderingFrequency data={data.componentData} />;
     }

@@ -212,7 +212,11 @@ function traverseHooks(memoizedState: any): HookStates {
 let atomsSelectors = {};
 let atomsComponents = {};
 const exclude = ['alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
-function convertFunctionToString(newObj, oldObj) {
+
+// This recursive function is used to grab the state of children components
+// and push them into the parent componenent 
+// react elements throw errors on client side of application - convert react/functions into string 
+function convertDataToString(newObj, oldObj) {
   const newPropData = oldObj || {};
   // const newPropData = Array.isArray(obj) === true ? {} : [];
   for (const key in newObj) {
@@ -224,7 +228,7 @@ function convertFunctionToString(newObj, oldObj) {
       return newPropData;
     } else if (typeof newObj[key] === 'object' && exclude.includes(key) !== true) {
       // console.log('in the recursive call', key, newObj[key], key);
-      newPropData[key] = convertFunctionToString(newObj[key], null);
+      newPropData[key] = convertDataToString(newObj[key], null);
     } else if (exclude.includes(key) !== true) {
       // console.log('there should be no objects here', key, typeof newObj[key], newObj[key]);
       newPropData[key] = newObj[key];
@@ -259,14 +263,13 @@ function createTree(
     selfBaseDuration,
     treeBaseDuration,
   } = currentFiber;
-  // new feature adds props/state into the component
-  // console.log('CurrentFiber & tag: ', tag, currentFiber);
 
+// check to see if we can get the information we were looking for 
   if (tag === 5) {
     try {
       if (memoizedProps.children[0]._owner.memoizedProps !== undefined) {
         const propsData = memoizedProps.children[0]._owner.memoizedProps;
-        const newPropData = convertFunctionToString(propsData, tree.componentData.props ? tree.componentData.props : null);
+        const newPropData = convertDataToString(propsData, tree.componentData.props ? tree.componentData.props : null);
         tree.componentData = {
           ...tree.componentData,
           props: newPropData
@@ -338,10 +341,10 @@ function createTree(
     props?: any,
   } = {};
   let componentFound = false;
+
+  // check to see if the parent component has any state/props 
   if (memoizedProps) {
-    // console.log('memoized props with the tag name', tag, memoizedProps, convertFunctionToString(memoizedProps, null));
-    // console.log('looking at memoizedProps ', memoizedProps);
-    componentData.props = convertFunctionToString(memoizedProps, null);
+    componentData.props = convertDataToString(memoizedProps, null);
   }
 
   // Check if node is a stateful class component
