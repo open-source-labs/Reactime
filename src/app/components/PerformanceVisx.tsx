@@ -18,6 +18,7 @@ import BarGraphComparison from './BarGraphComparison';
 import { useStoreContext } from '../store';
 // import snapshots from './snapshots';
 import snapshots from './snapshots';
+import { render } from 'react-dom';
 
 const exclude = ['childExpirationTime', 'staticContext', '_debugSource', 'actualDuration', 'actualStartTime', 'treeBaseDuration', '_debugID', '_debugIsCurrentlyTiming', 'selfBaseDuration', 'expirationTime', 'effectTag', 'alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
 
@@ -39,10 +40,6 @@ interface BarStackProps {
   hierarchy: any;
 }
 
-const formatRenderTime = time => {
-  time = time.toFixed(3);
-  return `${time} ms `;
-};
 // function getComponentsArr(componentName, snapshots, node) {
 //   //Input: Name of component and all snapshots
 //   //Output: One array of each individual snapshot
@@ -69,7 +66,7 @@ const makePropsPretty = data => {
   const nestedObj = [];
   // console.log('show me the data we are getting', data);
   if (typeof data !== 'object') {
-    return data;
+    return <p>{data}</p>;
   }
   for (const key in data) {
     if (data[key] !== 'reactFiber' && typeof data[key] !== 'object' && exclude.includes(key) !== true) {
@@ -98,23 +95,31 @@ const collectNodes = (snaps, componentName) => {
     for (let i = 0; i < snapshotList.length; i++) {
       const cur = snapshotList[i];
       if (cur.name === componentName) {
+        const renderTime = Number(
+          Number.parseFloat(cur.componentData.actualDuration).toPrecision(5),
+        );
+        if (renderTime === 0) {
+          break;
+        }
+        console.log('show me the render time', renderTime);
         // compare the last pushed component Data from the array to the current one to see if there are differences
         if (x !== 0 && componentsResult.length !== 0) {
           // needs to be stringified because values are hard to determine if true or false if in they're seen as objects
           if (JSON.stringify(Object.values(componentsResult[newChange ? componentsResult.length - 1 : trackChanges])[0]) !== JSON.stringify(cur.componentData.props)) {
             newChange = true;
-            const props = { [`snapshot${x}`]: { ...cur.componentData.props, rendertime: formatRenderTime(cur.componentData.actualDuration) } };
-            //props[`snapshot${x}`].rendertime = formatRenderTime(cur.componentData.actualDuration);
+            // const props = { [`snapshot${x}`]: { rendertime: formatRenderTime(cur.componentData.actualDuration), ...cur.componentData.props } };
+            const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
             componentsResult.push(props);
           } else {
             newChange = false;
             trackChanges = componentsResult.length - 1;
-            const props = { [`snapshot${x}`]: 'Same state as prior snapshot', rendertime: formatRenderTime(cur.componentData.actualDuration) };
+            const props = { [`snapshot${x}`]: 'Same state as prior snapshot' };
             componentsResult.push(props);
           }
         } else {
-          const props = { [`snapshot${x}`]: { ...cur.componentData.props}};
-          props[`snapshot${x}`].rendertime = formatRenderTime(cur.componentData.actualDuration);
+          // const props = { [`snapshot${x}`]: { ...cur.componentData.props}};
+          // props[`snapshot${x}`].rendertime = formatRenderTime(cur.componentData.actualDuration);
+          const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
           componentsResult.push(props);
         }
         break;
@@ -132,7 +137,7 @@ const collectNodes = (snaps, componentName) => {
       componentsResult[i][componentSnapshot] = makePropsPretty(componentsResult[i][componentSnapshot]);
     }
   }
-  console.log('we should be seeing react components with information', componentsResult);
+  // console.log('we should be seeing react components with information', componentsResult);
   return componentsResult;
 };
 
@@ -179,6 +184,12 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
     // Get rtid for the hovering feature
     data.componentData[componentName].rtid = child.rtid;
     data.componentData[componentName].information = collectNodes(snapshots, child.name).flat(Infinity);
+    if(renderTime !== 0) {
+        // eslint-disable-next-line react/jsx-one-expression-per-line
+        data.componentData[componentName].information.rendertime = <p>Render Time:{' '}{renderTime}{' '}</p>;
+    }
+    // (
+    // );
     // console.log('what is the result', data.componentData[componentName].information);
     traverse(snapshot.children[idx], data, snapshots, currTotalRender);
   });
