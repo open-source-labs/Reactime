@@ -18,6 +18,7 @@ const RenderingFrequency = (props) => {
             ).toFixed(3)}
             renderFrequency={currentComponent.renderFrequency}
             rtid={currentComponent.rtid}
+            information={perfData[componentName].information}
           />
         );
       })}
@@ -32,20 +33,27 @@ const ComponentCard = (props) => {
     averageRenderTime,
     renderFrequency,
     rtid,
+    information,
   } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
 
-  const onMouseMove = () => {
-    dispatch(onHover(rtid));
-  };
-  const onMouseLeave = () => {
-    dispatch(onHoverExit(rtid));
-  };
+  // const onMouseMove = () => {
+  //   console.log(rtid);
+  //   dispatch(onHover(rtid));
+  // };
+  // const onMouseLeave = () => {
+  //   console.log(rtid);
+  //   dispatch(onHoverExit(rtid));
+  // };
+  console.log('this is the information', information)
+
+// render time for each component from each snapshot
+// differences in state change that happened prior;
 
   return (
     <div
-      onMouseLeave={onMouseLeave}
-      onMouseMove={onMouseMove}
+      // onMouseLeave={onMouseLeave}
+      // onMouseMove={onMouseMove}
       className="StyledGridElement"
     >
       <div className="RenderLeft">
@@ -53,9 +61,12 @@ const ComponentCard = (props) => {
         <h4>{stateType}</h4>
         <h4>average time: {averageRenderTime} ms</h4>
       </div>
-      <div className="RenderRight">
+      <div onClick={() => console.log('this is triggering')} className="RenderRight">
         <p>{renderFrequency}</p>
       </div>
+      {/* <div>
+        <p>{information}</p>
+      </div> */}
     </div>
   );
 };

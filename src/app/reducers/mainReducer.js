@@ -265,7 +265,7 @@ export default (state, action) => produce(state, draft => {
     }
     case types.NEW_SNAPSHOTS: {
       const { payload } = action;
-      console.log("in NEW_SANPSHOTS", payload);
+      //console.log("in NEW_SANPSHOTS", payload);
       Object.keys(tabs).forEach(tab => {
         if (!payload[tab]) {
           delete tabs[tab];

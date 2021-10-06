@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 // @ts-nocheck
 import React, { useState } from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -8,13 +10,16 @@ import {
   NavLink,
   Switch,
 } from 'react-router-dom';
+import { Component } from 'react';
 import RenderingFrequency from './RenderingFrequency';
 // import Switch from '@material-ui/core/Switch';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
 import { useStoreContext } from '../store';
 // import snapshots from './snapshots';
-import { Component } from 'react';
+import snapshots from './snapshots';
+
+const exclude = ['childExpirationTime', 'staticContext', '_debugSource', 'actualDuration', 'actualStartTime', 'treeBaseDuration', '_debugID', '_debugIsCurrentlyTiming', 'selfBaseDuration', 'expirationTime', 'effectTag', 'alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
 
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
@@ -34,15 +39,17 @@ interface BarStackProps {
   hierarchy: any;
 }
 
-
-
+const formatRenderTime = time => {
+  time = time.toFixed(3);
+  return `${time} ms `;
+};
 // function getComponentsArr(componentName, snapshots, node) {
 //   //Input: Name of component and all snapshots
 //   //Output: One array of each individual snapshot
 
 //   //NOTE:
 //     //Every snapshot is an object with a children array with a snapshot that also has a children array etc
-//     //Children arrays more than one signify siblings 
+//     //Children arrays more than one signify siblings
 
 // }
 // // snapshots.map(rootNode => {
@@ -57,37 +64,77 @@ interface BarStackProps {
 // //     }
 // //   }
 // // })
+const makePropsPretty = data => {
+  const propsFormat = [];
+  const nestedObj = [];
+  // console.log('show me the data we are getting', data);
+  if (typeof data !== 'object') {
+    return data;
+  }
+  for (const key in data) {
+    if (data[key] !== 'reactFiber' && typeof data[key] !== 'object' && exclude.includes(key) !== true) {
+      propsFormat.push(<p className="stateprops">
+        {`${key}: ${data[key]}`}
+                       </p>);
+    } else if (data[key] !== 'reactFiber' && typeof data[key] === 'object' && exclude.includes(key) !== true) {
+      const result = makePropsPretty(data[key]);
+      nestedObj.push(result);
+    }
+  }
+  if (nestedObj) {
+    propsFormat.push(nestedObj);
+  }
+  // console.log('this is propsformat', propsFormat);
+  return propsFormat;
+};
 
 const collectNodes = (snaps, componentName) => {
   const componentsResult = [];
-  // console.log("This is the snapshots", snaps);
-  // componentsResult.splice(0, componentsResult.length); { /* We used the .splice method here to ensure that nodeList did not accumulate with page refreshes */ }
-  // componentsResult.push(snaps);
-
+  let trackChanges = 0;
+  let newChange = true;
   for (let x = 0; x < snaps.length; x++) {
-    const snapshotList = []
+    const snapshotList = [];
     snapshotList.push(snaps[x]);
-
     for (let i = 0; i < snapshotList.length; i++) {
-
       const cur = snapshotList[i];
       if (cur.name === componentName) {
-        componentsResult.push(cur.componentData.props);
+        // compare the last pushed component Data from the array to the current one to see if there are differences
+        if (x !== 0 && componentsResult.length !== 0) {
+          // needs to be stringified because values are hard to determine if true or false if in they're seen as objects
+          if (JSON.stringify(Object.values(componentsResult[newChange ? componentsResult.length - 1 : trackChanges])[0]) !== JSON.stringify(cur.componentData.props)) {
+            newChange = true;
+            const props = { [`snapshot${x}`]: { ...cur.componentData.props, rendertime: formatRenderTime(cur.componentData.actualDuration) } };
+            //props[`snapshot${x}`].rendertime = formatRenderTime(cur.componentData.actualDuration);
+            componentsResult.push(props);
+          } else {
+            newChange = false;
+            trackChanges = componentsResult.length - 1;
+            const props = { [`snapshot${x}`]: 'Same state as prior snapshot', rendertime: formatRenderTime(cur.componentData.actualDuration) };
+            componentsResult.push(props);
+          }
+        } else {
+          const props = { [`snapshot${x}`]: { ...cur.componentData.props}};
+          props[`snapshot${x}`].rendertime = formatRenderTime(cur.componentData.actualDuration);
+          componentsResult.push(props);
+        }
         break;
       }
       if (cur.children && cur.children.length > 0) {
-        for (let child of cur.children) {
+        for (const child of cur.children) {
           snapshotList.push(child);
         }
       }
     }
-  }  
-  //console.log('componentsResult looks like: ', componentsResult);
+  }
+  // console.log('componentsResult looks like: ', componentsResult);
+  for (let i = 0; i < componentsResult.length; i++) {
+    for (const componentSnapshot in componentsResult[i]) {
+      componentsResult[i][componentSnapshot] = makePropsPretty(componentsResult[i][componentSnapshot]);
+    }
+  }
+  console.log('we should be seeing react components with information', componentsResult);
   return componentsResult;
-}
-
-
-
+};
 
 /* DATA HANDLING HELPER FUNCTIONS */
 const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
@@ -113,7 +160,7 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
         renderFrequency: 0,
         totalRenderTime: 0,
         rtid: '',
-        props: {},
+        information: {},
       };
       if (child.state !== 'stateless') data.componentData[componentName].stateType = 'stateful';
     }
@@ -131,7 +178,8 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
     data.componentData[componentName].totalRenderTime += renderTime;
     // Get rtid for the hovering feature
     data.componentData[componentName].rtid = child.rtid;
-    data.componentData[componentName].props = collectNodes(snapshots, child.name);
+    data.componentData[componentName].information = collectNodes(snapshots, child.name).flat(Infinity);
+    // console.log('what is the result', data.componentData[componentName].information);
     traverse(snapshot.children[idx], data, snapshots, currTotalRender);
   });
   // reassigns total render time to max render time
@@ -144,13 +192,13 @@ const allStorage = () => {
   const values = [];
   const keys = Object.keys(localStorage);
   let i = keys.length;
-  console.log('allstorage keys', keys);
+  // console.log('allstorage keys', keys);
 
   while (i--) {
     const series = localStorage.getItem(keys[i]);
     values.push(JSON.parse(series));
   }
-  console.log('allstorage values', values);
+  // console.log('allstorage values', values);
   return values;
 };
 
@@ -172,7 +220,7 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
     componentData: {},
     maxTotalRender: 0,
   };
-  console.log('show me all of the snapshots', snapshots);
+  // console.log('show me all of the snapshots', snapshots);
   snapshots.forEach((snapshot, i) => {
     perfData.barStack.push({ snapshotId: snapshotsIds[i] });
     traverse(snapshot, perfData, snapshots);
@@ -192,6 +240,7 @@ const PerformanceVisx = (props: BarStackProps) => {
   const [comparisonData, setComparisonData] = useState();
   const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
+  // console.log('this is line 220', data);
 
   const renderComparisonBargraph = () => {
     if (hierarchy) {
@@ -213,10 +262,9 @@ const PerformanceVisx = (props: BarStackProps) => {
   };
 
   const renderComponentDetailsView = () => {
-    console.log('show me snapshots', snapshots)
-    console.log('what is heirarchy', hierarchy);
-    console.log('this is the info for rendering frequency', data.componentData);
+    // console.log('this is the info for rendering frequency', data.componentData);
     if (hierarchy) {
+      // console.log('this is line 246', data.comparisonData);
       return <RenderingFrequency data={data.componentData} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
