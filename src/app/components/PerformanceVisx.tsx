@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 // @ts-nocheck
 import React, { useState } from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -8,11 +10,17 @@ import {
   NavLink,
   Switch,
 } from 'react-router-dom';
+import { Component } from 'react';
+import { render } from 'react-dom';
 import RenderingFrequency from './RenderingFrequency';
 // import Switch from '@material-ui/core/Switch';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
 import { useStoreContext } from '../store';
+// import snapshots from './snapshots';
+import snapshots from './snapshots';
+
+const exclude = ['childExpirationTime', 'staticContext', '_debugSource', 'actualDuration', 'actualStartTime', 'treeBaseDuration', '_debugID', '_debugIsCurrentlyTiming', 'selfBaseDuration', 'expirationTime', 'effectTag', 'alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
 
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
@@ -32,8 +40,92 @@ interface BarStackProps {
   hierarchy: any;
 }
 
+const makePropsPretty = data => {
+  const propsFormat = [];
+  const nestedObj = [];
+  if (typeof data !== 'object') {
+    return <p>{data}</p>;
+  }
+  for (const key in data) {
+    if (data[key] !== 'reactFiber' && typeof data[key] !== 'object' && exclude.includes(key) !== true) {
+      propsFormat.push(<p className="stateprops">
+        {`${key}: ${data[key]}`}
+      </p>);
+    } else if (data[key] !== 'reactFiber' && typeof data[key] === 'object' && exclude.includes(key) !== true) {
+      const result = makePropsPretty(data[key]);
+      nestedObj.push(result);
+    }
+  }
+  if (nestedObj) {
+    propsFormat.push(nestedObj);
+  }
+  return propsFormat;
+};
+
+const collectNodes = (snaps, componentName) => {
+  const componentsResult = [];
+  const renderResult = [];
+  let trackChanges = 0;
+  let newChange = true;
+  for (let x = 0; x < snaps.length; x++) {
+    const snapshotList = [];
+    snapshotList.push(snaps[x]);
+    for (let i = 0; i < snapshotList.length; i++) {
+      const cur = snapshotList[i];
+      if (cur.name === componentName) {
+        const renderTime = Number(
+          Number.parseFloat(cur.componentData.actualDuration).toPrecision(5),
+        );
+        if (renderTime === 0) {
+          break;
+        } else {
+          renderResult.push(renderTime);
+        }
+        // compare the last pushed component Data from the array to the current one to see if there are differences
+        if (x !== 0 && componentsResult.length !== 0) {
+          // needs to be stringified because values are hard to determine if true or false if in they're seen as objects
+          if (JSON.stringify(Object.values(componentsResult[newChange ? componentsResult.length - 1 : trackChanges])[0]) !== JSON.stringify(cur.componentData.props)) {
+            newChange = true;
+            // const props = { [`snapshot${x}`]: { rendertime: formatRenderTime(cur.componentData.actualDuration), ...cur.componentData.props } };
+            const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
+            componentsResult.push(props);
+          } else {
+            newChange = false;
+            trackChanges = componentsResult.length - 1;
+            const props = { [`snapshot${x}`]: { state: 'Same state as prior snapshot' } };
+            componentsResult.push(props);
+          }
+        } else {
+          // const props = { [`snapshot${x}`]: { ...cur.componentData.props}};
+          // props[`snapshot${x}`].rendertime = formatRenderTime(cur.componentData.actualDuration);
+          const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
+          componentsResult.push(props);
+        }
+        break;
+      }
+      if (cur.children && cur.children.length > 0) {
+        for (const child of cur.children) {
+          snapshotList.push(child);
+        }
+      }
+    }
+  }
+
+  const finalResults = componentsResult.map((e, index) => {
+    const name = Object.keys(e)[0];
+    e[name].rendertime = renderResult[index];
+    return e;
+  });
+  for (let i = 0; i < finalResults.length; i++) {
+    for (const componentSnapshot in finalResults[i]) {
+      finalResults[i][componentSnapshot] = makePropsPretty(finalResults[i][componentSnapshot]).reverse();
+    }
+  }
+  return finalResults;
+};
+
 /* DATA HANDLING HELPER FUNCTIONS */
-const traverse = (snapshot, data, currTotalRender = 0) => {
+const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
   if (!snapshot.children[0]) return;
 
   // loop through snapshots
@@ -56,6 +148,7 @@ const traverse = (snapshot, data, currTotalRender = 0) => {
         renderFrequency: 0,
         totalRenderTime: 0,
         rtid: '',
+        information: {},
       };
       if (child.state !== 'stateless') data.componentData[componentName].stateType = 'stateful';
     }
@@ -63,12 +156,16 @@ const traverse = (snapshot, data, currTotalRender = 0) => {
     if (renderTime > 0) {
       data.componentData[componentName].renderFrequency++;
     }
+    // else {
+
+    // }
 
     // add to total render time
     data.componentData[componentName].totalRenderTime += renderTime;
     // Get rtid for the hovering feature
     data.componentData[componentName].rtid = child.rtid;
-    traverse(snapshot.children[idx], data, currTotalRender);
+    data.componentData[componentName].information = collectNodes(snapshots, child.name);
+    traverse(snapshot.children[idx], data, snapshots, currTotalRender);
   });
   // reassigns total render time to max render time
   data.maxTotalRender = Math.max(currTotalRender, data.maxTotalRender);
@@ -80,13 +177,12 @@ const allStorage = () => {
   const values = [];
   const keys = Object.keys(localStorage);
   let i = keys.length;
-  console.log('allstorage keys', keys);
+
 
   while (i--) {
     const series = localStorage.getItem(keys[i]);
     values.push(JSON.parse(series));
   }
-  console.log('allstorage values', values);
   return values;
 };
 
@@ -110,7 +206,7 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
   };
   snapshots.forEach((snapshot, i) => {
     perfData.barStack.push({ snapshotId: snapshotsIds[i] });
-    traverse(snapshot, perfData);
+    traverse(snapshot, perfData, snapshots);
   });
   return perfData;
 };

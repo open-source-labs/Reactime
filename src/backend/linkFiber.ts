@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
 // import 'core-js';
@@ -40,7 +42,7 @@ declare global {
 let fiberRoot = null;
 let doWork = true;
 const circularComponentTable = new Set();
-let isRecoil = false;
+const isRecoil = false;
 let allAtomsRelationship = [];
 let initialstart = false;
 let rtidCounter = 0;
@@ -49,9 +51,11 @@ const recoilDomNode = {};
 
 // Simple check for whether our target app uses Recoil
 // can these be regular
-if (window[`$recoilDebugStates`]) {
-  isRecoil = true;
-}
+
+// if (window.$recoilDebugStates) {
+//   isRecoil = true;
+// }
+
 // This is deprecated Recoil code.  Recoil as of 01-03-2021
 // does not work well with Reactime.  Leaving any Recoil
 // code in codebase to assist with Recoil implementations
@@ -87,11 +91,9 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   if (!snap.tree) {
     snap.tree = new Tree('root', 'root');
   }
-
   const payload = snap.tree.cleanTreeCopy();
   // if it's Recoil - run different actions?
   if (isRecoil) {
-      console.log('This is recoil and we\'re in sendSnapshot!');
     // getRecoilState()
     payload.atomsComponents = atomsComponents;
     payload.atomSelectors = atomsSelectors;
@@ -205,7 +207,28 @@ function traverseHooks(memoizedState: any): HookStates {
 // This runs after every Fiber commit. It creates a new snapshot
 let atomsSelectors = {};
 let atomsComponents = {};
+const exclude = ['alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
 
+// This recursive function is used to grab the state of children components
+// and push them into the parent componenent 
+// react elements throw errors on client side of application - convert react/functions into string 
+function convertDataToString(newObj, oldObj) {
+  const newPropData = oldObj || {};
+  // const newPropData = Array.isArray(obj) === true ? {} : [];
+  for (const key in newObj) {
+    if (typeof newObj[key] === 'function') {
+      newPropData[key] = 'function';
+    } else if (exclude.includes(key) === true) {
+      newPropData[key] = 'reactFiber';
+      return newPropData;
+    } else if (typeof newObj[key] === 'object' && exclude.includes(key) !== true) {
+      newPropData[key] = convertDataToString(newObj[key], null);
+    } else if (exclude.includes(key) !== true) {
+      newPropData[key] = newObj[key];
+    }
+  }
+  return newPropData;
+}
 // Every time a state change is made in the accompanying app, the extension creates a
 // Tree “snapshot” of the current state, and adds it to the current “cache” of snapshots in the extension
 function createTree(
@@ -232,6 +255,22 @@ function createTree(
     selfBaseDuration,
     treeBaseDuration,
   } = currentFiber;
+
+// check to see if we can get the information we were looking for 
+  if (tag === 5) {
+    try {
+      if (memoizedProps.children[0]._owner.memoizedProps !== undefined) {
+        const propsData = memoizedProps.children[0]._owner.memoizedProps;
+        const newPropData = convertDataToString(propsData, tree.componentData.props ? tree.componentData.props : null);
+        tree.componentData = {
+          ...tree.componentData,
+          props: newPropData
+        };
+      }
+    } catch (error) {
+      // console.log('this is the error', error);
+    }
+  }
 
   // Checks Recoil Atom and Selector Relationships
   if (
@@ -289,8 +328,14 @@ function createTree(
     actualStartTime?: number;
     selfBaseDuration?: number;
     treeBaseDuration?: number;
+    props?: any,
   } = {};
   let componentFound = false;
+
+  // check to see if the parent component has any state/props 
+  if (memoizedProps) {
+    componentData.props = convertDataToString(memoizedProps, null);
+  }
 
   // Check if node is a stateful class component
   if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
@@ -311,7 +356,6 @@ function createTree(
   if (
     memoizedState
     && (tag === 0 || tag === 1 || tag === 2 || tag === 10)
-    && isRecoil === true
   ) {
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
@@ -398,13 +442,14 @@ function createTree(
       while (pointer !== null) {
         if (pointer.stateNode !== null) {
           rtid = `fromLinkFiber${rtidCounter++}`;
+          // rtid = rtidCounter++;
           recoilDomNode[currentFiber.elementType.name].push(rtid);
           // check if rtid is already present
           //  remove existing rtid before adding a new one
           if (pointer.stateNode.classList.length > 0) {
             const lastClass = pointer.stateNode.classList[
-                pointer.stateNode.classList.length - 1
-              ];
+              pointer.stateNode.classList.length - 1
+            ];
             if (lastClass.includes('fromLinkFiber')) {
               pointer.stateNode.classList.remove(lastClass);
             }
@@ -421,12 +466,13 @@ function createTree(
         && currentFiber.child.stateNode.setAttribute
       ) {
         rtid = `fromLinkFiber${rtidCounter}`;
+        // rtid = rtidCounter;
         // check if rtid is already present
         //  remove existing rtid before adding a new one
         if (currentFiber.child.stateNode.classList.length > 0) {
           const lastClass = currentFiber.child.stateNode.classList[
-              currentFiber.child.stateNode.classList.length - 1
-            ];
+            currentFiber.child.stateNode.classList.length - 1
+          ];
           if (lastClass.includes('fromLinkFiber')) {
             currentFiber.child.stateNode.classList.remove(lastClass);
           }
@@ -437,7 +483,6 @@ function createTree(
     }
     // checking if tree fromSibling is true
     if (fromSibling) {
-      // tree object from tree.ts, with addSibling
       newNode = tree.addSibling(
         newState,
         elementType ? elementType.name : 'nameless',
@@ -459,6 +504,7 @@ function createTree(
   }
 
   // Recurse on children
+
   if (child && !circularComponentTable.has(child)) {
     // If this node had state we appended to the children array,
     // so attach children to the newly appended child.
@@ -466,6 +512,7 @@ function createTree(
     circularComponentTable.add(child);
     createTree(child, newNode);
   }
+
   // Recurse on siblings
   if (sibling && !circularComponentTable.has(sibling)) {
     circularComponentTable.add(sibling);
@@ -489,9 +536,12 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
+    // reactInstance returns an object of the react
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
     const throttledUpdateSnapshot = throttle(
-      () => updateSnapShotTree(snap, mode),
+      () => {
+        updateSnapShotTree(snap, mode);
+      },
       70
     );
     document.addEventListener('visibilitychange', onVisibilityChange);
