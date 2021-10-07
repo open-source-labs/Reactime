@@ -31,8 +31,6 @@ function History(props: Record<string, unknown>) {
   const svgRef = React.useRef(null);
   const root = JSON.parse(JSON.stringify(hierarchy));
 
-  console.log('DEBUG >>> HISTORY currLocation: ', currLocation);
-
   // setting the margins for the Map to render in the tab window.
   const innerWidth = totalWidth - margin.left - margin.right;
   const innerHeight = totalHeight - margin.top - margin.bottom - 60;

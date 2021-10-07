@@ -40,31 +40,9 @@ interface BarStackProps {
   hierarchy: any;
 }
 
-// function getComponentsArr(componentName, snapshots, node) {
-//   //Input: Name of component and all snapshots
-//   //Output: One array of each individual snapshot
-
-//   //NOTE:
-//     //Every snapshot is an object with a children array with a snapshot that also has a children array etc
-//     //Children arrays more than one signify siblings
-
-// }
-// // snapshots.map(rootNode => {
-// //     // rootNode.name
-// //   let currNode = rootNode
-// //   while (currNode) {
-// //     if (currNode.name === componentName) {
-// //       return currNode.componentData.props
-// //     } else {
-// //       currNode = currNode.children[0]
-// //       currNode = currNode.children[1]
-// //     }
-// //   }
-// // })
 const makePropsPretty = data => {
   const propsFormat = [];
   const nestedObj = [];
-  // console.log('show me the data we are getting', data);
   if (typeof data !== 'object') {
     return <p>{data}</p>;
   }
@@ -81,7 +59,6 @@ const makePropsPretty = data => {
   if (nestedObj) {
     propsFormat.push(nestedObj);
   }
-  // console.log('this is propsformat', propsFormat);
   return propsFormat;
 };
 
@@ -104,7 +81,6 @@ const collectNodes = (snaps, componentName) => {
         } else {
           renderResult.push(renderTime);
         }
-        console.log('show me the render time', renderTime);
         // compare the last pushed component Data from the array to the current one to see if there are differences
         if (x !== 0 && componentsResult.length !== 0) {
           // needs to be stringified because values are hard to determine if true or false if in they're seen as objects
@@ -112,7 +88,6 @@ const collectNodes = (snaps, componentName) => {
             newChange = true;
             // const props = { [`snapshot${x}`]: { rendertime: formatRenderTime(cur.componentData.actualDuration), ...cur.componentData.props } };
             const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
-            console.log('show me props structure', props)
             componentsResult.push(props);
           } else {
             newChange = false;
@@ -135,23 +110,18 @@ const collectNodes = (snaps, componentName) => {
       }
     }
   }
-  // console.log('componentsResult looks like: ', componentsResult);
 
-  // console.log('we should be seeing react components with information', componentsResult);
-  // componentsResult.push(renderResult);
   const finalResults = componentsResult.map((e, index) => {
     const name = Object.keys(e)[0];
-    console.log('this is name', name, 'show me e', e);
     e[name].rendertime = renderResult[index];
-    console.log('this is e', e);
     return e;
   });
   for (let i = 0; i < finalResults.length; i++) {
     for (const componentSnapshot in finalResults[i]) {
-      finalResults[i][componentSnapshot] = makePropsPretty(finalResults[i][componentSnapshot]);
+      finalResults[i][componentSnapshot] = makePropsPretty(finalResults[i][componentSnapshot]).reverse();
     }
   }
-  console.log('finalresults', finalResults);
+  console.log('is this going to reverse', finalResults);
   return finalResults;
 };
 
@@ -185,13 +155,11 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
     }
     // increment render frequencies
     if (renderTime > 0) {
-      // console.log('what is the child', child);
-      // console.log('por que?', data.componentData[componentName]);
       data.componentData[componentName].renderFrequency++;
-    } else {
-      // console.log('what is the child', child);
-      // console.log('we dont increment here', data.componentData[componentName], 'and the child', child);
     }
+    // else {
+
+    // }
 
     // add to total render time
     data.componentData[componentName].totalRenderTime += renderTime;
@@ -258,7 +226,6 @@ const PerformanceVisx = (props: BarStackProps) => {
   const [comparisonData, setComparisonData] = useState();
   const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
-  // console.log('this is line 220', data);
 
   const renderComparisonBargraph = () => {
     if (hierarchy) {
