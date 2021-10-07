@@ -6,7 +6,6 @@
 }
 
 .borderCheck {
-	border-radius: 5px;
 	border: 1px solid rgba(184, 196, 194, 0.25);
 	box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.2);
 	padding: 5px;
@@ -34,13 +33,9 @@
 	justify-content: space-between;
 	background: #242529;
 	padding: 20px;
-	width: 50vw;
 	height: 5vh;
 	margin: 20px 10px;
 	font-family: 'Roboto', sans-serif;
-	// border-radius: 5px;
-	// border: 1px solid rgba(184, 196, 194, 0.25);
-	// box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.2);
 
 	h3 {
 		color: $text-color;
@@ -74,14 +69,8 @@
 	justify-content: space-between;
 	background: #242529;
 	padding: 20px;
-	width: 50vw;
-	// height: 1000px;
 	margin: 20px 10px;
 	font-family: 'Roboto', sans-serif;
-	// border-radius: 5px;
-	// border: 1px solid rgba(184, 196, 194, 0.25);
-	// box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.2);
-
 
 	h3 {
 		color: $text-color;
@@ -110,6 +99,7 @@
 
 .RenderRight {
 	padding-right: 5px;
+	border-right: 5px;
 	background: $blue-color-gradient;
 	width: 50px;
 	padding: 0 0.5em;

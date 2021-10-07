@@ -42,15 +42,6 @@ const ComponentCard = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const [expand, setExpand] = useState(false);
 
-  // const onMouseMove = () => {
-  //   console.log(rtid);
-  //   dispatch(onHover(rtid));
-  // };
-  // const onMouseLeave = () => {
-  //   console.log(rtid);
-  //   dispatch(onHoverExit(rtid));
-  // };
-
   // render time for each component from each snapshot
   // differences in state change that happened prior;
 
@@ -98,23 +89,12 @@ const ComponentCard = props => {
   );
 };
 
-// const dataComponentContainer = (
-//   <div> 
-//     {dataComponentArray.}
-//   </div>  
-// );
-
 const DataComponent = props => {
   const {
     header,
     paragraphs,
   } = props;
 
-  // current bug
-  // we want render time to display first but it gets push to the end of the array
-  // first pop is because the last item of array is always empty for some reason
-
-  // const [{ tabs, currentTab }, dispatch] = useStoreContext();
   return (
     <div className="borderCheck">
       <h4>

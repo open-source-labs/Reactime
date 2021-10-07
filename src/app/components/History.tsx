@@ -51,12 +51,10 @@ function History(props: Record<string, unknown>) {
     }
     let found;
     if (!d3root.children) {
-      console.log('DEBUG >>> no child: ', d3root);
       return found;
     }
     d3root.children.forEach(child => {
       if (!found) {
-        console.log('DEBUG >>> child: ', child);
         found = labelCurrentNode(child);
       }
     });
@@ -75,14 +73,10 @@ function History(props: Record<string, unknown>) {
     };
     // const hierarchy = d3.hierarchy(root);
     const d3root = tree(root);
-    console.log('DEBUG >>> d3root: ', d3root);
 
     const currNode = labelCurrentNode(d3root);
-    console.log('DEBUG >>> currNode: ', currNode);
 
     const g = svg.append('g')
-      // .attr("font-family", "sans-serif")
-      // .attr("font-size", 10)
       .attr('transform', `translate(${margin.left},${d3root.height === 0 ? (totalHeight / 2) : margin.top})`);
 
     const link = g.selectAll('.link')

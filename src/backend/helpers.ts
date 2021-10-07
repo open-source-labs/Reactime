@@ -76,7 +76,6 @@ export const getHooksNames = (elementType: string): Array<string> => {
   let ast: any;
   try {
     ast = JSXParser.parse(elementType);
-    console.log('ast line 80', ast);
   } catch (e) {
     return ['unknown'];
   }

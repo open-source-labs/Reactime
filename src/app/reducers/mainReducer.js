@@ -3,10 +3,7 @@ import { produce, original } from 'immer';
 import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
-  // console.log('export state', state);
   const { port, currentTab, tabs } = draft;
-  // console.log('currentTab Reducer:', currentTab);
-  // console.log('reducer action:', action);
   const {
     hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex,
   } = tabs[currentTab] || {};
@@ -39,7 +36,6 @@ export default (state, action) => produce(state, draft => {
       const data = JSON.stringify(action.payload);
       localStorage.setItem(`${action.payload.currentTab}`, data);
       tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: true };
-      console.log('seriesSavedStatus set to true from saving series');
       break;
     }
     // Delete case will delete ALL stored series in chrome local storage. To see  chrome storage related data
@@ -139,9 +135,6 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.CHANGE_VIEW: {
-      console.log('DEBUG >>> viewIndex: ', viewIndex);
-      console.log('DEBUG >>> CHANGE_VIEW action.payload: ', action.payload);
-      console.log('DEBUG >>> tabs[currentTab]: ', tabs[currentTab]);
       // unselect view if same index was selected
       if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
       else tabs[currentTab].viewIndex = action.payload;
@@ -150,7 +143,6 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.CHANGE_SLIDER: {
-      console.log('DEBUG >>> CHANGE_SLIDER action.payload: ', action.payload);
       // eslint-disable-next-line max-len
       // finds the name by the action.payload parsing through the hierarchy to send to background.js the current name in the jump action
       const nameFromIndex = findName(action.payload, hierarchy);
@@ -265,7 +257,6 @@ export default (state, action) => produce(state, draft => {
     }
     case types.NEW_SNAPSHOTS: {
       const { payload } = action;
-      //console.log("in NEW_SANPSHOTS", payload);
       Object.keys(tabs).forEach(tab => {
         if (!payload[tab]) {
           delete tabs[tab];
@@ -277,7 +268,6 @@ export default (state, action) => produce(state, draft => {
             sliderIndex: newSnaps.length - 1,
             seriesSavedStatus: false,
           };
-          console.log('seriesSavedStatus set to false from new snapshot');
         }
       });
 

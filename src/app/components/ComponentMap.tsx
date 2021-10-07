@@ -167,55 +167,13 @@ export default function ComponentMap({
   //         nestedObj = nestedObj.forEach(e => makePropsPretty(e));
   //       }
   //     } catch (error) {
-  //       console.log('not a react componenet');
   //     }
   //   }
   // }
-  // const makePropsPretty = data => {
-  //   const propsFormat = [];
-  //   let nestedObj;
-  //   for (const key in data) {
-  //     if (data[key] !== 'reactFiber' && typeof data[key] !== 'object' && exclude.includes(key) !== true) {
-  //       propsFormat.push(<p className="stateprops">
-  //         {`${key}: ${nestedObj || data[key]}`}
-  //                        </p>);
-  //     } else if (typeof data[key] === 'object' && exclude.includes(key) !== true) {
-  //       nestedObj = makePropsPretty(data[key]);
-  //       try {
-  //         if (nestedObj[0].$$typeof) {
-  //           // nestedObj = nestedObj.forEach(e => makePropsPretty(e.props.children));
-  //           nestedObj = nestedObj.forEach(e => {
-  //             console.log('this is e show the object', e);
-  //             if (typeof e.props.children === 'object') {
-  //               console.log('nested obj show me ', typeof e.props.children, e.props.children);
-  //               return e.props.children;
-  //             }
-  //             console.log('not an object in nestedobj', typeof e.props.children, e.props.children);
-  //             return e.props.children;
-  //           });
-  //           console.log('show me show show show show show show show', nestedObj);
-  //           // console.log('show me the nestedobj after the react thing', nestedObj)
-  //         } else {
-  //           nestedObj = nestedObj.forEach(e =>{
-  //             console.log('this is not a react thing so show me', e)
-  //             makePropsPretty(e)
-  //           });
-  //         }
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //     if (nestedObj) {
-  //       propsFormat.push(nestedObj);
-  //     }
-  //   }
-  //   return propsFormat;
-  // };
 
   const makePropsPretty = data => {
     const propsFormat = [];
     const nestedObj = [];
-    // console.log('show me the data we are getting', data);
     for (const key in data) {
       if (data[key] !== 'reactFiber' && typeof data[key] !== 'object' && exclude.includes(key) !== true) {
         propsFormat.push(<p className="stateprops">
@@ -235,7 +193,6 @@ export default function ComponentMap({
 
   const collectNodes = node => {
     nodeList.splice(0, nodeList.length);
-    // console.log('Root node:', node);
     nodeList.push(node);
     for (let i = 0; i < nodeList.length; i++) {
       const cur = nodeList[i];
@@ -245,14 +202,12 @@ export default function ComponentMap({
         }
       }
     }
-    // console.log('NODELIST in ComponentMap: ', nodeList);
   };
   collectNodes(snapshots[lastNode]);
 
   // find the node that has been selected and use it as the root
   const startNode = null;
   const findSelectedNode = () => {
-    // console.log(selectedNode);
     for (const node of nodeList) {
       if (node.name === selectedNode) {
         startNode = node;
@@ -283,7 +238,6 @@ export default function ComponentMap({
         <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
         <rect width={totalWidth} height={totalHeight} rx={14} fill="#242529" />
         <Group top={margin.top} left={margin.left}>
-          {console.log('This is the SelectedNode:', selectedNode)}
           <Tree
             root={hierarchy(startNode || data, d => (d.isExpanded ? null : d.children))}
             size={[sizeWidth, sizeHeight]}
@@ -329,16 +283,11 @@ export default function ComponentMap({
                   // mousing controls & Tooltip display logic
                   const handleMouseAndClickOver = event => {
                     () => dispatch(onHover(node.data.rtid));
-                    console.log('line 197 event.target', event.target.ownerSVGElement);
-                    console.log('line 199 This is DATA: ', data);
-                    console.log('line 200 This is TREE: ', tree);
-                    console.log('line 201 This is NODE: ', node);
                     const coords = localPoint(
                       event.target.ownerSVGElement,
                       event,
                     );
                     const tooltipObj = { ...node.data };
-                    console.log('NODE DATAAAAAAAAAAAAA', node);
                     if (typeof tooltipObj.state === 'object') tooltipObj.state = 'stateful';
                     showTooltip({
                       tooltipLeft: coords.x,

@@ -46,7 +46,6 @@ export interface StateRouteProps {
 }
 
 const StateRoute = (props: StateRouteProps) => {
-  console.log(`DEBUG >>> State props: ${props}`);
   const { snapshot, hierarchy, snapshots, viewIndex, webMetrics, currLocation } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];

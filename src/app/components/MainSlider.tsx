@@ -41,8 +41,6 @@ function MainSlider(props: MainSliderProps) {
   const { currLocation } = tabs[currentTab];
   const [sliderIndex, setSliderIndex] = useState(0);
 
-  console.log('DEBUG >>> slider: ', currLocation);
-
   useEffect(() => {
     setSliderIndex(currLocation.index);
   }, [currLocation])
@@ -56,7 +54,6 @@ function MainSlider(props: MainSliderProps) {
         setSliderIndex(index);
       }}
       onAfterChange={() => {
-        console.log("DEBUG >>> sliderIndex: ", sliderIndex);
         dispatch(changeSlider(sliderIndex));
         dispatch(pause());
       }}

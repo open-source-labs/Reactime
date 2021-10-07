@@ -332,8 +332,7 @@ const BarGraphComparison = props => {
               // height/width/etc. are calculated by visx.
               // to set X and Y scale, it  will used the passed in function and
               // will run it on the array thats outputted by data
-              // console.log("barStack.bars:",barStack.bars)
-              const bar = barStack.bars[currentIndex];
+              const bar = barStack.bars[currentIndex]
               if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                 bar.height = 0;
               }
