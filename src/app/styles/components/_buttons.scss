@@ -118,6 +118,16 @@
   cursor: pointer;
 }
 
+.current-location {
+  outline: none;
+  height: 20px;
+  margin-bottom: 8px;
+  width: 70px;
+  border: transparent;
+  border-radius: 3px;
+  font: normal 11px 'Roboto', sans-serif;
+}
+
 .empty-button:hover {
   color: white;
   background-color: $highlight-color;
