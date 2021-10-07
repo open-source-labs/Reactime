@@ -105,9 +105,11 @@ function History(props: Record<string, unknown>) {
       .data(d3root.descendants())
       .enter()
       .append('g')
-      // .selectAll("g")
-      // .data(d3root.descendants())
-      // .join("g")
+      .style('cursor', 'pointer')
+      .on('click', d => {
+        dispatch(changeView(d.data.index));
+        dispatch(changeSlider(d.data.index));
+      })
       .attr('transform', d => `translate(${d.x},${d.y})`);
 
 
@@ -118,15 +120,6 @@ function History(props: Record<string, unknown>) {
         }
         return d.color ? d.color : '#555';
       })
-      .style('display', 'block')
-      .style('cursor', 'pointer')
-      .on('click', d => {
-        console.log('DEBUG >>> onclick d:', d);
-        console.log('DEBUG >>> Clicked on currlocation:', currLocation);
-        console.log('DEBUG >>> Clicked on d.data:', d.data.index);
-        dispatch(changeView(d.data.index));
-        dispatch(changeSlider(d.data.index));
-      })
       .attr('r', 14);
 
     node.append('text')
@@ -136,7 +129,6 @@ function History(props: Record<string, unknown>) {
       .clone(true)
       .lower()
       .attr('stroke', 'white');
-
     return svg.node();
   };
 

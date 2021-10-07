@@ -306,6 +306,12 @@ export default (state, action) => produce(state, draft => {
       }
       break;
     }
+    case types.SET_CURRENT_LOCATION: {
+      const { payload } = action;
+      const { currLocation } = payload[currentTab];
+      tabs[currentTab].currLocation = currLocation;
+      break;
+    }
     default:
       throw new Error(`nonexistent action: ${action.type}`);
   }

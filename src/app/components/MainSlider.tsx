@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Slider from 'rc-slider';
 import Tooltip from 'rc-tooltip';
 import { changeSlider, pause } from '../actions/actions';
 import { useStoreContext } from '../store';
+import { useEffect } from 'react';
 
 const { Handle } = Slider;
 
@@ -37,18 +38,26 @@ interface MainSliderProps {
 function MainSlider(props: MainSliderProps) {
   const { snapshotsLength } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { currLocation, sliderIndex } = tabs[currentTab];
+  const { currLocation } = tabs[currentTab];
+  const [sliderIndex, setSliderIndex] = useState(0);
 
   console.log('DEBUG >>> slider: ', currLocation);
+
+  useEffect(() => {
+    setSliderIndex(currLocation.index);
+  }, [currLocation])
 
   return (
     <Slider
       min={0}
       max={snapshotsLength - 1}
-      value={currLocation.index}
+      value={sliderIndex}
       onChange={(index: any) => {
-        const newIndex = index === -1 ? 0 : index;
-        dispatch(changeSlider(newIndex));
+        setSliderIndex(index);
+      }}
+      onAfterChange={() => {
+        console.log("DEBUG >>> sliderIndex: ", sliderIndex);
+        dispatch(changeSlider(sliderIndex));
         dispatch(pause());
       }}
       handle={handle}

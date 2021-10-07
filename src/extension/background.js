@@ -10,8 +10,6 @@ const tabsObj = {};
 // Will store Chrome web vital metrics and their corresponding values.
 const metrics = {};
 
-let isRecordAfterJump = false;
-
 // This function will create the first instance of the test app's tabs object
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
 function createTabObj(title) {
@@ -99,12 +97,7 @@ function countCurrName(rootNode, name) {
 function changeCurrLocation(tabObj, rootNode, index, name) {
   // index comes from the app's main reducer to locate the correct current location on tabObj
   // check if current node has the index wanted
-  console.log('DEBUG >>> rootNode.index: ', rootNode.index);
-  console.log('DEBUG >>> index: ', index);
   if (rootNode.index === index) {
-    console.log('DEBUG >>> jump index: ', index);
-    console.log('DEBUG >>> jump name: ', name);
-    console.log('DEBUG >>> jump hierachy: ', rootNode);
     tabObj.currLocation = rootNode;
     // Count number of nodes in the tree with name = next name.
     const currNameCount = countCurrName(tabObj.hierarchy, name + 1);
@@ -257,7 +250,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case 'jumpToSnap': {
       console.log('DEBUG >>> in jumpToSnap action!')
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
-      isRecordAfterJump = true;
+      if (portsArr.length > 0) {
+        portsArr.forEach(bg => bg.postMessage({
+          action: 'setCurrentLocation',
+          payload: tabsObj,
+        }));
+      }
       break;
     }
     // This injects a script into the app that you're testing Reactime on,
@@ -343,6 +341,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         break;
       }
 
+      console.log("DEBUG >>> reached previousSnap");
+
       // DUPLICATE SNAPSHOT CHECK
       const previousSnap = tabsObj[tabId].currLocation.stateSnapshot.children[0].componentData
         .actualDuration;
@@ -353,9 +353,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (reloaded[tabId]) {
         // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
         reloaded[tabId] = false;
-      } else if (isRecordAfterJump) {
-        console.log('DEBUG >>> test currLocation: ', tabsObj[tabId].currLocation);
-        isRecordAfterJump = false;
       } else {
         tabsObj[tabId].snapshots.push(request.payload);
         //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
@@ -366,12 +363,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             new Node(request.payload, tabsObj[tabId]),
           );
         }
-        //  else {
-        //   sendToHierarchy(
-        //     tabsObj[tabId],
-        //     new NewNode(request.payload, tabsObj[tabId])
-        //   );
-        // }
       }
       // sends new tabs obj to devtools
       if (portsArr.length > 0) {
