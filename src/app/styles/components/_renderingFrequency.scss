@@ -1,25 +1,45 @@
-.borderStyling{
+.borderStyling {
 	border-radius: 5px;
 	border: 1px solid rgba(184, 196, 194, 0.25);
 	box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.2);
-	width: 40vh;
+	width: 53vw;
+}
+
+.borderCheck {
+	border-radius: 5px;
+	border: 1px solid rgba(184, 196, 194, 0.25);
+	box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.2);
+	padding:5px;
+	width: 10vw;
+	height:25vw;
+	overflow-y: scroll;
+	overflow-wrap: break-word;
 }
 .DataComponent{
+	padding-left: 30px;
 	display: flex;
 	flex-direction: row;
-	width: 40vh
+	flex-wrap: wrap;
+	width: 50vw;
+	height:40vw;
+	overflow-y: scroll;
+	overflow-wrap: break-word;
 }
+
+
 .StyledGridElement {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	background: #242529;
-	padding: 20px;
-	width: 40vh;
+	padding: 20px; 
+	width: 50vw;
 	height: 5vh;
 	margin: 20px 10px;
 	font-family: 'Roboto', sans-serif;
-
+	// border-radius: 5px;
+	// border: 1px solid rgba(184, 196, 194, 0.25);
+	// box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.2);
 
 	h3 {
 		color: $text-color;
@@ -47,13 +67,18 @@
 }
 .ExpandStyledGridElement {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	background: #242529;
 	padding: 20px;
-	width: 80vh;
+	width: 50vw;
+	// height: 1000px;
 	margin: 20px 10px;
 	font-family: 'Roboto', sans-serif;
+	// border-radius: 5px;
+	// border: 1px solid rgba(184, 196, 194, 0.25);
+	// box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.2);
 
 
 	h3 {
@@ -81,8 +106,9 @@
 	}
 }
 .RenderRight {
-	border-radius: 5px;
+	padding-right: 5px;
 	background: $blue-color-gradient;
-	width: 10%;
+	width: 50px;
 	padding: 0 0.5em;
+	right: 10%;
 }
