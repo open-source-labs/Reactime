@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
+import { render } from 'react-dom';
 import { onHover, onHoverExit } from '../actions/actions';
 import { useStoreContext } from '../store';
 
@@ -50,9 +51,10 @@ const ComponentCard = props => {
   //   dispatch(onHoverExit(rtid));
   // };
 
-
   // render time for each component from each snapshot
   // differences in state change that happened prior;
+
+
   const dataComponentArray = [];
   for (let i = 0; i < information.length; i++) {
     dataComponentArray.push(<DataComponent header={Object.keys(information[i])} paragraphs={Object.values(information[i])} />);
@@ -103,6 +105,7 @@ const DataComponent = props => {
     header,
     paragraphs,
   } = props;
+
   // const [{ tabs, currentTab }, dispatch] = useStoreContext();
   return (
     <div>
