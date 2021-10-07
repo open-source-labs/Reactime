@@ -44,7 +44,7 @@ class Tree {
   name: string;
 
   componentData: {
-    props: {}
+    props:{}
   };
 
   children: (Tree | string)[];

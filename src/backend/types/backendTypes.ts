@@ -35,6 +35,7 @@ export interface ComponentData {
   actualStartTime?: number;
   selfBaseDuration?: number;
   treeBaseDuration?: number;
+  props?: any,
 }
 
 export interface HookStateItem {
