@@ -1,5 +1,6 @@
 import { List } from '@material-ui/core';
 import React from 'react';
+import snapshots from './snapshots';
 // Font size of the Controls label and Dropdowns
 const controlStyles = {
   fontSize: '12px',
@@ -34,6 +35,7 @@ const nodeList = [];
 
 const collectNodes = (node) => {
   // console.log("This is the root node", node);
+  // console.log('this is nodelist', nodeList)
   nodeList.splice(0, nodeList.length); { /* We used the .splice method here to ensure that nodeList did not accumulate with page refreshes */ }
   nodeList.push(node);
   for (let i = 0; i < nodeList.length; i++) {
@@ -60,7 +62,7 @@ export default function LinkControls({
   setSelectedNode,
   snapShots,
 }: Props) {
-
+  // console.log('this is line 64', snapShots)
   collectNodes(snapShots);
 
   return (

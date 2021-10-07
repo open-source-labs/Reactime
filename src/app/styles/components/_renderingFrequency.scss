@@ -1,3 +1,14 @@
+.borderStyling{
+	border-radius: 5px;
+	border: 1px solid rgba(184, 196, 194, 0.25);
+	box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.2);
+	width: 40vh;
+}
+.DataComponent{
+	display: flex;
+	flex-direction: row;
+	width: 40vh
+}
 .StyledGridElement {
 	display: flex;
 	align-items: center;
@@ -8,9 +19,7 @@
 	height: 5vh;
 	margin: 20px 10px;
 	font-family: 'Roboto', sans-serif;
-	border-radius: 5px;
-	border: 1px solid rgba(184, 196, 194, 0.25);
-	box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.2);
+
 
 	h3 {
 		color: $text-color;
@@ -30,6 +39,41 @@
 
 	p {
 		color: $brand-color;
+		line-height: 20px;
+		text-align: center;
+		font-size: 18px;
+		line-height: 18px;
+	}
+}
+.ExpandStyledGridElement {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: #242529;
+	padding: 20px;
+	width: 80vh;
+	margin: 20px 10px;
+	font-family: 'Roboto', sans-serif;
+
+
+	h3 {
+		color: $text-color;
+		margin-bottom: 5px;
+		margin-top: 5px;
+		text-transform: uppercase;
+		font-size: 14px;
+		font-weight: 500;
+	}
+
+	h4 {
+		color: $text-color;
+		margin-bottom: 5px;
+		margin-top: 5px;
+		font-weight: 300;
+	}
+
+	p {
+		color: white;
 		line-height: 20px;
 		text-align: center;
 		font-size: 18px;
