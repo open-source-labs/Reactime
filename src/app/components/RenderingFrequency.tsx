@@ -54,7 +54,6 @@ const ComponentCard = props => {
   // render time for each component from each snapshot
   // differences in state change that happened prior;
 
-
   const dataComponentArray = [];
   for (let i = 0; i < information.length; i++) {
     dataComponentArray.push(<DataComponent header={Object.keys(information[i])} paragraphs={Object.values(information[i])} />);
@@ -106,6 +105,10 @@ const DataComponent = props => {
     paragraphs,
   } = props;
 
+  // current bug
+  // we want render time to display first but it gets push to the end of the array
+  // first pop is because the last item of array is always empty for some reason 
+
   // const [{ tabs, currentTab }, dispatch] = useStoreContext();
   return (
     <div>
@@ -114,7 +117,7 @@ const DataComponent = props => {
         {header}
       </h4>
       <p>
-        {' '}
+
         {paragraphs}
       </p>
     </div>
