@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Tree from '../tree';
 
-
 export interface Snapshot {
   tree: Tree;
   unfilteredTree: null;
@@ -36,6 +35,7 @@ export interface ComponentData {
   actualStartTime?: number;
   selfBaseDuration?: number;
   treeBaseDuration?: number;
+  props?: any,
 }
 
 export interface HookStateItem {
@@ -82,7 +82,7 @@ export const ClassComponent = 1;
 export const IndeterminateComponent = 2; // Before we know whether it is function or class
 export const HostRoot = 3; // Root of a host tree. Could be nested inside another node.
 export const HostPortal = 4; // A subtree. Could be an entry point to a different renderer.
-export const HostComponent = 5;
+export const HostComponent = 5; // has stateNode of html elements
 export const HostText = 6;
 export const Fragment = 7;
 export const Mode = 8;
@@ -92,7 +92,7 @@ export const ForwardRef = 11;
 export const Profiler = 12;
 export const SuspenseComponent = 13;
 export const MemoComponent = 14;
-export const SimpleMemoComponent = 15;
+export const SimpleMemoComponent = 15; // A higher order component where if the component renders the same result given the same props, react skips rendering the component and uses last rendered result. Has memoizedProps/memoizedState but no stateNode
 export const LazyComponent = 16;
 export const IncompleteClassComponent = 17;
 export const DehydratedFragment = 18;

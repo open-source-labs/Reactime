@@ -68,6 +68,11 @@ const state = {
           }],
         }],
       },
+      currLocation: {
+        index: 0,
+        name: 1,
+        branch: 0,
+      },
       sliderIndex: 0,
       viewIndex: -1,
     },
@@ -86,7 +91,7 @@ let wrapper;
 //conditional rendering in ActionContainer that shows/hides time-travel functionality
 
 beforeEach(() => {
-  wrapper = shallow(<ActionContainer actionView={true}/>);
+  wrapper = shallow(<ActionContainer actionView={true} />);
   useStoreContext.mockClear();
   dispatch.mockClear();
 });

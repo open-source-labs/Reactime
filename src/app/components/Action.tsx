@@ -22,6 +22,7 @@ interface ActionProps {
   componentData: { actualDuration: number } | undefined;
   state?: Record<string, unknown>;
   viewIndex: number;
+  isCurrIndex: boolean;
   handleOnkeyDown: (e: any, i: number) => any;
   logChangedState: (index: number) => any;
 }
@@ -53,6 +54,7 @@ const Action = (props: ActionProps): JSX.Element => {
     componentName,
     componentData,
     viewIndex,
+    isCurrIndex,
     handleOnkeyDown,
     logChangedState,
   } = props;
@@ -98,43 +100,55 @@ const Action = (props: ActionProps): JSX.Element => {
   return (
     <div
       // Invoking keyboard functionality; functionality is in ActionContainer;
-      onKeyDown={(e) => handleOnkeyDown(e, viewIndex)}
+      onKeyDown={e => handleOnkeyDown(e, viewIndex)}
       className={
         selected || last ? 'action-component selected' : 'action-component'
       }
       onClick={() => {
         dispatch(changeView(index));
       }}
-      role='presentation'
+      role="presentation"
       style={index > sliderIndex ? { color: '#5f6369' } : {}}
       tabIndex={index}
     >
       <ReactHover options={optionsCursorTrueWithMargin}>
-        <Trigger type='trigger'>
-          <div className='action-component-trigger' style={index > sliderIndex ? { color: '#5f6369' } : {}}> 
-            <div className='action-component-text'>
+        <Trigger type="trigger">
+          <div className="action-component-trigger" style={index > sliderIndex ? { color: '#5f6369' } : {}}>
+            <div className="action-component-text">
               {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `}
               {/* {`displayName: ${displayName}`} */}
             </div>
-            <button className='time-button' type='button'>
+            <button className="time-button" type="button">
               {displayTime}
             </button>
-            <button
-              className='jump-button'
-              onClick={(e: any): void => {
-                e.stopPropagation();
-                dispatch(changeSlider(index));
-                dispatch(changeView(index));
-              }}
-              tabIndex={index}
-              type='button'
-            >
-              Jump
-            </button>
+            {
+              isCurrIndex ? (
+                <button
+                  className="current-location"
+                  type="button"
+                >
+                  Current
+                </button>
+              )
+                : (
+                  <button
+                    className="jump-button"
+                    onClick={(e: any): void => {
+                      e.stopPropagation();
+                      dispatch(changeSlider(index));
+                      dispatch(changeView(index));
+                    }}
+                    tabIndex={index}
+                    type="button"
+                  >
+                    Jump
+                  </button>
+                )
+            }
           </div>
         </Trigger>
-        <Hover type='hover'>
-          <div style={{ padding: '0.5rem 1rem' }} id='hover-box'>
+        <Hover type="hover">
+          <div style={{ padding: '0.5rem 1rem' }} id="hover-box">
             <p>{logChangedState(index)}</p>
           </div>
         </Hover>

@@ -11,7 +11,7 @@ interface DiffRouteProps{
     state?: string | unknown
     stateSnaphot?: Record<string, unknown>;
     children?: unknown[];
-    atomSelectors?:object; 
+    atomSelectors?:object;
     atomsComponents?:object
   }>;
 }

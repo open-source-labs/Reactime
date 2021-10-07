@@ -60,7 +60,7 @@ export default (origin, mode) => {
         );
         const hookState = Object.values(hook);
 
-        if ( hooksComponent && hooksComponent.dispatch) {
+        if (hooksComponent && hooksComponent.dispatch) {
           if (Array.isArray(hookState[0]) && hookState[0].length > 0 || !Array.isArray(hookState[0])) {
             hooksComponent.dispatch(hookState[0]);
           }

@@ -14,13 +14,13 @@ const metrics = {};
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
 function createTabObj(title) {
   // TO-DO for save button
-    // Save State
-    // Knowlege of the comparison snapshot
-    // Check for it in the reducer
+  // Save State
+  // Knowledge of the comparison snapshot
+  // Check for it in the reducer
   // update tabsObj
   return {
     title,
-    // snapshots is an array of ALL state snapshots for statefull and stateless components the reactime tab working on a specific user application
+    // snapshots is an array of ALL state snapshots for stateful and stateless components the Reactime tab working on a specific user application
     snapshots: [],
     // records initial snapshot to refresh page in case empty function is called
     initialSnapshot: [],
@@ -32,7 +32,7 @@ function createTabObj(title) {
     currParent: 0,
     // points to the current branch
     currBranch: 0,
-    //* inserting a new property to build out our hierarchy dataset for d3
+    // inserting a new property to build out our hierarchy dataset for d3
     hierarchy: null,
     // records initial hierarchy to refresh page in case empty function is called
     initialHierarchy: null,
@@ -49,6 +49,7 @@ function createTabObj(title) {
 // Each node stores a history of the link fiber tree.
 class Node {
   constructor(obj, tabObj) {
+
     // continues the order of number of total state changes
     this.index = tabObj.index++;
     // continues the order of number of states changed from that parent
@@ -67,16 +68,26 @@ function sendToHierarchy(tabObj, newNode) {
     tabObj.currLocation = newNode;
     tabObj.hierarchy = newNode;
   } else {
+    const currNameCount = countCurrName(tabObj.hierarchy, newNode.name);
+    newNode.branch = currNameCount;
+    tabObj.currBranch = newNode.branch;
     tabObj.currLocation.children.push(newNode);
-    // if the node's children's array is empty
-    if (tabObj.currLocation.children.length > 1) {
-      // increment the value of the nodes branch by 1
-      newNode.branch += 1;
-      // reassign value of current branch as the newNode branch value
-      tabObj.currBranch = newNode.branch;
-    }
     tabObj.currLocation = newNode;
   }
+}
+
+function countCurrName(rootNode, name) {
+  if (rootNode.name > name) {
+    return 0;
+  }
+  if (rootNode.name === name) {
+    return 1;
+  }
+  let branch = 0;
+  rootNode.children.forEach(child => {
+    branch += countCurrName(child, name);
+  });
+  return branch;
 }
 
 // This function is used when time jumping to a previous state,
@@ -87,6 +98,9 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   // check if current node has the index wanted
   if (rootNode.index === index) {
     tabObj.currLocation = rootNode;
+    // Count number of nodes in the tree with name = next name.
+    const currNameCount = countCurrName(tabObj.hierarchy, name + 1);
+    tabObj.currBranch = currNameCount === 0 ? 0 : currNameCount - 1;
     // index of current location from where the next node will be a child
     tabObj.currParent = name;
     return;
@@ -98,14 +112,14 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   }
 
   if (rootNode.children) {
-    rootNode.children.forEach((child) => {
+    rootNode.children.forEach(child => {
       changeCurrLocation(tabObj, child, index, name);
     });
   }
 }
 
 // Establishing incoming connection with devtools.
-chrome.runtime.onConnect.addListener((port) => {
+chrome.runtime.onConnect.addListener(port => {
   // port is one end of the connection - an object
 
   // push every port connected to the ports array
@@ -120,7 +134,7 @@ chrome.runtime.onConnect.addListener((port) => {
   }
 
   // every time devtool is closed, remove the port from portsArr
-  port.onDisconnect.addListener((e) => {
+  port.onDisconnect.addListener(e => {
     for (let i = 0; i < portsArr.length; i += 1) {
       if (portsArr[i] === e) {
         portsArr.splice(i, 1);
@@ -131,9 +145,8 @@ chrome.runtime.onConnect.addListener((port) => {
 
   // listen for message containing a snapshot from devtools and send it to contentScript -
   // (i.e. they're all related to the button actions on Reactime)
-  port.onMessage.addListener((msg) => {
+  port.onMessage.addListener(msg => {
     // msg is action denoting a time jump in devtools
-
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:
     // {
@@ -202,7 +215,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
-  const { action, index, name, value } = request;
+  const {
+    action, index, name, value,
+  } = request;
   let isReactTimeTravel = false;
 
   if (name) {
@@ -211,10 +226,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   // Filter out tabs that don't have reactime, tabs that dont use react?
   if (
-    action === 'tabReload' ||
-    action === 'recordSnap' ||
-    action === 'jumpToSnap' ||
-    action === 'injectScript'
+    action === 'tabReload'
+    || action === 'recordSnap'
+    || action === 'jumpToSnap'
+    || action === 'injectScript'
   ) {
     isReactTimeTravel = true;
   } else {
@@ -227,10 +242,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   const { persist, empty } = tabsObj[tabId].mode;
-
   switch (action) {
     case 'jumpToSnap': {
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
+      if (portsArr.length > 0) {
+        portsArr.forEach(bg => bg.postMessage({
+          action: 'setCurrentLocation',
+          payload: tabsObj,
+        }));
+      }
       break;
     }
     // This injects a script into the app that you're testing Reactime on,
@@ -284,12 +304,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         tabsObj[tabId].currBranch = 0;
 
         // send a message to devtools
-        portsArr.forEach((bg) =>
-          bg.postMessage({
-            action: 'initialConnectSnapshots',
-            payload: tabsObj,
-          })
-        );
+        portsArr.forEach(bg => bg.postMessage({
+          action: 'initialConnectSnapshots',
+          payload: tabsObj,
+        }));
       }
       reloaded[tabId] = true;
 
@@ -305,57 +323,46 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         tabsObj[tabId].snapshots.push(request.payload);
         sendToHierarchy(
           tabsObj[tabId],
-          new Node(request.payload, tabsObj[tabId])
+          new Node(request.payload, tabsObj[tabId]),
         );
 
         if (portsArr.length > 0) {
-          portsArr.forEach((bg) =>
-            bg.postMessage({
-              action: 'initialConnectSnapshots',
-              payload: tabsObj,
-            })
-          );
+          portsArr.forEach(bg => bg.postMessage({
+            action: 'initialConnectSnapshots',
+            payload: tabsObj,
+          }));
         }
         break;
       }
 
+
       // DUPLICATE SNAPSHOT CHECK
-      const previousSnap =
-        tabsObj[tabId].currLocation.stateSnapshot.children[0].componentData
-          .actualDuration;
-      const incomingSnap =
-        request.payload.children[0].componentData.actualDuration;
+      const previousSnap = tabsObj[tabId].currLocation.stateSnapshot.children[0].componentData
+        .actualDuration;
+      const incomingSnap = request.payload.children[0].componentData.actualDuration;
       if (previousSnap === incomingSnap) break;
 
-      // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
+      // Or if it is a snap after a jump, we don't record it.
       if (reloaded[tabId]) {
+        // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
         reloaded[tabId] = false;
       } else {
         tabsObj[tabId].snapshots.push(request.payload);
         //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
-
         if (!tabsObj[tabId][index]) {
           sendToHierarchy(
             tabsObj[tabId],
-            new Node(request.payload, tabsObj[tabId])
+            new Node(request.payload, tabsObj[tabId]),
           );
         }
-        //  else {
-        //   sendToHierarchy(
-        //     tabsObj[tabId],
-        //     new NewNode(request.payload, tabsObj[tabId])
-        //   );
-        // }
       }
       // sends new tabs obj to devtools
       if (portsArr.length > 0) {
-        portsArr.forEach((bg) =>
-          bg.postMessage({
-            action: 'sendSnapshots',
-            payload: tabsObj,
-            sourceTab,
-          })
-        );
+        portsArr.forEach(bg => bg.postMessage({
+          action: 'sendSnapshots',
+          payload: tabsObj,
+          sourceTab,
+        }));
       }
       break;
     }
@@ -366,15 +373,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // when tab is closed, remove the tabid from the tabsObj
-chrome.tabs.onRemoved.addListener((tabId) => {
+chrome.tabs.onRemoved.addListener(tabId => {
   // tell devtools which tab to delete
   if (portsArr.length > 0) {
-    portsArr.forEach((bg) =>
-      bg.postMessage({
-        action: 'deleteTab',
-        payload: tabId,
-      })
-    );
+    portsArr.forEach(bg => bg.postMessage({
+      action: 'deleteTab',
+      payload: tabId,
+    }));
   }
 
   // delete the tab from the tabsObj
@@ -391,12 +396,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
     if (changeInfo.title && changeInfo.title !== tabsObj[tabId].title) {
       // tell devtools which tab to delete
       if (portsArr.length > 0) {
-        portsArr.forEach((bg) =>
-          bg.postMessage({
-            action: 'deleteTab',
-            payload: tabId,
-          })
-        );
+        portsArr.forEach(bg => bg.postMessage({
+          action: 'deleteTab',
+          payload: tabId,
+        }));
       }
 
       // delete the tab from the tabsObj
@@ -411,15 +414,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 });
 
 // when tab view is changed, put the tabid as the current tab
-chrome.tabs.onActivated.addListener((info) => {
+chrome.tabs.onActivated.addListener(info => {
   // tell devtools which tab to be the current
   if (portsArr.length > 0) {
-    portsArr.forEach((bg) =>
-      bg.postMessage({
-        action: 'changeTab',
-        payload: info,
-      })
-    );
+    portsArr.forEach(bg => bg.postMessage({
+      action: 'changeTab',
+      payload: info,
+    }));
   }
 });
 
