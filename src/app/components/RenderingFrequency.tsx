@@ -98,6 +98,12 @@ const ComponentCard = props => {
   );
 };
 
+// const dataComponentContainer = (
+//   <div> 
+//     {dataComponentArray.}
+//   </div>  
+// );
+
 const DataComponent = props => {
   const {
     header,

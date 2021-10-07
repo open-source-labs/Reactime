@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 .save-series-button {
   padding: 3px;
   outline: transparent;
@@ -23,6 +24,7 @@
     background: rgb(41, 164, 41);
   }
 }
+
 .delete-button {
   padding: 3px;
   outline: transparent;
@@ -63,6 +65,7 @@
   width: 120px;
   background: $red-color-gradient;
 }
+
 .empty-button:hover {
   color: black;
   box-shadow: $box-shadow-red;
@@ -114,7 +117,6 @@
   // remove the blue border when button is clicked
   color: white;
   background-color: $fiery-rose;
-
   cursor: pointer;
 }
 
@@ -168,6 +170,7 @@
   background: $blue-color-gradient;
   border-radius: 5px;
 }
+
 .play-button:focus,
 .backward-button:focus,
 .forward-button:focus {
@@ -192,6 +195,7 @@
   border-color: transparent;
   background: $blue-color-gradient;
 }
+
 .import-button:hover,
 .howToUse-button:hover,
 .export-button:hover,
@@ -212,6 +216,7 @@
   overflow: visible;
   vertical-align: -0.125em;
 }
+
 %button-shared {
   padding: 5px;
   outline: none;
@@ -235,11 +240,9 @@
 .dropdown-dark {
   background: #444;
   border-color: #111111 #0a0a0a black;
-  background-image: -webkit-linear-gradient(
-    top,
-    transparent,
-    rgba(0, 0, 0, 0.4)
-  );
+  background-image: -webkit-linear-gradient(top,
+      transparent,
+      rgba(0, 0, 0, 0.4));
   background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
   background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
   background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
@@ -259,14 +262,15 @@
 .dropdown-dark .dropdown-select {
   color: #aaa;
   text-shadow: 0 1px black;
-  background: #444; /* Fallback for IE 8 */
+  background: #444;
+  /* Fallback for IE 8 */
 }
 
 .dropdown-dark .dropdown-select:focus {
   color: #ccc;
 }
 
-.dropdown-dark .dropdown-select > option {
+.dropdown-dark .dropdown-select>option {
   background: #444;
   text-shadow: 0 1px rgba(0, 0, 0, 0.4);
 }
@@ -274,6 +278,7 @@
 .MuiSelect-icon {
   color: lightgrey !important;
 }
+
 .series-options-container {
   display: flex;
   justify-content: space-between;
@@ -284,14 +289,17 @@
 .snapshotId-header {
   font-size: 1rem;
 }
+
 .dropdown-and-delete-series-container {
   display: flex;
   align-items: center;
 }
+
 .close-button-container {
   display: flex;
   justify-content: flex-end;
 }
+
 .closebtn {
   font-size: 20px;
   color: #818181;
@@ -299,14 +307,17 @@
   border: none;
   box-shadow: none;
 }
+
 .closebtn:hover {
   color: #f1f1f1;
 }
+
 .side-bar-button {
   width: 80px;
   height: 30px;
   padding: 0 2rem;
 }
+
 /* sidebar button open and closing functionality */
 aside {
   width: 250px;
@@ -318,6 +329,7 @@ aside {
 .no-aside {
   width: 30px;
 }
+
 .toggle {
   // width: 40px;
   // height: 10px;
@@ -325,6 +337,7 @@ aside {
   position: relative;
   margin-top: 1rem;
 }
+
 /* toggle i handles arrow animation */
 .toggle i,
 .toggle i::after,
@@ -370,7 +383,9 @@ aside {
 .no-aside .toggle i::after {
   transform: none;
 }
+
 #arrow {
   margin-bottom: 40px;
 }
+
 /* ^ sidebar button open and closing functionality */

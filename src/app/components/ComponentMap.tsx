@@ -220,7 +220,7 @@ export default function ComponentMap({
       if (data[key] !== 'reactFiber' && typeof data[key] !== 'object' && exclude.includes(key) !== true) {
         propsFormat.push(<p className="stateprops">
           {`${key}: ${data[key]}`}
-                         </p>);
+        </p>);
       } else if (data[key] !== 'reactFiber' && typeof data[key] === 'object' && exclude.includes(key) !== true) {
         const result = makePropsPretty(data[key]);
         nestedObj.push(result);
@@ -359,7 +359,7 @@ export default function ComponentMap({
                             forceUpdate();
                           }}
                         />
-                        )}
+                      )}
                       {/* This creates the rectangle boxes for each component and sets it relative position to other parent nodes of the same level. */}
                       {node.depth !== 0 && (
                         <rect
@@ -371,9 +371,7 @@ export default function ComponentMap({
                           fill={node.children ? '#161521' : '#62d6fb'}
                           // node.data.isExpanded = if node is collapsed
                           // stroke={(node.data.isExpanded && node.child) ? '#95fb62' : '#a69ff5'} => node.child is gone when clicked, even if it actually has children. Maybe better call node.children => node.leaf
-                          stroke={(node.data.isExpanded && node.data.children.length > 0) ? '#95fb62' : '#a69ff5'}
-
-                          // if already child in fill do not all stroke to change change color later but it works!!!!!!!!
+                          stroke={(node.data.isExpanded && node.data.children.length > 0) ? '#ff6569' : 'none'}
                           strokeWidth={3}
                           // strokeDasharray={node.children ? '0' : '2,2'}
                           strokeOpacity="1"
@@ -412,16 +410,16 @@ export default function ComponentMap({
                         textAnchor="middle"
                         style={{ pointerEvents: 'none' }}
                         fill={
-                        node.depth === 0
-                          ? '#161521'
-                          : node.children
-                            ? 'white'
-                            : '#161521'
-                      }
+                          node.depth === 0
+                            ? '#161521'
+                            : node.children
+                              ? 'white'
+                              : '#161521'
+                        }
                         z
-                        >
-                          {node.data.name}
-                        </text>
+                      >
+                        {node.data.name}
+                      </text>
                     </Group>
                   );
                 })}

@@ -10,7 +10,10 @@ const controlStyles = {
 const dropDownStyle = {
   margin: '0.5em',
   fontSize: '12px',
+  fontFamily: 'Roboto, sans-serif',
   borderRadius: '4px',
+  borderStyle: 'solid',
+  borderWidth: '1px',
   backgroundColor: '#242529',
   color: 'white',
   padding: '2px',
@@ -112,12 +115,11 @@ export default function LinkControls({
       </select>
 
       {/* Controls for the select selections. */}
-      <label>Select:</label>
+      <label> Select:</label>
       &nbsp; {/*This is a non-breaking space - Prevents an automatic line break at this position */}
-      <input list='nodeOptions' type='text' name="nodeOptions"
-        onChange={e => {
-          setSelectedNode(e.target.value)
-        }}
+      <input id='selectInput' list='nodeOptions' type='text' name="nodeOptions"
+        onChange={e => { setSelectedNode(e.target.value) }}
+        style={dropDownStyle}
       />
       <datalist id='nodeOptions'>
         {nodeList.map(node => (
