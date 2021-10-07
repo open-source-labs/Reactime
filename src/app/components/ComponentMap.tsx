@@ -229,7 +229,7 @@ export default function ComponentMap({
     if (nestedObj) {
       propsFormat.push(nestedObj);
     }
-    // console.log('this is propsformat', propsFormat);
+
     return propsFormat;
   };
 
@@ -261,7 +261,7 @@ export default function ComponentMap({
   };
   findSelectedNode();
 
-  // controls for the map 
+  // controls for the map
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
   return totalWidth < 10 ? null : (
     <div>
@@ -400,25 +400,25 @@ export default function ComponentMap({
                             //   setTooltip(true);
                             // }
                           }}
-                          onMouseEnter={() => dispatch(onHover(node.data.rtid))} // fix this not working
+                          onMouseEnter={() => dispatch(onHover(node.data.rtid))}
                           onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
                         />
-                        )}
+                      )}
                       {/* Display text inside of each component node */}
                       <text
-                          dy=".33em"
-                          fontSize={10}
-                          fontFamily="Roboto"
-                          textAnchor="middle"
-                          style={{ pointerEvents: 'none' }}
-                          fill={
-                          node.depth === 0
-                            ? '#161521'
-                            : node.children
-                              ? 'white'
-                              : '#161521'
-                        }
-                          z
+                        dy=".33em"
+                        fontSize={10}
+                        fontFamily="Roboto"
+                        textAnchor="middle"
+                        style={{ pointerEvents: 'none' }}
+                        fill={
+                        node.depth === 0
+                          ? '#161521'
+                          : node.children
+                            ? 'white'
+                            : '#161521'
+                      }
+                        z
                         >
                           {node.data.name}
                         </text>
