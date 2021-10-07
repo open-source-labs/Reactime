@@ -85,18 +85,15 @@ function getRecoilState(): any {
  * Middleware: Gets a copy of the current snap.tree and posts a recordSnap message to the window
  */
 function sendSnapshot(snap: Snapshot, mode: Mode): void {
-  console.log('DEBUG >>> sendSnapshot - mode: ', mode);
   // Don't send messages while jumping or while paused
   if (mode.jumping || mode.paused) return;
   // If there is no current tree  creates a new one
   if (!snap.tree) {
     snap.tree = new Tree('root', 'root');
   }
-  console.log('DEBUG >>> snap: ', snap);
   const payload = snap.tree.cleanTreeCopy();
   // if it's Recoil - run different actions?
   if (isRecoil) {
-    console.log('This is recoil and we\'re in sendSnapshot!');
     // getRecoilState()
     payload.atomsComponents = atomsComponents;
     payload.atomSelectors = atomsSelectors;
@@ -131,7 +128,6 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
   // this is the currently active root fiber(the mutable root of the tree)
   if (fiberRoot) {
     const { current } = fiberRoot;
-    console.log('DEBUG >>> current: ', current);
     // Clears circular component table
     circularComponentTable.clear();
     // creates snapshot that is a tree based on properties in fiberRoot object
@@ -222,19 +218,15 @@ function convertDataToString(newObj, oldObj) {
   for (const key in newObj) {
     if (typeof newObj[key] === 'function') {
       newPropData[key] = 'function';
-      // console.log('we changed the function', newPropData[key]);
     } else if (exclude.includes(key) === true) {
       newPropData[key] = 'reactFiber';
       return newPropData;
     } else if (typeof newObj[key] === 'object' && exclude.includes(key) !== true) {
-      // console.log('in the recursive call', key, newObj[key], key);
       newPropData[key] = convertDataToString(newObj[key], null);
     } else if (exclude.includes(key) !== true) {
-      // console.log('there should be no objects here', key, typeof newObj[key], newObj[key]);
       newPropData[key] = newObj[key];
     }
   }
-  // console.log(newPropData);
   return newPropData;
 }
 // Every time a state change is made in the accompanying app, the extension creates a
@@ -279,9 +271,7 @@ function createTree(
       // console.log('this is the error', error);
     }
   }
-  if (tag === 3) {
-    console.log(currentFiber)
-  }
+
   // Checks Recoil Atom and Selector Relationships
   if (
     currentFiber.memoizedState
@@ -490,19 +480,9 @@ function createTree(
         currentFiber.child.stateNode.classList.add(rtid);
       }
       rtidCounter++;
-      // console.log('rtidCounter', rtidCounter);
-      // console.log('checking the currentFiber', currentFiber);
     }
     // checking if tree fromSibling is true
     if (fromSibling) {
-      // tree object from tree.ts, with addSibling
-      // console.log('looking through every seingle currentFiber', currentFiber);
-      // try {
-      //   console.log('hello hello this is next effect', currentFiber.nextEffect);
-      // } catch (error) {
-      //   console.log('no next effect');
-      // }
-      // console.log('we are in addsibling and this is the rtid and element name', rtid, elementType.name, 'this is the current fiber', currentFiber);
       newNode = tree.addSibling(
         newState,
         elementType ? elementType.name : 'nameless',
@@ -511,13 +491,6 @@ function createTree(
         recoilDomNode
       );
     } else {
-      // console.log('looking through every seingle currentFiber', currentFiber);
-      // try {
-      //   console.log('hello hello this is next effect', currentFiber.nextEffect);
-      // } catch (error) {
-      //   console.log('no next effect');
-      // }
-      // console.log('we are in addchild and this is the rtid and element name', rtid, elementType.name, 'this is the current fiber', currentFiber);
       newNode = tree.addChild(
         newState,
         elementType ? elementType.name : 'nameless',
@@ -562,11 +535,9 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
   return () => {
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-    console.log('========================================REACT DEV TOOLS===========================================', devTools);
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     // reactInstance returns an object of the react
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-    console.log('THIS IS THE FIBER ROOOT', fiberRoot);
     const throttledUpdateSnapshot = throttle(
       () => {
         updateSnapShotTree(snap, mode);
@@ -581,14 +552,12 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
           // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
           if (doWork) {
-            console.log('DEBUG >>> onCommitFiberRoot');
             throttledUpdateSnapshot();
           }
           return original(...args);
         };
       }(devTools.onCommitFiberRoot));
     }
-    console.log('DEBUG >>> outside onCommitFiberRoot');
     throttledUpdateSnapshot();
   };
 };

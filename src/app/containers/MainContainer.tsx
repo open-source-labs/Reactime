@@ -35,7 +35,6 @@ function MainContainer(): any {
     if (currentPort) return;
     // open long-lived connection with background script
     const port = chrome.runtime.connect();
-    console.log('THIS IS THE PORT LINE 37', port);
 
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener(
@@ -45,7 +44,6 @@ function MainContainer(): any {
         sourceTab: number;
       }) => {
         const { action, payload, sourceTab } = message;
-        console.log("DEBUG >>> message: ", message);
         let maxTab;
         if (!sourceTab) {
           const tabsArray: any = Object.keys(payload);
@@ -64,13 +62,11 @@ function MainContainer(): any {
             dispatch(setTab(sourceTab));
             // set state with the information received from the background script
             dispatch(addNewSnapshots(payload));
-            console.log('this is the payload and this is the sendSnapshorts', sourceTab, payload);
             break;
           }
           case 'initialConnectSnapshots': {
             dispatch(setTab(maxTab));
             dispatch(initialConnect(payload));
-            console.log('this is the initial connect and settab', maxTab, payload);
             break;
           }
           case 'setCurrentLocation': {
@@ -149,7 +145,6 @@ function MainContainer(): any {
       </div>
     );
   }
-  console.log('DEBUG >>> main: ', tabs[currentTab]);
   const {
     currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics,
   } = tabs[currentTab];

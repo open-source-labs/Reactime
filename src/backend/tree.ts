@@ -107,7 +107,6 @@ class Tree {
     const newChild: Tree = new Tree(state, uniqueName, componentData, rtid, recoilDomNode);
     newChild.parent = this;
     this.children.push(newChild);
-    // console.log('this is the name and rtid', uniqueName, rtid);
     return newChild;
   }
 
@@ -116,7 +115,6 @@ class Tree {
     const newSibling: Tree = new Tree(state, uniqueName, componentData, rtid, recoilDomNode);
     newSibling.parent = this.parent;
     this.parent.children.push(newSibling);
-    // console.log('this is the name and rtid', uniqueName, rtid);
     return newSibling;
   }
 
@@ -134,7 +132,6 @@ class Tree {
     }
     // creates copy of present node
     let copy: Tree = new Tree(this.state, this.name, this.componentData, this.rtid, this.recoilDomNode);
-    // console.log('CLEANTREECOPY TEST', copy);
     delete copy.parent;
     circularComponentTable.add(this);
     copy = scrubUnserializableMembers(copy);

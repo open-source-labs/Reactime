@@ -13,7 +13,6 @@ let firstMessage = true;
 window.addEventListener('message', msg => {
   // Event listener runs constantly based on actions
   // recorded on the test application from backend files (linkFiber.ts).
-  console.log('we are in the msg ', msg);
   // Background.js has a listener that includes switch cases, depending on
   // the name of the action (e.g. 'tabReload').
   if (firstMessage) {

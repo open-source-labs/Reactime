@@ -121,7 +121,6 @@ const collectNodes = (snaps, componentName) => {
       finalResults[i][componentSnapshot] = makePropsPretty(finalResults[i][componentSnapshot]).reverse();
     }
   }
-  console.log('is this going to reverse', finalResults);
   return finalResults;
 };
 
@@ -178,13 +177,12 @@ const allStorage = () => {
   const values = [];
   const keys = Object.keys(localStorage);
   let i = keys.length;
-  // console.log('allstorage keys', keys);
+
 
   while (i--) {
     const series = localStorage.getItem(keys[i]);
     values.push(JSON.parse(series));
   }
-  // console.log('allstorage values', values);
   return values;
 };
 
@@ -206,7 +204,6 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
     componentData: {},
     maxTotalRender: 0,
   };
-  // console.log('show me all of the snapshots', snapshots);
   snapshots.forEach((snapshot, i) => {
     perfData.barStack.push({ snapshotId: snapshotsIds[i] });
     traverse(snapshot, perfData, snapshots);
@@ -247,9 +244,7 @@ const PerformanceVisx = (props: BarStackProps) => {
   };
 
   const renderComponentDetailsView = () => {
-    // console.log('this is the info for rendering frequency', data.componentData);
     if (hierarchy) {
-      // console.log('this is line 246', data.comparisonData);
       return <RenderingFrequency data={data.componentData} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;

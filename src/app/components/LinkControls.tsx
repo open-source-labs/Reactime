@@ -37,8 +37,6 @@ type Props = {
 const nodeList = [];
 
 const collectNodes = (node) => {
-  // console.log("This is the root node", node);
-  // console.log('this is nodelist', nodeList)
   nodeList.splice(0, nodeList.length); { /* We used the .splice method here to ensure that nodeList did not accumulate with page refreshes */ }
   nodeList.push(node);
   for (let i = 0; i < nodeList.length; i++) {
@@ -49,7 +47,6 @@ const collectNodes = (node) => {
       }
     }
   }
-  // console.log('NODELIST looks like: ', nodeList);
 }
 
 export default function LinkControls({
@@ -65,7 +62,6 @@ export default function LinkControls({
   setSelectedNode,
   snapShots,
 }: Props) {
-  // console.log('this is line 64', snapShots)
   collectNodes(snapShots);
 
   return (
@@ -106,7 +102,6 @@ export default function LinkControls({
       <select
         onClick={e => e.stopPropagation()}
         onChange={e => setLinkType(e.target.value)}
-        // value={linkType}
         style={dropDownStyle}
       >
         <option value="diagonal">Diagonal</option>

@@ -49,7 +49,7 @@ function createTabObj(title) {
 // Each node stores a history of the link fiber tree.
 class Node {
   constructor(obj, tabObj) {
-    console.log('DEBUG >>> tabObj: ', JSON.parse(JSON.stringify(tabObj)));
+
     // continues the order of number of total state changes
     this.index = tabObj.index++;
     // continues the order of number of states changed from that parent
@@ -69,7 +69,6 @@ function sendToHierarchy(tabObj, newNode) {
     tabObj.hierarchy = newNode;
   } else {
     const currNameCount = countCurrName(tabObj.hierarchy, newNode.name);
-    console.log(`DEBUG >>> count ${newNode.name} = ${currNameCount}`);
     newNode.branch = currNameCount;
     tabObj.currBranch = newNode.branch;
     tabObj.currLocation.children.push(newNode);
@@ -101,7 +100,6 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
     tabObj.currLocation = rootNode;
     // Count number of nodes in the tree with name = next name.
     const currNameCount = countCurrName(tabObj.hierarchy, name + 1);
-    console.log('DEBUG >>> currNameCount: ', currNameCount);
     tabObj.currBranch = currNameCount === 0 ? 0 : currNameCount - 1;
     // index of current location from where the next node will be a child
     tabObj.currParent = name;
@@ -126,7 +124,6 @@ chrome.runtime.onConnect.addListener(port => {
 
   // push every port connected to the ports array
   portsArr.push(port);
-  console.log('this is the port lets see what it is', port);
 
   // send tabs obj to the connected devtools as soon as connection to devtools is made
   if (Object.keys(tabsObj).length > 0) {
@@ -150,7 +147,6 @@ chrome.runtime.onConnect.addListener(port => {
   // (i.e. they're all related to the button actions on Reactime)
   port.onMessage.addListener(msg => {
     // msg is action denoting a time jump in devtools
-    console.log('this is the port on messages lets seet the message', msg);
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:
     // {
@@ -248,7 +244,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const { persist, empty } = tabsObj[tabId].mode;
   switch (action) {
     case 'jumpToSnap': {
-      console.log('DEBUG >>> in jumpToSnap action!')
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
       if (portsArr.length > 0) {
         portsArr.forEach(bg => bg.postMessage({
@@ -326,7 +321,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         reloaded[tabId] = false;
         tabsObj[tabId].webMetrics = metrics;
         tabsObj[tabId].snapshots.push(request.payload);
-        console.log('DEBUG >>> new Node');
         sendToHierarchy(
           tabsObj[tabId],
           new Node(request.payload, tabsObj[tabId]),
@@ -341,7 +335,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         break;
       }
 
-      console.log("DEBUG >>> reached previousSnap");
 
       // DUPLICATE SNAPSHOT CHECK
       const previousSnap = tabsObj[tabId].currLocation.stateSnapshot.children[0].componentData
@@ -357,7 +350,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         tabsObj[tabId].snapshots.push(request.payload);
         //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
         if (!tabsObj[tabId][index]) {
-          console.log('DEBUG >>> new Node 2?');
           sendToHierarchy(
             tabsObj[tabId],
             new Node(request.payload, tabsObj[tabId]),

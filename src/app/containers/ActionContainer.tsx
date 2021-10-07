@@ -154,7 +154,7 @@ function ActionContainer(props) {
   }
   // Sort by index.
   hierarchyArr.sort((a, b) => a.index - b.index);
-  // console.log('DEBUG >>> hierarchyArr: ', hierarchyArr);
+ 
   actionsArr = hierarchyArr.map(
     (
       snapshot: {
@@ -189,7 +189,6 @@ function ActionContainer(props) {
       );
     },
   );
-  // console.log('DEBUG >>> actionsArr: ', actionsArr);
   useEffect(() => {
     setActionView(true);
   }, [setActionView]);
