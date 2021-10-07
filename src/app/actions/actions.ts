@@ -5,7 +5,7 @@ export const save = (tabsObj) => ({
   type: types.SAVE,
   payload: tabsObj,
 });
-export const deleteSeries = () =>({
+export const deleteSeries = () => ({
   type: types.DELETE_SERIES,
 })
 export const toggleMode = (mode) => ({
@@ -95,3 +95,8 @@ export const onHoverExit = (rtid) => ({
   type: types.ON_HOVER_EXIT,
   payload: rtid,
 });
+
+export const setCurrentLocation = (tabsObj) => ({
+  type: types.SET_CURRENT_LOCATION,
+  payload: tabsObj,
+})

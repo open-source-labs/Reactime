@@ -9,6 +9,7 @@ import {
   setPort,
   setTab,
   deleteTab,
+  setCurrentLocation,
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 import MPID from '../user_id/user_id';
@@ -44,6 +45,7 @@ function MainContainer(): any {
         sourceTab: number;
       }) => {
         const { action, payload, sourceTab } = message;
+        console.log("DEBUG >>> message: ", message);
         let maxTab;
         if (!sourceTab) {
           const tabsArray: any = Object.keys(payload);
@@ -69,6 +71,10 @@ function MainContainer(): any {
             dispatch(setTab(maxTab));
             dispatch(initialConnect(payload));
             console.log('this is the initial connect and settab', maxTab, payload);
+            break;
+          }
+          case 'setCurrentLocation': {
+            dispatch(setCurrentLocation(payload));
             break;
           }
           default:

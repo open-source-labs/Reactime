@@ -42,7 +42,7 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
     case 'setPause':
       mode.paused = payload;
       break;
-      // maybe this isn't work react cohort 45
+    // maybe this isn't work react cohort 45
     case 'onHover':
       if (Array.isArray(payload)) {
         for (let i = 0; i < payload.length; i + 1) {
@@ -58,7 +58,7 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
         }
       }
       break;
-      // maybe this isn't work react cohort 45
+    // maybe this isn't work react cohort 45
     case 'onHoverExit':
       if (Array.isArray(payload)) {
         for (let i = 0; i < payload.length; i++) {
