@@ -81,7 +81,7 @@ const makePropsPretty = data => {
   if (nestedObj) {
     propsFormat.push(nestedObj);
   }
-  // console.log('this is propsformat', propsFormat);
+  console.log('this is propsformat', propsFormat);
   return propsFormat;
 };
 
@@ -112,7 +112,6 @@ const collectNodes = (snaps, componentName) => {
             newChange = true;
             // const props = { [`snapshot${x}`]: { rendertime: formatRenderTime(cur.componentData.actualDuration), ...cur.componentData.props } };
             const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
-            console.log('show me props structure', props)
             componentsResult.push(props);
           } else {
             newChange = false;
