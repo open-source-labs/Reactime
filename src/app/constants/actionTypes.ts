@@ -17,3 +17,4 @@ export const ON_HOVER = 'ON_HOVER';
 export const ON_HOVER_EXIT = 'ON_HOVER_EXIT';
 export const SAVE = 'SAVE';
 export const DELETE_SERIES = 'DELETE_SERIES';
+export const SET_CURRENT_LOCATION = 'SET_CURRENT_LOCATION';

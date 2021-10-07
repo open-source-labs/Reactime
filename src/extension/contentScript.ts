@@ -1,6 +1,8 @@
 // Web vital metrics calculated by 'web-vitals' npm package to be displayed
 // in Web Metrics tab of Reactime app.
-import { getTTFB, getLCP, getFID, getFCP, getCLS } from 'web-vitals';
+import {
+  getTTFB, getLCP, getFID, getFCP, getCLS,
+} from 'web-vitals';
 
 // Reactime application starts off with this file, and will send
 // first message to background.js for initial tabs object set up.
@@ -8,10 +10,9 @@ import { getTTFB, getLCP, getFID, getFCP, getCLS } from 'web-vitals';
 // such as snapshots, performance metrics, title of app, and so on.
 let firstMessage = true;
 // Listens for window messages (from the injected script on the DOM)
-window.addEventListener('message', (msg) => {
+window.addEventListener('message', msg => {
   // Event listener runs constantly based on actions
   // recorded on the test application from backend files (linkFiber.ts).
-
   // Background.js has a listener that includes switch cases, depending on
   // the name of the action (e.g. 'tabReload').
   if (firstMessage) {
@@ -29,7 +30,7 @@ window.addEventListener('message', (msg) => {
 });
 
 // Listening for messages from the UI of the Reactime extension.
-chrome.runtime.onMessage.addListener((request) => {
+chrome.runtime.onMessage.addListener(request => {
   const { action }: { action: string } = request;
   // this is only listening for Jump toSnap
   if (action) {

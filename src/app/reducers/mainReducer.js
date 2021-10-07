@@ -3,10 +3,7 @@ import { produce, original } from 'immer';
 import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
-  console.log('export state', state);
   const { port, currentTab, tabs } = draft;
-  console.log('currentTab Reducer:', currentTab);
-  console.log('reducer action:', action);
   const {
     hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex,
   } = tabs[currentTab] || {};
@@ -39,7 +36,6 @@ export default (state, action) => produce(state, draft => {
       const data = JSON.stringify(action.payload);
       localStorage.setItem(`${action.payload.currentTab}`, data);
       tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: true };
-      console.log('seriesSavedStatus set to true from saving series');
       break;
     }
     // Delete case will delete ALL stored series in chrome local storage. To see  chrome storage related data
@@ -59,6 +55,7 @@ export default (state, action) => produce(state, draft => {
         };
       });
       tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: false };
+      break;
     }
     case types.ON_HOVER_EXIT: {
       port.postMessage({
@@ -141,6 +138,8 @@ export default (state, action) => produce(state, draft => {
       // unselect view if same index was selected
       if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
       else tabs[currentTab].viewIndex = action.payload;
+      // update currLocation
+      // tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
       break;
     }
     case types.CHANGE_SLIDER: {
@@ -269,7 +268,6 @@ export default (state, action) => produce(state, draft => {
             sliderIndex: newSnaps.length - 1,
             seriesSavedStatus: false,
           };
-          console.log('seriesSavedStatus set to false from new snapshot');
         }
       });
 
@@ -296,6 +294,12 @@ export default (state, action) => produce(state, draft => {
         const newCurrentTab = parseInt(Object.keys(draft.tabs)[0], 10);
         draft.currentTab = newCurrentTab;
       }
+      break;
+    }
+    case types.SET_CURRENT_LOCATION: {
+      const { payload } = action;
+      const { currLocation } = payload[currentTab];
+      tabs[currentTab].currLocation = currLocation;
       break;
     }
     default:

@@ -70,6 +70,8 @@ The general flow of data is described in the following steps:
 ![GENERAL DATA FLOW](../assets/dataflow.jpg)
 
 1. When the background bundle is loaded by the browser, it executes a script injection into the dom. (see section on *backend*). This script uses a technique called [throttle](https://medium.com/@bitupon.211/debounce-and-throttle-160affa5457b) to send state data from the app to the content script every specified milliseconds (in our case, this interval is 70ms).
+<!--  CHECK LINE 496 IN LINKFIBER.TS -->
+
 
 2. The content script always listens for messages being passed from the extension's target application. Upon receiving data from the target app, the content script will immediately forward this data to the background script which then updates an object called `tabsObj`. Each time `tabsObj` is updated, its latest version will be passed to Reactime, where it is processed for displaying to the user by the *app* folder scripts.
 

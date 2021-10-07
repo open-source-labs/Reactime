@@ -2,7 +2,7 @@ import React from 'react';
 import Charts from 'react-apexcharts';
 import ReactHover, { Trigger, Hover } from 'react-hover';
 
-const radialGraph = (props) => {
+const radialGraph = props => {
   const state = {
     series: [props.series],
     options: {
@@ -91,21 +91,21 @@ const radialGraph = (props) => {
   };
 
   return (
-    <div className='metric'>
+    <div className="metric">
       <ReactHover options={optionsCursorTrueWithMargin}>
-        <Trigger type='trigger'>
-          <div id='chart'>
+        <Trigger type="trigger">
+          <div id="chart">
             <Charts
               options={state.options}
               series={state.series}
-              type='radialBar'
+              type="radialBar"
               height={200}
               width={200}
             />
           </div>
         </Trigger>
-        <Hover type='hover'>
-          <div style={{ padding: '0.5rem 1rem' }} id='hover-box'>
+        <Hover type="hover">
+          <div style={{ padding: '0.5rem 1rem' }} id="hover-box">
             <p>
               <strong>{props.name}</strong>
             </p>

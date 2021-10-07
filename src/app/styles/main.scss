@@ -12,7 +12,8 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: rgb(20, 20, 20);
+  // background: rgb(20, 20, 20);
+  background: none;
 }
 
 /* Handle */
@@ -24,6 +25,8 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(97, 97, 97);
 }
+
+// fixing the tooltip display for overflow scrolling 
 
 // 1. Configuration and helpers
 @import 'abstracts/variables';
@@ -49,3 +52,16 @@
 
 // diff component
 @import './components/diff';
+
+.visx-tooltip{
+  overflow-y: scroll;
+  overflow-wrap: break-word;
+  pointer-events:all !important;
+}
+.props{
+  line-height: 1;
+  height:100%;
+}
+.props p{
+  line-height:1;
+}
