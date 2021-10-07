@@ -93,12 +93,18 @@ const ComponentCard = props => {
         </div>
       </div>
       <div className="DataComponent">
-        {expand === true ? dataComponentArray : null}
+        {expand && dataComponentArray}
       </div>
 
     </div>
   );
 };
+
+// const dataComponentContainer = (
+//   <div> 
+//     {dataComponentArray.}
+//   </div>  
+// );
 
 const DataComponent = props => {
   const {
