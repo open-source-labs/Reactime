@@ -81,7 +81,7 @@ Try refreshing the application you want to test and refresh the DevTools by clic
 
 ### ❓ <b>I found a bug in Reactime</b>
 
-Reactime is an open source project, and we’d really appreciate your help with improving user experience. Please, create a pull request (or issue) to propose and collaborate on changes to a repository.
+Reactime is an open source project, and we’d really appreciate your help with improving user experience. Please create a pull request (or issue) to propose and collaborate on changes to a repository.
 
 ## <b>Features</b>
 
@@ -133,16 +133,18 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 
 ### <b>Additional Features</b>
 
-- identifying unnecessary re-renders
-- hover functionality to view tooltip details on state visualizations
-- ability to pan and zoom on state visualizations
-- a dropdown to support development of projects on multiple tabs
-- a slider to move through snapshots quickly
-- a play button to move through snapshots automatically
-- a lock button, which stops recording each snapshot
-- a persist button to keep snapshots upon refresh (handy when changing code and debugging)
-- download/upload the current snapshots in memory
-- declarative titles in the actions sidebar
+- Identifying unnecessary re-renders
+- Single-click to view tooltip details on state visualizations
+- Double-click to collapse child components 
+- A reverse filter with autofill to focus on a portion of the component map
+- Ability to pan and zoom on state visualizations
+- A dropdown to support development of projects on multiple tabs
+- A slider to move through snapshots quickly
+- A play button to move through snapshots automatically
+- A lock button, which stops recording each snapshot
+- A persist button to keep snapshots upon refresh (handy when changing code and debugging)
+- Download/upload the current snapshots in memory
+- Declarative titles in the actions sidebar
 
 ## <b>Read More</b>
 
@@ -195,6 +197,10 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - **Ergi Shehu** - [@Ergi516](https://github.com/ergi516)
 - **Raymond Kwan** - [@rkwn](https://github.com/rkwn)
 - **Joshua Howard** - [@Joshua-Howard](https://github.com/joshua-howard)
+- **Lina Shin** - [@rxlina](https://github.com/rxlina)
+- **Andy Tsou** - [@andytsou19](https://github.com/andytsou19)
+- **Feiyi Wu** - [@FreyaWu](https://github.com/FreyaWu)
+- **Viet Nguyen** - [@vnguyen95](https://github.com/vnguyen95)
 
 ## <b>License </b>
 
