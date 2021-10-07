@@ -320,8 +320,8 @@ export default function ComponentMap({
                           fill={node.children ? '#161521' : '#62d6fb'}
                           // node.data.isExpanded = if node is collapsed
                           // stroke={(node.data.isExpanded && node.child) ? '#95fb62' : '#a69ff5'} => node.child is gone when clicked, even if it actually has children. Maybe better call node.children => node.leaf
-                          stroke={(node.data.isExpanded && node.data.children.length > 0) ? '#ff6569' : 'none'}
-                          strokeWidth={3}
+                          stroke={(node.data.isExpanded && node.data.children.length > 0) ? '#ff6569' : '#4D4D4D'}
+                          strokeWidth={1.5}
                           // strokeDasharray={node.children ? '0' : '2,2'}
                           strokeOpacity="1"
                           rx={node.children ? 4 : 10}

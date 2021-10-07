@@ -13,6 +13,7 @@
 	height: 25vw;
 	overflow-y: scroll;
 	overflow-wrap: break-word;
+    overscroll-behavior: contain;
 }
 
 .DataComponent {
@@ -24,6 +25,7 @@
 	height: 40vw;
 	overflow-y: scroll;
 	overflow-wrap: break-word;
+	overscroll-behavior: contain;
 }
 
 
@@ -98,10 +100,17 @@
 }
 
 .RenderRight {
+	cursor: pointer;
 	padding-right: 5px;
 	border-right: 5px;
 	background: $blue-color-gradient;
 	width: 50px;
 	padding: 0 0.5em;
 	right: 10%;
+	opacity: 70%;
+	transition: 0.3s;
+}
+
+.RenderRight:hover {
+	opacity: 100%;
 }
