@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // @ts-nocheck
 import React, { Component, useEffect, useState } from 'react';
+import ReactHover, { Trigger, Hover } from 'react-hover';
+import ReactHtmlParser from 'react-html-parser';
+import { diff, formatters } from 'jsondiffpatch';
 import * as d3 from 'd3';
 import LegendKey from './legend';
 import { changeView, changeSlider } from '../actions/actions';
@@ -26,6 +29,7 @@ function History(props: Record<string, unknown>) {
     hierarchy,
     dispatch,
     currLocation,
+    snapshots,
   } = props;
 
   const svgRef = React.useRef(null);
@@ -99,11 +103,26 @@ function History(props: Record<string, unknown>) {
       .append('g')
       .style('cursor', 'pointer')
       .on('click', d => {
-        dispatch(changeView(d.data.index));
+        // console.log('d', d);
+        // dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
       })
+      .on('mouseover', d => {
+        const div = d3.select('.display').append('div')
+          .attr('class', 'tooltip')
+          .style('opacity', 1)
+          .style('left', (d3.event.pageX) + 'px')
+          .style('top', (d3.event.pageY) + 'px')
+          .text(JSON.stringify(findDiff(d.data.index)));
+        d3.selectAll('.tooltip').attr('color', '#2b2f39');
+        // div.text(findDiff(d.data.index));
+        // console.log('findDiff(d.data.index)', findDiff(d.data.index));
+        // console.log('snapshots in History.jsx', snapshots);
+      })
+      .on('mouseout', d => {
+        d3.selectAll('.tooltip').remove();
+      })
       .attr('transform', d => `translate(${d.x},${d.y})`);
-
 
     node.append('circle')
       .attr('fill', d => {
@@ -124,17 +143,94 @@ function History(props: Record<string, unknown>) {
     return svg.node();
   };
 
+  // finding difference
+  function findDiff(index) {
+    const statelessCleanning = (obj: {
+      name?: string;
+      componentData?: object;
+      state?: string | any;
+      stateSnaphot?: object;
+      children?: any[];
+    }) => {
+      const newObj = { ...obj };
+      if (newObj.name === 'nameless') {
+        delete newObj.name;
+      }
+      if (newObj.componentData) {
+        delete newObj.componentData;
+      }
+      if (newObj.state === 'stateless') {
+        delete newObj.state;
+      }
+      if (newObj.stateSnaphot) {
+        newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
+      }
+      if (newObj.children) {
+        newObj.children = [];
+        if (obj.children.length > 0) {
+          obj.children.forEach(
+            (element: { state?: object | string; children?: [] }) => {
+              if (
+                element.state !== 'stateless'
+                || element.children.length > 0
+              ) {
+                const clean = statelessCleanning(element);
+                newObj.children.push(clean);
+              }
+            },
+          );
+        }
+      }
+      // nathan test
+      return newObj;
+    };
+    // displays stateful data
+    // console.log(index, index - 1);
+
+    const previousDisplay = statelessCleanning(snapshots[index - 1]);
+    const delta = diff(previousDisplay, snapshots[index]);
+    const changedState = findStateChangeObj(delta);
+    console.log('changedState in History.tsx', changedState[0]);
+    // took out the formatting for History.tsx nodes, Rob 11/4
+    // const html = formatters.html.format(changedState[0]);
+    // const output = ReactHtmlParser(html);
+    // return output;
+
+    if (changedState[0][0] !== 'root') {
+      delete changedState[0]['hooksState']['_t'];
+    }
+    return changedState[0];
+  }
+
+  function findStateChangeObj(delta, changedState = []) {
+    if (!delta.children && !delta.state) {
+      return changedState;
+    }
+    if (delta.state && delta.state[0] !== 'stateless') {
+      changedState.push(delta.state);
+    }
+    if (!delta.children) {
+      return changedState;
+    }
+    Object.keys(delta.children).forEach(child => {
+      // if (isNaN(child) === false) {
+      changedState.push(...findStateChangeObj(delta.children[child]));
+      // }
+    });
+    return changedState;
+  }
+
   // below we are rendering the LegendKey component and passing hierarchy as props
   // then rendering each node in History tab to render using D3, which will share area with LegendKey
   return (
-    <>
+    <div className="display">
       {/* <LegendKey hierarchy={hierarchy} /> */}
       <svg
         ref={svgRef}
         width={totalWidth}
         height={totalHeight}
       />
-    </>
+    </div>
   );
 }
 

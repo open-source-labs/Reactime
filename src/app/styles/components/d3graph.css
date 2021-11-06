@@ -32,13 +32,13 @@ div.tooltip {
 	position: absolute;
 	text-align: center;
 	display: inline;
-	max-width: 250px;
+	max-width: 150px;
 	overflow-wrap: break-word;
 	padding: 6px;
-	color: #2b2f39;
+	/* color: #2b2f39; */
 	font-size: 12px;
 	font-family: 'Overpass Mono', monospace;
-	background: #679dca;
+	background: #000000;
 	border-radius: 8px;
 	pointer-events: none;
 }

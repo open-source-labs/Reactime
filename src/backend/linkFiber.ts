@@ -106,7 +106,6 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   // the postMessage action will be received on the content script to later update the tabsObj
   // this will fire off everytime there is a change in test application
   window.postMessage(
-
     {
       action: 'recordSnap',
       payload,
@@ -182,7 +181,7 @@ function traverseRecoilHooks(
 function traverseHooks(memoizedState: any): HookStates {
   const hooksStates: HookStates = [];
   while (memoizedState && memoizedState.queue) {
-    if (memoizedState.memoizedState) {
+    if (memoizedState.memoizedState !== null) {
       hooksStates.push({
         component: memoizedState.queue,
         state: memoizedState.memoizedState,
@@ -405,7 +404,11 @@ function createTree(
         } else if (!newState.hooksState) {
           newState.hooksState = [];
         }
+        // console.log('hooksStates', hooksStates);
+        // console.log('hooksNames', hooksNames);
         newState.hooksState.push({ [hooksNames[i]]: state.state });
+        // changing this to test
+        // newState.hooksState.push({ [hooksNames[i]]: state.state });
         componentFound = true;
       });
     }

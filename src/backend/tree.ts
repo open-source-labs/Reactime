@@ -23,6 +23,7 @@ function scrubUnserializableMembers(tree: Tree): Tree {
 
 function serializeState(state) {
   try {
+    // console.log('state in tree.js', state);
     return JSON.parse(JSON.stringify(state));
   } catch (e) {
     return 'circularState';
