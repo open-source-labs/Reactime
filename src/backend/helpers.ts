@@ -75,7 +75,9 @@ export const getHooksNames = (elementType: string): Array<string> => {
   // Initialize empty object to store the setters and getter
   let ast: any;
   try {
+    // console.log('hello');
     ast = JSXParser.parse(elementType);
+    // console.log('ast1', ast);
   } catch (e) {
     return ['unknown'];
   }
@@ -84,8 +86,10 @@ export const getHooksNames = (elementType: string): Array<string> => {
 
   // Begin search for hook names, only if ast has a body property.
   while (Object.hasOwnProperty.call(ast, 'body')) {
+    // console.log('body', body);
     let tsCount = 0; // Counter for the number of TypeScript hooks seen (to distinguish in masterState)
     ast = ast.body;
+    // console.log('ast.body', ast);
 
     // Statements get all the names of the hooks. For example: useCount, useWildcard, ...
     const statements: Array<string> = [];
@@ -100,6 +104,7 @@ export const getHooksNames = (elementType: string): Array<string> => {
       // Traverse through the function's funcDecs and Expression Statements
       body.forEach((elem: any) => {
         // Hooks will always be contained in a variable declaration
+        // console.log('elem', elem);
         if (elem.type === 'VariableDeclaration') {
           elem.declarations.forEach((hook: any) => {
             // Parse destructured statements pair
@@ -111,23 +116,28 @@ export const getHooksNames = (elementType: string): Array<string> => {
               });
               // Process hook function invocation ?
             } else {
+              // hook.init.object is '_useState2', '_useState4', etc.
+              // eslint-disable-next-line no-lonely-if
               if (hook.init.object && hook.init.object.name) {
                 const varName: any = hook.init.object.name;
                 if (!hooksNames[varName] && varName.match(/_use/)) {
                   hooksNames[varName] = hook.id.name;
                 }
               }
-              if (hook.id.name !== undefined) {
-                statements.push(hook.id.name);
-              }
+              // if (hook.id.name !== undefined) {
+              //   statements.push(hook.id.name);
+              // }
             }
           });
         }
       });
-      statements.forEach((el, i) => {
-        if (el.match(/_use/)) hooksNames[el] = statements[i + 1];
-      });
+    //   statements.forEach((el, i) => {
+    //     // console.log('in statements');
+    //     if (el.match(/_use/)) hooksNames[el] = statements[i + 1];
+    //   });
+    //   // console.log('statements', statements);
+    // });
     });
+    return Object.values(hooksNames);
   }
-  return Object.values(hooksNames);
 };

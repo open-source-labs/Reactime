@@ -24,16 +24,19 @@ const circularComponentTable = new Set();
 export default (origin, mode) => {
   // Recursively change state of tree
   // Set the state of the origin tree if the component is stateful
+  // console.log('origin', origin);
   function jump(target, firstCall = false) {
+    // console.log('target', target);
     if (!target) return;
     if (target.state === 'stateless') {
       target.children.forEach(child => jump(child));
       return;
     }
-    //
+    // for stateful class components
     const component = componentActionsRecord.getComponentByIndex(
       target.componentData.index,
     );
+
     // check if it is a stateful class component
     // if yes, find the component by its index and assign it to a variable
     // call that components setState method to reset state to the state at the time of the jump snapshot
@@ -54,15 +57,24 @@ export default (origin, mode) => {
 
     // Check for hooks state and set it with dispatch()
     if (target.state && target.state.hooksState) {
+      // console.log('target.state', target.state);
+      // console.log('target.state.hookState', target.state.hooksState);
       target.state.hooksState.forEach(hook => {
         const hooksComponent = componentActionsRecord.getComponentByIndex(
           target.componentData.hooksIndex,
         );
-        const hookState = Object.values(hook);
+        // console.log('hooksComponent', hooksComponent);
+        // console.log('hook', hook);
+        const hookState = Object.entries(hook);
+        // console.log('hookState', hookState);
 
         if (hooksComponent && hooksComponent.dispatch) {
           if (Array.isArray(hookState[0]) && hookState[0].length > 0 || !Array.isArray(hookState[0])) {
+            // console.log('about to dispatch');
+            // console.log('hooksComponentBefore', hooksComponent);
+            // console.log('dispatch', hooksComponent.dispatch);
             hooksComponent.dispatch(hookState[0]);
+            // console.log('hooksComponentAfter', hooksComponent);
           }
         }
       });
