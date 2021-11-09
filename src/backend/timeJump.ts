@@ -1,4 +1,5 @@
 import { Console } from 'console';
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable max-len */
@@ -18,14 +19,13 @@ import { Console } from 'console';
 /* eslint-disable no-param-reassign */
 
 import componentActionsRecord from './masterState';
-
 const circularComponentTable = new Set();
-
 export default (origin, mode) => {
   // Recursively change state of tree
   // Set the state of the origin tree if the component is stateful
-  // console.log('origin', origin);
   function jump(target, firstCall = false) {
+    console.log('componentActionsRecord', componentActionsRecord);
+    // console.log('origin', origin);
     // console.log('target', target);
     if (!target) return;
     if (target.state === 'stateless') {
@@ -42,8 +42,10 @@ export default (origin, mode) => {
     // call that components setState method to reset state to the state at the time of the jump snapshot
     if (component && component.setState) {
       component.setState(
+        // prevState contains the states of the snapshots we are jumping FROM, not jumping TO
         prevState => {
           Object.keys(prevState).forEach(key => {
+            // if conditional below does not appear to ever be reached if all states are defined - leaving code in just in case codebases do have undefined states
             if (!target.state[key] === undefined) {
               target.state[key] = undefined;
             }
@@ -55,37 +57,27 @@ export default (origin, mode) => {
       );
     }
 
-    // Check for hooks state and set it with dispatch()
-    if (target.state && target.state.hooksState) {
-      // console.log('target.state', target.state);
-      // console.log('target.state.hookState', target.state.hooksState);
-      target.state.hooksState.forEach(hook => {
-        const hooksComponent = componentActionsRecord.getComponentByIndex(
-          target.componentData.hooksIndex,
-        );
-        // console.log('hooksComponent', hooksComponent);
-        // console.log('hook', hook);
-        const hookState = Object.entries(hook);
-        // console.log('hookState', hookState);
-
-        if (hooksComponent && hooksComponent.dispatch) {
-          if (Array.isArray(hookState[0]) && hookState[0].length > 0 || !Array.isArray(hookState[0])) {
-            // console.log('about to dispatch');
-            // console.log('hooksComponentBefore', hooksComponent);
-            // console.log('dispatch', hooksComponent.dispatch);
-            hooksComponent.dispatch(hookState[0]);
-            // console.log('hooksComponentAfter', hooksComponent);
-          }
-        }
-      });
-    }
-
     target.children.forEach(child => {
       if (!circularComponentTable.has(child)) {
         circularComponentTable.add(child);
         jump(child);
       }
     });
+
+    // Check for hooks state and set it with dispatch()
+    if (target.state && target.state.hooksState) {
+      target.state.hooksState.forEach(hook => {
+        const hooksComponent = componentActionsRecord.getComponentByIndex(
+          target.componentData.hooksIndex,
+        );
+        const hookState = Object.values(hook);
+        if (hooksComponent && hooksComponent.dispatch) {
+          if (Array.isArray(hookState[0]) && hookState[0].length > 0 || !Array.isArray(hookState[0])) {
+            hooksComponent.dispatch(hookState[0]);
+          }
+        }
+      });
+    }
   }
 
   return (target, firstCall = false) => {

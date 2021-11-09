@@ -124,19 +124,18 @@ export const getHooksNames = (elementType: string): Array<string> => {
                   hooksNames[varName] = hook.id.name;
                 }
               }
-              // if (hook.id.name !== undefined) {
-              //   statements.push(hook.id.name);
-              // }
+              if (hook.id.name !== undefined) {
+                statements.push(hook.id.name);
+              }
             }
           });
         }
       });
-    //   statements.forEach((el, i) => {
-    //     // console.log('in statements');
-    //     if (el.match(/_use/)) hooksNames[el] = statements[i + 1];
-    //   });
-    //   // console.log('statements', statements);
-    // });
+      statements.forEach((el, i) => {
+        // console.log('in statements');
+        if (el.match(/_use/)) hooksNames[el] = statements[i + 1];
+      });
+      // console.log('statements', statements);
     });
     return Object.values(hooksNames);
   }
