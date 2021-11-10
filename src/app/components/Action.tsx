@@ -5,6 +5,7 @@
 import React from 'react';
 import ReactHover, { Trigger, Hover } from 'react-hover';
 import { changeView, changeSlider } from '../actions/actions';
+import snapshots from './snapshots';
 
 /**
  * @template ActionProps Props for the action component
@@ -58,6 +59,9 @@ const Action = (props: ActionProps): JSX.Element => {
     handleOnkeyDown,
     logChangedState,
   } = props;
+
+  // console.log('index in Action.tsx', index);
+  // console.log('logChangedState(index)', logChangedState(index));
 
   /**
    * @function cleanTime: Displays render times for state changes
@@ -134,6 +138,8 @@ const Action = (props: ActionProps): JSX.Element => {
                   <button
                     className="jump-button"
                     onClick={(e: any): void => {
+                      // console.log('index', index);
+                      // console.log('logChangedState(index)', logChangedState(index));
                       e.stopPropagation();
                       dispatch(changeSlider(index));
                       dispatch(changeView(index));
@@ -149,7 +155,7 @@ const Action = (props: ActionProps): JSX.Element => {
         </Trigger>
         <Hover type="hover">
           <div style={{ padding: '0.5rem 1rem' }} id="hover-box">
-            <p>{logChangedState(index)}</p>
+            <p>{(logChangedState(index))}</p>
           </div>
         </Hover>
       </ReactHover>

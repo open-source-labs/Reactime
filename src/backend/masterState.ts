@@ -15,6 +15,7 @@ const componentActionsRecord: HookStates = [];
 let index = 0;
 
 export default {
+  componentActionsRecord,
   saveNew: (state, component): number => {
     componentActionsRecord[index] = { state, component };
     // console.log('componentActionsRecord', componentActionsRecord);

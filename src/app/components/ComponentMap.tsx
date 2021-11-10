@@ -236,7 +236,9 @@ export default function ComponentMap({
 
       <svg ref={containerRef} width={totalWidth} height={totalHeight}>
         <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
-        <rect width={totalWidth} height={totalHeight} rx={14} fill="#242529" />
+        <rect onClick={() => {
+            setTooltip(false);
+            hideTooltip();}} width={totalWidth} height={totalHeight} rx={14} fill="#242529" />
         <Group top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(startNode || data, d => (d.isExpanded ? null : d.children))}
