@@ -1,4 +1,5 @@
 import { produce, original } from 'immer';
+import { debuglog } from 'util';
 
 import * as types from '../constants/actionTypes.ts';
 
@@ -11,6 +12,8 @@ export default (state, action) => produce(state, draft => {
   // eslint-disable-next-line max-len
   // function that finds the index in the hierarchy and extracts the name of the equivalent index to add to the post message
   // eslint-disable-next-line consistent-return
+
+  // (action.payload, hierarchy)
   const findName = (index, obj) => {
     // eslint-disable-next-line eqeqeq
     if (obj && obj.index == index) {
@@ -146,7 +149,11 @@ export default (state, action) => produce(state, draft => {
       // eslint-disable-next-line max-len
       // finds the name by the action.payload parsing through the hierarchy to send to background.js the current name in the jump action
       const nameFromIndex = findName(action.payload, hierarchy);
-
+      // nameFromIndex is a number based on which jump button is pushed
+      // console.log('action.payload', action.payload);
+      // console.log('hierarchy', hierarchy);
+      // console.log('hierarchy', JSON.stringify(hierarchy));
+      // console.log('nameFromIndex', nameFromIndex);
       port.postMessage({
         action: 'jumpToSnap',
         payload: snapshots[action.payload],
@@ -154,7 +161,11 @@ export default (state, action) => produce(state, draft => {
         name: nameFromIndex,
         tabId: currentTab,
       });
+      // console.log('tabs[currentTab].sliderIndex', JSON.stringify(tabs[currentTab].sliderIndex));
+      console.log('tabs[currentTab]', tabs[currentTab]);
+      // if you want the real fix to this, then look into sliderIndex. we just added + Infinity so they are not all greyed out after current index
       tabs[currentTab].sliderIndex = action.payload;
+      // + Infinity
       break;
     }
     case types.EMPTY: {

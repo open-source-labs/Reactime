@@ -34,6 +34,8 @@ export default (origin, mode) => {
     const component = componentActionsRecord.getComponentByIndex(
       target.componentData.index,
     );
+
+    console.log('target', target);
     // check if it is a stateful class component
     // if yes, find the component by its index and assign it to a variable
     // call that components setState method to reset state to the state at the time of the jump snapshot
@@ -59,7 +61,8 @@ export default (origin, mode) => {
           target.componentData.hooksIndex,
         );
         const hookState = Object.values(hook);
-
+        console.log('hooksComponent', hooksComponent);
+        console.log('hookState', hookState);
         if (hooksComponent && hooksComponent.dispatch) {
           if (Array.isArray(hookState[0]) && hookState[0].length > 0 || !Array.isArray(hookState[0])) {
             hooksComponent.dispatch(hookState[0]);
@@ -67,6 +70,21 @@ export default (origin, mode) => {
         }
       });
     }
+
+    // if (target.state && target.state.hooksState) {
+    //   const hooksComponent = componentActionsRecord.getComponentByIndex(
+    //     target.componentData.hooksIndex,
+    //   );
+    //   const hookState = Object.values(target.state.hooksState[0]);
+    //   console.log('hooksComponent', hooksComponent);
+    //   console.log('hookState', hookState);
+    //   // console.log('componentActionsRecord in timeJump', componentActionsRecord);
+    //   if (hooksComponent && hooksComponent.dispatch) {
+    //     if (Array.isArray(hookState[0]) && hookState[0].length > 0 || !Array.isArray(hookState[0])) {
+    //       hooksComponent.dispatch(hookState);
+    //     }
+    //   }
+    // }
 
     target.children.forEach(child => {
       if (!circularComponentTable.has(child)) {

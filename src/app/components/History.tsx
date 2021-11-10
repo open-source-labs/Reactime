@@ -104,7 +104,7 @@ function History(props: Record<string, unknown>) {
       .style('cursor', 'pointer')
       .on('click', d => {
         // console.log('d', d);
-        // dispatch(changeView(d.data.index));
+        dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
       })
       .on('mouseover', d => {
@@ -114,7 +114,8 @@ function History(props: Record<string, unknown>) {
           .style('left', (d3.event.pageX) + 'px')
           .style('top', (d3.event.pageY) + 'px')
           .text(JSON.stringify(findDiff(d.data.index)));
-        d3.selectAll('.tooltip').attr('color', '#2b2f39');
+          // .html(findDiff(d.data.index));
+        // d3.selectAll('.tooltip').attr('color', '#2b2f39');
         // div.text(findDiff(d.data.index));
         // console.log('findDiff(d.data.index)', findDiff(d.data.index));
         // console.log('snapshots in History.jsx', snapshots);
@@ -190,15 +191,16 @@ function History(props: Record<string, unknown>) {
     const previousDisplay = statelessCleanning(snapshots[index - 1]);
     const delta = diff(previousDisplay, snapshots[index]);
     const changedState = findStateChangeObj(delta);
-    console.log('changedState in History.tsx', changedState[0]);
+    // console.log('changedState in History.tsx', changedState[0]);
     // took out the formatting for History.tsx nodes, Rob 11/4
     // const html = formatters.html.format(changedState[0]);
     // const output = ReactHtmlParser(html);
-    // return output;
+    // return JSON.stringify(output);
 
-    if (changedState[0][0] !== 'root') {
-      delete changedState[0]['hooksState']['_t'];
-    }
+    // if (changedState[0][0] !== 'root') {
+    //   delete changedState[0]['hooksState']['_t'];
+    // }
+
     return changedState[0];
   }
 

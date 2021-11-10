@@ -35,10 +35,10 @@ div.tooltip {
 	max-width: 150px;
 	overflow-wrap: break-word;
 	padding: 6px;
-	/* color: #2b2f39; */
+	color: white;
 	font-size: 12px;
-	font-family: 'Overpass Mono', monospace;
-	background: #000000;
+	font-family: 'Roboto', sans-serif;
+	background: #51565e;
 	border-radius: 8px;
 	pointer-events: none;
 }

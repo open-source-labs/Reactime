@@ -404,11 +404,10 @@ function createTree(
         } else if (!newState.hooksState) {
           newState.hooksState = [];
         }
+        // console.log('memoizedState', memoizedState);
         // console.log('hooksStates', hooksStates);
         // console.log('hooksNames', hooksNames);
         newState.hooksState.push({ [hooksNames[i]]: state.state });
-        // changing this to test
-        // newState.hooksState.push({ [hooksNames[i]]: state.state });
         componentFound = true;
       });
     }

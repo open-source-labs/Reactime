@@ -24,7 +24,7 @@ function ActionContainer(props) {
   let actionsArr = [];
   const hierarchyArr: any[] = [];
 
-  console.log('snapshots in ActionContainer.jsx', snapshots);
+  // console.log('snapshots in ActionContainer.jsx', snapshots);
 
   function findDiff(index) {
     const statelessCleanning = (obj: {
