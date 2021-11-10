@@ -285,6 +285,7 @@ export default function ComponentMap({
                   // mousing controls & Tooltip display logic
                   const handleMouseAndClickOver = event => {
                     () => dispatch(onHover(node.data.rtid));
+                    console.log('hover', node);
                     const coords = localPoint(
                       event.target.ownerSVGElement,
                       event,

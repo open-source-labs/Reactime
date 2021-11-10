@@ -105,7 +105,7 @@ const radialGraph = props => {
           </div>
         </Trigger>
         <Hover type="hover">
-          <div style={{ zIndex: 100, position: 'relative', padding: '0.5rem 1rem' }} id="hover-box">
+          <div style={{ zIndex: 1, position: 'relative', padding: '0.5rem 1rem' }} id="hover-box">
             <p>
               <strong>{props.name}</strong>
             </p>

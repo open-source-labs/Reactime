@@ -17,22 +17,26 @@ export default (state, action) => produce(state, draft => {
   const findName = (index, obj) => {
     // eslint-disable-next-line eqeqeq
     if (obj && obj.index == index) {
+      // obj.name = obj.index + 1
+      // console.log('about to return');
       return obj.name;
     }
-
+    // console.log('we returned why r u still here');
     const objChildArray = [];
     if (obj) {
+      // eslint-disable-next-line no-restricted-syntax
       for (const objChild of obj.children) {
         objChildArray.push(findName(index, objChild));
       }
     }
+    // eslint-disable-next-line no-restricted-syntax
     for (const objChildName of objChildArray) {
       if (objChildName) {
         return objChildName;
       }
     }
   };
-
+  console.log('sliderIndex', sliderIndex);
   switch (action.type) {
     // Save case will store the series user wants to save to the chrome local storage
     case types.SAVE: {
@@ -79,11 +83,17 @@ export default (state, action) => produce(state, draft => {
     }
 
     case types.MOVE_BACKWARD: {
-      if (snapshots.length > 0 && sliderIndex > 0) {
+      if (sliderIndex > 0) {
         const newIndex = sliderIndex - 1;
         // eslint-disable-next-line max-len
         // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
         const nameFromIndex = findName(newIndex, hierarchy);
+        
+        // console.log('hierarchy', JSON.stringify(hierarchy));
+        console.log('snapshots', JSON.stringify(snapshots));
+        console.log('newIndex', newIndex);
+        console.log('nameFromIndex', nameFromIndex);
+        console.log('currentTab', currentTab);
         port.postMessage({
           action: 'jumpToSnap',
           payload: snapshots[newIndex],
@@ -108,9 +118,9 @@ export default (state, action) => produce(state, draft => {
 
         port.postMessage({
           action: 'jumpToSnap',
+          payload: snapshots[newIndex],
           index: newIndex,
           name: nameFromIndex,
-          payload: snapshots[newIndex],
           tabId: currentTab,
         });
 

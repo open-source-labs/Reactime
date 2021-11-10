@@ -33,6 +33,7 @@ const timeJump = timeJumpStart(snapShot, mode);
 window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
   switch (action) {
     case 'jumpToSnap':
+      // console.log('payload', payload);
       timeJump(payload, true); // * This sets state with given payload
       // Get the pathname from payload and add new entry to browser history
       // MORE: https://developer.mozilla.org/en-US/docs/Web/API/History/pushState

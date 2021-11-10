@@ -57,6 +57,7 @@ class Node {
     // marks from what branch this node is originated
     this.branch = tabObj.currBranch;
     this.stateSnapshot = obj;
+    // console.log('stateSnapshot', this.stateSnapshot);
     this.children = [];
   }
 }
@@ -160,9 +161,11 @@ chrome.runtime.onConnect.addListener(port => {
     switch (action) {
       case 'import': // create a snapshot property on tabId and set equal to tabs object
         // may need do something like filter payload from stateless
+        // console.log('import switch');
         tabsObj[tabId].snapshots = payload;
         return true;
       case 'emptySnap':
+        // console.log('emptySnap switch');
         // activates empty mode
         tabsObj[tabId].mode.empty = true;
         // records snapshot of page initial state
@@ -199,6 +202,7 @@ chrome.runtime.onConnect.addListener(port => {
         tabsObj[tabId].mode.persist = payload;
         return true;
       case 'jumpToSnap':
+        // console.log('jumpToSnap switch');
         chrome.tabs.sendMessage(tabId, msg);
         return true; // attempt to fix message port closing error, consider return Promise
       default:
@@ -316,16 +320,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case 'recordSnap': {
       const sourceTab = tabId;
       tabsObj[tabId].webMetrics = metrics;
+      console.log('snapshots', tabsObj[tabId].snapshots);
       if (!firstSnapshotReceived[tabId]) {
         firstSnapshotReceived[tabId] = true;
         reloaded[tabId] = false;
         tabsObj[tabId].webMetrics = metrics;
         tabsObj[tabId].snapshots.push(request.payload);
+        // console.log('req.payload', request.payload);
         sendToHierarchy(
           tabsObj[tabId],
           new Node(request.payload, tabsObj[tabId]),
         );
-
         if (portsArr.length > 0) {
           portsArr.forEach(bg => bg.postMessage({
             action: 'initialConnectSnapshots',
