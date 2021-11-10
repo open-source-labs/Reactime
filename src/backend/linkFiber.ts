@@ -32,6 +32,7 @@ import componentActionsRecord from './masterState';
 // getHooksNames - helper function to grab the getters/setters from `elementType`
 import { throttle, getHooksNames } from './helpers';
 import AtomsRelationship from '../app/components/AtomsRelationship';
+import { element } from 'prop-types';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -89,8 +90,10 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   if (mode.jumping || mode.paused) return;
   // If there is no current tree  creates a new one
   if (!snap.tree) {
+    // console.log('in sendSnapshot');
     snap.tree = new Tree('root', 'root');
   }
+  // console.log('cleantreecopy', snap);
   const payload = snap.tree.cleanTreeCopy();
   // if it's Recoil - run different actions?
   if (isRecoil) {
@@ -106,7 +109,6 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   // the postMessage action will be received on the content script to later update the tabsObj
   // this will fire off everytime there is a change in test application
   window.postMessage(
-
     {
       action: 'recordSnap',
       payload,
@@ -182,7 +184,7 @@ function traverseRecoilHooks(
 function traverseHooks(memoizedState: any): HookStates {
   const hooksStates: HookStates = [];
   while (memoizedState && memoizedState.queue) {
-    if (memoizedState.memoizedState) {
+    if (memoizedState.memoizedState !== null) {
       hooksStates.push({
         component: memoizedState.queue,
         state: memoizedState.memoizedState,
@@ -256,9 +258,11 @@ function createTree(
     treeBaseDuration,
   } = currentFiber;
 
+  // console.log('memoizedState', memoizedState);
 // check to see if we can get the information we were looking for 
   if (tag === 5) {
     try {
+      // console.log(elementType.toString());
       if (memoizedProps.children[0]._owner.memoizedProps !== undefined) {
         const propsData = memoizedProps.children[0]._owner.memoizedProps;
         const newPropData = convertDataToString(propsData, tree.componentData.props ? tree.componentData.props : null);
@@ -387,27 +391,43 @@ function createTree(
     && (tag === 0 || tag === 1 || tag === 2 || tag === 10)
     && isRecoil === false
   ) {
+    // console.log('memoizedState', memoizedState);
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
       // so we must traverse through the list and get the states.
       // We then store them along with the corresponding memoizedState.queue,
       // which includes the dispatch() function we use to change their state.
+      // console.log('memoizedState.queue', memoizedState.queue);
       const hooksStates = traverseHooks(memoizedState);
+      // console.log('elementType', elementType);
       const hooksNames = getHooksNames(elementType.toString());
+      // console.log('hooksStates', hooksStates);
       hooksStates.forEach((state, i) => {
+        // console.log('state before forEach', state);
+        // console.log('i', i);
         hooksIndex = componentActionsRecord.saveNew(
           state.state,
           state.component
         );
+        // console.log('hooksIndex', hooksIndex);
+        // console.log('componentActionsRecord', componentActionsRecord);
+        // console.log('componentActionsRecord.saveNew', componentActionsRecord.saveNew);
+        // console.log('state.state', state.state);
+        // console.log('state.component', state.component);
         componentData.hooksIndex = hooksIndex;
         if (!newState) {
           newState = { hooksState: [] };
+        // }
         } else if (!newState.hooksState) {
           newState.hooksState = [];
         }
+        // newState[hooksNames[i]] = state.state;
         newState.hooksState.push({ [hooksNames[i]]: state.state });
+        // console.log('newState.hooksState', newState.hooksState);
         componentFound = true;
       });
+      // console.log('hooksStates', hooksStates);
+      // console.log('hooksNames', hooksNames);
     }
   }
 
@@ -428,7 +448,8 @@ function createTree(
   let newNode = null;
 
   // We want to add this fiber node to the snapshot
-  if (componentFound || newState === 'stateless') {
+  // eslint-disable-next-line no-mixed-operators
+  if (componentFound || newState === 'stateless' && !newState.hooksState) {
     if (isRecoil) {
       // do this down below too
       if (currentFiber.elementType.name) {
@@ -483,6 +504,7 @@ function createTree(
     }
     // checking if tree fromSibling is true
     if (fromSibling) {
+      // console.log('stateinfromSibling', newState);
       newNode = tree.addSibling(
         newState,
         elementType ? elementType.name : 'nameless',
@@ -535,9 +557,13 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
   return () => {
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    console.log('devTools', devTools);
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
+    // console.log('reactInstance', reactInstance);
     // reactInstance returns an object of the react
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
+    // console.log('fiberRoot', fiberRoot);
+    // console.log('snap', snap);
     const throttledUpdateSnapshot = throttle(
       () => {
         updateSnapShotTree(snap, mode);

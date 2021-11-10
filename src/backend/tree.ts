@@ -23,6 +23,7 @@ function scrubUnserializableMembers(tree: Tree): Tree {
 
 function serializeState(state) {
   try {
+    // console.log('state', state);
     return JSON.parse(JSON.stringify(state));
   } catch (e) {
     return 'circularState';
@@ -104,7 +105,9 @@ class Tree {
 
   addChild(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode: any): Tree {
     const uniqueName = this.checkForDuplicates(name);
+    // console.log('state in addChild', state);
     const newChild: Tree = new Tree(state, uniqueName, componentData, rtid, recoilDomNode);
+    // console.log('newChild', newChild);
     newChild.parent = this;
     this.children.push(newChild);
     return newChild;
@@ -112,7 +115,10 @@ class Tree {
 
   addSibling(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode: any): Tree {
     const uniqueName = this.checkForDuplicates(name);
+    // console.log('state in addSibling', state);
     const newSibling: Tree = new Tree(state, uniqueName, componentData, rtid, recoilDomNode);
+    // console.log('sibTree', newSibling);
+    // console.log('newSibling', newSibling);
     newSibling.parent = this.parent;
     this.parent.children.push(newSibling);
     return newSibling;

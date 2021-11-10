@@ -99,6 +99,7 @@ function ActionContainer(props) {
     index: number;
     children?: [];
   }) => {
+    // console.log('hello');
     if (
       obj.stateSnapshot.children.length > 0
       && obj.stateSnapshot.children[0]
