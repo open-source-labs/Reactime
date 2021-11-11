@@ -113,12 +113,9 @@ function History(props: Record<string, unknown>) {
           .style('opacity', 1)
           .style('left', (d3.event.pageX) + 'px')
           .style('top', (d3.event.pageY) + 'px')
-          .text(JSON.stringify(findDiff(d.data.index)));
+          // .text(JSON.stringify(findDiff(d.data.index)));
           // .html(findDiff(d.data.index));
-        // d3.selectAll('.tooltip').attr('color', '#2b2f39');
-        // div.text(findDiff(d.data.index));
-        // console.log('findDiff(d.data.index)', findDiff(d.data.index));
-        // console.log('snapshots in History.jsx', snapshots);
+        d3.selectAll('.tooltip').html(findDiff(d.data.index));
       })
       .on('mouseout', d => {
         d3.selectAll('.tooltip').remove();
@@ -193,15 +190,15 @@ function History(props: Record<string, unknown>) {
     const changedState = findStateChangeObj(delta);
     // console.log('changedState in History.tsx', changedState[0]);
     // took out the formatting for History.tsx nodes, Rob 11/4
-    // const html = formatters.html.format(changedState[0]);
+    const html = formatters.html.format(changedState[0]);
     // const output = ReactHtmlParser(html);
-    // return JSON.stringify(output);
+    return html;
 
     // if (changedState[0][0] !== 'root') {
     //   delete changedState[0]['hooksState']['_t'];
     // }
 
-    return changedState[0];
+    // return changedState[0];
   }
 
   function findStateChangeObj(delta, changedState = []) {
