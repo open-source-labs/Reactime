@@ -161,7 +161,6 @@ function ActionContainer(props) {
   }
   // Sort by index.
   hierarchyArr.sort((a, b) => a.index - b.index);
-
   actionsArr = hierarchyArr.map(
     (
       snapshot: {
@@ -172,6 +171,8 @@ function ActionContainer(props) {
         componentData: { actualDuration: number } | undefined;
       },
     ) => {
+      // console.log('snapshots', snapshots);
+      console.log('snapshot', snapshot);
       const { index } = snapshot;
       const selected = index === viewIndex;
       const last = viewIndex === -1 && index === hierarchyArr.length - 1;

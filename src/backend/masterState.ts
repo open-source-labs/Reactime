@@ -23,7 +23,16 @@ export default {
     return index - 1;
   },
   getRecordByIndex: (inputIndex: number): HookStateItem => componentActionsRecord[inputIndex],
-  getComponentByIndex: (inputIndex: number): any => (componentActionsRecord[inputIndex]
-    ? componentActionsRecord[inputIndex].component
-    : undefined),
+  // getComponentByIndex: (inputIndex: number): any => (componentActionsRecord[inputIndex]
+  //   ? componentActionsRecord[inputIndex].component
+  //   : undefined),
+  getComponentByIndex: (inputIndex: Array<number> = []): any => {
+    // console.log('inputIndex', inputIndex);
+    // console.log('componentActionsRecord', componentActionsRecord);
+    const multiDispatch = [];
+    for (let i = 0; i < inputIndex.length; i++) {
+      if (componentActionsRecord[inputIndex[i]]) multiDispatch.push(componentActionsRecord[inputIndex[i]].component);
+    }
+    return multiDispatch;
+  },
 };

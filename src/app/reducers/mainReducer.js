@@ -36,7 +36,6 @@ export default (state, action) => produce(state, draft => {
       }
     }
   };
-  console.log('sliderIndex', sliderIndex);
   switch (action.type) {
     // Save case will store the series user wants to save to the chrome local storage
     case types.SAVE: {
@@ -90,10 +89,10 @@ export default (state, action) => produce(state, draft => {
         const nameFromIndex = findName(newIndex, hierarchy);
         
         // console.log('hierarchy', JSON.stringify(hierarchy));
-        console.log('snapshots', JSON.stringify(snapshots));
-        console.log('newIndex', newIndex);
-        console.log('nameFromIndex', nameFromIndex);
-        console.log('currentTab', currentTab);
+        // console.log('snapshots', JSON.stringify(snapshots));
+        // console.log('newIndex', newIndex);
+        // console.log('nameFromIndex', nameFromIndex);
+        // console.log('currentTab in slider', currentTab);
         port.postMessage({
           action: 'jumpToSnap',
           payload: snapshots[newIndex],
@@ -163,7 +162,6 @@ export default (state, action) => produce(state, draft => {
       // console.log('action.payload', action.payload);
       // console.log('hierarchy', hierarchy);
       // console.log('hierarchy', JSON.stringify(hierarchy));
-      // console.log('nameFromIndex', nameFromIndex);
       port.postMessage({
         action: 'jumpToSnap',
         payload: snapshots[action.payload],
@@ -171,11 +169,7 @@ export default (state, action) => produce(state, draft => {
         name: nameFromIndex,
         tabId: currentTab,
       });
-      // console.log('tabs[currentTab].sliderIndex', JSON.stringify(tabs[currentTab].sliderIndex));
-      console.log('tabs[currentTab]', tabs[currentTab]);
-      // if you want the real fix to this, then look into sliderIndex. we just added + Infinity so they are not all greyed out after current index
       tabs[currentTab].sliderIndex = action.payload;
-      // + Infinity
       break;
     }
     case types.EMPTY: {
