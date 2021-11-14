@@ -258,7 +258,7 @@ function createTree(
     treeBaseDuration,
   } = currentFiber;
 
-// check to see if we can get the information we were looking for 
+// check to see if we can get the information we were looking for
   if (tag === 5) {
     try {
       // console.log(elementType.toString());
@@ -397,19 +397,9 @@ function createTree(
       // We then store them along with the corresponding memoizedState.queue,
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseHooks(memoizedState);
-      // console.log('elementType', elementType);
       const hooksNames = getHooksNames(elementType.toString());
-      console.log('memoizedState', memoizedState);
-      // console.log('hooksStates', hooksStates);
-      // console.log('componentData.hooksIndex before', componentData.hooksIndex);
+      // console.log('hooksNames', hooksNames);
       
-      // pulled these lines out to test
-      // hooksIndex = componentActionsRecord.saveNew(
-      //   memoizedState.memoizedState,
-      //   memoizedState.queue
-      // );
-      // componentData.hooksIndex = hooksIndex;
-
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(
           state.state,
@@ -561,7 +551,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
   return () => {
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-    console.log('devTools', devTools);
+    // console.log('devTools', devTools);
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     // console.log('reactInstance', reactInstance);
     // reactInstance returns an object of the react

@@ -103,26 +103,16 @@ export default (origin, mode) => {
 
     // multiple dispatch check
     if (target.state && target.state.hooksState) {
-      console.log('target', target);
-      console.log('target.componentData.hooksIndex', target.componentData.hooksIndex);
-      console.log('componentActionsRecord', componentActionsRecord);
-      const hooksComponent = componentActionsRecord.getComponentByIndex([
-        target.componentData.hooksIndex + 1,
-        target.componentData.hooksIndex + 2,
-        target.componentData.hooksIndex + 3,
-        target.componentData.hooksIndex + 4,
-        target.componentData.hooksIndex + 5,
-        target.componentData.hooksIndex + 6,
-      ]);
-      console.log('hooksComponent', hooksComponent);
-      console.log('target.state.hooksState', target.state.hooksState);
+      const numState = target.state.hooksState.length;
+      const numArr: Array<number> = [];
+      let counter = 1;
+      while (counter < numState + 1) {
+        numArr.push(target.componentData.hooksIndex - numState + counter);
+        counter += 1;
+      }
+      const hooksComponent = componentActionsRecord.getComponentByIndex(numArr);
       for (let i = 0; i < target.state.hooksState.length; i += 1) {
-        if (Array.isArray(Object.values(target.state.hooksState[i]))) {
-          console.log('Object.values(target.state.hooksState[i])', Object.values(target.state.hooksState[i]));
-          hooksComponent[i].dispatch(Object.values(target.state.hooksState[i])[0]);
-        } else {
-          hooksComponent[i].dispatch(Object.values(target.state.hooksState[i]));
-        }
+        hooksComponent[i].dispatch(Object.values(target.state.hooksState[i])[0]);
       }
     }
   }
@@ -137,3 +127,15 @@ export default (origin, mode) => {
     }, 100);
   };
 };
+
+
+
+
+      // // if (target.state.hooksState.length > 1) {
+      //   for (let i = 0; i < target.state.hooksState.length; i += 1) {
+      //     // if (Array.isArray(Object.values(target.state.hooksState[i]))) {
+      //     //   hooksComponent[i].dispatch(Object.values(target.state.hooksState[i])[0]);
+      //     // } else {
+      //       hooksComponent[i].dispatch(Object.values(target.state.hooksState[i])[0]);
+      //     // }
+      //     // }

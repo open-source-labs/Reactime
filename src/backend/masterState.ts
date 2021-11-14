@@ -27,8 +27,6 @@ export default {
   //   ? componentActionsRecord[inputIndex].component
   //   : undefined),
   getComponentByIndex: (inputIndex: Array<number> = []): any => {
-    // console.log('inputIndex', inputIndex);
-    // console.log('componentActionsRecord', componentActionsRecord);
     const multiDispatch = [];
     for (let i = 0; i < inputIndex.length; i++) {
       if (componentActionsRecord[inputIndex[i]]) multiDispatch.push(componentActionsRecord[inputIndex[i]].component);
