@@ -65,54 +65,18 @@ export default (origin, mode) => {
       }
     });
 
-    // Check for hooks state and set it with dispatch()
-    // if (target.state && target.state.hooksState) {
-    //   target.state.hooksState.forEach(hook => {
-    //     const hooksComponent = componentActionsRecord.getComponentByIndex(
-    //       target.componentData.hooksIndex,
-    //     );
-    //     // console.log('hooksComponent', hooksComponent);
-    //     const hookState = Object.values(hook);
-    //     if (hooksComponent && hooksComponent.dispatch) {
-    //       if (Array.isArray(hookState[0]) && hookState[0].length > 0 || !Array.isArray(hookState[0])) {
-    //         hooksComponent.dispatch(hookState[0]);
-    //       }
-    //     }
-    //   });
-    // }
-
-    // attempt 2
-    // if (target.state && target.state.hooksState) {
-    //   console.log('target.state.hooksState', target.state.hooksState);
-    //   // console.log('target.componentData.hooksIndex', target.componentData.hooksIndex);
-    //   // console.log('componentActionsRecord', componentActionsRecord);
-    //   const hooksComponent = componentActionsRecord.getComponentByIndex(
-    //     target.componentData.hooksIndex,
-    //     // 13,
-    //     // whatever we pass into here is the hook that is being updated
-    //   );
-    //   // console.log('hooksComponent', hooksComponent);
-    //   const hookState = Object.values(target.state.hooksState[0]);
-    //   // console.log('hookState', hookState);
-    //   if (hooksComponent && hooksComponent.dispatch) {
-    //     if (Array.isArray(hookState[0]) && hookState[0].length > 0 || !Array.isArray(hookState[0])) {
-    //       hooksComponent.dispatch(hookState[0]);
-    //     }
-    //   }
-    // }
-
     // multiple dispatch check
     if (target.state && target.state.hooksState) {
-      const numState = target.state.hooksState.length;
+      const currState = target.state.hooksState;
       const numArr: Array<number> = [];
       let counter = 1;
-      while (counter < numState + 1) {
-        numArr.push(target.componentData.hooksIndex - numState + counter);
+      while (counter < currState.length + 1) {
+        numArr.push(target.componentData.hooksIndex - currState.length + counter);
         counter += 1;
       }
-      const hooksComponent = componentActionsRecord.getComponentByIndex(numArr);
-      for (let i = 0; i < target.state.hooksState.length; i += 1) {
-        hooksComponent[i].dispatch(Object.values(target.state.hooksState[i])[0]);
+      const hooksComponent = componentActionsRecord.getComponentByIndexHooks(numArr);
+      for (let i = 0; i < currState.length; i += 1) {
+        hooksComponent[i].dispatch(Object.values(currState[i])[0]);
       }
     }
   }
@@ -127,15 +91,3 @@ export default (origin, mode) => {
     }, 100);
   };
 };
-
-
-
-
-      // // if (target.state.hooksState.length > 1) {
-      //   for (let i = 0; i < target.state.hooksState.length; i += 1) {
-      //     // if (Array.isArray(Object.values(target.state.hooksState[i]))) {
-      //     //   hooksComponent[i].dispatch(Object.values(target.state.hooksState[i])[0]);
-      //     // } else {
-      //       hooksComponent[i].dispatch(Object.values(target.state.hooksState[i])[0]);
-      //     // }
-      //     // }
