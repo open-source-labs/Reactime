@@ -258,8 +258,7 @@ function createTree(
     treeBaseDuration,
   } = currentFiber;
 
-  // console.log('memoizedState', memoizedState);
-// check to see if we can get the information we were looking for 
+// check to see if we can get the information we were looking for
   if (tag === 5) {
     try {
       // console.log(elementType.toString());
@@ -397,24 +396,18 @@ function createTree(
       // so we must traverse through the list and get the states.
       // We then store them along with the corresponding memoizedState.queue,
       // which includes the dispatch() function we use to change their state.
-      // console.log('memoizedState.queue', memoizedState.queue);
       const hooksStates = traverseHooks(memoizedState);
-      // console.log('elementType', elementType);
       const hooksNames = getHooksNames(elementType.toString());
-      // console.log('hooksStates', hooksStates);
+      // console.log('hooksNames', hooksNames);
+      
       hooksStates.forEach((state, i) => {
-        // console.log('state before forEach', state);
-        // console.log('i', i);
         hooksIndex = componentActionsRecord.saveNew(
           state.state,
           state.component
         );
-        // console.log('hooksIndex', hooksIndex);
-        // console.log('componentActionsRecord', componentActionsRecord);
-        // console.log('componentActionsRecord.saveNew', componentActionsRecord.saveNew);
-        // console.log('state.state', state.state);
-        // console.log('state.component', state.component);
+        // why is this re-writing componentData.hooksIndex every time? instead, should remove from loop and try to re-write it to be whichever state is being updated
         componentData.hooksIndex = hooksIndex;
+        // console.log('componentData.hooksIndex inside loop', componentData.hooksIndex);
         if (!newState) {
           newState = { hooksState: [] };
         // }
@@ -426,6 +419,7 @@ function createTree(
         // console.log('newState.hooksState', newState.hooksState);
         componentFound = true;
       });
+      // console.log('componentData.hooksIndex after', componentData.hooksIndex);
       // console.log('hooksStates', hooksStates);
       // console.log('hooksNames', hooksNames);
     }
@@ -557,7 +551,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
   return () => {
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-    console.log('devTools', devTools);
+    // console.log('devTools', devTools);
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     // console.log('reactInstance', reactInstance);
     // reactInstance returns an object of the react

@@ -138,8 +138,7 @@ const Action = (props: ActionProps): JSX.Element => {
                   <button
                     className="jump-button"
                     onClick={(e: any): void => {
-                      // console.log('index', index);
-                      // console.log('logChangedState(index)', logChangedState(index));
+                      console.log('componentData', componentData);
                       e.stopPropagation();
                       dispatch(changeSlider(index));
                       dispatch(changeView(index));

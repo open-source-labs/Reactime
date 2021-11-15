@@ -30,17 +30,18 @@ body {
 
 div.tooltip {
 	position: absolute;
-	text-align: center;
-	display: inline;
+	/* text-align: center; */
+	/* display: inline; */
 	max-width: 150px;
-	overflow-wrap: break-word;
-	padding: 6px;
+	/* overflow-wrap: break-word; */
+	padding: 0.5rem 1rem;
+	/* padding: 6px; */
 	color: white;
 	font-size: 12px;
 	font-family: 'Roboto', sans-serif;
 	background: #51565e;
-	border-radius: 8px;
-	pointer-events: none;
+	border-radius: 5px;
+	/* pointer-events: none; */
 }
 
 .d3-tip {

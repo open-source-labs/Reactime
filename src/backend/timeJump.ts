@@ -19,12 +19,13 @@ import { Console } from 'console';
 /* eslint-disable no-param-reassign */
 
 import componentActionsRecord from './masterState';
+
 const circularComponentTable = new Set();
 export default (origin, mode) => {
   // Recursively change state of tree
   // Set the state of the origin tree if the component is stateful
   function jump(target, firstCall = false) {
-    console.log('componentActionsRecord', componentActionsRecord);
+    // console.log('componentActionsRecord', componentActionsRecord);
     // console.log('origin', origin);
     // console.log('target', target);
     if (!target) return;
@@ -64,19 +65,19 @@ export default (origin, mode) => {
       }
     });
 
-    // Check for hooks state and set it with dispatch()
+    // multiple dispatch check
     if (target.state && target.state.hooksState) {
-      target.state.hooksState.forEach(hook => {
-        const hooksComponent = componentActionsRecord.getComponentByIndex(
-          target.componentData.hooksIndex,
-        );
-        const hookState = Object.values(hook);
-        if (hooksComponent && hooksComponent.dispatch) {
-          if (Array.isArray(hookState[0]) && hookState[0].length > 0 || !Array.isArray(hookState[0])) {
-            hooksComponent.dispatch(hookState[0]);
-          }
-        }
-      });
+      const currState = target.state.hooksState;
+      const numArr: Array<number> = [];
+      let counter = 1;
+      while (counter < currState.length + 1) {
+        numArr.push(target.componentData.hooksIndex - currState.length + counter);
+        counter += 1;
+      }
+      const hooksComponent = componentActionsRecord.getComponentByIndexHooks(numArr);
+      for (let i = 0; i < currState.length; i += 1) {
+        hooksComponent[i].dispatch(Object.values(currState[i])[0]);
+      }
     }
   }
 
