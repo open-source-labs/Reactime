@@ -153,7 +153,7 @@ const Action = (props: ActionProps): JSX.Element => {
           </div>
         </Trigger>
         <Hover type="hover">
-          <div style={{ padding: '0.5rem 1rem' }} id="hover-box">
+          <div style={{ zIndex: 1, position: 'relative', padding: '0.5rem 1rem' }} id="hover-box">
             <p>{(logChangedState(index))}</p>
           </div>
         </Hover>
