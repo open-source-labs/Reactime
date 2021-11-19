@@ -103,7 +103,6 @@ function History(props: Record<string, unknown>) {
       .append('g')
       .style('cursor', 'pointer')
       .on('click', d => {
-        // console.log('d', d);
         dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
       })
@@ -183,12 +182,10 @@ function History(props: Record<string, unknown>) {
       return newObj;
     };
     // displays stateful data
-    // console.log(index, index - 1);
 
     const previousDisplay = statelessCleanning(snapshots[index - 1]);
     const delta = diff(previousDisplay, snapshots[index]);
     const changedState = findStateChangeObj(delta);
-    // console.log('changedState in History.tsx', changedState[0]);
     // took out the formatting for History.tsx nodes, Rob 11/4
     const html = formatters.html.format(changedState[0]);
     // const output = ReactHtmlParser(html);

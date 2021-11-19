@@ -18,7 +18,6 @@ const mixpanel = require('mixpanel').init('12fa2800ccbf44a5c36c37bc9776e4c0', {
   debug: false,
   protocol: 'https',
 });
-console.log('store', useStoreContext);
 function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;

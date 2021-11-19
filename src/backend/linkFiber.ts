@@ -90,12 +90,10 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   if (mode.jumping || mode.paused) return;
   // If there is no current tree  creates a new one
   if (!snap.tree) {
-    // console.log('in sendSnapshot');
     snap.tree = new Tree('root', 'root');
   }
-  // console.log('cleantreecopy', snap);
   const payload = snap.tree.cleanTreeCopy();
-  // if it's Recoil - run different actions?
+  // if it's Recoil - run different actions
   if (isRecoil) {
     // getRecoilState()
     payload.atomsComponents = atomsComponents;
@@ -261,7 +259,6 @@ function createTree(
 // check to see if we can get the information we were looking for
   if (tag === 5) {
     try {
-      // console.log(elementType.toString());
       if (memoizedProps.children[0]._owner.memoizedProps !== undefined) {
         const propsData = memoizedProps.children[0]._owner.memoizedProps;
         const newPropData = convertDataToString(propsData, tree.componentData.props ? tree.componentData.props : null);
@@ -271,7 +268,6 @@ function createTree(
         };
       }
     } catch (error) {
-      // console.log('this is the error', error);
     }
   }
 
@@ -390,7 +386,6 @@ function createTree(
     && (tag === 0 || tag === 1 || tag === 2 || tag === 10)
     && isRecoil === false
   ) {
-    // console.log('memoizedState', memoizedState);
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
       // so we must traverse through the list and get the states.
@@ -398,7 +393,6 @@ function createTree(
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseHooks(memoizedState);
       const hooksNames = getHooksNames(elementType.toString());
-      // console.log('hooksNames', hooksNames);
       
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(
@@ -407,7 +401,6 @@ function createTree(
         );
         // why is this re-writing componentData.hooksIndex every time? instead, should remove from loop and try to re-write it to be whichever state is being updated
         componentData.hooksIndex = hooksIndex;
-        // console.log('componentData.hooksIndex inside loop', componentData.hooksIndex);
         if (!newState) {
           newState = { hooksState: [] };
         // }
@@ -416,12 +409,8 @@ function createTree(
         }
         // newState[hooksNames[i]] = state.state;
         newState.hooksState.push({ [hooksNames[i]]: state.state });
-        // console.log('newState.hooksState', newState.hooksState);
         componentFound = true;
       });
-      // console.log('componentData.hooksIndex after', componentData.hooksIndex);
-      // console.log('hooksStates', hooksStates);
-      // console.log('hooksNames', hooksNames);
     }
   }
 
@@ -498,7 +487,6 @@ function createTree(
     }
     // checking if tree fromSibling is true
     if (fromSibling) {
-      // console.log('stateinfromSibling', newState);
       newNode = tree.addSibling(
         newState,
         elementType ? elementType.name : 'nameless',
@@ -551,13 +539,9 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
   return () => {
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-    // console.log('devTools', devTools);
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
-    // console.log('reactInstance', reactInstance);
     // reactInstance returns an object of the react
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-    // console.log('fiberRoot', fiberRoot);
-    // console.log('snap', snap);
     const throttledUpdateSnapshot = throttle(
       () => {
         updateSnapShotTree(snap, mode);

@@ -75,9 +75,7 @@ export const getHooksNames = (elementType: string): Array<string> => {
   // Initialize empty object to store the setters and getter
   let ast: any;
   try {
-    // console.log('hello');
     ast = JSXParser.parse(elementType);
-    // console.log('ast1', ast);
   } catch (e) {
     return ['unknown'];
   }
@@ -86,10 +84,8 @@ export const getHooksNames = (elementType: string): Array<string> => {
 
   // Begin search for hook names, only if ast has a body property.
   while (Object.hasOwnProperty.call(ast, 'body')) {
-    // console.log('body', body);
     let tsCount = 0; // Counter for the number of TypeScript hooks seen (to distinguish in masterState)
     ast = ast.body;
-    // console.log('ast.body', ast);
 
     // Statements get all the names of the hooks. For example: useCount, useWildcard, ...
     const statements: Array<string> = [];
@@ -104,7 +100,6 @@ export const getHooksNames = (elementType: string): Array<string> => {
       // Traverse through the function's funcDecs and Expression Statements
       body.forEach((elem: any) => {
         // Hooks will always be contained in a variable declaration
-        // console.log('elem', elem);
         if (elem.type === 'VariableDeclaration') {
           elem.declarations.forEach((hook: any) => {
             // Parse destructured statements pair
@@ -132,10 +127,8 @@ export const getHooksNames = (elementType: string): Array<string> => {
         }
       });
       statements.forEach((el, i) => {
-        // console.log('in statements');
         if (el.match(/_use/)) hooksNames[el] = statements[i + 1];
       });
-      // console.log('statements', statements);
     });
     return Object.values(hooksNames);
   }

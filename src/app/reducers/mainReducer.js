@@ -17,11 +17,8 @@ export default (state, action) => produce(state, draft => {
   const findName = (index, obj) => {
     // eslint-disable-next-line eqeqeq
     if (obj && obj.index == index) {
-      // obj.name = obj.index + 1
-      // console.log('about to return');
       return obj.name;
     }
-    // console.log('we returned why r u still here');
     const objChildArray = [];
     if (obj) {
       // eslint-disable-next-line no-restricted-syntax
@@ -88,11 +85,6 @@ export default (state, action) => produce(state, draft => {
         // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
         const nameFromIndex = findName(newIndex, hierarchy);
         
-        // console.log('hierarchy', JSON.stringify(hierarchy));
-        // console.log('snapshots', JSON.stringify(snapshots));
-        // console.log('newIndex', newIndex);
-        // console.log('nameFromIndex', nameFromIndex);
-        // console.log('currentTab in slider', currentTab);
         port.postMessage({
           action: 'jumpToSnap',
           payload: snapshots[newIndex],
@@ -159,9 +151,7 @@ export default (state, action) => produce(state, draft => {
       // finds the name by the action.payload parsing through the hierarchy to send to background.js the current name in the jump action
       const nameFromIndex = findName(action.payload, hierarchy);
       // nameFromIndex is a number based on which jump button is pushed
-      // console.log('action.payload', action.payload);
-      // console.log('hierarchy', hierarchy);
-      // console.log('hierarchy', JSON.stringify(hierarchy));
+      
       port.postMessage({
         action: 'jumpToSnap',
         payload: snapshots[action.payload],
