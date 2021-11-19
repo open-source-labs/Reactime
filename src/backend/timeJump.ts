@@ -62,7 +62,10 @@ export default (origin, mode) => {
       }
     });
 
-    // multiple dispatch check
+    //REACT HOOKS
+    // check if component states are set with hooks
+      // if yes, grab all relevant components for this snapshot in numArr
+      // call dispatch on each component passing in the corresponding currState value
     if (target.state && target.state.hooksState) {
       const currState = target.state.hooksState;
       const numArr: Array<number> = [];

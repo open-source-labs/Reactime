@@ -11,20 +11,26 @@ import {
   HookStates, // array of hook state items
 } from './types/backendTypes';
 
+// HookState is an array that contains a "component" for every single state change that occurs in the app
+// Information on these components include ComponentData as well as state
+// For class components, there will be one "component" for each snapshot
+// For functional components that utilize Hooks, there will be one "component" for each setter/getter every time we have a new snapshot
 const componentActionsRecord: HookStates = [];
 let index = 0;
 
 export default {
-  componentActionsRecord,
+  //adds new component to ComponentActionsRecord
   saveNew: (state, component): number => {
     componentActionsRecord[index] = { state, component };
     index++;
     return index - 1;
   },
   getRecordByIndex: (inputIndex: number): HookStateItem => componentActionsRecord[inputIndex],
+  //this is used for class components - inputIndex will always be a fixed number (coming in timeJump.ts)
   getComponentByIndex: (inputIndex: number): any => (componentActionsRecord[inputIndex]
     ? componentActionsRecord[inputIndex].component
     : undefined),
+    //this is used for react hooks - hooks will be passed in as an array from timeJump.ts
   getComponentByIndexHooks: (inputIndex: Array<number> = []): any => {
     const multiDispatch = [];
     for (let i = 0; i < inputIndex.length; i++) {
