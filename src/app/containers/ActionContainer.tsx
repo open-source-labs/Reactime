@@ -24,7 +24,6 @@ function ActionContainer(props) {
   let actionsArr = [];
   const hierarchyArr: any[] = [];
 
-  // console.log('snapshots in ActionContainer.jsx', snapshots);
 
   function findDiff(index) {
     const statelessCleanning = (obj: {
@@ -68,14 +67,10 @@ function ActionContainer(props) {
     };
     // displays stateful data
     const previousDisplay = statelessCleanning(snapshots[index - 1]);
-    // console.log('this is previousDisplay', previousDisplay);
     const delta = diff(previousDisplay, snapshots[index]);
-    // console.log('this is delta', delta);
     const changedState = findStateChangeObj(delta);
-    // console.log('this is changedState in ActionContainer.tsx', changedState);
     const html = formatters.html.format(changedState[0]);
     const output = ReactHtmlParser(html);
-    // console.log('this is output', output);
     return output;
   }
 
@@ -105,7 +100,6 @@ function ActionContainer(props) {
     index: number;
     children?: [];
   }) => {
-    // console.log('hello');
     if (
       obj.stateSnapshot.children.length > 0
       && obj.stateSnapshot.children[0]
@@ -171,8 +165,6 @@ function ActionContainer(props) {
         componentData: { actualDuration: number } | undefined;
       },
     ) => {
-      // console.log('snapshots', snapshots);
-      console.log('snapshot', snapshot);
       const { index } = snapshot;
       const selected = index === viewIndex;
       const last = viewIndex === -1 && index === hierarchyArr.length - 1;

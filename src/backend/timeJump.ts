@@ -25,9 +25,6 @@ export default (origin, mode) => {
   // Recursively change state of tree
   // Set the state of the origin tree if the component is stateful
   function jump(target, firstCall = false) {
-    // console.log('componentActionsRecord', componentActionsRecord);
-    // console.log('origin', origin);
-    // console.log('target', target);
     if (!target) return;
     if (target.state === 'stateless') {
       target.children.forEach(child => jump(child));

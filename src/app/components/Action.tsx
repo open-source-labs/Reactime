@@ -60,9 +60,6 @@ const Action = (props: ActionProps): JSX.Element => {
     logChangedState,
   } = props;
 
-  // console.log('index in Action.tsx', index);
-  // console.log('logChangedState(index)', logChangedState(index));
-
   /**
    * @function cleanTime: Displays render times for state changes
    * @returns render display time in seconds in miliseconds
@@ -138,7 +135,6 @@ const Action = (props: ActionProps): JSX.Element => {
                   <button
                     className="jump-button"
                     onClick={(e: any): void => {
-                      console.log('componentData', componentData);
                       e.stopPropagation();
                       dispatch(changeSlider(index));
                       dispatch(changeView(index));
