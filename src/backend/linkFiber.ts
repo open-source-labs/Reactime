@@ -182,6 +182,7 @@ function traverseRecoilHooks(
 function traverseHooks(memoizedState: any): HookStates {
   const hooksStates: HookStates = [];
   while (memoizedState && memoizedState.queue) {
+    // the !== null conditional is necessary here for correctly displaying react hooks because TypeScript recognizes 0 and "" as null - DO NOT REMOVE
     if (memoizedState.memoizedState !== null) {
       hooksStates.push({
         component: memoizedState.queue,
@@ -399,15 +400,12 @@ function createTree(
           state.state,
           state.component
         );
-        // why is this re-writing componentData.hooksIndex every time? instead, should remove from loop and try to re-write it to be whichever state is being updated
         componentData.hooksIndex = hooksIndex;
         if (!newState) {
           newState = { hooksState: [] };
-        // }
         } else if (!newState.hooksState) {
           newState.hooksState = [];
         }
-        // newState[hooksNames[i]] = state.state;
         newState.hooksState.push({ [hooksNames[i]]: state.state });
         componentFound = true;
       });
