@@ -24,6 +24,7 @@ function ActionContainer(props) {
   let actionsArr = [];
   const hierarchyArr: any[] = [];
 
+
   function findDiff(index) {
     const statelessCleanning = (obj: {
       name?: string;
@@ -154,7 +155,6 @@ function ActionContainer(props) {
   }
   // Sort by index.
   hierarchyArr.sort((a, b) => a.index - b.index);
- 
   actionsArr = hierarchyArr.map(
     (
       snapshot: {

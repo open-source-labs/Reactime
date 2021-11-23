@@ -5,6 +5,7 @@
 import React from 'react';
 import ReactHover, { Trigger, Hover } from 'react-hover';
 import { changeView, changeSlider } from '../actions/actions';
+import snapshots from './snapshots';
 
 /**
  * @template ActionProps Props for the action component
@@ -148,8 +149,8 @@ const Action = (props: ActionProps): JSX.Element => {
           </div>
         </Trigger>
         <Hover type="hover">
-          <div style={{ padding: '0.5rem 1rem' }} id="hover-box">
-            <p>{logChangedState(index)}</p>
+          <div style={{ zIndex: 1, position: 'relative', padding: '0.5rem 1rem' }} id="hover-box">
+            <p>{(logChangedState(index))}</p>
           </div>
         </Hover>
       </ReactHover>

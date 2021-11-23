@@ -1,10 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // @ts-nocheck
 import React, { Component, useEffect, useState } from 'react';
+// ReactHover does not refer to individual nodes within the history tab but rather can only wrap the entire SVG div
+import ReactHover, { Trigger, Hover } from 'react-hover';
+// used in action.tsx to format the return data of findDiff into a react component, not needed since the return of findDiff in History.tsx is simple a divs html
+import ReactHtmlParser from 'react-html-parser';
+// formatting findDiff return data to show the changes with green and red background colors, aligns with actions.tsx 
+import { diff, formatters } from 'jsondiffpatch';
 import * as d3 from 'd3';
+// legend key taken out before ReactimeX(v 10.0)
 import LegendKey from './legend';
 import { changeView, changeSlider } from '../actions/actions';
 
+//unused function definition, didnt break reactime when commented out
 const filterHooks = (data: any[]) => {
   if (data[0].children && data[0].state === 'stateless') {
     return filterHooks(data[0].children);
@@ -26,6 +34,8 @@ function History(props: Record<string, unknown>) {
     hierarchy,
     dispatch,
     currLocation,
+    //snapshots array passed down from state route, needed for findDiff function
+    snapshots,
   } = props;
 
   const svgRef = React.useRef(null);
@@ -102,8 +112,24 @@ function History(props: Record<string, unknown>) {
         dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
       })
+      //added to display state change information to node tree
+      .on('mouseover', d => {
+        // created popup div and appended it to display div(returned in this function)
+        // D3 doesn't utilize z-index for priority, rather decides on placement by order of rendering
+        // needed to define the return div with a className to have a target to append to with the correct level of priority
+        const div = d3.select('.display').append('div')
+          .attr('class', 'tooltip')
+          .style('opacity', 1)
+          .style('left', (d3.event.pageX) + 'px')
+          .style('top', (d3.event.pageY) + 'px')
+        d3.selectAll('.tooltip').html(findDiff(d.data.index));
+      })
+      .on('mouseout', d => {
+        // when appending divs on mouseover the appended dives would not disappear when using D3's 'transition' on mouseover/mouseout
+        // solution: remove all tooltop divs on mouseout
+        d3.selectAll('.tooltip').remove();
+      })
       .attr('transform', d => `translate(${d.x},${d.y})`);
-
 
     node.append('circle')
       .attr('fill', d => {
@@ -124,17 +150,86 @@ function History(props: Record<string, unknown>) {
     return svg.node();
   };
 
+  // findDiff function uses same logic as ActionContainer.tsx
+  function findDiff(index) {
+    const statelessCleanning = (obj: {
+      name?: string;
+      componentData?: object;
+      state?: string | any;
+      stateSnaphot?: object;
+      children?: any[];
+    }) => {
+      const newObj = { ...obj };
+      if (newObj.name === 'nameless') {
+        delete newObj.name;
+      }
+      if (newObj.componentData) {
+        delete newObj.componentData;
+      }
+      if (newObj.state === 'stateless') {
+        delete newObj.state;
+      }
+      if (newObj.stateSnaphot) {
+        newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
+      }
+      if (newObj.children) {
+        newObj.children = [];
+        if (obj.children.length > 0) {
+          obj.children.forEach(
+            (element: { state?: object | string; children?: [] }) => {
+              if (
+                element.state !== 'stateless'
+                || element.children.length > 0
+              ) {
+                const clean = statelessCleanning(element);
+                newObj.children.push(clean);
+              }
+            },
+          );
+        }
+      }
+      return newObj;
+    };
+
+    const previousDisplay = statelessCleanning(snapshots[index - 1]);
+    const delta = diff(previousDisplay, snapshots[index]);
+    const changedState = findStateChangeObj(delta);
+    // figured out the formatting for hover, applying diff.csss
+    const html = formatters.html.format(changedState[0]);
+    // uneeded, not returning a react component in SVG div
+    // const output = ReactHtmlParser(html);
+    return html;
+  }
+
+  function findStateChangeObj(delta, changedState = []) {
+    if (!delta.children && !delta.state) {
+      return changedState;
+    }
+    if (delta.state && delta.state[0] !== 'stateless') {
+      changedState.push(delta.state);
+    }
+    if (!delta.children) {
+      return changedState;
+    }
+    Object.keys(delta.children).forEach(child => {
+      // if (isNaN(child) === false) {
+      changedState.push(...findStateChangeObj(delta.children[child]));
+      // }
+    });
+    return changedState;
+  }
+
   // below we are rendering the LegendKey component and passing hierarchy as props
   // then rendering each node in History tab to render using D3, which will share area with LegendKey
   return (
-    <>
+    <div className="display">
       {/* <LegendKey hierarchy={hierarchy} /> */}
       <svg
         ref={svgRef}
         width={totalWidth}
         height={totalHeight}
       />
-    </>
+    </div>
   );
 }
 

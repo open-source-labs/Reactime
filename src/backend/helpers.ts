@@ -111,6 +111,8 @@ export const getHooksNames = (elementType: string): Array<string> => {
               });
               // Process hook function invocation ?
             } else {
+              // hook.init.object is '_useState2', '_useState4', etc.
+              // eslint-disable-next-line no-lonely-if
               if (hook.init.object && hook.init.object.name) {
                 const varName: any = hook.init.object.name;
                 if (!hooksNames[varName] && varName.match(/_use/)) {
@@ -128,6 +130,6 @@ export const getHooksNames = (elementType: string): Array<string> => {
         if (el.match(/_use/)) hooksNames[el] = statements[i + 1];
       });
     });
+    return Object.values(hooksNames);
   }
-  return Object.values(hooksNames);
 };

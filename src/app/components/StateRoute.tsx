@@ -90,6 +90,8 @@ const StateRoute = (props: StateRouteProps) => {
               sliderIndex={sliderIndex}
               viewIndex={viewIndex}
               currLocation={currLocation}
+              // added snapshots 11/4 Rob
+              snapshots={snapshots}
             />
           )}
         </ParentSize>

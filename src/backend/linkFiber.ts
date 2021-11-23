@@ -32,6 +32,7 @@ import componentActionsRecord from './masterState';
 // getHooksNames - helper function to grab the getters/setters from `elementType`
 import { throttle, getHooksNames } from './helpers';
 import AtomsRelationship from '../app/components/AtomsRelationship';
+import { element } from 'prop-types';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -92,7 +93,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
     snap.tree = new Tree('root', 'root');
   }
   const payload = snap.tree.cleanTreeCopy();
-  // if it's Recoil - run different actions?
+  // if it's Recoil - run different actions
   if (isRecoil) {
     // getRecoilState()
     payload.atomsComponents = atomsComponents;
@@ -106,7 +107,6 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   // the postMessage action will be received on the content script to later update the tabsObj
   // this will fire off everytime there is a change in test application
   window.postMessage(
-
     {
       action: 'recordSnap',
       payload,
@@ -182,7 +182,8 @@ function traverseRecoilHooks(
 function traverseHooks(memoizedState: any): HookStates {
   const hooksStates: HookStates = [];
   while (memoizedState && memoizedState.queue) {
-    if (memoizedState.memoizedState) {
+    // the !== null conditional is necessary here for correctly displaying react hooks because TypeScript recognizes 0 and "" as null - DO NOT REMOVE
+    if (memoizedState.memoizedState !== null) {
       hooksStates.push({
         component: memoizedState.queue,
         state: memoizedState.memoizedState,
@@ -256,7 +257,7 @@ function createTree(
     treeBaseDuration,
   } = currentFiber;
 
-// check to see if we can get the information we were looking for 
+// check to see if we can get the information we were looking for
   if (tag === 5) {
     try {
       if (memoizedProps.children[0]._owner.memoizedProps !== undefined) {
@@ -268,7 +269,6 @@ function createTree(
         };
       }
     } catch (error) {
-      // console.log('this is the error', error);
     }
   }
 
@@ -394,6 +394,7 @@ function createTree(
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseHooks(memoizedState);
       const hooksNames = getHooksNames(elementType.toString());
+      
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(
           state.state,
@@ -428,7 +429,8 @@ function createTree(
   let newNode = null;
 
   // We want to add this fiber node to the snapshot
-  if (componentFound || newState === 'stateless') {
+  // eslint-disable-next-line no-mixed-operators
+  if (componentFound || newState === 'stateless' && !newState.hooksState) {
     if (isRecoil) {
       // do this down below too
       if (currentFiber.elementType.name) {
