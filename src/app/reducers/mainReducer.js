@@ -1,4 +1,5 @@
 import { produce, original } from 'immer';
+import { debuglog } from 'util';
 
 import * as types from '../constants/actionTypes.ts';
 
@@ -11,25 +12,27 @@ export default (state, action) => produce(state, draft => {
   // eslint-disable-next-line max-len
   // function that finds the index in the hierarchy and extracts the name of the equivalent index to add to the post message
   // eslint-disable-next-line consistent-return
+
+  // (action.payload, hierarchy)
   const findName = (index, obj) => {
     // eslint-disable-next-line eqeqeq
     if (obj && obj.index == index) {
       return obj.name;
     }
-
     const objChildArray = [];
     if (obj) {
+      // eslint-disable-next-line no-restricted-syntax
       for (const objChild of obj.children) {
         objChildArray.push(findName(index, objChild));
       }
     }
+    // eslint-disable-next-line no-restricted-syntax
     for (const objChildName of objChildArray) {
       if (objChildName) {
         return objChildName;
       }
     }
   };
-
   switch (action.type) {
     // Save case will store the series user wants to save to the chrome local storage
     case types.SAVE: {
@@ -76,11 +79,12 @@ export default (state, action) => produce(state, draft => {
     }
 
     case types.MOVE_BACKWARD: {
-      if (snapshots.length > 0 && sliderIndex > 0) {
+      if (sliderIndex > 0) {
         const newIndex = sliderIndex - 1;
         // eslint-disable-next-line max-len
         // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
         const nameFromIndex = findName(newIndex, hierarchy);
+        
         port.postMessage({
           action: 'jumpToSnap',
           payload: snapshots[newIndex],
@@ -105,9 +109,9 @@ export default (state, action) => produce(state, draft => {
 
         port.postMessage({
           action: 'jumpToSnap',
+          payload: snapshots[newIndex],
           index: newIndex,
           name: nameFromIndex,
-          payload: snapshots[newIndex],
           tabId: currentTab,
         });
 
@@ -146,7 +150,8 @@ export default (state, action) => produce(state, draft => {
       // eslint-disable-next-line max-len
       // finds the name by the action.payload parsing through the hierarchy to send to background.js the current name in the jump action
       const nameFromIndex = findName(action.payload, hierarchy);
-
+      // nameFromIndex is a number based on which jump button is pushed
+      
       port.postMessage({
         action: 'jumpToSnap',
         payload: snapshots[action.payload],

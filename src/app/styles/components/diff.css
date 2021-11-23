@@ -38,7 +38,7 @@ ul.jsondiffpatch-delta {
 }
 .jsondiffpatch-unchanged,
 .jsondiffpatch-movedestination {
-  color: gray;
+  color: white;
 }
 .jsondiffpatch-unchanged,
 .jsondiffpatch-movedestination > .jsondiffpatch-value {

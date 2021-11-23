@@ -325,7 +325,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           tabsObj[tabId],
           new Node(request.payload, tabsObj[tabId]),
         );
-
         if (portsArr.length > 0) {
           portsArr.forEach(bg => bg.postMessage({
             action: 'initialConnectSnapshots',
