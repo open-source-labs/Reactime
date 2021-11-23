@@ -43,11 +43,11 @@
   <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.io">Website</a> • <a href="#read-more">Read More</a>
 </p>
 
-Currently, Reactime supports React apps using stateful components and Hooks, including frameworks like Gatsby and Next.js, with beta support for Recoil and Context API.
+Currently, Reactime supports React apps using stateful components and Hooks, with beta support for Recoil and Context API and frameworks like Gatsby and Next.js.
 
-<b>Reactime version 9.0</b> allows you to run A/B testing on your application by storing a "series" of state data snapshots. At any stage in the dev cycle, devs could run Reactime again and select any past series to do an A/B test with the current series of snapshots.  With Save Series, developers have access to view trends in their App's component render times during development by comparing the previous series of snapshots.
+<b>Reactime version 11.0</b> implements full compatibility with React Hooks. Additionally, hover functionality was added to all of the nodes that populate in the history tab, allowing developers to more easily view the state at that snapshot.
 
-Reactime 9.0 fixes previous version bugs and incorporates improved user experience for saved snapshot series. 
+Reactime 11.0 fixes existing bugs while also improving the user experience for information tooltips.
 
 After installing Reactime, you can test its functionalities with your React application in development mode.
 
@@ -152,6 +152,8 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - [React Fiber and Reactime](https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8)
 - [Meet Reactime - a time-traveling State Debugger for React](https://medium.com/@yujinkay/meet-reactime-a-time-traveling-state-debugger-for-react-24f0fce96802)
 - [Deep in Weeds with Reactime, Concurrent React_fiberRoot, and Browser History Caching](https://itnext.io/deep-in-the-weeds-with-reactime-concurrent-react-fiberroot-and-browser-history-caching-7ce9d7300abb)
+- [Time-Traveling Through React State with Reactime 9.0](https://rxlina.medium.com/time-traveling-through-react-state-with-reactime-9-0-371dbdc99319)
+- [What time is it? Reactime!](https://medium.com/@liuedar/what-time-is-it-reactime-fd7267b9eb89)
 
 ## <b>Authors</b>
 - **Harry Fox** - [@StackOverFlowWhereArtThou](https://github.com/StackOverFlowWhereArtThou)
@@ -201,6 +203,11 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - **Andy Tsou** - [@andytsou19](https://github.com/andytsou19)
 - **Feiyi Wu** - [@FreyaWu](https://github.com/FreyaWu)
 - **Viet Nguyen** - [@vnguyen95](https://github.com/vnguyen95)
+- **Alex Gomez** - [@alexgomez9](https://github.com/alexgomez9)
+- **Edar Liu** - [@liuedar](https://github.com/liuedar)
+- **Kristina Wallen** - [@kristinawallen](https://github.com/kristinawallen)
+- **Quan Le** - [@blachfog](https://github.com/Blachfog)
+- **Robert Maeda** - [@robmaeda](https://github.com/robmaeda)
 
 ## <b>License </b>
 
