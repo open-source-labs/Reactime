@@ -367,7 +367,7 @@ export default function ComponentMap({
                               ? 'white'
                               : '#161521'
                         }
-                        z
+                        z={1}
                       >
                         {node.data.name}
                       </text>
