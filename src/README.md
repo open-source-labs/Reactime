@@ -3,6 +3,18 @@
 ## Brief
 Our mission at Reactime is to maintain and iterate constantly, but never at the expense of future developers.<br />We know how hard it is to quickly get up to speed and onboard in a new codebase.<br />So, here are some helpful pointers to help you hit the ground running. 🏃🏾💨
 
+## Building from source
+
+1. If you have already installed Reactime from the Chrome Web Store, disable or uninstall it.
+2. Run `yarn` to install all dependencies.
+3. Run `yarn dev`. This will start a `webpack` process which watches for file changes and whenever it sees some, automatically rebuilds the webpack bundles used by the extension.
+4. Go to `chrome://extensions`
+5. Ensure Developer mode is enabled
+6. Click `Load unpacked`
+7. Select the `src/extension/build` directory
+
+Now you should be able to change Reactime code and see the changes instantly reflected in your browser!
+
 ## Quick Tips
 - _Before_ beginning development, especially on teams, make sure to configure your linter and code formatting to conform to one unified setting (We recommend [the Airbnb style guide](https://github.com/airbnb/javascript)!) This will make reviewing PRs much more readable and less error-prone.
 

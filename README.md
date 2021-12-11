@@ -59,9 +59,14 @@ To get started, install the Reactime [extension](https://chrome.google.com/webst
 
 NOTE: The React Developer Tools [extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en) is also required for Reactime to run, if you do not already have it installed on your browser.
 
-### <b>Alternative Installation</b>
+### Installation
 
 Use `src/extension/build/build.zip` for manual installation in [Developer mode](https://developer.chrome.com/extensions/faq#faq-dev-01). Turn on 'Allow access to file URLs' in extension details page if testing locally.
+
+### Building from source
+
+Please see [the developer README](src/README.md) for instructions on building
+from source.
 
 ## <b>How to Use</b>
 
