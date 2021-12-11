@@ -211,9 +211,9 @@ let atomsComponents = {};
 const exclude = ['alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
 
 // This recursive function is used to grab the state of children components
-// and push them into the parent componenent 
-// react elements throw errors on client side of application - convert react/functions into string 
-function convertDataToString(newObj, oldObj) {
+// and push them into the parent componenent
+// react elements throw errors on client side of application - convert react/functions into string
+function convertDataToString(newObj, oldObj, depth = 0) {
   const newPropData = oldObj || {};
   // const newPropData = Array.isArray(obj) === true ? {} : [];
   for (const key in newObj) {
@@ -223,7 +223,7 @@ function convertDataToString(newObj, oldObj) {
       newPropData[key] = 'reactFiber';
       return newPropData;
     } else if (typeof newObj[key] === 'object' && exclude.includes(key) !== true) {
-      newPropData[key] = convertDataToString(newObj[key], null);
+      newPropData[key] = depth > 10 ? 'convertDataToString reached max depth' : convertDataToString(newObj[key], null, depth + 1);
     } else if (exclude.includes(key) !== true) {
       newPropData[key] = newObj[key];
     }
