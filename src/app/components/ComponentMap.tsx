@@ -135,7 +135,7 @@ export default function ComponentMap({
     lineHeight: '18px',
     fontFamily: 'Roboto',
     zIndex: 100,
-    'pointer-events': 'all !important',
+    pointerEvents: 'all !important',
   };
 
   const scrollStyle = {
