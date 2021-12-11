@@ -113,7 +113,7 @@ export const getHooksNames = (elementType: string): Array<string> => {
             } else {
               // hook.init.object is '_useState2', '_useState4', etc.
               // eslint-disable-next-line no-lonely-if
-              if (hook.init.object && hook.init.object.name) {
+              if (hook?.init?.object?.name) {
                 const varName: any = hook.init.object.name;
                 if (!hooksNames[varName] && varName.match(/_use/)) {
                   hooksNames[varName] = hook.id.name;
