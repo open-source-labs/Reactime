@@ -42,7 +42,9 @@ function MainSlider(props: MainSliderProps) {
   const [sliderIndex, setSliderIndex] = useState(0);
 
   useEffect(() => {
-    setSliderIndex(currLocation.index);
+    if (currLocation) {
+      setSliderIndex(currLocation.index);
+    }
   }, [currLocation])
 
   return (
