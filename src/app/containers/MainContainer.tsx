@@ -134,8 +134,8 @@ function MainContainer(): any {
           No React application found. Please visit reactime.io to more info.
         </a>
         <p>
-          If you are using a React application, make sure tha you application is
-          running in development mode.
+          If you are using a React application, make sure that your application is
+          running in development mode. TEST
           <br />
           NOTE: The React Developer Tools extension is also required for
           Reactime to run, if you do not already have it installed on your

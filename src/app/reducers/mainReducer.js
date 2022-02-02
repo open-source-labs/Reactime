@@ -84,7 +84,7 @@ export default (state, action) => produce(state, draft => {
         // eslint-disable-next-line max-len
         // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
         const nameFromIndex = findName(newIndex, hierarchy);
-        
+
         port.postMessage({
           action: 'jumpToSnap',
           payload: snapshots[newIndex],
@@ -151,7 +151,7 @@ export default (state, action) => produce(state, draft => {
       // finds the name by the action.payload parsing through the hierarchy to send to background.js the current name in the jump action
       const nameFromIndex = findName(action.payload, hierarchy);
       // nameFromIndex is a number based on which jump button is pushed
-      
+
       port.postMessage({
         action: 'jumpToSnap',
         payload: snapshots[action.payload],
