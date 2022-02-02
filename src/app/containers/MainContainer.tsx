@@ -18,6 +18,7 @@ const mixpanel = require('mixpanel').init('12fa2800ccbf44a5c36c37bc9776e4c0', {
   debug: false,
   protocol: 'https',
 });
+
 function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port: currentPort } = store;
@@ -134,12 +135,9 @@ function MainContainer(): any {
           No React application found. Please visit reactime.io to more info.
         </a>
         <p>
-          If you are using a React application, make sure that your application is
-          running in development mode. TEST
+          If you are using a React application, make sure tha you application is running in development mode.
           <br />
-          NOTE: The React Developer Tools extension is also required for
-          Reactime to run, if you do not already have it installed on your
-          browser.
+          NOTE: The React Developer Tools extension is also required for Reactime to run, if you do not already have it installed on your browser.
         </p>
       </div>
     );
