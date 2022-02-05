@@ -49,7 +49,6 @@ function createTabObj(title) {
 // Each node stores a history of the link fiber tree.
 class Node {
   constructor(obj, tabObj) {
-
     // continues the order of number of total state changes
     this.index = tabObj.index++;
     // continues the order of number of states changed from that parent
@@ -120,6 +119,7 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
 
 // Establishing incoming connection with devtools.
 chrome.runtime.onConnect.addListener(port => {
+  console.log('event listener triggered, devtools botted and running!');
   // port is one end of the connection - an object
 
   // push every port connected to the ports array
@@ -146,6 +146,7 @@ chrome.runtime.onConnect.addListener(port => {
   // listen for message containing a snapshot from devtools and send it to contentScript -
   // (i.e. they're all related to the button actions on Reactime)
   port.onMessage.addListener(msg => {
+    console.log('message from devtools received', msg);
     // msg is action denoting a time jump in devtools
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:
@@ -209,6 +210,8 @@ chrome.runtime.onConnect.addListener(port => {
 
 // background.js listening for a message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log('recevied a message from contentScript', request);
+  console.log('heres the sender of that message', sender);
   // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
   if (request.type === 'SIGN_CONNECT') {
     return true;
@@ -258,7 +261,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case 'injectScript': {
       chrome.tabs.executeScript(tabId, {
         code: `
-        // Function will attach script to the dom 
+        // Function will attach script to the dom
         const injectScript = (file, tag) => {
           const htmlBody = document.getElementsByTagName(tag)[0];
           const script = document.createElement('script');
@@ -333,7 +336,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         break;
       }
-
 
       // DUPLICATE SNAPSHOT CHECK
       const previousSnap = tabsObj[tabId].currLocation.stateSnapshot.children[0].componentData
@@ -440,7 +442,7 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     type: 'panel',
     left: 0,
     top: 0,
-    width: 380,
+    width: 1000,
     height: window.screen.availHeight,
     url: chrome.runtime.getURL('panel.html'),
   };

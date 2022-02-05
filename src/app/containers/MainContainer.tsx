@@ -33,6 +33,7 @@ function MainContainer(): any {
   useEffect(() => {
     // only open port once
     if (currentPort) return;
+
     // open long-lived connection with background script
     const port = chrome.runtime.connect();
 
@@ -43,6 +44,8 @@ function MainContainer(): any {
         payload: Record<string, unknown>;
         sourceTab: number;
       }) => {
+        console.log('message', message);
+
         const { action, payload, sourceTab } = message;
         let maxTab;
         if (!sourceTab) {
@@ -69,7 +72,7 @@ function MainContainer(): any {
             dispatch(initialConnect(payload));
             break;
           }
-          case 'setCurrentLocation': {
+          case ' ': {
             dispatch(setCurrentLocation(payload));
             break;
           }
@@ -126,7 +129,7 @@ function MainContainer(): any {
   if (!tabs[currentTab]) {
     return (
       <div className="error-container">
-        <img src="../assets/logo-no-version.png" height="50px" />
+        <img src="../assets/logo-no-version.png" alt="Reactime Logo" height="50px" />
         <a
           href="https://reactime.io/"
           target="_blank"
@@ -142,6 +145,7 @@ function MainContainer(): any {
       </div>
     );
   }
+
   const {
     currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics,
   } = tabs[currentTab];
