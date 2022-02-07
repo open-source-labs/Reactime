@@ -19,7 +19,8 @@
     {
       "matches": [
         "http://localhost/*",
-        "https://localhost/*"
+        "https://localhost/*",
+        "https://reactjs.org/*"
       ],
       "js": [
         "bundles/content.bundle.js"
