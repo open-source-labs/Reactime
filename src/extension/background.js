@@ -258,7 +258,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case 'injectScript': {
       chrome.tabs.executeScript(tabId, {
         code: `
-        // Function will attach script to the dom 
+        // Function will attach script to the dom
         const injectScript = (file, tag) => {
           const htmlBody = document.getElementsByTagName(tag)[0];
           const script = document.createElement('script');
@@ -440,8 +440,8 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     type: 'panel',
     left: 0,
     top: 0,
-    width: 380,
-    height: window.screen.availHeight,
+    width: 1000,
+    height: 1000,
     url: chrome.runtime.getURL('panel.html'),
   };
   if (menuItemId === 'reactime') chrome.windows.create(options);
