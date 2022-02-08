@@ -301,6 +301,13 @@ export default (state, action) => produce(state, draft => {
       }
       break;
     }
+    case types.NO_DEV: {
+      console.log('made it into the reducers');
+      const { payload } = action;
+      const { reactDevToolsInstalled } = payload[currentTab];
+      tabs[currentTab].reactDevToolsInstalled = reactDevToolsInstalled;
+      break;
+    }
     case types.SET_CURRENT_LOCATION: {
       const { payload } = action;
       const { currLocation } = payload[currentTab];

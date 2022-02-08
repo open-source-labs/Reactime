@@ -137,6 +137,17 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
   sendSnapshot(snap, mode);
 }
 
+// updating tree depending on current mode on the panel (pause, etc)
+// function sendDevToolsInfo(snap: Snapshot, mode: Mode): void {
+//   window.postMessage(
+//     {
+//       action: 'recordSnap',
+//       payload,
+//     },
+//     '*'
+//   );
+// }
+
 /**
  * @method traverseRecoilHooks
  * @param memoizedState  Property containing state on a stateful fctnl component's FiberNode object
@@ -537,22 +548,17 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
   return () => {
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-
-    console.log(window);
-    console.log(devTools);
-
     const reactInstance = devTools ? devTools.renderers.get(1) : null;
     // reactInstance returns an object of the react
-    fiberRoot = devTools.getFiberRoots(1).values().next().value;
-    const throttledUpdateSnapshot = throttle(
-      () => {
-        updateSnapShotTree(snap, mode);
-      },
-      70
-    );
+    // fiberRoot = devTools.getFiberRoots(1).values().next().value;
+
+    const throttledUpdateSnapshot = throttle(() => { updateSnapShotTree(snap, mode); }, 70);
+    // const throttledDevToolChecker = throttle(() => { sendDevToolsInfo(snap, mode); }, 70);
+
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     if (reactInstance && reactInstance.version) {
+      fiberRoot = devTools.getFiberRoots(1).values().next().value;
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           // eslint-disable-next-line prefer-destructuring
@@ -563,7 +569,14 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
           return original(...args);
         };
       }(devTools.onCommitFiberRoot));
+    } else {
+        window.postMessage(
+        {
+          action: 'noDevToolsInstalled',
+          payload: 'noDevToolsInstalled'
+        },
+        '*'
+      );
     }
-    throttledUpdateSnapshot();
   };
 };

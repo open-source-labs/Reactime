@@ -81,6 +81,11 @@ export const deleteTab = (tab) => ({
   payload: tab,
 });
 
+export const noDev = (tab) => ({
+  type: types.NO_DEV,
+  payload: tab,
+});
+
 export const resetSlider = () => ({
   type: types.SLIDER_ZERO,
 });

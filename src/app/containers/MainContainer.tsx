@@ -9,6 +9,7 @@ import {
   setPort,
   setTab,
   deleteTab,
+  noDev,
   setCurrentLocation,
 } from '../actions/actions';
 import { useStoreContext } from '../store';
@@ -55,6 +56,10 @@ function MainContainer(): any {
         switch (action) {
           case 'deleteTab': {
             dispatch(deleteTab(payload));
+            break;
+          }
+          case 'noDevTools': {
+            dispatch(noDev(payload));
             break;
           }
           case 'changeTab': {
@@ -126,7 +131,7 @@ function MainContainer(): any {
     document.addEventListener('click', mpClickTrack);
   }, []);
 
-  if (!tabs[currentTab]) {
+  if (!tabs[currentTab] || tabs[currentTab].reactDevToolsInstalled === false) {
     return (
       <div className="error-container">
         <img src="../assets/logo-no-version.png" alt="Reactime Logo" height="50px" />

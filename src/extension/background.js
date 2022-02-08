@@ -12,7 +12,7 @@ const metrics = {};
 
 // This function will create the first instance of the test app's tabs object
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
-function createTabObj(title) {
+function createTabObj(title, tabId) {
   // TO-DO for save button
   // Save State
   // Knowledge of the comparison snapshot
@@ -36,6 +36,8 @@ function createTabObj(title) {
     hierarchy: null,
     // records initial hierarchy to refresh page in case empty function is called
     initialHierarchy: null,
+    // checks for dev tools
+    reactDevToolsInstalled: true,
     mode: {
       persist: false,
       paused: false,
@@ -211,7 +213,6 @@ chrome.runtime.onConnect.addListener(port => {
 // background.js listening for a message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('recevied a message from contentScript', request);
-  console.log('heres the sender of that message', sender);
   // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
   if (request.type === 'SIGN_CONNECT') {
     return true;
@@ -233,6 +234,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     || action === 'recordSnap'
     || action === 'jumpToSnap'
     || action === 'injectScript'
+    || action === 'noDevToolsInstalled'
   ) {
     isReactTimeTravel = true;
   } else {
@@ -241,6 +243,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   // everytime we get a new tabid, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) {
+    console.log('creatingTabObj: action = ', action);
     tabsObj[tabId] = createTabObj(tabTitle);
   }
 
@@ -254,6 +257,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           payload: tabsObj,
         }));
       }
+      break;
+    }
+    case 'noDevToolsInstalled': {
+      console.log('no devTools installed: in background script. Setting to false');
+      tabsObj[tabId].reactDevToolsInstalled = false;
+      // now that we have confirmed no devTools installed, we can go ahead and send this info to frontend
+      portsArr.forEach(bg => bg.postMessage({
+        action: 'noDevTools',
+        payload: tabsObj,
+      }));
       break;
     }
     // This injects a script into the app that you're testing Reactime on,
