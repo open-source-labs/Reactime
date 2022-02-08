@@ -131,6 +131,14 @@ function MainContainer(): any {
     document.addEventListener('click', mpClickTrack);
   }, []);
 
+  function mynewFunc(arg: any) {
+    if (arg !== undefined && arg.reactDevToolsInstalled === false) {
+      return (
+        <p> React Dev Tools not installed! </p>
+      );
+    }
+  }
+
   if (!tabs[currentTab] || tabs[currentTab].reactDevToolsInstalled === false) {
     return (
       <div className="error-container">
@@ -147,6 +155,9 @@ function MainContainer(): any {
           <br />
           NOTE: The React Developer Tools extension is also required for Reactime to run, if you do not already have it installed on your browser.
         </p>
+        <div>
+          {mynewFunc(tabs[currentTab]) }
+        </div>
       </div>
     );
   }
