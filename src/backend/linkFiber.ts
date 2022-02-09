@@ -548,12 +548,18 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
   return () => {
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-    const reactInstance = devTools ? devTools.renderers.get(1) : null;
+    // check if reactDev Tools is installed
+    if (devTools) {
+        window.postMessage({
+          action: 'noDevToolsInstalled',
+          payload: 'noDevToolsInstalled'
+        },
+          '*');
+      return;
+    }
     // reactInstance returns an object of the react
-    // fiberRoot = devTools.getFiberRoots(1).values().next().value;
-
+    const reactInstance = devTools ? devTools.renderers.get(1) : null;
     const throttledUpdateSnapshot = throttle(() => { updateSnapShotTree(snap, mode); }, 70);
-    // const throttledDevToolChecker = throttle(() => { sendDevToolsInfo(snap, mode); }, 70);
 
     document.addEventListener('visibilitychange', onVisibilityChange);
 
@@ -563,20 +569,14 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
         return function (...args) {
           // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
+          console.log('in the call back and dowork = ', doWork);
           if (doWork) {
             throttledUpdateSnapshot();
           }
           return original(...args);
         };
       }(devTools.onCommitFiberRoot));
-    } else {
-        window.postMessage(
-        {
-          action: 'noDevToolsInstalled',
-          payload: 'noDevToolsInstalled'
-        },
-        '*'
-      );
+       throttledUpdateSnapshot(); // only runs on start up
     }
   };
 };

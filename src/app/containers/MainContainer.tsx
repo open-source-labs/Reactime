@@ -137,6 +137,7 @@ function MainContainer(): any {
         <p> React Dev Tools not installed! </p>
       );
     }
+    return <p> React Dev Tools found </p>;
   }
 
   if (!tabs[currentTab] || tabs[currentTab].reactDevToolsInstalled === false) {
