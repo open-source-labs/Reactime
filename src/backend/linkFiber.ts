@@ -549,7 +549,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     // check if reactDev Tools is installed
-    if (devTools) {
+    if (!devTools) {
         window.postMessage({
           action: 'noDevToolsInstalled',
           payload: 'noDevToolsInstalled'
@@ -569,7 +569,6 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
         return function (...args) {
           // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
-          console.log('in the call back and dowork = ', doWork);
           if (doWork) {
             throttledUpdateSnapshot();
           }
