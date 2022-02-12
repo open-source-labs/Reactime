@@ -77,7 +77,7 @@ function MainContainer(): any {
             dispatch(initialConnect(payload));
             break;
           }
-          case ' ': {
+          case 'setCurrentLocation': {
             dispatch(setCurrentLocation(payload));
             break;
           }
