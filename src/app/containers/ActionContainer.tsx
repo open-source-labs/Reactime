@@ -26,7 +26,7 @@ function ActionContainer(props) {
 
 
   function findDiff(index) {
-    const statelessCleanning = (obj: {
+    const statelessCleaning = (obj: {
       name?: string;
       componentData?: object;
       state?: string | any;
@@ -44,7 +44,7 @@ function ActionContainer(props) {
         delete newObj.state;
       }
       if (newObj.stateSnaphot) {
-        newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
+        newObj.stateSnaphot = statelessCleaning(obj.stateSnaphot);
       }
       if (newObj.children) {
         newObj.children = [];
@@ -55,7 +55,7 @@ function ActionContainer(props) {
                 element.state !== 'stateless'
                 || element.children.length > 0
               ) {
-                const clean = statelessCleanning(element);
+                const clean = statelessCleaning(element);
                 newObj.children.push(clean);
               }
             },
@@ -66,7 +66,7 @@ function ActionContainer(props) {
       return newObj;
     };
     // displays stateful data
-    const previousDisplay = statelessCleanning(snapshots[index - 1]);
+    const previousDisplay = statelessCleaning(snapshots[index - 1]);
     const delta = diff(previousDisplay, snapshots[index]);
     const changedState = findStateChangeObj(delta);
     const html = formatters.html.format(changedState[0]);

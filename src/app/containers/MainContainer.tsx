@@ -3,6 +3,7 @@ import ActionContainer from './ActionContainer';
 import StateContainer from './StateContainer';
 import TravelContainer from './TravelContainer';
 import ButtonsContainer from './ButtonsContainer';
+import ErrorContainer from './ErrorContainer';
 import {
   addNewSnapshots,
   initialConnect,
@@ -131,35 +132,11 @@ function MainContainer(): any {
     document.addEventListener('click', mpClickTrack);
   }, []);
 
-  function mynewFunc(arg: any) {
-    if (arg !== undefined && arg.reactDevToolsInstalled === false) {
-      return (
-        <p> React Dev Tools not installed! </p>
-      );
-    }
-    return <p> React Dev Tools found </p>;
-  }
-
-  if (!tabs[currentTab] || tabs[currentTab].reactDevToolsInstalled === false) {
+  // error page if any of tabs check
+  // if (!tabs[currentTab]?.reactDevToolsInstalled) {
+  if (!tabs[currentTab] || !tabs[currentTab].reactDevToolsInstalled) {
     return (
-      <div className="error-container">
-        <img src="../assets/logo-no-version.png" alt="Reactime Logo" height="50px" />
-        <a
-          href="https://reactime.io/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          No React application found. Please visit reactime.io to more info.
-        </a>
-        <p>
-          If you are using a React application, make sure tha you application is running in development mode.
-          <br />
-          NOTE: The React Developer Tools extension is also required for Reactime to run, if you do not already have it installed on your browser.
-        </p>
-        <div>
-          {mynewFunc(tabs[currentTab]) }
-        </div>
-      </div>
+      <ErrorContainer />
     );
   }
 

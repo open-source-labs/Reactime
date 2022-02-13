@@ -121,7 +121,8 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
 
 // Establishing incoming connection with devtools.
 chrome.runtime.onConnect.addListener(port => {
-  console.log('event listener triggered, devtools botted and running!');
+  console.log('established inccoming connection with devtools on port', port);
+  console.log('tabsObj', tabsObj);
   // port is one end of the connection - an object
 
   // push every port connected to the ports array
@@ -429,6 +430,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 
 // when tab view is changed, put the tabid as the current tab
 chrome.tabs.onActivated.addListener(info => {
+  console.log(info);
   // tell devtools which tab to be the current
   if (portsArr.length > 0) {
     portsArr.forEach(bg => bg.postMessage({

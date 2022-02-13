@@ -282,12 +282,16 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.SET_TAB: {
-      if (typeof action.payload === 'number') {
-        draft.currentTab = action.payload;
-        break;
-      } else if (typeof action.payload === 'object') {
-        draft.currentTab = action.payload.tabId;
-        break;
+      // if lock
+      console.log(mode);
+      if (!mode?.paused) {
+        if (typeof action.payload === 'number') {
+          draft.currentTab = action.payload;
+          break;
+        } else if (typeof action.payload === 'object') {
+          draft.currentTab = action.payload.tabId;
+          break;
+        }
       }
       break;
     }

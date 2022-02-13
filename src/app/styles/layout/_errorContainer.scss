@@ -13,13 +13,21 @@
 	align-items: center;
 	a {
 		color: white;
-		margin-top: 5%;
+		margin-top: 1%;
 		height: 3%;
 	}
 	img {
 		text-align: center;
+		padding-top: 5%;
+		padding-bottom: 1.5%;
 	}
 	p {
 		text-align: center;
+	}
+	.loaderChecks{
+		padding: 1%;
+		border: 1px solid;
+		border-style: solid;
+		border-color: white;
 	}
 }
