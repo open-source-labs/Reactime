@@ -4,8 +4,10 @@ import 'core-js';
 const portsArr = [];
 const reloaded = {};
 const firstSnapshotReceived = {};
+
 // There will be the same number of objects in here as there are
 // Reactime tabs open for each user application being worked on.
+let activeTab = {};
 const tabsObj = {};
 // Will store Chrome web vital metrics and their corresponding values.
 const metrics = {};
@@ -121,12 +123,19 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
 
 // Establishing incoming connection with devtools.
 chrome.runtime.onConnect.addListener(port => {
-  console.log('established inccoming connection with devtools on port', port);
-  console.log('tabsObj', tabsObj);
   // port is one end of the connection - an object
-
   // push every port connected to the ports array
   portsArr.push(port);
+
+  console.log('established connection with devtools on port', port);
+  console.log('activeTabid', activeTab);
+
+  if (portsArr.length > 0) {
+    portsArr.forEach(bg => bg.postMessage({
+      action: 'changeTab',
+      payload: activeTab.id,
+    }));
+  }
 
   // send tabs obj to the connected devtools as soon as connection to devtools is made
   if (Object.keys(tabsObj).length > 0) {
@@ -430,7 +439,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 
 // when tab view is changed, put the tabid as the current tab
 chrome.tabs.onActivated.addListener(info => {
-  console.log(info);
+  // save active tab for global use
+  chrome.tabs.query({ currentWindow: true, active: true }, tabs => {
+    [activeTab] = tabs;
+  });
   // tell devtools which tab to be the current
   if (portsArr.length > 0) {
     portsArr.forEach(bg => bg.postMessage({
@@ -458,7 +470,7 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     left: 0,
     top: 0,
     width: 1000,
-    height: window.screen.availHeight,
+    height: 1000,
     url: chrome.runtime.getURL('panel.html'),
   };
   if (menuItemId === 'reactime') chrome.windows.create(options);
