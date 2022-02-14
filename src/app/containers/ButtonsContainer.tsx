@@ -88,6 +88,7 @@ function ButtonsContainer() {
         )}
         {persist ? 'Unpersist' : 'Persist'}
       </button>
+      <button onClick={() => console.log('hello world')}> Split View</button>
       <button
         className="export-button"
         type="button"

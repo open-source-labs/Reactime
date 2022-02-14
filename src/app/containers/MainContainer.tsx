@@ -131,7 +131,7 @@ function MainContainer(): any {
           target="_blank"
           rel="noopener noreferrer"
         >
-          No React application found. Please visit reactime.io to more info.
+          No React applicion found. Please visit reactime.io to more info.
         </a>
         <p>
           If you are using a React application, make sure tha you application is
@@ -187,10 +187,10 @@ function MainContainer(): any {
   };
   const snapshotDisplay = statelessCleaning(snapshotView);
   const hierarchyDisplay = statelessCleaning(hierarchy);
-
+  //body container scss file
   return (
     <div className="main-container">
-      <div id="bodyContainer" className="body-container1">
+      <div id="bodyContainer" className="body-container1">  
         <ActionContainer
           actionView={actionView}
           setActionView={setActionView}
