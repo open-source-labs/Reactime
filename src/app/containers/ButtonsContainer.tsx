@@ -55,7 +55,7 @@ function howToUseHandler() {
   return null;
 }
 
-function ButtonsContainer() {
+function ButtonsContainer(): JSX.Element {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
     snapshots,

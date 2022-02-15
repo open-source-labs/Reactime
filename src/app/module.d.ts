@@ -4,6 +4,7 @@ declare module 'react-select';
 declare module 'rc-slider';
 declare module 'rc-tooltip';
 declare module 'd3';
+declare module 'react-spinners';
 declare module 'immer';
 declare module 'jsondiffpatch';
 declare module 'react-html-parser';

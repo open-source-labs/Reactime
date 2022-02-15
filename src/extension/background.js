@@ -127,13 +127,10 @@ chrome.runtime.onConnect.addListener(port => {
   // push every port connected to the ports array
   portsArr.push(port);
 
-  console.log('established connection with devtools on port', port);
-  console.log('activeTabid', activeTab);
-
   if (portsArr.length > 0) {
     portsArr.forEach(bg => bg.postMessage({
       action: 'changeTab',
-      payload: activeTab.id,
+      payload: { tabId: activeTab.id, title: activeTab.title },
     }));
   }
 
@@ -439,17 +436,21 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 
 // when tab view is changed, put the tabid as the current tab
 chrome.tabs.onActivated.addListener(info => {
-  // save active tab for global use
+  // set active tab for global use: ignore an active tab if its reactime
   chrome.tabs.query({ currentWindow: true, active: true }, tabs => {
-    [activeTab] = tabs;
+    if (!tabs[0]?.pendingUrl?.match('^chrome-extension')) {
+      [activeTab] = tabs;
+      console.log(activeTab);
+      console.log(info);
+      // tell devtools which tab to be the current
+      if (portsArr.length > 0) {
+        portsArr.forEach(bg => bg.postMessage({
+          action: 'changeTab',
+          payload: { tabId: activeTab.id, title: activeTab.title },
+        }));
+      }
+    }
   });
-  // tell devtools which tab to be the current
-  if (portsArr.length > 0) {
-    portsArr.forEach(bg => bg.postMessage({
-      action: 'changeTab',
-      payload: info,
-    }));
-  }
 });
 
 // when reactime is installed

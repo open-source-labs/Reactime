@@ -1,21 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import Loader from '../components/Loader';
 import { useStoreContext } from '../store';
 
-function ErrorContainer(props): any {
+function ErrorContainer(props): JSX.Element {
   const [store, dispatch] = useStoreContext();
-  const { tabs, currentTab } = store;
+  const { tabs, currentTitle, currentTab } = store;
 
-  function contentScriptCheck() {
-    // if (arg !== undefined && arg.reactDevToolsInstalled === false) {
-    //   return (
-    //     <p> React Dev Tools not installed! </p>
-    //   );
-    // }
-    // return <p> React Dev Tools found </p>;
-  }
-  console.log(currentTab);
-  console.log(tabs[currentTab]);
+  const [loadingArray, setLoading] = useState([true, true, true]);
+  const [resultArray, setResult] = useState([false, true, true]);
+  const titleTracker = useRef(currentTitle);
+  const timeout = useRef(null);
 
+  // timer waiting for a snapshot from the background script, resets if the tab changes/reloads
+  useEffect(() => {
+    // check for tab reload/change
+    if (titleTracker.current !== currentTitle) {
+      titleTracker.current = currentTitle;
+      const newArray = [...loadingArray];
+      newArray[0] = true;
+      setLoading(newArray);
+      if (timeout.current) {
+        clearTimeout(timeout.current);
+        timeout.current = null;
+      }
+    }
+
+    if (loadingArray[0] === true) {
+      timeout.current = setTimeout(() => {
+        const newArray = [...loadingArray];
+        newArray[0] = false;
+        setLoading(newArray);
+        // grey out other checkers
+      }, 4000);
+    }
+  }, [currentTitle, loadingArray]);
 
   return (
     <div className="error-container">
@@ -24,13 +42,19 @@ function ErrorContainer(props): any {
       <h2>
         Launching Reactime on tab:
         {' '}
-        {currentTab}
+        {currentTitle}
       </h2>
 
       <div className="loaderChecks">
-        <p>Checking if a content script has been launched on this tab</p>
+        <p>Waiting for content script on this tab</p>
+        <Loader loading={loadingArray[0]} result={resultArray[0]} />
+
         <p>Checking if React Dev Tools has been installed</p>
+        <Loader loading={loadingArray[1]} result={resultArray[1]} />
+
         <p>Checking if this is React app</p>
+        <Loader loading={loadingArray[2]} result={resultArray[2]} />
+
       </div>
       <a
         href="https://reactime.io/"
@@ -44,9 +68,6 @@ function ErrorContainer(props): any {
         <br />
         NOTE: The React Developer Tools extension is also required for Reactime to run, if you do not already have it installed on your browser.
       </p>
-      {/* <div>
-        {mynewFunc() }
-      </div> */}
     </div>
   );
 }

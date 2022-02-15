@@ -133,7 +133,10 @@ function MainContainer(): any {
   }, []);
 
   // error page if any of tabs check
-  // if (!tabs[currentTab]?.reactDevToolsInstalled) {
+  // if (!tabs[currentTab]?.reactDevToolsInstalled)
+  console.log('does currentTab exist?', currentTab);
+  console.log('does tabs exist?', tabs);
+  console.log('does reactDevToolsInstalled exist?', tabs[currentTab]?.reactDevToolsInstalled);
   if (!tabs[currentTab] || !tabs[currentTab].reactDevToolsInstalled) {
     return (
       <ErrorContainer />

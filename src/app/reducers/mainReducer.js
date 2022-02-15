@@ -4,7 +4,9 @@ import { debuglog } from 'util';
 import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
-  const { port, currentTab, tabs } = draft;
+  const {
+    port, currentTab, currentTitle, tabs,
+  } = draft;
   const {
     hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex,
   } = tabs[currentTab] || {};
@@ -288,6 +290,7 @@ export default (state, action) => produce(state, draft => {
           break;
         } else if (typeof action.payload === 'object') {
           draft.currentTab = action.payload.tabId;
+          if (action.payload?.title) draft.currentTitle = action.payload.title;
           break;
         }
       }
@@ -304,7 +307,6 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.NO_DEV: {
-      console.log('made it into the reducers');
       const { payload } = action;
       const { reactDevToolsInstalled } = payload[currentTab];
       tabs[currentTab].reactDevToolsInstalled = reactDevToolsInstalled;
