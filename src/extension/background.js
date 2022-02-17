@@ -49,7 +49,6 @@ function createTabObj(title) {
 // Each node stores a history of the link fiber tree.
 class Node {
   constructor(obj, tabObj) {
-
     // continues the order of number of total state changes
     this.index = tabObj.index++;
     // continues the order of number of states changed from that parent
@@ -333,7 +332,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         break;
       }
-
 
       // DUPLICATE SNAPSHOT CHECK
       const previousSnap = tabsObj[tabId].currLocation.stateSnapshot.children[0].componentData

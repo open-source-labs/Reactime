@@ -92,7 +92,7 @@ function ActionContainer(props) {
     return changedState;
   }
 
-  // function to traverse state from hierarchy and also getting information on display name and component name
+ // function to traverse state from hierarchy and also getting information on display name and component name
   const displayArray = (obj: {
     stateSnapshot: { children: any[] };
     name: number;
