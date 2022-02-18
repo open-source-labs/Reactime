@@ -27,11 +27,17 @@ window.addEventListener('message', msg => {
   if (action === 'recordSnap') {
     chrome.runtime.sendMessage(msg.data);
   }
+  if (action === 'devToolsInstalled') {
+    chrome.runtime.sendMessage(msg.data);
+  }
+  if (action === 'aReactApp') {
+    chrome.runtime.sendMessage(msg.data);
+  }
 });
 
 // Listening for messages from the UI of the Reactime extension.
 chrome.runtime.onMessage.addListener(request => {
-  const { action }: { action: string } = request;
+  const { action }: { action: string; } = request;
   // this is only listening for Jump toSnap
   if (action) {
     if (action === 'jumpToSnap') {

@@ -356,12 +356,6 @@ describe('mainReducer testing', () => {
       expect(afterDelete.tabs[75]).toBe(undefined);
       expect(afterDelete.tabs[87]).not.toBe(undefined);
     });
-    it('should change current tab if deleted tab matches current tab', () => {
-      const afterDelete = mainReducer(state, deleteTab(87));
-      expect(afterDelete.tabs[87]).toBe(undefined);
-      expect(afterDelete.tabs[75]).not.toBe(undefined);
-      expect(afterDelete.currentTab).toBe(75);
-    });
   });
 
   describe('default', () => {

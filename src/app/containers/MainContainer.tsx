@@ -1,14 +1,17 @@
+/* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
 import ActionContainer from './ActionContainer';
 import StateContainer from './StateContainer';
 import TravelContainer from './TravelContainer';
 import ButtonsContainer from './ButtonsContainer';
+import ErrorContainer from './ErrorContainer';
 import {
   addNewSnapshots,
   initialConnect,
   setPort,
   setTab,
   deleteTab,
+  noDev,
   setCurrentLocation,
 } from '../actions/actions';
 import { useStoreContext } from '../store';
@@ -27,6 +30,7 @@ function MainContainer(): any {
   useEffect(() => {
     // only open port once
     if (currentPort) return;
+
     // open long-lived connection with background script
     const port = chrome.runtime.connect();
 
@@ -48,6 +52,10 @@ function MainContainer(): any {
             dispatch(deleteTab(payload));
             break;
           }
+          case 'devTools': {
+            dispatch(noDev(payload));
+            break;
+          }
           case 'changeTab': {
             dispatch(setTab(payload));
             break;
@@ -59,7 +67,6 @@ function MainContainer(): any {
             break;
           }
           case 'initialConnectSnapshots': {
-            dispatch(setTab(maxTab));
             dispatch(initialConnect(payload));
             break;
           }
@@ -82,25 +89,13 @@ function MainContainer(): any {
     dispatch(setPort(port));
   });
 
-  if (!tabs[currentTab]) {
+  // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
+  if (!tabs[currentTab] || !tabs[currentTab].status.reactDevToolsInstalled || !tabs[currentTab].status.targetPageisaReactApp) {
     return (
-      <div className="error-container">
-        <img src="../assets/logo-no-version.png" height="50px" />
-        <a
-          href="https://reactime.io/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          No React application found. Please visit reactime.io to more info.
-        </a>
-        <p>
-          If you are using a React application, make sure tha you application is running in development mode.
-          <br />
-          NOTE: The React Developer Tools extension is also required for Reactime to run, if you do not already have it installed on your browser.
-        </p>
-      </div>
+      <ErrorContainer />
     );
   }
+
   const {
     currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics,
   } = tabs[currentTab];

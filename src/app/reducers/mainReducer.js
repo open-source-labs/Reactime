@@ -3,7 +3,9 @@ import { produce } from 'immer';
 import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
-  const { port, currentTab, tabs } = draft;
+  const {
+    port, currentTab, currentTitle, tabs,
+  } = draft;
   const {
     hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex,
   } = tabs[currentTab] || {};
@@ -281,22 +283,36 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.SET_TAB: {
-      if (typeof action.payload === 'number') {
-        draft.currentTab = action.payload;
-        break;
-      } else if (typeof action.payload === 'object') {
-        draft.currentTab = action.payload.tabId;
-        break;
+      if (!mode?.paused) {
+        if (typeof action.payload === 'number') {
+          draft.currentTab = action.payload;
+          break;
+        } else if (typeof action.payload === 'object') {
+          draft.currentTab = action.payload.tabId;
+          if (action.payload?.title) draft.currentTitle = action.payload.title;
+          break;
+        }
       }
       break;
     }
     case types.DELETE_TAB: {
       delete draft.tabs[action.payload];
-      if (draft.currentTab === action.payload) {
-        // if the deleted tab was set to currentTab, replace currentTab with
-        // the first tabId within tabs obj
-        const newCurrentTab = parseInt(Object.keys(draft.tabs)[0], 10);
-        draft.currentTab = newCurrentTab;
+      break;
+    }
+    case types.LAUNCH_CONTENT: {
+      // Fired when user clicks launch button on the error page. Send msg to background to launch
+      port.postMessage({
+        action: 'launchContentScript',
+        payload: action.payload,
+        tabId: currentTab,
+      });
+      break;
+    }
+    case types.NO_DEV: {
+      const { payload } = action;
+      if (tabs[currentTab]) {
+        const { reactDevToolsInstalled } = payload[currentTab].status;
+        tabs[currentTab].status.reactDevToolsInstalled = reactDevToolsInstalled;
       }
       break;
     }

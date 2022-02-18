@@ -4,8 +4,10 @@ import 'core-js';
 const portsArr = [];
 const reloaded = {};
 const firstSnapshotReceived = {};
+
 // There will be the same number of objects in here as there are
 // Reactime tabs open for each user application being worked on.
+let activeTab;
 const tabsObj = {};
 // Will store Chrome web vital metrics and their corresponding values.
 const metrics = {};
@@ -36,6 +38,12 @@ function createTabObj(title) {
     hierarchy: null,
     // records initial hierarchy to refresh page in case empty function is called
     initialHierarchy: null,
+    // status checks: Content Script launched, React Dev Tools installed, target is react app
+    status: {
+      contentScriptLaunched: true,
+      reactDevToolsInstalled: false,
+      targetPageisaReactApp: false,
+    },
     mode: {
       persist: false,
       paused: false,
@@ -120,9 +128,16 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
 // Establishing incoming connection with devtools.
 chrome.runtime.onConnect.addListener(port => {
   // port is one end of the connection - an object
-
   // push every port connected to the ports array
   portsArr.push(port);
+
+  // On Reactime launch: make sure RT's active tab is correct
+  if (portsArr.length > 0) {
+    portsArr.forEach(bg => bg.postMessage({
+      action: 'changeTab',
+      payload: { tabId: activeTab.id, title: activeTab.title },
+    }));
+  }
 
   // send tabs obj to the connected devtools as soon as connection to devtools is made
   if (Object.keys(tabsObj).length > 0) {
@@ -193,9 +208,18 @@ chrome.runtime.onConnect.addListener(port => {
       // "Pause" is a deprecated feature from a previous Reactime version.
       case 'setPause':
         tabsObj[tabId].mode.paused = payload;
-        break;
+        return true;
       case 'setPersist':
         tabsObj[tabId].mode.persist = payload;
+        return true;
+      case 'launchContentScript':
+        // !!! in Manifest Version 3 this will need to be changed to the commented out code below !!!
+        // chrome.scripting.executeScript({
+        //   target: { tabId },
+        //   files: ['bundles/content.bundle.js'],
+        // });
+        // This line below will need to be removed
+        chrome.tabs.executeScript(tabId, { file: 'bundles/content.bundle.js' });
         return true;
       case 'jumpToSnap':
         chrome.tabs.sendMessage(tabId, msg);
@@ -208,10 +232,11 @@ chrome.runtime.onConnect.addListener(port => {
 
 // background.js listening for a message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
+  // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
     return true;
   }
+
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
   const {
@@ -229,12 +254,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     || action === 'recordSnap'
     || action === 'jumpToSnap'
     || action === 'injectScript'
+    || action === 'devToolsInstalled'
+    || action === 'aReactApp'
   ) {
     isReactTimeTravel = true;
   } else {
     return true;
   }
-
   // everytime we get a new tabid, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) {
     tabsObj[tabId] = createTabObj(tabTitle);
@@ -250,6 +276,20 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           payload: tabsObj,
         }));
       }
+      break;
+    }
+    // Confirmed React Dev Tools installed, send this info to frontend
+    case 'devToolsInstalled': {
+      tabsObj[tabId].status.reactDevToolsInstalled = true;
+      portsArr.forEach(bg => bg.postMessage({
+        action: 'devTools',
+        payload: tabsObj,
+      }));
+      break;
+    }
+    // Confirmed target is a react app. No need to send to frontend
+    case 'aReactApp': {
+      tabsObj[tabId].status.targetPageisaReactApp = true;
       break;
     }
     // This injects a script into the app that you're testing Reactime on,
@@ -412,13 +452,19 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 
 // when tab view is changed, put the tabid as the current tab
 chrome.tabs.onActivated.addListener(info => {
-  // tell devtools which tab to be the current
-  if (portsArr.length > 0) {
-    portsArr.forEach(bg => bg.postMessage({
-      action: 'changeTab',
-      payload: info,
-    }));
-  }
+  // get info about tab information from tabId
+  chrome.tabs.get(info.tabId, tab => {
+    // never set a reactime instance to the active tab
+    if (!tab.pendingUrl?.match('^chrome-extension')) {
+      activeTab = tab;
+      if (portsArr.length > 0) {
+        portsArr.forEach(bg => bg.postMessage({
+          action: 'changeTab',
+          payload: { tabId: tab.id, title: tab.title },
+        }));
+      }
+    }
+  });
 });
 
 // when reactime is installed
