@@ -82,6 +82,14 @@ function ErrorContainer(props): JSX.Element {
       <div className="errorMsg">
         <ErrorMsg loadingArray={loadingArray} status={status} launchContent={launch} />
       </div>
+      <br />
+      <a
+        href="https://reactime.io/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Please visit reactime.io to more info.
+      </a>
     </div>
   );
 }
