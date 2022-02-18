@@ -236,9 +236,16 @@ export default function ComponentMap({
 
       <svg ref={containerRef} width={totalWidth} height={totalHeight}>
         <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
-        <rect onClick={() => {
+        <rect
+          onClick={() => {
             setTooltip(false);
-            hideTooltip();}} width={totalWidth} height={totalHeight} rx={14} fill="#242529" />
+            hideTooltip();
+          }}
+          width={totalWidth}
+          height={totalHeight}
+          rx={14}
+          fill="#242529"
+        />
         <Group top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(startNode || data, d => (d.isExpanded ? null : d.children))}
@@ -284,7 +291,8 @@ export default function ComponentMap({
 
                   // mousing controls & Tooltip display logic
                   const handleMouseAndClickOver = event => {
-                    () => dispatch(onHover(node.data.rtid));
+                    // looks like onHover isnt working?
+                    // () => dispatch(onHover(node.data.rtid));
                     const coords = localPoint(
                       event.target.ownerSVGElement,
                       event,
@@ -327,30 +335,36 @@ export default function ComponentMap({
                           // strokeDasharray={node.children ? '0' : '2,2'}
                           strokeOpacity="1"
                           rx={node.children ? 4 : 10}
-                          onDoubleClick={() => {
+                          // double clicking the component expands or collapses the child components
+                          // onDoubleClick={() => {
+                          //   node.data.isExpanded = !node.data.isExpanded;
+                          //   hideTooltip();
+                          //   setTooltip(false);
+                          //   forceUpdate();
+                          // }}
+                          // Tooltip event handlers
+                          // test feature
+                          // onClick = {handleMouseAndClickOver}
+                          onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
                             hideTooltip();
                             setTooltip(false);
                             forceUpdate();
                           }}
-                          // Tooltip event handlers
-                          // test feature
-                          // onClick = {handleMouseAndClickOver}
-                          onClick={event => {
-                            if (!tooltip) {
-                              handleMouseAndClickOver(event);
-                              setTooltip(true);
-                            }
-                            // if (tooltip) { // cohort 45
-                            //   hideTooltip();
-                            //   setTooltip(false);
-                            // } else {
-                            //   handleMouseAndClickOver(event);
-                            //   setTooltip(true);
-                            // }
+
+                          onMouseOver={event => {
+                            setTooltip(true);
+                            handleMouseAndClickOver(event);
                           }}
-                          onMouseEnter={() => dispatch(onHover(node.data.rtid))}
-                          onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
+                          // paired with onmouseOver listener, this produces a hover over effect for the component Tooltip
+                          onMouseOut={() => {
+                            hideTooltip();
+                            setTooltip(false);
+                          }}
+
+                          // onMouseEnter={() => dispatch(onHover(node.data.rtid))}
+                          // onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
+                          // eslint-disable-next-line react/jsx-curly-newline
                         />
                       )}
                       {/* Display text inside of each component node */}

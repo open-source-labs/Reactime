@@ -19,7 +19,6 @@ src/
 │   ├── containers/           # More React components
 │   ├── reducers/             # Redux mechanism for updating state
 │   ├── styles/               #
-│   ├── user_id/              # Mixpanel data collection code
 │   ├── index.tsx             # Starting point for root App component 
 │   ├── module.d.ts           #
 │   └── store.tsx             #

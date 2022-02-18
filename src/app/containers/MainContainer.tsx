@@ -15,12 +15,6 @@ import {
   setCurrentLocation,
 } from '../actions/actions';
 import { useStoreContext } from '../store';
-import MPID from '../user_id/user_id';
-
-const mixpanel = require('mixpanel').init('12fa2800ccbf44a5c36c37bc9776e4c0', {
-  debug: false,
-  protocol: 'https',
-});
 
 function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
@@ -94,41 +88,6 @@ function MainContainer(): any {
     // assign port to state so it could be used by other components
     dispatch(setPort(port));
   });
-
-  /**
-   * get set cookies for mixpanel analytics
-   * */
-  useEffect(() => {
-    /**
-     * create new user and attempt to read cookies
-     */
-    const user = new MPID();
-    /**
-     * If developing turn tracking off by setting user.debug to true;
-     * End goal: set an environment variable to automate this toggle
-     */
-    user.debug = false;
-
-    if (!user.debug) {
-      // set current user cookie if it does not exist in cookies;
-      if (user.checkDocumentCookie(document)) {
-        mixpanel.people.increment(user.get_dId(), 'times');
-      } else {
-        document.cookie = user.setCookie();
-        mixpanel.people.set(user.get_dId(), { times: 1 });
-      }
-    }
-
-    function mpClickTrack(e) {
-      if (!user.debug) {
-        mixpanel.track('click', {
-          distinct_id: user.distinct_id,
-          where: e?.target?.innerText,
-        });
-      }
-    }
-    document.addEventListener('click', mpClickTrack);
-  }, []);
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
   if (!tabs[currentTab] || !tabs[currentTab].status.reactDevToolsInstalled || !tabs[currentTab].status.targetPageisaReactApp) {
