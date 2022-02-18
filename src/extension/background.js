@@ -7,14 +7,14 @@ const firstSnapshotReceived = {};
 
 // There will be the same number of objects in here as there are
 // Reactime tabs open for each user application being worked on.
-let activeTab = {};
+let activeTab;
 const tabsObj = {};
 // Will store Chrome web vital metrics and their corresponding values.
 const metrics = {};
 
 // This function will create the first instance of the test app's tabs object
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
-function createTabObj(title, tabId) {
+function createTabObj(title) {
   // TO-DO for save button
   // Save State
   // Knowledge of the comparison snapshot
@@ -38,8 +38,12 @@ function createTabObj(title, tabId) {
     hierarchy: null,
     // records initial hierarchy to refresh page in case empty function is called
     initialHierarchy: null,
-    // checks for dev tools
-    reactDevToolsInstalled: true,
+    // status checks: Content script launch, React Dev Tools installed, target is react app
+    status: {
+      contentScriptLaunched: true,
+      reactDevToolsInstalled: false,
+      targetPageisaReactApp: false,
+    },
     mode: {
       persist: false,
       paused: false,
@@ -127,6 +131,7 @@ chrome.runtime.onConnect.addListener(port => {
   // push every port connected to the ports array
   portsArr.push(port);
 
+  // On Reactime launch: make sure RT's active tab is correct
   if (portsArr.length > 0) {
     portsArr.forEach(bg => bg.postMessage({
       action: 'changeTab',
@@ -135,6 +140,7 @@ chrome.runtime.onConnect.addListener(port => {
   }
 
   // send tabs obj to the connected devtools as soon as connection to devtools is made
+  console.log('sending initialConnectSnapshots from RTONLINE: payload =', tabsObj);
   if (Object.keys(tabsObj).length > 0) {
     port.postMessage({
       action: 'initialConnectSnapshots',
@@ -220,10 +226,11 @@ chrome.runtime.onConnect.addListener(port => {
 // background.js listening for a message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('recevied a message from contentScript', request);
-  // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
+  // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
     return true;
   }
+
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
   const {
@@ -241,13 +248,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     || action === 'recordSnap'
     || action === 'jumpToSnap'
     || action === 'injectScript'
-    || action === 'noDevToolsInstalled'
+    || action === 'devToolsInstalled'
+    || action === 'aReactApp'
   ) {
     isReactTimeTravel = true;
   } else {
     return true;
   }
-
   // everytime we get a new tabid, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) {
     console.log('creatingTabObj: action = ', action);
@@ -266,14 +273,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
       break;
     }
-    case 'noDevToolsInstalled': {
-      console.log('no devTools installed: in background script. Setting to false');
-      tabsObj[tabId].reactDevToolsInstalled = false;
-      // now that we have confirmed no devTools installed, we can go ahead and send this info to frontend
+    case 'devToolsInstalled': {
+      tabsObj[tabId].status.reactDevToolsInstalled = true;
+      console.log('DevTools installed', tabsObj[tabId]);
+      // now that we have confirmed RDT installed, send this info to frontend
       portsArr.forEach(bg => bg.postMessage({
-        action: 'noDevTools',
+        action: 'devTools',
         payload: tabsObj,
       }));
+      break;
+    }
+    case 'aReactApp': {
+      console.log('confimred target is a react app: in background script. Setting to true');
+      tabsObj[tabId].status.targetPageisaReactApp = true;
+      // now that we have confirmed target is a react app,send this info to frontend
+      // portsArr.forEach(bg => bg.postMessage({
+      //   action: 'noDevTools',
+      //   payload: tabsObj,
+      // }));
       break;
     }
     // This injects a script into the app that you're testing Reactime on,
@@ -327,6 +344,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         tabsObj[tabId].currBranch = 0;
 
         // send a message to devtools
+        console.log('sending initialConnectSnapshots from TABRELOAD: payload =', tabsObj);
         portsArr.forEach(bg => bg.postMessage({
           action: 'initialConnectSnapshots',
           payload: tabsObj,
@@ -348,6 +366,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           tabsObj[tabId],
           new Node(request.payload, tabsObj[tabId]),
         );
+        console.log('sending initialConnectSnapshots from RECORDSNAP: payload =', tabsObj);
         if (portsArr.length > 0) {
           portsArr.forEach(bg => bg.postMessage({
             action: 'initialConnectSnapshots',
@@ -436,17 +455,16 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 
 // when tab view is changed, put the tabid as the current tab
 chrome.tabs.onActivated.addListener(info => {
-  // set active tab for global use: ignore an active tab if its reactime
-  chrome.tabs.query({ currentWindow: true, active: true }, tabs => {
-    if (!tabs[0]?.pendingUrl?.match('^chrome-extension')) {
-      [activeTab] = tabs;
-      console.log(activeTab);
-      console.log(info);
-      // tell devtools which tab to be the current
+  // get info about tab information from tabId
+  chrome.tabs.get(info.tabId, tab => {
+    // never set a reactime instance to the active tab
+    if (!tab.pendingUrl?.match('^chrome-extension')) {
+      console.log('active Tab = ', tab);
+      activeTab = tab;
       if (portsArr.length > 0) {
         portsArr.forEach(bg => bg.postMessage({
           action: 'changeTab',
-          payload: { tabId: activeTab.id, title: activeTab.title },
+          payload: { tabId: tab.id, title: tab.title },
         }));
       }
     }

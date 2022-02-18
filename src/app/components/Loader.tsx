@@ -22,7 +22,7 @@ const Loader = ({
   loading,
   result,
 }): JSX.Element => (loading ? (
-  <ClockLoader
+  <ClipLoader
     color="#123abc"
     css={override}
     speedMultiplier={1}

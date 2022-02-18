@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
 import ActionContainer from './ActionContainer';
 import StateContainer from './StateContainer';
@@ -59,7 +60,8 @@ function MainContainer(): any {
             dispatch(deleteTab(payload));
             break;
           }
-          case 'noDevTools': {
+          case 'devTools': {
+            console.log('devTools received in front end');
             dispatch(noDev(payload));
             break;
           }
@@ -74,7 +76,7 @@ function MainContainer(): any {
             break;
           }
           case 'initialConnectSnapshots': {
-            dispatch(setTab(maxTab));
+            // dispatch(setTab({ tabId: maxTab, title: payload[maxTab]['title'] }));
             dispatch(initialConnect(payload));
             break;
           }
@@ -132,12 +134,11 @@ function MainContainer(): any {
     document.addEventListener('click', mpClickTrack);
   }, []);
 
-  // error page if any of tabs check
-  // if (!tabs[currentTab]?.reactDevToolsInstalled)
-  console.log('does currentTab exist?', currentTab);
-  console.log('does tabs exist?', tabs);
-  console.log('does reactDevToolsInstalled exist?', tabs[currentTab]?.reactDevToolsInstalled);
-  if (!tabs[currentTab] || !tabs[currentTab].reactDevToolsInstalled) {
+  // Error Page launch IF 1) Content script not launchd 2) RDT not installed 3) Target not React app
+  console.log('tabs[currentTab] status of checks', currentTab, tabs[currentTab]?.status);
+  // console.log('does currentTab exist?', currentTab, 'does tabs exist?', tabs, 'does reactDevToolsInstalled exist?', tabs[currentTab]?.status.reactDevToolsInstalled);
+
+  if (!tabs[currentTab] || !tabs[currentTab].status.reactDevToolsInstalled || !tabs[currentTab].status.targetPageisaReactApp) {
     return (
       <ErrorContainer />
     );
