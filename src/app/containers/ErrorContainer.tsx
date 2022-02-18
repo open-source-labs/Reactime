@@ -17,10 +17,7 @@ function ErrorContainer(props): JSX.Element {
   if (tabs[currentTab]) {
     Object.assign(status, tabs[currentTab].status);
   }
-
-  // console.log('in error container, contentScriptLaunched =', contentScriptLaunched);
-  // console.log('in error container, reactDevToolsInstalled =', reactDevToolsInstalled);
-  // console.log('in error container, targetPageisaReactApp =', targetPageisaReactApp);
+  console.log(status);
 
   // timer waiting for a snapshot from the background script, resets if the tab changes/reloads
   useEffect(() => {
@@ -52,12 +49,14 @@ function ErrorContainer(props): JSX.Element {
       }
     } else {
       setLoadingArray(0, false);
+    }
+    if (loadingArray[0] === false && status.contentScriptLaunched === true) {
       setLoadingArray(1, false);
-      // TODO: SHOULD THIS AUTOMATICALLY SET LOADING ARRAY 3 TO NOT LOADING? TEST WITH RDT TURNED OFF
-      // works on a reactapp like tictactoe but it doesn't work on the server when RDT disabled
+    }
+    if (loadingArray[1] === false && status.reactDevToolsInstalled === true) {
       setLoadingArray(2, false);
     }
-  }, [status.contentScriptLaunched, currentTitle, timeout, loadingArray]);
+  }, [status, currentTitle, timeout, loadingArray]);
 
   return (
     <div className="error-container">
@@ -76,7 +75,7 @@ function ErrorContainer(props): JSX.Element {
         <p>Checking if React Dev Tools has been installed</p>
         <Loader loading={loadingArray[1]} result={status.reactDevToolsInstalled} />
 
-        <p>Checking if this is React app</p>
+        <p>Checking if target is a compatible React app</p>
         <Loader loading={loadingArray[2]} result={status.targetPageisaReactApp} />
 
       </div>
@@ -94,10 +93,10 @@ function ErrorContainer(props): JSX.Element {
       >
         No React application found. Please visit reactime.io to more info.
       </a> */}
-      <p>
+      {/* <p>
         <br />
         NOTE: The React Developer Tools extension is also required for Reactime to run, if you do not already have it installed on your browser.
-      </p>
+      </p> */}
     </div>
   );
 }

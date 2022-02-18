@@ -136,8 +136,6 @@ function MainContainer(): any {
 
   // Error Page launch IF 1) Content script not launchd 2) RDT not installed 3) Target not React app
   console.log('tabs[currentTab] status of checks', currentTab, tabs[currentTab]?.status);
-  // console.log('does currentTab exist?', currentTab, 'does tabs exist?', tabs, 'does reactDevToolsInstalled exist?', tabs[currentTab]?.status.reactDevToolsInstalled);
-
   if (!tabs[currentTab] || !tabs[currentTab].status.reactDevToolsInstalled || !tabs[currentTab].status.targetPageisaReactApp) {
     return (
       <ErrorContainer />

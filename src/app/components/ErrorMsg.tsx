@@ -35,15 +35,16 @@ function ErrorMsg({
         <div>
           Content Script was not launched. Trying reloading the page.
           <br />
-          NOTE: By default Reactime only works with urls starting with localhost.
+          NOTE: By default Reactime only works with URLS starting with localhost
           <br />
-          IF this is not the case you press the launch button to manually launch the content script.
+          If this is not the case you press the launch button to manually launch the content script.
         </div>
       );
     case 'RDT Error':
       return (
         <div>
           React Dev Tools isnt installed!
+          <br />
           <a
             href="https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en"
             target="_blank"

@@ -298,6 +298,12 @@ export default (state, action) => produce(state, draft => {
     }
     case types.DELETE_TAB: {
       delete draft.tabs[action.payload];
+      // if (draft.currentTab === action.payload) {
+      //   // if the deleted tab was set to currentTab, replace currentTab with
+      //   // the first tabId within tabs obj
+      //   const newCurrentTab = parseInt(Object.keys(draft.tabs)[0], 10);
+      //   draft.currentTab = newCurrentTab;
+      // }
       break;
     }
     case types.NO_DEV: {
