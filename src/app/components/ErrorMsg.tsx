@@ -33,7 +33,7 @@ function ErrorMsg({
     case 'Content Script Error':
       return (
         <div>
-          Content Script was not launched. Trying reloading the page.
+          Content Script was not launched. Try reloading the page.
           <br />
           NOTE: By default Reactime only works with URLS starting with localhost
           <br />

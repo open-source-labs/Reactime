@@ -215,25 +215,13 @@ chrome.runtime.onConnect.addListener(port => {
         tabsObj[tabId].mode.persist = payload;
         return true;
       case 'launchContentScript':
-        // !!! in Manifest Version 3 this will need to be changed to the commented out code here !!!
+        // !!! in Manifest Version 3 this will need to be changed to the commented out code below !!!
         // chrome.scripting.executeScript({
         //   target: { tabId },
         //   files: ['bundles/content.bundle.js'],
         // });
-        chrome.tabs.executeScript(tabId, {
-          code: `
-            // Function will attach script to the dom
-            const injectScript = (file, tag) => {
-              const htmlBody = document.getElementsByTagName(tag)[0];
-              const script = document.createElement('script');
-              script.setAttribute('type', 'text/javascript');
-              script.setAttribute('src', file);
-              document.title=${tabId} + '-' + document.title
-              htmlBody.appendChild(script);
-            };
-            injectScript(chrome.runtime.getURL('bundles/content.bundle.js'), 'body');
-          `,
-        });
+        // This line below will need to be removed
+        chrome.tabs.executeScript(tabId, { file: 'bundles/content.bundle.js' });
         return true;
       case 'jumpToSnap':
         chrome.tabs.sendMessage(tabId, msg);
