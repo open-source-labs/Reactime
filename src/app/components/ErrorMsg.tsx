@@ -21,7 +21,7 @@ function ErrorMsg({
     case 'Content Script Error':
       return (
         <div>
-          Content Script not found!
+          Content Script not found! Try closing Reactime and reloading the page.
           <br />
           NOTE: By default Reactime only launches the Content Script on URLS starting with localhost.
           <br />
