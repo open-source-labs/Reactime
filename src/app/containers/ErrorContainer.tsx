@@ -1,16 +1,23 @@
 /* eslint-disable max-len */
 import React, { useState, useEffect, useRef } from 'react';
+import {
+  launchContentScript,
+} from '../actions/actions';
 import Loader from '../components/Loader';
 import ErrorMsg from '../components/ErrorMsg';
 import { useStoreContext } from '../store';
 
 function ErrorContainer(props): JSX.Element {
-  const [store] = useStoreContext();
+  const [store, dispatch] = useStoreContext();
   const { tabs, currentTitle, currentTab } = store;
   // hooks for error checks
   const [loadingArray, setLoading] = useState([true, true, true]);
   const titleTracker = useRef(currentTitle);
   const timeout = useRef(null);
+
+  function launch(): void{
+    dispatch(launchContentScript(tabs[currentTab]));
+  }
 
   // check if tabObj exists > set status
   const status = { contentScriptLaunched: false, reactDevToolsInstalled: false, targetPageisaReactApp: false };
@@ -82,7 +89,7 @@ function ErrorContainer(props): JSX.Element {
 
       <br />
       <div className="errorMsg">
-        <ErrorMsg loadingArray={loadingArray} status={status} />
+        <ErrorMsg loadingArray={loadingArray} status={status} launchContent={launch} />
       </div>
 
       <br />

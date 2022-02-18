@@ -210,9 +210,30 @@ chrome.runtime.onConnect.addListener(port => {
       // "Pause" is a deprecated feature from a previous Reactime version.
       case 'setPause':
         tabsObj[tabId].mode.paused = payload;
-        break;
+        return true;
       case 'setPersist':
         tabsObj[tabId].mode.persist = payload;
+        return true;
+      case 'launchContentScript':
+        // !!! in Manifest Version 3 this will need to be changed to the commented out code here !!!
+        // chrome.scripting.executeScript({
+        //   target: { tabId },
+        //   files: ['bundles/content.bundle.js'],
+        // });
+        chrome.tabs.executeScript(tabId, {
+          code: `
+            // Function will attach script to the dom
+            const injectScript = (file, tag) => {
+              const htmlBody = document.getElementsByTagName(tag)[0];
+              const script = document.createElement('script');
+              script.setAttribute('type', 'text/javascript');
+              script.setAttribute('src', file);
+              document.title=${tabId} + '-' + document.title
+              htmlBody.appendChild(script);
+            };
+            injectScript(chrome.runtime.getURL('bundles/content.bundle.js'), 'body');
+          `,
+        });
         return true;
       case 'jumpToSnap':
         chrome.tabs.sendMessage(tabId, msg);
@@ -275,7 +296,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     case 'devToolsInstalled': {
       tabsObj[tabId].status.reactDevToolsInstalled = true;
-      console.log('DevTools installed', tabsObj[tabId]);
       // now that we have confirmed RDT installed, send this info to frontend
       portsArr.forEach(bg => bg.postMessage({
         action: 'devTools',
@@ -284,13 +304,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break;
     }
     case 'aReactApp': {
-      console.log('confimred target is a react app: in background script. Setting to true');
       tabsObj[tabId].status.targetPageisaReactApp = true;
-      // now that we have confirmed target is a react app,send this info to frontend
-      // portsArr.forEach(bg => bg.postMessage({
-      //   action: 'noDevTools',
-      //   payload: tabsObj,
-      // }));
       break;
     }
     // This injects a script into the app that you're testing Reactime on,
@@ -459,7 +473,6 @@ chrome.tabs.onActivated.addListener(info => {
   chrome.tabs.get(info.tabId, tab => {
     // never set a reactime instance to the active tab
     if (!tab.pendingUrl?.match('^chrome-extension')) {
-      console.log('active Tab = ', tab);
       activeTab = tab;
       if (portsArr.length > 0) {
         portsArr.forEach(bg => bg.postMessage({

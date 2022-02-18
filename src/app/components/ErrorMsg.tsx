@@ -21,7 +21,7 @@ function parseError(loadingArray: [], status: any): string {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 function ErrorMsg({
-  loadingArray, status,
+  loadingArray, status, launchContent,
 }): JSX.Element {
   switch (parseError(loadingArray, status)) {
     case 'Still Loading':
@@ -38,6 +38,8 @@ function ErrorMsg({
           NOTE: By default Reactime only works with URLS starting with localhost
           <br />
           If this is not the case you press the launch button to manually launch the content script.
+          <br />
+          <button type="button" className="launchContent" onClick={launchContent}> Launch </button>
         </div>
       );
     case 'RDT Error':

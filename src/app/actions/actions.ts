@@ -86,6 +86,11 @@ export const noDev = (tab) => ({
   payload: tab,
 });
 
+export const launchContentScript = (tab) => ({
+  type: types.LAUNCH_CONTENT,
+  payload: tab,
+});
+
 export const resetSlider = () => ({
   type: types.SLIDER_ZERO,
 });
