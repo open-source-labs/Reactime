@@ -1,9 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { css } from '@emotion/react';
-import {
-  ClipLoader, DotLoader, SyncLoader, ClockLoader,
-} from 'react-spinners';
+import { ClipLoader } from 'react-spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -12,11 +10,13 @@ const override = css`
   margin: 0 auto;
 `;
 
-const handleFail = (result: boolean): JSX.Element => (result
+// Displays the result of the check when loading is done
+const handleResult = (result: boolean): JSX.Element => (result
   ? <FontAwesomeIcon className="check" icon={faCheck} size="lg" />
   : <FontAwesomeIcon className="fail" icon={faExclamationCircle} size="lg" />
 );
 
+// Returns the Loader component
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const Loader = ({
   loading,
@@ -25,10 +25,9 @@ const Loader = ({
   <ClipLoader
     color="#123abc"
     css={override}
-    speedMultiplier={1}
     size={30}
     loading={loading}
   />
-) : handleFail(result));
+) : handleResult(result));
 
 export default Loader;

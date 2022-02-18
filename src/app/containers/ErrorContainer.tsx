@@ -1,8 +1,6 @@
 /* eslint-disable max-len */
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  launchContentScript,
-} from '../actions/actions';
+import { launchContentScript } from '../actions/actions';
 import Loader from '../components/Loader';
 import ErrorMsg from '../components/ErrorMsg';
 import { useStoreContext } from '../store';
@@ -15,18 +13,13 @@ function ErrorContainer(props): JSX.Element {
   const titleTracker = useRef(currentTitle);
   const timeout = useRef(null);
 
-  function launch(): void{
-    dispatch(launchContentScript(tabs[currentTab]));
-  }
+  function launch(): void{ dispatch(launchContentScript(tabs[currentTab])); }
 
   // check if tabObj exists > set status
   const status = { contentScriptLaunched: false, reactDevToolsInstalled: false, targetPageisaReactApp: false };
-  if (tabs[currentTab]) {
-    Object.assign(status, tabs[currentTab].status);
-  }
-  console.log(status);
+  if (tabs[currentTab]) { Object.assign(status, tabs[currentTab].status); }
 
-  // timer waiting for a snapshot from the background script, resets if the tab changes/reloads
+  // hook that sets timer while waiting for a snapshot from the background script, resets if the tab changes/reloads
   useEffect(() => {
     function setLoadingArray(i: number, value: boolean) {
       if (loadingArray[i] !== value) { // avoid unecessary state changes
@@ -36,7 +29,7 @@ function ErrorContainer(props): JSX.Element {
       }
     }
 
-    // check for tab reload/change
+    // check for tab reload/change: reset loadingArray
     if (titleTracker.current !== currentTitle) {
       titleTracker.current = currentTitle;
       setLoadingArray(0, true);
@@ -47,12 +40,10 @@ function ErrorContainer(props): JSX.Element {
         timeout.current = null;
       }
     }
-    // if content script hasnt been found, set timer
+    // if content script hasnt been found, set timer or immediately resolve
     if (!status.contentScriptLaunched) {
       if (loadingArray[0] === true) {
-        timeout.current = setTimeout(() => {
-          setLoadingArray(0, false);
-        }, 2000);
+        timeout.current = setTimeout(() => { setLoadingArray(0, false); }, 1500);
       }
     } else {
       setLoadingArray(0, false);
@@ -91,19 +82,6 @@ function ErrorContainer(props): JSX.Element {
       <div className="errorMsg">
         <ErrorMsg loadingArray={loadingArray} status={status} launchContent={launch} />
       </div>
-
-      <br />
-      {/* <a
-        href="https://reactime.io/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        No React application found. Please visit reactime.io to more info.
-      </a> */}
-      {/* <p>
-        <br />
-        NOTE: The React Developer Tools extension is also required for Reactime to run, if you do not already have it installed on your browser.
-      </p> */}
     </div>
   );
 }

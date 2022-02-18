@@ -7,6 +7,7 @@
 	margin: 0 auto;
 	background-color: $brand-color;
 	overflow: hidden;
+	font: 'Roboto', sans-serif;
 
 	display: flex;
 	flex-direction: column;
@@ -55,5 +56,21 @@
 	}
 	.errorMsg{
 		text-align: center;
+		font-weight: bold;
+	}
+
+	.launchContentButton {
+		padding: 3px;
+		outline: transparent;
+		color: white;
+		border-style: solid;
+		border-color: transparent;
+		border-radius: 3px;
+		cursor: pointer;
+		line-height: 1.5em;
+		font: 300 14px 'Roboto', sans-serif;
+		font-size: $button-text-size;
+		width: 120px;
+		background: $red-color-gradient;
 	}
 }

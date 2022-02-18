@@ -47,8 +47,6 @@ function MainContainer(): any {
         payload: Record<string, unknown>;
         sourceTab: number;
       }) => {
-        console.log('message', message);
-
         const { action, payload, sourceTab } = message;
         let maxTab;
         if (!sourceTab) {
@@ -61,7 +59,6 @@ function MainContainer(): any {
             break;
           }
           case 'devTools': {
-            console.log('devTools received in front end');
             dispatch(noDev(payload));
             break;
           }
@@ -76,7 +73,6 @@ function MainContainer(): any {
             break;
           }
           case 'initialConnectSnapshots': {
-            // dispatch(setTab({ tabId: maxTab, title: payload[maxTab]['title'] }));
             dispatch(initialConnect(payload));
             break;
           }
@@ -134,8 +130,7 @@ function MainContainer(): any {
     document.addEventListener('click', mpClickTrack);
   }, []);
 
-  // Error Page launch IF 1) Content script not launchd 2) RDT not installed 3) Target not React app
-  console.log('tabs[currentTab] status of checks', currentTab, tabs[currentTab]?.status);
+  // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
   if (!tabs[currentTab] || !tabs[currentTab].status.reactDevToolsInstalled || !tabs[currentTab].status.targetPageisaReactApp) {
     return (
       <ErrorContainer />

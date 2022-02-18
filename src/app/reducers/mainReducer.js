@@ -301,6 +301,7 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.LAUNCH_CONTENT: {
+      // Fired when user clicks launch button on the error page. Send msg to background to launch
       port.postMessage({
         action: 'launchContentScript',
         payload: action.payload,

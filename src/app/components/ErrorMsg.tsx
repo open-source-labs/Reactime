@@ -1,45 +1,34 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
-// takes in the loadingArray and the status and returns the correct message
+// parses loadingArray and status and returns the correct message
 function parseError(loadingArray: [], status: any): string {
-  // console.log('inside func', status);
-  // console.log('inside func', loadingArray);
-
   let stillLoading = true;
   loadingArray.forEach(e => { if (e === false) stillLoading = false; });
-
-  if (stillLoading) return 'Still Loading';
-  // check for first in status that is not true
+  // As long as everything is still loading dont diplay an error message
+  if (stillLoading) return 'default';
+  // Return first status that fails
   if (!status.contentScriptLaunched) return 'Content Script Error';
   if (!status.reactDevToolsInstalled) return 'RDT Error';
   if (!status.targetPageisaReactApp) return 'Not React App';
   return 'default';
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 function ErrorMsg({
   loadingArray, status, launchContent,
 }): JSX.Element {
   switch (parseError(loadingArray, status)) {
-    case 'Still Loading':
-      return (
-        <div>
-          Still waiting for checks to complete
-        </div>
-      );
     case 'Content Script Error':
       return (
         <div>
-          Content Script was not launched. Try reloading the page.
+          Content Script not found!
           <br />
-          NOTE: By default Reactime only works with URLS starting with localhost
+          NOTE: By default Reactime only launches the Content Script on URLS starting with localhost.
           <br />
-          If this is not the case you press the launch button to manually launch the content script.
+          If your target URL does not match, you can manually launch the content script below.
           <br />
-          <button type="button" className="launchContent" onClick={launchContent}> Launch </button>
+          <br />
+          <button type="button" className="launchContentButton" onClick={launchContent}> Launch Content Script </button>
         </div>
       );
     case 'RDT Error':

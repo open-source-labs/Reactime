@@ -38,7 +38,7 @@ function createTabObj(title) {
     hierarchy: null,
     // records initial hierarchy to refresh page in case empty function is called
     initialHierarchy: null,
-    // status checks: Content script launch, React Dev Tools installed, target is react app
+    // status checks: Content Script launched, React Dev Tools installed, target is react app
     status: {
       contentScriptLaunched: true,
       reactDevToolsInstalled: false,
@@ -140,7 +140,6 @@ chrome.runtime.onConnect.addListener(port => {
   }
 
   // send tabs obj to the connected devtools as soon as connection to devtools is made
-  console.log('sending initialConnectSnapshots from RTONLINE: payload =', tabsObj);
   if (Object.keys(tabsObj).length > 0) {
     port.postMessage({
       action: 'initialConnectSnapshots',
@@ -161,7 +160,6 @@ chrome.runtime.onConnect.addListener(port => {
   // listen for message containing a snapshot from devtools and send it to contentScript -
   // (i.e. they're all related to the button actions on Reactime)
   port.onMessage.addListener(msg => {
-    console.log('message from devtools received', msg);
     // msg is action denoting a time jump in devtools
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:
@@ -234,7 +232,6 @@ chrome.runtime.onConnect.addListener(port => {
 
 // background.js listening for a message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('recevied a message from contentScript', request);
   // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
     return true;
@@ -266,7 +263,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   // everytime we get a new tabid, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) {
-    console.log('creatingTabObj: action = ', action);
     tabsObj[tabId] = createTabObj(tabTitle);
   }
 
@@ -282,15 +278,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
       break;
     }
+    // Confirmed React Dev Tools installed, send this info to frontend
     case 'devToolsInstalled': {
       tabsObj[tabId].status.reactDevToolsInstalled = true;
-      // now that we have confirmed RDT installed, send this info to frontend
       portsArr.forEach(bg => bg.postMessage({
         action: 'devTools',
         payload: tabsObj,
       }));
       break;
     }
+    // Confirmed target is a react app. No need to send to frontend
     case 'aReactApp': {
       tabsObj[tabId].status.targetPageisaReactApp = true;
       break;
@@ -346,7 +343,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         tabsObj[tabId].currBranch = 0;
 
         // send a message to devtools
-        console.log('sending initialConnectSnapshots from TABRELOAD: payload =', tabsObj);
         portsArr.forEach(bg => bg.postMessage({
           action: 'initialConnectSnapshots',
           payload: tabsObj,
@@ -368,7 +364,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           tabsObj[tabId],
           new Node(request.payload, tabsObj[tabId]),
         );
-        console.log('sending initialConnectSnapshots from RECORDSNAP: payload =', tabsObj);
         if (portsArr.length > 0) {
           portsArr.forEach(bg => bg.postMessage({
             action: 'initialConnectSnapshots',
