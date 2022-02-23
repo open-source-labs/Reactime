@@ -8436,6 +8436,14 @@
     "react-input-autosize" "^2.2.2"
     "react-transition-group" "^4.3.0"
 
+"react-split@^2.0.14":
+  "integrity" "sha512-bKWydgMgaKTg/2JGQnaJPg51T6dmumTWZppFgEbbY0Fbme0F5TuatAScCLaqommbGQQf/ZT1zaejuPDriscISA=="
+  "resolved" "https://registry.npmjs.org/react-split/-/react-split-2.0.14.tgz"
+  "version" "2.0.14"
+  dependencies:
+    "prop-types" "^15.5.7"
+    "split.js" "^1.6.0"
+
 "react-test-renderer@^16.0.0-0":
   "integrity" "sha512-Sn2VRyOK2YJJldOqoh8Tn/lWQ+ZiKhyZTPtaO0Q6yNj+QDbmRkVFap6pZPy3YQk8DScRDfyqm/KxKYP9gCMRiQ=="
   "resolved" "https://registry.npmjs.org/react-test-renderer/-/react-test-renderer-16.13.1.tgz"
@@ -8463,7 +8471,7 @@
   dependencies:
     "debounce" "^1.2.0"
 
-"react@^0.14 || ^15.0.0 || ^16.0.0-alpha", "react@^0.14.0 || ^15.0.0 || ^16.0.0", "react@^0.14.0 || ^15.0.0 || ^16.0.0-0", "react@^0.14.9 || ^15.3.0 || ^16.0.0-rc || ^16.0", "react@^15.0.0 || ^16.0.0", "react@^15.0.0-0 || ^16.0.0-0", "react@^16.0.0-0", "react@^16.13.1", "react@^16.3.0-0", "react@^16.8.0", "react@^16.8.0 || ^17.0.0", "react@^16.8.0-0", "react@>=0.13", "react@>=15", "react@>=16.13", "react@>=16.3.0", "react@>=16.6.0", "react@>=16.x", "react@0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0":
+"react@*", "react@^0.14 || ^15.0.0 || ^16.0.0-alpha", "react@^0.14.0 || ^15.0.0 || ^16.0.0", "react@^0.14.0 || ^15.0.0 || ^16.0.0-0", "react@^0.14.9 || ^15.3.0 || ^16.0.0-rc || ^16.0", "react@^15.0.0 || ^16.0.0", "react@^15.0.0-0 || ^16.0.0-0", "react@^16.0.0-0", "react@^16.13.1", "react@^16.3.0-0", "react@^16.8.0", "react@^16.8.0 || ^17.0.0", "react@^16.8.0-0", "react@>=0.13", "react@>=15", "react@>=16.13", "react@>=16.3.0", "react@>=16.6.0", "react@>=16.x", "react@0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0":
   "integrity" "sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w=="
   "resolved" "https://registry.npmjs.org/react/-/react-16.13.1.tgz"
   "version" "16.13.1"
@@ -9451,6 +9459,11 @@
   "version" "3.1.0"
   dependencies:
     "extend-shallow" "^3.0.0"
+
+"split.js@^1.6.0":
+  "integrity" "sha512-mPTnGCiS/RiuTNsVhCm9De9cCAUsrNFFviRbADdKiiV+Kk8HKp/0fWu7Kr8pi3/yBmsqLFHuXGT9UUZ+CNLwFw=="
+  "resolved" "https://registry.npmjs.org/split.js/-/split.js-1.6.5.tgz"
+  "version" "1.6.5"
 
 "sprintf-js@~1.0.2":
   "integrity" "sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw="

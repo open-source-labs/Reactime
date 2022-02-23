@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Split from 'react-split';
 import ActionContainer from './ActionContainer';
 import StateContainer from './StateContainer';
 import TravelContainer from './TravelContainer';
@@ -23,6 +24,7 @@ function MainContainer(): any {
   const { tabs, currentTab, port: currentPort } = store;
   const [actionView, setActionView] = useState(true);
   // this function handles Time Jump sidebar view
+  const [splitView, setSplitView] = useState(false);
   const toggleActionContainer = () => {
     setActionView(!actionView);
     const toggleElem = document.querySelector('aside');
@@ -196,6 +198,18 @@ function MainContainer(): any {
           setActionView={setActionView}
           toggleActionContainer={toggleActionContainer}
         />
+        <div>
+        <Split  
+          sizes={[75, 150]}
+          minSize={200}
+          expandToMin={false}
+          gutterSize={10}
+          gutterAlign="center"
+          snapOffset={30}
+          dragInterval={1}
+          direction="horizontal"
+          cursor="col-resize"
+        >
         {snapshots.length ? (
           <StateContainer
             webMetrics={webMetrics}
@@ -206,6 +220,10 @@ function MainContainer(): any {
             currLocation={currLocation}
           />
         ) : null}
+        
+        
+        </Split>
+        </div>
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
       </div>
