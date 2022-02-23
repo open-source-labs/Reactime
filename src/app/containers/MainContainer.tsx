@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
+import Split from 'react-split';
 import ActionContainer from './ActionContainer';
 import StateContainer from './StateContainer';
 import TravelContainer from './TravelContainer';
@@ -21,6 +22,7 @@ function MainContainer(): any {
   const { tabs, currentTab, port: currentPort } = store;
   const [actionView, setActionView] = useState(true);
   // this function handles Time Jump sidebar view
+  const [splitView, setSplitView] = useState(false);
   const toggleActionContainer = () => {
     setActionView(!actionView);
     const toggleElem = document.querySelector('aside');
@@ -139,7 +141,7 @@ function MainContainer(): any {
   };
   const snapshotDisplay = statelessCleaning(snapshotView);
   const hierarchyDisplay = statelessCleaning(hierarchy);
-
+  // body container scss file
   return (
     <div className="main-container">
       <div id="bodyContainer" className="body-container1">
@@ -148,16 +150,36 @@ function MainContainer(): any {
           setActionView={setActionView}
           toggleActionContainer={toggleActionContainer}
         />
-        {snapshots.length ? (
-          <StateContainer
-            webMetrics={webMetrics}
-            viewIndex={viewIndex}
-            snapshot={snapshotDisplay}
-            hierarchy={hierarchyDisplay}
-            snapshots={snapshots}
-            currLocation={currLocation}
-          />
-        ) : null}
+        <div>
+          <Split
+
+        // notes Split built in Styling you can give
+        // within its own component.
+        // scss file is limiting where State Container can g
+        // docs  https://github.com/nathancahill/split/tree/master/packages/splitjs
+            sizes={[75, 150]}
+            minSize={200}
+            expandToMin={false}
+            gutterSize={10}
+            gutterAlign="center"
+            snapOffset={30}
+            dragInterval={1}
+            direction="horizontal"
+            cursor="col-resize"
+          >
+            {snapshots.length ? (
+              <StateContainer
+                webMetrics={webMetrics}
+                viewIndex={viewIndex}
+                snapshot={snapshotDisplay}
+                hierarchy={hierarchyDisplay}
+                snapshots={snapshots}
+                currLocation={currLocation}
+              />
+            ) : null}
+
+          </Split>
+        </div>
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
       </div>

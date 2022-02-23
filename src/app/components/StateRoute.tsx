@@ -64,7 +64,7 @@ const StateRoute = (props: StateRouteProps) => {
       return (
         <ParentSize>
           {({ width, height }) => (
-            <ComponentMap snapshots={snapshots} width={width} height={height} />
+            <ComponentMap snapshots={snapshots} width={width /.8} height={height/1.1} />
           )}
         </ParentSize>
       );

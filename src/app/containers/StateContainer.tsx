@@ -8,7 +8,6 @@ import {
 } from 'react-router-dom';
 import StateRoute from '../components/StateRoute';
 import DiffRoute from '../components/DiffRoute';
-
 interface StateContainerProps {
   snapshot: Record<
     number,
@@ -41,6 +40,9 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
     viewIndex,
     webMetrics,
     currLocation,
+    splitView,
+    setSplitView,
+    // added snapshots, Rob 11/4
     snapshots,
   } = props;
 
@@ -65,6 +67,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
             >
               Diff
             </NavLink>
+            <button> SplitView</button>
           </div>
         </div>
         <Switch>
