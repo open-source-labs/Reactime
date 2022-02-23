@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Split from 'react-split';
 import ActionContainer from './ActionContainer';
 import StateContainer from './StateContainer';
+import StateContainer2 from './StateContainer2';
 import TravelContainer from './TravelContainer';
 import ButtonsContainer from './ButtonsContainer';
 import ErrorContainer from './ErrorContainer';
@@ -142,6 +143,11 @@ function MainContainer(): any {
   const snapshotDisplay = statelessCleaning(snapshotView);
   const hierarchyDisplay = statelessCleaning(hierarchy);
   // body container scss file
+
+  // notes Split built in Styling you can give
+  // within its own component.
+  // scss file is limiting where State Container can g
+  // docs  https://github.com/nathancahill/split/tree/master/packages/splitjs
   return (
     <div className="main-container">
       <div id="bodyContainer" className="body-container1">
@@ -150,36 +156,42 @@ function MainContainer(): any {
           setActionView={setActionView}
           toggleActionContainer={toggleActionContainer}
         />
-        <div>
-          <Split
 
-        // notes Split built in Styling you can give
-        // within its own component.
-        // scss file is limiting where State Container can g
-        // docs  https://github.com/nathancahill/split/tree/master/packages/splitjs
-            sizes={[75, 150]}
-            minSize={200}
-            expandToMin={false}
-            gutterSize={10}
-            gutterAlign="center"
-            snapOffset={30}
-            dragInterval={1}
-            direction="horizontal"
-            cursor="col-resize"
-          >
-            {snapshots.length ? (
-              <StateContainer
-                webMetrics={webMetrics}
-                viewIndex={viewIndex}
-                snapshot={snapshotDisplay}
-                hierarchy={hierarchyDisplay}
-                snapshots={snapshots}
-                currLocation={currLocation}
-              />
-            ) : null}
+        <Split
+          sizes={[50, 50]}
+          minSize={250}
+          snapOffset={1}
+          className="state-container"
+          gutterStyle={function () {
+            return {
+              backgroundColor: 'dimgrey',
+              width: '10px'
+            };
+          }}
+        >
+          {/* <Split> */}
+          {snapshots.length ? (
+            <StateContainer
+              webMetrics={webMetrics}
+              viewIndex={viewIndex}
+              snapshot={snapshotDisplay}
+              hierarchy={hierarchyDisplay}
+              snapshots={snapshots}
+              currLocation={currLocation}
+            />
+          ) : null}
+          {snapshots.length ? (
+            <StateContainer
+              webMetrics={webMetrics}
+              viewIndex={viewIndex}
+              snapshot={snapshotDisplay}
+              hierarchy={hierarchyDisplay}
+              snapshots={snapshots}
+              currLocation={currLocation}
+            />
+          ) : null}
 
-          </Split>
-        </div>
+        </Split>
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
       </div>

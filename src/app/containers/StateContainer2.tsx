@@ -32,7 +32,7 @@ interface StateContainerProps {
 }
 
 // eslint-disable-next-line react/prop-types
-const StateContainer = (props: StateContainerProps): JSX.Element => {
+const StateContainer2 = (props: StateContainerProps): JSX.Element => {
   const {
     snapshot,
     hierarchy,
@@ -48,7 +48,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
 
   return (
     <Router>
-      <div className="state">
+      <div className="state-container2">
         <div className="main-navbar-container">
           <div className="main-navbar-text" />
           <div className="main-navbar">
@@ -58,7 +58,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
               exact
               to="/"
             >
-              STATE
+              TESTINGTESTING
             </NavLink>
             <NavLink
               className="main-router-link"
@@ -94,4 +94,4 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
   );
 };
 
-export default StateContainer;
+export default StateContainer2;

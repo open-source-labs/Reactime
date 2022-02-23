@@ -2,12 +2,16 @@
   font-size: 12px;
   overflow: auto;
   background-color: $brand-color;
+  display: flex;
 }
 
 #componentMapContainer,
 #historyContainer,
 #atomsContainer {
   overflow: hidden;
+}
+.state-container .state{
+  overflow-y: auto;
 }
 
 .toggleAC {
