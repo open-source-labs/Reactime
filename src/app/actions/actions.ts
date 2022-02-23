@@ -86,6 +86,10 @@ export const noDev = (tab) => ({
   payload: tab,
 });
 
+export const toggleSplit = () => ({
+  type: types.TOGGLE_SPLIT,
+});
+
 export const launchContentScript = (tab) => ({
   type: types.LAUNCH_CONTENT,
   payload: tab,

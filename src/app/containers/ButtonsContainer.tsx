@@ -1,18 +1,17 @@
 // @ts-nocheck
 import React from 'react';
-import { importSnapshots, toggleMode } from '../actions/actions';
-import { useStoreContext } from '../store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUpload,
   faQuestion,
   faDownload,
-  faMapMarker,
   faMapPin,
   faRedoAlt,
   faUnlock,
   faLock,
 } from '@fortawesome/free-solid-svg-icons';
+import { importSnapshots, toggleMode, toggleSplit } from '../actions/actions';
+import { useStoreContext } from '../store';
 
 function exportHandler(snapshots: []) {
   // create invisible download anchor link
@@ -20,7 +19,7 @@ function exportHandler(snapshots: []) {
 
   // set file in anchor link
   fileDownload.href = URL.createObjectURL(
-    new Blob([JSON.stringify(snapshots)], { type: 'application/json' })
+    new Blob([JSON.stringify(snapshots)], { type: 'application/json' }),
   );
 
   // set anchor as file download and click it
@@ -56,7 +55,7 @@ function howToUseHandler() {
 }
 
 function ButtonsContainer(): JSX.Element {
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const [{ tabs, currentTab, split }, dispatch] = useStoreContext();
   const {
     snapshots,
     mode: { paused, persist },
@@ -76,7 +75,8 @@ function ButtonsContainer(): JSX.Element {
         )}
         {paused ? 'Unlock' : 'Lock'}
       </button>
-      <button
+      {/* removing the UI for now Defunt perist feauture. See docs for more info */}
+      {/* <button
         className="persist-button"
         type="button"
         onClick={() => dispatch(toggleMode('persist'))}
@@ -87,6 +87,18 @@ function ButtonsContainer(): JSX.Element {
           <FontAwesomeIcon icon={faMapPin} />
         )}
         {persist ? 'Unpersist' : 'Persist'}
+      </button> */}
+      <button
+        className="split-button"
+        type="button"
+        onClick={() => dispatch(toggleSplit())}
+      >
+        {persist ? (
+          <FontAwesomeIcon icon={faRedoAlt} />
+        ) : (
+          <FontAwesomeIcon icon={faMapPin} />
+        )}
+        {split ? 'Unsplit' : 'Split'}
       </button>
       <button
         className="export-button"
@@ -109,7 +121,9 @@ function ButtonsContainer(): JSX.Element {
         type="button"
         onClick={() => howToUseHandler()}
       >
-        <FontAwesomeIcon icon={faQuestion} /> How to use
+        <FontAwesomeIcon icon={faQuestion} />
+        {' '}
+        How to use
       </button>
     </div>
   );

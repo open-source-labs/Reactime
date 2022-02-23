@@ -40,15 +40,13 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
     viewIndex,
     webMetrics,
     currLocation,
-    splitView,
-    setSplitView,
     // added snapshots, Rob 11/4
     snapshots,
   } = props;
 
   return (
     <Router>
-      <div className="state">
+      <div className="state-container">
         <div className="main-navbar-container">
           <div className="main-navbar-text" />
           <div className="main-navbar">
@@ -58,7 +56,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
               exact
               to="/"
             >
-              STATE
+              State
             </NavLink>
             <NavLink
               className="main-router-link"
@@ -67,7 +65,6 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
             >
               Diff
             </NavLink>
-            <button type="button"> SplitView</button>
           </div>
         </div>
         <Switch>
