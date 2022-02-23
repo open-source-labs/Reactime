@@ -200,6 +200,11 @@ function MainContainer(): any {
         />
         <div>
         <Split  
+
+        //notes Split built in Styling you can give 
+        //within its own component.
+        // scss file is limiting where State Container can g
+        //docs  https://github.com/nathancahill/split/tree/master/packages/splitjs
           sizes={[75, 150]}
           minSize={200}
           expandToMin={false}
