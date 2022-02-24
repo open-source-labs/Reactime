@@ -166,36 +166,54 @@ export default (state, action) => produce(state, draft => {
     case types.EMPTY: {
       port.postMessage({ action: 'emptySnap', tabId: currentTab });
       tabs[currentTab].sliderIndex = 0;
-      tabs[currentTab].viewIndex = -1;
+      tabs[currentTab].viewIndex = 0;
       tabs[currentTab].playing = false;
-      // activates empty mode
-      tabs[currentTab].mode.empty = true;
-      // records snapshot of page initial state
-      tabs[currentTab].initialSnapshot.push(tabs[currentTab].snapshots[0]);
-      // resets snapshots to page last state recorded
-      // eslint-disable-next-line max-len
-      tabs[currentTab].snapshots = [
-        tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1],
-      ];
-      // records hierarchy of page initial state
-      tabs[currentTab].initialHierarchy = { ...tabs[currentTab].hierarchy };
-      tabs[currentTab].initialHierarchy.children = [];
+      const lastSnapshot = tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1];
+      // resets hierarchy to page last state recorded
+      tabs[currentTab].hierarchy.stateSnapshot = { ...lastSnapshot };
       // resets hierarchy
       tabs[currentTab].hierarchy.children = [];
-      // resets hierarchy to page last state recorded
-      // eslint-disable-next-line prefer-destructuring
-      tabs[currentTab].hierarchy.stateSnapshot = tabs[currentTab].snapshots[0];
+      // resets snapshots to page last state recorded
+      tabs[currentTab].snapshots = [lastSnapshot];
       // resets currLocation to page last state recorded
       tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
-      // resets index
-      tabs[currentTab].index = 0;
-      // resets currParent plus current state
+      tabs[currentTab].index = 1;
       tabs[currentTab].currParent = 1;
-      // resets currBranch
       tabs[currentTab].currBranch = 0;
-      // resets series saved status
       tabs[currentTab].seriesSavedStatus = false;
       break;
+      // port.postMessage({ action: 'emptySnap', tabId: currentTab });
+      // tabs[currentTab].sliderIndex = 0;
+      // tabs[currentTab].viewIndex = -1;
+      // tabs[currentTab].playing = false;
+      // // activates empty mode
+      // tabs[currentTab].mode.empty = true;
+      // // records snapshot of page initial state
+      // tabs[currentTab].initialSnapshot.push(tabs[currentTab].snapshots[0]);
+      // // resets snapshots to page last state recorded
+      // // eslint-disable-next-line max-len
+      // tabs[currentTab].snapshots = [
+      //   tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1],
+      // ];
+      // // records hierarchy of page initial state
+      // tabs[currentTab].initialHierarchy = { ...tabs[currentTab].hierarchy };
+      // tabs[currentTab].initialHierarchy.children = [];
+      // // resets hierarchy
+      // tabs[currentTab].hierarchy.children = [];
+      // // resets hierarchy to page last state recorded
+      // // eslint-disable-next-line prefer-destructuring
+      // tabs[currentTab].hierarchy.stateSnapshot = tabs[currentTab].snapshots[0];
+      // // resets currLocation to page last state recorded
+      // tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+      // // resets index
+      // tabs[currentTab].index = 0;
+      // // resets currParent plus current state
+      // tabs[currentTab].currParent = 1;
+      // // resets currBranch
+      // tabs[currentTab].currBranch = 0;
+      // // resets series saved status
+      // tabs[currentTab].seriesSavedStatus = false;
+      // break;
     }
     case types.SET_PORT: {
       draft.port = action.payload;

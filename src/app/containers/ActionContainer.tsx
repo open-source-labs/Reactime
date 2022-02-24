@@ -21,24 +21,6 @@ function ActionContainer(props): JSX.Element {
   let actionsArr = [];
   const hierarchyArr: any[] = [];
 
-  function findStateChangeObj(delta, changedState = []) {
-    if (!delta.children && !delta.state) {
-      return changedState;
-    }
-    if (delta.state && delta.state[0] !== 'stateless') {
-      changedState.push(delta.state);
-    }
-    if (!delta.children) {
-      return changedState;
-    }
-    Object.keys(delta.children).forEach(child => {
-      // if (isNaN(child) === false) {
-      changedState.push(...findStateChangeObj(delta.children[child]));
-      // }
-    });
-    return changedState;
-  }
-
   // function to traverse state from hierarchy and also getting information on display name and component name
   const displayArray = (obj: {
     stateSnapshot: { children: any[] };

@@ -44,10 +44,10 @@ function createTabObj(title) {
       reactDevToolsInstalled: false,
       targetPageisaReactApp: false,
     },
+    // Note: Persist is a now defunct feature. Paused = Locked
     mode: {
       persist: false,
       paused: false,
-      empty: false,
     },
     // stores web metrics calculated by the content script file
     webMetrics: {},
@@ -177,19 +177,10 @@ chrome.runtime.onConnect.addListener(port => {
         tabsObj[tabId].snapshots = payload;
         return true;
       case 'emptySnap':
-        // activates empty mode
-        tabsObj[tabId].mode.empty = true;
-        // records snapshot of page initial state
-        tabsObj[tabId].initialSnapshot.push(tabsObj[tabId].snapshots[0]);
         // reset snapshots to page last state recorded
         tabsObj[tabId].snapshots = [
           tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1],
         ];
-        // records hierarchy of page initial state
-        tabsObj[tabId].initialHierarchy = {
-          ...tabsObj[tabId].hierarchy,
-          children: [],
-        };
         // resets hierarchy
         tabsObj[tabId].hierarchy.children = [];
         // resets hierarchy to page last state recorded
@@ -198,17 +189,15 @@ chrome.runtime.onConnect.addListener(port => {
         };
         // resets currLocation to page last state recorded
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
-        // resets index
-        tabsObj[tabId].index = 0;
-        // resets currParent plus current state
-        tabsObj[tabId].currParent = 1;
-        // resets currBranch
+        tabsObj[tabId].index = 1;
+        tabsObj[tabId].currParent = 0;
         tabsObj[tabId].currBranch = 0;
         return true;
-      // "Pause" is a deprecated feature from a previous Reactime version.
+      // Pause = lock on tab
       case 'setPause':
         tabsObj[tabId].mode.paused = payload;
         return true;
+      // persist is now depreacted
       case 'setPersist':
         tabsObj[tabId].mode.persist = payload;
         return true;
