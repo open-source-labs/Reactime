@@ -12,8 +12,8 @@ const override = css`
 
 // Displays the result of the check when loading is done
 const handleResult = (result: boolean): JSX.Element => (result
-  ? <FontAwesomeIcon className="check" icon={faCheck} size="lg" />
-  : <FontAwesomeIcon className="fail" icon={faExclamationCircle} size="lg" />
+  ? <FontAwesomeIcon icon={faCheck} className="check" size="lg" />
+  : <FontAwesomeIcon icon={faExclamationCircle} className="fail" size="lg" />
 );
 
 // Returns the Loader component
