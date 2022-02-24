@@ -1,4 +1,6 @@
 /* eslint-disable react/prop-types */
+
+
 import React from 'react';
 import { css } from '@emotion/react';
 import { ClipLoader } from 'react-spinners';
@@ -12,6 +14,7 @@ const override = css`
 
 // Displays the result of the check when loading is done
 const handleResult = (result: boolean): JSX.Element => (result
+  /* tslint:disable-next-line */
   ? <FontAwesomeIcon icon={faCheck} className="check" size="lg" />
   : <FontAwesomeIcon icon={faExclamationCircle} className="fail" size="lg" />
 );
