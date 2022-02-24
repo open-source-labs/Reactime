@@ -4,7 +4,7 @@ import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
   const {
-    port, currentTab, currentTitle, tabs,
+    port, currentTab, currentTitle, split, tabs,
   } = draft;
   const {
     hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex,
@@ -314,6 +314,10 @@ export default (state, action) => produce(state, draft => {
         const { reactDevToolsInstalled } = payload[currentTab].status;
         tabs[currentTab].status.reactDevToolsInstalled = reactDevToolsInstalled;
       }
+      break;
+    }
+    case types.TOGGLE_SPLIT: {
+      draft.split = !draft.split;
       break;
     }
     case types.SET_CURRENT_LOCATION: {

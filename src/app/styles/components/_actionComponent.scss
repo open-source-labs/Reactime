@@ -13,18 +13,6 @@
   @extend %disable-highlight;
 }
 
-// .action-component {
-//   padding: 5px 10px;
-//   display: flex;
-//   height: 20px;
-//   background-color: $brand-color;
-//   border-bottom-style: solid;
-//   border-bottom-width: 1px;
-//   border-color: $border-color;
-//   cursor: pointer;
-//   overflow: hidden;
-//   @extend %disable-highlight;
-// }
 .action-component-text {
   margin-bottom: 8px;
 }
@@ -44,7 +32,7 @@
 
 .action-component-trigger {
   display: grid;
-  grid-template-columns: 5fr 1fr;
+  grid-template-columns: 4fr 1fr;
   align-items: center;
   height: 20px;
   cursor: pointer;

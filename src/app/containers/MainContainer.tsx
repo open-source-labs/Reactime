@@ -1,10 +1,12 @@
 /* eslint-disable max-len */
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
+import Split from 'react-split';
 import ActionContainer from './ActionContainer';
-import StateContainer from './StateContainer';
 import TravelContainer from './TravelContainer';
 import ButtonsContainer from './ButtonsContainer';
 import ErrorContainer from './ErrorContainer';
+import StateContainer from './StateContainer';
 import {
   addNewSnapshots,
   initialConnect,
@@ -13,12 +15,15 @@ import {
   deleteTab,
   noDev,
   setCurrentLocation,
+  pause,
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
-  const { tabs, currentTab, port: currentPort } = store;
+  const {
+    tabs, currentTab, port: currentPort, split,
+  } = store;
   const [actionView, setActionView] = useState(true);
   // this function handles Time Jump sidebar view
   const toggleActionContainer = () => {
@@ -140,15 +145,10 @@ function MainContainer(): any {
   const snapshotDisplay = statelessCleaning(snapshotView);
   const hierarchyDisplay = statelessCleaning(hierarchy);
 
-  return (
-    <div className="main-container">
-      <div id="bodyContainer" className="body-container1">
-        <ActionContainer
-          actionView={actionView}
-          setActionView={setActionView}
-          toggleActionContainer={toggleActionContainer}
-        />
-        {snapshots.length ? (
+  function handleSplit(currentSplitMode: boolean): JSX.Element {
+    if (!currentSplitMode) {
+      return (
+        <div className="state-container-container">
           <StateContainer
             webMetrics={webMetrics}
             viewIndex={viewIndex}
@@ -157,7 +157,51 @@ function MainContainer(): any {
             snapshots={snapshots}
             currLocation={currLocation}
           />
-        ) : null}
+        </div>
+      );
+    }
+    return (
+      <Split
+        sizes={[50, 50]}
+        minSize={200}
+        snapOffset={1}
+        className="split"
+        gutterStyle={function () {
+          return {
+            backgroundColor: 'dimgrey',
+            width: '8px',
+          };
+        }}
+      >
+        <StateContainer
+          webMetrics={webMetrics}
+          viewIndex={viewIndex}
+          snapshot={snapshotDisplay}
+          hierarchy={hierarchyDisplay}
+          snapshots={snapshots}
+          currLocation={currLocation}
+        />
+        <StateContainer
+          webMetrics={webMetrics}
+          viewIndex={viewIndex}
+          snapshot={snapshotDisplay}
+          hierarchy={hierarchyDisplay}
+          snapshots={snapshots}
+          currLocation={currLocation}
+        />
+      </Split>
+    );
+  }
+
+  return (
+    <div className="main-container">
+      <div id="bodyContainer" className="body-container">
+        <ActionContainer
+          actionView={actionView}
+          setActionView={setActionView}
+          toggleActionContainer={toggleActionContainer}
+        />
+        {snapshots.length ? (handleSplit(split)) : null}
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
       </div>

@@ -62,7 +62,7 @@ const StateRoute = (props: StateRouteProps) => {
   const renderComponentMap = () => {
     if (hierarchy) {
       return (
-        <ParentSize>
+        <ParentSize className="componentMapContainer">
           {({ width, height }) => (
             <ComponentMap snapshots={snapshots} width={width} height={height} />
           )}

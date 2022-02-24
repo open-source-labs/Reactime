@@ -1,13 +1,7 @@
 .state-container {
-  font-size: 12px;
+  font-size: 10px;
   overflow: auto;
   background-color: $brand-color;
-}
-
-#componentMapContainer,
-#historyContainer,
-#atomsContainer {
-  overflow: hidden;
 }
 
 .toggleAC {
@@ -44,6 +38,10 @@
   margin: 6px;
 }
 
+.state-container .componentMapContainer{
+  height: 95% !important;
+}
+
 .state-container .main-navbar-container {
   position: sticky;
   top: 0px;
@@ -75,10 +73,10 @@
 .state-container {
   .main-navbar-text {
     margin: 6px;
-    font-size: 14px;
   }
 
   .main-router-link {
+    font-size: 14px;
     height: 75%;
     width: 75px;
     display: flex;
@@ -215,3 +213,9 @@
 .bargraph-position {
   position: relative;
 }
+
+
+/* if state view is  width is less than 500px, stack the body containers */
+// @media (max-width: 500px) {
+
+// }

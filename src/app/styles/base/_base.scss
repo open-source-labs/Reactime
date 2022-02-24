@@ -20,7 +20,10 @@ body {
   grid-area: actions;
   transition: 0.5s;
 }
-.state-container {
+.state-container-container {
+  grid-area: states;
+}
+.split {
   grid-area: states;
 }
 .buttons-container {

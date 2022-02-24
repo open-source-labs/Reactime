@@ -60,17 +60,19 @@
 	}
 
 	.launchContentButton {
-		padding: 3px;
-		outline: transparent;
-		color: white;
-		border-style: solid;
-		border-color: transparent;
-		border-radius: 3px;
-		cursor: pointer;
-		line-height: 1.5em;
-		font: 300 14px 'Roboto', sans-serif;
-		font-size: $button-text-size;
-		width: 120px;
-		background: $red-color-gradient;
+		background: $blue-brand;
+    color: $brand-color;
+    margin: 3px;
+		padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid rgb(36, 37, 41);
 	}
+
+	.launchContentButton:hover {
+    background: $light-background-color;
+  }
+
+	.launchContentButton:active {
+		box-shadow: 1px 1px 10px black;
+  }
 }
