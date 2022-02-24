@@ -3,7 +3,7 @@
   overflow: hidden;
   display: grid;
   grid-template-columns: min-content 1fr;
-  grid-template-rows: 8fr 1fr;
+  grid-template-rows: 90% 5% 5%;
   grid-template-areas:
     'actions states'
     'travel travel'

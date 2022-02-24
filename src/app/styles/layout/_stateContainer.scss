@@ -2,9 +2,7 @@
   font-size: 10px;
   overflow: auto;
   background-color: $brand-color;
-  overflow-y: auto;
 }
-
 
 .toggleAC {
   // color: #00dffc;
@@ -38,6 +36,10 @@
   align-items: center;
   height: 35px;
   margin: 6px;
+}
+
+.state-container .componentMapContainer{
+  height: 95% !important;
 }
 
 .state-container .main-navbar-container {
@@ -211,6 +213,7 @@
 .bargraph-position {
   position: relative;
 }
+
 
 /* if state view is  width is less than 500px, stack the body containers */
 // @media (max-width: 500px) {
