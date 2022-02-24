@@ -307,6 +307,19 @@ export default (state, action) => produce(state, draft => {
       draft.split = !draft.split;
       break;
     }
+    case types.TOGGLE_EXPANDED: {
+      const name = action.payload;
+      const currentSnapshot = tabs[currentTab].snapshots[tabs[currentTab].sliderIndex];
+      console.log('in main reducer: payload', name);
+      console.log('in main reducer: tabs[currentTab].snapshots[index]', currentSnapshot);
+      // recursive check through all to see if any in the hierarchy share the name
+      Object.keys(currentSnapshot).forEach(e => {
+        console.log(e);
+        console.log(currentSnapshot[e]);
+        if (e === name) { console.log('true'); }
+      });
+      break;
+    }
     case types.SET_CURRENT_LOCATION: {
       const { payload } = action;
       const { currLocation } = payload[currentTab];

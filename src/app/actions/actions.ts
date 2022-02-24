@@ -7,7 +7,7 @@ export const save = (tabsObj) => ({
 });
 export const deleteSeries = () => ({
   type: types.DELETE_SERIES,
-})
+});
 export const toggleMode = (mode) => ({
   type: types.TOGGLE_MODE,
   payload: mode,
@@ -88,6 +88,11 @@ export const noDev = (tab) => ({
 
 export const toggleSplit = () => ({
   type: types.TOGGLE_SPLIT,
+});
+
+export const toggleExpanded = (name) => ({
+  type: types.TOGGLE_EXPANDED,
+  payload: name,
 });
 
 export const launchContentScript = (tab) => ({
