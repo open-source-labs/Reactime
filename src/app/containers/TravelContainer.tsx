@@ -48,6 +48,7 @@ function TravelContainer(props:TravelContainerProps) {
 
   return (
     <div className="travel-container">
+      
       <button
         className="play-button"
         type="button"

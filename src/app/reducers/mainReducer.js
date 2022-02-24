@@ -1,10 +1,11 @@
-import { produce, original } from 'immer';
-import { debuglog } from 'util';
+import { produce } from 'immer';
 
 import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
-  const { port, currentTab, tabs } = draft;
+  const {
+    port, currentTab, tabs,
+  } = draft;
   const {
     hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex,
   } = tabs[currentTab] || {};
@@ -84,7 +85,7 @@ export default (state, action) => produce(state, draft => {
         // eslint-disable-next-line max-len
         // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
         const nameFromIndex = findName(newIndex, hierarchy);
-        
+
         port.postMessage({
           action: 'jumpToSnap',
           payload: snapshots[newIndex],
@@ -151,7 +152,7 @@ export default (state, action) => produce(state, draft => {
       // finds the name by the action.payload parsing through the hierarchy to send to background.js the current name in the jump action
       const nameFromIndex = findName(action.payload, hierarchy);
       // nameFromIndex is a number based on which jump button is pushed
-      
+
       port.postMessage({
         action: 'jumpToSnap',
         payload: snapshots[action.payload],
@@ -163,36 +164,23 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.EMPTY: {
+      // send msg to background script
       port.postMessage({ action: 'emptySnap', tabId: currentTab });
       tabs[currentTab].sliderIndex = 0;
-      tabs[currentTab].viewIndex = -1;
+      tabs[currentTab].viewIndex = 0;
       tabs[currentTab].playing = false;
-      // activates empty mode
-      tabs[currentTab].mode.empty = true;
-      // records snapshot of page initial state
-      tabs[currentTab].initialSnapshot.push(tabs[currentTab].snapshots[0]);
-      // resets snapshots to page last state recorded
-      // eslint-disable-next-line max-len
-      tabs[currentTab].snapshots = [
-        tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1],
-      ];
-      // records hierarchy of page initial state
-      tabs[currentTab].initialHierarchy = { ...tabs[currentTab].hierarchy };
-      tabs[currentTab].initialHierarchy.children = [];
+      const lastSnapshot = tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1];
+      // resets hierarchy to page last state recorded
+      tabs[currentTab].hierarchy.stateSnapshot = { ...lastSnapshot };
       // resets hierarchy
       tabs[currentTab].hierarchy.children = [];
-      // resets hierarchy to page last state recorded
-      // eslint-disable-next-line prefer-destructuring
-      tabs[currentTab].hierarchy.stateSnapshot = tabs[currentTab].snapshots[0];
+      // resets snapshots to page last state recorded
+      tabs[currentTab].snapshots = [lastSnapshot];
       // resets currLocation to page last state recorded
       tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
-      // resets index
-      tabs[currentTab].index = 0;
-      // resets currParent plus current state
-      tabs[currentTab].currParent = 1;
-      // resets currBranch
-      tabs[currentTab].currBranch = 0;
-      // resets series saved status
+      tabs[currentTab].index = 1;
+      tabs[currentTab].currParent = 0;
+      tabs[currentTab].currBranch = 1;
       tabs[currentTab].seriesSavedStatus = false;
       break;
     }
@@ -282,23 +270,41 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.SET_TAB: {
-      if (typeof action.payload === 'number') {
-        draft.currentTab = action.payload;
-        break;
-      } else if (typeof action.payload === 'object') {
-        draft.currentTab = action.payload.tabId;
-        break;
+      if (!mode?.paused) {
+        if (typeof action.payload === 'number') {
+          draft.currentTab = action.payload;
+          break;
+        } else if (typeof action.payload === 'object') {
+          draft.currentTab = action.payload.tabId;
+          if (action.payload?.title) draft.currentTitle = action.payload.title;
+          break;
+        }
       }
       break;
     }
     case types.DELETE_TAB: {
       delete draft.tabs[action.payload];
-      if (draft.currentTab === action.payload) {
-        // if the deleted tab was set to currentTab, replace currentTab with
-        // the first tabId within tabs obj
-        const newCurrentTab = parseInt(Object.keys(draft.tabs)[0], 10);
-        draft.currentTab = newCurrentTab;
+      break;
+    }
+    case types.LAUNCH_CONTENT: {
+      // Fired when user clicks launch button on the error page. Send msg to background to launch
+      port.postMessage({
+        action: 'launchContentScript',
+        payload: action.payload,
+        tabId: currentTab,
+      });
+      break;
+    }
+    case types.NO_DEV: {
+      const { payload } = action;
+      if (tabs[currentTab]) {
+        const { reactDevToolsInstalled } = payload[currentTab].status;
+        tabs[currentTab].status.reactDevToolsInstalled = reactDevToolsInstalled;
       }
+      break;
+    }
+    case types.TOGGLE_SPLIT: {
+      draft.split = !draft.split;
       break;
     }
     case types.SET_CURRENT_LOCATION: {

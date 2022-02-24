@@ -5,7 +5,6 @@
 import React from 'react';
 import ReactHover, { Trigger, Hover } from 'react-hover';
 import { changeView, changeSlider } from '../actions/actions';
-import snapshots from './snapshots';
 
 /**
  * @template ActionProps Props for the action component
@@ -25,7 +24,6 @@ interface ActionProps {
   viewIndex: number;
   isCurrIndex: boolean;
   handleOnkeyDown: (e: any, i: number) => any;
-  logChangedState: (index: number) => any;
 }
 
 /**
@@ -57,7 +55,6 @@ const Action = (props: ActionProps): JSX.Element => {
     viewIndex,
     isCurrIndex,
     handleOnkeyDown,
-    logChangedState,
   } = props;
 
   /**
@@ -117,7 +114,6 @@ const Action = (props: ActionProps): JSX.Element => {
           <div className="action-component-trigger" style={index > sliderIndex ? { color: '#5f6369' } : {}}>
             <div className="action-component-text">
               {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `}
-              {/* {`displayName: ${displayName}`} */}
             </div>
             <button className="time-button" type="button">
               {displayTime}
@@ -148,11 +144,7 @@ const Action = (props: ActionProps): JSX.Element => {
             }
           </div>
         </Trigger>
-        <Hover type="hover">
-          <div style={{ zIndex: 1, position: 'relative', padding: '0.5rem 1rem' }} id="hover-box">
-            <p>{(logChangedState(index))}</p>
-          </div>
-        </Hover>
+        <Hover type="hover" />
       </ReactHover>
     </div>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
@@ -76,7 +77,7 @@ export default function ComponentMap({
   const [linkType, setLinkType] = useState('diagonal');
   const [stepPercent, setStepPercent] = useState(10);
   const [tooltip, setTooltip] = useState(false);
-  const [expanded, setExpanded] = useState();
+  // const [expanded, setExpanded] = useState();
   const [selectedNode, setSelectedNode] = useState('root');
 
   // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
@@ -141,6 +142,7 @@ export default function ComponentMap({
   const scrollStyle = {
     minWidth: '60',
     maxWidth: '300',
+    minHeight: '20px',
     maxHeight: '200px',
     overflowY: 'scroll',
     overflowWrap: 'break-word',
@@ -154,23 +156,6 @@ export default function ComponentMap({
   // places all nodes into a flat array
   const nodeList = [];
 
-  // if (exclude.includes(key) === true) {
-  //   nestedObj[key] = 'react related';
-  // }
-  // if (typeof data[key] === 'object' && exclude.includes(key) !== true) {
-  //   nestedObj = makePropsPretty(data[key]);
-  //   if (Array.isArray(nestedObj)) {
-  //     try {
-  //       if (nestedObj[0].$$typeof) {
-  //         nestedObj = null;
-  //       } else {
-  //         nestedObj = nestedObj.forEach(e => makePropsPretty(e));
-  //       }
-  //     } catch (error) {
-  //     }
-  //   }
-  // }
-
   const makePropsPretty = data => {
     const propsFormat = [];
     const nestedObj = [];
@@ -178,7 +163,7 @@ export default function ComponentMap({
       if (data[key] !== 'reactFiber' && typeof data[key] !== 'object' && exclude.includes(key) !== true) {
         propsFormat.push(<p className="stateprops">
           {`${key}: ${data[key]}`}
-        </p>);
+                         </p>);
       } else if (data[key] !== 'reactFiber' && typeof data[key] === 'object' && exclude.includes(key) !== true) {
         const result = makePropsPretty(data[key]);
         nestedObj.push(result);
@@ -189,6 +174,35 @@ export default function ComponentMap({
     }
 
     return propsFormat;
+  };
+
+  const formatState = state => {
+    if (state === 'stateless') return ['stateless'];
+
+    const result = [];
+
+    const inner = arg => {
+      if (Array.isArray(arg)) {
+        result.push('[');
+        arg.forEach(e => { inner(e); });
+        result.push('] ');
+      } else if ((typeof arg) === 'object') {
+        result.push('{ ');
+        Object.keys(arg).forEach((key, i, arr) => {
+          result.push(`${key}: `);
+          ((typeof arg[key]) === 'object') ? inner(arg[key]) : result.push(arg[key]);
+          if (i !== arr.length - 1) result.push(', ');
+        });
+        result.push(' } ');
+      } else {
+        result.push(` ${arg}, `);
+      }
+    };
+
+
+    inner(state);
+    console.log(result);
+    return result;
   };
 
   const collectNodes = node => {
@@ -236,9 +250,16 @@ export default function ComponentMap({
 
       <svg ref={containerRef} width={totalWidth} height={totalHeight}>
         <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
-        <rect onClick={() => {
+        <rect
+          onClick={() => {
             setTooltip(false);
-            hideTooltip();}} width={totalWidth} height={totalHeight} rx={14} fill="#242529" />
+            hideTooltip();
+          }}
+          width={totalWidth}
+          height={totalHeight}
+          rx={14}
+          fill="#242529"
+        />
         <Group top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(startNode || data, d => (d.isExpanded ? null : d.children))}
@@ -284,13 +305,17 @@ export default function ComponentMap({
 
                   // mousing controls & Tooltip display logic
                   const handleMouseAndClickOver = event => {
-                    () => dispatch(onHover(node.data.rtid));
+                    // looks like onHover isnt working?
+                    // () => dispatch(onHover(node.data.rtid));
                     const coords = localPoint(
                       event.target.ownerSVGElement,
                       event,
                     );
                     const tooltipObj = { ...node.data };
-                    if (typeof tooltipObj.state === 'object') tooltipObj.state = 'stateful';
+                    // console.log(node.data);
+                    // if (typeof tooltipObj.state === 'object') {
+                    //   tooltipObj.state = JSON.stringify(tooltipObj.state);
+                    // }
                     showTooltip({
                       tooltipLeft: coords.x,
                       tooltipTop: coords.y,
@@ -327,30 +352,36 @@ export default function ComponentMap({
                           // strokeDasharray={node.children ? '0' : '2,2'}
                           strokeOpacity="1"
                           rx={node.children ? 4 : 10}
-                          onDoubleClick={() => {
+                          // double clicking the component expands or collapses the child components
+                          // onDoubleClick={() => {
+                          //   node.data.isExpanded = !node.data.isExpanded;
+                          //   hideTooltip();
+                          //   setTooltip(false);
+                          //   forceUpdate();
+                          // }}
+                          // Tooltip event handlers
+                          // test feature
+                          // onClick = {handleMouseAndClickOver}
+                          onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
                             hideTooltip();
                             setTooltip(false);
                             forceUpdate();
                           }}
-                          // Tooltip event handlers
-                          // test feature
-                          // onClick = {handleMouseAndClickOver}
-                          onClick={event => {
-                            if (!tooltip) {
-                              handleMouseAndClickOver(event);
-                              setTooltip(true);
-                            }
-                            // if (tooltip) { // cohort 45
-                            //   hideTooltip();
-                            //   setTooltip(false);
-                            // } else {
-                            //   handleMouseAndClickOver(event);
-                            //   setTooltip(true);
-                            // }
+
+                          onMouseOver={event => {
+                            setTooltip(true);
+                            handleMouseAndClickOver(event);
                           }}
-                          onMouseEnter={() => dispatch(onHover(node.data.rtid))}
-                          onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
+                          // paired with onmouseOver listener, this produces a hover over effect for the component Tooltip
+                          onMouseOut={() => {
+                            hideTooltip();
+                            setTooltip(false);
+                          }}
+
+                          // onMouseEnter={() => dispatch(onHover(node.data.rtid))}
+                          // onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
+                          // eslint-disable-next-line react/jsx-curly-newline
                         />
                       )}
                       {/* Display text inside of each component node */}
@@ -405,9 +436,10 @@ export default function ComponentMap({
               {formatRenderTime(tooltipData.componentData.actualDuration)}
               {' '}
             </div>
-            <div>
+            <div className="stateTip">
               State:
-              {tooltipData.state}
+              {formatState(tooltipData.state)}
+              {/* {tooltipData.state} */}
             </div>
             <div style={scrollStyle}>
               <div className="props">

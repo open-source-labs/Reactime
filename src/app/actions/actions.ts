@@ -81,6 +81,20 @@ export const deleteTab = (tab) => ({
   payload: tab,
 });
 
+export const noDev = (tab) => ({
+  type: types.NO_DEV,
+  payload: tab,
+});
+
+export const toggleSplit = () => ({
+  type: types.TOGGLE_SPLIT,
+});
+
+export const launchContentScript = (tab) => ({
+  type: types.LAUNCH_CONTENT,
+  payload: tab,
+});
+
 export const resetSlider = () => ({
   type: types.SLIDER_ZERO,
 });

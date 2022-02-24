@@ -62,10 +62,10 @@ describe('testing the bottom buttons', () => {
       state.tabs[state.currentTab].mode.paused = true;
       wrapper = shallow(<ButtonsContainer />);
       expect(wrapper.find('.pause-button').text()).toBe('<FontAwesomeIcon />Unlock');
-    }); 
+    });
   });
 
-  describe('persist button testing', () => {
+  describe.skip('persist button testing', () => {
     beforeEach(() => {
       wrapper.find('.persist-button').simulate('click');
     });

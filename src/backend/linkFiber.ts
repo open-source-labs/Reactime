@@ -12,6 +12,7 @@
 /* eslint-disable no-param-reassign */
 
 // import typescript types
+import { element } from 'prop-types';
 import {
   // tree
   Snapshot,
@@ -32,7 +33,6 @@ import componentActionsRecord from './masterState';
 // getHooksNames - helper function to grab the getters/setters from `elementType`
 import { throttle, getHooksNames } from './helpers';
 import AtomsRelationship from '../app/components/AtomsRelationship';
-import { element } from 'prop-types';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -137,6 +137,17 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
   sendSnapshot(snap, mode);
 }
 
+// updating tree depending on current mode on the panel (pause, etc)
+// function sendDevToolsInfo(snap: Snapshot, mode: Mode): void {
+//   window.postMessage(
+//     {
+//       action: 'recordSnap',
+//       payload,
+//     },
+//     '*'
+//   );
+// }
+
 /**
  * @method traverseRecoilHooks
  * @param memoizedState  Property containing state on a stateful fctnl component's FiberNode object
@@ -211,8 +222,8 @@ let atomsComponents = {};
 const exclude = ['alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
 
 // This recursive function is used to grab the state of children components
-// and push them into the parent componenent 
-// react elements throw errors on client side of application - convert react/functions into string 
+// and push them into the parent componenent
+// react elements throw errors on client side of application - convert react/functions into string
 function convertDataToString(newObj, oldObj) {
   const newPropData = oldObj || {};
   // const newPropData = Array.isArray(obj) === true ? {} : [];
@@ -332,7 +343,7 @@ function createTree(
   } = {};
   let componentFound = false;
 
-  // check to see if the parent component has any state/props 
+  // check to see if the parent component has any state/props
   if (memoizedProps) {
     componentData.props = convertDataToString(memoizedProps, null);
   }
@@ -394,7 +405,7 @@ function createTree(
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseHooks(memoizedState);
       const hooksNames = getHooksNames(elementType.toString());
-      
+
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(
           state.state,
@@ -537,18 +548,26 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
   return () => {
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-    const reactInstance = devTools ? devTools.renderers.get(1) : null;
+    // check if reactDev Tools is installed
+    if (!devTools) { return; }
+    window.postMessage({
+      action: 'devToolsInstalled',
+      payload: 'devToolsInstalled'
+    }, '*');
     // reactInstance returns an object of the react
-    fiberRoot = devTools.getFiberRoots(1).values().next().value;
-    const throttledUpdateSnapshot = throttle(
-      () => {
-        updateSnapShotTree(snap, mode);
-      },
-      70
-    );
+    const reactInstance = devTools.renderers.get(1);
+    // if no React Instance found then target is not a compatible app
+    if (!reactInstance) { return; }
+    window.postMessage({
+      action: 'aReactApp',
+      payload: 'aReactApp'
+    }, '*');
+
+    const throttledUpdateSnapshot = throttle(() => { updateSnapShotTree(snap, mode); }, 70);
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     if (reactInstance && reactInstance.version) {
+      fiberRoot = devTools.getFiberRoots(1).values().next().value;
       devTools.onCommitFiberRoot = (function (original) {
         return function (...args) {
           // eslint-disable-next-line prefer-destructuring
@@ -559,7 +578,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
           return original(...args);
         };
       }(devTools.onCommitFiberRoot));
+      throttledUpdateSnapshot(); // only runs on start up
     }
-    throttledUpdateSnapshot();
   };
 };

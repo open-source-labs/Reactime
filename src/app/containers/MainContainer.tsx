@@ -1,26 +1,29 @@
+/* eslint-disable max-len */
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
+import Split from 'react-split';
 import ActionContainer from './ActionContainer';
-import StateContainer from './StateContainer';
 import TravelContainer from './TravelContainer';
 import ButtonsContainer from './ButtonsContainer';
+import ErrorContainer from './ErrorContainer';
+import StateContainer from './StateContainer';
 import {
   addNewSnapshots,
   initialConnect,
   setPort,
   setTab,
   deleteTab,
+  noDev,
   setCurrentLocation,
+  pause,
 } from '../actions/actions';
 import { useStoreContext } from '../store';
-import MPID from '../user_id/user_id';
 
-const mixpanel = require('mixpanel').init('12fa2800ccbf44a5c36c37bc9776e4c0', {
-  debug: false,
-  protocol: 'https',
-});
 function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
-  const { tabs, currentTab, port: currentPort } = store;
+  const {
+    tabs, currentTab, port: currentPort, split,
+  } = store;
   const [actionView, setActionView] = useState(true);
   // this function handles Time Jump sidebar view
   const toggleActionContainer = () => {
@@ -32,6 +35,7 @@ function MainContainer(): any {
   useEffect(() => {
     // only open port once
     if (currentPort) return;
+
     // open long-lived connection with background script
     const port = chrome.runtime.connect();
 
@@ -53,6 +57,10 @@ function MainContainer(): any {
             dispatch(deleteTab(payload));
             break;
           }
+          case 'devTools': {
+            dispatch(noDev(payload));
+            break;
+          }
           case 'changeTab': {
             dispatch(setTab(payload));
             break;
@@ -64,7 +72,6 @@ function MainContainer(): any {
             break;
           }
           case 'initialConnectSnapshots': {
-            dispatch(setTab(maxTab));
             dispatch(initialConnect(payload));
             break;
           }
@@ -87,63 +94,13 @@ function MainContainer(): any {
     dispatch(setPort(port));
   });
 
-  /**
-   * get set cookies for mixpanel analytics
-   * */
-  useEffect(() => {
-    /**
-     * create new user and attempt to read cookies
-     */
-    const user = new MPID();
-    /**
-     * If developing turn tracking off by setting user.debug to true;
-     * End goal: set an environment variable to automate this toggle
-     */
-    user.debug = false;
-
-    if (!user.debug) {
-      // set current user cookie if it does not exist in cookies;
-      if (user.checkDocumentCookie(document)) {
-        mixpanel.people.increment(user.get_dId(), 'times');
-      } else {
-        document.cookie = user.setCookie();
-        mixpanel.people.set(user.get_dId(), { times: 1 });
-      }
-    }
-
-    function mpClickTrack(e) {
-      if (!user.debug) {
-        mixpanel.track('click', {
-          distinct_id: user.distinct_id,
-          where: e?.target?.innerText,
-        });
-      }
-    }
-    document.addEventListener('click', mpClickTrack);
-  }, []);
-
-  if (!tabs[currentTab]) {
+  // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
+  if (!tabs[currentTab] || !tabs[currentTab].status.reactDevToolsInstalled || !tabs[currentTab].status.targetPageisaReactApp) {
     return (
-      <div className="error-container">
-        <img src="../assets/logo-no-version.png" height="50px" />
-        <a
-          href="https://reactime.io/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          No React application found. Please visit reactime.io to more info.
-        </a>
-        <p>
-          If you are using a React application, make sure tha you application is
-          running in development mode.
-          <br />
-          NOTE: The React Developer Tools extension is also required for
-          Reactime to run, if you do not already have it installed on your
-          browser.
-        </p>
-      </div>
+      <ErrorContainer />
     );
   }
+
   const {
     currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics,
   } = tabs[currentTab];
@@ -188,15 +145,10 @@ function MainContainer(): any {
   const snapshotDisplay = statelessCleaning(snapshotView);
   const hierarchyDisplay = statelessCleaning(hierarchy);
 
-  return (
-    <div className="main-container">
-      <div id="bodyContainer" className="body-container1">
-        <ActionContainer
-          actionView={actionView}
-          setActionView={setActionView}
-          toggleActionContainer={toggleActionContainer}
-        />
-        {snapshots.length ? (
+  function handleSplit(currentSplitMode: boolean): JSX.Element {
+    if (!currentSplitMode) {
+      return (
+        <div className="state-container-container">
           <StateContainer
             webMetrics={webMetrics}
             viewIndex={viewIndex}
@@ -205,7 +157,51 @@ function MainContainer(): any {
             snapshots={snapshots}
             currLocation={currLocation}
           />
-        ) : null}
+        </div>
+      );
+    }
+    return (
+      <Split
+        sizes={[50, 50]}
+        minSize={200}
+        snapOffset={1}
+        className="split"
+        gutterStyle={function () {
+          return {
+            backgroundColor: 'dimgrey',
+            width: '8px',
+          };
+        }}
+      >
+        <StateContainer
+          webMetrics={webMetrics}
+          viewIndex={viewIndex}
+          snapshot={snapshotDisplay}
+          hierarchy={hierarchyDisplay}
+          snapshots={snapshots}
+          currLocation={currLocation}
+        />
+        <StateContainer
+          webMetrics={webMetrics}
+          viewIndex={viewIndex}
+          snapshot={snapshotDisplay}
+          hierarchy={hierarchyDisplay}
+          snapshots={snapshots}
+          currLocation={currLocation}
+        />
+      </Split>
+    );
+  }
+
+  return (
+    <div className="main-container">
+      <div id="bodyContainer" className="body-container">
+        <ActionContainer
+          actionView={actionView}
+          setActionView={setActionView}
+          toggleActionContainer={toggleActionContainer}
+        />
+        {snapshots.length ? (handleSplit(split)) : null}
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
       </div>

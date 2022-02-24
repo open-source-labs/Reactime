@@ -8,7 +8,6 @@ import {
 } from 'react-router-dom';
 import StateRoute from '../components/StateRoute';
 import DiffRoute from '../components/DiffRoute';
-
 interface StateContainerProps {
   snapshot: Record<
     number,

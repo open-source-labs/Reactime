@@ -12,6 +12,7 @@ import ActionContainer from '../containers/ActionContainer';
 import StateContainer from '../containers/StateContainer';
 import TravelContainer from '../containers/TravelContainer';
 import ButtonsContainer from '../containers/ButtonsContainer';
+import ErrorContainer from '../containers/ErrorContainer';
 
 const chrome = require('sinon-chrome');
 
@@ -46,9 +47,7 @@ beforeEach(() => {
 
 describe('MainContainer rendering', () => {
   test('With no snapshots, should not render any containers', () => {
-    expect(wrapper.text()).toEqual(
-      'No React application found. Please visit reactime.io to more info.If you are using a React application, make sure tha you application is running in development mode.NOTE: The React Developer Tools extension is also required for Reactime to run, if you do not already have it installed on your browser.',
-    );
+    expect(wrapper.find(ErrorContainer).length).toBe(1);
     expect(wrapper.find(ActionContainer).length).toBe(0);
     expect(wrapper.find(StateContainer).length).toBe(0);
     expect(wrapper.find(TravelContainer).length).toBe(0);
@@ -58,6 +57,7 @@ describe('MainContainer rendering', () => {
     state.currentTab = 87;
     state.tabs[87] = {
       snapshots: [{}],
+      status: { contentScriptLaunched: true, reactDevToolsInstalled: true, targetPageisaReactApp: true },
       viewIndex: -1,
       sliderIndex: 0,
       mode: {},

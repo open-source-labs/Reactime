@@ -1,13 +1,7 @@
 .state-container {
-  font-size: 12px;
+  font-size: 10px;
   overflow: auto;
   background-color: $brand-color;
-}
-
-#componentMapContainer,
-#historyContainer,
-#atomsContainer {
-  overflow: hidden;
 }
 
 .toggleAC {
@@ -44,6 +38,10 @@
   margin: 6px;
 }
 
+.state-container .componentMapContainer{
+  height: 95% !important;
+}
+
 .state-container .main-navbar-container {
   position: sticky;
   top: 0px;
@@ -75,10 +73,10 @@
 .state-container {
   .main-navbar-text {
     margin: 6px;
-    font-size: 14px;
   }
 
   .main-router-link {
+    font-size: 14px;
     height: 75%;
     width: 75px;
     display: flex;
@@ -215,3 +213,40 @@
 .bargraph-position {
   position: relative;
 }
+
+// tool tip styles
+
+
+.visx-tooltip{
+  overflow-y: auto;
+  overflow-wrap: break-word;
+  pointer-events:all !important;
+}
+.props, .stateTip{
+  margin-top: 3px;
+  line-height: 1;
+  height: 100%;
+  overflow-y: hidden;
+  max-height: 400px;
+}
+.props{
+  margin-top: 3px;
+}
+.props p{
+  line-height:1;
+  margin-top: 3px;
+  margin-bottom: 0px;
+}
+.stateTip p{
+  line-height:1;
+  margin-top: 3px;
+  margin-bottom: 0px;
+}
+.historyToolTip{
+  z-index: 2;
+}
+
+/* if state view is  width is less than 500px, stack the body containers */
+// @media (max-width: 500px) {
+
+// }
