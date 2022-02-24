@@ -12,7 +12,6 @@ describe('mainReducer testing', () => {
     state = {
       tabs: {
         87: {
-          initialSnapshot: [],
           snapshots: [1, 2, 3, 4],
           sliderIndex: 2,
           viewIndex: -1,
@@ -24,7 +23,6 @@ describe('mainReducer testing', () => {
           intervalId: 87,
           playing: true,
           index: 3,
-          initialHierarchy: null,
           // should be a linked list with four nodes
           hierarchy: {
             index: 0,
@@ -84,7 +82,6 @@ describe('mainReducer testing', () => {
           currLocation: 4,
         },
         75: {
-          initialSnapshot: [],
           snapshots: [1, 2, 3, 4],
           sliderIndex: 3,
           viewIndex: -1,
@@ -95,7 +92,6 @@ describe('mainReducer testing', () => {
           },
           intervalId: 75,
           playing: false,
-          initialHierarchy: null,
           // should be a linked list with four nodes
           hierarchy: {
             index: 0,
@@ -213,7 +209,7 @@ describe('mainReducer testing', () => {
   describe('empty', () => {
     it('should empty snapshots except the first one', () => {
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab].sliderIndex).toEqual(0);
-      expect(mainReducer(state, emptySnapshots()).tabs[currentTab].viewIndex).toEqual(-1);
+      expect(mainReducer(state, emptySnapshots()).tabs[currentTab].viewIndex).toEqual(0);
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab].playing).toEqual(false);
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab]
         .snapshots).toEqual([state.tabs[currentTab].snapshots[state.tabs[currentTab].snapshots.length - 1]]);

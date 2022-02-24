@@ -24,8 +24,6 @@ function createTabObj(title) {
     title,
     // snapshots is an array of ALL state snapshots for stateful and stateless components the Reactime tab working on a specific user application
     snapshots: [],
-    // records initial snapshot to refresh page in case empty function is called
-    initialSnapshot: [],
     // index here is the tab index that shows total amount of state changes
     index: 0,
     //* this is our pointer so we know what the current state the user is checking (this accounts for time travel aka when user clicks jump on the UI)
@@ -36,8 +34,6 @@ function createTabObj(title) {
     currBranch: 0,
     // inserting a new property to build out our hierarchy dataset for d3
     hierarchy: null,
-    // records initial hierarchy to refresh page in case empty function is called
-    initialHierarchy: null,
     // status checks: Content Script launched, React Dev Tools installed, target is react app
     status: {
       contentScriptLaunched: true,
@@ -191,7 +187,7 @@ chrome.runtime.onConnect.addListener(port => {
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
         tabsObj[tabId].index = 1;
         tabsObj[tabId].currParent = 0;
-        tabsObj[tabId].currBranch = 0;
+        tabsObj[tabId].currBranch = 1;
         return true;
       // Pause = lock on tab
       case 'setPause':
@@ -298,47 +294,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         injectScript(chrome.runtime.getURL('bundles/backend.bundle.js'), 'body');
       `,
       });
-      break;
-    }
-    case 'tabReload': {
-      tabsObj[tabId].mode.paused = false;
-      // dont remove snapshots if persisting
-      if (!persist) {
-        if (empty) {
-          // resets snapshots to page initial state recorded when emptied
-          tabsObj[tabId].snapshots = tabsObj[tabId].initialSnapshot;
-          // resets hierarchy to page initial state recorded when emptied
-          tabsObj[tabId].hierarchy = tabsObj[tabId].initialHierarchy;
-        } else {
-          // triggered with new tab opened
-          // resets snapshots to page initial state
-          tabsObj[tabId].snapshots.splice(1);
-          // checks if hierarchy before reset
-          if (tabsObj[tabId].hierarchy) {
-            // resets hierarchy to page initial state
-            tabsObj[tabId].hierarchy.children = [];
-            // resets currParent plus current state
-            tabsObj[tabId].currParent = 1;
-          } else {
-            // resets currParent
-            tabsObj[tabId].currParent = 0;
-          }
-        }
-        // resets currLocation to page initial state
-        tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
-        // resets index
-        tabsObj[tabId].index = 0;
-        // resets currBranch
-        tabsObj[tabId].currBranch = 0;
-
-        // send a message to devtools
-        portsArr.forEach(bg => bg.postMessage({
-          action: 'initialConnectSnapshots',
-          payload: tabsObj,
-        }));
-      }
-      reloaded[tabId] = true;
-
       break;
     }
     case 'recordSnap': {
