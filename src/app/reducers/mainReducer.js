@@ -4,7 +4,7 @@ import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
   const {
-    port, currentTab, currentTitle, split, tabs,
+    port, currentTab, tabs,
   } = draft;
   const {
     hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex,
