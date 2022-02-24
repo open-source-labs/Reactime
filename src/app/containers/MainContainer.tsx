@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import Split from 'react-split';
 import ActionContainer from './ActionContainer';
@@ -162,7 +163,7 @@ function MainContainer(): any {
     return (
       <Split
         sizes={[50, 50]}
-        minSize={250}
+        minSize={200}
         snapOffset={1}
         className="split"
         gutterStyle={function () {
@@ -194,7 +195,7 @@ function MainContainer(): any {
 
   return (
     <div className="main-container">
-      <div id="bodyContainer" className="body-container1">
+      <div id="bodyContainer" className="body-container">
         <ActionContainer
           actionView={actionView}
           setActionView={setActionView}
@@ -208,13 +209,4 @@ function MainContainer(): any {
   );
 }
 
-// <SplitContainer
-//   split={split}
-//   webMetrics={webMetrics}
-//   viewIndex={viewIndex}
-//   snapshot={snapshotDisplay}
-//   hierarchy={hierarchyDisplay}
-//   snapshots={snapshots}
-//   currLocation={currLocation}
-// />
 export default MainContainer;

@@ -205,7 +205,7 @@ function ActionContainer(props) {
         </aside>
       </div>
       {actionView ? (
-        <div>
+        <div className="action-button-wrapper">
           <SwitchAppDropdown />
           <div className="action-component exclude">
             <button

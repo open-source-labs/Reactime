@@ -1,8 +1,8 @@
-.body-container1 {
+.body-container {
   height: 100%;
   overflow: hidden;
   display: grid;
-  grid-template-columns: min-content 2fr;
+  grid-template-columns: min-content 1fr;
   grid-template-rows: 8fr 1fr;
   grid-template-areas:
     'actions states'
@@ -13,7 +13,7 @@
 
 /* if extension width is less than 500px, stack the body containers */
 @media (max-width: 500px) {
-  .body-container1 {
+  .body-container {
     grid-template-rows: 3fr 5fr 1fr;
     grid-template-columns: auto;
     grid-template-areas:

@@ -141,6 +141,7 @@ export default function ComponentMap({
   const scrollStyle = {
     minWidth: '60',
     maxWidth: '300',
+    minHeight: '20px',
     maxHeight: '200px',
     overflowY: 'scroll',
     overflowWrap: 'break-word',

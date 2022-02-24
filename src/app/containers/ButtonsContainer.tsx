@@ -5,8 +5,8 @@ import {
   faUpload,
   faQuestion,
   faDownload,
-  faMapPin,
-  faRedoAlt,
+  faSquare,
+  faColumns,
   faUnlock,
   faLock,
 } from '@fortawesome/free-solid-svg-icons';
@@ -75,6 +75,20 @@ function ButtonsContainer(): JSX.Element {
         )}
         {paused ? 'Unlock' : 'Lock'}
       </button>
+
+      <button
+        className="split-button"
+        type="button"
+        onClick={() => dispatch(toggleSplit())}
+      >
+        {split ? (
+          <FontAwesomeIcon icon={faSquare} />
+        ) : (
+          <FontAwesomeIcon icon={faColumns} />
+        )}
+        {split ? 'Unsplit' : 'Split'}
+      </button>
+
       {/* removing the UI for now Defunt perist feauture. See docs for more info */}
       {/* <button
         className="persist-button"
@@ -88,18 +102,7 @@ function ButtonsContainer(): JSX.Element {
         )}
         {persist ? 'Unpersist' : 'Persist'}
       </button> */}
-      <button
-        className="split-button"
-        type="button"
-        onClick={() => dispatch(toggleSplit())}
-      >
-        {persist ? (
-          <FontAwesomeIcon icon={faRedoAlt} />
-        ) : (
-          <FontAwesomeIcon icon={faMapPin} />
-        )}
-        {split ? 'Unsplit' : 'Split'}
-      </button>
+
       <button
         className="export-button"
         type="button"
