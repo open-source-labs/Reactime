@@ -21,14 +21,14 @@ function ErrorMsg({
     case 'Content Script Error':
       return (
         <div>
-          Content Script not found! Try closing Reactime and reloading the page.
+          Could not connect to the Target App. Try closing Reactime and reloading the page.
           <br />
-          NOTE: By default Reactime only launches the Content Script on URLS starting with localhost.
+          NOTE: By default Reactime only launches the content script on URLS starting with localhost.
           <br />
           If your target URL does not match, you can manually launch the content script below.
           <br />
           <br />
-          <button type="button" className="launchContentButton" onClick={launchContent}> Launch Content Script </button>
+          <button type="button" className="launchContentButton" onClick={launchContent}> Launch </button>
         </div>
       );
     case 'RDT Error':
