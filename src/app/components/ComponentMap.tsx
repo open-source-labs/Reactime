@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-restricted-syntax */
@@ -15,7 +17,6 @@ import {
   TooltipWithBounds,
   defaultStyles,
 } from '@visx/tooltip';
-import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import { toggleExpanded } from '../actions/actions';
@@ -54,7 +55,7 @@ export type LinkTypesProps = {
   width: number;
   height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
-  snapshots: [];
+  snapshots: Record<string, unknown>;
 };
 
 export default function ComponentMap({
@@ -62,13 +63,8 @@ export default function ComponentMap({
   width: totalWidth,
   height: totalHeight,
   margin = defaultMargin,
-  snapshots,
-}: LinkTypesProps) {
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  // This is where we select the last object in the snapshots array from props to allow hierarchy to parse the data for render on the component map per hierarchy layout specifications.
-  const lastNode = snapshots.length - 1;
-  const data: Record<string, unknown> = snapshots[lastNode];
-
+  currentSnapshot,
+}: LinkTypesProps): JSX.Element {
   // importing custom hooks for the selection tabs.
   const [layout, setLayout] = useState('cartesian');
   const [orientation, setOrientation] = useState('horizontal');
@@ -76,10 +72,9 @@ export default function ComponentMap({
   const [stepPercent, setStepPercent] = useState(10);
   const [tooltip, setTooltip] = useState(false);
   const [selectedNode, setSelectedNode] = useState('root');
-  const [store, dispatch] = useStoreContext();
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
 
-  // Forces React to Rerender
-  const forceUpdate = useForceUpdate();
+  console.log(currentSnapshot);
 
   // setting the margins for the Map to render in the tab window.
   const innerWidth = totalWidth - margin.left - margin.right;
@@ -212,7 +207,7 @@ export default function ComponentMap({
       }
     }
   };
-  collectNodes(snapshots[lastNode]);
+  collectNodes(currentSnapshot);
 
   // find the node that has been selected and use it as the root
   const startNode = null;
@@ -234,7 +229,7 @@ export default function ComponentMap({
         orientation={orientation}
         linkType={linkType}
         stepPercent={stepPercent}
-        snapShots={snapshots[lastNode]}
+        snapShots={currentSnapshot}
         selectedNode={selectedNode}
         setLayout={setLayout}
         setOrientation={setOrientation}
@@ -257,9 +252,7 @@ export default function ComponentMap({
         />
         <Group top={margin.top} left={margin.left}>
           <Tree
-            root={hierarchy(startNode || data, d => {
-              return d.componentData?.isExpanded ? d.children : null;
-            })}
+            root={hierarchy(startNode || data, d => (d.isExpanded ? d.children : null))}
             size={[sizeWidth, sizeHeight]}
             separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
           >
@@ -323,10 +316,9 @@ export default function ComponentMap({
                           fill="url('#links-gradient')"
                           stroke="#ff6569"
                           onClick={() => {
-                            console.log('on click IN CIRCLE', node);
-                            // node.data.componentData.isExpanded = !node.data.componentData.isExpanded;
-                            console.log('on click IN CIRCLE', node.data.componentData.isExpanded);
-                            forceUpdate();
+                            dispatch(toggleExpanded(node.data));
+                            hideTooltip();
+                            setTooltip(false);
                           }}
                         />
                       )}
@@ -337,46 +329,26 @@ export default function ComponentMap({
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          // node.children = if node has children
                           fill={node.children ? '#161521' : '#62d6fb'}
-                          // node.data.isExpanded = if node is collapsed
-                          // stroke={(node.data.isExpanded && node.child) ? '#95fb62' : '#a69ff5'} => node.child is gone when clicked, even if it actually has children. Maybe better call node.children => node.leaf
                           stroke={(node.data.isExpanded && node.data.children.length > 0) ? '#ff6569' : '#4D4D4D'}
                           strokeWidth={1.5}
-                          // strokeDasharray={node.children ? '0' : '2,2'}
                           strokeOpacity="1"
                           rx={node.children ? 4 : 10}
-                          // double clicking the component expands or collapses the child components
-                          // onDoubleClick={() => {
-                          //   node.data.isExpanded = !node.data.isExpanded;
-                          //   hideTooltip();
-                          //   setTooltip(false);
-                          //   forceUpdate();
-                          // }}
-                          // Tooltip event handlers
-                          // test feature
-                          // onClick = {handleMouseAndClickOver}
                           onClick={() => {
-                            dispatch(toggleExpanded(node.data.name));
-                            console.log('on click', node.data.componentData.isExpanded);
+                            dispatch(toggleExpanded(node.data));
                             hideTooltip();
                             setTooltip(false);
-                            forceUpdate();
                           }}
 
                           onMouseOver={event => {
                             setTooltip(true);
                             handleMouseAndClickOver(event);
                           }}
-                          // paired with onmouseOver listener, this produces a hover over effect for the component Tooltip
+                          // with onmouseOver, this produces a hover over effect for the Tooltip
                           onMouseOut={() => {
                             hideTooltip();
                             setTooltip(false);
                           }}
-
-                          // onMouseEnter={() => dispatch(onHover(node.data.rtid))}
-                          // onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
-                          // eslint-disable-next-line react/jsx-curly-newline
                         />
                       )}
                       {/* Display text inside of each component node */}

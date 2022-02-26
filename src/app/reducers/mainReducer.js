@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-
+import _ from 'lodash';
 import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
@@ -254,9 +254,19 @@ export default (state, action) => produce(state, draft => {
         if (!payload[tab]) {
           delete tabs[tab];
         } else {
+          // maintain isExpaned prop from old stateSnapshot to preserve componentMap expansion
+          const persistIsExpanded = (newNode, oldNode) => {
+            newNode.isExpanded = oldNode ? oldNode.isExpanded : true;
+            if (newNode.children) {
+              newNode.children.forEach((child, i) => {
+                persistIsExpanded(child, oldNode?.children[i]);
+              });
+            }
+          };
+          persistIsExpanded(payload[tab].currLocation.stateSnapshot, tabs[tab].currLocation.stateSnapshot);
+
           const { snapshots: newSnaps } = payload[tab];
           tabs[tab] = {
-            ...tabs[tab],
             ...payload[tab],
             sliderIndex: newSnaps.length - 1,
             seriesSavedStatus: false,
@@ -308,22 +318,32 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.TOGGLE_EXPANDED: {
-      const name = action.payload;
-      const currentSnapshot = tabs[currentTab].snapshots[tabs[currentTab].sliderIndex];
-      console.log('in main reducer: payload', name);
-      console.log('in main reducer: tabs[currentTab].snapshots[index]', currentSnapshot);
-      // recursive check through all to see if any in the hierarchy share the name
-      Object.keys(currentSnapshot).forEach(e => {
-        console.log(e);
-        console.log(currentSnapshot[e]);
-        if (e === name) { console.log('true'); }
-      });
+      // find correct node from currLocation and toggle isExpanded
+      const checkChildren = node => {
+        if (_.isEqual(node, action.payload)) {
+          node.isExpanded = !node.isExpanded;
+        }
+        if (node.children) {
+          node.children.forEach(child => {
+            checkChildren(child);
+          });
+        }
+      };
+      checkChildren(tabs[currentTab].currLocation.stateSnapshot);
       break;
     }
     case types.SET_CURRENT_LOCATION: {
       const { payload } = action;
-      const { currLocation } = payload[currentTab];
-      tabs[currentTab].currLocation = currLocation;
+      const persistIsExpanded = (newNode, oldNode) => {
+        newNode.isExpanded = oldNode ? oldNode.isExpanded : true;
+        if (newNode.children) {
+          newNode.children.forEach((child, i) => {
+            persistIsExpanded(child, oldNode?.children[i]);
+          });
+        }
+      };
+      persistIsExpanded(payload[currentTab].currLocation.stateSnapshot, tabs[currentTab].currLocation.stateSnapshot);
+      tabs[currentTab].currLocation = payload[currentTab].currLocation;
       break;
     }
     default:

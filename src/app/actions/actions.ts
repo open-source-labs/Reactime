@@ -90,9 +90,9 @@ export const toggleSplit = () => ({
   type: types.TOGGLE_SPLIT,
 });
 
-export const toggleExpanded = (name) => ({
+export const toggleExpanded = (node) => ({
   type: types.TOGGLE_EXPANDED,
-  payload: name,
+  payload: node,
 });
 
 export const launchContentScript = (tab) => ({

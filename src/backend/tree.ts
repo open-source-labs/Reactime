@@ -45,12 +45,13 @@ class Tree {
 
   componentData: {
     props: {},
-    isExpanded: boolean,
   };
 
   children: (Tree | string)[];
 
-  parent: Tree
+  parent: Tree;
+
+  isExpanded: boolean;
 
   atomsComponents: any;
 
@@ -71,9 +72,10 @@ class Tree {
   constructor(state: string | {}, name = 'nameless', componentData: {} = {}, rtid: any = null, recoilDomNode: any = null, string: any = null) {
     this.state = state === 'root' ? 'root' : serializeState(state);
     this.name = name;
-    this.componentData = componentData ? { isExpanded: true, ...JSON.parse(JSON.stringify(componentData)) } : { isExpanded: true };
+    this.componentData = componentData ? { ...JSON.parse(JSON.stringify(componentData)) } : { };
     this.children = [];
     this.parent = null; // ref to parent so we can add siblings
+    this.isExpanded = true;
     this.rtid = rtid;
     this.recoilDomNode = recoilDomNode;
   }
