@@ -51,20 +51,14 @@ const StateRoute = (props: StateRouteProps) => {
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
   const isRecoil = !!snapshot.atomsComponents;
 
-  const [noRenderData, setNoRenderData] = useState(false);
-  // component map zoom state
-  const [{ x, y, k }, setZoomState]: any = useState({
-    x: 150,
-    y: 250,
-    k: 1,
-  });
   // Map
   const renderComponentMap = () => {
     if (hierarchy) {
       return (
         <ParentSize className="componentMapContainer">
           {({ width, height }) => (
-            <ComponentMap snapshots={snapshots} width={width} height={height} />
+            // eslint-disable-next-line react/prop-types
+            <ComponentMap currentSnapshot={currLocation.stateSnapshot} width={width} height={height} />
           )}
         </ParentSize>
       );

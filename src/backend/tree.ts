@@ -44,12 +44,14 @@ class Tree {
   name: string;
 
   componentData: {
-    props:{}
+    props: {},
   };
 
   children: (Tree | string)[];
 
-  parent: Tree
+  parent: Tree;
+
+  isExpanded: boolean;
 
   atomsComponents: any;
 
@@ -67,17 +69,13 @@ class Tree {
   // If not, create the new component and also a new key: value pair in 'componentNames' with the component's name as the key and 0 as its value
   // EXAMPLE OF COMPONENTNAMES OBJECT: {editableInput: 1, Provider: 0, etc}
 
-  // Empty names:
-  // If string, rtid without 'fromLinkFiber"
-  // If object
-  // If null
-
   constructor(state: string | {}, name = 'nameless', componentData: {} = {}, rtid: any = null, recoilDomNode: any = null, string: any = null) {
     this.state = state === 'root' ? 'root' : serializeState(state);
     this.name = name;
-    this.componentData = componentData ? JSON.parse(JSON.stringify(componentData)) : {};
+    this.componentData = componentData ? { ...JSON.parse(JSON.stringify(componentData)) } : { };
     this.children = [];
     this.parent = null; // ref to parent so we can add siblings
+    this.isExpanded = true;
     this.rtid = rtid;
     this.recoilDomNode = recoilDomNode;
   }

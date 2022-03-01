@@ -1,9 +1,11 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
 // @ts-nocheck
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
@@ -15,12 +17,9 @@ import {
   TooltipWithBounds,
   defaultStyles,
 } from '@visx/tooltip';
-import { isAbsolute } from 'path';
-import { nest } from 'jscharting';
-import useForceUpdate from './useForceUpdate';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
-import { onHover, onHoverExit } from '../actions/actions';
+import { toggleExpanded } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 const exclude = ['childExpirationTime', 'staticContext', '_debugSource', 'actualDuration', 'actualStartTime', 'treeBaseDuration', '_debugID', '_debugIsCurrentlyTiming', 'selfBaseDuration', 'expirationTime', 'effectTag', 'alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
@@ -56,7 +55,7 @@ export type LinkTypesProps = {
   width: number;
   height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
-  snapshots: [];
+  snapshots: Record<string, unknown>;
 };
 
 export default function ComponentMap({
@@ -64,24 +63,16 @@ export default function ComponentMap({
   width: totalWidth,
   height: totalHeight,
   margin = defaultMargin,
-  snapshots,
-}: LinkTypesProps) {
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  // This is where we select the last object in the snapshots array from props to allow hierarchy to parse the data for render on the component map per hierarchy layout specifications.
-  const lastNode = snapshots.length - 1;
-  const data: {} = snapshots[lastNode];
-
+  currentSnapshot,
+}: LinkTypesProps): JSX.Element {
   // importing custom hooks for the selection tabs.
   const [layout, setLayout] = useState('cartesian');
   const [orientation, setOrientation] = useState('horizontal');
   const [linkType, setLinkType] = useState('diagonal');
   const [stepPercent, setStepPercent] = useState(10);
   const [tooltip, setTooltip] = useState(false);
-  // const [expanded, setExpanded] = useState();
   const [selectedNode, setSelectedNode] = useState('root');
-
-  // Declared this variable and assigned it to the useForceUpdate function that forces a state to change causing that component to re-render and display on the map
-  const forceUpdate = useForceUpdate();
+  const [{ tabs, currentTab }, dispatch] = useStoreContext();
 
   // setting the margins for the Map to render in the tab window.
   const innerWidth = totalWidth - margin.left - margin.right;
@@ -136,7 +127,7 @@ export default function ComponentMap({
     lineHeight: '18px',
     fontFamily: 'Roboto',
     zIndex: 100,
-    'pointer-events': 'all !important',
+    pointerEvents: 'all !important',
   };
 
   const scrollStyle = {
@@ -153,10 +144,7 @@ export default function ComponentMap({
     return `${time} ms `;
   };
 
-  // places all nodes into a flat array
-  const nodeList = [];
-
-  const makePropsPretty = data => {
+  const formatProps = data => {
     const propsFormat = [];
     const nestedObj = [];
     for (const key in data) {
@@ -165,7 +153,7 @@ export default function ComponentMap({
           {`${key}: ${data[key]}`}
                          </p>);
       } else if (data[key] !== 'reactFiber' && typeof data[key] === 'object' && exclude.includes(key) !== true) {
-        const result = makePropsPretty(data[key]);
+        const result = formatProps(data[key]);
         nestedObj.push(result);
       }
     }
@@ -180,7 +168,6 @@ export default function ComponentMap({
     if (state === 'stateless') return ['stateless'];
 
     const result = [];
-
     const inner = arg => {
       if (Array.isArray(arg)) {
         result.push('[');
@@ -198,12 +185,13 @@ export default function ComponentMap({
         result.push(` ${arg}, `);
       }
     };
-
-
     inner(state);
-    console.log(result);
+      
     return result;
   };
+
+  // places all nodes into a flat array
+  const nodeList = [];
 
   const collectNodes = node => {
     nodeList.splice(0, nodeList.length);
@@ -217,7 +205,7 @@ export default function ComponentMap({
       }
     }
   };
-  collectNodes(snapshots[lastNode]);
+  collectNodes(currentSnapshot);
 
   // find the node that has been selected and use it as the root
   const startNode = null;
@@ -239,7 +227,7 @@ export default function ComponentMap({
         orientation={orientation}
         linkType={linkType}
         stepPercent={stepPercent}
-        snapShots={snapshots[lastNode]}
+        snapShots={currentSnapshot}
         selectedNode={selectedNode}
         setLayout={setLayout}
         setOrientation={setOrientation}
@@ -262,7 +250,7 @@ export default function ComponentMap({
         />
         <Group top={margin.top} left={margin.left}>
           <Tree
-            root={hierarchy(startNode || data, d => (d.isExpanded ? null : d.children))}
+            root={hierarchy(startNode || data, d => (d.isExpanded ? d.children : null))}
             size={[sizeWidth, sizeHeight]}
             separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
           >
@@ -305,17 +293,12 @@ export default function ComponentMap({
 
                   // mousing controls & Tooltip display logic
                   const handleMouseAndClickOver = event => {
-                    // looks like onHover isnt working?
-                    // () => dispatch(onHover(node.data.rtid));
                     const coords = localPoint(
                       event.target.ownerSVGElement,
                       event,
                     );
                     const tooltipObj = { ...node.data };
-                    // console.log(node.data);
-                    // if (typeof tooltipObj.state === 'object') {
-                    //   tooltipObj.state = JSON.stringify(tooltipObj.state);
-                    // }
+
                     showTooltip({
                       tooltipLeft: coords.x,
                       tooltipTop: coords.y,
@@ -331,8 +314,9 @@ export default function ComponentMap({
                           fill="url('#links-gradient')"
                           stroke="#ff6569"
                           onClick={() => {
-                            node.data.isExpanded = !node.data.isExpanded;
-                            forceUpdate();
+                            dispatch(toggleExpanded(node.data));
+                            hideTooltip();
+                            setTooltip(false);
                           }}
                         />
                       )}
@@ -343,45 +327,27 @@ export default function ComponentMap({
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          // node.children = if node has children
                           fill={node.children ? '#161521' : '#62d6fb'}
-                          // node.data.isExpanded = if node is collapsed
-                          // stroke={(node.data.isExpanded && node.child) ? '#95fb62' : '#a69ff5'} => node.child is gone when clicked, even if it actually has children. Maybe better call node.children => node.leaf
                           stroke={(node.data.isExpanded && node.data.children.length > 0) ? '#ff6569' : '#4D4D4D'}
                           strokeWidth={1.5}
-                          // strokeDasharray={node.children ? '0' : '2,2'}
                           strokeOpacity="1"
                           rx={node.children ? 4 : 10}
-                          // double clicking the component expands or collapses the child components
-                          // onDoubleClick={() => {
-                          //   node.data.isExpanded = !node.data.isExpanded;
-                          //   hideTooltip();
-                          //   setTooltip(false);
-                          //   forceUpdate();
-                          // }}
-                          // Tooltip event handlers
-                          // test feature
-                          // onClick = {handleMouseAndClickOver}
+
                           onClick={() => {
-                            node.data.isExpanded = !node.data.isExpanded;
+                            dispatch(toggleExpanded(node.data));
                             hideTooltip();
                             setTooltip(false);
-                            forceUpdate();
                           }}
 
                           onMouseOver={event => {
                             setTooltip(true);
                             handleMouseAndClickOver(event);
                           }}
-                          // paired with onmouseOver listener, this produces a hover over effect for the component Tooltip
+                          // with onmouseOver, this produces a hover over effect for the Tooltip
                           onMouseOut={() => {
                             hideTooltip();
                             setTooltip(false);
                           }}
-
-                          // onMouseEnter={() => dispatch(onHover(node.data.rtid))}
-                          // onMouseLeave={() => dispatch(onHoverExit(node.data.rtid))}
-                          // eslint-disable-next-line react/jsx-curly-newline
                         />
                       )}
                       {/* Display text inside of each component node */}
@@ -439,12 +405,11 @@ export default function ComponentMap({
             <div className="stateTip">
               State:
               {formatState(tooltipData.state)}
-              {/* {tooltipData.state} */}
             </div>
             <div style={scrollStyle}>
               <div className="props">
                 Props:
-                {makePropsPretty(tooltipData.componentData.props)}
+                {formatProps(tooltipData.componentData.props)}
               </div>
             </div>
           </div>

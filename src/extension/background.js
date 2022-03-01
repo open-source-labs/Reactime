@@ -251,7 +251,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     tabsObj[tabId] = createTabObj(tabTitle);
   }
 
-  const { persist, empty } = tabsObj[tabId].mode;
   switch (action) {
     case 'jumpToSnap': {
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
