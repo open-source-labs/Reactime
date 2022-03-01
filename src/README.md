@@ -8,7 +8,7 @@ Our mission at Reactime is to maintain and iterate constantly, but never at the 
 
 ## File Structure
 
-In the *src* folder, there are three directories we care about: *app*, *backend*, and *extension*. 
+In the *src* folder, there are three directories we care about: *app*, *backend*, and *extension*.
 ```
 src/
 ├── app/                      # Frontend code
@@ -19,7 +19,7 @@ src/
 │   ├── containers/           # More React components
 │   ├── reducers/             # Redux mechanism for updating state
 │   ├── styles/               #
-│   ├── index.tsx             # Starting point for root App component 
+│   ├── index.tsx             # Starting point for root App component
 │   ├── module.d.ts           #
 │   └── store.tsx             #
 │
@@ -27,10 +27,10 @@ src/
 │   │                         # Focus especially on linkFiber, timeJump, tree, and helpers
 │   ├── __tests__/            #
 │   ├── types/                # Typescript interfaces
-│   ├── helpers.js            # 
-│   ├── index.ts              # Starting point for backend functionality 
-│   ├── index.d.ts            # 
-│   ├── linkFiber.ts          # 
+│   ├── helpers.js            #
+│   ├── index.ts              # Starting point for backend functionality
+│   ├── index.d.ts            #
+│   ├── linkFiber.ts          #
 │   ├── masterState.js        # Component action record interface
 │   ├── module.d.ts           #
 │   ├── package.json          #
@@ -46,7 +46,7 @@ src/
 └──
 ```
 
-1. The *app* folder is responsible for the Single Page Application that you see when you open the chrome dev tools under the Reactime tab. 
+1. The *app* folder is responsible for the Single Page Application that you see when you open the chrome dev tools under the Reactime tab.
 
 ![FRONTEND DATA FLOW](../assets/frontend.png)
 
@@ -55,7 +55,7 @@ src/
 
 ![BACKEND DATA FLOW](../assets/backend.png)
 
-3. The *extension* folder is where the `contentScript.js` and `background.js` are located. 
+3. The *extension* folder is where the `contentScript.js` and `background.js` are located.
     - Like regular web apps, Chrome Extensions are event-based. The background script is where one typically monitors for browser triggers (e.g. events like closing a tab, for example). The content script is what allows us to read or write to our target web application, usually as a result of [messages passed](https://developer.chrome.com/extensions/messaging) from the background script.
     - These two files help us handle requests both from the web browser and from the Reactime extension itself
 
@@ -66,7 +66,7 @@ All the diagrams of data flows are avaliable on [MIRO](https://miro.com/app/boar
 
 The general flow of data is described in the following steps:
 
-![GENERAL DATA FLOW](../assets/dataflow.jpg)
+![GENERAL DATA FLOW](../assets/DataFlowDiagram.PNG)
 
 1. When the background bundle is loaded by the browser, it executes a script injection into the dom. (see section on *backend*). This script uses a technique called [throttle](https://medium.com/@bitupon.211/debounce-and-throttle-160affa5457b) to send state data from the app to the content script every specified milliseconds (in our case, this interval is 70ms).
 <!--  CHECK LINE 496 IN LINKFIBER.TS -->
@@ -82,21 +82,21 @@ The general flow of data is described in the following steps:
 Navigation between different console.log panels can be confusing when running Reactime. We created a short instruction where you can find the results for your console.log
 
 ### <b> /src/extension </b>
-Console.logs from the Extension folder you can find here: 
+Console.logs from the Extension folder you can find here:
 - Chrome Extension (Developer mode)
-- Background page 
+- Background page
 
-![extension](../assets/extension-console.gif) 
+![extension](../assets/extension-console.gif)
 
 ### <b> /src/app </b>
-Console.logs from the App folder you can find here: 
+Console.logs from the App folder you can find here:
 - Chrome Browser
 - Inspect
 
 ![frontend](../assets/console.gif)
 
 ### <b> /src/backend </b>
-Console.logs from the App folder you can find here: 
+Console.logs from the App folder you can find here:
 - Open the Reactime extension in Chrome
 - Click "Inspect" on Reactime
 
@@ -105,15 +105,15 @@ Console.logs from the App folder you can find here:
 ## Chrome Developer Resources
 Still unsure about what content scripts and background scripts do for Reactime, or for a chrome extensions in general?
   - The implementation details [can be found](./extension/background.js) [in the source files](./extension/contentScript.ts) themselves.
-  - We also encourage you to dive into [the official Chrome Developer Docs](https://developer.chrome.com/home). 
-  
+  - We also encourage you to dive into [the official Chrome Developer Docs](https://developer.chrome.com/home).
+
   Some relevant sections are reproduced below:
 
-> Content scripts are files that run in the context of web pages. 
+> Content scripts are files that run in the context of web pages.
 >
 > By using the standard Document Object Model (DOM), they are able to **read** details of the web pages the browser visits, **make changes** to them and **pass information back** to their parent extension. ([Source](https://developer.chrome.com/extensions/content_scripts))
 
-- One helpful way to remember a content script's role in the Chrome ecosystem is to think: a *content* script is used to read and modify a target web page's rendered *content*. 
+- One helpful way to remember a content script's role in the Chrome ecosystem is to think: a *content* script is used to read and modify a target web page's rendered *content*.
 
 >A background page is loaded when it is needed, and unloaded when it goes idle.
 >
@@ -122,12 +122,12 @@ Still unsure about what content scripts and background scripts do for Reactime, 
 >The background page was listening for an event, and the event is dispatched.
 >A content script or other extension sends a message.
 >Another view in the extension, such as a popup, calls `runtime.getBackgroundPage`.
-> 
+>
 >Once it has been loaded, a background page will stay running as long as it is performing an action, such as calling a Chrome API or issuing a network request.
 >
 > Additionally, the background page will not unload until all visible views and all message ports are closed. Note that opening a view does not cause the event page to load, but only prevents it from closing once loaded. ([Source](https://developer.chrome.com/extensions/background_pages))
 
 - You can think of background scripts serving a purpose analogous to that of a **server** in the client/server paradigm. Much like a server, our `background.js` listens constantly for messages (i.e. requests) from two main places:
   1. The content script
-  2. The chrome extension "front-end" **(*NOT* the interface of the browser, this is an important distinction.)** 
-- In other words, a background script works as a sort of middleman, directly maintaining connection with its parent extension, and acting as a proxy enabling communication between it and the content script. 
+  2. The chrome extension "front-end" **(*NOT* the interface of the browser, this is an important distinction.)**
+- In other words, a background script works as a sort of middleman, directly maintaining connection with its parent extension, and acting as a proxy enabling communication between it and the content script.

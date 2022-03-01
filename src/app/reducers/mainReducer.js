@@ -322,6 +322,7 @@ export default (state, action) => produce(state, draft => {
       const checkChildren = node => {
         if (_.isEqual(node, action.payload)) {
           node.isExpanded = !node.isExpanded;
+          return;
         }
         if (node.children) {
           node.children.forEach(child => {
