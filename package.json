@@ -164,7 +164,6 @@
     "jscharting": "^3.0.2",
     "jsondiffpatch": "^0.3.11",
     "lodash": "^4.17.21",
-    "lodash.isequal": "^4.5.0",
     "prop-types": "^15.7.2",
     "rc-slider": "^8.7.1",
     "rc-tooltip": "^3.7.3",

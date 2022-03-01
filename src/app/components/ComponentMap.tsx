@@ -74,8 +74,6 @@ export default function ComponentMap({
   const [selectedNode, setSelectedNode] = useState('root');
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
 
-  console.log(currentSnapshot);
-
   // setting the margins for the Map to render in the tab window.
   const innerWidth = totalWidth - margin.left - margin.right;
   const innerHeight = totalHeight - margin.top - margin.bottom - 60;
@@ -188,7 +186,7 @@ export default function ComponentMap({
       }
     };
     inner(state);
-
+      
     return result;
   };
 
@@ -334,6 +332,7 @@ export default function ComponentMap({
                           strokeWidth={1.5}
                           strokeOpacity="1"
                           rx={node.children ? 4 : 10}
+
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
