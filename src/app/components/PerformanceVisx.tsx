@@ -1,27 +1,20 @@
 /* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
+//* eslint-disable no-restricted-syntax */
 // @ts-nocheck
 import React, { useState } from 'react';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { ParentSize } from '@visx/responsive';
 import {
   MemoryRouter as Router,
   Route,
   NavLink,
   Switch,
 } from 'react-router-dom';
-import { Component } from 'react';
-import { render } from 'react-dom';
 import RenderingFrequency from './RenderingFrequency';
 // import Switch from '@material-ui/core/Switch';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
 import { useStoreContext } from '../store';
 // import snapshots from './snapshots';
-import snapshots from './snapshots';
-
 const exclude = ['childExpirationTime', 'staticContext', '_debugSource', 'actualDuration', 'actualStartTime', 'treeBaseDuration', '_debugID', '_debugIsCurrentlyTiming', 'selfBaseDuration', 'expirationTime', 'effectTag', 'alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
-
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
 Barstacks display inconsistently...however, almost always displays upon initial test app load or
@@ -30,8 +23,7 @@ However, cycling between updating state and then emptying sometimes fixes the st
 to note - all snapshots do render (check HTML doc) within the chrome extension but they do
 not display because height is not consistently passed to each bar. This side effect is only
 seen in recoil apps...
- */
-
+*/
 // typescript for PROPS from StateRoute.tsx
 interface BarStackProps {
   width: number;
@@ -39,7 +31,6 @@ interface BarStackProps {
   snapshots: [];
   hierarchy: any;
 }
-
 const makePropsPretty = data => {
   const propsFormat = [];
   const nestedObj = [];
@@ -61,7 +52,6 @@ const makePropsPretty = data => {
   }
   return propsFormat;
 };
-
 const collectNodes = (snaps, componentName) => {
   const componentsResult = [];
   const renderResult = [];
@@ -110,7 +100,6 @@ const collectNodes = (snaps, componentName) => {
       }
     }
   }
-
   const finalResults = componentsResult.map((e, index) => {
     const name = Object.keys(e)[0];
     e[name].rendertime = renderResult[index];
@@ -123,15 +112,12 @@ const collectNodes = (snaps, componentName) => {
   }
   return finalResults;
 };
-
 /* DATA HANDLING HELPER FUNCTIONS */
 const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
   if (!snapshot.children[0]) return;
-
   // loop through snapshots
   snapshot.children.forEach((child, idx) => {
     const componentName = child.name + -[idx + 1];
-
     // Get component Rendering Time
     const renderTime = Number(
       Number.parseFloat(child.componentData.actualDuration).toPrecision(5),
@@ -140,7 +126,6 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
     currTotalRender += renderTime;
     // components as keys and set the value to their rendering time
     data.barStack[data.barStack.length - 1][componentName] = renderTime;
-
     // Get component stateType
     if (!data.componentData[componentName]) {
       data.componentData[componentName] = {
@@ -157,9 +142,7 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
       data.componentData[componentName].renderFrequency++;
     }
     // else {
-
     // }
-
     // add to total render time
     data.componentData[componentName].totalRenderTime += renderTime;
     // Get rtid for the hovering feature
@@ -171,21 +154,17 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
   data.maxTotalRender = Math.max(currTotalRender, data.maxTotalRender);
   return data;
 };
-
 // Retrieve snapshot series data from Chrome's local storage.
 const allStorage = () => {
   const values = [];
   const keys = Object.keys(localStorage);
   let i = keys.length;
-
-
   while (i--) {
     const series = localStorage.getItem(keys[i]);
     values.push(JSON.parse(series));
   }
   return values;
 };
-
 // Gets snapshot Ids for the regular bar graph view.
 const getSnapshotIds = (obj, snapshotIds = []): string[] => {
   snapshotIds.push(`${obj.name}.${obj.branch}`);
@@ -196,7 +175,6 @@ const getSnapshotIds = (obj, snapshotIds = []): string[] => {
   }
   return snapshotIds;
 };
-
 // Returns array of snapshot objs each with components and corresponding render times.
 const getPerfMetrics = (snapshots, snapshotsIds): {} => {
   const perfData = {
@@ -210,7 +188,6 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
   });
   return perfData;
 };
-
 /* EXPORT COMPONENT */
 const PerformanceVisx = (props: BarStackProps) => {
   // hook used to dispatch onhover action in rect
@@ -223,7 +200,6 @@ const PerformanceVisx = (props: BarStackProps) => {
   const [comparisonData, setComparisonData] = useState();
   const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
-
   const renderComparisonBargraph = () => {
     if (hierarchy) {
       return (
@@ -236,20 +212,17 @@ const PerformanceVisx = (props: BarStackProps) => {
       );
     }
   };
-
   const renderBargraph = () => {
     if (hierarchy) {
       return <BarGraph data={data} width={width} height={height} />;
     }
   };
-
   const renderComponentDetailsView = () => {
     if (hierarchy) {
       return <RenderingFrequency data={data.componentData} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
-
   return (
     <Router>
       <div className="performance-nav-bar-container">
@@ -279,7 +252,6 @@ const PerformanceVisx = (props: BarStackProps) => {
           Component Details
         </NavLink>
       </div>
-
       <Switch>
         <Route path="/comparison" render={renderComparisonBargraph} />
         <Route path="/componentdetails" render={renderComponentDetailsView} />
@@ -288,5 +260,4 @@ const PerformanceVisx = (props: BarStackProps) => {
     </Router>
   );
 };
-
 export default PerformanceVisx;
