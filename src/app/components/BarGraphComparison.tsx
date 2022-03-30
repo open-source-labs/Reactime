@@ -79,6 +79,8 @@ const BarGraphComparison = props => {
   const [maxRender, setMaxRender] = React.useState(data.maxTotalRender);
 
   function titleFilter(comparisonArray) {
+    // const comparisonArrayModded = comparisonArray[0];
+    console.log('titleFilter', comparisonArray);
     return comparisonArray.filter(
       elem => elem.title.split('-')[1] === tabs[currentTab].title.split('-')[1],
     );
@@ -119,6 +121,9 @@ const BarGraphComparison = props => {
   // with the render time of the current tab.
   // The max render time will determine the Y-axis's highest number.
   const calculateMaxTotalRender = series => {
+    console.log(comparison)
+    console.log(series)
+    // let currentMax = 5
     const currentSeriesBarStacks = !comparison[series]
       ? []
       : comparison[series].data.barStack;
@@ -206,6 +211,9 @@ const BarGraphComparison = props => {
       elem.currentTab = 'comparison';
     });
     // comparison[series].data.barStack.currentTab = currentTab;
+    console.log(comparison)
+    console.log(series)
+    console.log(comparison[series].data.barStack)
     return comparison[series].data.barStack;
   }
   function setXpointsCurrentTab() {
@@ -256,8 +264,11 @@ const BarGraphComparison = props => {
               {!comparison[series] ? (
                 <MenuItem>No series available</MenuItem>
               ) : (
-                titleFilter(comparison).map((tabElem, index) => (
-                  <MenuItem value={index}>{`Series ${index + 1}`}</MenuItem>
+                // titleFilter(comparison).map((tabElem, index) => (
+                //   <MenuItem value={index}>{`Series ${index + 1}`}</MenuItem>
+                // ))
+                comparison.map((tabElem, index) => (
+                  <MenuItem value={index}>{tabElem.name}</MenuItem>
                 ))
               )}
             </Select>

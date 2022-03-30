@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
@@ -109,12 +109,11 @@ const BarGraph = props => {
     title: tabs[currentTab].title,
     data,
   };
-
   // use this to animate the save series button. It
   useEffect(() => {
     const saveButtons = document.getElementsByClassName('save-series-button');
     for (let i = 0; i < saveButtons.length; i++) {
-      if (tabs[currentTab].seriesSavedStatus) {
+      if (tabs[currentTab].seriesSavedStatus === 'saved') {
         saveButtons[i].classList.add('animate');
         saveButtons[i].innerHTML = 'Saved!';
       } else {
@@ -123,12 +122,34 @@ const BarGraph = props => {
       }
     }
   });
+  
+  // const test = 0;
+
+  // let textbox;
+  // function textboxCreator() {
+  //   if (test === 0) {
+  //     textbox = <input type="text" className="seriesname" placeholder="Series Name" />
+  //   }
+  //   test++;
+  // }
+
+  // const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" className="seriesname" placeholder="Series Name" /> : null
+
   return (
     <div className="bargraph-position">
+      <input type="text" id ="seriesname" placeholder="Series Name" />
       <button
+        type="button"
         className="save-series-button"
         onClick={e => {
-          dispatch(save(toStorage));
+          // textboxCreator();
+          const seriesName = document.getElementById('seriesname').value;
+          console.log("seriesName", seriesName)
+          // render text box if not already rendered
+          // grab text from textbox
+          // dispatch save tostorage if text is being passed in
+          // if not do nothing
+          dispatch(save(toStorage, seriesName));
         }}
       >
         Save Series

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import * as types from '../constants/actionTypes';
 
-export const save = (tabsObj) => ({
+export const save = (newSeries, newSeriesName) => ({
   type: types.SAVE,
-  payload: tabsObj,
+  payload: { newSeries, newSeriesName },
 });
 export const deleteSeries = () => ({
   type: types.DELETE_SERIES,
