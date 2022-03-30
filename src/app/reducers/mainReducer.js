@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import _ from 'lodash';
+import _, { values } from 'lodash';
 import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
@@ -37,9 +37,40 @@ export default (state, action) => produce(state, draft => {
   switch (action.type) {
     // Save case will store the series user wants to save to the chrome local storage
     case types.SAVE: {
-      const data = JSON.stringify(action.payload);
-      localStorage.setItem(`${action.payload.currentTab}`, data);
-      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: true };
+      // console.log('reducer reached')
+      console.log(tabs[currentTab].seriesSavedStatus)
+      const { newSeries, newSeriesName } = action.payload; 
+      console.log('seriesName from reducer', newSeriesName)
+      //Grab the seriesArray from localStorage if it exists (and it will be in stringified form if it exists)
+      //If it exists, parse it
+      //Grab newSeries from payload (already in JSON form) and push it to seriesArray
+      //Stringify seriesArray
+      //upload it to localstorage
+      if (!tabs[currentTab].seriesSavedStatus) {
+        console.log('false case reacHED')
+        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
+        break;
+      }
+      if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' || tabs[currentTab].seriesSavedStatus === 'noSeriesNameError') {
+        console.log('main case reached')
+        if (!newSeriesName) {
+          console.log('failed name check:', newSeriesName)
+          tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'noSeriesNameError' };
+          break;
+        }
+        console.log('post seriesNameCheck')
+        let seriesArray = localStorage.getItem('project');
+        // seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
+        if (seriesArray === null) seriesArray = [];
+        else seriesArray = JSON.parse(seriesArray);
+        newSeries.name = newSeriesName;
+        seriesArray.push(newSeries);
+        console.log('before setItem:', newSeries);
+        localStorage.setItem('project', JSON.stringify(seriesArray));
+        console.log('save reducer:', localStorage);
+        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
+        break;
+      }
       break;
     }
     // Delete case will delete ALL stored series in chrome local storage. To see  chrome storage related data
