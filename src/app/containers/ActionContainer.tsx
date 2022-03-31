@@ -114,6 +114,7 @@ function ActionContainer(props): JSX.Element {
           viewIndex={viewIndex}
           isCurrIndex={isCurrIndex}
         />
+
       );
     },
   );

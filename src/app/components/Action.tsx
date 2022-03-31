@@ -96,29 +96,30 @@ const Action = (props: ActionProps): JSX.Element => {
   };
 
   return (
-    <div
+    <div className="individual-action">
+      <div
       // Invoking keyboard functionality; functionality is in ActionContainer;
-      onKeyDown={e => handleOnkeyDown(e, viewIndex)}
-      className={
+        onKeyDown={e => handleOnkeyDown(e, viewIndex)}
+        className={
         selected || last ? 'action-component selected' : 'action-component'
       }
-      onClick={() => {
-        dispatch(changeView(index));
-      }}
-      role="presentation"
-      style={index > sliderIndex ? { color: '#5f6369' } : {}}
-      tabIndex={index}
-    >
-      <ReactHover options={optionsCursorTrueWithMargin}>
-        <Trigger type="trigger">
-          <div className="action-component-trigger" style={index > sliderIndex ? { color: '#5f6369' } : {}}>
-            <div className="action-component-text">
-              {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `}
-            </div>
-            <button className="time-button" type="button">
-              {displayTime}
-            </button>
-            {
+        onClick={() => {
+          dispatch(changeView(index));
+        }}
+        role="presentation"
+        style={index > sliderIndex ? { color: '#5f6369' } : {}}
+        tabIndex={index}
+      >
+        <ReactHover options={optionsCursorTrueWithMargin}>
+          <Trigger type="trigger">
+            <div className="action-component-trigger" style={index > sliderIndex ? { color: '#5f6369' } : {}}>
+              <div className="action-component-text">
+                {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `}
+              </div>
+              <button className="time-button" type="button">
+                {displayTime}
+              </button>
+              {
               isCurrIndex ? (
                 <button
                   className="current-location"
@@ -142,10 +143,11 @@ const Action = (props: ActionProps): JSX.Element => {
                   </button>
                 )
             }
-          </div>
-        </Trigger>
-        <Hover type="hover" />
-      </ReactHover>
+            </div>
+          </Trigger>
+          <Hover type="hover" />
+        </ReactHover>
+      </div>
     </div>
   );
 };
