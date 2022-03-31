@@ -113,7 +113,7 @@ const Action = (props: ActionProps): JSX.Element => {
         <Trigger type="trigger">
           <div className="action-component-trigger" style={index > sliderIndex ? { color: '#5f6369' } : {}}>
             <div className="action-component-text">
-              {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `}
+              <input key={`ActionInput${displayName}`} type="text" className="actionname" placeholder={`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `} />
             </div>
             <button className="time-button" type="button">
               {displayTime}
