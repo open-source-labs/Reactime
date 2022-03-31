@@ -123,15 +123,20 @@ const BarGraph = props => {
     }
   });
   
-  // const test = 0;
+  const saveSeriesClickHandler = () => {
+    const seriesName = document.getElementById('seriesname').value;
+    const actionNames = document.getElementsByClassName('actionname');
+    console.log("action names", actionNames);
+    // const testname = document.getElementsByClassName('actionname').value
+    // console.log(testname)
+    for (let i = 0; i < actionNames.length; i++ ) {
+      toStorage.data.barStack[i].name = actionNames[i].value;
+    }
+// displayName: ${componentName !== 'nameless' ? componentName :
 
-  // let textbox;
-  // function textboxCreator() {
-  //   if (test === 0) {
-  //     textbox = <input type="text" className="seriesname" placeholder="Series Name" />
-  //   }
-  //   test++;
-  // }
+    
+    dispatch(save(toStorage, seriesName));
+  }
 
   // const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" className="seriesname" placeholder="Series Name" /> : null
 
@@ -141,16 +146,7 @@ const BarGraph = props => {
       <button
         type="button"
         className="save-series-button"
-        onClick={e => {
-          // textboxCreator();
-          const seriesName = document.getElementById('seriesname').value;
-          console.log("seriesName", seriesName)
-          // render text box if not already rendered
-          // grab text from textbox
-          // dispatch save tostorage if text is being passed in
-          // if not do nothing
-          dispatch(save(toStorage, seriesName));
-        }}
+        onClick={saveSeriesClickHandler}
       >
         Save Series
       </button>
