@@ -96,10 +96,11 @@ const Action = (props: ActionProps): JSX.Element => {
   };
 
   return (
-    <div
+    <div className="individual-action">
+      <div
       // Invoking keyboard functionality; functionality is in ActionContainer;
-      onKeyDown={e => handleOnkeyDown(e, viewIndex)}
-      className={
+        onKeyDown={e => handleOnkeyDown(e, viewIndex)}
+        className={
         selected || last ? 'action-component selected' : 'action-component'
       }
       onClick={() => {
@@ -142,10 +143,11 @@ const Action = (props: ActionProps): JSX.Element => {
                   </button>
                 )
             }
-          </div>
-        </Trigger>
-        <Hover type="hover" />
-      </ReactHover>
+            </div>
+          </Trigger>
+          <Hover type="hover" />
+        </ReactHover>
+      </div>
     </div>
   );
 };

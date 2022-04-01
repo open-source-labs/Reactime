@@ -10,6 +10,19 @@
 	padding: 1% 0 1% 0;
 }
 
+.introjs-tooltip {
+  color: black;
+  background-color: white;
+  min-width: 20rem;
+}
+.introjs-tooltiptext ul{
+	padding-left: 2px;
+}
+
+.introjs-helperLayer{
+  border: 2px solid yellow
+}
+
 @media (max-width: 500px) {
 	.buttons-container {
 		grid-template-columns: repeat(2, 1fr);

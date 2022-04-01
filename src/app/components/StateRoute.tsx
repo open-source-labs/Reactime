@@ -197,7 +197,7 @@ const StateRoute = (props: StateRouteProps) => {
     <Router>
       <div className="navbar">
         <NavLink
-          className="router-link"
+          className="router-link map-tab"
           activeClassName="is-active"
           exact
           to="/"
@@ -205,27 +205,27 @@ const StateRoute = (props: StateRouteProps) => {
           Map
         </NavLink>
         <NavLink
-          className="router-link"
+          className="router-link performance-tab"
           activeClassName="is-active"
           to="/performance"
         >
           Performance
         </NavLink>
         <NavLink
-          className="router-link"
+          className="router-link history-tab"
           activeClassName="is-active"
           to="/history"
         >
           History
         </NavLink>
         <NavLink
-          className="router-link"
+          className="router-link web-metrics-tab"
           activeClassName="is-active"
           to="/webMetrics"
         >
           Web Metrics
         </NavLink>
-        <NavLink className="router-link" activeClassName="is-active" to="/tree">
+        <NavLink className="router-link tree-tab" activeClassName="is-active" to="/tree">
           Tree
         </NavLink>
         {isRecoil && (
