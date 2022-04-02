@@ -34,40 +34,28 @@ export default (state, action) => produce(state, draft => {
       }
     }
   };
+  
   switch (action.type) {
-    // Save case will store the series user wants to save to the chrome local storage
+    // This saves the series user wants to save to chrome local storage
     case types.SAVE: {
-      // console.log('reducer reached')
-      console.log(tabs[currentTab].seriesSavedStatus)
       const { newSeries, newSeriesName } = action.payload; 
-      console.log('seriesName from reducer', newSeriesName)
-      //Grab the seriesArray from localStorage if it exists (and it will be in stringified form if it exists)
-      //If it exists, parse it
-      //Grab newSeries from payload (already in JSON form) and push it to seriesArray
-      //Stringify seriesArray
-      //upload it to localstorage
       if (!tabs[currentTab].seriesSavedStatus) {
-        console.log('false case reacHED')
         tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
         break;
       }
+      // Runs if series name input box is active.
+      // Updates chrome local storage with the newly saved series. Console logging the seriesArray grabbed from local storage may be helpful.
       if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' || tabs[currentTab].seriesSavedStatus === 'noSeriesNameError') {
-        console.log('main case reached')
         if (!newSeriesName) {
-          console.log('failed name check:', newSeriesName)
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'noSeriesNameError' };
           break;
         }
-        console.log('post seriesNameCheck')
         let seriesArray = localStorage.getItem('project');
-        // seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
-        if (seriesArray === null) seriesArray = [];
-        else seriesArray = JSON.parse(seriesArray);
+        seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
         newSeries.name = newSeriesName;
         seriesArray.push(newSeries);
-        console.log('before setItem:', newSeries);
+        console.log(seriesArray)
         localStorage.setItem('project', JSON.stringify(seriesArray));
-        console.log('save reducer:', localStorage);
         tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
         break;
       }

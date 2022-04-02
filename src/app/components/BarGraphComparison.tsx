@@ -237,11 +237,11 @@ const BarGraphComparison = props => {
   }
   const seriesList = comparison.map(elem => elem.data.barStack);
   const actionsList = seriesList.flat();
- const testList = actionsList.map(elem => elem.name);
+  const testList = actionsList.map(elem => elem.name);
  
   const finalList = [];
   for (let i = 0; i < testList.length; i++) {
-    if (testList[i] !== "") finalList.push(testList[i]);
+    if (testList[i] !== "" && !finalList.includes(testList[i])) finalList.push(testList[i]);
   }
    console.log('Final List', finalList)
   // )
@@ -295,15 +295,15 @@ const BarGraphComparison = props => {
               onClose={picHandleClose}
               onOpen={picHandleOpen}
               value={snapshots} //snapshots
-              onChange={picHandleChange}
+              // onChange={picHandleChange}
             >
               {!comparison[snapshots] ? (
                 <MenuItem>No snapshots available</MenuItem>
               ) : (
-                // finalList.map((elem, index) => (
-                  // <MenuItem value={index}>{elem}</MenuItem>
-                  <MenuItem value="test">Testing</MenuItem>
-                )
+                finalList.map((elem, index) => (
+                  <MenuItem value={index}>{elem}</MenuItem>
+                  // <MenuItem value="test">{}</MenuItem>
+                )))
               }
             </Select>
           </FormControl>

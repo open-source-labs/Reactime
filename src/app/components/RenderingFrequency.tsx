@@ -47,7 +47,7 @@ const ComponentCard = props => {
 
   const dataComponentArray = [];
   for (let i = 0; i < information.length; i++) {
-    dataComponentArray.push(<DataComponent header={Object.keys(information[i])} paragraphs={Object.values(information[i])} />);
+    dataComponentArray.push(<DataComponent key={`DataComponent${i}`} header={Object.keys(information[i])} paragraphs={Object.values(information[i])} />);
   }
 
   return (
@@ -102,8 +102,7 @@ const DataComponent = props => {
         {header}
       </h4>
       <p>
-
-        {paragraphs}
+        {`renderTime: ${paragraphs[0].rendertime}`}
       </p>
     </div>
   );
