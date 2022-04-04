@@ -79,8 +79,6 @@ const BarGraphComparison = props => {
   const [maxRender, setMaxRender] = React.useState(data.maxTotalRender);
 
   function titleFilter(comparisonArray) {
-    // const comparisonArrayModded = comparisonArray[0];
-    console.log('titleFilter', comparisonArray);
     return comparisonArray.filter(
       elem => elem.title.split('-')[1] === tabs[currentTab].title.split('-')[1],
     );
@@ -121,9 +119,6 @@ const BarGraphComparison = props => {
   // with the render time of the current tab.
   // The max render time will determine the Y-axis's highest number.
   const calculateMaxTotalRender = series => {
-    console.log(comparison)
-    console.log(series)
-    // let currentMax = 5
     const currentSeriesBarStacks = !comparison[series]
       ? []
       : comparison[series].data.barStack;
@@ -244,7 +239,6 @@ const BarGraphComparison = props => {
     if (testList[i] !== "" && !finalList.includes(testList[i])) finalList.push(testList[i]);
   }
    console.log('Final List', finalList)
-  // )
   
   return (
     <div>

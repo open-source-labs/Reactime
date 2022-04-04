@@ -14,6 +14,7 @@ const RenderingFrequency = props => {
         const currentComponent = perfData[componentName];
         return (
           <ComponentCard
+            key={componentName}
             componentName={componentName}
             stateType={currentComponent.stateType}
             averageRenderTime={(

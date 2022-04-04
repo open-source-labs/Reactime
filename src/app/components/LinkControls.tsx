@@ -118,7 +118,7 @@ export default function LinkControls({
       />
       <datalist id='nodeOptions'>
         {nodeList.map(node => (
-          <option value={node.name}>{node.name}</option>
+          <option key={node.name} value={node.name}>{node.name}</option>
         ))}
       </datalist>
 
