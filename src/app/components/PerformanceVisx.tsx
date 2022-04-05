@@ -16,6 +16,7 @@ import RenderingFrequency from './RenderingFrequency';
 // import Switch from '@material-ui/core/Switch';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
+import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useStoreContext } from '../store';
 // import snapshots from './snapshots';
 import snapshots from './snapshots';
@@ -174,17 +175,27 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
 
 // Retrieve snapshot series data from Chrome's local storage.
 const allStorage = () => {
-  // const keys = Object.keys(localStorage);
   let values = localStorage.getItem('project')
   values = values === null ? [] : JSON.parse(values);
-  // let i = keys.length;
-  // while (i--) {
-  //   const series = localStorage.getItem(keys[i]);
-  //   values.push(JSON.parse(series));
-  // }
-  console.log('allstorage values', values);
+  console.log('allStorage', values)
   return values;
 };
+
+const getActions = () => {
+  let seriesArr = localStorage.getItem('project')
+  seriesArr = seriesArr === null ? [] : JSON.parse(seriesArr);
+  const actionsArr = [];
+
+  if (seriesArr.length) {
+    for (let i = 0; i < seriesArr.length; i++) {
+      for (const action of seriesArr[i].data.barStack) {
+        if (action.name !== '') actionsArr.push(action);
+      }
+    }
+  }
+  console.log('actionsArr', actionsArr)
+  return actionsArr;
+}
 
 // Gets snapshot Ids for the regular bar graph view.
 const getSnapshotIds = (obj, snapshotIds = []): string[] => {
@@ -211,30 +222,44 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
   return perfData;
 };
 
+
+
 /* EXPORT COMPONENT */
 const PerformanceVisx = (props: BarStackProps) => {
   // hook used to dispatch onhover action in rect
-  const {
-    width, height, snapshots, hierarchy,
-  } = props;
+  const { width, height, snapshots, hierarchy, } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const [detailsView, setDetailsView] = useState('barStack');
   const [comparisonView, setComparisonView] = useState('barStack');
   const [comparisonData, setComparisonData] = useState();
   const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
+  const [ series, setSeries ] = useState(true);
+  const [ action, setAction ] = useState(false);
 
   const renderComparisonBargraph = () => {
-    if (hierarchy) {
-      return (
-        <BarGraphComparison
-          comparison={allStorage()}
-          data={data}
+    if (hierarchy && series) return (
+      <BarGraphComparison
+        comparison={allStorage()}
+        data={data}
+        width={width}
+        height={height}
+        setSeries={setSeries}
+        series={series}
+        setAction={setAction}
+      />
+    );
+    return (
+      <BarGraphComparisonActions 
+          // comparison={allStorage()}
+          data={getActions()}
           width={width}
           height={height}
-        />
-      );
-    }
+          setSeries={setSeries}
+          series={series}
+          setAction={setAction}
+      />
+    );
   };
 
   const renderBargraph = () => {

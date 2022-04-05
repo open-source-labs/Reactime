@@ -254,7 +254,7 @@ const BarGraphComparison = props => {
               dispatch(deleteSeries());
             }}
           >
-            Clear All Series
+            Clear All Series1
           </button>
           <h4 style={{ padding: '0 1rem' }}>Compare Series: </h4>
           <FormControl variant="outlined" className={classes.formControl}>
@@ -330,59 +330,6 @@ const BarGraphComparison = props => {
         />
         <Group top={margin.top} left={margin.left}>
           <BarStack
-            // Current Tab bar stack.
-            data={setXpointsCurrentTab()}
-            keys={keys}
-            x={getCurrentTab}
-            xScale={snapshotIdScale}
-            yScale={renderingScale}
-            color={colorScale}
-          >
-            {barStacks => barStacks.map((barStack, idx) => {
-              // Uses map method to iterate through all components,
-              // creating a rect component (from visx) for each iteration.
-              // height/width/etc. are calculated by visx.
-              // to set X and Y scale, it  will used the p`assed in function and
-              // will run it on the array thats outputted by data
-              const bar = barStack.bars[currentIndex];
-              if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
-                bar.height = 0;
-              }
-              return (
-                <rect
-                  key={`bar-stack-${idx}-NewView`}
-                  x={bar.x}
-                  y={bar.y}
-                  height={bar.height === 0 ? null : bar.height}
-                  width={bar.width}
-                  fill={bar.color}
-                    /* TIP TOOL EVENT HANDLERS */
-                    // Hides tool tip once cursor moves off the current rect
-                  onMouseLeave={() => {
-                    dispatch(
-                      onHoverExit(data.componentData[bar.key].rtid),
-                      (tooltipTimeout = window.setTimeout(() => {
-                        hideTooltip();
-                      }, 300)),
-                    );
-                  }}
-                    // Cursor position in window updates position of the tool tip
-                  onMouseMove={event => {
-                    dispatch(onHover(data.componentData[bar.key].rtid));
-                    if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                    const top = event.clientY - margin.top - bar.height;
-                    const left = bar.x + bar.width / 2;
-                    showTooltip({
-                      tooltipData: bar,
-                      tooltipTop: top,
-                      tooltipLeft: left,
-                    });
-                  }}
-                />
-              );
-            })}
-          </BarStack>
-          <BarStack
             // Comparison Barstack (populates based on series selected)
             // to set X and Y scale, it  will used the passed in function and
             // will run it on the array thats outputted by data
@@ -439,6 +386,53 @@ const BarGraphComparison = props => {
                 />
               );
             })}
+          </BarStack>
+          <BarStack
+            data={data.barStack}
+            keys={keys}
+            x={getSnapshotId}
+            xScale={snapshotIdScale}
+            yScale={renderingScale}
+            color={colorScale}
+          >
+            {barStacks => barStacks.map(barStack => barStack.bars.map((bar, idx) => {
+              // Hides new components if components don't exist in previous snapshots.
+              if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
+                bar.height = 0;
+              }
+              return (
+                <rect
+                  key={`bar-stack-${barStack.id}-${bar.id}`}
+                  x={bar.x}
+                  y={bar.y}
+                  height={bar.height === 0 ? null : bar.height}
+                  width={bar.width}
+                  fill={bar.color}
+                      /* TIP TOOL EVENT HANDLERS */
+                      // Hides tool tip once cursor moves off the current rect.
+                  onMouseLeave={() => {
+                    dispatch(
+                      onHoverExit(data.componentData[bar.key].rtid),
+                      (tooltipTimeout = window.setTimeout(() => {
+                        hideTooltip();
+                      }, 300)),
+                    );
+                  }}
+                      // Cursor position in window updates position of the tool tip.
+                  onMouseMove={event => {
+                    dispatch(onHover(data.componentData[bar.key].rtid));
+                    if (tooltipTimeout) clearTimeout(tooltipTimeout);
+                    const top = event.clientY - margin.top - bar.height;
+                    const left = bar.x + bar.width / 2;
+                    showTooltip({
+                      tooltipData: bar,
+                      tooltipTop: top,
+                      tooltipLeft: left,
+                    });
+                  }}
+                />
+              );
+            }))}
           </BarStack>
         </Group>
         <AxisLeft
