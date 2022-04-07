@@ -189,7 +189,10 @@ const getActions = () => {
   if (seriesArr.length) {
     for (let i = 0; i < seriesArr.length; i++) {
       for (const action of seriesArr[i].data.barStack) {
-        if (action.name !== '') actionsArr.push(action);
+        if (action.name !== '') {
+          action.seriesName = seriesArr[i].name;
+          actionsArr.push(action);
+        }
       }
     }
   }
@@ -252,11 +255,11 @@ const PerformanceVisx = (props: BarStackProps) => {
     return (
       <BarGraphComparisonActions 
           // comparison={allStorage()}
-          data={getActions()}
+          data={data}
           width={width}
           height={height}
           setSeries={setSeries}
-          series={series}
+          action={action}
           setAction={setAction}
       />
     );

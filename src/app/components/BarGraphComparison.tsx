@@ -215,9 +215,11 @@ const BarGraphComparison = props => {
     return comparison[series].data.barStack;
   }
   function setXpointsCurrentTab() {
+    console.log('unprocessedData',data)
     data.barStack.forEach(element => {
       element.currentTab = 'currentTab';
     });
+    console.log('processedData', data.barStack)
     return data.barStack;
   }
   const animateButton = function (e) {

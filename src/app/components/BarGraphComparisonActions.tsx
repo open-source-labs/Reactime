@@ -330,64 +330,6 @@ const BarGraphComparison = props => {
         />
         <Group top={margin.top} left={margin.left}>
           <BarStack
-            // Comparison Barstack (populates based on series selected)
-            // to set X and Y scale, it  will used the passed in function and
-            // will run it on the array thats outputted by data
-            // setXpointsComparison()}
-            // comparison[series].data.barStack
-            data={!comparison[series] ? [] : setXpointsComparison()}
-            keys={keys}
-            x={getCurrentTab}
-            xScale={snapshotIdScale}
-            yScale={renderingScale}
-            color={colorScale}
-          >
-            {barStacks => barStacks.map((barStack, idx) => {
-              // Uses map method to iterate through all components,
-              // creating a rect component (from visx) for each iteration.
-              // height/width/etc. are calculated by visx.
-              if (!barStack.bars[currentIndex]) {
-                return <h1>No Comparison</h1>;
-              }
-              const bar = barStack.bars[currentIndex];
-              if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
-                bar.height = 0;
-              }
-              return (
-                <rect
-                  key={`bar-stack-${idx}-${bar.index}`}
-                  x={bar.x}
-                  y={bar.y}
-                  height={bar.height === 0 ? null : bar.height}
-                  width={bar.width}
-                  fill={bar.color}
-                    /* TIP TOOL EVENT HANDLERS */
-                    // Hides tool tip once cursor moves off the current rect
-                  onMouseLeave={() => {
-                    dispatch(
-                      onHoverExit(data.componentData[bar.key].rtid),
-                      (tooltipTimeout = window.setTimeout(() => {
-                        hideTooltip();
-                      }, 300)),
-                    );
-                  }}
-                    // Cursor position in window updates position of the tool tip
-                  onMouseMove={event => {
-                    dispatch(onHover(data.componentData[bar.key].rtid));
-                    if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                    const top = event.clientY - margin.top - bar.height;
-                    const left = bar.x + bar.width / 2;
-                    showTooltip({
-                      tooltipData: bar,
-                      tooltipTop: top,
-                      tooltipLeft: left,
-                    });
-                  }}
-                />
-              );
-            })}
-          </BarStack>
-          <BarStack
             data={data.barStack}
             keys={keys}
             x={getSnapshotId}
@@ -396,6 +338,7 @@ const BarGraphComparison = props => {
             color={colorScale}
           >
             {barStacks => barStacks.map(barStack => barStack.bars.map((bar, idx) => {
+              console.log(bar)
               // Hides new components if components don't exist in previous snapshots.
               if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                 bar.height = 0;

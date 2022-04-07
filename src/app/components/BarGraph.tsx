@@ -139,7 +139,7 @@ const BarGraph = props => {
   }
 
   // const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" className="seriesname" placeholder="Series Name" /> : null
-
+  console.log('dataFromBarGraph', data)
   return (
     <div className="bargraph-position">
       <input type="text" id ="seriesname" placeholder="Series Name" />
@@ -181,6 +181,7 @@ const BarGraph = props => {
             color={colorScale}
           >
             {barStacks => barStacks.map(barStack => barStack.bars.map((bar, idx) => {
+              console.log(bar)
               // Hides new components if components don't exist in previous snapshots.
               if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                 bar.height = 0;
