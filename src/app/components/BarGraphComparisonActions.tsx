@@ -67,7 +67,7 @@ const tooltipStyles = {
   fontFamily: 'Roboto',
 };
 
-const BarGraphComparison = props => {
+const BarGraphComparisonActions = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
     width, height, data, comparison, setSeries, series, setAction
@@ -77,13 +77,7 @@ const BarGraphComparison = props => {
   const [open, setOpen] = React.useState(false);
   const [picOpen, setPicOpen] = React.useState(false);
   const [maxRender, setMaxRender] = React.useState(data.maxTotalRender);
-
-  function titleFilter(comparisonArray) {
-    return comparisonArray.filter(
-      elem => elem.title.split('-')[1] === tabs[currentTab].title.split('-')[1],
-    );
-  }
-
+  
   const currentIndex = tabs[currentTab].sliderIndex;
 
   const {
@@ -97,20 +91,17 @@ const BarGraphComparison = props => {
   let tooltipTimeout: number;
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
-
-  const keys = Object.keys(data.componentData);
-
+  const keys = Object.keys(data[0]).filter((componentName) => componentName !== 'name' && componentName !== 'seriesName' && componentName !== 'snapshotId');
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSnapshotId = (d: snapshot) => d.snapshotId;
   const formatSnapshotId = id => `Snapshot ID: ${id}`;
   const formatRenderTime = time => `${time} ms `;
-  const getCurrentTab = storedSeries => storedSeries.currentTab;
+  const getSeriesName = action => action.seriesName;
 
   // create visualization SCALES with cleaned data
   // the domain array/xAxisPoints elements will place the bars along the x-axis
-  const xAxisPoints = ['currentTab', 'comparison'];
-  const snapshotIdScale = scaleBand<string>({
-    domain: xAxisPoints,
+  const seriesNameScale = scaleBand<string>({
+    domain: data.map(getSeriesName),
     padding: 0.2,
   });
   // This function will iterate through the snapshots of the series,
@@ -118,23 +109,23 @@ const BarGraphComparison = props => {
   // We'll then use it in the renderingScale function and compare
   // with the render time of the current tab.
   // The max render time will determine the Y-axis's highest number.
-  const calculateMaxTotalRender = series => {
-    const currentSeriesBarStacks = !comparison[series]
-      ? []
-      : comparison[series].data.barStack;
-    if (currentSeriesBarStacks.length === 0) return 0;
+  const calculateMaxTotalRender = () => {
     let currentMax = -Infinity;
-    for (let i = 0; i < currentSeriesBarStacks.length; i += 1) {
-      const renderTimes = Object.values(currentSeriesBarStacks[i]).slice(1);
-      const renderTotal = renderTimes.reduce((acc, curr) => acc + curr);
-      if (renderTotal > currentMax) currentMax = renderTotal;
+    for(let i = 0; i < data.length; i++) {
+      let currentSum = 0;
+
+      for(const key of keys) {
+        if(data[i][key]) currentSum += data[i][key]
+      }
+
+      if(currentSum > currentMax) currentMax = currentSum;
     }
     return currentMax;
   };
 
   // the domain array on rendering scale will set the coordinates for Y-aix points.
-  const renderingScale = scaleLinear<number>({
-    domain: [0, Math.max(calculateMaxTotalRender(series), data.maxTotalRender)],
+  const renderingScale = scaleBand<number>({
+    domain: [0, Math.max(calculateMaxTotalRender(), data.maxTotalRender)],
     nice: true,
   });
   // the domain array will assign each key a different color to make rectangle boxes
@@ -147,7 +138,7 @@ const BarGraphComparison = props => {
   // setting max dimensions and scale ranges
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - 200;
-  snapshotIdScale.rangeRound([0, xMax]);
+  seriesNameScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
   // useStyles will change the styling on save series dropdown feature
@@ -189,7 +180,6 @@ const BarGraphComparison = props => {
   const handleActionChange = event => {
     setAction(event.target.value);
     setSeries(false);
-    console.log(event.target.value)
     // setXpoints();
   };
 
@@ -203,23 +193,7 @@ const BarGraphComparison = props => {
     // setXpoints();
   };
 
-  // manually assignin X -axis points with tab ID.
-  function setXpointsComparison() {
-    comparison[series].data.barStack.forEach(elem => {
-      elem.currentTab = 'comparison';
-    });
-    // comparison[series].data.barStack.currentTab = currentTab;
-    console.log(comparison)
-    console.log(series)
-    console.log(comparison[series].data.barStack)
-    return comparison[series].data.barStack;
-  }
-  function setXpointsCurrentTab() {
-    data.barStack.forEach(element => {
-      element.currentTab = 'currentTab';
-    });
-    return data.barStack;
-  }
+
   const animateButton = function (e) {
     e.preventDefault;
     e.target.classList.add('animate');
@@ -241,12 +215,13 @@ const BarGraphComparison = props => {
   for (let i = 0; i < testList.length; i++) {
     if (testList[i] !== "" && !finalList.includes(testList[i])) finalList.push(testList[i]);
   }
-   console.log('Final List', finalList)
+
+  console.log(data);
+  console.log(keys);
   
   return (
     <div>
       <div className="series-options-container">
-
         <div className="dropdown-and-delete-series-container">
           <button
             className="delete-button"
@@ -254,7 +229,7 @@ const BarGraphComparison = props => {
               dispatch(deleteSeries());
             }}
           >
-            Clear All Series1
+            Clear All Series
           </button>
           <h4 style={{ padding: '0 1rem' }}>Compare Series: </h4>
           <FormControl variant="outlined" className={classes.formControl}>
@@ -320,25 +295,26 @@ const BarGraphComparison = props => {
         <Grid
           top={margin.top}
           left={margin.left}
-          xScale={snapshotIdScale}
+          xScale={seriesNameScale}
           yScale={renderingScale}
           width={xMax}
           height={yMax}
           stroke="black"
           strokeOpacity={0.1}
-          xOffset={snapshotIdScale.bandwidth() / 2}
+          xOffset={seriesNameScale.bandwidth() / 2}
         />
         <Group top={margin.top} left={margin.left}>
           <BarStack
-            data={data.barStack}
+            data={data}
             keys={keys}
-            x={getSnapshotId}
-            xScale={snapshotIdScale}
+            x={getSeriesName}
+            xScale={seriesNameScale}
             yScale={renderingScale}
             color={colorScale}
           >
             {barStacks => barStacks.map(barStack => barStack.bars.map((bar, idx) => {
-              console.log(bar)
+              console.log('barstack', barStack)
+              console.log('bar', bar)
               // Hides new components if components don't exist in previous snapshots.
               if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                 bar.height = 0;
@@ -395,7 +371,7 @@ const BarGraphComparison = props => {
         <AxisBottom
           top={yMax + margin.top}
           left={margin.left}
-          scale={snapshotIdScale}
+          scale={seriesNameScale}
           stroke={axisColor}
           tickStroke={axisColor}
           strokeWidth={2}
@@ -449,4 +425,4 @@ const BarGraphComparison = props => {
   );
 };
 
-export default BarGraphComparison;
+export default BarGraphComparisonActions;

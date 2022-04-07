@@ -255,12 +255,13 @@ const PerformanceVisx = (props: BarStackProps) => {
     return (
       <BarGraphComparisonActions 
           // comparison={allStorage()}
-          data={data}
+          data={getActions()}
           width={width}
           height={height}
           setSeries={setSeries}
           action={action}
           setAction={setAction}
+          comparison={allStorage()}
       />
     );
   };
