@@ -300,7 +300,7 @@ const BarGraphComparison = props => {
                 <MenuItem>No snapshots available</MenuItem>
               ) : (
                 finalList.map((elem, index) => (
-                  <MenuItem value={index}>{elem}</MenuItem>
+                  <MenuItem value={elem}>{elem}</MenuItem>
                   // <MenuItem value="test">{}</MenuItem>
                 )))
               }

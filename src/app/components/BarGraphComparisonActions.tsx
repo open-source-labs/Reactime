@@ -70,13 +70,12 @@ const tooltipStyles = {
 const BarGraphComparisonActions = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
-    width, height, data, comparison, setSeries, series, setAction
+    width, height, data, comparison, setSeries, series, setAction, action
   } = props;
   // const [series, setSeries] = React.useState(0);
   const [snapshots, setSnapshots] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [picOpen, setPicOpen] = React.useState(false);
-  const [maxRender, setMaxRender] = React.useState(data.maxTotalRender);
   
   const currentIndex = tabs[currentTab].sliderIndex;
 
@@ -124,8 +123,8 @@ const BarGraphComparisonActions = props => {
   };
 
   // the domain array on rendering scale will set the coordinates for Y-aix points.
-  const renderingScale = scaleBand<number>({
-    domain: [0, Math.max(calculateMaxTotalRender(), data.maxTotalRender)],
+  const renderingScale = scaleLinear<number>({
+    domain: [0, calculateMaxTotalRender()],
     nice: true,
   });
   // the domain array will assign each key a different color to make rectangle boxes
@@ -266,14 +265,14 @@ const BarGraphComparisonActions = props => {
               open={picOpen}
               onClose={picHandleClose}
               onOpen={picHandleOpen}
-              value={''} //snapshots
+              value={action} //snapshots
               onChange={handleActionChange}
             >
               {!comparison[snapshots] ? (
                 <MenuItem>No snapshots available</MenuItem>
               ) : (
                 finalList.map((elem, index) => (
-                  <MenuItem value={index}>{elem}</MenuItem>
+                  <MenuItem value={elem}>{elem}</MenuItem>
                   // <MenuItem value="test">{}</MenuItem>
                 )))
               }
@@ -312,13 +311,13 @@ const BarGraphComparisonActions = props => {
             yScale={renderingScale}
             color={colorScale}
           >
-            {barStacks => barStacks.map(barStack => barStack.bars.map((bar, idx) => {
+            {barStacks => barStacks.map(barStack => barStack.bars.map((bar) => {
               console.log('barstack', barStack)
               console.log('bar', bar)
               // Hides new components if components don't exist in previous snapshots.
-              if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
-                bar.height = 0;
-              }
+              // if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
+              //   bar.height = 0;
+              // }
               return (
                 <rect
                   key={`bar-stack-${barStack.id}-${bar.id}`}

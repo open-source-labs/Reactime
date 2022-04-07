@@ -181,24 +181,7 @@ const allStorage = () => {
   return values;
 };
 
-const getActions = () => {
-  let seriesArr = localStorage.getItem('project')
-  seriesArr = seriesArr === null ? [] : JSON.parse(seriesArr);
-  const actionsArr = [];
 
-  if (seriesArr.length) {
-    for (let i = 0; i < seriesArr.length; i++) {
-      for (const action of seriesArr[i].data.barStack) {
-        if (action.name !== '') {
-          action.seriesName = seriesArr[i].name;
-          actionsArr.push(action);
-        }
-      }
-    }
-  }
-  console.log('actionsArr', actionsArr)
-  return actionsArr;
-}
 
 // Gets snapshot Ids for the regular bar graph view.
 const getSnapshotIds = (obj, snapshotIds = []): string[] => {
@@ -239,6 +222,26 @@ const PerformanceVisx = (props: BarStackProps) => {
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   const [ series, setSeries ] = useState(true);
   const [ action, setAction ] = useState(false);
+
+  const getActions = () => {
+    let seriesArr = localStorage.getItem('project')
+    seriesArr = seriesArr === null ? [] : JSON.parse(seriesArr);
+    const actionsArr = [];
+  
+    if (seriesArr.length) {
+      for (let i = 0; i < seriesArr.length; i++) {
+        for (const actionObj of seriesArr[i].data.barStack) {
+          if (actionObj.name === action) {
+            actionObj.seriesName = seriesArr[i].name;
+            actionsArr.push(actionObj);
+          }
+        }
+      }
+    }
+    console.log(action)
+    console.log('actionsArr', actionsArr)
+    return actionsArr;
+  }
 
   const renderComparisonBargraph = () => {
     if (hierarchy && series) return (
