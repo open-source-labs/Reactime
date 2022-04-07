@@ -312,33 +312,25 @@ const BarGraphComparisonActions = props => {
             color={colorScale}
           >
             {barStacks => barStacks.map(barStack => barStack.bars.map((bar) => {
-              console.log('barstack', barStack)
-              console.log('bar', bar)
-              // Hides new components if components don't exist in previous snapshots.
-              // if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
-              //   bar.height = 0;
-              // }
+              console.log(bar)
               return (
                 <rect
-                  key={`bar-stack-${barStack.id}-${bar.id}`}
+                  key={`bar-stack-${bar.bar.data.seriesName}-${bar.key}`}
                   x={bar.x}
                   y={bar.y}
                   height={bar.height === 0 ? null : bar.height}
                   width={bar.width}
                   fill={bar.color}
-                      /* TIP TOOL EVENT HANDLERS */
-                      // Hides tool tip once cursor moves off the current rect.
+                  /* TIP TOOL EVENT HANDLERS */
+                  // Hides tool tip once cursor moves off the current rect.
                   onMouseLeave={() => {
-                    dispatch(
-                      onHoverExit(data.componentData[bar.key].rtid),
-                      (tooltipTimeout = window.setTimeout(() => {
-                        hideTooltip();
-                      }, 300)),
-                    );
+                    tooltipTimeout = window.setTimeout(() => {
+                      hideTooltip();
+                    }, 300);
                   }}
-                      // Cursor position in window updates position of the tool tip.
+                  // Cursor position in window updates position of the tool tip.
                   onMouseMove={event => {
-                    dispatch(onHover(data.componentData[bar.key].rtid));
+                    // dispatch(onHover(data.componentData[bar.key].rtid));
                     if (tooltipTimeout) clearTimeout(tooltipTimeout);
                     const top = event.clientY - margin.top - bar.height;
                     const left = bar.x + bar.width / 2;
@@ -404,9 +396,10 @@ const BarGraphComparisonActions = props => {
           <div style={{ color: colorScale(tooltipData.key) }}>
             {' '}
             <strong>{tooltipData.key}</strong>
+            {console.log(tooltipData)}
             {' '}
           </div>
-          <div>{data.componentData[tooltipData.key].stateType}</div>
+          {/* <div>{data.componentData[tooltipData.key].stateType}</div> */}
           <div>
             {' '}
             {formatRenderTime(tooltipData.bar.data[tooltipData.key])}
@@ -415,7 +408,7 @@ const BarGraphComparisonActions = props => {
           <div>
             {' '}
             <small>
-              {formatSnapshotId(getSnapshotId(tooltipData.bar.data))}
+              {tooltipData.bar.data.seriesName}
             </small>
           </div>
         </TooltipInPortal>

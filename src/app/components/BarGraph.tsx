@@ -181,14 +181,13 @@ const BarGraph = props => {
             color={colorScale}
           >
             {barStacks => barStacks.map(barStack => barStack.bars.map((bar, idx) => {
-              console.log(bar)
               // Hides new components if components don't exist in previous snapshots.
               if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                 bar.height = 0;
               }
               return (
                 <rect
-                  key={`bar-stack-${barStack.id}-${bar.id}`}
+                  key={`bar-stack-${bar.bar.data.snapshotId}-${bar.key}`}
                   x={bar.x}
                   y={bar.y}
                   height={bar.height === 0 ? null : bar.height}
