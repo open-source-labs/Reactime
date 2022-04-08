@@ -72,17 +72,9 @@ const BarGraphComparison = props => {
   const {
     width, height, data, comparison, setSeries, series, setAction
   } = props;
-  // const [series, setSeries] = React.useState(0);
   const [snapshots, setSnapshots] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [picOpen, setPicOpen] = React.useState(false);
-  const [maxRender, setMaxRender] = React.useState(data.maxTotalRender);
-
-  function titleFilter(comparisonArray) {
-    return comparisonArray.filter(
-      elem => elem.title.split('-')[1] === tabs[currentTab].title.split('-')[1],
-    );
-  }
 
   const currentIndex = tabs[currentTab].sliderIndex;
 
@@ -173,34 +165,27 @@ const BarGraphComparison = props => {
   const handleSeriesChange = event => {
     setSeries(event.target.value);
     setAction(false);
-    // setXpoints();
   };
 
   const handleClose = () => {
     setOpen(false);
-    // setXpoints();
   };
 
   const handleOpen = () => {
     setOpen(true);
-    // setXpoints();
   };
 
   const handleActionChange = event => {
     setAction(event.target.value);
     setSeries(false);
-    console.log(event.target.value)
-    // setXpoints();
   };
 
   const picHandleClose = () => {
     setPicOpen(false);
-    // setXpoints();
   };
 
   const picHandleOpen = () => {
     setPicOpen(true);
-    // setXpoints();
   };
 
   // manually assignin X -axis points with tab ID.
@@ -208,18 +193,12 @@ const BarGraphComparison = props => {
     comparison[series].data.barStack.forEach(elem => {
       elem.currentTab = 'comparison';
     });
-    // comparison[series].data.barStack.currentTab = currentTab;
-    console.log(comparison)
-    console.log(series)
-    console.log(comparison[series].data.barStack)
     return comparison[series].data.barStack;
   }
   function setXpointsCurrentTab() {
-    console.log('unprocessedData',data)
     data.barStack.forEach(element => {
       element.currentTab = 'currentTab';
     });
-    console.log('processedData', data.barStack)
     return data.barStack;
   }
   const animateButton = function (e) {
@@ -243,7 +222,6 @@ const BarGraphComparison = props => {
   for (let i = 0; i < testList.length; i++) {
     if (testList[i] !== "" && !finalList.includes(testList[i])) finalList.push(testList[i]);
   }
-   console.log('Final List', finalList)
   
   return (
     <div>
@@ -274,11 +252,8 @@ const BarGraphComparison = props => {
               {!comparison.length ? (
                 <MenuItem>No series available</MenuItem>
               ) : (
-                // titleFilter(comparison).map((tabElem, index) => (
-                //   <MenuItem value={index}>{`Series ${index + 1}`}</MenuItem>
-                // ))
                 comparison.map((tabElem, index) => (
-                  <MenuItem value={index}>{tabElem.name}</MenuItem>
+                  <MenuItem key={`MenuItem${tabElem.name}`} value={index}>{tabElem.name}</MenuItem>
                 ))
               )}
             </Select>

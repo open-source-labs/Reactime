@@ -45,9 +45,6 @@ describe('unit testing for Action.tsx', () => {
       wrapper.setProps({ selected: false });
       expect(wrapper.hasClass('action-component selected')).toEqual(false);
     });
-    test('should have a text that is equal to props.index', () => {
-      expect(wrapper.find('.action-component-text').text()).toEqual(`${props.displayName}:  ${props.componentName} `);
-    });
 
     test('should invoke dispatch method when clicked', () => {
       wrapper.find('.action-component').simulate('click');

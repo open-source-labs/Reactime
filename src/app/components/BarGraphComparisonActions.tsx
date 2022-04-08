@@ -72,13 +72,10 @@ const BarGraphComparisonActions = props => {
   const {
     width, height, data, comparison, setSeries, series, setAction, action
   } = props;
-  // const [series, setSeries] = React.useState(0);
   const [snapshots, setSnapshots] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [picOpen, setPicOpen] = React.useState(false);
   
-  const currentIndex = tabs[currentTab].sliderIndex;
-
   const {
     tooltipOpen,
     tooltipLeft,
@@ -90,11 +87,9 @@ const BarGraphComparisonActions = props => {
   let tooltipTimeout: number;
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
+  console.log(data)
   const keys = Object.keys(data[0]).filter((componentName) => componentName !== 'name' && componentName !== 'seriesName' && componentName !== 'snapshotId');
   // data accessor (used to generate scales) and formatter (add units for on hover box)
-  const getSnapshotId = (d: snapshot) => d.snapshotId;
-  const formatSnapshotId = id => `Snapshot ID: ${id}`;
-  const formatRenderTime = time => `${time} ms `;
   const getSeriesName = action => action.seriesName;
 
   // create visualization SCALES with cleaned data
@@ -215,9 +210,6 @@ const BarGraphComparisonActions = props => {
     if (testList[i] !== "" && !finalList.includes(testList[i])) finalList.push(testList[i]);
   }
 
-  console.log(data);
-  console.log(keys);
-  
   return (
     <div>
       <div className="series-options-container">
@@ -237,22 +229,15 @@ const BarGraphComparisonActions = props => {
               labelId="simple-select-outlined-label"
               id="simple-select-outlined"
               className={classes.select}
-              open={open}
-              onClose={handleClose}
-              onOpen={handleOpen}
+              // open={open}
+              // onClose={handleClose}
+              // onOpen={handleOpen}
               value={series}
               onChange={handleSeriesChange}
             >
               {!comparison.length ? (
                 <MenuItem>No series available</MenuItem>
-              ) : (
-                // titleFilter(comparison).map((tabElem, index) => (
-                //   <MenuItem value={index}>{`Series ${index + 1}`}</MenuItem>
-                // ))
-                comparison.map((tabElem, index) => (
-                  <MenuItem value={index}>{tabElem.name}</MenuItem>
-                ))
-              )}
+              ) : comparison.map((tabElem, index) => (<MenuItem key={`MenuItem${tabElem.name}`} value={index}>{tabElem.name}</MenuItem> ))}
             </Select>
           </FormControl>
           <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4>
@@ -262,18 +247,17 @@ const BarGraphComparisonActions = props => {
               labelId="snapshot-select"
               id="snapshot-select"
               className={classes.select}
-              open={picOpen}
-              onClose={picHandleClose}
-              onOpen={picHandleOpen}
+              // open={picOpen}
+              // onClose={picHandleClose}
+              // onOpen={picHandleOpen}
               value={action} //snapshots
               onChange={handleActionChange}
             >
               {!comparison[snapshots] ? (
                 <MenuItem>No snapshots available</MenuItem>
               ) : (
-                finalList.map((elem, index) => (
-                  <MenuItem value={elem}>{elem}</MenuItem>
-                  // <MenuItem value="test">{}</MenuItem>
+                finalList.map((elem) => (
+                  <MenuItem key={`MenuItem${elem}`} value={elem}>{elem}</MenuItem>
                 )))
               }
             </Select>
@@ -282,7 +266,6 @@ const BarGraphComparisonActions = props => {
       </div>
 
       <svg ref={containerRef} width={width} height={height}>
-        {}
         <rect
           x={0}
           y={0}
@@ -312,7 +295,6 @@ const BarGraphComparisonActions = props => {
             color={colorScale}
           >
             {barStacks => barStacks.map(barStack => barStack.bars.map((bar) => {
-              console.log(bar)
               return (
                 <rect
                   key={`bar-stack-${bar.bar.data.seriesName}-${bar.key}`}
@@ -330,7 +312,6 @@ const BarGraphComparisonActions = props => {
                   }}
                   // Cursor position in window updates position of the tool tip.
                   onMouseMove={event => {
-                    // dispatch(onHover(data.componentData[bar.key].rtid));
                     if (tooltipTimeout) clearTimeout(tooltipTimeout);
                     const top = event.clientY - margin.top - bar.height;
                     const left = bar.x + bar.width / 2;
@@ -382,7 +363,7 @@ const BarGraphComparisonActions = props => {
           Rendering Time (ms)
         </Text>
         <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill="#FFFFFF">
-          Series ID
+          Series Name
         </Text>
       </svg>
       {/* FOR HOVER OVER DISPLAY */}
@@ -394,22 +375,11 @@ const BarGraphComparisonActions = props => {
           style={tooltipStyles}
         >
           <div style={{ color: colorScale(tooltipData.key) }}>
-            {' '}
             <strong>{tooltipData.key}</strong>
-            {console.log(tooltipData)}
-            {' '}
           </div>
-          {/* <div>{data.componentData[tooltipData.key].stateType}</div> */}
+          <div> {`${tooltipData.bar.data[tooltipData.key]} ms`} </div>
           <div>
-            {' '}
-            {formatRenderTime(tooltipData.bar.data[tooltipData.key])}
-            {' '}
-          </div>
-          <div>
-            {' '}
-            <small>
-              {tooltipData.bar.data.seriesName}
-            </small>
+            <small> {tooltipData.bar.data.seriesName} </small>
           </div>
         </TooltipInPortal>
       )}

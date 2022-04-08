@@ -45,11 +45,7 @@ export default (state, action) => produce(state, draft => {
       }
       // Runs if series name input box is active.
       // Updates chrome local storage with the newly saved series. Console logging the seriesArray grabbed from local storage may be helpful.
-      if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' || tabs[currentTab].seriesSavedStatus === 'noSeriesNameError') {
-        if (!newSeriesName) {
-          tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'noSeriesNameError' };
-          break;
-        }
+      if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
         let seriesArray = localStorage.getItem('project');
         seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
         newSeries.name = newSeriesName;
