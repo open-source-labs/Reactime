@@ -10,6 +10,32 @@
 	padding: 1% 0 1% 0;
 }
 
+.introjs-tooltip {
+  color: black;
+  background-color: white;
+  min-width: 20rem;
+}
+.introjs-tooltiptext ul{
+	padding-left: 2px;
+}
+
+.introjs-helperLayer{
+  // border: 2px solid yellow
+}
+
+.tools-container {
+	display: flex;
+	justify-content: space-between;
+	border: .5px solid grey;
+	background-color: #35383e;
+	padding: 3px;
+	margin-bottom: 1rem;
+}
+
+#seriesname {
+	background-color: inherit;
+}
+
 @media (max-width: 500px) {
 	.buttons-container {
 		grid-template-columns: repeat(2, 1fr);

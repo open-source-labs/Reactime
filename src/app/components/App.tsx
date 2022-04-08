@@ -1,7 +1,10 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useState } from 'react';
+// import { Steps, Hints } from 'intro.js-react';
 import MainContainer from '../containers/MainContainer';
 import { StoreContext } from '../store';
 import mainReducer from '../reducers/mainReducer.js';
+
+// import 'intro.js/introjs.css';
 
 const initialState: {
   port: null | number,

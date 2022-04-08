@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useEffect } from 'react';
+
 import Action from '../components/Action';
 import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
@@ -17,7 +18,9 @@ function ActionContainer(props): JSX.Element {
   const {
     currLocation, hierarchy, sliderIndex, viewIndex, snapshots,
   } = tabs[currentTab];
-  const { toggleActionContainer, actionView, setActionView } = props;
+  const {
+    toggleActionContainer, actionView, setActionView
+  } = props;
   let actionsArr = [];
   const hierarchyArr: any[] = [];
 
@@ -55,9 +58,9 @@ function ActionContainer(props): JSX.Element {
       });
     }
   };
-  // the hierarchy gets set on the first click in the page
-  // when page in refreshed we may not have a hierarchy so we need to check if hierarchy was initialized
-  // if true invoke displayArray to display the hierarchy
+    // the hierarchy gets set on the first click in the page
+    // when page in refreshed we may not have a hierarchy so we need to check if hierarchy was initialized
+    // if true invoke displayArray to display the hierarchy
   if (hierarchy) displayArray(hierarchy);
 
   // handles keyboard presses, function passes an event and index of each action-component
@@ -114,12 +117,20 @@ function ActionContainer(props): JSX.Element {
           viewIndex={viewIndex}
           isCurrIndex={isCurrIndex}
         />
+
       );
     },
   );
   useEffect(() => {
     setActionView(true);
   }, [setActionView]);
+
+  const toggleRecord = () => {
+    port.postMessage({
+      action: 'toggleRecord',
+    });
+    // change color of record button or switch svg/img file
+  };
 
   // the conditional logic below will cause ActionContainer.test.tsx to fail as it cannot find the Empty button
   // UNLESS actionView={true} is passed into <ActionContainer /> in the beforeEach() call in ActionContainer.test.tsx
@@ -131,6 +142,7 @@ function ActionContainer(props): JSX.Element {
             <i />
           </a>
         </aside>
+        {/* <button className="recordBtn" onClick={toggleRecord}>Record</button> */}
       </div>
       {actionView ? (
         <div className="action-button-wrapper">

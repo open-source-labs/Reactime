@@ -96,10 +96,11 @@ const Action = (props: ActionProps): JSX.Element => {
   };
 
   return (
-    <div
+    <div className="individual-action">
+      <div
       // Invoking keyboard functionality; functionality is in ActionContainer;
-      onKeyDown={e => handleOnkeyDown(e, viewIndex)}
-      className={
+        onKeyDown={e => handleOnkeyDown(e, viewIndex)}
+        className={
         selected || last ? 'action-component selected' : 'action-component'
       }
       onClick={() => {
@@ -113,7 +114,7 @@ const Action = (props: ActionProps): JSX.Element => {
         <Trigger type="trigger">
           <div className="action-component-trigger" style={index > sliderIndex ? { color: '#5f6369' } : {}}>
             <div className="action-component-text">
-              {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `}
+              <input key={`ActionInput${displayName}`} type="text" className="actionname" placeholder={`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `} />
             </div>
             <button className="time-button" type="button">
               {displayTime}
@@ -142,10 +143,11 @@ const Action = (props: ActionProps): JSX.Element => {
                   </button>
                 )
             }
-          </div>
-        </Trigger>
-        <Hover type="hover" />
-      </ReactHover>
+            </div>
+          </Trigger>
+          <Hover type="hover" />
+        </ReactHover>
+      </div>
     </div>
   );
 };

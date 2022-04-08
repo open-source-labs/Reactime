@@ -1,4 +1,16 @@
 .action-container {
-  overflow: auto;
+  // overflow: auto;
   background-color: $brand-color;
+  overflow-x: hidden;
+}
+
+.actionname {
+  background-color: #25242a;
+  color: #fffeff;
+}
+
+.recordBtn{
+  position: relative;
+  left: 80%;
+  // visibility: hidden;
 }
