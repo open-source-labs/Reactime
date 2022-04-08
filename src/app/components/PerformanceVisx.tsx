@@ -1,22 +1,19 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 // @ts-nocheck
 import React, { useState } from 'react';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { ParentSize } from '@visx/responsive';
 import {
   MemoryRouter as Router,
   Route,
   NavLink,
   Switch,
 } from 'react-router-dom';
-import { Component } from 'react';
-import { render } from 'react-dom';
 import RenderingFrequency from './RenderingFrequency';
-// import Switch from '@material-ui/core/Switch';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
+import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useStoreContext } from '../store';
-// import snapshots from './snapshots';
-import { Component } from 'react';
+
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
 Barstacks display inconsistently...however, almost always displays upon initial test app load or
@@ -26,6 +23,7 @@ to note - all snapshots do render (check HTML doc) within the chrome extension b
 not display because height is not consistently passed to each bar. This side effect is only
 seen in recoil apps...
  */
+
 // typescript for PROPS from StateRoute.tsx
 interface BarStackProps {
   width: number;
@@ -33,49 +31,64 @@ interface BarStackProps {
   snapshots: [];
   hierarchy: any;
 }
-// function getComponentsArr(componentName, snapshots, node) {
-//   //Input: Name of component and all snapshots
-//   //Output: One array of each individual snapshot
-//   //NOTE:
-//     //Every snapshot is an object with a children array with a snapshot that also has a children array etc
-//     //Children arrays more than one signify siblings
-// }
-// // snapshots.map(rootNode => {
-// //     // rootNode.name
-// //   let currNode = rootNode
-// //   while (currNode) {
-// //     if (currNode.name === componentName) {
-// //       return currNode.componentData.props
-// //     } else {
-// //       currNode = currNode.children[0]
-// //       currNode = currNode.children[1]
-// //     }
-// //   }
-// // })
+
 const collectNodes = (snaps, componentName) => {
   const componentsResult = [];
-  // console.log("This is the snapshots", snaps);
-  // componentsResult.splice(0, componentsResult.length); { /* We used the .splice method here to ensure that nodeList did not accumulate with page refreshes */ }
-  // componentsResult.push(snaps);
+  const renderResult = [];
+  let trackChanges = 0;
+  let newChange = true;
   for (let x = 0; x < snaps.length; x++) {
-    const snapshotList = []
+    const snapshotList = [];
     snapshotList.push(snaps[x]);
     for (let i = 0; i < snapshotList.length; i++) {
       const cur = snapshotList[i];
       if (cur.name === componentName) {
-        componentsResult.push(cur.componentData.props);
+        const renderTime = Number(
+          Number.parseFloat(cur.componentData.actualDuration).toPrecision(5),
+        );
+        if (renderTime === 0) {
+          break;
+        } else {
+          renderResult.push(renderTime);
+        }
+        // compare the last pushed component Data from the array to the current one to see if there are differences
+        if (x !== 0 && componentsResult.length !== 0) {
+          // needs to be stringified because values are hard to determine if true or false if in they're seen as objects
+          if (JSON.stringify(Object.values(componentsResult[newChange ? componentsResult.length - 1 : trackChanges])[0]) !== JSON.stringify(cur.componentData.props)) {
+            newChange = true;
+            // const props = { [`snapshot${x}`]: { rendertime: formatRenderTime(cur.componentData.actualDuration), ...cur.componentData.props } };
+            const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
+            componentsResult.push(props);
+          } else {
+            newChange = false;
+            trackChanges = componentsResult.length - 1;
+            const props = { [`snapshot${x}`]: { state: 'Same state as prior snapshot' } };
+            componentsResult.push(props);
+          }
+        } else {
+          // const props = { [`snapshot${x}`]: { ...cur.componentData.props}};
+          // props[`snapshot${x}`].rendertime = formatRenderTime(cur.componentData.actualDuration);
+          const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
+          componentsResult.push(props);
+        }
         break;
       }
       if (cur.children && cur.children.length > 0) {
-        for (let child of cur.children) {
+        for (const child of cur.children) {
           snapshotList.push(child);
         }
       }
     }
   }
-  //console.log('componentsResult looks like: ', componentsResult);
-  return componentsResult;
-}
+
+  const finalResults = componentsResult.map((e, index) => {
+    const name = Object.keys(e)[0];
+    e[name].rendertime = renderResult[index];
+    return e;
+  });
+  return finalResults;
+};
+
 /* DATA HANDLING HELPER FUNCTIONS */
 const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
   if (!snapshot.children[0]) return;
@@ -100,24 +113,20 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
         renderFrequency: 0,
         totalRenderTime: 0,
         rtid: '',
-        props: {},
+        information: {},
       };
       if (child.state !== 'stateless') data.componentData[componentName].stateType = 'stateful';
     }
     // increment render frequencies
     if (renderTime > 0) {
-      // console.log('what is the child', child);
-      // console.log('por que?', data.componentData[componentName]);
       data.componentData[componentName].renderFrequency++;
-    } else {
-      // console.log('what is the child', child);
-      // console.log('we dont increment here', data.componentData[componentName], 'and the child', child);
     }
+
     // add to total render time
     data.componentData[componentName].totalRenderTime += renderTime;
     // Get rtid for the hovering feature
     data.componentData[componentName].rtid = child.rtid;
-    data.componentData[componentName].props = collectNodes(snapshots, child.name);
+    data.componentData[componentName].information = collectNodes(snapshots, child.name);
     traverse(snapshot.children[idx], data, snapshots, currTotalRender);
   });
   // reassigns total render time to max render time
@@ -127,18 +136,8 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
 
 // Retrieve snapshot series data from Chrome's local storage.
 const allStorage = () => {
-  // const values = [];
-  // const keys = Object.keys(localStorage);
   let values = localStorage.getItem('project')
-  // values === null ? values = [] : values = JSON.parse(values) ;
   values = values === null ? [] : JSON.parse(values);
-  // let i = keys.length;
-  // console.log('allstorage keys', keys);
-  // while (i--) {
-  //   const series = localStorage.getItem(keys[i]);
-  //   values.push(JSON.parse(series));
-  // }
-  console.log('allstorage values', values);
   return values;
 };
 
@@ -160,7 +159,6 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
     componentData: {},
     maxTotalRender: 0,
   };
-  console.log('show me all of the snapshots', snapshots);
   snapshots.forEach((snapshot, i) => {
     perfData.barStack.push({ snapshotId: snapshotsIds[i] });
     traverse(snapshot, perfData, snapshots);
@@ -168,42 +166,71 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
   return perfData;
 };
 
+
+
 /* EXPORT COMPONENT */
 const PerformanceVisx = (props: BarStackProps) => {
   // hook used to dispatch onhover action in rect
-  const {
-    width, height, snapshots, hierarchy,
-  } = props;
+  const { width, height, snapshots, hierarchy, } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const [detailsView, setDetailsView] = useState('barStack');
   const [comparisonView, setComparisonView] = useState('barStack');
   const [comparisonData, setComparisonData] = useState();
   const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
+  const [ series, setSeries ] = useState(true);
+  const [ action, setAction ] = useState(false);
+
+  const getActions = () => {
+    let seriesArr = localStorage.getItem('project')
+    seriesArr = seriesArr === null ? [] : JSON.parse(seriesArr);
+    const actionsArr = [];
+  
+    if (seriesArr.length) {
+      for (let i = 0; i < seriesArr.length; i++) {
+        for (const actionObj of seriesArr[i].data.barStack) {
+          if (actionObj.name === action) {
+            actionObj.seriesName = seriesArr[i].name;
+            actionsArr.push(actionObj);
+          }
+        }
+      }
+    }
+    return actionsArr;
+  }
 
   const renderComparisonBargraph = () => {
-    if (hierarchy) {
-      return (
-        <BarGraphComparison
-          comparison={allStorage()}
-          data={data}
-          width={width}
-          height={height}
-        />
-      );
-    }
+    if (hierarchy && series !== false) return (
+      <BarGraphComparison
+        comparison={allStorage()}
+        data={data}
+        width={width}
+        height={height}
+        setSeries={setSeries}
+        series={series}
+        setAction={setAction}
+      />
+    );
+    return (
+      <BarGraphComparisonActions 
+        comparison={allStorage()}
+        data={getActions()}
+        width={width}
+        height={height}
+        setSeries={setSeries}
+        action={action}
+        setAction={setAction}
+      />
+    );
   };
 
   const renderBargraph = () => {
     if (hierarchy) {
-      return <BarGraph data={data} width={width} height={height} />;
+      return <BarGraph data={data} width={width} height={height} comparison={allStorage()} />;
     }
   };
 
   const renderComponentDetailsView = () => {
-    console.log('show me snapshots', snapshots)
-    console.log('what is heirarchy', hierarchy);
-    console.log('this is the info for rendering frequency', data.componentData);
     if (hierarchy) {
       return <RenderingFrequency data={data.componentData} />;
     }

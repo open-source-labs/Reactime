@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
@@ -61,7 +61,8 @@ const tooltipStyles = {
 
 const BarGraph = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { width, height, data } = props;
+  const { width, height, data, comparison } = props;
+  const [ seriesNameInput, setSeriesNameInput ] = useState(`Series ${comparison.length}`);
   const {
     tooltipOpen,
     tooltipLeft,
@@ -124,25 +125,23 @@ const BarGraph = props => {
   });
   
   const saveSeriesClickHandler = () => {
-    const seriesName = document.getElementById('seriesname').value;
-    const actionNames = document.getElementsByClassName('actionname');
-    console.log("action names", actionNames);
-    // const testname = document.getElementsByClassName('actionname').value
-    // console.log(testname)
-    for (let i = 0; i < actionNames.length; i++ ) {
-      toStorage.data.barStack[i].name = actionNames[i].value;
+    if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
+      const actionNames = document.getElementsByClassName('actionname');
+      for (let i = 0; i < actionNames.length; i++ ) {
+        toStorage.data.barStack[i].name = actionNames[i].value;
+      }
+      dispatch(save(toStorage, seriesNameInput));
+      setSeriesNameInput(`Series ${comparison.length}`)
+      return
     }
-// displayName: ${componentName !== 'nameless' ? componentName :
-
-    
-    dispatch(save(toStorage, seriesName));
+    dispatch(save(toStorage))
   }
 
-  // const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" className="seriesname" placeholder="Series Name" /> : null
-
+  const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" id="seriesname" value={seriesNameInput} onChange={e => setSeriesNameInput(e.target.value)} /> : null;
   return (
     <div className="bargraph-position">
-      <input type="text" id ="seriesname" placeholder="Series Name" />
+      {/* <input type="text" id ="seriesname" placeholder="Series Name" /> */}
+      {textbox}
       <button
         type="button"
         className="save-series-button"
@@ -151,7 +150,6 @@ const BarGraph = props => {
         Save Series
       </button>
       <svg ref={containerRef} width={width} height={height}>
-        {}
         <rect
           x={0}
           y={0}
@@ -187,7 +185,7 @@ const BarGraph = props => {
               }
               return (
                 <rect
-                  key={`bar-stack-${barStack.id}-${bar.id}`}
+                  key={`bar-stack-${bar.bar.data.snapshotId}-${bar.key}`}
                   x={bar.x}
                   y={bar.y}
                   height={bar.height === 0 ? null : bar.height}
