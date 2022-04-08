@@ -10,6 +10,7 @@ import {
 // such as snapshots, performance metrics, title of app, and so on.
 let firstMessage = true;
 // Listens for window messages (from the injected script on the DOM)
+let isRecording = true;
 window.addEventListener('message', msg => {
   // Event listener runs constantly based on actions
   // recorded on the test application from backend files (linkFiber.ts).
@@ -25,6 +26,7 @@ window.addEventListener('message', msg => {
   // will send snapshots of the test app's link fiber tree.
   const { action }: { action: string } = msg.data;
   if (action === 'recordSnap') {
+    if (!isRecording) return;
     chrome.runtime.sendMessage(msg.data);
   }
   if (action === 'devToolsInstalled') {
@@ -39,7 +41,12 @@ window.addEventListener('message', msg => {
 chrome.runtime.onMessage.addListener(request => {
   const { action }: { action: string; } = request;
   // this is only listening for Jump toSnap
+
   if (action) {
+    if (action === 'toggleRecord') {
+      isRecording = !isRecording;
+    }
+
     if (action === 'jumpToSnap') {
       //
       //

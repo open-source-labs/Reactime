@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { ParentSize } from '@visx/responsive';
 import {
@@ -7,16 +7,17 @@ import {
   Route,
   NavLink,
   Switch,
+  useLocation,
 } from 'react-router-dom';
 import { Component } from 'react';
 import { render } from 'react-dom';
+import { Component } from 'react';
 import RenderingFrequency from './RenderingFrequency';
 // import Switch from '@material-ui/core/Switch';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
 import { useStoreContext } from '../store';
 // import snapshots from './snapshots';
-import { Component } from 'react';
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
 Barstacks display inconsistently...however, almost always displays upon initial test app load or
@@ -58,7 +59,7 @@ const collectNodes = (snaps, componentName) => {
   // componentsResult.splice(0, componentsResult.length); { /* We used the .splice method here to ensure that nodeList did not accumulate with page refreshes */ }
   // componentsResult.push(snaps);
   for (let x = 0; x < snaps.length; x++) {
-    const snapshotList = []
+    const snapshotList = [];
     snapshotList.push(snaps[x]);
     for (let i = 0; i < snapshotList.length; i++) {
       const cur = snapshotList[i];
@@ -67,15 +68,15 @@ const collectNodes = (snaps, componentName) => {
         break;
       }
       if (cur.children && cur.children.length > 0) {
-        for (let child of cur.children) {
+        for (const child of cur.children) {
           snapshotList.push(child);
         }
       }
     }
   }
-  //console.log('componentsResult looks like: ', componentsResult);
+  // console.log('componentsResult looks like: ', componentsResult);
   return componentsResult;
-}
+};
 /* DATA HANDLING HELPER FUNCTIONS */
 const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
   if (!snapshot.children[0]) return;
@@ -129,7 +130,7 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
 const allStorage = () => {
   // const values = [];
   // const keys = Object.keys(localStorage);
-  let values = localStorage.getItem('project')
+  let values = localStorage.getItem('project');
   // values === null ? values = [] : values = JSON.parse(values) ;
   values = values === null ? [] : JSON.parse(values);
   // let i = keys.length;
@@ -171,6 +172,7 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
 /* EXPORT COMPONENT */
 const PerformanceVisx = (props: BarStackProps) => {
   // hook used to dispatch onhover action in rect
+
   const {
     width, height, snapshots, hierarchy,
   } = props;
@@ -201,7 +203,7 @@ const PerformanceVisx = (props: BarStackProps) => {
   };
 
   const renderComponentDetailsView = () => {
-    console.log('show me snapshots', snapshots)
+    console.log('show me snapshots', snapshots);
     console.log('what is heirarchy', hierarchy);
     console.log('this is the info for rendering frequency', data.componentData);
     if (hierarchy) {

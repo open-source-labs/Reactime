@@ -137,6 +137,7 @@
     "@fortawesome/react-fontawesome": "^0.1.12",
     "@material-ui/core": "^4.11.2",
     "@types/react-dom": "^17.0.14",
+    "@types/react-router-dom": "^5.3.3",
     "@visx/axis": "^1.0.0",
     "@visx/brush": "^1.2.0",
     "@visx/clip-path": "^1.0.0",

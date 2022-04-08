@@ -5,12 +5,13 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MemoryRouter as Router,
   Route,
   NavLink,
   Switch,
+  useLocation,
 } from 'react-router-dom';
 import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';

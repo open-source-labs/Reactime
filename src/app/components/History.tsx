@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 // formatting findDiff return data to show the changes with colors, aligns with actions.tsx
 import { diff, formatters } from 'jsondiffpatch';
 import * as d3 from 'd3';
+
 import { changeView, changeSlider } from '../actions/actions';
 
 const defaultMargin = {
@@ -33,6 +34,7 @@ function History(props: Record<string, unknown>): JSX.Element {
   useEffect(() => {
     makeD3Tree();
   }, [root, currLocation]);
+
 
   function labelCurrentNode(d3root) {
     if (d3root.data.index === currLocation.index) {

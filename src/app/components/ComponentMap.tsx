@@ -166,28 +166,32 @@ export default function ComponentMap({
 
   const formatState = state => {
     if (state === 'stateless') return ['stateless'];
-
-    const result = [];
-    const inner = arg => {
-      if (Array.isArray(arg)) {
-        result.push('[');
-        arg.forEach(e => { inner(e); });
-        result.push('] ');
-      } else if ((typeof arg) === 'object') {
-        result.push('{ ');
-        Object.keys(arg).forEach((key, i, arr) => {
-          result.push(`${key}: `);
-          ((typeof arg[key]) === 'object') ? inner(arg[key]) : result.push(arg[key]);
-          if (i !== arr.length - 1) result.push(', ');
-        });
-        result.push(' } ');
-      } else {
-        result.push(` ${arg}, `);
-      }
-    };
-    inner(state);
+    // Something in this code below is breaking the app,
+    // when you hover over a stateful component on the map
+    // --------------------------------------------------------------------------------------------
+    // const result = [];
+    // const inner = arg => {
+    //   if (Array.isArray(arg)) {
+    //     result.push('[');
+    //     arg.forEach(e => { inner(e); });
+    //     result.push('] ');
+    //   } else if ((typeof arg) === 'object') {
+    //     result.push('{ ');
+    //     Object.keys(arg).forEach((key, i, arr) => {
+    //       result.push(`${key}: `);
+    //       ((typeof arg[key]) === 'object') ? inner(arg[key]) : result.push(arg[key]);
+    //       if (i !== arr.length - 1) result.push(', ');
+    //     });
+    //     result.push(' } ');
+    //   } else {
+    //     result.push(` ${arg}, `);
+    //   }
+    // };
+    // inner(state);
       
-    return result;
+    // return result;
+    // --------------------------------------------------------------------------------------------
+    return ['stateful'];
   };
 
   // places all nodes into a flat array

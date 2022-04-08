@@ -142,7 +142,9 @@ const BarGraph = props => {
 
   return (
     <div className="bargraph-position">
-      <input type="text" id ="seriesname" placeholder="Series Name" />
+      <div className="tools-container">
+        <input type="text" id ="seriesname" placeholder="Series Name" />
+      </div>
       <button
         type="button"
         className="save-series-button"

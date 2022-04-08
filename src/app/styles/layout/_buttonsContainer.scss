@@ -20,7 +20,20 @@
 }
 
 .introjs-helperLayer{
-  border: 2px solid yellow
+  // border: 2px solid yellow
+}
+
+.tools-container {
+	display: flex;
+	justify-content: space-between;
+	border: .5px solid grey;
+	background-color: #35383e;
+	padding: 3px;
+	margin-bottom: 1rem;
+}
+
+#seriesname {
+	background-color: inherit;
 }
 
 @media (max-width: 500px) {
