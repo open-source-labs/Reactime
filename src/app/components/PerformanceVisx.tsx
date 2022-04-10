@@ -14,6 +14,8 @@ import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useStoreContext } from '../store';
+import { useEffect } from 'react';
+import { setCurrentTabInApp } from '../actions/actions';
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
 Barstacks display inconsistently...however, almost always displays upon initial test app load or
@@ -180,6 +182,10 @@ const PerformanceVisx = (props: BarStackProps) => {
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   const [ series, setSeries ] = useState(true);
   const [ action, setAction ] = useState(false);
+
+  useEffect(() => {
+    dispatch(setCurrentTabInApp('performance'));
+  }, []);
 
   const getActions = () => {
     let seriesArr = localStorage.getItem('project')

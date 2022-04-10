@@ -5,13 +5,15 @@ import { useLocation } from 'react-router-dom';
 import { Steps, Hints } from 'intro.js-react';
 import 'intro.js/introjs.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faQuestion,
-} from '@fortawesome/free-solid-svg-icons';
+import { faQuestion } from '@fortawesome/free-solid-svg-icons';
+import { useStoreContext } from '../store';
 
 export default function Tutorial(): JSX.Element {
   const [stepsEnabled, setStepsEnabled] = useState(false);
   const [initialStep, setInitialStep] = useState(0);
+  const [store, dispatch] = useStoreContext();
+  const { currentTabInApp } = store;
+  //why is this state rather than just a variable?
   const [steps, setSteps] = useState([
     {
       title: 'Reactime Tutorial',
@@ -103,12 +105,29 @@ export default function Tutorial(): JSX.Element {
   const startIntro = () => {
     setStepsEnabled(true);
   };
+  let stepsTest = [{
+    title: 'Tutorial Complete',
+    intro: '<ul><li>Please visit our official Github Repo for more information </li><br> <li><a href="https://github.com/open-source-labs/reactime" target="_blank">Reactime Github</a></li></ul>',
+    position: 'top',
+  }];
+
+  switch (currentTabInApp) {
+    case 'performance':
+      stepsTest = [{
+        title: 'performance',
+        intro: '<ul><li>Please visit our official Github Repo for more information </li><br> <li><a href="https://github.com/open-source-labs/reactime" target="_blank">Reactime Github</a></li></ul>',
+        position: 'top',
+      }];
+      break;
+    default:
+      break;
+  }
 
   return (
     <>
       <Steps
         enabled={stepsEnabled}
-        steps={steps}
+        steps={stepsTest}
         initialStep={initialStep}
         onExit={onExit}
         options={{

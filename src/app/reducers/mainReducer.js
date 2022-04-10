@@ -4,7 +4,7 @@ import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
   const {
-    port, currentTab, tabs,
+    port, currentTab, tabs, 
   } = draft;
   const {
     hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex,
@@ -360,6 +360,10 @@ export default (state, action) => produce(state, draft => {
       };
       persistIsExpanded(payload[currentTab].currLocation.stateSnapshot, tabs[currentTab].currLocation.stateSnapshot);
       tabs[currentTab].currLocation = payload[currentTab].currLocation;
+      break;
+    }
+    case types.SET_CURRENT_TAB_IN_APP: {
+      draft.currentTabInApp = action.payload;
       break;
     }
     default:

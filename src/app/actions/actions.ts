@@ -119,3 +119,8 @@ export const setCurrentLocation = (tabsObj) => ({
   type: types.SET_CURRENT_LOCATION,
   payload: tabsObj,
 })
+
+export const setCurrentTabInApp = (currentTabInApp) => ({
+  type: types.SET_CURRENT_TAB_IN_APP,
+  payload: currentTabInApp,
+})
