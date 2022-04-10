@@ -163,6 +163,7 @@ const BarGraphComparison = props => {
   const classes = useStyles();
 
   const handleSeriesChange = event => {
+    if (!event) return
     setSeries(event.target.value);
     setAction(false);
   };
@@ -176,6 +177,7 @@ const BarGraphComparison = props => {
   };
 
   const handleActionChange = event => {
+    if(!event.target.value) return
     setAction(event.target.value);
     setSeries(false);
   };

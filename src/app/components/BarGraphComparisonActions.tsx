@@ -156,6 +156,7 @@ const BarGraphComparisonActions = props => {
   const classes = useStyles();
 
   const handleSeriesChange = event => {
+    if (!event) return
     setSeries(event.target.value);
     setAction(false);
     // setXpoints();
@@ -172,6 +173,7 @@ const BarGraphComparisonActions = props => {
   };
 
   const handleActionChange = event => {
+    if (!event) return
     setAction(event.target.value);
     setSeries(false);
     // setXpoints();
@@ -217,6 +219,8 @@ const BarGraphComparisonActions = props => {
           <button
             className="delete-button"
             onClick={e => {
+              setAction(false);
+              setSeries(true);
               dispatch(deleteSeries());
             }}
           >

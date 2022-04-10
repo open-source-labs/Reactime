@@ -1,13 +1,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 // @ts-nocheck
-<<<<<<< HEAD
-import React, { useState, useEffect } from 'react';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { ParentSize } from '@visx/responsive';
-=======
 import React, { useState } from 'react';
->>>>>>> Reactime13.0
 import {
   MemoryRouter as Router,
   Route,
@@ -15,22 +9,11 @@ import {
   Switch,
   useLocation,
 } from 'react-router-dom';
-<<<<<<< HEAD
-import { Component } from 'react';
-import { render } from 'react-dom';
-import { Component } from 'react';
-=======
->>>>>>> Reactime13.0
 import RenderingFrequency from './RenderingFrequency';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useStoreContext } from '../store';
-<<<<<<< HEAD
-// import snapshots from './snapshots';
-=======
-
->>>>>>> Reactime13.0
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
 Barstacks display inconsistently...however, almost always displays upon initial test app load or
@@ -97,11 +80,6 @@ const collectNodes = (snaps, componentName) => {
       }
     }
   }
-<<<<<<< HEAD
-  // console.log('componentsResult looks like: ', componentsResult);
-  return componentsResult;
-};
-=======
 
   const finalResults = componentsResult.map((e, index) => {
     const name = Object.keys(e)[0];
@@ -111,7 +89,6 @@ const collectNodes = (snaps, componentName) => {
   return finalResults;
 };
 
->>>>>>> Reactime13.0
 /* DATA HANDLING HELPER FUNCTIONS */
 const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
   if (!snapshot.children[0]) return;
@@ -159,14 +136,7 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
 
 // Retrieve snapshot series data from Chrome's local storage.
 const allStorage = () => {
-<<<<<<< HEAD
-  // const values = [];
-  // const keys = Object.keys(localStorage);
-  let values = localStorage.getItem('project');
-  // values === null ? values = [] : values = JSON.parse(values) ;
-=======
   let values = localStorage.getItem('project')
->>>>>>> Reactime13.0
   values = values === null ? [] : JSON.parse(values);
   return values;
 };
@@ -201,14 +171,7 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
 /* EXPORT COMPONENT */
 const PerformanceVisx = (props: BarStackProps) => {
   // hook used to dispatch onhover action in rect
-<<<<<<< HEAD
-
-  const {
-    width, height, snapshots, hierarchy,
-  } = props;
-=======
   const { width, height, snapshots, hierarchy, } = props;
->>>>>>> Reactime13.0
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const [detailsView, setDetailsView] = useState('barStack');
   const [comparisonView, setComparisonView] = useState('barStack');
