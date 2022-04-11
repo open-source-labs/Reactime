@@ -1,8 +1,16 @@
 import React, { useReducer, useState } from 'react';
+import {
+  MemoryRouter as Router,
+  Route,
+  NavLink,
+  Switch,
+  useLocation,
+} from 'react-router-dom';
 // import { Steps, Hints } from 'intro.js-react';
 import MainContainer from '../containers/MainContainer';
 import { StoreContext } from '../store';
 import mainReducer from '../reducers/mainReducer.js';
+
 
 // import 'intro.js/introjs.css';
 
@@ -26,9 +34,11 @@ const initialState: {
 
 function App(): JSX.Element {
   return (
-    <StoreContext.Provider value={useReducer(mainReducer, initialState)}>
-      <MainContainer />
-    </StoreContext.Provider>
+    <Router>
+      <StoreContext.Provider value={useReducer(mainReducer, initialState)}>
+        <MainContainer />
+      </StoreContext.Provider>
+    </Router>
   );
 }
 
