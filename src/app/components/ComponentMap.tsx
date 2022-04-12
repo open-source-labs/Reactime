@@ -188,7 +188,6 @@ export default function ComponentMap({
     //   }
     // };
     // inner(state);
-      
     // return result;
     // --------------------------------------------------------------------------------------------
     return ['stateful'];

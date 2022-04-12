@@ -31,14 +31,13 @@ function MainContainer(): any {
     const toggleElem = document.querySelector('aside');
     toggleElem.classList.toggle('no-aside');
   };
-
+  // let port;
   useEffect(() => {
     // only open port once
     if (currentPort) return;
 
     // open long-lived connection with background script
     const port = chrome.runtime.connect();
-
     // listen for a message containing snapshots from the background script
     port.onMessage.addListener(
       (message: {

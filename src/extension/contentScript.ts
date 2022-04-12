@@ -11,6 +11,7 @@ import {
 let firstMessage = true;
 // Listens for window messages (from the injected script on the DOM)
 let isRecording = true;
+
 window.addEventListener('message', msg => {
   // Event listener runs constantly based on actions
   // recorded on the test application from backend files (linkFiber.ts).
@@ -48,8 +49,6 @@ chrome.runtime.onMessage.addListener(request => {
     }
 
     if (action === 'jumpToSnap') {
-      //
-      //
       chrome.runtime.sendMessage(request);
     }
     // After the jumpToSnap action has been sent back to background js,
