@@ -1,12 +1,10 @@
 // @ts-nocheck
 import * as React from 'react';
-import { useState, useEffect, Component } from 'react';
-import { useLocation, Redirect } from 'react-router-dom';
-import { Steps, Hints, updateStepElement } from 'intro.js-react';
+import { Component } from 'react';
+import { Steps } from 'intro.js-react';
 import 'intro.js/introjs.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
-import { useStoreContext } from '../store';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
 
 // export default function Tutorial(): JSX.Element {
@@ -201,6 +199,7 @@ import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions
 //   );
 // }
 
+// This needs to be a class component to be compatible with updateStepElement from intro.js
 class Tutorial extends Component {
   constructor(props) {
     super(props);
@@ -216,10 +215,10 @@ class Tutorial extends Component {
       if (currentTabInApp === 'performance' && currentStepIndex === 1) {
         dispatch(tutorialSaveSeriesToggle('inputBoxOpen'));
         this.steps.updateStepElement(currentStepIndex);
-      };
+      }
       if (currentTabInApp === 'performance' && currentStepIndex === 2) {
         this.steps.updateStepElement(currentStepIndex);
-      };
+      }
       if (currentTabInApp === 'performance' && currentStepIndex === 4) {
         dispatch(tutorialSaveSeriesToggle('saved'));
         this.steps.updateStepElement(currentStepIndex);
@@ -228,13 +227,13 @@ class Tutorial extends Component {
         this.steps.updateStepElement(currentStepIndex);
         dispatch(setCurrentTabInApp('performance-comparison'));
       }
+      if (currentTabInApp === 'performance-comparison' && currentStepIndex === 6) {
+        dispatch(tutorialSaveSeriesToggle(false));
+      }
     };
 
     const onExit = () => {
       this.setState({ stepsEnabled: false });
-      if (currentTabInApp === 'performance' || currentTabInApp === 'performance-comparison' || currentTabInApp === 'performance-component-details') {
-        dispatch(tutorialSaveSeriesToggle(false));
-      }
     };
     const startIntro = () => {
       if (currentTabInApp === 'performance' || currentTabInApp === 'performance-comparison' || currentTabInApp === 'performance-component-details') {
