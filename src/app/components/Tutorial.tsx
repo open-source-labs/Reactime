@@ -1,251 +1,422 @@
 // @ts-nocheck
 import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Steps, Hints, introJs } from 'intro.js-react';
+import { useState, useEffect, Component } from 'react';
+import { useLocation, Redirect } from 'react-router-dom';
+import { Steps, Hints, updateStepElement } from 'intro.js-react';
 import 'intro.js/introjs.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { useStoreContext } from '../store';
+import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
 
-const onChangeHandler = () => {
+// export default function Tutorial(): JSX.Element {
+//   const [stepsEnabled, setStepsEnabled] = useState(false);
+//   const [initialStep, setInitialStep] = useState(0);
+//   const [store, dispatch] = useStoreContext();
+//   const { currentTabInApp } = store;
 
-};
+//   const onChangeHandler = (nextStepIndex) => {
+//     if (currentTabInApp === 'performance' && nextStepIndex === 2) dispatch(tutorialSaveSeriesToggle('inputBoxOpen'));
+//     if (currentTabInApp === 'performance' && nextStepIndex === 4) dispatch(tutorialSaveSeriesToggle('saved'));
+//     if (currentTabInApp === 'performance' && nextStepIndex === 5) {
+//       dispatch(setCurrentTabInApp('performance-Comparison'));
+//       // steps1.updateStepElement(nextStepIndex);
+//     };
+//     console.log(nextStepIndex)
+//   };
+//   const onExit = () => {
+//     setStepsEnabled(false);
+//   };
+//   const startIntro = () => {
+//     setStepsEnabled(true);
+//   };
+//   let steps = [{
+//     title: 'Reactime Tutorial',
+//     intro: 'A performance and state managment tool for React apps.',
+//     position: 'top',
+//   },
+//   {
+//     title: 'Actions',
+//     element: '.action-container',
+//     intro: "<ul><li>Reactime records a snapshot whenever a target application's state is changed</li></ul>",
+//     position: 'right',
+//   },
+//   {
+//     element: '.individual-action',
+//     title: 'Snapshot',
+//     intro: '<ul><li>Each snapshot allows the user to jump to any previously recorded state.</li> <li>It also detects the amount of renders of each component and average time of rendering</li></ul>.',
+//     position: 'right',
+//   },
+//   {
+//     title: 'Timejump',
+//     element: '.rc-slider',
+//     intro: '<ul><li>Use the slider to go back in time to a particular state change</li><li>Click the Play button to run through each state change automatically</li></ul>',
+//     position: 'top',
+//   },
+//   {
+//     title: 'Lock Button',
+//     element: '.pause-button',
+//     intro: '<ul><li>Use button to lock Reactime to the target application\'s tab in the Chrome Browser</li></ul>',
+//     position: 'top',
+//   },
+//   {
+//     title: 'Split Button',
+//     element: '.split-button',
+//     intro: '<ul> <li>Use button to split Reactime into two windows in order to view multiple tabs simultaneously</li> </ul>',
+//     position: 'top',
+//   },
+//   {
+//     title: 'Download Button',
+//     element: '.export-button',
+//     intro: '<ul><li>Use button to download a JSON file of all snapshots</li> </ul>',
+//     position: 'top',
+//   },
+//   {
+//     title: 'Upload Button',
+//     element: '.import-button',
+//     intro: '<ul><li>Use button to upload a previously downloaded JSON file for snapshot comparisons</li></ul>',
+//     position: 'top',
+//   },
+//   {
+//     element: '.map-tab',
+//     title: 'Map Tab',
+//     intro: '<ul><li>This tab visually displays a component hierarchy tree for your app</li></ul>',
+//     position: 'bottom',
+//   },
+//   {
+//     title: 'Performance Tab',
+//     element: '.performance-tab',
+//     intro: '<ul><li>User can save a series of state snapshots and use it to analyze changes in component, render performance between current, and previous series of snapshots.</li> <li>User can save a series of state snapshots and use it to analyze changes in component render performance between current and previous series of snapshots.</li></ul>',
+//     position: 'bottom',
+//   },
+//   {
+//     title: 'History Tab',
+//     element: '.history-tab',
+//     intro: '<ul><li>This tab visually displays a history of each snapshot</li></ul>',
+//     position: 'bottom',
+//   },
+//   {
+//     title: 'Web Metrics Tab',
+//     element: '.web-metrics-tab',
+//     intro: '<ul> <li>This tab visually displays performance metrics and allows the user to gauge efficiency of their application</li></ul>',
+//     position: 'bottom',
+//   },
+//   {
+//     title: 'Tree Tab',
+//     element: '.tree-tab',
+//     intro: '<ul><li>This tab visually displays a JSON Tree containing the different components and states</li></ul>',
+//     position: 'bottom',
+//   },
+//   {
+//     title: 'Tutorial Complete',
+//     intro: '<ul><li>Please visit our official Github Repo for more information </li><br> <li><a href="https://github.com/open-source-labs/reactime" target="_blank">Reactime Github</a></li></ul>',
+//     position: 'top',
+//   }];
 
-export default function Tutorial(): JSX.Element {
-  const [stepsEnabled, setStepsEnabled] = useState(false);
-  const [initialStep, setInitialStep] = useState(0);
-  const [store, dispatch] = useStoreContext();
-  const { currentTabInApp } = store;
-  // why is this state rather than just a variable?
-  // const [steps, setSteps] = useState([
-  //   {
-  //     title: 'Reactime Tutorial',
-  //     intro: 'A performance and state managment tool for React apps.',
-  //     position: 'top',
-  //   },
-  //   {
-  //     title: 'Actions',
-  //     element: '.action-container',
-  //     intro: "<ul><li>Reactime records a snapshot whenever a target application's state is changed</li></ul>",
-  //     position: 'right',
-  //   },
-  //   {
-  //     element: '.individual-action',
-  //     title: 'Snapshot',
-  //     intro: '<ul><li>Each snapshot allows the user to jump to any previously recorded state.</li> <li>It also detects the amount of renders of each component and average time of rendering</li></ul>.',
-  //     position: 'right',
-  //   },
-  //   {
-  //     title: 'Timejump',
-  //     element: '.rc-slider',
-  //     intro: '<ul><li>Use the slider to go back in time to a particular state change</li><li>Click the Play button to run through each state change automatically</li></ul>',
-  //     position: 'top',
-  //   },
-  //   {
-  //     title: 'Lock Button',
-  //     element: '.pause-button',
-  //     intro: '<ul><li>Use button to lock Reactime to the target application\'s tab in the Chrome Browser</li></ul>',
-  //     position: 'top',
-  //   },
-  //   {
-  //     title: 'Split Button',
-  //     element: '.split-button',
-  //     intro: '<ul> <li>Use button to split Reactime into two windows in order to view multiple tabs simultaneously</li> </ul>',
-  //     position: 'top',
-  //   },
-  //   {
-  //     title: 'Download Button',
-  //     element: '.export-button',
-  //     intro: '<ul><li>Use button to download a JSON file of all snapshots</li> </ul>',
-  //     position: 'top',
-  //   },
-  //   {
-  //     title: 'Upload Button',
-  //     element: '.import-button',
-  //     intro: '<ul><li>Use button to upload a previously downloaded JSON file for snapshot comparisons</li></ul>',
-  //     position: 'top',
-  //   },
-  //   {
-  //     element: '.map-tab',
-  //     title: 'Map Tab',
-  //     intro: '<ul><li>This tab visually displays a component hierarchy tree for your app</li></ul>',
-  //     position: 'bottom',
-  //   },
-  //   {
-  //     title: 'Performance Tab',
-  //     element: '.performance-tab',
-  //     intro: '<ul><li>User can save a series of state snapshots and use it to analyze changes in component, render performance between current, and previous series of snapshots.</li> <li>User can save a series of state snapshots and use it to analyze changes in component render performance between current and previous series of snapshots.</li></ul>',
-  //     position: 'bottom',
-  //   },
-  //   {
-  //     title: 'History Tab',
-  //     element: '.history-tab',
-  //     intro: '<ul><li>This tab visually displays a history of each snapshot</li></ul>',
-  //     position: 'bottom',
-  //   },
-  //   {
-  //     title: 'Web Metrics Tab',
-  //     element: '.web-metrics-tab',
-  //     intro: '<ul> <li>This tab visually displays performance metrics and allows the user to gauge efficiency of their application</li></ul>',
-  //     position: 'bottom',
-  //   },
-  //   {
-  //     title: 'Tree Tab',
-  //     element: '.tree-tab',
-  //     intro: '<ul><li>This tab visually displays a JSON Tree containing the different components and states</li></ul>',
-  //     position: 'bottom',
-  //   },
-  //   {
-  //     title: 'Tutorial Complete',
-  //     intro: '<ul><li>Please visit our official Github Repo for more information </li><br> <li><a href="https://github.com/open-source-labs/reactime" target="_blank">Reactime Github</a></li></ul>',
-  //     position: 'top',
-  //   },
-  // ]);
-  // const location = useLocation();
-  const onExit = () => {
-    setStepsEnabled(false);
-  };
-  const startIntro = () => {
-    setStepsEnabled(true);
-    // console.log(location)
-  };
-  let steps = [{
-    title: 'Reactime Tutorial',
-    intro: 'A performance and state managment tool for React apps.',
-    position: 'top',
-  },
-  {
-    title: 'Actions',
-    element: '.action-container',
-    intro: "<ul><li>Reactime records a snapshot whenever a target application's state is changed</li></ul>",
-    position: 'right',
-  },
-  {
-    element: '.individual-action',
-    title: 'Snapshot',
-    intro: '<ul><li>Each snapshot allows the user to jump to any previously recorded state.</li> <li>It also detects the amount of renders of each component and average time of rendering</li></ul>.',
-    position: 'right',
-  },
-  {
-    title: 'Timejump',
-    element: '.rc-slider',
-    intro: '<ul><li>Use the slider to go back in time to a particular state change</li><li>Click the Play button to run through each state change automatically</li></ul>',
-    position: 'top',
-  },
-  {
-    title: 'Lock Button',
-    element: '.pause-button',
-    intro: '<ul><li>Use button to lock Reactime to the target application\'s tab in the Chrome Browser</li></ul>',
-    position: 'top',
-  },
-  {
-    title: 'Split Button',
-    element: '.split-button',
-    intro: '<ul> <li>Use button to split Reactime into two windows in order to view multiple tabs simultaneously</li> </ul>',
-    position: 'top',
-  },
-  {
-    title: 'Download Button',
-    element: '.export-button',
-    intro: '<ul><li>Use button to download a JSON file of all snapshots</li> </ul>',
-    position: 'top',
-  },
-  {
-    title: 'Upload Button',
-    element: '.import-button',
-    intro: '<ul><li>Use button to upload a previously downloaded JSON file for snapshot comparisons</li></ul>',
-    position: 'top',
-  },
-  {
-    element: '.map-tab',
-    title: 'Map Tab',
-    intro: '<ul><li>This tab visually displays a component hierarchy tree for your app</li></ul>',
-    position: 'bottom',
-  },
-  {
-    title: 'Performance Tab',
-    element: '.performance-tab',
-    intro: '<ul><li>User can save a series of state snapshots and use it to analyze changes in component, render performance between current, and previous series of snapshots.</li> <li>User can save a series of state snapshots and use it to analyze changes in component render performance between current and previous series of snapshots.</li></ul>',
-    position: 'bottom',
-  },
-  {
-    title: 'History Tab',
-    element: '.history-tab',
-    intro: '<ul><li>This tab visually displays a history of each snapshot</li></ul>',
-    position: 'bottom',
-  },
-  {
-    title: 'Web Metrics Tab',
-    element: '.web-metrics-tab',
-    intro: '<ul> <li>This tab visually displays performance metrics and allows the user to gauge efficiency of their application</li></ul>',
-    position: 'bottom',
-  },
-  {
-    title: 'Tree Tab',
-    element: '.tree-tab',
-    intro: '<ul><li>This tab visually displays a JSON Tree containing the different components and states</li></ul>',
-    position: 'bottom',
-  },
-  {
-    title: 'Tutorial Complete',
-    intro: '<ul><li>Please visit our official Github Repo for more information </li><br> <li><a href="https://github.com/open-source-labs/reactime" target="_blank">Reactime Github</a></li></ul>',
-    position: 'top',
-  }];
+//   switch (currentTabInApp) {
+//     case 'performance':
+//       steps = [{
+//         title: 'Welcome to the performance tab!',
+//         element: '.bargraph-position',
+//         intro: '<ul><li>Here we can analyze the render times of our app</li> <li>This is the current series of state changes within our app</li> <li>Mouse over the bargraph elements for details on each specific component</li></ul>',
+//         position: 'top',
+//       },
+//       {
+//         title: 'Saving Series & Actions',
+//         element: '.save-series-button',
+//         intro: '<ul><li>Click here to save your current series data</li></ul>',
+//         position: 'top',
+//       },
+//       {
+//         title: 'Saving Series & Actions',
+//         element: '.save-series-button',
+//         intro: '<ul><li>We can now give our series a name or leave it at the default</li></ul>',
+//         position: 'top',
+//       },
+//       {
+//         title: 'Saving Series & Actions',
+//         element: '.actionname',
+//         intro: '<ul><li>If we wish to save a specific action to compare later, give it a name here</li></ul>',
+//         position: 'top',
+//       },
+//       {
+//         title: 'Saving Series & Actions',
+//         element: '.save-series-button',
+//         intro: '<ul><li>Press save series again.</li> <li>Your series is now saved!</li></ul>',
+//         position: 'top',
+//       },
+//       {
+//         title: 'Saving Series & Actions',
+//         element: '.router-link-performance',
+//         intro: '<ul><li>Now let\'s head over to the comparison tab</li></ul>',
+//         position: 'top',
+//       },
+//       {
+//         title: 'Comparing Series',
+//         element: '#simple-select-outlined',
+//         intro: '<ul><li>Select a saved series from the dropdown to compare to the current series</li></ul>',
+//         position: 'top',
+//       }];
+//       break;
+//     default:
+//       break;
+//   }
 
-  switch (currentTabInApp) {
-    case 'performance':
-      steps = [{
-        title: 'Welcome to the performance tab!',
-        element: '.bargraph-position',
-        intro: '<ul><li>Here we can analyze the render times of our app</li> <li>This is the current series of state changes within our app</li> <li>Mouse over the bargraph elements for details on each specific component</li></ul>',
-        position: 'top',
-      },
-      {
-        title: 'Save Series Button',
-        element: '.save-series-button',
-        intro: '<ul><li>Click here to save our current series data</li></ul>',
-        position: 'top',
-      },];
-      break;
-    default:
-      break;
+//   return (
+//     <>
+//       <Steps
+//         enabled={stepsEnabled}
+//         steps={steps}
+//         initialStep={initialStep}
+//         onExit={onExit}
+//         options={{
+//           tooltipClass: 'customTooltip',
+//           scrollToElement: false,
+//           showProgress: true,
+//           showStepNumbers: true,
+//           showBullets: false,
+//           exitOnOverlayClick: false,
+//           doneLabel: 'Done',
+//           nextLabel: 'Next',
+//           hideNext: false,
+//           skipLabel: 'Skip',
+//           keyboardNavigation: true,
+//           overlayOpacity: 0.65,
+//         }}
+//         onBeforeChange={(nextStepIndex) => onChangeHandler(nextStepIndex)}
+//         // ref={steps => (steps1 = steps)}
+//       />
+
+//       <button
+//         className="howToUse-button"
+//         type="button"
+//         onClick={() => startIntro()}
+//       >
+//         <FontAwesomeIcon icon={faQuestion} />
+//         {' '}
+//         How to use
+//       </button>
+//     </>
+
+//   );
+// }
+
+class Tutorial extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      stepsEnabled: false,
+    };
   }
 
-  return (
-    <>
-      <Steps
-        enabled={stepsEnabled}
-        steps={steps}
-        initialStep={initialStep}
-        onExit={onExit}
-        options={{
-          tooltipClass: 'customTooltip',
-          scrollToElement: false,
-          showProgress: true,
-          showStepNumbers: true,
-          showBullets: false,
-          exitOnOverlayClick: false,
-          doneLabel: 'Done',
-          nextLabel: 'Next',
-          hideNext: false,
-          skipLabel: 'Skip',
-          keyboardNavigation: true,
-          overlayOpacity: 0.65,
-        }}
-        onChange={onChangeHandler}
-      />
+  render() {
+    const {currentTabInApp, dispatch } = this.props;
 
-      <button
-        className="howToUse-button"
-        type="button"
-        onClick={() => startIntro()}
-      >
-        <FontAwesomeIcon icon={faQuestion} />
-        {' '}
-        How to use
-      </button>
-    </>
+    const onChangeHandler = (currentStepIndex) => {
+      if (currentTabInApp === 'performance' && currentStepIndex === 1) {
+        dispatch(tutorialSaveSeriesToggle('inputBoxOpen'));
+        this.steps.updateStepElement(currentStepIndex);
+      };
+      if (currentTabInApp === 'performance' && currentStepIndex === 2) {
+        this.steps.updateStepElement(currentStepIndex);
+      };
+      if (currentTabInApp === 'performance' && currentStepIndex === 4) {
+        dispatch(tutorialSaveSeriesToggle('saved'));
+        this.steps.updateStepElement(currentStepIndex);
+      }
+      if (currentTabInApp === 'performance' && currentStepIndex === 5) {
+        this.steps.updateStepElement(currentStepIndex);
+        dispatch(setCurrentTabInApp('performance-comparison'));
+      }
+    };
 
-  );
+    const onExit = () => {
+      this.setState({ stepsEnabled: false });
+      if (currentTabInApp === 'performance' || currentTabInApp === 'performance-comparison' || currentTabInApp === 'performance-component-details') {
+        dispatch(tutorialSaveSeriesToggle(false));
+      }
+    };
+    const startIntro = () => {
+      if (currentTabInApp === 'performance' || currentTabInApp === 'performance-comparison' || currentTabInApp === 'performance-component-details') {
+        dispatch(setCurrentTabInApp('performance'));
+      }
+      this.setState({ stepsEnabled: true });
+    };
+    let steps = [];
+
+    switch (currentTabInApp) {
+      case 'map':
+        steps = [{
+          title: 'Reactime Tutorial',
+          intro: 'A performance and state managment tool for React apps.',
+          position: 'top',
+        },
+        {
+          title: 'Actions',
+          element: '.action-container',
+          intro: "<ul><li>Reactime records a snapshot whenever a target application's state is changed</li></ul>",
+          position: 'right',
+        },
+        {
+          element: '.individual-action',
+          title: 'Snapshot',
+          intro: '<ul><li>Each snapshot allows the user to jump to any previously recorded state.</li> <li>It also detects the amount of renders of each component and average time of rendering</li></ul>.',
+          position: 'right',
+        },
+        {
+          title: 'Timejump',
+          element: '.rc-slider',
+          intro: '<ul><li>Use the slider to go back in time to a particular state change</li><li>Click the Play button to run through each state change automatically</li></ul>',
+          position: 'top',
+        },
+        {
+          title: 'Lock Button',
+          element: '.pause-button',
+          intro: '<ul><li>Use button to lock Reactime to the target application\'s tab in the Chrome Browser</li></ul>',
+          position: 'top',
+        },
+        {
+          title: 'Split Button',
+          element: '.split-button',
+          intro: '<ul> <li>Use button to split Reactime into two windows in order to view multiple tabs simultaneously</li> </ul>',
+          position: 'top',
+        },
+        {
+          title: 'Download Button',
+          element: '.export-button',
+          intro: '<ul><li>Use button to download a JSON file of all snapshots</li> </ul>',
+          position: 'top',
+        },
+        {
+          title: 'Upload Button',
+          element: '.import-button',
+          intro: '<ul><li>Use button to upload a previously downloaded JSON file for snapshot comparisons</li></ul>',
+          position: 'top',
+        },
+        {
+          element: '.map-tab',
+          title: 'Map Tab',
+          intro: '<ul><li>This tab visually displays a component hierarchy tree for your app</li></ul>',
+          position: 'bottom',
+        },
+        {
+          title: 'Performance Tab',
+          element: '.performance-tab',
+          intro: '<ul><li>User can save a series of state snapshots and use it to analyze changes in component, render performance between current, and previous series of snapshots.</li> <li>User can save a series of state snapshots and use it to analyze changes in component render performance between current and previous series of snapshots.</li> <li>TIP: Click the how to use button within the performance tab for more details.</li> </ul>',
+          position: 'bottom',
+        },
+        {
+          title: 'History Tab',
+          element: '.history-tab',
+          intro: '<ul><li>This tab visually displays a history of each snapshot</li></ul>',
+          position: 'bottom',
+        },
+        {
+          title: 'Web Metrics Tab',
+          element: '.web-metrics-tab',
+          intro: '<ul> <li>This tab visually displays performance metrics and allows the user to gauge efficiency of their application</li></ul>',
+          position: 'bottom',
+        },
+        {
+          title: 'Tree Tab',
+          element: '.tree-tab',
+          intro: '<ul><li>This tab visually displays a JSON Tree containing the different components and states</li></ul>',
+          position: 'bottom',
+        },
+        {
+          title: 'Tutorial Complete',
+          intro: '<ul><li>Please visit our official Github Repo for more information </li><br> <li><a href="https://github.com/open-source-labs/reactime" target="_blank">Reactime Github</a></li></ul>',
+          position: 'top',
+        }];
+        break;
+      case 'performance':
+        steps = [{
+          title: 'This is the performance tab!',
+          element: '.bargraph-position',
+          intro: '<ul><li>Here we can analyze the render times of our app</li> <li>This is the current series of state changes within our app</li> <li>Mouse over the bargraph elements for details on each specific component</li></ul>',
+          position: 'top',
+        },
+        {
+          title: 'Saving Series & Actions',
+          element: '.save-series-button',
+          intro: '<ul><li>Click here to save your current series data</li></ul>',
+          position: 'top',
+        },
+        {
+          title: 'Saving Series & Actions',
+          element: '.seriesNameInput',
+          intro: '<ul><li>We can now give our series a name or leave it at the default</li></ul>',
+          position: 'top',
+        },
+        {
+          title: 'Saving Series & Actions',
+          element: '.actionname',
+          intro: '<ul><li>If we wish to save a specific action to compare later, give it a name here</li></ul>',
+          position: 'top',
+        },
+        {
+          title: 'Saving Series & Actions',
+          element: '.save-series-button',
+          intro: '<ul><li>Press save series again.</li> <li>Your series and actions are now saved!</li></ul>',
+          position: 'top',
+        },
+        {
+          title: 'Comparing Saved Series & Actions',
+          element: '#router-link-performance-comparison',
+          intro: '<ul><li>Now let\'s head over to the comparison tab</li></ul>',
+          position: 'top',
+        },
+        {
+          title: 'Comparing Series',
+          intro: '<ul><li>Here we can select a saved series or action to compare</li></ul>',
+          position: 'top',
+        }];
+        break;
+      default:
+        steps = [{
+          title: 'No Tutorial For This Tab',
+          intro: '<ul><li>A tutorial for this tab has not yet been created</li><li>Please visit our official Github Repo for more information </li><br> <li><a href="https://github.com/open-source-labs/reactime" target="_blank">Reactime Github</a></li></ul>',
+          position: 'top',
+        }]
+        break;
+    }
+
+    return (
+      <>
+        <Steps
+          enabled={this.state.stepsEnabled}
+          steps={steps}
+          initialStep={0}
+          onExit={onExit}
+          options={{
+            tooltipClass: 'customTooltip',
+            scrollToElement: false,
+            showProgress: true,
+            showStepNumbers: true,
+            showBullets: false,
+            exitOnOverlayClick: false,
+            doneLabel: 'Done',
+            nextLabel: 'Next',
+            hideNext: false,
+            skipLabel: 'Skip',
+            keyboardNavigation: true,
+            overlayOpacity: 0.65,
+          }}
+          onBeforeChange={(currentStepIndex) => onChangeHandler(currentStepIndex)}
+          ref={steps => (this.steps = steps)}
+        />
+        <button
+          className="howToUse-button"
+          type="button"
+          onClick={() => startIntro()}
+        >
+          <FontAwesomeIcon icon={faQuestion} />
+          {' '}
+          How to use
+        </button>
+      </>
+    );
+  }
 }
+
+export default Tutorial;

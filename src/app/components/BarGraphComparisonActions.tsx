@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import { onHover, onHoverExit, deleteSeries } from '../actions/actions';
+import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 /* TYPESCRIPT */
@@ -75,6 +75,9 @@ const BarGraphComparisonActions = props => {
   const [snapshots, setSnapshots] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [picOpen, setPicOpen] = React.useState(false);
+  useEffect(() => {
+    dispatch(setCurrentTabInApp('performance-comparison'));
+  }, []);
   
   const {
     tooltipOpen,

@@ -5,7 +5,8 @@ import React, { useEffect } from 'react';
 import { diff, formatters } from 'jsondiffpatch';
 import * as d3 from 'd3';
 
-import { changeView, changeSlider } from '../actions/actions';
+import { changeView, changeSlider, setCurrentTabInApp } from '../actions/actions';
+import { useStoreContext } from '../store';
 
 const defaultMargin = {
   top: 30, left: 30, right: 55, bottom: 70,
@@ -23,6 +24,8 @@ function History(props: Record<string, unknown>): JSX.Element {
     currLocation,
     snapshots,
   } = props;
+  const [ store, dispatch] = useStoreContext();
+  
 
   const svgRef = React.useRef(null);
   const root = JSON.parse(JSON.stringify(hierarchy));
@@ -34,6 +37,10 @@ function History(props: Record<string, unknown>): JSX.Element {
   useEffect(() => {
     makeD3Tree();
   }, [root, currLocation]);
+
+  useEffect(() => {
+    dispatch(setCurrentTabInApp('history'));
+  }, []);
 
 
   function labelCurrentNode(d3root) {

@@ -38,7 +38,7 @@ export default (state, action) => produce(state, draft => {
   switch (action.type) {
     // This saves the series user wants to save to chrome local storage
     case types.SAVE: {
-      const { newSeries, newSeriesName } = action.payload; 
+      const { newSeries, newSeriesName } = action.payload;
       if (!tabs[currentTab].seriesSavedStatus) {
         tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
         break;
@@ -50,7 +50,6 @@ export default (state, action) => produce(state, draft => {
         seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
         newSeries.name = newSeriesName;
         seriesArray.push(newSeries);
-        console.log(seriesArray)
         localStorage.setItem('project', JSON.stringify(seriesArray));
         tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
         break;
@@ -364,6 +363,10 @@ export default (state, action) => produce(state, draft => {
     }
     case types.SET_CURRENT_TAB_IN_APP: {
       draft.currentTabInApp = action.payload;
+      break;
+    }
+    case types.TUTORIAL_SAVE_SERIES_TOGGLE: {
+      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload };
       break;
     }
     default:

@@ -62,7 +62,7 @@ const tooltipStyles = {
 const BarGraph = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { width, height, data, comparison } = props;
-  const [ seriesNameInput, setSeriesNameInput ] = useState(`Series ${comparison.length}`);
+  const [ seriesNameInput, setSeriesNameInput ] = useState(`Series ${comparison.length + 1}`);
   const {
     tooltipOpen,
     tooltipLeft,
@@ -137,7 +137,7 @@ const BarGraph = props => {
     dispatch(save(toStorage))
   }
 
-  const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" id="seriesname" value={seriesNameInput} onChange={e => setSeriesNameInput(e.target.value)} /> : null;
+  const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" className="seriesNameInput" value={seriesNameInput} onChange={e => setSeriesNameInput(e.target.value)} /> : null;
   return (
     <div className="bargraph-position">
       {/* <input type="text" id ="seriesname" placeholder="Series Name" /> */}

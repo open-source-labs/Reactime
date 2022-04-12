@@ -22,7 +22,7 @@ import { useStoreContext } from '../store';
 function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
   const {
-    tabs, currentTab, port: currentPort, split, currentTabInApp
+    tabs, currentTab, port: currentPort, split,
   } = store;
   const [actionView, setActionView] = useState(true);
   // this function handles Time Jump sidebar view
@@ -195,7 +195,6 @@ function MainContainer(): any {
 
   return (
     <div className="main-container">
-      {currentTabInApp}
       <div id="bodyContainer" className="body-container">
         <ActionContainer
           actionView={actionView}
