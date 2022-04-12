@@ -156,6 +156,11 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - [What time is it? Reactime!](https://medium.com/@liuedar/what-time-is-it-reactime-fd7267b9eb89)
 
 ## <b>Authors</b>
+
+- **Kris Sorensen** - [@kris-sorensen](https://github.com/kris-sorensen)
+- **Daljit Gill** - [@dgill05](https://github.com/dgill05)
+- **Ben Michareune** - [@bmichare](https://github.com/bmichare)
+- **Dane Corpion** - [@danecorpion](https://github.com/danecorpion)
 - **Harry Fox** - [@StackOverFlowWhereArtThou](https://github.com/StackOverFlowWhereArtThou)
 - **Nathan Richardson** - [@BagelEnthusiast](https://github.com/BagelEnthusiast)
 - **David Bernstein** - [@dangitbobbeh](https://github.com/dangitbobbeh)

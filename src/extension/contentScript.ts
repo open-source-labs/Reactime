@@ -11,6 +11,7 @@ import {
 let firstMessage = true;
 // Listens for window messages (from the injected script on the DOM)
 let isRecording = true;
+
 window.addEventListener('message', msg => {
   // Event listener runs constantly based on actions
   // recorded on the test application from backend files (linkFiber.ts).
@@ -40,16 +41,14 @@ window.addEventListener('message', msg => {
 // Listening for messages from the UI of the Reactime extension.
 chrome.runtime.onMessage.addListener(request => {
   const { action }: { action: string; } = request;
-  // this is only listening for Jump toSnap
-
   if (action) {
+    // Message being sent from background.js
+    // This is toggling the record button on Reactime when clicked
     if (action === 'toggleRecord') {
       isRecording = !isRecording;
     }
-
+    // this is only listening for Jump toSnap
     if (action === 'jumpToSnap') {
-      //
-      //
       chrome.runtime.sendMessage(request);
     }
     // After the jumpToSnap action has been sent back to background js,

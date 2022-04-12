@@ -209,6 +209,9 @@ chrome.runtime.onConnect.addListener(port => {
       case 'jumpToSnap':
         chrome.tabs.sendMessage(tabId, msg);
         return true; // attempt to fix message port closing error, consider return Promise
+      case 'toggleRecord':
+        chrome.tabs.sendMessage(tabId, msg);
+        return true;
       default:
         return true;
     }
