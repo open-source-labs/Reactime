@@ -60,7 +60,7 @@ function howToUseHandler() {
 }
 
 function ButtonsContainer(): JSX.Element {
-  const [{ tabs, currentTab, split }, dispatch] = useStoreContext();
+  const [{ tabs, currentTab, split, currentTabInApp }, dispatch] = useStoreContext();
   const {
     snapshots,
     mode: { paused, persist },
@@ -125,7 +125,7 @@ function ButtonsContainer(): JSX.Element {
         Upload
       </button>
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}
-      <Tutorial />
+      <Tutorial dispatch={dispatch} currentTabInApp={currentTabInApp} />
     </div>
   );
 }

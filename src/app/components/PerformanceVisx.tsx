@@ -1,19 +1,21 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MemoryRouter as Router,
   Route,
   NavLink,
   Switch,
   useLocation,
+  Redirect,
 } from 'react-router-dom';
 import RenderingFrequency from './RenderingFrequency';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useStoreContext } from '../store';
+import { setCurrentTabInApp } from '../actions/actions';
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
 Barstacks display inconsistently...however, almost always displays upon initial test app load or
@@ -172,7 +174,7 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
 const PerformanceVisx = (props: BarStackProps) => {
   // hook used to dispatch onhover action in rect
   const { width, height, snapshots, hierarchy, } = props;
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
   const [detailsView, setDetailsView] = useState('barStack');
   const [comparisonView, setComparisonView] = useState('barStack');
   const [comparisonData, setComparisonData] = useState();
@@ -180,6 +182,10 @@ const PerformanceVisx = (props: BarStackProps) => {
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   const [ series, setSeries ] = useState(true);
   const [ action, setAction ] = useState(false);
+
+  useEffect(() => {
+    dispatch(setCurrentTabInApp('performance'));
+  }, []);
 
   const getActions = () => {
     let seriesArr = localStorage.getItem('project')
@@ -237,6 +243,14 @@ const PerformanceVisx = (props: BarStackProps) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
+  const renderForTutorial = () => {
+    console.log(currentTabInApp)
+    if (currentTabInApp === 'performance') return <Redirect to="/" />;
+    if (currentTabInApp === 'performance-comparison') return <Redirect to="/comparison" />;
+    
+    return null;
+  }
+
   return (
     <Router>
       <div className="performance-nav-bar-container">
@@ -251,6 +265,7 @@ const PerformanceVisx = (props: BarStackProps) => {
         </NavLink>
         <NavLink
           className="router-link-performance"
+          id="router-link-performance-comparison"
           // className="router-link"
           activeClassName="is-active"
           to="/comparison"
@@ -266,6 +281,8 @@ const PerformanceVisx = (props: BarStackProps) => {
           Component Details
         </NavLink>
       </div>
+
+      {renderForTutorial()}
 
       <Switch>
         <Route path="/comparison" render={renderComparisonBargraph} />

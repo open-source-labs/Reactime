@@ -118,4 +118,14 @@ export const onHoverExit = (rtid) => ({
 export const setCurrentLocation = (tabsObj) => ({
   type: types.SET_CURRENT_LOCATION,
   payload: tabsObj,
-})
+});
+
+export const setCurrentTabInApp = (currentTabInApp) => ({
+  type: types.SET_CURRENT_TAB_IN_APP,
+  payload: currentTabInApp,
+});
+
+export const tutorialSaveSeriesToggle = (toggleVal) => ({
+  type: types.TUTORIAL_SAVE_SERIES_TOGGLE,
+  payload: toggleVal,
+});

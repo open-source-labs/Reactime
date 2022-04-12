@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Charts from 'react-apexcharts';
 import ReactHover, { Trigger, Hover } from 'react-hover';
+
+import { setCurrentTabInApp } from '../actions/actions';
+import { useStoreContext } from '../store';
 
 const radialGraph = props => {
   const state = {
@@ -84,6 +87,10 @@ const radialGraph = props => {
       labels: [props.label],
     },
   };
+  const [ store, dispatch] = useStoreContext();
+  useEffect(() => {
+    dispatch(setCurrentTabInApp('history'));
+  }, []);
   const optionsCursorTrueWithMargin = {
     followCursor: true,
     shiftX: 20,
