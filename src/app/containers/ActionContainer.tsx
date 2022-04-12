@@ -1,6 +1,11 @@
 // @ts-nocheck
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faToggleOff,
+  faToggleOn,
+} from '@fortawesome/free-solid-svg-icons';
 import Action from '../components/Action';
 import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
@@ -14,13 +19,15 @@ const resetSlider = () => {
 };
 
 function ActionContainer(props): JSX.Element {
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const [{ tabs, currentTab, port }, dispatch] = useStoreContext();
   const {
     currLocation, hierarchy, sliderIndex, viewIndex, snapshots,
   } = tabs[currentTab];
   const {
-    toggleActionContainer, actionView, setActionView
+    toggleActionContainer, actionView, setActionView,
   } = props;
+  const [recordingActions, setRecordingActions] = useState(true);
+
   let actionsArr = [];
   const hierarchyArr: any[] = [];
 
@@ -125,24 +132,41 @@ function ActionContainer(props): JSX.Element {
     setActionView(true);
   }, [setActionView]);
 
+  // Function sends message to background.js which sends message to the content script
   const toggleRecord = () => {
     port.postMessage({
       action: 'toggleRecord',
+      tabId: currentTab,
     });
-    // change color of record button or switch svg/img file
+    // Record button's icon is being togggled on click
+    setRecordingActions(!recordingActions);
   };
 
   // the conditional logic below will cause ActionContainer.test.tsx to fail as it cannot find the Empty button
   // UNLESS actionView={true} is passed into <ActionContainer /> in the beforeEach() call in ActionContainer.test.tsx
   return (
     <div id="action-id" className="action-container">
-      <div id="arrow">
-        <aside className="aside">
-          <a onClick={toggleActionContainer} className="toggle">
-            <i />
-          </a>
-        </aside>
-        {/* <button className="recordBtn" onClick={toggleRecord}>Record</button> */}
+      <div className="actionToolContainer">
+        <div id="arrow">
+          <aside className="aside">
+            <a onClick={toggleActionContainer} className="toggle">
+              <i />
+            </a>
+          </aside>
+
+        </div>
+        <a
+          type="button"
+          id="recordBtn"
+          onClick={toggleRecord}
+        >
+          <i />
+          {recordingActions ? (
+            <FontAwesomeIcon className="fa-regular" icon={faToggleOn} />
+          ) : (
+            <FontAwesomeIcon className="fa-regular" icon={faToggleOff} />
+          )}
+        </a>
       </div>
       {actionView ? (
         <div className="action-button-wrapper">

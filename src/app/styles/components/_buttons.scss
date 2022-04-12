@@ -321,7 +321,7 @@
 
 /* sidebar button open and closing functionality */
 aside {
-  width: 250px;
+  // width: 250px;
   background: #242529;
   color: #fff;
   transition: width 1s;
@@ -329,6 +329,7 @@ aside {
 
 .no-aside {
   width: 30px;
+  margin-right: 15px;
 }
 
 .toggle {
@@ -352,8 +353,8 @@ aside {
 }
 
 .toggle i {
-  top: 46%;
-  left: 4%;
+  top: 8px;
+  left: 9px;
   display: block;
   background: $blue-brand;
 }

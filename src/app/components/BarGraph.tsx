@@ -62,7 +62,11 @@ const tooltipStyles = {
 const BarGraph = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { width, height, data, comparison } = props;
+<<<<<<< HEAD
   const [ seriesNameInput, setSeriesNameInput ] = useState(`Series ${comparison.length + 1}`);
+=======
+  const [seriesNameInput, setSeriesNameInput] = useState(`Series ${comparison.length}`);
+>>>>>>> master
   const {
     tooltipOpen,
     tooltipLeft,
@@ -123,11 +127,11 @@ const BarGraph = props => {
       }
     }
   });
-  
+
   const saveSeriesClickHandler = () => {
     if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
       const actionNames = document.getElementsByClassName('actionname');
-      for (let i = 0; i < actionNames.length; i++ ) {
+      for (let i = 0; i < actionNames.length; i++) {
         toStorage.data.barStack[i].name = actionNames[i].value;
       }
       dispatch(save(toStorage, seriesNameInput));
@@ -137,18 +141,25 @@ const BarGraph = props => {
     dispatch(save(toStorage))
   }
 
+<<<<<<< HEAD
   const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" className="seriesNameInput" value={seriesNameInput} onChange={e => setSeriesNameInput(e.target.value)} /> : null;
+=======
+  const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" id="seriesname" placeholder="Enter Series Name" onChange={e => setSeriesNameInput(e.target.value)} /> : null;
+>>>>>>> master
   return (
     <div className="bargraph-position">
+
       {/* <input type="text" id ="seriesname" placeholder="Series Name" /> */}
-      {textbox}
-      <button
-        type="button"
-        className="save-series-button"
-        onClick={saveSeriesClickHandler}
-      >
-        Save Series
-      </button>
+      <div>
+        {textbox}
+        <button
+          type="button"
+          className="save-series-button"
+          onClick={saveSeriesClickHandler}
+        >
+          Save Series
+        </button>
+      </div>
       <svg ref={containerRef} width={width} height={height}>
         <rect
           x={0}
@@ -191,8 +202,8 @@ const BarGraph = props => {
                   height={bar.height === 0 ? null : bar.height}
                   width={bar.width}
                   fill={bar.color}
-                      /* TIP TOOL EVENT HANDLERS */
-                      // Hides tool tip once cursor moves off the current rect.
+                  /* TIP TOOL EVENT HANDLERS */
+                  // Hides tool tip once cursor moves off the current rect.
                   onMouseLeave={() => {
                     dispatch(
                       onHoverExit(data.componentData[bar.key].rtid),
@@ -201,7 +212,7 @@ const BarGraph = props => {
                       }, 300)),
                     );
                   }}
-                      // Cursor position in window updates position of the tool tip.
+                  // Cursor position in window updates position of the tool tip.
                   onMouseMove={event => {
                     dispatch(onHover(data.componentData[bar.key].rtid));
                     if (tooltipTimeout) clearTimeout(tooltipTimeout);
