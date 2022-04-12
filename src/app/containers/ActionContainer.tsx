@@ -132,13 +132,14 @@ function ActionContainer(props): JSX.Element {
     setActionView(true);
   }, [setActionView]);
 
+  // Function sends message to background.js which sends message to the content script
   const toggleRecord = () => {
     port.postMessage({
       action: 'toggleRecord',
       tabId: currentTab,
     });
+    // Record button's icon is being togggled on click
     setRecordingActions(!recordingActions);
-    // change color of record button or switch svg/img file
   };
 
   // the conditional logic below will cause ActionContainer.test.tsx to fail as it cannot find the Empty button
@@ -156,7 +157,7 @@ function ActionContainer(props): JSX.Element {
         </div>
         <a
           type="button"
-          className="recordBtn"
+          id="recordBtn"
           onClick={toggleRecord}
         >
           <i />

@@ -30,6 +30,13 @@ function MainContainer(): any {
     setActionView(!actionView);
     const toggleElem = document.querySelector('aside');
     toggleElem.classList.toggle('no-aside');
+    // hides the record toggle button from Actions Container in Time Jump sidebar view
+    const recordBtn = document.getElementById('recordBtn');
+    if (recordBtn.style.display === 'none') {
+      recordBtn.style.display = 'flex';
+    } else {
+      recordBtn.style.display = 'none';
+    }
   };
   // let port;
   useEffect(() => {

@@ -41,13 +41,13 @@ window.addEventListener('message', msg => {
 // Listening for messages from the UI of the Reactime extension.
 chrome.runtime.onMessage.addListener(request => {
   const { action }: { action: string; } = request;
-  // this is only listening for Jump toSnap
-
   if (action) {
+    // Message being sent from background.js
+    // This is toggling the record button on Reactime when clicked
     if (action === 'toggleRecord') {
       isRecording = !isRecording;
     }
-
+    // this is only listening for Jump toSnap
     if (action === 'jumpToSnap') {
       chrome.runtime.sendMessage(request);
     }

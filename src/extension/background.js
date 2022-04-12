@@ -211,7 +211,7 @@ chrome.runtime.onConnect.addListener(port => {
         return true; // attempt to fix message port closing error, consider return Promise
       case 'toggleRecord':
         chrome.tabs.sendMessage(tabId, msg);
-        return true; // attempt to fix message port closing error, consider return Promise
+        return true;
       default:
         return true;
     }

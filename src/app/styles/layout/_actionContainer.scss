@@ -9,9 +9,18 @@
   color: #fffeff;
 }
 
-.recordBtn{
-  position: relative;
-  left: 80%;
-  height: 100vw;
-  // visibility: hidden;
+#recordBtn{
+  height: 100%;
+  display:flex;
+}
+
+.actionToolContainer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#recordBtn .fa-regular{
+  height: 100%;
+  width: 28px;
 }
