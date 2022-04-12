@@ -62,11 +62,7 @@ const tooltipStyles = {
 const BarGraph = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { width, height, data, comparison } = props;
-<<<<<<< HEAD
   const [ seriesNameInput, setSeriesNameInput ] = useState(`Series ${comparison.length + 1}`);
-=======
-  const [seriesNameInput, setSeriesNameInput] = useState(`Series ${comparison.length}`);
->>>>>>> master
   const {
     tooltipOpen,
     tooltipLeft,
