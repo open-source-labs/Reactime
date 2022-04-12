@@ -141,11 +141,7 @@ const BarGraph = props => {
     dispatch(save(toStorage))
   }
 
-<<<<<<< HEAD
-  const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" className="seriesNameInput" value={seriesNameInput} onChange={e => setSeriesNameInput(e.target.value)} /> : null;
-=======
   const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" id="seriesname" placeholder="Enter Series Name" onChange={e => setSeriesNameInput(e.target.value)} /> : null;
->>>>>>> master
   return (
     <div className="bargraph-position">
 
