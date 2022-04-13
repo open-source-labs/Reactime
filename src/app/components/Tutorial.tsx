@@ -21,7 +21,7 @@ class Tutorial extends Component {
     const { currentTabInApp, dispatch } = this.props;
 
     // This updates the steps so that they can target dynamically rendered elements
-    const onChangeHandler = (currentStepIndex) => {
+    const onChangeHandler = currentStepIndex => {
       if (currentTabInApp === 'performance' && currentStepIndex === 1) {
         dispatch(tutorialSaveSeriesToggle('inputBoxOpen'));
         this.steps.updateStepElement(currentStepIndex);
@@ -67,6 +67,12 @@ class Tutorial extends Component {
           title: 'Actions',
           element: '.action-container',
           intro: "<ul><li>Reactime records a snapshot whenever a target application's state is changed</li></ul>",
+          position: 'right',
+        },
+        {
+          title: 'Toggle Record Button',
+          element: '#recordBtn',
+          intro: '<ul><li>Toggle record button to pause state changes on target application</li></ul>',
           position: 'right',
         },
         {
@@ -143,7 +149,7 @@ class Tutorial extends Component {
         break;
       case 'performance':
         steps = [{
-          title: 'This is the performance tab!',
+          title: 'Performance Tab',
           element: '.bargraph-position',
           intro: '<ul><li>Here we can analyze the render times of our app</li> <li>This is the current series of state changes within our app</li> <li>Mouse over the bargraph elements for details on each specific component</li></ul>',
           position: 'top',
@@ -156,7 +162,7 @@ class Tutorial extends Component {
         },
         {
           title: 'Saving Series & Actions',
-          element: '.seriesNameInput',
+          element: '#seriesname',
           intro: '<ul><li>We can now give our series a name or leave it at the default</li></ul>',
           position: 'top',
         },
@@ -173,7 +179,7 @@ class Tutorial extends Component {
           position: 'top',
         },
         {
-          title: 'Comparing Saved Series & Actions',
+          title: 'Comparison Tab',
           element: '#router-link-performance-comparison',
           intro: '<ul><li>Now let\'s head over to the comparison tab</li></ul>',
           position: 'top',
@@ -189,7 +195,7 @@ class Tutorial extends Component {
           title: 'No Tutorial For This Tab',
           intro: '<ul><li>A tutorial for this tab has not yet been created</li><li>Please visit our official Github Repo for more information </li><br> <li><a href="https://github.com/open-source-labs/reactime" target="_blank">Reactime Github</a></li></ul>',
           position: 'top',
-        }]
+        }];
         break;
     }
 
@@ -214,7 +220,7 @@ class Tutorial extends Component {
             keyboardNavigation: true,
             overlayOpacity: 0.65,
           }}
-          onBeforeChange={(currentStepIndex) => onChangeHandler(currentStepIndex)}
+          onBeforeChange={currentStepIndex => onChangeHandler(currentStepIndex)}
           ref={steps => (this.steps = steps)}
         />
         <button
