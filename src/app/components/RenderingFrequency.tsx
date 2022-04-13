@@ -8,7 +8,7 @@ import { useStoreContext } from '../store';
 
 const RenderingFrequency = props => {
   const perfData = props.data;
-  const [ store, dispatch] = useStoreContext();
+  const [store, dispatch] = useStoreContext();
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance-comparison'));
   }, []);

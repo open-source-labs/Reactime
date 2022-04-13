@@ -241,7 +241,7 @@ const BarGraphComparison = props => {
           >
             Clear All Series
           </button>
-          <h4 style={{ padding: '0 1rem' }}>Compare Series: </h4>
+          <h4 className="compare-series-box"style={{ padding: '0 1rem' }}>Compare Series: </h4>
           <FormControl id="selectSeries" variant="outlined" className={classes.formControl}>
             <Select
               style={{ color: 'white' }}

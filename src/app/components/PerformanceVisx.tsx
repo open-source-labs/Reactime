@@ -58,7 +58,6 @@ const collectNodes = (snaps, componentName) => {
           // needs to be stringified because values are hard to determine if true or false if in they're seen as objects
           if (JSON.stringify(Object.values(componentsResult[newChange ? componentsResult.length - 1 : trackChanges])[0]) !== JSON.stringify(cur.componentData.props)) {
             newChange = true;
-            // const props = { [`snapshot${x}`]: { rendertime: formatRenderTime(cur.componentData.actualDuration), ...cur.componentData.props } };
             const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
             componentsResult.push(props);
           } else {
@@ -68,8 +67,6 @@ const collectNodes = (snaps, componentName) => {
             componentsResult.push(props);
           }
         } else {
-          // const props = { [`snapshot${x}`]: { ...cur.componentData.props}};
-          // props[`snapshot${x}`].rendertime = formatRenderTime(cur.componentData.actualDuration);
           const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
           componentsResult.push(props);
         }
@@ -138,7 +135,7 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
 
 // Retrieve snapshot series data from Chrome's local storage.
 const allStorage = () => {
-  let values = localStorage.getItem('project')
+  let values = localStorage.getItem('project');
   values = values === null ? [] : JSON.parse(values);
   return values;
 };
@@ -168,30 +165,28 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
   return perfData;
 };
 
-
-
 /* EXPORT COMPONENT */
 const PerformanceVisx = (props: BarStackProps) => {
   // hook used to dispatch onhover action in rect
-  const { width, height, snapshots, hierarchy, } = props;
+  const {
+    width, height, snapshots, hierarchy,
+  } = props;
   const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
-  const [detailsView, setDetailsView] = useState('barStack');
-  const [comparisonView, setComparisonView] = useState('barStack');
-  const [comparisonData, setComparisonData] = useState();
   const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
-  const [ series, setSeries ] = useState(true);
-  const [ action, setAction ] = useState(false);
+  const [series, setSeries] = useState(true);
+  const [action, setAction] = useState(false);
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance'));
-  }, []);
+  }, [dispatch]);
 
+  // Creates the actions array used to populate the compare actions dropdown
   const getActions = () => {
-    let seriesArr = localStorage.getItem('project')
+    let seriesArr = localStorage.getItem('project');
     seriesArr = seriesArr === null ? [] : JSON.parse(seriesArr);
     const actionsArr = [];
-  
+
     if (seriesArr.length) {
       for (let i = 0; i < seriesArr.length; i++) {
         for (const actionObj of seriesArr[i].data.barStack) {
@@ -203,22 +198,24 @@ const PerformanceVisx = (props: BarStackProps) => {
       }
     }
     return actionsArr;
-  }
+  };
 
   const renderComparisonBargraph = () => {
-    if (hierarchy && series !== false) return (
-      <BarGraphComparison
-        comparison={allStorage()}
-        data={data}
-        width={width}
-        height={height}
-        setSeries={setSeries}
-        series={series}
-        setAction={setAction}
-      />
-    );
+    if (hierarchy && series !== false) {
+      return (
+        <BarGraphComparison
+          comparison={allStorage()}
+          data={data}
+          width={width}
+          height={height}
+          setSeries={setSeries}
+          series={series}
+          setAction={setAction}
+        />
+      );
+    }
     return (
-      <BarGraphComparisonActions 
+      <BarGraphComparisonActions
         comparison={allStorage()}
         data={getActions()}
         width={width}
@@ -243,13 +240,12 @@ const PerformanceVisx = (props: BarStackProps) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
 
+  // This will redirect to the proper tabs during the tutorial
   const renderForTutorial = () => {
-    console.log(currentTabInApp)
     if (currentTabInApp === 'performance') return <Redirect to="/" />;
     if (currentTabInApp === 'performance-comparison') return <Redirect to="/comparison" />;
-    
     return null;
-  }
+  };
 
   return (
     <Router>

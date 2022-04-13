@@ -90,7 +90,6 @@ const BarGraphComparisonActions = props => {
   let tooltipTimeout: number;
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
-  console.log(data)
   const keys = Object.keys(data[0]).filter((componentName) => componentName !== 'name' && componentName !== 'seriesName' && componentName !== 'snapshotId');
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSeriesName = action => action.seriesName;
