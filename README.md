@@ -45,7 +45,7 @@
 
 Currently, Reactime supports React apps using stateful components and Hooks, with beta support for Recoil and Context API and frameworks like Gatsby and Next.js.
 
-<b>Reactime version 13.0</b> has added the exciting features below:
+<b>Reactime 13.0</b> has added the exciting features below:
 
 I. Action Comparison Tool
 Users now have the ability to name, save, and analyze specific action snapshots within a saved series. This feature allows engineers to compare component render times throughout the development process of their application, providing them with metrics to show any improvements or changes.
