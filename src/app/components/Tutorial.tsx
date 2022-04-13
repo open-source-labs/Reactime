@@ -399,7 +399,7 @@ class Tutorial extends Component {
             hideNext: false,
             skipLabel: 'Skip',
             keyboardNavigation: true,
-            overlayOpacity: 0.65,
+            overlayOpacity: 0.85,
           }}
           onBeforeChange={(currentStepIndex) => onChangeHandler(currentStepIndex)}
           ref={steps => (this.steps = steps)}
