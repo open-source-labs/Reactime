@@ -152,6 +152,8 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - A persist button to keep snapshots upon refresh (handy when changing code and debugging)
 - Download/upload the current snapshots in memory
 - Declarative titles in the actions sidebar
+- Interative Tutorial Walkthrough
+- Toggle feature allowing temporary pause of state monitoring
 
 ## <b>Read More</b>
 
