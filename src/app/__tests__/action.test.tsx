@@ -36,7 +36,7 @@ describe('unit testing for Action.tsx', () => {
   });
 
   describe('Component', () => {
-    test("should have a className 'action-component selected' if props.selected is true", () => {
+    test.skip("should have a className 'action-component selected' if props.selected is true", () => {
       wrapper.setProps({ selected: true });
       expect(wrapper.hasClass('action-component selected')).toEqual(true);
     });

@@ -45,9 +45,16 @@
 
 Currently, Reactime supports React apps using stateful components and Hooks, with beta support for Recoil and Context API and frameworks like Gatsby and Next.js.
 
-<b>Reactime version 11.0</b> implements full compatibility with React Hooks. Additionally, hover functionality was added to all of the nodes that populate in the history tab, allowing developers to more easily view the state at that snapshot.
+<b>Reactime 13.0</b> has added the exciting features below:
 
-Reactime 11.0 fixes existing bugs while also improving the user experience for information tooltips.
+I. Action Comparison Tool
+Users now have the ability to name, save, and analyze specific action snapshots within a saved series. This feature allows engineers to compare component render times throughout the development process of their application, providing them with metrics to show any improvements or changes.
+
+II. Reactime Visual Tutorial Walkthrough
+While Reactime offers a user friendly and intuitive interface,  users can now access a guided tutorial, walking the user through each feature while explaining practical use cases and added benefits that Reactime can provide. The walkthrough utilizes the Intro.js library, providing a visual experience that highlights and cycles through each COMPONENT displayed on the app.
+
+III. State Monitoring Toggle Feature
+Added toggle feature allows users to temporarily pause Reactime's state monitoring of the linked application. This allows users to make state changes within their application without populating the actions container within Reactime. Especially useful when trying to limit and compare the number of actions within one series that a user is planning to save. Relinking Reactime to the application is as simple as toggling the record button back to it's original state!
 
 After installing Reactime, you can test its functionalities with your React application in development mode.
 
@@ -101,9 +108,9 @@ Reactime offers debugging and performance tools for Next.js apps: time-traveling
 
 Whenever state is changed (whenever setState, useState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the Reactime panel.
 
-### 🔹 Snapshot Comparison 
+### 🔹 Snapshot Series and Action Comparison 
 
-You can save a series of state snapshots and use it to analyze changes in component render performance between current and previous series of snapshots.
+You can save a series of state snapshots and use it to analyze changes in component render performance between current and previous series of snapshots.  You can also name specific snapshots and compare all snapshots with the same name.
 <p align="center">
 <img src="http://g.recordit.co/KNxvT94qxd.gif" />
 </p>
@@ -145,6 +152,8 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - A persist button to keep snapshots upon refresh (handy when changing code and debugging)
 - Download/upload the current snapshots in memory
 - Declarative titles in the actions sidebar
+- Interative Tutorial Walkthrough
+- Toggle feature allowing temporary pause of state monitoring
 
 ## <b>Read More</b>
 
