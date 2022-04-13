@@ -19,9 +19,9 @@
 	padding-left: 2px;
 }
 
-.introjs-helperLayer{
-  // border: 2px solid yellow
-}
+// .introjs-helperLayer{
+//   // border: 2px solid yellow
+// }
 
 .tools-container {
 	display: flex;
@@ -33,11 +33,40 @@
 }
 
 #seriesname {
-	background-color: inherit;
+	background-color: #333;
+	color: white;
 }
 
 @media (max-width: 500px) {
 	.buttons-container {
 		grid-template-columns: repeat(2, 1fr);
 	}
+}
+
+.introjs-nextbutton {
+	background-color: none;
+	color: #3256f1;
+	border: 1px solid;
+	outline: none;
+}
+
+.introjs-prevbutton{
+	background-color: none;
+	color: #3256f1;
+	border: 1px solid;
+	outline: none;
+}
+
+
+.introjs-skipbutton {
+	color: #d72828;
+	border: 1px solid;
+	margin-top: 2px;
+    font-size: 12px;
+	outline: none;
+}
+
+.introjs-button {
+	background: none; 
+	outline: none;
 }

@@ -20,9 +20,12 @@
 }
 
 #seriesname {
-	background-color: white;
-	float: right;
-	width: 117px;
-	margin-right: 160px;
-	height: 24px;
+    float: right;
+    width: 220px;
+    margin-right: 165px;
+    height: 24px;
+
+}
+input:focus, textarea:focus, select:focus{
+	outline: none;
 }

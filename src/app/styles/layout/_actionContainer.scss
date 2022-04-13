@@ -1,11 +1,12 @@
 .action-container {
   // overflow: auto;
-  background-color: $brand-color;
+  // background-color: $brand-color;
   overflow-x: hidden;
+  background-color: #282828;
 }
 
 .actionname {
-  background-color: #25242a;
+  background-color: inherit;
   color: #fffeff;
 }
 
