@@ -101,9 +101,9 @@ Reactime offers debugging and performance tools for Next.js apps: time-traveling
 
 Whenever state is changed (whenever setState, useState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the Reactime panel.
 
-### 🔹 Snapshot Comparison 
+### 🔹 Snapshot Series and Action Comparison 
 
-You can save a series of state snapshots and use it to analyze changes in component render performance between current and previous series of snapshots.
+You can save a series of state snapshots and use it to analyze changes in component render performance between current and previous series of snapshots.  You can also name specific snapshots and compare all snapshots with the same name.
 <p align="center">
 <img src="http://g.recordit.co/KNxvT94qxd.gif" />
 </p>
