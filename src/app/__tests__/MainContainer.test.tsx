@@ -24,6 +24,7 @@ const state = {
 };
 
 const dispatch = jest.fn();
+jest.mock('../../../node_modules/intro.js/introjs.css', () => jest.fn());
 jest.mock('../store');
 useStoreContext.mockImplementation(() => [state, dispatch]);
 

@@ -1,27 +1,21 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 // @ts-nocheck
-import React, { useState } from 'react';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { ParentSize } from '@visx/responsive';
+import React, { useState, useEffect } from 'react';
 import {
   MemoryRouter as Router,
   Route,
   NavLink,
   Switch,
+  useLocation,
+  Redirect,
 } from 'react-router-dom';
-import { Component } from 'react';
-import { render } from 'react-dom';
 import RenderingFrequency from './RenderingFrequency';
-// import Switch from '@material-ui/core/Switch';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
+import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useStoreContext } from '../store';
-// import snapshots from './snapshots';
-import snapshots from './snapshots';
-
-const exclude = ['childExpirationTime', 'staticContext', '_debugSource', 'actualDuration', 'actualStartTime', 'treeBaseDuration', '_debugID', '_debugIsCurrentlyTiming', 'selfBaseDuration', 'expirationTime', 'effectTag', 'alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
-
+import { setCurrentTabInApp } from '../actions/actions';
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
 Barstacks display inconsistently...however, almost always displays upon initial test app load or
@@ -39,28 +33,6 @@ interface BarStackProps {
   snapshots: [];
   hierarchy: any;
 }
-
-const makePropsPretty = data => {
-  const propsFormat = [];
-  const nestedObj = [];
-  if (typeof data !== 'object') {
-    return <p>{data}</p>;
-  }
-  for (const key in data) {
-    if (data[key] !== 'reactFiber' && typeof data[key] !== 'object' && exclude.includes(key) !== true) {
-      propsFormat.push(<p className="stateprops">
-        {`${key}: ${data[key]}`}
-      </p>);
-    } else if (data[key] !== 'reactFiber' && typeof data[key] === 'object' && exclude.includes(key) !== true) {
-      const result = makePropsPretty(data[key]);
-      nestedObj.push(result);
-    }
-  }
-  if (nestedObj) {
-    propsFormat.push(nestedObj);
-  }
-  return propsFormat;
-};
 
 const collectNodes = (snaps, componentName) => {
   const componentsResult = [];
@@ -86,7 +58,6 @@ const collectNodes = (snaps, componentName) => {
           // needs to be stringified because values are hard to determine if true or false if in they're seen as objects
           if (JSON.stringify(Object.values(componentsResult[newChange ? componentsResult.length - 1 : trackChanges])[0]) !== JSON.stringify(cur.componentData.props)) {
             newChange = true;
-            // const props = { [`snapshot${x}`]: { rendertime: formatRenderTime(cur.componentData.actualDuration), ...cur.componentData.props } };
             const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
             componentsResult.push(props);
           } else {
@@ -96,8 +67,6 @@ const collectNodes = (snaps, componentName) => {
             componentsResult.push(props);
           }
         } else {
-          // const props = { [`snapshot${x}`]: { ...cur.componentData.props}};
-          // props[`snapshot${x}`].rendertime = formatRenderTime(cur.componentData.actualDuration);
           const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
           componentsResult.push(props);
         }
@@ -116,11 +85,6 @@ const collectNodes = (snaps, componentName) => {
     e[name].rendertime = renderResult[index];
     return e;
   });
-  for (let i = 0; i < finalResults.length; i++) {
-    for (const componentSnapshot in finalResults[i]) {
-      finalResults[i][componentSnapshot] = makePropsPretty(finalResults[i][componentSnapshot]).reverse();
-    }
-  }
   return finalResults;
 };
 
@@ -156,9 +120,6 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
     if (renderTime > 0) {
       data.componentData[componentName].renderFrequency++;
     }
-    // else {
-
-    // }
 
     // add to total render time
     data.componentData[componentName].totalRenderTime += renderTime;
@@ -174,15 +135,8 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
 
 // Retrieve snapshot series data from Chrome's local storage.
 const allStorage = () => {
-  const values = [];
-  const keys = Object.keys(localStorage);
-  let i = keys.length;
-
-
-  while (i--) {
-    const series = localStorage.getItem(keys[i]);
-    values.push(JSON.parse(series));
-  }
+  let values = localStorage.getItem('project');
+  values = values === null ? [] : JSON.parse(values);
   return values;
 };
 
@@ -217,29 +171,65 @@ const PerformanceVisx = (props: BarStackProps) => {
   const {
     width, height, snapshots, hierarchy,
   } = props;
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const [detailsView, setDetailsView] = useState('barStack');
-  const [comparisonView, setComparisonView] = useState('barStack');
-  const [comparisonData, setComparisonData] = useState();
+  const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
   const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
+  const [series, setSeries] = useState(true);
+  const [action, setAction] = useState(false);
+
+  useEffect(() => {
+    dispatch(setCurrentTabInApp('performance'));
+  }, [dispatch]);
+
+  // Creates the actions array used to populate the compare actions dropdown
+  const getActions = () => {
+    let seriesArr = localStorage.getItem('project');
+    seriesArr = seriesArr === null ? [] : JSON.parse(seriesArr);
+    const actionsArr = [];
+
+    if (seriesArr.length) {
+      for (let i = 0; i < seriesArr.length; i++) {
+        for (const actionObj of seriesArr[i].data.barStack) {
+          if (actionObj.name === action) {
+            actionObj.seriesName = seriesArr[i].name;
+            actionsArr.push(actionObj);
+          }
+        }
+      }
+    }
+    return actionsArr;
+  };
 
   const renderComparisonBargraph = () => {
-    if (hierarchy) {
+    if (hierarchy && series !== false) {
       return (
         <BarGraphComparison
           comparison={allStorage()}
           data={data}
           width={width}
           height={height}
+          setSeries={setSeries}
+          series={series}
+          setAction={setAction}
         />
       );
     }
+    return (
+      <BarGraphComparisonActions
+        comparison={allStorage()}
+        data={getActions()}
+        width={width}
+        height={height}
+        setSeries={setSeries}
+        action={action}
+        setAction={setAction}
+      />
+    );
   };
 
   const renderBargraph = () => {
     if (hierarchy) {
-      return <BarGraph data={data} width={width} height={height} />;
+      return <BarGraph data={data} width={width} height={height} comparison={allStorage()} />;
     }
   };
 
@@ -248,6 +238,13 @@ const PerformanceVisx = (props: BarStackProps) => {
       return <RenderingFrequency data={data.componentData} />;
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
+  };
+
+  // This will redirect to the proper tabs during the tutorial
+  const renderForTutorial = () => {
+    if (currentTabInApp === 'performance') return <Redirect to="/" />;
+    if (currentTabInApp === 'performance-comparison') return <Redirect to="/comparison" />;
+    return null;
   };
 
   return (
@@ -264,6 +261,7 @@ const PerformanceVisx = (props: BarStackProps) => {
         </NavLink>
         <NavLink
           className="router-link-performance"
+          id="router-link-performance-comparison"
           // className="router-link"
           activeClassName="is-active"
           to="/comparison"
@@ -279,6 +277,8 @@ const PerformanceVisx = (props: BarStackProps) => {
           Component Details
         </NavLink>
       </div>
+
+      {renderForTutorial()}
 
       <Switch>
         <Route path="/comparison" render={renderComparisonBargraph} />

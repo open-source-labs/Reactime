@@ -1,10 +1,10 @@
 import { produce } from 'immer';
-import _ from 'lodash';
+import _, { values } from 'lodash';
 import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
   const {
-    port, currentTab, tabs,
+    port, currentTab, tabs, 
   } = draft;
   const {
     hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex,
@@ -34,12 +34,26 @@ export default (state, action) => produce(state, draft => {
       }
     }
   };
+  
   switch (action.type) {
-    // Save case will store the series user wants to save to the chrome local storage
+    // This saves the series user wants to save to chrome local storage
     case types.SAVE: {
-      const data = JSON.stringify(action.payload);
-      localStorage.setItem(`${action.payload.currentTab}`, data);
-      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: true };
+      const { newSeries, newSeriesName } = action.payload;
+      if (!tabs[currentTab].seriesSavedStatus) {
+        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
+        break;
+      }
+      // Runs if series name input box is active.
+      // Updates chrome local storage with the newly saved series. Console logging the seriesArray grabbed from local storage may be helpful.
+      if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
+        let seriesArray = localStorage.getItem('project');
+        seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
+        newSeries.name = newSeriesName;
+        seriesArray.push(newSeries);
+        localStorage.setItem('project', JSON.stringify(seriesArray));
+        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
+        break;
+      }
       break;
     }
     // Delete case will delete ALL stored series in chrome local storage. To see  chrome storage related data
@@ -345,6 +359,14 @@ export default (state, action) => produce(state, draft => {
       };
       persistIsExpanded(payload[currentTab].currLocation.stateSnapshot, tabs[currentTab].currLocation.stateSnapshot);
       tabs[currentTab].currLocation = payload[currentTab].currLocation;
+      break;
+    }
+    case types.SET_CURRENT_TAB_IN_APP: {
+      draft.currentTabInApp = action.payload;
+      break;
+    }
+    case types.TUTORIAL_SAVE_SERIES_TOGGLE: {
+      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload };
       break;
     }
     default:

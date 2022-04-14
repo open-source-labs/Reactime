@@ -1,19 +1,24 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { render } from 'react-dom';
-import { onHover, onHoverExit } from '../actions/actions';
+import { onHover, onHoverExit, setCurrentTabInApp } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 const RenderingFrequency = props => {
   const perfData = props.data;
+  const [store, dispatch] = useStoreContext();
+  useEffect(() => {
+    dispatch(setCurrentTabInApp('performance-comparison'));
+  }, []);
   return (
     <div>
       {Object.keys(perfData).map(componentName => {
         const currentComponent = perfData[componentName];
         return (
           <ComponentCard
+            key={componentName}
             componentName={componentName}
             stateType={currentComponent.stateType}
             averageRenderTime={(
@@ -47,7 +52,7 @@ const ComponentCard = props => {
 
   const dataComponentArray = [];
   for (let i = 0; i < information.length; i++) {
-    dataComponentArray.push(<DataComponent header={Object.keys(information[i])} paragraphs={Object.values(information[i])} />);
+    dataComponentArray.push(<DataComponent key={`DataComponent${i}`} header={Object.keys(information[i])} paragraphs={Object.values(information[i])} />);
   }
 
   return (
@@ -102,8 +107,7 @@ const DataComponent = props => {
         {header}
       </h4>
       <p>
-
-        {paragraphs}
+        {`renderTime: ${paragraphs[0].rendertime}`}
       </p>
     </div>
   );
