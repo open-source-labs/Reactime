@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
@@ -61,8 +61,7 @@ const tooltipStyles = {
 
 const BarGraph = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { width, height, data, comparison } = props;
-  const [ seriesNameInput, setSeriesNameInput ] = useState(`Series ${comparison.length + 1}`);
+  const { width, height, data } = props;
   const {
     tooltipOpen,
     tooltipLeft,
@@ -110,11 +109,12 @@ const BarGraph = props => {
     title: tabs[currentTab].title,
     data,
   };
+
   // use this to animate the save series button. It
   useEffect(() => {
     const saveButtons = document.getElementsByClassName('save-series-button');
     for (let i = 0; i < saveButtons.length; i++) {
-      if (tabs[currentTab].seriesSavedStatus === 'saved') {
+      if (tabs[currentTab].seriesSavedStatus) {
         saveButtons[i].classList.add('animate');
         saveButtons[i].innerHTML = 'Saved!';
       } else {
@@ -123,36 +123,18 @@ const BarGraph = props => {
       }
     }
   });
-
-  const saveSeriesClickHandler = () => {
-    if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
-      const actionNames = document.getElementsByClassName('actionname');
-      for (let i = 0; i < actionNames.length; i++) {
-        toStorage.data.barStack[i].name = actionNames[i].value;
-      }
-      dispatch(save(toStorage, seriesNameInput));
-      setSeriesNameInput(`Series ${comparison.length}`)
-      return
-    }
-    dispatch(save(toStorage))
-  }
-
-  const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" id="seriesname" placeholder="Enter Series Name" onChange={e => setSeriesNameInput(e.target.value)} /> : null;
   return (
     <div className="bargraph-position">
-
-      {/* <input type="text" id ="seriesname" placeholder="Series Name" /> */}
-      <div className="saveSeriesContainer">
-        {textbox}
-        <button
-          type="button"
-          className="save-series-button"
-          onClick={saveSeriesClickHandler}
-        >
-          Save Series
-        </button>
-      </div>
+      <button
+        className="save-series-button"
+        onClick={e => {
+          dispatch(save(toStorage));
+        }}
+      >
+        Save Series
+      </button>
       <svg ref={containerRef} width={width} height={height}>
+        {}
         <rect
           x={0}
           y={0}
@@ -188,14 +170,14 @@ const BarGraph = props => {
               }
               return (
                 <rect
-                  key={`bar-stack-${bar.bar.data.snapshotId}-${bar.key}`}
+                  key={`bar-stack-${barStack.id}-${bar.id}`}
                   x={bar.x}
                   y={bar.y}
                   height={bar.height === 0 ? null : bar.height}
                   width={bar.width}
                   fill={bar.color}
-                  /* TIP TOOL EVENT HANDLERS */
-                  // Hides tool tip once cursor moves off the current rect.
+                      /* TIP TOOL EVENT HANDLERS */
+                      // Hides tool tip once cursor moves off the current rect.
                   onMouseLeave={() => {
                     dispatch(
                       onHoverExit(data.componentData[bar.key].rtid),
@@ -204,7 +186,7 @@ const BarGraph = props => {
                       }, 300)),
                     );
                   }}
-                  // Cursor position in window updates position of the tool tip.
+                      // Cursor position in window updates position of the tool tip.
                   onMouseMove={event => {
                     dispatch(onHover(data.componentData[bar.key].rtid));
                     if (tooltipTimeout) clearTimeout(tooltipTimeout);

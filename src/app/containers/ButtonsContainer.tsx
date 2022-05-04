@@ -1,9 +1,5 @@
 // @ts-nocheck
-
-import * as React from 'react';
-import {
-  useState, useRef, useEffect,
-} from 'react';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUpload,
@@ -16,7 +12,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { importSnapshots, toggleMode, toggleSplit } from '../actions/actions';
 import { useStoreContext } from '../store';
-import Tutorial from '../components/Tutorial';
 
 function exportHandler(snapshots: []) {
   // create invisible download anchor link
@@ -60,7 +55,7 @@ function howToUseHandler() {
 }
 
 function ButtonsContainer(): JSX.Element {
-  const [{ tabs, currentTab, split, currentTabInApp }, dispatch] = useStoreContext();
+  const [{ tabs, currentTab, split }, dispatch] = useStoreContext();
   const {
     snapshots,
     mode: { paused, persist },
@@ -124,8 +119,15 @@ function ButtonsContainer(): JSX.Element {
         <FontAwesomeIcon icon={faUpload} />
         Upload
       </button>
-      {/* The component below renders a button for the tutorial walkthrough of Reactime */}
-      <Tutorial dispatch={dispatch} currentTabInApp={currentTabInApp} />
+      <button
+        className="howToUse-button"
+        type="button"
+        onClick={() => howToUseHandler()}
+      >
+        <FontAwesomeIcon icon={faQuestion} />
+        {' '}
+        How to use
+      </button>
     </div>
   );
 }

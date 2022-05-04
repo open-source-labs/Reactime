@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../actions/actions';
+import { onHover, onHoverExit, deleteSeries } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 /* TYPESCRIPT */
@@ -70,14 +70,19 @@ const tooltipStyles = {
 const BarGraphComparison = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
-    width, height, data, comparison, setSeries, series, setAction
+    width, height, data, comparison,
   } = props;
+  const [series, setSeries] = React.useState(0);
   const [snapshots, setSnapshots] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [picOpen, setPicOpen] = React.useState(false);
-  useEffect(() => {
-    dispatch(setCurrentTabInApp('performance-comparison'));
-  }, []);
+  const [maxRender, setMaxRender] = React.useState(data.maxTotalRender);
+
+  function titleFilter(comparisonArray) {
+    return comparisonArray.filter(
+      elem => elem.title.split('-')[1] === tabs[currentTab].title.split('-')[1],
+    );
+  }
 
   const currentIndex = tabs[currentTab].sliderIndex;
 
@@ -165,32 +170,34 @@ const BarGraphComparison = props => {
 
   const classes = useStyles();
 
-  const handleSeriesChange = event => {
-    if (!event) return
+  const handleChange = event => {
     setSeries(event.target.value);
-    setAction(false);
+    // setXpoints();
   };
 
   const handleClose = () => {
     setOpen(false);
+    // setXpoints();
   };
 
   const handleOpen = () => {
     setOpen(true);
+    // setXpoints();
   };
 
-  const handleActionChange = event => {
-    if(!event.target.value) return
-    setAction(event.target.value);
-    setSeries(false);
+  const picHandleChange = event => {
+    setSnapshots(`${(event.target.value + 1).toString()}.0`);
+    // setXpoints();
   };
 
   const picHandleClose = () => {
     setPicOpen(false);
+    // setXpoints();
   };
 
   const picHandleOpen = () => {
     setPicOpen(true);
+    // setXpoints();
   };
 
   // manually assignin X -axis points with tab ID.
@@ -198,6 +205,7 @@ const BarGraphComparison = props => {
     comparison[series].data.barStack.forEach(elem => {
       elem.currentTab = 'comparison';
     });
+    // comparison[series].data.barStack.currentTab = currentTab;
     return comparison[series].data.barStack;
   }
   function setXpointsCurrentTab() {
@@ -219,15 +227,6 @@ const BarGraphComparison = props => {
   for (let i = 0; i < classname.length; i++) {
     classname[i].addEventListener('click', animateButton, false);
   }
-  const seriesList = comparison.map(elem => elem.data.barStack);
-  const actionsList = seriesList.flat();
-  const testList = actionsList.map(elem => elem.name);
- 
-  const finalList = [];
-  for (let i = 0; i < testList.length; i++) {
-    if (testList[i] !== "" && !finalList.includes(testList[i])) finalList.push(testList[i]);
-  }
-  
   return (
     <div>
       <div className="series-options-container">
@@ -241,28 +240,29 @@ const BarGraphComparison = props => {
           >
             Clear All Series
           </button>
-          <h4 className="compare-series-box"style={{ padding: '0 1rem' }}>Compare Series: </h4>
-          <FormControl id="selectSeries" variant="outlined" className={classes.formControl}>
+          <h4 style={{ padding: '0 1rem' }}>Comparison Series: </h4>
+          <FormControl variant="outlined" className={classes.formControl}>
             <Select
               style={{ color: 'white' }}
               labelId="simple-select-outlined-label"
+              id="simple-select-outlined"
               className={classes.select}
               open={open}
               onClose={handleClose}
               onOpen={handleOpen}
               value={series}
-              onChange={handleSeriesChange}
+              onChange={handleChange}
             >
-              {!comparison.length ? (
+              {!comparison[series] ? (
                 <MenuItem>No series available</MenuItem>
               ) : (
-                comparison.map((tabElem, index) => (
-                  <MenuItem key={`MenuItem${tabElem.name}`} value={index}>{tabElem.name}</MenuItem>
+                titleFilter(comparison).map((tabElem, index) => (
+                  <MenuItem value={index}>{`Series ${index + 1}`}</MenuItem>
                 ))
               )}
             </Select>
           </FormControl>
-          <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4>
+          {/* <h4 style={{ padding: '0 1rem' }}>Comparator Snapshot? </h4>
           <FormControl variant="outlined" className={classes.formControl}>
             <Select
               style={{ color: 'white' }}
@@ -272,19 +272,20 @@ const BarGraphComparison = props => {
               open={picOpen}
               onClose={picHandleClose}
               onOpen={picHandleOpen}
-              value={''} //snapshots
-              onChange={handleActionChange}
+              value={snapshots} //snapshots
+              onChange={picHandleChange}
             >
               {!comparison[snapshots] ? (
                 <MenuItem>No snapshots available</MenuItem>
               ) : (
-                finalList.map((elem, index) => (
-                  <MenuItem value={elem}>{elem}</MenuItem>
-                  // <MenuItem value="test">{}</MenuItem>
-                )))
-              }
+                titleFilter(comparison).map((tabElem, index) => {
+                  return (
+                    <MenuItem value={index}>{`${index + 1}`}</MenuItem>
+                  );
+                })
+              )}
             </Select>
-          </FormControl>
+          </FormControl> */}
         </div>
       </div>
 
@@ -323,7 +324,7 @@ const BarGraphComparison = props => {
               // Uses map method to iterate through all components,
               // creating a rect component (from visx) for each iteration.
               // height/width/etc. are calculated by visx.
-              // to set X and Y scale, it  will used the p`assed in function and
+              // to set X and Y scale, it  will used the passed in function and
               // will run it on the array thats outputted by data
               const bar = barStack.bars[currentIndex];
               if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
@@ -367,8 +368,6 @@ const BarGraphComparison = props => {
             // Comparison Barstack (populates based on series selected)
             // to set X and Y scale, it  will used the passed in function and
             // will run it on the array thats outputted by data
-            // setXpointsComparison()}
-            // comparison[series].data.barStack
             data={!comparison[series] ? [] : setXpointsComparison()}
             keys={keys}
             x={getCurrentTab}

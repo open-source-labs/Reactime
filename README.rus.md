@@ -107,10 +107,6 @@ Reactime beta поддерживает приложения, написанны�
 
 ## <b>Авторы</b>
 
-- **Kris Sorensen** - [@kris-sorensen](https://github.com/kris-sorensen)
-- **Daljit Gill** - [@dgill05](https://github.com/dgill05)
-- **Ben Michareune** - [@bmichare](https://github.com/bmichare)
-- **Dane Corpion** - [@danecorpion](https://github.com/danecorpion)
 - **Becca Viner** - [@rtviner](https://github.com/rtviner)
 - **Caitlin Chan** - [@caitlinchan23](https://github.com/caitlinchan23)
 - **Kim Mai Nguyen** - [@Nkmai](https://github.com/Nkmai)

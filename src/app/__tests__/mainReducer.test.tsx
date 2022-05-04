@@ -309,36 +309,35 @@ describe('mainReducer testing', () => {
     });
   });
 
-  // This test is breaking, please troubleshoot
-  // describe('new snapshots', () => {
-  //   const newSnapshots = {
-  //     87: {
-  //       snapshots: [1, 2, 3, 4, 5],
-  //       sliderIndex: 2,
-  //       viewIndex: -1,
-  //       mode: {
-  //         paused: false,
-  //         locked: false,
-  //         persist: false,
-  //       },
-  //       intervalId: 87,
-  //       playing: true,
-  //     },
-  //   };
-  //   it('update snapshots of corresponding tabId', () => {
-  //     const updated = mainReducer(state, addNewSnapshots(newSnapshots));
-  //     expect(updated.tabs[87].snapshots).toEqual(newSnapshots[87].snapshots);
-  //   });
-  //   it('should delete tabs that are deleted from background script', () => {
-  //     const updated = mainReducer(state, addNewSnapshots(newSnapshots));
-  //     expect(updated.tabs[75]).toBe(undefined);
-  //   });
-  //   it('if currentTab undefined currentTab becomes first Tab', () => {
-  //     state.currentTab = undefined;
-  //     const updated = mainReducer(state, addNewSnapshots(newSnapshots));
-  //     expect(updated.currentTab).toBe(87);
-  //   });
-  // });
+  describe('new snapshots', () => {
+    const newSnapshots = {
+      87: {
+        snapshots: [1, 2, 3, 4, 5],
+        sliderIndex: 2,
+        viewIndex: -1,
+        mode: {
+          paused: false,
+          locked: false,
+          persist: false,
+        },
+        intervalId: 87,
+        playing: true,
+      },
+    };
+    it('update snapshots of corresponding tabId', () => {
+      const updated = mainReducer(state, addNewSnapshots(newSnapshots));
+      expect(updated.tabs[87].snapshots).toEqual(newSnapshots[87].snapshots);
+    });
+    it('should delete tabs that are deleted from background script', () => {
+      const updated = mainReducer(state, addNewSnapshots(newSnapshots));
+      expect(updated.tabs[75]).toBe(undefined);
+    });
+    it('if currentTab undefined currentTab becomes first Tab', () => {
+      state.currentTab = undefined;
+      const updated = mainReducer(state, addNewSnapshots(newSnapshots));
+      expect(updated.currentTab).toBe(87);
+    });
+  });
 
   describe('set_tab', () => {
     it('should set tab to payload', () => {

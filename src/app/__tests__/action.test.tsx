@@ -36,7 +36,7 @@ describe('unit testing for Action.tsx', () => {
   });
 
   describe('Component', () => {
-    test.skip("should have a className 'action-component selected' if props.selected is true", () => {
+    test("should have a className 'action-component selected' if props.selected is true", () => {
       wrapper.setProps({ selected: true });
       expect(wrapper.hasClass('action-component selected')).toEqual(true);
     });
@@ -44,6 +44,9 @@ describe('unit testing for Action.tsx', () => {
     test("shouldn't have a className 'action-component selected' if props.selected is false", () => {
       wrapper.setProps({ selected: false });
       expect(wrapper.hasClass('action-component selected')).toEqual(false);
+    });
+    test('should have a text that is equal to props.index', () => {
+      expect(wrapper.find('.action-component-text').text()).toEqual(`${props.displayName}:  ${props.componentName} `);
     });
 
     test('should invoke dispatch method when clicked', () => {

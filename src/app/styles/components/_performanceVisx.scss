@@ -3,12 +3,12 @@
 	justify-content: center;
 }
 
-.MuiSwitch-colorPrimary.Mui-checked {
+.MuiSwitch-colorPrimary.Mui-checked  {
 	color: #62d6fb !important;
 }
 
 .MuiSwitch-switchBase {
-	color: #ff6569 !important;
+	color: #ff6569 !important; 
 }
 
 .MuiSwitch-track {
@@ -17,15 +17,4 @@
 
 .MuiTypography-body1 {
 	font-size: 1em !important;
-}
-
-#seriesname {
-    float: right;
-    width: 220px;
-    margin-right: 165px;
-    height: 24px;
-
-}
-input:focus, textarea:focus, select:focus{
-	outline: none;
-}
+	}

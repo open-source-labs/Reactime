@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react';
-import JSONTree from 'react-json-tree';
 
-import { setCurrentTabInApp } from '../actions/actions';
-import { useStoreContext } from '../store';
+import React from 'react';
+import JSONTree from 'react-json-tree';
 
 const colors = {
   scheme: 'paraiso',
@@ -49,11 +47,6 @@ interface TreeProps {
 
 const Tree = (props: TreeProps) => {
   const { snapshot } = props;
-  const [ store, dispatch] = useStoreContext();
-
-  useEffect(() => {
-    dispatch(setCurrentTabInApp('history'));
-  }, []);
 
   return (
     <>

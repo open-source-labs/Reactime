@@ -106,7 +106,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   // this postMessage will be sending the most up-to-date snapshot of the current React Fiber Tree
   // the postMessage action will be received on the content script to later update the tabsObj
   // this will fire off everytime there is a change in test application
-
+  console.log('payload in backend', payload);
   window.postMessage(
     {
       action: 'recordSnap',

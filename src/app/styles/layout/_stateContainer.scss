@@ -2,7 +2,6 @@
   font-size: 10px;
   overflow: auto;
   background-color: $brand-color;
-  // margin-left: 5px;
 }
 
 .toggleAC {
@@ -48,9 +47,7 @@
   top: 0px;
   left: 0px;
   z-index: 1;
-  // background-color: $background-color;
-  background-color: #252525;
-
+  background-color: $background-color;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -249,10 +246,6 @@
   z-index: 2;
 }
 
-
-.state-container .router-link {
-  border: 0.5px solid black;
-}
 /* if state view is  width is less than 500px, stack the body containers */
 // @media (max-width: 500px) {
 

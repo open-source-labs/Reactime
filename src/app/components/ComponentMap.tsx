@@ -19,9 +19,8 @@ import {
 } from '@visx/tooltip';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
-import { toggleExpanded, setCurrentTabInApp } from '../actions/actions';
+import { toggleExpanded } from '../actions/actions';
 import { useStoreContext } from '../store';
-import { useEffect } from 'react';
 
 const exclude = ['childExpirationTime', 'staticContext', '_debugSource', 'actualDuration', 'actualStartTime', 'treeBaseDuration', '_debugID', '_debugIsCurrentlyTiming', 'selfBaseDuration', 'expirationTime', 'effectTag', 'alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
 
@@ -74,10 +73,6 @@ export default function ComponentMap({
   const [tooltip, setTooltip] = useState(false);
   const [selectedNode, setSelectedNode] = useState('root');
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-
-  useEffect(() => {
-    dispatch(setCurrentTabInApp('map'))
-  }, []);
 
   // setting the margins for the Map to render in the tab window.
   const innerWidth = totalWidth - margin.left - margin.right;
@@ -171,31 +166,28 @@ export default function ComponentMap({
 
   const formatState = state => {
     if (state === 'stateless') return ['stateless'];
-    // Something in this code below is breaking the app,
-    // when you hover over a stateful component on the map
-    // --------------------------------------------------------------------------------------------
-    // const result = [];
-    // const inner = arg => {
-    //   if (Array.isArray(arg)) {
-    //     result.push('[');
-    //     arg.forEach(e => { inner(e); });
-    //     result.push('] ');
-    //   } else if ((typeof arg) === 'object') {
-    //     result.push('{ ');
-    //     Object.keys(arg).forEach((key, i, arr) => {
-    //       result.push(`${key}: `);
-    //       ((typeof arg[key]) === 'object') ? inner(arg[key]) : result.push(arg[key]);
-    //       if (i !== arr.length - 1) result.push(', ');
-    //     });
-    //     result.push(' } ');
-    //   } else {
-    //     result.push(` ${arg}, `);
-    //   }
-    // };
-    // inner(state);
-    // return result;
-    // --------------------------------------------------------------------------------------------
-    return ['stateful'];
+
+    const result = [];
+    const inner = arg => {
+      if (Array.isArray(arg)) {
+        result.push('[');
+        arg.forEach(e => { inner(e); });
+        result.push('] ');
+      } else if ((typeof arg) === 'object') {
+        result.push('{ ');
+        Object.keys(arg).forEach((key, i, arr) => {
+          result.push(`${key}: `);
+          ((typeof arg[key]) === 'object') ? inner(arg[key]) : result.push(arg[key]);
+          if (i !== arr.length - 1) result.push(', ');
+        });
+        result.push(' } ');
+      } else {
+        result.push(` ${arg}, `);
+      }
+    };
+    inner(state);
+      
+    return result;
   };
 
   // places all nodes into a flat array
