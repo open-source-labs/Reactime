@@ -28,6 +28,7 @@ import {
 import Tree from './tree';
 // passes the data down to its components ?
 import componentActionsRecord from './masterState';
+import routes from './routes';
 
 // throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
 // getHooksNames - helper function to grab the getters/setters from `elementType`
@@ -93,6 +94,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
     snap.tree = new Tree('root', 'root');
   }
   const payload = snap.tree.cleanTreeCopy();
+  payload.url = routes.addRoute(window.location.href);
   // if it's Recoil - run different actions
   if (isRecoil) {
     // getRecoilState()

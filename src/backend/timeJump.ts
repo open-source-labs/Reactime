@@ -1,4 +1,5 @@
 import { Console } from 'console';
+import routes from './routes';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -85,9 +86,19 @@ export default (origin, mode) => {
     // * Setting mode disables setState from posting messages to window
     mode.jumping = true;
     if (firstCall) circularComponentTable.clear();
-    jump(target);
-    setTimeout(() => {
-      mode.jumping = false;
-    }, 100);
+    const navigating: boolean = routes.navigate(target.url);
+    if (navigating) {
+      addEventListener('popstate', event => {
+        jump(target);
+        document.body.onmouseover = () => {
+          mode.jumping = false;
+        };
+      });
+    } else {
+      jump(target);
+      document.body.onmouseover = () => {
+        mode.jumping = false;
+      };
+    }
   };
 };
