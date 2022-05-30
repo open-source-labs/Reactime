@@ -86,7 +86,7 @@ export default (origin, mode) => {
     // * Setting mode disables setState from posting messages to window
     mode.jumping = true;
     if (firstCall) circularComponentTable.clear();
-    const navigating: boolean = routes.navigate(target.url);
+    const navigating: boolean = routes.navigate(target.route);
     if (navigating) {
       addEventListener('popstate', event => {
         jump(target);

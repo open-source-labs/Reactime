@@ -94,7 +94,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
     snap.tree = new Tree('root', 'root');
   }
   const payload = snap.tree.cleanTreeCopy();
-  payload.url = routes.addRoute(window.location.href);
+  payload.route = routes.addRoute(window.location.href);
   // if it's Recoil - run different actions
   if (isRecoil) {
     // getRecoilState()
