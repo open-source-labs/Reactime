@@ -19,22 +19,37 @@ const componentActionsRecord: HookStates = [];
 let index = 0;
 
 export default {
-  //adds new component to ComponentActionsRecord
+  // adds new component to ComponentActionsRecord
   saveNew: (state, component): number => {
     componentActionsRecord[index] = { state, component };
+    console.log('entire record of components is', [...componentActionsRecord]);
     index++;
+
+    for (let i = 0; i < componentActionsRecord.length - 2; i++) {
+      if (
+        componentActionsRecord[i].component.constructor.name ===
+        component.constructor.name
+      ) {
+        console.log('reassigning componentActionsRecord at index', i);
+        componentActionsRecord[i] = { state, component };
+      }
+    }
+
     return index - 1;
   },
-  getRecordByIndex: (inputIndex: number): HookStateItem => componentActionsRecord[inputIndex],
-  //this is used for class components - inputIndex will always be a fixed number (coming in timeJump.ts)
-  getComponentByIndex: (inputIndex: number): any => (componentActionsRecord[inputIndex]
-    ? componentActionsRecord[inputIndex].component
-    : undefined),
-    //this is used for react hooks - hooks will be passed in as an array from timeJump.ts
+  getRecordByIndex: (inputIndex: number): HookStateItem =>
+    componentActionsRecord[inputIndex],
+  // this is used for class components - inputIndex will always be a fixed number (coming in timeJump.ts)
+  getComponentByIndex: (inputIndex: number): any =>
+    componentActionsRecord[inputIndex]
+      ? componentActionsRecord[inputIndex].component
+      : undefined,
+  // this is used for react hooks - hooks will be passed in as an array from timeJump.ts
   getComponentByIndexHooks: (inputIndex: Array<number> = []): any => {
     const multiDispatch = [];
     for (let i = 0; i < inputIndex.length; i++) {
-      if (componentActionsRecord[inputIndex[i]]) multiDispatch.push(componentActionsRecord[inputIndex[i]].component);
+      if (componentActionsRecord[inputIndex[i]])
+        multiDispatch.push(componentActionsRecord[inputIndex[i]].component);
     }
     return multiDispatch;
   },
