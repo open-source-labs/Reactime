@@ -52,7 +52,7 @@ function ActionContainer(props): JSX.Element {
         displayName: `${obj.name}.${obj.branch}`,
         state: obj.stateSnapshot.children[0].state,
         componentName: obj.stateSnapshot.children[0].name,
-        routePath: obj.stateSnapshot.url,
+        routePath: obj.stateSnapshot.route.url,
         // nathan testing new entries for component name, original above
         // componentName: findDiff(obj.index),
         componentData:
@@ -146,28 +146,15 @@ function ActionContainer(props): JSX.Element {
     setRecordingActions(!recordingActions);
   };
 
-  // Logic to create the components for the route descriptions.
-  // Create a cache that will be an array of all the route paths.
-  const cache = [];
+  // Logic to create the route description components
+  const routes = {};
   for (let i = 0; i < actionsArr.length; i++) {
-    if (!cache.includes(actionsArr[i].props.routePath)){
-      cache.push(actionsArr[i].props.routePath);
+    if (!routes.hasOwnProperty(actionsArr[i].props.routePath)) {
+      routes[actionsArr[i].props.routePath] = [actionsArr[i]];
+    } else {
+      routes[actionsArr[i].props.routePath].push(actionsArr[i]);
     }
   }
-  // Create cache2 as an object route path as a key and the individual-actions as the value. 
-  const cache2 = {};
-  for (const element of cache) {
-    cache2[element] = []; 
-  }
-  // Create a conditional that will check if the individual-action matches the route path and add it to the cache2.
-  for (let i = 0; i < actionsArr.length; i++) {
-    for (const key in cache2){
-     if (actionsArr[i].props.routePath === key) {
-       cache2[key].push(actionsArr[i]);
-     }
-   }
-  }
-
 
   // the conditional logic below will cause ActionContainer.test.tsx to fail as it cannot find the Empty button
   // UNLESS actionView={true} is passed into <ActionContainer /> in the beforeEach() call in ActionContainer.test.tsx
@@ -211,10 +198,10 @@ function ActionContainer(props): JSX.Element {
               Clear
             </button>
           </div>
-          {/* Rendering of the cache2 component */}
-          {Object.keys(cache2).map((element) => {
+          {/* Rendering of route description components */}
+          {Object.keys(routes).map((route) => {
             return (
-            <RouteDescription actions = {cache2[element]}></RouteDescription>
+            <RouteDescription actions = {routes[route]}></RouteDescription>
             )
           })}
         </div>
