@@ -94,6 +94,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   }
   const payload = snap.tree.cleanTreeCopy();
   // if it's Recoil - run different actions
+  payload.url = window.location.href;
   if (isRecoil) {
     // getRecoilState()
     payload.atomsComponents = atomsComponents;
