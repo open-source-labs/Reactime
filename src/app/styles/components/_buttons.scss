@@ -51,7 +51,7 @@
 .empty-button {
   padding: 3px;
   outline: transparent;
-  color: white;
+  color: black;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -63,7 +63,7 @@
   font: 300 14px 'Roboto', sans-serif;
   font-size: $button-text-size;
   width: 120px;
-  background: $red-color-gradient;
+  background: #62d6fb;
 }
 
 .empty-button:hover {
