@@ -146,7 +146,7 @@ function ActionContainer(props): JSX.Element {
     setRecordingActions(!recordingActions);
   };
 
-
+  // Logic to create the components for the route descriptions.
   // Create a cache that will be an array of all the route paths.
   const cache = [];
   for (let i = 0; i < actionsArr.length; i++) {
@@ -211,6 +211,7 @@ function ActionContainer(props): JSX.Element {
               Clear
             </button>
           </div>
+          {/* Rendering of the cache2 component */}
           {Object.keys(cache2).map((element) => {
             return (
             <RouteDescription actions = {cache2[element]}></RouteDescription>
