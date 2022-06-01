@@ -20,18 +20,13 @@ let index = 0;
 
 export default {
   // adds new component to ComponentActionsRecord
-  saveNew: (state, component): number => {
-    componentActionsRecord[index] = { state, component };
-    console.log('entire record of components is', [...componentActionsRecord]);
+  saveNew: (state, component, name): number => {
+    componentActionsRecord[index] = { state, component, name };
     index++;
 
     for (let i = 0; i < componentActionsRecord.length - 2; i++) {
-      if (
-        componentActionsRecord[i].component.constructor.name ===
-        component.constructor.name
-      ) {
-        console.log('reassigning componentActionsRecord at index', i);
-        componentActionsRecord[i] = { state, component };
+      if (componentActionsRecord[i].name === name) {
+        componentActionsRecord[i] = { state, component, name };
       }
     }
 

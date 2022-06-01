@@ -357,7 +357,8 @@ function createTree(
     // time-travel state changing. Add record index to snapshot so we can retrieve.
     componentData.index = componentActionsRecord.saveNew(
       stateNode.state,
-      stateNode
+      stateNode,
+      currentFiber.elementType.name,
     );
     newState = stateNode.state;
     componentFound = true;
@@ -367,32 +368,32 @@ function createTree(
   atomArray.push(memoizedProps);
 
   // RECOIL HOOKS
-  if (
-    memoizedState
-    && (tag === 0 || tag === 1 || tag === 2 || tag === 10)
-  ) {
-    if (memoizedState.queue) {
-      // Hooks states are stored as a linked list using memoizedState.next,
-      // so we must traverse through the list and get the states.
-      // We then store them along with the corresponding memoizedState.queue,
-      // which includes the dispatch() function we use to change their state.
-      const hooksStates = traverseRecoilHooks(memoizedState, memoizedProps);
-      hooksStates.forEach((state, i) => {
-        hooksIndex = componentActionsRecord.saveNew(
-          state.state,
-          state.component
-        );
-        componentData.hooksIndex = hooksIndex;
-        if (!newState) {
-          newState = { hooksState: [] };
-        } else if (!newState.hooksState) {
-          newState.hooksState = [];
-        }
-        newState.hooksState.push({ [i]: state.state });
-        componentFound = true;
-      });
-    }
-  }
+  // if (
+  //   memoizedState
+  //   && (tag === 0 || tag === 1 || tag === 2 || tag === 10)
+  // ) {
+  //   if (memoizedState.queue) {
+  //     // Hooks states are stored as a linked list using memoizedState.next,
+  //     // so we must traverse through the list and get the states.
+  //     // We then store them along with the corresponding memoizedState.queue,
+  //     // which includes the dispatch() function we use to change their state.
+  //     const hooksStates = traverseRecoilHooks(memoizedState, memoizedProps);
+  //     hooksStates.forEach((state, i) => {
+  //       hooksIndex = componentActionsRecord.saveNew(
+  //         state.state,
+  //         state.component
+  //       );
+  //       componentData.hooksIndex = hooksIndex;
+  //       if (!newState) {
+  //         newState = { hooksState: [] };
+  //       } else if (!newState.hooksState) {
+  //         newState.hooksState = [];
+  //       }
+  //       newState.hooksState.push({ [i]: state.state });
+  //       componentFound = true;
+  //     });
+  //   }
+  // }
 
   // Check if node is a hooks useState function
   // REGULAR REACT HOOKS
@@ -412,7 +413,8 @@ function createTree(
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(
           state.state,
-          state.component
+          state.component,
+          currentFiber.elementType.name,
         );
         componentData.hooksIndex = hooksIndex;
         if (!newState) {
