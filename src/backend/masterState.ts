@@ -24,8 +24,8 @@ export default {
     index = 0;
   },
   // adds new component to ComponentActionsRecord
-  saveNew: (state, component, name): number => {
-    componentActionsRecord[index] = { state, component, name };
+  saveNew: (state, component): number => {
+    componentActionsRecord[index] = { state, component };
     index++;
 
     return index - 1;

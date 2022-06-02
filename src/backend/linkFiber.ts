@@ -359,7 +359,6 @@ function createTree(
     componentData.index = componentActionsRecord.saveNew(
       stateNode.state,
       stateNode,
-      currentFiber.elementType.name,
     );
     newState = stateNode.state;
     componentFound = true;
@@ -415,7 +414,6 @@ function createTree(
         hooksIndex = componentActionsRecord.saveNew(
           state.state,
           state.component,
-          currentFiber.elementType.name,
         );
         componentData.hooksIndex = hooksIndex;
         if (!newState) {

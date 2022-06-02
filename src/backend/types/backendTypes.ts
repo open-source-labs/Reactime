@@ -41,7 +41,6 @@ export interface ComponentData {
 export interface HookStateItem {
   state: any;
   component: any;
-  name?: string;
 }
 
 export type HookStates = Array<HookStateItem>;
