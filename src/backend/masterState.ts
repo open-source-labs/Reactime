@@ -15,26 +15,34 @@ import {
 // Information on these components include ComponentData as well as state
 // For class components, there will be one "component" for each snapshot
 // For functional components that utilize Hooks, there will be one "component" for each setter/getter every time we have a new snapshot
-const componentActionsRecord: HookStates = [];
+let componentActionsRecord: HookStates = [];
 let index = 0;
 
 export default {
-  //adds new component to ComponentActionsRecord
+  clear: () => {
+    componentActionsRecord = [];
+    index = 0;
+  },
+  // adds new component to ComponentActionsRecord
   saveNew: (state, component): number => {
     componentActionsRecord[index] = { state, component };
     index++;
+
     return index - 1;
   },
-  getRecordByIndex: (inputIndex: number): HookStateItem => componentActionsRecord[inputIndex],
-  //this is used for class components - inputIndex will always be a fixed number (coming in timeJump.ts)
-  getComponentByIndex: (inputIndex: number): any => (componentActionsRecord[inputIndex]
-    ? componentActionsRecord[inputIndex].component
-    : undefined),
-    //this is used for react hooks - hooks will be passed in as an array from timeJump.ts
+  getRecordByIndex: (inputIndex: number): HookStateItem =>
+    componentActionsRecord[inputIndex],
+  // this is used for class components - inputIndex will always be a fixed number (coming in timeJump.ts)
+  getComponentByIndex: (inputIndex: number): any =>
+    componentActionsRecord[inputIndex]
+      ? componentActionsRecord[inputIndex].component
+      : undefined,
+  // this is used for react hooks - hooks will be passed in as an array from timeJump.ts
   getComponentByIndexHooks: (inputIndex: Array<number> = []): any => {
     const multiDispatch = [];
     for (let i = 0; i < inputIndex.length; i++) {
-      if (componentActionsRecord[inputIndex[i]]) multiDispatch.push(componentActionsRecord[inputIndex[i]].component);
+      if (componentActionsRecord[inputIndex[i]])
+        multiDispatch.push(componentActionsRecord[inputIndex[i]].component);
     }
     return multiDispatch;
   },
