@@ -15,20 +15,18 @@ import {
 // Information on these components include ComponentData as well as state
 // For class components, there will be one "component" for each snapshot
 // For functional components that utilize Hooks, there will be one "component" for each setter/getter every time we have a new snapshot
-const componentActionsRecord: HookStates = [];
+let componentActionsRecord: HookStates = [];
 let index = 0;
 
 export default {
+  clear: () => {
+    componentActionsRecord = [];
+    index = 0;
+  },
   // adds new component to ComponentActionsRecord
   saveNew: (state, component, name): number => {
     componentActionsRecord[index] = { state, component, name };
     index++;
-
-    for (let i = 0; i < componentActionsRecord.length - 2; i++) {
-      if (componentActionsRecord[i].name === name) {
-        componentActionsRecord[i] = { state, component, name };
-      }
-    }
 
     return index - 1;
   },

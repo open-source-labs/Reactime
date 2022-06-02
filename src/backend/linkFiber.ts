@@ -134,6 +134,7 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
     // Clears circular component table
     circularComponentTable.clear();
     // creates snapshot that is a tree based on properties in fiberRoot object
+    componentActionsRecord.clear();
     snap.tree = createTree(current);
   }
   // sends the updated tree back
