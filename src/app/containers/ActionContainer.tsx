@@ -12,7 +12,6 @@ import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
 import RouteDescription from '../components/RouteDescription';
 
-
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
   if (slider) {
@@ -147,8 +146,12 @@ function ActionContainer(props): JSX.Element {
   };
 
   // Logic to create the route description components
+  type routes = {
+   [route: string]: [];
+  }
+
   const routes = {};
-  for (let i = 0; i < actionsArr.length; i++) {
+  for (let i = 0; i < actionsArr.length; i += 1) {
     if (!routes.hasOwnProperty(actionsArr[i].props.routePath)) {
       routes[actionsArr[i].props.routePath] = [actionsArr[i]];
     } else {
@@ -199,11 +202,8 @@ function ActionContainer(props): JSX.Element {
             </button>
           </div>
           {/* Rendering of route description components */}
-          {Object.keys(routes).map((route) => {
-            return (
-            <RouteDescription actions = {routes[route]}></RouteDescription>
-            )
-          })}
+          {Object.keys(routes).map(route => (
+            <RouteDescription actions={routes[route]} />))}
         </div>
       ) : null}
     </div>
