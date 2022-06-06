@@ -13,6 +13,8 @@ let firstMessage = true;
 let isRecording = true;
 
 window.addEventListener('message', msg => {
+  console.log('Hello from line 16');
+  console.log('msg is', msg.data);
   // Event listener runs constantly based on actions
   // recorded on the test application from backend files (linkFiber.ts).
   // Background.js has a listener that includes switch cases, depending on
@@ -82,4 +84,5 @@ getCLS(gatherMetrics);
 
 // Send message to background.js for injecting the initial script
 // into the app's DOM.
+console.log('Hello from line 86');
 chrome.runtime.sendMessage({ action: 'injectScript' });
