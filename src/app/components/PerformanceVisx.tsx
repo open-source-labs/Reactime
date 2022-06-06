@@ -16,6 +16,7 @@ import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useStoreContext } from '../store';
 import { setCurrentTabInApp } from '../actions/actions';
+
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
 Barstacks display inconsistently...however, almost always displays upon initial test app load or
@@ -159,7 +160,7 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
     maxTotalRender: 0,
   };
   snapshots.forEach((snapshot, i) => {
-    perfData.barStack.push({ snapshotId: snapshotsIds[i] });
+    perfData.barStack.push({ snapshotId: snapshotsIds[i], route: snapshot.route.url });
     traverse(snapshot, perfData, snapshots);
   });
   return perfData;
@@ -176,6 +177,8 @@ const PerformanceVisx = (props: BarStackProps) => {
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   const [series, setSeries] = useState(true);
   const [action, setAction] = useState(false);
+
+  const [route, setRoute] = useState(null);
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance'));
@@ -227,9 +230,39 @@ const PerformanceVisx = (props: BarStackProps) => {
     );
   };
 
+  // Logic for routeArr - DropDown
+  // Create an Arr to hold our routes for the dropDown.
+  const devRoutes: string[] = [];
+  //  Use a for loop to itereate over data and add the prospective routes to our devRoutes arr.
+  for (let i = 0; i < data.barStack.length; i += 1) {
+    const url:string = new URL(data.barStack[i].route);
+    // Making sure devRoutes does not include any additional routes as barStack carries the same Route for every action/state snapshot.
+    if (!devRoutes.includes(url.pathname)) {
+      devRoutes.push(url.pathname);
+    }
+  }
+
+  const userInputRoutes: string[] = [];
+  for (let i = 0; i < data.barStack.length; i += 1) {
+    const url:string = new URL(data.barStack[i].route);
+    // console.log('route is', route);
+    // console.log('url.pathname is', url.pathname);
+    if (route && route === url.pathname) {
+      userInputRoutes.push(data.barStack[i]);
+    }
+  }
+  if (route) {
+    data.barStack = userInputRoutes;
+  }
+
   const renderBargraph = () => {
     if (hierarchy) {
-      return <BarGraph data={data} width={width} height={height} comparison={allStorage()} />;
+      return (
+        <div>
+          <BarGraph data={data} width={width} height={height} comparison={allStorage()} setRoute={setRoute} devRoutes={devRoutes} />
+          {/* <input type="text" onChange={e => setRoute(e.target.value)} /> */}
+        </div>
+      );
     }
   };
 

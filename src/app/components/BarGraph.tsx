@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
@@ -61,7 +62,7 @@ const tooltipStyles = {
 
 const BarGraph = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { width, height, data, comparison } = props;
+  const { width, height, data, comparison, setRoute, devRoutes } = props;
   const [ seriesNameInput, setSeriesNameInput ] = useState(`Series ${comparison.length + 1}`);
   const {
     tooltipOpen,
@@ -131,11 +132,11 @@ const BarGraph = props => {
         toStorage.data.barStack[i].name = actionNames[i].value;
       }
       dispatch(save(toStorage, seriesNameInput));
-      setSeriesNameInput(`Series ${comparison.length}`)
-      return
+      setSeriesNameInput(`Series ${comparison.length}`);
+      return;
     }
-    dispatch(save(toStorage))
-  }
+    dispatch(save(toStorage));
+  };
 
   const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" id="seriesname" placeholder="Enter Series Name" onChange={e => setSeriesNameInput(e.target.value)} /> : null;
   return (
@@ -151,6 +152,21 @@ const BarGraph = props => {
         >
           Save Series
         </button>
+        <FormControl id="routes-formcontrol">
+          <InputLabel id="routes-dropdown">Routes</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="routes-select"
+            label="Routes"
+            onChange={e => setRoute(e.target.value)}
+          >
+            {devRoutes.map(route => { return (
+              <MenuItem value={route} className="routes">
+                {route}
+              </MenuItem>
+            )})}
+          </Select>
+        </FormControl>
       </div>
       <svg ref={containerRef} width={width} height={height}>
         <rect
