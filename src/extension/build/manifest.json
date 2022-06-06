@@ -4,11 +4,8 @@
   "devtools_page": "devtools.html",
   "description": "A Chrome extension that helps debug React applications by memorizing the state of components with every render.",
   "manifest_version": 3,
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
-  },
   "background": {
-    "service-worker": "bundles/background.bundle.js"
+    "service_worker": "bundles/background.bundle.js"
   },
   "icons": {
     "48": "assets/icon48.png",
@@ -16,30 +13,16 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "http://localhost/*",
-        "https://localhost/*"
-      ],
-      "js": [
-        "bundles/content.bundle.js"
-      ]
+      "matches": ["<all_urls>"],
+      "js": ["bundles/content.bundle.js"]
     }
   ],
-  "web_accessible_resources": [{
-    "resources": ["bundles/backend.bundle.js"],
-    "matches": [
-      "http://localhost/*",
-      "https://localhost/*"
-    ]
-  }],
-  "permissions": [
-    "contextMenus",
-    "tabs",
-    "activeTab"
+  "web_accessible_resources": [
+    {
+      "resources": ["bundles/backend.bundle.js"],
+      "matches": ["<all_urls>"]
+    }
   ],
-  "host_permissions": [
-    "http://localhost/*",
-    "https://localhost/*",
-    "<all_urls>"
-  ]
+  "permissions": ["contextMenus", "tabs", "activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"]
 }

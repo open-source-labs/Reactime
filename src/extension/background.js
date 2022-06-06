@@ -1,7 +1,6 @@
 // Import snapshots from "../app/components/snapshots".
-import 'core-js';
+// import 'core-js';
 
-console.log('Hello from line 4');
 // Store ports in an array.
 const portsArr = [];
 const reloaded = {};
@@ -288,35 +287,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // so that Reactime's backend files can communicate with the app's DOM.
     case 'injectScript': {
       console.log('Hello from line 287');
+
+      const injectScript = (file, tabId) => {
+        const htmlBody = document.getElementsByTagName('body')[0];
+        const script = document.createElement('script');
+        script.setAttribute('type', 'text/javascript');
+        script.setAttribute('src', file);
+        // eslint-disable-next-line prefer-template
+        document.title = tabId + '-' + document.title;
+        htmlBody.appendChild(script);
+      };
+
       chrome.scripting.executeScript({
         target: { tabId },
-        func: tab => {
-          const injectScript = (file, tag) => {
-            const htmlBody = document.getElementsByTagName(tag)[0];
-            const script = document.createElement('script');
-            script.setAttribute('type', 'text/javascript');
-            script.setAttribute('src', file);
-            document.title = tab + '-' + document.title;
-            htmlBody.appendChild(script);
-          };
-          injectScript(chrome.runtime.getURL('bundles/backend.bundle.js'), 'body');
-        },
-        args: [tabId],
+        function: injectScript,
+        args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId],
       });
-      // chrome.tabs.executeScript(tabId, {
-      //   code: `
-      //   // Function will attach script to the dom
-      //   const injectScript = (file, tag) => {
-      //     const htmlBody = document.getElementsByTagName(tag)[0];
-      //     const script = document.createElement('script');
-      //     script.setAttribute('type', 'text/javascript');
-      //     script.setAttribute('src', file);
-      //     document.title=${tabId} + '-' + document.title
-      //     htmlBody.appendChild(script);
-      //   };
-      //   injectScript(chrome.runtime.getURL('bundles/backend.bundle.js'), 'body');
-      // `,
-      // });
       break;
     }
     case 'recordSnap': {
@@ -442,6 +428,7 @@ chrome.runtime.onInstalled.addListener(() => {
     title: 'Reactime',
     contexts: ['page', 'selection', 'image', 'link'],
   });
+  console.log('Context Menu Created');
 });
 
 // when context menu is clicked, listen for the menuItemId,
