@@ -124,7 +124,6 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
 
 // Establishing incoming connection with devtools.
 chrome.runtime.onConnect.addListener(port => {
-  console.log('Hello from line 126');
   // port is one end of the connection - an object
   // push every port connected to the ports array
   portsArr.push(port);
@@ -200,14 +199,10 @@ chrome.runtime.onConnect.addListener(port => {
         tabsObj[tabId].mode.persist = payload;
         return true;
       case 'launchContentScript':
-        // !!! in Manifest Version 3 this will need to be changed to the commented out code below !!!
-        console.log('Youre here');
         chrome.scripting.executeScript({
           target: { tabId },
           files: ['bundles/content.bundle.js'],
         });
-        // This line below will need to be removed
-        // chrome.tabs.executeScript(tabId, { file: 'bundles/content.bundle.js' });
         return true;
       case 'jumpToSnap':
         chrome.tabs.sendMessage(tabId, msg);
@@ -223,7 +218,6 @@ chrome.runtime.onConnect.addListener(port => {
 
 // background.js listening for a message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('Hello from line 224');
   // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
     return true;
@@ -286,15 +280,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // This injects a script into the app that you're testing Reactime on,
     // so that Reactime's backend files can communicate with the app's DOM.
     case 'injectScript': {
-      console.log('Hello from line 287');
-
-      const injectScript = (file, tabId) => {
+      const injectScript = (file, tab) => {
         const htmlBody = document.getElementsByTagName('body')[0];
         const script = document.createElement('script');
         script.setAttribute('type', 'text/javascript');
         script.setAttribute('src', file);
         // eslint-disable-next-line prefer-template
-        document.title = tabId + '-' + document.title;
+        document.title = tab + '-' + document.title;
         htmlBody.appendChild(script);
       };
 
@@ -428,7 +420,6 @@ chrome.runtime.onInstalled.addListener(() => {
     title: 'Reactime',
     contexts: ['page', 'selection', 'image', 'link'],
   });
-  console.log('Context Menu Created');
 });
 
 // when context menu is clicked, listen for the menuItemId,
