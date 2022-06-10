@@ -40,10 +40,10 @@ const collectNodes = (snaps, componentName) => {
   const renderResult = [];
   let trackChanges = 0;
   let newChange = true;
-  for (let x = 0; x < snaps.length; x++) {
+  for (let x = 0; x < snaps.length; x += 1) {
     const snapshotList = [];
     snapshotList.push(snaps[x]);
-    for (let i = 0; i < snapshotList.length; i++) {
+    for (let i = 0; i < snapshotList.length; i += 1) {
       const cur = snapshotList[i];
       if (cur.name === componentName) {
         const renderTime = Number(
@@ -119,7 +119,7 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
     }
     // increment render frequencies
     if (renderTime > 0) {
-      data.componentData[componentName].renderFrequency++;
+      data.componentData[componentName].renderFrequency += 1;
     }
 
     // add to total render time
@@ -191,7 +191,7 @@ const PerformanceVisx = (props: BarStackProps) => {
     const actionsArr = [];
 
     if (seriesArr.length) {
-      for (let i = 0; i < seriesArr.length; i++) {
+      for (let i = 0; i < seriesArr.length; i += 1) {
         for (const actionObj of seriesArr[i].data.barStack) {
           if (actionObj.name === action) {
             actionObj.seriesName = seriesArr[i].name;
@@ -230,41 +230,50 @@ const PerformanceVisx = (props: BarStackProps) => {
     );
   };
 
-  // Logic for routeArr - DropDown
-  // Create an Arr to hold our routes for the dropDown.
-  const devRoutes: string[] = [];
-  //  Use a for loop to itereate over data and add the prospective routes to our devRoutes arr.
-  for (let i = 0; i < data.barStack.length; i += 1) {
-    const url:string = new URL(data.barStack[i].route);
-    // Making sure devRoutes does not include any additional routes as barStack carries the same Route for every action/state snapshot.
-    if (!devRoutes.includes(url.pathname)) {
-      devRoutes.push(url.pathname);
-    }
-  }
+  const allRoutes = [];
+  const filteredSnapshots = [];
+  const copyOfBars = [];
 
-  const userInputRoutes: string[] = [];
   for (let i = 0; i < data.barStack.length; i += 1) {
-    const url:string = new URL(data.barStack[i].route);
-    // console.log('route is', route);
-    // console.log('url.pathname is', url.pathname);
+    const url = new URL(data.barStack[i].route);
+    if (!allRoutes.includes(url.pathname)) {
+      allRoutes.push(url.pathname);
+    }
     if (route && route === url.pathname) {
-      userInputRoutes.push(data.barStack[i]);
+      filteredSnapshots.push(data.barStack[i]);
     }
   }
   if (route) {
-    data.barStack = userInputRoutes;
+    // copyOfBars = data.barStack;
+    data.barStack = filteredSnapshots;
   }
+  // console.log('Data', data);
+  // console.log('URL is ', url);
+  console.log('data.barStack is ', data.barStack);
+  console.log('filtered snapshots are ', filteredSnapshots);
+  // console.log('AllRoutes', allRoutes);
 
   const renderBargraph = () => {
     if (hierarchy) {
       return (
         <div>
-          <BarGraph data={data} width={width} height={height} comparison={allStorage()} setRoute={setRoute} devRoutes={devRoutes} />
-          {/* <input type="text" onChange={e => setRoute(e.target.value)} /> */}
+          <BarGraph
+            data={data}
+            width={width}
+            height={height}
+            comparison={allStorage()}
+            setRoute={setRoute}
+            allRoutes={allRoutes}
+            copyOfBars={copyOfBars}
+            filteredSnapshots={filteredSnapshots}
+          />
         </div>
       );
     }
   };
+
+  console.log('data', data)
+  
 
   const renderComponentDetailsView = () => {
     if (hierarchy) {

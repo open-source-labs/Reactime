@@ -22,19 +22,26 @@
 }
 
 #routes-formcontrol {
-  width: 10em;
+  padding: 3px;
   margin-left: 50px;
+  font: 300 13px 'Roboto', sans-serif;
+  text-align: left;
+  min-width: 10em;
+  max-height: 50%;
 }
 
 #routes-dropdown {
   color: white !important;
-  margin-bottom: 10px;
+  background-color: #ff6569 !important;
+  font: 300 13px 'Roboto', sans-serif;
+  text-align: left;
 }
 
 #routes-select {
   color: white !important;
   background-color: #ff6569 !important;
-  font: 300 'Roboto', sans-serif;
+  font: 300 13px 'Roboto', sans-serif;
+  text-align: left;
 }
 
 #seriesname {
@@ -42,43 +49,8 @@
     width: 220px;
     margin-right: 165px;
     height: 24px;
-
 }
 
 input:focus, textarea:focus, select:focus{
 	outline: none;
 }
-
-// .routes {
-// 	position: absolute;
-// 	align-items: center;
-// 	text-align: center;
-// 	justify-content: center;
-// 	width: 100px;
-// }
-
-// .devRoutes {
-//   padding: 3px;
-//   outline: transparent;
-//   color: white;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   text-align: center;
-//   border-style: solid;
-//   border-color: transparent;
-//   border-radius: 3px;
-//   cursor: pointer;
-//   line-height: 1.5em;
-//   font: 300 28px 'Roboto', sans-serif;
-//   font-size: $button-text-size;
-//   width: 80px;
-//   background: $red-color-gradient;
-//   height: 30px;
-//   position: absolute;
-//   left: 2.5rem;
-
-//   &.animate {
-//     background: rgb(41, 164, 41);
-//   }
-// }
