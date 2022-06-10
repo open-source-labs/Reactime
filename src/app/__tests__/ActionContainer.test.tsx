@@ -26,6 +26,10 @@ const state = {
             name: 'App',
             componentData: { actualDuration: 3.5 },
           }],
+          route: {
+            id: 1,
+            url: 'http://localhost:8080/',
+          },
         },
         children: [{
           index: 1,
@@ -38,6 +42,10 @@ const state = {
               name: 'App',
               componentData: { actualDuration: 3.5 },
             }],
+            route: {
+              id: 2,
+              url: 'http://localhost:8080/',
+            },
           },
           children: [{
             index: 2,
@@ -50,6 +58,10 @@ const state = {
                 name: 'App',
                 componentData: { actualDuration: 3.5 },
               }],
+              route: {
+                id: 3,
+                url: 'http://localhost:8080/',
+              },
             },
             children: [{
               index: 3,
@@ -62,6 +74,10 @@ const state = {
                   name: 'App',
                   componentData: { actualDuration: 3.5 },
                 }],
+                route: {
+                  id: 4,
+                  url: 'http://localhost:8080/',
+                },
               },
               children: [],
             }],
