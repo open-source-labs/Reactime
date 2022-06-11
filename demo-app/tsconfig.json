@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "jsx": "react",
+      "module": "commonjs",
+      "esModuleInterop": true,
+      "noImplicitAny": true,
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
+}
