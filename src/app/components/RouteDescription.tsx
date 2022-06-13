@@ -11,8 +11,7 @@ const RouteDescription = (props: RouteProps): JSX.Element => {
   return (
     <div className="routedescription">
       <h3 className="route">
-        Route:
-        {url.pathname}
+        Route: {url.pathname}
       </h3>
       {actions}
     </div>
