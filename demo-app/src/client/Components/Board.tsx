@@ -21,15 +21,8 @@ class Board extends Component<{}, BoardState> {
       scoreboard: { X: 0, O: 0 },
     };
 
-    // these methods need to be bound to the context of `this` since
-    // these will be passed into event handlers and called from outside the object
-    // where the context of `this` would be otherwise different
     this.resetBoard = this.resetBoard.bind(this);
     this.handleBoxClick = this.handleBoxClick.bind(this);
-  }
-
-  componentDidMount() {
-    this.getScores();
   }
 
   componentDidUpdate() {
@@ -70,7 +63,6 @@ class Board extends Component<{}, BoardState> {
   checkForWinner(): void {
     const { board, gameOver, currentPlayer } = this.state;
 
-    // helper function to check if board is filled
     const spacesLeft = (): boolean => {
       for (let i of board) {
         if (i.includes('-')) return true;
@@ -114,8 +106,6 @@ class Board extends Component<{}, BoardState> {
           message: `Player ${winner} wins!`,
         });
 
-        this.getScores('POST', JSON.stringify({ winner }));
-
         // draw condition: no '-' remaining in board without above win condition triggering
       } else if (!spacesLeft()) {
         this.setState({
@@ -124,11 +114,6 @@ class Board extends Component<{}, BoardState> {
         });
       }
     }
-  }
-
-  getScores(method?: string, winner?: string) {
-    // If method is GET, send a GET request to api route to get scores.
-    // If method is POST, send a POST request to api route to post the scores.
   }
 
   handleBoxClick(row: number, column: number): void {
@@ -143,7 +128,6 @@ class Board extends Component<{}, BoardState> {
   }
 
   render() {
-    // insert logic to render rows here
     const rows: Array<JSX.Element> = [];
     for (let i = 0; i < 3; i++) {
       rows.push(
@@ -155,7 +139,6 @@ class Board extends Component<{}, BoardState> {
         />
       );
     }
-    // Destructure scores for X and O from state so that they can individually be rendered below
     const { X, O }: Scoreboard = this.state.scoreboard;
 
     return (

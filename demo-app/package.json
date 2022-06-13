@@ -7,16 +7,6 @@
     "start": "webpack-dev-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CodesmithLLC/typescript-module.git"
-  },
-  "author": "Allison Pratt (allison@codesmith.io)",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/CodesmithLLC/typescript-module/issues"
-  },
-  "homepage": "https://github.com/CodesmithLLC/typescript-module#readme",
   "devDependencies": {
     "@babel/core": "^7.16.7",
     "@babel/preset-env": "^7.16.7",
