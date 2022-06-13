@@ -16,6 +16,7 @@ import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useStoreContext } from '../store';
 import { setCurrentTabInApp } from '../actions/actions';
+
 /* NOTES
 Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
 Barstacks display inconsistently...however, almost always displays upon initial test app load or
@@ -39,10 +40,10 @@ const collectNodes = (snaps, componentName) => {
   const renderResult = [];
   let trackChanges = 0;
   let newChange = true;
-  for (let x = 0; x < snaps.length; x++) {
+  for (let x = 0; x < snaps.length; x += 1) {
     const snapshotList = [];
     snapshotList.push(snaps[x]);
-    for (let i = 0; i < snapshotList.length; i++) {
+    for (let i = 0; i < snapshotList.length; i += 1) {
       const cur = snapshotList[i];
       if (cur.name === componentName) {
         const renderTime = Number(
@@ -118,7 +119,7 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
     }
     // increment render frequencies
     if (renderTime > 0) {
-      data.componentData[componentName].renderFrequency++;
+      data.componentData[componentName].renderFrequency += 1;
     }
 
     // add to total render time
@@ -159,7 +160,7 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
     maxTotalRender: 0,
   };
   snapshots.forEach((snapshot, i) => {
-    perfData.barStack.push({ snapshotId: snapshotsIds[i] });
+    perfData.barStack.push({ snapshotId: snapshotsIds[i], route: snapshot.route.url });
     traverse(snapshot, perfData, snapshots);
   });
   return perfData;
@@ -177,6 +178,8 @@ const PerformanceVisx = (props: BarStackProps) => {
   const [series, setSeries] = useState(true);
   const [action, setAction] = useState(false);
 
+  const [route, setRoute] = useState(null);
+
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance'));
   }, [dispatch]);
@@ -188,7 +191,7 @@ const PerformanceVisx = (props: BarStackProps) => {
     const actionsArr = [];
 
     if (seriesArr.length) {
-      for (let i = 0; i < seriesArr.length; i++) {
+      for (let i = 0; i < seriesArr.length; i += 1) {
         for (const actionObj of seriesArr[i].data.barStack) {
           if (actionObj.name === action) {
             actionObj.seriesName = seriesArr[i].name;
@@ -227,9 +230,37 @@ const PerformanceVisx = (props: BarStackProps) => {
     );
   };
 
+  const allRoutes = [];
+  const filteredSnapshots = [];
+
+  for (let i = 0; i < data.barStack.length; i += 1) {
+    const url = new URL(data.barStack[i].route);
+    if (!allRoutes.includes(url.pathname)) {
+      allRoutes.push(url.pathname);
+    }
+    if (route && route === url.pathname) {
+      filteredSnapshots.push(data.barStack[i]);
+    }
+  }
+  if (route) {
+    data.barStack = filteredSnapshots;
+  }
+ 
   const renderBargraph = () => {
     if (hierarchy) {
-      return <BarGraph data={data} width={width} height={height} comparison={allStorage()} />;
+      return (
+        <div>
+          <BarGraph
+            data={data}
+            width={width}
+            height={height}
+            comparison={allStorage()}
+            setRoute={setRoute}
+            allRoutes={allRoutes}
+            filteredSnapshots={filteredSnapshots}
+          />
+        </div>
+      );
     }
   };
 
@@ -252,7 +283,6 @@ const PerformanceVisx = (props: BarStackProps) => {
       <div className="performance-nav-bar-container">
         <NavLink
           className="router-link-performance"
-          // className="router-link"
           activeClassName="is-active"
           exact
           to="/"
@@ -262,7 +292,6 @@ const PerformanceVisx = (props: BarStackProps) => {
         <NavLink
           className="router-link-performance"
           id="router-link-performance-comparison"
-          // className="router-link"
           activeClassName="is-active"
           to="/comparison"
         >
@@ -270,7 +299,6 @@ const PerformanceVisx = (props: BarStackProps) => {
         </NavLink>
         <NavLink
           className="router-link-performance"
-          // className="router-link"
           activeClassName="is-active"
           to="/componentdetails"
         >
