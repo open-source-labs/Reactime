@@ -230,6 +230,7 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - **Edar Liu** - [@liuedar](https://github.com/liuedar)
 - **Kristina Wallen** - [@kristinawallen](https://github.com/kristinawallen)
 - **Quan Le** - [@blachfog](https://github.com/Blachfog)
+- **Robert Maeda** - [@robmaeda](https://github.com/robmaeda)
 - **David Kim** - [@codejunkie7](https://github.com/codejunkie7)
 - **Robby Tipton** - [@RobbyTipton](https://github.com/RobbyTipton)
 - **Kevin HoEun. Lee** - [@khobread](https://github.com/khobread)
