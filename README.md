@@ -43,7 +43,7 @@
   <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.io">Website</a> • <a href="#read-more">Read More</a>
 </p>
 
-Currently, Reactime supports React and React Router apps using stateful components and Hooks, with beta support for Recoil and Context API and frameworks like Gatsby and Next.js.
+Currently, Reactime supports React apps (now including React Router apps) using stateful components and Hooks, with beta support for Recoil and Context API and frameworks like Gatsby and Next.js.
 
 <b>Reactime 14.0</b> has added the exciting features below:
 
@@ -132,7 +132,7 @@ Using the actions sidebar, a user can jump to any previous recorded snapshots. H
 
 ### 🔹 Gatsby
 
-Reactime offers fully support for Gatsby applications. You would be able to identify unnecessary renders, duration of each rendering, travel-debugging features and visual representation of the tree components.
+Reactime offers full support for Gatsby applications. You would be able to identify unnecessary renders, duration of each rendering, travel-debugging features and visual representation of the tree components.
 
 ### 🔹 Next.js
 
@@ -230,7 +230,11 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - **Edar Liu** - [@liuedar](https://github.com/liuedar)
 - **Kristina Wallen** - [@kristinawallen](https://github.com/kristinawallen)
 - **Quan Le** - [@blachfog](https://github.com/Blachfog)
-- **Robert Maeda** - [@robmaeda](https://github.com/robmaeda)
+- **David Kim** - [@codejunkie7](https://github.com/codejunkie7)
+- **Robby Tipton** - [@RobbyTipton](https://github.com/RobbyTipton)
+- **Kevin HoEun. Lee** - [@khobread](https://github.com/khobread)
+- **Christopher LeBrett** - [@fscgolden](https://github.com/fscgolden)
+- **Joseph Park** - [@joeepark](https://github.com/joeepark)
 
 ## <b>License </b>
 
