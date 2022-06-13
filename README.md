@@ -9,7 +9,7 @@
   <br>
 </h1>
 
-<h4 align="center"> Reactime is a performance and debugging tool for React developers <b>(Beta version for Gatsby and Next.js)</b>. It records a snapshot whenever a target application's state is changed and allows the user to jump to any previously recorded state. It also detects the amount of renders of each component and average time of rendering.</h4>
+<h4 align="center"> Reactime is an open source Chrome developer tool for time travel debugging and performance monitoring in React applications. Reactime enables developers to record snapshots of application state, jump between and inspect state snapshots, and monitor performance metrics such as component render time and render frequency. </h4>
 
 <br>
 <p align="center">
@@ -43,18 +43,18 @@
   <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.io">Website</a> • <a href="#read-more">Read More</a>
 </p>
 
-Currently, Reactime supports React apps using stateful components and Hooks, with beta support for Recoil and Context API and frameworks like Gatsby and Next.js.
+Currently, Reactime supports React and React Router apps using stateful components and Hooks, with beta support for Recoil and Context API and frameworks like Gatsby and Next.js.
 
-<b>Reactime 13.0</b> has added the exciting features below:
+<b>Reactime 14.0</b> has added the exciting features below:
 
-I. Action Comparison Tool
-Users now have the ability to name, save, and analyze specific action snapshots within a saved series. This feature allows engineers to compare component render times throughout the development process of their application, providing them with metrics to show any improvements or changes.
+I. React Router Compatibility <br>
+Reactime is now compatible with React Router applications! Prior to Reactime 14.0, recording state snapshots as the user navigated across various routes was possible, but time travel debugging was only possible for the current route (i.e. jumping back to a prior state at a different route was not possible). In order to streamline debugging of applications with multiple routes, Reactime 14.0 added functionality that allows the user to time-travel back to different routes, including live updating in the browser to reflect the state of their application at that previously visited route.
 
-II. Reactime Visual Tutorial Walkthrough
-While Reactime offers a user friendly and intuitive interface,  users can now access a guided tutorial, walking the user through each feature while explaining practical use cases and added benefits that Reactime can provide. The walkthrough utilizes the Intro.js library, providing a visual experience that highlights and cycles through each COMPONENT displayed on the app.
+II. Classifying State Snapshots by Route <br>
+The list of state snapshots in the Reactime dashboard is now classified by route to give the developer visual cues of the snapshot-route relationship and make time travel debugging of various routes easier. 
 
-III. State Monitoring Toggle Feature
-Added toggle feature allows users to temporarily pause Reactime's state monitoring of the linked application. This allows users to make state changes within their application without populating the actions container within Reactime. Especially useful when trying to limit and compare the number of actions within one series that a user is planning to save. Relinking Reactime to the application is as simple as toggling the record button back to it's original state!
+III. Filtering Performance Metrics by Route <br>
+The Reactime dashboard includes a stacked bar graph showing render times for each component, with a separate bar stack for each snapshot. With Reactime 14.0, this composite bar graph can now be filtered by route to allow the developer to review detailed performance data by route.
 
 After installing Reactime, you can test its functionalities with your React application in development mode.
 
@@ -92,9 +92,43 @@ Reactime is an open source project, and we’d really appreciate your help with 
 
 ## <b>Features</b>
 
+### 🔹 Viewing
+
+You can view your application's file structure and click on a snapshot to view your app's state. State can be visualized in a Component Graph, JSON Tree, or Performance Graph. Snapshots can be diffed with the previous snapshot, which can be viewed in Diff mode.
+<br>
+<br>
+<p align="center">
+<img src="./assets/map-viewing.gif" />
+</p>
+<br>
+
+### 🔹 Snapshot Series and Action Comparison 
+
+You can save a series of state snapshots and use it to analyze changes in component render performance between current and previous series of snapshots.  You can also name specific snapshots and compare all snapshots with the same name.
+<br>
+<br>
+<p align="center">
+<img src="./assets/action-comparison.gif" />
+</p>
+<br>
+
+### 🔹 Recording
+
+Whenever state is changed (whenever setState, useState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the Reactime panel.
+<br>
+<br>
+<p align="center">
+<img src="./assets/history-tree.gif" />
+</p>
+<br>
+
 ### 🔹 Re-render Optimization
 
 One of the most common issues that affects performance in React is unnecessary render cycles. This problem can be fixed by checking your renders in the Performance tab in Chrome DevTools under the Reactime panel.
+
+### 🔹 Jumping
+
+Using the actions sidebar, a user can jump to any previous recorded snapshots. Hitting the jump button on any snapshot will allow a user to view state data at any point in the history of the target application.
 
 ### 🔹 Gatsby
 
@@ -104,26 +138,6 @@ Reactime offers fully support for Gatsby applications. You would be able to iden
 
 Reactime offers debugging and performance tools for Next.js apps: time-traveling debugging, preventing unnecessary components re-renders and making your application faster.
 
-### 🔹 Recording
-
-Whenever state is changed (whenever setState, useState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the Reactime panel.
-
-### 🔹 Snapshot Series and Action Comparison 
-
-You can save a series of state snapshots and use it to analyze changes in component render performance between current and previous series of snapshots.  You can also name specific snapshots and compare all snapshots with the same name.
-<p align="center">
-<img src="http://g.recordit.co/KNxvT94qxd.gif" />
-</p>
-<br>
-
-### 🔹 Viewing
-
-You can click on a snapshot to view your app's state. State can be visualized in a Component Graph, JSON Tree, or Performance Graph. Snapshots can be diffed with the previous snapshot, which can be viewed in Diff mode.
-
-### 🔹 Jumping
-
-Using the actions sidebar, a user can jump to any previous recorded snapshots. Hitting the jump button on any snapshot will allow a user to view state data at any point in the history of the target application.
-
 ### 🔹 TypeScript Support
 
 Reactime offers beta support for TypeScript applications using stateful class components and functional components. Further testing and development is required for custom hooks, Context API, and Concurrent Mode.
@@ -131,11 +145,6 @@ Reactime offers beta support for TypeScript applications using stateful class co
 ### 🔹 Documentation
 
 After cloning this repository, developers can simply run `npm run docs` at the root level and serve the dynamically generated `/docs/index.html` file on a browser. Doing so will provide a readable, extensible, and interactive GUI view of the structure and interfaces of the codebase.
-<br>
-
-<p align="center">
-<img src="./assets/nextjs.gif" />
-</p>
 <br>
 
 ### <b>Additional Features</b>
