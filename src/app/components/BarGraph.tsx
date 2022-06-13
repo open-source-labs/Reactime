@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-// import Select from 'react-select';
 import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
@@ -139,18 +138,9 @@ const BarGraph = props => {
     dispatch(save(toStorage));
   };
 
-  console.log('data-barstack', data.barStack)
-
-  // const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // const onMenuOpen = () => setIsMenuOpen(true);
-  // const onMenuClose = () => setIsMenuOpen(false);
-
   const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" id="seriesname" placeholder="Enter Series Name" onChange={e => setSeriesNameInput(e.target.value)} /> : null;
   return (
     <div className="bargraph-position">
-
-      {/* <input type="text" id ="seriesname" placeholder="Series Name" /> */}
       <div className="saveSeriesContainer">
         {textbox}
         <button
@@ -161,13 +151,11 @@ const BarGraph = props => {
           Save Series
         </button>
       </div>
-      {/* <div className="routesContainer"> */}
       <FormControl className="routesForm" id="routes-formcontrol" size="small">
         <InputLabel id="routes-dropdown">Select Route</InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="routes-select"
-          // label="Routes"
           onChange={e => setRoute(e.target.value)}
         >
           <MenuItem value={null}>
@@ -180,7 +168,6 @@ const BarGraph = props => {
           ))}
         </Select>
       </FormControl>
-      {/* </div> */}
       <svg ref={containerRef} width={width} height={height}>
         <rect
           x={0}

@@ -232,7 +232,6 @@ const PerformanceVisx = (props: BarStackProps) => {
 
   const allRoutes = [];
   const filteredSnapshots = [];
-  const copyOfBars = [];
 
   for (let i = 0; i < data.barStack.length; i += 1) {
     const url = new URL(data.barStack[i].route);
@@ -244,15 +243,9 @@ const PerformanceVisx = (props: BarStackProps) => {
     }
   }
   if (route) {
-    // copyOfBars = data.barStack;
     data.barStack = filteredSnapshots;
   }
-  // console.log('Data', data);
-  // console.log('URL is ', url);
-  console.log('data.barStack is ', data.barStack);
-  console.log('filtered snapshots are ', filteredSnapshots);
-  // console.log('AllRoutes', allRoutes);
-
+ 
   const renderBargraph = () => {
     if (hierarchy) {
       return (
@@ -264,16 +257,12 @@ const PerformanceVisx = (props: BarStackProps) => {
             comparison={allStorage()}
             setRoute={setRoute}
             allRoutes={allRoutes}
-            copyOfBars={copyOfBars}
             filteredSnapshots={filteredSnapshots}
           />
         </div>
       );
     }
   };
-
-  console.log('data', data)
-  
 
   const renderComponentDetailsView = () => {
     if (hierarchy) {
@@ -294,7 +283,6 @@ const PerformanceVisx = (props: BarStackProps) => {
       <div className="performance-nav-bar-container">
         <NavLink
           className="router-link-performance"
-          // className="router-link"
           activeClassName="is-active"
           exact
           to="/"
@@ -304,7 +292,6 @@ const PerformanceVisx = (props: BarStackProps) => {
         <NavLink
           className="router-link-performance"
           id="router-link-performance-comparison"
-          // className="router-link"
           activeClassName="is-active"
           to="/comparison"
         >
@@ -312,7 +299,6 @@ const PerformanceVisx = (props: BarStackProps) => {
         </NavLink>
         <NavLink
           className="router-link-performance"
-          // className="router-link"
           activeClassName="is-active"
           to="/componentdetails"
         >
