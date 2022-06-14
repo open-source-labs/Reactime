@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
