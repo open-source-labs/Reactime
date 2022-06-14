@@ -8,6 +8,7 @@ const app = express();
 
 app.use(express.static(path.resolve(__dirname)));
 
-const server = app.listen(5000);
+// Apple uses port 5000 for Air Play.
+const server = app.listen(5001);
 
 module.exports = server;

@@ -28,6 +28,7 @@ import {
 import Tree from './tree';
 // passes the data down to its components ?
 import componentActionsRecord from './masterState';
+import routes from './routes';
 
 // throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
 // getHooksNames - helper function to grab the getters/setters from `elementType`
@@ -93,6 +94,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
     snap.tree = new Tree('root', 'root');
   }
   const payload = snap.tree.cleanTreeCopy();
+  payload.route = routes.addRoute(window.location.href);
   // if it's Recoil - run different actions
   if (isRecoil) {
     // getRecoilState()
@@ -132,6 +134,7 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
     // Clears circular component table
     circularComponentTable.clear();
     // creates snapshot that is a tree based on properties in fiberRoot object
+    componentActionsRecord.clear();
     snap.tree = createTree(current);
   }
   // sends the updated tree back
@@ -355,7 +358,7 @@ function createTree(
     // time-travel state changing. Add record index to snapshot so we can retrieve.
     componentData.index = componentActionsRecord.saveNew(
       stateNode.state,
-      stateNode
+      stateNode,
     );
     newState = stateNode.state;
     componentFound = true;
@@ -365,32 +368,32 @@ function createTree(
   atomArray.push(memoizedProps);
 
   // RECOIL HOOKS
-  if (
-    memoizedState
-    && (tag === 0 || tag === 1 || tag === 2 || tag === 10)
-  ) {
-    if (memoizedState.queue) {
-      // Hooks states are stored as a linked list using memoizedState.next,
-      // so we must traverse through the list and get the states.
-      // We then store them along with the corresponding memoizedState.queue,
-      // which includes the dispatch() function we use to change their state.
-      const hooksStates = traverseRecoilHooks(memoizedState, memoizedProps);
-      hooksStates.forEach((state, i) => {
-        hooksIndex = componentActionsRecord.saveNew(
-          state.state,
-          state.component
-        );
-        componentData.hooksIndex = hooksIndex;
-        if (!newState) {
-          newState = { hooksState: [] };
-        } else if (!newState.hooksState) {
-          newState.hooksState = [];
-        }
-        newState.hooksState.push({ [i]: state.state });
-        componentFound = true;
-      });
-    }
-  }
+  // if (
+  //   memoizedState
+  //   && (tag === 0 || tag === 1 || tag === 2 || tag === 10)
+  // ) {
+  //   if (memoizedState.queue) {
+  //     // Hooks states are stored as a linked list using memoizedState.next,
+  //     // so we must traverse through the list and get the states.
+  //     // We then store them along with the corresponding memoizedState.queue,
+  //     // which includes the dispatch() function we use to change their state.
+  //     const hooksStates = traverseRecoilHooks(memoizedState, memoizedProps);
+  //     hooksStates.forEach((state, i) => {
+  //       hooksIndex = componentActionsRecord.saveNew(
+  //         state.state,
+  //         state.component
+  //       );
+  //       componentData.hooksIndex = hooksIndex;
+  //       if (!newState) {
+  //         newState = { hooksState: [] };
+  //       } else if (!newState.hooksState) {
+  //         newState.hooksState = [];
+  //       }
+  //       newState.hooksState.push({ [i]: state.state });
+  //       componentFound = true;
+  //     });
+  //   }
+  // }
 
   // Check if node is a hooks useState function
   // REGULAR REACT HOOKS
@@ -410,7 +413,7 @@ function createTree(
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(
           state.state,
-          state.component
+          state.component,
         );
         componentData.hooksIndex = hooksIndex;
         if (!newState) {
