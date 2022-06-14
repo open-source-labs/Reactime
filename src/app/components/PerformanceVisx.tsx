@@ -178,7 +178,7 @@ const PerformanceVisx = (props: BarStackProps) => {
   const [series, setSeries] = useState(true);
   const [action, setAction] = useState(false);
 
-  const [route, setRoute] = useState(null);
+  const [route, setRoute] = useState('All Routes');
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance'));
@@ -242,7 +242,7 @@ const PerformanceVisx = (props: BarStackProps) => {
       filteredSnapshots.push(data.barStack[i]);
     }
   }
-  if (route) {
+  if (route !== 'All Routes') {
     data.barStack = filteredSnapshots;
   }
  

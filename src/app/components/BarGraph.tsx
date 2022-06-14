@@ -150,24 +150,24 @@ const BarGraph = props => {
         >
           Save Series
         </button>
+        <form className="routesForm" id="routes-formcontrol">
+          <label id="routes-dropdown">Select Route: </label>
+          <select
+            labelId="demo-simple-select-label"
+            id="routes-select"
+            onChange={e => setRoute(e.target.value)}
+          >
+            <option>
+              All Routes
+            </option>
+            {allRoutes.map(route => (
+              <option className="routes">
+                {route}
+              </option>
+            ))}
+          </select>
+        </form>
       </div>
-      <FormControl className="routesForm" id="routes-formcontrol" size="small">
-        <InputLabel id="routes-dropdown">Select Route</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="routes-select"
-          onChange={e => setRoute(e.target.value)}
-        >
-          <MenuItem value={null}>
-            All Visited Routes
-          </MenuItem>
-          {allRoutes.map(route => (
-            <MenuItem value={route} className="routes">
-              {route}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
       <svg ref={containerRef} width={width} height={height}>
         <rect
           x={0}

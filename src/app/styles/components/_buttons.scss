@@ -9,16 +9,16 @@
   align-items: center;
   border-style: solid;
   border-color: transparent;
-  border-radius: 3px;
+  border-radius: 5px;
   cursor: pointer;
   line-height: 1.5em;
-  font: 300 14px 'Roboto', sans-serif;
-  font-size: $button-text-size;
+  font: 400 14px 'Roboto', sans-serif;
+  // font-size: $button-text-size;
   width: 120px;
   background: $red-color-gradient;
   height: 30px;
   position: absolute;
-  right: 2.5rem;
+  right: 3rem;
 
   &.animate {
     background: rgb(41, 164, 41);
@@ -196,7 +196,6 @@
   background: $blue-color-gradient;
 }
 
-
 .import-button:hover,
 .howToUse-button:hover,
 .export-button:hover,
@@ -241,9 +240,11 @@
 .dropdown-dark {
   background: #444;
   border-color: #111111 #0a0a0a black;
-  background-image: -webkit-linear-gradient(top,
-      transparent,
-      rgba(0, 0, 0, 0.4));
+  background-image: -webkit-linear-gradient(
+    top,
+    transparent,
+    rgba(0, 0, 0, 0.4)
+  );
   background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
   background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
   background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
@@ -271,7 +272,7 @@
   color: #ccc;
 }
 
-.dropdown-dark .dropdown-select>option {
+.dropdown-dark .dropdown-select > option {
   background: #444;
   text-shadow: 0 1px rgba(0, 0, 0, 0.4);
 }
