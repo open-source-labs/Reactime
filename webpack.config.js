@@ -82,6 +82,7 @@ const config = {
 
 module.exports = (env, argv) => {
   if (argv.mode === 'development') {
+    config.devtool = 'cheap-module-source-map';
     config.plugins.push(
       new ChromeExtensionReloader({
         entries: {
