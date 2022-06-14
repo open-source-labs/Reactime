@@ -61,7 +61,7 @@ const tooltipStyles = {
 
 const BarGraph = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { width, height, data, comparison } = props;
+  const { width, height, data, comparison, setRoute, allRoutes, filteredSnapshots } = props;
   const [ seriesNameInput, setSeriesNameInput ] = useState(`Series ${comparison.length + 1}`);
   const {
     tooltipOpen,
@@ -131,17 +131,15 @@ const BarGraph = props => {
         toStorage.data.barStack[i].name = actionNames[i].value;
       }
       dispatch(save(toStorage, seriesNameInput));
-      setSeriesNameInput(`Series ${comparison.length}`)
-      return
+      setSeriesNameInput(`Series ${comparison.length}`);
+      return;
     }
-    dispatch(save(toStorage))
-  }
+    dispatch(save(toStorage));
+  };
 
   const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" id="seriesname" placeholder="Enter Series Name" onChange={e => setSeriesNameInput(e.target.value)} /> : null;
   return (
     <div className="bargraph-position">
-
-      {/* <input type="text" id ="seriesname" placeholder="Series Name" /> */}
       <div className="saveSeriesContainer">
         {textbox}
         <button
@@ -151,6 +149,23 @@ const BarGraph = props => {
         >
           Save Series
         </button>
+        <form className="routesForm" id="routes-formcontrol">
+          <label id="routes-dropdown">Select Route: </label>
+          <select
+            labelId="demo-simple-select-label"
+            id="routes-select"
+            onChange={e => setRoute(e.target.value)}
+          >
+            <option>
+              All Routes
+            </option>
+            {allRoutes.map(route => (
+              <option className="routes">
+                {route}
+              </option>
+            ))}
+          </select>
+        </form>
       </div>
       <svg ref={containerRef} width={width} height={height}>
         <rect

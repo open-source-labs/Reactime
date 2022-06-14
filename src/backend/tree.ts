@@ -61,6 +61,8 @@ class Tree {
 
   recoilDomNode: any;
 
+  route: {};
+
   // Duplicate names: add a unique number ID
   // Create an object 'componentNames' to store each component name as a key and it's frequency of use as its value
   // When a new component is made on the tree, check if the new component's name already exists in 'componentNames' (possibly with the .hasOwnProperty method)

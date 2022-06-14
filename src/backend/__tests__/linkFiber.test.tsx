@@ -15,7 +15,8 @@ import puppeteer from 'puppeteer';
 
 const SERVER = require('../puppeteerServer');
 
-const APP = 'http://localhost:5000';
+// Apple uses port 5000 for Air Play.
+const APP = 'http://localhost:5001';
 
 let linkFiber;
 let mode;

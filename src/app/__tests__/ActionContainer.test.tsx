@@ -8,6 +8,7 @@ import ActionContainer from '../containers/ActionContainer';
 import { useStoreContext } from '../store';
 import { emptySnapshots } from '../actions/actions';
 import Action from '../components/Action';
+import RouteDescription from '../components/RouteDescription';
 
 configure({ adapter: new (Adapter as any)() });
 
@@ -26,6 +27,10 @@ const state = {
             name: 'App',
             componentData: { actualDuration: 3.5 },
           }],
+          route: {
+            id: 1,
+            url: 'http://localhost:8080/',
+          },
         },
         children: [{
           index: 1,
@@ -38,6 +43,10 @@ const state = {
               name: 'App',
               componentData: { actualDuration: 3.5 },
             }],
+            route: {
+              id: 2,
+              url: 'http://localhost:8080/',
+            },
           },
           children: [{
             index: 2,
@@ -50,6 +59,10 @@ const state = {
                 name: 'App',
                 componentData: { actualDuration: 3.5 },
               }],
+              route: {
+                id: 3,
+                url: 'http://localhost:8080/',
+              },
             },
             children: [{
               index: 3,
@@ -62,6 +75,10 @@ const state = {
                   name: 'App',
                   componentData: { actualDuration: 3.5 },
                 }],
+                route: {
+                  id: 4,
+                  url: 'http://localhost:8080/test/',
+                },
               },
               children: [],
             }],
@@ -87,11 +104,12 @@ useStoreContext.mockImplementation(() => [state, dispatch]);
 
 let wrapper;
 
-//actionView={true} must be passed in to <ActionContainer /> in beforeEach() to deal with new
-//conditional rendering in ActionContainer that shows/hides time-travel functionality
+// actionView={true} must be passed in to <ActionContainer /> in beforeEach() to deal with new
+// conditional rendering in ActionContainer that shows/hides time-travel functionality
 
 beforeEach(() => {
   wrapper = shallow(<ActionContainer actionView={true} />);
+  // wrapper2 = shallow(<RouteDescription />);
   useStoreContext.mockClear();
   dispatch.mockClear();
 });
@@ -107,6 +125,6 @@ describe('testing the emptySnapshot button', () => {
   });
 });
 
-test('number of actions should reflect snapshots array', () => {
-  expect(wrapper.find(Action).length).toBe(state.tabs[state.currentTab].snapshots.length);
+test('number of RouteDescription components should reflect number of unique routes', () => {
+  expect(wrapper.find(RouteDescription).length).toBe(2);
 });
