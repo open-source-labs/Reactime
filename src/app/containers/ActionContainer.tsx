@@ -10,6 +10,7 @@ import Action from '../components/Action';
 import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
+import RouteDescription from '../components/RouteDescription';
 
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
@@ -50,6 +51,7 @@ function ActionContainer(props): JSX.Element {
         displayName: `${obj.name}.${obj.branch}`,
         state: obj.stateSnapshot.children[0].state,
         componentName: obj.stateSnapshot.children[0].name,
+        routePath: obj.stateSnapshot.route.url,
         // nathan testing new entries for component name, original above
         // componentName: findDiff(obj.index),
         componentData:
@@ -123,6 +125,7 @@ function ActionContainer(props): JSX.Element {
           handleOnkeyDown={handleOnKeyDown}
           viewIndex={viewIndex}
           isCurrIndex={isCurrIndex}
+          routePath={snapshot.routePath}
         />
 
       );
@@ -141,6 +144,20 @@ function ActionContainer(props): JSX.Element {
     // Record button's icon is being togggled on click
     setRecordingActions(!recordingActions);
   };
+
+  // Logic to create the route description components
+  type routes = {
+   [route: string]: [];
+  }
+
+  const routes = {};
+  for (let i = 0; i < actionsArr.length; i += 1) {
+    if (!routes.hasOwnProperty(actionsArr[i].props.routePath)) {
+      routes[actionsArr[i].props.routePath] = [actionsArr[i]];
+    } else {
+      routes[actionsArr[i].props.routePath].push(actionsArr[i]);
+    }
+  }
 
   // the conditional logic below will cause ActionContainer.test.tsx to fail as it cannot find the Empty button
   // UNLESS actionView={true} is passed into <ActionContainer /> in the beforeEach() call in ActionContainer.test.tsx
@@ -184,7 +201,9 @@ function ActionContainer(props): JSX.Element {
               Clear
             </button>
           </div>
-          <div>{actionsArr}</div>
+          {/* Rendering of route description components */}
+          {Object.keys(routes).map(route => (
+            <RouteDescription actions={routes[route]} />))}
         </div>
       ) : null}
     </div>
