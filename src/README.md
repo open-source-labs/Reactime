@@ -35,7 +35,7 @@ src/
 │   ├── module.d.ts           #
 │   ├── package.json          #
 │   ├── puppeteerServer.js    #
-│   ├── routes.ts             # Interfaces with the browser history stack during inter-route time travel in React Router applications.
+│   ├── routes.ts             # Interfaces with the browser history stack 
 │   ├── timeJump.ts           # Rerenders DOM based on snapshot from background script
 │   └── tree.ts               # Custom structure to send to background
 │

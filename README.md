@@ -175,6 +175,11 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 
 ## <b>Authors</b>
 
+- **David Kim** - [@codejunkie7](https://github.com/codejunkie7)
+- **Robby Tipton** - [@RobbyTipton](https://github.com/RobbyTipton)
+- **Kevin HoEun Lee** - [@khobread](https://github.com/khobread)
+- **Christopher LeBrett** - [@fscgolden](https://github.com/fscgolden)
+- **Joseph Park** - [@joeepark](https://github.com/joeepark)
 - **Kris Sorensen** - [@kris-sorensen](https://github.com/kris-sorensen)
 - **Daljit Gill** - [@dgill05](https://github.com/dgill05)
 - **Ben Michareune** - [@bmichare](https://github.com/bmichare)
@@ -231,11 +236,6 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - **Kristina Wallen** - [@kristinawallen](https://github.com/kristinawallen)
 - **Quan Le** - [@blachfog](https://github.com/Blachfog)
 - **Robert Maeda** - [@robmaeda](https://github.com/robmaeda)
-- **David Kim** - [@codejunkie7](https://github.com/codejunkie7)
-- **Robby Tipton** - [@RobbyTipton](https://github.com/RobbyTipton)
-- **Kevin HoEun. Lee** - [@khobread](https://github.com/khobread)
-- **Christopher LeBrett** - [@fscgolden](https://github.com/fscgolden)
-- **Joseph Park** - [@joeepark](https://github.com/joeepark)
 
 ## <b>License </b>
 

@@ -7,31 +7,45 @@ Development Enviroment Setup
 Getting Started 
 <h2>
 
-<h4>
-1. Download React Dev Tools from the Chrome Web Store.  <a href=https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en>
+<h4>1. Download React Dev Tools from the Chrome Webstore <a href=https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en>
 Click Here To Download
-</a>
+</a></h4>
 
-<br>
-2. Run the following command in your terminal.
-<h4>
+<h4>2. Clone down the Reactime repo onto your machine.</h4>
 
 `````
+git clone https://github.com/open-source-labs/reactime.git
+`````
+
+<h4> 3. Install dependencies and build.</h4>
+
+`````
+cd reactime
 npm install --force
+npm run build
 `````
-<h4>
-3. If everything was installed without any errors, great! Move on to testing section to make sure everything is running.
-<h4>
+<h4> 4. Spin up the demo application. </h4>
+
+`````
+cd demo-app
+npm install
+npm start
+`````
 <br>
 
-<h2>
-Testing
-<h2>
 <h4>
-1. Access your Chrome extensions by clicking the puzzle piece icon in your browser. Click on manage extensions on the bottom. From there change into Developer Mode on the top right.
-
+5. Add Reactime to your Chrome extensions.
 <br>
-2. Click on "Load unpacked" on the left side of the screen. From there locate the Reactime file, and load  src/extension/build. If loaded correctly you should now see Reactime as an extension.
+- Navigate to chrome://extensions
+<br>
+- Select “Load Unpacked”
+<br>
+- Choose reactime > src > extension > build
+<br>
+Navigate to http://localhost:8080/ to inspect the demo application using Reactime!
+<br>
+<br>
 <h4>
-
-<div>
+<p align="center">
+<img src="./assets/reactime-dev-setup.gif" />
+</p>
