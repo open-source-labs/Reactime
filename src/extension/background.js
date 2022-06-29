@@ -122,7 +122,7 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   }
 }
 
-// Establishing incoming connection with devtools.
+// Establishing incoming connection with Reactime.
 chrome.runtime.onConnect.addListener(port => {
   // port is one end of the connection - an object
   // push every port connected to the ports array
@@ -222,7 +222,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'SIGN_CONNECT') {
     return true;
   }
-
+  console.log(sender, '<-- sender');
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
   const {
@@ -286,7 +286,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         script.setAttribute('type', 'text/javascript');
         script.setAttribute('src', file);
         // eslint-disable-next-line prefer-template
-        document.title = tab + '-' + document.title;
+        // document.title = tab + '-' + document.title; // error of injecting random number
         htmlBody.appendChild(script);
       };
 
