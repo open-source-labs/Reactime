@@ -43,37 +43,37 @@ window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
       mode.paused = payload;
       break;
     // maybe this isn't work react cohort 45
-    case 'onHover':
-      if (Array.isArray(payload)) {
-        for (let i = 0; i < payload.length; i + 1) {
-          const element = document.getElementById(payload[i]);
-          if (element !== null) {
-            element.style.backgroundColor = '#C0D9D9';
-          }
-        }
-      } else {
-        const element: HTMLElement = document.querySelector(`.${payload}`);
-        if (element !== null) {
-          element.style.backgroundColor = '#C0D9D9';
-        }
-      }
-      break;
-    // maybe this isn't work react cohort 45
-    case 'onHoverExit':
-      if (Array.isArray(payload)) {
-        for (let i = 0; i < payload.length; i++) {
-          const element: HTMLElement = document.querySelector(`.${payload}`);
-          if (element !== null) {
-            element.style.backgroundColor = '';
-          }
-        }
-      } else {
-        const element: HTMLElement = document.querySelector(`.${payload}`);
-        if (element !== null) {
-          element.style.backgroundColor = '';
-        }
-      }
-      break;
+    // case 'onHover':
+    //   if (Array.isArray(payload)) {
+    //     for (let i = 0; i < payload.length; i + 1) {
+    //       const element = document.getElementById(payload[i]);
+    //       if (element !== null) {
+    //         element.style.backgroundColor = '#C0D9D9';
+    //       }
+    //     }
+    //   } else {
+    //     const element: HTMLElement = document.querySelector(`.${payload}`);
+    //     if (element !== null) {
+    //       element.style.backgroundColor = '#C0D9D9';
+    //     }
+    //   }
+    //   break;
+    // // maybe this isn't work react cohort 45
+    // case 'onHoverExit':
+    //   if (Array.isArray(payload)) {
+    //     for (let i = 0; i < payload.length; i++) {
+    //       const element: HTMLElement = document.querySelector(`.${payload}`);
+    //       if (element !== null) {
+    //         element.style.backgroundColor = '';
+    //       }
+    //     }
+    //   } else {
+    //     const element: HTMLElement = document.querySelector(`.${payload}`);
+    //     if (element !== null) {
+    //       element.style.backgroundColor = '';
+    //     }
+    //   }
+    //   break;
     default:
       break;
   }

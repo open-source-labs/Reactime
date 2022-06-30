@@ -12,7 +12,6 @@ let activeTab;
 const tabsObj = {};
 // Will store Chrome web vital metrics and their corresponding values.
 const metrics = {};
-
 // This function will create the first instance of the test app's tabs object
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
 function createTabObj(title) {
@@ -122,12 +121,13 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   }
 }
 
-// Establishing incoming connection with devtools.
+// Establishing incoming connection with Reactime.
 chrome.runtime.onConnect.addListener(port => {
   // port is one end of the connection - an object
   // push every port connected to the ports array
   portsArr.push(port);
-
+  console.log(port, '<--port');
+  console.log(portsArr, '<--portsArr');
   // On Reactime launch: make sure RT's active tab is correct
   if (portsArr.length > 0) {
     portsArr.forEach(bg => bg.postMessage({
@@ -222,7 +222,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'SIGN_CONNECT') {
     return true;
   }
-
+  console.log(sender, '<-- sender');
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
   const {
@@ -286,7 +286,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         script.setAttribute('type', 'text/javascript');
         script.setAttribute('src', file);
         // eslint-disable-next-line prefer-template
-        document.title = tab + '-' + document.title;
+        // document.title = tab + '-' + document.title; // error of injecting random number
         htmlBody.appendChild(script);
       };
 
