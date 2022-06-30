@@ -11,7 +11,6 @@ import MainContainer from '../containers/MainContainer';
 import { StoreContext } from '../store';
 import mainReducer from '../reducers/mainReducer.js';
 
-
 // import 'intro.js/introjs.css';
 
 // currentTab is the current active tab within Google Chrome. This is used to decide what tab Reactime should be monitoring. This can be "locked"

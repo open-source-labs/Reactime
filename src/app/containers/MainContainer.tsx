@@ -22,7 +22,7 @@ import { useStoreContext } from '../store';
 function MainContainer(): any {
   const [store, dispatch] = useStoreContext();
   const {
-    tabs, currentTab, port: currentPort, split,
+    tabs, currentTab, port, split,
   } = store;
   const [actionView, setActionView] = useState(true);
   // this function handles Time Jump sidebar view
@@ -41,12 +41,12 @@ function MainContainer(): any {
   // let port;
   useEffect(() => {
     // only open port once
-    if (currentPort) return;
+    if (port) return;
 
     // open long-lived connection with background script
-    const port = chrome.runtime.connect();
+    const currentPort = chrome.runtime.connect();
     // listen for a message containing snapshots from the background script
-    port.onMessage.addListener(
+    currentPort.onMessage.addListener(
       (message: {
         action: string;
         payload: Record<string, unknown>;
@@ -91,13 +91,13 @@ function MainContainer(): any {
       },
     );
 
-    port.onDisconnect.addListener(() => {
+    currentPort.onDisconnect.addListener(() => {
       console.log('this port is disconeccting line 79');
       // disconnecting
     });
 
     // assign port to state so it could be used by other components
-    dispatch(setPort(port));
+    dispatch(setPort(currentPort));
   });
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
