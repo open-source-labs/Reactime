@@ -149,6 +149,7 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 
 ### <b>Additional Features</b>
 
+- Reactime 14.0 attempted to convert Reactime's Chrome manifest from V2 to V3. This conversion might have not been done properly.
 - Identifying unnecessary re-renders
 - Single-click to view tooltip details on state visualizations
 - Double-click to collapse child components 
@@ -166,6 +167,7 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 
 ## <b>Read More</b>
 
+- [Inter-Route Time Travel with Reactime](https://medium.com/@robbytiptontol/inter-route-time-travel-with-reactime-d84cd55ec73b)
 - [Time-Travel State with Reactime](https://medium.com/better-programming/time-traveling-state-with-reactime-6-0-53fdc3ae2a20)
 - [React Fiber and Reactime](https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8)
 - [Meet Reactime - a time-traveling State Debugger for React](https://medium.com/@yujinkay/meet-reactime-a-time-traveling-state-debugger-for-react-24f0fce96802)
