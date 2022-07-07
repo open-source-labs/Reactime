@@ -77,9 +77,14 @@ const BarGraph = props => {
     scroll: true,
   });
   const keys = Object.keys(data.componentData);
+  console.log('this is data in barGraph.tsx: ', data);
+  console.log('these are the data\'s keys: ', keys)
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
-  const getSnapshotId = (d: snapshot) => d.snapshotId;
+  const getSnapshotId = (d: snapshot) => {
+    console.log('snapshot object here: ', d);
+    return d.snapshotId;
+  }
   const formatSnapshotId = id => `Snapshot ID: ${id}`;
   const formatRenderTime = time => `${time} ms `;
 
@@ -99,6 +104,8 @@ const BarGraph = props => {
     range: schemeSet3,
   });
 
+  console.log()
+
   // setting max dimensions and scale ranges
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - 150;
@@ -116,6 +123,7 @@ const BarGraph = props => {
     for (let i = 0; i < saveButtons.length; i++) {
       if (tabs[currentTab].seriesSavedStatus === 'saved') {
         saveButtons[i].classList.add('animate');
+        console.log('checking saveButtons[i].classList', saveButtons[i].classList)
         saveButtons[i].innerHTML = 'Saved!';
       } else {
         saveButtons[i].innerHTML = 'Save Series';
@@ -137,6 +145,7 @@ const BarGraph = props => {
     dispatch(save(toStorage));
   };
 
+  // FTRI9 note - need to ensure text box is not empty before saving
   const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" id="seriesname" placeholder="Enter Series Name" onChange={e => setSeriesNameInput(e.target.value)} /> : null;
   return (
     <div className="bargraph-position">
@@ -162,6 +171,23 @@ const BarGraph = props => {
             {allRoutes.map(route => (
               <option className="routes">
                 {route}
+              </option>
+            ))}
+          </select>
+        </form>
+        <form className="routesForm" id="routes-formcontrol">
+          <label id="routes-dropdown">Select Snapshot: </label>
+          <select
+            labelId="demo-simple-select-label"
+            id="routes-select"
+            onChange={e => setSnapshot(e.target.value)}
+          >
+            <option>
+              All Snapshots
+            </option>
+            {filteredSnapshots.map(route => (
+              <option className="routes">
+                {route.snapshotId}
               </option>
             ))}
           </select>
@@ -197,6 +223,9 @@ const BarGraph = props => {
             color={colorScale}
           >
             {barStacks => barStacks.map(barStack => barStack.bars.map((bar, idx) => {
+              console.log(width, '<-- width');
+              console.log(height, '<-- height');
+              console.log(bar, '<-- bar');
               // Hides new components if components don't exist in previous snapshots.
               if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                 bar.height = 0;
