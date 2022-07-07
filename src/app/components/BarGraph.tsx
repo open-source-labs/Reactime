@@ -78,13 +78,13 @@ const BarGraph = props => {
   });
   const keys = Object.keys(data.componentData);
   console.log('this is data in barGraph.tsx: ', data);
-  console.log('these are the data\'s keys: ', keys)
+  console.log('these are the data\'s keys: ', keys);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSnapshotId = (d: snapshot) => {
     console.log('snapshot object here: ', d);
     return d.snapshotId;
-  }
+  };
   const formatSnapshotId = id => `Snapshot ID: ${id}`;
   const formatRenderTime = time => `${time} ms `;
 
@@ -103,8 +103,6 @@ const BarGraph = props => {
     domain: keys,
     range: schemeSet3,
   });
-
-  console.log()
 
   // setting max dimensions and scale ranges
   const xMax = width - margin.left - margin.right;

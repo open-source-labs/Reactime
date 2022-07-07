@@ -13,7 +13,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["http://localhost/*"],
       "js": ["bundles/content.bundle.js"]
     }
   ],
