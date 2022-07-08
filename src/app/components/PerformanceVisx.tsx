@@ -179,8 +179,8 @@ const PerformanceVisx = (props: BarStackProps) => {
   const [action, setAction] = useState(false);
 
   const [route, setRoute] = useState('All Routes');
-  const [snapshot, setSnapshot] = useState('Choose Snapshot ID');
-
+  const [snapshot, setSnapshot] = useState('All Snapshots');
+//snapshots = 3.0
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance'));
   }, [dispatch]);
@@ -246,9 +246,48 @@ const PerformanceVisx = (props: BarStackProps) => {
   if (route !== 'All Routes') {
     data.barStack = filteredSnapshots;
   }
-
-  console.log(filteredSnapshots, '<-- filtered snap shots');
- 
+  console.log(snapshot);
+  // snapshot = '2.0' parseInt(snapshot) = 3
+  // 2-1 =
+  // data.barStack[] // 0: 1.0 snapshot 1: 2.0 snapshot 2: 3.0 snapshot
+  // data.barStack[{123123},{123123},12312,12312]
+  // && data.barStack[parseInt(snapshot, 10) - 1]
+  if (snapshot !== 'All Snapshots') {
+    console.log(data.barStack, '<---------data.barstack', snapshot, '<-----snapshot');
+    // const checkData = [];
+    // for (let i = 0; i < data.barStack.length; i++) {
+    //   if (data.barStack[i].snapshotId === snapshot) {
+    //     console.log(data.barStack[i], '<----barstack[i]', i);
+    //     console.log(snapshot, '<--- snapshot from for loop inside performance');
+    //     console.log(route, '<--- this is a route');
+    //     checkData.push(data.barStack[i]);
+    //     break;
+    //   }
+    // }
+    // filter barStack to make it equal to an array of length 1 with object matching snapshot ID
+    // const checkData = data.barStack.map(comp => {
+    //   console.log(comp);
+    //   if (comp.snapshotId === snapshot) return comp;
+    // });
+    const checkData = [data.barStack.find(comp => comp.snapshotId === snapshot)];
+    // checkData = checkData.filter(element => { return element !== undefined; })
+    console.log(checkData, '<-- checkData');
+    if (checkData) data.barStack = checkData;
+  }
+  // data.barStack = [
+  //   {snapshot: 1.0,
+  //     box1: 5.4,
+  //     box2: 3.7
+  //   },
+  //   {snapshot: 2.0,
+  //     box1: 5.4,
+  //     box2: 3.7},
+  //   {snapshot: 3.0,
+  //     box1: 5.4,
+  //     box2: 3.7
+  //   }
+  // ]
+  //console.log(filteredSnapshots, '<-- filtered snap shots');
   const renderBargraph = () => {
     if (hierarchy) {
       return (

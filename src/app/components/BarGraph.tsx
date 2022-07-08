@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import { BarStack } from '@visx/shape';
+import { Bar } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
@@ -61,7 +62,7 @@ const tooltipStyles = {
 
 const BarGraph = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { width, height, data, comparison, setRoute, allRoutes, filteredSnapshots } = props;
+  const { width, height, data, comparison, setRoute, allRoutes, filteredSnapshots, setSnapshot} = props;
   const [ seriesNameInput, setSeriesNameInput ] = useState(`Series ${comparison.length + 1}`);
   const {
     tooltipOpen,
@@ -76,13 +77,78 @@ const BarGraph = props => {
     detectBounds: true,
     scroll: true,
   });
+
+  const HorizontalGraph = () => {
+    //  data.barStack =
+    // [{snapshot: 1.0,
+  //     box1: 5.4,
+  //     box2: 3.7
+  //     box3: 2.3
+  //     box4: 5.9,
+  //     box5: 3.5
+  //     box6: 2.9
+  //   }]
+
+    //  width = 50
+    //  -xxxxx-xxxxx
+    const BarArray = [];
+    // []
+    //-----------::  :: 3     4             
+    let i = 0;
+    let barWidth = (xMax / (Object.keys(data.barStack[0]).length) + 5);
+    console.log(data, '<-- data from snapshot');
+    for (const [key, value] of Object.entries(data.barStack[0])) {
+      if (key !== 'snapshotId' && key !== 'route'){
+        console.log(`${key}: ${value}`);
+        BarArray.push(<Bar
+          x={10 + 10 * i + barWidth * i}
+          y={yMax - value * 25}
+          height={value * 25}
+          key={key}
+          width={barWidth}
+          fill="rgba(23, 233, 217, .5)"
+          onMouseLeave={() => {
+            dispatch(
+              onHoverExit(data.componentData[key].rtid),
+              (tooltipTimeout = window.setTimeout(() => {
+                hideTooltip();
+              }, 300)),
+            );
+          }}
+          // Cursor position in window updates position of the tool tip.
+          onMouseMove={event => {
+            console.log(event, '<-- event from onMouseMove')
+            console.log(key, '<--key from onMouseMove');
+            dispatch(onHover(data.componentData[key].rtid));
+            if (tooltipTimeout) clearTimeout(tooltipTimeout);
+            const top = event.clientY - margin.top - value * 25;
+            const left = 10 + 10 * i + barWidth * i + barWidth / 2;
+            showTooltip({
+              tooltipData: value,
+              tooltipTop: top,
+              tooltipLeft: left,
+            });
+          }}
+        />);
+      }
+      i++;
+    }
+    console.log(BarArray, '<-- barArray');
+    return BarArray;
+  };
   const keys = Object.keys(data.componentData);
-  console.log('this is data in barGraph.tsx: ', data);
-  console.log('these are the data\'s keys: ', keys);
+  //console.log('this is data in barGraph.tsx: ', data);
+  //console.log('these are the data\'s keys: ', keys);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSnapshotId = (d: snapshot) => {
-    console.log('snapshot object here: ', d);
+    //d coming from data.barstack post filtered data
+    //Object.keys(data.barStack[0]).map(keys => if ())
+    console.log('snapshot object here from getSnapshotId: ', d);
+    return d.snapshotId;
+  };
+  const getComponentKeys = d => {
+    console.log('snapshot object here from getComponentKeys: ', d);
     return d.snapshotId;
   };
   const formatSnapshotId = id => `Snapshot ID: ${id}`;
@@ -161,7 +227,10 @@ const BarGraph = props => {
           <select
             labelId="demo-simple-select-label"
             id="routes-select"
-            onChange={e => setRoute(e.target.value)}
+            onChange={e => {
+              setSnapshot('All Snapshots');
+              setRoute(e.target.value);
+            }}
           >
             <option>
               All Routes
@@ -178,7 +247,7 @@ const BarGraph = props => {
           <select
             labelId="demo-simple-select-label"
             id="routes-select"
-            onChange={e => setSnapshot(e.target.value)}
+            onChange={e => setSnapshot(e.target.value)} 
           >
             <option>
               All Snapshots
@@ -211,57 +280,68 @@ const BarGraph = props => {
           strokeOpacity={0.1}
           xOffset={snapshotIdScale.bandwidth() / 2}
         />
+        {console.log('this is from the BarStack graph')}
         <Group top={margin.top} left={margin.left}>
-          <BarStack
-            data={data.barStack}
-            keys={keys}
-            x={getSnapshotId}
-            xScale={snapshotIdScale}
-            yScale={renderingScale}
-            color={colorScale}
-          >
-            {barStacks => barStacks.map(barStack => barStack.bars.map((bar, idx) => {
-              console.log(width, '<-- width');
-              console.log(height, '<-- height');
-              console.log(bar, '<-- bar');
-              // Hides new components if components don't exist in previous snapshots.
-              if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
-                bar.height = 0;
-              }
-              return (
-                <rect
-                  key={`bar-stack-${bar.bar.data.snapshotId}-${bar.key}`}
-                  x={bar.x}
-                  y={bar.y}
-                  height={bar.height === 0 ? null : bar.height}
-                  width={bar.width}
-                  fill={bar.color}
-                  /* TIP TOOL EVENT HANDLERS */
-                  // Hides tool tip once cursor moves off the current rect.
-                  onMouseLeave={() => {
-                    dispatch(
-                      onHoverExit(data.componentData[bar.key].rtid),
-                      (tooltipTimeout = window.setTimeout(() => {
-                        hideTooltip();
-                      }, 300)),
-                    );
-                  }}
-                  // Cursor position in window updates position of the tool tip.
-                  onMouseMove={event => {
-                    dispatch(onHover(data.componentData[bar.key].rtid));
-                    if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                    const top = event.clientY - margin.top - bar.height;
-                    const left = bar.x + bar.width / 2;
-                    showTooltip({
-                      tooltipData: bar,
-                      tooltipTop: top,
-                      tooltipLeft: left,
-                    });
-                  }}
-                />
-              );
-            }))}
-          </BarStack>
+          {data.barStack.length > 1 ? (
+            <BarStack
+              data={data.barStack}
+              keys={keys}
+              x={getSnapshotId}
+              xScale={snapshotIdScale}
+              yScale={renderingScale}
+              color={colorScale}
+            >
+              {barStacks => barStacks.map(barStack => barStack.bars.map((bar, idx) => {
+                console.log(filteredSnapshots, '<-- filtered snap shots');
+                console.log(data, '<-- data from barStacks');
+                console.log(data.barStack, '<-- data.barstack');
+                console.log(barStacks, '<--barStacks');
+                console.log(width, '<-- width');
+                console.log(height, '<-- height');
+                console.log(bar, '<-- bar');
+                // Hides new components if components don't exist in previous snapshots.
+                if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
+                  bar.height = 0;
+                }
+                return (
+                  <rect
+                    key={`bar-stack-${bar.bar.data.snapshotId}-${bar.key}`}
+                    x={bar.x}
+                    y={bar.y}
+                    height={bar.height === 0 ? null : bar.height}
+                    width={bar.width}
+                    fill={bar.color}
+                    /* TIP TOOL EVENT HANDLERS */
+                    // Hides tool tip once cursor moves off the current rect.
+                    onMouseLeave={() => {
+                      dispatch(
+                        onHoverExit(data.componentData[bar.key].rtid),
+                        (tooltipTimeout = window.setTimeout(() => {
+                          hideTooltip();
+                        }, 300)),
+                      );
+                    }}
+                    // Cursor position in window updates position of the tool tip.
+                    onMouseMove={event => {
+                      dispatch(onHover(data.componentData[bar.key].rtid));
+                      if (tooltipTimeout) clearTimeout(tooltipTimeout);
+                      const top = event.clientY - margin.top - bar.height;
+                      const left = bar.x + bar.width / 2;
+                      showTooltip({
+                        tooltipData: bar,
+                        tooltipTop: top,
+                        tooltipLeft: left,
+                      });
+                    }}
+                  />
+                );
+              }))}
+            </BarStack>
+          )
+            : (
+                HorizontalGraph()
+              )
+        }    
         </Group>
         <AxisLeft
           top={margin.top}
