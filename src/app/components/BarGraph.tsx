@@ -79,17 +79,56 @@ const BarGraph = props => {
   });
 
   const HorizontalGraph = () => {
+    //  data.barStack =
+    // [{snapshot: 1.0,
+  //     box1: 5.4,
+  //     box2: 3.7
+  //     box3: 2.3
+  //     box4: 5.9,
+  //     box5: 3.5
+  //     box6: 2.9
+  //   }]
+
+    //  width = 50
+    //  -xxxxx-xxxxx
     const BarArray = [];
+    // []
+    //-----------::  :: 3     4             
     let i = 0;
+    let barWidth = (xMax / (Object.keys(data.barStack[0]).length) + 5);
+    console.log(data, '<-- data from snapshot');
     for (const [key, value] of Object.entries(data.barStack[0])) {
       if (key !== 'snapshotId' && key !== 'route'){
         console.log(`${key}: ${value}`);
         BarArray.push(<Bar
-          x={10 + 30 * i}
-          y={10}
+          x={10 + 10 * i + barWidth * i}
+          y={yMax - value * 25}
           height={value * 25}
-          width={20}
+          key={key}
+          width={barWidth}
           fill="rgba(23, 233, 217, .5)"
+          onMouseLeave={() => {
+            dispatch(
+              onHoverExit(data.componentData[key].rtid),
+              (tooltipTimeout = window.setTimeout(() => {
+                hideTooltip();
+              }, 300)),
+            );
+          }}
+          // Cursor position in window updates position of the tool tip.
+          onMouseMove={event => {
+            console.log(event, '<-- event from onMouseMove')
+            console.log(key, '<--key from onMouseMove');
+            dispatch(onHover(data.componentData[key].rtid));
+            if (tooltipTimeout) clearTimeout(tooltipTimeout);
+            const top = event.clientY - margin.top - value * 25;
+            const left = 10 + 10 * i + barWidth * i + barWidth / 2;
+            showTooltip({
+              tooltipData: value,
+              tooltipTop: top,
+              tooltipLeft: left,
+            });
+          }}
         />);
       }
       i++;
@@ -105,11 +144,11 @@ const BarGraph = props => {
   const getSnapshotId = (d: snapshot) => {
     //d coming from data.barstack post filtered data
     //Object.keys(data.barStack[0]).map(keys => if ())
-    console.log('snapshot object here: ', d);
+    console.log('snapshot object here from getSnapshotId: ', d);
     return d.snapshotId;
   };
   const getComponentKeys = d => {
-    console.log('snapshot object here: ', d);
+    console.log('snapshot object here from getComponentKeys: ', d);
     return d.snapshotId;
   };
   const formatSnapshotId = id => `Snapshot ID: ${id}`;
@@ -188,7 +227,10 @@ const BarGraph = props => {
           <select
             labelId="demo-simple-select-label"
             id="routes-select"
-            onChange={e => setRoute(e.target.value)}
+            onChange={e => {
+              setSnapshot('All Snapshots');
+              setRoute(e.target.value);
+            }}
           >
             <option>
               All Routes
@@ -205,7 +247,7 @@ const BarGraph = props => {
           <select
             labelId="demo-simple-select-label"
             id="routes-select"
-            onChange={e => setSnapshot(e.target.value)}
+            onChange={e => setSnapshot(e.target.value)} 
           >
             <option>
               All Snapshots
@@ -238,8 +280,8 @@ const BarGraph = props => {
           strokeOpacity={0.1}
           xOffset={snapshotIdScale.bandwidth() / 2}
         />
+        {console.log('this is from the BarStack graph')}
         <Group top={margin.top} left={margin.left}>
-
           {data.barStack.length > 1 ? (
             <BarStack
               data={data.barStack}
@@ -251,7 +293,7 @@ const BarGraph = props => {
             >
               {barStacks => barStacks.map(barStack => barStack.bars.map((bar, idx) => {
                 console.log(filteredSnapshots, '<-- filtered snap shots');
-                console.log(data, '<-- data');
+                console.log(data, '<-- data from barStacks');
                 console.log(data.barStack, '<-- data.barstack');
                 console.log(barStacks, '<--barStacks');
                 console.log(width, '<-- width');
@@ -299,9 +341,7 @@ const BarGraph = props => {
             : (
                 HorizontalGraph()
               )
-        }
-          
-
+        }    
         </Group>
         <AxisLeft
           top={margin.top}
