@@ -179,7 +179,7 @@ const PerformanceVisx = (props: BarStackProps) => {
   const [action, setAction] = useState(false);
 
   const [route, setRoute] = useState('All Routes');
-  const [snapshot, setSnapshot] = useState('Choose Snapshot ID');
+  const [snapshot, setSnapshot] = useState('All Snapshots');
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance'));
@@ -246,9 +246,13 @@ const PerformanceVisx = (props: BarStackProps) => {
   if (route !== 'All Routes') {
     data.barStack = filteredSnapshots;
   }
+  console.log(snapshot);
+  if (snapshot !== 'All Snapshots') {
+    console.log(data.barStack, '<---------data.barstack', snapshot,  '<-----snapshot', (parseInt(snapshot, 10) - 1), '<-----parseInt-1' )
+    data.barStack = [data.barStack[parseInt(snapshot, 10) - 1]];
+  }
 
-  console.log(filteredSnapshots, '<-- filtered snap shots');
- 
+  //console.log(filteredSnapshots, '<-- filtered snap shots');
   const renderBargraph = () => {
     if (hierarchy) {
       return (
