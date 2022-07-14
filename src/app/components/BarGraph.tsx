@@ -105,7 +105,7 @@ const BarGraph = props => {
             min={'outer min'}
             max={'first if'}
             // x={100}
-            x={xMax / (Object.keys(data.barStack[0]).length - 2)}
+            x={xMax / (Object.keys(data.barStack[0]).length) - 2}
             y={yMax - value}
             height={value}
             key={key}
@@ -139,7 +139,7 @@ const BarGraph = props => {
           BarArray.push(<Bar
             min={'outer min'}
             max={'else here'}
-            x={(xMax / (Object.keys(data.barStack[0]).length - 2)) * (i + 1)} 
+            x={(xMax / (Object.keys(data.barStack[0]).length)) * (i + 1)} 
             // x={(xMax / (Object.keys(data.barStack[0]).length - 2)) + barWidth * i}
             y={yMax - value * 20}
             height={value * 20}
@@ -385,7 +385,7 @@ const BarGraph = props => {
           )
             : (
               <>
-              {snapshotIdScale.rangeRound([0, xMax + 200])}
+              {snapshotIdScale.rangeRound([0, xMax])}
               <Grid
                 top={margin.top}
                 left={margin.left}
