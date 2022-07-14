@@ -105,12 +105,12 @@ const BarGraph = props => {
             min={'outer min'}
             max={'first if'}
             // x={100}
-            x={xMax / (Object.keys(data.barStack[0]).length) - 2}
+            x={xMax / (Object.keys(data.barStack[0]).length)}
             y={yMax - value}
             height={value}
             key={key}
             width={barWidth}
-            fill={rgb[Math.floor(Math.random() * 5)]}
+            fill={'#ffffb3'}
             onMouseLeave={() => {
               dispatch(
                 onHoverExit(data.componentData[key].rtid),
@@ -145,7 +145,7 @@ const BarGraph = props => {
             height={value * 20}
             key={key}
             width={barWidth}
-            fill={rgb[Math.floor(Math.random() * 5)]}
+            fill={'#ffffb3'}
             onMouseLeave={() => {
               dispatch(
                 onHoverExit(data.componentData[key].rtid),
