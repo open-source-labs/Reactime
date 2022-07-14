@@ -12,7 +12,6 @@
 /* eslint-disable no-param-reassign */
 
 // import typescript types
-import { element } from 'prop-types';
 import {
   // tree
   Snapshot,
@@ -284,6 +283,7 @@ function createTree(
         };
       }
     } catch (error) {
+      console.log(error);
     }
   }
 
@@ -458,7 +458,7 @@ function createTree(
 
       while (pointer !== null) {
         if (pointer.stateNode !== null) {
-          rtid = `fromLinkFiber${rtidCounter++}`;
+          rtid = `fromLinkFiber${rtidCounter += 1}`;
           // rtid = rtidCounter++;
           recoilDomNode[currentFiber.elementType.name].push(rtid);
           // check if rtid is already present
@@ -496,7 +496,7 @@ function createTree(
         }
         currentFiber.child.stateNode.classList.add(rtid);
       }
-      rtidCounter++;
+      rtidCounter += 1;
     }
     // checking if tree fromSibling is true
     if (fromSibling) {

@@ -11,10 +11,12 @@ import {
   HookStates, // array of hook state items
 } from './types/backendTypes';
 
-// HookState is an array that contains a "component" for every single state change that occurs in the app
+// HookState is an array that contains a "component" for
+// every single state change that occurs in the app
 // Information on these components include ComponentData as well as state
 // For class components, there will be one "component" for each snapshot
-// For functional components that utilize Hooks, there will be one "component" for each setter/getter every time we have a new snapshot
+// For functional components that utilize Hooks, there will be one "component"
+// for each setter/getter every time we have a new snapshot
 let componentActionsRecord: HookStates = [];
 let index = 0;
 
@@ -30,19 +32,20 @@ export default {
 
     return index - 1;
   },
-  getRecordByIndex: (inputIndex: number): HookStateItem =>
-    componentActionsRecord[inputIndex],
-  // this is used for class components - inputIndex will always be a fixed number (coming in timeJump.ts)
-  getComponentByIndex: (inputIndex: number): any =>
+  getRecordByIndex: (inputIndex: number): HookStateItem => componentActionsRecord[inputIndex],
+  // this is used for class components -
+  /* inputIndex will always be a fixed number (coming in timeJump.ts) */
+  getComponentByIndex: (inputIndex: number): any => (
     componentActionsRecord[inputIndex]
       ? componentActionsRecord[inputIndex].component
-      : undefined,
+      : undefined),
   // this is used for react hooks - hooks will be passed in as an array from timeJump.ts
   getComponentByIndexHooks: (inputIndex: Array<number> = []): any => {
     const multiDispatch = [];
     for (let i = 0; i < inputIndex.length; i++) {
-      if (componentActionsRecord[inputIndex[i]])
+      if (componentActionsRecord[inputIndex[i]]) {
         multiDispatch.push(componentActionsRecord[inputIndex[i]].component);
+      }
     }
     return multiDispatch;
   },
