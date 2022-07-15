@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
-import { BarStack } from '@visx/shape';
-import { Bar } from '@visx/shape';
+import { BarStack, Bar } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
@@ -62,8 +61,18 @@ const tooltipStyles = {
 
 const BarGraph = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { width, height, data, comparison, setRoute, allRoutes, filteredSnapshots, snapshot, setSnapshot} = props;
-  const [ seriesNameInput, setSeriesNameInput ] = useState(`Series ${comparison.length + 1}`);
+  const {
+    width,
+    height,
+    data,
+    comparison,
+    setRoute,
+    allRoutes,
+    filteredSnapshots,
+    snapshot,
+    setSnapshot
+  } = props;
+  const [seriesNameInput, setSeriesNameInput] = useState(`Series ${comparison.length + 1}`);
   const {
     tooltipOpen,
     tooltipLeft,
@@ -81,10 +90,10 @@ const BarGraph = props => {
   const HorizontalGraph = () => {
     const BarArray = [];
     // []
-    //-----------::  :: 3     4             
+    // -----------::  :: 3     4
     let i = 0;
     // let barWidth = (xMax / (Object.keys(data.barStack[0]).length) + 5);
-    let barWidth = (xMax * (2/3)/ (Object.keys(data.barStack[0]).length - 2));
+    const barWidth = (xMax * (2 / 3) / (Object.keys(data.barStack[0]).length - 2));
     console.log(data, '<-- data from snapshot');
     // function colorGen() {
     //   const r = Math.floor(Math.random() * 256);
@@ -92,23 +101,23 @@ const BarGraph = props => {
     //   const b = Math.floor(Math.random() * 256);
     //   return "rgb(" + r + "," + g + "," + b + ", " + .5 + ")"
     // }
-    const rgb = ["rgba(50, 100, 241, .5)", "rgba(90, 150, 217, .5)", "rgba(200, 30, 7, .5)", "rgba(23, 233, 217, .5)", "rgba(150, 227, 19, .5)"]
+    const rgb = ['rgba(50, 100, 241, .5)', 'rgba(90, 150, 217, .5)', 'rgba(200, 30, 7, .5)', 'rgba(23, 233, 217, .5)', 'rgba(150, 227, 19, .5)'];
     for (const [key, value] of Object.entries(data.barStack[0])) {
-      console.log(xMax, '<--  xmax'); 
-      if (key !== 'snapshotId' && key !== 'route'){
-          //console.log(`${key}: ${value}`);
-          // let color = colorGen();
+      console.log(xMax, '<--  xmax');
+      if (key !== 'snapshotId' && key !== 'route') {
+        // console.log(`${key}: ${value}`);
+        // let color = colorGen();
         if (i === 0) {
           BarArray.push(<Bar
-            min={'outer min'}
-            max={'first if'}
+            min="outer min"
+            max="first if"
             // x={100}
             x={xMax / (Object.keys(data.barStack[0]).length)}
             y={yMax - value}
             height={value}
             key={key}
             width={barWidth}
-            fill={'#62d6fb'}
+            fill="#62d6fb"
             onMouseLeave={() => {
               dispatch(
                 onHoverExit(data.componentData[key].rtid),
@@ -119,7 +128,7 @@ const BarGraph = props => {
             }}
             // Cursor position in window updates position of the tool tip.
             onMouseMove={event => {
-              console.log(event, '<-- event from onMouseMove')
+              console.log(event, '<-- event from onMouseMove');
               console.log(key, '<--key from onMouseMove');
               dispatch(onHover(data.componentData[key].rtid));
               if (tooltipTimeout) clearTimeout(tooltipTimeout);
@@ -132,18 +141,17 @@ const BarGraph = props => {
               });
             }}
           />);
-        }
-        else {
+        } else {
           BarArray.push(<Bar
-            min={'outer min'}
-            max={'else here'}
-            x={(xMax / (Object.keys(data.barStack[0]).length)) * (i + 1)} 
+            min="outer min"
+            max="else here"
+            x={(xMax / (Object.keys(data.barStack[0]).length)) * (i + 1)}
             // x={(xMax / (Object.keys(data.barStack[0]).length - 2)) + barWidth * i}
             y={yMax - value * 20}
             height={value * 20}
             key={key}
             width={barWidth}
-            fill={'#62d6fb'}
+            fill="#62d6fb"
             onMouseLeave={() => {
               dispatch(
                 onHoverExit(data.componentData[key].rtid),
@@ -154,7 +162,7 @@ const BarGraph = props => {
             }}
             // Cursor position in window updates position of the tool tip.
             onMouseMove={event => {
-              console.log(event, '<-- event from onMouseMove')
+              console.log(event, '<-- event from onMouseMove');
               console.log(key, '<--key from onMouseMove');
               dispatch(onHover(data.componentData[key].rtid));
               if (tooltipTimeout) clearTimeout(tooltipTimeout);
@@ -168,22 +176,21 @@ const BarGraph = props => {
             }}
           />);
         }
-        i++;        
+        i += 1;
       }
-
-      }
-      console.log(BarArray, '<-- barArray');
-      return BarArray;
-    };
+    }
+    console.log(BarArray, '<-- barArray');
+    return BarArray;
+  };
 
   const keys = Object.keys(data.componentData);
-  //console.log('this is data in barGraph.tsx: ', data);
-  //console.log('these are the data\'s keys: ', keys);
+  // console.log('this is data in barGraph.tsx: ', data);
+  // console.log('these are the data\'s keys: ', keys);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSnapshotId = (d: snapshot) => {
-    //d coming from data.barstack post filtered data
-    //Object.keys(data.barStack[0]).map(keys => if ())
+    // d coming from data.barstack post filtered data
+    // Object.keys(data.barStack[0]).map(keys => if ())
     // console.log('snapshot object here from getSnapshotId: ', d);
     return d.snapshotId;
   };
@@ -200,8 +207,8 @@ const BarGraph = props => {
     padding: 0.2,
   });
 
-  console.log(data,' <--data')
-  console.log(data.maxTotalRender,' <--data.maxTotalRender')
+  console.log(data, ' <--data');
+  console.log(data.maxTotalRender, ' <--data.maxTotalRender');
 
   const renderingScale = scaleLinear<number>({
     domain: [0, data.maxTotalRender],
@@ -210,16 +217,15 @@ const BarGraph = props => {
 
   const componentsKeys = [];
   for (let key in data.barStack[0]) {
-    if(key !== 'route' && key !== 'snapshotId' )
-    componentsKeys.push(key);
+    if (key !== 'route' && key !== 'snapshotId' ) componentsKeys.push(key);
   }
-  console.log(data.barStack.map(getSnapshotId), '<-- check if getSnapshotId matches componentKeys')
-  console.log(componentsKeys, '<-- componentKeys')
+  console.log(data.barStack.map(getSnapshotId), '<-- check if getSnapshotId matches componentKeys');
+  console.log(componentsKeys, '<-- componentKeys');
 
   const componentScale = scaleBand<string>({
     domain: componentsKeys,
-    padding: 0.2
-  })
+    padding: 0.2,
+  });
 
   const colorScale = scaleOrdinal<string>({
     domain: keys,
@@ -331,17 +337,18 @@ const BarGraph = props => {
           rx={14}
         />
         {snapshot === 'All Snapshots' ? (
-        <><Grid
-            top={margin.top}
-            left={margin.left}
-            xScale={snapshotIdScale}
-            yScale={renderingScale}
-            width={xMax}
-            height={yMax}
-            stroke="black"
-            strokeOpacity={0.1}
-            xOffset={snapshotIdScale.bandwidth() / 2}
-          />
+          <>
+            <Grid
+              top={margin.top}
+              left={margin.left}
+              xScale={snapshotIdScale}
+              yScale={renderingScale}
+              width={xMax}
+              height={yMax}
+              stroke="black"
+              strokeOpacity={0.1}
+              xOffset={snapshotIdScale.bandwidth() / 2}
+            />
             <Group top={margin.top} left={margin.left}>
               <BarStack
                 data={data.barStack}
@@ -378,14 +385,13 @@ const BarGraph = props => {
                           onHoverExit(data.componentData[bar.key].rtid),
                           (tooltipTimeout = window.setTimeout(() => {
                             hideTooltip();
-                          }, 300))
+                          }, 300)),
                         );
-                      } }
+                      }}
                       // Cursor position in window updates position of the tool tip.
                       onMouseMove={event => {
                         dispatch(onHover(data.componentData[bar.key].rtid));
-                        if (tooltipTimeout)
-                          clearTimeout(tooltipTimeout);
+                        if (tooltipTimeout) clearTimeout(tooltipTimeout);
                         const top = event.clientY - margin.top - bar.height;
                         const left = bar.x + bar.width / 2;
                         showTooltip({
@@ -393,55 +399,56 @@ const BarGraph = props => {
                           tooltipTop: top,
                           tooltipLeft: left,
                         });
-                      } } />
+                      }}
+                    />
                   );
                 }))}
               </BarStack>
             </Group>
             <AxisLeft
-            top={margin.top}
-            left={margin.left}
-            scale={renderingScale}
-            stroke={axisColor}
-            tickStroke={axisColor}
-            strokeWidth={2}
-            tickLabelProps={() => ({
-              fill: 'rgb(231, 231, 231)',
-              fontSize: 11,
-              verticalAnchor: 'middle',
-              textAnchor: 'end',
-            })}
-          />
-          <AxisBottom
-            top={yMax + margin.top}
-            left={margin.left}
-            scale={snapshotIdScale}
-            stroke={axisColor}
-            tickStroke={axisColor}
-            strokeWidth={2}
-            tickLabelProps={() => ({
-              fill: 'rgb(231, 231, 231)',
-              fontSize: 11,
-              textAnchor: 'middle',
-            })}
-          />
-          <Text
-            x={-xMax / 2}
-            y="15"
-            transform="rotate(-90)"
-            fontSize={12}
-            fill="#FFFFFF"
-          >
-            Rendering Time (ms)
-          </Text>
-          <br />
-          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
-            Snapshot ID
-          </Text>
+              top={margin.top}
+              left={margin.left}
+              scale={renderingScale}
+              stroke={axisColor}
+              tickStroke={axisColor}
+              strokeWidth={2}
+              tickLabelProps={() => ({
+                fill: 'rgb(231, 231, 231)',
+                fontSize: 11,
+                verticalAnchor: 'middle',
+                textAnchor: 'end',
+              })}
+            />
+            <AxisBottom
+              top={yMax + margin.top}
+              left={margin.left}
+              scale={snapshotIdScale}
+              stroke={axisColor}
+              tickStroke={axisColor}
+              strokeWidth={2}
+              tickLabelProps={() => ({
+                fill: 'rgb(231, 231, 231)',
+                fontSize: 11,
+                textAnchor: 'middle',
+              })}
+            />
+            <Text
+              x={-xMax / 2}
+              y="15"
+              transform="rotate(-90)"
+              fontSize={12}
+              fill="#FFFFFF"
+            >
+              Rendering Time (ms)
+            </Text>
+            <br />
+            <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
+              Snapshot ID
+            </Text>
           </>
-          )
-            : (
-              <>
+        )
+          : (
+            <>
               <Grid
                 top={margin.top}
                 left={margin.left}
@@ -454,10 +461,10 @@ const BarGraph = props => {
                 strokeOpacity={0.1}
                 xOffset={componentScale.bandwidth() / 2}
               />
-                <Group top={margin.top} left={margin.left}>
+              <Group top={margin.top} left={margin.left}>
                 {HorizontalGraph()}
-                </Group>
-                <AxisLeft
+              </Group>
+              <AxisLeft
                 top={margin.top}
                 left={margin.left}
                 scale={renderingScale}
@@ -499,7 +506,7 @@ const BarGraph = props => {
               <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
                 Snapshot ID
               </Text>
-              </>
+            </>
           )}
 
       </svg>
