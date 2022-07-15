@@ -217,12 +217,13 @@ export default function ComponentMap({
 
   // find the node that has been selected and use it as the root
   const startNode = null;
+  let rootNode;
   const findSelectedNode = () => {
     for (const node of nodeList) {
-      if (node.name === selectedNode) {
-        startNode = node;
-      }
+      if (node.name === 'root') rootNode = node;
+      if (node.name === selectedNode) startNode = node;
     }
+    if (startNode === null) startNode = rootNode;
   };
   findSelectedNode();
 

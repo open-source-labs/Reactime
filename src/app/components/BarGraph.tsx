@@ -62,7 +62,7 @@ const tooltipStyles = {
 
 const BarGraph = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { width, height, data, comparison, setRoute, allRoutes, filteredSnapshots, setSnapshot} = props;
+  const { width, height, data, comparison, setRoute, allRoutes, filteredSnapshots, snapshot, setSnapshot} = props;
   const [ seriesNameInput, setSeriesNameInput ] = useState(`Series ${comparison.length + 1}`);
   const {
     tooltipOpen,
@@ -94,13 +94,11 @@ const BarGraph = props => {
     // }
     const rgb = ["rgba(50, 100, 241, .5)", "rgba(90, 150, 217, .5)", "rgba(200, 30, 7, .5)", "rgba(23, 233, 217, .5)", "rgba(150, 227, 19, .5)"]
     for (const [key, value] of Object.entries(data.barStack[0])) {
-      // console.log(i);
       console.log(xMax, '<--  xmax'); 
       if (key !== 'snapshotId' && key !== 'route'){
-          console.log(`${key}: ${value}`);
+          //console.log(`${key}: ${value}`);
           // let color = colorGen();
         if (i === 0) {
-          console.log('i = 0');
           BarArray.push(<Bar
             min={'outer min'}
             max={'first if'}
@@ -268,6 +266,7 @@ const BarGraph = props => {
     }
     dispatch(save(toStorage));
   };
+  console.log(data.barStack, 'data.barStack before graph');
 
   // FTRI9 note - need to ensure text box is not empty before saving
   const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" id="seriesname" placeholder="Enter Series Name" onChange={e => setSeriesNameInput(e.target.value)} /> : null;
@@ -288,8 +287,10 @@ const BarGraph = props => {
             labelId="demo-simple-select-label"
             id="routes-select"
             onChange={e => {
-              setSnapshot('All Snapshots');
               setRoute(e.target.value);
+              setSnapshot('All Snapshots');
+              const defaultSnapShot = document.querySelector('#snapshot-select');
+              defaultSnapShot.value = 'defaultSnapShot';
             }}
           >
             <option>
@@ -306,10 +307,10 @@ const BarGraph = props => {
           <label id="routes-dropdown">Select Snapshot: </label>
           <select
             labelId="demo-simple-select-label"
-            id="routes-select"
-            onChange={e => setSnapshot(e.target.value)} 
+            id="snapshot-select"
+            onChange={e => setSnapshot(e.target.value)}
           >
-            <option>
+            <option value="defaultSnapShot">
               All Snapshots
             </option>
             {filteredSnapshots.map(route => (
@@ -329,7 +330,7 @@ const BarGraph = props => {
           fill={background}
           rx={14}
         />
-        {data.barStack.length > 1 ? (
+        {snapshot === 'All Snapshots' ? (
         <><Grid
             top={margin.top}
             left={margin.left}
@@ -499,9 +500,7 @@ const BarGraph = props => {
                 Snapshot ID
               </Text>
               </>
-              )
-      }    
-
+          )}
 
       </svg>
       {/* FOR HOVER OVER DISPLAY */}

@@ -38,6 +38,7 @@ import AtomsRelationship from '../app/components/AtomsRelationship';
 declare global {
   interface Window {
     __REACT_DEVTOOLS_GLOBAL_HOOK__?: any;
+    __REDUX_DEVTOOLS_EXTENSION__?: any;
   }
 }
 let fiberRoot = null;

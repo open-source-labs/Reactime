@@ -37,7 +37,7 @@
   text-align: left;
 }
 
-#routes-select {
+#routes-select, #snapshot-select{
   color: white !important;
   background-color: #ff6569 !important;
   font: 400 14px 'Roboto', sans-serif;
@@ -47,6 +47,7 @@
   border-radius: 5px;
   text-align: center;
 }
+
 
 #seriesname {
   float: right;

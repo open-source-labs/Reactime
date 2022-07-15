@@ -303,6 +303,7 @@ const PerformanceVisx = (props: BarStackProps) => {
             allRoutes={allRoutes}
             filteredSnapshots={filteredSnapshots}
             setSnapshot={setSnapshot}
+            snapshot={snapshot}
           />
         </div>
       );

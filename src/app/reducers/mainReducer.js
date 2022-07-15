@@ -34,7 +34,7 @@ export default (state, action) => produce(state, draft => {
       }
     }
   };
-  
+
   switch (action.type) {
     // This saves the series user wants to save to chrome local storage
     case types.SAVE: {
