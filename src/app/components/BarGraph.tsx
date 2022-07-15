@@ -103,6 +103,7 @@ const BarGraph = props => {
     // }
     const rgb = ['rgba(50, 100, 241, .5)', 'rgba(90, 150, 217, .5)', 'rgba(200, 30, 7, .5)', 'rgba(23, 233, 217, .5)', 'rgba(150, 227, 19, .5)'];
     for (const [key, value] of Object.entries(data.barStack[0])) {
+      const toolTipData = {key: key, value: value}
       console.log(xMax, '<--  xmax');
       if (key !== 'snapshotId' && key !== 'route') {
         // console.log(`${key}: ${value}`);
@@ -135,7 +136,7 @@ const BarGraph = props => {
               const top = event.clientY - margin.top - value * 25;
               const left = 10 + 10 * i + barWidth * i + barWidth / 2;
               showTooltip({
-                tooltipData: value,
+                tooltipData: toolTipData,
                 tooltipTop: top,
                 tooltipLeft: left,
               });
@@ -169,7 +170,7 @@ const BarGraph = props => {
               const top = event.clientY - margin.top - value * 25;
               const left = 10 + 10 * i + barWidth * i + barWidth / 2;
               showTooltip({
-                tooltipData: value,
+                tooltipData: toolTipData,
                 tooltipTop: top,
                 tooltipLeft: left,
               });
@@ -511,7 +512,10 @@ const BarGraph = props => {
 
       </svg>
       {/* FOR HOVER OVER DISPLAY */}
-      {tooltipOpen && tooltipData && (
+      {/* Ths conditional statement displays a different tooltip
+      configuration depending on if we are trying do display a specific
+      snapshot through options menu or all snapshots together in bargraph */}
+      {snapshot === 'All Snapshots' ? (tooltipOpen && tooltipData && (
         <TooltipInPortal
           key={Math.random()} // update tooltip bounds each render
           top={tooltipTop}
@@ -536,7 +540,30 @@ const BarGraph = props => {
             </small>
           </div>
         </TooltipInPortal>
-      )}
+      ))
+        : (tooltipOpen && tooltipData && (
+          <TooltipInPortal
+            key={Math.random()} // update tooltip bounds each render
+            top={tooltipTop}
+            left={tooltipLeft}
+            style={tooltipStyles}
+          >
+            {console.log(tooltipData, '<------tooltipData')}
+            <div style={{ color: colorScale(tooltipData.key) }}>
+              {' '}
+              <strong>{tooltipData.key}</strong>
+              {' '}
+            </div>
+            <div>
+              {' '}
+              {formatRenderTime(tooltipData.value)}
+              {' '}
+            </div>
+            <div>
+              {' '}
+            </div>
+          </TooltipInPortal>
+        ))}
     </div>
   );
 };

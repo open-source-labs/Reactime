@@ -250,14 +250,14 @@ const PerformanceVisx = (props: BarStackProps) => {
   if (route !== 'All Routes') {
     data.barStack = filteredSnapshots;
   }
-  console.log(snapshot);
+  // console.log(snapshot);
   // snapshot = '2.0' parseInt(snapshot) = 3
   // 2-1 =
   // data.barStack[] // 0: 1.0 snapshot 1: 2.0 snapshot 2: 3.0 snapshot
   // data.barStack[{123123},{123123},12312,12312]
   // && data.barStack[parseInt(snapshot, 10) - 1]
   if (snapshot !== 'All Snapshots') {
-    console.log(data.barStack, '<---------data.barstack', snapshot, '<-----snapshot');
+    // console.log(data.barStack, '<---------data.barstack', snapshot, '<-----snapshot');
     // const checkData = [];
     // for (let i = 0; i < data.barStack.length; i++) {
     //   if (data.barStack[i].snapshotId === snapshot) {
@@ -275,7 +275,7 @@ const PerformanceVisx = (props: BarStackProps) => {
     // });
     const checkData = [data.barStack.find(comp => comp.snapshotId === snapshot)];
     // checkData = checkData.filter(element => { return element !== undefined; })
-    console.log(checkData, '<-- checkData');
+    // console.log(checkData, '<-- checkData');
     if (checkData) data.barStack = checkData;
   }
   // data.barStack = [
