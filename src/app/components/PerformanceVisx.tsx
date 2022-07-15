@@ -59,7 +59,9 @@ const collectNodes = (snaps, componentName) => {
         if (x !== 0 && componentsResult.length !== 0) {
           // needs to be stringified because values are hard to determine if
           // true or false if in they're seen as objects
-          if (JSON.stringify(Object.values(componentsResult[newChange ? componentsResult.length - 1 : trackChanges])[0]) !== JSON.stringify(cur.componentData.props)) {
+          if (JSON.stringify(Object.values(componentsResult[newChange
+            ? componentsResult.length - 1 : trackChanges])[0])
+            !== JSON.stringify(cur.componentData.props)) {
             newChange = true;
             const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
             componentsResult.push(props);
@@ -182,7 +184,7 @@ const PerformanceVisx = (props: BarStackProps) => {
 
   const [route, setRoute] = useState('All Routes');
   const [snapshot, setSnapshot] = useState('All Snapshots');
-//snapshots = 3.0
+  // snapshots = 3.0
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance'));
   }, [dispatch]);
@@ -289,7 +291,7 @@ const PerformanceVisx = (props: BarStackProps) => {
   //     box2: 3.7
   //   }
   // ]
-  //console.log(filteredSnapshots, '<-- filtered snap shots');
+  // console.log(filteredSnapshots, '<-- filtered snap shots');
   const renderBargraph = () => {
     if (hierarchy) {
       return (
