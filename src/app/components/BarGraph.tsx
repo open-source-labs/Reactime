@@ -86,6 +86,7 @@ const BarGraph = props => {
     detectBounds: true,
     scroll: true,
   });
+  console.log(snapshot, '<--current snapshot');
 
   const HorizontalGraph = () => {
     const BarArray = [];
@@ -94,6 +95,7 @@ const BarGraph = props => {
     let i = 0;
     // let barWidth = (xMax / (Object.keys(data.barStack[0]).length) + 5);
     const barWidth = (xMax * (2 / 3) / (Object.keys(data.barStack[0]).length - 2));
+    console.log(barWidth, '<-- barWidth')
     console.log(data, '<-- data from snapshot');
     // function colorGen() {
     //   const r = Math.floor(Math.random() * 256);
@@ -102,7 +104,10 @@ const BarGraph = props => {
     //   return "rgb(" + r + "," + g + "," + b + ", " + .5 + ")"
     // }
     const rgb = ['rgba(50, 100, 241, .5)', 'rgba(90, 150, 217, .5)', 'rgba(200, 30, 7, .5)', 'rgba(23, 233, 217, .5)', 'rgba(150, 227, 19, .5)'];
+    const gap = xMax / (Object.keys(data.barStack[0]).length);
+    console.log(gap, i, '<-- gap , i');
     for (const [key, value] of Object.entries(data.barStack[0])) {
+      const toolTipData = {key: key, value: value}
       console.log(xMax, '<--  xmax');
       if (key !== 'snapshotId' && key !== 'route') {
         // console.log(`${key}: ${value}`);
@@ -112,9 +117,9 @@ const BarGraph = props => {
             min="outer min"
             max="first if"
             // x={100}
-            x={xMax / (Object.keys(data.barStack[0]).length)}
-            y={yMax - value}
-            height={value}
+            x={gap}
+            y={yMax - value * 25}
+            height={value * 25}
             key={key}
             width={barWidth}
             fill="#62d6fb"
@@ -133,9 +138,10 @@ const BarGraph = props => {
               dispatch(onHover(data.componentData[key].rtid));
               if (tooltipTimeout) clearTimeout(tooltipTimeout);
               const top = event.clientY - margin.top - value * 25;
-              const left = 10 + 10 * i + barWidth * i + barWidth / 2;
+              // const left = 10 + 10 * i + barWidth * i + barWidth / 2;
+              const left = gap + barWidth / 2;
               showTooltip({
-                tooltipData: value,
+                tooltipData: toolTipData,
                 tooltipTop: top,
                 tooltipLeft: left,
               });
@@ -145,10 +151,10 @@ const BarGraph = props => {
           BarArray.push(<Bar
             min="outer min"
             max="else here"
-            x={(xMax / (Object.keys(data.barStack[0]).length)) * (i + 1)}
+            x={gap * (i + 1)}
             // x={(xMax / (Object.keys(data.barStack[0]).length - 2)) + barWidth * i}
-            y={yMax - value * 20}
-            height={value * 20}
+            y={yMax - value * 25}
+            height={value * 25}
             key={key}
             width={barWidth}
             fill="#62d6fb"
@@ -167,9 +173,10 @@ const BarGraph = props => {
               dispatch(onHover(data.componentData[key].rtid));
               if (tooltipTimeout) clearTimeout(tooltipTimeout);
               const top = event.clientY - margin.top - value * 25;
-              const left = 10 + 10 * i + barWidth * i + barWidth / 2;
+              // const left = 10 + 10 * i + barWidth * i + barWidth / 2;
+              const left = gap * (i + 1) + barWidth / 2;
               showTooltip({
-                tooltipData: value,
+                tooltipData: toolTipData,
                 tooltipTop: top,
                 tooltipLeft: left,
               });
@@ -296,7 +303,7 @@ const BarGraph = props => {
               setRoute(e.target.value);
               setSnapshot('All Snapshots');
               const defaultSnapShot = document.querySelector('#snapshot-select');
-              defaultSnapShot.value = 'defaultSnapShot';
+              defaultSnapShot.value = 'All Snapshots';
             }}
           >
             <option>
@@ -316,7 +323,7 @@ const BarGraph = props => {
             id="snapshot-select"
             onChange={e => setSnapshot(e.target.value)}
           >
-            <option value="defaultSnapShot">
+            <option value="All Snapshots">
               All Snapshots
             </option>
             {filteredSnapshots.map(route => (
@@ -338,6 +345,7 @@ const BarGraph = props => {
         />
         {snapshot === 'All Snapshots' ? (
           <>
+            { console.log(data.barStack, 'data.barStack that gives error 1') }
             <Grid
               top={margin.top}
               left={margin.left}
@@ -349,6 +357,8 @@ const BarGraph = props => {
               strokeOpacity={0.1}
               xOffset={snapshotIdScale.bandwidth() / 2}
             />
+            { console.log(data.barStack, 'data.barStack that gives error 2') }
+
             <Group top={margin.top} left={margin.left}>
               <BarStack
                 data={data.barStack}
@@ -419,6 +429,8 @@ const BarGraph = props => {
                 textAnchor: 'end',
               })}
             />
+            { console.log(data.barStack, 'data.barStack that gives error 3') }
+
             <AxisBottom
               top={yMax + margin.top}
               left={margin.left}
@@ -511,7 +523,10 @@ const BarGraph = props => {
 
       </svg>
       {/* FOR HOVER OVER DISPLAY */}
-      {tooltipOpen && tooltipData && (
+      {/* Ths conditional statement displays a different tooltip
+      configuration depending on if we are trying do display a specific
+      snapshot through options menu or all snapshots together in bargraph */}
+      {snapshot === 'All Snapshots' ? (tooltipOpen && tooltipData && (
         <TooltipInPortal
           key={Math.random()} // update tooltip bounds each render
           top={tooltipTop}
@@ -536,7 +551,32 @@ const BarGraph = props => {
             </small>
           </div>
         </TooltipInPortal>
-      )}
+      ))
+        : (tooltipOpen && tooltipData && (
+          <TooltipInPortal
+            key={Math.random()} // update tooltip bounds each render
+            top={tooltipTop}
+            left={tooltipLeft}
+            style={tooltipStyles}
+          >
+            {console.log(tooltipData, '<------tooltipData')}
+            {console.log(data.componentData, '<------data.componentData')}
+            <div style={{ color: colorScale(tooltipData.key) }}>
+              {' '}
+              <strong>{tooltipData.key}</strong>
+              {' '}
+            </div>
+            <div>{data.componentData[tooltipData.key].stateType}</div>
+            <div>
+              {' '}
+              {formatRenderTime(tooltipData.value)}
+              {' '}
+            </div>
+            <div>
+              {' '}
+            </div>
+          </TooltipInPortal>
+        ))}
     </div>
   );
 };
