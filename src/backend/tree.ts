@@ -7,8 +7,6 @@
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
 
-import { createGenerateClassName } from '@material-ui/styles';
-
 let copyInstances = 0;
 const circularComponentTable = new Set<Tree>();
 let componentNames = {};
@@ -83,14 +81,12 @@ class Tree {
   }
 
   // Returns a unique name ready to be used
-  checkForDuplicates(name: string) {
+  checkForDuplicates(name: string): string {
     // check for empty name
     if (name === '' && typeof this.rtid === 'string') {
       name = this.rtid.replace('fromLinkFiber', '');
     }
-    if (this.state === 'root') {
-      componentNames = {};
-    }
+    if (this.state === 'root') componentNames = {};
     // check for duplicate
     else if (componentNames[name] !== undefined) {
       const count = componentNames[name] + 1;

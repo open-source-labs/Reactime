@@ -27,8 +27,8 @@ function createTabObj(title) {
     snapshots: [],
     // index here is the tab index that shows total amount of state changes
     index: 0,
-    //* this is our pointer so we know what the current state the user
-    // is checking (this accounts for time travel aka when user clicks jump on the UI)
+    //* this is our pointer so we know what the current state the user is checking
+    // (this accounts for time travel aka when user clicks jump on the UI)
     currLocation: null,
     // points to the node that will generate the next child set by newest node or jump
     currParent: 0,
@@ -56,28 +56,15 @@ function createTabObj(title) {
 class Node {
   constructor(obj, tabObj) {
     // continues the order of number of total state changes
-    this.index = tabObj.index++;
+    this.index = tabObj.index;
+    tabObj.index += 1;
     // continues the order of number of states changed from that parent
-    this.name = tabObj.currParent += 1;
+    tabObj.currParent += 1;
+    this.name = tabObj.currParent;
     // marks from what branch this node is originated
     this.branch = tabObj.currBranch;
     this.stateSnapshot = obj;
     this.children = [];
-  }
-}
-
-// Adds a new node to the current location.
-// Invoked in the case 'recordSnap'.
-function sendToHierarchy(tabObj, newNode) {
-  if (!tabObj.currLocation) {
-    tabObj.currLocation = newNode;
-    tabObj.hierarchy = newNode;
-  } else {
-    const currNameCount = countCurrName(tabObj.hierarchy, newNode.name);
-    newNode.branch = currNameCount;
-    tabObj.currBranch = newNode.branch;
-    tabObj.currLocation.children.push(newNode);
-    tabObj.currLocation = newNode;
   }
 }
 
@@ -95,9 +82,26 @@ function countCurrName(rootNode, name) {
   return branch;
 }
 
+// Adds a new node to the current location.
+// Invoked in the case 'recordSnap'.
+function sendToHierarchy(tabObj, newNode) {
+  if (!tabObj.currLocation) {
+    tabObj.currLocation = newNode;
+    tabObj.hierarchy = newNode;
+  } else {
+    const currNameCount = countCurrName(tabObj.hierarchy, newNode.name);
+    newNode.branch = currNameCount;
+    tabObj.currBranch = newNode.branch;
+    tabObj.currLocation.children.push(newNode);
+    tabObj.currLocation = newNode;
+  }
+}
+
 // This function is used when time jumping to a previous state,
 // so that it runs recursively until it finds the correct index,
 // and updates the tabsObject to the node at that index.
+/* eslint no-param-reassign: ["error", { "props": false }] */
+
 function changeCurrLocation(tabObj, rootNode, index, name) {
   // index comes from the app's main reducer to locate the correct current location on tabObj
   // check if current node has the index wanted

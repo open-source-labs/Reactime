@@ -232,6 +232,8 @@ const BarGraph = props => {
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
+  componentScale.rangeRound([0, xMax]);
+
   const toStorage = {
     currentTab,
     title: tabs[currentTab].title,
@@ -395,7 +397,48 @@ const BarGraph = props => {
                   );
                 }))}
               </BarStack>
-            </Group></>
+            </Group>
+            <AxisLeft
+            top={margin.top}
+            left={margin.left}
+            scale={renderingScale}
+            stroke={axisColor}
+            tickStroke={axisColor}
+            strokeWidth={2}
+            tickLabelProps={() => ({
+              fill: 'rgb(231, 231, 231)',
+              fontSize: 11,
+              verticalAnchor: 'middle',
+              textAnchor: 'end',
+            })}
+          />
+          <AxisBottom
+            top={yMax + margin.top}
+            left={margin.left}
+            scale={snapshotIdScale}
+            stroke={axisColor}
+            tickStroke={axisColor}
+            strokeWidth={2}
+            tickLabelProps={() => ({
+              fill: 'rgb(231, 231, 231)',
+              fontSize: 11,
+              textAnchor: 'middle',
+            })}
+          />
+          <Text
+            x={-xMax / 2}
+            y="15"
+            transform="rotate(-90)"
+            fontSize={12}
+            fill="#FFFFFF"
+          >
+            Rendering Time (ms)
+          </Text>
+          <br />
+          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
+            Snapshot ID
+          </Text>
+          </>
           )
             : (
               <>
@@ -413,50 +456,52 @@ const BarGraph = props => {
               />
                 <Group top={margin.top} left={margin.left}>
                 {HorizontalGraph()}
-                </Group></>
-              )
-      }    
+                </Group>
+                <AxisLeft
+                top={margin.top}
+                left={margin.left}
+                scale={renderingScale}
+                stroke={axisColor}
+                tickStroke={axisColor}
+                strokeWidth={2}
+                tickLabelProps={() => ({
+                  fill: 'rgb(231, 231, 231)',
+                  fontSize: 11,
+                  verticalAnchor: 'middle',
+                  textAnchor: 'end',
+                })}
+              />
+              <AxisBottom
+                top={yMax + margin.top}
+                left={margin.left}
+                scale={componentScale}
+                stroke={axisColor}
+                tickStroke={axisColor}
+                strokeWidth={2}
+                tickLabelProps={() => ({
+                  fill: 'rgb(231, 231, 231)',
+                  fontSize: 11,
+                  textAnchor: 'middle',
+                })}
+              />
+              <Text
+                // x={-xMax / 2}
+                // x={Math.max((-xMax / 2), (-yMax / 2))}
+                x={-yMax / 2 - 75}
+                y="15"
+                transform="rotate(-90)"
+                fontSize={12}
+                fill="#FFFFFF"
+              >
+                Rendering Time (ms)
+              </Text>
+              <br />
+              <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
+                Snapshot ID
+              </Text>
+              </>
+          )}
 
-        <AxisLeft
-          top={margin.top}
-          left={margin.left}
-          scale={renderingScale}
-          stroke={axisColor}
-          tickStroke={axisColor}
-          strokeWidth={2}
-          tickLabelProps={() => ({
-            fill: 'rgb(231, 231, 231)',
-            fontSize: 11,
-            verticalAnchor: 'middle',
-            textAnchor: 'end',
-          })}
-        />
-        <AxisBottom
-          top={yMax + margin.top}
-          left={margin.left}
-          scale={snapshotIdScale}
-          stroke={axisColor}
-          tickStroke={axisColor}
-          strokeWidth={2}
-          tickLabelProps={() => ({
-            fill: 'rgb(231, 231, 231)',
-            fontSize: 11,
-            textAnchor: 'middle',
-          })}
-        />
-        <Text
-          x={-yMax / 2 - 75}
-          y="15"
-          transform="rotate(-90)"
-          fontSize={12}
-          fill="#FFFFFF"
-        >
-          Rendering Time (ms)
-        </Text>
-        <br />
-        <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
-          Snapshot ID
-        </Text>
       </svg>
       {/* FOR HOVER OVER DISPLAY */}
       {tooltipOpen && tooltipData && (
