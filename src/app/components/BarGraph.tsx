@@ -86,6 +86,7 @@ const BarGraph = props => {
     detectBounds: true,
     scroll: true,
   });
+  console.log(snapshot, '<--current snapshot');
 
   const HorizontalGraph = () => {
     const BarArray = [];
@@ -297,7 +298,7 @@ const BarGraph = props => {
               setRoute(e.target.value);
               setSnapshot('All Snapshots');
               const defaultSnapShot = document.querySelector('#snapshot-select');
-              defaultSnapShot.value = 'defaultSnapShot';
+              defaultSnapShot.value = 'All Snapshots';
             }}
           >
             <option>
@@ -317,7 +318,7 @@ const BarGraph = props => {
             id="snapshot-select"
             onChange={e => setSnapshot(e.target.value)}
           >
-            <option value="defaultSnapShot">
+            <option value="All Snapshots">
               All Snapshots
             </option>
             {filteredSnapshots.map(route => (
@@ -339,6 +340,7 @@ const BarGraph = props => {
         />
         {snapshot === 'All Snapshots' ? (
           <>
+            { console.log(data.barStack, 'data.barStack that gives error 1') }
             <Grid
               top={margin.top}
               left={margin.left}
@@ -350,6 +352,8 @@ const BarGraph = props => {
               strokeOpacity={0.1}
               xOffset={snapshotIdScale.bandwidth() / 2}
             />
+            { console.log(data.barStack, 'data.barStack that gives error 2') }
+
             <Group top={margin.top} left={margin.left}>
               <BarStack
                 data={data.barStack}
@@ -420,6 +424,8 @@ const BarGraph = props => {
                 textAnchor: 'end',
               })}
             />
+            { console.log(data.barStack, 'data.barStack that gives error 3') }
+
             <AxisBottom
               top={yMax + margin.top}
               left={margin.left}
