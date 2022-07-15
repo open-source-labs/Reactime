@@ -47,7 +47,7 @@ const collectNodes = (node) => {
       }
     }
   }
-}
+};
 
 export default function LinkControls({
   layout,
@@ -113,7 +113,7 @@ export default function LinkControls({
       <label> Select:</label>
       &nbsp; {/*This is a non-breaking space - Prevents an automatic line break at this position */}
       <input id='selectInput' list='nodeOptions' type='text' name="nodeOptions"
-        onChange={e => { setSelectedNode(e.target.value) }}
+        onChange={e => setSelectedNode(e.target.value)}
         style={dropDownStyle}
       />
       <datalist id='nodeOptions'>

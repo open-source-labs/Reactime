@@ -22,11 +22,13 @@ function createTabObj(title) {
   // update tabsObj
   return {
     title,
-    // snapshots is an array of ALL state snapshots for stateful and stateless components the Reactime tab working on a specific user application
+    // snapshots is an array of ALL state snapshots for stateful and stateless
+    // components the Reactime tab working on a specific user application
     snapshots: [],
     // index here is the tab index that shows total amount of state changes
     index: 0,
-    //* this is our pointer so we know what the current state the user is checking (this accounts for time travel aka when user clicks jump on the UI)
+    //* this is our pointer so we know what the current state the user
+    // is checking (this accounts for time travel aka when user clicks jump on the UI)
     currLocation: null,
     // points to the node that will generate the next child set by newest node or jump
     currParent: 0,

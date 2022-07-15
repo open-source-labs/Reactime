@@ -54,9 +54,11 @@ const collectNodes = (snaps, componentName) => {
         } else {
           renderResult.push(renderTime);
         }
-        // compare the last pushed component Data from the array to the current one to see if there are differences
+        // compare the last pushed component Data from the array to
+        // the current one to see if there are differences
         if (x !== 0 && componentsResult.length !== 0) {
-          // needs to be stringified because values are hard to determine if true or false if in they're seen as objects
+          // needs to be stringified because values are hard to determine if
+          // true or false if in they're seen as objects
           if (JSON.stringify(Object.values(componentsResult[newChange ? componentsResult.length - 1 : trackChanges])[0]) !== JSON.stringify(cur.componentData.props)) {
             newChange = true;
             const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
@@ -301,6 +303,7 @@ const PerformanceVisx = (props: BarStackProps) => {
             allRoutes={allRoutes}
             filteredSnapshots={filteredSnapshots}
             setSnapshot={setSnapshot}
+            snapshot={snapshot}
           />
         </div>
       );
