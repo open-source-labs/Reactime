@@ -62,6 +62,7 @@ const tooltipStyles = {
 const BarGraph = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
+    maxHeight,
     width,
     height,
     data,
@@ -138,12 +139,20 @@ const BarGraph = props => {
   });
 
   // setting max dimensions and scale ranges
+
+  // if (snapshot !== 'All Snapshots') {
+  //   // let oldHeight = height
+  //   height = maxHeight * 50 * 2 + margin.top + 150;
+  // }
+
   const xMax = width - margin.left - margin.right;
-  const yMax = height - margin.top - 150;
   snapshotIdScale.rangeRound([0, xMax]);
+  const yMax = height - margin.top - 150;
   renderingScale.range([yMax, 0]);
 
-  // componentScale.rangeRound([0, xMax]);
+  console.log(height, '<--height');
+  console.log(yMax, '<--yMax');
+  console.log(maxHeight, '<--maxHeight');
 
   const toStorage = {
     currentTab,
@@ -156,7 +165,7 @@ const BarGraph = props => {
     for (let i = 0; i < saveButtons.length; i++) {
       if (tabs[currentTab].seriesSavedStatus === 'saved') {
         saveButtons[i].classList.add('animate');
-        console.log('checking saveButtons[i].classList', saveButtons[i].classList)
+        console.log('checking saveButtons[i].classList', saveButtons[i].classList);
         saveButtons[i].innerHTML = 'Saved!';
       } else {
         saveButtons[i].innerHTML = 'Save Series';
@@ -298,7 +307,15 @@ const BarGraph = props => {
                   onMouseMove={event => {
                     dispatch(onHover(data.componentData[bar.key].rtid));
                     if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                    const top = event.clientY - margin.top - bar.height;
+                    const top;
+                    if (snapshot === 'All Snapshots') {
+                      top = event.clientY - margin.top - bar.height;
+                    } else {
+                      top = event.clientY - margin.top;
+                    }
+                    console.log(event.clientY, '<-- event.clientY');
+                    console.log(bar.height, '<-- bar.height');
+                    console.log(top, '<-- top');
                     const left = bar.x + bar.width / 2;
                     showTooltip({
                       tooltipData: bar,
@@ -341,7 +358,7 @@ const BarGraph = props => {
           })}
         />
         <Text
-          x={-xMax / 2}
+          x={-yMax / 2 - 75}
           y="15"
           transform="rotate(-90)"
           fontSize={12}
@@ -350,9 +367,17 @@ const BarGraph = props => {
           Rendering Time (ms)
         </Text>
         <br />
-        <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
-          Snapshot ID
-        </Text>
+        {(snapshot === 'All Snapshots')
+          ? (
+            <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
+              Snapshot ID
+            </Text>
+          )
+          : (
+            <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
+              Components
+            </Text>
+          )}
 
       </svg>
       {/* FOR HOVER OVER DISPLAY */}
