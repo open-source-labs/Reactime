@@ -199,7 +199,7 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 -   **Peng Dong** - [@d28601581](https://github.com/d28601581)
 -   **Ozair Ghulam** - [@ozairgh](https://github.com/ozairgh)
 -   **Christina Or** - [@christinaor](https://github.com/christinaor)
--   **Khanh Bui** - [@d28601581](https://github.com/AndyB909)
+-   **Khanh Bui** - [@AndyB909](https://github.com/AndyB909)
 -   **David Kim** - [@codejunkie7](https://github.com/codejunkie7)
 -   **Robby Tipton** - [@RobbyTipton](https://github.com/RobbyTipton)
 -   **Kevin HoEun Lee** - [@khobread](https://github.com/khobread)
