@@ -95,7 +95,9 @@ const BarGraph = props => {
     return d.snapshotId;
   };
 
+  // returns snapshot id when invoked in tooltip section
   const formatSnapshotId = id => `Snapshot ID: ${id}`;
+  // returns render time when invoked in tooltip section
   const formatRenderTime = time => `${time} ms `;
 
   // create visualization SCALES with cleaned data

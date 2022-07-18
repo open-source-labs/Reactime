@@ -233,7 +233,7 @@ const PerformanceVisx = (props: BarStackProps) => {
       />
     );
   };
-
+  // create allRoutes variable to hold urls
   const allRoutes = [];
   const filteredSnapshots = [];
   // loop through data.barStack
@@ -275,6 +275,7 @@ const PerformanceVisx = (props: BarStackProps) => {
     // maxTotalRender height of bar is aligned to y-axis
     // 1.15 adjusts the numbers on the y-axis so the max bar's true height never reaches the max of the y-axis
     data.maxTotalRender = maxHeight * 1.15;
+    // assign holdData to data.barStack to be used later to create graph
     if (holdData) data.barStack = holdData;
   }
 
