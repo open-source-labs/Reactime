@@ -25,8 +25,6 @@ const colors = {
   base0F: '#e96ba8',
 };
 
-
-
 const getItemString = (
   type,
   data: { state?: object | string; name: string; children: [] }
