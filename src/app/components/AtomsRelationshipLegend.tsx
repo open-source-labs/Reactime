@@ -4,12 +4,11 @@ import {
   LegendOrdinal,
   LegendItem,
   LegendLabel,
-  
 } from '@visx/legend';
 
 const ordinalColorScale = scaleOrdinal({
   domain: ['Root', 'Selectors', 'Atoms', 'Components'],
-  range: [ '#3BB78F', '#f0ece2', '#FED8B1', '#acdbdf'],
+  range: ['#3BB78F', '#f0ece2', '#FED8B1', '#acdbdf'],
 });
 
 const legendGlyphSize = 15;
@@ -20,11 +19,12 @@ export default function Legend({ events = false }: { events?: boolean }) {
       <LegendDemo title="Recoil Relationships">
         <LegendOrdinal scale={ordinalColorScale} labelFormat={label => `${label}`}>
           {labels => (
-            <div 
-            style={{ display: 'flex', flexDirection: 'column' }}
+            <div
+              style={{ display: 'flex', flexDirection: 'column' }}
             >
               {labels.map((label, i) => (
                 <LegendItem
+                  // eslint-disable-next-line react/no-array-index-key
                   key={`legend-quantile-${i}`}
                   margin="0 5px"
                   onClick={() => {
@@ -32,11 +32,11 @@ export default function Legend({ events = false }: { events?: boolean }) {
                   }}
                 >
                   <svg width={legendGlyphSize} height={legendGlyphSize}>
-                    <circle 
-                    fill={label.value}
-                    r={legendGlyphSize / 2}
-                    cx={legendGlyphSize / 2}
-                    cy={legendGlyphSize / 2}
+                    <circle
+                      fill={label.value}
+                      r={legendGlyphSize / 2}
+                      cx={legendGlyphSize / 2}
+                      cy={legendGlyphSize / 2}
                     />
                   </svg>
                   <LegendLabel align="left" margin="4px 0px 4px 4px">
@@ -70,7 +70,9 @@ function LegendDemo({ title, children }: { title: string; children: JSX.Element 
     <div className="legend">
       <div className="title">{title}</div>
       {children}
-      <style>{`
+      <style>
+        {
+        `
         .legend {
          position: absolute;
             top: 50;
@@ -88,7 +90,9 @@ function LegendDemo({ title, children }: { title: string; children: JSX.Element 
           margin-bottom: 10px;
           font-weight: 100;
         }
-      `}</style>
+      `
+      }
+      </style>
     </div>
   );
 }

@@ -132,8 +132,6 @@ chrome.runtime.onConnect.addListener(port => {
   // port is one end of the connection - an object
   // push every port connected to the ports array
   portsArr.push(port);
-  console.log(port, '<--port');
-  console.log(portsArr, '<--portsArr');
   // On Reactime launch: make sure RT's active tab is correct
   if (portsArr.length > 0) {
     portsArr.forEach(bg => bg.postMessage({
@@ -228,7 +226,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'SIGN_CONNECT') {
     return true;
   }
-  console.log(sender, '<-- sender');
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
   const {

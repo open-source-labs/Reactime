@@ -24,8 +24,7 @@ function History(props: Record<string, unknown>): JSX.Element {
     currLocation,
     snapshots,
   } = props;
-  const [ store, dispatch] = useStoreContext();
-  
+  const [, dispatch] = useStoreContext();
 
   const svgRef = React.useRef(null);
   const root = JSON.parse(JSON.stringify(hierarchy));
@@ -41,7 +40,6 @@ function History(props: Record<string, unknown>): JSX.Element {
   useEffect(() => {
     dispatch(setCurrentTabInApp('history'));
   }, []);
-
 
   function labelCurrentNode(d3root) {
     if (d3root.data.index === currLocation.index) {
@@ -109,8 +107,10 @@ function History(props: Record<string, unknown>): JSX.Element {
       // added to display state change information to node tree
       .on('mouseover', d => {
         // created popup div and appended it to display div(returned in this function)
-        // D3 doesn't utilize z-index for priority, rather decides on placement by order of rendering
-        // needed to define the return div with a className to have a target to append to with the correct level of priority
+        // D3 doesn't utilize z-index for priority,
+        // rather decides on placement by order of rendering
+        // needed to define the return div with a className to have a target to append to
+        // with the correct level of priority
         const div = d3.select('.display').append('div')
           .attr('class', 'tooltip')
           .style('left', `${d3.event.pageX}px`)
@@ -118,7 +118,8 @@ function History(props: Record<string, unknown>): JSX.Element {
         d3.selectAll('.tooltip').html(findDiff(d.data.index));
       })
       .on('mouseout', d => {
-        // when appending divs on mouseover the appended dives would not disappear when using D3's 'transition' on mouseover/mouseout
+        // when appending divs on mouseover the appended dives would not disappear
+        // when using D3's 'transition' on mouseover/mouseout
         // solution: remove all tooltop divs on mouseout
         d3.selectAll('.tooltip').remove();
       })

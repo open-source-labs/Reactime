@@ -19,7 +19,7 @@ class Tutorial extends Component {
 
   render() {
     const { currentTabInApp, dispatch } = this.props;
-
+    
     // This updates the steps so that they can target dynamically rendered elements
     const onChangeHandler = currentStepIndex => {
       if (currentTabInApp === 'performance' && currentStepIndex === 1) {
@@ -46,7 +46,8 @@ class Tutorial extends Component {
       this.setState({ stepsEnabled: false });
     };
     const startIntro = () => {
-      // If "How to use" is clicked while in the performance tab, we'll navigate to the snapshops view before starting the tutorial
+      // If "How to use" is clicked while in the performance tab,
+      // we'll navigate to the snapshops view before starting the tutorial
       // This is because the tutorial steps are designed to begin on the snapshots sub-tab
       // Check out the PerformanceVisx component to see the route redirect logic
       if (currentTabInApp === 'performance' || currentTabInApp === 'performance-comparison' || currentTabInApp === 'performance-component-details') {

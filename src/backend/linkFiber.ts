@@ -572,26 +572,11 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     if (reactInstance && reactInstance.version) {
-      console.log(devTools);
-      console.log(devTools.onCommitFiberRoot);
       fiberRoot = devTools.getFiberRoots(1).values().next().value;
-      // original is a function
-      // devTools.onCommitFiberRoot = (function (original) {
-      //   return function (...args) {
-      //     // eslint-disable-next-line prefer-destructuring
-      //     fiberRoot = args[1];
-      //     if (doWork) {
-      //       throttledUpdateSnapshot();
-      //     }
-      //     return original(...args);
-      //   };
-      // }(devTools.onCommitFiberRoot));
-
       // React has inherent methods that are called with react fiber
       // we attach new functionality without compromising the original work that onCommitFiberRoot does
       const addOneMoreStep = function (original) {
         return function (...args) {
-          console.log(args);
           // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
           // this is the additional functionality we added

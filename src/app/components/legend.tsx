@@ -65,10 +65,10 @@ export default function LegendKey(props: any) {
   const ordinalColorScale = scaleOrdinal<number, string>({
     domain: snap,
     range: [
-      '#eb4d70', 
-      '#f19938', 
+      '#eb4d70',
+      '#f19938',
       '#6ce18b',
-      '#78f6ef', 
+      '#78f6ef',
       '#9096f8',
       '#C5B738',
       '#858DFF',
@@ -112,7 +112,7 @@ export default function LegendKey(props: any) {
         </LegendOrdinal>
       </LegendVisual>
 
-      <style >
+      <style>
         {`
           .legends {
             position: center;
@@ -141,7 +141,7 @@ function LegendVisual({
     <div className="legend">
       <div className="title">{title}</div>
       {children}
-      <style >
+      <style>
         {`
           .legend {
             position: absolute;

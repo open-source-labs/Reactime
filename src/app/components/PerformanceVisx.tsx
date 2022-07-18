@@ -7,7 +7,6 @@ import {
   Route,
   NavLink,
   Switch,
-  useLocation,
   Redirect,
 } from 'react-router-dom';
 import RenderingFrequency from './RenderingFrequency';
@@ -237,66 +236,53 @@ const PerformanceVisx = (props: BarStackProps) => {
 
   const allRoutes = [];
   const filteredSnapshots = [];
-
+  // loop through data.barStack
   for (let i = 0; i < data.barStack.length; i += 1) {
+    // set url variable to new route url
     const url = new URL(data.barStack[i].route);
+    // if all the routes do not have the pathname property on url then push it onto all routes array
     if (!allRoutes.includes(url.pathname)) {
       allRoutes.push(url.pathname);
     }
+    // if the route exists and it is equal to url.pathname then push data.barstack at i into filteredSnapshots array
     if (route && route === url.pathname) {
       filteredSnapshots.push(data.barStack[i]);
     }
   }
+  // if route does not equal to All Routes, set data.barstack to filteredSnapshots array
   if (route !== 'All Routes') {
     data.barStack = filteredSnapshots;
   }
-  // console.log(snapshot);
-  // snapshot = '2.0' parseInt(snapshot) = 3
-  // 2-1 =
-  // data.barStack[] // 0: 1.0 snapshot 1: 2.0 snapshot 2: 3.0 snapshot
-  // data.barStack[{123123},{123123},12312,12312]
-  // && data.barStack[parseInt(snapshot, 10) - 1]
+
   if (snapshot !== 'All Snapshots') {
-    // console.log(data.barStack, '<---------data.barstack', snapshot, '<-----snapshot');
-    // const checkData = [];
-    // for (let i = 0; i < data.barStack.length; i++) {
-    //   if (data.barStack[i].snapshotId === snapshot) {
-    //     console.log(data.barStack[i], '<----barstack[i]', i);
-    //     console.log(snapshot, '<--- snapshot from for loop inside performance');
-    //     console.log(route, '<--- this is a route');
-    //     checkData.push(data.barStack[i]);
-    //     break;
-    //   }
-    // }
     // filter barStack to make it equal to an array of length 1 with object matching snapshot ID
-    // const checkData = data.barStack.map(comp => {
-    //   console.log(comp);
-    //   if (comp.snapshotId === snapshot) return comp;
-    // });
+
     const checkData = [data.barStack.find(comp => comp.snapshotId === snapshot)];
-    // checkData = checkData.filter(element => { return element !== undefined; })
-    // console.log(checkData, '<-- checkData');
-    if (checkData) data.barStack = checkData;
+    const holdData = [];
+    // maxheight is referring to the max height in render time to choose the scaling size for graph
+    let maxHeight = 0;
+    /* looping through checkData which is composed of a single snapshot
+       while pushing key/values to a new object and setting maxHeight */
+    for (const key in checkData[0]) {
+      if (key !== 'route' && key !== 'snapshotId') {
+        if (maxHeight < checkData[0][key]) maxHeight = checkData[0][key];
+        const name = {};
+        name[key] = checkData[0][key];
+        holdData.push(name);
+        holdData[holdData.length - 1].route = checkData[0].route;
+        holdData[holdData.length - 1].snapshotId = key;
+      }
+    }
+    data.maxTotalRender = maxHeight * 1.15;
+    if (holdData) data.barStack = holdData;
   }
-  // data.barStack = [
-  //   {snapshot: 1.0,
-  //     box1: 5.4,
-  //     box2: 3.7
-  //   },
-  //   {snapshot: 2.0,
-  //     box1: 5.4,
-  //     box2: 3.7},
-  //   {snapshot: 3.0,
-  //     box1: 5.4,
-  //     box2: 3.7
-  //   }
-  // ]
-  // console.log(filteredSnapshots, '<-- filtered snap shots');
+
   const renderBargraph = () => {
     if (hierarchy) {
       return (
         <div>
           <BarGraph
+            maxHeight={maxHeight}
             data={data}
             width={width}
             height={height}
