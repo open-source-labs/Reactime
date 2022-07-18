@@ -140,6 +140,7 @@ const BarGraph = props => {
     }
   });
 
+  // CURRENTLY DOES NOT SAVE
   const saveSeriesClickHandler = () => {
     if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
       const actionNames = document.getElementsByClassName('actionname');
@@ -153,7 +154,7 @@ const BarGraph = props => {
     dispatch(save(toStorage));
   };
 
-  // FTRI9 note - need to ensure text box is not empty before saving
+  // Need to change so textbox isn't empty before saving
   const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" id="seriesname" placeholder="Enter Series Name" onChange={e => setSeriesNameInput(e.target.value)} /> : null;
   return (
     <div className="bargraph-position">

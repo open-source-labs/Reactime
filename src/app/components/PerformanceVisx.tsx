@@ -254,15 +254,14 @@ const PerformanceVisx = (props: BarStackProps) => {
     data.barStack = filteredSnapshots;
   }
 
-  if (snapshot !== 'All Snapshots') {
-    // filter barStack to make it equal to an array of length 1 with object matching snapshot ID
 
+  if (snapshot !== 'All Snapshots') {
+    // filter barStack to make it equal to an array of length 1 with object matching snapshot ID to mirror the data.barStack object's shape
     const checkData = [data.barStack.find(comp => comp.snapshotId === snapshot)];
     const holdData = [];
     // maxheight is referring to the max height in render time to choose the scaling size for graph
     let maxHeight = 0;
-    /* looping through checkData which is composed of a single snapshot
-       while pushing key/values to a new object and setting maxHeight */
+    // looping through checkData which is composed of a single snapshot while pushing key/values to a new object and setting maxHeight
     for (const key in checkData[0]) {
       if (key !== 'route' && key !== 'snapshotId') {
         if (maxHeight < checkData[0][key]) maxHeight = checkData[0][key];
@@ -273,6 +272,8 @@ const PerformanceVisx = (props: BarStackProps) => {
         holdData[holdData.length - 1].snapshotId = key;
       }
     }
+    // maxTotalRender height of bar is aligned to y-axis
+    // 1.15 adjusts the numbers on the y-axis so the max bar's true height never reaches the max of the y-axis
     data.maxTotalRender = maxHeight * 1.15;
     if (holdData) data.barStack = holdData;
   }
