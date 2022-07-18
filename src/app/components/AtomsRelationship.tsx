@@ -3,16 +3,16 @@ import { Group } from '@visx/group';
 import { Cluster, hierarchy } from '@visx/hierarchy';
 import { LinkVertical } from '@visx/shape';
 import { LinearGradient } from '@visx/gradient';
-import { StateRouteProps} from './StateRoute'
-import { onHover, onHoverExit } from '../actions/actions'
-import { useStoreContext } from '../store'
-import Legend from './AtomsRelationshipLegend'
+import { StateRouteProps } from './StateRoute';
+import { onHover, onHoverExit } from '../actions/actions';
+import { useStoreContext } from '../store';
+import Legend from './AtomsRelationshipLegend';
 
 export const blue = '#acdbdf';
 export const selectWhite = '#f0ece2';
 
 export const lightgreen = '#0BAB64';
-export const green = '#3BB78F'
+export const green = '#3BB78F';
 export const orange = '#FED8B1';
 
 export const merlinsbeard = '#f7f7f3';
@@ -22,53 +22,50 @@ export const root = '#d2f5e3';
 interface clusterShape {
   name?:string;
   children?: clusterShape[]
-} 
+}
 
 interface outerObjShape {
   name?:string;
   children?: outerObjShape[]
-} 
+}
 
 interface innerObjShape {
   name?:string;
   children?: innerObjShape[]
-} 
+}
 
 interface selectorsCache {
   [key:string]: any
 }
 
-
 const clusterData : clusterShape = {};
 const selectorsCache :selectorsCache = {};
-const bothObj = {}; 
+const bothObj = {};
 
-
-let initialFire = false 
+let initialFire = false;
 function clusterDataPopulate(props:StateRouteProps) {
-  let atomCompObj = reorganizedCompObj(props);
-  
-  //this is to set the root name property 
+  const atomCompObj = reorganizedCompObj(props);
+
+  // this is to set the root name property
   if (props[0].name) {
     clusterData.name = props[0].name;
   }
 
-  //we'll first handle AtomSelectors 
-  if(Object.entries(props[0].atomSelectors).length !== 0){
-    if(!clusterData.children) clusterData.children = []
-   
-    for(let key in props[0].atomSelectors){
+  // we'll first handle AtomSelectors
+  if (Object.entries(props[0].atomSelectors).length !== 0) {
+    if (!clusterData.children) clusterData.children = [];
+    for (let key in props[0].atomSelectors) {
       let outerobj:outerObjShape = {}  
       outerobj.name = key
       selectorsCache[key] = true 
       
-      if(!bothObj[key]){
+      if (!bothObj[key]) {
         bothObj[key] = []
       }
 
-      if(props[0].atomSelectors[key].length){
-      for(let i=0; i<props[0].atomSelectors[key].length;i++){
-        if(!outerobj.children) outerobj.children = []
+      if (props[0].atomSelectors[key].length) {
+      for (let i=0; i<props[0].atomSelectors[key].length;i++) {
+        if (!outerobj.children) outerobj.children = []
         let innerobj:innerObjShape = {}
         innerobj.name = props[0].atomSelectors[key][i]
         selectorsCache[props[0].atomSelectors[key][i]] = true
@@ -104,25 +101,25 @@ function clusterDataPopulate(props:StateRouteProps) {
     clusterData.children.push(outerobj)
     }
   }
-  
-  for (let key in atomCompObj){
+
+  for (let key in atomCompObj) {
     let outObj:outerObjShape = {};
-    if(!selectorsCache[key]){
+    if (!selectorsCache[key]) {
       outObj.name = key
-      if(!bothObj[key]) bothObj[key] = []
-      for (let i=0; i<atomCompObj[key].length;i++){
-        if(!outObj.children) outObj.children = []
+      if (!bothObj[key]) bothObj[key] = []
+      for (let i=0; i<atomCompObj[key].length;i++) {
+        if (!outObj.children) outObj.children = []
         outObj.children.push({name:atomCompObj[key][i]})
         bothObj[key].push(atomCompObj[key][i])
       }
       clusterData.children.push(outObj)
     }    
   }
-  initialFire = true 
+  initialFire = true;
 }
 
 function reorganizedCompObj(props) {
-  let atomsComponentObj = props[0].atomsComponents;
+  const atomsComponentObj = props[0].atomsComponents;
   let reorganizedCompObj = {};
 
   for (const key in atomsComponentObj) {
@@ -141,9 +138,9 @@ function Node({ node, snapshots, dispatch, bothObj}) {
   const selector = node.depth === 1 && node.height === 2
   const isRoot = node.depth === 0;
   const isParent = !!node.children;
-  
+
   if (isRoot) return <RootNode node={node} />;
-  if (selector) return <SelectorNode node = {node} snapshots = {snapshots} bothObj = {bothObj} dispatch = {dispatch}/>;
+  if (selector) return <SelectorNode node={node} snapshots={snapshots} bothObj={bothObj} dispatch={dispatch} />;
 
   return (
     <Group top={node.y} left={node.x}>
@@ -153,18 +150,18 @@ function Node({ node, snapshots, dispatch, bothObj}) {
           fill={isParent ? orange : blue}
           stroke={isParent ? orange : blue}
           onMouseLeave={()=> {
-            for (let i=0; i<bothObj[node.data.name].length; i++){
-              if(snapshots[0].recoilDomNode[bothObj[node.data.name][i]].length){
-                dispatch(onHoverExit(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
-                }
+            for (let i=0; i<bothObj[node.data.name].length; i++) {
+              if (snapshots[0].recoilDomNode[bothObj[node.data.name][i]].length) {
+                dispatch(onHoverExit(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]));
+              }
             }
           }}
-          onMouseEnter={()=> {
-            for (let i=0; i<bothObj[node.data.name].length; i++){
-              if(snapshots[0].recoilDomNode[bothObj[node.data.name][i]].length){
-                dispatch(onHover(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
-                }
-            }                            
+          onMouseEnter={() => {
+            for (let i = 0; i < bothObj[node.data.name].length; i++) {
+              if (snapshots[0].recoilDomNode[bothObj[node.data.name][i]].length) {
+                dispatch(onHover(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]));
+              }
+            }
           }}
         />
       )}
@@ -173,7 +170,7 @@ function Node({ node, snapshots, dispatch, bothObj}) {
         fontSize={9}
         fontFamily="Arial"
         textAnchor="middle"
-        y = "-20"
+        y="-20"
         style={{ pointerEvents: 'none' }}
         fill={isParent ? orange : blue}
       >
@@ -184,7 +181,6 @@ function Node({ node, snapshots, dispatch, bothObj}) {
 }
 
 function RootNode({ node }) {
-  
   const width = 40;
   const height = 20;
   const centerX = -width / 2;
@@ -216,35 +212,35 @@ function RootNode({ node }) {
 }
 
 function SelectorNode({ node, snapshots, dispatch, bothObj}) {
-    return (
-      <Group top={node.y} left={node.x}>
+  return (
+    <Group top={node.y} left={node.x}>
       {node.depth !== 0 && (
-        <circle
-          r={12}
-          fill={selectWhite}
-          stroke={selectWhite}
-          onMouseLeave={()=> {
-            for (let i=0; i<bothObj[node.data.name].length; i++){
-              if(snapshots[0].recoilDomNode[bothObj[node.data.name][i]].length){
-                dispatch(onHoverExit(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
-              }              
+      <circle
+        r={12}
+        fill={selectWhite}
+        stroke={selectWhite}
+        onMouseLeave={()=> {
+          for (let i=0; i<bothObj[node.data.name].length; i++) {
+            if (snapshots[0].recoilDomNode[bothObj[node.data.name][i]].length) {
+              dispatch(onHoverExit(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]));
             }
-          }}
-          onMouseEnter={()=> {
-            for (let i=0; i<bothObj[node.data.name].length; i++){
-              if(snapshots[0].recoilDomNode[bothObj[node.data.name][i]].length){
-              dispatch(onHover(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]))
-              }
-            }                     
-          }}
-        />
+          }
+        }}
+        onMouseEnter={()=> {
+          for (let i=0; i<bothObj[node.data.name].length; i++) {
+            if (snapshots[0].recoilDomNode[bothObj[node.data.name][i]].length) {
+              dispatch(onHover(snapshots[0].recoilDomNode[bothObj[node.data.name][i]]));
+            }
+          }
+        }}
+      />
       )}
       <text
         dy=".33em"
         fontSize={9}
         fontFamily="Arial"
         textAnchor="middle"
-        y = "-20"
+        y="-20"
         style={{ pointerEvents: 'none' }}
         fill={selectWhite}
       >
@@ -254,16 +250,18 @@ function SelectorNode({ node, snapshots, dispatch, bothObj}) {
   );
 }
 
-function removeDup(bothObj){
-  let filteredObj = {}
-  for (let key in bothObj){
+function removeDup(bothObj) {
+  let filteredObj = {};
+  for (let key in bothObj) {
     let array = bothObj[key].filter((a,b) => bothObj[key].indexOf(a) === b)
     filteredObj[key] = array 
   }
-  return filteredObj
+  return filteredObj;
 }
 
-const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40 };
+const defaultMargin = {
+  top: 40, left: 0, right: 0, bottom: 40,
+};
 
 export default function AtomsRelationship({
   width,
@@ -272,53 +270,51 @@ export default function AtomsRelationship({
   snapshots,
 }) {
 
-  
-  let filtered = removeDup(bothObj)
+  const filtered = removeDup(bothObj);
 
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
 
-  if(!initialFire){
+  if (!initialFire) {
     clusterDataPopulate(snapshots);
   }
-  
   const data = useMemo(() => hierarchy(clusterData), []);
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
 
   return width < 10 ? null : (
     <>
-    <div>
-      <Legend />
-    </div>
-    <svg width={width} height={height}>
-      
-      <LinearGradient id="top" from={lightgreen} to={green} />
-
-      <rect width={width} height={height} rx={14} fill={background} />
-      <Cluster root={data} size={[xMax, yMax]}>
-        {(cluster) => (
-          <Group top={margin.top} left={margin.left}>
-            {cluster.links().map((link, i) => (
-              <LinkVertical
-                key={`cluster-link-${i}`}
-                data={link}
-                stroke={merlinsbeard}
-                strokeWidth="1"
-                strokeOpacity={0.2}
-                fill="none"                
-              />
-            ))}
-            {cluster.descendants().map((node, i) => (
-              <Node key={`cluster-node-${i}`} 
-              node={node}
-              bothObj = {filtered}
-              snapshots = {snapshots}
-              dispatch = {dispatch} />
-            ))}
-          </Group>
-        )}
-      </Cluster>
-    </svg>
+      <div>
+        <Legend />
+      </div>
+      <svg width={width} height={height}>
+        <LinearGradient id="top" from={lightgreen} to={green} />
+        <rect width={width} height={height} rx={14} fill={background} />
+        <Cluster root={data} size={[xMax, yMax]}>
+          {cluster => (
+            <Group top={margin.top} left={margin.left}>
+              {cluster.links().map((link, i) => (
+                <LinkVertical
+                  key={`cluster-link-${i}`}
+                  data={link}
+                  stroke={merlinsbeard}
+                  strokeWidth="1"
+                  strokeOpacity={0.2}
+                  fill="none"
+                />
+              ))}
+              {cluster.descendants().map((node, i) => (
+                <Node
+                  key={`cluster-node-${i}`}
+                  node={node}
+                  bothObj={filtered}
+                  snapshots={snapshots}
+                  dispatch={dispatch}
+                />
+              ))}
+            </Group>
+          )}
+        </Cluster>
+      </svg>
     </>
   );
 }

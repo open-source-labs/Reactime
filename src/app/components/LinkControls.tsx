@@ -36,10 +36,12 @@ type Props = {
 //use BFS to put all the nodes under snapShots(which is the tree node) into an array
 const nodeList = [];
 
-const collectNodes = (node) => {
-  nodeList.splice(0, nodeList.length); { /* We used the .splice method here to ensure that nodeList did not accumulate with page refreshes */ }
+const collectNodes = node => {
+  nodeList.splice(0, nodeList.length);
+  /* We used the .splice method here to ensure that nodeList
+  did not accumulate with page refreshes */
   nodeList.push(node);
-  for (let i = 0; i < nodeList.length; i++) {
+  for (let i = 0; i < nodeList.length; i += 1) {
     const cur = nodeList[i];
     if (cur.children && cur.children.length > 0) {
       for (let child of cur.children) {

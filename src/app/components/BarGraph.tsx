@@ -62,7 +62,6 @@ const tooltipStyles = {
 const BarGraph = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
-    maxHeight,
     width,
     height,
     data,
@@ -87,23 +86,15 @@ const BarGraph = props => {
     detectBounds: true,
     scroll: true,
   });
-  console.log(snapshot, '<--current snapshot');
 
   const keys = Object.keys(data.componentData);
-  // console.log('this is data in barGraph.tsx: ', data);
-  // console.log('these are the data\'s keys: ', keys);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSnapshotId = (d: snapshot) => {
     // d coming from data.barstack post filtered data
-    // Object.keys(data.barStack[0]).map(keys => if ())
-    // console.log('snapshot object here from getSnapshotId: ', d);
     return d.snapshotId;
   };
-  // const getComponentKeys = d => {
-  //   console.log('snapshot object here from getComponentKeys: ', d);
-  //   return d.snapshotId;
-  // };
+
   const formatSnapshotId = id => `Snapshot ID: ${id}`;
   const formatRenderTime = time => `${time} ms `;
 
@@ -113,46 +104,22 @@ const BarGraph = props => {
     padding: 0.2,
   });
 
-  console.log(data, ' <--data');
-  console.log(data.maxTotalRender, ' <--data.maxTotalRender');
-
+  // Adjusts y axis to match/ bar height
   const renderingScale = scaleLinear<number>({
     domain: [0, data.maxTotalRender],
     nice: true,
   });
-
-  // const componentsKeys = [];
-  // for (let key in data.barStack[0]) {
-  //   if (key !== 'route' && key !== 'snapshotId' ) componentsKeys.push(key);
-  // }
-  // console.log(data.barStack.map(getSnapshotId), '<-- check if getSnapshotId matches componentKeys');
-  // console.log(componentsKeys, '<-- componentKeys');
-
-  // const componentScale = scaleBand<string>({
-  //   domain: componentsKeys,
-  //   padding: 0.2,
-  // });
-
+  // Gives each bar on the graph a color using schemeSet3 imported from D3
   const colorScale = scaleOrdinal<string>({
     domain: keys,
     range: schemeSet3,
   });
 
   // setting max dimensions and scale ranges
-
-  // if (snapshot !== 'All Snapshots') {
-  //   // let oldHeight = height
-  //   height = maxHeight * 50 * 2 + margin.top + 150;
-  // }
-
   const xMax = width - margin.left - margin.right;
   snapshotIdScale.rangeRound([0, xMax]);
   const yMax = height - margin.top - 150;
   renderingScale.range([yMax, 0]);
-
-  console.log(height, '<--height');
-  console.log(yMax, '<--yMax');
-  console.log(maxHeight, '<--maxHeight');
 
   const toStorage = {
     currentTab,
@@ -165,7 +132,6 @@ const BarGraph = props => {
     for (let i = 0; i < saveButtons.length; i++) {
       if (tabs[currentTab].seriesSavedStatus === 'saved') {
         saveButtons[i].classList.add('animate');
-        console.log('checking saveButtons[i].classList', saveButtons[i].classList);
         saveButtons[i].innerHTML = 'Saved!';
       } else {
         saveButtons[i].innerHTML = 'Save Series';
@@ -177,7 +143,7 @@ const BarGraph = props => {
   const saveSeriesClickHandler = () => {
     if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
       const actionNames = document.getElementsByClassName('actionname');
-      for (let i = 0; i < actionNames.length; i++) {
+      for (let i = 0; i < actionNames.length; i += 1) {
         toStorage.data.barStack[i].name = actionNames[i].value;
       }
       dispatch(save(toStorage, seriesNameInput));
@@ -186,7 +152,6 @@ const BarGraph = props => {
     }
     dispatch(save(toStorage));
   };
-  console.log(data.barStack, 'data.barStack before graph');
 
   // FTRI9 note - need to ensure text box is not empty before saving
   const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" id="seriesname" placeholder="Enter Series Name" onChange={e => setSeriesNameInput(e.target.value)} /> : null;
@@ -250,7 +215,6 @@ const BarGraph = props => {
           fill={background}
           rx={14}
         />
-        { console.log(data.barStack, 'data.barStack that gives error 1') }
         <Grid
           top={margin.top}
           left={margin.left}
@@ -262,8 +226,6 @@ const BarGraph = props => {
           strokeOpacity={0.1}
           xOffset={snapshotIdScale.bandwidth() / 2}
         />
-        { console.log(data.barStack, 'data.barStack that gives error 2') }
-
         <Group top={margin.top} left={margin.left}>
           <BarStack
             data={data.barStack}
@@ -273,14 +235,7 @@ const BarGraph = props => {
             yScale={renderingScale}
             color={colorScale}
           >
-            {barStacks => barStacks.map(barStack => barStack.bars.map((bar, idx) => {
-              console.log(filteredSnapshots, '<-- filtered snap shots');
-              console.log(data, '<-- data from barStacks');
-              console.log(data.barStack, '<-- data.barstack');
-              console.log(barStacks, '<--barStacks');
-              // console.log(width, '<-- width');
-              // console.log(height, '<-- height');
-              console.log(bar, '<-- bar');
+            {barStacks => barStacks.map(barStack => barStack.bars.map(bar => {
               // Hides new components if components don't exist in previous snapshots.
               if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                 bar.height = 0;
@@ -313,9 +268,7 @@ const BarGraph = props => {
                     } else {
                       top = event.clientY - margin.top;
                     }
-                    console.log(event.clientY, '<-- event.clientY');
-                    console.log(bar.height, '<-- bar.height');
-                    console.log(top, '<-- top');
+
                     const left = bar.x + bar.width / 2;
                     showTooltip({
                       tooltipData: bar,
@@ -342,8 +295,6 @@ const BarGraph = props => {
             textAnchor: 'end',
           })}
         />
-        { console.log(data.barStack, 'data.barStack that gives error 3') }
-
         <AxisBottom
           top={yMax + margin.top}
           left={margin.left}

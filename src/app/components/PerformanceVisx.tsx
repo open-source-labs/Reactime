@@ -7,7 +7,6 @@ import {
   Route,
   NavLink,
   Switch,
-  useLocation,
   Redirect,
 } from 'react-router-dom';
 import RenderingFrequency from './RenderingFrequency';
@@ -254,34 +253,16 @@ const PerformanceVisx = (props: BarStackProps) => {
   if (route !== 'All Routes') {
     data.barStack = filteredSnapshots;
   }
-  // console.log(snapshot);
-  // snapshot = '2.0' parseInt(snapshot) = 3
-  // 2-1 =
-  // data.barStack[] // 0: 1.0 snapshot 1: 2.0 snapshot 2: 3.0 snapshot
-  // data.barStack[{123123},{123123},12312,12312]
-  // && data.barStack[parseInt(snapshot, 10) - 1]
-  
+
   if (snapshot !== 'All Snapshots') {
-    // console.log(data.barStack, '<---------data.barstack', snapshot, '<-----snapshot');
-    // const checkData = [];
-    // for (let i = 0; i < data.barStack.length; i++) {
-    //   if (data.barStack[i].snapshotId === snapshot) {
-    //     console.log(data.barStack[i], '<----barstack[i]', i);
-    //     console.log(snapshot, '<--- snapshot from for loop inside performance');
-    //     console.log(route, '<--- this is a route');
-    //     checkData.push(data.barStack[i]);
-    //     break;
-    //   }
-    // }
     // filter barStack to make it equal to an array of length 1 with object matching snapshot ID
-    // const checkData = data.barStack.map(comp => {
-    //   console.log(comp);
-    //   if (comp.snapshotId === snapshot) return comp;
-    // });
+
     const checkData = [data.barStack.find(comp => comp.snapshotId === snapshot)];
     const holdData = [];
     // maxheight is referring to the max height in render time to choose the scaling size for graph
     let maxHeight = 0;
+    /* looping through checkData which is composed of a single snapshot
+       while pushing key/values to a new object and setting maxHeight */
     for (const key in checkData[0]) {
       if (key !== 'route' && key !== 'snapshotId') {
         if (maxHeight < checkData[0][key]) maxHeight = checkData[0][key];
@@ -293,24 +274,9 @@ const PerformanceVisx = (props: BarStackProps) => {
       }
     }
     data.maxTotalRender = maxHeight * 1.15;
-    console.log(checkData, '<-- CheckData');
-    console.log(holdData, '<--holdData');
     if (holdData) data.barStack = holdData;
   }
-  // data.barStack = [
-  //   {snapshot: 1.0,
-  //     box1: 5.4,
-  //     box2: 3.7
-  //   },
-  //   {snapshot: 2.0,
-  //     box1: 5.4,
-  //     box2: 3.7},
-  //   {snapshot: 3.0,
-  //     box1: 5.4,
-  //     box2: 3.7
-  //   }
-  // ]
-  // console.log(filteredSnapshots, '<-- filtered snap shots');
+
   const renderBargraph = () => {
     if (hierarchy) {
       return (
