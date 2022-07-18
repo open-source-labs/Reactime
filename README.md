@@ -47,7 +47,7 @@
 
 Currently, Reactime supports React apps (now including React Router apps) using stateful components and Hooks, with beta support for Recoil and Context API and frameworks like Gatsby and Next.js.
 
-<b>Previously, Reactime 14.0</b> added the exciting features below:
+Previously, <b>Reactime 14.0</b> added the exciting features below:
 
 I. React Router Compatibility <br>
 Reactime is now compatible with React Router applications! Prior to Reactime 14.0, recording state snapshots as the user navigated across various routes was possible, but time travel debugging was only possible for the current route (i.e. jumping back to a prior state at a different route was not possible). In order to streamline debugging of applications with multiple routes, Reactime 14.0 added functionality that allows the user to time-travel back to different routes, including live updating in the browser to reflect the state of their application at that previously visited route.
