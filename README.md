@@ -123,7 +123,7 @@ When toggled to a specific snapshot, a visualization of the individual component
 <br>
 
 <p align="center">
-<!-- <img src="./assets/action-comparison.gif" /> -->
+<img src="./assets/components-viewing.gif" />
 </p>
 <br>
 
