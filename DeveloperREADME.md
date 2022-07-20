@@ -3,7 +3,7 @@
 
 <h2>Getting Started</h2>
 
-1. <a href=https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en>Download React Dev Tools from the Chrome Webstore Here</a>
+1. <a href="https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en">Download React Dev Tools from the Chrome Webstore Here</a>
 
 2. Clone down the Reactime repo onto your machine.
 
