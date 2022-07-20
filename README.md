@@ -43,7 +43,7 @@
   <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.io">Website</a> • <a href="#read-more">Read More</a>
 </p>
 
-<b>Reactime 15.0</b> has added a new visualization, allowing users to zone in on individual components of a specific snapshot. Additionally, a number of bug fixes have been implemented.
+<b>Reactime 15.0</b> adds a new visualization, allowing users to zone in on individual components of a specific snapshot. Additionally, a number of bug fixes have been implemented.
 
 Currently, Reactime supports React apps (now including React Router apps) using stateful components and Hooks, with beta support for Recoil and Context API and frameworks like Gatsby and Next.js.
 
