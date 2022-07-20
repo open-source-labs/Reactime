@@ -123,7 +123,7 @@ When toggled to a specific snapshot, a visualization of the individual component
 <br>
 
 <p align="center">
-<!-- <img src="./assets/action-comparison.gif" /> -->
+<img src="./assets/components-viewing.gif" />
 </p>
 <br>
 
@@ -184,6 +184,8 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 
 -   Search bar now searches for specific nodes successfully
 -   Tab titles of chrome browser tabs not running an application in development mode are no longer affected by Reactime
+-   Multiple black screens fixed
+-   Improved UI and performance
 
 ## <b>Read More</b>
 
