@@ -275,7 +275,7 @@ function createTree(
 // check to see if we can get the information we were looking for
   if (tag === 5) {
     try {
-      if (memoizedProps.children[0]._owner.memoizedProps !== undefined) {
+      if (memoizedProps.children[0]._owner?.memoizedProps !== undefined) {
         const propsData = memoizedProps.children[0]._owner.memoizedProps;
         const newPropData = convertDataToString(propsData, tree.componentData.props ? tree.componentData.props : null);
         tree.componentData = {

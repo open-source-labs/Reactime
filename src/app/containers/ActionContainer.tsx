@@ -202,8 +202,8 @@ function ActionContainer(props): JSX.Element {
             </button>
           </div>
           {/* Rendering of route description components */}
-          {Object.keys(routes).map(route => (
-            <RouteDescription actions={routes[route]} />))}
+          {Object.keys(routes).map((route, i) => (
+            <RouteDescription key={`route${i}`} actions={routes[route]} />))}
         </div>
       ) : null}
     </div>
