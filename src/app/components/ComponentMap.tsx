@@ -5,7 +5,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
@@ -14,14 +14,12 @@ import { localPoint } from '@visx/event';
 import {
   useTooltip,
   useTooltipInPortal,
-  TooltipWithBounds,
   defaultStyles,
 } from '@visx/tooltip';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import { toggleExpanded, setCurrentTabInApp } from '../actions/actions';
 import { useStoreContext } from '../store';
-import { useEffect } from 'react';
 
 const exclude = ['childExpirationTime', 'staticContext', '_debugSource', 'actualDuration', 'actualStartTime', 'treeBaseDuration', '_debugID', '_debugIsCurrentlyTiming', 'selfBaseDuration', 'expirationTime', 'effectTag', 'alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
 
@@ -71,13 +69,13 @@ export default function ComponentMap({
   const [orientation, setOrientation] = useState('horizontal');
   const [linkType, setLinkType] = useState('diagonal');
   const [stepPercent, setStepPercent] = useState(10);
-  const [tooltip, setTooltip] = useState(false);
+  const [Tooltip, setTooltip] = useState(false);
   const [selectedNode, setSelectedNode] = useState('root');
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const [, dispatch] = useStoreContext();
 
   useEffect(() => {
-    dispatch(setCurrentTabInApp('map'))
-  }, []);
+    dispatch(setCurrentTabInApp('map'));
+  }, [dispatch]);
 
   // setting the margins for the Map to render in the tab window.
   const innerWidth = totalWidth - margin.left - margin.right;
@@ -87,8 +85,11 @@ export default function ComponentMap({
   let sizeWidth: number;
   let sizeHeight: number;
 
-  // This sets the starting position for the root node on the maps display. the polar layout sets the root node to the relative center of the display box based on the size of the browser window.
-  // the else conditional statements determines the root nodes location either in the left middle or top middle of the browser window relative to the size of the browser.
+  // This sets the starting position for the root node on the maps display.
+  // the polar layout sets the root node to the relative center of the display box
+  // based on the size of the browser window.
+  // the else conditional statements determines the root nodes location either in the left middle
+  // or top middle of the browser window relative to the size of the browser.
   if (layout === 'polar') {
     origin = {
       x: innerWidth / 2,
@@ -154,9 +155,11 @@ export default function ComponentMap({
     const nestedObj = [];
     for (const key in data) {
       if (data[key] !== 'reactFiber' && typeof data[key] !== 'object' && exclude.includes(key) !== true) {
-        propsFormat.push(<p className="stateprops">
-          {`${key}: ${data[key]}`}
-                         </p>);
+        propsFormat.push(
+          <p className="stateprops">
+            {`${key}: ${data[key]}`}
+          </p>,
+        );
       } else if (data[key] !== 'reactFiber' && typeof data[key] === 'object' && exclude.includes(key) !== true) {
         const result = formatProps(data[key]);
         nestedObj.push(result);
@@ -204,7 +207,7 @@ export default function ComponentMap({
   const collectNodes = node => {
     nodeList.splice(0, nodeList.length);
     nodeList.push(node);
-    for (let i = 0; i < nodeList.length; i++) {
+    for (let i = 0; i < nodeList.length; i += 1) {
       const cur = nodeList[i];
       if (cur.children && cur.children.length > 0) {
         for (const child of cur.children) {
@@ -217,12 +220,13 @@ export default function ComponentMap({
 
   // find the node that has been selected and use it as the root
   const startNode = null;
+  let rootNode;
   const findSelectedNode = () => {
     for (const node of nodeList) {
-      if (node.name === selectedNode) {
-        startNode = node;
-      }
+      if (node.name === 'root') rootNode = node;
+      if (node.name === selectedNode) startNode = node;
     }
+    if (startNode === null) startNode = rootNode;
   };
   findSelectedNode();
 
@@ -310,7 +314,9 @@ export default function ComponentMap({
                     showTooltip({
                       tooltipLeft: coords.x,
                       tooltipTop: coords.y,
-                      tooltipData: tooltipObj, // this is where the data for state and render time is displayed but does not show props functions and etc
+                      tooltipData: tooltipObj,
+                      // this is where the data for state and render time is displayed
+                      // but does not show props functions and etc
                     });
                   };
 
@@ -328,7 +334,8 @@ export default function ComponentMap({
                           }}
                         />
                       )}
-                      {/* This creates the rectangle boxes for each component and sets it relative position to other parent nodes of the same level. */}
+                      {/* This creates the rectangle boxes for each component
+                       and sets it relative position to other parent nodes of the same level. */}
                       {node.depth !== 0 && (
                         <rect
                           height={height}

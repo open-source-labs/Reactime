@@ -72,7 +72,7 @@ const BarGraphComparison = props => {
   const {
     width, height, data, comparison, setSeries, series, setAction
   } = props;
-  const [snapshots, setSnapshots] = React.useState(0);
+  const [snapshots] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [picOpen, setPicOpen] = React.useState(false);
   useEffect(() => {
@@ -113,10 +113,10 @@ const BarGraphComparison = props => {
   // We'll then use it in the renderingScale function and compare
   // with the render time of the current tab.
   // The max render time will determine the Y-axis's highest number.
-  const calculateMaxTotalRender = series => {
-    const currentSeriesBarStacks = !comparison[series]
+  const calculateMaxTotalRender = serie => {
+    const currentSeriesBarStacks = !comparison[serie]
       ? []
-      : comparison[series].data.barStack;
+      : comparison[serie].data.barStack;
     if (currentSeriesBarStacks.length === 0) return 0;
     let currentMax = -Infinity;
     for (let i = 0; i < currentSeriesBarStacks.length; i += 1) {
@@ -166,7 +166,7 @@ const BarGraphComparison = props => {
   const classes = useStyles();
 
   const handleSeriesChange = event => {
-    if (!event) return
+    if (!event) return;
     setSeries(event.target.value);
     setAction(false);
   };
@@ -180,7 +180,7 @@ const BarGraphComparison = props => {
   };
 
   const handleActionChange = event => {
-    if(!event.target.value) return
+    if (!event.target.value) return;
     setAction(event.target.value);
     setSeries(false);
   };
@@ -206,7 +206,7 @@ const BarGraphComparison = props => {
     });
     return data.barStack;
   }
-  const animateButton = function (e) {
+  const animateButton = e => {
     e.preventDefault;
     e.target.classList.add('animate');
     e.target.innerHTML = 'Deleted!';
@@ -216,32 +216,33 @@ const BarGraphComparison = props => {
     }, 1000);
   };
   const classname = document.getElementsByClassName('delete-button');
-  for (let i = 0; i < classname.length; i++) {
+  for (let i = 0; i < classname.length; i += 1) {
     classname[i].addEventListener('click', animateButton, false);
   }
   const seriesList = comparison.map(elem => elem.data.barStack);
   const actionsList = seriesList.flat();
   const testList = actionsList.map(elem => elem.name);
- 
+
   const finalList = [];
-  for (let i = 0; i < testList.length; i++) {
-    if (testList[i] !== "" && !finalList.includes(testList[i])) finalList.push(testList[i]);
+  for (let i = 0; i < testList.length; i += 1) {
+    if (testList[i] !== '' && !finalList.includes(testList[i])) finalList.push(testList[i]);
   }
-  
+
   return (
     <div>
       <div className="series-options-container">
 
         <div className="dropdown-and-delete-series-container">
           <button
+            type="button"
             className="delete-button"
-            onClick={e => {
+            onClick={() => {
               dispatch(deleteSeries());
             }}
           >
             Clear All Series
           </button>
-          <h4 className="compare-series-box"style={{ padding: '0 1rem' }}>Compare Series: </h4>
+          <h4 className="compare-series-box" style={{ padding: '0 1rem' }}>Compare Series: </h4>
           <FormControl id="selectSeries" variant="outlined" className={classes.formControl}>
             <Select
               style={{ color: 'white' }}
@@ -272,17 +273,16 @@ const BarGraphComparison = props => {
               open={picOpen}
               onClose={picHandleClose}
               onOpen={picHandleOpen}
-              value={''} //snapshots
+              value="" // snapshots
               onChange={handleActionChange}
             >
               {!comparison[snapshots] ? (
                 <MenuItem>No snapshots available</MenuItem>
               ) : (
-                finalList.map((elem, index) => (
+                finalList.map(elem => (
                   <MenuItem value={elem}>{elem}</MenuItem>
                   // <MenuItem value="test">{}</MenuItem>
-                )))
-              }
+                )))}
             </Select>
           </FormControl>
         </div>

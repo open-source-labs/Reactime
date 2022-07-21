@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
-import { BarStack } from '@visx/shape';
+import { BarStack, Bar } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
@@ -47,7 +47,7 @@ interface TooltipData {
 const margin = {
   top: 30, right: 30, bottom: 0, left: 50,
 };
-const axisColor = '#62d6fb';
+const axisColor = '#FF6569';
 const background = '#242529';
 const tooltipStyles = {
   ...defaultStyles,
@@ -61,8 +61,18 @@ const tooltipStyles = {
 
 const BarGraph = props => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { width, height, data, comparison, setRoute, allRoutes, filteredSnapshots } = props;
-  const [ seriesNameInput, setSeriesNameInput ] = useState(`Series ${comparison.length + 1}`);
+  const {
+    width,
+    height,
+    data,
+    comparison,
+    setRoute,
+    allRoutes,
+    filteredSnapshots,
+    snapshot,
+    setSnapshot
+  } = props;
+  const [seriesNameInput, setSeriesNameInput] = useState(`Series ${comparison.length + 1}`);
   const {
     tooltipOpen,
     tooltipLeft,
@@ -76,11 +86,18 @@ const BarGraph = props => {
     detectBounds: true,
     scroll: true,
   });
+
   const keys = Object.keys(data.componentData);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
-  const getSnapshotId = (d: snapshot) => d.snapshotId;
+  const getSnapshotId = (d: snapshot) => {
+    // d coming from data.barstack post filtered data
+    return d.snapshotId;
+  };
+
+  // returns snapshot id when invoked in tooltip section
   const formatSnapshotId = id => `Snapshot ID: ${id}`;
+  // returns render time when invoked in tooltip section
   const formatRenderTime = time => `${time} ms `;
 
   // create visualization SCALES with cleaned data
@@ -89,11 +106,12 @@ const BarGraph = props => {
     padding: 0.2,
   });
 
+  // Adjusts y axis to match/ bar height
   const renderingScale = scaleLinear<number>({
     domain: [0, data.maxTotalRender],
     nice: true,
   });
-
+  // Gives each bar on the graph a color using schemeSet3 imported from D3
   const colorScale = scaleOrdinal<string>({
     domain: keys,
     range: schemeSet3,
@@ -101,8 +119,8 @@ const BarGraph = props => {
 
   // setting max dimensions and scale ranges
   const xMax = width - margin.left - margin.right;
-  const yMax = height - margin.top - 150;
   snapshotIdScale.rangeRound([0, xMax]);
+  const yMax = height - margin.top - 150;
   renderingScale.range([yMax, 0]);
 
   const toStorage = {
@@ -124,10 +142,11 @@ const BarGraph = props => {
     }
   });
 
+  // CURRENTLY DOES NOT SAVE
   const saveSeriesClickHandler = () => {
     if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
       const actionNames = document.getElementsByClassName('actionname');
-      for (let i = 0; i < actionNames.length; i++) {
+      for (let i = 0; i < actionNames.length; i += 1) {
         toStorage.data.barStack[i].name = actionNames[i].value;
       }
       dispatch(save(toStorage, seriesNameInput));
@@ -137,6 +156,7 @@ const BarGraph = props => {
     dispatch(save(toStorage));
   };
 
+  // Need to change so textbox isn't empty before saving
   const textbox = tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? <input type="text" id="seriesname" placeholder="Enter Series Name" onChange={e => setSeriesNameInput(e.target.value)} /> : null;
   return (
     <div className="bargraph-position">
@@ -154,7 +174,12 @@ const BarGraph = props => {
           <select
             labelId="demo-simple-select-label"
             id="routes-select"
-            onChange={e => setRoute(e.target.value)}
+            onChange={e => {
+              setRoute(e.target.value);
+              setSnapshot('All Snapshots');
+              const defaultSnapShot = document.querySelector('#snapshot-select');
+              defaultSnapShot.value = 'All Snapshots';
+            }}
           >
             <option>
               All Routes
@@ -162,6 +187,23 @@ const BarGraph = props => {
             {allRoutes.map(route => (
               <option className="routes">
                 {route}
+              </option>
+            ))}
+          </select>
+        </form>
+        <form className="routesForm" id="routes-formcontrol">
+          <label id="routes-dropdown">Select Snapshot: </label>
+          <select
+            labelId="demo-simple-select-label"
+            id="snapshot-select"
+            onChange={e => setSnapshot(e.target.value)}
+          >
+            <option value="All Snapshots">
+              All Snapshots
+            </option>
+            {filteredSnapshots.map(route => (
+              <option className="routes">
+                {route.snapshotId}
               </option>
             ))}
           </select>
@@ -196,7 +238,7 @@ const BarGraph = props => {
             yScale={renderingScale}
             color={colorScale}
           >
-            {barStacks => barStacks.map(barStack => barStack.bars.map((bar, idx) => {
+            {barStacks => barStacks.map(barStack => barStack.bars.map(bar => {
               // Hides new components if components don't exist in previous snapshots.
               if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                 bar.height = 0;
@@ -223,7 +265,13 @@ const BarGraph = props => {
                   onMouseMove={event => {
                     dispatch(onHover(data.componentData[bar.key].rtid));
                     if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                    const top = event.clientY - margin.top - bar.height;
+                    const top;
+                    if (snapshot === 'All Snapshots') {
+                      top = event.clientY - margin.top - bar.height;
+                    } else {
+                      top = event.clientY - margin.top;
+                    }
+
                     const left = bar.x + bar.width / 2;
                     showTooltip({
                       tooltipData: bar,
@@ -264,7 +312,7 @@ const BarGraph = props => {
           })}
         />
         <Text
-          x={-xMax / 2}
+          x={-yMax / 2 - 75}
           y="15"
           transform="rotate(-90)"
           fontSize={12}
@@ -273,11 +321,23 @@ const BarGraph = props => {
           Rendering Time (ms)
         </Text>
         <br />
-        <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
-          Snapshot ID
-        </Text>
+        {(snapshot === 'All Snapshots')
+          ? (
+            <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
+              Snapshot ID
+            </Text>
+          )
+          : (
+            <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill="#FFFFFF">
+              Components
+            </Text>
+          )}
+
       </svg>
       {/* FOR HOVER OVER DISPLAY */}
+      {/* Ths conditional statement displays a different tooltip
+      configuration depending on if we are trying do display a specific
+      snapshot through options menu or all snapshots together in bargraph */}
       {tooltipOpen && tooltipData && (
         <TooltipInPortal
           key={Math.random()} // update tooltip bounds each render

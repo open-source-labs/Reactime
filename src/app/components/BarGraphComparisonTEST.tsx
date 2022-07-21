@@ -241,6 +241,7 @@ const BarGraphComparison = props => {
       <div className="series-options-container">
         <div className="dropdown-and-delete-series-container">
           <button
+            type="button"
             className="delete-button"
             onClick={e => {
               dispatch(deleteSeries());

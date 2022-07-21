@@ -27,8 +27,9 @@ window.addEventListener('message', msg => {
   // will send snapshots of the test app's link fiber tree.
   const { action }: { action: string } = msg.data;
   if (action === 'recordSnap') {
-    if (!isRecording) return;
-    chrome.runtime.sendMessage(msg.data);
+    if (isRecording) {
+      chrome.runtime.sendMessage(msg.data);
+    }
   }
   if (action === 'devToolsInstalled') {
     chrome.runtime.sendMessage(msg.data);

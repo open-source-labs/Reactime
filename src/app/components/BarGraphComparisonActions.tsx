@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../actions/actions';
+import { deleteSeries, setCurrentTabInApp } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 /* TYPESCRIPT */
@@ -68,17 +68,17 @@ const tooltipStyles = {
 };
 
 const BarGraphComparisonActions = props => {
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const [dispatch] = useStoreContext();
   const {
     width, height, data, comparison, setSeries, series, setAction, action
   } = props;
-  const [snapshots, setSnapshots] = React.useState(0);
-  const [open, setOpen] = React.useState(false);
-  const [picOpen, setPicOpen] = React.useState(false);
+  const [snapshots] = React.useState(0);
+  const [setOpen] = React.useState(false);
+  const [setPicOpen] = React.useState(false);
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance-comparison'));
   }, []);
-  
+
   const {
     tooltipOpen,
     tooltipLeft,
@@ -107,14 +107,10 @@ const BarGraphComparisonActions = props => {
   // The max render time will determine the Y-axis's highest number.
   const calculateMaxTotalRender = () => {
     let currentMax = -Infinity;
-    for(let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i += 1) {
       let currentSum = 0;
-
-      for(const key of keys) {
-        if(data[i][key]) currentSum += data[i][key]
-      }
-
-      if(currentSum > currentMax) currentMax = currentSum;
+      for (const key of keys) if (data[i][key]) currentSum += data[i][key];
+      if (currentSum > currentMax) currentMax = currentSum;
     }
     return currentMax;
   };
@@ -158,7 +154,7 @@ const BarGraphComparisonActions = props => {
   const classes = useStyles();
 
   const handleSeriesChange = event => {
-    if (!event) return
+    if (!event) return;
     setSeries(event.target.value);
     setAction(false);
     // setXpoints();
@@ -175,7 +171,7 @@ const BarGraphComparisonActions = props => {
   };
 
   const handleActionChange = event => {
-    if (!event) return
+    if (!event) return;
     setAction(event.target.value);
     setSeries(false);
     // setXpoints();
@@ -191,7 +187,6 @@ const BarGraphComparisonActions = props => {
     // setXpoints();
   };
 
-
   const animateButton = function (e) {
     e.preventDefault;
     e.target.classList.add('animate');
@@ -202,16 +197,16 @@ const BarGraphComparisonActions = props => {
     }, 1000);
   };
   const classname = document.getElementsByClassName('delete-button');
-  for (let i = 0; i < classname.length; i++) {
+  for (let i = 0; i < classname.length; i += 1) {
     classname[i].addEventListener('click', animateButton, false);
   }
   const seriesList = comparison.map(elem => elem.data.barStack);
   const actionsList = seriesList.flat();
   const testList = actionsList.map(elem => elem.name);
- 
+
   const finalList = [];
-  for (let i = 0; i < testList.length; i++) {
-    if (testList[i] !== "" && !finalList.includes(testList[i])) finalList.push(testList[i]);
+  for (let i = 0; i < testList.length; i += 1) {
+    if (testList[i] !== '' && !finalList.includes(testList[i])) finalList.push(testList[i]);
   }
 
   return (
@@ -220,7 +215,7 @@ const BarGraphComparisonActions = props => {
         <div className="dropdown-and-delete-series-container">
           <button
             className="delete-button"
-            onClick={e => {
+            onClick={() => {
               setAction(false);
               setSeries(true);
               dispatch(deleteSeries());
@@ -243,7 +238,7 @@ const BarGraphComparisonActions = props => {
             >
               {!comparison.length ? (
                 <MenuItem>No series available</MenuItem>
-              ) : comparison.map((tabElem, index) => (<MenuItem key={`MenuItem${tabElem.name}`} value={index}>{tabElem.name}</MenuItem> ))}
+              ) : comparison.map((tabElem, index) => (<MenuItem key={`MenuItem${tabElem.name}`} value={index}>{tabElem.name}</MenuItem>))}
             </Select>
           </FormControl>
           <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4>
@@ -256,16 +251,15 @@ const BarGraphComparisonActions = props => {
               // open={picOpen}
               // onClose={picHandleClose}
               // onOpen={picHandleOpen}
-              value={action} //snapshots
+              value={action} // snapshots
               onChange={handleActionChange}
             >
               {!comparison[snapshots] ? (
                 <MenuItem>No snapshots available</MenuItem>
               ) : (
-                finalList.map((elem) => (
+                finalList.map(elem => (
                   <MenuItem key={`MenuItem${elem}`} value={elem}>{elem}</MenuItem>
-                )))
-              }
+                )))}
             </Select>
           </FormControl>
         </div>
@@ -300,36 +294,34 @@ const BarGraphComparisonActions = props => {
             yScale={renderingScale}
             color={colorScale}
           >
-            {barStacks => barStacks.map(barStack => barStack.bars.map((bar) => {
-              return (
-                <rect
-                  key={`bar-stack-${bar.bar.data.seriesName}-${bar.key}`}
-                  x={bar.x}
-                  y={bar.y}
-                  height={bar.height === 0 ? null : bar.height}
-                  width={bar.width}
-                  fill={bar.color}
-                  /* TIP TOOL EVENT HANDLERS */
-                  // Hides tool tip once cursor moves off the current rect.
-                  onMouseLeave={() => {
-                    tooltipTimeout = window.setTimeout(() => {
-                      hideTooltip();
-                    }, 300);
-                  }}
-                  // Cursor position in window updates position of the tool tip.
-                  onMouseMove={event => {
-                    if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                    const top = event.clientY - margin.top - bar.height;
-                    const left = bar.x + bar.width / 2;
-                    showTooltip({
-                      tooltipData: bar,
-                      tooltipTop: top,
-                      tooltipLeft: left,
-                    });
-                  }}
-                />
-              );
-            }))}
+            {barStacks => barStacks.map(barStack => barStack.bars.map(bar => (
+              <rect
+                key={`bar-stack-${bar.bar.data.seriesName}-${bar.key}`}
+                x={bar.x}
+                y={bar.y}
+                height={bar.height === 0 ? null : bar.height}
+                width={bar.width}
+                fill={bar.color}
+                /* TIP TOOL EVENT HANDLERS */
+                // Hides tool tip once cursor moves off the current rect.
+                onMouseLeave={() => {
+                  tooltipTimeout = window.setTimeout(() => {
+                    hideTooltip();
+                  }, 300);
+                }}
+                // Cursor position in window updates position of the tool tip.
+                onMouseMove={event => {
+                  if (tooltipTimeout) clearTimeout(tooltipTimeout);
+                  const top = event.clientY - margin.top - bar.height;
+                  const left = bar.x + bar.width / 2;
+                  showTooltip({
+                    tooltipData: bar,
+                    tooltipTop: top,
+                    tooltipLeft: left,
+                  });
+                }}
+              />
+            )))}
           </BarStack>
         </Group>
         <AxisLeft
@@ -383,9 +375,15 @@ const BarGraphComparisonActions = props => {
           <div style={{ color: colorScale(tooltipData.key) }}>
             <strong>{tooltipData.key}</strong>
           </div>
-          <div> {`${tooltipData.bar.data[tooltipData.key]} ms`} </div>
           <div>
-            <small> {tooltipData.bar.data.seriesName} </small>
+            {
+            `${tooltipData.bar.data[tooltipData.key]} ms`
+            }
+          </div>
+          <div>
+            <small>
+              {tooltipData.bar.data.seriesName}
+            </small>
           </div>
         </TooltipInPortal>
       )}
