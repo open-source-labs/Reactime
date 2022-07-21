@@ -12,7 +12,6 @@
 /* eslint-disable no-param-reassign */
 
 // import typescript types
-import { element } from 'prop-types';
 import {
   // tree
   Snapshot,
@@ -39,6 +38,7 @@ import AtomsRelationship from '../app/components/AtomsRelationship';
 declare global {
   interface Window {
     __REACT_DEVTOOLS_GLOBAL_HOOK__?: any;
+    __REDUX_DEVTOOLS_EXTENSION__?: any;
   }
 }
 let fiberRoot = null;
@@ -284,6 +284,7 @@ function createTree(
         };
       }
     } catch (error) {
+      console.log(error);
     }
   }
 
@@ -458,7 +459,7 @@ function createTree(
 
       while (pointer !== null) {
         if (pointer.stateNode !== null) {
-          rtid = `fromLinkFiber${rtidCounter++}`;
+          rtid = `fromLinkFiber${rtidCounter += 1}`;
           // rtid = rtidCounter++;
           recoilDomNode[currentFiber.elementType.name].push(rtid);
           // check if rtid is already present
@@ -496,7 +497,7 @@ function createTree(
         }
         currentFiber.child.stateNode.classList.add(rtid);
       }
-      rtidCounter++;
+      rtidCounter += 1;
     }
     // checking if tree fromSibling is true
     if (fromSibling) {
@@ -572,16 +573,22 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
 
     if (reactInstance && reactInstance.version) {
       fiberRoot = devTools.getFiberRoots(1).values().next().value;
-      devTools.onCommitFiberRoot = (function (original) {
+      // React has inherent methods that are called with react fiber
+      // we attach new functionality without compromising the original work that onCommitFiberRoot does
+      const addOneMoreStep = function (original) {
         return function (...args) {
           // eslint-disable-next-line prefer-destructuring
           fiberRoot = args[1];
+          // this is the additional functionality we added
           if (doWork) {
             throttledUpdateSnapshot();
           }
+          // after our added work is completed we invoke the original function
           return original(...args);
         };
-      }(devTools.onCommitFiberRoot));
+      };
+      devTools.onCommitFiberRoot = addOneMoreStep(devTools.onCommitFiberRoot);
+
       throttledUpdateSnapshot(); // only runs on start up
     }
   };

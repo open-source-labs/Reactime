@@ -7,7 +7,6 @@ import {
   Route,
   NavLink,
   Switch,
-  useLocation,
   Redirect,
 } from 'react-router-dom';
 import RenderingFrequency from './RenderingFrequency';
@@ -54,10 +53,14 @@ const collectNodes = (snaps, componentName) => {
         } else {
           renderResult.push(renderTime);
         }
-        // compare the last pushed component Data from the array to the current one to see if there are differences
+        // compare the last pushed component Data from the array to
+        // the current one to see if there are differences
         if (x !== 0 && componentsResult.length !== 0) {
-          // needs to be stringified because values are hard to determine if true or false if in they're seen as objects
-          if (JSON.stringify(Object.values(componentsResult[newChange ? componentsResult.length - 1 : trackChanges])[0]) !== JSON.stringify(cur.componentData.props)) {
+          // needs to be stringified because values are hard to determine if
+          // true or false if in they're seen as objects
+          if (JSON.stringify(Object.values(componentsResult[newChange
+            ? componentsResult.length - 1 : trackChanges])[0])
+            !== JSON.stringify(cur.componentData.props)) {
             newChange = true;
             const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
             componentsResult.push(props);
@@ -179,7 +182,8 @@ const PerformanceVisx = (props: BarStackProps) => {
   const [action, setAction] = useState(false);
 
   const [route, setRoute] = useState('All Routes');
-
+  const [snapshot, setSnapshot] = useState('All Snapshots');
+  // snapshots = 3.0
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance'));
   }, [dispatch]);
@@ -229,28 +233,58 @@ const PerformanceVisx = (props: BarStackProps) => {
       />
     );
   };
-
+  // create allRoutes variable to hold urls
   const allRoutes = [];
   const filteredSnapshots = [];
-
+  // loop through data.barStack
   for (let i = 0; i < data.barStack.length; i += 1) {
+    // set url variable to new route url
     const url = new URL(data.barStack[i].route);
+    // if all the routes do not have the pathname property on url then push it onto all routes array
     if (!allRoutes.includes(url.pathname)) {
       allRoutes.push(url.pathname);
     }
+    // if the route exists and it is equal to url.pathname then push data.barstack at i into filteredSnapshots array
     if (route && route === url.pathname) {
       filteredSnapshots.push(data.barStack[i]);
     }
   }
+  // if route does not equal to All Routes, set data.barstack to filteredSnapshots array
   if (route !== 'All Routes') {
     data.barStack = filteredSnapshots;
   }
- 
+
+
+  if (snapshot !== 'All Snapshots') {
+    // filter barStack to make it equal to an array of length 1 with object matching snapshot ID to mirror the data.barStack object's shape
+    const checkData = [data.barStack.find(comp => comp.snapshotId === snapshot)];
+    const holdData = [];
+    // maxheight is referring to the max height in render time to choose the scaling size for graph
+    let maxHeight = 0;
+    // looping through checkData which is composed of a single snapshot while pushing key/values to a new object and setting maxHeight
+    for (const key in checkData[0]) {
+      if (key !== 'route' && key !== 'snapshotId') {
+        if (maxHeight < checkData[0][key]) maxHeight = checkData[0][key];
+        const name = {};
+        name[key] = checkData[0][key];
+        holdData.push(name);
+        holdData[holdData.length - 1].route = checkData[0].route;
+        holdData[holdData.length - 1].snapshotId = key;
+      }
+    }
+    // maxTotalRender height of bar is aligned to y-axis
+    // 1.15 adjusts the numbers on the y-axis so the max bar's true height never reaches the max of the y-axis
+    data.maxTotalRender = maxHeight * 1.15;
+    // assign holdData to data.barStack to be used later to create graph
+    if (holdData) data.barStack = holdData;
+  }
+
   const renderBargraph = () => {
     if (hierarchy) {
       return (
         <div>
           <BarGraph
+            maxHeight={maxHeight}
             data={data}
             width={width}
             height={height}
@@ -258,6 +292,8 @@ const PerformanceVisx = (props: BarStackProps) => {
             setRoute={setRoute}
             allRoutes={allRoutes}
             filteredSnapshots={filteredSnapshots}
+            setSnapshot={setSnapshot}
+            snapshot={snapshot}
           />
         </div>
       );
