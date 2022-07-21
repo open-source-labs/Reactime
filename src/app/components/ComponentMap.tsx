@@ -69,7 +69,7 @@ export default function ComponentMap({
   const [orientation, setOrientation] = useState('horizontal');
   const [linkType, setLinkType] = useState('diagonal');
   const [stepPercent, setStepPercent] = useState(10);
-  const [setTooltip] = useState(false);
+  const [Tooltip, setTooltip] = useState(false);
   const [selectedNode, setSelectedNode] = useState('root');
   const [, dispatch] = useStoreContext();
 
