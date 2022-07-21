@@ -186,6 +186,8 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 -   Tab titles of chrome browser tabs not running an application in development mode are no longer affected by Reactime
 -   Multiple black screens fixed
 -   Improved UI and performance
+-   No longer inject scripts to non-target applications
+
 
 ## <b>Read More</b>
 
