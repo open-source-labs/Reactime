@@ -49,13 +49,13 @@ Currently, Reactime supports React apps (now including React Router apps) using 
 
 Previously, <b>Reactime 14.0</b> added the exciting features below:
 
-I. React Router Compatibility <br>
+**I. React Router Compatibility** <br>
 Reactime is now compatible with React Router applications! Prior to Reactime 14.0, recording state snapshots as the user navigated across various routes was possible, but time travel debugging was only possible for the current route (i.e. jumping back to a prior state at a different route was not possible). In order to streamline debugging of applications with multiple routes, Reactime 14.0 added functionality that allows the user to time-travel back to different routes, including live updating in the browser to reflect the state of their application at that previously visited route.
 
-II. Classifying State Snapshots by Route <br>
+**II. Classifying State Snapshots by Route** <br>
 The list of state snapshots in the Reactime dashboard is now classified by route to give the developer visual cues of the snapshot-route relationship and make time travel debugging of various routes easier.
 
-III. Filtering Performance Metrics by Route <br>
+**III. Filtering Performance Metrics by Route** <br>
 The Reactime dashboard includes a stacked bar graph showing render times for each component, with a separate bar stack for each snapshot. With Reactime 14.0, this composite bar graph can now be filtered by route to allow the developer to review detailed performance data by route.
 
 After installing Reactime, you can test its functionalities with your React application in development mode.
@@ -200,71 +200,33 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 
 ## <b>Authors</b>
 
--   **Peng Dong** - [@d28601581](https://github.com/d28601581)
--   **Ozair Ghulam** - [@ozairgh](https://github.com/ozairgh)
--   **Christina Or** - [@christinaor](https://github.com/christinaor)
--   **Khanh Bui** - [@AndyB909](https://github.com/AndyB909)
--   **David Kim** - [@codejunkie7](https://github.com/codejunkie7)
--   **Robby Tipton** - [@RobbyTipton](https://github.com/RobbyTipton)
--   **Kevin HoEun Lee** - [@khobread](https://github.com/khobread)
--   **Christopher LeBrett** - [@fscgolden](https://github.com/fscgolden)
--   **Joseph Park** - [@joeepark](https://github.com/joeepark)
--   **Kris Sorensen** - [@kris-sorensen](https://github.com/kris-sorensen)
--   **Daljit Gill** - [@dgill05](https://github.com/dgill05)
--   **Ben Michareune** - [@bmichare](https://github.com/bmichare)
--   **Dane Corpion** - [@danecorpion](https://github.com/danecorpion)
--   **Harry Fox** - [@StackOverFlowWhereArtThou](https://github.com/StackOverFlowWhereArtThou)
--   **Nathan Richardson** - [@BagelEnthusiast](https://github.com/BagelEnthusiast)
--   **David Bernstein** - [@dangitbobbeh](https://github.com/dangitbobbeh)
--   **Joseph Stern** - [@josephiswhere](https://github.com/josephiswhere)
--   **Dennis Lopez** - [@DennisLpz](https://github.com/DennisLpz)
--   **Cole Styron** - [@colestyron](https://github.com/C-STYR)
--   **Ali Rahman** - [@CourageWolf](https://github.com/CourageWolf)
--   **Caner Demir** - [@demircaner](https://github.com/demircaner)
--   **Kevin Ngo** - [@kev-ngo](https://github.com/kev-ngo)
--   **Becca Viner** - [@rtviner](https://github.com/rtviner)
--   **Caitlin Chan** - [@caitlinchan23](https://github.com/caitlinchan23)
--   **Kim Mai Nguyen** - [@Nkmai](https://github.com/Nkmai)
--   **Tania Lind** - [@lind-tania](https://github.com/lind-tania)
--   **Alex Landeros** - [@AlexanderLanderos](https://github.com/AlexanderLanderos)
--   **Chris Guizzetti** - [@guizzettic](https://github.com/guizzettic)
--   **Jason Victor** - [@theqwertypusher](https://github.com/Theqwertypusher)
--   **Sanjay Lavingia** - [@sanjaylavingia](https://github.com/sanjaylavingia)
--   **Vincent Nguyen** - [@VNguyenCode](https://github.com/VNguyenCode)
--   **Haejin Jo** - [@haejinjo](https://github.com/haejinjo)
--   **Hien Nguyen** - [@hienqn](https://github.com/hienqn)
--   **Jack Crish** - [@JackC27](https://github.com/JackC27)
--   **Kevin Fey** - [@kevinfey](https://github.com/kevinfey)
--   **Carlos Perez** - [@crperezt](https://github.com/crperezt)
--   **Edwin Menendez** - [@edwinjmenendez](https://github.com/edwinjmenendez)
--   **Gabriela Jardim Aquino** - [@aquinojardim](https://github.com/aquinojardim)
--   **Greg Panciera** - [@gpanciera](https://github.com/gpanciera)
--   **Nathanael Wa Mwenze** - [@nmwenz90](https://github.com/nmwenz90)
--   **Ryan Dang** - [@rydang](https://github.com/rydang)
--   **Bryan Lee** - [@mylee1995](https://github.com/mylee1995)
--   **Josh Kim** - [@joshua0308](https://github.com/joshua0308)
--   **Sierra Swaby** - [@starkspark](https://github.com/starkspark)
--   **Ruth Anam** - [@peachiecodes](https://github.com/peachiecodes)
--   **David Chai** - [@davidchaidev](https://github.com/davidchai717)
--   **Yujin Kang** - [@yujinkay](https://github.com/yujinkay)
--   **Andy Wong** - [@andywongdev](https://github.com/andywongdev)
--   **Chris Flannery** - [@chriswillsflannery](https://github.com/chriswillsflannery)
--   **Rajeeb Banstola** - [@rajeebthegreat](https://github.com/rajeebthegreat)
--   **Prasanna Malla** - [@prasmalla](https://github.com/prasmalla)
--   **Rocky Lin** - [@rocky9413](https://github.com/rocky9413)
--   **Abaas Khorrami** - [@dubalol](https://github.com/dubalol)
--   **Ergi Shehu** - [@Ergi516](https://github.com/ergi516)
--   **Raymond Kwan** - [@rkwn](https://github.com/rkwn)
--   **Joshua Howard** - [@Joshua-Howard](https://github.com/joshua-howard)
--   **Lina Shin** - [@rxlina](https://github.com/rxlina)
--   **Andy Tsou** - [@andytsou19](https://github.com/andytsou19)
--   **Feiyi Wu** - [@FreyaWu](https://github.com/FreyaWu)
--   **Viet Nguyen** - [@vnguyen95](https://github.com/vnguyen95)
--   **Alex Gomez** - [@alexgomez9](https://github.com/alexgomez9)
--   **Edar Liu** - [@liuedar](https://github.com/liuedar)
--   **Kristina Wallen** - [@kristinawallen](https://github.com/kristinawallen)
--   **Quan Le** - [@blachfog](https://github.com/Blachfog)
--   **Robert Maeda** - [@robmaeda](https://github.com/robmaeda)
+| Authors| | |
+| ------------- | ------------- | -------- |
+| -   **Peng Dong** - [@d28601581](https://github.com/d28601581)          | -   **Ozair Ghulam** - [@ozairgh](https://github.com/ozairgh)       | -   **Christina Or** - [@christinaor](https://github.com/christinaor) |
+| -   **Khanh Bui** - [@AndyB909](https://github.com/AndyB909)          | -   **David Kim** - [@codejunkie7](https://github.com/codejunkie7)       | -   **Robby Tipton** - [@RobbyTipton](https://github.com/RobbyTipton)  |
+|-   **Kevin HoEun Lee** - [@khobread](https://github.com/khobread)         | -   **Christopher LeBrett** - [@fscgolden](https://github.com/fscgolden)      | -   **Joseph Park** - [@joeepark](https://github.com/joeepark) |
+| -   **Kris Sorensen** - [@kris-sorensen](https://github.com/kris-sorensen)         | -   **Daljit Gill** - [@dgill05](https://github.com/dgill05)     | -   **Ben Michareune** - [@bmichare](https://github.com/bmichare) |
+| -   **Dane Corpion** - [@danecorpion](https://github.com/danecorpion)     | -   **Harry Fox** - [@StackOverFlowWhereArtThou](https://github.com/StackOverFlowWhereArtThou)       |-   **Nathan Richardson** - [@BagelEnthusiast](https://github.com/BagelEnthusiast)  |
+|-   **David Bernstein** - [@dangitbobbeh](https://github.com/dangitbobbeh)         | -   **Joseph Stern** - [@josephiswhere](https://github.com/josephiswhere)       | -   **Dennis Lopez** - [@DennisLpz](https://github.com/DennisLpz)  |
+| -   **Cole Styron** - [@colestyron](https://github.com/C-STYR)      | -   **Ali Rahman** - [@CourageWolf](https://github.com/CourageWolf)      | -   **Caner Demir** - [@demircaner](https://github.com/demircaner)  |
+| -   **Kevin Ngo** - [@kev-ngo](https://github.com/kev-ngo)   | -   **Becca Viner** - [@rtviner](https://github.com/rtviner)         |  -   **Caitlin Chan** - [@caitlinchan23](https://github.com/caitlinchan23) | 
+|-   **Kim Mai Nguyen** - [@Nkmai](https://github.com/Nkmai) |-   **Tania Lind** - [@lind-tania](https://github.com/lind-tania) |-   **Alex Landeros** - [@AlexanderLanderos](https://github.com/AlexanderLanderos) |
+|-   **Chris Guizzetti** - [@guizzettic](https://github.com/guizzettic) |-   **Jason Victor** - [@theqwertypusher](https://github.com/Theqwertypusher) |-   **Sanjay Lavingia** - [@sanjaylavingia](https://github.com/sanjaylavingia) |
+|-   **Vincent Nguyen** - [@VNguyenCode](https://github.com/VNguyenCode) |-   **Haejin Jo** - [@haejinjo](https://github.com/haejinjo) |-   **Hien Nguyen** - [@hienqn](https://github.com/hienqn) |
+|-   **Jack Crish** - [@JackC27](https://github.com/JackC27) |-   **Kevin Fey** - [@kevinfey](https://github.com/kevinfey) |-   **Carlos Perez** - [@crperezt](https://github.com/crperezt) |
+|-   **Edwin Menendez** - [@edwinjmenendez](https://github.com/edwinjmenendez) |-   **Gabriela Jardim Aquino** - [@aquinojardim](https://github.com/aquinojardim) |-   **Greg Panciera** - [@gpanciera](https://github.com/gpanciera) |
+|-   **Nathanael Wa Mwenze** - [@nmwenz90](https://github.com/nmwenz90) |-   **Ryan Dang** - [@rydang](https://github.com/rydang) |-   **Bryan Lee** - [@mylee1995](https://github.com/mylee1995) |
+|-   **Josh Kim** - [@joshua0308](https://github.com/joshua0308) |-   **Sierra Swaby** - [@starkspark](https://github.com/starkspark) |-   **Ruth Anam** - [@peachiecodes](https://github.com/peachiecodes) |
+|-   **David Chai** - [@davidchaidev](https://github.com/davidchai717) |-   **Yujin Kang** - [@yujinkay](https://github.com/yujinkay) |-   **Andy Wong** - [@andywongdev](https://github.com/andywongdev) |
+|-   **Chris Flannery** - [@chriswillsflannery](https://github.com/chriswillsflannery) |-   **Rajeeb Banstola** - [@rajeebthegreat](https://github.com/rajeebthegreat) |-   **Prasanna Malla** - [@prasmalla](https://github.com/prasmalla) |
+|-   **Rocky Lin** - [@rocky9413](https://github.com/rocky9413) |-   **Abaas Khorrami** - [@dubalol](https://github.com/dubalol) |-   **Ergi Shehu** - [@Ergi516](https://github.com/ergi516) |
+|-   **Raymond Kwan** - [@rkwn](https://github.com/rkwn) |-   **Joshua Howard** - [@Joshua-Howard](https://github.com/joshua-howard) |-   **Lina Shin** - [@rxlina](https://github.com/rxlina) |
+|-   **Andy Tsou** - [@andytsou19](https://github.com/andytsou19) |-   **Feiyi Wu** - [@FreyaWu](https://github.com/FreyaWu) |-   **Viet Nguyen** - [@vnguyen95](https://github.com/vnguyen95) |
+|
+-   **Alex Gomez** - [@alexgomez9](https://github.com/alexgomez9) |-   **Edar Liu** - [@liuedar](https://github.com/liuedar) |-   **Kristina Wallen** - [@kristinawallen](https://github.com/kristinawallen) |
+|-   **Quan Le** - [@blachfog](https://github.com/Blachfog) |-   **Robert Maeda** - [@robmaeda](https://github.com/robmaeda) | |
+
+
 
 ## <b>License </b>
 
