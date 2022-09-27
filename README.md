@@ -244,7 +244,7 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 -   **Bryan Lee** - [@mylee1995](https://github.com/mylee1995)
 -   **Josh Kim** - [@joshua0308](https://github.com/joshua0308)
 -   **Sierra Swaby** - [@starkspark](https://github.com/starkspark)
--   **Ruth Anam** - [@peachiecodes](https://github.com/peachiecodes)
+-   **Ruth Anam** - [@nusanam](https://github.com/nusanam)
 -   **David Chai** - [@davidchaidev](https://github.com/davidchai717)
 -   **Yujin Kang** - [@yujinkay](https://github.com/yujinkay)
 -   **Andy Wong** - [@andywongdev](https://github.com/andywongdev)
