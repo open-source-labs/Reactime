@@ -19,8 +19,6 @@ import ComponentMap from './ComponentMap';
 import { changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
 import PerformanceVisx from './PerformanceVisx';
-import Legend from './AtomsRelationshipLegend';
-import AtomsRelationship from './AtomsRelationship';
 import WebMetrics from './WebMetrics';
 
 const History = require('./History').default;
@@ -94,20 +92,6 @@ const StateRoute = (props: StateRouteProps) => {
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
-
-  const renderAtomsRelationship = () => (
-    <ParentSize>
-      {({ width, height }) => (
-        <>
-          <AtomsRelationship
-            width={width}
-            height={height}
-            snapshots={snapshots}
-          />
-        </>
-      )}
-    </ParentSize>
-  );
 
   // the hierarchy gets set on the first click in the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
@@ -242,7 +226,6 @@ const StateRoute = (props: StateRouteProps) => {
       <Switch>
         <Route path="/performance" render={renderPerfView} />
         <Route path="/history" render={renderHistory} />
-        <Route path="/relationship" render={renderAtomsRelationship} />
         <Route path="/webMetrics" render={renderWebMetrics} />
         <Route path="/tree" render={renderTree} />
         <Route path="/" render={renderComponentMap} />
