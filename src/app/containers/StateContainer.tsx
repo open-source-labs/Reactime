@@ -17,14 +17,10 @@ interface StateContainerProps {
       state?: Record<string, unknown>;
       stateSnaphot?: Record<string, unknown>;
       children?: unknown[];
-      AtomsRelationship?: any[];
-      atomSelectors?: object;
-      atomsComponents?: object;
     }
   >;
   toggleActionContainer?: any;
   webMetrics?: object;
-  AtomsRelationship?: any[];
   hierarchy: Record<string, unknown>;
   snapshots?: [];
   viewIndex?: number;
