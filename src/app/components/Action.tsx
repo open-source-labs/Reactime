@@ -58,33 +58,33 @@ const Action = (props: ActionProps): JSX.Element => {
 
   /**
    * @function cleanTime: Displays render times for state changes
-   * @returns render display time in seconds in miliseconds
+   * @returns render display time in seconds in milliseconds
    */
   const cleanTime = () => {
     if (!componentData || !componentData.actualDuration) {
       return 'NO TIME';
     }
     let seconds: number | string;
-    let miliseconds: any = componentData.actualDuration;
+    let milliseconds: any = componentData.actualDuration;
     if (Math.floor(componentData.actualDuration) > 60) {
       seconds = Math.floor(componentData.actualDuration / 60);
       seconds = JSON.stringify(seconds);
       if (seconds.length < 2) {
         seconds = '0'.concat(seconds);
       }
-      miliseconds = Math.floor(componentData.actualDuration % 60);
+      milliseconds = Math.floor(componentData.actualDuration % 60);
     } else {
       seconds = '00';
     }
-    miliseconds = Number.parseFloat(miliseconds).toFixed(2);
-    const arrayMiliseconds = miliseconds.split('.');
-    if (arrayMiliseconds[0].length < 2) {
-      arrayMiliseconds[0] = '0'.concat(arrayMiliseconds[0]);
+    milliseconds = Number.parseFloat(milliseconds).toFixed(2);
+    const arrayMilliseconds = milliseconds.split('.');
+    if (arrayMilliseconds[0].length < 2) {
+      arrayMilliseconds[0] = '0'.concat(arrayMilliseconds[0]);
     }
     if (index === 0) {
-      return `${seconds}:${arrayMiliseconds[0]}.${arrayMiliseconds[1]}`;
+      return `${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`;
     }
-    return `+${seconds}:${arrayMiliseconds[0]}.${arrayMiliseconds[1]}`;
+    return `+${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`;
   };
   const displayTime = cleanTime();
 
