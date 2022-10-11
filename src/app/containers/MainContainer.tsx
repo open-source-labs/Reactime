@@ -19,7 +19,7 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-function MainContainer(): any {
+function MainContainer(): JSX.Element {
   const [store, dispatch] = useStoreContext();
   const {
     tabs, currentTab, port, split,
@@ -53,9 +53,9 @@ function MainContainer(): any {
         sourceTab: number;
       }) => {
         const { action, payload, sourceTab } = message;
-        let maxTab;
+        let maxTab: number;
         if (!sourceTab) {
-          const tabsArray: any = Object.keys(payload);
+          const tabsArray: Array<string> = Object.keys(payload);
           maxTab = Math.max(...tabsArray);
         }
         switch (action) {
