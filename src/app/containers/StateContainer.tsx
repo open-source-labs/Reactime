@@ -36,7 +36,6 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
     viewIndex,
     webMetrics,
     currLocation,
-    // added snapshots, Rob 11/4
     snapshots,
   } = props;
 
