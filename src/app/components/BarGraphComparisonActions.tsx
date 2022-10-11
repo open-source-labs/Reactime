@@ -94,7 +94,7 @@ const BarGraphComparisonActions = props => {
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSeriesName = action => action.seriesName;
 
-  // create visualization SCALES with cleaned data
+  // create visualization SCALES with cleaned data.
   // the domain array/xAxisPoints elements will place the bars along the x-axis
   const seriesNameScale = scaleBand<string>({
     domain: data.map(getSeriesName),
