@@ -22,7 +22,6 @@ import PerformanceVisx from './PerformanceVisx';
 import WebMetrics from './WebMetrics';
 
 const History = require('./History').default;
-const ErrorHandler = require('./ErrorHandler').default;
 
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types

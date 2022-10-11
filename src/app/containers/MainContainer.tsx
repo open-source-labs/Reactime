@@ -92,7 +92,7 @@ function MainContainer(): JSX.Element {
     );
 
     currentPort.onDisconnect.addListener(() => {
-      console.log('this port is disconeccting line 79');
+      console.log('this port is disconnecting line 79');
       // disconnecting
     });
 
