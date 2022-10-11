@@ -46,7 +46,6 @@ const circularComponentTable = new Set();
 let initialstart = false;
 let rtidCounter = 0;
 let rtid = null;
-const recoilDomNode = {};
 
 /**
  * @method sendSnapshot

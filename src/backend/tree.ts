@@ -51,13 +51,7 @@ class Tree {
 
   isExpanded: boolean;
 
-  atomsComponents: any;
-
-  atomSelectors: any;
-
   rtid: any;
-
-  recoilDomNode: any;
 
   route: {};
 
@@ -69,7 +63,7 @@ class Tree {
   // If not, create the new component and also a new key: value pair in 'componentNames' with the component's name as the key and 0 as its value
   // EXAMPLE OF COMPONENTNAMES OBJECT: {editableInput: 1, Provider: 0, etc}
 
-  constructor(state: string | {}, name = 'nameless', componentData: {} = {}, rtid: any = null, recoilDomNode: any = null, string: any = null) {
+  constructor(state: string | {}, name = 'nameless', componentData: {} = {}, rtid: any = null, string: any = null) {
     this.state = state === 'root' ? 'root' : serializeState(state);
     this.name = name;
     this.componentData = componentData ? { ...JSON.parse(JSON.stringify(componentData)) } : { };
@@ -77,7 +71,6 @@ class Tree {
     this.parent = null; // ref to parent so we can add siblings
     this.isExpanded = true;
     this.rtid = rtid;
-    this.recoilDomNode = recoilDomNode;
   }
 
   // Returns a unique name ready to be used
@@ -98,17 +91,17 @@ class Tree {
     return name;
   }
 
-  addChild(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode: any): Tree {
+  addChild(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
     const uniqueName = this.checkForDuplicates(name);
-    const newChild: Tree = new Tree(state, uniqueName, componentData, rtid, recoilDomNode);
+    const newChild: Tree = new Tree(state, uniqueName, componentData, rtid);
     newChild.parent = this;
     this.children.push(newChild);
     return newChild;
   }
 
-  addSibling(state: string | {}, name: string, componentData: {}, rtid: any, recoilDomNode: any): Tree {
+  addSibling(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
     const uniqueName = this.checkForDuplicates(name);
-    const newSibling: Tree = new Tree(state, uniqueName, componentData, rtid, recoilDomNode);
+    const newSibling: Tree = new Tree(state, uniqueName, componentData, rtid);
     newSibling.parent = this.parent;
     this.parent.children.push(newSibling);
     return newSibling;
@@ -127,7 +120,7 @@ class Tree {
       circularComponentTable.clear();
     }
     // creates copy of present node
-    let copy: Tree = new Tree(this.state, this.name, this.componentData, this.rtid, this.recoilDomNode);
+    let copy: Tree = new Tree(this.state, this.name, this.componentData, this.rtid);
     delete copy.parent;
     circularComponentTable.add(this);
     copy = scrubUnserializableMembers(copy);
