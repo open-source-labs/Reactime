@@ -5,7 +5,7 @@ import Loader from '../components/Loader';
 import ErrorMsg from '../components/ErrorMsg';
 import { useStoreContext } from '../store';
 
-function ErrorContainer(props): JSX.Element {
+function ErrorContainer(): any {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTitle, currentTab } = store;
   // hooks for error checks
