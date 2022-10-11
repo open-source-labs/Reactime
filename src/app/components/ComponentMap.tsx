@@ -23,29 +23,6 @@ import { useStoreContext } from '../store';
 
 const exclude = ['childExpirationTime', 'staticContext', '_debugSource', 'actualDuration', 'actualStartTime', 'treeBaseDuration', '_debugID', '_debugIsCurrentlyTiming', 'selfBaseDuration', 'expirationTime', 'effectTag', 'alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
 
-// const root = hierarchy({
-//   name: 'root',
-//   children: [
-//     { name: 'child #1' },
-//     {
-//       name: 'child #2',
-//       children: [
-//         { name: 'grandchild #1' },
-//         { name: 'grandchild #2' },
-//         { name: 'grandchild #3' },
-//       ],
-//     },
-//   ],
-// });
-
-interface TreeNode {
-  name: string;
-  isExpanded?: boolean;
-  children?: TreeNode[];
-}
-
-// type HierarchyNode = HierarchyPointNode<TreeNode>;
-
 const defaultMargin = {
   top: 30, left: 30, right: 55, bottom: 70,
 };
@@ -174,30 +151,6 @@ export default function ComponentMap({
 
   const formatState = state => {
     if (state === 'stateless') return ['stateless'];
-    // Something in this code below is breaking the app,
-    // when you hover over a stateful component on the map
-    // --------------------------------------------------------------------------------------------
-    // const result = [];
-    // const inner = arg => {
-    //   if (Array.isArray(arg)) {
-    //     result.push('[');
-    //     arg.forEach(e => { inner(e); });
-    //     result.push('] ');
-    //   } else if ((typeof arg) === 'object') {
-    //     result.push('{ ');
-    //     Object.keys(arg).forEach((key, i, arr) => {
-    //       result.push(`${key}: `);
-    //       ((typeof arg[key]) === 'object') ? inner(arg[key]) : result.push(arg[key]);
-    //       if (i !== arr.length - 1) result.push(', ');
-    //     });
-    //     result.push(' } ');
-    //   } else {
-    //     result.push(` ${arg}, `);
-    //   }
-    // };
-    // inner(state);
-    // return result;
-    // --------------------------------------------------------------------------------------------
     return ['stateful'];
   };
 
