@@ -80,6 +80,7 @@ export const getHooksNames = (elementType: string): Array<string> => {
     return ['unknown'];
   }
 
+  // hookNames will contain an object with methods (functions)
   const hooksNames: any = {};
 
   // Begin search for hook names, only if ast has a body property.

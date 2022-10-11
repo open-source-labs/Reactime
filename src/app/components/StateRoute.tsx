@@ -22,7 +22,6 @@ import PerformanceVisx from './PerformanceVisx';
 import WebMetrics from './WebMetrics';
 
 const History = require('./History').default;
-const ErrorHandler = require('./ErrorHandler').default;
 
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
 // eslint-disable-next-line react/prop-types
@@ -64,9 +63,9 @@ const StateRoute = (props: StateRouteProps) => {
 
   // the hierarchy gets set upon the first click on the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
-  // if true, we invoke teh D3 render chart with hierarchy
+  // if true, we invoke the D3 render chart with hierarchy
   // by invoking History component, and passing in all the props required to render D3 elements and perform timeJump from clicking of node
-  // otherwise we an alert to the user that no state was found.
+  // otherwise we send an alert to the user that no state was found.
   const renderHistory = () => {
     if (hierarchy) {
       return (

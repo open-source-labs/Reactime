@@ -1,13 +1,9 @@
 // @ts-nocheck
 
 import * as React from 'react';
-import {
-  useState, useRef, useEffect,
-} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUpload,
-  faQuestion,
   faDownload,
   faSquare,
   faColumns,
@@ -54,16 +50,11 @@ function importHandler(dispatch: (a: any) => void) {
   fileUpload.click();
 }
 
-function howToUseHandler() {
-  window.open('https://github.com/open-source-labs/reactime', '_blank');
-  return null;
-}
-
 function ButtonsContainer(): JSX.Element {
   const [{ tabs, currentTab, split, currentTabInApp }, dispatch] = useStoreContext();
   const {
     snapshots,
-    mode: { paused, persist },
+    mode: { paused },
   } = tabs[currentTab];
 
   return (
@@ -93,20 +84,6 @@ function ButtonsContainer(): JSX.Element {
         )}
         {split ? 'Unsplit' : 'Split'}
       </button>
-
-      {/* removing the UI for now Defunt perist feauture. See docs for more info */}
-      {/* <button
-        className="persist-button"
-        type="button"
-        onClick={() => dispatch(toggleMode('persist'))}
-      >
-        {persist ? (
-          <FontAwesomeIcon icon={faRedoAlt} />
-        ) : (
-          <FontAwesomeIcon icon={faMapPin} />
-        )}
-        {persist ? 'Unpersist' : 'Persist'}
-      </button> */}
 
       <button
         className="export-button"

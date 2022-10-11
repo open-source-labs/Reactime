@@ -40,7 +40,7 @@ interface TravelContainerProps {
   snapshotsLength: number,
 }
 
-function TravelContainer(props:TravelContainerProps) {
+function TravelContainer(props:TravelContainerProps): JSX.Element {
   const { snapshotsLength } = props;
   const [selectedSpeed, setSpeed] = useState(speeds[1]);
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
@@ -48,7 +48,6 @@ function TravelContainer(props:TravelContainerProps) {
 
   return (
     <div className="travel-container">
-      
       <button
         className="play-button"
         type="button"

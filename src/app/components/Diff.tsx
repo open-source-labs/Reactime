@@ -28,7 +28,7 @@ function Diff(props: DiffProps) {
   }
 
   // cleaning preview from stateless data
-  const statelessCleanning = (obj:{name?:string; componentData?:object; state?:string|any;stateSnaphot?:object; children?:any[]}) => {
+  const statelessCleanning = (obj:{name?:string; componentData?:object; state?:string|any; stateSnaphot?:object; children?:any[]}) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;

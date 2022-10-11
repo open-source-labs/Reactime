@@ -22,7 +22,7 @@ const resetSlider = () => {
 function ActionContainer(props): JSX.Element {
   const [{ tabs, currentTab, port }, dispatch] = useStoreContext();
   const {
-    currLocation, hierarchy, sliderIndex, viewIndex, snapshots,
+    currLocation, hierarchy, sliderIndex, viewIndex,
   } = tabs[currentTab];
   const {
     toggleActionContainer, actionView, setActionView,
@@ -52,8 +52,6 @@ function ActionContainer(props): JSX.Element {
         state: obj.stateSnapshot.children[0].state,
         componentName: obj.stateSnapshot.children[0].name,
         routePath: obj.stateSnapshot.route.url,
-        // nathan testing new entries for component name, original above
-        // componentName: findDiff(obj.index),
         componentData:
           JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}'
             ? ''
