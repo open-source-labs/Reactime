@@ -70,8 +70,8 @@ describe('Tree unit test', () => {
 
   describe('Adding sibling', () => {
     let newTree = new Tree({});
-    let returnChild = newTree.addChild('stateful', 'child', {}, null, null);
-    let returnSibling = returnChild.addSibling('stateful', 'child', {}, null, null);
+    let returnChild = newTree.addChild('stateful', 'child', {}, null);
+    let returnSibling = returnChild.addSibling('stateful', 'child', {}, null);
     it('the tree now has 2 children', () => {
       expect(newTree.children.length).toBe(2);
     })
