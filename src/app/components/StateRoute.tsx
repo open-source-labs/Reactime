@@ -34,8 +34,6 @@ export interface StateRouteProps {
     state?: string | object;
     stateSnaphot?: object;
     children?: any[];
-    atomsComponents?: any;
-    atomSelectors?: any;
   };
   hierarchy: any;
   snapshots: [];
