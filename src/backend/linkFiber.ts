@@ -357,7 +357,6 @@ function createTree(
         elementType ? elementType.name : 'nameless',
         componentData,
         rtid,
-        recoilDomNode
       );
     } else {
       newNode = tree.addChild(
@@ -365,7 +364,6 @@ function createTree(
         elementType ? elementType.name : 'nameless',
         componentData,
         rtid,
-        recoilDomNode
       );
     }
   } else {
