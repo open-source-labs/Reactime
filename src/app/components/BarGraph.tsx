@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
-import { BarStack, Bar } from '@visx/shape';
+import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
@@ -43,6 +43,18 @@ interface TooltipData {
   color: string;
 }
 
+interface BarGraphProps {
+    width: number,
+    height: number,
+    data: Record<string, unknown>,
+    comparison: unknown,
+    setRoute: unknown,
+    allRoutes: unknown,
+    filteredSnapshots: unknown,
+    snapshot: unknown,
+    setSnapshot: unknown
+  }
+
 /* DEFAULTS */
 const margin = {
   top: 30, right: 30, bottom: 0, left: 50,
@@ -59,7 +71,7 @@ const tooltipStyles = {
   fontFamily: 'Roboto',
 };
 
-const BarGraph = props => {
+const BarGraph = (props: BarGraphProps): unknown => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
     width,
@@ -70,7 +82,7 @@ const BarGraph = props => {
     allRoutes,
     filteredSnapshots,
     snapshot,
-    setSnapshot
+    setSnapshot,
   } = props;
   const [seriesNameInput, setSeriesNameInput] = useState(`Series ${comparison.length + 1}`);
   const {
