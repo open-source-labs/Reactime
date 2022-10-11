@@ -5,6 +5,7 @@
     "transform": {
       "^.+\\.(js|ts|tsx)$": "ts-jest"
     },
+    "transformIgnorePatterns": ["/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)"],
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
       "ts",
@@ -93,6 +94,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@types/chai": "^4.2.14",
     "@types/chrome": "^0.0.119",
+    "@types/d3": "^7.4.0",
     "@types/d3-scale-chromatic": "^2.0.0",
     "@types/jest": "^26.0.4",
     "@types/lodash.isequal": "^4.5.5",
