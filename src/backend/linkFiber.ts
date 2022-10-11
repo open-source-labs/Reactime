@@ -32,7 +32,6 @@ import routes from './routes';
 // throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
 // getHooksNames - helper function to grab the getters/setters from `elementType`
 import { throttle, getHooksNames } from './helpers';
-import AtomsRelationship from '../app/components/AtomsRelationship';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -45,39 +44,11 @@ let fiberRoot = null;
 let doWork = true;
 const circularComponentTable = new Set();
 const isRecoil = false;
-let allAtomsRelationship = [];
 let initialstart = false;
 let rtidCounter = 0;
 let rtid = null;
 const recoilDomNode = {};
 
-// Simple check for whether our target app uses Recoil
-// can these be regular
-
-// if (window.$recoilDebugStates) {
-//   isRecoil = true;
-// }
-
-// This is deprecated Recoil code.  Recoil as of 01-03-2021
-// does not work well with Reactime.  Leaving any Recoil
-// code in codebase to assist with Recoil implementations
-// in the future.
-/*
-function getRecoilState(): any {
-  const RecoilSnapshotsLength = window[`$recoilDebugStates`].length;
-  const lastRecoilSnapshot =
-    window[`$recoilDebugStates`][RecoilSnapshotsLength - 1];
-  const nodeToNodeSubs = lastRecoilSnapshot.nodeToNodeSubscriptions;
-  const nodeToNodeSubsKeys = lastRecoilSnapshot.nodeToNodeSubscriptions.keys();
-  nodeToNodeSubsKeys.forEach((node) => {
-    nodeToNodeSubs
-      .get(node)
-      .forEach((nodeSubs) =>
-        allAtomsRelationship.push([node, nodeSubs, 'atoms and selectors'])
-      );
-  });
-}
-*/
 /**
  * @method sendSnapshot
  * @param snap The current snapshot
@@ -116,7 +87,6 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
     },
     '*'
   );
-  allAtomsRelationship = [];
 }
 
 /**
