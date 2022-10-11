@@ -360,7 +360,9 @@ function createTree(
  * linkFiber contains core module functionality, exported as an anonymous function.
  */
 export default (snap: Snapshot, mode: Mode): (() => void) => {
+  // checks for visiblity of document
   function onVisibilityChange(): void {
+    // hidden property = background tab/minimized window
     doWork = !document.hidden;
   }
   return () => {
@@ -372,7 +374,7 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       action: 'devToolsInstalled',
       payload: 'devToolsInstalled'
     }, '*');
-    // reactInstance returns an object of the react
+    // reactInstance returns an object of the react, 1st element in map
     const reactInstance = devTools.renderers.get(1);
     // if no React Instance found then target is not a compatible app
     if (!reactInstance) { return; }
