@@ -212,8 +212,7 @@ function History(props: Record<string, unknown>): JSX.Element {
     return html;
   }
 
-  // below we are rendering the LegendKey component and passing hierarchy as props
-  // then rendering each node in History tab to render using D3, which will share area with LegendKey
+// then rendering each node in History tab to render using D3, which will share area with LegendKey
   return (
     <div className="display">
       <svg
