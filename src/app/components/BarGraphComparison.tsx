@@ -45,6 +45,16 @@ interface TooltipData {
   color: string;
 }
 
+interface BarGraphComparisonProps {
+  width: number,
+  height: number,
+  data: Record<string, unknown>,
+  comparison: string | [],
+  setSeries: () => void,
+  series: unknown,
+  setAction: () => void,
+  }
+
 /* DEFAULTS */
 const margin = {
   top: 30, right: 30, bottom: 0, left: 50,
@@ -61,10 +71,10 @@ const tooltipStyles = {
   fontFamily: 'Roboto',
 };
 
-const BarGraphComparison = props => {
+const BarGraphComparison = (props: BarGraphComparisonProps): unknown => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
-    width, height, data, comparison, setSeries, series, setAction
+    width, height, data, comparison, setSeries, series, setAction,
   } = props;
   const [snapshots] = React.useState(0);
   const [open, setOpen] = React.useState(false);
@@ -201,7 +211,7 @@ const BarGraphComparison = props => {
     return data.barStack;
   }
   const animateButton = e => {
-    e.preventDefault;
+    e.preventDefault();
     e.target.classList.add('animate');
     e.target.innerHTML = 'Deleted!';
     setTimeout(() => {

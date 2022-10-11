@@ -48,11 +48,11 @@ interface BarGraphProps {
     height: number,
     data: Record<string, unknown>,
     comparison: unknown,
-    setRoute: unknown,
+    setRoute: () => void,
     allRoutes: unknown,
     filteredSnapshots: unknown,
     snapshot: unknown,
-    setSnapshot: unknown
+    setSnapshot: () => void
   }
 
 /* DEFAULTS */
