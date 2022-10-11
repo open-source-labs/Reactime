@@ -16,16 +16,6 @@ import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useStoreContext } from '../store';
 import { setCurrentTabInApp } from '../actions/actions';
 
-/* NOTES
-Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
-Barstacks display inconsistently...however, almost always displays upon initial test app load or
-when empty button is clicked. Updating state after initial app load typically makes bars disappear.
-However, cycling between updating state and then emptying sometimes fixes the stack bars. Important
-to note - all snapshots do render (check HTML doc) within the chrome extension but they do
-not display because height is not consistently passed to each bar. This side effect is only
-seen in recoil apps...
- */
-
 // typescript for PROPS from StateRoute.tsx
 interface BarStackProps {
   width: number;
