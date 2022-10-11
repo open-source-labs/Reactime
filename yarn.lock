@@ -8817,11 +8817,6 @@
   dependencies:
     "resolve" "^1.1.6"
 
-"recoil@0.0.10":
-  "integrity" "sha512-+9gRqehw3yKETmoZbhSnWu4GO10HDb5xYf1CjLF1oXGK2uT6GX5Lu9mfTXwjxV/jXxEKx8MIRUUbgPxvbJ8SEw=="
-  "resolved" "https://registry.npmjs.org/recoil/-/recoil-0.0.10.tgz"
-  "version" "0.0.10"
-
 "redent@^3.0.0":
   "integrity" "sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg=="
   "resolved" "https://registry.npmjs.org/redent/-/redent-3.0.0.tgz"
