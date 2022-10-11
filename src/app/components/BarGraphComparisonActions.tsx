@@ -17,12 +17,6 @@ import { deleteSeries, setCurrentTabInApp } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 /* TYPESCRIPT */
-interface data {
-  snapshotId?: string;
-}
-interface series {
-  seriesId?: any;
-}
 
 interface margin {
   top: number;
