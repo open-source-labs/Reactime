@@ -17,12 +17,6 @@ import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../actio
 import { useStoreContext } from '../store';
 
 /* TYPESCRIPT */
-interface data {
-  snapshotId?: string;
-}
-interface series {
-  seriesId?: any;
-}
 
 interface margin {
   top: number;
