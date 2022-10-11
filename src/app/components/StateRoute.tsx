@@ -213,15 +213,6 @@ const StateRoute = (props: StateRouteProps) => {
         <NavLink className="router-link tree-tab" activeClassName="is-active" to="/tree">
           Tree
         </NavLink>
-        {isRecoil && (
-          <NavLink
-            className="router-link"
-            activeClassName="is-active"
-            to="/relationship"
-          >
-            AtomsRecoil
-          </NavLink>
-        )}
       </div>
       <Switch>
         <Route path="/performance" render={renderPerfView} />
