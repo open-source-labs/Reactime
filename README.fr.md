@@ -43,7 +43,7 @@
   <a href="#how-to-use">Manuel</a> • <a href="#features">Caractéristiques</a> • <a href="https://reactime.io">Website</a> • <a href="#readmore">En savoir plus</a>
 </p>
 
-Actuellement, Reactime est compatible avec les applications React qui utilisent des composants à état (stateful) et Hooks, avec un support en version bêta de et de pour le Context API.
+Actuellement, Reactime est compatible avec les applications React qui utilisent des composants à état (stateful) et Hooks, avec un support en version bêta de Recoil et de pour le Context API.
 
 <b>Reactime version 7.0</b> beta peut vous aider à éviter les ré-rendus inutiles. Identifier les rendus inutiles dans vos applications React est le point de départ idéal pour identifier la plupart des problèmes de performances.
 La version beta 7.0 de Reactime corrige les bugs des anciennes versions et intègre des visualisations améliorées pour les relations entre les composants.
