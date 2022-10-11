@@ -48,7 +48,6 @@ const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex, webMetrics, currLocation } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
-  const isRecoil = !!snapshot.atomsComponents;
 
   // Map
   const renderComponentMap = () => {
