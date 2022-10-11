@@ -243,6 +243,8 @@ function createTree(
     componentFound = true;
   }
   let hooksIndex;
+  const atomArray = [];
+  atomArray.push(memoizedProps);
 
   // Check if node is a hooks useState function
   // REGULAR REACT HOOKS
