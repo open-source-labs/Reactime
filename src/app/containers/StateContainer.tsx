@@ -1,5 +1,8 @@
 // @ts-nocheck
 import React, { useState } from 'react';
+/* <Router> that keeps the history of your “URL” in memory (does not read/write to the address bar)
+ Useful in tests and non-browser environments like React Native.
+*/
 import {
   MemoryRouter as Router,
   Route,
@@ -8,6 +11,7 @@ import {
 } from 'react-router-dom';
 import StateRoute from '../components/StateRoute';
 import DiffRoute from '../components/DiffRoute';
+
 interface StateContainerProps {
   snapshot: Record<
     number,

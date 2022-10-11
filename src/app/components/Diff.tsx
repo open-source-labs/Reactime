@@ -13,7 +13,8 @@ interface DiffProps {
  * @param props props from maincontainer
  * @returns a diff tree or a string stating no state changes have happened
  */
-function Diff(props: DiffProps) {
+// LL added Record<string, unknown> for return statement on function
+function Diff(props: DiffProps): Record<string, unknown> {
   const { snapshot, show } = props;
   const [mainState] = useStoreContext();
   const { currentTab, tabs } = mainState; // k/v pairs of mainstate store object being created
@@ -28,7 +29,7 @@ function Diff(props: DiffProps) {
   }
 
   // cleaning preview from stateless data
-  const statelessCleanning = (obj:{name?:string; componentData?:object; state?:string|any;stateSnaphot?:object; children?:any[]}) => {
+  const statelessCleanning = (obj:{name?:string; componentData?:object; state?:string|any; stateSnaphot?:object; children?:any[]}) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;

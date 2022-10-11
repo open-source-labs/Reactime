@@ -127,7 +127,8 @@ class Tree {
       circularComponentTable.clear();
     }
     // creates copy of present node
-    let copy: Tree = new Tree(this.state, this.name, this.componentData, this.rtid, this.recoilDomNode);
+    let copy: Tree = new Tree(this.state, this.name, this.componentData, this.
+    \, this.recoilDomNode);
     delete copy.parent;
     circularComponentTable.add(this);
     copy = scrubUnserializableMembers(copy);

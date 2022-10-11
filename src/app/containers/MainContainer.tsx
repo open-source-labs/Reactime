@@ -28,6 +28,7 @@ function MainContainer(): any {
   // this function handles Time Jump sidebar view
   const toggleActionContainer = () => {
     setActionView(!actionView);
+    // aside is like an added text that appears "on the side" aside some text.
     const toggleElem = document.querySelector('aside');
     toggleElem.classList.toggle('no-aside');
     // hides the record toggle button from Actions Container in Time Jump sidebar view
@@ -47,6 +48,7 @@ function MainContainer(): any {
     const currentPort = chrome.runtime.connect();
     // listen for a message containing snapshots from the background script
     currentPort.onMessage.addListener(
+    // parameter message is an object with following type script properties
       (message: {
         action: string;
         payload: Record<string, unknown>;
