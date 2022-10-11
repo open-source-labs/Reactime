@@ -114,40 +114,6 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
 // }
 
 /**
- * @method traverseRecoilHooks
- * @param memoizedState  Property containing state on a stateful fctnl component's FiberNode object
- * @param memoizedProps Property containing props on a stateful fctnl component's FiberNode object
- * @return An array of array of HookStateItem objects (state and component properties)
- */
-
-// if type of state - Recoil hooks
-function traverseRecoilHooks(
-  // State of the fiber that was used to create the output. When processing updates it reflects the state that’s currently rendered on the screen.
-  memoizedState: any,
-  // Props of the fiber that were used to create the output during the previous render.
-  memoizedProps: any
-): HookStates {
-  const hooksStates: HookStates = [];
-  while (memoizedState && memoizedState.queue) {
-    if (
-      memoizedState.memoizedState
-      && memoizedState.queue.lastRenderedReducer
-      && memoizedState.queue.lastRenderedReducer.name === 'basicStateReducer'
-    ) {
-      if (Object.entries(memoizedProps).length !== 0) {
-        hooksStates.push({
-          component: memoizedState.queue,
-          state: memoizedProps,
-        });
-      }
-    }
-    memoizedState = memoizedState.next !== memoizedState ? memoizedState.next : null;
-  }
-
-  return hooksStates;
-}
-
-/**
  * @method traverseHooks
  * @param memoizedState memoizedState property on a stateful fctnl component's FiberNode object
  * @return An array of array of HookStateItem objects
