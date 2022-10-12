@@ -4,7 +4,6 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 
-// import {Hook}
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   HookStateItem, // obj with state and component
@@ -18,7 +17,8 @@ import {
 // For functional components that utilize Hooks, there will be one "component"
 // for each setter/getter every time we have a new snapshot
 let componentActionsRecord: HookStates = [];
-let index = 0;
+let index: number;
+index = 0;
 
 export default {
   clear: () => {
@@ -35,12 +35,12 @@ export default {
   getRecordByIndex: (inputIndex: number): HookStateItem => componentActionsRecord[inputIndex],
   // this is used for class components -
   /* inputIndex will always be a fixed number (coming in timeJump.ts) */
-  getComponentByIndex: (inputIndex: number): any => (
+  getComponentByIndex: (inputIndex: number): void => (
     componentActionsRecord[inputIndex]
       ? componentActionsRecord[inputIndex].component
       : undefined),
   // this is used for react hooks - hooks will be passed in as an array from timeJump.ts
-  getComponentByIndexHooks: (inputIndex: Array<number> = []): any => {
+  getComponentByIndexHooks: (inputIndex: Array<number> = []): Array<any> => {
     const multiDispatch = [];
     for (let i = 0; i < inputIndex.length; i++) {
       if (componentActionsRecord[inputIndex[i]]) {
