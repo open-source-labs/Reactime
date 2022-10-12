@@ -131,7 +131,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): unknown => {
     return currentMax;
   };
 
-  // the domain array on rendering scale will set the coordinates for Y-aix points.
+  // the domain array on rendering scale will set the coordinates for Y-axis points.
   const renderingScale = scaleLinear<number>({
     domain: [0, Math.max(calculateMaxTotalRender(series), data.maxTotalRender)],
     nice: true,

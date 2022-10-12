@@ -17,12 +17,6 @@ import { deleteSeries, setCurrentTabInApp } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 /* TYPESCRIPT */
-interface data {
-  snapshotId?: string;
-}
-interface series {
-  seriesId?: any;
-}
 
 interface margin {
   top: number;
@@ -94,7 +88,7 @@ const BarGraphComparisonActions = props => {
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSeriesName = action => action.seriesName;
 
-  // create visualization SCALES with cleaned data
+  // create visualization SCALES with cleaned data.
   // the domain array/xAxisPoints elements will place the bars along the x-axis
   const seriesNameScale = scaleBand<string>({
     domain: data.map(getSeriesName),
@@ -157,38 +151,16 @@ const BarGraphComparisonActions = props => {
     if (!event) return;
     setSeries(event.target.value);
     setAction(false);
-    // setXpoints();
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    // setXpoints();
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-    // setXpoints();
   };
 
   const handleActionChange = event => {
     if (!event) return;
     setAction(event.target.value);
     setSeries(false);
-    // setXpoints();
-  };
-
-  const picHandleClose = () => {
-    setPicOpen(false);
-    // setXpoints();
-  };
-
-  const picHandleOpen = () => {
-    setPicOpen(true);
-    // setXpoints();
   };
 
   const animateButton = function (e) {
-    e.preventDefault;
+    e.preventDefault();
     e.target.classList.add('animate');
     e.target.innerHTML = 'Deleted!';
     setTimeout(() => {
@@ -230,9 +202,6 @@ const BarGraphComparisonActions = props => {
               labelId="simple-select-outlined-label"
               id="simple-select-outlined"
               className={classes.select}
-              // open={open}
-              // onClose={handleClose}
-              // onOpen={handleOpen}
               value={series}
               onChange={handleSeriesChange}
             >
@@ -248,9 +217,6 @@ const BarGraphComparisonActions = props => {
               labelId="snapshot-select"
               id="snapshot-select"
               className={classes.select}
-              // open={picOpen}
-              // onClose={picHandleClose}
-              // onOpen={picHandleOpen}
               value={action} // snapshots
               onChange={handleActionChange}
             >

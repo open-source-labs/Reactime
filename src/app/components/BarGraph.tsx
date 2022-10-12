@@ -13,9 +13,6 @@ import { onHover, onHoverExit, save } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 /* TYPESCRIPT */
-interface data {
-  snapshotId?: string;
-}
 
 interface margin {
   top: number;
