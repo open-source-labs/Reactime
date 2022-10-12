@@ -336,3 +336,60 @@ function createTree(
   }
   return tree;
 }
+
+/**
+ * @method linkFiber
+ * @param snap The current snapshot
+ * @param mode The current mode (i.e. jumping, time-traveling, or paused)
+ * @return a function to be invoked by index.js that initiates snapshot monitoring
+ * linkFiber contains core module functionality, exported as an anonymous function.
+ */
+ export default (snap: Snapshot, mode: Mode): (() => void) => {
+  // checks for visiblity of document
+  function onVisibilityChange(): void {
+    // hidden property = background tab/minimized window
+    doWork = !document.hidden;
+  }
+  return () => {
+    // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
+    const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    // check if reactDev Tools is installed
+    if (!devTools) { return; }
+    window.postMessage({
+      action: 'devToolsInstalled',
+      payload: 'devToolsInstalled'
+    }, '*');
+    // reactInstance returns an object of the react, 1st element in map
+    const reactInstance = devTools.renderers.get(1);
+    // if no React Instance found then target is not a compatible app
+    if (!reactInstance) { return; }
+    window.postMessage({
+      action: 'aReactApp',
+      payload: 'aReactApp'
+    }, '*');
+
+    const throttledUpdateSnapshot = throttle(() => { updateSnapShotTree(snap, mode); }, 70);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    if (reactInstance && reactInstance.version) {
+      fiberRoot = devTools.getFiberRoots(1).values().next().value;
+      // React has inherent methods that are called with react fiber
+      // we attach new functionality without compromising the original work that onCommitFiberRoot does
+      const addOneMoreStep = function (original) {
+        return function (...args) {
+          // eslint-disable-next-line prefer-destructuring
+          fiberRoot = args[1];
+          // this is the additional functionality we added
+          if (doWork) {
+            throttledUpdateSnapshot();
+          }
+          // after our added work is completed we invoke the original function
+          return original(...args);
+        };
+      };
+      devTools.onCommitFiberRoot = addOneMoreStep(devTools.onCommitFiberRoot);
+
+      throttledUpdateSnapshot(); // only runs on start up
+    }
+  };
+};
