@@ -1,17 +1,20 @@
 import React from 'react';
 
 class ErrorHandler extends React.Component {
-  constructor(props:any) {
+  constructor(props:unknown) {
     super(props);
     this.state = { errorOccurred: false };
   }
 
-  componentDidCatch(error:string, info:string) {
+  componentDidCatch(error: string, info: string): void {
     this.setState({ errorOccurred: true });
   }
 
-  render() {
-    return this.state.errorOccurred ? <div>Unexpected Error</div> : this.props.children
+  render(): JSX.Element {
+    const { errorOccurred } = this.state;
+    // eslint-disable-next-line react/prop-types
+    const { children } = this.props;
+    return errorOccurred ? <div>Unexpected Error</div> : children;
   }
 }
 
