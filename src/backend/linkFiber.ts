@@ -2,7 +2,6 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
-// import 'core-js';
 /* eslint-disable indent */
 /* eslint-disable brace-style */
 /* eslint-disable comma-dangle */
@@ -10,6 +9,7 @@
 /* eslint-disable func-names */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
+/* eslint-disable-next-line no-mixed-operators */
 
 // import typescript types
 import {
@@ -17,7 +17,6 @@ import {
   Snapshot,
   // jump, pause
   Mode,
-  ComponentData,
   // array of state and component
   HookStates,
   // object with tree structure
@@ -25,7 +24,7 @@ import {
 } from './types/backendTypes';
 // import function that creates a tree
 import Tree from './tree';
-// passes the data down to its components ?
+// passes the data down to its components
 import componentActionsRecord from './masterState';
 import routes from './routes';
 
@@ -43,7 +42,6 @@ declare global {
 let fiberRoot = null;
 let doWork = true;
 const circularComponentTable = new Set();
-let initialstart = false;
 let rtidCounter = 0;
 let rtid = null;
 
@@ -102,20 +100,9 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
   sendSnapshot(snap, mode);
 }
 
-// updating tree depending on current mode on the panel (pause, etc)
-// function sendDevToolsInfo(snap: Snapshot, mode: Mode): void {
-//   window.postMessage(
-//     {
-//       action: 'recordSnap',
-//       payload,
-//     },
-//     '*'
-//   );
-// }
-
 /**
  * @method traverseHooks
- * @param memoizedState memoizedState property on a stateful fctnl component's FiberNode object
+ * @param memoizedState memoizedState property on a stateful functional component's FiberNode object
  * @return An array of array of HookStateItem objects
  *
  * Helper function to traverse through memoizedState and inject instrumentation to update our state tree
@@ -155,7 +142,6 @@ const exclude = ['alternate', '_owner', '_store', 'get key', 'ref', '_self', '_s
 // react elements throw errors on client side of application - convert react/functions into string
 function convertDataToString(newObj, oldObj) {
   const newPropData = oldObj || {};
-  // const newPropData = Array.isArray(obj) === true ? {} : [];
   for (const key in newObj) {
     if (typeof newObj[key] === 'function') {
       newPropData[key] = 'function';
@@ -292,7 +278,6 @@ function createTree(
   let newNode = null;
 
   // We want to add this fiber node to the snapshot
-  // eslint-disable-next-line no-mixed-operators
   if (componentFound || newState === 'stateless' && !newState.hooksState) {
       if (
         currentFiber.child
@@ -351,60 +336,3 @@ function createTree(
   }
   return tree;
 }
-
-/**
- * @method linkFiber
- * @param snap The current snapshot
- * @param mode The current mode (i.e. jumping, time-traveling, or paused)
- * @return a function to be invoked by index.js that initiates snapshot monitoring
- * linkFiber contains core module functionality, exported as an anonymous function.
- */
-export default (snap: Snapshot, mode: Mode): (() => void) => {
-  // checks for visiblity of document
-  function onVisibilityChange(): void {
-    // hidden property = background tab/minimized window
-    doWork = !document.hidden;
-  }
-  return () => {
-    // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
-    const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-    // check if reactDev Tools is installed
-    if (!devTools) { return; }
-    window.postMessage({
-      action: 'devToolsInstalled',
-      payload: 'devToolsInstalled'
-    }, '*');
-    // reactInstance returns an object of the react, 1st element in map
-    const reactInstance = devTools.renderers.get(1);
-    // if no React Instance found then target is not a compatible app
-    if (!reactInstance) { return; }
-    window.postMessage({
-      action: 'aReactApp',
-      payload: 'aReactApp'
-    }, '*');
-
-    const throttledUpdateSnapshot = throttle(() => { updateSnapShotTree(snap, mode); }, 70);
-    document.addEventListener('visibilitychange', onVisibilityChange);
-
-    if (reactInstance && reactInstance.version) {
-      fiberRoot = devTools.getFiberRoots(1).values().next().value;
-      // React has inherent methods that are called with react fiber
-      // we attach new functionality without compromising the original work that onCommitFiberRoot does
-      const addOneMoreStep = function (original) {
-        return function (...args) {
-          // eslint-disable-next-line prefer-destructuring
-          fiberRoot = args[1];
-          // this is the additional functionality we added
-          if (doWork) {
-            throttledUpdateSnapshot();
-          }
-          // after our added work is completed we invoke the original function
-          return original(...args);
-        };
-      };
-      devTools.onCommitFiberRoot = addOneMoreStep(devTools.onCommitFiberRoot);
-
-      throttledUpdateSnapshot(); // only runs on start up
-    }
-  };
-};
