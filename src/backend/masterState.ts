@@ -35,7 +35,7 @@ export default {
   getRecordByIndex: (inputIndex: number): HookStateItem => componentActionsRecord[inputIndex],
   // this is used for class components -
   /* inputIndex will always be a fixed number (coming in timeJump.ts) */
-  getComponentByIndex: (inputIndex: number): void => (
+  getComponentByIndex: (inputIndex: number): any => (
     componentActionsRecord[inputIndex]
       ? componentActionsRecord[inputIndex].component
       : undefined),
