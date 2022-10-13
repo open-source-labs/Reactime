@@ -1,6 +1,4 @@
-import { List } from '@material-ui/core';
 import React from 'react';
-import snapshots from './snapshots';
 // Font size of the Controls label and Dropdowns
 const controlStyles = {
   fontSize: '12px',
@@ -53,10 +51,8 @@ const collectNodes = node => {
 
 export default function LinkControls({
   layout,
-  orientation,
   linkType,
   stepPercent,
-  selectedNode,
   setLayout,
   setOrientation,
   setLinkType,
@@ -71,7 +67,7 @@ export default function LinkControls({
 
       {/* Controls for the layout selection */}
       <label>Layout:</label>
-      &nbsp;
+      &nbsp; {/*This is a non-breaking space - Prevents an automatic line break at this position */}
       <select
         onClick={e => e.stopPropagation()}
         onChange={e => setLayout(e.target.value)}
@@ -89,7 +85,6 @@ export default function LinkControls({
       <select
         onClick={e => e.stopPropagation()}
         onChange={e => setOrientation(e.target.value)}
-        // value={orientation}/
         disabled={layout === 'polar'}
         style={dropDownStyle}
       >
@@ -113,7 +108,7 @@ export default function LinkControls({
 
       {/* Controls for the select selections. */}
       <label> Select:</label>
-      &nbsp; {/*This is a non-breaking space - Prevents an automatic line break at this position */}
+      &nbsp; 
       <input id='selectInput' list='nodeOptions' type='text' name="nodeOptions"
         onChange={e => setSelectedNode(e.target.value)}
         style={dropDownStyle}
