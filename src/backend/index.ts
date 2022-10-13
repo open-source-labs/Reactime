@@ -29,13 +29,13 @@ const mode: Mode = {
 // linkFiber is now assigned the default function exported from the file linkFiber.ts
 const linkFiber = linkFiberStart(snapShot, mode);
 // timeJump is now assigned the default function exported from the file timeJump.ts
-const timeJump = timeJumpStart(snapShot, mode);
+const timeJump = timeJumpStart(mode);
 
 // * Event listener for time-travel actions
 window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
   switch (action) {
     case 'jumpToSnap':
-      timeJump(payload, true); // * This sets state with given payloa
+      timeJump(payload, true); // * This sets state with given payload
       break;
 
     case 'setPause':
