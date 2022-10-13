@@ -110,7 +110,7 @@ function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
  */
 function traverseHooks(memoizedState: any): HookStates {
   const hooksStates: HookStates = [];
-  while (memoizedState && memoizedState.queue) {
+  while (memoizedState?.queue) {
     // the !== null conditional is necessary here for correctly displaying react hooks because TypeScript recognizes 0 and "" as null - DO NOT REMOVE
     if (memoizedState.memoizedState !== null) {
       hooksStates.push({
@@ -279,11 +279,7 @@ function createTree(
 
   // We want to add this fiber node to the snapshot
   if (componentFound || newState === 'stateless' && !newState.hooksState) {
-      if (
-        currentFiber.child
-        && currentFiber.child.stateNode
-        && currentFiber.child.stateNode.setAttribute
-      ) {
+      if (currentFiber.child?.stateNode?.setAttribute) {
         rtid = `fromLinkFiber${rtidCounter}`;
         // rtid = rtidCounter;
         // check if rtid is already present

@@ -96,8 +96,8 @@ export const getHooksNames = (elementType: string): Array<string> => {
      * Check within each function declaration if there are hook declarations */
     ast.forEach(functionDec => {
       let declarationBody: any;
-      if (functionDec.expression && functionDec.expression.body) declarationBody = functionDec.expression.body.body; // check if functionDec.expression.body exists, then set declarationBody to functionDec's body
-      else declarationBody = functionDec.body ? functionDec.body.body : [];
+      if (functionDec.expression?.body) declarationBody = functionDec.expression.body.body; // check if functionDec.expression.body exists, then set declarationBody to functionDec's body
+      else declarationBody = functionDec.body?.body ?? [];
       // Traverse through the function's funcDecs and Expression Statements
       declarationBody.forEach((elem: any) => {
         // Hooks will always be contained in a variable declaration
@@ -114,7 +114,7 @@ export const getHooksNames = (elementType: string): Array<string> => {
             } else {
               // hook.init.object is '_useState2', '_useState4', etc.
               // eslint-disable-next-line no-lonely-if
-              if (hook.init.object && hook.init.object.name) {
+              if (hook.init.object?.name) {
                 const varName: any = hook.init.object.name;
                 if (!hooksNames[varName] && varName.match(/_use/)) {
                   hooksNames[varName] = hook.id.name;
