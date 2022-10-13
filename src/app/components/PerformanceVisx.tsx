@@ -16,7 +16,7 @@ import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useStoreContext } from '../store';
 import { setCurrentTabInApp } from '../actions/actions';
 
-// typescript for PROPS from StateRoute.tsx
+
 interface BarStackProps {
   width: number;
   height: number;
@@ -87,7 +87,7 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
   if (!snapshot.children[0]) return;
 
   // loop through snapshots
-  snapshot.children.forEach((child, idx) => {
+  snapshot.children.forEach((child, idx: number) => {
     const componentName = child.name + -[idx + 1];
 
     // Get component Rendering Time
@@ -152,7 +152,7 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
     componentData: {},
     maxTotalRender: 0,
   };
-  snapshots.forEach((snapshot, i) => {
+  snapshots.forEach((snapshot, i: number) => {
     perfData.barStack.push({ snapshotId: snapshotsIds[i], route: snapshot.route.url });
     traverse(snapshot, perfData, snapshots);
   });

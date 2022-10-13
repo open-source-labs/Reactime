@@ -6,6 +6,7 @@ import 'intro.js/introjs.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
+import { element } from 'prop-types';
 
 // This is the tutorial displayed when the "How to use" button is clicked
 // This needs to be a class component to be compatible with updateStepElement from intro.js
@@ -21,7 +22,7 @@ class Tutorial extends Component {
     const { currentTabInApp, dispatch } = this.props;
     
     // This updates the steps so that they can target dynamically rendered elements
-    const onChangeHandler = currentStepIndex => {
+    const onChangeHandler = (currentStepIndex: Number) => {
       if (currentTabInApp === 'performance' && currentStepIndex === 1) {
         dispatch(tutorialSaveSeriesToggle('inputBoxOpen'));
         this.steps.updateStepElement(currentStepIndex);
@@ -55,8 +56,17 @@ class Tutorial extends Component {
       }
       this.setState({ stepsEnabled: true });
     };
-    let steps = [];
 
+    interface stepsObj {
+      title: String,
+      element?: String,
+      intro: String,
+      position: String,
+    }
+
+    let steps: stepsObj[] = [];
+
+  
     switch (currentTabInApp) {
       case 'map':
         steps = [{
@@ -199,6 +209,9 @@ class Tutorial extends Component {
         }];
         break;
     }
+
+   
+
 
     return (
       <>

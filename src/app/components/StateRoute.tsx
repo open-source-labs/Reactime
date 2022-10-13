@@ -5,13 +5,12 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   MemoryRouter as Router,
   Route,
   NavLink,
   Switch,
-  useLocation,
 } from 'react-router-dom';
 import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
@@ -24,7 +23,7 @@ import WebMetrics from './WebMetrics';
 const History = require('./History').default;
 
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
-// eslint-disable-next-line react/prop-types
+
 
 export interface StateRouteProps {
   snapshot: {
@@ -79,7 +78,6 @@ const StateRoute = (props: StateRouteProps) => {
               sliderIndex={sliderIndex}
               viewIndex={viewIndex}
               currLocation={currLocation}
-              // added snapshots 11/4 Rob
               snapshots={snapshots}
             />
           )}
@@ -99,8 +97,8 @@ const StateRoute = (props: StateRouteProps) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
   const renderWebMetrics = () => {
-    let LCPColor; let FIDColor; let FCPColor; let
-      TTFBColor;
+    let LCPColor: String; let FIDColor: String; let FCPColor: String; let
+      TTFBColor: String;
 
     if (webMetrics.LCP <= 2000) LCPColor = '#0bce6b';
     if (webMetrics.LCP > 2000 && webMetrics.LCP < 4000) LCPColor = '#E56543';

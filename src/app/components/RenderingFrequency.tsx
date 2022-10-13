@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
-import { render } from 'react-dom';
 import { onHover, onHoverExit, setCurrentTabInApp } from '../actions/actions';
 import { useStoreContext } from '../store';
 
@@ -35,13 +34,12 @@ const RenderingFrequency = props => {
   );
 };
 
-const ComponentCard = props => {
+const ComponentCard = (props): JSX.Element => {
   const {
     componentName,
     stateType,
     averageRenderTime,
     renderFrequency,
-    rtid,
     information,
   } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
