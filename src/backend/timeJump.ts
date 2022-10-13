@@ -1,4 +1,3 @@
-import { Console } from 'console';
 import routes from './routes';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -22,10 +21,10 @@ import routes from './routes';
 import componentActionsRecord from './masterState';
 
 const circularComponentTable = new Set();
-export default (origin, mode) => {
+export default mode => {
   // Recursively change state of tree
   // Set the state of the origin tree if the component is stateful
-  function jump(target, firstCall = false) {
+  function jump(target) {
     if (!target) return;
     if (target.state === 'stateless') {
       target.children.forEach(child => jump(child));
@@ -44,8 +43,8 @@ export default (origin, mode) => {
         // prevState contains the states of the snapshots we are jumping FROM, not jumping TO
         prevState => {
           Object.keys(prevState).forEach(key => {
-            // if conditional below does not appear to ever be reached if all states are defined - leaving code in just in case codebases do have undefined states
-            if (!target.state[key] === undefined) {
+            // the if conditional below does not appear to ever be reached if all states are defined - leaving code in just in case codebases do have undefined states
+            if (target.state[key] !== undefined) {
               target.state[key] = undefined;
             }
           });
@@ -82,6 +81,7 @@ export default (origin, mode) => {
     }
   }
 
+  // payload from index.ts is assigned to target
   return (target, firstCall = false) => {
     // * Setting mode disables setState from posting messages to window
     mode.jumping = true;
