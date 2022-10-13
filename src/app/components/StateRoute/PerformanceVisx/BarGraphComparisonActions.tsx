@@ -14,7 +14,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import { deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
-import { useStoreContext } from '../store';
+import { useStoreContext } from '../../../store';
 
 /* TYPESCRIPT */
 
