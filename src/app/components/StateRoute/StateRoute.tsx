@@ -14,11 +14,11 @@ import {
 } from 'react-router-dom';
 import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
-import ComponentMap from './ComponentMap';
-import { changeView, changeSlider } from '../actions/actions';
-import { useStoreContext } from '../store';
-import PerformanceVisx from './PerformanceVisx';
-import WebMetrics from './WebMetrics';
+import ComponentMap from './ComponentMap/ComponentMap';
+import { changeView, changeSlider } from '../../actions/actions';
+import { useStoreContext } from '../../store';
+import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
+import WebMetrics from '../WebMetrics';
 
 const History = require('./History').default;
 
