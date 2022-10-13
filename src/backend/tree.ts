@@ -1,7 +1,6 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/ban-types */
-// import 'core-js';
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-console */
