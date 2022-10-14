@@ -13,8 +13,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../actions/actions';
-import { useStoreContext } from '../store';
+import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
+import { useStoreContext } from '../../../store';
 
 /* TYPESCRIPT */
 
@@ -53,7 +53,7 @@ interface BarGraphComparisonProps {
   setSeries: () => void,
   series: unknown,
   setAction: () => void,
-  }
+}
 
 /* DEFAULTS */
 const margin = {
@@ -293,7 +293,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): unknown => {
       </div>
 
       <svg ref={containerRef} width={width} height={height}>
-        {}
+        { }
         <rect
           x={0}
           y={0}
@@ -341,8 +341,8 @@ const BarGraphComparison = (props: BarGraphComparisonProps): unknown => {
                   height={bar.height === 0 ? null : bar.height}
                   width={bar.width}
                   fill={bar.color}
-                    /* TIP TOOL EVENT HANDLERS */
-                    // Hides tool tip once cursor moves off the current rect
+                  /* TIP TOOL EVENT HANDLERS */
+                  // Hides tool tip once cursor moves off the current rect
                   onMouseLeave={() => {
                     dispatch(
                       onHoverExit(data.componentData[bar.key].rtid),
@@ -351,7 +351,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): unknown => {
                       }, 300)),
                     );
                   }}
-                    // Cursor position in window updates position of the tool tip
+                  // Cursor position in window updates position of the tool tip
                   onMouseMove={event => {
                     dispatch(onHover(data.componentData[bar.key].rtid));
                     if (tooltipTimeout) clearTimeout(tooltipTimeout);
@@ -399,8 +399,8 @@ const BarGraphComparison = (props: BarGraphComparisonProps): unknown => {
                   height={bar.height === 0 ? null : bar.height}
                   width={bar.width}
                   fill={bar.color}
-                    /* TIP TOOL EVENT HANDLERS */
-                    // Hides tool tip once cursor moves off the current rect
+                  /* TIP TOOL EVENT HANDLERS */
+                  // Hides tool tip once cursor moves off the current rect
                   onMouseLeave={() => {
                     dispatch(
                       onHoverExit(data.componentData[bar.key].rtid),
@@ -409,7 +409,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): unknown => {
                       }, 300)),
                     );
                   }}
-                    // Cursor position in window updates position of the tool tip
+                  // Cursor position in window updates position of the tool tip
                   onMouseMove={event => {
                     dispatch(onHover(data.componentData[bar.key].rtid));
                     if (tooltipTimeout) clearTimeout(tooltipTimeout);

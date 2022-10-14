@@ -9,8 +9,8 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
-import { onHover, onHoverExit, save } from '../actions/actions';
-import { useStoreContext } from '../store';
+import { onHover, onHoverExit, save } from '../../../actions/actions';
+import { useStoreContext } from '../../../store';
 
 /* TYPESCRIPT */
 

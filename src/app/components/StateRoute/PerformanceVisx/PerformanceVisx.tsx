@@ -13,8 +13,8 @@ import RenderingFrequency from './RenderingFrequency';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
-import { useStoreContext } from '../store';
-import { setCurrentTabInApp } from '../actions/actions';
+import { useStoreContext } from '../../../store';
+import { setCurrentTabInApp } from '../../../actions/actions';
 
 
 interface BarStackProps {

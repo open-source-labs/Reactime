@@ -5,8 +5,8 @@ import React, { useEffect } from 'react';
 import { diff, formatters } from 'jsondiffpatch';
 import * as d3 from 'd3';
 
-import { changeView, changeSlider, setCurrentTabInApp } from '../actions/actions';
-import { useStoreContext } from '../store';
+import { changeView, changeSlider, setCurrentTabInApp } from '../../actions/actions';
+import { useStoreContext } from '../../store';
 
 interface defaultMargin {
   top: number,
