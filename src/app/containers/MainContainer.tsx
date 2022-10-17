@@ -58,7 +58,8 @@ function MainContainer(): JSX.Element {
         let maxTab: number;
         if (!sourceTab) {
           const tabsArray: Array<string> = Object.keys(payload);
-          maxTab = Math.max(...tabsArray);
+          const numTabsArray: number[] = tabsArray.map(tab => Number(tab));
+          maxTab = Math.max(...numTabsArray);
         }
         switch (action) {
           case 'deleteTab': {
