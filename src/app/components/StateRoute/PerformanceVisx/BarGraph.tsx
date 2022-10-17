@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import { BarStack } from '@visx/shape';
-import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
 import { AxisBottom, AxisLeft } from '@visx/axis';
@@ -11,46 +10,7 @@ import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
 import { onHover, onHoverExit, save } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-
-/* TYPESCRIPT */
-
-interface margin {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
-
-interface snapshot {
-  snapshotId?: string;
-  children: [];
-  componentData: any;
-  name: string;
-  state: string;
-}
-
-interface TooltipData {
-  bar: SeriesPoint<snapshot>;
-  key: string;
-  index: number;
-  height: number;
-  width: number;
-  x: number;
-  y: number;
-  color: string;
-}
-
-interface BarGraphProps {
-    width: number,
-    height: number,
-    data: Record<string, unknown>,
-    comparison: unknown,
-    setRoute: () => void,
-    allRoutes: unknown,
-    filteredSnapshots: unknown,
-    snapshot: unknown,
-    setSnapshot: () => void
-  }
+import { snapshot, TooltipData, margin, BarGraphProps } from '../../FrontendTypes';
 
 /* DEFAULTS */
 const margin = {
@@ -68,7 +28,7 @@ const tooltipStyles = {
   fontFamily: 'Roboto',
 };
 
-const BarGraph = (props: BarGraphProps): unknown => {
+const BarGraph = (props: BarGraphProps): JSX.Element => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
     width,

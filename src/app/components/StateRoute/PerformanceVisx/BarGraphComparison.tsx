@@ -1,7 +1,7 @@
 // @ts-nocheck
+/* eslint-disable no-param-reassign */
 import React, { useEffect } from 'react';
 import { BarStack } from '@visx/shape';
-import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
 import { AxisBottom, AxisLeft } from '@visx/axis';
@@ -13,47 +13,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
+import {
+  onHover, onHoverExit, deleteSeries, setCurrentTabInApp,
+} from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-
-/* TYPESCRIPT */
-
-interface margin {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
-
-interface snapshot {
-  snapshotId?: string;
-  children: [];
-  componentData: any;
-  name: string;
-  state: string;
-}
-
-// On-hover data.
-interface TooltipData {
-  bar: SeriesPoint<snapshot>;
-  key: string;
-  index: number;
-  height: number;
-  width: number;
-  x: number;
-  y: number;
-  color: string;
-}
-
-interface BarGraphComparisonProps {
-  width: number,
-  height: number,
-  data: Record<string, unknown>,
-  comparison: string | [],
-  setSeries: () => void,
-  series: unknown,
-  setAction: () => void,
-}
+import {
+  snapshot, TooltipData, margin, BarGraphComparisonProps,
+} from '../../FrontendTypes';
 
 /* DEFAULTS */
 const margin = {
@@ -71,7 +37,7 @@ const tooltipStyles = {
   fontFamily: 'Roboto',
 };
 
-const BarGraphComparison = (props: BarGraphComparisonProps): unknown => {
+const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
     width, height, data, comparison, setSeries, series, setAction,
@@ -117,15 +83,15 @@ const BarGraphComparison = (props: BarGraphComparisonProps): unknown => {
   // We'll then use it in the renderingScale function and compare
   // with the render time of the current tab.
   // The max render time will determine the Y-axis's highest number.
-  const calculateMaxTotalRender = serie => {
-    const currentSeriesBarStacks = !comparison[serie]
+  const calculateMaxTotalRender = (serie: number): number => {
+    const currentSeriesBarStacks: number[] = !comparison[serie]
       ? []
       : comparison[serie].data.barStack;
     if (currentSeriesBarStacks.length === 0) return 0;
     let currentMax = -Infinity;
     for (let i = 0; i < currentSeriesBarStacks.length; i += 1) {
-      const renderTimes = Object.values(currentSeriesBarStacks[i]).slice(1);
-      const renderTotal = renderTimes.reduce((acc, curr) => acc + curr);
+      const renderTimes: number[] = Object.values(currentSeriesBarStacks[i]).slice(1);
+      const renderTotal: number = renderTimes.reduce((acc, curr) => acc + curr);
       if (renderTotal > currentMax) currentMax = renderTotal;
     }
     return currentMax;
