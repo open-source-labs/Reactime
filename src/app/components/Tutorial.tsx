@@ -1,3 +1,6 @@
+/* eslint-disable react/sort-comp */
+/* eslint-disable lines-between-class-members */
+/* eslint-disable react/static-property-placement */
 //@ts-nocheck
 import * as React from 'react';
 import { Component } from 'react';
@@ -7,11 +10,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
 
-type tutorialProps = Record<string, unknown>
+interface tutorialProps {
+  dispatch: unknown;
+  currentTabInApp: unknown;
+}
 
 // This is the tutorial displayed when the "How to use" button is clicked
 // This needs to be a class component to be compatible with updateStepElement from intro.js
-class Tutorial extends React.Component<tutorialProps> {
+export default class Tutorial extends React.Component<tutorialProps> {
   constructor(props:tutorialProps) {
     super(props);
     this.state = {
@@ -19,6 +25,7 @@ class Tutorial extends React.Component<tutorialProps> {
     };
   }
 
+  public props: tutorialProps;
   render(): JSX.Element {
     const { currentTabInApp, dispatch } = this.props;
 
@@ -247,5 +254,3 @@ class Tutorial extends React.Component<tutorialProps> {
     );
   }
 }
-
-export default Tutorial;
