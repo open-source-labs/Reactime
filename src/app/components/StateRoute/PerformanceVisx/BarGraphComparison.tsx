@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-nocheck
 /* eslint-disable no-param-reassign */
 import React, { useEffect } from 'react';
 import { BarStack } from '@visx/shape';
