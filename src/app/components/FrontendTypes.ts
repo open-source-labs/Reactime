@@ -22,7 +22,7 @@ export interface PerfData {
 
 interface BarStackProp {
   snapshotId: string,
-  route: URL | string,
+  route: string,
   currentTab?: string,
 }
 
@@ -41,7 +41,7 @@ export interface TooltipData {
 export interface snapshot {
   snapshotId?: string;
   children: [];
-  componentData: any;
+  componentData: { actualDuration: number } | undefined;
   name: string;
   state: string;
 }
