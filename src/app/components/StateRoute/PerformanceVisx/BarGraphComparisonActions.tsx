@@ -15,35 +15,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import { deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-
-/* TYPESCRIPT */
-
-interface margin {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
-
-interface snapshot {
-  snapshotId?: string;
-  children: [];
-  componentData: any;
-  name: string;
-  state: string;
-}
-
-// On-hover data.
-interface TooltipData {
-  bar: SeriesPoint<snapshot>;
-  key: string;
-  index: number;
-  height: number;
-  width: number;
-  x: number;
-  y: number;
-  color: string;
-}
+import { TooltipData, margin } from '../../FrontendTypes';
 
 /* DEFAULTS */
 const margin = {
@@ -343,7 +315,7 @@ const BarGraphComparisonActions = props => {
           </div>
           <div>
             {
-            `${tooltipData.bar.data[tooltipData.key]} ms`
+              `${tooltipData.bar.data[tooltipData.key]} ms`
             }
           </div>
           <div>
