@@ -1,5 +1,19 @@
 import { SeriesPoint } from '@visx/shape/lib/types';
 
+// PerformanceVisx types
+
+export interface Series {
+    data: {
+      barStack: ActionObj[],
+    }
+    name: string
+  }
+
+  interface ActionObj {
+    name: unknown,
+    seriesName: unknown,
+  }
+
 export interface PerfData {
   barStack: BarStackProp[],
   componentData?: Record<string, unknown>,
@@ -9,6 +23,7 @@ export interface PerfData {
 interface BarStackProp {
   snapshotId: string,
   route: URL,
+  currentTab?: string,
 }
 
 // On-hover data for BarGraph/BarGraphComparison.tsx
@@ -42,11 +57,12 @@ interface BarGraphBase {
   width: number,
   height: number,
   data: PerfData,
-  comparison: string | [],
+  comparison: string | Series | [],
 }
+
 export interface BarGraphComparisonProps extends BarGraphBase {
   setSeries: () => void,
-  series: unknown,
+  series: number,
   setAction: () => void,
 }
 

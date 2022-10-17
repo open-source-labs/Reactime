@@ -17,7 +17,7 @@ import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useStoreContext } from '../../../store';
 import { setCurrentTabInApp } from '../../../actions/actions';
-import { PerfData } from '../../FrontendTypes';
+import { PerfData, Series } from '../../FrontendTypes';
 
 interface PerformanceVisxProps {
   width: number;
@@ -148,14 +148,6 @@ const getSnapshotIds = (obj, snapshotIds = []): string[] => {
   return snapshotIds;
 };
 
-// type BarStackProp = Record <string, unknown | URL | number>
-
-// interface PerfData {
-//   barStack: BarStackProp[],
-//   componentData?: Record<string, unknown>,
-//   maxTotalRender: number,
-// }
-
 // Returns array of snapshot objs each with components and corresponding render times.
 const getPerfMetrics = (snapshots, snapshotsIds): PerfData => {
   const perfData: PerfData = {
@@ -188,18 +180,6 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance'));
   }, [dispatch]);
-
-  type Series = {
-    data: {
-      barStack: ActionObj[],
-    }
-    name: string
-  }
-
-  type ActionObj = {
-    name: unknown,
-    seriesName: unknown,
-  }
 
   // Creates the actions array used to populate the compare actions dropdown
   const getActions = () => {

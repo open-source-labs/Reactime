@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React, { useEffect } from 'react';
 import { BarStack } from '@visx/shape';
 import { Group } from '@visx/group';
@@ -77,10 +78,10 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   // We'll then use it in the renderingScale function and compare
   // with the render time of the current tab.
   // The max render time will determine the Y-axis's highest number.
-  const calculateMaxTotalRender = series => {
-    const currentSeriesBarStacks = !comparison[series]
+  const calculateMaxTotalRender = serie => {
+    const currentSeriesBarStacks = !comparison[serie]
       ? []
-      : comparison[series].data.barStack;
+      : comparison[serie].data.barStack;
     if (currentSeriesBarStacks.length === 0) return 0;
     let currentMax = -Infinity;
     for (let i = 0; i < currentSeriesBarStacks.length; i += 1) {
