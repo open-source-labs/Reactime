@@ -68,7 +68,7 @@ const tooltipStyles = {
   fontFamily: 'Roboto',
 };
 
-const BarGraph = (props: BarGraphProps): unknown => {
+const BarGraph = (props: BarGraphProps): JSX.Element => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
     width,

@@ -71,7 +71,7 @@ const tooltipStyles = {
   fontFamily: 'Roboto',
 };
 
-const BarGraphComparison = (props: BarGraphComparisonProps): unknown => {
+const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
     width, height, data, comparison, setSeries, series, setAction,

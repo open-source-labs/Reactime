@@ -1,6 +1,6 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import {
   MemoryRouter as Router,
@@ -15,7 +15,7 @@ import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useStoreContext } from '../../../store';
 import { setCurrentTabInApp } from '../../../actions/actions';
-
+import { Bar } from '@visx/shape';
 
 interface BarStackProps {
   width: number;
@@ -82,8 +82,10 @@ const collectNodes = (snaps, componentName) => {
   return finalResults;
 };
 
+type currNum = number
+
 /* DATA HANDLING HELPER FUNCTIONS */
-const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
+const traverse = (snapshot, data, snapshots, currTotalRender: currNum = 0): void => {
   if (!snapshot.children[0]) return;
 
   // loop through snapshots
@@ -95,7 +97,7 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
       Number.parseFloat(child.componentData.actualDuration).toPrecision(5),
     );
     // sums render time for all children
-    currTotalRender += renderTime;
+    const childrenRenderTime = currTotalRender + renderTime;
     // components as keys and set the value to their rendering time
     data.barStack[data.barStack.length - 1][componentName] = renderTime;
 
@@ -120,11 +122,10 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
     // Get rtid for the hovering feature
     data.componentData[componentName].rtid = child.rtid;
     data.componentData[componentName].information = collectNodes(snapshots, child.name);
-    traverse(snapshot.children[idx], data, snapshots, currTotalRender);
+    traverse(snapshot.children[idx], data, snapshots, childrenRenderTime);
   });
   // reassigns total render time to max render time
   data.maxTotalRender = Math.max(currTotalRender, data.maxTotalRender);
-  return data;
 };
 
 // Retrieve snapshot series data from Chrome's local storage.
@@ -145,9 +146,17 @@ const getSnapshotIds = (obj, snapshotIds = []): string[] => {
   return snapshotIds;
 };
 
+type BarStackProp = Record <string, unknown>
+
+interface PerfData {
+  barStack: BarStackProp[],
+  componentData?: Record<string, unknown>,
+  maxTotalRender: number,
+}
+
 // Returns array of snapshot objs each with components and corresponding render times.
-const getPerfMetrics = (snapshots, snapshotsIds): {} => {
-  const perfData = {
+const getPerfMetrics = (snapshots, snapshotsIds): PerfData => {
+  const perfData: PerfData = {
     barStack: [],
     componentData: {},
     maxTotalRender: 0,
@@ -160,12 +169,12 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
 };
 
 /* EXPORT COMPONENT */
-const PerformanceVisx = (props: BarStackProps) => {
+const PerformanceVisx = (props: BarStackProps): JSX.Element => {
   // hook used to dispatch onhover action in rect
   const {
     width, height, snapshots, hierarchy,
   } = props;
-  const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
+  const [{ currentTabInApp }, dispatch] = useStoreContext();
   const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   const [series, setSeries] = useState(true);
@@ -178,10 +187,22 @@ const PerformanceVisx = (props: BarStackProps) => {
     dispatch(setCurrentTabInApp('performance'));
   }, [dispatch]);
 
+  type Series = {
+    data: {
+      barStack: ActionObj[],
+    }
+    name: string
+  }
+
+  type ActionObj = {
+    name: unknown,
+    seriesName: unknown,
+  }
+
   // Creates the actions array used to populate the compare actions dropdown
   const getActions = () => {
-    let seriesArr = localStorage.getItem('project');
-    seriesArr = seriesArr === null ? [] : JSON.parse(seriesArr);
+    const project = localStorage.getItem('project');
+    const seriesArr: Series[] = project === null ? [] : JSON.parse(project);
     const actionsArr = [];
 
     if (seriesArr.length) {
@@ -244,13 +265,12 @@ const PerformanceVisx = (props: BarStackProps) => {
     data.barStack = filteredSnapshots;
   }
 
-
+  // maxheight is referring to the max height in render time to choose the scaling size for graph
+  let maxHeight = 0;
   if (snapshot !== 'All Snapshots') {
     // filter barStack to make it equal to an array of length 1 with object matching snapshot ID to mirror the data.barStack object's shape
     const checkData = [data.barStack.find(comp => comp.snapshotId === snapshot)];
     const holdData = [];
-    // maxheight is referring to the max height in render time to choose the scaling size for graph
-    let maxHeight = 0;
     // looping through checkData which is composed of a single snapshot while pushing key/values to a new object and setting maxHeight
     for (const key in checkData[0]) {
       if (key !== 'route' && key !== 'snapshotId') {
