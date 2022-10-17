@@ -1,6 +1,8 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
+/* eslint-disable max-len */
+
 import React, { useState, useEffect } from 'react';
 import {
   MemoryRouter as Router,
@@ -15,7 +17,7 @@ import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useStoreContext } from '../../../store';
 import { setCurrentTabInApp } from '../../../actions/actions';
-import { Bar } from '@visx/shape';
+import { PerfData } from '../../FrontendTypes';
 
 interface BarStackProps {
   width: number;
@@ -146,13 +148,13 @@ const getSnapshotIds = (obj, snapshotIds = []): string[] => {
   return snapshotIds;
 };
 
-type BarStackProp = Record <string, unknown>
+// type BarStackProp = Record <string, unknown | URL | number>
 
-interface PerfData {
-  barStack: BarStackProp[],
-  componentData?: Record<string, unknown>,
-  maxTotalRender: number,
-}
+// interface PerfData {
+//   barStack: BarStackProp[],
+//   componentData?: Record<string, unknown>,
+//   maxTotalRender: number,
+// }
 
 // Returns array of snapshot objs each with components and corresponding render times.
 const getPerfMetrics = (snapshots, snapshotsIds): PerfData => {
@@ -294,7 +296,6 @@ const PerformanceVisx = (props: BarStackProps): JSX.Element => {
       return (
         <div>
           <BarGraph
-            maxHeight={maxHeight}
             data={data}
             width={width}
             height={height}

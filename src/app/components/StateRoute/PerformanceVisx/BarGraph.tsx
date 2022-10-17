@@ -11,6 +11,7 @@ import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
 import { onHover, onHoverExit, save } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
+import { PerfData } from '../../FrontendTypes';
 
 /* TYPESCRIPT */
 
@@ -41,16 +42,16 @@ interface TooltipData {
 }
 
 interface BarGraphProps {
-    width: number,
-    height: number,
-    data: Record<string, unknown>,
-    comparison: unknown,
-    setRoute: () => void,
-    allRoutes: unknown,
-    filteredSnapshots: unknown,
-    snapshot: unknown,
-    setSnapshot: () => void
-  }
+  width: number,
+  height: number,
+  data: PerfData,
+  comparison: unknown,
+  setRoute: () => void,
+  allRoutes: unknown,
+  filteredSnapshots: unknown,
+  snapshot: unknown,
+  setSnapshot: () => void
+}
 
 /* DEFAULTS */
 const margin = {

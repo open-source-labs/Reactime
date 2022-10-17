@@ -15,6 +15,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
+import { PerfData } from '../../FrontendTypes';
 
 /* TYPESCRIPT */
 
@@ -48,7 +49,7 @@ interface TooltipData {
 interface BarGraphComparisonProps {
   width: number,
   height: number,
-  data: Record<string, unknown>,
+  data: PerfData,
   comparison: string | [],
   setSeries: () => void,
   series: unknown,
