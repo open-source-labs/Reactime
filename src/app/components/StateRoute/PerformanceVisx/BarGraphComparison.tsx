@@ -1,7 +1,5 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import { BarStack } from '@visx/shape';
-import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
 import { AxisBottom, AxisLeft } from '@visx/axis';
@@ -15,46 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-import { PerfData } from '../../FrontendTypes';
-
-/* TYPESCRIPT */
-
-interface margin {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
-
-interface snapshot {
-  snapshotId?: string;
-  children: [];
-  componentData: any;
-  name: string;
-  state: string;
-}
-
-// On-hover data.
-interface TooltipData {
-  bar: SeriesPoint<snapshot>;
-  key: string;
-  index: number;
-  height: number;
-  width: number;
-  x: number;
-  y: number;
-  color: string;
-}
-
-interface BarGraphComparisonProps {
-  width: number,
-  height: number,
-  data: PerfData,
-  comparison: string | [],
-  setSeries: () => void,
-  series: unknown,
-  setAction: () => void,
-}
+import { snapshot, TooltipData, margin, BarGraphComparisonProps } from '../../FrontendTypes';
 
 /* DEFAULTS */
 const margin = {
@@ -118,10 +77,10 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   // We'll then use it in the renderingScale function and compare
   // with the render time of the current tab.
   // The max render time will determine the Y-axis's highest number.
-  const calculateMaxTotalRender = serie => {
-    const currentSeriesBarStacks = !comparison[serie]
+  const calculateMaxTotalRender = series => {
+    const currentSeriesBarStacks = !comparison[series]
       ? []
-      : comparison[serie].data.barStack;
+      : comparison[series].data.barStack;
     if (currentSeriesBarStacks.length === 0) return 0;
     let currentMax = -Infinity;
     for (let i = 0; i < currentSeriesBarStacks.length; i += 1) {

@@ -19,7 +19,7 @@ import { useStoreContext } from '../../../store';
 import { setCurrentTabInApp } from '../../../actions/actions';
 import { PerfData } from '../../FrontendTypes';
 
-interface BarStackProps {
+interface PerformanceVisxProps {
   width: number;
   height: number;
   snapshots: [];
@@ -171,8 +171,8 @@ const getPerfMetrics = (snapshots, snapshotsIds): PerfData => {
 };
 
 /* EXPORT COMPONENT */
-const PerformanceVisx = (props: BarStackProps): JSX.Element => {
-  // hook used to dispatch onhover action in rect
+const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
+  // hook used to dispatch onhover action in react
   const {
     width, height, snapshots, hierarchy,
   } = props;

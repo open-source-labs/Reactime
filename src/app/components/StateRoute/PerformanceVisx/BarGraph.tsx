@@ -11,47 +11,7 @@ import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
 import { onHover, onHoverExit, save } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-import { PerfData } from '../../FrontendTypes';
-
-/* TYPESCRIPT */
-
-interface margin {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
-
-interface snapshot {
-  snapshotId?: string;
-  children: [];
-  componentData: any;
-  name: string;
-  state: string;
-}
-
-interface TooltipData {
-  bar: SeriesPoint<snapshot>;
-  key: string;
-  index: number;
-  height: number;
-  width: number;
-  x: number;
-  y: number;
-  color: string;
-}
-
-interface BarGraphProps {
-  width: number,
-  height: number,
-  data: PerfData,
-  comparison: unknown,
-  setRoute: () => void,
-  allRoutes: unknown,
-  filteredSnapshots: unknown,
-  snapshot: unknown,
-  setSnapshot: () => void
-}
+import { snapshot, TooltipData, margin, BarGraphProps } from '../../FrontendTypes';
 
 /* DEFAULTS */
 const margin = {
