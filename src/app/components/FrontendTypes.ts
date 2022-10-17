@@ -10,8 +10,8 @@ export interface Series {
   }
 
   interface ActionObj {
-    name: unknown,
-    seriesName: unknown,
+    name: string,
+    seriesName: string,
   }
 
 export interface PerfData {
