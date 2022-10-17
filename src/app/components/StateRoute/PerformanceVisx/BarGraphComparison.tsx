@@ -18,11 +18,11 @@ import {
 } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 import {
-  snapshot, TooltipData, margin, BarGraphComparisonProps,
+  snapshot, TooltipData, margin, BarGraphComparisonProps, ActionObj,
 } from '../../FrontendTypes';
 
 /* DEFAULTS */
-const margin = {
+const margin: margin = {
   top: 30, right: 30, bottom: 0, left: 50,
 };
 const axisColor = '#62d6fb';
@@ -47,9 +47,9 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const [picOpen, setPicOpen] = React.useState(false);
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance-comparison'));
-  }, []);
+  }, [dispatch]);
 
-  const currentIndex = tabs[currentTab].sliderIndex;
+  const currentIndex: number = tabs[currentTab].sliderIndex;
 
   const {
     tooltipOpen,
@@ -63,17 +63,17 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
 
-  const keys = Object.keys(data.componentData);
+  const keys: string[] = Object.keys(data.componentData);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSnapshotId = (d: snapshot) => d.snapshotId;
-  const formatSnapshotId = id => `Snapshot ID: ${id}`;
-  const formatRenderTime = time => `${time} ms `;
-  const getCurrentTab = storedSeries => storedSeries.currentTab;
+  const formatSnapshotId = (id: string): string => `Snapshot ID: ${id}`;
+  const formatRenderTime = (time: string): string => `${time} ms `;
+  const getCurrentTab = (storedSeries: Record<string, unknown>) => storedSeries.currentTab;
 
   // create visualization SCALES with cleaned data
   // the domain array/xAxisPoints elements will place the bars along the x-axis
-  const xAxisPoints = ['currentTab', 'comparison'];
+  const xAxisPoints: string[] = ['currentTab', 'comparison'];
   const snapshotIdScale = scaleBand<string>({
     domain: xAxisPoints,
     padding: 0.2,
@@ -84,7 +84,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   // with the render time of the current tab.
   // The max render time will determine the Y-axis's highest number.
   const calculateMaxTotalRender = (serie: number): number => {
-    const currentSeriesBarStacks: number[] = !comparison[serie]
+    const currentSeriesBarStacks: ActionObj[] = !comparison[serie]
       ? []
       : comparison[serie].data.barStack;
     if (currentSeriesBarStacks.length === 0) return 0;
@@ -104,9 +104,10 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   });
   // the domain array will assign each key a different color to make rectangle boxes
   // and use range to set the color scheme each bar
-  const colorScale = scaleOrdinal<string>({
+  const duplicate = schemeSet3.slice();
+  const colorScale = scaleOrdinal<string, string>({
     domain: keys,
-    range: schemeSet3,
+    range: duplicate,
   });
 
   // setting max dimensions and scale ranges
@@ -125,7 +126,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     select: {
       minWidth: 80,
       fontSize: '.75rem',
-      fontWeight: '200',
+      fontWeight: 200,
       border: '1px solid grey',
       borderRadius: 4,
       color: 'grey',

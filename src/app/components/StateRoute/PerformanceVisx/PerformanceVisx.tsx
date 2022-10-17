@@ -271,7 +271,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
     if (holdData) data.barStack = holdData;
   }
 
-  const renderBargraph = () => {
+  const renderBargraph = (): JSX.Element | null => {
     if (hierarchy) {
       return (
         <div>
@@ -289,6 +289,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
         </div>
       );
     }
+    return null;
   };
 
   const renderComponentDetailsView = () => {

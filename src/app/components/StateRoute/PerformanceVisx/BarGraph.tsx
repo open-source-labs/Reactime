@@ -10,7 +10,9 @@ import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
 import { onHover, onHoverExit, save } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-import { snapshot, TooltipData, margin, BarGraphProps } from '../../FrontendTypes';
+import {
+  snapshot, TooltipData, margin, BarGraphProps,
+} from '../../FrontendTypes';
 
 /* DEFAULTS */
 const margin = {
@@ -59,10 +61,8 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
   const keys = Object.keys(data.componentData);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
-  const getSnapshotId = (d: snapshot) => {
-    // d coming from data.barstack post filtered data
-    return d.snapshotId;
-  };
+  // d coming from data.barstack post filtered data
+  const getSnapshotId = (d: snapshot) => d.snapshotId;
 
   // returns snapshot id when invoked in tooltip section
   const formatSnapshotId = id => `Snapshot ID: ${id}`;
