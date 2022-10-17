@@ -90,7 +90,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     if (currentSeriesBarStacks.length === 0) return 0;
     let currentMax = -Infinity;
     for (let i = 0; i < currentSeriesBarStacks.length; i += 1) {
-      const renderTimes = Object.values(currentSeriesBarStacks[i]).slice(1);
+      const renderTimes: number[] = Object.values(currentSeriesBarStacks[i]).slice(1);
       const renderTotal: number = renderTimes.reduce((acc, curr) => acc + curr);
       if (renderTotal > currentMax) currentMax = renderTotal;
     }
