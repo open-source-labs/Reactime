@@ -22,7 +22,7 @@ export interface PerfData {
 
 interface BarStackProp {
   snapshotId: string,
-  route: string,
+  route: string | URL,
   currentTab?: string,
 }
 
