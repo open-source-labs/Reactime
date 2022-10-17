@@ -82,7 +82,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   // We'll then use it in the renderingScale function and compare
   // with the render time of the current tab.
   // The max render time will determine the Y-axis's highest number.
-  const calculateMaxTotalRender = (serie: string) => {
+  const calculateMaxTotalRender = (serie: string): number => {
     const currentSeriesBarStacks: number[] = !comparison[serie]
       ? []
       : comparison[serie].data.barStack;
