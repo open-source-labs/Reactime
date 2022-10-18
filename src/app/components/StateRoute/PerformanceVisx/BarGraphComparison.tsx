@@ -193,7 +193,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   }
   const seriesList: ActionObj[][] = comparison.map((series: Series) => series.data.barStack);
   const actionsList: ActionObj[] = seriesList.flat();
-  const testList = actionsList.map((elem: ActionObj) => elem.name);
+  const testList: string[] = actionsList.map((elem: ActionObj) => elem.name);
 
   const finalList = [];
   for (let i = 0; i < testList.length; i += 1) {
