@@ -24,16 +24,15 @@ let snapShot;
 
 let browser;
 let page;
-interface Component {
-  render(): any;
-  context: any;
-  setState: any;
-  forceUpdate: any;
-  props: any;
-  state: any;
-  refs: any;
-}
-
+// interface Component {
+//   render(): any;
+//   context: any;
+//   setState: any;
+//   forceUpdate: any;
+//   props: any;
+//   state: any;
+//   refs: any;
+// }
 
 class App extends Component{
   state: { foo: string; };
