@@ -57,7 +57,7 @@ export interface BarGraphBase {
   width: number,
   height: number,
   data: PerfData,
-  comparison: string | Series[],
+  comparison: Series[] | string,
 }
 
 export interface BarGraphComparisonProps extends BarGraphBase {
