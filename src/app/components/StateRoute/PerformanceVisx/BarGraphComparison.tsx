@@ -20,6 +20,7 @@ import { useStoreContext } from '../../../store';
 import {
   snapshot, TooltipData, margin, BarGraphComparisonProps, ActionObj,
 } from '../../FrontendTypes';
+import { BarStack } from '@visx/shape/lib/types';
 
 /* DEFAULTS */
 const margin: margin = {
@@ -136,7 +137,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
 
   const classes = useStyles();
 
-  const handleSeriesChange = event => {
+  const handleSeriesChange = (event: Event) => {
     if (!event) return;
     setSeries(event.target.value);
     setAction(false);
@@ -150,7 +151,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     setOpen(true);
   };
 
-  const handleActionChange = event => {
+  const handleActionChange = (event: Event) => {
     if (!event.target.value) return;
     setAction(event.target.value);
     setSeries(false);
@@ -166,7 +167,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
 
   // manually assignin X -axis points with tab ID.
   function setXpointsComparison() {
-    comparison[series].data.barStack.forEach(elem => {
+    comparison[series].data.barStack.forEach((elem: ActionObj) => {
       elem.currentTab = 'comparison';
     });
     return comparison[series].data.barStack;
@@ -177,7 +178,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     });
     return data.barStack;
   }
-  const animateButton = e => {
+  const animateButton = (e: MouseEvent) => {
     e.preventDefault();
     e.target.classList.add('animate');
     e.target.innerHTML = 'Deleted!';
@@ -190,9 +191,9 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   for (let i = 0; i < classname.length; i += 1) {
     classname[i].addEventListener('click', animateButton, false);
   }
-  const seriesList = comparison.map(elem => elem.data.barStack);
+  const seriesList: ActionObj[][] = comparison.map((series: Series) => series.data.barStack);
   const actionsList = seriesList.flat();
-  const testList = actionsList.map(elem => elem.name);
+  const testList = actionsList.map((elem: ActionObj) => elem.name);
 
   const finalList = [];
   for (let i = 0; i < testList.length; i += 1) {
