@@ -22,7 +22,7 @@ interface ActionProps {
   componentData: { actualDuration: number } | undefined;
   routePath: any;
   state?: Record<string, unknown>;
-  viewIndex: number;
+  viewIndex: number | unknown;
   isCurrIndex: boolean;
   handleOnkeyDown: (e: any, i: number) => any;
 }
