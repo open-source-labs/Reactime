@@ -9,7 +9,7 @@ export interface Series {
     name: string
   }
 
-  interface ActionObj {
+export interface ActionObj {
     name: string,
     seriesName: string,
   }
@@ -20,7 +20,7 @@ export interface PerfData {
   maxTotalRender: number,
 }
 
-interface BarStackProp {
+export interface BarStackProp {
   snapshotId: string,
   route: string,
   currentTab?: string,
@@ -53,15 +53,15 @@ export interface margin {
   left: number;
 }
 
-interface BarGraphBase {
+export interface BarGraphBase {
   width: number,
   height: number,
   data: PerfData,
-  comparison: string | Series | [],
+  comparison: string | Series[],
 }
 
 export interface BarGraphComparisonProps extends BarGraphBase {
-  setSeries: () => void,
+  setSeries: (e: boolean) => void,
   series: number,
   setAction: () => void,
 }
