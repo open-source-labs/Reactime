@@ -1,4 +1,4 @@
-// @ts-nocheck
+/* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -34,7 +34,10 @@ function ActionContainer(props): JSX.Element {
 
   // function to traverse state from hierarchy and also getting information on display name and component name
   const displayArray = (obj: {
-    stateSnapshot: { children: any[] };
+    stateSnapshot: {
+      route: any,
+      children: any[]
+    };
     name: number;
     branch: number;
     index: number;
@@ -97,6 +100,7 @@ function ActionContainer(props): JSX.Element {
   actionsArr = hierarchyArr.map(
     (
       snapshot: {
+        routePath: any;
         state?: Record<string, unknown>;
         index: number;
         displayName: string;

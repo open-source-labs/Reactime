@@ -1,4 +1,3 @@
-// @ts-nocheck
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-filename-extension */
 
@@ -11,7 +10,7 @@ import RouteDescription from '../components/RouteDescription';
 configure({ adapter: new (Adapter as any)() });
 
 describe('Unit testing RouteDescription', () => {
-  const actionsArr = [];
+  const actionsArr: JSX.Element[] = [];
 
   actionsArr.push(
     <Action
