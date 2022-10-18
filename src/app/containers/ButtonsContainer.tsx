@@ -31,18 +31,18 @@ function exportHandler(snapshots: []) {
   URL.revokeObjectURL(fileDownload.href);
 }
 
-function importHandler(dispatch: (a: any) => void) {
+function importHandler(dispatch: (a: unknown) => void) {
   const fileUpload = document.createElement('input');
   fileUpload.setAttribute('type', 'file');
 
-  fileUpload.onchange = () => {
+  fileUpload.onchange = (e) => {
     const reader = new FileReader();
     reader.onload = () => {
       const test = reader.result.toString();
       return dispatch(importSnapshots(JSON.parse(test)));
     };
-    if (event.target.hasOwnProperty('files')) {
-      const eventFiles: any = event.target;
+    if (e.target.hasOwnProperty('files')) {
+      const eventFiles: unknown = e.target;
       reader.readAsText(eventFiles.files[0]);
     }
   };

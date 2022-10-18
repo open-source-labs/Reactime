@@ -20,8 +20,9 @@ interface ActionProps {
   displayName: string;
   componentName: string;
   componentData: { actualDuration: number } | undefined;
+  routePath: any;
   state?: Record<string, unknown>;
-  viewIndex: number;
+  viewIndex: number | undefined;
   isCurrIndex: boolean;
   handleOnkeyDown: (e: any, i: number) => any;
 }

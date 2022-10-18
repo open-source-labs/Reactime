@@ -1,7 +1,5 @@
 /* eslint-disable react/prop-types */
 
-// @ts-nocheck
-
 import React from 'react';
 import { css } from '@emotion/react';
 import { ClipLoader } from 'react-spinners';

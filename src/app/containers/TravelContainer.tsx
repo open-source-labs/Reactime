@@ -1,4 +1,4 @@
-// @ts-nocheck
+/* eslint-disable max-len */
 import React, { useState } from 'react';
 import MainSlider from '../components/MainSlider';
 import Dropdown from '../components/Dropdown';
