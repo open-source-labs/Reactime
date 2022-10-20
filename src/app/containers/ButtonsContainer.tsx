@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import * as React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -12,7 +10,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { importSnapshots, toggleMode, toggleSplit } from '../actions/actions';
 import { useStoreContext } from '../store';
-import Tutorial from '../components/Tutorial';
+
+const Tutorial = require('../components/Tutorial');
 
 function exportHandler(snapshots: []) {
   // create invisible download anchor link
@@ -35,15 +34,18 @@ function importHandler(dispatch: (a: unknown) => void) {
   const fileUpload = document.createElement('input');
   fileUpload.setAttribute('type', 'file');
 
-  fileUpload.onchange = (e) => {
+  fileUpload.onchange = (e: Event) => {
     const reader = new FileReader();
     reader.onload = () => {
       const test = reader.result.toString();
       return dispatch(importSnapshots(JSON.parse(test)));
     };
-    if (e.target.hasOwnProperty('files')) {
-      const eventFiles: unknown = e.target;
-      reader.readAsText(eventFiles.files[0]);
+    const eventFiles = e.target as HTMLInputElement;
+    if (eventFiles?.hasOwnProperty('files')) {
+      // const eventFiles = target as HTMLInputElement;
+      if (eventFiles) {
+        reader.readAsText(eventFiles.files[0]);
+      }
     }
   };
 

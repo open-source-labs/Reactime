@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
 
+//Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly. 
 const { Steps } = require('intro.js-react');
 
 interface tutorialProps {
