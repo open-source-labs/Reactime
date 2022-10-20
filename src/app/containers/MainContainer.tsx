@@ -1,7 +1,5 @@
 /* eslint-disable max-len */
-// @ts-nocheck
 import React, { useEffect, useState } from 'react';
-import Split from 'react-split';
 import ActionContainer from './ActionContainer';
 import TravelContainer from './TravelContainer';
 import ButtonsContainer from './ButtonsContainer';
@@ -18,6 +16,9 @@ import {
   pause,
 } from '../actions/actions';
 import { useStoreContext } from '../store';
+
+//Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly. 
+const Split = require('react-split');
 
 function MainContainer(): JSX.Element {
   const [store, dispatch] = useStoreContext();
