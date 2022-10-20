@@ -132,7 +132,7 @@ const traverse = (snapshot, data, snapshots, currTotalRender: currNum = 0): void
 // Retrieve snapshot series data from Chrome's local storage.
 const allStorage = (): Series[] => {
   let values = localStorage.getItem('project');
-  const newValues = values === null ? [] : JSON.parse(values);
+  const newValues: Series[] = values === null ? [] : JSON.parse(values);
   return newValues;
 };
 

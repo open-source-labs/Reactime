@@ -9,6 +9,16 @@ export interface Series {
     name: string
   }
 
+// interface Event {
+//     target: EventTarget
+// }
+
+// interface EventTarget {
+//   x: WithParentSizeProvidedProps,
+//   y: OptionalKeys,
+//   value?: idk
+//   }
+
 export interface ActionObj {
     name: string,
     seriesName: string,
@@ -63,7 +73,7 @@ export interface BarGraphBase {
 export interface BarGraphComparisonProps extends BarGraphBase {
   setSeries: (e: boolean) => void,
   series: number,
-  setAction: () => void,
+  setAction: (e: boolean) => void,
 }
 
 export interface BarGraphProps extends BarGraphBase{

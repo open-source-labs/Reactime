@@ -18,7 +18,7 @@ import {
 } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 import {
-  snapshot, TooltipData, margin, BarGraphComparisonProps, ActionObj,
+  snapshot, TooltipData, margin, BarGraphComparisonProps, ActionObj, Series,
 } from '../../FrontendTypes';
 import { BarStack } from '@visx/shape/lib/types';
 
@@ -178,14 +178,18 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     });
     return data.barStack;
   }
+  
   const animateButton = (e: MouseEvent) => {
     e.preventDefault();
-    e.target.classList.add('animate');
-    e.target.innerHTML = 'Deleted!';
-    setTimeout(() => {
-      e.target.innerHTML = 'Clear All Series';
-      e.target.classList.remove('animate');
-    }, 1000);
+    const target = event.target as HTMLButtonElement;
+    if (target) {
+      target.classList.add('animate');
+      target.innerHTML = 'Deleted!';
+      setTimeout(() => {
+        target.innerHTML = 'Clear All Series';
+        target.classList.remove('animate');
+      }, 1000);
+    }
   };
   const classname = document.getElementsByClassName('delete-button');
   for (let i = 0; i < classname.length; i += 1) {
