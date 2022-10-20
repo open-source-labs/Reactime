@@ -11,7 +11,7 @@ import { schemeSet3 } from 'd3-scale-chromatic';
 import { onHover, onHoverExit, save } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 import {
-  snapshot, TooltipData, margin, BarGraphProps,
+  snapshot, TooltipData, Margin, BarGraphProps,
 } from '../../FrontendTypes';
 
 /* DEFAULTS */

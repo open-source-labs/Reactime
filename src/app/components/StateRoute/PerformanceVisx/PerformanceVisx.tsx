@@ -2,7 +2,6 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable max-len */
-
 import React, { useState, useEffect } from 'react';
 import {
   MemoryRouter as Router,
@@ -131,10 +130,10 @@ const traverse = (snapshot, data, snapshots, currTotalRender: currNum = 0): void
 };
 
 // Retrieve snapshot series data from Chrome's local storage.
-const allStorage = () => {
+const allStorage = (): Series[] => {
   let values = localStorage.getItem('project');
-  values = values === null ? [] : JSON.parse(values);
-  return values;
+  const newValues: Series[] = values === null ? [] : JSON.parse(values);
+  return newValues;
 };
 
 // Gets snapshot Ids for the regular bar graph view.

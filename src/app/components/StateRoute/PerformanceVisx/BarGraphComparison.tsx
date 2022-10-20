@@ -1,4 +1,5 @@
 // @ts-nocheck
+/// <reference lib="dom" />
 /* eslint-disable no-param-reassign */
 import React, { useEffect } from 'react';
 import { BarStack } from '@visx/shape';
@@ -18,12 +19,12 @@ import {
 } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 import {
-  snapshot, TooltipData, margin, BarGraphComparisonProps, ActionObj,
+  snapshot, TooltipData, Margin, BarGraphComparisonProps, ActionObj, Series,
 } from '../../FrontendTypes';
-import { BarStack } from '@visx/shape/lib/types';
+// import { BarStack as BarStacks } from '@visx/shape/lib/types';
 
 /* DEFAULTS */
-const margin: margin = {
+const margin: Margin = {
   top: 30, right: 30, bottom: 0, left: 50,
 };
 const axisColor = '#62d6fb';
@@ -70,7 +71,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const getSnapshotId = (d: snapshot) => d.snapshotId;
   const formatSnapshotId = (id: string): string => `Snapshot ID: ${id}`;
   const formatRenderTime = (time: string): string => `${time} ms `;
-  const getCurrentTab = (storedSeries: Record<string, unknown>) => storedSeries.currentTab;
+  const getCurrentTab = (storedSeries: ActionObj) => storedSeries.currentTab;
 
   // create visualization SCALES with cleaned data
   // the domain array/xAxisPoints elements will place the bars along the x-axis
@@ -139,8 +140,11 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
 
   const handleSeriesChange = (event: Event) => {
     if (!event) return;
-    setSeries(event.target.value);
-    setAction(false);
+    const target = event.target as HTMLInputElement;
+    if (target) {
+      setSeries(target.value);
+      setAction(false);
+    }
   };
 
   const handleClose = () => {
@@ -152,9 +156,12 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   };
 
   const handleActionChange = (event: Event) => {
-    if (!event.target.value) return;
-    setAction(event.target.value);
-    setSeries(false);
+    const target = event.target as HTMLInputElement;
+    if (!target.value) return;
+    if (target) {
+      setAction(target.value);
+      setSeries(false);
+    }
   };
 
   const picHandleClose = () => {
@@ -178,14 +185,18 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     });
     return data.barStack;
   }
+
   const animateButton = (e: MouseEvent) => {
     e.preventDefault();
-    e.target.classList.add('animate');
-    e.target.innerHTML = 'Deleted!';
-    setTimeout(() => {
-      e.target.innerHTML = 'Clear All Series';
-      e.target.classList.remove('animate');
-    }, 1000);
+    const target = (e.target as HTMLButtonElement);
+    if (target) {
+      target.classList.add('animate');
+      target.innerHTML = 'Deleted!';
+      setTimeout(() => {
+        target.innerHTML = 'Clear All Series';
+        target.classList.remove('animate');
+      }, 1000);
+    }
   };
   const classname = document.getElementsByClassName('delete-button');
   for (let i = 0; i < classname.length; i += 1) {
