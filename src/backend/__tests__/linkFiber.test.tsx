@@ -6,7 +6,7 @@
 /* eslint-disable import/order */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/jsx-filename-extension */
-
+//@ts-nocheck
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import linkFiberStart from '../linkFiber';
