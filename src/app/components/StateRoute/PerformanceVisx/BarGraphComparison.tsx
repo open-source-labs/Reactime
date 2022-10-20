@@ -1,4 +1,4 @@
-
+/// <reference lib="dom" />
 /* eslint-disable no-param-reassign */
 import React, { useEffect } from 'react';
 import { BarStack } from '@visx/shape';
@@ -20,7 +20,7 @@ import { useStoreContext } from '../../../store';
 import {
   snapshot, TooltipData, Margin, BarGraphComparisonProps, ActionObj, Series,
 } from '../../FrontendTypes';
-import { BarStack } from '@visx/shape/lib/types';
+// import { BarStack as BarStacks } from '@visx/shape/lib/types';
 
 /* DEFAULTS */
 const margin: Margin = {
@@ -70,7 +70,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const getSnapshotId = (d: snapshot) => d.snapshotId;
   const formatSnapshotId = (id: string): string => `Snapshot ID: ${id}`;
   const formatRenderTime = (time: string): string => `${time} ms `;
-  const getCurrentTab = (storedSeries: Record<string, unknown>) => storedSeries.currentTab;
+  const getCurrentTab = (storedSeries: ActionObj) => storedSeries.currentTab;
 
   // create visualization SCALES with cleaned data
   // the domain array/xAxisPoints elements will place the bars along the x-axis
@@ -187,7 +187,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
 
   const animateButton = (e: MouseEvent) => {
     e.preventDefault();
-    const target = event.target as HTMLButtonElement;
+    const target = (e.target as HTMLButtonElement);
     if (target) {
       target.classList.add('animate');
       target.innerHTML = 'Deleted!';
