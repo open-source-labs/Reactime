@@ -14,10 +14,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import { deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-import { TooltipData, margin } from '../../FrontendTypes';
+import { TooltipData, Margin } from '../../FrontendTypes';
 
 /* DEFAULTS */
-const margin = {
+const margin: Margin = {
   top: 30, right: 30, bottom: 0, left: 50,
 };
 const axisColor = '#62d6fb';

@@ -18,12 +18,12 @@ import {
 } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 import {
-  snapshot, TooltipData, margin, BarGraphComparisonProps, ActionObj, Series,
+  snapshot, TooltipData, Margin, BarGraphComparisonProps, ActionObj, Series,
 } from '../../FrontendTypes';
 import { BarStack } from '@visx/shape/lib/types';
 
 /* DEFAULTS */
-const margin: margin = {
+const margin: Margin = {
   top: 30, right: 30, bottom: 0, left: 50,
 };
 const axisColor = '#62d6fb';
@@ -139,8 +139,11 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
 
   const handleSeriesChange = (event: Event) => {
     if (!event) return;
-    setSeries(event.target.value);
-    setAction(false);
+    const target = event.target as HTMLInputElement;
+    if (target) {
+      setSeries(target.value);
+      setAction(false);
+    }
   };
 
   const handleClose = () => {
@@ -152,9 +155,12 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   };
 
   const handleActionChange = (event: Event) => {
-    if (!event.target.value) return;
-    setAction(event.target.value);
-    setSeries(false);
+    const target = event.target as HTMLInputElement;
+    if (!target.value) return;
+    if (target) {
+      setAction(target.value);
+      setSeries(false);
+    }
   };
 
   const picHandleClose = () => {
@@ -178,7 +184,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     });
     return data.barStack;
   }
-  
+
   const animateButton = (e: MouseEvent) => {
     e.preventDefault();
     const target = event.target as HTMLButtonElement;

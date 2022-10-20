@@ -21,7 +21,8 @@ export interface Series {
 
 export interface ActionObj {
     name: string,
-    seriesName: string,
+  seriesName: string,
+  currentTab: string,
   }
 
 export interface PerfData {
@@ -56,7 +57,7 @@ export interface snapshot {
   state: string;
 }
 
-export interface margin {
+export interface Margin {
   top: number;
   right: number;
   bottom: number;
@@ -71,9 +72,9 @@ export interface BarGraphBase {
 }
 
 export interface BarGraphComparisonProps extends BarGraphBase {
-  setSeries: (e: boolean) => void,
+  setSeries: (e: boolean | string) => void,
   series: number,
-  setAction: (e: boolean) => void,
+  setAction: (e: boolean | string) => void,
 }
 
 export interface BarGraphProps extends BarGraphBase{
