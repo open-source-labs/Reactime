@@ -10,9 +10,8 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import linkFiberStart from '../linkFiber';
-// import 'expect-puppeteer';
-import puppeteer from 'puppeteer';
 
+const puppeteer = require('puppeteer');
 const SERVER = require('../puppeteerServer');
 
 // Apple uses port 5000 for Air Play.
@@ -24,15 +23,6 @@ let snapShot;
 
 let browser;
 let page;
-// interface Component {
-//   render(): any;
-//   context: any;
-//   setState: any;
-//   forceUpdate: any;
-//   props: any;
-//   state: any;
-//   refs: any;
-// }
 
 class App extends Component{
   state: { foo: string; };
