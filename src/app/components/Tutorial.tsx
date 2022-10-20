@@ -30,6 +30,12 @@ export default class Tutorial extends React.Component<tutorialProps, tutorialSta
       stepsEnabled: false,
     };
   }
+  public context: any;
+  public setState: any;
+  public forceUpdate: any;
+  public props: any;
+  public state: any;
+  public refs: any;
 
   render(): JSX.Element {
     const { currentTabInApp, dispatch } = this.props;

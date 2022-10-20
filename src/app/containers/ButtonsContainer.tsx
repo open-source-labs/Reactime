@@ -11,7 +11,7 @@ import {
 import { importSnapshots, toggleMode, toggleSplit } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-const Tutorial = require('../components/Tutorial');
+import Tutorial from '../components/Tutorial';
 
 function exportHandler(snapshots: []) {
   // create invisible download anchor link
