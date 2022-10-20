@@ -11,13 +11,17 @@ import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
 
 interface tutorialProps {
-  dispatch: unknown;
-  currentTabInApp: unknown;
+  dispatch: (object) => void;
+  currentTabInApp: string;
+}
+
+interface tutorialState {
+  stepsEnabled: boolean;
 }
 
 // This is the tutorial displayed when the "How to use" button is clicked
 // This needs to be a class component to be compatible with updateStepElement from intro.js
-export default class Tutorial extends React.Component<tutorialProps> {
+export default class Tutorial extends React.Component<tutorialProps, tutorialState> {
   constructor(props:tutorialProps) {
     super(props);
     this.state = {
