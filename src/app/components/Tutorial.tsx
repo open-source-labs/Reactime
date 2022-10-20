@@ -30,6 +30,8 @@ export default class Tutorial extends React.Component<tutorialProps, tutorialSta
       stepsEnabled: false,
     };
   }
+
+  //tutorial class needs these public variables to be a valid class component for ts when rendered in buttonscontainer.tsx
   public context: any;
   public setState: any;
   public forceUpdate: any;
