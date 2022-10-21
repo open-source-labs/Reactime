@@ -67,7 +67,7 @@ const collectNodes = (snaps, componentName) => {
         }
         break;
       }
-      if (cur.children && cur.children.length > 0) {
+      if (cur.children?.length > 0) {
         for (const child of cur.children) {
           snapshotList.push(child);
         }
