@@ -92,7 +92,7 @@ export interface BarGraphComparisonAction{
   height: number,
   comparison: Series[],
   setSeries: (e: boolean | string) => void,
-  series: number,
+  series?: number,
   setAction: (e: boolean | string) => void,
 }
 
