@@ -84,3 +84,15 @@ export interface BarGraphProps extends BarGraphBase{
   snapshot: unknown,
   setSnapshot: () => void
 }
+
+export interface BarGraphComparisonAction{
+  action: ActionObj,
+  data: ActionObj[],
+  width: number,
+  height: number,
+  comparison: Series[],
+  setSeries: (e: boolean | string) => void,
+  series: number,
+  setAction: (e: boolean | string) => void,
+}
+
