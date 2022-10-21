@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 // Font size of the Controls label and Dropdowns
 const controlStyles = {
@@ -28,10 +29,10 @@ type Props = {
   setLinkType: (linkType: string) => void;
   setStepPercent: (percent: number) => void;
   setSelectedNode: (selectedNode: string) => void;
-  snapShots: [];
+  snapShots: Record<string, unknown>;
 };
 
-//use BFS to put all the nodes under snapShots(which is the tree node) into an array
+// use BFS to put all the nodes under snapShots(which is the tree node) into an array
 const nodeList = [];
 
 const collectNodes = node => {
@@ -41,10 +42,8 @@ const collectNodes = node => {
   nodeList.push(node);
   for (let i = 0; i < nodeList.length; i += 1) {
     const cur = nodeList[i];
-    if (cur.children && cur.children.length > 0) {
-      for (let child of cur.children) {
-        nodeList.push(child);
-      }
+    if (cur.children?.length > 0) {
+      cur.children.forEach(child => nodeList.push(child));
     }
   }
 };
@@ -59,7 +58,7 @@ export default function LinkControls({
   setStepPercent,
   setSelectedNode,
   snapShots,
-}: Props) {
+}: Props): JSX.Element {
   collectNodes(snapShots);
 
   return (
@@ -67,7 +66,9 @@ export default function LinkControls({
 
       {/* Controls for the layout selection */}
       <label>Layout:</label>
-      &nbsp; {/*This is a non-breaking space - Prevents an automatic line break at this position */}
+      &nbsp;
+      {' '}
+      {/* This is a non-breaking space - Prevents an automatic line break at this position */}
       <select
         onClick={e => e.stopPropagation()}
         onChange={e => setLayout(e.target.value)}
@@ -108,12 +109,16 @@ export default function LinkControls({
 
       {/* Controls for the select selections. */}
       <label> Select:</label>
-      &nbsp; 
-      <input id='selectInput' list='nodeOptions' type='text' name="nodeOptions"
+      &nbsp;
+      <input
+        id="selectInput"
+        list="nodeOptions"
+        type="text"
+        name="nodeOptions"
         onChange={e => setSelectedNode(e.target.value)}
         style={dropDownStyle}
       />
-      <datalist id='nodeOptions'>
+      <datalist id="nodeOptions">
         {nodeList.map(node => (
           <option key={node.name} value={node.name}>{node.name}</option>
         ))}
