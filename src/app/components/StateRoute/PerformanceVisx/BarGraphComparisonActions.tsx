@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 import React, { useEffect } from 'react';
 import { BarStack } from '@visx/shape';
 import { Group } from '@visx/group';
