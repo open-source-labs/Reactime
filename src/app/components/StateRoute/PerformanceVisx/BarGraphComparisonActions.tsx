@@ -14,7 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import { deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-import { TooltipData, Margin } from '../../FrontendTypes';
+import { TooltipData, Margin, BarGraphComparisonAction, ActionObj, } from '../../FrontendTypes';
 
 /* DEFAULTS */
 const margin: Margin = {
@@ -32,7 +32,7 @@ const tooltipStyles = {
   fontFamily: 'Roboto',
 };
 
-const BarGraphComparisonActions = props => {
+const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   const [dispatch] = useStoreContext();
   const {
     width, height, data, comparison, setSeries, series, setAction, action
@@ -57,7 +57,7 @@ const BarGraphComparisonActions = props => {
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
   const keys = Object.keys(data[0]).filter((componentName) => componentName !== 'name' && componentName !== 'seriesName' && componentName !== 'snapshotId');
   // data accessor (used to generate scales) and formatter (add units for on hover box)
-  const getSeriesName = action => action.seriesName;
+  const getSeriesName = (action: ActionObj):string => action.seriesName;
 
   // create visualization SCALES with cleaned data.
   // the domain array/xAxisPoints elements will place the bars along the x-axis
