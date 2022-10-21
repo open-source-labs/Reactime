@@ -6,6 +6,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
+// @ts-nocheck
 
 import React, { useState, useEffect } from 'react';
 import { Group } from '@visx/group';
@@ -173,7 +174,7 @@ export default function ComponentMap({
     }
   };
   collectNodes(currentSnapshot);
-
+  // @ts
   // find the node that has been selected and use it as the root
   let startNode = null;
   let rootNode;
