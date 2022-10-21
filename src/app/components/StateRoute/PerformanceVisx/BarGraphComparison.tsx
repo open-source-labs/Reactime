@@ -202,7 +202,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   for (let i = 0; i < classname.length; i += 1) {
     classname[i].addEventListener('click', animateButton, false);
   }
-  const seriesList: ActionObj[][] = comparison.map((series: Series) => series.data.barStack);
+  const seriesList: ActionObj[][] = comparison.map((action: Series) => action.data.barStack);
   const actionsList: ActionObj[] = seriesList.flat();
   const testList: string[] = actionsList.map((elem: ActionObj) => elem.name);
 

@@ -1,10 +1,12 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
-// @ts-nocheck
+
 import React, { useState, useEffect } from 'react';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
@@ -32,6 +34,7 @@ export type LinkTypesProps = {
   height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
   snapshots: Record<string, unknown>;
+  currentSnapshot?: Record<string, unknown>
 };
 
 export default function ComponentMap({
@@ -55,8 +58,8 @@ export default function ComponentMap({
   }, [dispatch]);
 
   // setting the margins for the Map to render in the tab window.
-  const innerWidth = totalWidth - margin.left - margin.right;
-  const innerHeight = totalHeight - margin.top - margin.bottom - 60;
+  const innerWidth: number = totalWidth - margin.left - margin.right;
+  const innerHeight: number = totalHeight - margin.top - margin.bottom - 60;
 
   let origin: { x: number; y: number };
   let sizeWidth: number;
@@ -122,9 +125,9 @@ export default function ComponentMap({
     overflowWrap: 'break-word',
   };
 
-  const formatRenderTime = time => {
-    time = time.toFixed(3);
-    return `${time} ms `;
+  const formatRenderTime = (time: number): string => {
+    const renderTime = time.toFixed(3);
+    return `${renderTime} ms `;
   };
 
   const formatProps = data => {
@@ -172,7 +175,7 @@ export default function ComponentMap({
   collectNodes(currentSnapshot);
 
   // find the node that has been selected and use it as the root
-  const startNode = null;
+  let startNode = null;
   let rootNode;
   const findSelectedNode = () => {
     for (const node of nodeList) {
@@ -215,7 +218,7 @@ export default function ComponentMap({
         />
         <Group top={margin.top} left={margin.left}>
           <Tree
-            root={hierarchy(startNode || data, d => (d.isExpanded ? d.children : null))}
+            root={hierarchy(startNode, d => (d.isExpanded ? d.children : null))}
             size={[sizeWidth, sizeHeight]}
             separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
           >
@@ -332,7 +335,6 @@ export default function ComponentMap({
                               ? 'white'
                               : '#161521'
                         }
-                        z
                       >
                         {node.data.name}
                       </text>
@@ -374,7 +376,7 @@ export default function ComponentMap({
               State:
               {formatState(tooltipData.state)}
             </div>
-            <div style={scrollStyle}>
+            <div style={React.scrollStyle}>
               <div className="props">
                 Props:
                 {formatProps(tooltipData.componentData.props)}
