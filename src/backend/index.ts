@@ -7,12 +7,12 @@
  * 'reactime' module has a single export
  * @function linkFiber
 */
-
+// regenerator runtime supports async functionality
 import 'regenerator-runtime/runtime';
 import linkFiberStart from './linkFiber';
 import timeJumpStart from './timeJump';
 import {
-  Snapshot, Mode, SnapshotNode, MsgData,
+  Snapshot, Mode, MsgData,
 } from './types/backendTypes';
 
 // * State snapshot object initialized here
@@ -26,57 +26,26 @@ const mode: Mode = {
   paused: false,
 };
 
+// linkFiber is now assigned the default function exported from the file linkFiber.ts
 const linkFiber = linkFiberStart(snapShot, mode);
-const timeJump = timeJumpStart(snapShot, mode);
+// timeJump is now assigned the default function exported from the file timeJump.ts
+const timeJump = timeJumpStart(mode);
 
 // * Event listener for time-travel actions
 window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
   switch (action) {
     case 'jumpToSnap':
       timeJump(payload, true); // * This sets state with given payload
-      // Get the pathname from payload and add new entry to browser history
-      // MORE: https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
-      // try to modify workInProgress tree from here
-      // window.history.pushState('', '', getRouteURL(payload));
       break;
+
     case 'setPause':
       mode.paused = payload;
       break;
-    // maybe this isn't work react cohort 45
-    // case 'onHover':
-    //   if (Array.isArray(payload)) {
-    //     for (let i = 0; i < payload.length; i + 1) {
-    //       const element = document.getElementById(payload[i]);
-    //       if (element !== null) {
-    //         element.style.backgroundColor = '#C0D9D9';
-    //       }
-    //     }
-    //   } else {
-    //     const element: HTMLElement = document.querySelector(`.${payload}`);
-    //     if (element !== null) {
-    //       element.style.backgroundColor = '#C0D9D9';
-    //     }
-    //   }
-    //   break;
-    // // maybe this isn't work react cohort 45
-    // case 'onHoverExit':
-    //   if (Array.isArray(payload)) {
-    //     for (let i = 0; i < payload.length; i++) {
-    //       const element: HTMLElement = document.querySelector(`.${payload}`);
-    //       if (element !== null) {
-    //         element.style.backgroundColor = '';
-    //       }
-    //     }
-    //   } else {
-    //     const element: HTMLElement = document.querySelector(`.${payload}`);
-    //     if (element !== null) {
-    //       element.style.backgroundColor = '';
-    //     }
-    //   }
-    //   break;
+
     default:
       break;
   }
 });
-// connect to dev tools and new fiber
+// connect to dev tools and new fiber,
+// invokes anonymous function from linkFiber.ts set to linkFiber on line 30
 linkFiber();

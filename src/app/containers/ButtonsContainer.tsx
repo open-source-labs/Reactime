@@ -1,13 +1,7 @@
-// @ts-nocheck
-
 import * as React from 'react';
-import {
-  useState, useRef, useEffect,
-} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUpload,
-  faQuestion,
   faDownload,
   faSquare,
   faColumns,
@@ -16,6 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { importSnapshots, toggleMode, toggleSplit } from '../actions/actions';
 import { useStoreContext } from '../store';
+
 import Tutorial from '../components/Tutorial';
 
 function exportHandler(snapshots: []) {
@@ -35,35 +30,33 @@ function exportHandler(snapshots: []) {
   URL.revokeObjectURL(fileDownload.href);
 }
 
-function importHandler(dispatch: (a: any) => void) {
+function importHandler(dispatch: (a: unknown) => void) {
   const fileUpload = document.createElement('input');
   fileUpload.setAttribute('type', 'file');
 
-  fileUpload.onchange = () => {
+  fileUpload.onchange = (e: Event) => {
     const reader = new FileReader();
     reader.onload = () => {
       const test = reader.result.toString();
       return dispatch(importSnapshots(JSON.parse(test)));
     };
-    if (event.target.hasOwnProperty('files')) {
-      const eventFiles: any = event.target;
-      reader.readAsText(eventFiles.files[0]);
+    const eventFiles = e.target as HTMLInputElement;
+    if (eventFiles?.hasOwnProperty('files')) {
+      // const eventFiles = target as HTMLInputElement;
+      if (eventFiles) {
+        reader.readAsText(eventFiles.files[0]);
+      }
     }
   };
 
   fileUpload.click();
 }
 
-function howToUseHandler() {
-  window.open('https://github.com/open-source-labs/reactime', '_blank');
-  return null;
-}
-
 function ButtonsContainer(): JSX.Element {
   const [{ tabs, currentTab, split, currentTabInApp }, dispatch] = useStoreContext();
   const {
     snapshots,
-    mode: { paused, persist },
+    mode: { paused },
   } = tabs[currentTab];
 
   return (
@@ -93,20 +86,6 @@ function ButtonsContainer(): JSX.Element {
         )}
         {split ? 'Unsplit' : 'Split'}
       </button>
-
-      {/* removing the UI for now Defunt perist feauture. See docs for more info */}
-      {/* <button
-        className="persist-button"
-        type="button"
-        onClick={() => dispatch(toggleMode('persist'))}
-      >
-        {persist ? (
-          <FontAwesomeIcon icon={faRedoAlt} />
-        ) : (
-          <FontAwesomeIcon icon={faMapPin} />
-        )}
-        {persist ? 'Unpersist' : 'Persist'}
-      </button> */}
 
       <button
         className="export-button"

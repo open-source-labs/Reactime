@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React, { useEffect } from 'react';
 import { BarStack } from '@visx/shape';
-import { SeriesPoint } from '@visx/shape/lib/types';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
 import { AxisBottom, AxisLeft } from '@visx/axis';
@@ -13,46 +12,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import { deleteSeries, setCurrentTabInApp } from '../actions/actions';
-import { useStoreContext } from '../store';
-
-/* TYPESCRIPT */
-interface data {
-  snapshotId?: string;
-}
-interface series {
-  seriesId?: any;
-}
-
-interface margin {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
-
-interface snapshot {
-  snapshotId?: string;
-  children: [];
-  componentData: any;
-  name: string;
-  state: string;
-}
-
-// On-hover data.
-interface TooltipData {
-  bar: SeriesPoint<snapshot>;
-  key: string;
-  index: number;
-  height: number;
-  width: number;
-  x: number;
-  y: number;
-  color: string;
-}
+import { deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
+import { useStoreContext } from '../../../store';
+import { TooltipData, Margin, BarGraphComparisonAction, ActionObj, } from '../../FrontendTypes';
 
 /* DEFAULTS */
-const margin = {
+const margin: Margin = {
   top: 30, right: 30, bottom: 0, left: 50,
 };
 const axisColor = '#62d6fb';
@@ -67,7 +32,7 @@ const tooltipStyles = {
   fontFamily: 'Roboto',
 };
 
-const BarGraphComparisonActions = props => {
+const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   const [dispatch] = useStoreContext();
   const {
     width, height, data, comparison, setSeries, series, setAction, action
@@ -92,9 +57,9 @@ const BarGraphComparisonActions = props => {
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
   const keys = Object.keys(data[0]).filter((componentName) => componentName !== 'name' && componentName !== 'seriesName' && componentName !== 'snapshotId');
   // data accessor (used to generate scales) and formatter (add units for on hover box)
-  const getSeriesName = action => action.seriesName;
+  const getSeriesName = (action: ActionObj):string => action.seriesName;
 
-  // create visualization SCALES with cleaned data
+  // create visualization SCALES with cleaned data.
   // the domain array/xAxisPoints elements will place the bars along the x-axis
   const seriesNameScale = scaleBand<string>({
     domain: data.map(getSeriesName),
@@ -157,38 +122,16 @@ const BarGraphComparisonActions = props => {
     if (!event) return;
     setSeries(event.target.value);
     setAction(false);
-    // setXpoints();
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    // setXpoints();
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-    // setXpoints();
   };
 
   const handleActionChange = event => {
     if (!event) return;
     setAction(event.target.value);
     setSeries(false);
-    // setXpoints();
-  };
-
-  const picHandleClose = () => {
-    setPicOpen(false);
-    // setXpoints();
-  };
-
-  const picHandleOpen = () => {
-    setPicOpen(true);
-    // setXpoints();
   };
 
   const animateButton = function (e) {
-    e.preventDefault;
+    e.preventDefault();
     e.target.classList.add('animate');
     e.target.innerHTML = 'Deleted!';
     setTimeout(() => {
@@ -230,9 +173,6 @@ const BarGraphComparisonActions = props => {
               labelId="simple-select-outlined-label"
               id="simple-select-outlined"
               className={classes.select}
-              // open={open}
-              // onClose={handleClose}
-              // onOpen={handleOpen}
               value={series}
               onChange={handleSeriesChange}
             >
@@ -248,9 +188,6 @@ const BarGraphComparisonActions = props => {
               labelId="snapshot-select"
               id="snapshot-select"
               className={classes.select}
-              // open={picOpen}
-              // onClose={picHandleClose}
-              // onOpen={picHandleOpen}
               value={action} // snapshots
               onChange={handleActionChange}
             >
@@ -377,7 +314,7 @@ const BarGraphComparisonActions = props => {
           </div>
           <div>
             {
-            `${tooltipData.bar.data[tooltipData.key]} ms`
+              `${tooltipData.bar.data[tooltipData.key]} ms`
             }
           </div>
           <div>

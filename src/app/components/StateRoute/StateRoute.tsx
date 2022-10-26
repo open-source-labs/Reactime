@@ -5,29 +5,25 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   MemoryRouter as Router,
   Route,
   NavLink,
   Switch,
-  useLocation,
 } from 'react-router-dom';
 import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
-import ComponentMap from './ComponentMap';
-import { changeView, changeSlider } from '../actions/actions';
-import { useStoreContext } from '../store';
-import PerformanceVisx from './PerformanceVisx';
-import Legend from './AtomsRelationshipLegend';
-import AtomsRelationship from './AtomsRelationship';
-import WebMetrics from './WebMetrics';
+import ComponentMap from './ComponentMap/ComponentMap';
+import { changeView, changeSlider } from '../../actions/actions';
+import { useStoreContext } from '../../store';
+import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
+import WebMetrics from '../WebMetrics';
 
 const History = require('./History').default;
-const ErrorHandler = require('./ErrorHandler').default;
 
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
-// eslint-disable-next-line react/prop-types
+
 
 export interface StateRouteProps {
   snapshot: {
@@ -36,8 +32,6 @@ export interface StateRouteProps {
     state?: string | object;
     stateSnaphot?: object;
     children?: any[];
-    atomsComponents?: any;
-    atomSelectors?: any;
   };
   hierarchy: any;
   snapshots: [];
@@ -50,7 +44,6 @@ const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex, webMetrics, currLocation } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
-  const isRecoil = !!snapshot.atomsComponents;
 
   // Map
   const renderComponentMap = () => {
@@ -69,9 +62,9 @@ const StateRoute = (props: StateRouteProps) => {
 
   // the hierarchy gets set upon the first click on the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
-  // if true, we invoke teh D3 render chart with hierarchy
+  // if true, we invoke the D3 render chart with hierarchy
   // by invoking History component, and passing in all the props required to render D3 elements and perform timeJump from clicking of node
-  // otherwise we an alert to the user that no state was found.
+  // otherwise we send an alert to the user that no state was found.
   const renderHistory = () => {
     if (hierarchy) {
       return (
@@ -85,7 +78,6 @@ const StateRoute = (props: StateRouteProps) => {
               sliderIndex={sliderIndex}
               viewIndex={viewIndex}
               currLocation={currLocation}
-              // added snapshots 11/4 Rob
               snapshots={snapshots}
             />
           )}
@@ -94,20 +86,6 @@ const StateRoute = (props: StateRouteProps) => {
     }
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
-
-  const renderAtomsRelationship = () => (
-    <ParentSize>
-      {({ width, height }) => (
-        <>
-          <AtomsRelationship
-            width={width}
-            height={height}
-            snapshots={snapshots}
-          />
-        </>
-      )}
-    </ParentSize>
-  );
 
   // the hierarchy gets set on the first click in the page
   // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
@@ -119,8 +97,8 @@ const StateRoute = (props: StateRouteProps) => {
     return <div className="noState">{NO_STATE_MSG}</div>;
   };
   const renderWebMetrics = () => {
-    let LCPColor; let FIDColor; let FCPColor; let
-      TTFBColor;
+    let LCPColor: String; let FIDColor: String; let FCPColor: String; let
+      TTFBColor: String;
 
     if (webMetrics.LCP <= 2000) LCPColor = '#0bce6b';
     if (webMetrics.LCP > 2000 && webMetrics.LCP < 4000) LCPColor = '#E56543';
@@ -229,20 +207,10 @@ const StateRoute = (props: StateRouteProps) => {
         <NavLink className="router-link tree-tab" activeClassName="is-active" to="/tree">
           Tree
         </NavLink>
-        {isRecoil && (
-          <NavLink
-            className="router-link"
-            activeClassName="is-active"
-            to="/relationship"
-          >
-            AtomsRecoil
-          </NavLink>
-        )}
       </div>
       <Switch>
         <Route path="/performance" render={renderPerfView} />
         <Route path="/history" render={renderHistory} />
-        <Route path="/relationship" render={renderAtomsRelationship} />
         <Route path="/webMetrics" render={renderWebMetrics} />
         <Route path="/tree" render={renderTree} />
         <Route path="/" render={renderComponentMap} />

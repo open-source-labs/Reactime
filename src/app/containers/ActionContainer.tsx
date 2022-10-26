@@ -1,4 +1,4 @@
-// @ts-nocheck
+/* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -22,7 +22,7 @@ const resetSlider = () => {
 function ActionContainer(props): JSX.Element {
   const [{ tabs, currentTab, port }, dispatch] = useStoreContext();
   const {
-    currLocation, hierarchy, sliderIndex, viewIndex, snapshots,
+    currLocation, hierarchy, sliderIndex, viewIndex,
   } = tabs[currentTab];
   const {
     toggleActionContainer, actionView, setActionView,
@@ -34,7 +34,10 @@ function ActionContainer(props): JSX.Element {
 
   // function to traverse state from hierarchy and also getting information on display name and component name
   const displayArray = (obj: {
-    stateSnapshot: { children: any[] };
+    stateSnapshot: {
+      route: any,
+      children: any[]
+    };
     name: number;
     branch: number;
     index: number;
@@ -52,8 +55,6 @@ function ActionContainer(props): JSX.Element {
         state: obj.stateSnapshot.children[0].state,
         componentName: obj.stateSnapshot.children[0].name,
         routePath: obj.stateSnapshot.route.url,
-        // nathan testing new entries for component name, original above
-        // componentName: findDiff(obj.index),
         componentData:
           JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}'
             ? ''
@@ -99,6 +100,7 @@ function ActionContainer(props): JSX.Element {
   actionsArr = hierarchyArr.map(
     (
       snapshot: {
+        routePath: any;
         state?: Record<string, unknown>;
         index: number;
         displayName: string;

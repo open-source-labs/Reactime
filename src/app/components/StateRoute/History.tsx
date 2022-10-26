@@ -5,10 +5,17 @@ import React, { useEffect } from 'react';
 import { diff, formatters } from 'jsondiffpatch';
 import * as d3 from 'd3';
 
-import { changeView, changeSlider, setCurrentTabInApp } from '../actions/actions';
-import { useStoreContext } from '../store';
+import { changeView, changeSlider, setCurrentTabInApp } from '../../actions/actions';
+import { useStoreContext } from '../../store';
 
-const defaultMargin = {
+interface defaultMargin {
+  top: number,
+  left: number,
+  right: number,
+  bottom: number,
+}
+
+const defaultMargin: defaultMargin = {
   top: 30, left: 30, right: 55, bottom: 70,
 };
 
@@ -30,16 +37,8 @@ function History(props: Record<string, unknown>): JSX.Element {
   const root = JSON.parse(JSON.stringify(hierarchy));
 
   // setting the margins for the Map to render in the tab window.
-  const innerWidth = totalWidth - margin.left - margin.right;
-  const innerHeight = totalHeight - margin.top - margin.bottom - 60;
-
-  useEffect(() => {
-    makeD3Tree();
-  }, [root, currLocation]);
-
-  useEffect(() => {
-    dispatch(setCurrentTabInApp('history'));
-  }, []);
+  const innerWidth: number = totalWidth - margin.left - margin.right;
+  const innerHeight: number = totalHeight - margin.top - margin.bottom - 60;
 
   function labelCurrentNode(d3root) {
     if (d3root.data.index === currLocation.index) {
@@ -61,6 +60,74 @@ function History(props: Record<string, unknown>): JSX.Element {
       }
     });
     return found;
+  }
+
+  // findDiff function uses same logic as ActionContainer.tsx
+  function findDiff(index) {
+    const statelessCleanning = (obj: {
+      name?: string;
+      componentData?: object;
+      state?: string | any;
+      stateSnaphot?: object;
+      children?: any[];
+    }) => {
+      const newObj = { ...obj };
+      if (newObj.name === 'nameless') {
+        delete newObj.name;
+      }
+      if (newObj.componentData) {
+        delete newObj.componentData;
+      }
+      if (newObj.state === 'stateless') {
+        delete newObj.state;
+      }
+      if (newObj.stateSnaphot) {
+        newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
+      }
+      if (newObj.children) {
+        newObj.children = [];
+        if (obj.children.length > 0) {
+          obj.children.forEach(
+            (element: { state?: object | string; children?: [] }) => {
+              if (
+                element.state !== 'stateless'
+                || element.children.length > 0
+              ) {
+                const clean = statelessCleanning(element);
+                newObj.children.push(clean);
+              }
+            },
+          );
+        }
+      }
+      return newObj;
+    };
+
+    function findStateChangeObj(delta, changedState = []) {
+      if (!delta.children && !delta.state) {
+        return changedState;
+      }
+      if (delta.state && delta.state[0] !== 'stateless') {
+        changedState.push(delta.state);
+      }
+      if (!delta.children) {
+        return changedState;
+      }
+      Object.keys(delta.children).forEach(child => {
+        // if (isNaN(child) === false) {
+        changedState.push(...findStateChangeObj(delta.children[child]));
+        // }
+      });
+      return changedState;
+    }
+
+    const delta = diff(statelessCleanning(snapshots[index - 1]), statelessCleanning(snapshots[index]));
+    const changedState = findStateChangeObj(delta);
+    // figured out the formatting for hover, applying diff.csss
+    const html = formatters.html.format(changedState[0]);
+    // uneeded, not returning a react component in SVG div
+    // const output = ReactHtmlParser(html);
+    return html;
   }
 
   /**
@@ -144,75 +211,13 @@ function History(props: Record<string, unknown>): JSX.Element {
     return svg.node();
   };
 
-  // findDiff function uses same logic as ActionContainer.tsx
-  function findDiff(index) {
-    const statelessCleanning = (obj: {
-      name?: string;
-      componentData?: object;
-      state?: string | any;
-      stateSnaphot?: object;
-      children?: any[];
-    }) => {
-      const newObj = { ...obj };
-      if (newObj.name === 'nameless') {
-        delete newObj.name;
-      }
-      if (newObj.componentData) {
-        delete newObj.componentData;
-      }
-      if (newObj.state === 'stateless') {
-        delete newObj.state;
-      }
-      if (newObj.stateSnaphot) {
-        newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
-      }
-      if (newObj.children) {
-        newObj.children = [];
-        if (obj.children.length > 0) {
-          obj.children.forEach(
-            (element: { state?: object | string; children?: [] }) => {
-              if (
-                element.state !== 'stateless'
-                || element.children.length > 0
-              ) {
-                const clean = statelessCleanning(element);
-                newObj.children.push(clean);
-              }
-            },
-          );
-        }
-      }
-      return newObj;
-    };
+  useEffect(() => {
+    makeD3Tree();
+  }, [root, currLocation]);
 
-    function findStateChangeObj(delta, changedState = []) {
-      if (!delta.children && !delta.state) {
-        return changedState;
-      }
-      if (delta.state && delta.state[0] !== 'stateless') {
-        changedState.push(delta.state);
-      }
-      if (!delta.children) {
-        return changedState;
-      }
-      Object.keys(delta.children).forEach(child => {
-      // if (isNaN(child) === false) {
-        changedState.push(...findStateChangeObj(delta.children[child]));
-      // }
-      });
-      return changedState;
-    }
-
-    const delta = diff(statelessCleanning(snapshots[index - 1]), statelessCleanning(snapshots[index]));
-    const changedState = findStateChangeObj(delta);
-    // figured out the formatting for hover, applying diff.csss
-    const html = formatters.html.format(changedState[0]);
-    // uneeded, not returning a react component in SVG div
-    // const output = ReactHtmlParser(html);
-    return html;
-  }
-
-  // below we are rendering the LegendKey component and passing hierarchy as props
+  useEffect(() => {
+    dispatch(setCurrentTabInApp('history'));
+  }, []);
   // then rendering each node in History tab to render using D3, which will share area with LegendKey
   return (
     <div className="display">

@@ -1,13 +1,17 @@
 // @ts-nocheck
 import React, { useState } from 'react';
+/* <Router> that keeps the history of your “URL” in memory (does not read/write to the address bar)
+ Useful in tests and non-browser environments like React Native.
+*/
 import {
   MemoryRouter as Router,
   Route,
   NavLink,
   Switch,
 } from 'react-router-dom';
-import StateRoute from '../components/StateRoute';
+import StateRoute from '../components/StateRoute/StateRoute';
 import DiffRoute from '../components/DiffRoute';
+
 interface StateContainerProps {
   snapshot: Record<
     number,
@@ -17,14 +21,10 @@ interface StateContainerProps {
       state?: Record<string, unknown>;
       stateSnaphot?: Record<string, unknown>;
       children?: unknown[];
-      AtomsRelationship?: any[];
-      atomSelectors?: object;
-      atomsComponents?: object;
     }
   >;
   toggleActionContainer?: any;
   webMetrics?: object;
-  AtomsRelationship?: any[];
   hierarchy: Record<string, unknown>;
   snapshots?: [];
   viewIndex?: number;
@@ -40,7 +40,6 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
     viewIndex,
     webMetrics,
     currLocation,
-    // added snapshots, Rob 11/4
     snapshots,
   } = props;
 
