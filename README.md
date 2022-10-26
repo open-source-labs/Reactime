@@ -70,7 +70,7 @@ NOTE: The React Developer Tools [extension](https://chrome.google.com/webstore/d
 
 ### <b>Alternative Installation</b>
 
-Use `src/extension/build/build.zip` for manual installation in [Developer mode](https://developer.chrome.com/extensions/faq#faq-dev-01). Turn on 'Allow access to file URLs' in extension details page if testing locally.
+Go to your Chrome Extensions (make sure Chrome Extension is in Developer Mode) for manual installation in (https://developer.chrome.com/extensions/faq#faq-dev-01) and click on Load Unpacked. Use `src/extension/build/` to load this extension. Turn on 'Allow access to file URLs' in extension details page if testing locally.
 
 ## <b>How to Use</b>
 
@@ -165,106 +165,111 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 
 ### <b>Additional Features</b>
 
--   Identifying unnecessary re-renders
--   Single-click to view tooltip details on state visualizations
--   Double-click to collapse child components
--   A reverse filter with autofill to focus on a portion of the component map
--   Ability to pan and zoom on state visualizations
--   A dropdown to support development of projects on multiple tabs
--   A slider to move through snapshots quickly
--   A play button to move through snapshots automatically
--   A lock button, which stops recording each snapshot
--   A persist button to keep snapshots upon refresh (handy when changing code and debugging)
--   Download/upload the current snapshots in memory
--   Declarative titles in the actions sidebar
--   Interative Tutorial Walkthrough
--   Toggle feature allowing temporary pause of state monitoring
+- Identifying unnecessary re-renders
+- Single-click to view tooltip details on state visualizations
+- Double-click to collapse child components
+- A reverse filter with autofill to focus on a portion of the component map
+- Ability to pan and zoom on state visualizations
+- A dropdown to support development of projects on multiple tabs
+- A slider to move through snapshots quickly
+- A play button to move through snapshots automatically
+- A lock button, which stops recording each snapshot
+- A persist button to keep snapshots upon refresh (handy when changing code and debugging)
+- Download/upload the current snapshots in memory
+- Declarative titles in the actions sidebar
+- Interative Tutorial Walkthrough
+- Toggle feature allowing temporary pause of state monitoring
 
 ### <b>Bug Fixes</b>
 
--   Search bar now searches for specific nodes successfully
--   Tab titles of chrome browser tabs not running an application in development mode are no longer affected by Reactime
--   Multiple black screens fixed
--   Improved UI and performance
--   No longer inject scripts to non-target applications
-
+- Search bar now searches for specific nodes successfully
+- Tab titles of chrome browser tabs not running an application in development mode are no longer affected by Reactime
+- Multiple black screens fixed
+- Improved UI and performance
+- No longer inject scripts to non-target applications
 
 ## <b>Read More</b>
 
--   [Time-Travel State with Reactime](https://medium.com/better-programming/time-traveling-state-with-reactime-6-0-53fdc3ae2a20)
--   [React Fiber and Reactime](https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8)
--   [Meet Reactime - a time-traveling State Debugger for React](https://medium.com/@yujinkay/meet-reactime-a-time-traveling-state-debugger-for-react-24f0fce96802)
--   [Deep in Weeds with Reactime, Concurrent React_fiberRoot, and Browser History Caching](https://itnext.io/deep-in-the-weeds-with-reactime-concurrent-react-fiberroot-and-browser-history-caching-7ce9d7300abb)
--   [Time-Traveling Through React State with Reactime 9.0](https://rxlina.medium.com/time-traveling-through-react-state-with-reactime-9-0-371dbdc99319)
--   [What time is it? Reactime!](https://medium.com/@liuedar/what-time-is-it-reactime-fd7267b9eb89)
+- [Reactime XVI: Clean-up Time](https://medium.com/@emintahirov1996/reactime-xvi-cleanup-time-a14ba3dcc8a6)
+- [Inter-Route Time Travel with Reactime](https://medium.com/@robbytiptontol/inter-route-time-travel-with-reactime-d84cd55ec73b)
+- [Time-Travel State with Reactime](https://medium.com/better-programming/time-traveling-state-with-reactime-6-0-53fdc3ae2a20)
+- [React Fiber and Reactime](https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8)
+- [Meet Reactime - a time-traveling State Debugger for React](https://medium.com/@yujinkay/meet-reactime-a-time-traveling-state-debugger-for-react-24f0fce96802)
+- [Deep in Weeds with Reactime, Concurrent React_fiberRoot, and Browser History Caching](https://itnext.io/deep-in-the-weeds-with-reactime-concurrent-react-fiberroot-and-browser-history-caching-7ce9d7300abb)
+- [Time-Traveling Through React State with Reactime 9.0](https://rxlina.medium.com/time-traveling-through-react-state-with-reactime-9-0-371dbdc99319)
+- [What time is it? Reactime!](https://medium.com/@liuedar/what-time-is-it-reactime-fd7267b9eb89)
 
 ## <b>Authors</b>
 
--   **Peng Dong** - [@d28601581](https://github.com/d28601581)
--   **Ozair Ghulam** - [@ozairgh](https://github.com/ozairgh)
--   **Christina Or** - [@christinaor](https://github.com/christinaor)
--   **Khanh Bui** - [@AndyB909](https://github.com/AndyB909)
--   **David Kim** - [@codejunkie7](https://github.com/codejunkie7)
--   **Robby Tipton** - [@RobbyTipton](https://github.com/RobbyTipton)
--   **Kevin HoEun Lee** - [@khobread](https://github.com/khobread)
--   **Christopher LeBrett** - [@fscgolden](https://github.com/fscgolden)
--   **Joseph Park** - [@joeepark](https://github.com/joeepark)
--   **Kris Sorensen** - [@kris-sorensen](https://github.com/kris-sorensen)
--   **Daljit Gill** - [@dgill05](https://github.com/dgill05)
--   **Ben Michareune** - [@bmichare](https://github.com/bmichare)
--   **Dane Corpion** - [@danecorpion](https://github.com/danecorpion)
--   **Harry Fox** - [@StackOverFlowWhereArtThou](https://github.com/StackOverFlowWhereArtThou)
--   **Nathan Richardson** - [@BagelEnthusiast](https://github.com/BagelEnthusiast)
--   **David Bernstein** - [@dangitbobbeh](https://github.com/dangitbobbeh)
--   **Joseph Stern** - [@josephiswhere](https://github.com/josephiswhere)
--   **Dennis Lopez** - [@DennisLpz](https://github.com/DennisLpz)
--   **Cole Styron** - [@colestyron](https://github.com/C-STYR)
--   **Ali Rahman** - [@CourageWolf](https://github.com/CourageWolf)
--   **Caner Demir** - [@demircaner](https://github.com/demircaner)
--   **Kevin Ngo** - [@kev-ngo](https://github.com/kev-ngo)
--   **Becca Viner** - [@rtviner](https://github.com/rtviner)
--   **Caitlin Chan** - [@caitlinchan23](https://github.com/caitlinchan23)
--   **Kim Mai Nguyen** - [@Nkmai](https://github.com/Nkmai)
--   **Tania Lind** - [@lind-tania](https://github.com/lind-tania)
--   **Alex Landeros** - [@AlexanderLanderos](https://github.com/AlexanderLanderos)
--   **Chris Guizzetti** - [@guizzettic](https://github.com/guizzettic)
--   **Jason Victor** - [@theqwertypusher](https://github.com/Theqwertypusher)
--   **Sanjay Lavingia** - [@sanjaylavingia](https://github.com/sanjaylavingia)
--   **Vincent Nguyen** - [@VNguyenCode](https://github.com/VNguyenCode)
--   **Haejin Jo** - [@haejinjo](https://github.com/haejinjo)
--   **Hien Nguyen** - [@hienqn](https://github.com/hienqn)
--   **Jack Crish** - [@JackC27](https://github.com/JackC27)
--   **Kevin Fey** - [@kevinfey](https://github.com/kevinfey)
--   **Carlos Perez** - [@crperezt](https://github.com/crperezt)
--   **Edwin Menendez** - [@edwinjmenendez](https://github.com/edwinjmenendez)
--   **Gabriela Jardim Aquino** - [@aquinojardim](https://github.com/aquinojardim)
--   **Greg Panciera** - [@gpanciera](https://github.com/gpanciera)
--   **Nathanael Wa Mwenze** - [@nmwenz90](https://github.com/nmwenz90)
--   **Ryan Dang** - [@rydang](https://github.com/rydang)
--   **Bryan Lee** - [@mylee1995](https://github.com/mylee1995)
--   **Josh Kim** - [@joshua0308](https://github.com/joshua0308)
--   **Sierra Swaby** - [@starkspark](https://github.com/starkspark)
--   **Ruth Anam** - [@peachiecodes](https://github.com/peachiecodes)
--   **David Chai** - [@davidchaidev](https://github.com/davidchai717)
--   **Yujin Kang** - [@yujinkay](https://github.com/yujinkay)
--   **Andy Wong** - [@andywongdev](https://github.com/andywongdev)
--   **Chris Flannery** - [@chriswillsflannery](https://github.com/chriswillsflannery)
--   **Rajeeb Banstola** - [@rajeebthegreat](https://github.com/rajeebthegreat)
--   **Prasanna Malla** - [@prasmalla](https://github.com/prasmalla)
--   **Rocky Lin** - [@rocky9413](https://github.com/rocky9413)
--   **Abaas Khorrami** - [@dubalol](https://github.com/dubalol)
--   **Ergi Shehu** - [@Ergi516](https://github.com/ergi516)
--   **Raymond Kwan** - [@rkwn](https://github.com/rkwn)
--   **Joshua Howard** - [@Joshua-Howard](https://github.com/joshua-howard)
--   **Lina Shin** - [@rxlina](https://github.com/rxlina)
--   **Andy Tsou** - [@andytsou19](https://github.com/andytsou19)
--   **Feiyi Wu** - [@FreyaWu](https://github.com/FreyaWu)
--   **Viet Nguyen** - [@vnguyen95](https://github.com/vnguyen95)
--   **Alex Gomez** - [@alexgomez9](https://github.com/alexgomez9)
--   **Edar Liu** - [@liuedar](https://github.com/liuedar)
--   **Kristina Wallen** - [@kristinawallen](https://github.com/kristinawallen)
--   **Quan Le** - [@blachfog](https://github.com/Blachfog)
--   **Robert Maeda** - [@robmaeda](https://github.com/robmaeda)
+- **Louis Lam** - [@llam722](https://github.com/llam722)
+- **Samuel Tran** - [@leumastr](https://github.com/leumastr)
+- **Brian Yang** - [@yangbrian310](https://github.com/yangbrian310)
+- **Emin Tahirov** - [@eminthrv](https://github.com/eminthrv)
+- **Peng Dong** - [@d28601581](https://github.com/d28601581)
+- **Ozair Ghulam** - [@ozairgh](https://github.com/ozairgh)
+- **Christina Or** - [@christinaor](https://github.com/christinaor)
+- **Khanh Bui** - [@AndyB909](https://github.com/AndyB909)
+- **David Kim** - [@codejunkie7](https://github.com/codejunkie7)
+- **Robby Tipton** - [@RobbyTipton](https://github.com/RobbyTipton)
+- **Kevin HoEun Lee** - [@khobread](https://github.com/khobread)
+- **Christopher LeBrett** - [@fscgolden](https://github.com/fscgolden)
+- **Joseph Park** - [@joeepark](https://github.com/joeepark)
+- **Kris Sorensen** - [@kris-sorensen](https://github.com/kris-sorensen)
+- **Daljit Gill** - [@dgill05](https://github.com/dgill05)
+- **Ben Michareune** - [@bmichare](https://github.com/bmichare)
+- **Dane Corpion** - [@danecorpion](https://github.com/danecorpion)
+- **Harry Fox** - [@StackOverFlowWhereArtThou](https://github.com/StackOverFlowWhereArtThou)
+- **Nathan Richardson** - [@BagelEnthusiast](https://github.com/BagelEnthusiast)
+- **David Bernstein** - [@dangitbobbeh](https://github.com/dangitbobbeh)
+- **Joseph Stern** - [@josephiswhere](https://github.com/josephiswhere)
+- **Dennis Lopez** - [@DennisLpz](https://github.com/DennisLpz)
+- **Cole Styron** - [@colestyron](https://github.com/C-STYR)
+- **Ali Rahman** - [@CourageWolf](https://github.com/CourageWolf)
+- **Caner Demir** - [@demircaner](https://github.com/demircaner)
+- **Kevin Ngo** - [@kev-ngo](https://github.com/kev-ngo)
+- **Becca Viner** - [@rtviner](https://github.com/rtviner)
+- **Caitlin Chan** - [@caitlinchan23](https://github.com/caitlinchan23)
+- **Kim Mai Nguyen** - [@Nkmai](https://github.com/Nkmai)
+- **Tania Lind** - [@lind-tania](https://github.com/lind-tania)
+- **Alex Landeros** - [@AlexanderLanderos](https://github.com/AlexanderLanderos)
+- **Chris Guizzetti** - [@guizzettic](https://github.com/guizzettic)
+- **Jason Victor** - [@theqwertypusher](https://github.com/Theqwertypusher)
+- **Sanjay Lavingia** - [@sanjaylavingia](https://github.com/sanjaylavingia)
+- **Vincent Nguyen** - [@VNguyenCode](https://github.com/VNguyenCode)
+- **Haejin Jo** - [@haejinjo](https://github.com/haejinjo)
+- **Hien Nguyen** - [@hienqn](https://github.com/hienqn)
+- **Jack Crish** - [@JackC27](https://github.com/JackC27)
+- **Kevin Fey** - [@kevinfey](https://github.com/kevinfey)
+- **Carlos Perez** - [@crperezt](https://github.com/crperezt)
+- **Edwin Menendez** - [@edwinjmenendez](https://github.com/edwinjmenendez)
+- **Gabriela Jardim Aquino** - [@aquinojardim](https://github.com/aquinojardim)
+- **Greg Panciera** - [@gpanciera](https://github.com/gpanciera)
+- **Nathanael Wa Mwenze** - [@nmwenz90](https://github.com/nmwenz90)
+- **Ryan Dang** - [@rydang](https://github.com/rydang)
+- **Bryan Lee** - [@mylee1995](https://github.com/mylee1995)
+- **Josh Kim** - [@joshua0308](https://github.com/joshua0308)
+- **Sierra Swaby** - [@starkspark](https://github.com/starkspark)
+- **Ruth Anam** - [@nusanam](https://github.com/nusanam)
+- **David Chai** - [@davidchaidev](https://github.com/davidchai717)
+- **Yujin Kang** - [@yujinkay](https://github.com/yujinkay)
+- **Andy Wong** - [@andywongdev](https://github.com/andywongdev)
+- **Chris Flannery** - [@chriswillsflannery](https://github.com/chriswillsflannery)
+- **Rajeeb Banstola** - [@rajeebthegreat](https://github.com/rajeebthegreat)
+- **Prasanna Malla** - [@prasmalla](https://github.com/prasmalla)
+- **Rocky Lin** - [@rocky9413](https://github.com/rocky9413)
+- **Abaas Khorrami** - [@dubalol](https://github.com/dubalol)
+- **Ergi Shehu** - [@Ergi516](https://github.com/ergi516)
+- **Raymond Kwan** - [@rkwn](https://github.com/rkwn)
+- **Joshua Howard** - [@Joshua-Howard](https://github.com/joshua-howard)
+- **Lina Shin** - [@rxlina](https://github.com/rxlina)
+- **Andy Tsou** - [@andytsou19](https://github.com/andytsou19)
+- **Feiyi Wu** - [@FreyaWu](https://github.com/FreyaWu)
+- **Viet Nguyen** - [@vnguyen95](https://github.com/vnguyen95)
+- **Alex Gomez** - [@alexgomez9](https://github.com/alexgomez9)
+- **Edar Liu** - [@liuedar](https://github.com/liuedar)
+- **Kristina Wallen** - [@kristinawallen](https://github.com/kristinawallen)
+- **Quan Le** - [@blachfog](https://github.com/Blachfog)
+- **Robert Maeda** - [@robmaeda](https://github.com/robmaeda)
 
 ## <b>License </b>
 
