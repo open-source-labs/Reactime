@@ -1,27 +1,49 @@
-// @ts-nocheck
+/* eslint-disable react/sort-comp */
+/* eslint-disable lines-between-class-members */
+/* eslint-disable react/static-property-placement */
+
 import * as React from 'react';
 import { Component } from 'react';
-import { Steps } from 'intro.js-react';
 import 'intro.js/introjs.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
 
+//Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly. 
+const { Steps } = require('intro.js-react');
+
+interface tutorialProps {
+  dispatch: (object) => void;
+  currentTabInApp: string;
+}
+
+interface tutorialState {
+  stepsEnabled: boolean;
+}
+
 // This is the tutorial displayed when the "How to use" button is clicked
 // This needs to be a class component to be compatible with updateStepElement from intro.js
-class Tutorial extends Component {
-  constructor(props) {
+export default class Tutorial extends React.Component<tutorialProps, tutorialState> {
+  constructor(props: tutorialProps) {
     super(props);
     this.state = {
       stepsEnabled: false,
     };
   }
 
-  render() {
+  //tutorial class needs these public variables to be a valid class component for ts when rendered in buttonscontainer.tsx
+  public context: any;
+  public setState: any;
+  public forceUpdate: any;
+  public props: any;
+  public state: any;
+  public refs: any;
+
+  render(): JSX.Element {
     const { currentTabInApp, dispatch } = this.props;
-    
+
     // This updates the steps so that they can target dynamically rendered elements
-    const onChangeHandler = currentStepIndex => {
+    const onChangeHandler = (currentStepIndex: number) => {
       if (currentTabInApp === 'performance' && currentStepIndex === 1) {
         dispatch(tutorialSaveSeriesToggle('inputBoxOpen'));
         this.steps.updateStepElement(currentStepIndex);
@@ -55,7 +77,15 @@ class Tutorial extends Component {
       }
       this.setState({ stepsEnabled: true });
     };
-    let steps = [];
+
+    interface stepsObj {
+      title: string,
+      element?: string,
+      intro: string,
+      position: string,
+    }
+
+    let steps: stepsObj[] = [];
 
     switch (currentTabInApp) {
       case 'map':
@@ -237,5 +267,3 @@ class Tutorial extends Component {
     );
   }
 }
-
-export default Tutorial;

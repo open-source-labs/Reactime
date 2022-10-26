@@ -21,8 +21,8 @@ export default function getLinkComponent({
   layout: string;
   linkType: string;
   orientation: string;
-}): React.ComponentType<any> {
-  let LinkComponent: React.ComponentType<any>;
+}): React.ComponentType<unknown> {
+  let LinkComponent: React.ComponentType<unknown>;
 
   if (layout === 'polar') {
     if (linkType === 'step') {

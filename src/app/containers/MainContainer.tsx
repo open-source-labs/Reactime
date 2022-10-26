@@ -1,7 +1,5 @@
 /* eslint-disable max-len */
-// @ts-nocheck
 import React, { useEffect, useState } from 'react';
-import Split from 'react-split';
 import ActionContainer from './ActionContainer';
 import TravelContainer from './TravelContainer';
 import ButtonsContainer from './ButtonsContainer';
@@ -19,7 +17,10 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-function MainContainer(): any {
+//Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly. 
+const Split = require('react-split');
+
+function MainContainer(): JSX.Element {
   const [store, dispatch] = useStoreContext();
   const {
     tabs, currentTab, port, split,
@@ -28,6 +29,7 @@ function MainContainer(): any {
   // this function handles Time Jump sidebar view
   const toggleActionContainer = () => {
     setActionView(!actionView);
+    // aside is like an added text that appears "on the side" aside some text.
     const toggleElem = document.querySelector('aside');
     toggleElem.classList.toggle('no-aside');
     // hides the record toggle button from Actions Container in Time Jump sidebar view
@@ -47,16 +49,18 @@ function MainContainer(): any {
     const currentPort = chrome.runtime.connect();
     // listen for a message containing snapshots from the background script
     currentPort.onMessage.addListener(
+    // parameter message is an object with following type script properties
       (message: {
         action: string;
         payload: Record<string, unknown>;
         sourceTab: number;
       }) => {
         const { action, payload, sourceTab } = message;
-        let maxTab;
+        let maxTab: number;
         if (!sourceTab) {
-          const tabsArray: any = Object.keys(payload);
-          maxTab = Math.max(...tabsArray);
+          const tabsArray: Array<string> = Object.keys(payload);
+          const numTabsArray: number[] = tabsArray.map(tab => Number(tab));
+          maxTab = Math.max(...numTabsArray);
         }
         switch (action) {
           case 'deleteTab': {
@@ -92,7 +96,7 @@ function MainContainer(): any {
     );
 
     currentPort.onDisconnect.addListener(() => {
-      console.log('this port is disconeccting line 79');
+      console.log('this port is disconnecting line 79');
       // disconnecting
     });
 

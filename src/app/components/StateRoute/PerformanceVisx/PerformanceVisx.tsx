@@ -1,6 +1,7 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
-// @ts-nocheck
+/* eslint-disable max-len */
 import React, { useState, useEffect } from 'react';
 import {
   MemoryRouter as Router,
@@ -13,21 +14,11 @@ import RenderingFrequency from './RenderingFrequency';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
-import { useStoreContext } from '../store';
-import { setCurrentTabInApp } from '../actions/actions';
+import { useStoreContext } from '../../../store';
+import { setCurrentTabInApp } from '../../../actions/actions';
+import { PerfData, Series } from '../../FrontendTypes';
 
-/* NOTES
-Issue - Not fully compatible with recoil apps. Reference the recoil-todo-test.
-Barstacks display inconsistently...however, almost always displays upon initial test app load or
-when empty button is clicked. Updating state after initial app load typically makes bars disappear.
-However, cycling between updating state and then emptying sometimes fixes the stack bars. Important
-to note - all snapshots do render (check HTML doc) within the chrome extension but they do
-not display because height is not consistently passed to each bar. This side effect is only
-seen in recoil apps...
- */
-
-// typescript for PROPS from StateRoute.tsx
-interface BarStackProps {
+interface PerformanceVisxProps {
   width: number;
   height: number;
   snapshots: [];
@@ -76,7 +67,7 @@ const collectNodes = (snaps, componentName) => {
         }
         break;
       }
-      if (cur.children && cur.children.length > 0) {
+      if (cur.children?.length > 0) {
         for (const child of cur.children) {
           snapshotList.push(child);
         }
@@ -92,12 +83,14 @@ const collectNodes = (snaps, componentName) => {
   return finalResults;
 };
 
+type currNum = number
+
 /* DATA HANDLING HELPER FUNCTIONS */
-const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
+const traverse = (snapshot, data, snapshots, currTotalRender: currNum = 0): void => {
   if (!snapshot.children[0]) return;
 
   // loop through snapshots
-  snapshot.children.forEach((child, idx) => {
+  snapshot.children.forEach((child, idx: number) => {
     const componentName = child.name + -[idx + 1];
 
     // Get component Rendering Time
@@ -105,7 +98,7 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
       Number.parseFloat(child.componentData.actualDuration).toPrecision(5),
     );
     // sums render time for all children
-    currTotalRender += renderTime;
+    const childrenRenderTime = currTotalRender + renderTime;
     // components as keys and set the value to their rendering time
     data.barStack[data.barStack.length - 1][componentName] = renderTime;
 
@@ -130,18 +123,17 @@ const traverse = (snapshot, data, snapshots, currTotalRender = 0) => {
     // Get rtid for the hovering feature
     data.componentData[componentName].rtid = child.rtid;
     data.componentData[componentName].information = collectNodes(snapshots, child.name);
-    traverse(snapshot.children[idx], data, snapshots, currTotalRender);
+    traverse(snapshot.children[idx], data, snapshots, childrenRenderTime);
   });
   // reassigns total render time to max render time
   data.maxTotalRender = Math.max(currTotalRender, data.maxTotalRender);
-  return data;
 };
 
 // Retrieve snapshot series data from Chrome's local storage.
-const allStorage = () => {
+const allStorage = (): Series[] => {
   let values = localStorage.getItem('project');
-  values = values === null ? [] : JSON.parse(values);
-  return values;
+  const newValues: Series[] = values === null ? [] : JSON.parse(values);
+  return newValues;
 };
 
 // Gets snapshot Ids for the regular bar graph view.
@@ -156,13 +148,13 @@ const getSnapshotIds = (obj, snapshotIds = []): string[] => {
 };
 
 // Returns array of snapshot objs each with components and corresponding render times.
-const getPerfMetrics = (snapshots, snapshotsIds): {} => {
-  const perfData = {
+const getPerfMetrics = (snapshots, snapshotsIds): PerfData => {
+  const perfData: PerfData = {
     barStack: [],
     componentData: {},
     maxTotalRender: 0,
   };
-  snapshots.forEach((snapshot, i) => {
+  snapshots.forEach((snapshot, i: number) => {
     perfData.barStack.push({ snapshotId: snapshotsIds[i], route: snapshot.route.url });
     traverse(snapshot, perfData, snapshots);
   });
@@ -170,12 +162,12 @@ const getPerfMetrics = (snapshots, snapshotsIds): {} => {
 };
 
 /* EXPORT COMPONENT */
-const PerformanceVisx = (props: BarStackProps) => {
-  // hook used to dispatch onhover action in rect
+const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
+  // hook used to dispatch onhover action in react
   const {
     width, height, snapshots, hierarchy,
   } = props;
-  const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
+  const [{ currentTabInApp }, dispatch] = useStoreContext();
   const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   const [series, setSeries] = useState(true);
@@ -190,8 +182,8 @@ const PerformanceVisx = (props: BarStackProps) => {
 
   // Creates the actions array used to populate the compare actions dropdown
   const getActions = () => {
-    let seriesArr = localStorage.getItem('project');
-    seriesArr = seriesArr === null ? [] : JSON.parse(seriesArr);
+    const project = localStorage.getItem('project');
+    const seriesArr: Series[] = project === null ? [] : JSON.parse(project);
     const actionsArr = [];
 
     if (seriesArr.length) {
@@ -254,13 +246,12 @@ const PerformanceVisx = (props: BarStackProps) => {
     data.barStack = filteredSnapshots;
   }
 
-
+  // maxheight is referring to the max height in render time to choose the scaling size for graph
+  let maxHeight = 0;
   if (snapshot !== 'All Snapshots') {
     // filter barStack to make it equal to an array of length 1 with object matching snapshot ID to mirror the data.barStack object's shape
     const checkData = [data.barStack.find(comp => comp.snapshotId === snapshot)];
     const holdData = [];
-    // maxheight is referring to the max height in render time to choose the scaling size for graph
-    let maxHeight = 0;
     // looping through checkData which is composed of a single snapshot while pushing key/values to a new object and setting maxHeight
     for (const key in checkData[0]) {
       if (key !== 'route' && key !== 'snapshotId') {
@@ -279,12 +270,11 @@ const PerformanceVisx = (props: BarStackProps) => {
     if (holdData) data.barStack = holdData;
   }
 
-  const renderBargraph = () => {
+  const renderBargraph = (): JSX.Element | null => {
     if (hierarchy) {
       return (
         <div>
           <BarGraph
-            maxHeight={maxHeight}
             data={data}
             width={width}
             height={height}
@@ -298,6 +288,7 @@ const PerformanceVisx = (props: BarStackProps) => {
         </div>
       );
     }
+    return null;
   };
 
   const renderComponentDetailsView = () => {

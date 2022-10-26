@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
-import { BarStack, Bar } from '@visx/shape';
-import { SeriesPoint } from '@visx/shape/lib/types';
+import { BarStack } from '@visx/shape';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
 import { AxisBottom, AxisLeft } from '@visx/axis';
@@ -9,39 +8,11 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
-import { onHover, onHoverExit, save } from '../actions/actions';
-import { useStoreContext } from '../store';
-
-/* TYPESCRIPT */
-interface data {
-  snapshotId?: string;
-}
-
-interface margin {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
-
-interface snapshot {
-  snapshotId?: string;
-  children: [];
-  componentData: any;
-  name: string;
-  state: string;
-}
-
-interface TooltipData {
-  bar: SeriesPoint<snapshot>;
-  key: string;
-  index: number;
-  height: number;
-  width: number;
-  x: number;
-  y: number;
-  color: string;
-}
+import { onHover, onHoverExit, save } from '../../../actions/actions';
+import { useStoreContext } from '../../../store';
+import {
+  snapshot, TooltipData, Margin, BarGraphProps,
+} from '../../FrontendTypes';
 
 /* DEFAULTS */
 const margin = {
@@ -59,7 +30,7 @@ const tooltipStyles = {
   fontFamily: 'Roboto',
 };
 
-const BarGraph = props => {
+const BarGraph = (props: BarGraphProps): JSX.Element => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
     width,
@@ -70,7 +41,7 @@ const BarGraph = props => {
     allRoutes,
     filteredSnapshots,
     snapshot,
-    setSnapshot
+    setSnapshot,
   } = props;
   const [seriesNameInput, setSeriesNameInput] = useState(`Series ${comparison.length + 1}`);
   const {
@@ -90,10 +61,8 @@ const BarGraph = props => {
   const keys = Object.keys(data.componentData);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
-  const getSnapshotId = (d: snapshot) => {
-    // d coming from data.barstack post filtered data
-    return d.snapshotId;
-  };
+  // d coming from data.barstack post filtered data
+  const getSnapshotId = (d: snapshot) => d.snapshotId;
 
   // returns snapshot id when invoked in tooltip section
   const formatSnapshotId = id => `Snapshot ID: ${id}`;

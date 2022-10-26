@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import JSONTree from 'react-json-tree';
 
-import { setCurrentTabInApp } from '../actions/actions';
-import { useStoreContext } from '../store';
+import { setCurrentTabInApp } from '../../actions/actions';
+import { useStoreContext } from '../../store';
 
 const colors = {
   scheme: 'paraiso',
