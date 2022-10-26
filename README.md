@@ -70,7 +70,7 @@ NOTE: The React Developer Tools [extension](https://chrome.google.com/webstore/d
 
 ### <b>Alternative Installation</b>
 
-Go to your Chrome Extensions (make sure Chrome Extension is in Developer Mode) for manual installation in (https://developer.chrome.com/extensions/faq#faq-dev-01). and click on Load Unpacked... Use `src/extension/build/` to load this extension. Turn on 'Allow access to file URLs' in extension details page if testing locally.
+Go to your Chrome Extensions (make sure Chrome Extension is in Developer Mode) for manual installation in (https://developer.chrome.com/extensions/faq#faq-dev-01) and click on Load Unpacked. Use `src/extension/build/` to load this extension. Turn on 'Allow access to file URLs' in extension details page if testing locally.
 
 ## <b>How to Use</b>
 
@@ -190,6 +190,8 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 
 ## <b>Read More</b>
 
+- [Reactime XVI: Clean-up Time](https://medium.com/@emintahirov1996/reactime-xvi-cleanup-time-a14ba3dcc8a6)
+- [Inter-Route Time Travel with Reactime](https://medium.com/@robbytiptontol/inter-route-time-travel-with-reactime-d84cd55ec73b)
 - [Time-Travel State with Reactime](https://medium.com/better-programming/time-traveling-state-with-reactime-6-0-53fdc3ae2a20)
 - [React Fiber and Reactime](https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8)
 - [Meet Reactime - a time-traveling State Debugger for React](https://medium.com/@yujinkay/meet-reactime-a-time-traveling-state-debugger-for-react-24f0fce96802)
