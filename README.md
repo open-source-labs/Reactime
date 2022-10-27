@@ -43,11 +43,11 @@
   <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.io">Website</a> • <a href="#read-more">Read More</a>
 </p>
 
-<b>Reactime 15.0</b> adds a new visualization, allowing users to zone in on individual components of a specific snapshot. Additionally, a number of bug fixes have been implemented.
+<b>Reactime 16.0</b> presents the codebase with substancial, much-needed clean-up. From the backend and frontend to testing, the Reactime XVI team has: removed vestigial code, added comments to clarify code, implemented 100% testing coverage for the codebase, compartmentalized and modularized files, and implemented typescript.
 
-Currently, Reactime supports React apps (now including React Router apps) using stateful components and Hooks, with beta support for Recoil and Context API and frameworks like Gatsby and Next.js.
+The primary purpose of this update is to allow easier understanding of Reactime's codebase by individuals or groups wishing to further update Reactime, keeping this great developer tool alive. 
 
-Previously, <b>Reactime 14.0</b> added the exciting features below:
+Previously, <b>Reactime 14.0 and 15.0</b> added the exciting features below:
 
 I. React Router Compatibility <br>
 Reactime is now compatible with React Router applications! Prior to Reactime 14.0, recording state snapshots as the user navigated across various routes was possible, but time travel debugging was only possible for the current route (i.e. jumping back to a prior state at a different route was not possible). In order to streamline debugging of applications with multiple routes, Reactime 14.0 added functionality that allows the user to time-travel back to different routes, including live updating in the browser to reflect the state of their application at that previously visited route.
@@ -55,8 +55,14 @@ Reactime is now compatible with React Router applications! Prior to Reactime 14.
 II. Classifying State Snapshots by Route <br>
 The list of state snapshots in the Reactime dashboard is now classified by route to give the developer visual cues of the snapshot-route relationship and make time travel debugging of various routes easier.
 
-III. Filtering Performance Metrics by Route <br>
+III. Filtering Performance Metrics By Route <br>
 The Reactime dashboard includes a stacked bar graph showing render times for each component, with a separate bar stack for each snapshot. With Reactime 14.0, this composite bar graph can now be filtered by route to allow the developer to review detailed performance data by route.
+
+IV.  Visualize And Compare Components Within a Snapshot <br>
+Users not only have access to multiple snapshots, but can now zone into a specified snapshot more granularly through a new visualization consisting of its individual components. These new graphs are rendered directly in the same Performance tab in Reactime and provide details for each component when the user hovers over, providing a new visual comparison of components across a single chosen state.
+
+<p align="center">
+<img src="./assets/snapshot-comparison.gif" />
 
 After installing Reactime, you can test its functionalities with your React application in development mode.
 
@@ -179,6 +185,10 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - Declarative titles in the actions sidebar
 - Interative Tutorial Walkthrough
 - Toggle feature allowing temporary pause of state monitoring
+- Updated frontend diagram:
+
+<p align="center">
+<img src="./assets/frontend-diagram.png" />
 
 ### <b>Bug Fixes</b>
 

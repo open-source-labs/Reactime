@@ -49,7 +49,7 @@ src/
 
 1. The *app* folder is responsible for the Single Page Application that you see when you open the chrome dev tools under the Reactime tab.
 
-![FRONTEND DATA FLOW](../assets/frontend.png)
+![FRONTEND DATA FLOW](../assets/frontend-diagram.png)
 
 2. The *backend* folder contains the set of all scripts that we inject into our "target" application via `background.js`
     - In Reactime, its main role is to generate data and handle time-jump requests from the background script in our *extension* folder.
