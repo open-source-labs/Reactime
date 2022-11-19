@@ -14,8 +14,10 @@
     ]
   },
   "scripts": {
-    "build": "webpack --mode production",
-    "dev": "webpack --mode development --watch",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode production",
+    "dev": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode development --watch",
+    "buildlegacy": "webpack --mode production",
+    "devlegacy": "webpack --mode development --watch",
     "test": "jest --verbose --coverage",
     "test-on": "./node_modules/.bin/jest $1",
     "docker-test-lint": "eslint --ext .js --ext .jsx src",
