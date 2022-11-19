@@ -30,7 +30,7 @@
 
 <h5 align="center">
 <br>
-  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a>
+  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href='./src/README.md'>DEVELOPER README</a>
   <br>
 </h5>
 <br>
@@ -46,6 +46,9 @@
 <b>Reactime 16.0</b> presents the codebase with substancial, much-needed clean-up. From the backend and frontend to testing, the Reactime XVI team has: removed vestigial code, added comments to clarify code, implemented 100% testing coverage for the codebase, compartmentalized and modularized files, and implemented typescript.
 
 The primary purpose of this update is to allow easier understanding of Reactime's codebase by individuals or groups wishing to further update Reactime, keeping this great developer tool alive. 
+
+<b>With release of Node v18.12.1(LTS), the script has been updated to 'npm run dev' || 'npm run build' for backwards compatibility.<br/>
+For version Node v16.16.0, please use script 'npm run devlegacy' || 'npm run buildlegacy'</b>
 
 Previously, <b>Reactime 14.0 and 15.0</b> added the exciting features below:
 
