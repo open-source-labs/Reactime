@@ -1,10 +1,11 @@
-import { produce, original } from 'immer';
-import { debuglog } from 'util';
-
+import { produce } from 'immer';
+import _, { values } from 'lodash';
 import * as types from '../constants/actionTypes.ts';
 
 export default (state, action) => produce(state, draft => {
-  const { port, currentTab, tabs } = draft;
+  const {
+    port, currentTab, tabs, 
+  } = draft;
   const {
     hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex,
   } = tabs[currentTab] || {};
@@ -33,12 +34,26 @@ export default (state, action) => produce(state, draft => {
       }
     }
   };
+
   switch (action.type) {
-    // Save case will store the series user wants to save to the chrome local storage
+    // This saves the series user wants to save to chrome local storage
     case types.SAVE: {
-      const data = JSON.stringify(action.payload);
-      localStorage.setItem(`${action.payload.currentTab}`, data);
-      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: true };
+      const { newSeries, newSeriesName } = action.payload;
+      if (!tabs[currentTab].seriesSavedStatus) {
+        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
+        break;
+      }
+      // Runs if series name input box is active.
+      // Updates chrome local storage with the newly saved series. Console logging the seriesArray grabbed from local storage may be helpful.
+      if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
+        let seriesArray = localStorage.getItem('project');
+        seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
+        newSeries.name = newSeriesName;
+        seriesArray.push(newSeries);
+        localStorage.setItem('project', JSON.stringify(seriesArray));
+        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
+        break;
+      }
       break;
     }
     // Delete case will delete ALL stored series in chrome local storage. To see  chrome storage related data
@@ -84,7 +99,7 @@ export default (state, action) => produce(state, draft => {
         // eslint-disable-next-line max-len
         // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
         const nameFromIndex = findName(newIndex, hierarchy);
-        
+
         port.postMessage({
           action: 'jumpToSnap',
           payload: snapshots[newIndex],
@@ -151,7 +166,7 @@ export default (state, action) => produce(state, draft => {
       // finds the name by the action.payload parsing through the hierarchy to send to background.js the current name in the jump action
       const nameFromIndex = findName(action.payload, hierarchy);
       // nameFromIndex is a number based on which jump button is pushed
-      
+
       port.postMessage({
         action: 'jumpToSnap',
         payload: snapshots[action.payload],
@@ -163,36 +178,23 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.EMPTY: {
+      // send msg to background script
       port.postMessage({ action: 'emptySnap', tabId: currentTab });
       tabs[currentTab].sliderIndex = 0;
-      tabs[currentTab].viewIndex = -1;
+      tabs[currentTab].viewIndex = 0;
       tabs[currentTab].playing = false;
-      // activates empty mode
-      tabs[currentTab].mode.empty = true;
-      // records snapshot of page initial state
-      tabs[currentTab].initialSnapshot.push(tabs[currentTab].snapshots[0]);
-      // resets snapshots to page last state recorded
-      // eslint-disable-next-line max-len
-      tabs[currentTab].snapshots = [
-        tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1],
-      ];
-      // records hierarchy of page initial state
-      tabs[currentTab].initialHierarchy = { ...tabs[currentTab].hierarchy };
-      tabs[currentTab].initialHierarchy.children = [];
+      const lastSnapshot = tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1];
+      // resets hierarchy to page last state recorded
+      tabs[currentTab].hierarchy.stateSnapshot = { ...lastSnapshot };
       // resets hierarchy
       tabs[currentTab].hierarchy.children = [];
-      // resets hierarchy to page last state recorded
-      // eslint-disable-next-line prefer-destructuring
-      tabs[currentTab].hierarchy.stateSnapshot = tabs[currentTab].snapshots[0];
+      // resets snapshots to page last state recorded
+      tabs[currentTab].snapshots = [lastSnapshot];
       // resets currLocation to page last state recorded
       tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
-      // resets index
-      tabs[currentTab].index = 0;
-      // resets currParent plus current state
-      tabs[currentTab].currParent = 1;
-      // resets currBranch
-      tabs[currentTab].currBranch = 0;
-      // resets series saved status
+      tabs[currentTab].index = 1;
+      tabs[currentTab].currParent = 0;
+      tabs[currentTab].currBranch = 1;
       tabs[currentTab].seriesSavedStatus = false;
       break;
     }
@@ -266,9 +268,19 @@ export default (state, action) => produce(state, draft => {
         if (!payload[tab]) {
           delete tabs[tab];
         } else {
+          // maintain isExpaned prop from old stateSnapshot to preserve componentMap expansion
+          const persistIsExpanded = (newNode, oldNode) => {
+            newNode.isExpanded = oldNode ? oldNode.isExpanded : true;
+            if (newNode.children) {
+              newNode.children.forEach((child, i) => {
+                persistIsExpanded(child, oldNode?.children[i]);
+              });
+            }
+          };
+          persistIsExpanded(payload[tab].currLocation.stateSnapshot, tabs[tab].currLocation.stateSnapshot);
+
           const { snapshots: newSnaps } = payload[tab];
           tabs[tab] = {
-            ...tabs[tab],
             ...payload[tab],
             sliderIndex: newSnaps.length - 1,
             seriesSavedStatus: false,
@@ -282,29 +294,79 @@ export default (state, action) => produce(state, draft => {
       break;
     }
     case types.SET_TAB: {
-      if (typeof action.payload === 'number') {
-        draft.currentTab = action.payload;
-        break;
-      } else if (typeof action.payload === 'object') {
-        draft.currentTab = action.payload.tabId;
-        break;
+      if (!mode?.paused) {
+        if (typeof action.payload === 'number') {
+          draft.currentTab = action.payload;
+          break;
+        } else if (typeof action.payload === 'object') {
+          draft.currentTab = action.payload.tabId;
+          if (action.payload?.title) draft.currentTitle = action.payload.title;
+          break;
+        }
       }
       break;
     }
     case types.DELETE_TAB: {
       delete draft.tabs[action.payload];
-      if (draft.currentTab === action.payload) {
-        // if the deleted tab was set to currentTab, replace currentTab with
-        // the first tabId within tabs obj
-        const newCurrentTab = parseInt(Object.keys(draft.tabs)[0], 10);
-        draft.currentTab = newCurrentTab;
+      break;
+    }
+    case types.LAUNCH_CONTENT: {
+      // Fired when user clicks launch button on the error page. Send msg to background to launch
+      port.postMessage({
+        action: 'launchContentScript',
+        payload: action.payload,
+        tabId: currentTab,
+      });
+      break;
+    }
+    case types.NO_DEV: {
+      const { payload } = action;
+      if (tabs[currentTab]) {
+        const { reactDevToolsInstalled } = payload[currentTab].status;
+        tabs[currentTab].status.reactDevToolsInstalled = reactDevToolsInstalled;
       }
+      break;
+    }
+    case types.TOGGLE_SPLIT: {
+      draft.split = !draft.split;
+      break;
+    }
+    case types.TOGGLE_EXPANDED: {
+      // find correct node from currLocation and toggle isExpanded
+      const checkChildren = node => {
+        if (_.isEqual(node, action.payload)) {
+          node.isExpanded = !node.isExpanded;
+          return;
+        }
+        if (node.children) {
+          node.children.forEach(child => {
+            checkChildren(child);
+          });
+        }
+      };
+      checkChildren(tabs[currentTab].currLocation.stateSnapshot);
       break;
     }
     case types.SET_CURRENT_LOCATION: {
       const { payload } = action;
-      const { currLocation } = payload[currentTab];
-      tabs[currentTab].currLocation = currLocation;
+      const persistIsExpanded = (newNode, oldNode) => {
+        newNode.isExpanded = oldNode ? oldNode.isExpanded : true;
+        if (newNode.children) {
+          newNode.children.forEach((child, i) => {
+            persistIsExpanded(child, oldNode?.children[i]);
+          });
+        }
+      };
+      persistIsExpanded(payload[currentTab].currLocation.stateSnapshot, tabs[currentTab].currLocation.stateSnapshot);
+      tabs[currentTab].currLocation = payload[currentTab].currLocation;
+      break;
+    }
+    case types.SET_CURRENT_TAB_IN_APP: {
+      draft.currentTabInApp = action.payload;
+      break;
+    }
+    case types.TUTORIAL_SAVE_SERIES_TOGGLE: {
+      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload };
       break;
     }
     default:

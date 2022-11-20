@@ -9,16 +9,16 @@
   align-items: center;
   border-style: solid;
   border-color: transparent;
-  border-radius: 3px;
+  border-radius: 5px;
   cursor: pointer;
   line-height: 1.5em;
-  font: 300 14px 'Roboto', sans-serif;
-  font-size: $button-text-size;
+  font: 400 14px 'Roboto', sans-serif;
+  // font-size: $button-text-size;
   width: 120px;
   background: $red-color-gradient;
   height: 30px;
   position: absolute;
-  right: 2.5rem;
+  right: 3rem;
 
   &.animate {
     background: rgb(41, 164, 41);
@@ -51,7 +51,7 @@
 .empty-button {
   padding: 3px;
   outline: transparent;
-  color: white;
+  color: black;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -63,7 +63,7 @@
   font: 300 14px 'Roboto', sans-serif;
   font-size: $button-text-size;
   width: 120px;
-  background: $red-color-gradient;
+  background: #62d6fb;
 }
 
 .empty-button:hover {
@@ -189,7 +189,7 @@
 .howToUse-button,
 .export-button,
 .pause-button,
-.persist-button {
+.split-button {
   @extend %button-shared;
   color: white;
   border-color: transparent;
@@ -200,7 +200,7 @@
 .howToUse-button:hover,
 .export-button:hover,
 .pause-button:hover,
-.persist-button:hover {
+.split-button:hover {
   @extend %button-shared;
   color: #62d6fb;
   box-shadow: 1px 1px 2px 1px rgba(30, 86, 171, 0.25);
@@ -240,9 +240,11 @@
 .dropdown-dark {
   background: #444;
   border-color: #111111 #0a0a0a black;
-  background-image: -webkit-linear-gradient(top,
-      transparent,
-      rgba(0, 0, 0, 0.4));
+  background-image: -webkit-linear-gradient(
+    top,
+    transparent,
+    rgba(0, 0, 0, 0.4)
+  );
   background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
   background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
   background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
@@ -270,7 +272,7 @@
   color: #ccc;
 }
 
-.dropdown-dark .dropdown-select>option {
+.dropdown-dark .dropdown-select > option {
   background: #444;
   text-shadow: 0 1px rgba(0, 0, 0, 0.4);
 }
@@ -320,7 +322,7 @@
 
 /* sidebar button open and closing functionality */
 aside {
-  width: 250px;
+  // width: 250px;
   background: #242529;
   color: #fff;
   transition: width 1s;
@@ -328,6 +330,7 @@ aside {
 
 .no-aside {
   width: 30px;
+  margin-right: 15px;
 }
 
 .toggle {
@@ -351,8 +354,8 @@ aside {
 }
 
 .toggle i {
-  top: 46%;
-  left: 4%;
+  top: 8px;
+  left: 9px;
   display: block;
   background: $blue-brand;
 }

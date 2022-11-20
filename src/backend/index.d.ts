@@ -13,16 +13,19 @@
  * Reactime contributors:
     "Abaas Khorrami",
     "Andy Wong",
+    "Brian Yang",
     "Bryan Lee",
     "Carlos Perez",
     "Chris Flannery",
     "David Chai",
     "Edwin Menendez",
+    "Emin Tahirov",
     "Ergi Shehu",
     "Gabriela Jardim Aquino",
     "Gregory Panciera",
     "Josh Kim",
     "Joshua Howard",
+    "Louis Lam",
     "Nathanael Wa Mwenze",
     "Prasanna Malla",
     "Rajeeb Banstola",
@@ -30,6 +33,7 @@
     "Rocky Lin",
     "Ruth Anam",
     "Ryan Dang",
+    "Samuel Tran",
     "Sierra Swaby",
     "Yujin Kang"
  *
