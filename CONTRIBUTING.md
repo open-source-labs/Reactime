@@ -16,7 +16,7 @@ To get an overview of the project, read the [README](README.md). Here are some r
 
 ## Getting started
 
-To navigate our codebase with confidence, see the Developer READMEs [Developer Installation](/DeveloperREADME.md) and [Developer Guidelines](/src/README.md) :confetti_ball:. For more information on how we write our markdown files, see [the GitHub Markdown reference](contributing/content-markup-reference.md).
+To navigate our codebase with confidence, see the Developer READMEs [Developer Installation](/DeveloperREADME.md) and [Developer Guidelines](/src/README.md) :confetti_ball:.
 
 ### Issues
 
@@ -33,10 +33,6 @@ Scan through our [existing issues](https://github.com/open-source-labs/reactime/
 #### Make changes in the UI
 
 Click **Make a contribution** at the bottom of any docs page to make small changes such as a typo, sentence fix, or a broken link. This takes you to the `.md` file where you can make your changes and [create a pull request](#pull-request) for a review. 
-
-#### Make changes in a codespace
-
-For more information about using a codespace for working on GitHub documentation, see "[Working in a codespace](https://github.com/github/docs/blob/main/contributing/codespace.md)."
 
 #### Make changes locally
 
@@ -71,4 +67,4 @@ Once you submit your PR, a Docs team member will review your proposal. We may as
 
 Congratulations :tada::tada: The Reactime team thanks you! :sparkles:. 
 
-Once your PR is merged, your contributions will be publicly visible on [Reactime](https://github.com/open-source-labs/reactime)!.
+Once your PR is merged, your contributions will be publicly visible on [Reactime](https://github.com/open-source-labs/reactime)!
