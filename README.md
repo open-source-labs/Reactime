@@ -43,7 +43,7 @@
   <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.io">Website</a> • <a href="#read-more">Read More</a>
 </p>
 
-<b>Reactime 16.0</b> presents the codebase with substancial, much-needed clean-up. From the backend and frontend to testing, the Reactime XVI team has: removed vestigial code, added comments to clarify code, implemented 100% testing coverage for the codebase, compartmentalized and modularized files, and implemented typescript.
+<b>Reactime 16.0</b> presents the codebase with substantial, much-needed clean-up. From the backend and frontend to testing, the Reactime XVI team has: removed vestigial code, added comments to clarify code, implemented 100% testing coverage for the codebase, compartmentalized and modularized files, and implemented typescript.
 
 The primary purpose of this update is to allow easier understanding of Reactime's codebase by individuals or groups wishing to further update Reactime, keeping this great developer tool alive. 
 
