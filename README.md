@@ -102,7 +102,7 @@ Try refreshing the application you want to test and refresh the DevTools by clic
 
 ### ❓ <b>I found a bug in Reactime</b>
 
-Reactime is an open source project, and we’d really appreciate your help with improving user experience. Please create a pull request (or issue) to propose and collaborate on changes to a repository.
+Reactime is an open source project, and we’d really appreciate your help with improving user experience. Please read [the developer README](src/README.md), and create a pull request (or issue) to propose and collaborate on changes to a repository.
 
 ### ❓ <b>Node version compatiability</b>
 
