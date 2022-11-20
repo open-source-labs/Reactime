@@ -2,6 +2,7 @@
   "compilerOptions": {
     "outDir": "./src/extension/build/bundles/",
     "module": "es6",
+    // "noImplicitAny": true,
     "target": "es5",
     "jsx": "react",
     "removeComments": true,  
@@ -17,7 +18,7 @@
     "forceConsistentCasingInFileNames": true,
   },
   "include": ["./src/app", "./src/backend", "./src/extension", "./jest-setup.ts", "./global.d.ts"],
-  "exclude": ["./src/app/__tests__", "./src/backend/__tests__"],
+  "exclude": ["./src/app/__tests__", "./src/backend/__tests__", "node_modules"],
   "typeDocOptions": {
     "mode": "file",
     "out": "docs"

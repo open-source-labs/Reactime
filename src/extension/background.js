@@ -1,15 +1,17 @@
 // Import snapshots from "../app/components/snapshots".
-import 'core-js';
+// import 'core-js';
+
 // Store ports in an array.
 const portsArr = [];
 const reloaded = {};
 const firstSnapshotReceived = {};
+
 // There will be the same number of objects in here as there are
 // Reactime tabs open for each user application being worked on.
+let activeTab;
 const tabsObj = {};
 // Will store Chrome web vital metrics and their corresponding values.
 const metrics = {};
-
 // This function will create the first instance of the test app's tabs object
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
 function createTabObj(title) {
@@ -20,13 +22,13 @@ function createTabObj(title) {
   // update tabsObj
   return {
     title,
-    // snapshots is an array of ALL state snapshots for stateful and stateless components the Reactime tab working on a specific user application
+    // snapshots is an array of ALL state snapshots for stateful and stateless
+    // components the Reactime tab working on a specific user application
     snapshots: [],
-    // records initial snapshot to refresh page in case empty function is called
-    initialSnapshot: [],
     // index here is the tab index that shows total amount of state changes
     index: 0,
-    //* this is our pointer so we know what the current state the user is checking (this accounts for time travel aka when user clicks jump on the UI)
+    //* this is our pointer so we know what the current state the user is checking
+    // (this accounts for time travel aka when user clicks jump on the UI)
     currLocation: null,
     // points to the node that will generate the next child set by newest node or jump
     currParent: 0,
@@ -34,12 +36,16 @@ function createTabObj(title) {
     currBranch: 0,
     // inserting a new property to build out our hierarchy dataset for d3
     hierarchy: null,
-    // records initial hierarchy to refresh page in case empty function is called
-    initialHierarchy: null,
+    // status checks: Content Script launched, React Dev Tools installed, target is react app
+    status: {
+      contentScriptLaunched: true,
+      reactDevToolsInstalled: false,
+      targetPageisaReactApp: false,
+    },
+    // Note: Persist is a now defunct feature. Paused = Locked
     mode: {
       persist: false,
       paused: false,
-      empty: false,
     },
     // stores web metrics calculated by the content script file
     webMetrics: {},
@@ -49,30 +55,16 @@ function createTabObj(title) {
 // Each node stores a history of the link fiber tree.
 class Node {
   constructor(obj, tabObj) {
-
     // continues the order of number of total state changes
-    this.index = tabObj.index++;
+    this.index = tabObj.index;
+    tabObj.index += 1;
     // continues the order of number of states changed from that parent
-    this.name = tabObj.currParent += 1;
+    tabObj.currParent += 1;
+    this.name = tabObj.currParent;
     // marks from what branch this node is originated
     this.branch = tabObj.currBranch;
     this.stateSnapshot = obj;
     this.children = [];
-  }
-}
-
-// Adds a new node to the current location.
-// Invoked in the case 'recordSnap'.
-function sendToHierarchy(tabObj, newNode) {
-  if (!tabObj.currLocation) {
-    tabObj.currLocation = newNode;
-    tabObj.hierarchy = newNode;
-  } else {
-    const currNameCount = countCurrName(tabObj.hierarchy, newNode.name);
-    newNode.branch = currNameCount;
-    tabObj.currBranch = newNode.branch;
-    tabObj.currLocation.children.push(newNode);
-    tabObj.currLocation = newNode;
   }
 }
 
@@ -90,9 +82,26 @@ function countCurrName(rootNode, name) {
   return branch;
 }
 
+// Adds a new node to the current location.
+// Invoked in the case 'recordSnap'.
+function sendToHierarchy(tabObj, newNode) {
+  if (!tabObj.currLocation) {
+    tabObj.currLocation = newNode;
+    tabObj.hierarchy = newNode;
+  } else {
+    const currNameCount = countCurrName(tabObj.hierarchy, newNode.name);
+    newNode.branch = currNameCount;
+    tabObj.currBranch = newNode.branch;
+    tabObj.currLocation.children.push(newNode);
+    tabObj.currLocation = newNode;
+  }
+}
+
 // This function is used when time jumping to a previous state,
 // so that it runs recursively until it finds the correct index,
 // and updates the tabsObject to the node at that index.
+/* eslint no-param-reassign: ["error", { "props": false }] */
+
 function changeCurrLocation(tabObj, rootNode, index, name) {
   // index comes from the app's main reducer to locate the correct current location on tabObj
   // check if current node has the index wanted
@@ -118,12 +127,18 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   }
 }
 
-// Establishing incoming connection with devtools.
+// Establishing incoming connection with Reactime.
 chrome.runtime.onConnect.addListener(port => {
   // port is one end of the connection - an object
-
   // push every port connected to the ports array
   portsArr.push(port);
+  // On Reactime launch: make sure RT's active tab is correct
+  if (portsArr.length > 0) {
+    portsArr.forEach(bg => bg.postMessage({
+      action: 'changeTab',
+      payload: { tabId: activeTab.id, title: activeTab.title },
+    }));
+  }
 
   // send tabs obj to the connected devtools as soon as connection to devtools is made
   if (Object.keys(tabsObj).length > 0) {
@@ -163,19 +178,10 @@ chrome.runtime.onConnect.addListener(port => {
         tabsObj[tabId].snapshots = payload;
         return true;
       case 'emptySnap':
-        // activates empty mode
-        tabsObj[tabId].mode.empty = true;
-        // records snapshot of page initial state
-        tabsObj[tabId].initialSnapshot.push(tabsObj[tabId].snapshots[0]);
         // reset snapshots to page last state recorded
         tabsObj[tabId].snapshots = [
           tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1],
         ];
-        // records hierarchy of page initial state
-        tabsObj[tabId].initialHierarchy = {
-          ...tabsObj[tabId].hierarchy,
-          children: [],
-        };
         // resets hierarchy
         tabsObj[tabId].hierarchy.children = [];
         // resets hierarchy to page last state recorded
@@ -184,23 +190,30 @@ chrome.runtime.onConnect.addListener(port => {
         };
         // resets currLocation to page last state recorded
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
-        // resets index
-        tabsObj[tabId].index = 0;
-        // resets currParent plus current state
-        tabsObj[tabId].currParent = 1;
-        // resets currBranch
-        tabsObj[tabId].currBranch = 0;
+        tabsObj[tabId].index = 1;
+        tabsObj[tabId].currParent = 0;
+        tabsObj[tabId].currBranch = 1;
         return true;
-      // "Pause" is a deprecated feature from a previous Reactime version.
+      // Pause = lock on tab
       case 'setPause':
         tabsObj[tabId].mode.paused = payload;
-        break;
+        return true;
+      // persist is now depreacted
       case 'setPersist':
         tabsObj[tabId].mode.persist = payload;
+        return true;
+      case 'launchContentScript':
+        chrome.scripting.executeScript({
+          target: { tabId },
+          files: ['bundles/content.bundle.js'],
+        });
         return true;
       case 'jumpToSnap':
         chrome.tabs.sendMessage(tabId, msg);
         return true; // attempt to fix message port closing error, consider return Promise
+      case 'toggleRecord':
+        chrome.tabs.sendMessage(tabId, msg);
+        return true;
       default:
         return true;
     }
@@ -209,7 +222,7 @@ chrome.runtime.onConnect.addListener(port => {
 
 // background.js listening for a message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  // IGNORE THE AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED
+  // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
     return true;
   }
@@ -230,18 +243,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     || action === 'recordSnap'
     || action === 'jumpToSnap'
     || action === 'injectScript'
+    || action === 'devToolsInstalled'
+    || action === 'aReactApp'
   ) {
     isReactTimeTravel = true;
   } else {
     return true;
   }
-
   // everytime we get a new tabid, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) {
     tabsObj[tabId] = createTabObj(tabTitle);
   }
 
-  const { persist, empty } = tabsObj[tabId].mode;
   switch (action) {
     case 'jumpToSnap': {
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
@@ -253,64 +266,38 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
       break;
     }
+    // Confirmed React Dev Tools installed, send this info to frontend
+    case 'devToolsInstalled': {
+      tabsObj[tabId].status.reactDevToolsInstalled = true;
+      portsArr.forEach(bg => bg.postMessage({
+        action: 'devTools',
+        payload: tabsObj,
+      }));
+      break;
+    }
+    // Confirmed target is a react app. No need to send to frontend
+    case 'aReactApp': {
+      tabsObj[tabId].status.targetPageisaReactApp = true;
+      break;
+    }
     // This injects a script into the app that you're testing Reactime on,
     // so that Reactime's backend files can communicate with the app's DOM.
     case 'injectScript': {
-      chrome.tabs.executeScript(tabId, {
-        code: `
-        // Function will attach script to the dom 
-        const injectScript = (file, tag) => {
-          const htmlBody = document.getElementsByTagName(tag)[0];
-          const script = document.createElement('script');
-          script.setAttribute('type', 'text/javascript');
-          script.setAttribute('src', file);
-          document.title=${tabId} + '-' + document.title
-          htmlBody.appendChild(script);
-        };
-        injectScript(chrome.runtime.getURL('bundles/backend.bundle.js'), 'body');
-      `,
+      const injectScript = (file, tab) => {
+        const htmlBody = document.getElementsByTagName('body')[0];
+        const script = document.createElement('script');
+        script.setAttribute('type', 'text/javascript');
+        script.setAttribute('src', file);
+        // eslint-disable-next-line prefer-template
+        // document.title = tab + '-' + document.title; // error of injecting random number
+        htmlBody.appendChild(script);
+      };
+
+      chrome.scripting.executeScript({
+        target: { tabId },
+        function: injectScript,
+        args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId],
       });
-      break;
-    }
-    case 'tabReload': {
-      tabsObj[tabId].mode.paused = false;
-      // dont remove snapshots if persisting
-      if (!persist) {
-        if (empty) {
-          // resets snapshots to page initial state recorded when emptied
-          tabsObj[tabId].snapshots = tabsObj[tabId].initialSnapshot;
-          // resets hierarchy to page initial state recorded when emptied
-          tabsObj[tabId].hierarchy = tabsObj[tabId].initialHierarchy;
-        } else {
-          // triggered with new tab opened
-          // resets snapshots to page initial state
-          tabsObj[tabId].snapshots.splice(1);
-          // checks if hierarchy before reset
-          if (tabsObj[tabId].hierarchy) {
-            // resets hierarchy to page initial state
-            tabsObj[tabId].hierarchy.children = [];
-            // resets currParent plus current state
-            tabsObj[tabId].currParent = 1;
-          } else {
-            // resets currParent
-            tabsObj[tabId].currParent = 0;
-          }
-        }
-        // resets currLocation to page initial state
-        tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
-        // resets index
-        tabsObj[tabId].index = 0;
-        // resets currBranch
-        tabsObj[tabId].currBranch = 0;
-
-        // send a message to devtools
-        portsArr.forEach(bg => bg.postMessage({
-          action: 'initialConnectSnapshots',
-          payload: tabsObj,
-        }));
-      }
-      reloaded[tabId] = true;
-
       break;
     }
     case 'recordSnap': {
@@ -333,7 +320,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         break;
       }
-
 
       // DUPLICATE SNAPSHOT CHECK
       const previousSnap = tabsObj[tabId].currLocation.stateSnapshot.children[0].componentData
@@ -414,13 +400,19 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 
 // when tab view is changed, put the tabid as the current tab
 chrome.tabs.onActivated.addListener(info => {
-  // tell devtools which tab to be the current
-  if (portsArr.length > 0) {
-    portsArr.forEach(bg => bg.postMessage({
-      action: 'changeTab',
-      payload: info,
-    }));
-  }
+  // get info about tab information from tabId
+  chrome.tabs.get(info.tabId, tab => {
+    // never set a reactime instance to the active tab
+    if (!tab.pendingUrl?.match('^chrome-extension')) {
+      activeTab = tab;
+      if (portsArr.length > 0) {
+        portsArr.forEach(bg => bg.postMessage({
+          action: 'changeTab',
+          payload: { tabId: tab.id, title: tab.title },
+        }));
+      }
+    }
+  });
 });
 
 // when reactime is installed
@@ -440,8 +432,8 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     type: 'panel',
     left: 0,
     top: 0,
-    width: 380,
-    height: window.screen.availHeight,
+    width: 1000,
+    height: 1000,
     url: chrome.runtime.getURL('panel.html'),
   };
   if (menuItemId === 'reactime') chrome.windows.create(options);

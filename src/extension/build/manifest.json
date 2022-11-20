@@ -1,15 +1,11 @@
 {
   "name": "Reactime",
-  "version": "11.0.0",
+  "version": "16.0.0",
   "devtools_page": "devtools.html",
   "description": "A Chrome extension that helps debug React applications by memorizing the state of components with every render.",
-  "manifest_version": 2,
-  "content_security_policy": "script-src 'self' https://www.gstatic.com:* 'unsafe-eval'; object-src 'self'",
+  "manifest_version": 3,
   "background": {
-    "scripts": [
-      "bundles/background.bundle.js"
-    ],
-    "persistent": false
+    "service_worker": "bundles/background.bundle.js"
   },
   "icons": {
     "48": "assets/icon48.png",
@@ -17,23 +13,16 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "http://localhost/*",
-        "https://localhost/*"
-      ],
-      "js": [
-        "bundles/content.bundle.js"
-      ]
+      "matches": ["http://localhost/*"],
+      "js": ["bundles/content.bundle.js"]
     }
   ],
   "web_accessible_resources": [
-    "bundles/backend.bundle.js"
+    {
+      "resources": ["bundles/backend.bundle.js"],
+      "matches": ["<all_urls>"]
+    }
   ],
-  "permissions": [
-    "contextMenus",
-    "tabs",
-    "activeTab",
-    "http://localhost/*",
-    "https://localhost/*"
-  ]
+  "permissions": ["contextMenus", "tabs", "activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"]
 }

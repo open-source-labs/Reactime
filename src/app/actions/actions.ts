@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import * as types from '../constants/actionTypes';
 
-export const save = (tabsObj) => ({
+export const save = (newSeries, newSeriesName) => ({
   type: types.SAVE,
-  payload: tabsObj,
+  payload: { newSeries, newSeriesName },
 });
 export const deleteSeries = () => ({
   type: types.DELETE_SERIES,
-})
+});
 export const toggleMode = (mode) => ({
   type: types.TOGGLE_MODE,
   payload: mode,
@@ -81,6 +81,25 @@ export const deleteTab = (tab) => ({
   payload: tab,
 });
 
+export const noDev = (tab) => ({
+  type: types.NO_DEV,
+  payload: tab,
+});
+
+export const toggleSplit = () => ({
+  type: types.TOGGLE_SPLIT,
+});
+
+export const toggleExpanded = (node) => ({
+  type: types.TOGGLE_EXPANDED,
+  payload: node,
+});
+
+export const launchContentScript = (tab) => ({
+  type: types.LAUNCH_CONTENT,
+  payload: tab,
+});
+
 export const resetSlider = () => ({
   type: types.SLIDER_ZERO,
 });
@@ -99,4 +118,14 @@ export const onHoverExit = (rtid) => ({
 export const setCurrentLocation = (tabsObj) => ({
   type: types.SET_CURRENT_LOCATION,
   payload: tabsObj,
-})
+});
+
+export const setCurrentTabInApp = (currentTabInApp) => ({
+  type: types.SET_CURRENT_TAB_IN_APP,
+  payload: currentTabInApp,
+});
+
+export const tutorialSaveSeriesToggle = (toggleVal) => ({
+  type: types.TUTORIAL_SAVE_SERIES_TOGGLE,
+  payload: toggleVal,
+});

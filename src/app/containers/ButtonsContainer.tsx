@@ -1,18 +1,17 @@
-// @ts-nocheck
-import React from 'react';
-import { importSnapshots, toggleMode } from '../actions/actions';
-import { useStoreContext } from '../store';
+import * as React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUpload,
-  faQuestion,
   faDownload,
-  faMapMarker,
-  faMapPin,
-  faRedoAlt,
+  faSquare,
+  faColumns,
   faUnlock,
   faLock,
 } from '@fortawesome/free-solid-svg-icons';
+import { importSnapshots, toggleMode, toggleSplit } from '../actions/actions';
+import { useStoreContext } from '../store';
+
+import Tutorial from '../components/Tutorial';
 
 function exportHandler(snapshots: []) {
   // create invisible download anchor link
@@ -20,7 +19,7 @@ function exportHandler(snapshots: []) {
 
   // set file in anchor link
   fileDownload.href = URL.createObjectURL(
-    new Blob([JSON.stringify(snapshots)], { type: 'application/json' })
+    new Blob([JSON.stringify(snapshots)], { type: 'application/json' }),
   );
 
   // set anchor as file download and click it
@@ -31,35 +30,33 @@ function exportHandler(snapshots: []) {
   URL.revokeObjectURL(fileDownload.href);
 }
 
-function importHandler(dispatch: (a: any) => void) {
+function importHandler(dispatch: (a: unknown) => void) {
   const fileUpload = document.createElement('input');
   fileUpload.setAttribute('type', 'file');
 
-  fileUpload.onchange = () => {
+  fileUpload.onchange = (e: Event) => {
     const reader = new FileReader();
     reader.onload = () => {
       const test = reader.result.toString();
       return dispatch(importSnapshots(JSON.parse(test)));
     };
-    if (event.target.hasOwnProperty('files')) {
-      const eventFiles: any = event.target;
-      reader.readAsText(eventFiles.files[0]);
+    const eventFiles = e.target as HTMLInputElement;
+    if (eventFiles?.hasOwnProperty('files')) {
+      // const eventFiles = target as HTMLInputElement;
+      if (eventFiles) {
+        reader.readAsText(eventFiles.files[0]);
+      }
     }
   };
 
   fileUpload.click();
 }
 
-function howToUseHandler() {
-  window.open('https://github.com/open-source-labs/reactime', '_blank');
-  return null;
-}
-
-function ButtonsContainer() {
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+function ButtonsContainer(): JSX.Element {
+  const [{ tabs, currentTab, split, currentTabInApp }, dispatch] = useStoreContext();
   const {
     snapshots,
-    mode: { paused, persist },
+    mode: { paused },
   } = tabs[currentTab];
 
   return (
@@ -76,18 +73,20 @@ function ButtonsContainer() {
         )}
         {paused ? 'Unlock' : 'Lock'}
       </button>
+
       <button
-        className="persist-button"
+        className="split-button"
         type="button"
-        onClick={() => dispatch(toggleMode('persist'))}
+        onClick={() => dispatch(toggleSplit())}
       >
-        {persist ? (
-          <FontAwesomeIcon icon={faRedoAlt} />
+        {split ? (
+          <FontAwesomeIcon icon={faSquare} />
         ) : (
-          <FontAwesomeIcon icon={faMapPin} />
+          <FontAwesomeIcon icon={faColumns} />
         )}
-        {persist ? 'Unpersist' : 'Persist'}
+        {split ? 'Unsplit' : 'Split'}
       </button>
+
       <button
         className="export-button"
         type="button"
@@ -104,13 +103,8 @@ function ButtonsContainer() {
         <FontAwesomeIcon icon={faUpload} />
         Upload
       </button>
-      <button
-        className="howToUse-button"
-        type="button"
-        onClick={() => howToUseHandler()}
-      >
-        <FontAwesomeIcon icon={faQuestion} /> How to use
-      </button>
+      {/* The component below renders a button for the tutorial walkthrough of Reactime */}
+      <Tutorial dispatch={dispatch} currentTabInApp={currentTabInApp} />
     </div>
   );
 }

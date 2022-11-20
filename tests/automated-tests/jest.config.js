@@ -1,3 +1,6 @@
 module.exports = {
-  verbose: true
+  verbose: true,
+  moduleNameMapper: {
+    ".*\\.css$": "/dummy.js"
+    }
 };

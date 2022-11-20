@@ -107,6 +107,24 @@ Reactime beta поддерживает приложения, написанны�
 
 ## <b>Авторы</b>
 
+- **David Kim** - [@codejunkie7](https://github.com/codejunkie7)
+- **Robby Tipton** - [@RobbyTipton](https://github.com/RobbyTipton)
+- **Kevin HoEun Lee** - [@khobread](https://github.com/khobread)
+- **Christopher LeBrett** - [@fscgolden](https://github.com/fscgolden)
+- **Joseph Park** - [@joeepark](https://github.com/joeepark)
+- **Kris Sorensen** - [@kris-sorensen](https://github.com/kris-sorensen)
+- **Daljit Gill** - [@dgill05](https://github.com/dgill05)
+- **Ben Michareune** - [@bmichare](https://github.com/bmichare)
+- **Dane Corpion** - [@danecorpion](https://github.com/danecorpion)
+- **Harry Fox** - [@StackOverFlowWhereArtThou](https://github.com/StackOverFlowWhereArtThou)
+- **Nathan Richardson** - [@BagelEnthusiast](https://github.com/BagelEnthusiast)
+- **David Bernstein** - [@dangitbobbeh](https://github.com/dangitbobbeh)
+- **Joseph Stern** - [@josephiswhere](https://github.com/josephiswhere)
+- **Dennis Lopez** - [@DennisLpz](https://github.com/DennisLpz)
+- **Cole Styron** - [@colestyron](https://github.com/C-STYR)
+- **Ali Rahman** - [@CourageWolf](https://github.com/CourageWolf)
+- **Caner Demir** - [@demircaner](https://github.com/demircaner)
+- **Kevin Ngo** - [@kev-ngo](https://github.com/kev-ngo)
 - **Becca Viner** - [@rtviner](https://github.com/rtviner)
 - **Caitlin Chan** - [@caitlinchan23](https://github.com/caitlinchan23)
 - **Kim Mai Nguyen** - [@Nkmai](https://github.com/Nkmai)
@@ -141,6 +159,15 @@ Reactime beta поддерживает приложения, написанны�
 - **Ergi Shehu** - [@Ergi516](https://github.com/ergi516)
 - **Raymond Kwan** - [@rkwn](https://github.com/rkwn)
 - **Joshua Howard** - [@Joshua-Howard](https://github.com/joshua-howard)
+- **Lina Shin** - [@rxlina](https://github.com/rxlina)
+- **Andy Tsou** - [@andytsou19](https://github.com/andytsou19)
+- **Feiyi Wu** - [@FreyaWu](https://github.com/FreyaWu)
+- **Viet Nguyen** - [@vnguyen95](https://github.com/vnguyen95)
+- **Alex Gomez** - [@alexgomez9](https://github.com/alexgomez9)
+- **Edar Liu** - [@liuedar](https://github.com/liuedar)
+- **Kristina Wallen** - [@kristinawallen](https://github.com/kristinawallen)
+- **Quan Le** - [@blachfog](https://github.com/Blachfog)
+- **Robert Maeda** - [@robmaeda](https://github.com/robmaeda)
 
 ## <b>License </b>
 
