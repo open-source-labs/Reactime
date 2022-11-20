@@ -3,6 +3,18 @@
 ## Brief
 Our mission at Reactime is to maintain and iterate constantly, but never at the expense of future developers.<br />We know how hard it is to quickly get up to speed and onboard in a new codebase.<br />So, here are some helpful pointers to help you hit the ground running. 🏃🏾💨
 
+## Building from source
+
+1. If you have already installed Reactime from the Chrome Web Store, disable or uninstall it.
+2. Run `yarn` to install all dependencies.
+3. Run `yarn dev`. This will start a `webpack` process which watches for file changes and whenever it sees some, automatically rebuilds the webpack bundles used by the extension.
+4. Go to `chrome://extensions`
+5. Ensure Developer mode is enabled
+6. Click `Load unpacked`
+7. Select the `src/extension/build` directory
+
+Now you should be able to change Reactime code and see the changes instantly reflected in your browser!
+
 <b>With release of Node v18.12.1 (LTS) on 11/4/22, the script has been updated to 'npm run dev' | 'npm run build' for backwards compatibility.<br/>
 For version Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'</b>
 
