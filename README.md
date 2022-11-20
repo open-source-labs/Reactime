@@ -81,6 +81,9 @@ NOTE: The React Developer Tools [extension](https://chrome.google.com/webstore/d
 
 Go to Chrome Extensions (make sure Chrome Extension is in Developer Mode) for manual installation in (https://developer.chrome.com/extensions/faq#faq-dev-01) and click on Load Unpacked. Use `src/extension/build/` to load this extension. Turn on 'Allow access to file URLs' in extension details page if testing locally.
 
+<i>Please refer to Developer Install for a detailed guide:</i>
+<a href='/DeveloperREADME.md'>Developer Install</a> 
+
 ## <b>How to Use</b>
 
 After installing the Chrome extension, just open up your project in the browser.
