@@ -6,16 +6,16 @@
 /* eslint-disable import/order */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/jsx-filename-extension */
-//@ts-nocheck
-import React, { Component } from 'react';
+import { string } from 'prop-types';
+import React, { useState } from 'react';
 import { render } from 'react-dom';
 import linkFiberStart from '../linkFiber';
-// import 'expect-puppeteer';
-import puppeteer from 'puppeteer';
 
+const puppeteer = require('puppeteer');
 const SERVER = require('../puppeteerServer');
 
-const APP = 'http://localhost:5000';
+// Apple uses port 5000 for Air Play.
+const APP = 'http://localhost:5001';
 
 let linkFiber;
 let mode;
@@ -23,28 +23,18 @@ let snapShot;
 
 let browser;
 let page;
-interface Component {
-  render(): any;
-  context: any;
-  setState: any;
-  forceUpdate: any;
-  props: any;
-  state: any;
-  refs: any;
+
+interface fooState {
+  foo: string,
+  setFoo?: (string) => void
 }
-
-
-class App extends Component{
-  state: { foo: string; };
-  constructor(props) {
-    super(props);
-    this.state = { foo: 'bar' };
-  }
-
-  render() {
-    const { foo } = this.state;
-    return <div>{foo}</div>;
-  }
+function App(): JSX.Element {
+  const [fooState, setFooState] = useState({
+    foo: 'bar',
+  });
+  return (
+    <div>{fooState}</div>
+  );
 }
 
 xdescribe('unit test for linkFiber', () => {

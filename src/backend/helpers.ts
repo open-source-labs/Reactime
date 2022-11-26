@@ -24,9 +24,9 @@ export const throttle = (callback: Function, ms: number): Function => {
   let isOnCooldown = false;
   let isCallQueued = false;
 
-  // Wrap the passed-in function, f, in a callback function that "throttles"
-  // (puts a limit on) the number of calls that can be made to function, f
-  // in a given period of time (ms), t
+  // Wrap the passed-in function callback in a callback function that "throttles"
+  // (puts a limit on) the number of calls that can be made to function
+  // in a given period of time (ms)
   const throttledFunc = (): any => {
     // CASE 1: In cooldown mode and we already have a function waiting to be executed,
     //         so do nothing
@@ -40,7 +40,7 @@ export const throttle = (callback: Function, ms: number): Function => {
     }
 
     // CASE 3: If we are ready to "fire":
-    // Execute the function, f, immediately
+    // Execute the function callback immediately
     callback();
     // Initiate a new cooldown period and reset the "call queue"
     isOnCooldown = true;
@@ -51,7 +51,7 @@ export const throttle = (callback: Function, ms: number): Function => {
     const runAfterTimeout = (): any => {
       if (isCallQueued) {
         isCallQueued = false;
-        isOnCooldown = true; // not needed I think
+        isOnCooldown = true;
         callback();
         setTimeout(runAfterTimeout, ms);
         return;
@@ -68,7 +68,7 @@ export const throttle = (callback: Function, ms: number): Function => {
 // Helper function to grab the getters/setters from `elementType`
 /**
  * @method getHooksNames
- * @param elementType The fiber `type`, A stringified function of the component the Fiber whose hooks we want corresponds to
+ * @param elementType The fiber `type`, A stringified function of the component, the Fiber whose hooks we want corresponds to
  * @returns An array of strings
  */
 export const getHooksNames = (elementType: string): Array<string> => {
@@ -80,6 +80,7 @@ export const getHooksNames = (elementType: string): Array<string> => {
     return ['unknown'];
   }
 
+  // hookNames will contain an object with methods (functions)
   const hooksNames: any = {};
 
   // Begin search for hook names, only if ast has a body property.
@@ -94,11 +95,11 @@ export const getHooksNames = (elementType: string): Array<string> => {
      * Iterate through AST of every function declaration
      * Check within each function declaration if there are hook declarations */
     ast.forEach(functionDec => {
-      let body: any;
-      if (functionDec.expression && functionDec.expression.body) body = functionDec.expression.body.body;
-      else body = functionDec.body ? functionDec.body.body : [];
+      let declarationBody: any;
+      if (functionDec.expression?.body) declarationBody = functionDec.expression.body.body; // check if functionDec.expression.body exists, then set declarationBody to functionDec's body
+      else declarationBody = functionDec.body?.body ?? [];
       // Traverse through the function's funcDecs and Expression Statements
-      body.forEach((elem: any) => {
+      declarationBody.forEach((elem: any) => {
         // Hooks will always be contained in a variable declaration
         if (elem.type === 'VariableDeclaration') {
           elem.declarations.forEach((hook: any) => {

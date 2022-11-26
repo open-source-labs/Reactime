@@ -1,4 +1,34 @@
 .action-container {
-  overflow: auto;
-  background-color: $brand-color;
+  // overflow: auto;
+  // background-color: $brand-color;
+  overflow-x: hidden;
+  background-color: #282828;
+}
+
+.actionname {
+  background-color: inherit;
+  color: #fffeff;
+}
+
+#recordBtn{
+  height: 100%;
+  display:flex;
+}
+
+.actionToolContainer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#recordBtn .fa-regular{
+  height: 100%;
+  width: 28px;
+}
+
+.route {
+  background-color: #ff6569;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }

@@ -29,7 +29,7 @@ describe('Tree unit test', () => {
 
   describe('Adding children', () => {
     let newTree = new Tree({});
-    let returnChild = newTree.addChild('stateful', 'child', {}, null, null);
+    let returnChild = newTree.addChild('stateful', 'child', {}, null);
   
     it('should be able to add a child', () => {
       expect(typeof newTree.children).toEqual('object');
@@ -49,8 +49,8 @@ describe('Tree unit test', () => {
 
   describe('Adding sibling', () => {
     let newTree = new Tree({});
-    let returnChild = newTree.addChild('stateful', 'child', {}, null, null);
-    let returnSibling = returnChild.addSibling('stateful', 'child', {}, null, null);
+    let returnChild = newTree.addChild('stateful', 'child', {}, null);
+    let returnSibling = returnChild.addSibling('stateful', 'child', {}, null);
 
     it('the tree now has 2 children', () => {
       expect(newTree.children.length).toBe(2);
@@ -70,8 +70,8 @@ describe('Tree unit test', () => {
 
   describe('Adding sibling', () => {
     let newTree = new Tree({});
-    let returnChild = newTree.addChild('stateful', 'child', {}, null, null);
-    let returnSibling = returnChild.addSibling('stateful', 'child', {}, null, null);
+    let returnChild = newTree.addChild('stateful', 'child', {}, null);
+    let returnSibling = returnChild.addSibling('stateful', 'child', {}, null);
     it('the tree now has 2 children', () => {
       expect(newTree.children.length).toBe(2);
     })
@@ -90,8 +90,8 @@ describe('Tree unit test', () => {
 
   describe('Copy & clean tree', () => {
     let newTree = new Tree({});
-    let returnChild = newTree.addChild('stateful', 'child', {}, null, null);
-    let returnSibling = returnChild.addSibling('stateful', 'child', {}, null, null);
+    let returnChild = newTree.addChild('stateful', 'child', {}, null);
+    let returnSibling = returnChild.addSibling('stateful', 'child', {}, null);
     let copy = newTree.cleanTreeCopy();
     it('its copy has 2 children', () => {
       expect(copy.children.length).toEqual(2);

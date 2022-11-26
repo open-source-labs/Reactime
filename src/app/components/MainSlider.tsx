@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Slider from 'rc-slider';
 import Tooltip from 'rc-tooltip';
 import { changeSlider, pause } from '../actions/actions';
 import { useStoreContext } from '../store';
-import { useEffect } from 'react';
 
 const { Handle } = Slider;
 
@@ -42,8 +41,12 @@ function MainSlider(props: MainSliderProps) {
   const [sliderIndex, setSliderIndex] = useState(0);
 
   useEffect(() => {
-    setSliderIndex(currLocation.index);
-  }, [currLocation])
+    if (currLocation) {
+      setSliderIndex(currLocation.index);
+    } else {
+      setSliderIndex(0);
+    }
+  }, [currLocation]);
 
   return (
     <Slider

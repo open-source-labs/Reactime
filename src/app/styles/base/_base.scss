@@ -20,7 +20,10 @@ body {
   grid-area: actions;
   transition: 0.5s;
 }
-.state-container {
+.state-container-container {
+  grid-area: states;
+}
+.split {
   grid-area: states;
 }
 .buttons-container {
@@ -34,4 +37,9 @@ body {
   border-style: solid;
   border-color: $border-color;
   border-width: 1px;
+}
+
+.saveSeriesContainer {
+  padding-bottom: 15px;
+  padding-top: 10px;
 }

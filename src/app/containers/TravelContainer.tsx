@@ -1,4 +1,4 @@
-// @ts-nocheck
+/* eslint-disable max-len */
 import React, { useState } from 'react';
 import MainSlider from '../components/MainSlider';
 import Dropdown from '../components/Dropdown';
@@ -40,7 +40,7 @@ interface TravelContainerProps {
   snapshotsLength: number,
 }
 
-function TravelContainer(props:TravelContainerProps) {
+function TravelContainer(props:TravelContainerProps): JSX.Element {
   const { snapshotsLength } = props;
   const [selectedSpeed, setSpeed] = useState(speeds[1]);
   const [{ tabs, currentTab }, dispatch] = useStoreContext();

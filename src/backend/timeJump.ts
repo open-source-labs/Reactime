@@ -1,4 +1,4 @@
-import { Console } from 'console';
+import routes from './routes';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -21,10 +21,10 @@ import { Console } from 'console';
 import componentActionsRecord from './masterState';
 
 const circularComponentTable = new Set();
-export default (origin, mode) => {
+export default mode => {
   // Recursively change state of tree
   // Set the state of the origin tree if the component is stateful
-  function jump(target, firstCall = false) {
+  function jump(target) {
     if (!target) return;
     if (target.state === 'stateless') {
       target.children.forEach(child => jump(child));
@@ -43,8 +43,8 @@ export default (origin, mode) => {
         // prevState contains the states of the snapshots we are jumping FROM, not jumping TO
         prevState => {
           Object.keys(prevState).forEach(key => {
-            // if conditional below does not appear to ever be reached if all states are defined - leaving code in just in case codebases do have undefined states
-            if (!target.state[key] === undefined) {
+            // the if conditional below does not appear to ever be reached if all states are defined - leaving code in just in case codebases do have undefined states
+            if (target.state[key] !== undefined) {
               target.state[key] = undefined;
             }
           });
@@ -62,10 +62,10 @@ export default (origin, mode) => {
       }
     });
 
-    //REACT HOOKS
+    // REACT HOOKS
     // check if component states are set with hooks
-      // if yes, grab all relevant components for this snapshot in numArr
-      // call dispatch on each component passing in the corresponding currState value
+    // if yes, grab all relevant components for this snapshot in numArr
+    // call dispatch on each component passing in the corresponding currState value
     if (target.state && target.state.hooksState) {
       const currState = target.state.hooksState;
       const numArr: Array<number> = [];
@@ -81,13 +81,24 @@ export default (origin, mode) => {
     }
   }
 
+  // payload from index.ts is assigned to target
   return (target, firstCall = false) => {
     // * Setting mode disables setState from posting messages to window
     mode.jumping = true;
     if (firstCall) circularComponentTable.clear();
-    jump(target);
-    setTimeout(() => {
-      mode.jumping = false;
-    }, 100);
+    const navigating: boolean = routes.navigate(target.route);
+    if (navigating) {
+      addEventListener('popstate', event => {
+        jump(target);
+        document.body.onmouseover = () => {
+          mode.jumping = false;
+        };
+      });
+    } else {
+      jump(target);
+      document.body.onmouseover = () => {
+        mode.jumping = false;
+      };
+    }
   };
 };

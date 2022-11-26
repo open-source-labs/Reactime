@@ -5,7 +5,6 @@
 import React from 'react';
 import ReactHover, { Trigger, Hover } from 'react-hover';
 import { changeView, changeSlider } from '../actions/actions';
-import snapshots from './snapshots';
 
 /**
  * @template ActionProps Props for the action component
@@ -21,11 +20,11 @@ interface ActionProps {
   displayName: string;
   componentName: string;
   componentData: { actualDuration: number } | undefined;
+  routePath: any;
   state?: Record<string, unknown>;
-  viewIndex: number;
+  viewIndex: number | undefined;
   isCurrIndex: boolean;
   handleOnkeyDown: (e: any, i: number) => any;
-  logChangedState: (index: number) => any;
 }
 
 /**
@@ -52,43 +51,41 @@ const Action = (props: ActionProps): JSX.Element => {
     sliderIndex,
     dispatch,
     displayName,
-    componentName,
     componentData,
     viewIndex,
     isCurrIndex,
     handleOnkeyDown,
-    logChangedState,
   } = props;
 
   /**
    * @function cleanTime: Displays render times for state changes
-   * @returns render display time in seconds in miliseconds
+   * @returns render display time in seconds in milliseconds
    */
   const cleanTime = () => {
     if (!componentData || !componentData.actualDuration) {
       return 'NO TIME';
     }
     let seconds: number | string;
-    let miliseconds: any = componentData.actualDuration;
+    let milliseconds: any = componentData.actualDuration;
     if (Math.floor(componentData.actualDuration) > 60) {
       seconds = Math.floor(componentData.actualDuration / 60);
       seconds = JSON.stringify(seconds);
       if (seconds.length < 2) {
         seconds = '0'.concat(seconds);
       }
-      miliseconds = Math.floor(componentData.actualDuration % 60);
+      milliseconds = Math.floor(componentData.actualDuration % 60);
     } else {
       seconds = '00';
     }
-    miliseconds = Number.parseFloat(miliseconds).toFixed(2);
-    const arrayMiliseconds = miliseconds.split('.');
-    if (arrayMiliseconds[0].length < 2) {
-      arrayMiliseconds[0] = '0'.concat(arrayMiliseconds[0]);
+    milliseconds = Number.parseFloat(milliseconds).toFixed(2);
+    const arrayMilliseconds = milliseconds.split('.');
+    if (arrayMilliseconds[0].length < 2) {
+      arrayMilliseconds[0] = '0'.concat(arrayMilliseconds[0]);
     }
     if (index === 0) {
-      return `${seconds}:${arrayMiliseconds[0]}.${arrayMiliseconds[1]}`;
+      return `${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`;
     }
-    return `+${seconds}:${arrayMiliseconds[0]}.${arrayMiliseconds[1]}`;
+    return `+${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`;
   };
   const displayTime = cleanTime();
 
@@ -99,61 +96,58 @@ const Action = (props: ActionProps): JSX.Element => {
   };
 
   return (
-    <div
+    <div className="individual-action">
+      <div
       // Invoking keyboard functionality; functionality is in ActionContainer;
-      onKeyDown={e => handleOnkeyDown(e, viewIndex)}
-      className={
+        onKeyDown={e => handleOnkeyDown(e, viewIndex)}
+        className={
         selected || last ? 'action-component selected' : 'action-component'
       }
-      onClick={() => {
-        dispatch(changeView(index));
-      }}
-      role="presentation"
-      style={index > sliderIndex ? { color: '#5f6369' } : {}}
-      tabIndex={index}
-    >
-      <ReactHover options={optionsCursorTrueWithMargin}>
-        <Trigger type="trigger">
-          <div className="action-component-trigger" style={index > sliderIndex ? { color: '#5f6369' } : {}}>
-            <div className="action-component-text">
-              {`${displayName}:  ${componentName !== 'nameless' ? componentName : ''} `}
-              {/* {`displayName: ${displayName}`} */}
-            </div>
-            <button className="time-button" type="button">
-              {displayTime}
-            </button>
-            {
-              isCurrIndex ? (
-                <button
-                  className="current-location"
-                  type="button"
-                >
-                  Current
-                </button>
-              )
-                : (
+        onClick={() => {
+          dispatch(changeView(index));
+        }}
+        role="presentation"
+        style={index > sliderIndex ? { color: '#5f6369' } : {}}
+        tabIndex={index}
+      >
+        <ReactHover options={optionsCursorTrueWithMargin}>
+          <Trigger type="trigger">
+            <div className="action-component-trigger" style={index > sliderIndex ? { color: '#5f6369' } : {}}>
+              <div className="action-component-text">
+                <input key={`ActionInput${displayName}`} type="text" className="actionname" placeholder={`Snapshot: ${displayName}`} />
+              </div>
+              <button className="time-button" type="button">
+                {displayTime}
+              </button>
+              {
+                isCurrIndex ? (
                   <button
-                    className="jump-button"
-                    onClick={(e: any): void => {
-                      e.stopPropagation();
-                      dispatch(changeSlider(index));
-                      dispatch(changeView(index));
-                    }}
-                    tabIndex={index}
+                    className="current-location"
                     type="button"
                   >
-                    Jump
+                    Current
                   </button>
                 )
-            }
-          </div>
-        </Trigger>
-        <Hover type="hover">
-          <div style={{ zIndex: 1, position: 'relative', padding: '0.5rem 1rem' }} id="hover-box">
-            <p>{(logChangedState(index))}</p>
-          </div>
-        </Hover>
-      </ReactHover>
+                  : (
+                    <button
+                      className="jump-button"
+                      onClick={(e: any): void => {
+                        e.stopPropagation();
+                        dispatch(changeSlider(index));
+                        dispatch(changeView(index));
+                      }}
+                      tabIndex={index}
+                      type="button"
+                    >
+                      Jump
+                    </button>
+                  )
+              }
+            </div>
+          </Trigger>
+          <Hover type="hover" />
+        </ReactHover>
+      </div>
     </div>
   );
 };

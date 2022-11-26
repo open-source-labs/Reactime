@@ -1,15 +1,26 @@
 .travel-container {
-	background: linear-gradient(
-		90deg,
-		rgba(41, 41, 41, 1) 0%,
-		rgba(51, 51, 51, 1) 50%,
-		rgba(41, 41, 41, 1) 100%
-	);
-	border-color: $border-color;
+	// background: linear-gradient(
+	// 	90deg,
+	// 	rgba(41, 41, 41, 1) 0%,
+	// 	rgba(51, 51, 51, 1) 50%,
+	// 	rgba(41, 41, 41, 1) 100%
+	// );
+	// border-color: $border-color;
+	// display: flex;
+	// flex-direction: row;
+	// align-items: center;
+	// justify-content: space-around;
+
 	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-around;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    border: none;
+    margin-top: 18px;
+}
+
+.visx-group{
+	margin-top: 10px;
 }
 
 
