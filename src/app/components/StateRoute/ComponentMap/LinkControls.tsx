@@ -89,8 +89,8 @@ export default function LinkControls({
         disabled={layout === 'polar'}
         style={dropDownStyle}
       >
-        <option value="horizontal">Horizontal</option>
         <option value="vertical">Vertical</option>
+        <option value="horizontal">Horizontal</option>
       </select>
       &nbsp;&nbsp;
 
