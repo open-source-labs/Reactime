@@ -47,7 +47,7 @@ export default function ComponentMap({
 }: LinkTypesProps): JSX.Element {
   // importing custom hooks for the selection tabs.
   const [layout, setLayout] = useState('cartesian');
-  const [orientation, setOrientation] = useState('horizontal');
+  const [orientation, setOrientation] = useState('vertical');
   const [linkType, setLinkType] = useState('diagonal');
   const [stepPercent, setStepPercent] = useState(10);
   const [Tooltip, setTooltip] = useState(false);
