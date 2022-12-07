@@ -44,9 +44,9 @@ export default mode => {
         prevState => {
           Object.keys(prevState).forEach(key => {
             // the if conditional below does not appear to ever be reached if all states are defined - leaving code in just in case codebases do have undefined states
-            if (target.state[key] !== undefined) {
-              target.state[key] = undefined;
-            }
+            // if (target.state[key] !== undefined) {
+            //   target.state[key] = undefined;
+            // }
           });
           return target.state;
         },
