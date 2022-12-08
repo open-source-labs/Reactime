@@ -1,6 +1,9 @@
 import Tree from '../tree';
 import { networkInterfaces } from 'os';
 
+
+
+
 describe('Tree unit test', () => {
   const newTree = new Tree({});
 
@@ -30,6 +33,8 @@ describe('Tree unit test', () => {
   });
 
   /**
+   *
+   * making sure to adhere to ts practices when goign through tests
    *
    * ^^
    * the tree should have initial values of state,
@@ -62,9 +67,9 @@ describe('Tree unit test', () => {
   });
 
   describe('Adding sibling', () => {
-    let newTree = new Tree({});
-    let returnChild = newTree.addChild('stateful', 'child', {}, null);
-    let returnSibling = returnChild.addSibling('stateful', 'child', {}, null);
+    // const newTree = new Tree({});
+    const returnChild = newTree.addChild('stateful', 'child', {}, null);
+    const returnSibling = returnChild.addSibling('stateful', 'child', {}, null);
 
     it('the tree now has 2 children', () => {
       expect(newTree.children.length).toBe(2);
@@ -81,11 +86,17 @@ describe('Tree unit test', () => {
     })  
   })
 
+
+
+  // review this test 
+  // returnSibling not used?
+  // Check Test
+
   describe('Copy & clean tree', () => {
-    let newTree = new Tree({});
-    let returnChild = newTree.addChild('stateful', 'child', {}, null);
-    let returnSibling = returnChild.addSibling('stateful', 'child', {}, null);
-    let copy = newTree.cleanTreeCopy();
+    // const newTree = new Tree({});
+    const returnChild = newTree.addChild('stateful', 'child', {}, null);
+    const returnSibling = returnChild.addSibling('stateful', 'child', {}, null);
+    const copy = newTree.cleanTreeCopy();
     it('its copy has 2 children', () => {
       expect(copy.children.length).toEqual(2);
     })
