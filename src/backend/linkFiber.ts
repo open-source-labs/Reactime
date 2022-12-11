@@ -184,6 +184,7 @@ function createTree(
   } = currentFiber;
 
 // check to see if we can get the information we were looking for
+// need to figure out what tag is
   if (tag === 5) {
     try {
       if (memoizedProps.children[0]._owner?.memoizedProps !== undefined) {

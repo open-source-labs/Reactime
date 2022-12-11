@@ -8,12 +8,16 @@ import Buttons from "./Components/Buttons";
 
 const root = document.getElementById("root");
 
+const Context = React.createContext({});
+
 ReactDOM.render(
     <BrowserRouter>
+      <Context.Provider value={{ bullshit: 'bullshit' }}>
       <Nav />
       <Routes>
         <Route path="/tictactoe" element={<Board />}/>
         <Route path="/" element={<Home />}/>
         <Route path="/buttons" element={<Buttons />}/>
       </Routes>
+      </Context.Provider>
     </BrowserRouter>, root);
