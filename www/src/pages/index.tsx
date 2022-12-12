@@ -4,7 +4,7 @@ import Link from "next/link";
 import LandingPage from "./components/LandingPage";
 import NavBar from "./components/NavBar";
 import Blogs from "./components/Blogs";
-
+import FeatureSlider from './components/FeatureSlider'
 import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
@@ -12,6 +12,7 @@ const Home: NextPage = () => {
 
   return (
     <>
+      <FeatureSlider/>
       <NavBar />
       <LandingPage />
       <Blogs />
