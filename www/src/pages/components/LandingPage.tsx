@@ -133,7 +133,7 @@ export default function LandingPage() {
                       What's new
                     </span>
                     <span className="inline-flex items-center space-x-1 text-sm font-medium text-rose-500">
-                      <span>Just shipped version 0.1.0</span>
+                      <span>Just shipped version 17.0.0</span>
                       <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
                     </span>
                   </a>
