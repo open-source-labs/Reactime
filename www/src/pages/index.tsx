@@ -12,7 +12,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <FeatureSlider/>
+      {/* <FeatureSlider/>                     */}
       <NavBar />
       <LandingPage />
       <Blogs />
