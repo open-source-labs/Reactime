@@ -20,7 +20,7 @@ const posts = [
   {
     title: 'Time-Traveling Through React State',
     href: 'https://rxlina.medium.com/time-traveling-through-react-state-with-reactime-9-0-371dbdc99319',
-    category: { name: 'React', href: '#' },
+    category: { name: 'React', href: 'https://medium.com/tag/react' },
     description:
       'Reactime is a Chrome extension and time-travel debugger for React that allows developers to record, track, and visualize state changes. Reactime leverages React’s core reconciliation... ',
     date: 'Oct 7, 2021',
@@ -36,21 +36,20 @@ const posts = [
     },
   },
   {
-    title: 'Open Source DeBugging Tool for React',
-    href: 'https://betterprogramming.pub/time-traveling-state-with-reactime-6-0-53fdc3ae2a20',
-    category: { name: 'Better Programming', href: '#' },
-    description:
-      'State management is a crucial part of developing efficient and performant React applications. Developers know that managing state can become unmanageable as an application scales... ',
-    date: 'Oct 21, 2020',
-    datetime: '2020-10-21',
+    title: 'What time is it? Reactime!',
+    href: 'https://medium.com/@robbytiptontol/inter-route-time-travel-with-reactime-d84cd55ec73b',
+    category: { name: 'React Devtools', href: 'https://medium.com/tag/react-devtools' },
+    description: 'Reactime is a debugging tool that lets developers take snapshots of an application\’s state data as well as time-travel through these snapshots. The snapshots display React...',
+    date: 'Jun 16, 2022',
+    datetime: '2022-06-16',
     imageUrl:
       'https://images.unsplash.com/photo-1492724441997-5dc865305da7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80',
-    readingTime: '11 min',
+    readingTime: '9 min',
     author: {
-      name: 'Vincent Nguyen',
-      href: 'https://medium.com/@CSVince',
+      name: 'Robby Tipton',
+      href: 'https://medium.com/@robbytiptontol',
       imageUrl:
-        'https://media-exp1.licdn.com/dms/image/C5603AQEsAdcE-e7kZg/profile-displayphoto-shrink_200_200/0/1604336802983?e=1676505600&v=beta&t=yK3edcZkpG4Yhvr4iavafRs1SBEQgza-4IRJncRV0X4',
+        'https://miro.medium.com/fit/c/96/96/1*pi-RH2LRvsZA9vLZTvY2mg.jpeg',
     },
   },
 ]
