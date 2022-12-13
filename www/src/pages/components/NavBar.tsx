@@ -31,11 +31,8 @@ function NavBarSytling() {
 
 
   return (
-<<<<<<< HEAD
+
     <Disclosure as="nav" className="bg-[#333333] fixed z-10 w-screen drop-shadow-20px">
-=======
-    <Disclosure as="nav" className={NavBarSytling()}>
->>>>>>> b0762547e2888aed98ea28a1845973415410bdf6
       {({ open }) => (
         <>
           <div className="mx-auto max-w9xl px-4 sm:px-6 lg:px-8">

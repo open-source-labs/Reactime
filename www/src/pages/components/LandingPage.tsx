@@ -120,14 +120,7 @@ export default function LandingPage():any {
         <FeaturesSection />
         <TeamSection />
       </div>
-
-
-<<<<<<< HEAD
-      </main>``
-=======
-      </main>
->>>>>>> b0762547e2888aed98ea28a1845973415410bdf6
-
+    </main>
       {/* Footer section */}
       <footer className="mt-8 bg-[#333333] gray-900 sm:mt-8">
         <div className="mx-auto max-w-md overflow-hidden py-3 pb-10 px-4 sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">

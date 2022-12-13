@@ -12,13 +12,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-<<<<<<< HEAD
-      {/* <FeatureSlider/>                     */}
-=======
-
->>>>>>> b0762547e2888aed98ea28a1845973415410bdf6
       <NavBar />
-
       <LandingPage />
       {/* <FeatureSlider/> */}
       {/* <Blogs /> */}
