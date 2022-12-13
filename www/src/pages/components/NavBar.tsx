@@ -25,11 +25,11 @@ useEffect(() => {
     };
 }, []);
 
-function NavBarSytling() {
+function NavBarSytle() {
   return scrollPosition === 0 ? "sticky top-0 bg-gray-50 w-screen z-20 border-b" : "sticky top-0 bg-gray-50 w-screen z-20 shadow-xl";
 }
   return (
-    <Disclosure as="nav" className="bg-[#333333] fixed z-10 w-screen drop-shadow-20px">
+    <Disclosure as="nav" className={NavBarSytle}>
       {({ open }) => (
         <>
           <div className="mx-auto max-w9xl px-4 sm:px-6 lg:px-8">
