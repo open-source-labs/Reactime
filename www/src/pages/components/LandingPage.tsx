@@ -1,11 +1,13 @@
 import { ChevronRightIcon, StarIcon } from '@heroicons/react/20/solid';
 import { string } from 'prop-types';
 import TeamSection from '../components/TeamSection';
+import FeaturesSection from '../components/FeaturesSection';
 import Image from 'next/image';
+import Blogs from './Blogs';
 
 export default function LandingPage():any {
   return (
-    <div className="bg-white">
+    <div className="bg-gray-50">
       <main>
         {/* Hero section */}
         <div className="overflow-hidden pt-8 sm:pt-12 lg:relative lg:py-48">
@@ -114,11 +116,17 @@ export default function LandingPage():any {
         </div>
 
       <div className="relative mt-16">
+        <Blogs />
+        <FeaturesSection />
         <TeamSection />
       </div>
 
 
+<<<<<<< HEAD
       </main>``
+=======
+      </main>
+>>>>>>> b0762547e2888aed98ea28a1845973415410bdf6
 
       {/* Footer section */}
       <footer className="mt-8 bg-[#333333] gray-900 sm:mt-8">
