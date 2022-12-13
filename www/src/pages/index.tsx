@@ -12,10 +12,12 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <FeatureSlider/>
+
       <NavBar />
+
       <LandingPage />
-      <Blogs />
+      {/* <FeatureSlider/> */}
+      {/* <Blogs /> */}
     </>
   );
 };
