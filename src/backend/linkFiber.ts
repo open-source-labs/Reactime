@@ -202,7 +202,7 @@ function createTree(
 // check to see if we can get the information we were looking for
   if (tag === 5) {
     try {
-      if (memoizedProps.children[0]._owner?.memoizedProps !== undefined) {
+      if (memoizedProps.children && memoizedProps.children[0]?._owner?.memoizedProps !== undefined) {
         const propsData = memoizedProps.children[0]._owner.memoizedProps;
         const newPropData = convertDataToString(propsData, tree.componentData.props ? tree.componentData.props : null);
         tree.componentData = {
@@ -237,7 +237,6 @@ function createTree(
   // if the component uses the useContext hook, we want to grab the co  text object and add it to the componentData object for that fiber
   if (tag === 0 && _debugHookTypes) {
       componentData.context = convertDataToString(dependencies?.firstContext?.memoizedValue, null);
-      console.log(convertDataToString(componentData.context, null), componentData.context);
   }
   // Check if node is a stateful class component
   if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
