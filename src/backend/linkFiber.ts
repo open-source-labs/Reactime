@@ -183,6 +183,32 @@ function createTree(
     treeBaseDuration,
   } = currentFiber;
 
+
+//   if (currentFiber.tag === 10) {
+//     const queue = [currentFiber];
+//     const result = [];
+//     while (queue.length > 0) {
+//       const tempFiber = queue.shift();
+//       if (tempFiber.tag === 0 && tempFiber._debugHookTypes) result.push(tempFiber);
+//       if (tempFiber.sibling) {
+//         queue.push(tempFiber.sibling);
+//       }
+//       if (tempFiber.child) {
+//         queue.push(tempFiber.child);
+//       }
+//   }
+//   console.log('test', result);
+// }
+
+  // if(currentFiber.tag === 10) {
+  //   let stack = [currentFiber];
+
+  //   while(stack > 0) {
+  //     let node = stack.pop();
+
+
+  //   }
+  // }
 // check to see if we can get the information we were looking for
   if (tag === 5) {
     try {
@@ -243,6 +269,7 @@ function createTree(
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseHooks(memoizedState);
       const hooksNames = getHooksNames(elementType.toString());
+
 
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(

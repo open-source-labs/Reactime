@@ -174,4 +174,6 @@ export type Fiber = {
   // This value bubbles up during the "complete" phase.
   // This field is only set when the enableProfilerTimer flag is enabled.
   treeBaseDuration?: number;
+
+  _debugHookTypes?: string[] | null;
 };
