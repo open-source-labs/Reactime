@@ -181,15 +181,15 @@ function createTree(
     actualStartTime,
     selfBaseDuration,
     treeBaseDuration,
+    dependencies,
+    _debugHookTypes,
   } = currentFiber;
-
 
 //   if (currentFiber.tag === 10) {
 //     const queue = [currentFiber];
-//     const result = [];
 //     while (queue.length > 0) {
 //       const tempFiber = queue.shift();
-//       if (tempFiber.tag === 0 && tempFiber._debugHookTypes) result.push(tempFiber);
+//       if (tempFiber.tag === 0) console.log(tempFiber);
 //       if (tempFiber.sibling) {
 //         queue.push(tempFiber.sibling);
 //       }
@@ -197,18 +197,8 @@ function createTree(
 //         queue.push(tempFiber.child);
 //       }
 //   }
-//   console.log('test', result);
 // }
 
-  // if(currentFiber.tag === 10) {
-  //   let stack = [currentFiber];
-
-  //   while(stack > 0) {
-  //     let node = stack.pop();
-
-
-  //   }
-  // }
 // check to see if we can get the information we were looking for
   if (tag === 5) {
     try {
@@ -235,6 +225,7 @@ function createTree(
     selfBaseDuration?: number;
     treeBaseDuration?: number;
     props?: any,
+    context?: any,
   } = {};
   let componentFound = false;
 
@@ -243,6 +234,11 @@ function createTree(
     componentData.props = convertDataToString(memoizedProps, null);
   }
 
+  // if the component uses the useContext hook, we want to grab the co  text object and add it to the componentData object for that fiber
+  if (tag === 0 && _debugHookTypes) {
+      componentData.context = convertDataToString(dependencies?.firstContext?.memoizedValue, null);
+      console.log(convertDataToString(componentData.context, null), componentData.context);
+  }
   // Check if node is a stateful class component
   if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
     // Save component's state and setState() function to our record for future
