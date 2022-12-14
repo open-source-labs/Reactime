@@ -52,7 +52,7 @@ export default function FeaturesSection() {
           What makes Reactime so great?
         </p>
         <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
-        Reactime is chock full of features that make your life easier as a developer. From time-travel debugging to state snapshot display, check out how using Reactime will improve your developer experience.
+        Reactime iscd full of features that make your life easier as a developer. From time-travel debugging to state snapshot display, check out how using Reactime will improve your developer experience.
         </p>
         <div className="mt-20">
           <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
