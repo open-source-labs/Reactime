@@ -47,7 +47,7 @@ export default function FeaturesSection() {
   return (
     <div className="relative bg-white py-24 sm:py-32 lg:py-40">
       <div className="mx-auto max-w-md px-6 text-center sm:max-w-3xl lg:max-w-7xl lg:px-8">
-        <h2 className="text-lg font-semibold text-indigo-600">Core Features</h2>
+        <h2 className="text-lg font-semibold text-rose-500">Core Features</h2>
         <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
           What makes Reactime so great?
         </p>
@@ -61,7 +61,7 @@ export default function FeaturesSection() {
                 <div className="flow-root rounded-lg bg-gray-50 px-6 pb-8 h-64">
                   <div className="-mt-6">
                     <div>
-                      <span className="inline-flex items-center justify-center rounded-xl bg-indigo-500 p-3 shadow-lg">
+                      <span className="inline-flex items-center justify-center rounded-xl bg-rose-500 p-3 shadow-lg">
                         <feature.icon className="h-8 w-8 text-white" aria-hidden="true" />
                       </span>
                     </div>
