@@ -62,7 +62,7 @@ export default function Blogs() {
       </div>
       <div className="relative mx-auto max-w-7xl">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">From the blog</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">From the Blog</h2>
           <p className="mx-auto mt-3 max-w-2xl text-xl text-gray-500 sm:mt-4">
             See the blogs from the most recent updates and to the past years!
           </p>
@@ -75,7 +75,7 @@ export default function Blogs() {
               </div>
               <div className="flex flex-1 flex-col justify-between bg-white p-6">
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-indigo-600">
+                  <p className="text-sm font-medium text-rose-500">
                     <a href={post.category.href} className="hover:underline">
                       {post.category.name}
                     </a>

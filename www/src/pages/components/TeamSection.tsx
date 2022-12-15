@@ -85,8 +85,8 @@ function replace(e: React.SyntheticEvent<HTMLImageElement>): void{
             <div className="space-y-5 sm:mx-auto sm:max-w-xl sm:space-y-4 lg:max-w-5xl">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Our Contributors</h2>
               <p className="text-xl text-gray-500">
-                Risus velit condimentum vitae tincidunt tincidunt. Mauris ridiculus fusce amet urna nunc. Ut nisl ornare
-                diam in.
+                {/* Risus velit condimentum vitae tincidunt tincidunt. Mauris ridiculus fusce amet urna nunc. Ut nisl ornare
+                diam in. */}
               </p>
             </div>
             <ul
@@ -100,7 +100,7 @@ function replace(e: React.SyntheticEvent<HTMLImageElement>): void{
                     <div className="space-y-2">
                       <div className="text-xs font-medium lg:text-sm">
                         <h3>{person[0]}</h3>
-                        <a href={`https://github.com/${person[1]}`} className="text-indigo-600">{person[1]}</a>
+                        <a href={`https://github.com/${person[1]}`} className="text-rose-500">{person[1]}</a>
                       </div>
                     </div>
                   </div>
