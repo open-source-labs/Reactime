@@ -40,7 +40,7 @@
 </p>
 
 <p align="center">
-  <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.io">Website</a> • <a href="#read-more">Read More</a>
+  <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.dev">Website</a> • <a href="#read-more">Read More</a>
 </p>
 
 <b>Reactime 16.0</b> presents the codebase with substantial, much-needed
