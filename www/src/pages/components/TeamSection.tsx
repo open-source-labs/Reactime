@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { useState } from 'react';
 
 const people: string[][] = [
     ["Alex Gomez", "alexgomez9"],
@@ -76,7 +77,7 @@ function replace(e: React.SyntheticEvent<HTMLImageElement>): void{
     e.currentTarget.onerror = null;
     e.currentTarget.src = "/profileFallback.png"
 }
-  
+
   export default function People(): JSX.Element {
     return (
       <div className="bg-white">
@@ -85,31 +86,49 @@ function replace(e: React.SyntheticEvent<HTMLImageElement>): void{
             <div className="space-y-5 sm:mx-auto sm:max-w-xl sm:space-y-4 lg:max-w-5xl">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Our Contributors</h2>
               <p className="text-xl text-gray-500">
-                Risus velit condimentum vitae tincidunt tincidunt. Mauris ridiculus fusce amet urna nunc. Ut nisl ornare
-                diam in.
+                All of the people who make Reactime awesome!
               </p>
             </div>
             <ul
               role="list"
               className="mx-auto grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-4 md:gap-x-6 lg:max-w-5xl lg:gap-x-8 lg:gap-y-12 xl:grid-cols-8"
             >
-              {people.map((person) => person && (
-                <li key={person[1]} >
-                  <div className="space-y-4">
-                    <img className="mx-auto h-20 w-20 rounded-full lg:h-24 lg:w-24" src={`https://github.com/${person[1]}.png`} onError={(e) => replace(e)} />
-                    <div className="space-y-2">
-                      <div className="text-xs font-medium lg:text-sm">
-                        <h3>{person[0]}</h3>
-                        <a href={`https://github.com/${person[1]}`} className="text-indigo-600">{person[1]}</a>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              ))}
+              <>
+                {people.map((person)=>(
+                  <Profile key={person[1]} profile={person[1]} name={person[0]}/>
+                ))}
+              </>
             </ul>
           </div>
         </div>
       </div>
     )
   }
-  
+  type profileType = {
+    profile: string | undefined,
+    name: string | undefined,
+  }
+  function Profile({profile, name}: profileType) {
+    const [imageError, setImageError] = useState(false);
+    return (
+      <div className="space-y-4">
+        <Image
+              width={100}
+              height={100}
+              src={imageError ? "/profileFallback.png" : 'https://github.com/' + profile + '.png'}
+              className="mx-auto h-20 w-20 rounded-full lg:h-24 lg:w-24"
+              onError={(e) => setImageError(true)}
+              alt="missing-profile-image"
+          />
+        <div className="space-y-2">
+          <div className="text-xs font-medium lg:text-sm">
+            <h3>{name}</h3>
+            <a target="_blank" href={`https://github.com/${profile}`} className="text-rose-500">{profile}</a>
+          </div>
+        </div>
+      </div>
+    )
+}
+
+
+
