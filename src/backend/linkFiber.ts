@@ -265,6 +265,7 @@ function createTree(
       const hooksStates = traverseHooks(memoizedState);
       const hooksNames = getHooksNames(elementType.toString());
 
+
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(
           state.state,
