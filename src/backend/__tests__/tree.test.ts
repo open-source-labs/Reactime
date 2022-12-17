@@ -1,8 +1,4 @@
 import Tree from '../tree';
-import { networkInterfaces } from 'os';
-
-
-
 
 describe('Tree unit test', () => {
   const newTree = new Tree({});
@@ -73,32 +69,30 @@ describe('Tree unit test', () => {
 
     it('the tree now has 2 children', () => {
       expect(newTree.children.length).toBe(2);
-    })
+    });
 
     it('both of the children has the parent as this tree', () => {
       expect(newTree.children[0]).toEqual(returnChild);
       expect(newTree.children[1]).toEqual(returnSibling);
-    })
+    });
 
     it('both of the children has the parent as this tree', () => {
       expect(returnChild.parent).toEqual(newTree);
       expect(returnSibling.parent).toEqual(newTree);
-    })  
-  })
+    });
+  });
 
-
-
-  // review this test 
+  // review this test
   // returnSibling not used?
   // Check Test
 
   describe('Copy & clean tree', () => {
     // const newTree = new Tree({});
     const returnChild = newTree.addChild('stateful', 'child', {}, null);
-    const returnSibling = returnChild.addSibling('stateful', 'child', {}, null);
+    returnChild.addSibling('stateful', 'child', {}, null);
     const copy = newTree.cleanTreeCopy();
     it('its copy has 2 children', () => {
       expect(copy.children.length).toEqual(2);
-    })
-  })
-})
+    });
+  });
+});

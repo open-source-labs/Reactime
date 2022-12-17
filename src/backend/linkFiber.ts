@@ -181,13 +181,29 @@ function createTree(
     actualStartTime,
     selfBaseDuration,
     treeBaseDuration,
+    dependencies,
+    _debugHookTypes,
   } = currentFiber;
+
+//   if (currentFiber.tag === 10) {
+//     const queue = [currentFiber];
+//     while (queue.length > 0) {
+//       const tempFiber = queue.shift();
+//       if (tempFiber.tag === 0) console.log(tempFiber);
+//       if (tempFiber.sibling) {
+//         queue.push(tempFiber.sibling);
+//       }
+//       if (tempFiber.child) {
+//         queue.push(tempFiber.child);
+//       }
+//   }
+// }
 
 // check to see if we can get the information we were looking for
 // need to figure out what tag is
   if (tag === 5) {
     try {
-      if (memoizedProps.children[0]._owner?.memoizedProps !== undefined) {
+      if (memoizedProps.children && memoizedProps.children[0]?._owner?.memoizedProps !== undefined) {
         const propsData = memoizedProps.children[0]._owner.memoizedProps;
         const newPropData = convertDataToString(propsData, tree.componentData.props ? tree.componentData.props : null);
         tree.componentData = {
@@ -210,6 +226,7 @@ function createTree(
     selfBaseDuration?: number;
     treeBaseDuration?: number;
     props?: any,
+    context?: any,
   } = {};
   let componentFound = false;
 
@@ -218,6 +235,10 @@ function createTree(
     componentData.props = convertDataToString(memoizedProps, null);
   }
 
+  // if the component uses the useContext hook, we want to grab the co  text object and add it to the componentData object for that fiber
+  if (tag === 0 && _debugHookTypes) {
+      componentData.context = convertDataToString(dependencies?.firstContext?.memoizedValue, null);
+  }
   // Check if node is a stateful class component
   if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
     // Save component's state and setState() function to our record for future
@@ -244,6 +265,7 @@ function createTree(
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseHooks(memoizedState);
       const hooksNames = getHooksNames(elementType.toString());
+
 
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(

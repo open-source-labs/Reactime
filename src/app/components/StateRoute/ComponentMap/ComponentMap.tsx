@@ -153,6 +153,19 @@ export default function ComponentMap({
     return propsFormat;
   };
 
+  const formatContext = data => {
+    const propsFormat = [];
+    const nestedObj = [];
+    for (const key in data) {
+      propsFormat.push(
+        <p className="stateprops">
+          {`${key}: ${data[key]}`}
+        </p>,
+      );
+    }
+    return propsFormat;
+  };
+
   const formatState = state => {
     if (state === 'stateless') return ['stateless'];
     return ['stateful'];
@@ -378,10 +391,15 @@ export default function ComponentMap({
               {formatState(tooltipData.state)}
             </div>
             <div style={React.scrollStyle}>
-              <div className="props">
-                Props:
+              <div className="tooltipWrapper">
+                <h2>Props:</h2>
                 {formatProps(tooltipData.componentData.props)}
               </div>
+              {tooltipData.componentData.context &&
+              <div className="tooltipWrapper">
+                <h2>Context:</h2>
+                {formatContext(tooltipData.componentData.context)}
+              </div>}
             </div>
           </div>
         </TooltipInPortal>

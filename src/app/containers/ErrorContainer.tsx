@@ -84,11 +84,11 @@ function ErrorContainer(): any {
       </div>
       <br />
       <a
-        href="https://reactime.io/"
+        href="https://reactime.dev/"
         target="_blank"
         rel="noopener noreferrer"
       >
-        Please visit reactime.io to more info.
+        Please visit reactime.dev to more info.
       </a>
     </div>
   );
