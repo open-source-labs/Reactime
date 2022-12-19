@@ -17,9 +17,6 @@ import routes from './routes';
  */
 
 /* eslint-disable no-param-reassign */
-// hookState store?
-// are lines 42 - 56 even needed??
-// add event listener yelling at us
 import componentActionsRecord from './masterState';
 
 const circularComponentTable = new Set();
