@@ -65,7 +65,8 @@ describe('unit testing for timeJump.ts', () => {
     timeJump = timeJumpRequire(mode);
   });
   test('calling the initial require should return a function', () => {
-    expect(typeof timeJumpRequire).toBe('function');
+    const funcDef = timeJumpRequire;
+    expect(typeof funcDef).toBe('function');
   });
 
   // xdescribe('testing iteration through snapshot tree', () => {

@@ -17,7 +17,6 @@ import routes from './routes';
  */
 
 /* eslint-disable no-param-reassign */
-
 import componentActionsRecord from './masterState';
 
 const circularComponentTable = new Set();
