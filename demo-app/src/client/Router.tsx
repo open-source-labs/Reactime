@@ -8,7 +8,6 @@ import Buttons from "./Components/Buttons";
 
 const root = document.getElementById("root");
 
-
 ReactDOM.render(
     <BrowserRouter>
       <Nav />
