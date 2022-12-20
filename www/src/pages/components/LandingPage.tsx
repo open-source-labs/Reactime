@@ -7,15 +7,15 @@ import Blogs from './Blogs';
 import { useState } from 'react';
 import { trpc } from '../../utils/trpc';
 
-export default function LandingPage(): JSX.Element {
+export default function LandingPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const { mutate } = trpc.user.createUser.useMutation();
   
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     // grab the information of name and email
     // bundle those together to be an object to be sent to backend
-    const { mutate } = trpc.user.createUser.useMutation();
     mutate({name, email});
   }
 
