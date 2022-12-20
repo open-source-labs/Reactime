@@ -4,9 +4,23 @@ import TeamSection from '../components/TeamSection';
 import FeaturesSection from '../components/FeaturesSection';
 import Image from 'next/image';
 import Blogs from './Blogs';
+import { useState } from 'react';
+import { trpc } from '../../utils/trpc';
 
-export default function LandingPage():any {
+export default function LandingPage(): JSX.Element {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    // grab the information of name and email
+    // bundle those together to be an object to be sent to backend
+    const { mutate } = trpc.user.createUser.useMutation();
+    mutate({name, email});
+  }
+
   return (
+    <>
     <div className="bg-gray-50">
       <main>
         {/* Hero section */}
@@ -42,6 +56,18 @@ export default function LandingPage():any {
                 </div>
                 <form action="#" className="mt-12 sm:flex sm:w-full sm:max-w-lg">
                   <div className="min-w-0 flex-1">
+                    <label htmlFor="name" className="sr-only">
+                      Name
+                    </label>
+                    <input
+                      id="name"
+                      type="text"
+                      className="block w-full rounded-md border border-gray-300 px-5 mb-2 py-3 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:border-rose-500 focus:ring-rose-500"
+                      placeholder="Enter your name"
+                      required
+                      value = {name}
+                      onChange ={(e) => {setName(e.target.value)}}
+                    />
                     <label htmlFor="hero-email" className="sr-only">
                       Email address
                     </label>
@@ -50,12 +76,16 @@ export default function LandingPage():any {
                       type="email"
                       className="block w-full rounded-md border border-gray-300 px-5 py-3 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:border-rose-500 focus:ring-rose-500"
                       placeholder="Enter your email"
+                      required
+                      value = {email}
+                      onChange = {(e) => {setEmail(e.target.value)}}
                     />
                   </div>
                   <div className="mt-4 sm:mt-0 sm:ml-3">
                     <button
                       type="submit"
-                      className="block w-full rounded-md border border-transparent bg-rose-500 px-5 py-3 text-base font-medium text-white shadow hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 sm:px-10"
+                      className="block w-full rounded-md border border-transparent bg-rose-500 mt-8 px-5 py-3 text-base font-medium text-white shadow hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 sm:px-10"
+                      onClick={(e)=> handleSubmit(e)}
                     >
                       Notify me
                     </button>
@@ -130,5 +160,6 @@ export default function LandingPage():any {
         </div>
       </footer>
     </div>
+  </>
   )
 }

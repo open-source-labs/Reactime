@@ -6,17 +6,18 @@ export const userRouter = router({
   createUser: publicProcedure
     .input(z.object({ 
       name: z.string(), 
-      email: z.string().email()})
+      email: z.string().email()}),
+      
     ) // name and email
-    .mutation(({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       // we want to add to our database with the name, email, admin defaulted to false as column values
-      return ctx.prisma.user.create({
+      return await ctx.prisma.user.create({
         data: {
           name: input.name,
           email: input.email,
         }
       })
-    }),
+    })
 });
 
 
