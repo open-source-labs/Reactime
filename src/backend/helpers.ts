@@ -106,9 +106,11 @@ export const getHooksNames = (elementType: string): Array<string> => {
             // Parse destructured statements pair
             if (hook.id.type === 'ArrayPattern') {
               hook.id.elements.forEach(hook => {
-                statements.push(`_useWildcard${tsCount}`);
-                statements.push(hook.name);
-                tsCount += 1;
+                if (hook !== null) {
+                  statements.push(`_useWildcard${tsCount}`);
+                  statements.push(hook.name);
+                  tsCount += 1;
+                }
               });
               // Process hook function invocation ?
             } else {
