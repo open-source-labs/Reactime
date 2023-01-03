@@ -137,7 +137,7 @@ export default function LandingPage() {
               <div className="relative -mr-40 pl-4 sm:mx-auto sm:max-w-3xl sm:px-0 lg:h-full lg:max-w-none lg:pl-12">
                 <img
                   className="w-full rounded-md shadow-xl ring-1 ring-black ring-opacity-5 lg:h-full lg:w-auto lg:max-w-none"
-                  src="https://i.imgur.com/CyIU9Td.jpg"
+                  src="/RTScreen.png"
                   alt=""
                 />
               </div>
