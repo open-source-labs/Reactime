@@ -15,13 +15,15 @@ import { trpc } from "../utils/trpc";
 const secret: NextPage = () => {
   return (
     <>
-      <input
-        type="password"
-        required
-        placeholder="password"
-        className="block w-40 rounded-md border border-gray-300 px-5 py-3 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:border-rose-500 focus:ring-rose-500">
-      </input>
-      <button>Submit</button>
+      <div className = 'flex h-screen items-center justify-center'>
+        <input
+          type="password"
+          required
+          placeholder="password"
+          className="block w-50 rounded-md border border-gray-300 px-5 py-3 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:border-rose-500 focus:ring-rose-500 mr-8">
+        </input>
+        <button className="blockrounded-md border rounded border-transparent bg-rose-500 px-5 py-3 text-base font-medium text-white shadow hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 sm:px-10">Submit</button>
+      </div>
     </>
   );
 };
