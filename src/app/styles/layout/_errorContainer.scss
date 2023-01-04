@@ -1,14 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+* {
+	font-family: 'Roboto', sans-serif;
+}
 .error-container {
-  height: 100%;
-  margin: 0 auto;
-  background-color: $brand-color;
-  overflow: hidden;
+	height: 100%;
+	margin: 0 auto;
+	background-color: $brand-color;
+	overflow: hidden;
+	font: 'Roboto', sans-serif;
 
-  display: grid;
-  justify-content: center;
-  a {
-    color: white;
-    margin-top: 5%;
-    height: 3%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	a {
+		color: white;
+		margin-top: 1%;
+		height: 3%;
+	}
+	img {
+		text-align: center;
+		padding-top: 5%;
+		padding-bottom: 1.5%;
+	}
+	p {
+		padding: 0;
+		text-align: center;
+		margin: 2% 0;
+	}
+	.loaderChecks {
+		padding: 1%;
+		border: 1px solid;
+		border-style: solid;
+		border-color: white;
+		display: grid;
+		grid-template-columns: 4fr 1fr;
+		grid-template-rows: repeat(3, 1fr);
+		grid-column-gap: .5%;
+		grid-row-gap: .5%;
+		justify-content: center;
+		align-items: center;
+	}
+	h2 {
+		padding-left: 2%;
+		padding-right: 2%;
+	}
+	.check, .fail{
+		font-size: 3em;
+		color: green;
+		margin: 0;
+		align-self: center;
+		justify-self: center;
+	}
+	.fail{
+		color: red;
+	}
+	.errorMsg{
+		text-align: center;
+		font-weight: bold;
+	}
+
+	.launchContentButton {
+		background: $blue-brand;
+    color: $brand-color;
+    margin: 3px;
+		padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid rgb(36, 37, 41);
+	}
+
+	.launchContentButton:hover {
+    background: $light-background-color;
+  }
+
+	.launchContentButton:active {
+		box-shadow: 1px 1px 10px black;
   }
 }

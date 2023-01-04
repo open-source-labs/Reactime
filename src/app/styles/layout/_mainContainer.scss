@@ -4,3 +4,12 @@
   background-color: $brand-color;
   overflow: hidden;
 }
+
+.state-container-container{
+  display: contents;
+}
+
+.split {
+  display: flex;
+  overflow-y: auto;
+}

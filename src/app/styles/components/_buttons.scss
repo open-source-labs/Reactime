@@ -1,11 +1,83 @@
-.empty-button {
-  @extend %button-shared;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+.save-series-button {
+  padding: 3px;
+  outline: transparent;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-style: solid;
+  border-color: transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  line-height: 1.5em;
+  font: 400 14px 'Roboto', sans-serif;
+  // font-size: $button-text-size;
   width: 120px;
+  background: $red-color-gradient;
+  height: 30px;
+  position: absolute;
+  right: 3rem;
+
+  &.animate {
+    background: rgb(41, 164, 41);
+  }
+}
+
+.delete-button {
+  padding: 3px;
+  outline: transparent;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-style: solid;
+  border-color: transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  line-height: 1.5em;
+  font: 300 14px 'Roboto', sans-serif;
+  font-size: $button-text-size;
+  width: 120px;
+  background: $red-color-gradient;
+  height: 30px;
+
+  &.animate {
+    background: rgb(41, 164, 41);
+  }
+}
+
+.empty-button {
+  padding: 3px;
+  outline: transparent;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-style: solid;
+  border-color: transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  line-height: 1.5em;
+  font: 300 14px 'Roboto', sans-serif;
+  font-size: $button-text-size;
+  width: 120px;
+  background: #62d6fb;
+}
+
+.empty-button:hover {
+  color: black;
+  box-shadow: $box-shadow-red;
 }
 
 .state-dropdown {
-  width: 240px; 
-  margin-left: 20px; 
+  width: 240px;
+  margin-left: 20px;
+}
+
+.action-component:hover .time-button {
+  display: none;
 }
 
 .action-component:hover .jump-button {
@@ -14,64 +86,309 @@
   transition: opacity 300ms, transform 0.15s linear;
 }
 
+.time-button {
+  outline: none;
+  height: 20px;
+  margin-bottom: 8px;
+  width: 70px;
+  border: none;
+  border-radius: 3px;
+  background: $grey-color-gradient;
+  font: normal 11px 'Roboto', sans-serif;
+  color: #b0b0b0;
+}
+
 .jump-button {
-  @extend %button-shared;
-  width: 50px;
-  opacity: 0;
+  outline: none;
+  height: 20px;
+  margin-bottom: 8px;
+  width: 70px;
+  border: transparent;
+  border-radius: 3px;
+  background-color: #565a61;
+  font: normal 11px 'Roboto', sans-serif;
+  color: #b0b0b0;
   transform: rotateX(90deg);
   transition: opacity 300ms, transform 0.15s linear;
+  opacity: 0;
 }
 
 .jump-button:hover {
   // remove the blue border when button is clicked
-  background-color: $highlight-color;
+  color: white;
+  background-color: $fiery-rose;
+  cursor: pointer;
+}
+
+.current-location {
+  outline: none;
+  height: 20px;
+  margin-bottom: 8px;
+  width: 70px;
+  border: transparent;
+  border-radius: 3px;
+  font: normal 11px 'Roboto', sans-serif;
 }
 
 .empty-button:hover {
+  color: white;
   background-color: $highlight-color;
 }
 
 .play-button {
-  @extend %button-shared;
   width: 100px;
+  height: 25px;
   margin: 0 1% 0 2%;
+  color: $brand-color;
+  border-color: transparent;
+  background: $blue-color-gradient;
+  border-radius: 5px;
+}
+
+.play-button:hover {
+  background: $blue-color-gradient;
+  transform: translate3d(0, -3px, 0);
+  cursor: pointer;
 }
 
 .backward-button {
-  @extend %button-shared;
   width: 30px;
+  height: 25px;
   margin: 7px;
+  color: $brand-color;
+  border-color: transparent;
+  background: $blue-color-gradient;
+  border-radius: 5px;
 }
 
 .forward-button {
-  @extend %button-shared;
   width: 30px;
+  height: 25px;
   margin: 7px;
+  color: $brand-color;
+  border-color: transparent;
+  background: $blue-color-gradient;
+  border-radius: 5px;
+}
+
+.play-button:focus,
+.backward-button:focus,
+.forward-button:focus {
+  outline: none;
+  box-shadow: $box-shadow-blue;
+}
+
+.forward-button:hover,
+.backward-button:hover {
+  background: $blue-color-gradient;
+  transform: translate3d(0, -3px, 0);
+  cursor: pointer;
 }
 
 .import-button,
+.howToUse-button,
 .export-button,
-.lock-button,
 .pause-button,
-.persist-button {
+.split-button {
   @extend %button-shared;
+  color: white;
+  border-color: transparent;
+  background: $blue-color-gradient;
+}
+
+.import-button:hover,
+.howToUse-button:hover,
+.export-button:hover,
+.pause-button:hover,
+.split-button:hover {
+  @extend %button-shared;
+  color: #62d6fb;
+  box-shadow: 1px 1px 2px 1px rgba(30, 86, 171, 0.25);
+  transform: translate3d(0, -3px, 0);
+}
+
+.svg-inline--fa {
+  color: $blue-brand;
+  margin-right: 0.75em;
+  display: inline-block;
+  font-size: inherit;
+  height: 0.75em;
+  overflow: visible;
+  vertical-align: -0.125em;
 }
 
 %button-shared {
+  padding: 5px;
   outline: none;
-  background-color: $brand-color;
-  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 20px;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 3px;
   cursor: pointer;
   line-height: 1.5em;
-  font: normal 13px monaco, Consolas, "Lucida Console", monospace, Arial, sans-serif;
+  font: 300 14px 'Roboto', sans-serif;
   font-size: $button-text-size;
+
+  background: $brand-color;
+  border-radius: 5px;
+  position: relative;
+  border: 1px solid #b8c4c240;
 
   @extend %disable-highlight;
 }
+
+// Save button
+.dropdown-dark {
+  background: #444;
+  border-color: #111111 #0a0a0a black;
+  background-image: -webkit-linear-gradient(
+    top,
+    transparent,
+    rgba(0, 0, 0, 0.4)
+  );
+  background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+  background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+  background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+  -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1),
+    0 1px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-dark:before {
+  border-bottom-color: #aaa;
+}
+
+.dropdown-dark:after {
+  border-top-color: #aaa;
+}
+
+.dropdown-dark .dropdown-select {
+  color: #aaa;
+  text-shadow: 0 1px black;
+  background: #444;
+  /* Fallback for IE 8 */
+}
+
+.dropdown-dark .dropdown-select:focus {
+  color: #ccc;
+}
+
+.dropdown-dark .dropdown-select > option {
+  background: #444;
+  text-shadow: 0 1px rgba(0, 0, 0, 0.4);
+}
+
+.MuiSelect-icon {
+  color: lightgrey !important;
+}
+
+.series-options-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 1rem;
+}
+
+.snapshotId-header {
+  font-size: 1rem;
+}
+
+.dropdown-and-delete-series-container {
+  display: flex;
+  align-items: center;
+}
+
+.close-button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.closebtn {
+  font-size: 20px;
+  color: #818181;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.closebtn:hover {
+  color: #f1f1f1;
+}
+
+.side-bar-button {
+  width: 80px;
+  height: 30px;
+  padding: 0 2rem;
+}
+
+/* sidebar button open and closing functionality */
+aside {
+  // width: 250px;
+  background: #242529;
+  color: #fff;
+  transition: width 1s;
+}
+
+.no-aside {
+  width: 30px;
+  margin-right: 15px;
+}
+
+.toggle {
+  // width: 40px;
+  // height: 10px;
+  display: block;
+  position: relative;
+  margin-top: 1rem;
+}
+
+/* toggle i handles arrow animation */
+.toggle i,
+.toggle i::after,
+.toggle i::before {
+  position: absolute;
+  width: 27px;
+  height: 4px;
+  border-radius: 4px;
+  transition: transform 0.15s;
+  background-color: $blue-brand;
+}
+
+.toggle i {
+  top: 8px;
+  left: 9px;
+  display: block;
+  background: $blue-brand;
+}
+
+.toggle i::before {
+  top: -5px;
+}
+
+.toggle i::after {
+  bottom: -6px;
+}
+
+.toggle i::after,
+.toggle i::before {
+  content: '';
+  display: block;
+}
+
+.toggle i::before {
+  transform: translate3d(-8px, 0, 0) rotate(-45deg) scale(0.7, 1);
+}
+
+.toggle i::after {
+  transform: translate3d(-8px, 0, 0) rotate(45deg) scale(0.7, 1);
+}
+
+.no-aside .toggle i::before,
+.no-aside .toggle i::after {
+  transform: none;
+}
+
+#arrow {
+  margin-bottom: 40px;
+}
+
+/* ^ sidebar button open and closing functionality */

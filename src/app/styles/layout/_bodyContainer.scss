@@ -1,13 +1,15 @@
 .body-container {
-  height: 94%;
+  height: 100%;
+  overflow: hidden;
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  grid-template-rows: 8fr 1fr;
+  grid-template-columns: min-content 1fr;
+  grid-template-rows: 90% 5% 5%;
   grid-template-areas:
     'actions states'
     'travel travel'
     'buttons buttons';
 }
+
 
 /* if extension width is less than 500px, stack the body containers */
 @media (max-width: 500px) {

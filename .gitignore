@@ -1,4 +1,7 @@
 node_modules
+node_modules/
+/node_modules
+./node_modules
 .DS_Store
 src/extension/build/bundles
 package/reactime-*.tgz
@@ -9,3 +12,7 @@ src/extension/build.zip
 src/extension/build.crx
 src/extension/build.pem
 bower_components
+sandboxes/manual-tests/NextJS/.next
+.vscode
+src/app/components/Map.tsx
+package-lock.json

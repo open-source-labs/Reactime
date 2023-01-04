@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "outDir": "./src/extension/build/bundles/",
+    "module": "es6",
+    // "noImplicitAny": true,
+    "target": "es5",
+    "jsx": "react",
+    "removeComments": true,  
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "types": ["chrome", "jest", "node"],
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+  },
+  "include": ["./src/app", "./src/backend", "./src/extension", "./jest-setup.ts", "./global.d.ts"],
+  "exclude": ["./src/app/__tests__", "./src/backend/__tests__", "node_modules"],
+  "typeDocOptions": {
+    "mode": "file",
+    "out": "docs"
+  },
+}

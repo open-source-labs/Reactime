@@ -1,90 +1,95 @@
-/* @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap'); */
-@import url("https://fonts.googleapis.com/css?family=Overpass+Mono&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 body {
-  background-color: black;
+	background-color: black;
 }
 
 .node {
-  cursor: pointer;
+	cursor: pointer;
+	fill-opacity: 0.8;
 }
 
 /*   this represents leaf nodes aka nodes with no children */
-.node circle {
-  fill: #5249f7;
-}
-
-.node circle:hover {
-  fill: #9cf4df;
-}
-
 .node text {
-  font-size: 10px;
-  font-family: "Overpass Mono", monospace;
-}
-/* this represents text for leaf nodes aka the ones with no children */
-.node--leaf {
-  fill: #71e9e1;
-  fill-opacity: 0.8;
+	fill: #fae6e4;
+	background-color: red;
+	font-size: 10px;
+	font-family: 'Roboto', sans-serif;
 }
 
-/*   this represents those nodes that have children */
-.node--internal circle {
-  fill: #d317c9;
-}
 /*   modifies text of parent nodes (has children) */
 .node--internal text {
-  fill: #fae6e4;
-  font-size: 11px;
+	fill: white;
+	font-size: 10px;
 }
 .link {
-  fill: none;
-  stroke: #3853ea;
-  stroke-opacity: 0.4;
-  stroke-width: 3px;
+	fill: none;
+	stroke: #fae6e4;
+	stroke-opacity: 0.4;
+	stroke-width: 3px;
 }
 
 div.tooltip {
-  position: absolute;
-  text-align: center;
-  display: inline;
-  max-width: 250px;
-  overflow-wrap: break-word;
-  padding: 6px;
-  color: #320a5c;
-  font-size: 12px;
-  font-family: "Overpass Mono", monospace;
-  background: #9cf4df;
-  border-radius: 8px;
-  pointer-events: none;
+	position: absolute;
+	padding: 0.5rem 1rem;
+	color: white;
+	z-index: 100;
+	font-size: 14px;
+	font-family: 'Roboto', sans-serif;
+	background: rgb(17, 17, 17, 0.9);
+	box-shadow: rgb(33 33 33 / 20%) 0px 1px 2px;
+	border-radius: 5px;
+	max-width: 300px;
 }
 
-/* .d3-tip {
-  line-height: 1;
-  padding: 6px;
-  background: #9cf4df;
-  color: #320a5c;
-  border-radius: 4px;
-  font-size: 13px;
-  max-width: 400px;
-  overflow-wrap: break-word;
-  font-family: "Overpass Mono", monospace;
-} */
+.d3-tip {
+	line-height: 1;
+	padding: 6px;
+	background: #679dca;
+	color: #2b2f39;
+	border-radius: 4px;
+	font-size: 13px;
+	max-width: 400px;
+	overflow-wrap: break-word;
+	font-family: 'Overpass Mono', monospace;
+}
 
-/* Creates a small triangle extender for the tooltip
+/* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
-  box-sizing: border-box;
-  display: inline;
-  font-size: 15px;
-  line-height: 1;
-  color: #9cf4df;
-  content: "\25BC";
-  position: absolute;
-  text-align: center;
-} */
+	box-sizing: border-box;
+	display: inline;
+	font-size: 15px;
+	line-height: 1;
+	color: #679dca;
+	content: '\25BC';
+	position: absolute;
+	text-align: center;
+}
 
 /* Style northward tooltips specifically */
-/* .d3-tip.n:after {
-  margin: -2px 0 0 0;
-  top: 100%;
-  left: 0;
-} */
+.d3-tip.n:after {
+	margin: -2px 0 0 0;
+	top: 100%;
+	left: 0;
+}
+
+.history-d3-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: calc(100% - 70px);
+}
+
+.perf-d3-container {
+	height: calc(100% - 70px);
+}
+
+.perf-d3-svg {
+	display: block;
+}
+
+.perf-chart-labels {
+	font: 1.3em sans-serif;
+	fill: #2a2f3a;
+	pointer-events: none;
+	text-anchor: middle;
+}
