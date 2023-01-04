@@ -5,7 +5,10 @@
     "transform": {
       "^.+\\.(js|ts|tsx)$": "ts-jest"
     },
-    "transformIgnorePatterns": ["/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)"],
+    "testPathIgnorePatterns": ["www"],
+    "transformIgnorePatterns": [
+      "/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)"
+    ],
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
       "ts",
@@ -98,6 +101,7 @@
     "@babel/preset-react": "^7.12.7",
     "@emotion/babel-plugin": "^11.7.2",
     "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^13.4.0",
     "@types/chai": "^4.2.14",
     "@types/chrome": "^0.0.119",
     "@types/d3": "^7.4.0",
