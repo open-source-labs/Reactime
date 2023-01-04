@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import Blogs from '../src/pages/components/Blogs';
+import React from 'react';
 
 const posts = [
   {
@@ -70,11 +71,9 @@ describe('Blog component test ', () => {
 
   it ('displays the correct information for each blog post', () => {
     const blogs = screen.getAllByTestId('blog')
-    blogs.forEach((blog, index) => {
-      console.debug(blog)
+    blogs.forEach((blog) => {
+
 
     })
-
   });
-
 });
