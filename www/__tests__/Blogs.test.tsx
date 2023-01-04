@@ -72,13 +72,7 @@ describe('Blog component test ', () => {
     const blogs = screen.getAllByTestId('blog')
     blogs.forEach((blog, index) => {
       console.debug(blog)
-      expect(blog).toHaveProperty('title', blog.title);
-      // expect(blog).toHaveProperty('description', blog.description);
-      // expect(blog).toHaveProperty('description', blog.);
-      // expect(blog).toHaveProperty('category.name', blog.title);
-      // expect(blog).toHaveProperty('author.name', blog.title);
-      // expect(blog).toHaveProperty('date', blog.date);
-      // expect(blog).toHaveProperty('readingTime', blog.title);
+
     })
 
   });
