@@ -131,6 +131,10 @@ Après avoir cloné ce référentiel, les développeurs peuvent simplement exéc
 
 ## <b>Auteurs</b>
 
+- **Ben Margolius** - [@benmarg](https://github.com/benmarg)
+- **Eric Yun** - [@ericsngyun](https://github.com/ericsngyun)
+- **James Nghiem** - [@jemzir](https://github.com/jemzir)
+- **Wilton Lee** - [@wiltonlee948](https://github.com/wiltonlee948)
 - **David Kim** - [@codejunkie7](https://github.com/codejunkie7)
 - **Robby Tipton** - [@RobbyTipton](https://github.com/RobbyTipton)
 - **Kevin HoEun Lee** - [@khobread](https://github.com/khobread)
