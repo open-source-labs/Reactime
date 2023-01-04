@@ -18,8 +18,10 @@ export const userRouter = router({
         }
       })
     }),
-  getAllUsers: publicProcedure
-    .query()
+  findAll: publicProcedure
+    .query(async ({ctx}) => {
+      return await ctx.prisma.user.findMany();
+    })
 });
 
 
