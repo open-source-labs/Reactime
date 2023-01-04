@@ -89,8 +89,8 @@ export default function LinkControls({
         disabled={layout === 'polar'}
         style={dropDownStyle}
       >
-        <option value="horizontal">Horizontal</option>
         <option value="vertical">Vertical</option>
+        <option value="horizontal">Horizontal</option>
       </select>
       &nbsp;&nbsp;
 
@@ -110,19 +110,16 @@ export default function LinkControls({
       {/* Controls for the select selections. */}
       <label> Select:</label>
       &nbsp;
-      <input
+      <select
         id="selectInput"
-        list="nodeOptions"
-        type="text"
         name="nodeOptions"
         onChange={e => setSelectedNode(e.target.value)}
         style={dropDownStyle}
-      />
-      <datalist id="nodeOptions">
+      >
         {nodeList.map(node => (
-          <option key={node.name} value={node.name}>{node.name}</option>
+          node.children.length > 0 && <option key={node.name} value={node.name}>{node.name}</option>
         ))}
-      </datalist>
+      </select>
 
       {/* This is the slider control for the step option */}
       {linkType === 'step' && layout !== 'polar' && (

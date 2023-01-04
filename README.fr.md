@@ -18,10 +18,10 @@
   </a>
   <a href="https://travis-ci.com/oslabs-beta/reactime">
     <img src="https://travis-ci.com/oslabs-beta/reactime.svg?branch=master" alt="Build Status">
-  </a>  
+  </a>
   <a href="http://badge.fury.io/js/reactime">
     <img src="https://badge.fury.io/js/reactime.svg" alt="npm version">
-  </a>  
+  </a>
     <img src="https://img.shields.io/badge/babel%20preset-airbnb-ff69b4" alt="BabelPresetPrefs">
     <img src="https://img.shields.io/badge/linted%20with-eslint-blueviolet" alt="LintPrefs">
 </p>
@@ -40,7 +40,7 @@
 </p>
 
 <p align="center">
-  <a href="#how-to-use">Manuel</a> • <a href="#features">Caractéristiques</a> • <a href="https://reactime.io">Website</a> • <a href="#readmore">En savoir plus</a>
+  <a href="#how-to-use">Manuel</a> • <a href="#features">Caractéristiques</a> • <a href="https://reactime.dev">Website</a> • <a href="#readmore">En savoir plus</a>
 </p>
 
 Actuellement, Reactime est compatible avec les applications React qui utilisent des composants à état (stateful) et Hooks, avec un support en version bêta de Recoil et de pour le Context API.
@@ -131,6 +131,10 @@ Après avoir cloné ce référentiel, les développeurs peuvent simplement exéc
 
 ## <b>Auteurs</b>
 
+- **Ben Margolius** - [@benmarg](https://github.com/benmarg)
+- **Eric Yun** - [@ericsngyun](https://github.com/ericsngyun)
+- **James Nghiem** - [@jemzir](https://github.com/jemzir)
+- **Wilton Lee** - [@wiltonlee948](https://github.com/wiltonlee948)
 - **David Kim** - [@codejunkie7](https://github.com/codejunkie7)
 - **Robby Tipton** - [@RobbyTipton](https://github.com/RobbyTipton)
 - **Kevin HoEun Lee** - [@khobread](https://github.com/khobread)

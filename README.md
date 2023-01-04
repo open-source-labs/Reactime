@@ -18,10 +18,10 @@
   </a>
   <a href="https://travis-ci.com/oslabs-beta/reactime">
     <img src="https://travis-ci.com/oslabs-beta/reactime.svg?branch=master" alt="Build Status">
-  </a>  
+  </a>
   <a href="http://badge.fury.io/js/reactime">
     <img src="https://badge.fury.io/js/reactime.svg" alt="npm version">
-  </a>  
+  </a>
     <img src="https://img.shields.io/badge/babel%20preset-airbnb-ff69b4" alt="BabelPresetPrefs">
     <img src="https://img.shields.io/badge/linted%20with-eslint-blueviolet" alt="LintPrefs">
 </p>
@@ -40,54 +40,90 @@
 </p>
 
 <p align="center">
-  <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.io">Website</a> • <a href="#read-more">Read More</a>
+  <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.dev">Website</a> • <a href="#read-more">Read More</a>
 </p>
 
-<b>Reactime 16.0</b> presents the codebase with substantial, much-needed clean-up. From the backend and frontend to testing, the Reactime XVI team has: removed vestigial code, added comments to clarify code, implemented 100% testing coverage for the codebase, compartmentalized and modularized files, and implemented typescript.
+<b>Reactime 16.0</b> presents the codebase with substantial, much-needed
+clean-up. From the backend and frontend to testing, the Reactime XVI team has:
+removed vestigial code, added comments to clarify code, implemented 100% testing
+coverage for the codebase, compartmentalized and modularized files, and
+implemented typescript.
 
-The primary purpose of this update is to allow easier understanding of Reactime's codebase by individuals or groups wishing to further update Reactime, keeping this great developer tool alive. 
+The primary purpose of this update is to allow easier understanding of
+Reactime's codebase by individuals or groups wishing to further update Reactime,
+keeping this great developer tool alive.
 
-With release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to 'npm run dev' || 'npm run build' for backwards compatibility.<br/>
-For version Node v16.16.0, please use script 'npm run devlegacy' || 'npm run buildlegacy'
+With release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
+'npm run dev' || 'npm run build' for backwards compatibility.<br/> For version
+Node v16.16.0, please use script 'npm run devlegacy' || 'npm run buildlegacy'
 
 Previously, <b>Reactime 14.0 and 15.0</b> added the exciting features below:
 
-I. React Router Compatibility <br>
-Reactime is now compatible with React Router applications! Prior to Reactime 14.0, recording state snapshots as the user navigated across various routes was possible, but time travel debugging was only possible for the current route (i.e. jumping back to a prior state at a different route was not possible). In order to streamline debugging of applications with multiple routes, Reactime 14.0 added functionality that allows the user to time-travel back to different routes, including live updating in the browser to reflect the state of their application at that previously visited route.
+I. React Router Compatibility <br> Reactime is now compatible with React Router
+applications! Prior to Reactime 14.0, recording state snapshots as the user
+navigated across various routes was possible, but time travel debugging was only
+possible for the current route (i.e. jumping back to a prior state at a
+different route was not possible). In order to streamline debugging of
+applications with multiple routes, Reactime 14.0 added functionality that allows
+the user to time-travel back to different routes, including live updating in the
+browser to reflect the state of their application at that previously visited
+route.
 
-II. Classifying State Snapshots by Route <br>
-The list of state snapshots in the Reactime dashboard is now classified by route to give the developer visual cues of the snapshot-route relationship and make time travel debugging of various routes easier.
+II. Classifying State Snapshots by Route <br> The list of state snapshots in the
+Reactime dashboard is now classified by route to give the developer visual cues
+of the snapshot-route relationship and make time travel debugging of various
+routes easier.
 
-III. Filtering Performance Metrics By Route <br>
-The Reactime dashboard includes a stacked bar graph showing render times for each component, with a separate bar stack for each snapshot. With Reactime 14.0, this composite bar graph can now be filtered by route to allow the developer to review detailed performance data by route.
+III. Filtering Performance Metrics By Route <br> The Reactime dashboard includes
+a stacked bar graph showing render times for each component, with a separate bar
+stack for each snapshot. With Reactime 14.0, this composite bar graph can now be
+filtered by route to allow the developer to review detailed performance data by
+route.
 
-IV.  Visualize And Compare Components Within a Snapshot <br>
-Users not only have access to multiple snapshots, but can now zone into a specified snapshot more granularly through a new visualization consisting of its individual components. These new graphs are rendered directly in the same Performance tab in Reactime and provide details for each component when the user hovers over, providing a new visual comparison of components across a single chosen state.
+IV. Visualize And Compare Components Within a Snapshot <br> Users not only have
+access to multiple snapshots, but can now zone into a specified snapshot more
+granularly through a new visualization consisting of its individual components.
+These new graphs are rendered directly in the same Performance tab in Reactime
+and provide details for each component when the user hovers over, providing a
+new visual comparison of components across a single chosen state.
 
 <p align="center">
 <img src="./assets/snapshot-comparison.gif" />
 
-After installing Reactime, you can test its functionalities with your React application in development mode.
+After installing Reactime, you can test its functionalities with your React
+application in development mode.
 
-Please note, the time jumping feature will <b>ONLY</b> work when your application is running in <b>development mode</b>. In production mode, you are able to view your application’s component map but no additional features.
+Please note, the time jumping feature will <b>ONLY</b> work when your
+application is running in <b>development mode</b>. In production mode, you are
+able to view your application’s component map but no additional features.
 
 ## <b>Installation</b>
 
-To get started, install the Reactime [extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) from Chrome Web Store.
+To get started, install the Reactime
+[extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga)
+from Chrome Web Store.
 
-NOTE: The React Developer Tools [extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en) is also required for Reactime to run, if you do not already have it installed on your browser.
+NOTE: The React Developer Tools
+[extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+is also required for Reactime to run, if you do not already have it installed on
+your browser.
 
-### Installation
+### Manual Installation
 
-Go to Chrome Extensions (make sure Chrome Extension is in Developer Mode) for manual installation in (https://developer.chrome.com/extensions/faq#faq-dev-01) and click on Load Unpacked. Use `src/extension/build/` to load this extension. Turn on 'Allow access to file URLs' in extension details page if testing locally.
+Go to Chrome Extensions (make sure Chrome Extension is in Developer Mode) for
+manual installation in (https://developer.chrome.com/extensions/faq#faq-dev-01)
+and click on Load Unpacked. Use `src/extension/build/` to load this extension.
+Turn on 'Allow access to file URLs' in extension details page if testing
+locally.
+
+### Looking to contribute to Reactime?
 
 <i>Please refer to Developer Install for a detailed guide:</i>
-<a href='/DeveloperREADME.md'>Developer Install</a> 
+<a href='/DeveloperREADME.md'>Developer Install</a>
 
-### Building from source
-
-Please see [the developer README](src/README.md) for instructions on building
-from source.
+After you finish the Develpoer Install, checkout
+[the developer README](src/README.md) for more info on the project, and
+instructions on building from source.
 
 ## <b>How to Use</b>
 
@@ -99,26 +135,36 @@ Then open up your Chrome DevTools and navigate to the Reactime panel.
 
 ### ❓ <b>Why is Reactime telling me that no React application is found?</b>
 
-Reactime initially runs using the dev tools global hook from the Chrome API. It takes time for Chrome to load this. Try refreshing your application a couple times until you see Reactime running.
+Reactime initially runs using the dev tools global hook from the Chrome API. It
+takes time for Chrome to load this. Try refreshing your application a couple
+times until you see Reactime running.
 
 ### ❓ <b>There is a black screen instead of the Reactime extension</b>
 
-Try refreshing the application you want to test and refresh the DevTools by clicking the right mouse button “Reload frame”.
+Try refreshing the application you want to test and refresh the DevTools by
+clicking the right mouse button “Reload frame”.
 
 ### ❓ <b>I found a bug in Reactime</b>
 
-Reactime is an open source project, and we’d really appreciate your help with improving user experience. Please read [the developer README](src/README.md), and create a pull request (or issue) to propose and collaborate on changes to a repository.
+Reactime is an open source project, and we’d really appreciate your help with
+improving user experience. Please read [the developer README](src/README.md),
+and create a pull request (or issue) to propose and collaborate on changes to a
+repository.
 
 ### ❓ <b>Node version compatiability</b>
 
-With release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to 'npm run dev' | 'npm run build' for backwards compatibility.<br/>
-For version Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
+With release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
+'npm run dev' | 'npm run build' for backwards compatibility.<br/> For version
+Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 
 ## <b>Features</b>
 
 ### 🔹 Viewing
 
-You can view your application's file structure and click on a snapshot to view your app's state. State can be visualized in a Component Graph, JSON Tree, or Performance Graph. Snapshots can be diffed with the previous snapshot, which can be viewed in Diff mode.
+You can view your application's file structure and click on a snapshot to view
+your app's state. State can be visualized in a Component Graph, JSON Tree, or
+Performance Graph. Snapshots can be diffed with the previous snapshot, which can
+be viewed in Diff mode.
 <br>
 <br>
 
@@ -129,7 +175,10 @@ You can view your application's file structure and click on a snapshot to view y
 
 ### 🔹 Snapshot Series and Action Comparison
 
-You can save a series of state snapshots and use it to analyze changes in component render performance between current and previous series of snapshots. You can also name specific snapshots and compare all snapshots with the same name.
+You can save a series of state snapshots and use it to analyze changes in
+component render performance between current and previous series of snapshots.
+You can also name specific snapshots and compare all snapshots with the same
+name.
 <br>
 <br>
 
@@ -140,7 +189,10 @@ You can save a series of state snapshots and use it to analyze changes in compon
 
 ### 🔹 Components Comparison
 
-When toggled to a specific snapshot, a visualization of the individual components of the snapshow will be displayed. This can be done under the same Performance tab where the snapshots are rendered. You will also find details of each component upon hovering.
+When toggled to a specific snapshot, a visualization of the individual
+components of the snapshow will be displayed. This can be done under the same
+Performance tab where the snapshots are rendered. You will also find details of
+each component upon hovering.
 <br>
 <br>
 
@@ -151,7 +203,9 @@ When toggled to a specific snapshot, a visualization of the individual component
 
 ### 🔹 Recording
 
-Whenever state is changed (whenever setState, useState is called), this extension will create a snapshot of the current state tree and record it. Each snapshot will be displayed in Chrome DevTools under the Reactime panel.
+Whenever state is changed (whenever setState, useState is called), this
+extension will create a snapshot of the current state tree and record it. Each
+snapshot will be displayed in Chrome DevTools under the Reactime panel.
 <br>
 <br>
 
@@ -162,27 +216,40 @@ Whenever state is changed (whenever setState, useState is called), this extensio
 
 ### 🔹 Re-render Optimization
 
-One of the most common issues that affects performance in React is unnecessary render cycles. This problem can be fixed by checking your renders in the Performance tab in Chrome DevTools under the Reactime panel.
+One of the most common issues that affects performance in React is unnecessary
+render cycles. This problem can be fixed by checking your renders in the
+Performance tab in Chrome DevTools under the Reactime panel.
 
 ### 🔹 Jumping
 
-Using the actions sidebar, a user can jump to any previous recorded snapshots. Hitting the jump button on any snapshot will allow a user to view state data at any point in the history of the target application.
+Using the actions sidebar, a user can jump to any previous recorded snapshots.
+Hitting the jump button on any snapshot will allow a user to view state data at
+any point in the history of the target application.
 
 ### 🔹 Gatsby
 
-Reactime offers full support for Gatsby applications. You would be able to identify unnecessary renders, duration of each rendering, travel-debugging features and visual representation of the tree components.
+Reactime offers full support for Gatsby applications. You would be able to
+identify unnecessary renders, duration of each rendering, travel-debugging
+features and visual representation of the tree components.
 
 ### 🔹 Next.js
 
-Reactime offers debugging and performance tools for Next.js apps: time-traveling debugging, preventing unnecessary components re-renders and making your application faster.
+Reactime offers debugging and performance tools for Next.js apps: time-traveling
+debugging, preventing unnecessary components re-renders and making your
+application faster.
 
 ### 🔹 TypeScript Support
 
-Reactime offers beta support for TypeScript applications using stateful class components and functional components. Further testing and development is required for custom hooks, Context API, and Concurrent Mode.
+Reactime offers beta support for TypeScript applications using stateful class
+components and functional components. Further testing and development is
+required for custom hooks, Context API, and Concurrent Mode.
 
 ### 🔹 Documentation
 
-After cloning this repository, developers can simply run `npm run docs` at the root level and serve the dynamically generated `/docs/index.html` file on a browser. Doing so will provide a readable, extensible, and interactive GUI view of the structure and interfaces of the codebase.
+After cloning this repository, developers can simply run `npm run docs` at the
+root level and serve the dynamically generated `/docs/index.html` file on a
+browser. Doing so will provide a readable, extensible, and interactive GUI view
+of the structure and interfaces of the codebase.
 <br>
 
 ### <b>Additional Features</b>
@@ -196,7 +263,8 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - A slider to move through snapshots quickly
 - A play button to move through snapshots automatically
 - A lock button, which stops recording each snapshot
-- A persist button to keep snapshots upon refresh (handy when changing code and debugging)
+- A persist button to keep snapshots upon refresh (handy when changing code and
+  debugging)
 - Download/upload the current snapshots in memory
 - Declarative titles in the actions sidebar
 - Interative Tutorial Walkthrough
@@ -209,7 +277,8 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 ### <b>Bug Fixes</b>
 
 - Search bar now searches for specific nodes successfully
-- Tab titles of chrome browser tabs not running an application in development mode are no longer affected by Reactime
+- Tab titles of chrome browser tabs not running an application in development
+  mode are no longer affected by Reactime
 - Multiple black screens fixed
 - Improved UI and performance
 - No longer inject scripts to non-target applications
@@ -227,6 +296,10 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 
 ## <b>Authors</b>
 
+- **Ben Margolius** - [@benmarg](https://github.com/benmarg)
+- **Eric Yun** - [@ericsngyun](https://github.com/ericsngyun)
+- **James Nghiem** - [@jemzir](https://github.com/jemzir)
+- **Wilton Lee** - [@wiltonlee948](https://github.com/wiltonlee948)
 - **Louis Lam** - [@llam722](https://github.com/llam722)
 - **Samuel Tran** - [@leumastr](https://github.com/leumastr)
 - **Brian Yang** - [@yangbrian310](https://github.com/yangbrian310)
@@ -244,7 +317,8 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - **Daljit Gill** - [@dgill05](https://github.com/dgill05)
 - **Ben Michareune** - [@bmichare](https://github.com/bmichare)
 - **Dane Corpion** - [@danecorpion](https://github.com/danecorpion)
-- **Harry Fox** - [@StackOverFlowWhereArtThou](https://github.com/StackOverFlowWhereArtThou)
+- **Harry Fox** -
+  [@StackOverFlowWhereArtThou](https://github.com/StackOverFlowWhereArtThou)
 - **Nathan Richardson** - [@BagelEnthusiast](https://github.com/BagelEnthusiast)
 - **David Bernstein** - [@dangitbobbeh](https://github.com/dangitbobbeh)
 - **Joseph Stern** - [@josephiswhere](https://github.com/josephiswhere)
@@ -279,7 +353,8 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 - **David Chai** - [@davidchaidev](https://github.com/davidchai717)
 - **Yujin Kang** - [@yujinkay](https://github.com/yujinkay)
 - **Andy Wong** - [@andynullwong](https://github.com/andynullwong)
-- **Chris Flannery** - [@chriswillsflannery](https://github.com/chriswillsflannery)
+- **Chris Flannery** -
+  [@chriswillsflannery](https://github.com/chriswillsflannery)
 - **Rajeeb Banstola** - [@rajeebthegreat](https://github.com/rajeebthegreat)
 - **Prasanna Malla** - [@prasmalla](https://github.com/prasmalla)
 - **Rocky Lin** - [@rocky9413](https://github.com/rocky9413)
@@ -299,4 +374,5 @@ After cloning this repository, developers can simply run `npm run docs` at the r
 
 ## <b>License </b>
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
+for details.

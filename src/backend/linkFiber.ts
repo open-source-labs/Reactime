@@ -140,7 +140,7 @@ const exclude = ['alternate', '_owner', '_store', 'get key', 'ref', '_self', '_s
 // This recursive function is used to grab the state of children components
 // and push them into the parent componenent
 // react elements throw errors on client side of application - convert react/functions into string
-function convertDataToString(newObj, oldObj) {
+function convertDataToString(newObj, oldObj, depth = 0) {
   const newPropData = oldObj || {};
   for (const key in newObj) {
     if (typeof newObj[key] === 'function') {
@@ -149,7 +149,7 @@ function convertDataToString(newObj, oldObj) {
       newPropData[key] = 'reactFiber';
       return newPropData;
     } else if (typeof newObj[key] === 'object' && exclude.includes(key) !== true) {
-      newPropData[key] = convertDataToString(newObj[key], null);
+      newPropData[key] = depth > 10 ? 'convertDataToString reached max depth' : convertDataToString(newObj[key], null, depth + 1);
     } else if (exclude.includes(key) !== true) {
       newPropData[key] = newObj[key];
     }
@@ -181,12 +181,29 @@ function createTree(
     actualStartTime,
     selfBaseDuration,
     treeBaseDuration,
+    dependencies,
+    _debugHookTypes,
   } = currentFiber;
 
+//   if (currentFiber.tag === 10) {
+//     const queue = [currentFiber];
+//     while (queue.length > 0) {
+//       const tempFiber = queue.shift();
+//       if (tempFiber.tag === 0) console.log(tempFiber);
+//       if (tempFiber.sibling) {
+//         queue.push(tempFiber.sibling);
+//       }
+//       if (tempFiber.child) {
+//         queue.push(tempFiber.child);
+//       }
+//   }
+// }
+
 // check to see if we can get the information we were looking for
+// need to figure out what tag is
   if (tag === 5) {
     try {
-      if (memoizedProps.children[0]._owner?.memoizedProps !== undefined) {
+      if (memoizedProps.children && memoizedProps.children[0]?._owner?.memoizedProps !== undefined) {
         const propsData = memoizedProps.children[0]._owner.memoizedProps;
         const newPropData = convertDataToString(propsData, tree.componentData.props ? tree.componentData.props : null);
         tree.componentData = {
@@ -209,6 +226,7 @@ function createTree(
     selfBaseDuration?: number;
     treeBaseDuration?: number;
     props?: any,
+    context?: any,
   } = {};
   let componentFound = false;
 
@@ -217,6 +235,10 @@ function createTree(
     componentData.props = convertDataToString(memoizedProps, null);
   }
 
+  // if the component uses the useContext hook, we want to grab the co  text object and add it to the componentData object for that fiber
+  if (tag === 0 && _debugHookTypes) {
+      componentData.context = convertDataToString(dependencies?.firstContext?.memoizedValue, null);
+  }
   // Check if node is a stateful class component
   if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
     // Save component's state and setState() function to our record for future
@@ -243,6 +265,7 @@ function createTree(
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseHooks(memoizedState);
       const hooksNames = getHooksNames(elementType.toString());
+
 
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(

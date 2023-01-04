@@ -47,7 +47,7 @@ export default function ComponentMap({
 }: LinkTypesProps): JSX.Element {
   // importing custom hooks for the selection tabs.
   const [layout, setLayout] = useState('cartesian');
-  const [orientation, setOrientation] = useState('horizontal');
+  const [orientation, setOrientation] = useState('vertical');
   const [linkType, setLinkType] = useState('diagonal');
   const [stepPercent, setStepPercent] = useState(10);
   const [Tooltip, setTooltip] = useState(false);
@@ -150,6 +150,19 @@ export default function ComponentMap({
       propsFormat.push(nestedObj);
     }
 
+    return propsFormat;
+  };
+
+  const formatContext = data => {
+    const propsFormat = [];
+    const nestedObj = [];
+    for (const key in data) {
+      propsFormat.push(
+        <p className="stateprops">
+          {`${key}: ${data[key]}`}
+        </p>,
+      );
+    }
     return propsFormat;
   };
 
@@ -378,10 +391,15 @@ export default function ComponentMap({
               {formatState(tooltipData.state)}
             </div>
             <div style={React.scrollStyle}>
-              <div className="props">
-                Props:
+              <div className="tooltipWrapper">
+                <h2>Props:</h2>
                 {formatProps(tooltipData.componentData.props)}
               </div>
+              {tooltipData.componentData.context &&
+              <div className="tooltipWrapper">
+                <h2>Context:</h2>
+                {formatContext(tooltipData.componentData.context)}
+              </div>}
             </div>
           </div>
         </TooltipInPortal>
