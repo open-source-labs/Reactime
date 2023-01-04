@@ -106,7 +106,10 @@ Reactime beta поддерживает приложения, написанны�
 - [Deep in Weeds with Reactime, Concurrent React_fiberRoot, and Browser History Caching](https://itnext.io/deep-in-the-weeds-with-reactime-concurrent-react-fiberroot-and-browser-history-caching-7ce9d7300abb)
 
 ## <b>Авторы</b>
-
+- **Ben Margolius** - [@benmarg](https://github.com/benmarg)
+- **Eric Yun** - [@ericsngyun](https://github.com/ericsngyun)
+- **James Nghiem** - [@jemzir](https://github.com/jemzir)
+- **Wilton Lee** - [@wiltonlee948](https://github.com/wiltonlee948)
 - **David Kim** - [@codejunkie7](https://github.com/codejunkie7)
 - **Robby Tipton** - [@RobbyTipton](https://github.com/RobbyTipton)
 - **Kevin HoEun Lee** - [@khobread](https://github.com/khobread)

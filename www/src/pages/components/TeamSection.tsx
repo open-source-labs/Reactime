@@ -8,6 +8,7 @@ const people: string[][] = [
     ["Andy Tsou", "andytsou19"],
     ["Andy Wong", "andywongdev"],
     ["Becca Viner", "rtviner"],
+    ["Ben Margolius", "benmarg"],
     ["Ben Michareune", "bmichare"],
     ["Brian Yang", "yangbrian310"],
     ["Bryan Lee", "mylee1995"],
@@ -29,6 +30,7 @@ const people: string[][] = [
     ["Edwin Menendez", "edwinjmenendez"],
     ["Emin Tahirov", "eminthrv"],
     ["Ergi Shehu", "Ergi516"],
+    ["Eric Yun", "ericsngyun"],
     ["Feiyi Wu", "FreyaWu"],
     ["Gabriela Aquino", "aquinojardim"],
     ["Greg Panciera", "gpanciera"],
@@ -36,6 +38,7 @@ const people: string[][] = [
     ["Harry Fox", "StackOverFlowWhereArtThou"],
     ["Hien Nguyen", "hienqn"],
     ["Jack Crish", "JackC27"],
+    ["James Nghiem", "jemzir"],
     ["Jason Victor", "Theqwertypusher"],
     ["Joshua Howard", "Joshua-Howard"],
     ["Joseph Park", "joeepark"],
@@ -69,6 +72,7 @@ const people: string[][] = [
     ["Tania Lind", "lind-tania"],
     ["Viet Nguyen", "vnguyen95"],
     ["Vincent Nguyen", "VNguyenCode"],
+    ["Wilton Lee", "wiltonlee948"],
     ["Yujin Kang", " yujinkay"],
 ]
 

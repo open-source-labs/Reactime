@@ -296,6 +296,10 @@ of the structure and interfaces of the codebase.
 
 ## <b>Authors</b>
 
+- **Ben Margolius** - [@benmarg](https://github.com/benmarg)
+- **Eric Yun** - [@ericsngyun](https://github.com/ericsngyun)
+- **James Nghiem** - [@jemzir](https://github.com/jemzir)
+- **Wilton Lee** - [@wiltonlee948](https://github.com/wiltonlee948)
 - **Louis Lam** - [@llam722](https://github.com/llam722)
 - **Samuel Tran** - [@leumastr](https://github.com/leumastr)
 - **Brian Yang** - [@yangbrian310](https://github.com/yangbrian310)
