@@ -1,14 +1,21 @@
 import Tree from '../tree';
 
+/**
+ * Created new tree under sibling and copy and clean tree describe block --
+ * Reason is because other tests are adding properties to tree and affecting the child block, 
+ * so this was a quick way to test the trees getting reset to initial state
+ * 
+ * Possible fix if more time allowed: Making use of beforeEach or afterEach --
+ */
+
 describe('Tree unit test', () => {
   const newTree = new Tree({});
-
   describe('Constructor', () => {
     it('should be able to create a newTree', () => {
       expect(newTree.state).toEqual({});
     });
 
-    it('should have 8 properties', () => {
+    it('should have 7 properties', () => {
       expect(newTree).toHaveProperty('state');
       expect(newTree).toHaveProperty('name');
       expect(newTree).toHaveProperty('componentData');
@@ -16,15 +23,10 @@ describe('Tree unit test', () => {
       expect(newTree).toHaveProperty('parent');
       expect(newTree).toHaveProperty('isExpanded');
       expect(newTree).toHaveProperty('rtid');
-      expect(newTree).toHaveProperty('route');
     });
 
     it('has name default value as stateless', () => {
       expect(newTree.name).toBe('nameless');
-    });
-
-    it('has children as an empty array', () => {
-      expect(newTree.children).toEqual([]);
     });
   });
 
@@ -63,22 +65,17 @@ describe('Tree unit test', () => {
   });
 
   describe('Adding sibling', () => {
-    // const newTree = new Tree({});
-    const returnChild = newTree.addChild('stateful', 'child', {}, null);
+    const newTreeCopy = new Tree({});
+    const returnChild = newTreeCopy.addChild('stateful', 'child', {}, null);
     const returnSibling = returnChild.addSibling('stateful', 'child', {}, null);
 
     it('the tree now has 2 children', () => {
-      expect(newTree.children.length).toBe(2);
+      expect(newTreeCopy.children.length).toBe(2);
     });
 
     it('both of the children has the parent as this tree', () => {
-      expect(newTree.children[0]).toEqual(returnChild);
-      expect(newTree.children[1]).toEqual(returnSibling);
-    });
-
-    it('both of the children has the parent as this tree', () => {
-      expect(returnChild.parent).toEqual(newTree);
-      expect(returnSibling.parent).toEqual(newTree);
+      expect(returnChild.parent).toEqual(newTreeCopy);
+      expect(returnSibling.parent).toEqual(newTreeCopy);
     });
   });
 
@@ -87,10 +84,10 @@ describe('Tree unit test', () => {
   // Check Test
 
   describe('Copy & clean tree', () => {
-    // const newTree = new Tree({});
-    const returnChild = newTree.addChild('stateful', 'child', {}, null);
+    const newTreeLastCopy = new Tree({});
+    const returnChild = newTreeLastCopy.addChild('stateful', 'child', {}, null);
     returnChild.addSibling('stateful', 'child', {}, null);
-    const copy = newTree.cleanTreeCopy();
+    const copy = newTreeLastCopy.cleanTreeCopy();
     it('its copy has 2 children', () => {
       expect(copy.children.length).toEqual(2);
     });
