@@ -112,7 +112,7 @@ function replace(e: React.SyntheticEvent<HTMLImageElement>): void{
     profile: string | undefined,
     name: string | undefined,
   }
-  function Profile({profile, name}: profileType) {
+  export function Profile({profile, name}: profileType) {
     const [imageError, setImageError] = useState(false);
     return (
       <div className="space-y-4">
@@ -123,6 +123,7 @@ function replace(e: React.SyntheticEvent<HTMLImageElement>): void{
               className="mx-auto h-20 w-20 rounded-full lg:h-24 lg:w-24"
               onError={(e) => setImageError(true)}
               alt="missing-profile-image"
+              data-testid="image"
           />
         <div className="space-y-2">
           <div className="text-xs font-medium lg:text-sm">
