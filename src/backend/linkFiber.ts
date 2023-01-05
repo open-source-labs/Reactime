@@ -185,20 +185,6 @@ function createTree(
     _debugHookTypes,
   } = currentFiber;
 
-//   if (currentFiber.tag === 10) {
-//     const queue = [currentFiber];
-//     while (queue.length > 0) {
-//       const tempFiber = queue.shift();
-//       if (tempFiber.tag === 0) console.log(tempFiber);
-//       if (tempFiber.sibling) {
-//         queue.push(tempFiber.sibling);
-//       }
-//       if (tempFiber.child) {
-//         queue.push(tempFiber.child);
-//       }
-//   }
-// }
-
 // check to see if we can get the information we were looking for
 // need to figure out what tag is
   if (tag === 5) {
