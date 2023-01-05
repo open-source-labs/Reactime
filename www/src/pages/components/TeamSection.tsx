@@ -77,7 +77,6 @@ const people: string[][] = [
 ]
 
 function replace(e: React.SyntheticEvent<HTMLImageElement>): void{
-    console.log('test');
     e.currentTarget.onerror = null;
     e.currentTarget.src = "/profileFallback.png"
 }
