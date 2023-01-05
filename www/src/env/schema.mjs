@@ -7,7 +7,6 @@ import { z } from "zod";
  */
 export const serverSchema = z.object({
   DATABASE_URL: z.string().url(),
-  NEXT_PUBLIC_ADMIN_PASSWORD: z.string(),
   NODE_ENV: z.enum(["development", "test", "production"]),
 });
 
@@ -17,6 +16,7 @@ export const serverSchema = z.object({
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
+  NEXT_PUBLIC_ADMIN_PASSWORD: z.string(),
   // NEXT_PUBLIC_CLIENTVAR: z.string(),
 });
 
@@ -27,5 +27,6 @@ export const clientSchema = z.object({
  * @type {{ [k in keyof z.infer<typeof clientSchema>]: z.infer<typeof clientSchema>[k] | undefined }}
  */
 export const clientEnv = {
+  NEXT_PUBLIC_ADMIN_PASSWORD: process.env.NEXT_PUBLIC_ADMIN_PASSWORD,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
