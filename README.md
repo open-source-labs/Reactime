@@ -43,6 +43,15 @@
   <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.dev">Website</a> • <a href="#read-more">Read More</a>
 </p>
 
+<b>Reactime 17.0</b>
+We are pleased to announce the release of Reactime 17.0,
+which includes several new and improved features. Context API support has now been added.
+You can now monitor state stored in context if your component is subscribed to context changes.
+We also improved the tooltip UI on our tree diagram to improve readability.
+In addition, we have redesigned the Reactime.dev website using Tailwind CSS,
+ resulting in a clean, modern design with an intuitive layout.
+ To stay informed about future updates, you can now sign up for email notifications.
+
 <b>Reactime 16.0</b> presents the codebase with substantial, much-needed
 clean-up. From the backend and frontend to testing, the Reactime XVI team has:
 removed vestigial code, added comments to clarify code, implemented 100% testing
@@ -240,9 +249,9 @@ application faster.
 
 ### 🔹 TypeScript Support
 
-Reactime offers beta support for TypeScript applications using stateful class
+Reactime offers support for TypeScript applications using stateful class
 components and functional components. Further testing and development is
-required for custom hooks, Context API, and Concurrent Mode.
+required for custom hooks, and Concurrent Mode.
 
 ### 🔹 Documentation
 
@@ -284,7 +293,8 @@ of the structure and interfaces of the codebase.
 - No longer inject scripts to non-target applications
 
 ## <b>Read More</b>
-
+- [Reactime v17.0.0: Now with support for the Context API, and a modern UI](https://medium.com/@reactime/reactime-v17-0-0-now-with-support-for-the-context-api-and-a-modern-ui-f0edf9e54dae)
+- [Reactime XVI: Clean-up Time](https://medium.com/@emintahirov1996/reactime-xvi-cleanup-time-a14ba3dcc8a6)
 - [Reactime XVI: Clean-up Time](https://medium.com/@emintahirov1996/reactime-xvi-cleanup-time-a14ba3dcc8a6)
 - [Inter-Route Time Travel with Reactime](https://medium.com/@robbytiptontol/inter-route-time-travel-with-reactime-d84cd55ec73b)
 - [Time-Travel State with Reactime](https://medium.com/better-programming/time-traveling-state-with-reactime-6-0-53fdc3ae2a20)
