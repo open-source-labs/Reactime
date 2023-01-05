@@ -5,8 +5,8 @@ const posts = [
     category: { name: 'React Debugging', href: 'https://medium.com/tag/react-devtools' },
     description:
       'Reactime v17, we have come a long way from beta. Now introducing full Context API support: thereby allowing developers to better visualize the states and ... ',
-    date: 'Jan 3, 2022',
-    datetime: '2022-1-03',
+    date: 'Jan 3, 2023',
+    datetime: '2023-1-03',
     imageUrl:
       'https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80',
     readingTime: '6 min',
@@ -80,7 +80,7 @@ export default function Blogs() {
                       {post.category.name}
                     </a>
                   </p>
-                  <a href={post.href} className="mt-2 block">
+                  <a href={post.href} data-testid='link' className="mt-2 block">
                     <p className="text-xl font-semibold text-gray-900">{post.title}</p>
                     <p className="mt-3 text-base text-gray-500">{post.description}</p>
                   </a>

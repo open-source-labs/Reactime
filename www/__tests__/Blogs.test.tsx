@@ -5,21 +5,21 @@ import React from 'react';
 
 const posts = [
   {
-    title: 'Our Legendary Article here',
-    href: '#',
-    category: { name: 'Greatness', href: '#' },
+    title: 'Traveling through time with Reactime',
+    href: 'https://medium.com/@reactime/reactime-v17-0-0-now-with-support-for-the-context-api-and-a-modern-ui-f0edf9e54dae',
+    category: { name: 'React Debugging', href: 'https://medium.com/tag/react-devtools' },
     description:
-      'Reactime v17, we have come a long way from beta. Now introducing full Context API support and CustomHooks support: thereby allowing developers to better visualize the states and ... ',
-    date: 'Dec 14, 2022',
-    datetime: '2022-12-14',
+      'Reactime v17, we have come a long way from beta. Now introducing full Context API support: thereby allowing developers to better visualize the states and ... ',
+    date: 'Jan 3, 2023',
+    datetime: '2023-1-03',
     imageUrl:
       'https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80',
     readingTime: '6 min',
     author: {
       name: 'James Nghiem',
-      href: '#',
+      href: 'https://medium.com/@reactime',
       imageUrl:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+        'https://github.com/jemzir.png',
     },
   },
   {
@@ -70,10 +70,19 @@ describe('Blog component test ', () => {
   });
 
   it ('displays the correct information for each blog post', () => {
-    const blogs = screen.getAllByTestId('blog')
-    blogs.forEach((blog) => {
+    posts.forEach(post => {
+      expect(screen.getByText(post.title)).toBeInTheDocument();
+      expect(screen.getByText(post.description.trim())).toBeInTheDocument();
+      expect(screen.getByText(post.date)).toBeInTheDocument();
+      expect(screen.getByText(post.category.name)).toBeInTheDocument();
+      expect(screen.getAllByText(post.author.name)[0]).toBeInTheDocument();
+    })
+  });
 
-
+  it ('clicking a post link navigates to the correct URL', () => {
+    posts.forEach((post, index) => {
+      const postLink = post.href
+      expect(screen.getAllByTestId('link')[index]).toHaveAttribute('href', postLink);
     })
   });
 });
