@@ -19,6 +19,7 @@
     "@trpc/next": "^10.0.0",
     "@trpc/react-query": "^10.0.0",
     "@trpc/server": "^10.0.0",
+    "eslint-config-airbnb": "^19.0.4",
     "next": "13.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
