@@ -1,26 +1,80 @@
 {
   "compilerOptions": {
-    "outDir": "./src/extension/build/bundles/",
-    "module": "es6",
-    // "noImplicitAny": true,
+    /* Basic Options */
+    //---------------------LANGUAGE AND ENVIRONEMNT-----------------------------
+    // Specifies the ECMAScript version that the TypeScript compiler should target. This allow the transpiled file being used in older browser.
     "target": "es5",
+    // Specifies the syntax for writing React components in TypeScript
     "jsx": "react",
-    "removeComments": true,  
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
+
+    // --------------------------MODULES----------------------------------------
+    // Specifies the module format for the compiled TypeScript files
+    "module": "es6",
+    // Specifies the folder where TypeScript should look for type definition files.
+    "typeRoots": ["./node_modules/@types"],
+    // Specifies which global types to include in the project.
+    // Specifies type package names to be included without being referenced in a source file.
     "types": ["chrome", "jest", "node"],
-    "esModuleInterop": true,
+
+    // ---------------------------------TYPE CHECKING---------------------------
+    // "strict": true,                                    /* Enable all strict type-checking options. */
+    // "noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
+    // "strictNullChecks": true,                         /* When type checking, take into account 'null' and 'undefined'. */
+    // "strictFunctionTypes": true,                      /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */
+    // "strictBindCallApply": true,                      /* Check that the arguments for 'bind', 'call', and 'apply' methods match the original function. */
+    // "strictPropertyInitialization": true,             /* Check for class properties that are declared but not set in the constructor. */
+    // "noImplicitThis": true,                           /* Enable error reporting when 'this' is given the type 'any'. */
+    // "useUnknownInCatchVariables": true,               /* Default catch clause variables as 'unknown' instead of 'any'. */
+    // "alwaysStrict": true,                             /* Ensure 'use strict' is always emitted. */
+    // "noUnusedLocals": true,                           /* Enable error reporting when local variables aren't read. */
+    // "noUnusedParameters": true,                       /* Raise an error when a function parameter isn't read. */
+    // "exactOptionalPropertyTypes": true,               /* Interpret optional property types as written, rather than adding 'undefined'. */
+    // "noImplicitReturns": true,                        /* Enable error reporting for codepaths that do not explicitly return in a function. */
+    // "noFallthroughCasesInSwitch": true,               /* Enable error reporting for fallthrough cases in switch statements. */
+    // "noUncheckedIndexedAccess": true,                 /* Add 'undefined' to a type when accessed using an index. */
+    // "noImplicitOverride": true,                       /* Ensure overriding members in derived classes are marked with an override modifier. */
+    // "noPropertyAccessFromIndexSignature": true,       /* Enforces using indexed accessors for keys declared using an indexed type. */
+    // "allowUnusedLabels": true,                        /* Disable error reporting for unused labels. */
+    // "allowUnreachableCode": true,                     /* Disable error reporting for unreachable code. */
+
+    // -------------------------------EMIT--------------------------------------
+    // Specifies TypeScript compiler to remove comments from the compiled JavaScript code.
+    "removeComments": true,
+
+    // --------------------------JAVASCRIPT SUPPORT-----------------------------
+    // Specifies TypeScript compiler to allow JavaScript files to be included in the compilation process. => good to use if want to incrementally convert javascript to typescript files
+    "allowJs": true,
+
+    // Specifies the module resolution strategy to use.
     "moduleResolution": "node",
+
+    // Enables TypeScript to import JSON files as modules.
     "resolveJsonModule": true,
+
+    //------------------------INTEROP CONSTRAINTS------------------------------
+    //  Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility.
+    "esModuleInterop": true,
+    // Specifies TypeScript compiler to allow importing modules with a default export from modules
+    // some third party modules may still use
+    "allowSyntheticDefaultImports": true,
+    // Transiple each file as a seprate module => expect all files to have import/export statement
+    // "isolatedModules": true,
+    // Ensures that file names are consistently cased.
     "forceConsistentCasingInFileNames": true,
+
+    // -----------------------------COMPLETENESS--------------------------------
+    // Skip type checking of type declartion files (.d.ts files) that are included with TypeScript. If we trust the type definition of our imported file, turn this flag on => reduce compiling time.
+    "skipLibCheck": true
   },
+
+  // Specifies which files should be included in the compilation.
   "include": ["./src/app", "./src/backend", "./src/extension", "./jest-setup.ts", "./global.d.ts"],
+  // Specifies which files should be excluded from the compilation.
   "exclude": ["./src/app/__tests__", "./src/backend/__tests__", "node_modules"],
+
+  // Specifies options for TypeDoc, a documentation generator for TypeScript. In this case, it tells TypeDoc to generate documentation for the project in "file" mode, and to output the documentation to a "docs" folder.
   "typeDocOptions": {
     "mode": "file",
     "out": "docs"
-  },
+  }
 }
