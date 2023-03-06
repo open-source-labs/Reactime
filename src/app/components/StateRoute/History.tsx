@@ -19,7 +19,7 @@ const defaultMargin: defaultMargin = {
   top: 30,
   left: 30,
   right: 55,
-  bottom: 70
+  bottom: 70,
 };
 
 // main function exported to StateRoute
@@ -32,7 +32,7 @@ function History(props: Record<string, unknown>): JSX.Element {
     hierarchy,
     dispatch,
     currLocation,
-    snapshots
+    snapshots,
   } = props;
   const [, dispatch] = useStoreContext();
 
@@ -121,7 +121,7 @@ function History(props: Record<string, unknown>): JSX.Element {
 
     const delta = diff(
       statelessCleanning(snapshots[index - 1]),
-      statelessCleanning(snapshots[index])
+      statelessCleanning(snapshots[index]),
     );
     const changedState = findStateChangeObj(delta);
     // figured out the formatting for hover, applying diff.csss
@@ -150,7 +150,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .append('g')
       .attr(
         'transform',
-        `translate(${margin.left},${d3root.height === 0 ? totalHeight / 2 : margin.top})`
+        `translate(${margin.left},${d3root.height === 0 ? totalHeight / 2 : margin.top})`,
       );
 
     const link = g
@@ -168,7 +168,7 @@ function History(props: Record<string, unknown>): JSX.Element {
         (d) =>
           `M${d.x},${d.y}C${d.x},${(d.y + d.parent.y) / 2} ${d.parent.x},${
             (d.y + d.parent.y) / 2
-          } ${d.parent.x},${d.parent.y}`
+          } ${d.parent.x},${d.parent.y}`,
       );
 
     const node = g

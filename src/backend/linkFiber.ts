@@ -20,7 +20,7 @@ import {
   // array of state and component
   HookStates,
   // object with tree structure
-  Fiber
+  Fiber,
 } from './types/backendTypes';
 // import function that creates a tree
 import Tree from './tree';
@@ -72,9 +72,9 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   window.postMessage(
     {
       action: 'recordSnap',
-      payload
+      payload,
     },
-    '*'
+    '*',
   );
 }
 
@@ -115,7 +115,7 @@ function traverseHooks(memoizedState: any): HookStates {
     if (memoizedState.memoizedState !== null) {
       hooksStates.push({
         component: memoizedState.queue,
-        state: memoizedState.memoizedState
+        state: memoizedState.memoizedState,
       });
     }
     memoizedState = memoizedState.next !== memoizedState ? memoizedState.next : null;
@@ -186,7 +186,7 @@ const exclude = [
   '_context',
   'stateNode',
   'elementType',
-  'type'
+  'type',
 ];
 
 // This recursive function is used to grab the state of children components
@@ -216,7 +216,7 @@ function convertDataToString(newObj, oldObj, depth = 0) {
 function createTree(
   currentFiber: Fiber,
   tree: Tree = new Tree('root', 'root'),
-  fromSibling = false
+  fromSibling = false,
 ) {
   // Base case: child or sibling pointed to null
   if (!currentFiber) return null;
@@ -237,7 +237,7 @@ function createTree(
     selfBaseDuration,
     treeBaseDuration,
     dependencies,
-    _debugHookTypes
+    _debugHookTypes,
   } = currentFiber;
 
   // check to see if we can get the information we were looking for
@@ -251,11 +251,11 @@ function createTree(
         const propsData = memoizedProps.children[0]._owner.memoizedProps;
         const newPropData = convertDataToString(
           propsData,
-          tree.componentData.props ? tree.componentData.props : null
+          tree.componentData.props ? tree.componentData.props : null,
         );
         tree.componentData = {
           ...tree.componentData,
-          props: newPropData
+          props: newPropData,
         };
       }
     } catch (error) {
@@ -332,7 +332,7 @@ function createTree(
     actualDuration,
     actualStartTime,
     selfBaseDuration,
-    treeBaseDuration
+    treeBaseDuration,
   };
 
   let newNode = null;
@@ -360,14 +360,14 @@ function createTree(
         newState,
         elementType ? elementType.name : 'nameless',
         componentData,
-        rtid
+        rtid,
       );
     } else {
       newNode = tree.addChild(
         newState,
         elementType ? elementType.name : 'nameless',
         componentData,
-        rtid
+        rtid,
       );
     }
   } else {
@@ -415,9 +415,9 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     window.postMessage(
       {
         action: 'devToolsInstalled',
-        payload: 'devToolsInstalled'
+        payload: 'devToolsInstalled',
       },
-      '*'
+      '*',
     );
     // reactInstance returns an object of the react, 1st element in map
     const reactInstance = devTools.renderers.get(1);
@@ -428,9 +428,9 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     window.postMessage(
       {
         action: 'aReactApp',
-        payload: 'aReactApp'
+        payload: 'aReactApp',
       },
-      '*'
+      '*',
     );
 
     const throttledUpdateSnapshot = throttle(() => {

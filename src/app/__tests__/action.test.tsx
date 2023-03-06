@@ -24,11 +24,11 @@ describe('unit testing for Action.tsx', () => {
     componentName: 'App',
     logChangedState: jest.fn(),
     componentData: {
-      actualDuration: 3.5
+      actualDuration: 3.5,
     },
     state: { test: 'test' },
     viewIndex: 2,
-    handleOnkeyDown: jest.fn()
+    handleOnkeyDown: jest.fn(),
   };
   beforeEach(() => {
     wrapper = shallow(<Action {...props} />);

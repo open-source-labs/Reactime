@@ -20,7 +20,7 @@ configure({ adapter: new (Adapter as any)() });
 
 const state = {
   tabs: {},
-  currentTab: null
+  currentTab: null,
 };
 
 const dispatch = jest.fn();
@@ -32,11 +32,11 @@ let wrapper;
 global.chrome = chrome;
 const port = {
   onMessage: {
-    addListener: () => {}
+    addListener: () => {},
   },
   onDisconnect: {
-    addListener: () => {}
-  }
+    addListener: () => {},
+  },
 };
 chrome.runtime.connect.returns(port);
 
@@ -61,11 +61,11 @@ describe('MainContainer rendering', () => {
       status: {
         contentScriptLaunched: true,
         reactDevToolsInstalled: true,
-        targetPageisaReactApp: true
+        targetPageisaReactApp: true,
       },
       viewIndex: -1,
       sliderIndex: 0,
-      mode: {}
+      mode: {},
     };
 
     wrapper = shallow(<MainContainer />);

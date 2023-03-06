@@ -48,7 +48,7 @@ const ComponentCard = (props): JSX.Element => {
         key={`DataComponent${i}`}
         header={Object.keys(information[i])}
         paragraphs={Object.values(information[i])}
-      />
+      />,
     );
   }
 

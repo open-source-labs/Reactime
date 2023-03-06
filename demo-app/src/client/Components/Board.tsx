@@ -18,7 +18,7 @@ class Board extends Component<{}, BoardState> {
       currentPlayer: 'X',
       gameOver: false,
       message: '',
-      scoreboard: { X: 0, O: 0 }
+      scoreboard: { X: 0, O: 0 },
     };
 
     this.resetBoard = this.resetBoard.bind(this);
@@ -38,7 +38,7 @@ class Board extends Component<{}, BoardState> {
     return [
       ['-', '-', '-'],
       ['-', '-', '-'],
-      ['-', '-', '-']
+      ['-', '-', '-'],
     ];
   }
 
@@ -51,7 +51,7 @@ class Board extends Component<{}, BoardState> {
     this.setState({
       gameOver: false,
       board: this.newBoard(),
-      message: ''
+      message: '',
     });
   }
 
@@ -87,14 +87,14 @@ class Board extends Component<{}, BoardState> {
 
         this.setState({
           gameOver: true,
-          message: `Player ${winner} wins!`
+          message: `Player ${winner} wins!`,
         });
 
         // draw condition: no '-' remaining in board without above win condition triggering
       } else if (!spacesLeft()) {
         this.setState({
           gameOver: true,
-          message: 'Draw!'
+          message: 'Draw!',
         });
       }
     }
@@ -104,7 +104,7 @@ class Board extends Component<{}, BoardState> {
     const boardCopy: BoardContent = [
       [...this.state.board[0]],
       [...this.state.board[1]],
-      [...this.state.board[2]]
+      [...this.state.board[2]],
     ];
     boardCopy[row][column] = this.state.currentPlayer;
     const newPlayer: Player = this.state.currentPlayer === 'X' ? 'O' : 'X';
@@ -115,7 +115,7 @@ class Board extends Component<{}, BoardState> {
     const rows: Array<JSX.Element> = [];
     for (let i = 0; i < 3; i++) {
       rows.push(
-        <Row key={i} row={i} handleBoxClick={this.handleBoxClick} values={this.state.board[i]} />
+        <Row key={i} row={i} handleBoxClick={this.handleBoxClick} values={this.state.board[i]} />,
       );
     }
     const { X, O }: Scoreboard = this.state.scoreboard;

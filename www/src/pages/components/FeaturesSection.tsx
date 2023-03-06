@@ -7,7 +7,7 @@ import {
   ClockIcon,
   CameraIcon,
   PresentationChartLineIcon,
-  MapIcon
+  MapIcon,
 } from '@heroicons/react/24/outline';
 
 const features = [
@@ -15,35 +15,35 @@ const features = [
     name: 'State SnapShot Display',
     description:
       'See your application state in a stylized and interactive format, for clear concise state management',
-    icon: CameraIcon
+    icon: CameraIcon,
   },
   {
     name: 'Time Travel Rendering',
     description: 'Simulate any state change from your DOM history, with a simple click of a button',
-    icon: ClockIcon
+    icon: ClockIcon,
   },
   {
     name: 'Action Comparison & Snapshot Series',
     description:
       'Save a series of state snapshots and use it to analyze changes in component render performance between current and previous series of snapshots.',
-    icon: ArrowPathIcon
+    icon: ArrowPathIcon,
   },
   {
     name: 'Components Performance Display',
     description:
       'Visualize the relative latency trends introduced by re-rendering each component on state change',
-    icon: PresentationChartLineIcon
+    icon: PresentationChartLineIcon,
   },
   {
     name: 'Download, Upload, and Persist',
     description: 'Save your state history for future tests. Keep your state changes on app reload',
-    icon: ArrowDownTrayIcon
+    icon: ArrowDownTrayIcon,
   },
   {
     name: 'Atom and Selector Relationships',
     description: 'Visualize the mapping of Atoms and Selectors to components in Recoil Apps',
-    icon: MapIcon
-  }
+    icon: MapIcon,
+  },
 ];
 
 export default function FeaturesSection() {

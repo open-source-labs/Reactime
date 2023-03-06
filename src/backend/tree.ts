@@ -66,7 +66,7 @@ class Tree {
     name = 'nameless',
     componentData: {} = {},
     rtid: any = null,
-    string: any = null
+    string: any = null,
   ) {
     this.state = state === 'root' ? 'root' : serializeState(state);
     this.name = name;

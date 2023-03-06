@@ -15,11 +15,11 @@ describe('Navbar Component Test ', () => {
   it('clicking a post link navigates to the correct URL', () => {
     expect(screen.getAllByRole('link')[0]).toHaveAttribute(
       'href',
-      'http://github.com/open-source-labs/reactime'
+      'http://github.com/open-source-labs/reactime',
     );
     expect(screen.getAllByRole('link')[1]).toHaveAttribute(
       'href',
-      'https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga?hl=en-US'
+      'https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga?hl=en-US',
     );
   });
 });

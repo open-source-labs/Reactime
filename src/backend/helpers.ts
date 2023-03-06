@@ -96,10 +96,8 @@ export const getHooksNames = (elementType: string): Array<string> => {
      * Check within each function declaration if there are hook declarations */
     ast.forEach((functionDec) => {
       let declarationBody: any;
-      if (functionDec.expression?.body)
-        declarationBody =
-          functionDec.expression.body
-            .body; // check if functionDec.expression.body exists, then set declarationBody to functionDec's body
+      if (functionDec.expression?.body) declarationBody = functionDec.expression.body.body;
+      // check if functionDec.expression.body exists, then set declarationBody to functionDec's body
       else declarationBody = functionDec.body?.body ?? [];
       // Traverse through the function's funcDecs and Expression Statements
       declarationBody.forEach((elem: any) => {

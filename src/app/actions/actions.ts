@@ -3,129 +3,129 @@ import * as types from '../constants/actionTypes';
 
 export const save = (newSeries, newSeriesName) => ({
   type: types.SAVE,
-  payload: { newSeries, newSeriesName }
+  payload: { newSeries, newSeriesName },
 });
 export const deleteSeries = () => ({
-  type: types.DELETE_SERIES
+  type: types.DELETE_SERIES,
 });
 export const toggleMode = (mode) => ({
   type: types.TOGGLE_MODE,
-  payload: mode
+  payload: mode,
 });
 
 export const addNewSnapshots = (tabsObj) => ({
   type: types.NEW_SNAPSHOTS,
-  payload: tabsObj
+  payload: tabsObj,
 });
 
 export const initialConnect = (tabsObj) => ({
   type: types.INITIAL_CONNECT,
-  payload: tabsObj
+  payload: tabsObj,
 });
 
 export const setPort = (port) => ({
   type: types.SET_PORT,
-  payload: port
+  payload: port,
 });
 
 export const emptySnapshots = () => ({
-  type: types.EMPTY
+  type: types.EMPTY,
 });
 
 export const changeView = (index) => ({
   type: types.CHANGE_VIEW,
-  payload: index
+  payload: index,
 });
 
 export const changeSlider = (index) => ({
   type: types.CHANGE_SLIDER,
-  payload: index
+  payload: index,
 });
 
 export const moveBackward = () => ({
   type: types.MOVE_BACKWARD,
-  payload: false
+  payload: false,
 });
 
 export const moveForward = () => ({
   type: types.MOVE_FORWARD,
-  payload: false
+  payload: false,
 });
 
 export const playForward = () => ({
   type: types.MOVE_FORWARD,
-  payload: true
+  payload: true,
 });
 
 export const pause = () => ({
-  type: types.PAUSE
+  type: types.PAUSE,
 });
 
 export const startPlaying = (intervalId) => ({
   type: types.PLAY,
-  payload: intervalId
+  payload: intervalId,
 });
 
 export const importSnapshots = (newSnaps) => ({
   type: types.IMPORT,
-  payload: newSnaps
+  payload: newSnaps,
 });
 
 export const setTab = (tab) => ({
   type: types.SET_TAB,
-  payload: tab
+  payload: tab,
 });
 
 export const deleteTab = (tab) => ({
   type: types.DELETE_TAB,
-  payload: tab
+  payload: tab,
 });
 
 export const noDev = (tab) => ({
   type: types.NO_DEV,
-  payload: tab
+  payload: tab,
 });
 
 export const toggleSplit = () => ({
-  type: types.TOGGLE_SPLIT
+  type: types.TOGGLE_SPLIT,
 });
 
 export const toggleExpanded = (node) => ({
   type: types.TOGGLE_EXPANDED,
-  payload: node
+  payload: node,
 });
 
 export const launchContentScript = (tab) => ({
   type: types.LAUNCH_CONTENT,
-  payload: tab
+  payload: tab,
 });
 
 export const resetSlider = () => ({
-  type: types.SLIDER_ZERO
+  type: types.SLIDER_ZERO,
 });
 
 export const onHover = (rtid) => ({
   type: types.ON_HOVER,
   //the payload should be something to relate the component we're hovering and highlight that component on the DOM
-  payload: rtid
+  payload: rtid,
 });
 
 export const onHoverExit = (rtid) => ({
   type: types.ON_HOVER_EXIT,
-  payload: rtid
+  payload: rtid,
 });
 
 export const setCurrentLocation = (tabsObj) => ({
   type: types.SET_CURRENT_LOCATION,
-  payload: tabsObj
+  payload: tabsObj,
 });
 
 export const setCurrentTabInApp = (currentTabInApp) => ({
   type: types.SET_CURRENT_TAB_IN_APP,
-  payload: currentTabInApp
+  payload: currentTabInApp,
 });
 
 export const tutorialSaveSeriesToggle = (toggleVal) => ({
   type: types.TUTORIAL_SAVE_SERIES_TOGGLE,
-  payload: toggleVal
+  payload: toggleVal,
 });

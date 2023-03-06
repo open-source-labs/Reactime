@@ -21,7 +21,7 @@ function ErrorContainer(): any {
   const status = {
     contentScriptLaunched: false,
     reactDevToolsInstalled: false,
-    targetPageisaReactApp: false
+    targetPageisaReactApp: false,
   };
   if (tabs[currentTab]) {
     Object.assign(status, tabs[currentTab].status);

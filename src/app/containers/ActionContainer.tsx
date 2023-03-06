@@ -51,7 +51,7 @@ function ActionContainer(props): JSX.Element {
         componentData:
           JSON.stringify(obj.stateSnapshot.children[0].componentData) === '{}'
             ? ''
-            : obj.stateSnapshot.children[0].componentData
+            : obj.stateSnapshot.children[0].componentData,
       };
       hierarchyArr.push(newObj);
     }
@@ -121,7 +121,7 @@ function ActionContainer(props): JSX.Element {
           routePath={snapshot.routePath}
         />
       );
-    }
+    },
   );
   useEffect(() => {
     setActionView(true);
@@ -131,7 +131,7 @@ function ActionContainer(props): JSX.Element {
   const toggleRecord = () => {
     port.postMessage({
       action: 'toggleRecord',
-      tabId: currentTab
+      tabId: currentTab,
     });
     // Record button's icon is being togggled on click
     setRecordingActions(!recordingActions);

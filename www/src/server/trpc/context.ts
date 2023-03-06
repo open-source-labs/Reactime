@@ -15,7 +15,7 @@ type CreateContextOptions = Record<string, never>;
  **/
 export const createContextInner = async (opts: CreateContextOptions) => {
   return {
-    prisma
+    prisma,
   };
 };
 

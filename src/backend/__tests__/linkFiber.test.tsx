@@ -30,7 +30,7 @@ interface fooState {
 }
 function App(): JSX.Element {
   const [fooState, setFooState] = useState({
-    foo: 'bar'
+    foo: 'bar',
   });
   return <div>{fooState}</div>;
 }
@@ -48,15 +48,15 @@ xdescribe('unit test for linkFiber', () => {
         '---extensions-on-chrome-urls',
         '--whitelisted-extension-id=fmkadmapgofadopljbjfkapdkoienihi',
         '--whitelisted-extension-id=hilpbahfbckghckaiafiiinjkeagmfhn',
-        '--load-extension=/mnt/d/Libraries/Documents/codeRepos/reactime/src/extension/build'
+        '--load-extension=/mnt/d/Libraries/Documents/codeRepos/reactime/src/extension/build',
       ]),
       devtools: true,
-      ignoreDefaultArgs: true
+      ignoreDefaultArgs: true,
     });
 
     const c = await puppeteer.connect({
       browserWSEndpoint: browser.wsEndpoint(),
-      ignoreHTTPSErrors: false
+      ignoreHTTPSErrors: false,
     });
 
     page = await browser.newPage();
@@ -72,7 +72,7 @@ xdescribe('unit test for linkFiber', () => {
     snapShot = { tree: null };
     mode = {
       jumping: false,
-      paused: false
+      paused: false,
     };
     linkFiber = linkFiberStart(snapShot, mode);
 
@@ -83,7 +83,7 @@ xdescribe('unit test for linkFiber', () => {
         lf(container);
       },
       {},
-      linkFiber
+      linkFiber,
     );
   });
 

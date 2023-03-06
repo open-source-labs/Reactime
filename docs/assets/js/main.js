@@ -65,7 +65,7 @@
       },
       contains: function () {
         return !0;
-      }
+      },
     }),
     (e.Set.empty = {
       intersect: function () {
@@ -76,7 +76,7 @@
       },
       contains: function () {
         return !1;
-      }
+      },
     }),
     (e.Set.prototype.contains = function (e) {
       return !!this.elements[e];
@@ -161,7 +161,7 @@
       (t.label && t.label in this.registeredFunctions) ||
         e.utils.warn(
           'Function is not registered with pipeline. This may cause problems when serialising the index.\n',
-          t
+          t,
         );
     }),
     (e.Pipeline.load = function (t) {
@@ -317,17 +317,17 @@
           aliti: 'al',
           iviti: 'ive',
           biliti: 'ble',
-          logi: 'log'
+          logi: 'log',
         },
         t = { icate: 'ic', ative: '', alize: 'al', iciti: 'ic', ical: 'ic', ful: '', ness: '' },
         i = '[aeiouy]',
         n = '[^aeiou][^aeiouy]*',
         c = new RegExp('^([^aeiou][^aeiouy]*)?[aeiouy][aeiou]*[^aeiou][^aeiouy]*'),
         h = new RegExp(
-          '^([^aeiou][^aeiouy]*)?[aeiouy][aeiou]*[^aeiou][^aeiouy]*[aeiouy][aeiou]*[^aeiou][^aeiouy]*'
+          '^([^aeiou][^aeiouy]*)?[aeiouy][aeiou]*[^aeiou][^aeiouy]*[aeiouy][aeiou]*[^aeiou][^aeiouy]*',
         ),
         d = new RegExp(
-          '^([^aeiou][^aeiouy]*)?[aeiouy][aeiou]*[^aeiou][^aeiouy]*([aeiouy][aeiou]*)?$'
+          '^([^aeiou][^aeiouy]*)?[aeiouy][aeiou]*[^aeiou][^aeiouy]*([aeiouy][aeiou]*)?$',
         ),
         f = new RegExp('^([^aeiou][^aeiouy]*)?[aeiouy]'),
         p = /^(.+?)(ss|i)es$/,
@@ -523,7 +523,7 @@
       'would',
       'yet',
       'you',
-      'your'
+      'your',
     ])),
     e.Pipeline.registerFunction(e.stopWordFilter, 'stopWordFilter'),
     (e.trimmer = function (e) {
@@ -834,7 +834,7 @@
         fields: this.fields,
         fieldVectors: r,
         invertedIndex: t,
-        pipeline: this.pipeline.toJSON()
+        pipeline: this.pipeline.toJSON(),
       };
     }),
     (e.Index.load = function (t) {
@@ -851,7 +851,7 @@
             e.version +
             "' does not match serialized index '" +
             t.version +
-            "'"
+            "'",
         );
       for (var l = 0; l < n.length; l++) {
         var h = (c = n[l])[0],
@@ -1012,7 +1012,7 @@
           fieldVectors: this.fieldVectors,
           tokenSet: this.tokenSet,
           fields: Object.keys(this._fields),
-          pipeline: this.searchPipeline
+          pipeline: this.searchPipeline,
         })
       );
     }),
@@ -1423,7 +1423,7 @@ var typedoc,
           selector: selector,
           constructor: constructor,
           priority: priority,
-          namespace: namespace
+          namespace: namespace,
         }),
         components.sort(function (a, b) {
           return a.priority - b.priority;
@@ -1506,13 +1506,13 @@ var typedoc,
             'scroll',
             typedoc.throttle(function () {
               return _this.onScroll();
-            }, 10)
+            }, 10),
           ),
           window.addEventListener(
             'resize',
             typedoc.throttle(function () {
               return _this.onResize();
-            }, 10)
+            }, 10),
           ),
           _this.onResize(),
           _this.onScroll(),
@@ -1523,14 +1523,14 @@ var typedoc,
         __extends(Viewport, _super),
         (Viewport.prototype.triggerResize = function () {
           var event = new CustomEvent('resize', {
-            detail: { width: this.width, height: this.height }
+            detail: { width: this.width, height: this.height },
           });
           this.dispatchEvent(event);
         }),
         (Viewport.prototype.onResize = function () {
           (this.width = window.innerWidth || 0), (this.height = window.innerHeight || 0);
           var event = new CustomEvent('resize', {
-            detail: { width: this.width, height: this.height }
+            detail: { width: this.width, height: this.height },
           });
           this.dispatchEvent(event);
         }),
@@ -1568,7 +1568,7 @@ var typedoc,
       (typedoc.isPointerTouch = !1),
       (typedoc.hasPointerMoved = !1),
       (typedoc.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
+        navigator.userAgent,
       )),
       document.documentElement.classList.add(typedoc.isMobile ? 'is-mobile' : 'not-mobile'),
       typedoc.isMobile &&
@@ -1642,7 +1642,7 @@ var typedoc,
               ((this.checkbox.checked = this.value),
               document.documentElement.classList.toggle(
                 'toggle-' + this.key,
-                this.value != this.defaultValue
+                this.value != this.defaultValue,
               ));
           }),
           (FilterItemCheckbox.prototype.fromLocalStorage = function (value) {
@@ -1775,7 +1775,7 @@ var typedoc,
             return a.position - b.position;
           });
           var event = new CustomEvent('scroll', {
-            detail: { scrollTop: typedoc.viewport.scrollTop }
+            detail: { scrollTop: typedoc.viewport.scrollTop },
           });
           this.onScroll(event);
         }),
@@ -1912,7 +1912,7 @@ var typedoc,
               rel && (current.classList.remove('current'), rel.classList.add('current'));
             } else
               (current = this.results.querySelector(
-                1 == dir ? 'li:first-child' : 'li:last-child'
+                1 == dir ? 'li:first-child' : 'li:last-child',
               )) && current.classList.add('current');
           }),
           (Search.prototype.gotoCurrentResult = function () {

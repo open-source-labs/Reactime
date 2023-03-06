@@ -3,7 +3,7 @@ import React from 'react';
 // Font size of the Controls label and Dropdowns
 const controlStyles = {
   fontSize: '12px',
-  padding: '10px'
+  padding: '10px',
 };
 
 const dropDownStyle = {
@@ -15,7 +15,7 @@ const dropDownStyle = {
   borderWidth: '1px',
   backgroundColor: '#242529',
   color: 'white',
-  padding: '2px'
+  padding: '2px',
 };
 
 type Props = {
@@ -57,7 +57,7 @@ export default function LinkControls({
   setLinkType,
   setStepPercent,
   setSelectedNode,
-  snapShots
+  snapShots,
 }: Props): JSX.Element {
   collectNodes(snapShots);
 
@@ -117,7 +117,7 @@ export default function LinkControls({
               <option key={node.name} value={node.name}>
                 {node.name}
               </option>
-            )
+            ),
         )}
       </select>
       {/* This is the slider control for the step option */}

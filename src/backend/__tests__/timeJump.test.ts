@@ -58,7 +58,7 @@ describe('unit testing for timeJump.ts', () => {
     tree.children = [
       new FiberNode(mockFuncs[1], '*'),
       new FiberNode(mockFuncs[2], '*'),
-      new FiberNode(mockFuncs[3], '*')
+      new FiberNode(mockFuncs[3], '*'),
     ];
 
     snapShot = { tree };

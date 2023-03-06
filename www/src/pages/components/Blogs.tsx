@@ -13,8 +13,8 @@ const posts = [
     author: {
       name: 'James Nghiem',
       href: 'https://medium.com/@reactime',
-      imageUrl: 'https://github.com/jemzir.png'
-    }
+      imageUrl: 'https://github.com/jemzir.png',
+    },
   },
   {
     title: 'Time-Traveling Through React State',
@@ -31,8 +31,8 @@ const posts = [
       name: 'Lina Shin',
       href: 'https://rxlina.medium.com/',
       imageUrl:
-        'https://media-exp1.licdn.com/dms/image/C5603AQHQGFvRHt25WQ/profile-displayphoto-shrink_200_200/0/1623865299399?e=1676505600&v=beta&t=yDqgIaJOhO3oOWLROIH9rHPBHdVzDSV3VlB2axWqXr4'
-    }
+        'https://media-exp1.licdn.com/dms/image/C5603AQHQGFvRHt25WQ/profile-displayphoto-shrink_200_200/0/1623865299399?e=1676505600&v=beta&t=yDqgIaJOhO3oOWLROIH9rHPBHdVzDSV3VlB2axWqXr4',
+    },
   },
   {
     title: 'What time is it? Reactime!',
@@ -48,9 +48,9 @@ const posts = [
     author: {
       name: 'Robby Tipton',
       href: 'https://medium.com/@robbytiptontol',
-      imageUrl: 'https://miro.medium.com/fit/c/96/96/1*pi-RH2LRvsZA9vLZTvY2mg.jpeg'
-    }
-  }
+      imageUrl: 'https://miro.medium.com/fit/c/96/96/1*pi-RH2LRvsZA9vLZTvY2mg.jpeg',
+    },
+  },
 ];
 
 export default function Blogs() {

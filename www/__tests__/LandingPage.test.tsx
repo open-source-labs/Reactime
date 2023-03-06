@@ -13,14 +13,14 @@ jest.mock('../src/utils/trpc', () => {
 
   const mockUserRouter = {
     createUser: mockCreateUser,
-    findAll: mockFindAll
+    findAll: mockFindAll,
   };
 
   const mockAppRouter = {
-    user: mockUserRouter
+    user: mockUserRouter,
   };
   return {
-    appRouter: mockAppRouter
+    appRouter: mockAppRouter,
   };
 });
 
