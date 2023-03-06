@@ -6,7 +6,7 @@ import {
   faSquare,
   faColumns,
   faUnlock,
-  faLock,
+  faLock
 } from '@fortawesome/free-solid-svg-icons';
 import { importSnapshots, toggleMode, toggleSplit } from '../actions/actions';
 import { useStoreContext } from '../store';
@@ -19,7 +19,7 @@ function exportHandler(snapshots: []) {
 
   // set file in anchor link
   fileDownload.href = URL.createObjectURL(
-    new Blob([JSON.stringify(snapshots)], { type: 'application/json' }),
+    new Blob([JSON.stringify(snapshots)], { type: 'application/json' })
   );
 
   // set anchor as file download and click it
@@ -56,50 +56,26 @@ function ButtonsContainer(): JSX.Element {
   const [{ tabs, currentTab, split, currentTabInApp }, dispatch] = useStoreContext();
   const {
     snapshots,
-    mode: { paused },
+    mode: { paused }
   } = tabs[currentTab];
 
   return (
-    <div className="buttons-container">
-      <button
-        className="pause-button"
-        type="button"
-        onClick={() => dispatch(toggleMode('paused'))}
-      >
-        {paused ? (
-          <FontAwesomeIcon icon={faUnlock} />
-        ) : (
-          <FontAwesomeIcon icon={faLock} />
-        )}
+    <div className='buttons-container'>
+      <button className='pause-button' type='button' onClick={() => dispatch(toggleMode('paused'))}>
+        {paused ? <FontAwesomeIcon icon={faUnlock} /> : <FontAwesomeIcon icon={faLock} />}
         {paused ? 'Unlock' : 'Lock'}
       </button>
 
-      <button
-        className="split-button"
-        type="button"
-        onClick={() => dispatch(toggleSplit())}
-      >
-        {split ? (
-          <FontAwesomeIcon icon={faSquare} />
-        ) : (
-          <FontAwesomeIcon icon={faColumns} />
-        )}
+      <button className='split-button' type='button' onClick={() => dispatch(toggleSplit())}>
+        {split ? <FontAwesomeIcon icon={faSquare} /> : <FontAwesomeIcon icon={faColumns} />}
         {split ? 'Unsplit' : 'Split'}
       </button>
 
-      <button
-        className="export-button"
-        type="button"
-        onClick={() => exportHandler(snapshots)}
-      >
+      <button className='export-button' type='button' onClick={() => exportHandler(snapshots)}>
         <FontAwesomeIcon icon={faDownload} />
         Download
       </button>
-      <button
-        className="import-button"
-        type="button"
-        onClick={() => importHandler(dispatch)}
-      >
+      <button className='import-button' type='button' onClick={() => importHandler(dispatch)}>
         <FontAwesomeIcon icon={faUpload} />
         Upload
       </button>

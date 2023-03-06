@@ -3,11 +3,11 @@ import { SeriesPoint } from '@visx/shape/lib/types';
 // PerformanceVisx types
 
 export interface Series {
-    data: {
-      barStack: ActionObj[],
-    }
-    name: string
-  }
+  data: {
+    barStack: ActionObj[];
+  };
+  name: string;
+}
 
 // interface Event {
 //     target: EventTarget
@@ -20,21 +20,21 @@ export interface Series {
 //   }
 
 export interface ActionObj {
-    name: string,
-  seriesName: string,
-  currentTab: string,
-  }
+  name: string;
+  seriesName: string;
+  currentTab: string;
+}
 
 export interface PerfData {
-  barStack: BarStackProp[],
-  componentData?: Record<string, unknown>,
-  maxTotalRender: number,
+  barStack: BarStackProp[];
+  componentData?: Record<string, unknown>;
+  maxTotalRender: number;
 }
 
 export interface BarStackProp {
-  snapshotId: string,
-  route: string,
-  currentTab?: string,
+  snapshotId: string;
+  route: string;
+  currentTab?: string;
 }
 
 // On-hover data for BarGraph/BarGraphComparison.tsx
@@ -65,34 +65,33 @@ export interface Margin {
 }
 
 export interface BarGraphBase {
-  width: number,
-  height: number,
-  data: PerfData,
-  comparison: Series[],
+  width: number;
+  height: number;
+  data: PerfData;
+  comparison: Series[];
 }
 
 export interface BarGraphComparisonProps extends BarGraphBase {
-  setSeries: (e: boolean | string) => void,
-  series: number,
-  setAction: (e: boolean | string) => void,
+  setSeries: (e: boolean | string) => void;
+  series: number;
+  setAction: (e: boolean | string) => void;
 }
 
-export interface BarGraphProps extends BarGraphBase{
-  setRoute: () => void,
-  allRoutes: unknown,
-  filteredSnapshots: unknown,
-  snapshot: unknown,
-  setSnapshot: () => void
+export interface BarGraphProps extends BarGraphBase {
+  setRoute: () => void;
+  allRoutes: unknown;
+  filteredSnapshots: unknown;
+  snapshot: unknown;
+  setSnapshot: () => void;
 }
 
-export interface BarGraphComparisonAction{
-  action: ActionObj,
-  data: ActionObj[],
-  width: number,
-  height: number,
-  comparison: Series[],
-  setSeries: (e: boolean | string) => void,
-  series?: number,
-  setAction: (e: boolean | string) => void,
+export interface BarGraphComparisonAction {
+  action: ActionObj;
+  data: ActionObj[];
+  width: number;
+  height: number;
+  comparison: Series[];
+  setSeries: (e: boolean | string) => void;
+  series?: number;
+  setAction: (e: boolean | string) => void;
 }
-

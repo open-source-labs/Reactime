@@ -5,7 +5,7 @@ import ReactHover, { Trigger, Hover } from 'react-hover';
 import { setCurrentTabInApp } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-const radialGraph = props => {
+const radialGraph = (props) => {
   const state = {
     series: [props.series],
     options: {
@@ -15,8 +15,8 @@ const radialGraph = props => {
         width: 100,
         type: 'radialBar',
         toolbar: {
-          show: false,
-        },
+          show: false
+        }
       },
       plotOptions: {
         radialBar: {
@@ -35,8 +35,8 @@ const radialGraph = props => {
               top: 3,
               left: 0,
               blur: 4,
-              opacity: 0.24,
-            },
+              opacity: 0.24
+            }
           },
           track: {
             background: '#fff',
@@ -47,8 +47,8 @@ const radialGraph = props => {
               top: -3,
               left: 0,
               blur: 4,
-              opacity: 0.35,
-            },
+              opacity: 0.35
+            }
           },
 
           dataLabels: {
@@ -57,16 +57,16 @@ const radialGraph = props => {
               offsetY: -10,
               show: true,
               color: '#fff',
-              fontSize: '24px',
+              fontSize: '24px'
             },
             value: {
               formatter: props.formatted,
               color: '#fff',
               fontSize: '16px',
-              show: true,
-            },
-          },
-        },
+              show: true
+            }
+          }
+        }
       },
       fill: {
         type: 'solid',
@@ -78,14 +78,14 @@ const radialGraph = props => {
           inverseColors: false,
           opacityFrom: 1,
           opacityTo: 1,
-          stops: [0, 100],
-        },
+          stops: [0, 100]
+        }
       },
       stroke: {
-        lineCap: 'flat',
+        lineCap: 'flat'
       },
-      labels: [props.label],
-    },
+      labels: [props.label]
+    }
   };
 
   // This updates currentTabInApp which is used to determine what tutorial to display (depending on the active tab within Reactime)
@@ -98,25 +98,25 @@ const radialGraph = props => {
   const optionsCursorTrueWithMargin = {
     followCursor: true,
     shiftX: 20,
-    shiftY: 0,
+    shiftY: 0
   };
 
   return (
-    <div className="metric">
+    <div className='metric'>
       <ReactHover options={optionsCursorTrueWithMargin}>
-        <Trigger type="trigger">
-          <div id="chart">
+        <Trigger type='trigger'>
+          <div id='chart'>
             <Charts
               options={state.options}
               series={state.series}
-              type="radialBar"
+              type='radialBar'
               height={200}
               width={200}
             />
           </div>
         </Trigger>
-        <Hover type="hover">
-          <div style={{ zIndex: 1, position: 'relative', padding: '0.5rem 1rem' }} id="hover-box">
+        <Hover type='hover'>
+          <div style={{ zIndex: 1, position: 'relative', padding: '0.5rem 1rem' }} id='hover-box'>
             <p>
               <strong>{props.name}</strong>
             </p>

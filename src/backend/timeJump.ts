@@ -20,19 +20,17 @@ import routes from './routes';
 import componentActionsRecord from './masterState';
 
 const circularComponentTable = new Set();
-export default mode => {
+export default (mode) => {
   // Recursively change state of tree
   // Set the state of the origin tree if the component is stateful
   function jump(target) {
     if (!target) return;
     if (target.state === 'stateless') {
-      target.children.forEach(child => jump(child));
+      target.children.forEach((child) => jump(child));
       return;
     }
     // for stateful class components
-    const component = componentActionsRecord.getComponentByIndex(
-      target.componentData.index,
-    );
+    const component = componentActionsRecord.getComponentByIndex(target.componentData.index);
 
     // check if it is a stateful class component
     // if yes, find the component by its index and assign it to a variable
@@ -40,8 +38,8 @@ export default mode => {
     if (component && component.setState) {
       component.setState(
         // prevState contains the states of the snapshots we are jumping FROM, not jumping TO
-        prevState => {
-          Object.keys(prevState).forEach(key => {
+        (prevState) => {
+          Object.keys(prevState).forEach((key) => {
             // the if conditional below does not appear to ever be reached if all states are defined - leaving code in just in case codebases do have undefined states
             // if (target.state[key] !== undefined) {
             //   target.state[key] = undefined;
@@ -50,11 +48,11 @@ export default mode => {
           return target.state;
         },
         // Iterate through new children after state has been set
-        () => target.children.forEach(child => jump(child)),
+        () => target.children.forEach((child) => jump(child))
       );
     }
 
-    target.children.forEach(child => {
+    target.children.forEach((child) => {
       if (!circularComponentTable.has(child)) {
         circularComponentTable.add(child);
         jump(child);
@@ -87,7 +85,7 @@ export default mode => {
     if (firstCall) circularComponentTable.clear();
     const navigating: boolean = routes.navigate(target.route);
     if (navigating) {
-      addEventListener('popstate', event => {
+      addEventListener('popstate', (event) => {
         jump(target);
         document.body.onmouseover = () => {
           mode.jumping = false;

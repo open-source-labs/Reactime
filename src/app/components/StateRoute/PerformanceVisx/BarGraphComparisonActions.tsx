@@ -14,11 +14,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import { deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-import { TooltipData, Margin, BarGraphComparisonAction, ActionObj, } from '../../FrontendTypes';
+import { TooltipData, Margin, BarGraphComparisonAction, ActionObj } from '../../FrontendTypes';
 
 /* DEFAULTS */
 const margin: Margin = {
-  top: 30, right: 30, bottom: 0, left: 50,
+  top: 30,
+  right: 30,
+  bottom: 0,
+  left: 50
 };
 const axisColor = '#62d6fb';
 const background = '#242529';
@@ -29,14 +32,12 @@ const tooltipStyles = {
   color: 'white',
   fontSize: '14px',
   lineHeight: '18px',
-  fontFamily: 'Roboto',
+  fontFamily: 'Roboto'
 };
 
 const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   const [dispatch] = useStoreContext();
-  const {
-    width, height, data, comparison, setSeries, series, setAction, action
-  } = props;
+  const { width, height, data, comparison, setSeries, series, setAction, action } = props;
   const [snapshots] = React.useState(0);
   const [setOpen] = React.useState(false);
   const [setPicOpen] = React.useState(false);
@@ -44,26 +45,23 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
     dispatch(setCurrentTabInApp('performance-comparison'));
   }, []);
 
-  const {
-    tooltipOpen,
-    tooltipLeft,
-    tooltipTop,
-    tooltipData,
-    hideTooltip,
-    showTooltip,
-  } = useTooltip<TooltipData>();
+  const { tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip } =
+    useTooltip<TooltipData>();
   let tooltipTimeout: number;
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
-  const keys = Object.keys(data[0]).filter((componentName) => componentName !== 'name' && componentName !== 'seriesName' && componentName !== 'snapshotId');
+  const keys = Object.keys(data[0]).filter(
+    (componentName) =>
+      componentName !== 'name' && componentName !== 'seriesName' && componentName !== 'snapshotId'
+  );
   // data accessor (used to generate scales) and formatter (add units for on hover box)
-  const getSeriesName = (action: ActionObj):string => action.seriesName;
+  const getSeriesName = (action: ActionObj): string => action.seriesName;
 
   // create visualization SCALES with cleaned data.
   // the domain array/xAxisPoints elements will place the bars along the x-axis
   const seriesNameScale = scaleBand<string>({
     domain: data.map(getSeriesName),
-    padding: 0.2,
+    padding: 0.2
   });
   // This function will iterate through the snapshots of the series,
   // and grab the highest render times (sum of all component times).
@@ -83,13 +81,13 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   // the domain array on rendering scale will set the coordinates for Y-aix points.
   const renderingScale = scaleLinear<number>({
     domain: [0, calculateMaxTotalRender()],
-    nice: true,
+    nice: true
   });
   // the domain array will assign each key a different color to make rectangle boxes
   // and use range to set the color scheme each bar
   const colorScale = scaleOrdinal<string>({
     domain: keys,
-    range: schemeSet3,
+    range: schemeSet3
   });
 
   // setting max dimensions and scale ranges
@@ -99,11 +97,11 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   renderingScale.range([yMax, 0]);
 
   // useStyles will change the styling on save series dropdown feature
-  const useStyles = makeStyles(theme => ({
+  const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
       minWidth: 80,
-      height: 30,
+      height: 30
     },
     select: {
       minWidth: 80,
@@ -112,19 +110,19 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
       border: '1px solid grey',
       borderRadius: 4,
       color: 'grey',
-      height: 30,
-    },
+      height: 30
+    }
   }));
 
   const classes = useStyles();
 
-  const handleSeriesChange = event => {
+  const handleSeriesChange = (event) => {
     if (!event) return;
     setSeries(event.target.value);
     setAction(false);
   };
 
-  const handleActionChange = event => {
+  const handleActionChange = (event) => {
     if (!event) return;
     setAction(event.target.value);
     setSeries(false);
@@ -143,9 +141,9 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   for (let i = 0; i < classname.length; i += 1) {
     classname[i].addEventListener('click', animateButton, false);
   }
-  const seriesList = comparison.map(elem => elem.data.barStack);
+  const seriesList = comparison.map((elem) => elem.data.barStack);
   const actionsList = seriesList.flat();
-  const testList = actionsList.map(elem => elem.name);
+  const testList = actionsList.map((elem) => elem.name);
 
   const finalList = [];
   for (let i = 0; i < testList.length; i += 1) {
@@ -154,10 +152,10 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
 
   return (
     <div>
-      <div className="series-options-container">
-        <div className="dropdown-and-delete-series-container">
+      <div className='series-options-container'>
+        <div className='dropdown-and-delete-series-container'>
           <button
-            className="delete-button"
+            className='delete-button'
             onClick={() => {
               setAction(false);
               setSeries(true);
@@ -167,26 +165,32 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
             Clear All Series
           </button>
           <h4 style={{ padding: '0 1rem' }}>Compare Series: </h4>
-          <FormControl variant="outlined" className={classes.formControl}>
+          <FormControl variant='outlined' className={classes.formControl}>
             <Select
               style={{ color: 'white' }}
-              labelId="simple-select-outlined-label"
-              id="simple-select-outlined"
+              labelId='simple-select-outlined-label'
+              id='simple-select-outlined'
               className={classes.select}
               value={series}
               onChange={handleSeriesChange}
             >
               {!comparison.length ? (
                 <MenuItem>No series available</MenuItem>
-              ) : comparison.map((tabElem, index) => (<MenuItem key={`MenuItem${tabElem.name}`} value={index}>{tabElem.name}</MenuItem>))}
+              ) : (
+                comparison.map((tabElem, index) => (
+                  <MenuItem key={`MenuItem${tabElem.name}`} value={index}>
+                    {tabElem.name}
+                  </MenuItem>
+                ))
+              )}
             </Select>
           </FormControl>
           <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4>
-          <FormControl variant="outlined" className={classes.formControl}>
+          <FormControl variant='outlined' className={classes.formControl}>
             <Select
               style={{ color: 'white' }}
-              labelId="snapshot-select"
-              id="snapshot-select"
+              labelId='snapshot-select'
+              id='snapshot-select'
               className={classes.select}
               value={action} // snapshots
               onChange={handleActionChange}
@@ -194,23 +198,19 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
               {!comparison[snapshots] ? (
                 <MenuItem>No snapshots available</MenuItem>
               ) : (
-                finalList.map(elem => (
-                  <MenuItem key={`MenuItem${elem}`} value={elem}>{elem}</MenuItem>
-                )))}
+                finalList.map((elem) => (
+                  <MenuItem key={`MenuItem${elem}`} value={elem}>
+                    {elem}
+                  </MenuItem>
+                ))
+              )}
             </Select>
           </FormControl>
         </div>
       </div>
 
       <svg ref={containerRef} width={width} height={height}>
-        <rect
-          x={0}
-          y={0}
-          width={width}
-          height={height}
-          fill={background}
-          rx={14}
-        />
+        <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
         <Grid
           top={margin.top}
           left={margin.left}
@@ -218,7 +218,7 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
           yScale={renderingScale}
           width={xMax}
           height={yMax}
-          stroke="black"
+          stroke='black'
           strokeOpacity={0.1}
           xOffset={seriesNameScale.bandwidth() / 2}
         />
@@ -231,34 +231,38 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
             yScale={renderingScale}
             color={colorScale}
           >
-            {barStacks => barStacks.map(barStack => barStack.bars.map(bar => (
-              <rect
-                key={`bar-stack-${bar.bar.data.seriesName}-${bar.key}`}
-                x={bar.x}
-                y={bar.y}
-                height={bar.height === 0 ? null : bar.height}
-                width={bar.width}
-                fill={bar.color}
-                /* TIP TOOL EVENT HANDLERS */
-                // Hides tool tip once cursor moves off the current rect.
-                onMouseLeave={() => {
-                  tooltipTimeout = window.setTimeout(() => {
-                    hideTooltip();
-                  }, 300);
-                }}
-                // Cursor position in window updates position of the tool tip.
-                onMouseMove={event => {
-                  if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                  const top = event.clientY - margin.top - bar.height;
-                  const left = bar.x + bar.width / 2;
-                  showTooltip({
-                    tooltipData: bar,
-                    tooltipTop: top,
-                    tooltipLeft: left,
-                  });
-                }}
-              />
-            )))}
+            {(barStacks) =>
+              barStacks.map((barStack) =>
+                barStack.bars.map((bar) => (
+                  <rect
+                    key={`bar-stack-${bar.bar.data.seriesName}-${bar.key}`}
+                    x={bar.x}
+                    y={bar.y}
+                    height={bar.height === 0 ? null : bar.height}
+                    width={bar.width}
+                    fill={bar.color}
+                    /* TIP TOOL EVENT HANDLERS */
+                    // Hides tool tip once cursor moves off the current rect.
+                    onMouseLeave={() => {
+                      tooltipTimeout = window.setTimeout(() => {
+                        hideTooltip();
+                      }, 300);
+                    }}
+                    // Cursor position in window updates position of the tool tip.
+                    onMouseMove={(event) => {
+                      if (tooltipTimeout) clearTimeout(tooltipTimeout);
+                      const top = event.clientY - margin.top - bar.height;
+                      const left = bar.x + bar.width / 2;
+                      showTooltip({
+                        tooltipData: bar,
+                        tooltipTop: top,
+                        tooltipLeft: left
+                      });
+                    }}
+                  />
+                ))
+              )
+            }
           </BarStack>
         </Group>
         <AxisLeft
@@ -272,7 +276,7 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
             fill: 'rgb(231, 231, 231)',
             fontSize: 11,
             verticalAnchor: 'middle',
-            textAnchor: 'end',
+            textAnchor: 'end'
           })}
         />
         <AxisBottom
@@ -285,19 +289,13 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
           tickLabelProps={() => ({
             fill: 'rgb(231, 231, 231)',
             fontSize: 11,
-            textAnchor: 'middle',
+            textAnchor: 'middle'
           })}
         />
-        <Text
-          x={-xMax / 2}
-          y="15"
-          transform="rotate(-90)"
-          fontSize={12}
-          fill="#FFFFFF"
-        >
+        <Text x={-xMax / 2} y='15' transform='rotate(-90)' fontSize={12} fill='#FFFFFF'>
           Rendering Time (ms)
         </Text>
-        <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill="#FFFFFF">
+        <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill='#FFFFFF'>
           Series Name
         </Text>
       </svg>
@@ -312,15 +310,9 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
           <div style={{ color: colorScale(tooltipData.key) }}>
             <strong>{tooltipData.key}</strong>
           </div>
+          <div>{`${tooltipData.bar.data[tooltipData.key]} ms`}</div>
           <div>
-            {
-              `${tooltipData.bar.data[tooltipData.key]} ms`
-            }
-          </div>
-          <div>
-            <small>
-              {tooltipData.bar.data.seriesName}
-            </small>
+            <small>{tooltipData.bar.data.seriesName}</small>
           </div>
         </TooltipInPortal>
       )}

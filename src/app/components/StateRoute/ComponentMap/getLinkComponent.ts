@@ -10,13 +10,13 @@ import {
   LinkRadialCurve,
   LinkHorizontalLine,
   LinkVerticalLine,
-  LinkRadialLine,
+  LinkRadialLine
 } from '@visx/shape';
 
 export default function getLinkComponent({
   layout,
   linkType,
-  orientation,
+  orientation
 }: {
   layout: string;
   linkType: string;

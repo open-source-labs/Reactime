@@ -20,7 +20,7 @@ import {
   // array of state and component
   HookStates,
   // object with tree structure
-  Fiber,
+  Fiber
 } from './types/backendTypes';
 // import function that creates a tree
 import Tree from './tree';
@@ -72,7 +72,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
   window.postMessage(
     {
       action: 'recordSnap',
-      payload,
+      payload
     },
     '*'
   );
@@ -115,7 +115,7 @@ function traverseHooks(memoizedState: any): HookStates {
     if (memoizedState.memoizedState !== null) {
       hooksStates.push({
         component: memoizedState.queue,
-        state: memoizedState.memoizedState,
+        state: memoizedState.memoizedState
       });
     }
     memoizedState = memoizedState.next !== memoizedState ? memoizedState.next : null;
@@ -135,7 +135,59 @@ function traverseHooks(memoizedState: any): HookStates {
  * 3. Build a new state snapshot
  */
 // This runs after every Fiber commit. It creates a new snapshot
-const exclude = ['alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
+const exclude = [
+  'alternate',
+  '_owner',
+  '_store',
+  'get key',
+  'ref',
+  '_self',
+  '_source',
+  'firstBaseUpdate',
+  'updateQueue',
+  'lastBaseUpdate',
+  'shared',
+  'responders',
+  'pending',
+  'lanes',
+  'childLanes',
+  'effects',
+  'memoizedState',
+  'pendingProps',
+  'lastEffect',
+  'firstEffect',
+  'tag',
+  'baseState',
+  'baseQueue',
+  'dependencies',
+  'Consumer',
+  'context',
+  '_currentRenderer',
+  '_currentRenderer2',
+  'mode',
+  'flags',
+  'nextEffect',
+  'sibling',
+  'create',
+  'deps',
+  'next',
+  'destroy',
+  'parentSub',
+  'child',
+  'key',
+  'return',
+  'children',
+  '$$typeof',
+  '_threadCount',
+  '_calculateChangedBits',
+  '_currentValue',
+  '_currentValue2',
+  'Provider',
+  '_context',
+  'stateNode',
+  'elementType',
+  'type'
+];
 
 // This recursive function is used to grab the state of children components
 // and push them into the parent componenent
@@ -149,7 +201,10 @@ function convertDataToString(newObj, oldObj, depth = 0) {
       newPropData[key] = 'reactFiber';
       return newPropData;
     } else if (typeof newObj[key] === 'object' && exclude.includes(key) !== true) {
-      newPropData[key] = depth > 10 ? 'convertDataToString reached max depth' : convertDataToString(newObj[key], null, depth + 1);
+      newPropData[key] =
+        depth > 10
+          ? 'convertDataToString reached max depth'
+          : convertDataToString(newObj[key], null, depth + 1);
     } else if (exclude.includes(key) !== true) {
       newPropData[key] = newObj[key];
     }
@@ -182,16 +237,22 @@ function createTree(
     selfBaseDuration,
     treeBaseDuration,
     dependencies,
-    _debugHookTypes,
+    _debugHookTypes
   } = currentFiber;
 
-// check to see if we can get the information we were looking for
-// need to figure out what tag is
+  // check to see if we can get the information we were looking for
+  // need to figure out what tag is
   if (tag === 5) {
     try {
-      if (memoizedProps.children && memoizedProps.children[0]?._owner?.memoizedProps !== undefined) {
+      if (
+        memoizedProps.children &&
+        memoizedProps.children[0]?._owner?.memoizedProps !== undefined
+      ) {
         const propsData = memoizedProps.children[0]._owner.memoizedProps;
-        const newPropData = convertDataToString(propsData, tree.componentData.props ? tree.componentData.props : null);
+        const newPropData = convertDataToString(
+          propsData,
+          tree.componentData.props ? tree.componentData.props : null
+        );
         tree.componentData = {
           ...tree.componentData,
           props: newPropData
@@ -211,8 +272,8 @@ function createTree(
     actualStartTime?: number;
     selfBaseDuration?: number;
     treeBaseDuration?: number;
-    props?: any,
-    context?: any,
+    props?: any;
+    context?: any;
   } = {};
   let componentFound = false;
 
@@ -223,16 +284,13 @@ function createTree(
 
   // if the component uses the useContext hook, we want to grab the co  text object and add it to the componentData object for that fiber
   if (tag === 0 && _debugHookTypes) {
-      componentData.context = convertDataToString(dependencies?.firstContext?.memoizedValue, null);
+    componentData.context = convertDataToString(dependencies?.firstContext?.memoizedValue, null);
   }
   // Check if node is a stateful class component
   if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
     // Save component's state and setState() function to our record for future
     // time-travel state changing. Add record index to snapshot so we can retrieve.
-    componentData.index = componentActionsRecord.saveNew(
-      stateNode.state,
-      stateNode,
-    );
+    componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
     newState = stateNode.state;
     componentFound = true;
   }
@@ -240,10 +298,7 @@ function createTree(
 
   // Check if node is a hooks useState function
   // REGULAR REACT HOOKS
-  if (
-    memoizedState
-    && (tag === 0 || tag === 1 || tag === 2 || tag === 10)
-  ) {
+  if (memoizedState && (tag === 0 || tag === 1 || tag === 2 || tag === 10)) {
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
       // so we must traverse through the list and get the states.
@@ -252,12 +307,8 @@ function createTree(
       const hooksStates = traverseHooks(memoizedState);
       const hooksNames = getHooksNames(elementType.toString());
 
-
       hooksStates.forEach((state, i) => {
-        hooksIndex = componentActionsRecord.saveNew(
-          state.state,
-          state.component,
-        );
+        hooksIndex = componentActionsRecord.saveNew(state.state, state.component);
         componentData.hooksIndex = hooksIndex;
         if (!newState) {
           newState = { hooksState: [] };
@@ -281,43 +332,42 @@ function createTree(
     actualDuration,
     actualStartTime,
     selfBaseDuration,
-    treeBaseDuration,
+    treeBaseDuration
   };
 
   let newNode = null;
 
   // We want to add this fiber node to the snapshot
-  if (componentFound || newState === 'stateless' && !newState.hooksState) {
-      if (currentFiber.child?.stateNode?.setAttribute) {
-        rtid = `fromLinkFiber${rtidCounter}`;
-        // rtid = rtidCounter;
-        // check if rtid is already present
-        //  remove existing rtid before adding a new one
-        if (currentFiber.child.stateNode.classList.length > 0) {
-          const lastClass = currentFiber.child.stateNode.classList[
-            currentFiber.child.stateNode.classList.length - 1
-          ];
-          if (lastClass.includes('fromLinkFiber')) {
-            currentFiber.child.stateNode.classList.remove(lastClass);
-          }
+  if (componentFound || (newState === 'stateless' && !newState.hooksState)) {
+    if (currentFiber.child?.stateNode?.setAttribute) {
+      rtid = `fromLinkFiber${rtidCounter}`;
+      // rtid = rtidCounter;
+      // check if rtid is already present
+      //  remove existing rtid before adding a new one
+      if (currentFiber.child.stateNode.classList.length > 0) {
+        const lastClass =
+          currentFiber.child.stateNode.classList[currentFiber.child.stateNode.classList.length - 1];
+        if (lastClass.includes('fromLinkFiber')) {
+          currentFiber.child.stateNode.classList.remove(lastClass);
         }
-        currentFiber.child.stateNode.classList.add(rtid);
       }
-      rtidCounter += 1;
+      currentFiber.child.stateNode.classList.add(rtid);
+    }
+    rtidCounter += 1;
     // checking if tree fromSibling is true
     if (fromSibling) {
       newNode = tree.addSibling(
         newState,
         elementType ? elementType.name : 'nameless',
         componentData,
-        rtid,
+        rtid
       );
     } else {
       newNode = tree.addChild(
         newState,
         elementType ? elementType.name : 'nameless',
         componentData,
-        rtid,
+        rtid
       );
     }
   } else {
@@ -349,7 +399,7 @@ function createTree(
  * @return a function to be invoked by index.js that initiates snapshot monitoring
  * linkFiber contains core module functionality, exported as an anonymous function.
  */
- export default (snap: Snapshot, mode: Mode): (() => void) => {
+export default (snap: Snapshot, mode: Mode): (() => void) => {
   // checks for visiblity of document
   function onVisibilityChange(): void {
     // hidden property = background tab/minimized window
@@ -359,21 +409,33 @@ function createTree(
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     // check if reactDev Tools is installed
-    if (!devTools) { return; }
-    window.postMessage({
-      action: 'devToolsInstalled',
-      payload: 'devToolsInstalled'
-    }, '*');
+    if (!devTools) {
+      return;
+    }
+    window.postMessage(
+      {
+        action: 'devToolsInstalled',
+        payload: 'devToolsInstalled'
+      },
+      '*'
+    );
     // reactInstance returns an object of the react, 1st element in map
     const reactInstance = devTools.renderers.get(1);
     // if no React Instance found then target is not a compatible app
-    if (!reactInstance) { return; }
-    window.postMessage({
-      action: 'aReactApp',
-      payload: 'aReactApp'
-    }, '*');
+    if (!reactInstance) {
+      return;
+    }
+    window.postMessage(
+      {
+        action: 'aReactApp',
+        payload: 'aReactApp'
+      },
+      '*'
+    );
 
-    const throttledUpdateSnapshot = throttle(() => { updateSnapShotTree(snap, mode); }, 70);
+    const throttledUpdateSnapshot = throttle(() => {
+      updateSnapShotTree(snap, mode);
+    }, 70);
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     if (reactInstance && reactInstance.version) {

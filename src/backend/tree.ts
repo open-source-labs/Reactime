@@ -12,7 +12,7 @@ let componentNames = {};
 
 // Removes unserializable state data such as functions
 function scrubUnserializableMembers(tree: Tree): Tree {
-  Object.entries(tree.state).forEach(keyValuePair => {
+  Object.entries(tree.state).forEach((keyValuePair) => {
     if (typeof keyValuePair[1] === 'function') tree.state[keyValuePair[0]] = 'function';
   });
   return tree;
@@ -25,7 +25,6 @@ function serializeState(state) {
     return 'circularState';
   }
 }
-
 
 /**
  * This is the current snapshot that is being sent to the snapshots array.
@@ -41,7 +40,7 @@ class Tree {
   name: string;
 
   componentData: {
-    props: {},
+    props: {};
   };
 
   children: (Tree | string)[];
@@ -62,10 +61,16 @@ class Tree {
   // If not, create the new component and also a new key: value pair in 'componentNames' with the component's name as the key and 0 as its value
   // EXAMPLE OF COMPONENTNAMES OBJECT: {editableInput: 1, Provider: 0, etc}
 
-  constructor(state: string | {}, name = 'nameless', componentData: {} = {}, rtid: any = null, string: any = null) {
+  constructor(
+    state: string | {},
+    name = 'nameless',
+    componentData: {} = {},
+    rtid: any = null,
+    string: any = null
+  ) {
     this.state = state === 'root' ? 'root' : serializeState(state);
     this.name = name;
-    this.componentData = componentData ? { ...JSON.parse(JSON.stringify(componentData)) } : { };
+    this.componentData = componentData ? { ...JSON.parse(JSON.stringify(componentData)) } : {};
     this.children = [];
     this.parent = null; // ref to parent so we can add siblings
     this.isExpanded = true;

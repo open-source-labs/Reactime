@@ -2,7 +2,7 @@ import routes from '../routes';
 
 describe('Unit Tests for routes.ts', () => {
   describe('addRoute', () => {
-    it('If given a url that doesn\'t match the current route, it should return a new route object and add the route object to its values array.', () => {
+    it("If given a url that doesn't match the current route, it should return a new route object and add the route object to its values array.", () => {
       const newRoute = routes.addRoute('http://localhost:8080/');
       expect(newRoute.url).toBe('http://localhost:8080/');
       expect(newRoute.id).toBe(1);
@@ -39,7 +39,7 @@ describe('Unit Tests for routes.ts', () => {
       expect(routes.navigate({ url: 'http://localhost:8080/', id: 1 })).toBe(true);
     });
 
-    it('Should return false if it didn\'t navigate.', () => {
+    it("Should return false if it didn't navigate.", () => {
       expect(routes.navigate({ url: 'http://localhost:8080/', id: 1 })).toBe(false);
     });
   });

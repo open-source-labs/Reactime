@@ -16,10 +16,10 @@ const state = {
     87: {
       snapshots: [1, 2, 3, 4],
       sliderIndex: 2,
-      playing: true,
-    },
+      playing: true
+    }
   },
-  currentTab: 87,
+  currentTab: 87
 };
 
 const dispatch = jest.fn();

@@ -2,14 +2,14 @@ import masterState from '../masterState';
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   HookStateItem,
-  HookStates,
+  HookStates
 } from '../types/backendTypes';
 
 describe('Testing masterState functionality', () => {
-  const hookOne : HookStateItem = { state: 'A', component: 'counter1' };
-  const hookTwo : HookStateItem = { state: 'B', component: 'counter2' };
-  const hookThree : HookStateItem = { state: 'C', component: 'counter3' };
-  const allHooks : HookStates = [hookOne, hookTwo];
+  const hookOne: HookStateItem = { state: 'A', component: 'counter1' };
+  const hookTwo: HookStateItem = { state: 'B', component: 'counter2' };
+  const hookThree: HookStateItem = { state: 'C', component: 'counter3' };
+  const allHooks: HookStates = [hookOne, hookTwo];
 
   describe('saveNew', () => {
     it('Should return the index of the saved component', () => {
@@ -40,7 +40,10 @@ describe('Testing masterState functionality', () => {
 
   describe('getComponentByIndexHooks', () => {
     it('Should return an array of components when given an a valid array of indices', () => {
-      expect(masterState.getComponentByIndexHooks([0, 1])).toEqual([hookOne.component, hookTwo.component]);
+      expect(masterState.getComponentByIndexHooks([0, 1])).toEqual([
+        hookOne.component,
+        hookTwo.component
+      ]);
     });
     it('Should return an empty array when given an invalid array of indices', () => {
       expect(masterState.getComponentByIndexHooks([2])).toEqual([]);

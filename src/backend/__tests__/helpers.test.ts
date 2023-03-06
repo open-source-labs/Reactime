@@ -17,7 +17,6 @@ import { throttle, getHooksNames } from '../helpers';
 jest.useFakeTimers();
 
 describe('AST Unit Tests', () => {
-
   describe('throttle', () => {
     let mockFunc;
     let throttledMockFunc;
@@ -54,9 +53,7 @@ describe('AST Unit Tests', () => {
     });
   });
 
-
-
-  // test notes 
+  // test notes
   describe('getHooksNames', () => {
     it('Should return object with one getter/setter for a single useState instance', () => {
       const elementType = `function SingleUseFakeComponent() { 
@@ -88,7 +85,12 @@ describe('AST Unit Tests', () => {
                                     </div>);
                           }`;
 
-      expect(getHooksNames(elementType)).toEqual(['testCount', 'setTestCount', 'biscuitCount', 'setBiscuitCount']);
+      expect(getHooksNames(elementType)).toEqual([
+        'testCount',
+        'setTestCount',
+        'biscuitCount',
+        'setBiscuitCount'
+      ]);
       expect(Object.keys(getHooksNames(elementType))).toHaveLength(4);
     });
 

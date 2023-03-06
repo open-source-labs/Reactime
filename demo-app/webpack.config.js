@@ -7,7 +7,7 @@ module.exports = {
   entry: './src/client/Router.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: 'bundle.js'
   },
   module: {
     rules: [
@@ -17,38 +17,37 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react'],
-          },
-        },
+            presets: ['@babel/preset-env', '@babel/preset-react']
+          }
+        }
       },
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
-        exclude: /node_modules/,
+        exclude: /node_modules/
       }
-    ],
+    ]
   },
   resolve: {
-    extensions: ['.jsx', '.js','.ts','.tsx'],
+    extensions: ['.jsx', '.js', '.ts', '.tsx']
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/client/index.html',
-      filename: './index.html',
+      filename: './index.html'
     }),
     new CopyPlugin({
-      patterns: [{ from: './src/client/style.css' }],
-    }),
+      patterns: [{ from: './src/client/style.css' }]
+    })
   ],
   devServer: {
     historyApiFallback: true,
     static: {
-      directory: path.join(__dirname, './dist'),
+      directory: path.join(__dirname, './dist')
     },
     proxy: {
       '/api': 'http://localhost:3000',
       secure: false
     }
-  },
-
-}
+  }
+};

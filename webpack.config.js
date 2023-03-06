@@ -11,15 +11,15 @@ const config = {
     app: './src/app/index.tsx',
     background: './src/extension/background.js',
     content: './src/extension/contentScript.ts',
-    backend: './src/backend/index.ts',
+    backend: './src/backend/index.ts'
   },
   output: {
     path: path.resolve(__dirname, 'src/extension/build/bundles'),
-    filename: '[name].bundle.js',
+    filename: '[name].bundle.js'
   },
   node: {
     net: 'empty',
-    tls: 'empty',
+    tls: 'empty'
   },
   module: {
     rules: [
@@ -27,47 +27,46 @@ const config = {
         test: /\.jsx?/,
         exclude: /(node_modules)/,
         resolve: {
-          extensions: ['.js', '.jsx'],
+          extensions: ['.js', '.jsx']
         },
         use: {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['@babel/preset-env',
+              [
+                '@babel/preset-env',
                 {
                   useBuiltIns: 'entry',
                   corejs: 3,
-                  debug: true,
-                },
+                  debug: true
+                }
               ],
 
               '@babel/preset-react',
               {
-                plugins: [
-                  '@babel/plugin-proposal-class-properties',
-                ],
-              },
-            ],
-          },
-        },
+                plugins: ['@babel/plugin-proposal-class-properties']
+              }
+            ]
+          }
+        }
       },
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/,
         resolve: {
-          extensions: ['.tsx', '.ts', '.js'],
-        },
+          extensions: ['.tsx', '.ts', '.js']
+        }
       },
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        use: ['style-loader', 'css-loader', 'sass-loader']
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-    ],
+        use: ['style-loader', 'css-loader']
+      }
+    ]
   },
   plugins: [
     // new TypedocWebpackPlugin({
@@ -77,7 +76,7 @@ const config = {
     //   includeDeclarations: false,
     //   ignoreCompilerErrors: true,
     // }),
-  ],
+  ]
 };
 
 module.exports = (env, argv) => {
@@ -87,9 +86,9 @@ module.exports = (env, argv) => {
       new ChromeExtensionReloader({
         entries: {
           contentScript: ['app', 'content'],
-          background: ['background'],
-        },
-      }),
+          background: ['background']
+        }
+      })
     );
   } else {
     config.mode = 'production';

@@ -7,17 +7,17 @@ import timeJumpRequire from '../timeJump';
 import componentActionsRecord from '../masterState';
 
 class Component {
-  mockfn: (state) => void
+  mockfn: (state) => void;
 
-  state: Record<string, unknown>
+  state: Record<string, unknown>;
 
-  componentData: {}
+  componentData: {};
 
   constructor(mockfn) {
     this.mockfn = mockfn;
   }
 
-  setState(state, func = () => { }) {
+  setState(state, func = () => {}) {
     this.mockfn(state);
     func();
   }
@@ -58,7 +58,7 @@ describe('unit testing for timeJump.ts', () => {
     tree.children = [
       new FiberNode(mockFuncs[1], '*'),
       new FiberNode(mockFuncs[2], '*'),
-      new FiberNode(mockFuncs[3], '*'),
+      new FiberNode(mockFuncs[3], '*')
     ];
 
     snapShot = { tree };
