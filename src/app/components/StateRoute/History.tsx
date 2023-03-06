@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable */
 // @ts-nocheck
 import React, { useEffect } from 'react';
 // formatting findDiff return data to show the changes with colors, aligns with actions.tsx
@@ -182,7 +183,8 @@ function History(props: Record<string, unknown>): JSX.Element {
         dispatch(changeSlider(d.data.index));
       })
       // added to display state change information to node tree
-      .on('mouseover', (d) => {
+      .on('mouseover', (event, d) => {
+        const [x, y] = d3.pointer(event);
         // created popup div and appended it to display div(returned in this function)
         // D3 doesn't utilize z-index for priority,
         // rather decides on placement by order of rendering
@@ -192,8 +194,8 @@ function History(props: Record<string, unknown>): JSX.Element {
           .select('.display')
           .append('div')
           .attr('class', 'tooltip')
-          .style('left', `${d3.event.pageX}px`)
-          .style('top', `${d3.event.pageY}px`);
+          .style('left', `${x}px`)
+          .style('top', `${y}px`);
         d3.selectAll('.tooltip').html(findDiff(d.data.index));
       })
       .on('mouseout', (d) => {
