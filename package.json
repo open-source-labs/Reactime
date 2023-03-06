@@ -5,7 +5,9 @@
     "transform": {
       "^.+\\.(js|ts|tsx)$": "ts-jest"
     },
-    "testPathIgnorePatterns": ["www"],
+    "testPathIgnorePatterns": [
+      "www"
+    ],
     "transformIgnorePatterns": [
       "/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)"
     ],
@@ -24,7 +26,8 @@
     "test": "jest --verbose --coverage",
     "test-on": "./node_modules/.bin/jest $1",
     "docker-test-lint": "eslint --ext .js --ext .jsx src",
-    "docs": "typedoc --json docs --inputFiles src/app --inputFiles src/backend --readme docs/readme.md"
+    "docs": "typedoc --json docs --inputFiles src/app --inputFiles src/backend --readme docs/readme.md",
+    "format": "prettier --config .prettierrc './**/*.{ts,tsx,js,jsx}' --write"
   },
   "keywords": [
     "react",
@@ -131,6 +134,7 @@
     "jest-diff": "^26.1.0",
     "jest-runner-eslint": "^0.7.7",
     "jscharting-react": "^1.2.1",
+    "prettier": "2.8.4",
     "puppeteer": "^14.3.0",
     "sass": "^1.26.10",
     "sass-loader": "^7.3.1",

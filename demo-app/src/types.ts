@@ -1,7 +1,7 @@
 export type Scoreboard = {
-  X: number,
-  O: number
-}
+  X: number;
+  O: number;
+};
 
 export type Player = 'X' | 'O';
 

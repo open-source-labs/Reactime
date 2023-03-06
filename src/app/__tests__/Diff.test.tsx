@@ -15,17 +15,20 @@ describe('Unit testing for Diff.jsx', () => {
   let wrapper;
   const props = {
     show: false,
-    snapshot: [{
-      children: [{
-        state: { total: 12, next: 5, operation: null },
-      }],
-
-    }],
+    snapshot: [
+      {
+        children: [
+          {
+            state: { total: 12, next: 5, operation: null }
+          }
+        ]
+      }
+    ]
   };
 
   const state = {
     currentTab: 100,
-    tabs: { 100: { snapshots: [1, 2, 3, 4], viewIndex: 1, sliderIndex: 1 } },
+    tabs: { 100: { snapshots: [1, 2, 3, 4], viewIndex: 1, sliderIndex: 1 } }
   };
 
   useStoreContext.mockImplementation(() => [state]);
@@ -68,7 +71,9 @@ describe('Unit testing for Diff.jsx', () => {
       expect(typeof wrapper.text()).toEqual('string');
     });
     it('Check if previous and delta is defined Diff should not have text content "No state change detected. Trigger an event to change state"', () => {
-      expect(wrapper.textContent).not.toEqual('No state change detected. Trigger an event to change state');
+      expect(wrapper.textContent).not.toEqual(
+        'No state change detected. Trigger an event to change state'
+      );
     });
   });
 });

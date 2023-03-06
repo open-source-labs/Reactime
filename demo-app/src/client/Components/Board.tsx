@@ -18,7 +18,7 @@ class Board extends Component<{}, BoardState> {
       currentPlayer: 'X',
       gameOver: false,
       message: '',
-      scoreboard: { X: 0, O: 0 },
+      scoreboard: { X: 0, O: 0 }
     };
 
     this.resetBoard = this.resetBoard.bind(this);
@@ -38,7 +38,7 @@ class Board extends Component<{}, BoardState> {
     return [
       ['-', '-', '-'],
       ['-', '-', '-'],
-      ['-', '-', '-'],
+      ['-', '-', '-']
     ];
   }
 
@@ -51,7 +51,7 @@ class Board extends Component<{}, BoardState> {
     this.setState({
       gameOver: false,
       board: this.newBoard(),
-      message: '',
+      message: ''
     });
   }
 
@@ -73,44 +73,28 @@ class Board extends Component<{}, BoardState> {
     if (!gameOver) {
       // win conditions: matching rows, columns, or diagonals, that are not empty('-')
       if (
-        (board[0][0] === board[0][1] &&
-          board[0][1] === board[0][2] &&
-          board[0][2] !== '-') ||
-        (board[1][0] === board[1][1] &&
-          board[1][1] === board[1][2] &&
-          board[1][2] !== '-') ||
-        (board[2][0] === board[2][1] &&
-          board[2][1] === board[2][2] &&
-          board[2][2] !== '-') ||
-        (board[0][0] === board[1][0] &&
-          board[1][0] === board[2][0] &&
-          board[2][0] !== '-') ||
-        (board[0][1] === board[1][1] &&
-          board[1][1] === board[2][1] &&
-          board[2][1] !== '-') ||
-        (board[0][2] === board[1][2] &&
-          board[1][2] === board[2][2] &&
-          board[2][2] !== '-') ||
-        (board[0][0] === board[1][1] &&
-          board[1][1] === board[2][2] &&
-          board[2][2] !== '-') ||
-        (board[2][0] === board[1][1] &&
-          board[1][1] === board[0][2] &&
-          board[0][2] !== '-')
+        (board[0][0] === board[0][1] && board[0][1] === board[0][2] && board[0][2] !== '-') ||
+        (board[1][0] === board[1][1] && board[1][1] === board[1][2] && board[1][2] !== '-') ||
+        (board[2][0] === board[2][1] && board[2][1] === board[2][2] && board[2][2] !== '-') ||
+        (board[0][0] === board[1][0] && board[1][0] === board[2][0] && board[2][0] !== '-') ||
+        (board[0][1] === board[1][1] && board[1][1] === board[2][1] && board[2][1] !== '-') ||
+        (board[0][2] === board[1][2] && board[1][2] === board[2][2] && board[2][2] !== '-') ||
+        (board[0][0] === board[1][1] && board[1][1] === board[2][2] && board[2][2] !== '-') ||
+        (board[2][0] === board[1][1] && board[1][1] === board[0][2] && board[0][2] !== '-')
       ) {
         // winner is the person who's turn was previous
         const winner: Player = currentPlayer === 'X' ? 'O' : 'X';
 
         this.setState({
           gameOver: true,
-          message: `Player ${winner} wins!`,
+          message: `Player ${winner} wins!`
         });
 
         // draw condition: no '-' remaining in board without above win condition triggering
       } else if (!spacesLeft()) {
         this.setState({
           gameOver: true,
-          message: 'Draw!',
+          message: 'Draw!'
         });
       }
     }
@@ -120,7 +104,7 @@ class Board extends Component<{}, BoardState> {
     const boardCopy: BoardContent = [
       [...this.state.board[0]],
       [...this.state.board[1]],
-      [...this.state.board[2]],
+      [...this.state.board[2]]
     ];
     boardCopy[row][column] = this.state.currentPlayer;
     const newPlayer: Player = this.state.currentPlayer === 'X' ? 'O' : 'X';
@@ -131,22 +115,17 @@ class Board extends Component<{}, BoardState> {
     const rows: Array<JSX.Element> = [];
     for (let i = 0; i < 3; i++) {
       rows.push(
-        <Row
-          key={i}
-          row={i}
-          handleBoxClick={this.handleBoxClick}
-          values={this.state.board[i]}
-        />
+        <Row key={i} row={i} handleBoxClick={this.handleBoxClick} values={this.state.board[i]} />
       );
     }
     const { X, O }: Scoreboard = this.state.scoreboard;
 
     return (
-      <div className="board">
+      <div className='board'>
         <h1>Tic Tac Toe</h1>
         {this.state.gameOver && <h4>{this.state.message}</h4>}
         {rows}
-        <button id="reset" onClick={this.resetBoard}>
+        <button id='reset' onClick={this.resetBoard}>
           Reset
         </button>
       </div>

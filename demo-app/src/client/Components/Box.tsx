@@ -10,10 +10,7 @@ type BoxProps = {
 
 const Box = (props: BoxProps) => {
   return (
-    <button
-      className="box"
-      onClick={(e) => props.handleBoxClick(props.row, props.column)}
-    >
+    <button className='box' onClick={(e) => props.handleBoxClick(props.row, props.column)}>
       {props.value}
     </button>
   );

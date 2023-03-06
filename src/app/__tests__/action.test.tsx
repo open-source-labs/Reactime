@@ -24,11 +24,11 @@ describe('unit testing for Action.tsx', () => {
     componentName: 'App',
     logChangedState: jest.fn(),
     componentData: {
-      actualDuration: 3.5,
+      actualDuration: 3.5
     },
     state: { test: 'test' },
     viewIndex: 2,
-    handleOnkeyDown: jest.fn(),
+    handleOnkeyDown: jest.fn()
   };
   beforeEach(() => {
     wrapper = shallow(<Action {...props} />);
@@ -59,12 +59,7 @@ describe('unit testing for Action.tsx', () => {
 
   describe('Jump Button', () => {
     test("should render a div with a className 'jump-button' inside action-component", () => {
-      expect(
-        wrapper
-          .find('.action-component')
-          .children()
-          .find('.jump-button'),
-      ).toHaveLength(1);
+      expect(wrapper.find('.action-component').children().find('.jump-button')).toHaveLength(1);
     });
 
     test('should invoke dispatch method when clicked', () => {

@@ -2,7 +2,21 @@
 /* eslint-disable max-len */
 import mainReducer from '../reducers/mainReducer';
 import {
-  toggleMode, addNewSnapshots, initialConnect, setPort, emptySnapshots, changeView, changeSlider, moveBackward, moveForward, playForward, pause, startPlaying, importSnapshots, setTab, deleteTab,
+  toggleMode,
+  addNewSnapshots,
+  initialConnect,
+  setPort,
+  emptySnapshots,
+  changeView,
+  changeSlider,
+  moveBackward,
+  moveForward,
+  playForward,
+  pause,
+  startPlaying,
+  importSnapshots,
+  setTab,
+  deleteTab
 } from '../actions/actions';
 
 describe('mainReducer testing', () => {
@@ -18,7 +32,7 @@ describe('mainReducer testing', () => {
           mode: {
             paused: false,
             locked: false,
-            persist: false,
+            persist: false
           },
           intervalId: 87,
           playing: true,
@@ -30,56 +44,70 @@ describe('mainReducer testing', () => {
             branch: 0,
             stateSnapshot: {
               state: {},
-              children: [{
-                state: { test: 'test' },
-                name: 'App',
-                componentData: { actualDuration: 3.5 },
-              }],
-            },
-            children: [{
-              index: 1,
-              name: 2,
-              branch: 0,
-              stateSnapshot: {
-                state: {},
-                children: [{
+              children: [
+                {
                   state: { test: 'test' },
                   name: 'App',
-                  componentData: { actualDuration: 3.5 },
-                }],
-              },
-              children: [{
-                index: 2,
-                name: 3,
+                  componentData: { actualDuration: 3.5 }
+                }
+              ]
+            },
+            children: [
+              {
+                index: 1,
+                name: 2,
                 branch: 0,
                 stateSnapshot: {
                   state: {},
-                  children: [{
-                    state: { test: 'test' },
-                    name: 'App',
-                    componentData: { actualDuration: 3.5 },
-                  }],
-                },
-                children: [{
-                  index: 3,
-                  name: 4,
-                  branch: 0,
-                  stateSnapshot: {
-                    state: {},
-                    children: [{
+                  children: [
+                    {
                       state: { test: 'test' },
                       name: 'App',
-                      componentData: { actualDuration: 3.5 },
-                    }],
-                  },
-                  children: [],
-                }],
-              }],
-            }],
+                      componentData: { actualDuration: 3.5 }
+                    }
+                  ]
+                },
+                children: [
+                  {
+                    index: 2,
+                    name: 3,
+                    branch: 0,
+                    stateSnapshot: {
+                      state: {},
+                      children: [
+                        {
+                          state: { test: 'test' },
+                          name: 'App',
+                          componentData: { actualDuration: 3.5 }
+                        }
+                      ]
+                    },
+                    children: [
+                      {
+                        index: 3,
+                        name: 4,
+                        branch: 0,
+                        stateSnapshot: {
+                          state: {},
+                          children: [
+                            {
+                              state: { test: 'test' },
+                              name: 'App',
+                              componentData: { actualDuration: 3.5 }
+                            }
+                          ]
+                        },
+                        children: []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           // currLocation: null,
           // should point to the last node in hierarchy
-          currLocation: 4,
+          currLocation: 4
         },
         75: {
           snapshots: [1, 2, 3, 4],
@@ -88,7 +116,7 @@ describe('mainReducer testing', () => {
           mode: {
             paused: false,
             locked: false,
-            persist: false,
+            persist: false
           },
           intervalId: 75,
           playing: false,
@@ -99,62 +127,76 @@ describe('mainReducer testing', () => {
             branch: 0,
             stateSnapshot: {
               state: {},
-              children: [{
-                state: { test: 'test' },
-                name: 'App',
-                componentData: { actualDuration: 3.5 },
-              }],
-            },
-            children: [{
-              index: 1,
-              name: 2,
-              branch: 0,
-              stateSnapshot: {
-                state: {},
-                children: [{
+              children: [
+                {
                   state: { test: 'test' },
                   name: 'App',
-                  componentData: { actualDuration: 3.5 },
-                }],
-              },
-              children: [{
-                index: 2,
-                name: 3,
+                  componentData: { actualDuration: 3.5 }
+                }
+              ]
+            },
+            children: [
+              {
+                index: 1,
+                name: 2,
                 branch: 0,
                 stateSnapshot: {
                   state: {},
-                  children: [{
-                    state: { test: 'test' },
-                    name: 'App',
-                    componentData: { actualDuration: 3.5 },
-                  }],
-                },
-                children: [{
-                  index: 3,
-                  name: 4,
-                  branch: 0,
-                  stateSnapshot: {
-                    state: {},
-                    children: [{
+                  children: [
+                    {
                       state: { test: 'test' },
                       name: 'App',
-                      componentData: { actualDuration: 3.5 },
-                    }],
-                  },
-                  children: [],
-                }],
-              }],
-            }],
+                      componentData: { actualDuration: 3.5 }
+                    }
+                  ]
+                },
+                children: [
+                  {
+                    index: 2,
+                    name: 3,
+                    branch: 0,
+                    stateSnapshot: {
+                      state: {},
+                      children: [
+                        {
+                          state: { test: 'test' },
+                          name: 'App',
+                          componentData: { actualDuration: 3.5 }
+                        }
+                      ]
+                    },
+                    children: [
+                      {
+                        index: 3,
+                        name: 4,
+                        branch: 0,
+                        stateSnapshot: {
+                          state: {},
+                          children: [
+                            {
+                              state: { test: 'test' },
+                              name: 'App',
+                              componentData: { actualDuration: 3.5 }
+                            }
+                          ]
+                        },
+                        children: []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           // currLocation: null,
           // should point to the last node in hierarchy
-          currLocation: 4,
-        },
+          currLocation: 4
+        }
       },
       currentTab: 87,
       port: {
-        postMessage: () => {},
-      },
+        postMessage: () => {}
+      }
     };
 
     // eslint-disable-next-line prefer-destructuring
@@ -211,8 +253,9 @@ describe('mainReducer testing', () => {
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab].sliderIndex).toEqual(0);
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab].viewIndex).toEqual(0);
       expect(mainReducer(state, emptySnapshots()).tabs[currentTab].playing).toEqual(false);
-      expect(mainReducer(state, emptySnapshots()).tabs[currentTab]
-        .snapshots).toEqual([state.tabs[currentTab].snapshots[state.tabs[currentTab].snapshots.length - 1]]);
+      expect(mainReducer(state, emptySnapshots()).tabs[currentTab].snapshots).toEqual([
+        state.tabs[currentTab].snapshots[state.tabs[currentTab].snapshots.length - 1]
+      ]);
     });
     // should push slider back to start position
   });
@@ -225,7 +268,9 @@ describe('mainReducer testing', () => {
 
   describe('Import', () => {
     it('importing file should replace snapshots of devtool', () => {
-      expect(mainReducer(state, importSnapshots([100, 101])).tabs[currentTab].snapshots).toEqual([100, 101]);
+      expect(mainReducer(state, importSnapshots([100, 101])).tabs[currentTab].snapshots).toEqual([
+        100, 101
+      ]);
     });
   });
 
@@ -281,11 +326,11 @@ describe('mainReducer testing', () => {
         mode: {
           paused: false,
           locked: false,
-          persist: false,
+          persist: false
         },
         intervalId: 912,
-        playing: true,
-      },
+        playing: true
+      }
     };
     it('should add new tab', () => {
       const addedTab = mainReducer(state, initialConnect(newTab)).tabs[104];
@@ -358,7 +403,7 @@ describe('mainReducer testing', () => {
   describe('default', () => {
     const action = {
       type: 'doesNotExist',
-      payload: 'trigger',
+      payload: 'trigger'
     };
     it('if there are no match of action types, throw error', () => {
       try {

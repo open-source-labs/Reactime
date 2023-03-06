@@ -8,7 +8,7 @@ import { MemoryRouter as Router, Switch } from 'react-router-dom';
 const DiffRoute = require('../components/DiffRoute').default;
 
 const props = {
-  snapshot: [{}],
+  snapshot: [{}]
 };
 
 configure({ adapter: new (Adapter as any)() });

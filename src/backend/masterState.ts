@@ -7,7 +7,7 @@
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   HookStateItem, // obj with state and component
-  HookStates, // array of hook state items
+  HookStates // array of hook state items
 } from './types/backendTypes';
 
 // HookState is an array that contains a "component" for
@@ -35,10 +35,8 @@ export default {
   getRecordByIndex: (inputIndex: number): HookStateItem => componentActionsRecord[inputIndex],
   // this is used for class components -
   /* inputIndex will always be a fixed number (coming in timeJump.ts) */
-  getComponentByIndex: (inputIndex: number): any => (
-    componentActionsRecord[inputIndex]
-      ? componentActionsRecord[inputIndex].component
-      : undefined),
+  getComponentByIndex: (inputIndex: number): any =>
+    componentActionsRecord[inputIndex] ? componentActionsRecord[inputIndex].component : undefined,
   // this is used for react hooks - hooks will be passed in as an array from timeJump.ts
   getComponentByIndexHooks: (inputIndex: Array<number> = []): Array<any> => {
     const multiDispatch = [];
@@ -48,5 +46,5 @@ export default {
       }
     }
     return multiDispatch;
-  },
+  }
 };

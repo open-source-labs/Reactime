@@ -14,11 +14,11 @@ describe('Unit testing RouteDescription', () => {
 
   actionsArr.push(
     <Action
-      key="action0"
+      key='action0'
       index={0}
       state={{}}
-      displayName="1.0"
-      componentName="App"
+      displayName='1.0'
+      componentName='App'
       componentData={{ actualDuration: 0 }}
       selected={false}
       last={false}
@@ -27,17 +27,17 @@ describe('Unit testing RouteDescription', () => {
       handleOnkeyDown={(e, i) => null}
       viewIndex={undefined}
       isCurrIndex={false}
-      routePath="http://localhost:3000/home"
-    />,
+      routePath='http://localhost:3000/home'
+    />
   );
 
   actionsArr.push(
     <Action
-      key="action1"
+      key='action1'
       index={0}
       state={{}}
-      displayName="2.0"
-      componentName="App"
+      displayName='2.0'
+      componentName='App'
       componentData={{ actualDuration: 0 }}
       selected={false}
       last={false}
@@ -46,8 +46,8 @@ describe('Unit testing RouteDescription', () => {
       handleOnkeyDown={(e, i) => null}
       viewIndex={undefined}
       isCurrIndex={false}
-      routePath="http://localhost:3000/home"
-    />,
+      routePath='http://localhost:3000/home'
+    />
   );
 
   const wrapper = shallow(<RouteDescription actions={actionsArr} />);

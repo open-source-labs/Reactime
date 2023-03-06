@@ -4,18 +4,18 @@
  *  if correct send them the shit
  */
 
-import { type NextPage } from "next";
-import { useState } from "react";
-import Head from "next/head";
-import Link from "next/link";
-import LandingPage from "./components/LandingPage";
-import NavBar from "./components/NavBar";
-import Blogs from "./components/Blogs";
-import { trpc } from "../utils/trpc";
+import { type NextPage } from 'next';
+import { useState } from 'react';
+import Head from 'next/head';
+import Link from 'next/link';
+import LandingPage from './components/LandingPage';
+import NavBar from './components/NavBar';
+import Blogs from './components/Blogs';
+import { trpc } from '../utils/trpc';
 
 const secret: NextPage = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  const [password, setPassword] = useState<string>("");
+  const [password, setPassword] = useState<string>('');
 
   const clickHandler = () => {
     if (process.env.NEXT_PUBLIC_ADMIN_PASSWORD === password) {
@@ -23,23 +23,35 @@ const secret: NextPage = () => {
     }
   };
 
-  const { data:users } = trpc.user.findAll.useQuery();
+  const { data: users } = trpc.user.findAll.useQuery();
 
   return (
     <>
-      {!isAdmin && <div className = 'flex h-screen items-center justify-center'>
-        <input
-          type="password"
-          value={password}
-          onChange={(e)=>setPassword(e.target.value)}
-          required
-          placeholder="password"
-          className="block w-50 rounded-md border border-gray-300 px-5 py-3 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:border-rose-500 focus:ring-rose-500 mr-8">
-        </input>
-        <button onClick={clickHandler} className="blockrounded-md border rounded border-transparent bg-rose-500 px-5 py-3 text-base font-medium text-white shadow hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 sm:px-10">Submit</button>
-      </div>}
-        {isAdmin && <div>{users?.map(user => <span key={user.id}>{user.email}, </span>)}</div>}
-
+      {!isAdmin && (
+        <div className='flex h-screen items-center justify-center'>
+          <input
+            type='password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            placeholder='password'
+            className='block w-50 rounded-md border border-gray-300 px-5 py-3 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:border-rose-500 focus:ring-rose-500 mr-8'
+          ></input>
+          <button
+            onClick={clickHandler}
+            className='blockrounded-md border rounded border-transparent bg-rose-500 px-5 py-3 text-base font-medium text-white shadow hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 sm:px-10'
+          >
+            Submit
+          </button>
+        </div>
+      )}
+      {isAdmin && (
+        <div>
+          {users?.map((user) => (
+            <span key={user.id}>{user.email}, </span>
+          ))}
+        </div>
+      )}
     </>
   );
 };

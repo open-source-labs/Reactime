@@ -22,7 +22,7 @@ const Row = (props: RowProps) => {
     );
   }
 
-  return <div className="row">{boxes}</div>;
+  return <div className='row'>{boxes}</div>;
 };
 
 export default Row;

@@ -4,8 +4,8 @@ import ReactHtmlParser from 'react-html-parser';
 import { useStoreContext } from '../store';
 
 interface DiffProps {
-  snapshot: {state?:Record<string, unknown>};
-  show?: boolean|undefined;
+  snapshot: { state?: Record<string, unknown> };
+  show?: boolean | undefined;
 }
 /**
  * Displays tree showing specific two versions of tree
@@ -21,14 +21,21 @@ function Diff(props: DiffProps) {
   let previous;
 
   // previous follows viewIndex or sliderIndex
-  if (viewIndex !== -1) { // if tab isnt selected, view index is set to -1
+  if (viewIndex !== -1) {
+    // if tab isnt selected, view index is set to -1
     previous = snapshots[viewIndex - 1];
   } else {
     previous = snapshots[sliderIndex - 1];
   }
 
   // cleaning preview from stateless data
-  const statelessCleanning = (obj:{name?:string; componentData?: Record<string, unknown>; state?:string| any; stateSnaphot?: Record<string, unknown>; children?: any[]}) => {
+  const statelessCleanning = (obj: {
+    name?: string;
+    componentData?: Record<string, unknown>;
+    state?: string | any;
+    stateSnaphot?: Record<string, unknown>;
+    children?: any[];
+  }) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;
@@ -45,12 +52,14 @@ function Diff(props: DiffProps) {
     if (newObj.children) {
       newObj.children = [];
       if (obj.children.length > 0) {
-        obj.children.forEach((element:{state?: Record<string, unknown> | string; children?:[]}) => {
-          if (element.state !== 'stateless' || element.children.length > 0) {
-            const clean = statelessCleanning(element);
-            newObj.children.push(clean);
+        obj.children.forEach(
+          (element: { state?: Record<string, unknown> | string; children?: [] }) => {
+            if (element.state !== 'stateless' || element.children.length > 0) {
+              const clean = statelessCleanning(element);
+              newObj.children.push(clean);
+            }
           }
-        });
+        );
       }
     }
     return newObj;
@@ -68,7 +77,12 @@ function Diff(props: DiffProps) {
   else formatters.html.hideUnchanged();
 
   if (previous === undefined || delta === undefined) {
-    return <div className="no-data-message"> No state change detected. Trigger an event to change state. </div>;
+    return (
+      <div className='no-data-message'>
+        {' '}
+        No state change detected. Trigger an event to change state.{' '}
+      </div>
+    );
   }
   return <div>{ReactHtmlParser(html)}</div>;
 }

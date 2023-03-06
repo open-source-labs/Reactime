@@ -40,15 +40,15 @@ function createTabObj(title) {
     status: {
       contentScriptLaunched: true,
       reactDevToolsInstalled: false,
-      targetPageisaReactApp: false,
+      targetPageisaReactApp: false
     },
     // Note: Persist is a now defunct feature. Paused = Locked
     mode: {
       persist: false,
-      paused: false,
+      paused: false
     },
     // stores web metrics calculated by the content script file
-    webMetrics: {},
+    webMetrics: {}
   };
 }
 
@@ -76,7 +76,7 @@ function countCurrName(rootNode, name) {
     return 1;
   }
   let branch = 0;
-  rootNode.children.forEach(child => {
+  rootNode.children.forEach((child) => {
     branch += countCurrName(child, name);
   });
   return branch;
@@ -121,35 +121,37 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   }
 
   if (rootNode.children) {
-    rootNode.children.forEach(child => {
+    rootNode.children.forEach((child) => {
       changeCurrLocation(tabObj, child, index, name);
     });
   }
 }
 
 // Establishing incoming connection with Reactime.
-chrome.runtime.onConnect.addListener(port => {
+chrome.runtime.onConnect.addListener((port) => {
   // port is one end of the connection - an object
   // push every port connected to the ports array
   portsArr.push(port);
   // On Reactime launch: make sure RT's active tab is correct
   if (portsArr.length > 0) {
-    portsArr.forEach(bg => bg.postMessage({
-      action: 'changeTab',
-      payload: { tabId: activeTab.id, title: activeTab.title },
-    }));
+    portsArr.forEach((bg) =>
+      bg.postMessage({
+        action: 'changeTab',
+        payload: { tabId: activeTab.id, title: activeTab.title }
+      })
+    );
   }
 
   // send tabs obj to the connected devtools as soon as connection to devtools is made
   if (Object.keys(tabsObj).length > 0) {
     port.postMessage({
       action: 'initialConnectSnapshots',
-      payload: tabsObj,
+      payload: tabsObj
     });
   }
 
   // every time devtool is closed, remove the port from portsArr
-  port.onDisconnect.addListener(e => {
+  port.onDisconnect.addListener((e) => {
     for (let i = 0; i < portsArr.length; i += 1) {
       if (portsArr[i] === e) {
         portsArr.splice(i, 1);
@@ -160,7 +162,7 @@ chrome.runtime.onConnect.addListener(port => {
 
   // listen for message containing a snapshot from devtools and send it to contentScript -
   // (i.e. they're all related to the button actions on Reactime)
-  port.onMessage.addListener(msg => {
+  port.onMessage.addListener((msg) => {
     // msg is action denoting a time jump in devtools
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:
@@ -179,14 +181,12 @@ chrome.runtime.onConnect.addListener(port => {
         return true;
       case 'emptySnap':
         // reset snapshots to page last state recorded
-        tabsObj[tabId].snapshots = [
-          tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1],
-        ];
+        tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]];
         // resets hierarchy
         tabsObj[tabId].hierarchy.children = [];
         // resets hierarchy to page last state recorded
         tabsObj[tabId].hierarchy.stateSnapshot = {
-          ...tabsObj[tabId].snapshots[0],
+          ...tabsObj[tabId].snapshots[0]
         };
         // resets currLocation to page last state recorded
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
@@ -205,7 +205,7 @@ chrome.runtime.onConnect.addListener(port => {
       case 'launchContentScript':
         chrome.scripting.executeScript({
           target: { tabId },
-          files: ['bundles/content.bundle.js'],
+          files: ['bundles/content.bundle.js']
         });
         return true;
       case 'jumpToSnap':
@@ -228,9 +228,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
-  const {
-    action, index, name, value,
-  } = request;
+  const { action, index, name, value } = request;
   let isReactTimeTravel = false;
 
   if (name) {
@@ -239,12 +237,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   // Filter out tabs that don't have reactime, tabs that dont use react?
   if (
-    action === 'tabReload'
-    || action === 'recordSnap'
-    || action === 'jumpToSnap'
-    || action === 'injectScript'
-    || action === 'devToolsInstalled'
-    || action === 'aReactApp'
+    action === 'tabReload' ||
+    action === 'recordSnap' ||
+    action === 'jumpToSnap' ||
+    action === 'injectScript' ||
+    action === 'devToolsInstalled' ||
+    action === 'aReactApp'
   ) {
     isReactTimeTravel = true;
   } else {
@@ -259,20 +257,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case 'jumpToSnap': {
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
       if (portsArr.length > 0) {
-        portsArr.forEach(bg => bg.postMessage({
-          action: 'setCurrentLocation',
-          payload: tabsObj,
-        }));
+        portsArr.forEach((bg) =>
+          bg.postMessage({
+            action: 'setCurrentLocation',
+            payload: tabsObj
+          })
+        );
       }
       break;
     }
     // Confirmed React Dev Tools installed, send this info to frontend
     case 'devToolsInstalled': {
       tabsObj[tabId].status.reactDevToolsInstalled = true;
-      portsArr.forEach(bg => bg.postMessage({
-        action: 'devTools',
-        payload: tabsObj,
-      }));
+      portsArr.forEach((bg) =>
+        bg.postMessage({
+          action: 'devTools',
+          payload: tabsObj
+        })
+      );
       break;
     }
     // Confirmed target is a react app. No need to send to frontend
@@ -296,7 +298,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       chrome.scripting.executeScript({
         target: { tabId },
         function: injectScript,
-        args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId],
+        args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId]
       });
       break;
     }
@@ -308,22 +310,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         reloaded[tabId] = false;
         tabsObj[tabId].webMetrics = metrics;
         tabsObj[tabId].snapshots.push(request.payload);
-        sendToHierarchy(
-          tabsObj[tabId],
-          new Node(request.payload, tabsObj[tabId]),
-        );
+        sendToHierarchy(tabsObj[tabId], new Node(request.payload, tabsObj[tabId]));
         if (portsArr.length > 0) {
-          portsArr.forEach(bg => bg.postMessage({
-            action: 'initialConnectSnapshots',
-            payload: tabsObj,
-          }));
+          portsArr.forEach((bg) =>
+            bg.postMessage({
+              action: 'initialConnectSnapshots',
+              payload: tabsObj
+            })
+          );
         }
         break;
       }
 
       // DUPLICATE SNAPSHOT CHECK
-      const previousSnap = tabsObj[tabId].currLocation.stateSnapshot.children[0].componentData
-        .actualDuration;
+      const previousSnap =
+        tabsObj[tabId].currLocation.stateSnapshot.children[0].componentData.actualDuration;
       const incomingSnap = request.payload.children[0].componentData.actualDuration;
       if (previousSnap === incomingSnap) break;
 
@@ -335,19 +336,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         tabsObj[tabId].snapshots.push(request.payload);
         //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
         if (!tabsObj[tabId][index]) {
-          sendToHierarchy(
-            tabsObj[tabId],
-            new Node(request.payload, tabsObj[tabId]),
-          );
+          sendToHierarchy(tabsObj[tabId], new Node(request.payload, tabsObj[tabId]));
         }
       }
       // sends new tabs obj to devtools
       if (portsArr.length > 0) {
-        portsArr.forEach(bg => bg.postMessage({
-          action: 'sendSnapshots',
-          payload: tabsObj,
-          sourceTab,
-        }));
+        portsArr.forEach((bg) =>
+          bg.postMessage({
+            action: 'sendSnapshots',
+            payload: tabsObj,
+            sourceTab
+          })
+        );
       }
       break;
     }
@@ -358,13 +358,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // when tab is closed, remove the tabid from the tabsObj
-chrome.tabs.onRemoved.addListener(tabId => {
+chrome.tabs.onRemoved.addListener((tabId) => {
   // tell devtools which tab to delete
   if (portsArr.length > 0) {
-    portsArr.forEach(bg => bg.postMessage({
-      action: 'deleteTab',
-      payload: tabId,
-    }));
+    portsArr.forEach((bg) =>
+      bg.postMessage({
+        action: 'deleteTab',
+        payload: tabId
+      })
+    );
   }
 
   // delete the tab from the tabsObj
@@ -381,10 +383,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
     if (changeInfo.title && changeInfo.title !== tabsObj[tabId].title) {
       // tell devtools which tab to delete
       if (portsArr.length > 0) {
-        portsArr.forEach(bg => bg.postMessage({
-          action: 'deleteTab',
-          payload: tabId,
-        }));
+        portsArr.forEach((bg) =>
+          bg.postMessage({
+            action: 'deleteTab',
+            payload: tabId
+          })
+        );
       }
 
       // delete the tab from the tabsObj
@@ -399,17 +403,19 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 });
 
 // when tab view is changed, put the tabid as the current tab
-chrome.tabs.onActivated.addListener(info => {
+chrome.tabs.onActivated.addListener((info) => {
   // get info about tab information from tabId
-  chrome.tabs.get(info.tabId, tab => {
+  chrome.tabs.get(info.tabId, (tab) => {
     // never set a reactime instance to the active tab
     if (!tab.pendingUrl?.match('^chrome-extension')) {
       activeTab = tab;
       if (portsArr.length > 0) {
-        portsArr.forEach(bg => bg.postMessage({
-          action: 'changeTab',
-          payload: { tabId: tab.id, title: tab.title },
-        }));
+        portsArr.forEach((bg) =>
+          bg.postMessage({
+            action: 'changeTab',
+            payload: { tabId: tab.id, title: tab.title }
+          })
+        );
       }
     }
   });
@@ -421,7 +427,7 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: 'reactime',
     title: 'Reactime',
-    contexts: ['page', 'selection', 'image', 'link'],
+    contexts: ['page', 'selection', 'image', 'link']
   });
 });
 
@@ -434,7 +440,7 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     top: 0,
     width: 1000,
     height: 1000,
-    url: chrome.runtime.getURL('panel.html'),
+    url: chrome.runtime.getURL('panel.html')
   };
   if (menuItemId === 'reactime') chrome.windows.create(options);
 });

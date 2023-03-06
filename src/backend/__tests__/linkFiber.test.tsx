@@ -25,35 +25,38 @@ let browser;
 let page;
 
 interface fooState {
-  foo: string,
-  setFoo?: (string) => void
+  foo: string;
+  setFoo?: (string) => void;
 }
 function App(): JSX.Element {
   const [fooState, setFooState] = useState({
-    foo: 'bar',
+    foo: 'bar'
   });
-  return (
-    <div>{fooState}</div>
-  );
+  return <div>{fooState}</div>;
 }
 
 xdescribe('unit test for linkFiber', () => {
   beforeAll(async () => {
     await SERVER;
-    const args = puppeteer.defaultArgs().filter(arg => String(arg).toLowerCase() !== '--disable-extensions');
+    const args = puppeteer
+      .defaultArgs()
+      .filter((arg) => String(arg).toLowerCase() !== '--disable-extensions');
     browser = await puppeteer.launch({
-      args: args.concat(['--no-sandbox', '--disable-setuid-sandbox',
+      args: args.concat([
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
         '---extensions-on-chrome-urls',
         '--whitelisted-extension-id=fmkadmapgofadopljbjfkapdkoienihi',
         '--whitelisted-extension-id=hilpbahfbckghckaiafiiinjkeagmfhn',
-        '--load-extension=/mnt/d/Libraries/Documents/codeRepos/reactime/src/extension/build']),
+        '--load-extension=/mnt/d/Libraries/Documents/codeRepos/reactime/src/extension/build'
+      ]),
       devtools: true,
-      ignoreDefaultArgs: true,
+      ignoreDefaultArgs: true
     });
 
     const c = await puppeteer.connect({
       browserWSEndpoint: browser.wsEndpoint(),
-      ignoreHTTPSErrors: false,
+      ignoreHTTPSErrors: false
     });
 
     page = await browser.newPage();
@@ -69,15 +72,19 @@ xdescribe('unit test for linkFiber', () => {
     snapShot = { tree: null };
     mode = {
       jumping: false,
-      paused: false,
+      paused: false
     };
     linkFiber = linkFiberStart(snapShot, mode);
 
-    page.waitForFunction(async lf => {
-      const container = document.createElement('div');
-      render(<App />, container);
-      lf(container);
-    }, {}, linkFiber);
+    page.waitForFunction(
+      async (lf) => {
+        const container = document.createElement('div');
+        render(<App />, container);
+        lf(container);
+      },
+      {},
+      linkFiber
+    );
   });
 
   test('type of tree should be an object', () => {

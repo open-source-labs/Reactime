@@ -2,9 +2,9 @@ import Tree from '../tree';
 
 /**
  * Created new tree under sibling and copy and clean tree describe block --
- * Reason is because other tests are adding properties to tree and affecting the child block, 
+ * Reason is because other tests are adding properties to tree and affecting the child block,
  * so this was a quick way to test the trees getting reset to initial state
- * 
+ *
  * Possible fix if more time allowed: Making use of beforeEach or afterEach --
  */
 
@@ -47,12 +47,12 @@ describe('Tree unit test', () => {
   describe('Adding children', () => {
     const returnChild = newTree.addChild('stateful', 'child', {}, null);
 
-    it('should have the child be in the children\'s array property', () => {
+    it("should have the child be in the children's array property", () => {
       // check if returnChild is in the children array property of tree that invoked addChild
       expect(newTree.children).toContain(returnChild);
     });
 
-    it('should have the object that invoked it be it\'s parent', () => {
+    it("should have the object that invoked it be it's parent", () => {
       // checking parent to be the tree that invoked addChild
       expect(returnChild.parent).toEqual(newTree);
     });

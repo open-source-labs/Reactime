@@ -22,79 +22,93 @@ const state = {
         branch: 0,
         stateSnapshot: {
           state: {},
-          children: [{
-            state: { test: 'test' },
-            name: 'App',
-            componentData: { actualDuration: 3.5 },
-          }],
-          route: {
-            id: 1,
-            url: 'http://localhost:8080/',
-          },
-        },
-        children: [{
-          index: 1,
-          name: 2,
-          branch: 0,
-          stateSnapshot: {
-            state: {},
-            children: [{
+          children: [
+            {
               state: { test: 'test' },
               name: 'App',
-              componentData: { actualDuration: 3.5 },
-            }],
-            route: {
-              id: 2,
-              url: 'http://localhost:8080/',
-            },
-          },
-          children: [{
-            index: 2,
-            name: 3,
+              componentData: { actualDuration: 3.5 }
+            }
+          ],
+          route: {
+            id: 1,
+            url: 'http://localhost:8080/'
+          }
+        },
+        children: [
+          {
+            index: 1,
+            name: 2,
             branch: 0,
             stateSnapshot: {
               state: {},
-              children: [{
-                state: { test: 'test' },
-                name: 'App',
-                componentData: { actualDuration: 3.5 },
-              }],
-              route: {
-                id: 3,
-                url: 'http://localhost:8080/',
-              },
-            },
-            children: [{
-              index: 3,
-              name: 4,
-              branch: 0,
-              stateSnapshot: {
-                state: {},
-                children: [{
+              children: [
+                {
                   state: { test: 'test' },
                   name: 'App',
-                  componentData: { actualDuration: 3.5 },
-                }],
-                route: {
-                  id: 4,
-                  url: 'http://localhost:8080/test/',
+                  componentData: { actualDuration: 3.5 }
+                }
+              ],
+              route: {
+                id: 2,
+                url: 'http://localhost:8080/'
+              }
+            },
+            children: [
+              {
+                index: 2,
+                name: 3,
+                branch: 0,
+                stateSnapshot: {
+                  state: {},
+                  children: [
+                    {
+                      state: { test: 'test' },
+                      name: 'App',
+                      componentData: { actualDuration: 3.5 }
+                    }
+                  ],
+                  route: {
+                    id: 3,
+                    url: 'http://localhost:8080/'
+                  }
                 },
-              },
-              children: [],
-            }],
-          }],
-        }],
+                children: [
+                  {
+                    index: 3,
+                    name: 4,
+                    branch: 0,
+                    stateSnapshot: {
+                      state: {},
+                      children: [
+                        {
+                          state: { test: 'test' },
+                          name: 'App',
+                          componentData: { actualDuration: 3.5 }
+                        }
+                      ],
+                      route: {
+                        id: 4,
+                        url: 'http://localhost:8080/test/'
+                      }
+                    },
+                    children: []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       currLocation: {
         index: 0,
         name: 1,
-        branch: 0,
+        branch: 0
       },
       sliderIndex: 0,
-      viewIndex: -1,
-    },
+      viewIndex: -1
+    }
   },
-  currentTab: 87,
+  currentTab: 87
 };
 
 const dispatch = jest.fn();

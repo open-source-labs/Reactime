@@ -6,24 +6,22 @@
 /**
  * 'reactime' module has a single export
  * @function linkFiber
-*/
+ */
 // regenerator runtime supports async functionality
 import 'regenerator-runtime/runtime';
 import linkFiberStart from './linkFiber';
 import timeJumpStart from './timeJump';
-import {
-  Snapshot, Mode, MsgData,
-} from './types/backendTypes';
+import { Snapshot, Mode, MsgData } from './types/backendTypes';
 
 // * State snapshot object initialized here
 const snapShot: Snapshot = {
   tree: null,
-  unfilteredTree: null,
+  unfilteredTree: null
 };
 
 const mode: Mode = {
   jumping: false,
-  paused: false,
+  paused: false
 };
 
 // linkFiber is now assigned the default function exported from the file linkFiber.ts

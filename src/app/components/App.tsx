@@ -1,7 +1,5 @@
 import React, { useReducer } from 'react';
-import {
-  MemoryRouter as Router,
-} from 'react-router-dom';
+import { MemoryRouter as Router } from 'react-router-dom';
 import MainContainer from '../containers/MainContainer';
 import { StoreContext } from '../store';
 import mainReducer from '../reducers/mainReducer.js';
@@ -12,19 +10,20 @@ import mainReducer from '../reducers/mainReducer.js';
 // This is used to determine the proper tutorial to render when How To button is pressed.
 
 const initialState: {
-  port: null | number,
-  currentTab: null | number,
-  currentTitle: null | string,
-  split: null | boolean,
-  tabs: unknown,
-  currentTabInApp: null | string, } = {
-    port: null,
-    currentTab: null,
-    currentTitle: 'No Target',
-    split: false,
-    tabs: {},
-    currentTabInApp: null,
-  };
+  port: null | number;
+  currentTab: null | number;
+  currentTitle: null | string;
+  split: null | boolean;
+  tabs: unknown;
+  currentTabInApp: null | string;
+} = {
+  port: null,
+  currentTab: null,
+  currentTitle: 'No Target',
+  split: false,
+  tabs: {},
+  currentTabInApp: null
+};
 
 function App(): JSX.Element {
   return (

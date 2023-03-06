@@ -18,9 +18,8 @@ const posts = [
     author: {
       name: 'James Nghiem',
       href: 'https://medium.com/@reactime',
-      imageUrl:
-        'https://github.com/jemzir.png',
-    },
+      imageUrl: 'https://github.com/jemzir.png'
+    }
   },
   {
     title: 'Time-Traveling Through React State',
@@ -37,14 +36,15 @@ const posts = [
       name: 'Lina Shin',
       href: 'https://rxlina.medium.com/',
       imageUrl:
-        'https://media-exp1.licdn.com/dms/image/C5603AQHQGFvRHt25WQ/profile-displayphoto-shrink_200_200/0/1623865299399?e=1676505600&v=beta&t=yDqgIaJOhO3oOWLROIH9rHPBHdVzDSV3VlB2axWqXr4',
-    },
+        'https://media-exp1.licdn.com/dms/image/C5603AQHQGFvRHt25WQ/profile-displayphoto-shrink_200_200/0/1623865299399?e=1676505600&v=beta&t=yDqgIaJOhO3oOWLROIH9rHPBHdVzDSV3VlB2axWqXr4'
+    }
   },
   {
     title: 'What time is it? Reactime!',
     href: 'https://medium.com/@robbytiptontol/inter-route-time-travel-with-reactime-d84cd55ec73b',
     category: { name: 'React Devtools', href: 'https://medium.com/tag/react-devtools' },
-    description: 'Reactime is a debugging tool that lets developers take snapshots of an application\’s state data as well as time-travel through these snapshots. The snapshots display React...',
+    description:
+      'Reactime is a debugging tool that lets developers take snapshots of an application’s state data as well as time-travel through these snapshots. The snapshots display React...',
     date: 'Jun 16, 2022',
     datetime: '2022-06-16',
     imageUrl:
@@ -53,36 +53,37 @@ const posts = [
     author: {
       name: 'Robby Tipton',
       href: 'https://medium.com/@robbytiptontol',
-      imageUrl:
-        'https://miro.medium.com/fit/c/96/96/1*pi-RH2LRvsZA9vLZTvY2mg.jpeg',
-    },
-  },
-]
+      imageUrl: 'https://miro.medium.com/fit/c/96/96/1*pi-RH2LRvsZA9vLZTvY2mg.jpeg'
+    }
+  }
+];
 
 describe('Blog component test ', () => {
   beforeEach(() => {
-    render (<Blogs />)
-  })
-
-  it ('the title appears on the page', () => {
-    expect(screen.getByText(/From the Blog/i)).toBeInTheDocument()
-    expect(screen.getByText(/See the blogs from the most recent updates and to the past years!/i)).toBeInTheDocument()
+    render(<Blogs />);
   });
 
-  it ('displays the correct information for each blog post', () => {
-    posts.forEach(post => {
+  it('the title appears on the page', () => {
+    expect(screen.getByText(/From the Blog/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/See the blogs from the most recent updates and to the past years!/i)
+    ).toBeInTheDocument();
+  });
+
+  it('displays the correct information for each blog post', () => {
+    posts.forEach((post) => {
       expect(screen.getByText(post.title)).toBeInTheDocument();
       expect(screen.getByText(post.description.trim())).toBeInTheDocument();
       expect(screen.getByText(post.date)).toBeInTheDocument();
       expect(screen.getByText(post.category.name)).toBeInTheDocument();
       expect(screen.getAllByText(post.author.name)[0]).toBeInTheDocument();
-    })
+    });
   });
 
-  it ('clicking a post link navigates to the correct URL', () => {
+  it('clicking a post link navigates to the correct URL', () => {
     posts.forEach((post, index) => {
-      const postLink = post.href
+      const postLink = post.href;
       expect(screen.getAllByTestId('link')[index]).toHaveAttribute('href', postLink);
-    })
+    });
   });
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 
 class ErrorHandler extends React.Component {
-  constructor(props:unknown) {
+  constructor(props: unknown) {
     super(props);
     this.state = { errorOccurred: false };
   }

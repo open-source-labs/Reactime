@@ -14,20 +14,82 @@ import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
 import { pointRadial } from 'd3-shape';
 import { localPoint } from '@visx/event';
-import {
-  useTooltip,
-  useTooltipInPortal,
-  defaultStyles,
-} from '@visx/tooltip';
+import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import { toggleExpanded, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 
-const exclude = ['childExpirationTime', 'staticContext', '_debugSource', 'actualDuration', 'actualStartTime', 'treeBaseDuration', '_debugID', '_debugIsCurrentlyTiming', 'selfBaseDuration', 'expirationTime', 'effectTag', 'alternate', '_owner', '_store', 'get key', 'ref', '_self', '_source', 'firstBaseUpdate', 'updateQueue', 'lastBaseUpdate', 'shared', 'responders', 'pending', 'lanes', 'childLanes', 'effects', 'memoizedState', 'pendingProps', 'lastEffect', 'firstEffect', 'tag', 'baseState', 'baseQueue', 'dependencies', 'Consumer', 'context', '_currentRenderer', '_currentRenderer2', 'mode', 'flags', 'nextEffect', 'sibling', 'create', 'deps', 'next', 'destroy', 'parentSub', 'child', 'key', 'return', 'children', '$$typeof', '_threadCount', '_calculateChangedBits', '_currentValue', '_currentValue2', 'Provider', '_context', 'stateNode', 'elementType', 'type'];
+const exclude = [
+  'childExpirationTime',
+  'staticContext',
+  '_debugSource',
+  'actualDuration',
+  'actualStartTime',
+  'treeBaseDuration',
+  '_debugID',
+  '_debugIsCurrentlyTiming',
+  'selfBaseDuration',
+  'expirationTime',
+  'effectTag',
+  'alternate',
+  '_owner',
+  '_store',
+  'get key',
+  'ref',
+  '_self',
+  '_source',
+  'firstBaseUpdate',
+  'updateQueue',
+  'lastBaseUpdate',
+  'shared',
+  'responders',
+  'pending',
+  'lanes',
+  'childLanes',
+  'effects',
+  'memoizedState',
+  'pendingProps',
+  'lastEffect',
+  'firstEffect',
+  'tag',
+  'baseState',
+  'baseQueue',
+  'dependencies',
+  'Consumer',
+  'context',
+  '_currentRenderer',
+  '_currentRenderer2',
+  'mode',
+  'flags',
+  'nextEffect',
+  'sibling',
+  'create',
+  'deps',
+  'next',
+  'destroy',
+  'parentSub',
+  'child',
+  'key',
+  'return',
+  'children',
+  '$$typeof',
+  '_threadCount',
+  '_calculateChangedBits',
+  '_currentValue',
+  '_currentValue2',
+  'Provider',
+  '_context',
+  'stateNode',
+  'elementType',
+  'type'
+];
 
 const defaultMargin = {
-  top: 30, left: 30, right: 55, bottom: 70,
+  top: 30,
+  left: 30,
+  right: 55,
+  bottom: 70
 };
 
 export type LinkTypesProps = {
@@ -35,7 +97,7 @@ export type LinkTypesProps = {
   height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
   snapshots: Record<string, unknown>;
-  currentSnapshot?: Record<string, unknown>
+  currentSnapshot?: Record<string, unknown>;
 };
 
 export default function ComponentMap({
@@ -43,7 +105,7 @@ export default function ComponentMap({
   width: totalWidth,
   height: totalHeight,
   margin = defaultMargin,
-  currentSnapshot,
+  currentSnapshot
 }: LinkTypesProps): JSX.Element {
   // importing custom hooks for the selection tabs.
   const [layout, setLayout] = useState('cartesian');
@@ -74,7 +136,7 @@ export default function ComponentMap({
   if (layout === 'polar') {
     origin = {
       x: innerWidth / 2,
-      y: innerHeight / 2,
+      y: innerHeight / 2
     };
     sizeWidth = 2 * Math.PI;
     sizeHeight = Math.min(innerWidth, innerHeight) / 2;
@@ -90,18 +152,12 @@ export default function ComponentMap({
   }
 
   // Tooltip stuff:
-  const {
-    tooltipData,
-    tooltipLeft,
-    tooltipTop,
-    tooltipOpen,
-    showTooltip,
-    hideTooltip,
-  } = useTooltip();
+  const { tooltipData, tooltipLeft, tooltipTop, tooltipOpen, showTooltip, hideTooltip } =
+    useTooltip();
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal({
     detectBounds: true,
-    scroll: true,
+    scroll: true
   });
 
   const tooltipStyles = {
@@ -114,7 +170,7 @@ export default function ComponentMap({
     lineHeight: '18px',
     fontFamily: 'Roboto',
     zIndex: 100,
-    pointerEvents: 'all !important',
+    pointerEvents: 'all !important'
   };
 
   const scrollStyle = {
@@ -123,7 +179,7 @@ export default function ComponentMap({
     minHeight: '20px',
     maxHeight: '200px',
     overflowY: 'scroll',
-    overflowWrap: 'break-word',
+    overflowWrap: 'break-word'
   };
 
   const formatRenderTime = (time: number): string => {
@@ -131,17 +187,21 @@ export default function ComponentMap({
     return `${renderTime} ms `;
   };
 
-  const formatProps = data => {
+  const formatProps = (data) => {
     const propsFormat = [];
     const nestedObj = [];
     for (const key in data) {
-      if (data[key] !== 'reactFiber' && typeof data[key] !== 'object' && exclude.includes(key) !== true) {
-        propsFormat.push(
-          <p className="stateprops">
-            {`${key}: ${data[key]}`}
-          </p>,
-        );
-      } else if (data[key] !== 'reactFiber' && typeof data[key] === 'object' && exclude.includes(key) !== true) {
+      if (
+        data[key] !== 'reactFiber' &&
+        typeof data[key] !== 'object' &&
+        exclude.includes(key) !== true
+      ) {
+        propsFormat.push(<p className='stateprops'>{`${key}: ${data[key]}`}</p>);
+      } else if (
+        data[key] !== 'reactFiber' &&
+        typeof data[key] === 'object' &&
+        exclude.includes(key) !== true
+      ) {
         const result = formatProps(data[key]);
         nestedObj.push(result);
       }
@@ -153,20 +213,16 @@ export default function ComponentMap({
     return propsFormat;
   };
 
-  const formatContext = data => {
+  const formatContext = (data) => {
     const propsFormat = [];
     const nestedObj = [];
     for (const key in data) {
-      propsFormat.push(
-        <p className="stateprops">
-          {`${key}: ${data[key]}`}
-        </p>,
-      );
+      propsFormat.push(<p className='stateprops'>{`${key}: ${data[key]}`}</p>);
     }
     return propsFormat;
   };
 
-  const formatState = state => {
+  const formatState = (state) => {
     if (state === 'stateless') return ['stateless'];
     return ['stateful'];
   };
@@ -174,7 +230,7 @@ export default function ComponentMap({
   // places all nodes into a flat array
   const nodeList = [];
 
-  const collectNodes = node => {
+  const collectNodes = (node) => {
     nodeList.splice(0, nodeList.length);
     nodeList.push(node);
     for (let i = 0; i < nodeList.length; i += 1) {
@@ -219,7 +275,7 @@ export default function ComponentMap({
       />
 
       <svg ref={containerRef} width={totalWidth} height={totalHeight}>
-        <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
+        <LinearGradient id='links-gradient' from='#fd9b93' to='#fe6e9e' />
         <rect
           onClick={() => {
             setTooltip(false);
@@ -228,29 +284,29 @@ export default function ComponentMap({
           width={totalWidth}
           height={totalHeight}
           rx={14}
-          fill="#242529"
+          fill='#242529'
         />
         <Group top={margin.top} left={margin.left}>
           <Tree
-            root={hierarchy(startNode, d => (d.isExpanded ? d.children : null))}
+            root={hierarchy(startNode, (d) => (d.isExpanded ? d.children : null))}
             size={[sizeWidth, sizeHeight]}
             separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
           >
-            {tree => (
+            {(tree) => (
               <Group top={origin.y} left={origin.x}>
                 {tree.links().map((link, i) => (
                   <LinkComponent
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    stroke="#ff6569"
-                    strokeWidth="1"
-                    fill="none"
+                    stroke='#ff6569'
+                    strokeWidth='1'
+                    fill='none'
                   />
                 ))}
 
                 {tree.descendants().map((node, key) => {
-                  const widthFunc = name => {
+                  const widthFunc = (name) => {
                     const nodeLength = name.length;
                     if (nodeLength < 5) return nodeLength + 40;
                     if (nodeLength < 10) return nodeLength + 60;
@@ -274,29 +330,26 @@ export default function ComponentMap({
                   }
 
                   // mousing controls & Tooltip display logic
-                  const handleMouseAndClickOver = event => {
-                    const coords = localPoint(
-                      event.target.ownerSVGElement,
-                      event,
-                    );
+                  const handleMouseAndClickOver = (event) => {
+                    const coords = localPoint(event.target.ownerSVGElement, event);
                     const tooltipObj = { ...node.data };
 
                     showTooltip({
                       tooltipLeft: coords.x,
                       tooltipTop: coords.y,
-                      tooltipData: tooltipObj,
+                      tooltipData: tooltipObj
                       // this is where the data for state and render time is displayed
                       // but does not show props functions and etc
                     });
                   };
 
                   return (
-                    <Group top={top} left={left} key={key} className="rect">
+                    <Group top={top} left={left} key={key} className='rect'>
                       {node.depth === 0 && (
                         <circle
                           r={12}
                           fill="url('#links-gradient')"
-                          stroke="#ff6569"
+                          stroke='#ff6569'
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
@@ -313,18 +366,20 @@ export default function ComponentMap({
                           y={-height / 2}
                           x={-width / 2}
                           fill={node.children ? '#161521' : '#62d6fb'}
-                          stroke={(node.data.isExpanded && node.data.children.length > 0) ? '#ff6569' : '#4D4D4D'}
+                          stroke={
+                            node.data.isExpanded && node.data.children.length > 0
+                              ? '#ff6569'
+                              : '#4D4D4D'
+                          }
                           strokeWidth={1.5}
-                          strokeOpacity="1"
+                          strokeOpacity='1'
                           rx={node.children ? 4 : 10}
-
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
                             setTooltip(false);
                           }}
-
-                          onMouseOver={event => {
+                          onMouseOver={(event) => {
                             setTooltip(true);
                             handleMouseAndClickOver(event);
                           }}
@@ -337,18 +392,12 @@ export default function ComponentMap({
                       )}
                       {/* Display text inside of each component node */}
                       <text
-                        dy=".33em"
+                        dy='.33em'
                         fontSize={10}
-                        fontFamily="Roboto"
-                        textAnchor="middle"
+                        fontFamily='Roboto'
+                        textAnchor='middle'
                         style={{ pointerEvents: 'none' }}
-                        fill={
-                          node.depth === 0
-                            ? '#161521'
-                            : node.children
-                              ? 'white'
-                              : '#161521'
-                        }
+                        fill={node.depth === 0 ? '#161521' : node.children ? 'white' : '#161521'}
                       >
                         {node.data.name}
                       </text>
@@ -369,37 +418,32 @@ export default function ComponentMap({
           style={tooltipStyles}
           onClick={hideTooltip}
         >
-          <div onClick={() => {
-            setTooltip(false);
-            hideTooltip();
-          }}
+          <div
+            onClick={() => {
+              setTooltip(false);
+              hideTooltip();
+            }}
           >
             <div style={{}}>
               {' '}
-              <strong>{tooltipData.name}</strong>
-              {' '}
+              <strong>{tooltipData.name}</strong>{' '}
             </div>
-            <div>
-              {' '}
-              Render time:
-              {' '}
-              {formatRenderTime(tooltipData.componentData.actualDuration)}
-              {' '}
-            </div>
-            <div className="stateTip">
+            <div> Render time: {formatRenderTime(tooltipData.componentData.actualDuration)} </div>
+            <div className='stateTip'>
               State:
               {formatState(tooltipData.state)}
             </div>
             <div style={React.scrollStyle}>
-              <div className="tooltipWrapper">
+              <div className='tooltipWrapper'>
                 <h2>Props:</h2>
                 {formatProps(tooltipData.componentData.props)}
               </div>
-              {tooltipData.componentData.context &&
-              <div className="tooltipWrapper">
-                <h2>Context:</h2>
-                {formatContext(tooltipData.componentData.context)}
-              </div>}
+              {tooltipData.componentData.context && (
+                <div className='tooltipWrapper'>
+                  <h2>Context:</h2>
+                  {formatContext(tooltipData.componentData.context)}
+                </div>
+              )}
             </div>
           </div>
         </TooltipInPortal>
