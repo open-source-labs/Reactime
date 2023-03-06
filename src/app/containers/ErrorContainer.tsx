@@ -65,6 +65,11 @@ function ErrorContainer(): any {
     if (loadingArray[1] === false && status.reactDevToolsInstalled === true) {
       setLoadingArray(2, false);
     }
+
+    //Unload async function when Error Container is unmounted
+    return () => {
+      clearTimeout(timeout.current);
+    };
   }, [status, currentTitle, timeout, loadingArray]);
 
   return (
