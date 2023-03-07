@@ -3,16 +3,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Tree from '../tree';
 
+/**
+ * The snapshot of the current tree
+ * @param tree - {Tree} - The tree structure to send to front end
+ * @param unfilteredTree - {null} - The current mode (i.e. jumping, time-traveling, or paused)
+ */
 export interface Snapshot {
   tree: Tree;
   unfilteredTree: null;
 }
 
+/**
+ * Where we
+ * @param jumping - whether we are jumping steps by
+ * @param paused - true/false for whether pausing to see the state
+ */
 export interface Mode {
   jumping: boolean;
   paused: boolean;
 }
 
+/**
+ *
+ */
 export interface SnapshotNode {
   name: string;
   state: {
@@ -20,7 +33,9 @@ export interface SnapshotNode {
   };
   children: any[];
 }
-
+/**
+ * @param data - an object with action & payload properties
+ */
 export interface MsgData {
   data: {
     action: string;
@@ -28,6 +43,16 @@ export interface MsgData {
   };
 }
 
+/**
+ *
+ * @param index -
+ * @param hooksIndex -
+ * @param actualDuration -
+ * @param actualStartTime -
+ * @param selfBaseDuration -
+ * @param treeBaseDuration -
+ * @param props -
+ */
 export interface ComponentData {
   index?: number;
   hooksIndex?: number;
@@ -38,11 +63,19 @@ export interface ComponentData {
   props?: any;
 }
 
+/**
+ * @param state -
+ * @param component -
+ */
 export interface HookStateItem {
   state: any;
   component: any;
 }
 
+/**
+ * HookeStates is an array of HookeStateItem
+ * Each HookStateItem is an object with state & component properties
+ */
 export type HookStates = Array<HookStateItem>;
 
 export interface State {

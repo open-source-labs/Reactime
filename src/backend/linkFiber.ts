@@ -391,6 +391,26 @@ function createTree(
   }
   return tree;
 }
+type version = undefined | { version: string };
+/**
+ * @interface DevTools - A global object provided by the React Developer Tools extension. It provides a set of methods that allow developers to inspect and manipulate React components in the browser.
+ */
+interface DevTools {
+  /**
+   * @property renderers - an Map object containing information about the React renders that are currently active on the page. The react version being used can be obtained at key = 1.
+   */
+  renderers: Map<1, undefined | { version: string }>;
+  /**
+   * @method getFiberRoots - a method that return a fiber root {set}
+   * @param renderID - the ID of the node???
+   * @return A set of fiber root.
+   */
+  getFiberRoots: (renderID: number) => Set<number>;
+
+  onCommitFiberRoot: any;
+}
+
+interface ReactInstance {}
 
 /**
  * @method linkFiber
@@ -400,18 +420,20 @@ function createTree(
  * linkFiber contains core module functionality, exported as an anonymous function.
  */
 export default (snap: Snapshot, mode: Mode): (() => void) => {
-  // checks for visiblity of document
-  function onVisibilityChange(): void {
-    // hidden property = background tab/minimized window
+  // Checks for visiblity of document
+  function onVisibilityChange() {
+    // Hidden property = background tab/minimized window
     doWork = !document.hidden;
   }
   return () => {
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
-    const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    const devTools: undefined | DevTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    console.log('linkFiber.ts', { devTools });
     // check if reactDev Tools is installed
     if (!devTools) {
       return;
     }
+    // if reactDev Tools is installed, send a message to front end
     window.postMessage(
       {
         action: 'devToolsInstalled',
@@ -419,12 +441,13 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       },
       '*',
     );
-    // reactInstance returns an object of the react, 1st element in map
+    // Obtain reaction application information. If target application is not a React App, this will return null.
     const reactInstance = devTools.renderers.get(1);
     // if no React Instance found then target is not a compatible app
     if (!reactInstance) {
       return;
     }
+    // we may want to add try/catch
     window.postMessage(
       {
         action: 'aReactApp',
@@ -439,7 +462,9 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     if (reactInstance && reactInstance.version) {
+      // Obtain the fiber
       fiberRoot = devTools.getFiberRoots(1).values().next().value;
+      console.log('LinkFiber', { fiberRoot });
       // React has inherent methods that are called with react fiber
       // we attach new functionality without compromising the original work that onCommitFiberRoot does
       const addOneMoreStep = function (original) {
