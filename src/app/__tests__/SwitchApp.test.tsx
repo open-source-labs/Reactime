@@ -21,13 +21,13 @@ describe('Unit testing for SwitchApp.jsx', () => {
         snapshots: [1, 2, 3, 4],
         viewIndex: 1,
         sliderIndex: 1,
-        title: 'component'
-      }
-    }
+        title: 'component',
+      },
+    },
   };
   const dropdownCurrTabLabel = {
     value: 100,
-    label: 'component'
+    label: 'component',
   };
   // mockImplementation creates a mock function call
   const dispatch = jest.fn();

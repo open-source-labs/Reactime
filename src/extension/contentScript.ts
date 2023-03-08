@@ -68,7 +68,7 @@ const gatherMetrics = ({ name, value }) => {
   chrome.runtime.sendMessage({
     type: 'performance:metric',
     name,
-    value
+    value,
   });
 };
 

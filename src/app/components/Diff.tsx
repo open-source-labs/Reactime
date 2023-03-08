@@ -58,7 +58,7 @@ function Diff(props: DiffProps) {
               const clean = statelessCleanning(element);
               newObj.children.push(clean);
             }
-          }
+          },
         );
       }
     }

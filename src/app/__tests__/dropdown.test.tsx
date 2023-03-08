@@ -16,10 +16,10 @@ describe('unit testing for Dropdown.jsx', () => {
     speeds: [
       { value: 1234, label: '0.5x' },
       { value: 312, label: '1.0x' },
-      { value: 23, label: '2.0x' }
+      { value: 23, label: '2.0x' },
     ],
     setSpeed: jest.fn(),
-    selectedSpeed: { value: 312, label: '1.0x' }
+    selectedSpeed: { value: 312, label: '1.0x' },
   };
   beforeEach(() => {
     wrapper = shallow(<Dropdown {...props} />);

@@ -21,7 +21,7 @@ const margin: Margin = {
   top: 30,
   right: 30,
   bottom: 0,
-  left: 50
+  left: 50,
 };
 const axisColor = '#62d6fb';
 const background = '#242529';
@@ -32,7 +32,7 @@ const tooltipStyles = {
   color: 'white',
   fontSize: '14px',
   lineHeight: '18px',
-  fontFamily: 'Roboto'
+  fontFamily: 'Roboto',
 };
 
 const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
@@ -52,7 +52,7 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
   const keys = Object.keys(data[0]).filter(
     (componentName) =>
-      componentName !== 'name' && componentName !== 'seriesName' && componentName !== 'snapshotId'
+      componentName !== 'name' && componentName !== 'seriesName' && componentName !== 'snapshotId',
   );
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSeriesName = (action: ActionObj): string => action.seriesName;
@@ -61,7 +61,7 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   // the domain array/xAxisPoints elements will place the bars along the x-axis
   const seriesNameScale = scaleBand<string>({
     domain: data.map(getSeriesName),
-    padding: 0.2
+    padding: 0.2,
   });
   // This function will iterate through the snapshots of the series,
   // and grab the highest render times (sum of all component times).
@@ -81,13 +81,13 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   // the domain array on rendering scale will set the coordinates for Y-aix points.
   const renderingScale = scaleLinear<number>({
     domain: [0, calculateMaxTotalRender()],
-    nice: true
+    nice: true,
   });
   // the domain array will assign each key a different color to make rectangle boxes
   // and use range to set the color scheme each bar
   const colorScale = scaleOrdinal<string>({
     domain: keys,
-    range: schemeSet3
+    range: schemeSet3,
   });
 
   // setting max dimensions and scale ranges
@@ -101,7 +101,7 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
     formControl: {
       margin: theme.spacing(1),
       minWidth: 80,
-      height: 30
+      height: 30,
     },
     select: {
       minWidth: 80,
@@ -110,8 +110,8 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
       border: '1px solid grey',
       borderRadius: 4,
       color: 'grey',
-      height: 30
-    }
+      height: 30,
+    },
   }));
 
   const classes = useStyles();
@@ -256,11 +256,11 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
                       showTooltip({
                         tooltipData: bar,
                         tooltipTop: top,
-                        tooltipLeft: left
+                        tooltipLeft: left,
                       });
                     }}
                   />
-                ))
+                )),
               )
             }
           </BarStack>
@@ -276,7 +276,7 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
             fill: 'rgb(231, 231, 231)',
             fontSize: 11,
             verticalAnchor: 'middle',
-            textAnchor: 'end'
+            textAnchor: 'end',
           })}
         />
         <AxisBottom
@@ -289,7 +289,7 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
           tickLabelProps={() => ({
             fill: 'rgb(231, 231, 231)',
             fontSize: 11,
-            textAnchor: 'middle'
+            textAnchor: 'middle',
           })}
         />
         <Text x={-xMax / 2} y='15' transform='rotate(-90)' fontSize={12} fill='#FFFFFF'>

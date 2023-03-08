@@ -13,7 +13,7 @@ import {
   deleteTab,
   noDev,
   setCurrentLocation,
-  pause
+  pause,
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
@@ -86,7 +86,7 @@ function MainContainer(): JSX.Element {
           default:
         }
         return true;
-      }
+      },
     );
 
     currentPort.onDisconnect.addListener(() => {
@@ -172,7 +172,7 @@ function MainContainer(): JSX.Element {
         gutterStyle={function () {
           return {
             backgroundColor: 'dimgrey',
-            width: '8px'
+            width: '8px',
           };
         }}
       >

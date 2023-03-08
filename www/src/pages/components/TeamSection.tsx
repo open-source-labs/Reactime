@@ -73,7 +73,7 @@ const people: string[][] = [
   ['Viet Nguyen', 'vnguyen95'],
   ['Vincent Nguyen', 'VNguyenCode'],
   ['Wilton Lee', 'wiltonlee948'],
-  ['Yujin Kang', ' yujinkay']
+  ['Yujin Kang', ' yujinkay'],
 ];
 
 function replace(e: React.SyntheticEvent<HTMLImageElement>): void {

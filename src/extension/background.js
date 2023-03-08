@@ -40,15 +40,15 @@ function createTabObj(title) {
     status: {
       contentScriptLaunched: true,
       reactDevToolsInstalled: false,
-      targetPageisaReactApp: false
+      targetPageisaReactApp: false,
     },
     // Note: Persist is a now defunct feature. Paused = Locked
     mode: {
       persist: false,
-      paused: false
+      paused: false,
     },
     // stores web metrics calculated by the content script file
-    webMetrics: {}
+    webMetrics: {},
   };
 }
 
@@ -137,8 +137,8 @@ chrome.runtime.onConnect.addListener((port) => {
     portsArr.forEach((bg) =>
       bg.postMessage({
         action: 'changeTab',
-        payload: { tabId: activeTab.id, title: activeTab.title }
-      })
+        payload: { tabId: activeTab.id, title: activeTab.title },
+      }),
     );
   }
 
@@ -146,7 +146,7 @@ chrome.runtime.onConnect.addListener((port) => {
   if (Object.keys(tabsObj).length > 0) {
     port.postMessage({
       action: 'initialConnectSnapshots',
-      payload: tabsObj
+      payload: tabsObj,
     });
   }
 
@@ -186,7 +186,7 @@ chrome.runtime.onConnect.addListener((port) => {
         tabsObj[tabId].hierarchy.children = [];
         // resets hierarchy to page last state recorded
         tabsObj[tabId].hierarchy.stateSnapshot = {
-          ...tabsObj[tabId].snapshots[0]
+          ...tabsObj[tabId].snapshots[0],
         };
         // resets currLocation to page last state recorded
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
@@ -205,7 +205,7 @@ chrome.runtime.onConnect.addListener((port) => {
       case 'launchContentScript':
         chrome.scripting.executeScript({
           target: { tabId },
-          files: ['bundles/content.bundle.js']
+          files: ['bundles/content.bundle.js'],
         });
         return true;
       case 'jumpToSnap':
@@ -260,8 +260,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         portsArr.forEach((bg) =>
           bg.postMessage({
             action: 'setCurrentLocation',
-            payload: tabsObj
-          })
+            payload: tabsObj,
+          }),
         );
       }
       break;
@@ -272,8 +272,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       portsArr.forEach((bg) =>
         bg.postMessage({
           action: 'devTools',
-          payload: tabsObj
-        })
+          payload: tabsObj,
+        }),
       );
       break;
     }
@@ -298,7 +298,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       chrome.scripting.executeScript({
         target: { tabId },
         function: injectScript,
-        args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId]
+        args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId],
       });
       break;
     }
@@ -315,8 +315,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           portsArr.forEach((bg) =>
             bg.postMessage({
               action: 'initialConnectSnapshots',
-              payload: tabsObj
-            })
+              payload: tabsObj,
+            }),
           );
         }
         break;
@@ -345,8 +345,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           bg.postMessage({
             action: 'sendSnapshots',
             payload: tabsObj,
-            sourceTab
-          })
+            sourceTab,
+          }),
         );
       }
       break;
@@ -364,8 +364,8 @@ chrome.tabs.onRemoved.addListener((tabId) => {
     portsArr.forEach((bg) =>
       bg.postMessage({
         action: 'deleteTab',
-        payload: tabId
-      })
+        payload: tabId,
+      }),
     );
   }
 
@@ -386,8 +386,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
         portsArr.forEach((bg) =>
           bg.postMessage({
             action: 'deleteTab',
-            payload: tabId
-          })
+            payload: tabId,
+          }),
         );
       }
 
@@ -413,8 +413,8 @@ chrome.tabs.onActivated.addListener((info) => {
         portsArr.forEach((bg) =>
           bg.postMessage({
             action: 'changeTab',
-            payload: { tabId: tab.id, title: tab.title }
-          })
+            payload: { tabId: tab.id, title: tab.title },
+          }),
         );
       }
     }
@@ -427,7 +427,7 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: 'reactime',
     title: 'Reactime',
-    contexts: ['page', 'selection', 'image', 'link']
+    contexts: ['page', 'selection', 'image', 'link'],
   });
 });
 
@@ -440,7 +440,7 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     top: 0,
     width: 1000,
     height: 1000,
-    url: chrome.runtime.getURL('panel.html')
+    url: chrome.runtime.getURL('panel.html'),
   };
   if (menuItemId === 'reactime') chrome.windows.create(options);
 });

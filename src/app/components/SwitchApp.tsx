@@ -13,7 +13,7 @@ const SwitchAppDropdown = () => {
 
   const currTab = {
     value: currentTab,
-    label: tabs[currentTab].title
+    label: tabs[currentTab].title,
   };
 
   const customStyles = {
@@ -22,7 +22,7 @@ const SwitchAppDropdown = () => {
       const margin = 0;
 
       return { ...provided, outline, margin };
-    }
+    },
   };
 
   return (

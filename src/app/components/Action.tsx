@@ -54,7 +54,7 @@ const Action = (props: ActionProps): JSX.Element => {
     componentData,
     viewIndex,
     isCurrIndex,
-    handleOnkeyDown
+    handleOnkeyDown,
   } = props;
 
   /**
@@ -92,7 +92,7 @@ const Action = (props: ActionProps): JSX.Element => {
   const optionsCursorTrueWithMargin = {
     followCursor: true,
     shiftX: 20,
-    shiftY: 0
+    shiftY: 0,
   };
 
   return (

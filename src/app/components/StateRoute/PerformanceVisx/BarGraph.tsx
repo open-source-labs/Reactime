@@ -17,7 +17,7 @@ const margin = {
   top: 30,
   right: 30,
   bottom: 0,
-  left: 50
+  left: 50,
 };
 const axisColor = '#FF6569';
 const background = '#242529';
@@ -28,7 +28,7 @@ const tooltipStyles = {
   color: 'white',
   fontSize: '14px',
   lineHeight: '18px',
-  fontFamily: 'Roboto'
+  fontFamily: 'Roboto',
 };
 
 const BarGraph = (props: BarGraphProps): JSX.Element => {
@@ -42,7 +42,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     allRoutes,
     filteredSnapshots,
     snapshot,
-    setSnapshot
+    setSnapshot,
   } = props;
   const [seriesNameInput, setSeriesNameInput] = useState(`Series ${comparison.length + 1}`);
   const { tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip } =
@@ -50,7 +50,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
   let tooltipTimeout: number;
   const { containerRef, TooltipInPortal } = useTooltipInPortal({
     detectBounds: true,
-    scroll: true
+    scroll: true,
   });
 
   const keys = Object.keys(data.componentData);
@@ -67,18 +67,18 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
   // create visualization SCALES with cleaned data
   const snapshotIdScale = scaleBand<string>({
     domain: data.barStack.map(getSnapshotId),
-    padding: 0.2
+    padding: 0.2,
   });
 
   // Adjusts y axis to match/ bar height
   const renderingScale = scaleLinear<number>({
     domain: [0, data.maxTotalRender],
-    nice: true
+    nice: true,
   });
   // Gives each bar on the graph a color using schemeSet3 imported from D3
   const colorScale = scaleOrdinal<string>({
     domain: keys,
-    range: schemeSet3
+    range: schemeSet3,
   });
 
   // setting max dimensions and scale ranges
@@ -90,7 +90,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
   const toStorage = {
     currentTab,
     title: tabs[currentTab].title,
-    data
+    data,
   };
   // use this to animate the save series button. It
   useEffect(() => {
@@ -213,7 +213,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
                           onHoverExit(data.componentData[bar.key].rtid),
                           (tooltipTimeout = window.setTimeout(() => {
                             hideTooltip();
-                          }, 300))
+                          }, 300)),
                         );
                       }}
                       // Cursor position in window updates position of the tool tip.
@@ -231,12 +231,12 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
                         showTooltip({
                           tooltipData: bar,
                           tooltipTop: top,
-                          tooltipLeft: left
+                          tooltipLeft: left,
                         });
                       }}
                     />
                   );
-                })
+                }),
               )
             }
           </BarStack>
@@ -252,7 +252,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
             fill: 'rgb(231, 231, 231)',
             fontSize: 11,
             verticalAnchor: 'middle',
-            textAnchor: 'end'
+            textAnchor: 'end',
           })}
         />
         <AxisBottom
@@ -265,7 +265,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           tickLabelProps={() => ({
             fill: 'rgb(231, 231, 231)',
             fontSize: 11,
-            textAnchor: 'middle'
+            textAnchor: 'middle',
           })}
         />
         <Text x={-yMax / 2 - 75} y='15' transform='rotate(-90)' fontSize={12} fill='#FFFFFF'>

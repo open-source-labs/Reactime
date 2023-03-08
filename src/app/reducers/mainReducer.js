@@ -67,7 +67,7 @@ export default (state, action) =>
         allStorage();
         Object.keys(tabs).forEach((tab) => {
           tabs[tab] = {
-            ...tabs[tab]
+            ...tabs[tab],
           };
         });
         tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: false };
@@ -77,7 +77,7 @@ export default (state, action) =>
         port.postMessage({
           action: 'onHoverExit',
           payload: action.payload,
-          tabId: currentTab
+          tabId: currentTab,
         });
         break;
       }
@@ -86,7 +86,7 @@ export default (state, action) =>
         port.postMessage({
           action: 'onHover',
           payload: action.payload,
-          tabId: currentTab
+          tabId: currentTab,
         });
         break;
       }
@@ -104,7 +104,7 @@ export default (state, action) =>
             index: newIndex,
             name: nameFromIndex,
             tabId: currentTab,
-            newProp: 'newPropFromReducer'
+            newProp: 'newPropFromReducer',
           });
           clearInterval(intervalId);
 
@@ -125,7 +125,7 @@ export default (state, action) =>
             payload: snapshots[newIndex],
             index: newIndex,
             name: nameFromIndex,
-            tabId: currentTab
+            tabId: currentTab,
           });
 
           tabs[currentTab].sliderIndex = newIndex;
@@ -146,7 +146,7 @@ export default (state, action) =>
           index: 0,
           name: 0,
           payload: snapshots[0],
-          tabId: currentTab
+          tabId: currentTab,
         });
         tabs[currentTab].sliderIndex = 0;
         break;
@@ -170,7 +170,7 @@ export default (state, action) =>
           payload: snapshots[action.payload],
           index: action.payload,
           name: nameFromIndex,
-          tabId: currentTab
+          tabId: currentTab,
         });
         tabs[currentTab].sliderIndex = action.payload;
         break;
@@ -204,7 +204,7 @@ export default (state, action) =>
         port.postMessage({
           action: 'import',
           payload: action.payload,
-          tabId: currentTab
+          tabId: currentTab,
         });
         tabs[currentTab].snapshots = action.payload;
         break;
@@ -226,7 +226,7 @@ export default (state, action) =>
         port.postMessage({
           action: actionText,
           payload: newMode,
-          tabId: currentTab
+          tabId: currentTab,
         });
         break;
       }
@@ -251,7 +251,7 @@ export default (state, action) =>
             sliderIndex: 0,
             viewIndex: -1,
             intervalId: null,
-            playing: false
+            playing: false,
           };
         });
 
@@ -277,14 +277,14 @@ export default (state, action) =>
             };
             persistIsExpanded(
               payload[tab].currLocation.stateSnapshot,
-              tabs[tab].currLocation.stateSnapshot
+              tabs[tab].currLocation.stateSnapshot,
             );
 
             const { snapshots: newSnaps } = payload[tab];
             tabs[tab] = {
               ...payload[tab],
               sliderIndex: newSnaps.length - 1,
-              seriesSavedStatus: false
+              seriesSavedStatus: false,
             };
           }
         });
@@ -316,7 +316,7 @@ export default (state, action) =>
         port.postMessage({
           action: 'launchContentScript',
           payload: action.payload,
-          tabId: currentTab
+          tabId: currentTab,
         });
         break;
       }
@@ -360,7 +360,7 @@ export default (state, action) =>
         };
         persistIsExpanded(
           payload[currentTab].currLocation.stateSnapshot,
-          tabs[currentTab].currLocation.stateSnapshot
+          tabs[currentTab].currLocation.stateSnapshot,
         );
         tabs[currentTab].currLocation = payload[currentTab].currLocation;
         break;

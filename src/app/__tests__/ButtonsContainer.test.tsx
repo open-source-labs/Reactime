@@ -18,11 +18,11 @@ const state = {
       mode: {
         paused: false,
         locked: false,
-        persist: false
-      }
-    }
+        persist: false,
+      },
+    },
   },
-  currentTab: 87
+  currentTab: 87,
 };
 
 const currentTab = state.tabs[state.currentTab];
@@ -42,7 +42,7 @@ describe('testing the bottom buttons', () => {
     useStoreContext.mockClear();
     currentTab.mode = {
       paused: false,
-      persist: false
+      persist: false,
     };
   });
 

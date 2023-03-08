@@ -31,7 +31,7 @@ const collectNodes = (snaps, componentName) => {
       const cur = snapshotList[i];
       if (cur.name === componentName) {
         const renderTime = Number(
-          Number.parseFloat(cur.componentData.actualDuration).toPrecision(5)
+          Number.parseFloat(cur.componentData.actualDuration).toPrecision(5),
         );
         if (renderTime === 0) {
           break;
@@ -46,8 +46,8 @@ const collectNodes = (snaps, componentName) => {
           if (
             JSON.stringify(
               Object.values(
-                componentsResult[newChange ? componentsResult.length - 1 : trackChanges]
-              )[0]
+                componentsResult[newChange ? componentsResult.length - 1 : trackChanges],
+              )[0],
             ) !== JSON.stringify(cur.componentData.props)
           ) {
             newChange = true;
@@ -105,7 +105,7 @@ const traverse = (snapshot, data, snapshots, currTotalRender: currNum = 0): void
         renderFrequency: 0,
         totalRenderTime: 0,
         rtid: '',
-        information: {}
+        information: {},
       };
       if (child.state !== 'stateless') data.componentData[componentName].stateType = 'stateful';
     }
@@ -148,7 +148,7 @@ const getPerfMetrics = (snapshots, snapshotsIds): PerfData => {
   const perfData: PerfData = {
     barStack: [],
     componentData: {},
-    maxTotalRender: 0
+    maxTotalRender: 0,
   };
   snapshots.forEach((snapshot, i: number) => {
     perfData.barStack.push({ snapshotId: snapshotsIds[i], route: snapshot.route.url });

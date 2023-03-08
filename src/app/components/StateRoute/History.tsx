@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable */
 // @ts-nocheck
 import React, { useEffect } from 'react';
 // formatting findDiff return data to show the changes with colors, aligns with actions.tsx
@@ -19,7 +20,7 @@ const defaultMargin: defaultMargin = {
   top: 30,
   left: 30,
   right: 55,
-  bottom: 70
+  bottom: 70,
 };
 
 // main function exported to StateRoute
@@ -32,7 +33,7 @@ function History(props: Record<string, unknown>): JSX.Element {
     hierarchy,
     dispatch,
     currLocation,
-    snapshots
+    snapshots,
   } = props;
   const [, dispatch] = useStoreContext();
 
@@ -121,7 +122,7 @@ function History(props: Record<string, unknown>): JSX.Element {
 
     const delta = diff(
       statelessCleanning(snapshots[index - 1]),
-      statelessCleanning(snapshots[index])
+      statelessCleanning(snapshots[index]),
     );
     const changedState = findStateChangeObj(delta);
     // figured out the formatting for hover, applying diff.csss
@@ -150,7 +151,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .append('g')
       .attr(
         'transform',
-        `translate(${margin.left},${d3root.height === 0 ? totalHeight / 2 : margin.top})`
+        `translate(${margin.left},${d3root.height === 0 ? totalHeight / 2 : margin.top})`,
       );
 
     const link = g
@@ -168,7 +169,7 @@ function History(props: Record<string, unknown>): JSX.Element {
         (d) =>
           `M${d.x},${d.y}C${d.x},${(d.y + d.parent.y) / 2} ${d.parent.x},${
             (d.y + d.parent.y) / 2
-          } ${d.parent.x},${d.parent.y}`
+          } ${d.parent.x},${d.parent.y}`,
       );
 
     const node = g
@@ -182,7 +183,8 @@ function History(props: Record<string, unknown>): JSX.Element {
         dispatch(changeSlider(d.data.index));
       })
       // added to display state change information to node tree
-      .on('mouseover', (d) => {
+      .on('mouseover', (event, d) => {
+        const [x, y] = d3.pointer(event);
         // created popup div and appended it to display div(returned in this function)
         // D3 doesn't utilize z-index for priority,
         // rather decides on placement by order of rendering
@@ -192,8 +194,8 @@ function History(props: Record<string, unknown>): JSX.Element {
           .select('.display')
           .append('div')
           .attr('class', 'tooltip')
-          .style('left', `${d3.event.pageX}px`)
-          .style('top', `${d3.event.pageY}px`);
+          .style('left', `${x}px`)
+          .style('top', `${y}px`);
         d3.selectAll('.tooltip').html(findDiff(d.data.index));
       })
       .on('mouseout', (d) => {

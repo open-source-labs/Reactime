@@ -89,7 +89,7 @@ describe('AST Unit Tests', () => {
         'testCount',
         'setTestCount',
         'biscuitCount',
-        'setBiscuitCount'
+        'setBiscuitCount',
       ]);
       expect(Object.keys(getHooksNames(elementType))).toHaveLength(4);
     });

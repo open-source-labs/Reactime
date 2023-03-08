@@ -82,14 +82,14 @@ const exclude = [
   '_context',
   'stateNode',
   'elementType',
-  'type'
+  'type',
 ];
 
 const defaultMargin = {
   top: 30,
   left: 30,
   right: 55,
-  bottom: 70
+  bottom: 70,
 };
 
 export type LinkTypesProps = {
@@ -105,7 +105,7 @@ export default function ComponentMap({
   width: totalWidth,
   height: totalHeight,
   margin = defaultMargin,
-  currentSnapshot
+  currentSnapshot,
 }: LinkTypesProps): JSX.Element {
   // importing custom hooks for the selection tabs.
   const [layout, setLayout] = useState('cartesian');
@@ -136,7 +136,7 @@ export default function ComponentMap({
   if (layout === 'polar') {
     origin = {
       x: innerWidth / 2,
-      y: innerHeight / 2
+      y: innerHeight / 2,
     };
     sizeWidth = 2 * Math.PI;
     sizeHeight = Math.min(innerWidth, innerHeight) / 2;
@@ -157,7 +157,7 @@ export default function ComponentMap({
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal({
     detectBounds: true,
-    scroll: true
+    scroll: true,
   });
 
   const tooltipStyles = {
@@ -170,7 +170,7 @@ export default function ComponentMap({
     lineHeight: '18px',
     fontFamily: 'Roboto',
     zIndex: 100,
-    pointerEvents: 'all !important'
+    pointerEvents: 'all !important',
   };
 
   const scrollStyle = {
@@ -179,7 +179,7 @@ export default function ComponentMap({
     minHeight: '20px',
     maxHeight: '200px',
     overflowY: 'scroll',
-    overflowWrap: 'break-word'
+    overflowWrap: 'break-word',
   };
 
   const formatRenderTime = (time: number): string => {
@@ -337,7 +337,7 @@ export default function ComponentMap({
                     showTooltip({
                       tooltipLeft: coords.x,
                       tooltipTop: coords.y,
-                      tooltipData: tooltipObj
+                      tooltipData: tooltipObj,
                       // this is where the data for state and render time is displayed
                       // but does not show props functions and etc
                     });

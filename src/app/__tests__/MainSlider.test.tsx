@@ -18,16 +18,16 @@ const handle = Tooltip;
 describe('Unit testing for MainSlider.jsx', () => {
   let wrapper;
   const props = {
-    snapshotsLength: 1
+    snapshotsLength: 1,
   };
 
   const state = {
     tabs: {
       100: {
-        sliderIndex: 1
-      }
+        sliderIndex: 1,
+      },
     },
-    currentTab: 100
+    currentTab: 100,
   };
 
   const dispatch = jest.fn();

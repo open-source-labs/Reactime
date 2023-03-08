@@ -6,6 +6,7 @@
     "target": "es5",
     // Specifies the syntax for writing React components in TypeScript
     "jsx": "react",
+    "outDir": "./src/extension/build/bundles/",
 
     // --------------------------MODULES----------------------------------------
     // Specifies the module format for the compiled TypeScript files
@@ -70,7 +71,12 @@
   // Specifies which files should be included in the compilation.
   "include": ["./src/app", "./src/backend", "./src/extension", "./jest-setup.ts", "./global.d.ts"],
   // Specifies which files should be excluded from the compilation.
-  "exclude": ["./src/app/__tests__", "./src/backend/__tests__", "node_modules"],
+  "exclude": [
+    "./src/app/__tests__",
+    "./src/backend/__tests__",
+    "node_modules",
+    "./src/extension/build/bundles"
+  ],
 
   // Specifies options for TypeDoc, a documentation generator for TypeScript. In this case, it tells TypeDoc to generate documentation for the project in "file" mode, and to output the documentation to a "docs" folder.
   "typeDocOptions": {

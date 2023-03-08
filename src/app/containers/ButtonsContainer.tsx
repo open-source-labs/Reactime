@@ -6,7 +6,7 @@ import {
   faSquare,
   faColumns,
   faUnlock,
-  faLock
+  faLock,
 } from '@fortawesome/free-solid-svg-icons';
 import { importSnapshots, toggleMode, toggleSplit } from '../actions/actions';
 import { useStoreContext } from '../store';
@@ -19,7 +19,7 @@ function exportHandler(snapshots: []) {
 
   // set file in anchor link
   fileDownload.href = URL.createObjectURL(
-    new Blob([JSON.stringify(snapshots)], { type: 'application/json' })
+    new Blob([JSON.stringify(snapshots)], { type: 'application/json' }),
   );
 
   // set anchor as file download and click it
@@ -56,7 +56,7 @@ function ButtonsContainer(): JSX.Element {
   const [{ tabs, currentTab, split, currentTabInApp }, dispatch] = useStoreContext();
   const {
     snapshots,
-    mode: { paused }
+    mode: { paused },
   } = tabs[currentTab];
 
   return (

@@ -7,7 +7,7 @@
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   HookStateItem, // obj with state and component
-  HookStates // array of hook state items
+  HookStates, // array of hook state items
 } from './types/backendTypes';
 
 // HookState is an array that contains a "component" for
@@ -46,5 +46,5 @@ export default {
       }
     }
     return multiDispatch;
-  }
+  },
 };

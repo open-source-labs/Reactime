@@ -28,7 +28,7 @@ describe('Unit testing RouteDescription', () => {
       viewIndex={undefined}
       isCurrIndex={false}
       routePath='http://localhost:3000/home'
-    />
+    />,
   );
 
   actionsArr.push(
@@ -47,7 +47,7 @@ describe('Unit testing RouteDescription', () => {
       viewIndex={undefined}
       isCurrIndex={false}
       routePath='http://localhost:3000/home'
-    />
+    />,
   );
 
   const wrapper = shallow(<RouteDescription actions={actionsArr} />);

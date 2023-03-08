@@ -17,5 +17,5 @@ ReactDOM.render(
       <Route path='/buttons' element={<Buttons />} />
     </Routes>
   </BrowserRouter>,
-  root
+  root,
 );

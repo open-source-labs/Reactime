@@ -22,7 +22,7 @@ const initialState: {
   currentTitle: 'No Target',
   split: false,
   tabs: {},
-  currentTabInApp: null
+  currentTabInApp: null,
 };
 
 function App(): JSX.Element {

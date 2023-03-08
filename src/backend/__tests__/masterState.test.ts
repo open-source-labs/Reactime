@@ -2,7 +2,7 @@ import masterState from '../masterState';
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   HookStateItem,
-  HookStates
+  HookStates,
 } from '../types/backendTypes';
 
 describe('Testing masterState functionality', () => {
@@ -42,7 +42,7 @@ describe('Testing masterState functionality', () => {
     it('Should return an array of components when given an a valid array of indices', () => {
       expect(masterState.getComponentByIndexHooks([0, 1])).toEqual([
         hookOne.component,
-        hookTwo.component
+        hookTwo.component,
       ]);
     });
     it('Should return an empty array when given an invalid array of indices', () => {

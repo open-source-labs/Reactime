@@ -18,7 +18,7 @@ const Row = (props: RowProps) => {
         column={i}
         handleBoxClick={props.handleBoxClick}
         value={props.values[i]}
-      ></Box>
+      ></Box>,
     );
   }
 

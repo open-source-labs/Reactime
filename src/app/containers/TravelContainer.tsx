@@ -8,14 +8,14 @@ import {
   startPlaying,
   moveForward,
   moveBackward,
-  resetSlider
+  resetSlider,
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 const speeds = [
   { value: 2000, label: '0.5x' },
   { value: 1000, label: '1.0x' },
-  { value: 500, label: '2.0x' }
+  { value: 500, label: '2.0x' },
 ];
 
 // start slider movement
@@ -24,7 +24,7 @@ function play(
   playing: boolean,
   dispatch: (a: any) => void,
   snapshotsLength: number,
-  sliderIndex: number
+  sliderIndex: number,
 ) {
   if (playing) {
     dispatch(pause());

@@ -21,7 +21,7 @@ function ErrorContainer(): any {
   const status = {
     contentScriptLaunched: false,
     reactDevToolsInstalled: false,
-    targetPageisaReactApp: false
+    targetPageisaReactApp: false,
   };
   if (tabs[currentTab]) {
     Object.assign(status, tabs[currentTab].status);
@@ -65,6 +65,11 @@ function ErrorContainer(): any {
     if (loadingArray[1] === false && status.reactDevToolsInstalled === true) {
       setLoadingArray(2, false);
     }
+
+    //Unload async function when Error Container is unmounted
+    return () => {
+      clearTimeout(timeout.current);
+    };
   }, [status, currentTitle, timeout, loadingArray]);
 
   return (

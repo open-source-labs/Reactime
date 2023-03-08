@@ -22,7 +22,7 @@ import {
   Margin,
   BarGraphComparisonProps,
   ActionObj,
-  Series
+  Series,
 } from '../../FrontendTypes';
 // import { BarStack as BarStacks } from '@visx/shape/lib/types';
 
@@ -31,7 +31,7 @@ const margin: Margin = {
   top: 30,
   right: 30,
   bottom: 0,
-  left: 50
+  left: 50,
 };
 const axisColor = '#62d6fb';
 const background = '#242529';
@@ -42,7 +42,7 @@ const tooltipStyles = {
   color: 'white',
   fontSize: '14px',
   lineHeight: '18px',
-  fontFamily: 'Roboto'
+  fontFamily: 'Roboto',
 };
 
 const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
@@ -76,7 +76,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const xAxisPoints: string[] = ['currentTab', 'comparison'];
   const snapshotIdScale = scaleBand<string>({
     domain: xAxisPoints,
-    padding: 0.2
+    padding: 0.2,
   });
   // This function will iterate through the snapshots of the series,
   // and grab the highest render times (sum of all component times).
@@ -100,14 +100,14 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   // the domain array on rendering scale will set the coordinates for Y-axis points.
   const renderingScale = scaleLinear<number>({
     domain: [0, Math.max(calculateMaxTotalRender(series), data.maxTotalRender)],
-    nice: true
+    nice: true,
   });
   // the domain array will assign each key a different color to make rectangle boxes
   // and use range to set the color scheme each bar
   const duplicate = schemeSet3.slice();
   const colorScale = scaleOrdinal<string, string>({
     domain: keys,
-    range: duplicate
+    range: duplicate,
   });
 
   // setting max dimensions and scale ranges
@@ -121,7 +121,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     formControl: {
       margin: theme.spacing(1),
       minWidth: 80,
-      height: 30
+      height: 30,
     },
     select: {
       minWidth: 80,
@@ -130,8 +130,8 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
       border: '1px solid grey',
       borderRadius: 4,
       color: 'grey',
-      height: 30
-    }
+      height: 30,
+    },
   }));
 
   const classes = useStyles();
@@ -323,7 +323,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                         onHoverExit(data.componentData[bar.key].rtid),
                         (tooltipTimeout = window.setTimeout(() => {
                           hideTooltip();
-                        }, 300))
+                        }, 300)),
                       );
                     }}
                     // Cursor position in window updates position of the tool tip
@@ -335,7 +335,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                       showTooltip({
                         tooltipData: bar,
                         tooltipTop: top,
-                        tooltipLeft: left
+                        tooltipLeft: left,
                       });
                     }}
                   />
@@ -383,7 +383,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                         onHoverExit(data.componentData[bar.key].rtid),
                         (tooltipTimeout = window.setTimeout(() => {
                           hideTooltip();
-                        }, 300))
+                        }, 300)),
                       );
                     }}
                     // Cursor position in window updates position of the tool tip
@@ -395,7 +395,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                       showTooltip({
                         tooltipData: bar,
                         tooltipTop: top,
-                        tooltipLeft: left
+                        tooltipLeft: left,
                       });
                     }}
                   />
@@ -415,7 +415,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             fill: 'rgb(231, 231, 231)',
             fontSize: 11,
             verticalAnchor: 'middle',
-            textAnchor: 'end'
+            textAnchor: 'end',
           })}
         />
         <AxisBottom
@@ -428,7 +428,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           tickLabelProps={() => ({
             fill: 'rgb(231, 231, 231)',
             fontSize: 11,
-            textAnchor: 'middle'
+            textAnchor: 'middle',
           })}
         />
         <Text x={-xMax / 2} y='15' transform='rotate(-90)' fontSize={12} fill='#FFFFFF'>
