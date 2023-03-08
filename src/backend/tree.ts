@@ -142,7 +142,7 @@ class Tree {
     const uniqueName = this.checkForDuplicates(name);
     // instantiate new sibilng tree with state, uniqueName, componentName and rtid
     const newSibling: Tree = new Tree(state, uniqueName, componentData, rtid);
-    // updating newSibling parent to be the parent of "this" which refers to sibling node
+    // updating newSibling's parent to be the parent of "this" which refers to sibling node
     newSibling.parent = this.parent;
     // adds newSibling to children array
     this.parent.children.push(newSibling);
@@ -160,27 +160,31 @@ class Tree {
      */
     // if we havent made a copy of the tree, increment copyInstances and clear cicularComponentTable set
     if (copyInstances === 0) {
+      // increment copyInstances
       copyInstances++;
+      // clear circularComponentTable
       circularComponentTable.clear();
     }
     // creates copy of present node
     let copy: Tree = new Tree(this.state, this.name, this.componentData, this.rtid);
-    // you want to get rid of the parentNode?? not sure why
+    // you want to get rid of the parentNode becuase right now copy and "this" have the same parent and you dont want that
     delete copy.parent;
     // add to circularComponentTable
     circularComponentTable.add(this);
-    //
+    // remove unserializable Trees
     copy = scrubUnserializableMembers(copy);
 
-    // creates copy of each child of the present node
+    // creates copy of each child of the present node and assigns it to children property of the new copy Tree
     copy.children = this.children.map((child: Tree): Tree | string => {
+      // if child isnt in circularComponent table, return recursive call of cleanTreeCopy() on child. We need to do this to fully build out the tree
       if (!circularComponentTable.has(child)) {
         return child.cleanTreeCopy();
       }
       return 'circular';
     });
-
+    // reset copyInstances back to zero becuase we are done making a copy of the tree
     copyInstances--;
+    // return the copy
     return copy;
   }
 }
