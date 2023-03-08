@@ -11,7 +11,7 @@
 import 'regenerator-runtime/runtime';
 import linkFiberStart from './linkFiber';
 import timeJumpStart from './timeJump';
-import { Snapshot, Mode, MsgData } from './types/backendTypes';
+import { Snapshot, Status, MsgData } from './types/backendTypes';
 
 // * State snapshot object initialized here
 const snapShot: Snapshot = {
@@ -19,7 +19,7 @@ const snapShot: Snapshot = {
   unfilteredTree: null,
 };
 
-const mode: Mode = {
+const mode: Status = {
   jumping: false,
   paused: false,
 };

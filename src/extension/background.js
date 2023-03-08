@@ -324,7 +324,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
       // DUPLICATE SNAPSHOT CHECK
       const previousSnap =
-        tabsObj[tabId].currLocation.stateSnapshot.children[0].componentData.actualDuration;
+        tabsObj[tabId]?.currLocation?.stateSnapshot?.children[0]?.componentData?.actualDuration;
       const incomingSnap = request.payload.children[0].componentData.actualDuration;
       if (previousSnap === incomingSnap) break;
 
