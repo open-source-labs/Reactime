@@ -16,11 +16,41 @@ import {
   // tree
   Snapshot,
   // jump, pause
-  Mode,
+  Status,
   // array of state and component
   HookStates,
   // object with tree structure
   Fiber,
+} from './types/backendTypes';
+import {
+  FunctionComponent,
+  ClassComponent,
+  IndeterminateComponent, // Before we know whether it is function or class
+  HostRoot, // Root of a host tree. Could be nested inside another node.
+  HostPortal, // A subtree. Could be an entry point to a different renderer.
+  /**
+   * Host Component: a type of component that represents a native DOM element in the browser environment, such as div, span, input, h1 etc.
+   */
+  HostComponent, // has stateNode of html elements
+  HostText,
+  Fragment,
+  Mode,
+  ContextConsumer,
+  ContextProvider,
+  ForwardRef,
+  Profiler,
+  SuspenseComponent,
+  MemoComponent,
+  SimpleMemoComponent, // A higher order component where if the component renders the same result given the same props, react skips rendering the component and uses last rendered result. Has memoizedProps/memoizedState but no stateNode
+  LazyComponent,
+  IncompleteClassComponent,
+  DehydratedFragment,
+  SuspenseListComponent,
+  FundamentalComponent,
+  ScopeComponent,
+  Block,
+  OffscreenComponent,
+  LegacyHiddenComponent,
 } from './types/backendTypes';
 // import function that creates a tree
 import Tree from './tree';
@@ -54,7 +84,7 @@ let rtid = null;
  *
  * Middleware: Gets a copy of the current snap.tree and posts a recordSnap message to the window
  */
-function sendSnapshot(snap: Snapshot, mode: Mode): void {
+function sendSnapshot(snap: Snapshot, mode: Status): void {
   // Don't send messages while jumping or while paused
   if (mode.jumping || mode.paused) return;
   // If there is no current tree  creates a new one
@@ -87,7 +117,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
  * Middleware: Updates snap object with latest snapshot, using @sendSnapshot
  */
 // updating tree depending on current mode on the panel (pause, etc)
-function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
+function updateSnapShotTree(snap: Snapshot, mode: Status): void {
   // this is the currently active root fiber(the mutable root of the tree)
   if (fiberRoot) {
     const { current } = fiberRoot;
@@ -138,6 +168,7 @@ function traverseHooks(memoizedState: any): HookStates {
 // This runs after every Fiber commit. It creates a new snapshot
 const exclude = new Set([
   'alternate',
+  'basename',
   'baseQueue',
   'baseState',
   'child',
@@ -149,6 +180,8 @@ const exclude = new Set([
   'deps',
   'dependencies',
   'destroy',
+  'dispatch',
+  'location',
   'effects',
   'element',
   'elementType',
@@ -156,13 +189,16 @@ const exclude = new Set([
   'firstEffect',
   'flags',
   'get key',
+  'getState',
   'key',
   'lanes',
   'lastBaseUpdate',
   'lastEffect',
+  'liftedStore',
   'navigator',
   'memoizedState',
   'mode',
+  'navigationType',
   'next',
   'nextEffect',
   'pending',
@@ -172,12 +208,15 @@ const exclude = new Set([
   'Provider',
   'updateQueue',
   'ref',
+  'replaceReducer',
   'responders',
   'return',
   'route',
   'routeContext',
   'shared',
   'sibling',
+  'subscribe',
+  'subscription',
   'stateNode',
   'tag',
   'type',
@@ -193,6 +232,7 @@ const exclude = new Set([
   '_store',
   '_threadCount',
   '$$typeof',
+  '@@observable',
 ]);
 // -----------------TRIMMING PASSED IN FIBER ROOT DATA--------------------------
 /**
@@ -204,26 +244,36 @@ const exclude = new Set([
  * @param depth - reactDevData is nested object. The value in reactDevData can be another object. Depth is use to keep track the depth during the unraveling of nested object
  * @returns reactimeData - the updated data object to send to front end of ReactTime
  */
-function convertDataToString(reactDevData, reactimeData = {}, depth = 0) {
+function convertDataToString(reactDevData, reactimeData = {}, excludeSet?: any) {
+  if (!excludeSet) excludeSet = exclude;
   for (const key in reactDevData) {
-    // Skip keys that are in exclude list OR if there is no value at key
-    if (exclude.has(key) || !reactDevData[key]) {
+    // Skip keys that are in exclude set OR if there is no value at key
+    // Falsy values such as 0, false, null are still valid value
+    if (excludeSet.has(key) || reactDevData[key] === undefined) {
       continue;
     }
     // If value at key is a function, assign key with value 'function' to reactimeData object
     else if (typeof reactDevData[key] === 'function') {
       reactimeData[key] = 'function';
-    }
-    // If value at key is an object, recusive call convertDataToString to traverse through all keys and append to reactimeData object accodingly
-    else if (typeof reactDevData[key] === 'object') {
-      depth > 10
-        ? 'convertDataToString reached max depth'
-        : convertDataToString(reactDevData[key], reactimeData, depth + 1);
     } else {
       reactimeData[key] = reactDevData[key];
     }
   }
   return reactimeData;
+}
+// ------------------------TRIMMING CONTEXT DATA--------------------------------
+function trimContextData(memoizedState, reactimeContextData = {}) {
+  const exclude = new Set(['children', 'store', 'subscription']);
+  while (memoizedState) {
+    //Trim the current level of memoizedState data:
+    const updateMemoizedState = convertDataToString(memoizedState?.memoizedState[0], {}, exclude);
+    //Update Reactime data:
+    Object.assign(reactimeContextData, updateMemoizedState);
+    //Move on to the next level:
+    memoizedState = memoizedState?.next;
+  }
+
+  return reactimeContextData;
 }
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
 /**
@@ -273,8 +323,8 @@ function createTree(
     _debugHookTypes,
   });
 
-  // Tag === 5 signify this is a React Fragment. Each JSX component return a React fragment => The parent of a React Fragment could be a JSX component
-  if (tag === 5) {
+  // TODO: Understand this if statement
+  if (tag === HostComponent) {
     try {
       // Ensure parent component has memoizedProps property
       if (
@@ -311,15 +361,24 @@ function createTree(
   } = {};
   let componentFound = false;
 
+  /**
+   * In addition to React Component JSX from user input, there are other components that user would be using under the hood without needing to see it. For example, if Redux is used, a ContextProvider, called ReactRedux.Provider is created under the hood to manage the context store.
+   * @variable filteredComponents is boolean value, used to filter out 'under-the-hood' components
+   */
+  // const filteredComponents = tag != ContextProvider;
+  const filteredComponents = true;
   // check to see if the parent component has any state/props
-  if (memoizedProps && Object.keys(memoizedProps).length) {
+  if (filteredComponents && memoizedProps && Object.keys(memoizedProps).length) {
     componentData.props = convertDataToString(memoizedProps);
   }
   // if the component uses the useContext hook, we want to grab the context object and add it to the componentData object for that fiber
-  if (tag === 0 && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
-    componentData.context = convertDataToString(dependencies.firstContext.memoizedValue);
-    console.log('Linkfiber', { context: componentData.context });
+  // if (tag === 0 && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
+  //   componentData.context = convertDataToString(dependencies.firstContext.memoizedValue);
+  // }
+  if ((tag === FunctionComponent || tag === ClassComponent) && memoizedState?.memoizedState) {
+    componentData.context = trimContextData(memoizedState);
   }
+  
   // Check if node is a stateful class component
   if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
     // Save component's state and setState() function to our record for future
@@ -369,6 +428,7 @@ function createTree(
     treeBaseDuration,
   };
   console.log('props', componentData.props);
+  console.log('context', componentData.context);
   let newNode = null;
 
   // We want to add this fiber node to the snapshot
@@ -458,7 +518,7 @@ interface DevTools {
  * @return a function to be invoked by index.js that initiates snapshot monitoring
  * linkFiber contains core module functionality, exported as an anonymous function.
  */
-export default (snap: Snapshot, mode: Mode): (() => void) => {
+export default (snap: Snapshot, mode: Status): (() => void) => {
   // Checks for visiblity of document
   function onVisibilityChange() {
     // Hidden property = background tab/minimized window

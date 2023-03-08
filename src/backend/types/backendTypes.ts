@@ -14,11 +14,11 @@ export interface Snapshot {
 }
 
 /**
- * @type Mode - object that describes where we are
+ * @type Status - object that describes where we are
  * @member jumping - whether we are jumping steps by
  * @member paused - true/false for whether pausing to see the state
  */
-export interface Mode {
+export interface Status {
   jumping: boolean;
   paused: boolean;
 }
