@@ -149,6 +149,7 @@ const exclude = new Set([
   'dependencies',
   'destroy',
   'effects',
+  'element',
   'elementType',
   'firstBaseUpdate',
   'firstEffect',
@@ -158,18 +159,22 @@ const exclude = new Set([
   'lanes',
   'lastBaseUpdate',
   'lastEffect',
+  'navigator',
   'memoizedState',
   'mode',
   'next',
   'nextEffect',
   'pending',
   'parentSub',
+  'pathnameBase',
   'pendingProps',
   'Provider',
   'updateQueue',
   'ref',
   'responders',
   'return',
+  'route',
+  'routeContext',
   'shared',
   'sibling',
   'stateNode',
@@ -192,20 +197,26 @@ const exclude = new Set([
 // This recursive function is used to grab the state of children components
 // and push them into the parent componenent
 // react elements throw errors on client side of application - convert react/functions into string
-function convertDataToString(newObj, oldObj, depth = 0) {
-  const newPropData = oldObj || {};
+function convertDataToString(newObj, newPropData = {}, depth = 0) {
+  // const newPropData = oldObj;
   for (const key in newObj) {
-    if (typeof newObj[key] === 'function') {
+    // Skip keys that are in exclude list OR if there is no value at key
+    if (exclude.has(key) || !newObj[key]) {
+      continue;
+      // newPropData[key] = 'reactFiber';
+      // return newPropData;
+    }
+    // If value at key is a function, assign key with value 'function' to newPropData object
+    else if (typeof newObj[key] === 'function') {
       newPropData[key] = 'function';
-    } else if (exclude.has(key)) {
-      newPropData[key] = 'reactFiber';
-      return newPropData;
-    } else if (typeof newObj[key] === 'object' && !exclude.has(key)) {
-      newPropData[key] =
-        depth > 10
-          ? 'convertDataToString reached max depth'
-          : convertDataToString(newObj[key], null, depth + 1);
-    } else if (!exclude.has(key)) {
+    }
+    // If value at key is an object, recusive call convertDataToString to traverse through all keys and append to newPropData object accodingly
+    else if (typeof newObj[key] === 'object') {
+      // newPropData[key] =
+      depth > 10
+        ? 'convertDataToString reached max depth'
+        : convertDataToString(newObj[key], newPropData, depth + 1);
+    } else {
       newPropData[key] = newObj[key];
     }
   }
@@ -241,15 +252,25 @@ function createTree(
     dependencies,
     _debugHookTypes,
   } = currentFiber;
+  console.log('LinkFiber', {
+    tag,
+    elementType:
+      elementType?._context?.displayName ||
+      elementType?.render?.name ||
+      elementType?.name ||
+      elementType,
+    memoizedProps,
+    memoizedState,
+  });
 
-  // Tag === 5 signify this is a React Fragment. Each JSX component return a React fragment
+  // Tag === 5 signify this is a React Fragment. Each JSX component return a React fragment => The parent of a React Fragment could be a JSX component
   if (tag === 5) {
     try {
       // Ensure parent component has memoizedProps property
       if (
         memoizedProps.children &&
         memoizedProps.children[0]?._owner?.memoizedProps !== undefined
-        ) {
+      ) {
         // Access the memoizedProps of the parent component
         const propsData = memoizedProps.children[0]._owner.memoizedProps;
         const newPropData = convertDataToString(
@@ -281,13 +302,13 @@ function createTree(
   let componentFound = false;
 
   // check to see if the parent component has any state/props
-  if (memoizedProps) {
-    componentData.props = convertDataToString(memoizedProps, null);
+  if (memoizedProps && Object.keys(memoizedProps).length) {
+    componentData.props = convertDataToString(memoizedProps, {});
   }
 
-  // if the component uses the useContext hook, we want to grab the co  text object and add it to the componentData object for that fiber
-  if (tag === 0 && _debugHookTypes) {
-    componentData.context = convertDataToString(dependencies?.firstContext?.memoizedValue, null);
+  // if the component uses the useContext hook, we want to grab the context object and add it to the componentData object for that fiber
+  if (tag === 0 && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
+    componentData.context = convertDataToString(dependencies.firstContext.memoizedValue, null);
   }
   // Check if node is a stateful class component
   if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
@@ -337,7 +358,7 @@ function createTree(
     selfBaseDuration,
     treeBaseDuration,
   };
-
+  console.log('props', componentData.props);
   let newNode = null;
 
   // We want to add this fiber node to the snapshot
@@ -392,6 +413,7 @@ function createTree(
     circularComponentTable.add(sibling);
     createTree(sibling, newNode, true);
   }
+
   return tree;
 }
 /**

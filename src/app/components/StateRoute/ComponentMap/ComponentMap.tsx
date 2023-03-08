@@ -188,19 +188,20 @@ export default function ComponentMap({
   };
 
   const formatProps = (data) => {
+    console.log('ComponentMap', { data });
     const propsFormat = [];
     const nestedObj = [];
     for (const key in data) {
       if (
-        data[key] !== 'reactFiber' &&
-        typeof data[key] !== 'object' &&
-        exclude.includes(key) !== true
+        // data[key] !== 'reactFiber' &&
+        typeof data[key] !== 'object'
+        // exclude.includes(key) !== true
       ) {
         propsFormat.push(<p className='stateprops'>{`${key}: ${data[key]}`}</p>);
       } else if (
-        data[key] !== 'reactFiber' &&
-        typeof data[key] === 'object' &&
-        exclude.includes(key) !== true
+        // data[key] !== 'reactFiber' &&
+        typeof data[key] === 'object'
+        // exclude.includes(key) !== true
       ) {
         const result = formatProps(data[key]);
         nestedObj.push(result);

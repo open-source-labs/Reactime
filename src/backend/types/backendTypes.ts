@@ -115,6 +115,9 @@ export const ClassComponent = 1;
 export const IndeterminateComponent = 2; // Before we know whether it is function or class
 export const HostRoot = 3; // Root of a host tree. Could be nested inside another node.
 export const HostPortal = 4; // A subtree. Could be an entry point to a different renderer.
+/**
+ * Host Component: a type of component that represents a native DOM element in the browser environment, such as div, span, input, h1 etc.
+ */
 export const HostComponent = 5; // has stateNode of html elements
 export const HostText = 6;
 export const Fragment = 7;
@@ -138,6 +141,7 @@ export const LegacyHiddenComponent = 24;
 
 /**
  * @type Fiber - The Fiber data structure that React uses to represent a component tree.
+ * https://indepth.dev/posts/1008/inside-fiber-in-depth-overview-of-the-new-reconciliation-algorithm-in-react
  * @member actualDuration - The time taken to render the current Fiber node and its descendants during the previous render cycle. This value is used to optimize the rendering of components and to provide performance metrics to developers.
  * @member actualStartTime - The time at which the rendering of the current Fiber node started during the previous render cycle.
  * @member child - Pointer to the first child.
