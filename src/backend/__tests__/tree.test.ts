@@ -1,4 +1,5 @@
 import Tree from '../tree';
+import { serializeState, scrubUnserializableMembers } from '../tree';
 
 /**
  * Created new tree under sibling and copy and clean tree describe block --
@@ -7,6 +8,10 @@ import Tree from '../tree';
  *
  * Possible fix if more time allowed: Making use of beforeEach or afterEach --
  */
+
+describe('Serialize state unit test', () => {
+  const dummyState = { counter: 1, playerOne: 'X' };
+});
 
 describe('Tree unit test', () => {
   const newTree = new Tree({});
@@ -79,6 +84,8 @@ describe('Tree unit test', () => {
     });
   });
 
+  // TO DO- add serializing state tests
+  describe('Serializing state unit test', () => {});
   // review this test
   // returnSibling not used?
   // Check Test
