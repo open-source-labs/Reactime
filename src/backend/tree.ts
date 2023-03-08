@@ -6,8 +6,8 @@
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
 
-// ~~ I dont like the fact that this are global variables ~~ - Zack
-let copyInstances = 0; // Tells you if we have already made a copy of current tree
+// ~~ I dont like the fact that these are global variables ~~ - Zack
+let copyInstances = 0; // Tells you if we have already made a copy of current tree??
 const circularComponentTable = new Set<Tree>(); // Keeps track of the nodes added to the tree
 let componentNames = {}; // {componentName: frequency of use} => component name as a key and it's frequency of use as its value
 
@@ -88,7 +88,7 @@ class Tree {
     if (name === '' && typeof this.rtid === 'string') {
       name = this.rtid.replace('fromLinkFiber', '');
     }
-    // if we are at root, then make sure componentNames is an empty
+    // if we are at root, then make sure componentNames is an empty object
     if (this.state === 'root') componentNames = {};
     // check for duplicate
     else if (componentNames[name] !== undefined) {
@@ -148,9 +148,9 @@ class Tree {
     }
     // creates copy of present node
     let copy: Tree = new Tree(this.state, this.name, this.componentData, this.rtid);
-    // you want to get rid of the parentNode
+    // you want to get rid of the parentNode?? not sure why
     delete copy.parent;
-    // add to circulareComponentTable
+    // add to circularComponentTable
     circularComponentTable.add(this);
     // 
     copy = scrubUnserializableMembers(copy);

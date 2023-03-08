@@ -35,10 +35,11 @@ import { throttle, getHooksNames } from './helpers';
 // Set global variables to use in exported module and helper functions
 declare global {
   interface Window {
-    __REACT_DEVTOOLS_GLOBAL_HOOK__?: any;
+    __REACT_DEVTOOLS_GLOBAL_HOOK__?: DevTools;
     __REDUX_DEVTOOLS_EXTENSION__?: any;
   }
 }
+
 let fiberRoot = null;
 let doWork = true;
 const circularComponentTable = new Set();
@@ -84,7 +85,6 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
  * @param mode The current mode (i.e. jumping, time-traveling, or paused)
  * Middleware: Updates snap object with latest snapshot, using @sendSnapshot
  */
-
 // updating tree depending on current mode on the panel (pause, etc)
 function updateSnapShotTree(snap: Snapshot, mode: Mode): void {
   // this is the currently active root fiber(the mutable root of the tree)
@@ -135,60 +135,60 @@ function traverseHooks(memoizedState: any): HookStates {
  * 3. Build a new state snapshot
  */
 // This runs after every Fiber commit. It creates a new snapshot
-const exclude = [
+const exclude = new Set([
   'alternate',
-  '_owner',
-  '_store',
-  'get key',
-  'ref',
-  '_self',
-  '_source',
-  'firstBaseUpdate',
-  'updateQueue',
-  'lastBaseUpdate',
-  'shared',
-  'responders',
-  'pending',
-  'lanes',
-  'childLanes',
-  'effects',
-  'memoizedState',
-  'pendingProps',
-  'lastEffect',
-  'firstEffect',
-  'tag',
-  'baseState',
   'baseQueue',
-  'dependencies',
+  'baseState',
+  'child',
+  'childLanes',
+  'children',
   'Consumer',
   'context',
-  '_currentRenderer',
-  '_currentRenderer2',
-  'mode',
-  'flags',
-  'nextEffect',
-  'sibling',
   'create',
   'deps',
-  'next',
+  'dependencies',
   'destroy',
-  'parentSub',
-  'child',
+  'effects',
+  'elementType',
+  'firstBaseUpdate',
+  'firstEffect',
+  'flags',
+  'get key',
   'key',
+  'lanes',
+  'lastBaseUpdate',
+  'lastEffect',
+  'memoizedState',
+  'mode',
+  'next',
+  'nextEffect',
+  'pending',
+  'parentSub',
+  'pendingProps',
+  'Provider',
+  'updateQueue',
+  'ref',
+  'responders',
   'return',
-  'children',
-  '$$typeof',
-  '_threadCount',
+  'shared',
+  'sibling',
+  'stateNode',
+  'tag',
+  'type',
   '_calculateChangedBits',
+  '_context',
+  '_currentRenderer',
+  '_currentRenderer2',
   '_currentValue',
   '_currentValue2',
-  'Provider',
-  '_context',
-  'stateNode',
-  'elementType',
-  'type',
-];
-
+  '_owner',
+  '_self',
+  '_source',
+  '_store',
+  '_threadCount',
+  '$$typeof',
+]);
+// -------------------CONVERT PROPT DATA TO STRING------------------------------
 // This recursive function is used to grab the state of children components
 // and push them into the parent componenent
 // react elements throw errors on client side of application - convert react/functions into string
@@ -197,22 +197,24 @@ function convertDataToString(newObj, oldObj, depth = 0) {
   for (const key in newObj) {
     if (typeof newObj[key] === 'function') {
       newPropData[key] = 'function';
-    } else if (exclude.includes(key) === true) {
+    } else if (exclude.has(key)) {
       newPropData[key] = 'reactFiber';
       return newPropData;
-    } else if (typeof newObj[key] === 'object' && exclude.includes(key) !== true) {
+    } else if (typeof newObj[key] === 'object' && !exclude.has(key)) {
       newPropData[key] =
         depth > 10
           ? 'convertDataToString reached max depth'
           : convertDataToString(newObj[key], null, depth + 1);
-    } else if (exclude.includes(key) !== true) {
+    } else if (!exclude.has(key)) {
       newPropData[key] = newObj[key];
     }
   }
   return newPropData;
 }
-// Every time a state change is made in the accompanying app, the extension creates a
-// Tree “snapshot” of the current state, and adds it to the current “cache” of snapshots in the extension
+// -------------------------CREATE TREE TO SEND TO FRONT END--------------------
+/**
+ * Every time a state change is made in the accompanying app, the extension creates a Tree “snapshot” of the current state, and adds it to the current “cache” of snapshots in the extension
+ */
 function createTree(
   currentFiber: Fiber,
   tree: Tree = new Tree('root', 'root'),
@@ -240,14 +242,15 @@ function createTree(
     _debugHookTypes,
   } = currentFiber;
 
-  // check to see if we can get the information we were looking for
-  // need to figure out what tag is
+  // Tag === 5 signify this is a React Fragment. Each JSX component return a React fragment
   if (tag === 5) {
     try {
+      // Ensure parent component has memoizedProps property
       if (
         memoizedProps.children &&
         memoizedProps.children[0]?._owner?.memoizedProps !== undefined
-      ) {
+        ) {
+        // Access the memoizedProps of the parent component
         const propsData = memoizedProps.children[0]._owner.memoizedProps;
         const newPropData = convertDataToString(
           propsData,
@@ -391,7 +394,6 @@ function createTree(
   }
   return tree;
 }
-type version = undefined | { version: string };
 /**
  * @interface DevTools - A global object provided by the React Developer Tools extension. It provides a set of methods that allow developers to inspect and manipulate React components in the browser.
  */
@@ -401,16 +403,21 @@ interface DevTools {
    */
   renderers: Map<1, undefined | { version: string }>;
   /**
-   * @method getFiberRoots - a method that return a fiber root {set}
-   * @param renderID - the ID of the node???
-   * @return A set of fiber root.
+   * @method getFiberRoots - get the Set of fiber roots that are currently mounted for the given rendererID. If not found, initalize a new empty Set at renderID key.
+   * @param renderID -  a unique identifier for a specific instance of a React renderer. When a React application is first mounted, it will receive a rendererID. This rendererID will remain the same for the entire lifecycle of the application, even if the state is updated and the components are re-rendered/unmounted/added. However, if the application is unmounted and re-mounted again, it will receive a new rendererID.
+   * @return A set of fiberRoot.
    */
-  getFiberRoots: (renderID: number) => Set<number>;
+  getFiberRoots: (rendererID: number) => Set<number>;
 
-  onCommitFiberRoot: any;
+  /**
+   * @method onCommitFiberRoot - After the state of a component in a React Application is updated, the virtual DOM will be updated. When a render has been commited for a root, onCommitFiberRoot will be invoked to determine if the component is being mounted, updated, or unmounted. After that, this method will send update information to the React DevTools to update its UI to reflect the change.
+   * @param rendererID -  a unique identifier for a specific instance of a React renderer
+   * @param root - root of the rendered tree (a.k.a the root of the React Application)
+   * @param priorityLevel
+   * @return void
+   */
+  onCommitFiberRoot: (rendererID: number, root: any, priorityLevel: any) => void;
 }
-
-interface ReactInstance {}
 
 /**
  * @method linkFiber
@@ -426,14 +433,16 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     doWork = !document.hidden;
   }
   return () => {
+    // -------------------CHECK REACT DEVTOOL INSTALLATION----------------------
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
-    const devTools: undefined | DevTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    // Obtain React Devtools Object:
+    const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     console.log('linkFiber.ts', { devTools });
-    // check if reactDev Tools is installed
+    // If React Devtools is not installed, object will be undefined.
     if (!devTools) {
       return;
     }
-    // if reactDev Tools is installed, send a message to front end
+    // If React Devtools is installed, send a message to front end.
     window.postMessage(
       {
         action: 'devToolsInstalled',
@@ -441,13 +450,16 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
       },
       '*',
     );
-    // Obtain reaction application information. If target application is not a React App, this will return null.
+
+    // --------------------CHECK VALID REACT APPLICATION------------------------
+    // Obtain React Application information:
     const reactInstance = devTools.renderers.get(1);
-    // if no React Instance found then target is not a compatible app
+    // If target application is not a React App, this will return undefined.
     if (!reactInstance) {
       return;
     }
     // we may want to add try/catch
+    // If target application is a React App, send a message to front end.
     window.postMessage(
       {
         action: 'aReactApp',
@@ -462,9 +474,10 @@ export default (snap: Snapshot, mode: Mode): (() => void) => {
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     if (reactInstance && reactInstance.version) {
-      // Obtain the fiber
+      // Obtain the FiberRootNode, which is the first value in the FiberRoot Set:
       fiberRoot = devTools.getFiberRoots(1).values().next().value;
       console.log('LinkFiber', { fiberRoot });
+
       // React has inherent methods that are called with react fiber
       // we attach new functionality without compromising the original work that onCommitFiberRoot does
       const addOneMoreStep = function (original) {
