@@ -20,70 +20,70 @@ import getLinkComponent from './getLinkComponent';
 import { toggleExpanded, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 
-const exclude = [
-  'childExpirationTime',
-  'staticContext',
-  '_debugSource',
-  'actualDuration',
-  'actualStartTime',
-  'treeBaseDuration',
-  '_debugID',
-  '_debugIsCurrentlyTiming',
-  'selfBaseDuration',
-  'expirationTime',
-  'effectTag',
-  'alternate',
-  '_owner',
-  '_store',
-  'get key',
-  'ref',
-  '_self',
-  '_source',
-  'firstBaseUpdate',
-  'updateQueue',
-  'lastBaseUpdate',
-  'shared',
-  'responders',
-  'pending',
-  'lanes',
-  'childLanes',
-  'effects',
-  'memoizedState',
-  'pendingProps',
-  'lastEffect',
-  'firstEffect',
-  'tag',
-  'baseState',
-  'baseQueue',
-  'dependencies',
-  'Consumer',
-  'context',
-  '_currentRenderer',
-  '_currentRenderer2',
-  'mode',
-  'flags',
-  'nextEffect',
-  'sibling',
-  'create',
-  'deps',
-  'next',
-  'destroy',
-  'parentSub',
-  'child',
-  'key',
-  'return',
-  'children',
-  '$$typeof',
-  '_threadCount',
-  '_calculateChangedBits',
-  '_currentValue',
-  '_currentValue2',
-  'Provider',
-  '_context',
-  'stateNode',
-  'elementType',
-  'type',
-];
+// const exclude = [
+//   'childExpirationTime',
+//   'staticContext',
+//   '_debugSource',
+//   'actualDuration',
+//   'actualStartTime',
+//   'treeBaseDuration',
+//   '_debugID',
+//   '_debugIsCurrentlyTiming',
+//   'selfBaseDuration',
+//   'expirationTime',
+//   'effectTag',
+//   'alternate',
+//   '_owner',
+//   '_store',
+//   'get key',
+//   'ref',
+//   '_self',
+//   '_source',
+//   'firstBaseUpdate',
+//   'updateQueue',
+//   'lastBaseUpdate',
+//   'shared',
+//   'responders',
+//   'pending',
+//   'lanes',
+//   'childLanes',
+//   'effects',
+//   'memoizedState',
+//   'pendingProps',
+//   'lastEffect',
+//   'firstEffect',
+//   'tag',
+//   'baseState',
+//   'baseQueue',
+//   'dependencies',
+//   'Consumer',
+//   'context',
+//   '_currentRenderer',
+//   '_currentRenderer2',
+//   'mode',
+//   'flags',
+//   'nextEffect',
+//   'sibling',
+//   'create',
+//   'deps',
+//   'next',
+//   'destroy',
+//   'parentSub',
+//   'child',
+//   'key',
+//   'return',
+//   'children',
+//   '$$typeof',
+//   '_threadCount',
+//   '_calculateChangedBits',
+//   '_currentValue',
+//   '_currentValue2',
+//   'Provider',
+//   '_context',
+//   'stateNode',
+//   'elementType',
+//   'type',
+// ];
 
 const defaultMargin = {
   top: 30,
@@ -188,38 +188,39 @@ export default function ComponentMap({
   };
 
   const formatProps = (data) => {
+    console.log('ComponentMap', { data });
     const propsFormat = [];
-    const nestedObj = [];
+    // const nestedObj = [];
     for (const key in data) {
       if (
-        data[key] !== 'reactFiber' &&
-        typeof data[key] !== 'object' &&
-        exclude.includes(key) !== true
+        // data[key] !== 'reactFiber' &&
+        typeof data[key] !== 'object'
+        // exclude.includes(key) !== true
       ) {
         propsFormat.push(<p className='stateprops'>{`${key}: ${data[key]}`}</p>);
-      } else if (
-        data[key] !== 'reactFiber' &&
-        typeof data[key] === 'object' &&
-        exclude.includes(key) !== true
-      ) {
-        const result = formatProps(data[key]);
-        nestedObj.push(result);
       }
+      // else if (
+      // data[key] !== 'reactFiber' &&
+      // typeof data[key] === 'object'
+      // exclude.includes(key) !== true
+      // ) {
+      // const result = formatProps(data[key]);
+      // nestedObj.push(result);
+      // }
     }
-    if (nestedObj) {
-      propsFormat.push(nestedObj);
-    }
-
-    return propsFormat;
+    // if (nestedObj) {
+    //   propsFormat.push(nestedObj);
+    // }
+    if (propsFormat.length) return propsFormat;
   };
 
   const formatContext = (data) => {
-    const propsFormat = [];
-    const nestedObj = [];
+    const contextFormat = [];
+    // const nestedObj = [];
     for (const key in data) {
-      propsFormat.push(<p className='stateprops'>{`${key}: ${data[key]}`}</p>);
+      contextFormat.push(<p className='statecontext'>{`${key}: ${data[key]}`}</p>);
     }
-    return propsFormat;
+    return contextFormat;
   };
 
   const formatState = (state) => {
