@@ -6,9 +6,8 @@
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
 
-// ~~ I dont like the fact that these are global variables ~~ - Zack
 let copyInstances = 0; // Tells you if we have already made a copy of current tree??
-const circularComponentTable = new Set<Tree>(); // Keeps track of the nodes added to the tree
+const circularComponentTable = new Set<Tree>(); // Keeps track of the nodes added to the tree and allows you make sure there isnt circular state
 let componentNames = {}; // {componentName: frequency of use} => component name as a key and it's frequency of use as its value
 
 // Functions dont serialize properly so we need to scrub for that
@@ -19,12 +18,13 @@ function scrubUnserializableMembers(tree: Tree): Tree {
   return tree;
 }
 
-// Making a deep clone of an object
+// Making a deep clone of state becuase we want to make a copy
 function serializeState(state) {
   try {
     // makes a deep clone, but this way can be very slow
     return JSON.parse(JSON.stringify(state));
   } catch (e) {
+    // if there is an error, that means there is circular state i.e state that depends on itself
     return 'circularState';
   }
 }
@@ -37,6 +37,9 @@ function serializeState(state) {
  * @param componentData - {props: {}} - Data in the component tree
  * @param chilren - {(Tree | string)[]} - An array of children nodes
  * @param parent - {Tree} - the parent node
+ * @param isExpanded - {boolean}
+ * @param rtid - {any}
+ * @param route -
  * @parent generates a new tree (recursive call)
  */
 class Tree {
@@ -106,7 +109,14 @@ class Tree {
     // return name
     return name;
   }
-
+  /**
+   *
+   * @param state - string if root, serialized state otherwise
+   * @param name - name of child
+   * @param componentData - props
+   * @param rtid - ??
+   * @returns - return new tree instance that is child
+   */
   addChild(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
     // gets unique name by calling checkForDuplicates method
     const uniqueName = this.checkForDuplicates(name);
@@ -119,7 +129,14 @@ class Tree {
     // return newChild
     return newChild;
   }
-
+  /**
+   *
+   * @param state - string if root, serialized state otherwise
+   * @param name - name of child
+   * @param componentData - props
+   * @param rtid - ??
+   * @returns - return new tree instance that is child
+   */
   addSibling(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
     // gets unique name by calling checkForDuplicates method
     const uniqueName = this.checkForDuplicates(name);
@@ -152,7 +169,7 @@ class Tree {
     delete copy.parent;
     // add to circularComponentTable
     circularComponentTable.add(this);
-    // 
+    //
     copy = scrubUnserializableMembers(copy);
 
     // creates copy of each child of the present node
