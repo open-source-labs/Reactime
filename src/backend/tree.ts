@@ -6,9 +6,8 @@
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
 
-// ~~ I dont like the fact that these are global variables ~~ - Zack
 let copyInstances = 0; // Tells you if we have already made a copy of current tree??
-const circularComponentTable = new Set<Tree>(); // Keeps track of the nodes added to the tree
+const circularComponentTable = new Set<Tree>(); // Keeps track of the nodes added to the tree and allows you make sure there isnt circular state
 let componentNames = {}; // {componentName: frequency of use} => component name as a key and it's frequency of use as its value
 
 // Functions dont serialize properly so we need to scrub for that
@@ -19,12 +18,13 @@ function scrubUnserializableMembers(tree: Tree): Tree {
   return tree;
 }
 
-// Making a deep clone of an object
+// Making a deep clone of state becuase we want to make a copy
 function serializeState(state) {
   try {
     // makes a deep clone, but this way can be very slow
     return JSON.parse(JSON.stringify(state));
   } catch (e) {
+    // if there is an error, that means there is circular state i.e state that depends on itself
     return 'circularState';
   }
 }
@@ -37,6 +37,9 @@ function serializeState(state) {
  * @param componentData - {props: {}} - Data in the component tree
  * @param chilren - {(Tree | string)[]} - An array of children nodes
  * @param parent - {Tree} - the parent node
+ * @param isExpanded - {boolean}
+ * @param rtid - {any}
+ * @param route -
  * @parent generates a new tree (recursive call)
  */
 class Tree {
@@ -106,7 +109,14 @@ class Tree {
     // return name
     return name;
   }
-
+  /**
+   *
+   * @param state - string if root, serialized state otherwise
+   * @param name - name of child
+   * @param componentData - props
+   * @param rtid - ??
+   * @returns - return new tree instance that is child
+   */
   addChild(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
     // gets unique name by calling checkForDuplicates method
     const uniqueName = this.checkForDuplicates(name);
@@ -119,13 +129,20 @@ class Tree {
     // return newChild
     return newChild;
   }
-
+  /**
+   *
+   * @param state - string if root, serialized state otherwise
+   * @param name - name of child
+   * @param componentData - props
+   * @param rtid - ??
+   * @returns - return new tree instance that is child
+   */
   addSibling(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
     // gets unique name by calling checkForDuplicates method
     const uniqueName = this.checkForDuplicates(name);
     // instantiate new sibilng tree with state, uniqueName, componentName and rtid
     const newSibling: Tree = new Tree(state, uniqueName, componentData, rtid);
-    // updating newSibling parent to be the parent of "this" which refers to sibling node
+    // updating newSibling's parent to be the parent of "this" which refers to sibling node
     newSibling.parent = this.parent;
     // adds newSibling to children array
     this.parent.children.push(newSibling);
@@ -143,27 +160,31 @@ class Tree {
      */
     // if we havent made a copy of the tree, increment copyInstances and clear cicularComponentTable set
     if (copyInstances === 0) {
+      // increment copyInstances
       copyInstances++;
+      // clear circularComponentTable
       circularComponentTable.clear();
     }
     // creates copy of present node
     let copy: Tree = new Tree(this.state, this.name, this.componentData, this.rtid);
-    // you want to get rid of the parentNode?? not sure why
+    // you want to get rid of the parentNode becuase right now copy and "this" have the same parent and you dont want that
     delete copy.parent;
     // add to circularComponentTable
     circularComponentTable.add(this);
-    // 
+    // remove unserializable Trees
     copy = scrubUnserializableMembers(copy);
 
-    // creates copy of each child of the present node
+    // creates copy of each child of the present node and assigns it to children property of the new copy Tree
     copy.children = this.children.map((child: Tree): Tree | string => {
+      // if child isnt in circularComponent table, return recursive call of cleanTreeCopy() on child. We need to do this to fully build out the tree
       if (!circularComponentTable.has(child)) {
         return child.cleanTreeCopy();
       }
       return 'circular';
     });
-
+    // reset copyInstances back to zero becuase we are done making a copy of the tree
     copyInstances--;
+    // return the copy
     return copy;
   }
 }
