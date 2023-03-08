@@ -4,9 +4,9 @@
 import Tree from '../tree';
 
 /**
- * The snapshot of the current tree
- * @param tree - {Tree} - The tree structure to send to front end
- * @param unfilteredTree - {null} - The current mode (i.e. jumping, time-traveling, or paused)
+ * @type Tree - The snapshot of the current tree
+ * @member tree - {Tree} - The tree structure to send to front end
+ * @member unfilteredTree - {null} - The current mode (i.e. jumping, time-traveling, or paused)
  */
 export interface Snapshot {
   tree: Tree;
@@ -14,9 +14,9 @@ export interface Snapshot {
 }
 
 /**
- * Where we
- * @param jumping - whether we are jumping steps by
- * @param paused - true/false for whether pausing to see the state
+ * @type Mode - object that describes where we are
+ * @member jumping - whether we are jumping steps by
+ * @member paused - true/false for whether pausing to see the state
  */
 export interface Mode {
   jumping: boolean;
@@ -24,7 +24,11 @@ export interface Mode {
 }
 
 /**
- *
+ * This is what is shown in developer tools??
+ * @type SnapshotNode
+ * @member name -
+ * @member state -
+ * @member children -
  */
 export interface SnapshotNode {
   name: string;
@@ -34,7 +38,8 @@ export interface SnapshotNode {
   children: any[];
 }
 /**
- * @param data - an object with action & payload properties
+ * @type MsgData - obj with data object that will be sent to window?
+ * @member data - an object with action & payload properties
  */
 export interface MsgData {
   data: {
@@ -44,14 +49,14 @@ export interface MsgData {
 }
 
 /**
- *
- * @param index -
- * @param hooksIndex -
- * @param actualDuration -
- * @param actualStartTime -
- * @param selfBaseDuration -
- * @param treeBaseDuration -
- * @param props -
+ * @type ComponentData -
+ * @member index -
+ * @member hooksIndex -
+ * @member actualDuration -
+ * @member actualStartTime -
+ * @member selfBaseDuration -
+ * @member treeBaseDuration -
+ * @member props -
  */
 export interface ComponentData {
   index?: number;
@@ -64,8 +69,9 @@ export interface ComponentData {
 }
 
 /**
- * @param state -
- * @param component -
+ * @type HookStateItem
+ * @member state -
+ * @member component -
  */
 export interface HookStateItem {
   state: any;
