@@ -194,38 +194,45 @@ const exclude = new Set([
   '_threadCount',
   '$$typeof',
 ]);
-// -------------------CONVERT PROPT DATA TO STRING------------------------------
-// This recursive function is used to grab the state of children components
-// and push them into the parent componenent
-// react elements throw errors on client side of application - convert react/functions into string
-function convertDataToString(newObj, newPropData = {}, depth = 0) {
-  // const newPropData = oldObj;
-  for (const key in newObj) {
+// -----------------TRIMMING PASSED IN FIBER ROOT DATA--------------------------
+/**
+ * This recursive function is used to grab the state of children components
+ and push them into the parent componenent react elements throw errors on client side of application - convert react/functions into string
+ * 
+ * @param reactDevData - The data object obtained from React Devtool. Ex: memoizedProps, memoizedState
+ * @param reactimeData - The updated data object to send to front end of Reactime. 
+ * @param depth - reactDevData is nested object. The value in reactDevData can be another object. Depth is use to keep track the depth during the unraveling of nested object
+ * @returns reactimeData - the updated data object to send to front end of ReactTime
+ */
+function convertDataToString(reactDevData, reactimeData = {}, depth = 0) {
+  for (const key in reactDevData) {
     // Skip keys that are in exclude list OR if there is no value at key
-    if (exclude.has(key) || !newObj[key]) {
+    if (exclude.has(key) || !reactDevData[key]) {
       continue;
-      // newPropData[key] = 'reactFiber';
-      // return newPropData;
     }
-    // If value at key is a function, assign key with value 'function' to newPropData object
-    else if (typeof newObj[key] === 'function') {
-      newPropData[key] = 'function';
+    // If value at key is a function, assign key with value 'function' to reactimeData object
+    else if (typeof reactDevData[key] === 'function') {
+      reactimeData[key] = 'function';
     }
-    // If value at key is an object, recusive call convertDataToString to traverse through all keys and append to newPropData object accodingly
-    else if (typeof newObj[key] === 'object') {
-      // newPropData[key] =
+    // If value at key is an object, recusive call convertDataToString to traverse through all keys and append to reactimeData object accodingly
+    else if (typeof reactDevData[key] === 'object') {
       depth > 10
         ? 'convertDataToString reached max depth'
-        : convertDataToString(newObj[key], newPropData, depth + 1);
+        : convertDataToString(reactDevData[key], reactimeData, depth + 1);
     } else {
-      newPropData[key] = newObj[key];
+      reactimeData[key] = reactDevData[key];
     }
   }
-  return newPropData;
+  return reactimeData;
 }
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
 /**
  * Every time a state change is made in the accompanying app, the extension creates a Tree “snapshot” of the current state, and adds it to the current “cache” of snapshots in the extension
+ *
+ * @param currentFiber
+ * @param tree
+ * @param fromSibling
+ * @returns
  */
 function createTree(
   currentFiber: Fiber,
@@ -262,6 +269,8 @@ function createTree(
       elementType,
     memoizedProps,
     memoizedState,
+    dependencies,
+    _debugHookTypes,
   });
 
   // Tag === 5 signify this is a React Fragment. Each JSX component return a React fragment => The parent of a React Fragment could be a JSX component
@@ -304,12 +313,12 @@ function createTree(
 
   // check to see if the parent component has any state/props
   if (memoizedProps && Object.keys(memoizedProps).length) {
-    componentData.props = convertDataToString(memoizedProps, {});
+    componentData.props = convertDataToString(memoizedProps);
   }
-
   // if the component uses the useContext hook, we want to grab the context object and add it to the componentData object for that fiber
   if (tag === 0 && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
-    componentData.context = convertDataToString(dependencies.firstContext.memoizedValue, null);
+    componentData.context = convertDataToString(dependencies.firstContext.memoizedValue);
+    console.log('Linkfiber', { context: componentData.context });
   }
   // Check if node is a stateful class component
   if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
