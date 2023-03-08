@@ -77,6 +77,7 @@ function sendSnapshot(snap: Snapshot, mode: Mode): void {
     },
     '*',
   );
+  console.log('LinkFiber', { payload });
 }
 
 /**
