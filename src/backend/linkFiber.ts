@@ -352,7 +352,8 @@ function createTree(
   console.log('LinkFiber', {
     tag,
     elementType:
-      elementType?._context?.displayName ||
+      elementType?._context?.displayName || //For ContextProvider
+      elementType?._result?.name || //For lazy Component
       elementType?.render?.name ||
       elementType?.name ||
       elementType,
