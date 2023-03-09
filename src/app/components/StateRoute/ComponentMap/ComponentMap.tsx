@@ -216,8 +216,8 @@ export default function ComponentMap({
 
   const formatContext = (data) => {
     const contextFormat = [];
-    // const nestedObj = [];
     for (const key in data) {
+      // Suggestion: update the front end to display as a list if we have object
       contextFormat.push(<p className='statecontext'>{`${key}: ${data[key]}`}</p>);
     }
     return contextFormat;
