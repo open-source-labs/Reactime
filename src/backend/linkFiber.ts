@@ -132,7 +132,7 @@ function updateSnapShotTree(snap: Snapshot, mode: Status): void {
 }
 
 /**
- * @method traverseHooks
+ * @function traverseHooks
  * @param memoizedState memoizedState property on a stateful functional component's FiberNode object
  * @return An array of array of HookStateItem objects
  *
@@ -155,7 +155,7 @@ function traverseHooks(memoizedState: any): HookStates {
 }
 
 /**
- * @method createTree
+ * @function createTree
  * @param currentFiber A Fiber object
  * @param tree A Tree object, default initialized to an instance given 'root' and 'root'
  * @param fromSibling A boolean, default initialized to false
@@ -190,6 +190,7 @@ const exclude = new Set([
   'flags',
   'get key',
   'getState',
+  'hash',
   'key',
   'lanes',
   'lastBaseUpdate',
@@ -213,8 +214,11 @@ const exclude = new Set([
   'return',
   'route',
   'routeContext',
+  'search',
   'shared',
   'sibling',
+  'state',
+  'store',
   'subscribe',
   'subscription',
   'stateNode',
@@ -261,19 +265,38 @@ function convertDataToString(reactDevData, reactimeData = {}, excludeSet?: any) 
   }
   return reactimeData;
 }
-// ------------------------TRIMMING CONTEXT DATA--------------------------------
-function trimContextData(memoizedState, reactimeContextData = {}) {
+// ------------------------TRIMMING STATE DATA--------------------------------
+function trimContextData(memoizedState, _debugHookTypes) {
+  // Initialize object to store state data of the component
+  const reactimeStateData = {};
+  // Initialize the set of excluded properties:
   const exclude = new Set(['children', 'store', 'subscription']);
-  while (memoizedState) {
-    //Trim the current level of memoizedState data:
-    const updateMemoizedState = convertDataToString(memoizedState?.memoizedState[0], {}, exclude);
-    //Update Reactime data:
-    Object.assign(reactimeContextData, updateMemoizedState);
+  // Initialize the set of React Hooks:
+  const reactHooks = new Set(['useState', 'useMemo']);
+  // Initialize counter for the default naming. If user use reactHook, such as useState, react will only pass in the value, and not the name of the state.
+  let stateCounter = 1;
+  for (const hook of _debugHookTypes) {
+    if (reactHooks.has(hook)) {
+      let stateData = memoizedState?.memoizedState;
+      // ReactHook condition:
+      if (typeof stateData !== 'object') {
+        const defaultName = `state${stateCounter}`;
+        stateData = { [defaultName]: stateData };
+        stateCounter++;
+      }
+      // If user does not use reactHook => state is store in memoizedState array, at i = 0
+      else {
+        stateData = stateData[0];
+      }
+      //Trim the current level of memoizedState data:
+      console.log({ stateData });
+      convertDataToString(stateData, reactimeStateData);
+    }
     //Move on to the next level:
     memoizedState = memoizedState?.next;
   }
 
-  return reactimeContextData;
+  return reactimeStateData;
 }
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
 /**
@@ -319,7 +342,8 @@ function createTree(
       elementType,
     memoizedProps,
     memoizedState,
-    dependencies,
+    stateNode,
+    // dependencies,
     _debugHookTypes,
   });
 
@@ -367,20 +391,43 @@ function createTree(
    */
   // const filteredComponents = tag != ContextProvider;
   const filteredComponents = true;
+
+  // ----------------APPEND PROP DATA FROM REACT DEV TOOL-----------------------
   // check to see if the parent component has any state/props
   if (filteredComponents && memoizedProps && Object.keys(memoizedProps).length) {
     componentData.props = convertDataToString(memoizedProps);
   }
+
+  // ----------------APPEND STATE DATA FROM REACT DEV TOOL----------------------
+  // If user uses Redux, context data will be stored in memoizedState of the component => grab context object stored in the memoizedState
+  if (
+    (tag === FunctionComponent || tag === ClassComponent) &&
+    Array.isArray(memoizedState?.memoizedState)
+  ) {
+    componentData.context = trimContextData(memoizedState, _debugHookTypes);
+  }
+  // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
+  // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
+  if (tag === ContextProvider && !elementType._context.displayName) {
+    let stateData = memoizedProps.value;
+    if (stateData === null || typeof stateData !== 'object') {
+      stateData = { CONTEXT: stateData };
+    }
+    componentData.context = stateData;
+  }
+
+  // Check to see if the component has any context:
   // if the component uses the useContext hook, we want to grab the context object and add it to the componentData object for that fiber
-  // if (tag === 0 && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
+  // if (tag === FunctionComponent && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
   //   componentData.context = convertDataToString(dependencies.firstContext.memoizedValue);
   // }
-  if ((tag === FunctionComponent || tag === ClassComponent) && memoizedState?.memoizedState) {
-    componentData.context = trimContextData(memoizedState);
-  }
-  
+
   // Check if node is a stateful class component
-  if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
+  if (
+    stateNode &&
+    stateNode.state &&
+    (tag === FunctionComponent || tag === ClassComponent || tag === IndeterminateComponent)
+  ) {
     // Save component's state and setState() function to our record for future
     // time-travel state changing. Add record index to snapshot so we can retrieve.
     componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
@@ -391,8 +438,16 @@ function createTree(
 
   // Check if node is a hooks useState function
   // REGULAR REACT HOOKS
-  if (memoizedState && (tag === 0 || tag === 1 || tag === 2 || tag === 10)) {
+  if (
+    memoizedState &&
+    (tag === FunctionComponent ||
+      tag === ClassComponent ||
+      tag === IndeterminateComponent ||
+      tag === ContextProvider)
+  ) {
+    console.log('Out here');
     if (memoizedState.queue) {
+      console.log('In Queue');
       // Hooks states are stored as a linked list using memoizedState.next,
       // so we must traverse through the list and get the states.
       // We then store them along with the corresponding memoizedState.queue,
@@ -415,7 +470,10 @@ function createTree(
   }
 
   // This grabs stateless components
-  if (!componentFound && (tag === 0 || tag === 1 || tag === 2)) {
+  if (
+    !componentFound &&
+    (tag === FunctionComponent || tag === ClassComponent || tag === IndeterminateComponent)
+  ) {
     newState = 'stateless';
   }
 
