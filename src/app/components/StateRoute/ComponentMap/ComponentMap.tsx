@@ -353,7 +353,7 @@ export default function ComponentMap({
               </div>
 
               <div className='tooltipWrapper'>
-                <h2>Context:</h2>
+                <h2>Initial Context:</h2>
                 {formatData(tooltipData.componentData.context, 'context')}
               </div>
 

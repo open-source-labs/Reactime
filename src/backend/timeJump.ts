@@ -36,6 +36,7 @@ export default (mode) => {
     // if yes, find the component by its index and assign it to a variable
     // call that components setState method to reset state to the state at the time of the jump snapshot
     if (component && component.setState) {
+      console.log('timeJumps', { component });
       component.setState(
         // prevState contains the states of the snapshots we are jumping FROM, not jumping TO
         (prevState) => {

@@ -154,17 +154,6 @@ function traverseHooks(memoizedState: any): HookStates {
   return hooksStates;
 }
 
-/**
- * @function createTree
- * @param currentFiber A Fiber object
- * @param tree A Tree object, default initialized to an instance given 'root' and 'root'
- * @param fromSibling A boolean, default initialized to false
- * @return An instance of a Tree object
- * This is a recursive function that runs after every Fiber commit using the following logic:
- * 1. Traverse from FiberRootNode
- * 2. Create an instance of custom Tree class
- * 3. Build a new state snapshot
- */
 // This runs after every Fiber commit. It creates a new snapshot
 const exclude = new Set([
   'alternate',
@@ -323,12 +312,16 @@ function trimContextData(memoizedState, componentName, _debugHookTypes: string[]
 }
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
 /**
+ * This is a recursive function that runs after every Fiber commit using the following logic:
+ * 1. Traverse from FiberRootNode
+ * 2. Create an instance of custom Tree class
+ * 3. Build a new state snapshot
  * Every time a state change is made in the accompanying app, the extension creates a Tree “snapshot” of the current state, and adds it to the current “cache” of snapshots in the extension
- *
- * @param currentFiber
- * @param tree
- * @param fromSibling
- * @returns
+ * @function createTree
+ * @param currentFiber A Fiber object
+ * @param tree A Tree object, default initialized to an instance given 'root' and 'root'
+ * @param fromSibling A boolean, default initialized to false
+ * @return An instance of a Tree object
  */
 function createTree(
   currentFiber: Fiber,
@@ -426,10 +419,19 @@ function createTree(
   }
 
   // ------------APPEND STATE & CONTEXT DATA FROM REACT DEV TOOL----------------
+  // stateNode
+  // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
+  // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
   if (stateNode?.state) {
     Object.assign(componentData.state, stateNode.state);
   }
-  if ((tag === FunctionComponent || tag === ClassComponent) && memoizedState?.memoizedState) {
+
+  // memoizedState
+  // Note: if user use ReactHook, memoizedState.memoizedState can be a falsy value such as null, false, ... => need to specify this data is not undefined
+  if (
+    (tag === FunctionComponent || tag === ClassComponent) &&
+    memoizedState?.memoizedState !== undefined
+  ) {
     // If user uses Redux, context data will be stored in memoizedState of the Provider component => grab context object stored in the memoizedState
     if (elementType.name === 'Provider') {
       Object.assign(
@@ -463,10 +465,10 @@ function createTree(
   //   componentData.context = convertDataToString(dependencies.firstContext.memoizedValue);
   // }
 
+  // ----------------------SET UP FOR JUMPING CONDITION-------------------------
   // Check if node is a stateful class component
   if (
-    stateNode &&
-    stateNode.state &&
+    stateNode?.state &&
     (tag === FunctionComponent || tag === ClassComponent || tag === IndeterminateComponent)
   ) {
     // Save component's state and setState() function to our record for future
