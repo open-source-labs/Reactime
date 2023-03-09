@@ -7,11 +7,11 @@
 /* eslint-disable no-param-reassign */
 
 let copyInstances = 0; // Tells you if we have already made a copy of current tree??
-const circularComponentTable = new Set<Tree>(); // Keeps track of the nodes added to the tree and allows you make sure there isnt circular state
+const circularComponentTable = new Set<Tree>(); // Keeps track of the nodes added to the tree
 let componentNames = {}; // {componentName: frequency of use} => component name as a key and it's frequency of use as its value
 
 // Functions dont serialize properly so we need to scrub for that
-function scrubUnserializableMembers(tree: Tree): Tree {
+export function scrubUnserializableMembers(tree: Tree): Tree {
   Object.entries(tree.state).forEach((keyValuePair) => {
     if (typeof keyValuePair[1] === 'function') tree.state[keyValuePair[0]] = 'function';
   });
@@ -19,9 +19,9 @@ function scrubUnserializableMembers(tree: Tree): Tree {
 }
 
 // Making a deep clone of state becuase we want to make a copy
-function serializeState(state) {
+export function serializeState(state) {
   try {
-    // makes a deep clone, but this way can be very slow
+    // makes a deep clone
     return JSON.parse(JSON.stringify(state));
   } catch (e) {
     // if there is an error, that means there is circular state i.e state that depends on itself
