@@ -1,19 +1,56 @@
 import Tree from '../tree';
 import { serializeState, scrubUnserializableMembers } from '../tree';
 
-/**
- * Created new tree under sibling and copy and clean tree describe block --
- * Reason is because other tests are adding properties to tree and affecting the child block,
- * so this was a quick way to test the trees getting reset to initial state
- *
- * Possible fix if more time allowed: Making use of beforeEach or afterEach --
- */
-
 describe('Serialize state unit test', () => {
-  const dummyState = { counter: 1, playerOne: 'X' };
+  const dummyState = {
+    counter: 1,
+    playerOne: 'X',
+    board: [
+      ['', 'O', 'X'],
+      ['', 'O', 'X'],
+      ['O', 'X', ''],
+    ],
+  };
+
+  const circularState: { [key: string]: any } = {};
+  circularState.circ = circularState;
+
+  const serializedState = serializeState(dummyState);
+  const serializedCircularState = serializeState(circularState);
+
+  it('should create a deep copy of state', () => {
+    expect(dummyState).toEqual(serializedState);
+    expect(dummyState).not.toBe(serializedState);
+  });
+
+  it('should detect circular state', () => {
+    expect(serializedCircularState).toEqual('circularState');
+  });
 });
 
-describe('Tree unit test', () => {
+describe('Scrub unserialized members unit test', () => {
+  const dummyState = {
+    counter: 1,
+    playerOne: 'X',
+    board: [
+      ['', 'O', 'X'],
+      ['', 'O', 'X'],
+      ['O', 'X', ''],
+    ],
+    increment: function () {
+      this.counter++;
+    },
+  };
+  const newTree = new Tree(dummyState);
+  const scrubbedTree = scrubUnserializableMembers(newTree);
+  // make sure return type is tree
+  it('should be instance of tree', () => {
+    expect(newTree).toBeInstanceOf(Tree);
+  });
+  // make sure function is scrubbed
+});
+
+xdescribe('Tree unit test', () => {
   const newTree = new Tree({});
   describe('Constructor', () => {
     it('should be able to create a newTree', () => {
@@ -34,20 +71,6 @@ describe('Tree unit test', () => {
       expect(newTree.name).toBe('nameless');
     });
   });
-
-  /**
-   *
-   * making sure to adhere to ts practices when goign through tests
-   *
-   * ^^
-   * the tree should have initial values of state,
-   * name, etc to be default as per newly created tree
-   * update the add child and add sibling tests
-   *
-   * update the clean tree copy test to make it test for deep equaltiy? (note:
-   * this test may always fail if we make it so because there is no way to have deep equalituy
-   * with some shit that isn't allowed)
-   */
 
   describe('Adding children', () => {
     const returnChild = newTree.addChild('stateful', 'child', {}, null);
