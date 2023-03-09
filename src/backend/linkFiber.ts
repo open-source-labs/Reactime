@@ -132,8 +132,8 @@ function updateSnapShotTree(snap: Snapshot, mode: Status): void {
 }
 
 /**
- * @method traverseHooks
- * @param memoizedState memoizedState property on a stateful functional component's FiberNode object
+ * @function traverseHooks
+ * @param memoizedState - The current state of the component associated with the current Fiber node.
  * @return An array of array of HookStateItem objects
  *
  * Helper function to traverse through memoizedState and inject instrumentation to update our state tree
@@ -154,17 +154,6 @@ function traverseHooks(memoizedState: any): HookStates {
   return hooksStates;
 }
 
-/**
- * @method createTree
- * @param currentFiber A Fiber object
- * @param tree A Tree object, default initialized to an instance given 'root' and 'root'
- * @param fromSibling A boolean, default initialized to false
- * @return An instance of a Tree object
- * This is a recursive function that runs after every Fiber commit using the following logic:
- * 1. Traverse from FiberRootNode
- * 2. Create an instance of custom Tree class
- * 3. Build a new state snapshot
- */
 // This runs after every Fiber commit. It creates a new snapshot
 const exclude = new Set([
   'alternate',
@@ -190,6 +179,7 @@ const exclude = new Set([
   'flags',
   'get key',
   'getState',
+  'hash',
   'key',
   'lanes',
   'lastBaseUpdate',
@@ -213,8 +203,11 @@ const exclude = new Set([
   'return',
   'route',
   'routeContext',
+  'search',
   'shared',
   'sibling',
+  'state',
+  'store',
   'subscribe',
   'subscription',
   'stateNode',
@@ -261,28 +254,74 @@ function convertDataToString(reactDevData, reactimeData = {}, excludeSet?: any) 
   }
   return reactimeData;
 }
-// ------------------------TRIMMING CONTEXT DATA--------------------------------
-function trimContextData(memoizedState, reactimeContextData = {}) {
-  const exclude = new Set(['children', 'store', 'subscription']);
-  while (memoizedState) {
-    //Trim the current level of memoizedState data:
-    const updateMemoizedState = convertDataToString(memoizedState?.memoizedState[0], {}, exclude);
-    //Update Reactime data:
-    Object.assign(reactimeContextData, updateMemoizedState);
-    //Move on to the next level:
+// ---------------------------TRIMMING STATE DATA-------------------------------
+/**
+ * This function is used to trim the state data of a component.
+ * All propperty name that are in the central exclude list would be trimmed off.
+ * If passed in memoizedState is a not an object (a.k.a a primitive type), a default name would be provided.
+ * @param memoizedState - The current state of the component associated with the current Fiber node.
+ * @param {string[]} _debugHookTypes - An array of hooks used for debugging purposes.
+ * @param componentName - Name of the evaluated component
+ * @returns - The updated state data object to send to front end of ReactTime
+ */
+function trimContextData(memoizedState, componentName, _debugHookTypes: string[]) {
+  // Initialize a list of componentName that would not be evaluated for State Data:
+  const ignoreComponent = new Set(['BrowserRouter', 'Router']);
+  if (ignoreComponent.has(componentName)) return;
+
+  // Initialize object to store state data of the component
+  const reactimeStateData = {};
+  // Initialize the set of interested React Hooks:
+  const reactHooks = new Set(['useState', 'useMemo']);
+  // Initilize the set of React Hooks that do not generate a state:
+  const noStateReactHooks = new Set(['useContext']);
+  // Initialize counter for the default naming. If user use reactHook, such as useState, react will only pass in the value, and not the name of the state.
+  let stateCounter = 1;
+  let refCounter = 1;
+
+  // Loop through each hook inside the _debugHookTypes array.
+  // NOTE: _debugHookTypes.length === height of memoizedState tree.
+  for (const hook of _debugHookTypes) {
+    // useContext does not create any state => skip
+    if (hook === 'useContext') {
+      continue;
+    }
+    // If user use useState reactHook => React will only pass in the value of state & not the name of the state => create a default name:
+    else if (hook === 'useState') {
+      const defaultName = `State ${stateCounter}`;
+      reactimeStateData[defaultName] = memoizedState.memoizedState;
+      stateCounter++;
+    }
+    // If user use useRef reactHook => React will store memoizedState in current object:
+    else if (hook === 'useRef') {
+      const defaultName = `Ref ${refCounter}`;
+      reactimeStateData[defaultName] = memoizedState.memoizedState.current;
+      refCounter++;
+    }
+    // If user use Redux to contain their context => the context object will be stored using useMemo Hook, as of for Rect Dev Tool v4.27.2
+    // Note: Provider is not a reserved component name for redux. User may name their component as Provider, which will break this logic. However, it is a good assumption that if user have a custom provider component, it would have a more specific naming such as ThemeProvider.
+    else if (hook === 'useMemo' && componentName === 'Provider') {
+      convertDataToString(memoizedState.memoizedState[0], reactimeStateData);
+    }
+    console.log('StateData', reactimeStateData);
+    //Move on to the next level of memoizedState tree.
     memoizedState = memoizedState?.next;
   }
-
-  return reactimeContextData;
+  // Return the updated state data object to send to front end of ReactTime
+  return reactimeStateData;
 }
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
 /**
+ * This is a recursive function that runs after every Fiber commit using the following logic:
+ * 1. Traverse from FiberRootNode
+ * 2. Create an instance of custom Tree class
+ * 3. Build a new state snapshot
  * Every time a state change is made in the accompanying app, the extension creates a Tree “snapshot” of the current state, and adds it to the current “cache” of snapshots in the extension
- *
- * @param currentFiber
- * @param tree
- * @param fromSibling
- * @returns
+ * @function createTree
+ * @param currentFiber A Fiber object
+ * @param tree A Tree object, default initialized to an instance given 'root' and 'root'
+ * @param fromSibling A boolean, default initialized to false
+ * @return An instance of a Tree object
  */
 function createTree(
   currentFiber: Fiber,
@@ -313,13 +352,15 @@ function createTree(
   console.log('LinkFiber', {
     tag,
     elementType:
-      elementType?._context?.displayName ||
+      elementType?._context?.displayName || //For ContextProvider
+      elementType?._result?.name || //For lazy Component
       elementType?.render?.name ||
       elementType?.name ||
       elementType,
     memoizedProps,
     memoizedState,
-    dependencies,
+    stateNode,
+    // dependencies,
     _debugHookTypes,
   });
 
@@ -357,8 +398,12 @@ function createTree(
     selfBaseDuration?: number;
     treeBaseDuration?: number;
     props?: any;
-    context?: any;
-  } = {};
+    context: {};
+    state: {};
+  } = {
+    context: {},
+    state: {},
+  };
   let componentFound = false;
 
   /**
@@ -367,20 +412,66 @@ function createTree(
    */
   // const filteredComponents = tag != ContextProvider;
   const filteredComponents = true;
+
+  // ----------------APPEND PROP DATA FROM REACT DEV TOOL-----------------------
   // check to see if the parent component has any state/props
   if (filteredComponents && memoizedProps && Object.keys(memoizedProps).length) {
     componentData.props = convertDataToString(memoizedProps);
   }
+
+  // ------------APPEND STATE & CONTEXT DATA FROM REACT DEV TOOL----------------
+  // stateNode
+  // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
+  // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
+  if (stateNode?.state) {
+    Object.assign(componentData.state, stateNode.state);
+  }
+
+  // memoizedState
+  // Note: if user use ReactHook, memoizedState.memoizedState can be a falsy value such as null, false, ... => need to specify this data is not undefined
+  if (
+    (tag === FunctionComponent || tag === ClassComponent) &&
+    memoizedState?.memoizedState !== undefined
+  ) {
+    // If user uses Redux, context data will be stored in memoizedState of the Provider component => grab context object stored in the memoizedState
+    if (elementType.name === 'Provider') {
+      Object.assign(
+        componentData.context,
+        trimContextData(memoizedState, elementType.name, _debugHookTypes),
+      );
+    }
+    // Else if user use ReactHook to define state => all states will be stored in memoizedState => grab all states stored in the memoizedState
+    else {
+      Object.assign(
+        componentData.state,
+        trimContextData(memoizedState, elementType.name, _debugHookTypes),
+      );
+    }
+  }
+  // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
+  // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
+  // TODO: need to render this context provider when user use useContext hook.
+  if (tag === ContextProvider && !elementType._context.displayName) {
+    let stateData = memoizedProps.value;
+    if (stateData === null || typeof stateData !== 'object') {
+      stateData = { CONTEXT: stateData };
+    }
+    componentData.context = convertDataToString(stateData);
+  }
+
+  // DEPRECATED: This code worked previously. However, with the update of React Dev Tool, context can no longer be pulled using this method.
+  // Check to see if the component has any context:
   // if the component uses the useContext hook, we want to grab the context object and add it to the componentData object for that fiber
-  // if (tag === 0 && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
+  // if (tag === FunctionComponent && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
   //   componentData.context = convertDataToString(dependencies.firstContext.memoizedValue);
   // }
-  if ((tag === FunctionComponent || tag === ClassComponent) && memoizedState?.memoizedState) {
-    componentData.context = trimContextData(memoizedState);
-  }
-  
+
+  // ----------------------SET UP FOR JUMPING CONDITION-------------------------
   // Check if node is a stateful class component
-  if (stateNode && stateNode.state && (tag === 0 || tag === 1 || tag === 2)) {
+  if (
+    stateNode?.state &&
+    (tag === FunctionComponent || tag === ClassComponent || tag === IndeterminateComponent)
+  ) {
     // Save component's state and setState() function to our record for future
     // time-travel state changing. Add record index to snapshot so we can retrieve.
     componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
@@ -391,8 +482,16 @@ function createTree(
 
   // Check if node is a hooks useState function
   // REGULAR REACT HOOKS
-  if (memoizedState && (tag === 0 || tag === 1 || tag === 2 || tag === 10)) {
+  if (
+    memoizedState &&
+    (tag === FunctionComponent ||
+      tag === ClassComponent ||
+      tag === IndeterminateComponent ||
+      tag === ContextProvider)
+  ) {
+    console.log('Out here');
     if (memoizedState.queue) {
+      console.log('In Queue');
       // Hooks states are stored as a linked list using memoizedState.next,
       // so we must traverse through the list and get the states.
       // We then store them along with the corresponding memoizedState.queue,
@@ -415,7 +514,10 @@ function createTree(
   }
 
   // This grabs stateless components
-  if (!componentFound && (tag === 0 || tag === 1 || tag === 2)) {
+  if (
+    !componentFound &&
+    (tag === FunctionComponent || tag === ClassComponent || tag === IndeterminateComponent)
+  ) {
     newState = 'stateless';
   }
 
@@ -429,6 +531,7 @@ function createTree(
   };
   console.log('props', componentData.props);
   console.log('context', componentData.context);
+  console.log('state', componentData.state);
   let newNode = null;
 
   // We want to add this fiber node to the snapshot

@@ -33,6 +33,7 @@ const timeJump = timeJumpStart(mode);
 window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
   switch (action) {
     case 'jumpToSnap':
+      console.log('Index ts', { payload });
       timeJump(payload, true); // * This sets state with given payload
       break;
 
