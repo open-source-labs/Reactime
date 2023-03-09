@@ -239,5 +239,5 @@ export type Fiber = {
 
   dependencies: any;
 
-  _debugHookTypes: any;
+  _debugHookTypes: string[];
 };

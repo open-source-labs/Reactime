@@ -133,7 +133,7 @@ function updateSnapShotTree(snap: Snapshot, mode: Status): void {
 
 /**
  * @function traverseHooks
- * @param memoizedState memoizedState property on a stateful functional component's FiberNode object
+ * @param memoizedState - The current state of the component associated with the current Fiber node.
  * @return An array of array of HookStateItem objects
  *
  * Helper function to traverse through memoizedState and inject instrumentation to update our state tree
@@ -265,37 +265,60 @@ function convertDataToString(reactDevData, reactimeData = {}, excludeSet?: any) 
   }
   return reactimeData;
 }
-// ------------------------TRIMMING STATE DATA--------------------------------
-function trimContextData(memoizedState, _debugHookTypes) {
+// ---------------------------TRIMMING STATE DATA-------------------------------
+/**
+ * This function is used to trim the state data of a component.
+ * All propperty name that are in the central exclude list would be trimmed off.
+ * If passed in memoizedState is a not an object (a.k.a a primitive type), a default name would be provided.
+ * @param memoizedState - The current state of the component associated with the current Fiber node.
+ * @param {string[]} _debugHookTypes - An array of hooks used for debugging purposes.
+ * @param componentName - Name of the evaluated component
+ * @returns - The updated state data object to send to front end of ReactTime
+ */
+function trimContextData(memoizedState, componentName, _debugHookTypes: string[]) {
+  // Initialize a list of componentName that would not be evaluated for State Data:
+  const ignoreComponent = new Set(['BrowserRouter', 'Router']);
+  if (ignoreComponent.has(componentName)) return;
+
   // Initialize object to store state data of the component
   const reactimeStateData = {};
-  // Initialize the set of excluded properties:
-  const exclude = new Set(['children', 'store', 'subscription']);
-  // Initialize the set of React Hooks:
+  // Initialize the set of interested React Hooks:
   const reactHooks = new Set(['useState', 'useMemo']);
+  // Initilize the set of React Hooks that do not generate a state:
+  const noStateReactHooks = new Set(['useContext']);
   // Initialize counter for the default naming. If user use reactHook, such as useState, react will only pass in the value, and not the name of the state.
   let stateCounter = 1;
+  let refCounter = 1;
+
+  // Loop through each hook inside the _debugHookTypes array.
+  // NOTE: _debugHookTypes.length === height of memoizedState tree.
   for (const hook of _debugHookTypes) {
-    if (reactHooks.has(hook)) {
-      let stateData = memoizedState?.memoizedState;
-      // ReactHook condition:
-      if (typeof stateData !== 'object') {
-        const defaultName = `state${stateCounter}`;
-        stateData = { [defaultName]: stateData };
-        stateCounter++;
-      }
-      // If user does not use reactHook => state is store in memoizedState array, at i = 0
-      else {
-        stateData = stateData[0];
-      }
-      //Trim the current level of memoizedState data:
-      console.log({ stateData });
-      convertDataToString(stateData, reactimeStateData);
+    // useContext does not create any state => skip
+    if (hook === 'useContext') {
+      continue;
     }
-    //Move on to the next level:
+    // If user use useState reactHook => React will only pass in the value of state & not the name of the state => create a default name:
+    else if (hook === 'useState') {
+      const defaultName = `State ${stateCounter}`;
+      reactimeStateData[defaultName] = memoizedState.memoizedState;
+      stateCounter++;
+    }
+    // If user use useRef reactHook => React will store memoizedState in current object:
+    else if (hook === 'useRef') {
+      const defaultName = `Ref ${refCounter}`;
+      reactimeStateData[defaultName] = memoizedState.memoizedState.current;
+      refCounter++;
+    }
+    // If user use Redux to contain their context => the context object will be stored using useMemo Hook, as of for Rect Dev Tool v4.27.2
+    // Note: Provider is not a reserved component name for redux. User may name their component as Provider, which will break this logic. However, it is a good assumption that if user have a custom provider component, it would have a more specific naming such as ThemeProvider.
+    else if (hook === 'useMemo' && componentName === 'Provider') {
+      convertDataToString(memoizedState.memoizedState[0], reactimeStateData);
+    }
+    console.log('StateData', reactimeStateData);
+    //Move on to the next level of memoizedState tree.
     memoizedState = memoizedState?.next;
   }
-
+  // Return the updated state data object to send to front end of ReactTime
   return reactimeStateData;
 }
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
@@ -381,8 +404,12 @@ function createTree(
     selfBaseDuration?: number;
     treeBaseDuration?: number;
     props?: any;
-    context?: any;
-  } = {};
+    context: {};
+    state: {};
+  } = {
+    context: {},
+    state: {},
+  };
   let componentFound = false;
 
   /**
@@ -399,23 +426,37 @@ function createTree(
   }
 
   // ----------------APPEND STATE DATA FROM REACT DEV TOOL----------------------
-  // If user uses Redux, context data will be stored in memoizedState of the component => grab context object stored in the memoizedState
-  if (
-    (tag === FunctionComponent || tag === ClassComponent) &&
-    Array.isArray(memoizedState?.memoizedState)
-  ) {
-    componentData.context = trimContextData(memoizedState, _debugHookTypes);
+  if (stateNode?.state) {
+    Object.assign(componentData.state, stateNode.state);
+  }
+  if ((tag === FunctionComponent || tag === ClassComponent) && memoizedState?.memoizedState) {
+    // If user uses Redux, context data will be stored in memoizedState of the Provider component => grab context object stored in the memoizedState
+    if (elementType.name === 'Provider') {
+      Object.assign(
+        componentData.context,
+        trimContextData(memoizedState, elementType.name, _debugHookTypes),
+      );
+    }
+    // Else if user use ReactHook to define state => all states will be stored in memoizedState => grab all states stored in the memoizedState
+    else {
+      Object.assign(
+        componentData.state,
+        trimContextData(memoizedState, elementType.name, _debugHookTypes),
+      );
+    }
   }
   // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
   // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
+  // TODO: need to render this context provider when user use usContext hook.
   if (tag === ContextProvider && !elementType._context.displayName) {
     let stateData = memoizedProps.value;
     if (stateData === null || typeof stateData !== 'object') {
       stateData = { CONTEXT: stateData };
     }
-    componentData.context = stateData;
+    componentData.context = convertDataToString(stateData);
   }
 
+  // DEPRECATED: This code worked previously. However, with the update of React Dev Tool, context can no longer be pulled using this method.
   // Check to see if the component has any context:
   // if the component uses the useContext hook, we want to grab the context object and add it to the componentData object for that fiber
   // if (tag === FunctionComponent && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
@@ -487,6 +528,7 @@ function createTree(
   };
   console.log('props', componentData.props);
   console.log('context', componentData.context);
+  console.log('state', componentData.state);
   let newNode = null;
 
   // We want to add this fiber node to the snapshot

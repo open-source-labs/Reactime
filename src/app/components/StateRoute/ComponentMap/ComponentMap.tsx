@@ -20,71 +20,6 @@ import getLinkComponent from './getLinkComponent';
 import { toggleExpanded, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 
-// const exclude = [
-//   'childExpirationTime',
-//   'staticContext',
-//   '_debugSource',
-//   'actualDuration',
-//   'actualStartTime',
-//   'treeBaseDuration',
-//   '_debugID',
-//   '_debugIsCurrentlyTiming',
-//   'selfBaseDuration',
-//   'expirationTime',
-//   'effectTag',
-//   'alternate',
-//   '_owner',
-//   '_store',
-//   'get key',
-//   'ref',
-//   '_self',
-//   '_source',
-//   'firstBaseUpdate',
-//   'updateQueue',
-//   'lastBaseUpdate',
-//   'shared',
-//   'responders',
-//   'pending',
-//   'lanes',
-//   'childLanes',
-//   'effects',
-//   'memoizedState',
-//   'pendingProps',
-//   'lastEffect',
-//   'firstEffect',
-//   'tag',
-//   'baseState',
-//   'baseQueue',
-//   'dependencies',
-//   'Consumer',
-//   'context',
-//   '_currentRenderer',
-//   '_currentRenderer2',
-//   'mode',
-//   'flags',
-//   'nextEffect',
-//   'sibling',
-//   'create',
-//   'deps',
-//   'next',
-//   'destroy',
-//   'parentSub',
-//   'child',
-//   'key',
-//   'return',
-//   'children',
-//   '$$typeof',
-//   '_threadCount',
-//   '_calculateChangedBits',
-//   '_currentValue',
-//   '_currentValue2',
-//   'Provider',
-//   '_context',
-//   'stateNode',
-//   'elementType',
-//   'type',
-// ];
-
 const defaultMargin = {
   top: 30,
   left: 30,
@@ -187,38 +122,13 @@ export default function ComponentMap({
     return `${renderTime} ms `;
   };
 
-  const formatProps = (data) => {
-    console.log('ComponentMap', { data });
-    const propsFormat = [];
-    // const nestedObj = [];
-    for (const key in data) {
-      if (
-        // data[key] !== 'reactFiber' &&
-        typeof data[key] !== 'object'
-        // exclude.includes(key) !== true
-      ) {
-        propsFormat.push(<p className='stateprops'>{`${key}: ${data[key]}`}</p>);
-      }
-      // else if (
-      // data[key] !== 'reactFiber' &&
-      // typeof data[key] === 'object'
-      // exclude.includes(key) !== true
-      // ) {
-      // const result = formatProps(data[key]);
-      // nestedObj.push(result);
-      // }
-    }
-    // if (nestedObj) {
-    //   propsFormat.push(nestedObj);
-    // }
-    if (propsFormat.length) return propsFormat;
-  };
-
-  const formatContext = (data) => {
+  const formatData = (data, type) => {
     const contextFormat = [];
     for (const key in data) {
       // Suggestion: update the front end to display as a list if we have object
-      contextFormat.push(<p className='statecontext'>{`${key}: ${data[key]}`}</p>);
+      contextFormat.push(
+        <p className={`${type}-item`}>{`${key}: ${JSON.stringify(data[key])}`}</p>,
+      );
     }
     return contextFormat;
   };
@@ -437,14 +347,18 @@ export default function ComponentMap({
             <div style={React.scrollStyle}>
               <div className='tooltipWrapper'>
                 <h2>Props:</h2>
-                {formatProps(tooltipData.componentData.props)}
+                {formatData(tooltipData.componentData.props, 'props')}
               </div>
-              {tooltipData.componentData.context && (
-                <div className='tooltipWrapper'>
-                  <h2>Context:</h2>
-                  {formatContext(tooltipData.componentData.context)}
-                </div>
-              )}
+
+              <div className='tooltipWrapper'>
+                <h2>Context:</h2>
+                {formatData(tooltipData.componentData.context, 'context')}
+              </div>
+
+              <div className='tooltipWrapper'>
+                <h2>State:</h2>
+                {formatData(tooltipData.componentData.state, 'state')}
+              </div>
             </div>
           </div>
         </TooltipInPortal>
