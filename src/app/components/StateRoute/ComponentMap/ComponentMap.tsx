@@ -126,9 +126,11 @@ export default function ComponentMap({
     const contextFormat = [];
     for (const key in data) {
       // Suggestion: update the front end to display as a list if we have object
-      contextFormat.push(
-        <p className={`${type}-item`}>{`${key}: ${JSON.stringify(data[key])}`}</p>,
-      );
+      let inputData = data[key];
+      if (inputData !== null && typeof inputData === 'object') {
+        inputData = JSON.stringify(inputData);
+      }
+      contextFormat.push(<p className={`${type}-item`}>{`${key}: ${inputData}`}</p>);
     }
     return contextFormat;
   };

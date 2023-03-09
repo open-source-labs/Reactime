@@ -425,7 +425,7 @@ function createTree(
     componentData.props = convertDataToString(memoizedProps);
   }
 
-  // ----------------APPEND STATE DATA FROM REACT DEV TOOL----------------------
+  // ------------APPEND STATE & CONTEXT DATA FROM REACT DEV TOOL----------------
   if (stateNode?.state) {
     Object.assign(componentData.state, stateNode.state);
   }
@@ -447,7 +447,7 @@ function createTree(
   }
   // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
   // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
-  // TODO: need to render this context provider when user use usContext hook.
+  // TODO: need to render this context provider when user use useContext hook.
   if (tag === ContextProvider && !elementType._context.displayName) {
     let stateData = memoizedProps.value;
     if (stateData === null || typeof stateData !== 'object') {
