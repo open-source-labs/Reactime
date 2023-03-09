@@ -141,15 +141,15 @@ function updateSnapShotTree(snap: Snapshot, mode: Status): void {
  */
 function traverseHooks(memoizedState: any): HookStates {
   const hooksStates: HookStates = [];
-  while (memoizedState?.queue) {
-    // the !== null conditional is necessary here for correctly displaying react hooks because TypeScript recognizes 0 and "" as null - DO NOT REMOVE
-    if (memoizedState.memoizedState !== null) {
-      hooksStates.push({
-        component: memoizedState.queue,
-        state: memoizedState.memoizedState,
-      });
-    }
-    memoizedState = memoizedState.next !== memoizedState ? memoizedState.next : null;
+  while (memoizedState) {
+    // the !== undefined conditional is necessary here for correctly displaying react hooks because TypeScript recognizes 0 and "" as falsey value - DO NOT REMOVE
+    // if (memoizedState.memoizedState !== undefined) {
+    hooksStates.push({
+      component: memoizedState.queue,
+      state: memoizedState.memoizedState,
+    });
+    // }
+    memoizedState = memoizedState.next;
   }
   return hooksStates;
 }
@@ -237,12 +237,11 @@ const exclude = new Set([
  * @param depth - reactDevData is nested object. The value in reactDevData can be another object. Depth is use to keep track the depth during the unraveling of nested object
  * @returns reactimeData - the updated data object to send to front end of ReactTime
  */
-function convertDataToString(reactDevData, reactimeData = {}, excludeSet?: any) {
-  if (!excludeSet) excludeSet = exclude;
+function convertDataToString(reactDevData, reactimeData = {}) {
   for (const key in reactDevData) {
     // Skip keys that are in exclude set OR if there is no value at key
     // Falsy values such as 0, false, null are still valid value
-    if (excludeSet.has(key) || reactDevData[key] === undefined) {
+    if (exclude.has(key) || reactDevData[key] === undefined) {
       continue;
     }
     // If value at key is a function, assign key with value 'function' to reactimeData object
@@ -303,7 +302,6 @@ function trimContextData(memoizedState, componentName, _debugHookTypes: string[]
     else if (hook === 'useMemo' && componentName === 'Provider') {
       convertDataToString(memoizedState.memoizedState[0], reactimeStateData);
     }
-    console.log('StateData', reactimeStateData);
     //Move on to the next level of memoizedState tree.
     memoizedState = memoizedState?.next;
   }
@@ -351,7 +349,8 @@ function createTree(
   } = currentFiber;
   console.log('LinkFiber', {
     tag,
-    elementType:
+    elementType,
+    componentName:
       elementType?._context?.displayName || //For ContextProvider
       elementType?._result?.name || //For lazy Component
       elementType?.render?.name ||
@@ -415,7 +414,7 @@ function createTree(
 
   // ----------------APPEND PROP DATA FROM REACT DEV TOOL-----------------------
   // check to see if the parent component has any state/props
-  if (filteredComponents && memoizedProps && Object.keys(memoizedProps).length) {
+  if (filteredComponents && memoizedProps) {
     componentData.props = convertDataToString(memoizedProps);
   }
 
@@ -467,7 +466,7 @@ function createTree(
   // }
 
   // ----------------------SET UP FOR JUMPING CONDITION-------------------------
-  // Check if node is a stateful class component
+  // Check if node is a stateful class component when user use setState
   if (
     stateNode?.state &&
     (tag === FunctionComponent || tag === ClassComponent || tag === IndeterminateComponent)
@@ -475,13 +474,14 @@ function createTree(
     // Save component's state and setState() function to our record for future
     // time-travel state changing. Add record index to snapshot so we can retrieve.
     componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
+    // passess to front end
     newState = stateNode.state;
     componentFound = true;
   }
-  let hooksIndex;
 
-  // Check if node is a hooks useState function
   // REGULAR REACT HOOKS
+  let hooksIndex;
+  // Check if node is a hooks useState function
   if (
     memoizedState &&
     (tag === FunctionComponent ||
@@ -489,15 +489,15 @@ function createTree(
       tag === IndeterminateComponent ||
       tag === ContextProvider)
   ) {
-    console.log('Out here');
     if (memoizedState.queue) {
-      console.log('In Queue');
       // Hooks states are stored as a linked list using memoizedState.next,
       // so we must traverse through the list and get the states.
       // We then store them along with the corresponding memoizedState.queue,
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseHooks(memoizedState);
       const hooksNames = getHooksNames(elementType.toString());
+      console.log({ hooksNames }); // ['useState', 'useState']
+      console.log({ hooksStates });
 
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(state.state, state.component);
@@ -510,6 +510,7 @@ function createTree(
         newState.hooksState.push({ [hooksNames[i]]: state.state });
         componentFound = true;
       });
+      console.log({ newState: newState.hooksState });
     }
   }
 
@@ -529,9 +530,9 @@ function createTree(
     selfBaseDuration,
     treeBaseDuration,
   };
-  console.log('props', componentData.props);
-  console.log('context', componentData.context);
-  console.log('state', componentData.state);
+  // console.log('props', componentData.props);
+  // console.log('context', componentData.context);
+  // console.log('state', componentData.state);
   let newNode = null;
 
   // We want to add this fiber node to the snapshot
