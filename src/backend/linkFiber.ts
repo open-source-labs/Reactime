@@ -85,20 +85,21 @@ let rtid = null;
 
 /**
  * @method sendSnapshot
- * @param snap The current snapshot
+ * @param snapShot The current snapshot
  * @param mode The current mode (i.e. jumping, time-traveling, or paused)
  * @return Nothing.
  *
- * Middleware: Gets a copy of the current snap.tree and posts a recordSnap message to the window
+ * Middleware: Gets a copy of the current snapShot.tree and posts a recordSnap message to the window
  */
-function sendSnapshot(snap: Snapshot, mode: Status): void {
+function sendSnapshot(snapShot: Snapshot, mode: Status): void {
   // Don't send messages while jumping or while paused
   if (mode.jumping || mode.paused) return;
   // If there is no current tree  creates a new one
-  if (!snap.tree) {
-    snap.tree = new Tree('root', 'root');
+  if (!snapShot.tree) {
+    snapShot.tree = new Tree('root', 'root');
   }
-  const payload = snap.tree.cleanTreeCopy();
+  // Make a deep copy of the tree:
+  const payload = snapShot.tree.cleanTreeCopy();
   payload.route = routes.addRoute(window.location.href);
   // method safely enables cross-origin communication between Window objects;
   // e.g., between a page and a pop-up that it spawned, or between a page
@@ -119,12 +120,12 @@ function sendSnapshot(snap: Snapshot, mode: Status): void {
 
 /**
  * @function updateSnapShotTree
- * @param snap The current snapshot
+ * @param snapShot The current snapshot
  * @param mode The current mode (i.e. jumping, time-traveling, or paused)
- * Middleware: Updates snap object with latest snapshot, using @sendSnapshot
+ * Middleware: Updates snapShot object with latest snapshot, using @sendSnapshot
  */
 // updating tree depending on current mode on the panel (pause, etc)
-function updateSnapShotTree(snap: Snapshot, mode: Status): void {
+function updateSnapShotTree(snapShot: Snapshot, mode: Status): void {
   // this is the currently active root fiber(the mutable root of the tree)
   if (fiberRoot) {
     const { current } = fiberRoot;
@@ -132,10 +133,10 @@ function updateSnapShotTree(snap: Snapshot, mode: Status): void {
     circularComponentTable.clear();
     // creates snapshot that is a tree based on properties in fiberRoot object
     componentActionsRecord.clear();
-    snap.tree = createTree(current);
+    snapShot.tree = createTree(current);
   }
   // sends the updated tree back
-  sendSnapshot(snap, mode);
+  sendSnapshot(snapShot, mode);
 }
 
 /**
@@ -638,7 +639,7 @@ interface DevTools {
  * 2. Check if the target application (on the browser) is a valid react application.
  * 3. Initiate a event listener for visibility update of the target React Applicaiton.
  * 4. Obtain the initial fiberRootNode, which is the root node of a tree of React component.
- * 5. Initialize the tree snap shot on Chrome Extension.
+ * 5. Initialize the tree snapShot on Chrome Extension.
  * 6. Monkey patching the onCommitFiberRoot from REACT DEV TOOL to obtain updated data after React Applicaiton is re-rendered.
  * @param snapShot The current snapshot
  * @param mode The current mode (i.e. jumping, time-traveling, or paused)
