@@ -21,6 +21,8 @@ import {
   HookStates,
   // object with tree structure
   Fiber,
+  // object with tree structure
+  FiberRoot,
 } from './types/backendTypes';
 import {
   FunctionComponent,
@@ -70,12 +72,15 @@ declare global {
   }
 }
 /**
- * The fiberRootNode, which is the root node of a tree of React component.
- * fiberRoot has data structure of a Tree, which can be used to traverse and obtain all child component data.
+ * The `fiberRootNode`, which is the root node of a tree of React component.
+ * The `current` property of `fiberRoot` has data structure of a Tree, which can be used to traverse and obtain all child component data.
  */
-let fiberRoot = null;
-const circularComponentTable = new Set();
+let fiberRoot: FiberRoot;
+const circularComponentTable: Set<Fiber> = new Set();
 let rtidCounter = 0;
+/**
+ * `rtid` - The `Root ID` is a unique identifier that is assigned to each React root instance in a React application.
+ */
 let rtid = null;
 
 /**
@@ -318,18 +323,18 @@ function trimContextData(memoizedState, componentName, _debugHookTypes: string[]
  * 3. Build a new state snapshot
  * Every time a state change is made in the accompanying app, the extension creates a Tree “snapshot” of the current state, and adds it to the current “cache” of snapshots in the extension
  * @function createTree
- * @param currentFiber A Fiber object
+ * @param currentFiberNode A Fiber object
  * @param tree A Tree object, default initialized to an instance given 'root' and 'root'
  * @param fromSibling A boolean, default initialized to false
  * @return An instance of a Tree object
  */
 function createTree(
-  currentFiber: Fiber,
+  currentFiberNode: Fiber,
   tree: Tree = new Tree('root', 'root'),
   fromSibling = false,
 ) {
   // Base case: child or sibling pointed to null
-  if (!currentFiber) return null;
+  if (!currentFiberNode) return null;
   if (!tree) return tree;
   // These have the newest state. We update state and then
   // called updateSnapshotTree()
@@ -348,22 +353,23 @@ function createTree(
     treeBaseDuration,
     dependencies,
     _debugHookTypes,
-  } = currentFiber;
-  // console.log('LinkFiber', {
-  //   tag,
-  //   elementType,
-  //   componentName:
-  //     elementType?._context?.displayName || //For ContextProvider
-  //     elementType?._result?.name || //For lazy Component
-  //     elementType?.render?.name ||
-  //     elementType?.name ||
-  //     elementType,
-  //   memoizedProps,
-  //   memoizedState,
-  //   stateNode,
-  //   // dependencies,
-  //   _debugHookTypes,
-  // });
+  } = currentFiberNode;
+  console.log('LinkFiber', {
+    currentFiberNode,
+    // tag,
+    // elementType,
+    componentName:
+      elementType?._context?.displayName || //For ContextProvider
+      elementType?._result?.name || //For lazy Component
+      elementType?.render?.name ||
+      elementType?.name ||
+      elementType,
+    // memoizedProps,
+    // memoizedState,
+    // stateNode,
+    // dependencies,
+    // _debugHookTypes,
+  });
 
   // TODO: Understand this if statement
   if (tag === HostComponent) {
@@ -389,35 +395,34 @@ function createTree(
     }
   }
 
+  // -----------------INITIALIZE OBJECT TO CONTAIN COMPONENT DATA---------------
   let newState: any | { hooksState?: any[] } = {};
   let componentData: {
+    actualDuration: number;
+    actualStartTime: number;
+    selfBaseDuration: number;
+    treeBaseDuration: number;
+    props: {};
+    context: {};
+    state: {};
     hooksState?: any[];
     hooksIndex?: number;
     index?: number;
-    actualDuration?: number;
-    actualStartTime?: number;
-    selfBaseDuration?: number;
-    treeBaseDuration?: number;
-    props?: any;
-    context: {};
-    state: {};
   } = {
+    actualDuration,
+    actualStartTime,
+    selfBaseDuration,
+    treeBaseDuration,
+    props: {},
     context: {},
     state: {},
   };
   let componentFound = false;
 
-  /**
-   * In addition to React Component JSX from user input, there are other components that user would be using under the hood without needing to see it. For example, if Redux is used, a ContextProvider, called ReactRedux.Provider is created under the hood to manage the context store.
-   * @variable filteredComponents is boolean value, used to filter out 'under-the-hood' components
-   */
-  // const filteredComponents = tag != ContextProvider;
-  const filteredComponents = true;
-
   // ----------------APPEND PROP DATA FROM REACT DEV TOOL-----------------------
   // check to see if the parent component has any state/props
-  if (filteredComponents && memoizedProps) {
-    componentData.props = convertDataToString(memoizedProps);
+  if (memoizedProps) {
+    Object.assign(componentData.props, convertDataToString(memoizedProps));
   }
 
   // ------------APPEND STATE & CONTEXT DATA FROM REACT DEV TOOL----------------
@@ -460,7 +465,7 @@ function createTree(
     componentData.context = convertDataToString(stateData);
   }
 
-  // DEPRECATED: This code worked previously. However, with the update of React Dev Tool, context can no longer be pulled using this method.
+  // DEPRECATED: This code might have worked previously. However, with the update of React Dev Tool, context can no longer be pulled using this method.
   // Check to see if the component has any context:
   // if the component uses the useContext hook, we want to grab the context object and add it to the componentData object for that fiber
   // if (tag === FunctionComponent && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
@@ -525,35 +530,44 @@ function createTree(
   }
 
   // Adds performance metrics to the component data
-  componentData = {
-    ...componentData,
-    actualDuration,
-    actualStartTime,
-    selfBaseDuration,
-    treeBaseDuration,
-  };
+  // componentData = {
+  //   ...componentData,
+  //   actualDuration,
+  //   actualStartTime,
+  //   selfBaseDuration,
+  //   treeBaseDuration,
+  // };
   // console.log('props', componentData.props);
   // console.log('context', componentData.context);
   // console.log('state', componentData.state);
-  let newNode = null;
 
+  // ------------------ADD COMPONENT DATA TO THE OUTPUT TREE--------------------
+  /**
+   * The updated tree after adding the `componentData` obtained from `currentFiberNode`
+   */
+  let newNode: Tree;
   // We want to add this fiber node to the snapshot
-  if (componentFound || (newState === 'stateless' && !newState.hooksState)) {
-    if (currentFiber.child?.stateNode?.setAttribute) {
+  // if (componentFound || (newState === 'stateless' && !newState.hooksState)) {
+  if (componentFound || newState === 'stateless') {
+    // Grab JSX Component & replace the 'fromLinkFiber' class value
+    if (currentFiberNode.child?.stateNode?.setAttribute) {
+      console.log(elementType.name);
       rtid = `fromLinkFiber${rtidCounter}`;
       // rtid = rtidCounter;
       // check if rtid is already present
       //  remove existing rtid before adding a new one
-      if (currentFiber.child.stateNode.classList.length > 0) {
+      if (currentFiberNode.child.stateNode.classList.length > 0) {
         const lastClass =
-          currentFiber.child.stateNode.classList[currentFiber.child.stateNode.classList.length - 1];
+          currentFiberNode.child.stateNode.classList[
+            currentFiberNode.child.stateNode.classList.length - 1
+          ];
         if (lastClass.includes('fromLinkFiber')) {
-          currentFiber.child.stateNode.classList.remove(lastClass);
+          currentFiberNode.child.stateNode.classList.remove(lastClass);
         }
       }
-      currentFiber.child.stateNode.classList.add(rtid);
+      currentFiberNode.child.stateNode.classList.add(rtid);
     }
-    rtidCounter += 1;
+    rtidCounter += 1; // I THINK THIS SHOULD BE UP IN THE IF STATEMENT. Still unsure the use of rtid
     // checking if tree fromSibling is true
     if (fromSibling) {
       newNode = tree.addSibling(
@@ -574,8 +588,8 @@ function createTree(
     newNode = tree;
   }
 
+  // ----------------------TRAVERSE TO NEXT FIBERNODE---------------------------
   // Recurse on children
-
   if (child && !circularComponentTable.has(child)) {
     // If this node had state we appended to the children array,
     // so attach children to the newly appended child.
@@ -590,6 +604,7 @@ function createTree(
     createTree(sibling, newNode, true);
   }
 
+  // -------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING-------
   return tree;
 }
 /**
