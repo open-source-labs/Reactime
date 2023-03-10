@@ -69,9 +69,11 @@ declare global {
     __REDUX_DEVTOOLS_EXTENSION__?: any;
   }
 }
-
+/**
+ * The fiberRootNode, which is the root node of a tree of React component.
+ * fiberRoot has data structure of a Tree, which can be used to traverse and obtain all child component data.
+ */
 let fiberRoot = null;
-let doWork = true;
 const circularComponentTable = new Set();
 let rtidCounter = 0;
 let rtid = null;
@@ -107,7 +109,7 @@ function sendSnapshot(snap: Snapshot, mode: Status): void {
     },
     '*',
   );
-  console.log('LinkFiber', { payload });
+  // console.log('LinkFiber', { payload });
 }
 
 /**
@@ -347,21 +349,21 @@ function createTree(
     dependencies,
     _debugHookTypes,
   } = currentFiber;
-  console.log('LinkFiber', {
-    tag,
-    elementType,
-    componentName:
-      elementType?._context?.displayName || //For ContextProvider
-      elementType?._result?.name || //For lazy Component
-      elementType?.render?.name ||
-      elementType?.name ||
-      elementType,
-    memoizedProps,
-    memoizedState,
-    stateNode,
-    // dependencies,
-    _debugHookTypes,
-  });
+  // console.log('LinkFiber', {
+  //   tag,
+  //   elementType,
+  //   componentName:
+  //     elementType?._context?.displayName || //For ContextProvider
+  //     elementType?._result?.name || //For lazy Component
+  //     elementType?.render?.name ||
+  //     elementType?.name ||
+  //     elementType,
+  //   memoizedProps,
+  //   memoizedState,
+  //   stateNode,
+  //   // dependencies,
+  //   _debugHookTypes,
+  // });
 
   // TODO: Understand this if statement
   if (tag === HostComponent) {
@@ -496,8 +498,8 @@ function createTree(
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseHooks(memoizedState);
       const hooksNames = getHooksNames(elementType.toString());
-      console.log({ hooksNames }); // ['useState', 'useState']
-      console.log({ hooksStates });
+      // console.log({ hooksNames }); // ['useState', 'useState']
+      // console.log({ hooksStates });
 
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(state.state, state.component);
@@ -510,7 +512,7 @@ function createTree(
         newState.hooksState.push({ [hooksNames[i]]: state.state });
         componentFound = true;
       });
-      console.log({ newState: newState.hooksState });
+      // console.log({ newState: newState.hooksState });
     }
   }
 
@@ -616,24 +618,42 @@ interface DevTools {
 }
 
 /**
- * @method linkFiber
- * @param snap The current snapshot
+ * linkFiber contains core module functionality, exported as an anonymous function, perform the following logic:
+ * 1. Check if React Dev Tool is installed.
+ * 2. Check if the target application (on the browser) is a valid react application.
+ * 3. Initiate a event listener for visibility update of the target React Applicaiton.
+ * 4. Obtain the initial fiberRootNode, which is the root node of a tree of React component.
+ * 5. Initialize the tree snap shot on Chrome Extension.
+ * 6. Monkey patching the onCommitFiberRoot from REACT DEV TOOL to obtain updated data after React Applicaiton is re-rendered.
+ * @param snapShot The current snapshot
  * @param mode The current mode (i.e. jumping, time-traveling, or paused)
  * @return a function to be invoked by index.js that initiates snapshot monitoring
- * linkFiber contains core module functionality, exported as an anonymous function.
  */
-export default (snap: Snapshot, mode: Status): (() => void) => {
-  // Checks for visiblity of document
-  function onVisibilityChange() {
-    // Hidden property = background tab/minimized window
-    doWork = !document.hidden;
-  }
+export default function linkFiber(snapShot: Snapshot, mode: Status): () => void {
+  /**
+   * A boolean value indicate if the target React Application is visible
+   */
+  let isVisible: boolean = true;
+
+  /**
+   * @constant MIN_TIME_BETWEEN_UPDATE - The minimum time (ms) between each re-render/update of the snapShot tree being displayed on the Chrome Extension.
+   */
+  const MIN_TIME_BETWEEN_UPDATE = 10;
+  /**
+   * @function throttledUpdateSnapshot - a function that will wait for at least MIN_TIME_BETWEEN_UPDATE ms, before updating the tree snapShot being displayed on the Chrome Extension.
+   */
+  const throttledUpdateSnapshot = throttle(() => {
+    updateSnapShotTree(snapShot, mode);
+  }, MIN_TIME_BETWEEN_UPDATE);
+
+  // Return a function to be invoked by index.js that initiates snapshot monitoring
+  // TODO: Convert this into async/await & add try/catch
+
   return () => {
     // -------------------CHECK REACT DEVTOOL INSTALLATION----------------------
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     // Obtain React Devtools Object:
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-    console.log('linkFiber.ts', { devTools });
     // If React Devtools is not installed, object will be undefined.
     if (!devTools) {
       return;
@@ -654,7 +674,6 @@ export default (snap: Snapshot, mode: Status): (() => void) => {
     if (!reactInstance) {
       return;
     }
-    // we may want to add try/catch
     // If target application is a React App, send a message to front end.
     window.postMessage(
       {
@@ -663,34 +682,44 @@ export default (snap: Snapshot, mode: Status): (() => void) => {
       },
       '*',
     );
+    // --------------INITIATE EVENT LISTENER FOR VISIBILITY CHANGE--------------
+    /**
+     * Initiate an event listener for when there is a change to the visibility of the react target application (the browser tab)
+     * @example If tic-tac-toe demo app is loaded on a tab with localhost:8080, whenever user switch tab or switch to another software => 'visibilityChange' => invoke the callback to update doWork boolean value
+     */
+    document.addEventListener('visibilitychange', () => {
+      // Hidden property = background tab/minimized window
+      isVisible = !document.hidden;
+    });
 
-    const throttledUpdateSnapshot = throttle(() => {
-      updateSnapShotTree(snap, mode);
-    }, 70);
-    document.addEventListener('visibilitychange', onVisibilityChange);
+    // ---------OBTAIN THE INITIAL FIBEROOTNODE FROM REACT DEV TOOL-------------
+    // Obtain the FiberRootNode, which is the first value in the FiberRoot Set:
+    fiberRoot = devTools.getFiberRoots(1).values().next().value;
+    console.log('linkFiber', { fiberRoot });
 
-    if (reactInstance && reactInstance.version) {
-      // Obtain the FiberRootNode, which is the first value in the FiberRoot Set:
-      fiberRoot = devTools.getFiberRoots(1).values().next().value;
-      console.log('LinkFiber', { fiberRoot });
+    // ----------INITIALIZE THE TREE SNAP SHOT ON CHROME EXTENSION--------------
+    throttledUpdateSnapshot(); // only runs on start up
 
-      // React has inherent methods that are called with react fiber
-      // we attach new functionality without compromising the original work that onCommitFiberRoot does
-      const addOneMoreStep = function (original) {
-        return function (...args) {
-          // eslint-disable-next-line prefer-destructuring
-          fiberRoot = args[1];
-          // this is the additional functionality we added
-          if (doWork) {
-            throttledUpdateSnapshot();
-          }
-          // after our added work is completed we invoke the original function
-          return original(...args);
-        };
+    // ---------MOKEY PATCHING THE onCommitFiberRoot FROM REACT DEV TOOL--------
+    // React has inherent methods that are called with react fiber
+    // One of which is the onCommitFiberRoot method, which is invoked after the React application re-render its component(s).
+    // we attach new functionality without compromising the original work that onCommitFiberRoot does
+    /**
+     * @param onCommitFiberRoot -  is a callback provided by React that is automatically invoked by React Fiber after the target React application re-renders its components. This callback is used by REACT DEV TOOL to receive updated data about the component tree and its state. See {@link https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8}
+     * @returns an anonymous function, which when invoked will update the fiberRoot value & post a request to update the snapShot tree on Chrome Extension
+     */
+    function addOneMoreStep(onCommitFiberRoot) {
+      return function (...args) {
+        // eslint-disable-next-line prefer-destructuring
+        // Obtain the updated FiberRootNode, after the target React application re-renders
+        fiberRoot = args[1];
+        // If the target React application is visible, send a request to update the snapShot tree displayed on Chrome Extension
+        if (isVisible) throttledUpdateSnapshot();
+        // After our added work is completed we invoke the original onComitFiberRoot function
+        return onCommitFiberRoot(...args);
       };
-      devTools.onCommitFiberRoot = addOneMoreStep(devTools.onCommitFiberRoot);
-
-      throttledUpdateSnapshot(); // only runs on start up
     }
+    // Money Patching the onCommitFiberRoot method from REACT DEV TOOL
+    devTools.onCommitFiberRoot = addOneMoreStep(devTools.onCommitFiberRoot);
   };
-};
+}

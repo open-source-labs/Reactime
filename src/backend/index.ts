@@ -25,6 +25,7 @@ const mode: Status = {
 };
 
 // linkFiber is now assigned the default function exported from the file linkFiber.ts
+console.log('Index ts', { snapShot: JSON.parse(JSON.stringify(snapShot)) });
 const linkFiber = linkFiberStart(snapShot, mode);
 // timeJump is now assigned the default function exported from the file timeJump.ts
 const timeJump = timeJumpStart(mode);

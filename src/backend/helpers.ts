@@ -15,25 +15,41 @@ const JSXParser = acorn.Parser.extend(jsx());
 /**
  * @method throttle
  * @param callback A function to throttle
- * @param ms A number of milliseconds to use as throttling interval
- * @returns A function that limits input function, `callback`, from being called more than once every `ms` milliseconds
+ * @param MIN_TIME_BETWEEN_UPDATE A number of milliseconds to use as throttling interval
+ * @returns A function that limits input function, `callback`, from being called more than once every `MIN_TIME_BETWEEN_UPDATE` milliseconds
  *
  */
-export const throttle = (callback: Function, ms: number): Function => {
+export const throttle = (callback: Function, MIN_TIME_BETWEEN_UPDATE: number): Function => {
   // Initialize boolean flags for callback, throttledFunc
+  /**
+   * A boolean variable tracking if MIN_TIME_BETWEEN_UPDATE has passed
+   *
+   * This value turns TRUE after a callback function is invoked. While this value is true, no additional callback function can be invoked.
+   *
+   * This value turns FALSE after MIN_TIME_BETWEEN_UPDATE has passed => additional callback can now be invoked.
+   *
+   * @default false
+   */
   let isOnCooldown = false;
+  /**
+   * A boolean variable tracking if there is a request to invoke the callback in the queue.
+   *
+   * This value turns TRUE if a request to invoke the callback is sent before the MIN_TIME_BETWEEN_UPDATE passes.
+   *
+   * This value turns FALSE after the callback is invoked.
+   *
+   * @default false
+   *
+   */
   let isCallQueued = false;
 
-  // Wrap the passed-in function callback in a callback function that "throttles"
-  // (puts a limit on) the number of calls that can be made to function
-  // in a given period of time (ms)
-  const throttledFunc = (): any => {
-    // CASE 1: In cooldown mode and we already have a function waiting to be executed,
-    //         so do nothing
+  let timeout;
+  // Wrap the passed-in function callback in a callback function that "throttles" (puts a limit on) the number of calls that can be made to function in a given period of time (ms)
+  return function throttledFunc() {
+    // CASE 1: In cooldown mode and we already have a function waiting to be executed, so do nothing
     if (isOnCooldown && isCallQueued) return;
 
-    // CASE 2: In cooldown mode, but we have no functions waiting to be executed,
-    //         so just make note that we now have a call waiting to be executed and return
+    // CASE 2: In cooldown mode, but we have no functions waiting to be executed, so just make note that we now have a call waiting to be executed and return
     if (isOnCooldown) {
       isCallQueued = true;
       return;
@@ -45,24 +61,33 @@ export const throttle = (callback: Function, ms: number): Function => {
     // Initiate a new cooldown period and reset the "call queue"
     isOnCooldown = true;
     isCallQueued = false;
+    // Set timeout to end the cooldown period after MIN_TIME_BETWEEN_UPDATE has passed
+    clearTimeout(timeout);
+    timeout = setTimeout(runAfterTimeout, MIN_TIME_BETWEEN_UPDATE);
 
-    // Declare a function that checks whether we have
-    // another function to be executed right after.
-    const runAfterTimeout = (): any => {
+    /**
+     * @function runAfterTimeout - a function that end the cooldown mode & checks whether we have another function to be executed right after.
+     * @returns void
+     */
+    function runAfterTimeout() {
+      // If there is callback in the queue
       if (isCallQueued) {
-        isCallQueued = false;
-        isOnCooldown = true;
+        // Execute the function callback immediately
         callback();
-        setTimeout(runAfterTimeout, ms);
-        return;
+        // Initiate a new cooldown period and reset the "call queue"
+        isOnCooldown = true;
+        isCallQueued = false;
+        // End the cooldown period after MIN_TIME_BETWEEN_UPDATE
+        clearTimeout(timeout);
+        setTimeout(runAfterTimeout, MIN_TIME_BETWEEN_UPDATE);
       }
-      isOnCooldown = false;
-    };
-
-    setTimeout(runAfterTimeout, ms);
+      // If not callback in queue, end the cooldown period
+      else {
+        // End cooldown period after MIN_TIME_BETWEEN_UPDATE has passed
+        isOnCooldown = false;
+      }
+    }
   };
-
-  return throttledFunc;
 };
 
 // Helper function to grab the getters/setters from `elementType`
