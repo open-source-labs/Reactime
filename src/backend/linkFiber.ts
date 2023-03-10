@@ -716,7 +716,7 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
     // ----------INITIALIZE THE TREE SNAP SHOT ON CHROME EXTENSION--------------
     throttledUpdateSnapshot(); // only runs on start up
 
-    // ---------MOKEY PATCHING THE onCommitFiberRoot FROM REACT DEV TOOL--------
+    // --------MONKEY PATCHING THE onCommitFiberRoot FROM REACT DEV TOOL--------
     // React has inherent methods that are called with react fiber
     // One of which is the onCommitFiberRoot method, which is invoked after the React application re-render its component(s).
     // we attach new functionality without compromising the original work that onCommitFiberRoot does
