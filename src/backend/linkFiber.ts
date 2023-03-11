@@ -82,7 +82,6 @@ type ComponentData = {
 
 let rtidCounter = 0;
 
-
 /**
  * @function traverseHooks
  * @param memoizedState - The current state of the component associated with the current Fiber node.
@@ -106,7 +105,6 @@ function traverseHooks(memoizedState: any): HookStates {
   return hooksStates;
 }
 
-// This runs after every Fiber commit. It creates a new snapshot
 const exclude = new Set([
   'alternate',
   'basename',
@@ -365,7 +363,7 @@ export function createTree(
     context: {},
     state: {},
   };
-  let componentFound = false;
+  let isStatefulComponent = false;
 
   // ----------------APPEND PROP DATA FROM REACT DEV TOOL-----------------------
   // check to see if the parent component has any state/props
@@ -431,7 +429,7 @@ export function createTree(
     componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
     // passess to front end
     newState = stateNode.state;
-    componentFound = true;
+    isStatefulComponent = true;
   }
 
   // REGULAR REACT HOOKS
@@ -463,7 +461,7 @@ export function createTree(
           newState.hooksState = [];
         }
         newState.hooksState.push({ [hooksNames[i]]: state.state });
-        componentFound = true;
+        isStatefulComponent = true;
       });
       // console.log({ newState: newState.hooksState });
     }
@@ -471,7 +469,7 @@ export function createTree(
 
   // This grabs stateless components
   if (
-    !componentFound &&
+    !isStatefulComponent &&
     (tag === FunctionComponent || tag === ClassComponent || tag === IndeterminateComponent)
   ) {
     newState = 'stateless';
@@ -500,7 +498,7 @@ export function createTree(
   let rtid: string | null = null;
   // We want to add this fiber node to the snapshot
   // if (componentFound || (newState === 'stateless' && !newState.hooksState)) {
-  if (componentFound || newState === 'stateless') {
+  if (isStatefulComponent || newState === 'stateless') {
     // Grab JSX Component & replace the 'fromLinkFiber' class value
     if (currentFiberNode.child?.stateNode?.setAttribute) {
       rtid = `fromLinkFiber${rtidCounter}`;
