@@ -60,6 +60,7 @@ import Tree from './tree';
 // passes the data down to its components
 import componentActionsRecord from './masterState';
 import routes from './routes';
+import updateSnapShotTree from './snapShot';
 
 // throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
 // getHooksNames - helper function to grab the getters/setters from `elementType`
@@ -79,63 +80,8 @@ type ComponentData = {
   [key: string]: any;
 };
 
-const circularComponentTable: Set<Fiber> = new Set();
 let rtidCounter = 0;
 
-/**
- * @method sendSnapshot
- * @param snapShot The current snapshot
- * @param mode The current mode (i.e. jumping, time-traveling, or paused)
- * @return Nothing.
- *
- * Middleware: Gets a copy of the current snapShot.tree and posts a recordSnap message to the window
- */
-function sendSnapshot(snapShot: Snapshot, mode: Status): void {
-  // Don't send messages while jumping or while paused
-  if (mode.jumping || mode.paused) return;
-  // If there is no current tree  creates a new one
-  if (!snapShot.tree) {
-    snapShot.tree = new Tree('root', 'root');
-  }
-  // Make a deep copy of the tree:
-  const payload = snapShot.tree.cleanTreeCopy();
-  payload.route = routes.addRoute(window.location.href);
-  // method safely enables cross-origin communication between Window objects;
-  // e.g., between a page and a pop-up that it spawned, or between a page
-  // and an iframe embedded within it.
-  // this postMessage will be sending the most up-to-date snapshot of the current React Fiber Tree
-  // the postMessage action will be received on the content script to later update the tabsObj
-  // this will fire off everytime there is a change in test application
-
-  window.postMessage(
-    {
-      action: 'recordSnap',
-      payload,
-    },
-    '*',
-  );
-}
-
-/**
- * @function updateSnapShotTree
- * @param snapShot The current snapshot
- * @param mode The current mode (i.e. jumping, time-traveling, or paused)
- * Middleware: Updates snapShot object with latest snapshot, using @sendSnapshot
- */
-// updating tree depending on current mode on the panel (pause, etc)
-function updateSnapShotTree(snapShot: Snapshot, mode: Status, fiberRoot: FiberRoot): void {
-  // this is the currently active root fiber(the mutable root of the tree)
-  if (fiberRoot) {
-    const { current } = fiberRoot;
-    // Clears circular component table
-    circularComponentTable.clear();
-    // creates snapshot that is a tree based on properties in fiberRoot object
-    componentActionsRecord.clear();
-    snapShot.tree = createTree(current);
-  }
-  // sends the updated tree back
-  sendSnapshot(snapShot, mode);
-}
 
 /**
  * @function traverseHooks
@@ -329,8 +275,9 @@ function trimContextData(
  * @param fromSibling A boolean, default initialized to false
  * @return An instance of a Tree object
  */
-function createTree(
+export function createTree(
   currentFiberNode: Fiber,
+  circularComponentTable: Set<Fiber> = new Set(),
   tree: Tree = new Tree('root', 'root'),
   fromSibling = false,
 ): Tree {
@@ -355,22 +302,22 @@ function createTree(
     dependencies,
     _debugHookTypes,
   } = currentFiberNode;
-  console.log('LinkFiber', {
-    currentFiberNode,
-    // tag,
-    // elementType,
-    componentName:
-      elementType?._context?.displayName || //For ContextProvider
-      elementType?._result?.name || //For lazy Component
-      elementType?.render?.name ||
-      elementType?.name ||
-      elementType,
-    // memoizedProps,
-    // memoizedState,
-    // stateNode,
-    // dependencies,
-    // _debugHookTypes,
-  });
+  // console.log('LinkFiber', {
+  //   currentFiberNode,
+  //   // tag,
+  //   // elementType,
+  //   componentName:
+  //     elementType?._context?.displayName || //For ContextProvider
+  //     elementType?._result?.name || //For lazy Component
+  //     elementType?.render?.name ||
+  //     elementType?.name ||
+  //     elementType,
+  //   // memoizedProps,
+  //   // memoizedState,
+  //   // stateNode,
+  //   // dependencies,
+  //   // _debugHookTypes,
+  // });
 
   // TODO: Understand this if statement
   if (tag === HostComponent) {
@@ -556,7 +503,6 @@ function createTree(
   if (componentFound || newState === 'stateless') {
     // Grab JSX Component & replace the 'fromLinkFiber' class value
     if (currentFiberNode.child?.stateNode?.setAttribute) {
-      console.log(elementType.name);
       rtid = `fromLinkFiber${rtidCounter}`;
       // rtid = rtidCounter;
       // check if rtid is already present
@@ -600,13 +546,13 @@ function createTree(
     // so attach children to the newly appended child.
     // Otherwise, attach children to this same node.
     circularComponentTable.add(child);
-    createTree(child, newNode);
+    createTree(child, circularComponentTable, newNode);
   }
 
   // Recurse on siblings
   if (sibling && !circularComponentTable.has(sibling)) {
     circularComponentTable.add(sibling);
-    createTree(sibling, newNode, true);
+    createTree(sibling, circularComponentTable, newNode, true);
   }
 
   // -------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING-------
@@ -698,7 +644,7 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
     console.log('linkFiber', { fiberRoot });
 
     // ----------INITIALIZE THE TREE SNAP SHOT ON CHROME EXTENSION--------------
-    throttledUpdateSnapshot(); // only runs on start up
+    throttledUpdateSnapshot(fiberRoot); // only runs on start up
 
     // --------MONKEY PATCHING THE onCommitFiberRoot FROM REACT DEV TOOL--------
     // React has inherent methods that are called with react fiber
