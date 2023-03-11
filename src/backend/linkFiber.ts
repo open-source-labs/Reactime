@@ -188,25 +188,30 @@ function convertDataToString(
   reactimeData: ReactimeData = {},
 ): ReactimeData {
   for (const key in reactDevData) {
-    // Skip keys that are in exclude set OR if there is no value at key
-    // Falsy values such as 0, false, null are still valid value
-    if (exclude.has(key) || reactDevData[key] === undefined) {
-      continue;
+    try {
+      // Skip keys that are in exclude set OR if there is no value at key
+      // Falsy values such as 0, false, null are still valid value
+      if (exclude.has(key) || reactDevData[key] === undefined) {
+        continue;
+      }
+      // If value at key is a function, assign key with value 'function' to reactimeData object
+      else if (typeof reactDevData[key] === 'function') {
+        reactimeData[key] = 'function';
+      }
+      // If value at key is an object/array and not null => JSON stringify the value
+      else if (typeof reactDevData[key] === 'object' && reactDevData[key] !== null) {
+        reactimeData[key] = JSON.stringify(reactDevData[key]);
+      }
+      // Else assign the primitive value
+      else {
+        reactimeData[key] = reactDevData[key];
+      }
+    } catch (err) {
+      console.log('linkFiber', { reactDevData, key });
+      throw Error(`Error caught at converDataToString: ${err}`);
     }
-    // If value at key is a function, assign key with value 'function' to reactimeData object
-    else if (typeof reactDevData[key] === 'function') {
-      reactimeData[key] = 'function';
-    }
-    // If value at key is an object/array and not null => JSON stringify the value
-    else if (typeof reactDevData[key] === 'object' && reactDevData[key] !== null) {
-      reactimeData[key] = JSON.stringify(reactDevData[key]);
-    }
-    // Else assign the primitive value
-    else {
-      reactimeData[key] = reactDevData[key];
-    }
+    return reactimeData;
   }
-  return reactimeData;
 }
 // ------------------------FILTER STATE & CONTEXT DATA--------------------------
 /**
@@ -368,7 +373,13 @@ export function createTree(
 
   // ----------------APPEND PROP DATA FROM REACT DEV TOOL-----------------------
   // check to see if the parent component has any state/props
-  if (memoizedProps) {
+  if (
+    (tag === FunctionComponent ||
+      tag === ClassComponent ||
+      tag === IndeterminateComponent ||
+      tag === ContextProvider) &&
+    memoizedProps
+  ) {
     Object.assign(componentData.props, convertDataToString(memoizedProps));
   }
 
@@ -448,6 +459,7 @@ export function createTree(
       const hooksNames = getHooksNames(elementType.toString());
       console.log({ hooksNames });
       newState.hooksState = [];
+      componentData.state = {};
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(state.state, state.component);
         componentData.hooksIndex = hooksIndex;
