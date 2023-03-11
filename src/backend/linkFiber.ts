@@ -63,7 +63,7 @@ import updateSnapShotTree from './snapShot';
 
 // throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
 // getHooksNames - helper function to grab the getters/setters from `elementType`
-import { throttle, getHooksNames } from './helpers';
+import { throttle, getHooksNames, getComponentName } from './helpers';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -92,12 +92,12 @@ function traverseHooks(memoizedState: any): HookStates {
   const hooksStates: HookStates = [];
   while (memoizedState) {
     // the !== undefined conditional is necessary here for correctly displaying react hooks because TypeScript recognizes 0 and "" as falsey value - DO NOT REMOVE
-    // if (memoizedState.memoizedState !== undefined) {
-    hooksStates.push({
-      component: memoizedState.queue,
-      state: memoizedState.memoizedState,
-    });
-    // }
+    if (memoizedState.queue) {
+      hooksStates.push({
+        component: memoizedState.queue,
+        state: memoizedState.memoizedState,
+      });
+    }
     memoizedState = memoizedState.next;
   }
   return hooksStates;
@@ -175,13 +175,12 @@ const exclude = new Set([
   '$$typeof',
   '@@observable',
 ]);
-// ---------------------FILTER DATA FROM REACT DEV TOOL-------------------------
+// ------------FILTER DATA FROM REACT DEV TOOL && CONVERT TO STRING-------------
 /**
- * This recursive function is used to grab the state/props/context of children components
- and push them into the parent componenent react elements throw errors on client side of application - convert react/functions into string
- * 
+ * This function receives raw Data from REACT DEV TOOL and filter the Data based on the exclude list. The filterd data is then converted to string (if applicable) before being send to reacTime front end.
+ *
  * @param reactDevData - The data object obtained from React Devtool. Ex: memoizedProps, memoizedState
- * @param reactimeData - The cached data from the current component. This can be data about states, context and/or props of the component. 
+ * @param reactimeData - The cached data from the current component. This can be data about states, context and/or props of the component.
  * @returns The update component data object to send to front end of ReactTime
  */
 function convertDataToString(
@@ -197,7 +196,13 @@ function convertDataToString(
     // If value at key is a function, assign key with value 'function' to reactimeData object
     else if (typeof reactDevData[key] === 'function') {
       reactimeData[key] = 'function';
-    } else {
+    }
+    // If value at key is an object/array and not null => JSON stringify the value
+    else if (typeof reactDevData[key] === 'object' && reactDevData[key] !== null) {
+      reactimeData[key] = JSON.stringify(reactDevData[key]);
+    }
+    // Else assign the primitive value
+    else {
       reactimeData[key] = reactDevData[key];
     }
   }
@@ -295,7 +300,6 @@ export function createTree(
     actualStartTime,
     selfBaseDuration,
     treeBaseDuration,
-    dependencies,
     _debugHookTypes,
   } = currentFiberNode;
   // console.log('LinkFiber', {
@@ -348,7 +352,7 @@ export function createTree(
     treeBaseDuration?: number;
     props: {};
     context: {};
-    state: {};
+    state?: {};
     hooksState?: any[];
     hooksIndex?: number;
     index?: number;
@@ -359,7 +363,6 @@ export function createTree(
     treeBaseDuration,
     props: {},
     context: {},
-    state: {},
   };
   let isStatefulComponent = false;
 
@@ -370,12 +373,6 @@ export function createTree(
   }
 
   // ------------APPEND STATE & CONTEXT DATA FROM REACT DEV TOOL----------------
-  // stateNode
-  // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
-  // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
-  if (stateNode?.state) {
-    Object.assign(componentData.state, stateNode.state);
-  }
 
   // memoizedState
   // Note: if user use ReactHook, memoizedState.memoizedState can be a falsy value such as null, false, ... => need to specify this data is not undefined
@@ -391,12 +388,12 @@ export function createTree(
       );
     }
     // Else if user use ReactHook to define state => all states will be stored in memoizedState => grab all states stored in the memoizedState
-    else {
-      Object.assign(
-        componentData.state,
-        trimContextData(memoizedState, elementType.name, _debugHookTypes),
-      );
-    }
+    // else {
+    //   Object.assign(
+    //     componentData.state,
+    //     trimContextData(memoizedState, elementType.name, _debugHookTypes),
+    //   );
+    // }
   }
   // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
   // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
@@ -416,29 +413,31 @@ export function createTree(
   //   componentData.context = convertDataToString(dependencies.firstContext.memoizedValue);
   // }
 
-  // ----------------------SET UP FOR JUMPING CONDITION-------------------------
-  // Check if node is a stateful class component when user use setState
-  if (
-    stateNode?.state &&
-    (tag === FunctionComponent || tag === ClassComponent || tag === IndeterminateComponent)
-  ) {
+  // -----------OBTAIN STATE & SET STATE METHODS FOR CLASS COMPONENT------------
+  // Check if node is a stateful class component when user use setState.
+  // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
+  // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
+  if (stateNode?.state && (tag === ClassComponent || tag === IndeterminateComponent)) {
     // Save component's state and setState() function to our record for future
     // time-travel state changing. Add record index to snapshot so we can retrieve.
     componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
-    // passess to front end
+    // Save state information in componentData.
+    componentData.state = stateNode.state;
+    // Passess to front end
     newState = stateNode.state;
     isStatefulComponent = true;
   }
 
+  // ---------OBTAIN STATE & DISPATCH METHODS FOR FUNCTIONAL COMPONENT---------
   // REGULAR REACT HOOKS
   let hooksIndex;
   // Check if node is a hooks useState function
   if (
     memoizedState &&
     (tag === FunctionComponent ||
-      tag === ClassComponent ||
+      // tag === ClassComponent || WE SHOULD NOT BE ABLE TO USE HOOK IN CLASS
       tag === IndeterminateComponent ||
-      tag === ContextProvider)
+      tag === ContextProvider) //TODOD: Need to figure out why we need context provider
   ) {
     if (memoizedState.queue) {
       // Hooks states are stored as a linked list using memoizedState.next,
@@ -446,21 +445,21 @@ export function createTree(
       // We then store them along with the corresponding memoizedState.queue,
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseHooks(memoizedState);
-      const hooksNames = getHooksNames(elementType.toString());
+      // console.log(elementType.toString());
+      // const hooksNames = getHooksNames(elementType.toString());
+      const hooksNames = getComponentName(elementType.toString());
       // console.log({ hooksNames }); // ['useState', 'useState']
-      // console.log({ hooksStates });
-
+      console.log({ hooksStates });
+      // console.log({ memoizedState });
+      console.log({ hooksNames });
+      newState.hooksState = [];
       hooksStates.forEach((state, i) => {
         hooksIndex = componentActionsRecord.saveNew(state.state, state.component);
         componentData.hooksIndex = hooksIndex;
-        if (!newState) {
-          newState = { hooksState: [] };
-        } else if (!newState.hooksState) {
-          newState.hooksState = [];
-        }
-        newState.hooksState.push({ [hooksNames[i]]: state.state });
-        isStatefulComponent = true;
+        newState.hooksState.push({ [hooksNames[i].hookName]: state.state });
+        componentData.state[hooksNames[i].varName] = state.state;
       });
+      isStatefulComponent = true;
       // console.log({ newState: newState.hooksState });
     }
   }
