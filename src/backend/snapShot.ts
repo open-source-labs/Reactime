@@ -20,7 +20,6 @@ export default function updateSnapShotTree(
   mode: Status,
   fiberRoot: FiberRoot,
 ): void {
-  console.log('snapShot.ts - Update');
   // this is the currently active root fiber(the mutable root of the tree)
   const { current } = fiberRoot;
   componentActionsRecord.clear();

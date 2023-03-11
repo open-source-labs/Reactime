@@ -655,7 +655,6 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
         // eslint-disable-next-line prefer-destructuring
         // Obtain the updated FiberRootNode, after the target React application re-renders
         fiberRoot = args[1];
-        console.log('onCommit', { fiberRoot });
         // If the target React application is visible, send a request to update the snapShot tree displayed on Chrome Extension
         if (isVisible) throttledUpdateSnapshot(fiberRoot);
         // After our added work is completed we invoke the original onComitFiberRoot function

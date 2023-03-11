@@ -27,6 +27,7 @@ export default {
   },
   // adds new component to ComponentActionsRecord
   saveNew: (state, component): number => {
+    console.log('masterState', { component, componentActionsRecord });
     componentActionsRecord[index] = { state, component };
     index++;
 
@@ -35,7 +36,7 @@ export default {
   getRecordByIndex: (inputIndex: number): HookStateItem => componentActionsRecord[inputIndex],
   // this is used for class components -
   /* inputIndex will always be a fixed number (coming in timeJump.ts) */
-  getComponentByIndex: (inputIndex: number): any =>
+  getComponentByIndex: (inputIndex: number): HookStateItem['component'] | undefined =>
     componentActionsRecord[inputIndex] ? componentActionsRecord[inputIndex].component : undefined,
   // this is used for react hooks - hooks will be passed in as an array from timeJump.ts
   getComponentByIndexHooks: (inputIndex: Array<number> = []): Array<any> => {

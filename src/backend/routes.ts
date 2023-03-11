@@ -54,7 +54,6 @@ class Routes {
       // If the last visited index is not the last position in routeHistory stack. This happens when user use the timeJump functionality.
       // => Rebuild the browserHistory
       if (this.current !== this.routeHistory.length - 1) {
-        console.log('Rebuild browser history');
         this.rebuildHistory(url);
       }
       // Create a new route instance from the passed in url.
@@ -64,8 +63,6 @@ class Routes {
       // Update the last visited index.
       this.current = this.routeHistory.length - 1;
     }
-    console.log('Route History', this.routeHistory, this.current);
-    console.log('History length', window.history.length);
     return route;
   }
 
