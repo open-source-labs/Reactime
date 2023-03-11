@@ -16,7 +16,6 @@ import { Snapshot, Status, MsgData } from './types/backendTypes';
 // * State snapshot object initialized here
 const snapShot: Snapshot = {
   tree: null,
-  unfilteredTree: null,
 };
 
 const mode: Status = {

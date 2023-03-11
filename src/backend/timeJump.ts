@@ -3,10 +3,14 @@ import routes from './routes';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable max-len */
+/* eslint-disable no-param-reassign */
+import componentActionsRecord from './masterState';
+const circularComponentTable = new Set();
+
 /**
  * This file contains necessary functionality for time-travel feature
  *
- * It exports an anonymous
+ * Default Export:
  * @function timeJump
  * @param origin The latest snapshot, linked to the fiber (changes to origin will change app)
  * @param mode The current mode (i.e. jumping, time-traveling, or paused)
@@ -15,15 +19,10 @@ import routes from './routes';
  * The target snapshot portrays some past state we want to travel to.
  * `jump` recursively sets state for any stateful components.
  */
-
-/* eslint-disable no-param-reassign */
-import componentActionsRecord from './masterState';
-
-const circularComponentTable = new Set();
-export default (mode) => {
+export default function timeJump(mode) {
   // Recursively change state of tree
   // Set the state of the origin tree if the component is stateful
-  function jump(target) {
+  function jump(target): void {
     if (!target) return;
     if (target.state === 'stateless') {
       target.children.forEach((child) => jump(child));
@@ -100,4 +99,4 @@ export default (mode) => {
       };
     }
   };
-};
+}

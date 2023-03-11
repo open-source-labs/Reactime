@@ -6,11 +6,9 @@ import Tree from '../tree';
 /**
  * @type Tree - The snapshot of the current tree
  * @member tree - {Tree} - The tree structure to send to front end
- * @member unfilteredTree - {null} - The current mode (i.e. jumping, time-traveling, or paused)
  */
 export interface Snapshot {
   tree: Tree;
-  unfilteredTree: null;
 }
 
 /**
@@ -245,7 +243,7 @@ export type Fiber = {
 
 /**
  * @type FiberRoot - The internal data structure that represents a fiberRootNode or the top-level node of a single component tree
- * 
+ *
  * FiberRoot data structure has several properties. For Reactime, we only access the `current` property which contains the tree structure made of `fiberNode`. Each `fiberNode` contains a component data in the React component tree.
  */
 export type FiberRoot = {

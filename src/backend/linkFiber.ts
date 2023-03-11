@@ -59,13 +59,11 @@ import {
 import Tree from './tree';
 // passes the data down to its components
 import componentActionsRecord from './masterState';
-import routes from './routes';
 import updateSnapShotTree from './snapShot';
 
 // throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
 // getHooksNames - helper function to grab the getters/setters from `elementType`
 import { throttle, getHooksNames } from './helpers';
-import { any } from 'prop-types';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -76,7 +74,7 @@ declare global {
 }
 
 // TODO: Determine what Component Data Type we are sending back for state, context, & props
-type ComponentData = {
+type ReactimeData = {
   [key: string]: any;
 };
 
@@ -188,8 +186,8 @@ const exclude = new Set([
  */
 function convertDataToString(
   reactDevData: { [key: string]: any },
-  reactimeData: ComponentData = {},
-): ComponentData {
+  reactimeData: ReactimeData = {},
+): ReactimeData {
   for (const key in reactDevData) {
     // Skip keys that are in exclude set OR if there is no value at key
     // Falsy values such as 0, false, null are still valid value
@@ -225,7 +223,7 @@ function trimContextData(
   if (ignoreComponent.has(componentName)) return;
 
   // Initialize object to store state and context data of the component
-  const reactimeData: ComponentData = {};
+  const reactimeData: ReactimeData = {};
   // Initialize counter for the default naming. If user use reactHook, such as useState, react will only pass in the value, and not the variable name of the state.
   let stateCounter = 1;
   let refCounter = 1;
