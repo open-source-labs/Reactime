@@ -96,78 +96,78 @@ export const throttle = (
   };
 };
 
-// Helper function to grab the getters/setters from `elementType`
-/**
- * @method getHooksNames
- * @param elementType The fiber `type`, A stringified function of the component, the Fiber whose hooks we want corresponds to
- * @returns An array of strings
- */
-// TODO: this function has return at the end of loop? Is this intentional?
-export const getHooksNames = (elementType: string): Array<string> | undefined => {
-  // Initialize empty object to store the setters and getter
-  let ast: any;
-  try {
-    ast = JSXParser.parse(elementType);
-  } catch (e) {
-    return ['unknown'];
-  }
-  // hookNames will contain an object with methods (functions)
-  const hooksNames: any = {};
+// // Helper function to grab the getters/setters from `elementType`
+// /**
+//  * @method getHooksNames
+//  * @param elementType The fiber `type`, A stringified function of the component, the Fiber whose hooks we want corresponds to
+//  * @returns An array of strings
+//  */
+// // TODO: this function has return at the end of loop? Is this intentional?
+// export const getHooksNames = (elementType: string): Array<string> | undefined => {
+//   // Initialize empty object to store the setters and getter
+//   let ast: any;
+//   try {
+//     ast = JSXParser.parse(elementType);
+//   } catch (e) {
+//     return ['unknown'];
+//   }
+//   // hookNames will contain an object with methods (functions)
+//   const hooksNames: any = {};
 
-  // Begin search for hook names, only if ast has a body property.
-  while (Object.hasOwnProperty.call(ast, 'body')) {
-    let tsCount = 0; // Counter for the number of TypeScript hooks seen (to distinguish in masterState)
-    ast = ast.body;
+//   // Begin search for hook names, only if ast has a body property.
+//   while (Object.hasOwnProperty.call(ast, 'body')) {
+//     let tsCount = 0; // Counter for the number of TypeScript hooks seen (to distinguish in masterState)
+//     ast = ast.body;
 
-    // Statements get all the names of the hooks. For example: useCount, useWildcard, ...
-    const statements: Array<string> = [];
-    /** All module exports always start off as a single 'FunctionDeclaration' type
-     * Other types: "BlockStatement" / "ExpressionStatement" / "ReturnStatement"
-     * Iterate through AST of every function declaration
-     * Check within each function declaration if there are hook declarations */
-    ast.forEach((functionDec: any) => {
-      let declarationBody: any;
-      if (functionDec.expression?.body) declarationBody = functionDec.expression.body.body;
-      // check if functionDec.expression.body exists, then set declarationBody to functionDec's body
-      else declarationBody = functionDec.body?.body ?? [];
-      // Traverse through the function's funcDecs and Expression Statements
-      declarationBody.forEach((elem: any) => {
-        // Hooks will always be contained in a variable declaration
-        if (elem.type === 'VariableDeclaration') {
-          elem.declarations.forEach((hook: any) => {
-            // Parse destructured statements pair
-            if (hook.id.type === 'ArrayPattern') {
-              hook.id.elements.forEach((hook: any) => {
-                statements.push(`_useWildcard${tsCount}`);
-                statements.push(hook.name);
-                tsCount += 1;
-              });
-              // Process hook function invocation ?
-            } else {
-              // hook.init.object is '_useState2', '_useState4', etc.
-              // eslint-disable-next-line no-lonely-if
-              if (hook?.init?.object?.name) {
-                const varName: any = hook.init.object.name;
-                if (!hooksNames[varName] && varName.match(/_use/)) {
-                  hooksNames[varName] = hook.id.name;
-                }
-              }
-              if (hook.id.name !== undefined) {
-                statements.push(hook.id.name);
-              }
-            }
-          });
-        }
-      });
-      statements.forEach((el, i) => {
-        if (el.match(/_use/)) hooksNames[el] = statements[i + 1];
-      });
-    });
-    return Object.values(hooksNames);
-  }
-};
+//     // Statements get all the names of the hooks. For example: useCount, useWildcard, ...
+//     const statements: Array<string> = [];
+//     /** All module exports always start off as a single 'FunctionDeclaration' type
+//      * Other types: "BlockStatement" / "ExpressionStatement" / "ReturnStatement"
+//      * Iterate through AST of every function declaration
+//      * Check within each function declaration if there are hook declarations */
+//     ast.forEach((functionDec: any) => {
+//       let declarationBody: any;
+//       if (functionDec.expression?.body) declarationBody = functionDec.expression.body.body;
+//       // check if functionDec.expression.body exists, then set declarationBody to functionDec's body
+//       else declarationBody = functionDec.body?.body ?? [];
+//       // Traverse through the function's funcDecs and Expression Statements
+//       declarationBody.forEach((elem: any) => {
+//         // Hooks will always be contained in a variable declaration
+//         if (elem.type === 'VariableDeclaration') {
+//           elem.declarations.forEach((hook: any) => {
+//             // Parse destructured statements pair
+//             if (hook.id.type === 'ArrayPattern') {
+//               hook.id.elements.forEach((hook: any) => {
+//                 statements.push(`_useWildcard${tsCount}`);
+//                 statements.push(hook.name);
+//                 tsCount += 1;
+//               });
+//               // Process hook function invocation ?
+//             } else {
+//               // hook.init.object is '_useState2', '_useState4', etc.
+//               // eslint-disable-next-line no-lonely-if
+//               if (hook?.init?.object?.name) {
+//                 const varName: any = hook.init.object.name;
+//                 if (!hooksNames[varName] && varName.match(/_use/)) {
+//                   hooksNames[varName] = hook.id.name;
+//                 }
+//               }
+//               if (hook.id.name !== undefined) {
+//                 statements.push(hook.id.name);
+//               }
+//             }
+//           });
+//         }
+//       });
+//       statements.forEach((el, i) => {
+//         if (el.match(/_use/)) hooksNames[el] = statements[i + 1];
+//       });
+//     });
+//     return Object.values(hooksNames);
+//   }
+// };
 
-export const getComponentName = (
+export const getHooksNames = (
   elementType: string,
 ): { hookName: string; varName: string }[] | undefined => {
   // Initialize empty object to store the setters and getter

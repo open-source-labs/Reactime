@@ -63,7 +63,7 @@ import updateSnapShotTree from './snapShot';
 
 // throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
 // getHooksNames - helper function to grab the getters/setters from `elementType`
-import { throttle, getHooksNames, getComponentName } from './helpers';
+import { throttle, getHooksNames } from './helpers';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -413,7 +413,7 @@ export function createTree(
   //   componentData.context = convertDataToString(dependencies.firstContext.memoizedValue);
   // }
 
-  // -----------OBTAIN STATE & SET STATE METHODS FOR CLASS COMPONENT------------
+  // ----------OBTAIN STATE & SET STATE METHODS FROM CLASS COMPONENT------------
   // Check if node is a stateful class component when user use setState.
   // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
   // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
@@ -428,7 +428,7 @@ export function createTree(
     isStatefulComponent = true;
   }
 
-  // ---------OBTAIN STATE & DISPATCH METHODS FOR FUNCTIONAL COMPONENT---------
+  // ---------OBTAIN STATE & DISPATCH METHODS FROM FUNCTIONAL COMPONENT---------
   // REGULAR REACT HOOKS
   let hooksIndex;
   // Check if node is a hooks useState function
@@ -445,12 +445,7 @@ export function createTree(
       // We then store them along with the corresponding memoizedState.queue,
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseHooks(memoizedState);
-      // console.log(elementType.toString());
-      // const hooksNames = getHooksNames(elementType.toString());
-      const hooksNames = getComponentName(elementType.toString());
-      // console.log({ hooksNames }); // ['useState', 'useState']
-      console.log({ hooksStates });
-      // console.log({ memoizedState });
+      const hooksNames = getHooksNames(elementType.toString());
       console.log({ hooksNames });
       newState.hooksState = [];
       hooksStates.forEach((state, i) => {
@@ -460,7 +455,6 @@ export function createTree(
         componentData.state[hooksNames[i].varName] = state.state;
       });
       isStatefulComponent = true;
-      // console.log({ newState: newState.hooksState });
     }
   }
 
@@ -471,18 +465,6 @@ export function createTree(
   ) {
     newState = 'stateless';
   }
-
-  // Adds performance metrics to the component data
-  // componentData = {
-  //   ...componentData,
-  //   actualDuration,
-  //   actualStartTime,
-  //   selfBaseDuration,
-  //   treeBaseDuration,
-  // };
-  // console.log('props', componentData.props);
-  // console.log('context', componentData.context);
-  // console.log('state', componentData.state);
 
   // ------------------ADD COMPONENT DATA TO THE OUTPUT TREE--------------------
   /**
