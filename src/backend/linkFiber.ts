@@ -63,6 +63,7 @@ import routes from './routes';
 // throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
 // getHooksNames - helper function to grab the getters/setters from `elementType`
 import { throttle, getHooksNames } from './helpers';
+import { any } from 'prop-types';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -71,6 +72,12 @@ declare global {
     __REDUX_DEVTOOLS_EXTENSION__?: any;
   }
 }
+
+// TODO: Determine what Component Data Type we are sending back for state, context, & props
+type ComponentData = {
+  [key: string]: any;
+};
+
 /**
  * The `fiberRootNode`, which is the root node of a tree of React component.
  * The `current` property of `fiberRoot` has data structure of a Tree, which can be used to traverse and obtain all child component data.
@@ -78,10 +85,6 @@ declare global {
 let fiberRoot: FiberRoot;
 const circularComponentTable: Set<Fiber> = new Set();
 let rtidCounter = 0;
-/**
- * `rtid` - The `Root ID` is a unique identifier that is assigned to each React root instance in a React application.
- */
-let rtid = null;
 
 /**
  * @method sendSnapshot
@@ -235,17 +238,19 @@ const exclude = new Set([
   '$$typeof',
   '@@observable',
 ]);
-// -----------------TRIMMING PASSED IN FIBER ROOT DATA--------------------------
+// ---------------------FILTER DATA FROM REACT DEV TOOL-------------------------
 /**
- * This recursive function is used to grab the state of children components
+ * This recursive function is used to grab the state/props/context of children components
  and push them into the parent componenent react elements throw errors on client side of application - convert react/functions into string
  * 
  * @param reactDevData - The data object obtained from React Devtool. Ex: memoizedProps, memoizedState
- * @param reactimeData - The updated data object to send to front end of Reactime. 
- * @param depth - reactDevData is nested object. The value in reactDevData can be another object. Depth is use to keep track the depth during the unraveling of nested object
- * @returns reactimeData - the updated data object to send to front end of ReactTime
+ * @param reactimeData - The cached data from the current component. This can be data about states, context and/or props of the component. 
+ * @returns The update component data object to send to front end of ReactTime
  */
-function convertDataToString(reactDevData, reactimeData = {}) {
+function convertDataToString(
+  reactDevData: { [key: string]: any },
+  reactimeData: ComponentData = {},
+): ComponentData {
   for (const key in reactDevData) {
     // Skip keys that are in exclude set OR if there is no value at key
     // Falsy values such as 0, false, null are still valid value
@@ -261,28 +266,28 @@ function convertDataToString(reactDevData, reactimeData = {}) {
   }
   return reactimeData;
 }
-// ---------------------------TRIMMING STATE DATA-------------------------------
+// ------------------------FILTER STATE & CONTEXT DATA--------------------------
 /**
  * This function is used to trim the state data of a component.
  * All propperty name that are in the central exclude list would be trimmed off.
  * If passed in memoizedState is a not an object (a.k.a a primitive type), a default name would be provided.
  * @param memoizedState - The current state of the component associated with the current Fiber node.
- * @param {string[]} _debugHookTypes - An array of hooks used for debugging purposes.
+ * @param _debugHookTypes - An array of hooks used for debugging purposes.
  * @param componentName - Name of the evaluated component
  * @returns - The updated state data object to send to front end of ReactTime
  */
-function trimContextData(memoizedState, componentName, _debugHookTypes: string[]) {
+function trimContextData(
+  memoizedState: Fiber['memoizedState'],
+  componentName: string,
+  _debugHookTypes: Fiber['_debugHookTypes'],
+) {
   // Initialize a list of componentName that would not be evaluated for State Data:
   const ignoreComponent = new Set(['BrowserRouter', 'Router']);
   if (ignoreComponent.has(componentName)) return;
 
-  // Initialize object to store state data of the component
-  const reactimeStateData = {};
-  // Initialize the set of interested React Hooks:
-  const reactHooks = new Set(['useState', 'useMemo']);
-  // Initilize the set of React Hooks that do not generate a state:
-  const noStateReactHooks = new Set(['useContext']);
-  // Initialize counter for the default naming. If user use reactHook, such as useState, react will only pass in the value, and not the name of the state.
+  // Initialize object to store state and context data of the component
+  const reactimeData: ComponentData = {};
+  // Initialize counter for the default naming. If user use reactHook, such as useState, react will only pass in the value, and not the variable name of the state.
   let stateCounter = 1;
   let refCounter = 1;
 
@@ -296,25 +301,25 @@ function trimContextData(memoizedState, componentName, _debugHookTypes: string[]
     // If user use useState reactHook => React will only pass in the value of state & not the name of the state => create a default name:
     else if (hook === 'useState') {
       const defaultName = `State ${stateCounter}`;
-      reactimeStateData[defaultName] = memoizedState.memoizedState;
+      reactimeData[defaultName] = memoizedState.memoizedState;
       stateCounter++;
     }
     // If user use useRef reactHook => React will store memoizedState in current object:
     else if (hook === 'useRef') {
       const defaultName = `Ref ${refCounter}`;
-      reactimeStateData[defaultName] = memoizedState.memoizedState.current;
+      reactimeData[defaultName] = memoizedState.memoizedState.current;
       refCounter++;
     }
     // If user use Redux to contain their context => the context object will be stored using useMemo Hook, as of for Rect Dev Tool v4.27.2
     // Note: Provider is not a reserved component name for redux. User may name their component as Provider, which will break this logic. However, it is a good assumption that if user have a custom provider component, it would have a more specific naming such as ThemeProvider.
     else if (hook === 'useMemo' && componentName === 'Provider') {
-      convertDataToString(memoizedState.memoizedState[0], reactimeStateData);
+      convertDataToString(memoizedState.memoizedState[0], reactimeData);
     }
     //Move on to the next level of memoizedState tree.
     memoizedState = memoizedState?.next;
   }
   // Return the updated state data object to send to front end of ReactTime
-  return reactimeStateData;
+  return reactimeData;
 }
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
 /**
@@ -333,10 +338,10 @@ function createTree(
   currentFiberNode: Fiber,
   tree: Tree = new Tree('root', 'root'),
   fromSibling = false,
-) {
+): Tree {
   // Base case: child or sibling pointed to null
-  if (!currentFiberNode) return null;
-  if (!tree) return tree;
+  // if (!currentFiberNode) return tree; //TO BE DELETE SINCE THIS FUNCTION CAN ONLY BE RECURSIVE CALLED IF THE FIBERNODE HAS A CHILD/SIBILING
+  // if (!tree) return tree; //TO BE DELETE: WE HAVE A DEFAULT PARAMETER TREE, THIS WILL NEVER BE TRUE
   // These have the newest state. We update state and then
   // called updateSnapshotTree()
   const {
@@ -399,10 +404,10 @@ function createTree(
   // -----------------INITIALIZE OBJECT TO CONTAIN COMPONENT DATA---------------
   let newState: any | { hooksState?: any[] } = {};
   let componentData: {
-    actualDuration: number;
-    actualStartTime: number;
-    selfBaseDuration: number;
-    treeBaseDuration: number;
+    actualDuration?: number;
+    actualStartTime?: number;
+    selfBaseDuration?: number;
+    treeBaseDuration?: number;
     props: {};
     context: {};
     state: {};
@@ -547,6 +552,10 @@ function createTree(
    * The updated tree after adding the `componentData` obtained from `currentFiberNode`
    */
   let newNode: Tree;
+  /**
+   * `rtid` - The `Root ID` is a unique identifier that is assigned to each React root instance in a React application.
+   */
+  let rtid: string | null = null;
   // We want to add this fiber node to the snapshot
   // if (componentFound || (newState === 'stateless' && !newState.hooksState)) {
   if (componentFound || newState === 'stateless') {
@@ -722,10 +731,10 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
     // we attach new functionality without compromising the original work that onCommitFiberRoot does
     /**
      * @param onCommitFiberRoot -  is a callback provided by React that is automatically invoked by React Fiber after the target React application re-renders its components. This callback is used by REACT DEV TOOL to receive updated data about the component tree and its state. See {@link https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8}
-     * @returns an anonymous function, which when invoked will update the fiberRoot value & post a request to update the snapShot tree on Chrome Extension
+     * @returns an anonymous function, which will have the same parameters as onCommitFiberRoot and when invoked will update the fiberRoot value & post a request to update the snapShot tree on Chrome Extension
      */
-    function addOneMoreStep(onCommitFiberRoot) {
-      return function (...args) {
+    function addOneMoreStep(onCommitFiberRoot: DevTools['onCommitFiberRoot']) {
+      return function (...args: Parameters<typeof onCommitFiberRoot>) {
         // eslint-disable-next-line prefer-destructuring
         // Obtain the updated FiberRootNode, after the target React application re-renders
         fiberRoot = args[1];

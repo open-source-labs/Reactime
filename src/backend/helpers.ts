@@ -43,7 +43,7 @@ export const throttle = (callback: Function, MIN_TIME_BETWEEN_UPDATE: number): F
    */
   let isCallQueued = false;
 
-  let timeout;
+  let timeout: NodeJS.Timeout;
   // Wrap the passed-in function callback in a callback function that "throttles" (puts a limit on) the number of calls that can be made to function in a given period of time (ms)
   return function throttledFunc() {
     // CASE 1: In cooldown mode and we already have a function waiting to be executed, so do nothing
@@ -96,7 +96,8 @@ export const throttle = (callback: Function, MIN_TIME_BETWEEN_UPDATE: number): F
  * @param elementType The fiber `type`, A stringified function of the component, the Fiber whose hooks we want corresponds to
  * @returns An array of strings
  */
-export const getHooksNames = (elementType: string): Array<string> => {
+// TODO: this function has return at the end of loop? Is this intentional?
+export const getHooksNames = (elementType: string): Array<string> | undefined => {
   // Initialize empty object to store the setters and getter
   let ast: any;
   try {
@@ -119,7 +120,7 @@ export const getHooksNames = (elementType: string): Array<string> => {
      * Other types: "BlockStatement" / "ExpressionStatement" / "ReturnStatement"
      * Iterate through AST of every function declaration
      * Check within each function declaration if there are hook declarations */
-    ast.forEach((functionDec) => {
+    ast.forEach((functionDec: any) => {
       let declarationBody: any;
       if (functionDec.expression?.body) declarationBody = functionDec.expression.body.body;
       // check if functionDec.expression.body exists, then set declarationBody to functionDec's body
@@ -131,7 +132,7 @@ export const getHooksNames = (elementType: string): Array<string> => {
           elem.declarations.forEach((hook: any) => {
             // Parse destructured statements pair
             if (hook.id.type === 'ArrayPattern') {
-              hook.id.elements.forEach((hook) => {
+              hook.id.elements.forEach((hook: any) => {
                 statements.push(`_useWildcard${tsCount}`);
                 statements.push(hook.name);
                 tsCount += 1;
