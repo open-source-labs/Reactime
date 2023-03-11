@@ -19,7 +19,10 @@ const JSXParser = acorn.Parser.extend(jsx());
  * @returns A function that limits input function, `callback`, from being called more than once every `MIN_TIME_BETWEEN_UPDATE` milliseconds
  *
  */
-export const throttle = (callback: Function, MIN_TIME_BETWEEN_UPDATE: number): Function => {
+export const throttle = (
+  callback: (...args: any) => void,
+  MIN_TIME_BETWEEN_UPDATE: number,
+): Function => {
   // Initialize boolean flags for callback, throttledFunc
   /**
    * A boolean variable tracking if MIN_TIME_BETWEEN_UPDATE has passed
@@ -45,7 +48,7 @@ export const throttle = (callback: Function, MIN_TIME_BETWEEN_UPDATE: number): F
 
   let timeout: NodeJS.Timeout;
   // Wrap the passed-in function callback in a callback function that "throttles" (puts a limit on) the number of calls that can be made to function in a given period of time (ms)
-  return function throttledFunc() {
+  return function throttledFunc(...args: Parameters<typeof callback>) {
     // CASE 1: In cooldown mode and we already have a function waiting to be executed, so do nothing
     if (isOnCooldown && isCallQueued) return;
 
@@ -57,7 +60,7 @@ export const throttle = (callback: Function, MIN_TIME_BETWEEN_UPDATE: number): F
 
     // CASE 3: If we are ready to "fire":
     // Execute the function callback immediately
-    callback();
+    callback(...args);
     // Initiate a new cooldown period and reset the "call queue"
     isOnCooldown = true;
     isCallQueued = false;
@@ -73,7 +76,7 @@ export const throttle = (callback: Function, MIN_TIME_BETWEEN_UPDATE: number): F
       // If there is callback in the queue
       if (isCallQueued) {
         // Execute the function callback immediately
-        callback();
+        callback(...args);
         // Initiate a new cooldown period and reset the "call queue"
         isOnCooldown = true;
         isCallQueued = false;

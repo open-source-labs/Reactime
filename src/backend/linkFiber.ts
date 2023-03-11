@@ -24,6 +24,7 @@ import {
   // object with tree structure
   FiberRoot,
 } from './types/backendTypes';
+import { DevTools } from './types/linkFiberTypes';
 import {
   FunctionComponent,
   ClassComponent,
@@ -78,11 +79,6 @@ type ComponentData = {
   [key: string]: any;
 };
 
-/**
- * The `fiberRootNode`, which is the root node of a tree of React component.
- * The `current` property of `fiberRoot` has data structure of a Tree, which can be used to traverse and obtain all child component data.
- */
-let fiberRoot: FiberRoot;
 const circularComponentTable: Set<Fiber> = new Set();
 let rtidCounter = 0;
 
@@ -118,7 +114,6 @@ function sendSnapshot(snapShot: Snapshot, mode: Status): void {
     },
     '*',
   );
-  // console.log('LinkFiber', { payload });
 }
 
 /**
@@ -128,7 +123,7 @@ function sendSnapshot(snapShot: Snapshot, mode: Status): void {
  * Middleware: Updates snapShot object with latest snapshot, using @sendSnapshot
  */
 // updating tree depending on current mode on the panel (pause, etc)
-function updateSnapShotTree(snapShot: Snapshot, mode: Status): void {
+function updateSnapShotTree(snapShot: Snapshot, mode: Status, fiberRoot: FiberRoot): void {
   // this is the currently active root fiber(the mutable root of the tree)
   if (fiberRoot) {
     const { current } = fiberRoot;
@@ -617,30 +612,6 @@ function createTree(
   // -------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING-------
   return tree;
 }
-/**
- * @interface DevTools - A global object provided by the React Developer Tools extension. It provides a set of methods that allow developers to inspect and manipulate React components in the browser.
- */
-interface DevTools {
-  /**
-   * @property renderers - an Map object containing information about the React renders that are currently active on the page. The react version being used can be obtained at key = 1.
-   */
-  renderers: Map<1, undefined | { version: string }>;
-  /**
-   * @method getFiberRoots - get the Set of fiber roots that are currently mounted for the given rendererID. If not found, initalize a new empty Set at renderID key.
-   * @param renderID -  a unique identifier for a specific instance of a React renderer. When a React application is first mounted, it will receive a rendererID. This rendererID will remain the same for the entire lifecycle of the application, even if the state is updated and the components are re-rendered/unmounted/added. However, if the application is unmounted and re-mounted again, it will receive a new rendererID.
-   * @return A set of fiberRoot.
-   */
-  getFiberRoots: (rendererID: number) => Set<number>;
-
-  /**
-   * @method onCommitFiberRoot - After the state of a component in a React Application is updated, the virtual DOM will be updated. When a render has been commited for a root, onCommitFiberRoot will be invoked to determine if the component is being mounted, updated, or unmounted. After that, this method will send update information to the React DevTools to update its UI to reflect the change.
-   * @param rendererID -  a unique identifier for a specific instance of a React renderer
-   * @param root - root of the rendered tree (a.k.a the root of the React Application)
-   * @param priorityLevel
-   * @return void
-   */
-  onCommitFiberRoot: (rendererID: number, root: any, priorityLevel: any) => void;
-}
 
 /**
  * linkFiber contains core module functionality, exported as an anonymous function, perform the following logic:
@@ -659,7 +630,11 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
    * A boolean value indicate if the target React Application is visible
    */
   let isVisible: boolean = true;
-
+  /**
+   * The `fiberRootNode`, which is the root node of a tree of React component.
+   * The `current` property of `fiberRoot` has data structure of a Tree, which can be used to traverse and obtain all child component data.
+   */
+  let fiberRoot: FiberRoot;
   /**
    * @constant MIN_TIME_BETWEEN_UPDATE - The minimum time (ms) between each re-render/update of the snapShot tree being displayed on the Chrome Extension.
    */
@@ -667,8 +642,8 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
   /**
    * @function throttledUpdateSnapshot - a function that will wait for at least MIN_TIME_BETWEEN_UPDATE ms, before updating the tree snapShot being displayed on the Chrome Extension.
    */
-  const throttledUpdateSnapshot = throttle(() => {
-    updateSnapShotTree(snapShot, mode);
+  const throttledUpdateSnapshot = throttle((fiberRoot) => {
+    updateSnapShotTree(snapShot, mode, fiberRoot);
   }, MIN_TIME_BETWEEN_UPDATE);
 
   // Return a function to be invoked by index.js that initiates snapshot monitoring
@@ -738,8 +713,9 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
         // eslint-disable-next-line prefer-destructuring
         // Obtain the updated FiberRootNode, after the target React application re-renders
         fiberRoot = args[1];
+        console.log('onCommit', { fiberRoot });
         // If the target React application is visible, send a request to update the snapShot tree displayed on Chrome Extension
-        if (isVisible) throttledUpdateSnapshot();
+        if (isVisible) throttledUpdateSnapshot(fiberRoot);
         // After our added work is completed we invoke the original onComitFiberRoot function
         return onCommitFiberRoot(...args);
       };
