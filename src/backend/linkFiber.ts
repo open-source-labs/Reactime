@@ -63,7 +63,13 @@ import updateSnapShotTree from './snapShot';
 
 // throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
 // getHooksNames - helper function to grab the getters/setters from `elementType`
-import { throttle, getHooksNames } from './helpers';
+import { throttle } from './helpers';
+import {
+  getHooksNames,
+  getHooksStateAndUpdateMethod,
+  getStateAndContextData,
+  filterAndFormatData,
+} from './statePropsExtractors';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -73,198 +79,6 @@ declare global {
   }
 }
 
-// TODO: Determine what Component Data Type we are sending back for state, context, & props
-type ReactimeData = {
-  [key: string]: any;
-};
-
-/**
- * @function traverseHooks
- * @param memoizedState - The current state of the component associated with the current Fiber node.
- * @return An array of array of HookStateItem objects
- *
- * Helper function to traverse through memoizedState and inject instrumentation to update our state tree
- * every time a hooks component changes state
- */
-function traverseHooks(memoizedState: any): HookStates {
-  const hooksStates: HookStates = [];
-  while (memoizedState) {
-    if (memoizedState.queue) {
-      hooksStates.push({
-        component: memoizedState.queue,
-        state: memoizedState.memoizedState,
-      });
-    }
-    memoizedState = memoizedState.next;
-  }
-  return hooksStates;
-}
-
-const exclude = new Set([
-  'alternate',
-  'basename',
-  'baseQueue',
-  'baseState',
-  'child',
-  'childLanes',
-  'children',
-  'Consumer',
-  'context',
-  'create',
-  'deps',
-  'dependencies',
-  'destroy',
-  'dispatch',
-  'location',
-  'effects',
-  'element',
-  'elementType',
-  'firstBaseUpdate',
-  'firstEffect',
-  'flags',
-  'get key',
-  'getState',
-  'hash',
-  'key',
-  'lanes',
-  'lastBaseUpdate',
-  'lastEffect',
-  'liftedStore',
-  'navigator',
-  'memoizedState',
-  'mode',
-  'navigationType',
-  'next',
-  'nextEffect',
-  'pending',
-  'parentSub',
-  'pathnameBase',
-  'pendingProps',
-  'Provider',
-  'updateQueue',
-  'ref',
-  'replaceReducer',
-  'responders',
-  'return',
-  'route',
-  'routeContext',
-  'search',
-  'shared',
-  'sibling',
-  'state',
-  'store',
-  'subscribe',
-  'subscription',
-  'stateNode',
-  'tag',
-  'type',
-  '_calculateChangedBits',
-  '_context',
-  '_currentRenderer',
-  '_currentRenderer2',
-  '_currentValue',
-  '_currentValue2',
-  '_owner',
-  '_self',
-  '_source',
-  '_store',
-  '_threadCount',
-  '$$typeof',
-  '@@observable',
-]);
-// ------------FILTER DATA FROM REACT DEV TOOL && CONVERT TO STRING-------------
-/**
- * This function receives raw Data from REACT DEV TOOL and filter the Data based on the exclude list. The filterd data is then converted to string (if applicable) before being send to reacTime front end.
- *
- * @param reactDevData - The data object obtained from React Devtool. Ex: memoizedProps, memoizedState
- * @param reactimeData - The cached data from the current component. This can be data about states, context and/or props of the component.
- * @returns The update component data object to send to front end of ReactTime
- */
-function convertDataToString(
-  reactDevData: { [key: string]: any },
-  reactimeData: ReactimeData = {},
-): ReactimeData {
-  for (const key in reactDevData) {
-    try {
-      // Skip keys that are in exclude set OR if there is no value at key
-      // Falsy values such as 0, false, null are still valid value
-      if (exclude.has(key) || reactDevData[key] === undefined) {
-        continue;
-      }
-      // If value at key is a function, assign key with value 'function' to reactimeData object
-      else if (typeof reactDevData[key] === 'function') {
-        reactimeData[key] = 'function';
-      }
-      // If value at key is an object/array and not null => JSON stringify the value
-      else if (typeof reactDevData[key] === 'object' && reactDevData[key] !== null) {
-        reactimeData[key] = JSON.stringify(reactDevData[key]);
-      }
-      // Else assign the primitive value
-      else {
-        reactimeData[key] = reactDevData[key];
-      }
-    } catch (err) {
-      console.log('linkFiber', { reactDevData, key });
-      throw Error(`Error caught at converDataToString: ${err}`);
-    }
-  }
-  return reactimeData;
-}
-// ------------------------FILTER STATE & CONTEXT DATA--------------------------
-/**
- * This function is used to trim the state data of a component.
- * All propperty name that are in the central exclude list would be trimmed off.
- * If passed in memoizedState is a not an object (a.k.a a primitive type), a default name would be provided.
- * @param memoizedState - The current state of the component associated with the current Fiber node.
- * @param _debugHookTypes - An array of hooks used for debugging purposes.
- * @param componentName - Name of the evaluated component
- * @returns - The updated state data object to send to front end of ReactTime
- */
-function trimContextData(
-  memoizedState: Fiber['memoizedState'],
-  componentName: string,
-  _debugHookTypes: Fiber['_debugHookTypes'],
-) {
-  // Initialize a list of componentName that would not be evaluated for State Data:
-  const ignoreComponent = new Set(['BrowserRouter', 'Router']);
-  if (ignoreComponent.has(componentName)) return;
-
-  // Initialize object to store state and context data of the component
-  const reactimeData: ReactimeData = {};
-  // Initialize counter for the default naming. If user use reactHook, such as useState, react will only pass in the value, and not the variable name of the state.
-  let stateCounter = 1;
-  let refCounter = 1;
-
-  // Loop through each hook inside the _debugHookTypes array.
-  // NOTE: _debugHookTypes.length === height of memoizedState tree.
-  for (const hook of _debugHookTypes) {
-    // useContext does not create any state => skip
-    if (hook === 'useContext') {
-      continue;
-    }
-    // If user use useState reactHook => React will only pass in the value of state & not the name of the state => create a default name:
-    else if (hook === 'useState') {
-      const defaultName = `State ${stateCounter}`;
-      reactimeData[defaultName] = memoizedState.memoizedState;
-      stateCounter++;
-    }
-    // If user use useRef reactHook => React will store memoizedState in current object:
-    else if (hook === 'useRef') {
-      const defaultName = `Ref ${refCounter}`;
-      reactimeData[defaultName] = memoizedState.memoizedState.current;
-      refCounter++;
-    }
-    // If user use Redux to contain their context => the context object will be stored using useMemo Hook, as of for Rect Dev Tool v4.27.2
-    // Note: Provider is not a reserved component name for redux. User may name their component as Provider, which will break this logic. However, it is a good assumption that if user have a custom provider component, it would have a more specific naming such as ThemeProvider.
-    else if (hook === 'useMemo' && componentName === 'Provider') {
-      convertDataToString(memoizedState.memoizedState[0], reactimeData);
-    }
-    //Move on to the next level of memoizedState tree.
-    memoizedState = memoizedState?.next;
-  }
-  // Return the updated state data object to send to front end of ReactTime
-  return reactimeData;
-}
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
 /**
  * This is a recursive function that runs after every Fiber commit using the following logic:
@@ -341,7 +155,7 @@ export function createTree(
       ) {
         // Access the memoizedProps of the parent component
         const propsData = memoizedProps.children[0]._owner.memoizedProps;
-        const newPropData = convertDataToString(
+        const newPropData = filterAndFormatData(
           propsData,
           tree.componentData.props ? tree.componentData.props : null,
         );
@@ -395,7 +209,7 @@ export function createTree(
         componentData.props = { pathname: memoizedProps?.match?.pathname };
         break;
       default:
-        Object.assign(componentData.props, convertDataToString(memoizedProps));
+        Object.assign(componentData.props, filterAndFormatData(memoizedProps));
     }
   }
 
@@ -411,14 +225,14 @@ export function createTree(
     if (elementType.name === 'Provider') {
       Object.assign(
         componentData.context,
-        trimContextData(memoizedState, elementType.name, _debugHookTypes),
+        getStateAndContextData(memoizedState, elementType.name, _debugHookTypes),
       );
     }
     // Else if user use ReactHook to define state => all states will be stored in memoizedState => grab all states stored in the memoizedState
     // else {
     //   Object.assign(
     //     componentData.state,
-    //     trimContextData(memoizedState, elementType.name, _debugHookTypes),
+    //     getStateAndContextData(memoizedState, elementType.name, _debugHookTypes),
     //   );
     // }
   }
@@ -430,7 +244,7 @@ export function createTree(
     if (stateData === null || typeof stateData !== 'object') {
       stateData = { CONTEXT: stateData };
     }
-    componentData.context = convertDataToString(stateData);
+    componentData.context = filterAndFormatData(stateData);
   }
 
   // DEPRECATED: This code might have worked previously. However, with the update of React Dev Tool, context can no longer be pulled using this method.
@@ -469,7 +283,7 @@ export function createTree(
       // so we must traverse through the list and get the states.
       // We then store them along with the corresponding memoizedState.queue,
       // which includes the dispatch() function we use to change their state.
-      const hooksStates = traverseHooks(memoizedState);
+      const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
       const hooksNames = getHooksNames(elementType.toString());
       // Intialize state & index:
       newState.hooksState = [];
