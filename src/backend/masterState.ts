@@ -10,13 +10,15 @@ import {
   HookStates, // array of hook state items
 } from './types/backendTypes';
 
+type ComponentAction = any[];
+
 // HookState is an array that contains a "component" for
 // every single state change that occurs in the app
 // Information on these components include ComponentData as well as state
 // For class components, there will be one "component" for each snapshot
 // For functional components that utilize Hooks, there will be one "component"
 // for each setter/getter every time we have a new snapshot
-let componentActionsRecord: HookStates = [];
+let componentActionsRecord: ComponentAction = [];
 let index: number;
 index = 0;
 
@@ -26,9 +28,8 @@ export default {
     index = 0;
   },
   // adds new component to ComponentActionsRecord
-  saveNew: (state, component): number => {
-    console.log('masterState', { component, componentActionsRecord });
-    componentActionsRecord[index] = { state, component };
+  saveNew: (component): number => {
+    componentActionsRecord[index] = component;
     index++;
 
     return index - 1;
@@ -36,16 +37,14 @@ export default {
   getRecordByIndex: (inputIndex: number): HookStateItem => componentActionsRecord[inputIndex],
   // this is used for class components -
   /* inputIndex will always be a fixed number (coming in timeJump.ts) */
-  getComponentByIndex: (inputIndex: number): HookStateItem['component'] | undefined =>
-    componentActionsRecord[inputIndex] ? componentActionsRecord[inputIndex].component : undefined,
+  getComponentByIndex: (inputIndex: number): any | undefined =>
+    componentActionsRecord[inputIndex] ? componentActionsRecord[inputIndex] : undefined,
   // this is used for react hooks - hooks will be passed in as an array from timeJump.ts
-  getComponentByIndexHooks: (
-    inputIndex: Array<number> = [],
-  ): Array<HookStateItem['component']> | undefined => {
+  getComponentByIndexHooks: (inputIndex: Array<number> = []): any[] | undefined => {
     const multiDispatch = [];
     for (let i = 0; i < inputIndex.length; i++) {
       if (componentActionsRecord[inputIndex[i]]) {
-        multiDispatch.push(componentActionsRecord[inputIndex[i]].component);
+        multiDispatch.push(componentActionsRecord[inputIndex[i]]);
       }
     }
     return multiDispatch;

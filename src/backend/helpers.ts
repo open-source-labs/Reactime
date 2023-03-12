@@ -96,6 +96,54 @@ export const throttle = (
   };
 };
 
+export const getHooksNames = (
+  elementType: string,
+): { hookName: string; varName: string }[] | undefined => {
+  // Initialize empty object to store the setters and getter
+  let AST: any;
+  try {
+    AST = JSXParser.parse(elementType);
+  } catch (e) {
+    throw Error('Error occurs at helpers getHooksName.ts Cannot parse functional component.');
+  }
+  // Begin search for hook names, only if ast has a body property.
+
+  AST = AST.body;
+
+  // Statements get all the names of the hooks. For example: useCount, useWildcard, ...
+  const statements: { hookName: string; varName: string }[] = [];
+  /** All module exports always start off as a single 'FunctionDeclaration' type
+   * Other types: "BlockStatement" / "ExpressionStatement" / "ReturnStatement"
+   * Iterate through AST of every function declaration
+   * Check within each function declaration if there are hook declarations & variable name declaration */
+  AST.forEach((functionDec: any) => {
+    let declarationBody: any;
+    if (functionDec.expression?.body) declarationBody = functionDec.expression.body.body;
+    // check if functionDec.expression.body exists, then set declarationBody to functionDec's body
+    else declarationBody = functionDec.body?.body ?? [];
+    // Traverse through the function's funcDecs and Expression Statements
+    declarationBody.forEach((elem: any) => {
+      // Hooks will always be contained in a variable declaration
+      if (elem.type === 'VariableDeclaration') {
+        // Obtain the declarations array from elem.
+        const { declarations } = elem;
+        // Obtain the reactHook:
+        const reactHook: string = declarations[0]?.init?.callee?.expressions[1]?.property?.name;
+        if (reactHook === 'useState') {
+          // Obtain the variable being set:
+          let varName: string = declarations[1]?.id?.name;
+          // Obtain the setState method:
+          let hookName: string = declarations[2]?.id?.name;
+          // Push reactHook & varName to statements array
+          statements.push({ hookName, varName });
+        }
+      }
+    });
+  });
+  return statements;
+};
+
+// DEPERACATED: After React DEV Tool Update. This function no longer works. Keep for history record
 // // Helper function to grab the getters/setters from `elementType`
 // /**
 //  * @method getHooksNames
@@ -166,50 +214,3 @@ export const throttle = (
 //     return Object.values(hooksNames);
 //   }
 // };
-
-export const getHooksNames = (
-  elementType: string,
-): { hookName: string; varName: string }[] | undefined => {
-  // Initialize empty object to store the setters and getter
-  let AST: any;
-  try {
-    AST = JSXParser.parse(elementType);
-  } catch (e) {
-    throw Error('Error occurs at helpers ts getComponentName. Cannot parse functional component.');
-  }
-  // Begin search for hook names, only if ast has a body property.
-
-  AST = AST.body;
-
-  // Statements get all the names of the hooks. For example: useCount, useWildcard, ...
-  const statements: { hookName: string; varName: string }[] = [];
-  /** All module exports always start off as a single 'FunctionDeclaration' type
-   * Other types: "BlockStatement" / "ExpressionStatement" / "ReturnStatement"
-   * Iterate through AST of every function declaration
-   * Check within each function declaration if there are hook declarations & variable name declaration */
-  AST.forEach((functionDec: any) => {
-    let declarationBody: any;
-    if (functionDec.expression?.body) declarationBody = functionDec.expression.body.body;
-    // check if functionDec.expression.body exists, then set declarationBody to functionDec's body
-    else declarationBody = functionDec.body?.body ?? [];
-    // Traverse through the function's funcDecs and Expression Statements
-    declarationBody.forEach((elem: any) => {
-      // Hooks will always be contained in a variable declaration
-      if (elem.type === 'VariableDeclaration') {
-        // Obtain the declarations array from elem.
-        const { declarations } = elem;
-        // Obtain the reactHook:
-        const reactHook: string = declarations[0]?.init?.callee?.expressions[1]?.property?.name;
-        if (reactHook === 'useState') {
-          // Obtain the variable being set:
-          let varName: string = declarations[1]?.id?.name;
-          // Obtain the setState method:
-          let hookName: string = declarations[2]?.id?.name;
-          // Push reactHook & varName to statements array
-          statements.push({ hookName, varName });
-        }
-      }
-    });
-  });
-  return statements;
-};

@@ -78,8 +78,6 @@ type ReactimeData = {
   [key: string]: any;
 };
 
-let rtidCounter = 0;
-
 /**
  * @function traverseHooks
  * @param memoizedState - The current state of the component associated with the current Fiber node.
@@ -281,6 +279,9 @@ function trimContextData(
  * @param fromSibling A boolean, default initialized to false
  * @return An instance of a Tree object
  */
+// TODO: Not sure why the ritd need to be outside of the createTree function. Want to put inside, but in case this need to be keep track for front end.
+let rtidCounter = 0;
+
 export function createTree(
   currentFiberNode: Fiber,
   circularComponentTable: Set<Fiber> = new Set(),
@@ -431,7 +432,7 @@ export function createTree(
   if (stateNode?.state && (tag === ClassComponent || tag === IndeterminateComponent)) {
     // Save component's state and setState() function to our record for future
     // time-travel state changing. Add record index to snapshot so we can retrieve.
-    componentData.index = componentActionsRecord.saveNew(stateNode.state, stateNode);
+    componentData.index = componentActionsRecord.saveNew(stateNode);
     // Save state information in componentData.
     componentData.state = stateNode.state;
     // Passess to front end
@@ -457,14 +458,13 @@ export function createTree(
       // which includes the dispatch() function we use to change their state.
       const hooksStates = traverseHooks(memoizedState);
       const hooksNames = getHooksNames(elementType.toString());
-      console.log({ hooksNames });
       // Intialize state & index:
       newState.hooksState = [];
       componentData.hooksState = [];
       componentData.hooksIndex = [];
       hooksStates.forEach((state, i) => {
         // Save component's state and dispatch() function to our record for future time-travel state changing. Add record index to snapshot so we can retrieve.
-        componentData.hooksIndex.push(componentActionsRecord.saveNew(state.state, state.component));
+        componentData.hooksIndex.push(componentActionsRecord.saveNew(state.component));
         // Save state information in componentData.
         newState.hooksState.push({ [hooksNames[i].hookName]: state.state });
         // Passess to front end
