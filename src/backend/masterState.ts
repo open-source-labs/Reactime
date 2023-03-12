@@ -27,26 +27,19 @@ export default {
     componentActionsRecord = [];
     index = 0;
   },
-  // adds new component to ComponentActionsRecord
+  // Adds new component to ComponentActionsRecord
   saveNew: (component): number => {
     componentActionsRecord[index] = component;
     index++;
 
     return index - 1;
   },
-  getRecordByIndex: (inputIndex: number): HookStateItem => componentActionsRecord[inputIndex],
-  // this is used for class components -
+  // ----------------------------CLASS COMPONENT--------------------------------
   /* inputIndex will always be a fixed number (coming in timeJump.ts) */
-  getComponentByIndex: (inputIndex: number): any | undefined =>
-    componentActionsRecord[inputIndex] ? componentActionsRecord[inputIndex] : undefined,
+  getComponentByIndex: (inputIndex: number): any | undefined => componentActionsRecord[inputIndex],
+
+  //---------------------------FUNCTIONAL COMPONENT-----------------------------
   // this is used for react hooks - hooks will be passed in as an array from timeJump.ts
-  getComponentByIndexHooks: (inputIndex: Array<number> = []): any[] | undefined => {
-    const multiDispatch = [];
-    for (let i = 0; i < inputIndex.length; i++) {
-      if (componentActionsRecord[inputIndex[i]]) {
-        multiDispatch.push(componentActionsRecord[inputIndex[i]]);
-      }
-    }
-    return multiDispatch;
-  },
+  getComponentByIndexHooks: (inputIndex: Array<number> = []): any[] | undefined =>
+    inputIndex.map((index) => componentActionsRecord[index]),
 };
