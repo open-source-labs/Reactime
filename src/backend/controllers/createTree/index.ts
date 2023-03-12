@@ -44,6 +44,8 @@ import {
   filterAndFormatData,
 } from '../../controllers/createTree/statePropExtractors';
 
+let rtidCounter = 0;
+const nextJSDefaultComponent = new Set(['ReactDevOverlay', 'Portal']);
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
 /**
  * This is a recursive function that runs after every Fiber commit using the following logic:
@@ -51,15 +53,12 @@ import {
  * 2. Create an instance of custom Tree class
  * 3. Build a new state snapshot
  * Every time a state change is made in the accompanying app, the extension creates a Tree “snapshot” of the current state, and adds it to the current “cache” of snapshots in the extension
- * @function createTree
  * @param currentFiberNode A Fiber object
  * @param tree A Tree object, default initialized to an instance given 'root' and 'root'
  * @param fromSibling A boolean, default initialized to false
  * @return An instance of a Tree object
  */
 // TODO: Not sure why the ritd need to be outside of the createTree function. Want to put inside, but in case this need to be keep track for front end.
-let rtidCounter = 0;
-
 export default function createTree(
   currentFiberNode: Fiber,
   circularComponentTable: Set<Fiber> = new Set(),
@@ -93,22 +92,22 @@ export default function createTree(
     treeBaseDuration,
     _debugHookTypes,
   } = currentFiberNode;
-  // console.log('LinkFiber', {
-  //   currentFiberNode,
-  //   // tag,
-  //   // elementType,
-  //   componentName:
-  //     elementType?._context?.displayName || //For ContextProvider
-  //     elementType?._result?.name || //For lazy Component
-  //     elementType?.render?.name ||
-  //     elementType?.name ||
-  //     elementType,
-  //   // memoizedProps,
-  //   // memoizedState,
-  //   // stateNode,
-  //   // dependencies,
-  //   // _debugHookTypes,
-  // });
+  console.log('LinkFiber', {
+    currentFiberNode,
+    // tag,
+    // elementType,
+    componentName:
+      elementType?._context?.displayName || //For ContextProvider
+      elementType?._result?.name || //For lazy Component
+      elementType?.render?.name ||
+      elementType?.name ||
+      elementType,
+    // memoizedProps,
+    // memoizedState,
+    // stateNode,
+    // dependencies,
+    // _debugHookTypes,
+  });
 
   // TODO: Understand this if statement
   if (tag === HostComponent) {
@@ -244,26 +243,34 @@ export default function createTree(
       tag === ContextProvider) //TODOD: Need to figure out why we need context provider
   ) {
     if (memoizedState.queue) {
-      // Hooks states are stored as a linked list using memoizedState.next,
-      // so we must traverse through the list and get the states.
-      // We then store them along with the corresponding memoizedState.queue,
-      // which includes the dispatch() function we use to change their state.
-      const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
-      const hooksNames = getHooksNames(elementType.toString());
-      // Intialize state & index:
-      newState.hooksState = [];
-      componentData.hooksState = {};
-      componentData.hooksIndex = [];
-      hooksStates.forEach(({ state, component }, i) => {
-        // Save component's state and dispatch() function to our record for future time-travel state changing. Add record index to snapshot so we can retrieve.
-        componentData.hooksIndex.push(componentActionsRecord.saveNew(component));
-        // Save state information in componentData.
-        newState.hooksState.push({ [hooksNames[i].varName]: state });
-        // Passess to front end
-        componentData.hooksState[hooksNames[i].varName] = state;
-      });
-      isStatefulComponent = true;
+      try {
+        // Hooks states are stored as a linked list using memoizedState.next,
+        // so we must traverse through the list and get the states.
+        // We then store them along with the corresponding memoizedState.queue,
+        // which includes the dispatch() function we use to change their state.
+        const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
+        const hooksNames = getHooksNames(elementType.toString());
+        // Intialize state & index:
+        newState.hooksState = [];
+        componentData.hooksState = {};
+        componentData.hooksIndex = [];
+        hooksStates.forEach(({ state, component }, i) => {
+          // Save component's state and dispatch() function to our record for future time-travel state changing. Add record index to snapshot so we can retrieve.
+          componentData.hooksIndex.push(componentActionsRecord.saveNew(component));
+          // Save state information in componentData.
+          newState.hooksState.push({ [hooksNames[i].varName]: state });
+          // Passess to front end
+          componentData.hooksState[hooksNames[i].varName] = state;
+        });
+      } catch (err) {
+        console.log('Failed Element', { component: elementType?.name });
+        // if (!nextJSDefaultComponent.has(elementType?.name)) {
+        //   throw new Error(err);
+        // } else {
+        //   console.log('We are good');
+      }
     }
+    isStatefulComponent = true;
   }
 
   // This grabs stateless components

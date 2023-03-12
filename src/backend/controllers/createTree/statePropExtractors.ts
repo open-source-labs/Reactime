@@ -217,7 +217,9 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
   try {
     AST = JSXParser.parse(elementType);
   } catch (e) {
+    console.log('This component was not converted', { elementType });
     throw Error('Error occurs at helpers getHooksName.ts Cannot parse functional component.');
+    return;
   }
   // Begin search for hook names, only if ast has a body property.
   AST = AST.body;
