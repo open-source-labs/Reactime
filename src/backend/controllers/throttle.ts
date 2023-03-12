@@ -7,10 +7,7 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable no-inner-declarations, no-loop-func */
 
-import { string } from 'prop-types';
-
 // eslint-disable-next-line import/newline-after-import
-
 
 /**
  * @method throttle
@@ -19,10 +16,10 @@ import { string } from 'prop-types';
  * @returns A function that limits input function, `callback`, from being called more than once every `MIN_TIME_BETWEEN_UPDATE` milliseconds
  *
  */
-export const throttle = (
+export default function throttle(
   callback: (...args: any) => void,
   MIN_TIME_BETWEEN_UPDATE: number,
-): Function => {
+): Function {
   // Initialize boolean flags for callback, throttledFunc
   /**
    * A boolean variable tracking if MIN_TIME_BETWEEN_UPDATE has passed
@@ -91,5 +88,4 @@ export const throttle = (
       }
     }
   };
-};
-
+}

@@ -1,8 +1,8 @@
-import { Snapshot, Status, FiberRoot } from './types/backendTypes';
+import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
 // passes the data down to its components
-import componentActionsRecord from './masterState';
-import routes from './routes';
-import { createTree } from './linkFiber';
+import componentActionsRecord from '../models/masterState';
+import routes from '../models/routes';
+import createTree from '../controllers/createTree';
 
 // ---------------------------UPDATE TREE SNAP SHOT-----------------------------
 /**

@@ -6,7 +6,7 @@ import {
   HookStates,
   // object with tree structure
   Fiber,
-} from './types/backendTypes';
+} from '../../types/backendTypes';
 // TODO: Determine what Component Data Type we are sending back for state, context, & props
 type ReactimeData = {
   [key: string]: any;
@@ -126,8 +126,8 @@ export function filterAndFormatData(
 }
 // ------------------------FILTER STATE & CONTEXT DATA--------------------------
 /**
- * This function is used to trim the state data of a component.
- * All propperty name that are in the central exclude list would be trimmed off.
+ * This function is used to filter the state data of a component.
+ * All propperty name that are in the central `exclude` list would be filtered out.
  * If passed in memoizedState is a not an object (a.k.a a primitive type), a default name would be provided.
  * @param memoizedState - The current state of the component associated with the current Fiber node.
  * @param _debugHookTypes - An array of hooks used for debugging purposes.

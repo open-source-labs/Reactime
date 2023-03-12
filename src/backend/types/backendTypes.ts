@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Tree from '../tree';
+import Tree from '../models/tree';
 
 /**
  * @type Tree - The snapshot of the current tree

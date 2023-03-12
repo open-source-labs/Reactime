@@ -1,10 +1,10 @@
-import routes from './routes';
+import routes from '../models/routes';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
-import componentActionsRecord from './masterState';
+import componentActionsRecord from '../models/masterState';
 const circularComponentTable = new Set();
 
 /**

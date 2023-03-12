@@ -9,8 +9,8 @@
  */
 // regenerator runtime supports async functionality
 import 'regenerator-runtime/runtime';
-import linkFiberStart from './linkFiber';
-import timeJumpStart from './timeJump';
+import linkFiberStart from './routers/linkFiber';
+import timeJumpStart from './controllers/timeJump';
 import { Snapshot, Status, MsgData } from './types/backendTypes';
 
 // * State snapshot object initialized here
