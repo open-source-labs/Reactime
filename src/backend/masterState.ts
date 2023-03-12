@@ -39,7 +39,9 @@ export default {
   getComponentByIndex: (inputIndex: number): HookStateItem['component'] | undefined =>
     componentActionsRecord[inputIndex] ? componentActionsRecord[inputIndex].component : undefined,
   // this is used for react hooks - hooks will be passed in as an array from timeJump.ts
-  getComponentByIndexHooks: (inputIndex: Array<number> = []): Array<any> => {
+  getComponentByIndexHooks: (
+    inputIndex: Array<number> = [],
+  ): Array<HookStateItem['component']> | undefined => {
     const multiDispatch = [];
     for (let i = 0; i < inputIndex.length; i++) {
       if (componentActionsRecord[inputIndex[i]]) {

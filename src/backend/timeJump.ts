@@ -28,67 +28,53 @@ export default function timeJump(mode) {
     // Base Case: if has visited, return
     if (circularComponentTable.has(target)) {
       return;
-    } else circularComponentTable.add(target);
+    } else {
+      circularComponentTable.add(target);
+    }
     // ------------------------STATELESS/ROOT COMPONENT-------------------------
     // Since stateless component has no data to update, continue to traverse its child nodes:
     if (target.state === 'stateless' || target.state === 'root') {
       target.children.forEach((child) => jump(child));
       return;
     }
-    // Obtain component data & its update method at the given index
-    const component = componentActionsRecord.getComponentByIndex(target.componentData.index);
 
+    // Destructure component data:
+    const { index, state, hooksIndex, hooksState } = target.componentData;
     // ------------------------STATEFUL CLASS COMPONENT-------------------------
     // for stateful class components
     // check if it is a stateful class component
     // if yes, find the component by its index and assign it to a variable
     // call that components setState method to reset state to the state at the time of the jump snapshot
-    if (component && component.setState) {
-      console.log('timeJump CLASS', componentActionsRecord);
-      await component.setState(
-        // prevState contains the states of the snapshots we are jumping FROM, not jumping TO
-        (prevState) => target.state,
-        // (prevState) => {
-        //   Object.keys(prevState).forEach((key) => {
-        //     // the if conditional below does not appear to ever be reached if all states are defined - leaving code in just in case codebases do have undefined states
-        //     // if (target.state[key] !== undefined) {
-        //     //   target.state[key] = undefined;
-        //     // }
-        //   });
-        //   return target.state;
-        // }
-
-        // Iterate through new children after state has been set
-        () => target.children.forEach((child) => jump(child)),
-      );
+    //index can be zero => falsy value => DO NOT REMOVE UNDEFINED
+    if (index !== undefined) {
+      // Obtain component data & its update method at the given index
+      const classComponent = componentActionsRecord.getComponentByIndex(index);
+      if (classComponent && classComponent.setState) {
+        await classComponent.setState(
+          // prevState contains the states of the snapshots we are jumping FROM, not jumping TO
+          (prevState) => state,
+        );
+      }
+      // Iterate through new children after state has been set
+      target.children.forEach((child) => jump(child));
       return;
     }
 
-    // target.children.forEach((child) => {
-    //   if (!circularComponentTable.has(child)) {
-    //     circularComponentTable.add(child);
-    //     jump(child);
-    //   }
-    // });
-
     // ----------------------STATEFUL FUNCTIONAL COMPONENT----------------------
-    // REACT HOOKS
     // check if component states are set with hooks
-    // if yes, grab all relevant components for this snapshot in numArr
+    // if yes, grab all relevant components for this snapshot by its index
     // call dispatch on each component passing in the corresponding currState value
-    if (target.state && target.state.hooksState) {
-      const currState = target.state.hooksState;
-      const numArr: number[] = [];
-      let counter = 1;
-      while (counter < currState.length + 1) {
-        numArr.push(target.componentData.hooksIndex - currState.length + counter);
-        counter += 1;
+    //index can be zero => falsy value => DO NOT REMOVE UNDEFINED
+    if (hooksIndex !== undefined) {
+      // Obtain component data & its update method at the given index
+      const functionalComponent = componentActionsRecord.getComponentByIndexHooks(hooksIndex);
+      if (functionalComponent.length) {
+        for (let i = 0; i < hooksState.length; i += 1) {
+          await functionalComponent[i].dispatch(Object.values(hooksState[i])[0]);
+        }
       }
-      const hooksComponent = componentActionsRecord.getComponentByIndexHooks(numArr);
-      console.log('timeJumps', { hooksComponent, currState });
-      for (let i = 0; i < currState.length; i += 1) {
-        hooksComponent[i].dispatch(Object.values(currState[i])[0]);
-      }
+      target.children.forEach((child) => jump(child));
+      return;
     }
   }
 

@@ -1,18 +1,14 @@
 import { set } from 'lodash';
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 function Home() {
   const [dummyDummy1, setDummyData1] = useState('dummyData1');
   const [dummyDummy2, setDummyData2] = useState('dummyData2');
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    setCount((count) => count + 1);
-  }, [dummyDummy1]);
+
   function handleClick1() {
     setDummyData1((dummyData1) => (dummyData1 === 'dummyData1' ? 'test1' : 'dummyData1'));
   }
-  const [count1, setCount1] = useState(0);
 
   function handleClick2() {
     setDummyData2((dummyData2) => (dummyData2 === 'dummyData2' ? 'test2' : 'dummyData2'));
@@ -30,7 +26,6 @@ function Home() {
         {' '}
         Test{' '}
       </button>
-      <p>Count: {count}</p>
       {/* <h1>Lorem Ipsum</h1> */}
       {/* <p>
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt

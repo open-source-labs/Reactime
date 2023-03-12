@@ -210,8 +210,8 @@ function convertDataToString(
       console.log('linkFiber', { reactDevData, key });
       throw Error(`Error caught at converDataToString: ${err}`);
     }
-    return reactimeData;
   }
+  return reactimeData;
 }
 // ------------------------FILTER STATE & CONTEXT DATA--------------------------
 /**
@@ -359,7 +359,7 @@ export function createTree(
     context: {};
     state?: {};
     hooksState?: any[];
-    hooksIndex?: number;
+    hooksIndex?: number[];
     index?: number;
   } = {
     actualDuration,
@@ -458,13 +458,17 @@ export function createTree(
       const hooksStates = traverseHooks(memoizedState);
       const hooksNames = getHooksNames(elementType.toString());
       console.log({ hooksNames });
+      // Intialize state & index:
       newState.hooksState = [];
-      componentData.state = {};
+      componentData.hooksState = [];
+      componentData.hooksIndex = [];
       hooksStates.forEach((state, i) => {
-        hooksIndex = componentActionsRecord.saveNew(state.state, state.component);
-        componentData.hooksIndex = hooksIndex;
+        // Save component's state and dispatch() function to our record for future time-travel state changing. Add record index to snapshot so we can retrieve.
+        componentData.hooksIndex.push(componentActionsRecord.saveNew(state.state, state.component));
+        // Save state information in componentData.
         newState.hooksState.push({ [hooksNames[i].hookName]: state.state });
-        componentData.state[hooksNames[i].varName] = state.state;
+        // Passess to front end
+        componentData.hooksState.push({ [hooksNames[i].hookName]: state.state });
       });
       isStatefulComponent = true;
     }
