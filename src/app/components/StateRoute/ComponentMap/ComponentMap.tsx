@@ -359,7 +359,12 @@ export default function ComponentMap({
 
               <div className='tooltipWrapper'>
                 <h2>State:</h2>
-                {formatData(tooltipData.componentData.state, 'state')}
+                {formatData(
+                  tooltipData.componentData.hooksIndex
+                    ? tooltipData.componentData.hooksState
+                    : tooltipData.componentData.state,
+                  'state',
+                )}
               </div>
             </div>
           </div>

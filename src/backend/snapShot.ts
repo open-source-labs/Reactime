@@ -1,6 +1,4 @@
 import { Snapshot, Status, FiberRoot } from './types/backendTypes';
-// import function that creates a tree
-import Tree from './tree';
 // passes the data down to its components
 import componentActionsRecord from './masterState';
 import routes from './routes';

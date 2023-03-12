@@ -89,7 +89,6 @@ type ReactimeData = {
 function traverseHooks(memoizedState: any): HookStates {
   const hooksStates: HookStates = [];
   while (memoizedState) {
-    // the !== undefined conditional is necessary here for correctly displaying react hooks because TypeScript recognizes 0 and "" as falsey value - DO NOT REMOVE
     if (memoizedState.queue) {
       hooksStates.push({
         component: memoizedState.queue,
@@ -293,6 +292,13 @@ export function createTree(
   // if (!tree) return tree; //TO BE DELETE: WE HAVE A DEFAULT PARAMETER TREE, THIS WILL NEVER BE TRUE
   // These have the newest state. We update state and then
   // called updateSnapshotTree()
+
+  // Base Case: if has visited, return
+  if (circularComponentTable.has(currentFiberNode)) {
+    return;
+  } else {
+    circularComponentTable.add(currentFiberNode);
+  }
   const {
     sibling,
     stateNode,
@@ -359,7 +365,7 @@ export function createTree(
     props: {};
     context: {};
     state?: {};
-    hooksState?: any[];
+    hooksState?: {};
     hooksIndex?: number[];
     index?: number;
   } = {
@@ -381,7 +387,16 @@ export function createTree(
       tag === ContextProvider) &&
     memoizedProps
   ) {
-    Object.assign(componentData.props, convertDataToString(memoizedProps));
+    switch (elementType.name) {
+      case 'Router':
+        componentData.props = { pathname: memoizedProps?.location?.pathname };
+        break;
+      case 'RenderedRoute':
+        componentData.props = { pathname: memoizedProps?.match?.pathname };
+        break;
+      default:
+        Object.assign(componentData.props, convertDataToString(memoizedProps));
+    }
   }
 
   // ------------APPEND STATE & CONTEXT DATA FROM REACT DEV TOOL----------------
@@ -441,8 +456,6 @@ export function createTree(
   }
 
   // ---------OBTAIN STATE & DISPATCH METHODS FROM FUNCTIONAL COMPONENT---------
-  // REGULAR REACT HOOKS
-  let hooksIndex;
   // Check if node is a hooks useState function
   if (
     memoizedState &&
@@ -460,15 +473,15 @@ export function createTree(
       const hooksNames = getHooksNames(elementType.toString());
       // Intialize state & index:
       newState.hooksState = [];
-      componentData.hooksState = [];
+      componentData.hooksState = {};
       componentData.hooksIndex = [];
-      hooksStates.forEach((state, i) => {
+      hooksStates.forEach(({ state, component }, i) => {
         // Save component's state and dispatch() function to our record for future time-travel state changing. Add record index to snapshot so we can retrieve.
-        componentData.hooksIndex.push(componentActionsRecord.saveNew(state.component));
+        componentData.hooksIndex.push(componentActionsRecord.saveNew(component));
         // Save state information in componentData.
-        newState.hooksState.push({ [hooksNames[i].hookName]: state.state });
+        newState.hooksState.push({ [hooksNames[i].varName]: state });
         // Passess to front end
-        componentData.hooksState.push({ [hooksNames[i].hookName]: state.state });
+        componentData.hooksState[hooksNames[i].varName] = state;
       });
       isStatefulComponent = true;
     }
@@ -492,7 +505,6 @@ export function createTree(
    */
   let rtid: string | null = null;
   // We want to add this fiber node to the snapshot
-  // if (componentFound || (newState === 'stateless' && !newState.hooksState)) {
   if (isStatefulComponent || newState === 'stateless') {
     // Grab JSX Component & replace the 'fromLinkFiber' class value
     if (currentFiberNode.child?.stateNode?.setAttribute) {
@@ -512,41 +524,30 @@ export function createTree(
       currentFiberNode.child.stateNode.classList.add(rtid);
     }
     rtidCounter += 1; // I THINK THIS SHOULD BE UP IN THE IF STATEMENT. Still unsure the use of rtid
+
+    // Obtain component name:
+    const componentName =
+      elementType?._context?.displayName || //For ContextProvider
+      elementType?._result?.name || //For lazy Component
+      elementType?.render?.name ||
+      elementType?.name ||
+      'nameless';
     // checking if tree fromSibling is true
     if (fromSibling) {
-      newNode = tree.addSibling(
-        newState,
-        elementType ? elementType.name : 'nameless',
-        componentData,
-        rtid,
-      );
+      newNode = tree.addSibling(newState, componentName, componentData, rtid);
     } else {
-      newNode = tree.addChild(
-        newState,
-        elementType ? elementType.name : 'nameless',
-        componentData,
-        rtid,
-      );
+      newNode = tree.addChild(newState, componentName, componentData, rtid);
     }
   } else {
     newNode = tree;
   }
 
   // ----------------------TRAVERSE TO NEXT FIBERNODE---------------------------
-  // Recurse on children
-  if (child && !circularComponentTable.has(child)) {
-    // If this node had state we appended to the children array,
-    // so attach children to the newly appended child.
-    // Otherwise, attach children to this same node.
-    circularComponentTable.add(child);
-    createTree(child, circularComponentTable, newNode);
-  }
+  // If currentFiberNode has children, recurse on children
+  if (child) createTree(child, circularComponentTable, newNode);
 
-  // Recurse on siblings
-  if (sibling && !circularComponentTable.has(sibling)) {
-    circularComponentTable.add(sibling);
-    createTree(sibling, circularComponentTable, newNode, true);
-  }
+  // If currentFiberNode has siblings, recurse on siblings
+  if (sibling) createTree(sibling, circularComponentTable, newNode, true);
 
   // -------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING-------
   return tree;

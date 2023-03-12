@@ -82,11 +82,6 @@ export interface HookStateItem {
  */
 export type HookStates = Array<HookStateItem>;
 
-export interface State {
-  state?: {} | number;
-  hooksState?: HookStates;
-}
-
 export type WorkTag =
   | 0
   | 1
@@ -248,4 +243,5 @@ export type Fiber = {
  */
 export type FiberRoot = {
   current: Fiber;
+  Nok_Nok: string;
 };

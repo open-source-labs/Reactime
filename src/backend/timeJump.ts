@@ -23,7 +23,6 @@ export default function timeJump(mode) {
   // Recursively change state of tree
   // Set the state of the origin tree if the component is stateful
   async function jump(target): Promise<void> {
-    // ----------------
     if (!target) return;
     // Base Case: if has visited, return
     if (circularComponentTable.has(target)) {
@@ -68,11 +67,10 @@ export default function timeJump(mode) {
     if (hooksIndex !== undefined) {
       // Obtain component data & its update method at the given index
       const functionalComponent = componentActionsRecord.getComponentByIndexHooks(hooksIndex);
-      if (functionalComponent.length) {
-        for (let i = 0; i < hooksState.length; i += 1) {
-          await functionalComponent[i].dispatch(Object.values(hooksState[i])[0]);
-        }
+      for (let i in functionalComponent) {
+        await functionalComponent[i].dispatch(Object.values(hooksState)[i]);
       }
+      // Iterate through new children after state has been set
       target.children.forEach((child) => jump(child));
       return;
     }

@@ -4,12 +4,6 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 
-import {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  HookStateItem, // obj with state and component
-  HookStates, // array of hook state items
-} from './types/backendTypes';
-
 type ComponentAction = any[];
 
 // HookState is an array that contains a "component" for
