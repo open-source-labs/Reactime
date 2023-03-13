@@ -1,16 +1,14 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Tree from '../tree';
+import Tree from '../models/tree';
 
 /**
  * @type Tree - The snapshot of the current tree
  * @member tree - {Tree} - The tree structure to send to front end
- * @member unfilteredTree - {null} - The current mode (i.e. jumping, time-traveling, or paused)
  */
 export interface Snapshot {
   tree: Tree;
-  unfilteredTree: null;
 }
 
 /**
@@ -84,11 +82,6 @@ export interface HookStateItem {
  */
 export type HookStates = Array<HookStateItem>;
 
-export interface State {
-  state?: {} | number;
-  hooksState?: HookStates;
-}
-
 export type WorkTag =
   | 0
   | 1
@@ -146,8 +139,9 @@ export const OffscreenComponent = 23;
 export const LegacyHiddenComponent = 24;
 
 /**
- * @type Fiber - The Fiber data structure that React uses to represent a component tree.
- * https://indepth.dev/posts/1008/inside-fiber-in-depth-overview-of-the-new-reconciliation-algorithm-in-react
+ * @type Fiber - The internal data structure that represents a `fiberNode` or a component in the React component tree
+ *
+ * {@link https://indepth.dev/posts/1008/inside-fiber-in-depth-overview-of-the-new-reconciliation-algorithm-in-react}
  * @member actualDuration - The time taken to render the current Fiber node and its descendants during the previous render cycle. This value is used to optimize the rendering of components and to provide performance metrics to developers.
  * @member actualStartTime - The time at which the rendering of the current Fiber node started during the previous render cycle.
  * @member child - Pointer to the first child.
@@ -240,4 +234,14 @@ export type Fiber = {
   dependencies: any;
 
   _debugHookTypes: string[];
+};
+
+/**
+ * @type FiberRoot - The internal data structure that represents a fiberRootNode or the top-level node of a single component tree
+ *
+ * FiberRoot data structure has several properties. For Reactime, we only access the `current` property which contains the tree structure made of `fiberNode`. Each `fiberNode` contains a component data in the React component tree.
+ */
+export type FiberRoot = {
+  current: Fiber;
+  Nok_Nok: string;
 };

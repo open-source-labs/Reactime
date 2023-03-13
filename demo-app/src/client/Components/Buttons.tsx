@@ -4,7 +4,7 @@ import Increment from './Increment';
 function Buttons() {
   const buttons = [];
   for (let i = 0; i < 4; i++) {
-    buttons.push(<Increment />);
+    buttons.push(<Increment key={i} />);
   }
 
   return (

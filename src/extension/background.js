@@ -328,7 +328,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       const incomingSnap = request.payload.children[0].componentData.actualDuration;
       if (previousSnap === incomingSnap) break;
 
-      // Or if it is a snap after a jump, we don't record it.
+      // Or if it is a snapShot after a jump, we don't record it.
       if (reloaded[tabId]) {
         // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
         reloaded[tabId] = false;

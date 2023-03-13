@@ -5,6 +5,7 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
+import { Route } from './routes';
 
 let copyInstances = 0; // Tells you if we have already made a copy of current tree??
 const circularComponentTable = new Set<Tree>(); // Keeps track of the nodes added to the tree
@@ -59,7 +60,7 @@ class Tree {
 
   rtid: any;
 
-  route: {};
+  route: Route;
 
   // Duplicate names: add a unique number ID
   // Create an object 'componentNames' to store each component name as a key and it's frequency of use as its value

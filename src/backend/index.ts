@@ -9,14 +9,13 @@
  */
 // regenerator runtime supports async functionality
 import 'regenerator-runtime/runtime';
-import linkFiberStart from './linkFiber';
-import timeJumpStart from './timeJump';
+import linkFiberStart from './routers/linkFiber';
+import timeJumpStart from './controllers/timeJump';
 import { Snapshot, Status, MsgData } from './types/backendTypes';
 
 // * State snapshot object initialized here
 const snapShot: Snapshot = {
   tree: null,
-  unfilteredTree: null,
 };
 
 const mode: Status = {
@@ -25,6 +24,7 @@ const mode: Status = {
 };
 
 // linkFiber is now assigned the default function exported from the file linkFiber.ts
+console.log('Index ts', { snapShot: JSON.parse(JSON.stringify(snapShot)) });
 const linkFiber = linkFiberStart(snapShot, mode);
 // timeJump is now assigned the default function exported from the file timeJump.ts
 const timeJump = timeJumpStart(mode);
