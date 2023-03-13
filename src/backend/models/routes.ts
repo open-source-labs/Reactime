@@ -4,7 +4,7 @@
 /**
  * @class Route instances are created by the addRoute method on Routes. A Route instance has two properties: the url of the route and a unique id.
  */
-class Route {
+export class Route {
   url: string;
 
   id: number;
@@ -73,9 +73,11 @@ class Routes {
    * Rebuilds the browser history stack using the copy of the stack maintained in the `routeHistory` stack. https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState, https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
    */
   private rebuildHistory(url: string): void {
+    console.log('REBUILD');
     window.history.replaceState('', '', this.routeHistory[this.current + 1].url);
 
     for (let i = this.current + 2; i < this.routeHistory.length; i += 1) {
+      console.log('REBUILD');
       window.history.pushState('', '', this.routeHistory[i].url);
     }
 
@@ -114,6 +116,7 @@ class Routes {
     // if delta != 0 => need to navigate to another page
     if (delta !== 0) {
       // Navigate to that page based on delta steps
+      console.log({ delta });
       window.history.go(delta);
       return true;
     }

@@ -29,11 +29,19 @@ export default {
     return index - 1;
   },
   // ----------------------------CLASS COMPONENT--------------------------------
-  /* inputIndex will always be a fixed number (coming in timeJump.ts) */
+  /**
+   * This function is used for stateful Class Component to retrieve an object that has the bound setState method
+   * @param inputIndex - index of component inside `componentActionsRecord` coming from `timeJump.ts`
+   * @returns - an object containing the bound setState method
+   */
   getComponentByIndex: (inputIndex: number): any | undefined => componentActionsRecord[inputIndex],
 
   //---------------------------FUNCTIONAL COMPONENT-----------------------------
-  // this is used for react hooks - hooks will be passed in as an array from timeJump.ts
+  /**
+   * This function is used for Functional Component to retrieve an array of objects that have the bound dispatch methods.
+   * @param inputIndex - index of component inside `componentActionsRecord` coming from `timeJump.ts`
+   * @returns - an array of objects containing the bound dispatch methods
+   */
   getComponentByIndexHooks: (inputIndex: Array<number> = []): any[] | undefined =>
     inputIndex.map((index) => componentActionsRecord[index]),
 };

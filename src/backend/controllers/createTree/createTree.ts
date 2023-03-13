@@ -42,7 +42,7 @@ import {
   getHooksStateAndUpdateMethod,
   getStateAndContextData,
   filterAndFormatData,
-} from '../../controllers/createTree/statePropExtractors';
+} from './statePropExtractors';
 
 let rtidCounter = 0;
 const nextJSDefaultComponent = new Set(['ReactDevOverlay', 'Portal']);
@@ -92,22 +92,22 @@ export default function createTree(
     treeBaseDuration,
     _debugHookTypes,
   } = currentFiberNode;
-  console.log('LinkFiber', {
-    currentFiberNode,
-    // tag,
-    // elementType,
-    componentName:
-      elementType?._context?.displayName || //For ContextProvider
-      elementType?._result?.name || //For lazy Component
-      elementType?.render?.name ||
-      elementType?.name ||
-      elementType,
-    // memoizedProps,
-    // memoizedState,
-    // stateNode,
-    // dependencies,
-    // _debugHookTypes,
-  });
+  // console.log('LinkFiber', {
+  //   currentFiberNode,
+  //   // tag,
+  //   // elementType,
+  //   componentName:
+  //     elementType?._context?.displayName || //For ContextProvider
+  //     elementType?._result?.name || //For lazy Component
+  //     elementType?.render?.name ||
+  //     elementType?.name ||
+  //     elementType,
+  //   // memoizedProps,
+  //   // memoizedState,
+  //   // stateNode,
+  //   // dependencies,
+  //   // _debugHookTypes,
+  // });
 
   // TODO: Understand this if statement
   if (tag === HostComponent) {

@@ -2,7 +2,7 @@ import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
 // passes the data down to its components
 import componentActionsRecord from '../models/masterState';
 import routes from '../models/routes';
-import createTree from '../controllers/createTree';
+import createTree from '../controllers/createTree/CreateTree';
 
 // ---------------------------UPDATE TREE SNAP SHOT-----------------------------
 /**
