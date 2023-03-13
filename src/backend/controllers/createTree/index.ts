@@ -262,6 +262,7 @@ export default function createTree(
           // Passess to front end
           componentData.hooksState[hooksNames[i].varName] = state;
         });
+        isStatefulComponent = true;
       } catch (err) {
         console.log('Failed Element', { component: elementType?.name });
         // if (!nextJSDefaultComponent.has(elementType?.name)) {
@@ -270,7 +271,6 @@ export default function createTree(
         //   console.log('We are good');
       }
     }
-    isStatefulComponent = true;
   }
 
   // This grabs stateless components
