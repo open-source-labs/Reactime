@@ -24,6 +24,8 @@ export default function updateSnapShotTree(
   // creates snapshot that is a tree based on properties in fiberRoot object
   snapShot.tree = createTree(current);
   // sends the updated tree back
+  // Don't send messages while jumping or while paused
+  if (mode.jumping || mode.paused) return;
   sendSnapshot(snapShot, mode);
 }
 
@@ -36,9 +38,6 @@ export default function updateSnapShotTree(
  *
  */
 function sendSnapshot(snapShot: Snapshot, mode: Status): void {
-  // Don't send messages while jumping or while paused
-  if (mode.jumping || mode.paused) return;
-
   // Make a deep copy of the tree:
   const payload = snapShot.tree.cleanTreeCopy();
   payload.route = routes.addRoute(window.location.href);
@@ -49,6 +48,7 @@ function sendSnapshot(snapShot: Snapshot, mode: Status): void {
   // the postMessage action will be received on the content script to later update the tabsObj
   // this will fire off everytime there is a change in test application
   console.log('sendSnapShot', { payload });
+  console.log('sendSnapShot', { componentAction: componentActionsRecord.getAllComponents() });
   window.postMessage(
     {
       action: 'recordSnap',

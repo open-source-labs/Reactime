@@ -107,6 +107,7 @@ class Routes {
     /**
      * The position in the window history to which you want to move, relative to the current page. A negative value moves backwards, a positive value moves forwards.
      */
+    console.log({ targetIndex, current: this.current, history: this.routeHistory });
     const delta: number = targetIndex - this.current;
 
     // Update the position within routeHistory stack

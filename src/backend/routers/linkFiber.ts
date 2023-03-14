@@ -26,6 +26,9 @@ import updateSnapShotTree from './snapShot';
 // throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
 // getHooksNames - helper function to grab the getters/setters from `elementType`
 import throttle from '../controllers/throttle';
+import componentActionsRecord from '../models/masterState';
+import createComponentActionsRecord from '../controllers/createTree/createComponentActionsRecord';
+import timeJump from '../controllers/timeJump';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -65,7 +68,23 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
    * @function throttledUpdateSnapshot - a function that will wait for at least MIN_TIME_BETWEEN_UPDATE ms, before updating the tree snapShot being displayed on the Chrome Extension.
    */
   const throttledUpdateSnapshot = throttle((fiberRoot) => {
-    updateSnapShotTree(snapShot, mode, fiberRoot);
+    console.log('RERENDER');
+    // If jumping cause a navigation to a new route:
+    if (mode.navigating) {
+      console.log('OBTAIN NEW UPDATE METHOD');
+      // Reset the array containing update methods:
+      componentActionsRecord.clear();
+      // Obtain new update methods for the current route:
+      const { current } = fiberRoot;
+      createComponentActionsRecord(current);
+      // Invoke timeJump to update reactFiber based on the snapshotTree & the newly obtained BOUND update methods
+      mode.navigating();
+    }
+    // Else if not jumping
+    else if (!mode.jumping) {
+      // Update and Send SnapShot tree to front end
+      updateSnapShotTree(snapShot, mode, fiberRoot);
+    }
   }, MIN_TIME_BETWEEN_UPDATE);
 
   // Return a function to be invoked by index.js that initiates snapshot monitoring
@@ -118,7 +137,11 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
     // Obtain the FiberRootNode, which is the first value in the FiberRoot Set:
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
     console.log('linkFiber', { fiberRoot });
-
+    // DO NOT REMOVE: due to the nature of Next JS, when the website get reloaded, fiberRoot will not be
+    // console.log(devTools.getFiberRoots(1));
+    // while (!fiberRoot) {
+    //   fiberRoot = devTools.getFiberRoots(1).values().next().value;
+    // }
     // ----------INITIALIZE THE TREE SNAP SHOT ON CHROME EXTENSION--------------
     throttledUpdateSnapshot(fiberRoot); // only runs on start up
 

@@ -19,6 +19,7 @@ export interface Snapshot {
 export interface Status {
   jumping: boolean;
   paused: boolean;
+  navigating?: Function;
 }
 
 /**

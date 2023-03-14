@@ -15,7 +15,7 @@ const circularComponentTable = new Set();
  * The target snapshot portrays some past state we want to travel to `jump` recursively and setState for any stateful component.
  *
  * @param mode - The current mode (i.e. jumping, time-traveling, or paused)
- * @returns A function that takes a `target` snapshot and a boolean flag checking for `firstCall`, then invokes `jump` on that target snapshot
+ * @returns A function that takes a `inputTarget` snapshot and a boolean flag checking for `firstCall`, then invokes `initiateJump` on that target snapshot
  *
  */
 export default function timeJump(mode: Status) {
@@ -28,43 +28,49 @@ export default function timeJump(mode: Status) {
    */
   // IMPORTANT: DO NOT move this function into return function. This function is out here so that it will not be redefined any time the return function is invoked. This is importatnt for removeEventListener for popstate to work.
   const popStateHandler = () => {
+    console.log('POP STATE');
     initiateJump(target, mode);
   };
 
   /**
+   * This function that takes a `inputTarget` snapshot and a boolean flag checking for `firstCall`, then invokes `initiateJump` update browser to match states provided by the `inputTarget`
    * @param inputTarget - The target snapshot to re-render. The payload from index.ts is assigned to inputTarget
    * @param firstCall - A boolean flag checking for `firstCall`
    */
-  return (inputTarget: Tree, firstCall = false): void => {
-    // Setting mode disables setState from posting messages to window
-    mode.jumping = true;
+  return async (inputTarget: Tree, firstCall = false): Promise<void> => {
+    // Reset mode.navigating
+    delete mode.navigating;
     // Set target for popStateHandler usage:
     target = inputTarget;
     // Clearn the circularComponentTable
     if (firstCall) circularComponentTable.clear();
     // Determine if user is navigating to another route
     // NOTE: Inside routes.navigate, if user is navigating, we will invoke history.go, which will go back/forth based on # of delta steps. This will trigger a popstate event. Since history.go is an async method, the event listener is the only way to invoke timeJump after we have arrived at the desirable route.
-    const navigating: boolean = routes.navigate(inputTarget.route);
-    if (navigating) {
-      // Remove 'popstate' listener to avoid duplicate listeners
-      removeEventListener('popstate', popStateHandler);
-      // To invoke initateJump after history.go is complete
-      addEventListener('popstate', popStateHandler);
-    } else {
-      // Intiate the jump immideately if not navigating
-      initiateJump(inputTarget, mode);
-    }
+    // const navigating: boolean = routes.navigate(inputTarget.route);
+    // if (navigating) {
+    //   // Remove 'popstate' listener to avoid duplicate listeners
+    //   removeEventListener('popstate', popStateHandler);
+    //   // To invoke initateJump after history.go is complete
+    //   addEventListener('popstate', popStateHandler);
+    // } else {
+    //   // Intiate the jump immideately if not navigating
+    //   initiateJump(inputTarget, mode);
+    // }
+    await initiateJump(inputTarget, mode);
   };
 }
 
 /**
- * This function initiate the request for jump and will pause the jump when user moves mouse over the body of the document.
+ * This function initiates the request for jump and will pause the jump when user moves mouse over the body of the document.
  * @param target - The target snapshot to re-render
  * @param mode - The current mode (i.e. jumping, time-traveling, or paused)
  */
 async function initiateJump(target, mode): Promise<void> {
+  console.log('JUMP', { jumping: mode.jumping });
+  console.log('JUMP', { target, componentAction: componentActionsRecord.getAllComponents() });
   updateTreeState(target).then(() => {
     document.body.onmouseover = () => {
+      console.log('STOP JUMPING');
       mode.jumping = false;
     };
   });
