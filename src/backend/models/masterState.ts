@@ -44,4 +44,10 @@ export default {
    */
   getComponentByIndexHooks: (inputIndex: Array<number> = []): any[] | undefined =>
     inputIndex.map((index) => componentActionsRecord[index]),
+  // ----------------------------------DEBUGGING--------------------------------
+  /**
+   * This method is used for debugging purpose to access the array of setState/dispatch methods
+   * @returns - an array of objects containing the bound methods for updating state
+   */
+  getAllComponents: (): any[] => componentActionsRecord,
 };
