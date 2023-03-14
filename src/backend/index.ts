@@ -9,8 +9,8 @@
  */
 // regenerator runtime supports async functionality
 import 'regenerator-runtime/runtime';
-import linkFiberStart from './routers/linkFiber';
-import timeJumpStart from './controllers/timeJump';
+import linkFiberInitialization from './routers/linkFiber';
+import timeJumpInitialization from './controllers/timeJump';
 import { Snapshot, Status, MsgData } from './types/backendTypes';
 
 // * State snapshot object initialized here
@@ -24,10 +24,11 @@ const mode: Status = {
 };
 
 // linkFiber is now assigned the default function exported from the file linkFiber.ts
+
 console.log('Index ts', { snapShot: JSON.parse(JSON.stringify(snapShot)) });
-const linkFiber = linkFiberStart(snapShot, mode);
+const linkFiber = linkFiberInitialization(snapShot, mode);
 // timeJump is now assigned the default function exported from the file timeJump.ts
-const timeJump = timeJumpStart(mode);
+const timeJump = timeJumpInitialization(mode);
 
 // * Event listener for time-travel actions
 window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
