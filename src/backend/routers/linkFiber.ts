@@ -36,14 +36,14 @@ declare global {
 }
 
 /**
- * linkFiber contains core module functionality, exported as an anonymous function, perform the following logic:
+ * @function linkFiber - linkFiber contains core module functionality, exported as an anonymous function, perform the following logic:
  * 1. Check if React Dev Tool is installed.
  * 2. Check if the target application (on the browser) is a valid react application.
  * 3. Initiate a event listener for visibility update of the target React Applicaiton.
- * 4. Obtain the initial fiberRootNode, which is the root node of a tree of React component.
- * 5. Initialize the tree snapShot on Chrome Extension.
+ * 4. Obtain the initial fiberRootNode, which is the root node of the fiber tree
+ * 5. Initialize the fiber tree snapShot on Chrome Extension.
  * 6. Monkey patching the onCommitFiberRoot from REACT DEV TOOL to obtain updated data after React Applicaiton is re-rendered.
- * @param snapShot The current snapshot
+ * @param snapShot The current snapshot (i.e fiber tree)
  * @param mode The current mode (i.e. jumping, time-traveling, or paused)
  * @return a function to be invoked by index.js that initiates snapshot monitoring
  */
@@ -53,8 +53,9 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
    */
   let isVisible: boolean = true;
   /**
-   * The `fiberRootNode`, which is the root node of a tree of React component.
-   * The `current` property of `fiberRoot` has data structure of a Tree, which can be used to traverse and obtain all child component data.
+   * Every React application has one or more DOM elements that act as containers. React creates a fiber root object for each of those containers.
+   * This fiber root is where React holds reference to a fiber tree
+   * The `fiberRootNode`, which is the root node of the fiber tree is stored in the current property of the fiber root object
    */
   let fiberRoot: FiberRoot;
   /**
@@ -76,6 +77,8 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     // Obtain React Devtools Object:
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    const { onCommitFiberRoot } = devTools;
+    console.log('onCommit..', onCommitFiberRoot);
     // If React Devtools is not installed, object will be undefined.
     if (!devTools) {
       return;

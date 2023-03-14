@@ -6,11 +6,11 @@ import createTree from '../controllers/createTree/createTree';
 
 // ---------------------------UPDATE TREE SNAP SHOT-----------------------------
 /**
- * - Create a new `snapShot` tree with the provided `fiberRoot`. This runs after every Fiber commit.
+ * @function updateSnapShotTree - Creates a new `snapShot` fiber tree with the provided `fiberRoot`. This runs after every Fiber commit.
  * - Middleware: Updates snapShot object with latest snapshot, using `sendSnapshot`
- * @param snapShot The current snapshot
+ * @param snapShot The current snapshot of the fiber tree
  * @param mode The current mode (i.e. jumping, time-traveling, or paused)
- * @param fiberRoot The `fiberRootNode`, which is the root node of a tree of React component. The `current` property of `fiberRoot` has data structure of a Tree, which can be used to traverse and obtain all child component data.
+ * @param fiberRoot The `fiberRootNode`, which is the root node of the fiber tree is stored in the current property of the fiber root object which we can use to traverse the tree
  */
 // updating tree depending on current mode on the panel (pause, etc)
 export default function updateSnapShotTree(
@@ -20,8 +20,9 @@ export default function updateSnapShotTree(
 ): void {
   // this is the currently active root fiber(the mutable root of the tree)
   const { current } = fiberRoot;
+  // clear all of the legacy actions from old fiber tree becuase we are about to create a new one
   componentActionsRecord.clear();
-  // creates snapshot that is a tree based on properties in fiberRoot object
+  // calls the createTree function which creates the new Fiber tree and adds it to tree property on the snapShot object
   snapShot.tree = createTree(current);
   // sends the updated tree back
   sendSnapshot(snapShot, mode);
@@ -29,8 +30,8 @@ export default function updateSnapShotTree(
 
 // -------------------SEND TREE SNAP SHOT TO FRONT END--------------------------
 /**
- * Gets a copy of the current snapShot.tree and posts a recordSnap message to the window
- * @param snapShot The current snapshot
+ * @function sendSnapshot - Gets a copy of the current snapShot.tree and posts a recordSnap message to the window
+ * @param snapShot The current snapshot of the fiber tree that is shown in the extension
  * @param mode The current mode (i.e. jumping, time-traveling, or paused)
  * @return void
  *

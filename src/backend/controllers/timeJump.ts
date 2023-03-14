@@ -66,6 +66,7 @@ async function initiateJump(target, mode): Promise<void> {
   updateTreeState(target).then(() => {
     document.body.onmouseover = () => {
       mode.jumping = false;
+      console.log('mouseover');
     };
   });
 }
