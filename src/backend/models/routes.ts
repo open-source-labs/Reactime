@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable max-len */
-
+import componentActionsRecord from './masterState';
 /**
  * @class Route instances are created by the addRoute method on Routes. A Route instance has two properties: the url of the route and a unique id.
  */
@@ -93,7 +93,6 @@ class Routes {
    */
   navigate(route: Route): boolean {
     let targetIndex: number | undefined;
-
     // Loop through the routeHistory stack
     for (let i = 0; i < this.routeHistory.length; i += 1) {
       // If within the route history, found a match of url & id from the passed in route, update `targetIndex`
@@ -116,7 +115,6 @@ class Routes {
     // if delta != 0 => need to navigate to another page
     if (delta !== 0) {
       // Navigate to that page based on delta steps
-      console.log({ delta });
       window.history.go(delta);
       return true;
     }

@@ -19,30 +19,40 @@ const circularComponentTable = new Set();
  *
  */
 export default function timeJump(mode: Status) {
-  // payload from index.ts is assigned to target
   /**
-   * @param target - The target snapshot to re-render
+   * The target snapshot to re-render
+   */
+  let target;
+  /**
+   * This function is to aid the removeListener for 'popstate'
+   */
+  // IMPORTANT: DO NOT move this function into return function. This function is out here so that it will not be redefined any time the return function is invoked. This is importatnt for removeEventListener for popstate to work.
+  const popStateHandler = () => {
+    initiateJump(target, mode);
+  };
+
+  /**
+   * @param inputTarget - The target snapshot to re-render. The payload from index.ts is assigned to inputTarget
    * @param firstCall - A boolean flag checking for `firstCall`
    */
-  return (target: Tree, firstCall = false): void => {
+  return (inputTarget: Tree, firstCall = false): void => {
     // Setting mode disables setState from posting messages to window
     mode.jumping = true;
+    // Set target for popStateHandler usage:
+    target = inputTarget;
     // Clearn the circularComponentTable
     if (firstCall) circularComponentTable.clear();
-    // Determine if user is navigating to another site
-    const navigating: boolean = routes.navigate(target.route);
-
+    // Determine if user is navigating to another route
+    // NOTE: Inside routes.navigate, if user is navigating, we will invoke history.go, which will go back/forth based on # of delta steps. This will trigger a popstate event. Since history.go is an async method, the event listener is the only way to invoke timeJump after we have arrived at the desirable route.
+    const navigating: boolean = routes.navigate(inputTarget.route);
     if (navigating) {
-      // Initiate popStateHandler to aid the removeListener for 'popstate'
-      const popStateHandler = () => {
-        initiateJump(target, mode);
-      };
-      // removeEventListener('popstate', popStateHandler);
-      // Background will "perform" popstate till get to the correct history location?
+      // Remove 'popstate' listener to avoid duplicate listeners
+      removeEventListener('popstate', popStateHandler);
+      // To invoke initateJump after history.go is complete
       addEventListener('popstate', popStateHandler);
     } else {
-      // Intiate the jump
-      initiateJump(target, mode);
+      // Intiate the jump immideately if not navigating
+      initiateJump(inputTarget, mode);
     }
   };
 }
@@ -53,10 +63,10 @@ export default function timeJump(mode: Status) {
  * @param mode - The current mode (i.e. jumping, time-traveling, or paused)
  */
 async function initiateJump(target, mode): Promise<void> {
-  console.log('JUMP');
   updateTreeState(target).then(() => {
     document.body.onmouseover = () => {
       mode.jumping = false;
+      console.log('mouseover');
     };
   });
 }
@@ -84,48 +94,34 @@ async function updateTreeState(target): Promise<void> {
   // Destructure component data:
   const { index, state, hooksIndex, hooksState } = target.componentData;
   // ------------------------STATEFUL CLASS COMPONENT-------------------------
-  // for stateful class components
-  // check if it is a stateful class component
-  // if yes, find the component by its index and assign it to a variable
-  // call that components setState method to reset state to the state at the time of the jump snapshot
-  //index can be zero => falsy value => DO NOT REMOVE UNDEFINED
+  // Check if it is a stateful class component
+  // Index can be zero => falsy value => DO NOT REMOVE UNDEFINED
   if (index !== undefined) {
-    // Obtain component data & its update method at the given index
+    // Obtain the BOUND update method at the given index
     const classComponent = componentActionsRecord.getComponentByIndex(index);
-    // If the user navigate to another page during jumps, Routes methods will popState until find a match => this cause changes in componentActionRecord => keep the if statement, otherwise will run into Uncaught Promise type error.
-    if (classComponent?.setState) {
-      // Update component state
-      await classComponent.setState(
-        // prevState contains the states of the snapshots we are jumping FROM, not jumping TO
-        (prevState) => state,
-      );
-    }
-    // Else statement is to ensure if a mismatch, this popstate is not the correct componentActionRecord. Return immediately to avoid traverse the entire tree
-    else return;
-
+    // Update component state
+    await classComponent.setState(
+      // prevState contains the states of the snapshots we are jumping FROM, not jumping TO
+      (prevState) => state,
+    );
     // Iterate through new children after state has been set
     target.children.forEach((child) => updateTreeState(child));
     return;
   }
 
   // ----------------------STATEFUL FUNCTIONAL COMPONENT----------------------
-  // check if component states are set with hooks
+  // Check if it is a stateful functional component
   // if yes, grab all relevant components for this snapshot by its index
   // call dispatch on each component passing in the corresponding currState value
   //index can be zero => falsy value => DO NOT REMOVE UNDEFINED
   if (hooksIndex !== undefined) {
-    // Obtain component data & its update method at the given index
+    // Obtain the array of BOUND update methods at the given indexes.
+    // NOTE: each useState will be a separate update method. So if a component have 3 useState, we will obtain an array of 3 update methods.
     const functionalComponent = componentActionsRecord.getComponentByIndexHooks(hooksIndex);
-    // If the user navigate to another page during jumps, Routes methods will popState until find a match => this cause changes in componentActionRecord => keep the if statement, otherwise will run into Uncaught Promise type error.
-    if (functionalComponent[0]?.dispatch) {
-      // Update component state
-      for (let i in functionalComponent) {
-        await functionalComponent[i].dispatch(Object.values(hooksState)[i]);
-      }
+    // Update component state
+    for (let i in functionalComponent) {
+      await functionalComponent[i].dispatch(Object.values(hooksState)[i]);
     }
-    // Else statement is to ensure if a mismatch, this popstate is not the correct componentActionRecord. Return immediately to avoid traverse the entire tree
-    else return;
-
     // Iterate through new children after state has been set
     target.children.forEach((child) => updateTreeState(child));
     return;
