@@ -72,6 +72,7 @@ async function initiateJump(target, mode): Promise<void> {
     document.body.onmouseover = () => {
       console.log('STOP JUMPING');
       mode.jumping = false;
+      console.log('mouseover');
     };
   });
 }

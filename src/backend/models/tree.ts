@@ -7,9 +7,12 @@
 /* eslint-disable no-param-reassign */
 import { Route } from './routes';
 
-let copyInstances = 0; // Tells you if we have already made a copy of current tree??
-const circularComponentTable = new Set<Tree>(); // Keeps track of the nodes added to the tree
-let componentNames = {}; // {componentName: frequency of use} => component name as a key and it's frequency of use as its value
+// The circularComponentTable is used to handle circular references in the state object. It keeps tracks of the components that have already been serialized. When a component is encountered for the first time, it is added to the table along with a unique identifier. If the same component is encountered again, the identifier is used to reference the previously serialized component in the output instead of serializing it again, thus avoiding the infinite loop.
+const circularComponentTable = new Set<Tree>();
+// Used to keep track of which objects have already been copied during the serialization process. This is necessary to handle circular references correctly. When an object is serialized, all its properties are copied to the serialized object. If an object property is an object itself, it needs to be serialized recursively. However, if the object being serialized has already been serialized before, it should not be serialized again to prevent an infinite loop.
+let copyInstances = 0;
+// ComponentNames is used to store a mapping between a component's unique identifier and its name. This mapping is used to reconstruct the component instances during deserialization.
+let componentNames = {};
 
 // Functions dont serialize properly so we need to scrub for that
 export function scrubUnserializableMembers(tree: Tree): Tree {
@@ -20,6 +23,11 @@ export function scrubUnserializableMembers(tree: Tree): Tree {
 }
 
 // Making a deep clone of state becuase we want to make a copy
+/**
+ * @function serializeState - In the context of React, state is often used to store data that determines the behavior and appearance of a component. By serializing the state, we can preserve the component's data across page refreshes, server-side rendering, and other transitions. Additionally, by serializing the state and passing it to a child component, we can create a deep clone of the state, which allows the child component to manipulate the state without affecting the original component. This is useful in situations where we want to keep the state of the parent component immutable, but still allow child components to modify a copy of the state.
+ * @param state - Object that contains the current state of the application or system that needs to be serialized.
+ * @returns
+ */
 export function serializeState(state) {
   try {
     // makes a deep clone
@@ -33,15 +41,14 @@ export function serializeState(state) {
 /**
  * This is the current snapshot that is being sent to the snapshots array.
  * Creates a Tree
- * @param state - {string| {}} - the tree's current state
- * @param name - {string} - the tree's name
- * @param componentData - {props: {}} - Data in the component tree
- * @param chilren - {(Tree | string)[]} - An array of children nodes
- * @param parent - {Tree} - the parent node
- * @param isExpanded - {boolean}
- * @param rtid - {any}
- * @param route -
- * @parent generates a new tree (recursive call)
+ * @param state - the current state of the component represented by this node.
+ * @param name - the name of the component represented by this node.
+ * @param componentData - an object containing the props of the component represented by this node.
+ * @param chilren - an array of child nodes.
+ * @param parent -  a reference to the parent node.
+ * @param isExpanded - a boolean value indicating whether the node is expanded in the UI.
+ * @param rtid - a unique identifier for the node.
+ * @param route - an object representing the route associated with the node.
  */
 class Tree {
   state: string | {};
@@ -87,6 +94,11 @@ class Tree {
   }
 
   // Returns a unique name ready to be used for when new components gets added to the tree
+  /**
+   * @function checkForDuplicates - Generates a unique name for a component that is being added to the component tree
+   * @param name
+   * @returns
+   */
   checkForDuplicates(name: string): string {
     // check for empty name
     if (name === '' && typeof this.rtid === 'string') {
