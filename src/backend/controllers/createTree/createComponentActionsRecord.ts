@@ -56,23 +56,19 @@ const nextJSDefaultComponent = new Set([
   'RouteAnnouncer',
   'Portal',
 ]);
-// ------------------------CREATE TREE TO SEND TO FRONT END-------------------
+// ------------------------CREATE COMPONENT ACTIONS RECORD----------------------
 /**
- * This is a recursive function that runs after every Fiber commit using the following logic:
+ * This is a recursive function that runs after Fiber commit, if user navigating to a new route during jumping. This function performs the following logic:
  * 1. Traverse from FiberRootNode
- * 2. Create an instance of custom Tree class
- * 3. Build a new state snapshot
- * Every time a state change is made in the accompanying app, the extension creates a Tree “snapshot” of the current state, and adds it to the current “cache” of snapshots in the extension
+ * 2. If the component is stateful, extract its update methods & push to the `componentActionRecord` array
  * @param currentFiberNode A Fiber object
- * @param tree A Tree object, default initialized to an instance given 'root' and 'root'
- * @param fromSibling A boolean, default initialized to false
- * @return An instance of a Tree object
+ * @param circularComponentTable A table content visited Fiber nodes
  */
 // TODO: Not sure why the ritd need to be outside of the createTree function. Want to put inside, but in case this need to be keep track for front end.
 export default function createComponentActionsRecord(
   currentFiberNode: Fiber,
   circularComponentTable: Set<Fiber> = new Set(),
-): Tree {
+): void {
   // Base Case: if has visited, return
   if (circularComponentTable.has(currentFiberNode)) {
     return;
@@ -95,20 +91,20 @@ export default function createComponentActionsRecord(
     elementType?.render?.name ||
     elementType?.name ||
     'nameless';
-  console.log('LinkFiber', {
-    currentFiberNode,
-    // tag,
-    // elementType,
-    componentName:
-      elementType?._context?.displayName || //For ContextProvider
-      elementType?._result?.name || //For lazy Component
-      elementType?.render?.name ||
-      elementType?.name ||
-      elementType,
-    // memoizedState,
-    // stateNode,
-    // _debugHookTypes,
-  });
+  //   console.log('LinkFiber', {
+  //     currentFiberNode,
+  //     // tag,
+  //     // elementType,
+  //     componentName:
+  //       elementType?._context?.displayName || //For ContextProvider
+  //       elementType?._result?.name || //For lazy Component
+  //       elementType?.render?.name ||
+  //       elementType?.name ||
+  //       elementType,
+  //     // memoizedState,
+  //     // stateNode,
+  //     // _debugHookTypes,
+  //   });
 
   // ---------OBTAIN STATE & SET STATE METHODS FROM CLASS COMPONENT-----------
   // Check if node is a stateful class component when user use setState.
@@ -119,20 +115,17 @@ export default function createComponentActionsRecord(
     stateNode?.state &&
     (tag === ClassComponent || tag === IndeterminateComponent)
   ) {
-    // Save component's state and setState() function to our record for future
-    // time-travel state changing. Add record index to snapshot so we can retrieve.
+    // Save component setState() method to our componentActionsRecord for use during timeJump
     componentActionsRecord.saveNew(stateNode);
   }
 
   // --------OBTAIN STATE & DISPATCH METHODS FROM FUNCTIONAL COMPONENT--------
-  // Check if node is a hooks useState function
+  // Check if node is a stateful class component when user use setState.
+  // If user use useState to define/manage state, the state object will be stored in memoizedState.queue => grab the state object stored in the memoizedState.queue
   if (
     !nextJSDefaultComponent.has(componentName) &&
     memoizedState &&
-    (tag === FunctionComponent ||
-      // tag === ClassComponent || WE SHOULD NOT BE ABLE TO USE HOOK IN CLASS
-      tag === IndeterminateComponent ||
-      tag === ContextProvider) //TODOD: Need to figure out why we need context provider
+    (tag === FunctionComponent || tag === IndeterminateComponent || tag === ContextProvider) //TODO: Need to figure out why we need context provider
   ) {
     if (memoizedState.queue) {
       try {

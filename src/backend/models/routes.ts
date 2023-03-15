@@ -85,7 +85,10 @@ class Routes {
   }
 
   /**
-   * @method navigate
+   * This method will perform the following:
+   * 1. Evaluate if user need to navigate to another route
+   * 2. If navigation is needed, perform navigation and return true
+   * 3. Else return false
    * @param route - The target route in the `routeHistory` stack that is being navigated to.
    * @returns A boolean indicating whether or not a new route was navigated to.
    *

@@ -7,98 +7,69 @@ import routes from '../models/routes';
 import componentActionsRecord from '../models/masterState';
 import { Status } from '../types/backendTypes';
 import Tree from '../models/tree';
-const circularComponentTable = new Set();
+
+// THIS FILE CONTAINS NECCESSARY FUNCTIONALITY FOR TIME-TRAVEL FEATURE
 
 /**
- * This file contains necessary functionality for time-travel feature.
  *
- * The target snapshot portrays some past state we want to travel to `jump` recursively and setState for any stateful component.
- *
- * @param mode - The current mode (i.e. jumping, time-traveling, or paused)
- * @returns A function that takes a `inputTarget` snapshot and a boolean flag checking for `firstCall`, then invokes `initiateJump` on that target snapshot
+ * This is a closure function to keep track of mode (jumping or not jumping)
+ * @param mode - The current mode (i.e. jumping)
+ * @returns an async function that takes an `targetSnapshot`, then invokes `updateReactFiberTree` based on the state provided within that target snapshot
  *
  */
-export default function timeJump(mode: Status) {
+export default function timeJumpInitiation(mode: Status) {
   /**
-   * The target snapshot to re-render
+   * This function is to reset jumping mode to false when user hover the mouse over the browser body
    */
-  let target;
-  /**
-   * This function is to aid the removeListener for 'popstate'
-   */
-  // IMPORTANT: DO NOT move this function into return function. This function is out here so that it will not be redefined any time the return function is invoked. This is importatnt for removeEventListener for popstate to work.
-  const popStateHandler = () => {
-    console.log('POP STATE');
-    initiateJump(target, mode);
+  const resetJumpingMode = (): void => {
+    console.log('timeJump - STOP JUMPING');
+    mode.jumping = false;
   };
-
   /**
-   * This function that takes a `inputTarget` snapshot and a boolean flag checking for `firstCall`, then invokes `initiateJump` update browser to match states provided by the `inputTarget`
-   * @param inputTarget - The target snapshot to re-render. The payload from index.ts is assigned to inputTarget
-   * @param firstCall - A boolean flag checking for `firstCall`
+   * This function that takes a `targetSnapshot` then invokes `updateReactFiberTree` to update the React Application on the browser to match states provided by the `targetSnapshot`
+   * @param targetSnapshot - The target snapshot to re-render. The payload from index.ts is assigned to targetSnapshot
    */
-  return async (inputTarget: Tree, firstCall = false): Promise<void> => {
+  return async function timeJump(targetSnapshot: Tree): Promise<void> {
+    console.log('timeJump - START JUMPING');
     // Reset mode.navigating
     delete mode.navigating;
-    // Set target for popStateHandler usage:
-    target = inputTarget;
-    // Clearn the circularComponentTable
-    if (firstCall) circularComponentTable.clear();
-    // Determine if user is navigating to another route
-    // NOTE: Inside routes.navigate, if user is navigating, we will invoke history.go, which will go back/forth based on # of delta steps. This will trigger a popstate event. Since history.go is an async method, the event listener is the only way to invoke timeJump after we have arrived at the desirable route.
-    // const navigating: boolean = routes.navigate(inputTarget.route);
-    // if (navigating) {
-    //   // Remove 'popstate' listener to avoid duplicate listeners
-    //   removeEventListener('popstate', popStateHandler);
-    //   // To invoke initateJump after history.go is complete
-    //   addEventListener('popstate', popStateHandler);
-    // } else {
-    //   // Intiate the jump immideately if not navigating
-    //   initiateJump(inputTarget, mode);
-    // }
-    await initiateJump(inputTarget, mode);
+    // Traverse the snapshotTree to update ReactFiberTree
+    updateReactFiberTree(targetSnapshot).then(() => {
+      // Remove Event listener for mouse over
+      removeEventListener('mouseover', resetJumpingMode);
+      // Since in order to change state, user will need to navigate to browser
+      // => set an event listener to resetJumpingMode when mouse is over the browser
+      addEventListener('mouseover', resetJumpingMode, { once: true });
+    });
   };
 }
 
 /**
- * This function initiates the request for jump and will pause the jump when user moves mouse over the body of the document.
- * @param target - The target snapshot to re-render
- * @param mode - The current mode (i.e. jumping, time-traveling, or paused)
+ * This recursive function receives the target snapshot from front end and will update the state of the fiber tree if the component is stateful
+ * @param targetSnapshot - Target snapshot portrays some past state we want to travel to.
+ * @param circularComponentTable - A table contains visited components
+ *
  */
-async function initiateJump(target, mode): Promise<void> {
-  console.log('JUMP', { jumping: mode.jumping });
-  console.log('JUMP', { target, componentAction: componentActionsRecord.getAllComponents() });
-  updateTreeState(target).then(() => {
-    document.body.onmouseover = () => {
-      console.log('STOP JUMPING');
-      mode.jumping = false;
-      console.log('mouseover');
-    };
-  });
-}
-
-/**
- * This recursive function receives the target snapshot and will update the state of the fiber tree if the component is statefu
- * @param target - The target snapshot to re-render
- */
-async function updateTreeState(target): Promise<void> {
-  if (!target) return;
+async function updateReactFiberTree(
+  targetSnapshot,
+  circularComponentTable: Set<any> = new Set(),
+): Promise<void> {
+  if (!targetSnapshot) return;
   // Base Case: if has visited, return
-  if (circularComponentTable.has(target)) {
+  if (circularComponentTable.has(targetSnapshot)) {
     return;
   } else {
-    circularComponentTable.add(target);
+    circularComponentTable.add(targetSnapshot);
   }
-  // console.log(target.name);
   // ------------------------STATELESS/ROOT COMPONENT-------------------------
   // Since stateless component has no data to update, continue to traverse its child nodes:
-  if (target.state === 'stateless' || target.state === 'root') {
-    target.children.forEach((child) => updateTreeState(child));
+  if (targetSnapshot.state === 'stateless' || targetSnapshot.state === 'root') {
+    targetSnapshot.children.forEach((child) => updateReactFiberTree(child, circularComponentTable));
     return;
   }
 
   // Destructure component data:
-  const { index, state, hooksIndex, hooksState } = target.componentData;
+  const { index, state, hooksIndex, hooksState } = targetSnapshot.componentData;
   // ------------------------STATEFUL CLASS COMPONENT-------------------------
   // Check if it is a stateful class component
   // Index can be zero => falsy value => DO NOT REMOVE UNDEFINED
@@ -111,7 +82,7 @@ async function updateTreeState(target): Promise<void> {
       (prevState) => state,
     );
     // Iterate through new children after state has been set
-    target.children.forEach((child) => updateTreeState(child));
+    targetSnapshot.children.forEach((child) => updateReactFiberTree(child, circularComponentTable));
     return;
   }
 
@@ -129,7 +100,7 @@ async function updateTreeState(target): Promise<void> {
       await functionalComponent[i].dispatch(Object.values(hooksState)[i]);
     }
     // Iterate through new children after state has been set
-    target.children.forEach((child) => updateTreeState(child));
+    targetSnapshot.children.forEach((child) => updateReactFiberTree(child));
     return;
   }
 }
