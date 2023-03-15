@@ -243,7 +243,11 @@ export default function createTree(
   // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
   // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
   // TODO: need to render this context provider when user use useContext hook.
-  if (!nextJSDefaultComponent.has(componentName) &&tag === ContextProvider && !elementType._context.displayName) {
+  if (
+    !nextJSDefaultComponent.has(componentName) &&
+    tag === ContextProvider &&
+    !elementType._context.displayName
+  ) {
     let stateData = memoizedProps.value;
     if (stateData === null || typeof stateData !== 'object') {
       stateData = { CONTEXT: stateData };
@@ -262,9 +266,14 @@ export default function createTree(
   // Check if node is a stateful class component when user use setState.
   // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
   // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
-  if (!nextJSDefaultComponent.has(componentName) && stateNode?.state && (tag === ClassComponent || tag === IndeterminateComponent)) {
+  if (
+    !nextJSDefaultComponent.has(componentName) &&
+    stateNode?.state &&
+    (tag === ClassComponent || tag === IndeterminateComponent)
+  ) {
     // Save component's state and setState() function to our record for future
     // time-travel state changing. Add record index to snapshot so we can retrieve.
+    console.log('Class Component: ', stateNode);
     componentData.index = componentActionsRecord.saveNew(stateNode);
     // Save state information in componentData.
     componentData.state = stateNode.state;
@@ -275,7 +284,8 @@ export default function createTree(
 
   // ---------OBTAIN STATE & DISPATCH METHODS FROM FUNCTIONAL COMPONENT---------
   // Check if node is a hooks useState function
-  if (!nextJSDefaultComponent.has(componentName) &&
+  if (
+    !nextJSDefaultComponent.has(componentName) &&
     memoizedState &&
     (tag === FunctionComponent ||
       // tag === ClassComponent || WE SHOULD NOT BE ABLE TO USE HOOK IN CLASS

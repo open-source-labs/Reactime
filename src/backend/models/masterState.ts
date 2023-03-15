@@ -6,10 +6,11 @@
 /**
  * @type ComponentAction - an array of actions that can be performed on a component
  */
-type ComponentAction = {
+export type ComponentAction = {
   [url: string]: any[];
 };
-type ComponentActionRecord = ComponentAction[];
+
+export type ComponentActionRecord = ComponentAction[];
 
 // The HookState data structure is an array that holds the current value of a hook's state, as well as a dispatch function that is used to update that state.
 // Information on these components include ComponentData as well as state
@@ -58,8 +59,14 @@ export default {
    * @param inputIndex - index of component inside `componentActionsRecord` coming from `timeJump.ts`
    * @returns - an array of objects containing the bound dispatch methods
    */
-  getComponentByIndexHooks: (inputIndex: Array<number> = []): any[] | undefined =>
-    inputIndex.map((index) => componentActionsRecord[window.location.href][index]),
+  getComponentByIndexHooks: (inputIndex: Array<number> = []): any[] | undefined => {
+    const validIndex = inputIndex.filter(
+      (index) => componentActionsRecord[window.location.href]?.[index],
+    );
+    if (!validIndex.length) return undefined;
+
+    return validIndex.map((index) => componentActionsRecord[window.location.href][index]);
+  },
   // ----------------------------------DEBUGGING--------------------------------
   /**
    * @function getAllComponents - This method is used for debugging purpose to access the array of setState/dispatch methods

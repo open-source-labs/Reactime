@@ -1,14 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-shadow */
-/* eslint-disable max-len */
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable linebreak-style */
-/* eslint-disable no-inner-declarations, no-loop-func */
-
-// eslint-disable-next-line import/newline-after-import
-
 /**
  * @method throttle
  * @param callback A function to throttle

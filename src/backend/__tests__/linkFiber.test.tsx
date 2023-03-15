@@ -9,7 +9,7 @@
 import { string } from 'prop-types';
 import React, { useState } from 'react';
 import { render } from 'react-dom';
-import linkFiberStart from '../linkFiber';
+import linkFiberStart from '../routers/linkFiber';
 
 const puppeteer = require('puppeteer');
 const SERVER = require('../puppeteerServer');
