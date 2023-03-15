@@ -12,6 +12,8 @@ import 'regenerator-runtime/runtime';
 import linkFiberInitialization from './routers/linkFiber';
 import timeJumpInitialization from './controllers/timeJump';
 import { Snapshot, Status, MsgData } from './types/backendTypes';
+import componentActionsRecord from './models/masterState';
+import routes from './models/routes';
 
 // * State snapshot object initialized here
 const snapShot: Snapshot = {
@@ -25,21 +27,30 @@ const mode: Status = {
 
 // linkFiber is now assigned the default function exported from the file linkFiber.ts
 
-console.log('Index ts', { snapShot: JSON.parse(JSON.stringify(snapShot)) });
+console.log('Index ts Initiation');
 const linkFiber = linkFiberInitialization(snapShot, mode);
 // timeJump is now assigned the default function exported from the file timeJump.ts
 const timeJump = timeJumpInitialization(mode);
 
 // * Event listener for time-travel actions
-window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
+window.addEventListener('message', async ({ data: { action, payload } }: MsgData) => {
   switch (action) {
     case 'jumpToSnap':
-      console.log('Index ts', { payload });
-      timeJump(payload, true); // * This sets state with given payload
-      break;
-
-    case 'setPause':
-      mode.paused = payload;
+      console.log('Index ts - jumpToSnap', { payload });
+      // Set mode to jumping to prevent snapShot being sent to frontEnd
+      // NOTE: mode.jumping is set to false inside the timeJump.ts
+      mode.jumping = true;
+      // Check if we are navigating to another route
+      const navigating: boolean = routes.navigate(payload.route);
+      // If need to navigate
+      if (navigating) {
+        // Pass timeJump function to mode.navigating => which will be invoked during onCommitFiberRoot:
+        mode.navigating = () => timeJump(payload);
+      }
+      // If not navitating, invoke timeJump immediately to update React Application FiberTree based on the snapshotTree
+      else {
+        await timeJump(payload); // * This sets state with given payload
+      }
       break;
 
     default:

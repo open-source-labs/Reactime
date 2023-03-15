@@ -3,18 +3,21 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
-
 /**
  * @type ComponentAction - an array of actions that can be performed on a component
  */
-type ComponentAction = any[];
+export type ComponentAction = {
+  [url: string]: any[];
+};
+
+export type ComponentActionRecord = ComponentAction[];
 
 // The HookState data structure is an array that holds the current value of a hook's state, as well as a dispatch function that is used to update that state.
 // Information on these components include ComponentData as well as state
 // For class components, there will be one "component" for each snapshot
 // For functional components that utilize Hooks, there will be one "component"
 // for each setter/getter every time we have a new snapshot
-let componentActionsRecord: ComponentAction = [];
+let componentActionsRecord: ComponentActionRecord = [];
 // index keeps track of the current position in the array
 let index: number;
 index = 0;
@@ -24,7 +27,7 @@ export default {
    * @function clear - Clears componentActionsRecord
    */
   clear: () => {
-    componentActionsRecord = [];
+    componentActionsRecord[window.location.href] = [];
     index = 0;
   },
 
@@ -34,10 +37,12 @@ export default {
    * @returns number
    */
   saveNew: (component): number => {
-    componentActionsRecord[index] = component;
-    index++;
+    componentActionsRecord[window.location.href].push(component);
+    // componentActionsRecord[index] = component;
+    // index++;
 
-    return index - 1;
+    // return index - 1;
+    return componentActionsRecord[window.location.href].length - 1;
   },
   // ----------------------------CLASS COMPONENT--------------------------------
   /**
@@ -45,7 +50,8 @@ export default {
    * @param inputIndex - index of component inside `componentActionsRecord` coming from `timeJump.ts`
    * @returns - an object containing the bound setState method
    */
-  getComponentByIndex: (inputIndex: number): any | undefined => componentActionsRecord[inputIndex],
+  getComponentByIndex: (inputIndex: number): any | undefined =>
+    componentActionsRecord[window.location.href][inputIndex],
 
   //---------------------------FUNCTIONAL COMPONENT-----------------------------
   /**
@@ -53,12 +59,18 @@ export default {
    * @param inputIndex - index of component inside `componentActionsRecord` coming from `timeJump.ts`
    * @returns - an array of objects containing the bound dispatch methods
    */
-  getComponentByIndexHooks: (inputIndex: Array<number> = []): any[] | undefined =>
-    inputIndex.map((index) => componentActionsRecord[index]),
+  getComponentByIndexHooks: (inputIndex: Array<number> = []): any[] | undefined => {
+    const validIndex = inputIndex.filter(
+      (index) => componentActionsRecord[window.location.href]?.[index],
+    );
+    if (!validIndex.length) return undefined;
+
+    return validIndex.map((index) => componentActionsRecord[window.location.href][index]);
+  },
   // ----------------------------------DEBUGGING--------------------------------
   /**
    * @function getAllComponents - This method is used for debugging purpose to access the array of setState/dispatch methods
    * @returns - an array of objects containing the bound methods for updating state
    */
-  getAllComponents: (): any[] => componentActionsRecord,
+  getAllComponents: (): any[] => componentActionsRecord[window.location.href],
 };

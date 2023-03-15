@@ -13,9 +13,6 @@ function Nav() {
       <Link className='link' to='/buttons'>
         Counter
       </Link>
-      {/* <Link className='link' to='/test'>
-        Test
-      </Link> */}
     </div>
   );
 }

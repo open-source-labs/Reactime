@@ -45,7 +45,23 @@ import {
 } from './statePropExtractors';
 
 let rtidCounter = 0;
-const nextJSDefaultComponent = new Set(['ReactDevOverlay', 'Portal']);
+const nextJSDefaultComponent = new Set([
+  'Root',
+  'Head',
+  'AppContainer',
+  'Container',
+  'ReactDevOverlay',
+  'ErrorBoundary',
+  'AppRouterContext',
+  'SearchParamsContext',
+  'PathnameContextProviderAdapter',
+  'PathnameContext',
+  'RouterContext',
+  'HeadManagerContext',
+  'ImageConfigContext',
+  'RouteAnnouncer',
+  'Portal',
+]);
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
 /**
  * This is a recursive function that runs after every Fiber commit using the following logic:
@@ -92,6 +108,13 @@ export default function createTree(
     treeBaseDuration,
     _debugHookTypes,
   } = currentFiberNode;
+  // Obtain component name:
+  const componentName =
+    elementType?._context?.displayName || //For ContextProvider
+    elementType?._result?.name || //For lazy Component
+    elementType?.render?.name ||
+    elementType?.name ||
+    'nameless';
   // console.log('LinkFiber', {
   //   currentFiberNode,
   //   // tag,
@@ -155,6 +178,22 @@ export default function createTree(
     context: {},
   };
   let isStatefulComponent = false;
+  /**
+   * The updated tree after adding the `componentData` obtained from `currentFiberNode`
+   */
+  let newNode: Tree;
+
+  // console.log('LinkFiber', {
+  //   currentFiberNode,
+  //   // tag,
+  //   // elementType,
+  //   componentName,
+  //   // memoizedProps,
+  //   // memoizedState,
+  //   // stateNode,
+  //   // dependencies,
+  //   // _debugHookTypes,
+  // });
 
   // ----------------APPEND PROP DATA FROM REACT DEV TOOL-----------------------
   // check to see if the parent component has any state/props
@@ -182,6 +221,7 @@ export default function createTree(
   // memoizedState
   // Note: if user use ReactHook, memoizedState.memoizedState can be a falsy value such as null, false, ... => need to specify this data is not undefined
   if (
+    !nextJSDefaultComponent.has(componentName) &&
     (tag === FunctionComponent || tag === ClassComponent) &&
     memoizedState?.memoizedState !== undefined
   ) {
@@ -203,7 +243,11 @@ export default function createTree(
   // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
   // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
   // TODO: need to render this context provider when user use useContext hook.
-  if (tag === ContextProvider && !elementType._context.displayName) {
+  if (
+    !nextJSDefaultComponent.has(componentName) &&
+    tag === ContextProvider &&
+    !elementType._context.displayName
+  ) {
     let stateData = memoizedProps.value;
     if (stateData === null || typeof stateData !== 'object') {
       stateData = { CONTEXT: stateData };
@@ -222,9 +266,14 @@ export default function createTree(
   // Check if node is a stateful class component when user use setState.
   // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
   // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
-  if (stateNode?.state && (tag === ClassComponent || tag === IndeterminateComponent)) {
+  if (
+    !nextJSDefaultComponent.has(componentName) &&
+    stateNode?.state &&
+    (tag === ClassComponent || tag === IndeterminateComponent)
+  ) {
     // Save component's state and setState() function to our record for future
     // time-travel state changing. Add record index to snapshot so we can retrieve.
+    console.log('Class Component: ', stateNode);
     componentData.index = componentActionsRecord.saveNew(stateNode);
     // Save state information in componentData.
     componentData.state = stateNode.state;
@@ -236,6 +285,7 @@ export default function createTree(
   // ---------OBTAIN STATE & DISPATCH METHODS FROM FUNCTIONAL COMPONENT---------
   // Check if node is a hooks useState function
   if (
+    !nextJSDefaultComponent.has(componentName) &&
     memoizedState &&
     (tag === FunctionComponent ||
       // tag === ClassComponent || WE SHOULD NOT BE ABLE TO USE HOOK IN CLASS
@@ -276,22 +326,25 @@ export default function createTree(
   // This grabs stateless components
   if (
     !isStatefulComponent &&
-    (tag === FunctionComponent || tag === ClassComponent || tag === IndeterminateComponent)
+    (tag === FunctionComponent ||
+      tag === ClassComponent ||
+      tag === IndeterminateComponent ||
+      tag === ContextProvider)
   ) {
     newState = 'stateless';
   }
 
   // ------------------ADD COMPONENT DATA TO THE OUTPUT TREE--------------------
-  /**
-   * The updated tree after adding the `componentData` obtained from `currentFiberNode`
-   */
-  let newNode: Tree;
+
   /**
    * `rtid` - The `Root ID` is a unique identifier that is assigned to each React root instance in a React application.
    */
   let rtid: string | null = null;
   // We want to add this fiber node to the snapshot
-  if (isStatefulComponent || newState === 'stateless') {
+  if (
+    (isStatefulComponent || newState === 'stateless') &&
+    !nextJSDefaultComponent.has(componentName)
+  ) {
     // Grab JSX Component & replace the 'fromLinkFiber' class value
     if (currentFiberNode.child?.stateNode?.setAttribute) {
       rtid = `fromLinkFiber${rtidCounter}`;
@@ -310,14 +363,6 @@ export default function createTree(
       currentFiberNode.child.stateNode.classList.add(rtid);
     }
     rtidCounter += 1; // I THINK THIS SHOULD BE UP IN THE IF STATEMENT. Still unsure the use of rtid
-
-    // Obtain component name:
-    const componentName =
-      elementType?._context?.displayName || //For ContextProvider
-      elementType?._result?.name || //For lazy Component
-      elementType?.render?.name ||
-      elementType?.name ||
-      'nameless';
     // checking if tree fromSibling is true
     if (fromSibling) {
       newNode = tree.addSibling(newState, componentName, componentData, rtid);

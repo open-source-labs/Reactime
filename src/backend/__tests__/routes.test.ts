@@ -1,46 +1,76 @@
-import routes from '../routes';
+import Routes, { Route } from '../models/routes';
 
-describe('Unit Tests for routes.ts', () => {
+describe('Routes', () => {
+  beforeEach(() => {
+    // Reset the route history and id before each test
+    Routes.routeHistory = [new Route('dummyURL', 0)];
+    Routes.id = 0;
+    Routes.current = 0;
+  });
+
   describe('addRoute', () => {
-    it("If given a url that doesn't match the current route, it should return a new route object and add the route object to its values array.", () => {
-      const newRoute = routes.addRoute('http://localhost:8080/');
-      expect(newRoute.url).toBe('http://localhost:8080/');
-      expect(newRoute.id).toBe(1);
-      expect(routes.values[1].url).toBe('http://localhost:8080/');
-      expect(routes.values[1].id).toBe(1);
+    it('should return the current route if the URL matches the last visited route', () => {
+      const lastVisitedRoute = Routes.routeHistory[Routes.current];
+      const newRoute = Routes.addRoute(lastVisitedRoute.url);
+      expect(newRoute).toBe(lastVisitedRoute);
     });
 
-    it('If given a url that does match the current route, it should return the current route object and not add anything to its values array.', () => {
-      const sameRoute = routes.addRoute('http://localhost:8080/');
-      expect(sameRoute).toBe(routes.values[1]);
-      expect(routes.values.length).toBe(2);
+    it('should add a new route to the history stack if the URL does not match the last visited route', () => {
+      const lastVisitedRoute = Routes.routeHistory[Routes.current];
+      const newUrl = 'https://localhost8080/';
+      const newRoute = Routes.addRoute(newUrl);
+      expect(newRoute.url).toBe(newUrl);
+      expect(newRoute.id).toBe(lastVisitedRoute.id + 1);
+      expect(Routes.routeHistory.length).toBe(2);
+      expect(Routes.current).toBe(1);
+      expect(Routes.routeHistory[1]).toBe(newRoute);
     });
 
-    it('Should give route objects unique ids.', () => {
-      routes.addRoute('http://localhost:8080/test');
-      expect(routes.values[1].id).not.toBe(routes.values[2].id);
-    });
-
-    it('Should reassign current to point to the last index in the values array.', () => {
-      expect(routes.current).toBe(routes.values.length - 1);
+    it('should rebuild the history stack if the last visited index is not the last position in the stack', () => {
+      Routes.addRoute('https://localhost8080/1');
+      Routes.addRoute('https://localhost8080/2');
+      Routes.addRoute('https://localhost8080/3');
+      const newUrl = 'https://localhost8080/4';
+      Routes.current = 1; // Simulate timeJump functionality
+      const newRoute = Routes.addRoute(newUrl);
+      expect(Routes.routeHistory.length).toBe(3);
+      expect(Routes.current).toBe(2);
+      expect(Routes.routeHistory[0].url).toBe('dummyURL');
+      expect(Routes.routeHistory[1].url).toBe(newUrl);
+      expect(Routes.routeHistory[2].url).toBe('https://localhost8080/3');
     });
   });
 
   describe('navigate', () => {
-    it('Should correctly calculate delta between current and target route.', () => {
-      routes.addRoute('http://localhost:8080/test1');
-      routes.navigate({ url: 'http://localhost:8080/', id: 1 });
-      expect(routes.current).toBe(1);
-      routes.navigate({ url: 'http://localhost:8080/test1', id: 3 });
-      expect(routes.current).toBe(3);
+    beforeEach(() => {
+      // Add some dummy routes to the history stack
+      Routes.addRoute('https://localhost8080/1');
+      Routes.addRoute('https://localhost8080/2');
+      Routes.addRoute('https://localhost8080/3');
+      Routes.addRoute('https://localhost8080/4');
     });
 
-    it('Should return true if it navigated.', () => {
-      expect(routes.navigate({ url: 'http://localhost:8080/', id: 1 })).toBe(true);
+    it('should navigate to the target route and return true', () => {
+      const targetRoute = Routes.routeHistory[1];
+      const result = Routes.navigate(targetRoute);
+      expect(result).toBe(true);
+      expect(Routes.current).toBe(1);
+      expect(window.history.state).toBe(null); // state should be null after navigation
+      expect(window.location.href).toBe(targetRoute.url);
     });
 
-    it("Should return false if it didn't navigate.", () => {
-      expect(routes.navigate({ url: 'http://localhost:8080/', id: 1 })).toBe(false);
+    it('should not navigate if the target route is the current route and return false', () => {
+      const currentRoute = Routes.routeHistory[Routes.current];
+      const result = Routes.navigate(currentRoute);
+      expect(result).toBe(false);
+      expect(Routes.current).toBe(0);
+      expect(window.history.state).toBe(null); // state should not change
+      expect(window.location.href).toBe(currentRoute.url);
+    });
+
+    it('should throw an error if the target route cannot be found in the history stack', () => {
+      const targetRoute = new Route('https://localhost8080/unknown', 123);
+      expect(() => Routes.navigate(targetRoute)).toThrow();
     });
   });
 });
