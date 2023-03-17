@@ -81,13 +81,7 @@ export default function createTree(
   tree: Tree = new Tree('root', 'root'),
   fromSibling = false,
 ): Tree {
-  // Base case: child or sibling pointed to null
-  // if (!currentFiberNode) return tree; //TO BE DELETE SINCE THIS FUNCTION CAN ONLY BE RECURSIVE CALLED IF THE FIBERNODE HAS A CHILD/SIBILING
-  // if (!tree) return tree; //TO BE DELETE: WE HAVE A DEFAULT PARAMETER TREE, THIS WILL NEVER BE TRUE
-  // These have the newest state. We update state and then
-  // called updateSnapshotTree()
-
-  // Base Case: if has visited, return
+  // Base Case: if has visited the component, return
   if (circularComponentTable.has(currentFiberNode)) {
     return;
   } else {
@@ -132,30 +126,6 @@ export default function createTree(
   //   // _debugHookTypes,
   // });
 
-  // TODO: Understand this if statement
-  if (tag === HostComponent) {
-    try {
-      // Ensure parent component has memoizedProps property
-      if (
-        memoizedProps.children &&
-        memoizedProps.children[0]?._owner?.memoizedProps !== undefined
-      ) {
-        // Access the memoizedProps of the parent component
-        const propsData = memoizedProps.children[0]._owner.memoizedProps;
-        const newPropData = filterAndFormatData(
-          propsData,
-          tree.componentData.props ? tree.componentData.props : null,
-        );
-        tree.componentData = {
-          ...tree.componentData,
-          props: newPropData,
-        };
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   // -----------------INITIALIZE OBJECT TO CONTAIN COMPONENT DATA---------------
   let newState: any | { hooksState?: any[] } = {};
   let componentData: {
@@ -182,18 +152,6 @@ export default function createTree(
    * The updated tree after adding the `componentData` obtained from `currentFiberNode`
    */
   let newNode: Tree;
-
-  // console.log('LinkFiber', {
-  //   currentFiberNode,
-  //   // tag,
-  //   // elementType,
-  //   componentName,
-  //   // memoizedProps,
-  //   // memoizedState,
-  //   // stateNode,
-  //   // dependencies,
-  //   // _debugHookTypes,
-  // });
 
   // ----------------APPEND PROP DATA FROM REACT DEV TOOL-----------------------
   // check to see if the parent component has any state/props
@@ -273,7 +231,6 @@ export default function createTree(
   ) {
     // Save component's state and setState() function to our record for future
     // time-travel state changing. Add record index to snapshot so we can retrieve.
-    console.log('Class Component: ', stateNode);
     componentData.index = componentActionsRecord.saveNew(stateNode);
     // Save state information in componentData.
     componentData.state = stateNode.state;
@@ -314,11 +271,9 @@ export default function createTree(
         });
         isStatefulComponent = true;
       } catch (err) {
-        console.log('Failed Element', { component: elementType?.name });
-        // if (!nextJSDefaultComponent.has(elementType?.name)) {
-        //   throw new Error(err);
-        // } else {
-        //   console.log('We are good');
+        console.log('ERROR: Failed Element during JSX parsing', {
+          componentName: elementType?.name,
+        });
       }
     }
   }
@@ -378,7 +333,14 @@ export default function createTree(
   if (child) createTree(child, circularComponentTable, newNode);
 
   // If currentFiberNode has siblings, recurse on siblings
-  if (sibling) createTree(sibling, circularComponentTable, newNode, true);
+  if (sibling) {
+    if (
+      (isStatefulComponent || newState === 'stateless') &&
+      !nextJSDefaultComponent.has(componentName)
+    )
+      createTree(sibling, circularComponentTable, newNode, true);
+    else createTree(sibling, circularComponentTable, newNode, fromSibling);
+  }
 
   // -------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING-------
   return tree;

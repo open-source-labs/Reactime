@@ -10,14 +10,14 @@ function Increment() {
       <button className='increment' onClick={() => setCount(count + 1)}>
         You clicked me {count} times.
       </button>
-      <div>
+      {/* <div> */}
         <Box
           value={value}
           column={3}
           row={2}
           handleBoxClick={() => setValue((value: BoardText) => (value == 'X' ? 'O' : 'X'))}
         />
-      </div>
+      {/* </div> */}
     </div>
   );
 }

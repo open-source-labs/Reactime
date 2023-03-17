@@ -34,6 +34,7 @@ export function serializeState(state) {
     return JSON.parse(JSON.stringify(state));
   } catch (e) {
     // if there is an error, that means there is circular state i.e state that depends on itself
+    console.log('circular');
     return 'circularState';
   }
 }
@@ -51,7 +52,7 @@ export function serializeState(state) {
  * @param route - an object representing the route associated with the node.
  */
 class Tree {
-  state: string | {};
+  state: string | {}; // TODO: should change this to stateless || statefull
 
   name: string;
 
@@ -77,16 +78,10 @@ class Tree {
   // If not, create the new component and also a new key: value pair in 'componentNames' with the component's name as the key and 0 as its value
   // EXAMPLE OF COMPONENTNAMES OBJECT: {editableInput: 1, Provider: 0, etc}
 
-  constructor(
-    state: string | {},
-    name = 'nameless',
-    componentData: {} = {},
-    rtid: any = null,
-    string: any = null,
-  ) {
+  constructor(state: string | {}, name = 'nameless', componentData: {} = {}, rtid: any = null) {
     this.state = state === 'root' ? 'root' : serializeState(state);
     this.name = name;
-    this.componentData = componentData ? { ...JSON.parse(JSON.stringify(componentData)) } : {};
+    this.componentData = JSON.parse(JSON.stringify(componentData));
     this.children = [];
     this.parent = null; // ref to parent so we can add siblings
     this.isExpanded = true;
@@ -100,26 +95,24 @@ class Tree {
    * @returns
    */
   checkForDuplicates(name: string): string {
+    /**
+     * The condition for check empty name does not seem to ever be reached
+     * Commented and did not remove for potential future use
+     */
     // check for empty name
-    if (name === '' && typeof this.rtid === 'string') {
-      name = this.rtid.replace('fromLinkFiber', '');
-    }
-    // if we are at root, then make sure componentNames is an empty object
-    if (this.state === 'root') componentNames = {};
-    // check for duplicate
-    else if (componentNames[name] !== undefined) {
-      // if name exists in componentNames object, grab count and add 1
-      const count: number = componentNames[name] + 1;
-      // declare a new name variable
-      const newName: string = name + count;
-      // update name count in object
-      componentNames[name] = count;
-      // return newName
-      return newName;
-    }
-    // add name in componentsName with value of 0
-    componentNames[name] = 0;
-    // return name
+    // if (name === '' && typeof this.rtid === 'string') {
+    //   name = this.rtid.replace('fromLinkFiber', '');
+    // }
+    // console.log('Tree', { name, parentName: this.name, this: this });
+    // if parent node is root, initialize the componentNames object
+    if (this.name === 'root') componentNames = {};
+
+    // Numerize the component name if found duplicate
+    // Ex: A board has 3 rows => Row, Row1, Row2
+    // Ex: Each row has 3 boxes => Box, Box1, Box2, ..., Box8
+    componentNames[name] = componentNames[name] + 1 || 0;
+    name += componentNames[name] ? componentNames[name] : '';
+
     return name;
   }
   /**
@@ -131,9 +124,10 @@ class Tree {
    * @returns - return new tree instance that is child
    */
   addChild(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
-    // gets unique name by calling checkForDuplicates method
+    // Get unique name by invoking checkForDuplicates method
     const uniqueName = this.checkForDuplicates(name);
-    // instantiates new child Tree with state, uniqueName, componentData and rtid
+    console.log('CHILD', { name: uniqueName, this: this });
+    // Instantiates new child Tree with state, uniqueName, componentData and rtid
     const newChild: Tree = new Tree(state, uniqueName, componentData, rtid);
     // updating newChild parent to "this"
     newChild.parent = this;
@@ -153,6 +147,7 @@ class Tree {
   addSibling(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
     // gets unique name by calling checkForDuplicates method
     const uniqueName = this.checkForDuplicates(name);
+    console.log('SIBILING', { name: uniqueName, this: this });
     // instantiate new sibilng tree with state, uniqueName, componentName and rtid
     const newSibling: Tree = new Tree(state, uniqueName, componentData, rtid);
     // updating newSibling's parent to be the parent of "this" which refers to sibling node
