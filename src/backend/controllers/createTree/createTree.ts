@@ -43,25 +43,8 @@ import {
   getStateAndContextData,
   filterAndFormatData,
 } from './statePropExtractors';
+import { nextJSDefaultComponent } from '../../models/filterConditions';
 
-let rtidCounter = 0;
-const nextJSDefaultComponent = new Set([
-  'Root',
-  'Head',
-  'AppContainer',
-  'Container',
-  'ReactDevOverlay',
-  'ErrorBoundary',
-  'AppRouterContext',
-  'SearchParamsContext',
-  'PathnameContextProviderAdapter',
-  'PathnameContext',
-  'RouterContext',
-  'HeadManagerContext',
-  'ImageConfigContext',
-  'RouteAnnouncer',
-  'Portal',
-]);
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
 /**
  * This is a recursive function that runs after every Fiber commit using the following logic:
@@ -77,269 +60,267 @@ const nextJSDefaultComponent = new Set([
 // TODO: Not sure why the ritd need to be outside of the createTree function. Want to put inside, but in case this need to be keep track for front end.
 export default function createTree(
   currentFiberNode: Fiber,
-  circularComponentTable: Set<Fiber> = new Set(),
-  tree: Tree = new Tree('root', 'root'),
+  // circularComponentTable: Set<Fiber> = new Set(),
+  // tree: Tree = new Tree('root', 'root'),
 ): Tree {
-  // Base Case: if has visited the component, return
-  if (circularComponentTable.has(currentFiberNode)) {
-    return;
-  } else {
-    circularComponentTable.add(currentFiberNode);
-  }
-  const {
-    sibling,
-    stateNode,
-    child,
-    // with memoizedState we can grab the root type and construct an Abstract Syntax Tree from the hooks structure using Acorn in order to extract the hook getters and match them with their corresponding setters in an object
-    memoizedState,
-    memoizedProps,
-    elementType,
-    tag,
-    actualDuration,
-    actualStartTime,
-    selfBaseDuration,
-    treeBaseDuration,
-    _debugHookTypes,
-  } = currentFiberNode;
-  // Obtain component name:
-  const componentName =
-    elementType?._context?.displayName || //For ContextProvider
-    elementType?._result?.name || //For lazy Component
-    elementType?.render?.name ||
-    elementType?.name ||
-    'nameless';
-  console.log('createTree', { tree });
-  // console.log('LinkFiber', {
-  //   currentFiberNode,
-  //   // tag,
-  //   // elementType,
-  //   componentName:
-  //     elementType?._context?.displayName || //For ContextProvider
-  //     elementType?._result?.name || //For lazy Component
-  //     elementType?.render?.name ||
-  //     elementType?.name ||
-  //     elementType,
-  //   // memoizedProps,
-  //   // memoizedState,
-  //   // stateNode,
-  //   // dependencies,
-  //   // _debugHookTypes,
-  // });
+  const circularComponentTable = new Set();
+  let rtidCounter = 0;
+  return _createTree(currentFiberNode, new Tree('root', 'root'));
 
-  // -----------------INITIALIZE OBJECT TO CONTAIN COMPONENT DATA---------------
-  let newState: any | { hooksState?: any[] } = {};
-  let componentData: {
-    actualDuration?: number;
-    actualStartTime?: number;
-    selfBaseDuration?: number;
-    treeBaseDuration?: number;
-    props: {};
-    context: {};
-    state?: {};
-    hooksState?: {};
-    hooksIndex?: number[];
-    index?: number;
-  } = {
-    actualDuration,
-    actualStartTime,
-    selfBaseDuration,
-    treeBaseDuration,
-    props: {},
-    context: {},
-  };
-  let isStatefulComponent = false;
-
-  // ----------------APPEND PROP DATA FROM REACT DEV TOOL-----------------------
-  // check to see if the parent component has any state/props
-  if (
-    (tag === FunctionComponent ||
-      tag === ClassComponent ||
-      tag === IndeterminateComponent ||
-      tag === ContextProvider) &&
-    memoizedProps
-  ) {
-    switch (elementType.name) {
-      case 'Router':
-        componentData.props = { pathname: memoizedProps?.location?.pathname };
-        break;
-      case 'RenderedRoute':
-        componentData.props = { pathname: memoizedProps?.match?.pathname };
-        break;
-      default:
-        Object.assign(componentData.props, filterAndFormatData(memoizedProps));
+  function _createTree(currentFiberNode: Fiber, tree: Tree): Tree {
+    // Base Case: if has visited the component, return
+    if (circularComponentTable.has(currentFiberNode)) {
+      return;
+    } else {
+      circularComponentTable.add(currentFiberNode);
     }
-  }
+    const {
+      sibling,
+      stateNode,
+      child,
+      // with memoizedState we can grab the root type and construct an Abstract Syntax Tree from the hooks structure using Acorn in order to extract the hook getters and match them with their corresponding setters in an object
+      memoizedState,
+      memoizedProps,
+      elementType,
+      tag,
+      actualDuration,
+      actualStartTime,
+      selfBaseDuration,
+      treeBaseDuration,
+      _debugHookTypes,
+    } = currentFiberNode;
+    // Obtain component name:
+    const componentName =
+      elementType?._context?.displayName || //For ContextProvider
+      elementType?._result?.name || //For lazy Component
+      elementType?.render?.name ||
+      elementType?.name ||
+      'nameless';
+    // console.log('LinkFiber', {
+    //   currentFiberNode,
+    //   // tag,
+    //   // elementType,
+    //   componentName:
+    //     elementType?._context?.displayName || //For ContextProvider
+    //     elementType?._result?.name || //For lazy Component
+    //     elementType?.render?.name ||
+    //     elementType?.name ||
+    //     elementType,
+    //   // memoizedProps,
+    //   // memoizedState,
+    //   // stateNode,
+    //   // dependencies,
+    //   // _debugHookTypes,
+    // });
 
-  // ------------APPEND STATE & CONTEXT DATA FROM REACT DEV TOOL----------------
+    // -----------------INITIALIZE OBJECT TO CONTAIN COMPONENT DATA---------------
+    let newState: any | { hooksState?: any[] } = {};
+    let componentData: {
+      actualDuration?: number;
+      actualStartTime?: number;
+      selfBaseDuration?: number;
+      treeBaseDuration?: number;
+      props: {};
+      context: {};
+      state?: {};
+      hooksState?: {};
+      hooksIndex?: number[];
+      index?: number;
+    } = {
+      actualDuration,
+      actualStartTime,
+      selfBaseDuration,
+      treeBaseDuration,
+      props: {},
+      context: {},
+    };
+    let isStatefulComponent = false;
 
-  // memoizedState
-  // Note: if user use ReactHook, memoizedState.memoizedState can be a falsy value such as null, false, ... => need to specify this data is not undefined
-  if (
-    !nextJSDefaultComponent.has(componentName) &&
-    (tag === FunctionComponent || tag === ClassComponent) &&
-    memoizedState?.memoizedState !== undefined
-  ) {
-    // If user uses Redux, context data will be stored in memoizedState of the Provider component => grab context object stored in the memoizedState
-    if (elementType.name === 'Provider') {
-      Object.assign(
-        componentData.context,
-        getStateAndContextData(memoizedState, elementType.name, _debugHookTypes),
-      );
-    }
-    // Else if user use ReactHook to define state => all states will be stored in memoizedState => grab all states stored in the memoizedState
-    // else {
-    //   Object.assign(
-    //     componentData.state,
-    //     getStateAndContextData(memoizedState, elementType.name, _debugHookTypes),
-    //   );
-    // }
-  }
-  // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
-  // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
-  // TODO: need to render this context provider when user use useContext hook.
-  if (
-    !nextJSDefaultComponent.has(componentName) &&
-    tag === ContextProvider &&
-    !elementType._context.displayName
-  ) {
-    let stateData = memoizedProps.value;
-    if (stateData === null || typeof stateData !== 'object') {
-      stateData = { CONTEXT: stateData };
-    }
-    componentData.context = filterAndFormatData(stateData);
-  }
-
-  // DEPRECATED: This code might have worked previously. However, with the update of React Dev Tool, context can no longer be pulled using this method.
-  // Check to see if the component has any context:
-  // if the component uses the useContext hook, we want to grab the context object and add it to the componentData object for that fiber
-  // if (tag === FunctionComponent && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
-  //   componentData.context = convertDataToString(dependencies.firstContext.memoizedValue);
-  // }
-
-  // ----------OBTAIN STATE & SET STATE METHODS FROM CLASS COMPONENT------------
-  // Check if node is a stateful class component when user use setState.
-  // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
-  // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
-  if (
-    !nextJSDefaultComponent.has(componentName) &&
-    stateNode?.state &&
-    (tag === ClassComponent || tag === IndeterminateComponent)
-  ) {
-    // Save component's state and setState() function to our record for future
-    // time-travel state changing. Add record index to snapshot so we can retrieve.
-    componentData.index = componentActionsRecord.saveNew(stateNode);
-    // Save state information in componentData.
-    componentData.state = stateNode.state;
-    // Passess to front end
-    newState = stateNode.state;
-    isStatefulComponent = true;
-  }
-
-  // ---------OBTAIN STATE & DISPATCH METHODS FROM FUNCTIONAL COMPONENT---------
-  // Check if node is a hooks useState function
-  if (
-    !nextJSDefaultComponent.has(componentName) &&
-    memoizedState &&
-    (tag === FunctionComponent ||
-      // tag === ClassComponent || WE SHOULD NOT BE ABLE TO USE HOOK IN CLASS
-      tag === IndeterminateComponent ||
-      tag === ContextProvider) //TODOD: Need to figure out why we need context provider
-  ) {
-    if (memoizedState.queue) {
-      try {
-        // Hooks states are stored as a linked list using memoizedState.next,
-        // so we must traverse through the list and get the states.
-        // We then store them along with the corresponding memoizedState.queue,
-        // which includes the dispatch() function we use to change their state.
-        const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
-        const hooksNames = getHooksNames(elementType.toString());
-        // Intialize state & index:
-        newState.hooksState = [];
-        componentData.hooksState = {};
-        componentData.hooksIndex = [];
-        hooksStates.forEach(({ state, component }, i) => {
-          // Save component's state and dispatch() function to our record for future time-travel state changing. Add record index to snapshot so we can retrieve.
-          componentData.hooksIndex.push(componentActionsRecord.saveNew(component));
-          // Save state information in componentData.
-          newState.hooksState.push({ [hooksNames[i].varName]: state });
-          // Passess to front end
-          componentData.hooksState[hooksNames[i].varName] = state;
-        });
-        isStatefulComponent = true;
-      } catch (err) {
-        console.log('ERROR: Failed Element during JSX parsing', {
-          componentName: elementType?.name,
-        });
+    // ----------------APPEND PROP DATA FROM REACT DEV TOOL-----------------------
+    // check to see if the parent component has any state/props
+    if (
+      !nextJSDefaultComponent.has(componentName) &&
+      (tag === FunctionComponent ||
+        tag === ClassComponent ||
+        tag === IndeterminateComponent ||
+        tag === ContextProvider) &&
+      memoizedProps
+    ) {
+      switch (elementType.name) {
+        case 'Router':
+          componentData.props = { pathname: memoizedProps?.location?.pathname };
+          break;
+        case 'RenderedRoute':
+          componentData.props = { pathname: memoizedProps?.match?.pathname };
+          break;
+        default:
+          Object.assign(componentData.props, filterAndFormatData(memoizedProps));
       }
     }
-  }
 
-  // This grabs stateless components
-  if (
-    !isStatefulComponent &&
-    (tag === FunctionComponent ||
-      tag === ClassComponent ||
-      tag === IndeterminateComponent ||
-      tag === ContextProvider)
-  ) {
-    newState = 'stateless';
-  }
+    // ------------APPEND CONTEXT DATA FROM REACT DEV TOOL----------------
 
-  // ------------------ADD COMPONENT DATA TO THE OUTPUT TREE--------------------
+    // memoizedState
+    // Note: if user use ReactHook, memoizedState.memoizedState can be a falsy value such as null, false, ... => need to specify this data is not undefined
+    if (
+      !nextJSDefaultComponent.has(componentName) &&
+      (tag === FunctionComponent || tag === ClassComponent) &&
+      memoizedState?.memoizedState !== undefined
+    ) {
+      // If user uses Redux, context data will be stored in memoizedState of the Provider component => grab context object stored in the memoizedState
+      if (elementType.name === 'Provider') {
+        Object.assign(
+          componentData.context,
+          getStateAndContextData(memoizedState, elementType.name, _debugHookTypes),
+        );
+      }
+      // Else if user use ReactHook to define state => all states will be stored in memoizedState => grab all states stored in the memoizedState
+      // else {
+      //   Object.assign(
+      //     componentData.state,
+      //     getStateAndContextData(memoizedState, elementType.name, _debugHookTypes),
+      //   );
+      // }
+    }
+    // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
+    // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
+    // TODO: need to render this context provider when user use useContext hook.
+    if (
+      !nextJSDefaultComponent.has(componentName) &&
+      tag === ContextProvider &&
+      !elementType._context.displayName
+    ) {
+      let stateData = memoizedProps.value;
+      if (stateData === null || typeof stateData !== 'object') {
+        stateData = { CONTEXT: stateData };
+      }
+      componentData.context = filterAndFormatData(stateData);
+    }
 
-  /**
-   * `rtid` - The `Root ID` is a unique identifier that is assigned to each React root instance in a React application.
-   */
-  let rtid: string | null = null;
-  /**
-   * The updated tree after adding the `componentData` obtained from `currentFiberNode`
-   */
-  let newNode: Tree = tree;
-  let parentNode: Tree;
-  // We want to add this fiber node to the snapshot
-  if (
-    (isStatefulComponent || newState === 'stateless') &&
-    !nextJSDefaultComponent.has(componentName)
-  ) {
-    // Grab JSX Component & replace the 'fromLinkFiber' class value
-    if (currentFiberNode.child?.stateNode?.setAttribute) {
-      rtid = `fromLinkFiber${rtidCounter}`;
-      // rtid = rtidCounter;
-      // check if rtid is already present
-      // remove existing rtid before adding a new one
-      if (currentFiberNode.child.stateNode.classList.length > 0) {
-        const lastClass =
-          currentFiberNode.child.stateNode.classList[
-            currentFiberNode.child.stateNode.classList.length - 1
-          ];
-        if (lastClass.includes('fromLinkFiber')) {
-          currentFiberNode.child.stateNode.classList.remove(lastClass);
+    // DEPRECATED: This code might have worked previously. However, with the update of React Dev Tool, context can no longer be pulled using this method.
+    // Check to see if the component has any context:
+    // if the component uses the useContext hook, we want to grab the context object and add it to the componentData object for that fiber
+    // if (tag === FunctionComponent && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
+    //   componentData.context = convertDataToString(dependencies.firstContext.memoizedValue);
+    // }
+
+    // ----------OBTAIN STATE & SET STATE METHODS FROM CLASS COMPONENT------------
+    // Check if node is a stateful class component when user use setState.
+    // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
+    // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
+    if (
+      !nextJSDefaultComponent.has(componentName) &&
+      stateNode?.state &&
+      (tag === ClassComponent || tag === IndeterminateComponent)
+    ) {
+      // Save component's state and setState() function to our record for future
+      // time-travel state changing. Add record index to snapshot so we can retrieve.
+      componentData.index = componentActionsRecord.saveNew(stateNode);
+      // Save state information in componentData.
+      componentData.state = stateNode.state;
+      // Passess to front end
+      newState = stateNode.state;
+      isStatefulComponent = true;
+    }
+
+    // ---------OBTAIN STATE & DISPATCH METHODS FROM FUNCTIONAL COMPONENT---------
+    // Check if node is a hooks useState function
+    if (
+      !nextJSDefaultComponent.has(componentName) &&
+      memoizedState &&
+      (tag === FunctionComponent ||
+        // tag === ClassComponent || WE SHOULD NOT BE ABLE TO USE HOOK IN CLASS
+        tag === IndeterminateComponent ||
+        tag === ContextProvider) //TODOD: Need to figure out why we need context provider
+    ) {
+      if (memoizedState.queue) {
+        try {
+          // Hooks states are stored as a linked list using memoizedState.next,
+          // so we must traverse through the list and get the states.
+          // We then store them along with the corresponding memoizedState.queue,
+          // which includes the dispatch() function we use to change their state.
+          const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
+          const hooksNames = getHooksNames(elementType.toString());
+          // Intialize state & index:
+          newState.hooksState = [];
+          componentData.hooksState = {};
+          componentData.hooksIndex = [];
+          hooksStates.forEach(({ state, component }, i) => {
+            // Save component's state and dispatch() function to our record for future time-travel state changing. Add record index to snapshot so we can retrieve.
+            componentData.hooksIndex.push(componentActionsRecord.saveNew(component));
+            // Save state information in componentData.
+            newState.hooksState.push({ [hooksNames[i].varName]: state });
+            // Passess to front end
+            componentData.hooksState[hooksNames[i].varName] = state;
+          });
+          isStatefulComponent = true;
+        } catch (err) {
+          console.log('ERROR: Failed Element during JSX parsing', {
+            componentName: elementType?.name,
+          });
         }
       }
-      currentFiberNode.child.stateNode.classList.add(rtid);
     }
-    rtidCounter += 1; // I THINK THIS SHOULD BE UP IN THE IF STATEMENT. Still unsure the use of rtid
 
-    // Append the childNode to the tree
-    [parentNode, newNode] = tree.addChild(newState, componentName, componentData, rtid);
-  }
+    // This grabs stateless components
+    if (
+      !isStatefulComponent &&
+      (tag === FunctionComponent ||
+        tag === ClassComponent ||
+        tag === IndeterminateComponent ||
+        tag === ContextProvider)
+    ) {
+      newState = 'stateless';
+    }
 
-  // ----------------------TRAVERSE TO NEXT FIBERNODE---------------------------
-  // If currentFiberNode has children, recurse on children
-  if (child) createTree(child, circularComponentTable, newNode);
+    // ------------------ADD COMPONENT DATA TO THE OUTPUT TREE--------------------
 
-  // If currentFiberNode has siblings, recurse on siblings
-  if (sibling) {
-    // If the component was not filtered, add the sibling to the parentNode
+    /**
+     * `rtid` - The `Root ID` is a unique identifier that is assigned to each React root instance in a React application.
+     */
+    let rtid: string | null = null;
+    /**
+     * The updated tree after adding the `componentData` obtained from `currentFiberNode`
+     */
+    let childNode: Tree = tree;
+    // We want to add this fiber node to the snapshot
     if (
       (isStatefulComponent || newState === 'stateless') &&
       !nextJSDefaultComponent.has(componentName)
-    )
-      createTree(sibling, circularComponentTable, parentNode);
+    ) {
+      // Grab JSX Component & replace the 'fromLinkFiber' class value
+      if (currentFiberNode.child?.stateNode?.setAttribute) {
+        rtid = `fromLinkFiber${rtidCounter}`;
+        // rtid = rtidCounter;
+        // check if rtid is already present
+        // remove existing rtid before adding a new one
+        if (currentFiberNode.child.stateNode.classList.length > 0) {
+          const lastClass =
+            currentFiberNode.child.stateNode.classList[
+              currentFiberNode.child.stateNode.classList.length - 1
+            ];
+          if (lastClass.includes('fromLinkFiber')) {
+            currentFiberNode.child.stateNode.classList.remove(lastClass);
+          }
+        }
+        currentFiberNode.child.stateNode.classList.add(rtid);
+      }
+      rtidCounter += 1; // I THINK THIS SHOULD BE UP IN THE IF STATEMENT. Still unsure the use of rtid
 
-    else createTree(sibling, circularComponentTable, newNode);
+      // Append the childNode to the tree
+      childNode = tree.addChild(newState, componentName, componentData, rtid);
+    }
+
+    // ----------------------TRAVERSE TO NEXT FIBERNODE---------------------------
+    // If currentFiberNode has children, recurse on children
+    if (child) _createTree(child, childNode);
+
+    // If currentFiberNode has siblings, recurse on siblings
+    if (sibling) {
+      _createTree(sibling, tree);
+    }
+
+    // -------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING-------
+    return tree;
   }
-
-  // -------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING-------
-  return tree;
 }

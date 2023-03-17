@@ -2,7 +2,7 @@ import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
 // passes the data down to its components
 import componentActionsRecord from '../models/masterState';
 import routes from '../models/routes';
-import createTree from '../controllers/createTree/createTree';
+import _createTree from '../controllers/createTree/createTree';
 
 // -------------------------UPDATE & SEND TREE SNAP SHOT------------------------
 /**
@@ -19,9 +19,9 @@ export default function updateAndSendSnapShotTree(snapshot: Snapshot, fiberRoot:
   // Clear all of the legacy actions from old fiber tree becuase we are about to create a new one
   componentActionsRecord.clear();
   // Calls the createTree function which creates the new Fiber tree and adds it to tree property on the snapShot object
-  snapshot.tree = createTree(current);
+  snapshot.tree = _createTree(current);
   // Make a deep copy of the tree:
-  const payload = snapshot.tree.cleanTreeCopy();
+  const payload = snapshot.tree;
   // Save the current window url to route
   payload.route = routes.addRoute(window.location.href);
   console.log('send snapshot', { payload });

@@ -7,10 +7,6 @@
 /* eslint-disable no-param-reassign */
 import { Route } from './routes';
 
-// The circularComponentTable is used to handle circular references in the state object. It keeps tracks of the components that have already been serialized. When a component is encountered for the first time, it is added to the table along with a unique identifier. If the same component is encountered again, the identifier is used to reference the previously serialized component in the output instead of serializing it again, thus avoiding the infinite loop.
-const circularComponentTable = new Set<Tree>();
-// Used to keep track of which objects have already been copied during the serialization process. This is necessary to handle circular references correctly. When an object is serialized, all its properties are copied to the serialized object. If an object property is an object itself, it needs to be serialized recursively. However, if the object being serialized has already been serialized before, it should not be serialized again to prevent an infinite loop.
-let copyInstances = 0;
 // ComponentNames is used to store a mapping between a component's unique identifier and its name. This mapping is used to reconstruct the component instances during deserialization.
 let componentNames = {};
 
@@ -58,9 +54,7 @@ class Tree {
 
   componentData: {};
 
-  children: (Tree | string)[];
-
-  parent: Tree;
+  children: Tree[];
 
   isExpanded: boolean = true;
 
@@ -76,12 +70,16 @@ class Tree {
   // If not, create the new component and also a new key: value pair in 'componentNames' with the component's name as the key and 0 as its value
   // EXAMPLE OF COMPONENTNAMES OBJECT: {editableInput: 1, Provider: 0, etc}
 
-  constructor(state: string | {}, name = 'nameless', componentData: {} = {}, rtid: any = null) {
+  constructor(
+    state: string | {},
+    name = 'nameless',
+    componentData: {} = {},
+    rtid: string | null = null,
+  ) {
     this.children = [];
     this.componentData = JSON.parse(JSON.stringify(componentData));
     this.state = state === 'root' ? 'root' : serializeState(state);
     this.name = name;
-    this.parent = null; // ref to parent so we can add siblings
     this.rtid = rtid;
   }
 
@@ -100,7 +98,6 @@ class Tree {
     // if (name === '' && typeof this.rtid === 'string') {
     //   name = this.rtid.replace('fromLinkFiber', '');
     // }
-    // console.log('Tree', { name, parentName: this.name, this: this });
     // if parent node is root, initialize the componentNames object
     if (this.name === 'root') componentNames = {};
 
@@ -120,56 +117,15 @@ class Tree {
    * @param rtid - ??
    * @returns - return new tree instance that is child
    */
-  addChild(state: string | {}, name: string, componentData: {}, rtid: any): [Tree, Tree] {
+  addChild(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
     // Get unique name by invoking checkForDuplicates method
     const uniqueName = this.checkForDuplicates(name);
-    console.log('CHILD', { name: uniqueName, this: this });
     // Instantiates new child Tree with state, uniqueName, componentData and rtid
     const newChild: Tree = new Tree(state, uniqueName, componentData, rtid);
-    // updating newChild parent to "this"
-    newChild.parent = this;
     // adds newChild to children array
     this.children.push(newChild);
     // return newChild
-    return [this, newChild];
-  }
-
-  /**
-   * @function cleanTreeCopy : Adds a sibling to the current tree
-   */
-  cleanTreeCopy(): Tree {
-    /**
-     * @object circularComponentTable : Clears circular component table only on first call, not recursive ones
-     *
-     */
-    // if we havent made a copy of the tree, increment copyInstances and clear cicularComponentTable set
-    if (copyInstances === 0) {
-      // increment copyInstances
-      copyInstances++;
-      // clear circularComponentTable
-      circularComponentTable.clear();
-    }
-    // creates copy of present node
-    let copy: Tree = new Tree(this.state, this.name, this.componentData, this.rtid);
-    // you want to get rid of the parentNode becuase right now copy and "this" have the same parent and you dont want that
-    delete copy.parent;
-    // add to circularComponentTable
-    circularComponentTable.add(this);
-    // remove unserializable Trees
-    copy = scrubUnserializableMembers(copy);
-
-    // creates copy of each child of the present node and assigns it to children property of the new copy Tree
-    copy.children = this.children.map((child: Tree): Tree | string => {
-      // if child isnt in circularComponent table, return recursive call of cleanTreeCopy() on child. We need to do this to fully build out the tree
-      if (!circularComponentTable.has(child)) {
-        return child.cleanTreeCopy();
-      }
-      return 'circular';
-    });
-    // reset copyInstances back to zero becuase we are done making a copy of the tree
-    copyInstances--;
-    // return the copy
-    return copy;
+    return newChild;
   }
 }
 

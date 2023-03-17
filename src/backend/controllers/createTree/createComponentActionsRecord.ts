@@ -38,24 +38,8 @@ import Tree from '../../models/tree';
 // passes the data down to its components
 import componentActionsRecord from '../../models/masterState';
 import { getHooksStateAndUpdateMethod } from './statePropExtractors';
+import { nextJSDefaultComponent } from '../../models/filterConditions';
 
-const nextJSDefaultComponent = new Set([
-  'Root',
-  'Head',
-  'AppContainer',
-  'Container',
-  'ReactDevOverlay',
-  'ErrorBoundary',
-  'AppRouterContext',
-  'SearchParamsContext',
-  'PathnameContextProviderAdapter',
-  'PathnameContext',
-  'RouterContext',
-  'HeadManagerContext',
-  'ImageConfigContext',
-  'RouteAnnouncer',
-  'Portal',
-]);
 // ------------------------CREATE COMPONENT ACTIONS RECORD----------------------
 /**
  * This is a recursive function that runs after Fiber commit, if user navigating to a new route during jumping. This function performs the following logic:
@@ -64,7 +48,6 @@ const nextJSDefaultComponent = new Set([
  * @param currentFiberNode A Fiber object
  * @param circularComponentTable A table content visited Fiber nodes
  */
-// TODO: Not sure why the ritd need to be outside of the createTree function. Want to put inside, but in case this need to be keep track for front end.
 export default function createComponentActionsRecord(
   currentFiberNode: Fiber,
   circularComponentTable: Set<Fiber> = new Set(),
@@ -91,7 +74,7 @@ export default function createComponentActionsRecord(
     elementType?.render?.name ||
     elementType?.name ||
     'nameless';
-  //   console.log('LinkFiber', {
+  //   console.log('createComponentActionsRecord', {
   //     currentFiberNode,
   //     // tag,
   //     // elementType,
