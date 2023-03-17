@@ -79,7 +79,6 @@ export default function createTree(
   currentFiberNode: Fiber,
   circularComponentTable: Set<Fiber> = new Set(),
   tree: Tree = new Tree('root', 'root'),
-  fromSibling = false,
 ): Tree {
   // Base Case: if has visited the component, return
   if (circularComponentTable.has(currentFiberNode)) {
@@ -109,6 +108,7 @@ export default function createTree(
     elementType?.render?.name ||
     elementType?.name ||
     'nameless';
+  console.log('createTree', { tree });
   // console.log('LinkFiber', {
   //   currentFiberNode,
   //   // tag,
@@ -148,10 +148,6 @@ export default function createTree(
     context: {},
   };
   let isStatefulComponent = false;
-  /**
-   * The updated tree after adding the `componentData` obtained from `currentFiberNode`
-   */
-  let newNode: Tree;
 
   // ----------------APPEND PROP DATA FROM REACT DEV TOOL-----------------------
   // check to see if the parent component has any state/props
@@ -295,6 +291,11 @@ export default function createTree(
    * `rtid` - The `Root ID` is a unique identifier that is assigned to each React root instance in a React application.
    */
   let rtid: string | null = null;
+  /**
+   * The updated tree after adding the `componentData` obtained from `currentFiberNode`
+   */
+  let newNode: Tree = tree;
+  let parentNode: Tree;
   // We want to add this fiber node to the snapshot
   if (
     (isStatefulComponent || newState === 'stateless') &&
@@ -305,7 +306,7 @@ export default function createTree(
       rtid = `fromLinkFiber${rtidCounter}`;
       // rtid = rtidCounter;
       // check if rtid is already present
-      //  remove existing rtid before adding a new one
+      // remove existing rtid before adding a new one
       if (currentFiberNode.child.stateNode.classList.length > 0) {
         const lastClass =
           currentFiberNode.child.stateNode.classList[
@@ -318,14 +319,9 @@ export default function createTree(
       currentFiberNode.child.stateNode.classList.add(rtid);
     }
     rtidCounter += 1; // I THINK THIS SHOULD BE UP IN THE IF STATEMENT. Still unsure the use of rtid
-    // checking if tree fromSibling is true
-    if (fromSibling) {
-      newNode = tree.addSibling(newState, componentName, componentData, rtid);
-    } else {
-      newNode = tree.addChild(newState, componentName, componentData, rtid);
-    }
-  } else {
-    newNode = tree;
+
+    // Append the childNode to the tree
+    [parentNode, newNode] = tree.addChild(newState, componentName, componentData, rtid);
   }
 
   // ----------------------TRAVERSE TO NEXT FIBERNODE---------------------------
@@ -334,12 +330,14 @@ export default function createTree(
 
   // If currentFiberNode has siblings, recurse on siblings
   if (sibling) {
+    // If the component was not filtered, add the sibling to the parentNode
     if (
       (isStatefulComponent || newState === 'stateless') &&
       !nextJSDefaultComponent.has(componentName)
     )
-      createTree(sibling, circularComponentTable, newNode, true);
-    else createTree(sibling, circularComponentTable, newNode, fromSibling);
+      createTree(sibling, circularComponentTable, parentNode);
+
+    else createTree(sibling, circularComponentTable, newNode);
   }
 
   // -------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING-------

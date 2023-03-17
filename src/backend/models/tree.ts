@@ -56,19 +56,17 @@ class Tree {
 
   name: string;
 
-  componentData: {
-    props: {};
-  };
+  componentData: {};
 
   children: (Tree | string)[];
 
   parent: Tree;
 
-  isExpanded: boolean;
+  isExpanded: boolean = true;
 
-  rtid: any;
+  rtid: string | null;
 
-  route: Route;
+  route?: Route;
 
   // Duplicate names: add a unique number ID
   // Create an object 'componentNames' to store each component name as a key and it's frequency of use as its value
@@ -79,12 +77,11 @@ class Tree {
   // EXAMPLE OF COMPONENTNAMES OBJECT: {editableInput: 1, Provider: 0, etc}
 
   constructor(state: string | {}, name = 'nameless', componentData: {} = {}, rtid: any = null) {
+    this.children = [];
+    this.componentData = JSON.parse(JSON.stringify(componentData));
     this.state = state === 'root' ? 'root' : serializeState(state);
     this.name = name;
-    this.componentData = JSON.parse(JSON.stringify(componentData));
-    this.children = [];
     this.parent = null; // ref to parent so we can add siblings
-    this.isExpanded = true;
     this.rtid = rtid;
   }
 
@@ -123,7 +120,7 @@ class Tree {
    * @param rtid - ??
    * @returns - return new tree instance that is child
    */
-  addChild(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
+  addChild(state: string | {}, name: string, componentData: {}, rtid: any): [Tree, Tree] {
     // Get unique name by invoking checkForDuplicates method
     const uniqueName = this.checkForDuplicates(name);
     console.log('CHILD', { name: uniqueName, this: this });
@@ -134,28 +131,7 @@ class Tree {
     // adds newChild to children array
     this.children.push(newChild);
     // return newChild
-    return newChild;
-  }
-  /**
-   *
-   * @param state - string if root, serialized state otherwise
-   * @param name - name of child
-   * @param componentData - props
-   * @param rtid - ??
-   * @returns - return new tree instance that is child
-   */
-  addSibling(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
-    // gets unique name by calling checkForDuplicates method
-    const uniqueName = this.checkForDuplicates(name);
-    console.log('SIBILING', { name: uniqueName, this: this });
-    // instantiate new sibilng tree with state, uniqueName, componentName and rtid
-    const newSibling: Tree = new Tree(state, uniqueName, componentData, rtid);
-    // updating newSibling's parent to be the parent of "this" which refers to sibling node
-    newSibling.parent = this.parent;
-    // adds newSibling to children array
-    this.parent.children.push(newSibling);
-    // return newSibling
-    return newSibling;
+    return [this, newChild];
   }
 
   /**
