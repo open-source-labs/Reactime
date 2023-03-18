@@ -43,7 +43,11 @@ import {
   getStateAndContextData,
   filterAndFormatData,
 } from './statePropExtractors';
-import { nextJSDefaultComponent, remixDefaultComponents } from '../../models/filterConditions';
+import {
+  nextJSDefaultComponent,
+  remixDefaultComponents,
+  allowedComponentTypes,
+} from '../../models/filterConditions';
 
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
 /**
@@ -76,7 +80,6 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     } else {
       circularComponentTable.add(currentFiberNode);
     }
-    
     // ------------------OBTAIN DATA FROM THE CURRENT FIBER NODE----------------
     // Destructure the current fiber node:
     const {
@@ -120,9 +123,33 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     //   // dependencies,
     //   // _debugHookTypes,
     // });
+    // --------------------FILTER COMPONENTS/FIBER NODE-------------------------
+    /**
+     * For the snapshot tree,
+     * 1. We will only interested in components that are one of these types: Function Component, Class Component, Indeterminate Component or Context Provider.
+     * NOTE: this list of components may change depending on future use
+     * 2. If user use Next JS, filter out default NextJS components
+     * 3. If user use Remix JS, filter out default Remix components
+     */
 
+    if (
+      !allowedComponentTypes.has(tag) ||
+      nextJSDefaultComponent.has(componentName) ||
+      remixDefaultComponents.has(componentName)
+    ) {
+      // -------------------TRAVERSE TO NEXT FIBERNODE------------------------
+      // If currentFiberNode has children, recurse on children
+      if (child) _createTree(child, tree);
 
-    // --------------INITIALIZE OBJECT TO CONTAIN COMPONENT DATA--------------- 
+      // If currentFiberNode has siblings, recurse on siblings
+      if (sibling) {
+        _createTree(sibling, tree);
+      }
+      // -------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING-------
+      return tree;
+    }
+
+    // --------------INITIALIZE OBJECT TO CONTAIN COMPONENT DATA---------------
     let newState: any | { hooksState?: any[] } = {};
     let componentData: {
       actualDuration?: number;
@@ -146,16 +173,8 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     let isStatefulComponent = false;
 
     // ---------------APPEND PROP DATA FROM REACT DEV TOOL----------------------
-    // Check to see if the parent component has any state/props
-    if (
-      !nextJSDefaultComponent.has(componentName) &&
-      !remixDefaultComponents.has(componentName) &&
-      (tag === FunctionComponent ||
-        tag === ClassComponent ||
-        tag === IndeterminateComponent ||
-        tag === ContextProvider) &&
-      memoizedProps
-    ) {
+    // Check to see if the parent component has any props
+    if (memoizedProps) {
       switch (elementType.name) {
         case 'Router':
           componentData.props = { pathname: memoizedProps?.location?.pathname };
@@ -169,13 +188,10 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     }
 
     // ------------APPEND CONTEXT DATA FROM REACT DEV TOOL----------------
-
     // memoizedState
     // Note: if user use ReactHook, memoizedState.memoizedState can be a falsy value such as null, false, ... => need to specify this data is not undefined
     if (
-      !nextJSDefaultComponent.has(componentName) &&
-      !remixDefaultComponents.has(componentName) &&
-      (tag === FunctionComponent || tag === ClassComponent) &&
+      (tag === FunctionComponent || tag === ClassComponent || tag === IndeterminateComponent) &&
       memoizedState?.memoizedState !== undefined
     ) {
       // If user uses Redux, context data will be stored in memoizedState of the Provider component => grab context object stored in the memoizedState
@@ -196,12 +212,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
     // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
     // TODO: need to render this context provider when user use useContext hook.
-    if (
-      !nextJSDefaultComponent.has(componentName) &&
-      !remixDefaultComponents.has(componentName) &&
-      tag === ContextProvider &&
-      !elementType._context.displayName
-    ) {
+    if (tag === ContextProvider && !elementType._context.displayName) {
       let stateData = memoizedProps.value;
       if (stateData === null || typeof stateData !== 'object') {
         stateData = { CONTEXT: stateData };
@@ -221,12 +232,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     // Check if node is a stateful class component when user use setState.
     // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
     // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
-    if (
-      !nextJSDefaultComponent.has(componentName) &&
-      !remixDefaultComponents.has(componentName) &&
-      stateNode?.state &&
-      (tag === ClassComponent || tag === IndeterminateComponent)
-    ) {
+    if ((tag === ClassComponent || tag === IndeterminateComponent) && stateNode?.state) {
       // Save component's state and setState() function to our record for future
       // time-travel state changing. Add record index to snapshot so we can retrieve.
       componentData.index = componentActionsRecord.saveNew(stateNode);
@@ -240,13 +246,11 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     // --------OBTAIN STATE & DISPATCH METHODS FROM FUNCTIONAL COMPONENT--------
     // Check if node is a hooks useState function
     if (
-      !nextJSDefaultComponent.has(componentName) &&
-      !remixDefaultComponents.has(componentName) &&
-      memoizedState &&
       (tag === FunctionComponent ||
-        // tag === ClassComponent || WE SHOULD NOT BE ABLE TO USE HOOK IN CLASS
         tag === IndeterminateComponent ||
-        tag === ContextProvider) //TODOD: Need to figure out why we need context provider
+        //TODO: Need to figure out why we need context provider
+        tag === ContextProvider) &&
+      memoizedState
     ) {
       if (memoizedState.queue) {
         try {
@@ -278,13 +282,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     }
 
     // This grabs stateless components
-    if (
-      !isStatefulComponent &&
-      (tag === FunctionComponent ||
-        tag === ClassComponent ||
-        tag === IndeterminateComponent ||
-        tag === ContextProvider)
-    ) {
+    if (!isStatefulComponent) {
       newState = 'stateless';
     }
 
@@ -299,33 +297,28 @@ export default function createTree(currentFiberNode: Fiber): Tree {
      */
     let childNode: Tree = tree;
     // We want to add this fiber node to the snapshot
-    if (
-      (isStatefulComponent || newState === 'stateless') &&
-      !nextJSDefaultComponent.has(componentName) &&
-      !remixDefaultComponents.has(componentName)
-    ) {
-      // Grab JSX Component & replace the 'fromLinkFiber' class value
-      if (currentFiberNode.child?.stateNode?.setAttribute) {
-        rtid = `fromLinkFiber${rtidCounter}`;
-        // rtid = rtidCounter;
-        // check if rtid is already present
-        // remove existing rtid before adding a new one
-        if (currentFiberNode.child.stateNode.classList.length > 0) {
-          const lastClass =
-            currentFiberNode.child.stateNode.classList[
-              currentFiberNode.child.stateNode.classList.length - 1
-            ];
-          if (lastClass.includes('fromLinkFiber')) {
-            currentFiberNode.child.stateNode.classList.remove(lastClass);
-          }
-        }
-        currentFiberNode.child.stateNode.classList.add(rtid);
-      }
-      rtidCounter += 1; // I THINK THIS SHOULD BE UP IN THE IF STATEMENT. Still unsure the use of rtid
 
-      // Append the childNode to the tree
-      childNode = tree.addChild(newState, componentName, componentData, rtid);
+    // Grab JSX Component & replace the 'fromLinkFiber' class value
+    if (currentFiberNode.child?.stateNode?.setAttribute) {
+      rtid = `fromLinkFiber${rtidCounter}`;
+      // rtid = rtidCounter;
+      // check if rtid is already present
+      // remove existing rtid before adding a new one
+      if (currentFiberNode.child.stateNode.classList.length > 0) {
+        const lastClass =
+          currentFiberNode.child.stateNode.classList[
+            currentFiberNode.child.stateNode.classList.length - 1
+          ];
+        if (lastClass.includes('fromLinkFiber')) {
+          currentFiberNode.child.stateNode.classList.remove(lastClass);
+        }
+      }
+      currentFiberNode.child.stateNode.classList.add(rtid);
     }
+    rtidCounter += 1; // I THINK THIS SHOULD BE UP IN THE IF STATEMENT. Still unsure the use of rtid
+
+    // Append the childNode to the tree
+    childNode = tree.addChild(newState, componentName, componentData, rtid);
 
     // ---------------------TRAVERSE TO NEXT FIBERNODE--------------------------
     // If currentFiberNode has children, recurse on children
@@ -336,7 +329,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       _createTree(sibling, tree);
     }
 
-    // -------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING-------
+    // ------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING------
     return tree;
   }
 }
