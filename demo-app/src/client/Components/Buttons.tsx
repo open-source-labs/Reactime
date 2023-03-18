@@ -15,7 +15,6 @@ function Buttons() {
         hook.
       </h4>
       {buttons}
-      {buttons}
     </div>
   );
 }

@@ -7,31 +7,7 @@ import {
   FunctionComponent,
   ClassComponent,
   IndeterminateComponent, // Before we know whether it is function or class
-  HostRoot, // Root of a host tree. Could be nested inside another node.
-  HostPortal, // A subtree. Could be an entry point to a different renderer.
-  /**
-   * Host Component: a type of component that represents a native DOM element in the browser environment, such as div, span, input, h1 etc.
-   */
-  HostComponent, // has stateNode of html elements
-  HostText,
-  Fragment,
-  Mode,
-  ContextConsumer,
   ContextProvider,
-  ForwardRef,
-  Profiler,
-  SuspenseComponent,
-  MemoComponent,
-  SimpleMemoComponent, // A higher order component where if the component renders the same result given the same props, react skips rendering the component and uses last rendered result. Has memoizedProps/memoizedState but no stateNode
-  LazyComponent,
-  IncompleteClassComponent,
-  DehydratedFragment,
-  SuspenseListComponent,
-  FundamentalComponent,
-  ScopeComponent,
-  Block,
-  OffscreenComponent,
-  LegacyHiddenComponent,
 } from '../../types/backendTypes';
 // import function that creates a tree
 import Tree from '../../models/tree';
@@ -57,7 +33,6 @@ import {
  * 3. Build a new state snapshot
  * Every time a state change is made in the accompanying app, the extension creates a Tree “snapshot” of the current state, and adds it to the current “cache” of snapshots in the extension
  * @param currentFiberNode A Fiber object
- * @param tree A Tree object, default initialized to an instance given 'root' and 'root'
  * @return An instance of a Tree object
  */
 // TODO: Not sure why the ritd need to be outside of the createTree function. Want to put inside, but in case this need to be keep track for front end.
@@ -80,6 +55,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     } else {
       circularComponentTable.add(currentFiberNode);
     }
+    
     // ------------------OBTAIN DATA FROM THE CURRENT FIBER NODE----------------
     // Destructure the current fiber node:
     const {
@@ -145,12 +121,12 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       if (sibling) {
         _createTree(sibling, tree);
       }
-      // -------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING-------
+      // ---------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING-------
       return tree;
     }
 
     // --------------INITIALIZE OBJECT TO CONTAIN COMPONENT DATA---------------
-    let newState: any | { hooksState?: any[] } = {};
+    let newState: 'stateless' | object = 'stateless';
     let componentData: {
       actualDuration?: number;
       actualStartTime?: number;
@@ -170,7 +146,6 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       props: {},
       context: {},
     };
-    let isStatefulComponent = false;
 
     // ---------------APPEND PROP DATA FROM REACT DEV TOOL----------------------
     // Check to see if the parent component has any props
@@ -239,8 +214,8 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       // Save state information in componentData.
       componentData.state = stateNode.state;
       // Passess to front end
-      newState = stateNode.state;
-      isStatefulComponent = true;
+      // TODO: Refactor this, this is currently being used for Tree & Diff tabs
+      newState = componentData.state;
     }
 
     // --------OBTAIN STATE & DISPATCH METHODS FROM FUNCTIONAL COMPONENT--------
@@ -261,29 +236,24 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
           const hooksNames = getHooksNames(elementType.toString());
           // Intialize state & index:
-          newState.hooksState = [];
+          // newState.hooksState = [];
           componentData.hooksState = {};
           componentData.hooksIndex = [];
           hooksStates.forEach(({ state, component }, i) => {
             // Save component's state and dispatch() function to our record for future time-travel state changing. Add record index to snapshot so we can retrieve.
             componentData.hooksIndex.push(componentActionsRecord.saveNew(component));
-            // Save state information in componentData.
-            newState.hooksState.push({ [hooksNames[i].varName]: state });
             // Passess to front end
             componentData.hooksState[hooksNames[i].varName] = state;
           });
-          isStatefulComponent = true;
+          // Passess to front end
+          // TODO: Refactor this, this is currently being used for Tree & Diff tabs
+          newState = componentData.hooksState;
         } catch (err) {
           console.log('ERROR: Failed Element during JSX parsing', {
-            componentName: elementType?.name,
+            componentName,
           });
         }
       }
-    }
-
-    // This grabs stateless components
-    if (!isStatefulComponent) {
-      newState = 'stateless';
     }
 
     // -----------------ADD COMPONENT DATA TO THE OUTPUT TREE-------------------

@@ -27,7 +27,7 @@ import updateAndSendSnapShotTree from './snapShot';
 // getHooksNames - helper function to grab the getters/setters from `elementType`
 import throttle from '../controllers/throttle';
 import componentActionsRecord from '../models/masterState';
-import createComponentActionsRecord from '../controllers/createTree/createComponentActionsRecord';
+import _createComponentActionsRecord from '../controllers/createTree/createComponentActionsRecord';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -83,9 +83,7 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
       componentActionsRecord.clear();
       // Obtain new update methods for the current route:
       const { current } = fiberRoot;
-      createComponentActionsRecord(current);
-      console.log(current);
-      console.log(componentActionsRecord.getAllComponents());
+      _createComponentActionsRecord(current);
       // Invoke timeJump, which is stored in mode.navigating, to update React Application FiberTree based on the snapshotTree
       await mode.navigating();
     }
@@ -146,11 +144,7 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
     // Obtain the FiberRootNode, which is the first value in the FiberRoot Set:
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
     console.log('linkFiber', { fiberRoot });
-    // DO NOT REMOVE: due to the nature of Next JS, when the website get reloaded, fiberRoot will not be
-    // console.log(devTools.getFiberRoots(1));
-    // while (!fiberRoot) {
-    //   fiberRoot = devTools.getFiberRoots(1).values().next().value;
-    // }
+
     // ----------INITIALIZE THE TREE SNAP SHOT ON CHROME EXTENSION--------------
     throttledUpdateSnapshot(fiberRoot); // only runs on start up
 
