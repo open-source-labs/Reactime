@@ -1,9 +1,3 @@
-import routes from '../models/routes';
-
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable max-len */
-/* eslint-disable no-param-reassign */
 import componentActionsRecord from '../models/masterState';
 import { Status } from '../types/backendTypes';
 import Tree from '../models/tree';
@@ -30,6 +24,7 @@ export default function timeJumpInitiation(mode: Status) {
    * @param targetSnapshot - The target snapshot to re-render. The payload from index.ts is assigned to targetSnapshot
    */
   return async function timeJump(targetSnapshot: Tree): Promise<void> {
+    mode.jumping = true;
     console.log('timeJump - START JUMPING');
     // Reset mode.navigating
     delete mode.navigating;
