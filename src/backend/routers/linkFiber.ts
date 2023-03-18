@@ -84,6 +84,8 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
       // Obtain new update methods for the current route:
       const { current } = fiberRoot;
       createComponentActionsRecord(current);
+      console.log(current);
+      console.log(componentActionsRecord.getAllComponents());
       // Invoke timeJump, which is stored in mode.navigating, to update React Application FiberTree based on the snapshotTree
       await mode.navigating();
     }

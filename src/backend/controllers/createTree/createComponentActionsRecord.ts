@@ -38,7 +38,7 @@ import Tree from '../../models/tree';
 // passes the data down to its components
 import componentActionsRecord from '../../models/masterState';
 import { getHooksStateAndUpdateMethod } from './statePropExtractors';
-import { nextJSDefaultComponent } from '../../models/filterConditions';
+import { nextJSDefaultComponent, remixDefaultComponents } from '../../models/filterConditions';
 
 // ------------------------CREATE COMPONENT ACTIONS RECORD----------------------
 /**
@@ -95,6 +95,7 @@ export default function createComponentActionsRecord(
   // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
   if (
     !nextJSDefaultComponent.has(componentName) &&
+    !remixDefaultComponents.has(componentName) &&
     stateNode?.state &&
     (tag === ClassComponent || tag === IndeterminateComponent)
   ) {
@@ -107,6 +108,7 @@ export default function createComponentActionsRecord(
   // If user use useState to define/manage state, the state object will be stored in memoizedState.queue => grab the state object stored in the memoizedState.queue
   if (
     !nextJSDefaultComponent.has(componentName) &&
+    !remixDefaultComponents.has(componentName) &&
     memoizedState &&
     (tag === FunctionComponent || tag === IndeterminateComponent || tag === ContextProvider) //TODO: Need to figure out why we need context provider
   ) {

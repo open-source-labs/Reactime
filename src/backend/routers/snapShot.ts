@@ -24,7 +24,11 @@ export default function updateAndSendSnapShotTree(snapshot: Snapshot, fiberRoot:
   const payload = snapshot.tree;
   // Save the current window url to route
   payload.route = routes.addRoute(window.location.href);
-  console.log('send snapshot', { payload });
+  console.log('send snapshot', {
+    payload,
+    componentAction: componentActionsRecord.getAllComponents(),
+  });
+
   // method safely enables cross-origin communication between Window objects;
   // e.g., between a page and a pop-up that it spawned, or between a page
   // and an iframe embedded within it.

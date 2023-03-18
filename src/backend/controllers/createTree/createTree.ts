@@ -47,33 +47,38 @@ import { nextJSDefaultComponent, remixDefaultComponents } from '../../models/fil
 
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
 /**
- * This is a recursive function that runs after every Fiber commit using the following logic:
+ * This is a function that runs after every Fiber commit using the following logic:
  * 1. Traverse from FiberRootNode
  * 2. Create an instance of custom Tree class
  * 3. Build a new state snapshot
  * Every time a state change is made in the accompanying app, the extension creates a Tree “snapshot” of the current state, and adds it to the current “cache” of snapshots in the extension
  * @param currentFiberNode A Fiber object
  * @param tree A Tree object, default initialized to an instance given 'root' and 'root'
- * @param fromSibling A boolean, default initialized to false
  * @return An instance of a Tree object
  */
 // TODO: Not sure why the ritd need to be outside of the createTree function. Want to put inside, but in case this need to be keep track for front end.
-export default function createTree(
-  currentFiberNode: Fiber,
-  // circularComponentTable: Set<Fiber> = new Set(),
-  // tree: Tree = new Tree('root', 'root'),
-): Tree {
+export default function createTree(currentFiberNode: Fiber): Tree {
   const circularComponentTable = new Set();
   let rtidCounter = 0;
   return _createTree(currentFiberNode, new Tree('root', 'root'));
 
+  /**
+   * This is a helper function to recursively traverse the React Fiber Tree and craft the snapshot tree to send to front end
+   * @param currentFiberNode A Fiber object
+   * @param tree A Tree object, default initialized to an instance given 'root' and 'root'
+   * @returns An instance of a Tree Object
+   */
   function _createTree(currentFiberNode: Fiber, tree: Tree): Tree {
+    // ----------------------UPDATE VISITED FIBER NODE SET----------------------
     // Base Case: if has visited the component, return
     if (circularComponentTable.has(currentFiberNode)) {
       return;
     } else {
       circularComponentTable.add(currentFiberNode);
     }
+    
+    // ------------------OBTAIN DATA FROM THE CURRENT FIBER NODE----------------
+    // Destructure the current fiber node:
     const {
       sibling,
       stateNode,
@@ -89,6 +94,7 @@ export default function createTree(
       treeBaseDuration,
       _debugHookTypes,
     } = currentFiberNode;
+
     // Obtain component name:
     let componentName =
       elementType?._context?.displayName || //For ContextProvider
@@ -96,25 +102,27 @@ export default function createTree(
       elementType?.render?.name ||
       elementType?.name ||
       'nameless';
-    console.log('LinkFiber', {
-      currentFiberNode,
-      tag,
-      // elementType,
-      componentName:
-        elementType?._context?.displayName || //For ContextProvider
-        elementType?._result?.name || //For lazy Component
-        elementType?.render?.name ||
-        elementType?.name ||
-        elementType,
-      remix: remixDefaultComponents.has(componentName),
-      // memoizedProps,
-      // memoizedState,
-      // stateNode,
-      // dependencies,
-      // _debugHookTypes,
-    });
 
-    // -----------------INITIALIZE OBJECT TO CONTAIN COMPONENT DATA---------------
+    // console.log('LinkFiber', {
+    //   currentFiberNode,
+    //   tag,
+    //   // elementType,
+    //   componentName:
+    //     elementType?._context?.displayName || //For ContextProvider
+    //     elementType?._result?.name || //For lazy Component
+    //     elementType?.render?.name ||
+    //     elementType?.name ||
+    //     elementType,
+    //   remix: remixDefaultComponents.has(componentName),
+    //   // memoizedProps,
+    //   // memoizedState,
+    //   // stateNode,
+    //   // dependencies,
+    //   // _debugHookTypes,
+    // });
+
+
+    // --------------INITIALIZE OBJECT TO CONTAIN COMPONENT DATA--------------- 
     let newState: any | { hooksState?: any[] } = {};
     let componentData: {
       actualDuration?: number;
@@ -137,8 +145,8 @@ export default function createTree(
     };
     let isStatefulComponent = false;
 
-    // ----------------APPEND PROP DATA FROM REACT DEV TOOL-----------------------
-    // check to see if the parent component has any state/props
+    // ---------------APPEND PROP DATA FROM REACT DEV TOOL----------------------
+    // Check to see if the parent component has any state/props
     if (
       !nextJSDefaultComponent.has(componentName) &&
       !remixDefaultComponents.has(componentName) &&
@@ -209,7 +217,7 @@ export default function createTree(
     //   componentData.context = convertDataToString(dependencies.firstContext.memoizedValue);
     // }
 
-    // ----------OBTAIN STATE & SET STATE METHODS FROM CLASS COMPONENT------------
+    // ---------OBTAIN STATE & SET STATE METHODS FROM CLASS COMPONENT-----------
     // Check if node is a stateful class component when user use setState.
     // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
     // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
@@ -229,7 +237,7 @@ export default function createTree(
       isStatefulComponent = true;
     }
 
-    // ---------OBTAIN STATE & DISPATCH METHODS FROM FUNCTIONAL COMPONENT---------
+    // --------OBTAIN STATE & DISPATCH METHODS FROM FUNCTIONAL COMPONENT--------
     // Check if node is a hooks useState function
     if (
       !nextJSDefaultComponent.has(componentName) &&
@@ -280,7 +288,7 @@ export default function createTree(
       newState = 'stateless';
     }
 
-    // ------------------ADD COMPONENT DATA TO THE OUTPUT TREE--------------------
+    // -----------------ADD COMPONENT DATA TO THE OUTPUT TREE-------------------
 
     /**
      * `rtid` - The `Root ID` is a unique identifier that is assigned to each React root instance in a React application.
@@ -319,7 +327,7 @@ export default function createTree(
       childNode = tree.addChild(newState, componentName, componentData, rtid);
     }
 
-    // ----------------------TRAVERSE TO NEXT FIBERNODE---------------------------
+    // ---------------------TRAVERSE TO NEXT FIBERNODE--------------------------
     // If currentFiberNode has children, recurse on children
     if (child) _createTree(child, childNode);
 
