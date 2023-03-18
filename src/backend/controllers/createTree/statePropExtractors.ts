@@ -118,8 +118,8 @@ export function filterAndFormatData(
         reactimeData[key] = reactDevData[key];
       }
     } catch (err) {
-      console.log('linkFiber', { reactDevData, key });
-      throw Error(`Error caught at converDataToString: ${err}`);
+      console.log('Error: linkFiber', { reactDevData, key });
+      // throw Error(`Error caught at converDataToString: ${err}`);
     }
   }
   return reactimeData;

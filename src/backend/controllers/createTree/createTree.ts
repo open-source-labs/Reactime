@@ -43,7 +43,7 @@ import {
   getStateAndContextData,
   filterAndFormatData,
 } from './statePropExtractors';
-import { nextJSDefaultComponent } from '../../models/filterConditions';
+import { nextJSDefaultComponent, remixDefaultComponents } from '../../models/filterConditions';
 
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
 /**
@@ -90,28 +90,29 @@ export default function createTree(
       _debugHookTypes,
     } = currentFiberNode;
     // Obtain component name:
-    const componentName =
+    let componentName =
       elementType?._context?.displayName || //For ContextProvider
       elementType?._result?.name || //For lazy Component
       elementType?.render?.name ||
       elementType?.name ||
       'nameless';
-    // console.log('LinkFiber', {
-    //   currentFiberNode,
-    //   // tag,
-    //   // elementType,
-    //   componentName:
-    //     elementType?._context?.displayName || //For ContextProvider
-    //     elementType?._result?.name || //For lazy Component
-    //     elementType?.render?.name ||
-    //     elementType?.name ||
-    //     elementType,
-    //   // memoizedProps,
-    //   // memoizedState,
-    //   // stateNode,
-    //   // dependencies,
-    //   // _debugHookTypes,
-    // });
+    console.log('LinkFiber', {
+      currentFiberNode,
+      tag,
+      // elementType,
+      componentName:
+        elementType?._context?.displayName || //For ContextProvider
+        elementType?._result?.name || //For lazy Component
+        elementType?.render?.name ||
+        elementType?.name ||
+        elementType,
+      remix: remixDefaultComponents.has(componentName),
+      // memoizedProps,
+      // memoizedState,
+      // stateNode,
+      // dependencies,
+      // _debugHookTypes,
+    });
 
     // -----------------INITIALIZE OBJECT TO CONTAIN COMPONENT DATA---------------
     let newState: any | { hooksState?: any[] } = {};
@@ -140,6 +141,7 @@ export default function createTree(
     // check to see if the parent component has any state/props
     if (
       !nextJSDefaultComponent.has(componentName) &&
+      !remixDefaultComponents.has(componentName) &&
       (tag === FunctionComponent ||
         tag === ClassComponent ||
         tag === IndeterminateComponent ||
@@ -164,6 +166,7 @@ export default function createTree(
     // Note: if user use ReactHook, memoizedState.memoizedState can be a falsy value such as null, false, ... => need to specify this data is not undefined
     if (
       !nextJSDefaultComponent.has(componentName) &&
+      !remixDefaultComponents.has(componentName) &&
       (tag === FunctionComponent || tag === ClassComponent) &&
       memoizedState?.memoizedState !== undefined
     ) {
@@ -187,6 +190,7 @@ export default function createTree(
     // TODO: need to render this context provider when user use useContext hook.
     if (
       !nextJSDefaultComponent.has(componentName) &&
+      !remixDefaultComponents.has(componentName) &&
       tag === ContextProvider &&
       !elementType._context.displayName
     ) {
@@ -195,6 +199,7 @@ export default function createTree(
         stateData = { CONTEXT: stateData };
       }
       componentData.context = filterAndFormatData(stateData);
+      componentName = 'Context';
     }
 
     // DEPRECATED: This code might have worked previously. However, with the update of React Dev Tool, context can no longer be pulled using this method.
@@ -210,6 +215,7 @@ export default function createTree(
     // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
     if (
       !nextJSDefaultComponent.has(componentName) &&
+      !remixDefaultComponents.has(componentName) &&
       stateNode?.state &&
       (tag === ClassComponent || tag === IndeterminateComponent)
     ) {
@@ -227,6 +233,7 @@ export default function createTree(
     // Check if node is a hooks useState function
     if (
       !nextJSDefaultComponent.has(componentName) &&
+      !remixDefaultComponents.has(componentName) &&
       memoizedState &&
       (tag === FunctionComponent ||
         // tag === ClassComponent || WE SHOULD NOT BE ABLE TO USE HOOK IN CLASS
@@ -286,7 +293,8 @@ export default function createTree(
     // We want to add this fiber node to the snapshot
     if (
       (isStatefulComponent || newState === 'stateless') &&
-      !nextJSDefaultComponent.has(componentName)
+      !nextJSDefaultComponent.has(componentName) &&
+      !remixDefaultComponents.has(componentName)
     ) {
       // Grab JSX Component & replace the 'fromLinkFiber' class value
       if (currentFiberNode.child?.stateNode?.setAttribute) {

@@ -29,6 +29,12 @@ import {
   LegacyHiddenComponent,
 } from '../types/backendTypes';
 
+export const allowedComponentTypes = new Set([
+  FunctionComponent,
+  ClassComponent,
+  ContextProvider,
+  IndeterminateComponent,
+]);
 export const nextJSDefaultComponent = new Set([
   'Root',
   'Head',
@@ -47,9 +53,21 @@ export const nextJSDefaultComponent = new Set([
   'Portal',
 ]);
 
-export const allowedComponentTypes = new Set([
-  FunctionComponent,
-  ClassComponent,
-  ContextProvider,
-  IndeterminateComponent,
+export const remixDefaultComponents = new Set([
+  'RemixBrowser',
+  'Remix',
+  'RemixErrorBoundary',
+  'RouterProvider',
+  'DataRouter',
+  'DataRouterState',
+  'RenderErrorBoundary',
+  'Meta',
+  'V1Meta',
+  'Links',
+  'RemixRoute',
+  'Outlet',
+  'ScrollRestoration2',
+  'script',
+  'Scripts',
+  'LiveReload2',
 ]);
