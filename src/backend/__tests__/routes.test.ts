@@ -61,8 +61,8 @@ describe('Route class testing', () => {
     });
 
     it('should throw an error if target route is not found', () => {
-      const dummyRoute: Route = new Route('/dummy', 0);
-      expect(routes.navigate(dummyRoute)).toThrowError();
+      const dummyRoute: Route = new Route('/error', 0);
+      expect(() => routes.navigate(dummyRoute)).toThrowError();
     });
   });
 

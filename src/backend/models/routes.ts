@@ -47,7 +47,6 @@ export class Routes {
     const currentRoute: Route = this.routeHistory[this.current];
     // Check if the new url is different from the current url
     const isNavigating = currentRoute.url !== url;
-    console.log('IsNavigating ', isNavigating);
     if (isNavigating) {
       // Check if current is not equal to routeHistory.length - 1 becuase if it doesnt, we need to rebuild history
       if (this.current !== this.routeHistory.length - 1) {
@@ -102,7 +101,7 @@ export class Routes {
     );
     // If the target route is not found, throw an error
     if (targetIndex === -1) {
-      throw Error('Error at Routes.navigage: targetIndex is undefined');
+      throw new Error('Error at Routes.navigage: targetIndex is undefined');
     }
     // Calculate the difference in index between the current route and the target route
     const delta: number = targetIndex - this.current;
