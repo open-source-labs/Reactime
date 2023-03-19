@@ -7,10 +7,6 @@
 /* eslint-disable no-param-reassign */
 import { Route } from './routes';
 
-// The circularComponentTable is used to handle circular references in the state object. It keeps tracks of the components that have already been serialized. When a component is encountered for the first time, it is added to the table along with a unique identifier. If the same component is encountered again, the identifier is used to reference the previously serialized component in the output instead of serializing it again, thus avoiding the infinite loop.
-const circularComponentTable = new Set<Tree>();
-// Used to keep track of which objects have already been copied during the serialization process. This is necessary to handle circular references correctly. When an object is serialized, all its properties are copied to the serialized object. If an object property is an object itself, it needs to be serialized recursively. However, if the object being serialized has already been serialized before, it should not be serialized again to prevent an infinite loop.
-let copyInstances = 0;
 // ComponentNames is used to store a mapping between a component's unique identifier and its name. This mapping is used to reconstruct the component instances during deserialization.
 let componentNames = {};
 
@@ -34,6 +30,7 @@ export function serializeState(state) {
     return JSON.parse(JSON.stringify(state));
   } catch (e) {
     // if there is an error, that means there is circular state i.e state that depends on itself
+    console.log('circular');
     return 'circularState';
   }
 }
@@ -51,23 +48,19 @@ export function serializeState(state) {
  * @param route - an object representing the route associated with the node.
  */
 class Tree {
-  state: string | {};
+  state: string | {}; // TODO: should change this to stateless || statefull
 
   name: string;
 
-  componentData: {
-    props: {};
-  };
+  componentData: {};
 
-  children: (Tree | string)[];
+  children: Tree[];
 
-  parent: Tree;
+  isExpanded: boolean = true;
 
-  isExpanded: boolean;
+  rtid: string | null;
 
-  rtid: any;
-
-  route: Route;
+  route?: Route;
 
   // Duplicate names: add a unique number ID
   // Create an object 'componentNames' to store each component name as a key and it's frequency of use as its value
@@ -81,15 +74,12 @@ class Tree {
     state: string | {},
     name = 'nameless',
     componentData: {} = {},
-    rtid: any = null,
-    string: any = null,
+    rtid: string | null = null,
   ) {
+    this.children = [];
+    this.componentData = JSON.parse(JSON.stringify(componentData));
     this.state = state === 'root' ? 'root' : serializeState(state);
     this.name = name;
-    this.componentData = componentData ? { ...JSON.parse(JSON.stringify(componentData)) } : {};
-    this.children = [];
-    this.parent = null; // ref to parent so we can add siblings
-    this.isExpanded = true;
     this.rtid = rtid;
   }
 
@@ -100,26 +90,23 @@ class Tree {
    * @returns
    */
   checkForDuplicates(name: string): string {
+    /**
+     * The condition for check empty name does not seem to ever be reached
+     * Commented and did not remove for potential future use
+     */
     // check for empty name
-    if (name === '' && typeof this.rtid === 'string') {
-      name = this.rtid.replace('fromLinkFiber', '');
-    }
-    // if we are at root, then make sure componentNames is an empty object
-    if (this.state === 'root') componentNames = {};
-    // check for duplicate
-    else if (componentNames[name] !== undefined) {
-      // if name exists in componentNames object, grab count and add 1
-      const count: number = componentNames[name] + 1;
-      // declare a new name variable
-      const newName: string = name + count;
-      // update name count in object
-      componentNames[name] = count;
-      // return newName
-      return newName;
-    }
-    // add name in componentsName with value of 0
-    componentNames[name] = 0;
-    // return name
+    // if (name === '' && typeof this.rtid === 'string') {
+    //   name = this.rtid.replace('fromLinkFiber', '');
+    // }
+    // if parent node is root, initialize the componentNames object
+    if (this.name === 'root') componentNames = {};
+
+    // Numerize the component name if found duplicate
+    // Ex: A board has 3 rows => Row, Row1, Row2
+    // Ex: Each row has 3 boxes => Box, Box1, Box2, ..., Box8
+    componentNames[name] = componentNames[name] + 1 || 0;
+    name += componentNames[name] ? componentNames[name] : '';
+
     return name;
   }
   /**
@@ -131,74 +118,14 @@ class Tree {
    * @returns - return new tree instance that is child
    */
   addChild(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
-    // gets unique name by calling checkForDuplicates method
+    // Get unique name by invoking checkForDuplicates method
     const uniqueName = this.checkForDuplicates(name);
-    // instantiates new child Tree with state, uniqueName, componentData and rtid
+    // Instantiates new child Tree with state, uniqueName, componentData and rtid
     const newChild: Tree = new Tree(state, uniqueName, componentData, rtid);
-    // updating newChild parent to "this"
-    newChild.parent = this;
     // adds newChild to children array
     this.children.push(newChild);
     // return newChild
     return newChild;
-  }
-  /**
-   *
-   * @param state - string if root, serialized state otherwise
-   * @param name - name of child
-   * @param componentData - props
-   * @param rtid - ??
-   * @returns - return new tree instance that is child
-   */
-  addSibling(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
-    // gets unique name by calling checkForDuplicates method
-    const uniqueName = this.checkForDuplicates(name);
-    // instantiate new sibilng tree with state, uniqueName, componentName and rtid
-    const newSibling: Tree = new Tree(state, uniqueName, componentData, rtid);
-    // updating newSibling's parent to be the parent of "this" which refers to sibling node
-    newSibling.parent = this.parent;
-    // adds newSibling to children array
-    this.parent.children.push(newSibling);
-    // return newSibling
-    return newSibling;
-  }
-
-  /**
-   * @function cleanTreeCopy : Adds a sibling to the current tree
-   */
-  cleanTreeCopy(): Tree {
-    /**
-     * @object circularComponentTable : Clears circular component table only on first call, not recursive ones
-     *
-     */
-    // if we havent made a copy of the tree, increment copyInstances and clear cicularComponentTable set
-    if (copyInstances === 0) {
-      // increment copyInstances
-      copyInstances++;
-      // clear circularComponentTable
-      circularComponentTable.clear();
-    }
-    // creates copy of present node
-    let copy: Tree = new Tree(this.state, this.name, this.componentData, this.rtid);
-    // you want to get rid of the parentNode becuase right now copy and "this" have the same parent and you dont want that
-    delete copy.parent;
-    // add to circularComponentTable
-    circularComponentTable.add(this);
-    // remove unserializable Trees
-    copy = scrubUnserializableMembers(copy);
-
-    // creates copy of each child of the present node and assigns it to children property of the new copy Tree
-    copy.children = this.children.map((child: Tree): Tree | string => {
-      // if child isnt in circularComponent table, return recursive call of cleanTreeCopy() on child. We need to do this to fully build out the tree
-      if (!circularComponentTable.has(child)) {
-        return child.cleanTreeCopy();
-      }
-      return 'circular';
-    });
-    // reset copyInstances back to zero becuase we are done making a copy of the tree
-    copyInstances--;
-    // return the copy
-    return copy;
   }
 }
 

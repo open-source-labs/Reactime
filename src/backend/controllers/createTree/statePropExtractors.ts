@@ -118,8 +118,8 @@ export function filterAndFormatData(
         reactimeData[key] = reactDevData[key];
       }
     } catch (err) {
-      console.log('linkFiber', { reactDevData, key });
-      throw Error(`Error caught at converDataToString: ${err}`);
+      console.log('EROOR: linkFiber', { reactDevData, key });
+      // throw Error(`Error caught at converDataToString: ${err}`);
     }
   }
   return reactimeData;
@@ -217,7 +217,6 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
   try {
     AST = JSXParser.parse(elementType);
   } catch (e) {
-    console.log('This component was not converted', { elementType });
     throw Error('Error occurs at helpers getHooksName.ts Cannot parse functional component.');
     return;
   }
