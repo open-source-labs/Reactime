@@ -244,5 +244,4 @@ export type Fiber = {
  */
 export type FiberRoot = {
   current: Fiber;
-  Nok_Nok: string;
 };

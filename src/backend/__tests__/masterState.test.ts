@@ -116,7 +116,6 @@ describe('Master State unit tests', () => {
           component2,
           component3,
         ]);
-        expect(window.location.href).toBeTruthy();
       });
 
       it('should return undefined when passed an empty array', () => {
