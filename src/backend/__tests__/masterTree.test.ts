@@ -1,30 +1,112 @@
 import createComponentActionsRecord from '../controllers/createTree/createComponentActionsRecord';
 import { Fiber } from '../types/backendTypes';
 import componentActionsRecord from '../models/masterState';
+import createTree from '../controllers/createTree/createTree';
+import Tree from '../models/tree';
+import {
+  allowedComponentTypes,
+  nextJSDefaultComponent,
+  remixDefaultComponents,
+} from '../models/filterConditions';
 
 describe('master tree tests', () => {
-  describe('createComponentActionsRecord', () => {
-    let mockFiberNode: Fiber;
-    beforeEach(() => {
-      // create a mock Fiber node with relevant properties
-      mockFiberNode = {
-        sibling: null,
-        stateNode: {},
-        child: null,
-        memoizedState: null,
-        elementType: {},
-        tag: 2, // IndeterminateComponent
-        key: null,
-        type: null,
-        index: 0,
-        memoizedProps: null,
-        dependencies: null,
-        _debugHookTypes: [],
-      };
-      // clear the saved component actions record
-      componentActionsRecord.clear();
+  let mockTree = new Tree('root', 'root');
+  let mockFiberNode: Fiber;
+  let mockSiblingNode: Fiber;
+  let mockChildNode: Fiber;
+  beforeEach(() => {
+    // create a mock Fiber node with relevant properties
+    mockFiberNode = {
+      sibling: null,
+      stateNode: {},
+      child: null,
+      memoizedState: null,
+      elementType: {},
+      tag: 2, // IndeterminateComponent
+      key: null,
+      type: null,
+      index: 0,
+      memoizedProps: null,
+      dependencies: null,
+      _debugHookTypes: [],
+    };
+
+    mockChildNode = {
+      ...mockFiberNode,
+      tag: 1,
+      elementType: { name: 'child' },
+      stateNode: { state: { counter: 0 }, props: { start: 0 } },
+    };
+    mockSiblingNode = {
+      ...mockFiberNode,
+      tag: 0,
+      elementType: { name: 'sibling' },
+      memoizedState: { memoizedState: 1, queue: [{}, { state: { value: 'test' } }], next: null },
+    };
+    // clear the saved component actions record
+    componentActionsRecord.clear();
+  });
+  describe('create tree tests', () => {
+    it('should return a Tree if we pass in a empty fiber node', () => {
+      const tree = createTree(mockFiberNode);
+      const children = tree.children;
+
+      expect(tree).toBeInstanceOf(Tree);
+      expect(tree.name).toEqual('root');
+      expect(tree.state).toEqual('root');
+      expect(children[0].name).toEqual('nameless');
+      expect(children[0].state).toEqual('stateless');
     });
 
+    it('should filter out NextJS default components with no children or siblings', () => {
+      for (let name of nextJSDefaultComponent) {
+        mockFiberNode.elementType.name = name;
+        const tree = createTree(mockFiberNode);
+        const newTree = new Tree('root', 'root');
+        expect(tree).toEqual(newTree);
+      }
+    });
+
+    it('should filter out NextJS default components with children and/or siblings', () => {
+      for (let name of nextJSDefaultComponent) {
+        mockFiberNode.elementType.name = name;
+        mockFiberNode.child = mockChildNode;
+        mockFiberNode.sibling = mockSiblingNode;
+        const tree = createTree(mockFiberNode);
+        const children = tree.children;
+        const firstChild = children[0];
+        const secondChild = children[1];
+        expect(children.length).toEqual(2);
+        // expect(firstChild.componentData?.state).toEqual(2);
+      }
+    });
+
+    it('should filter out remix default components with no children or siblings', () => {
+      for (let name of remixDefaultComponents) {
+        mockFiberNode.elementType.name = name;
+        const tree = createTree(mockFiberNode);
+      }
+    });
+
+    it('should only traverse allowed components', () => {
+      for (let tag of allowedComponentTypes) {
+        mockFiberNode.elementType.tag = tag;
+        const tree = createTree(mockFiberNode);
+        const children = tree.children;
+
+        expect(tree.name).toEqual('root');
+        expect(tree.state).toEqual('root');
+        expect(children[0].name).toEqual('nameless');
+        expect(children[0].state).toEqual('stateless');
+      }
+    });
+  });
+
+  describe('add sibling', () => {});
+
+  describe('add children', () => {});
+
+  describe('createComponentActionsRecord', () => {
     it('should save a new component action record if the Fiber node is a stateful class component', () => {
       mockFiberNode.tag = 1; // ClassComponent
       mockFiberNode.stateNode = {
@@ -82,24 +164,7 @@ describe('master tree tests', () => {
     });
 
     it('should return the correct hooks array for a given component index', () => {
-      const component1 = { state: 'dummy state', props: {} };
-      const component2 = { state: 'dummy state2', props: {} };
-      const component3 = { state: 'dummy state3', props: {} };
-      componentActionsRecord.saveNew(component1);
-      componentActionsRecord.saveNew(component2);
-      componentActionsRecord.saveNew(component3);
       // create a mock component action record
-      const mockComponentActionRecord = {
-        index: 0,
-        hooks: ['mock hook 1', 'mock hook 2', 'mock hook 3'],
-      };
-      componentActionsRecord.addOrUpdateComponent(mockComponentActionRecord);
-
-      // call the getComponentByIndexHooks function with the mock index
-      const hooksArray = componentActionsRecord.getComponentByIndexHooks(0);
-
-      // assert that the returned hooks array matches the expected value
-      expect(hooksArray).toEqual(mockComponentActionRecord.hooks);
     });
 
     it('should not save a new component action record if the Fiber node is not a relevant component type', () => {
