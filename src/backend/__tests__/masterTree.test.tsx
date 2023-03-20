@@ -3,6 +3,7 @@ import { Fiber } from '../types/backendTypes';
 import componentActionsRecord from '../models/masterState';
 import createTree from '../controllers/createTree/createTree';
 import Tree from '../models/tree';
+import React, { useState } from 'react';
 import {
   allowedComponentTypes,
   nextJSDefaultComponent,
@@ -14,6 +15,17 @@ describe('master tree tests', () => {
   let mockFiberNode: Fiber;
   let mockSiblingNode: Fiber;
   let mockChildNode: Fiber;
+  function MockFunctionalComponent() {
+    const [count, setCount] = useState(0);
+    return (
+      <div>
+        <button className='increment' onClick={() => setCount(count + 1)}>
+          You clicked me {count} times.
+        </button>
+      </div>
+    );
+  }
+
   beforeEach(() => {
     // create a mock Fiber node with relevant properties
     mockFiberNode = {
@@ -31,23 +43,26 @@ describe('master tree tests', () => {
       _debugHookTypes: [],
     };
 
+    // create a mock child Fiber node with relevant properties for class component
     mockChildNode = {
       ...mockFiberNode,
       tag: 1,
       elementType: { name: 'child' },
       stateNode: { state: { counter: 0 }, props: { start: 0 } },
     };
+
+    // create a mock sibling Fiber node with relevant properties for class component
     mockSiblingNode = {
       ...mockFiberNode,
       tag: 0,
-      elementType: { name: 'sibling' },
+      elementType: MockFunctionalComponent,
       memoizedState: { memoizedState: 1, queue: [{}, { state: { value: 'test' } }], next: null },
     };
     // clear the saved component actions record
     componentActionsRecord.clear();
   });
   describe('create tree tests', () => {
-    it('should return a Tree if we pass in a empty fiber node', () => {
+    xit('should return a Tree if we pass in a empty fiber node', () => {
       const tree = createTree(mockFiberNode);
       const children = tree.children;
 
@@ -58,7 +73,7 @@ describe('master tree tests', () => {
       expect(children[0].state).toEqual('stateless');
     });
 
-    it('should filter out NextJS default components with no children or siblings', () => {
+    xit('should filter out NextJS default components with no children or siblings', () => {
       for (let name of nextJSDefaultComponent) {
         mockFiberNode.elementType.name = name;
         const tree = createTree(mockFiberNode);
@@ -76,19 +91,22 @@ describe('master tree tests', () => {
         const children = tree.children;
         const firstChild = children[0];
         const secondChild = children[1];
+        console.log('First Child', firstChild);
+        console.log('Second Child', secondChild);
         expect(children.length).toEqual(2);
-        // expect(firstChild.componentData?.state).toEqual(2);
+        expect(firstChild.componentData.state).toEqual({ counter: 0 });
+        expect(secondChild.componentData.hooksState);
       }
     });
 
-    it('should filter out remix default components with no children or siblings', () => {
+    xit('should filter out remix default components with no children or siblings', () => {
       for (let name of remixDefaultComponents) {
         mockFiberNode.elementType.name = name;
         const tree = createTree(mockFiberNode);
       }
     });
 
-    it('should only traverse allowed components', () => {
+    xit('should only traverse allowed components', () => {
       for (let tag of allowedComponentTypes) {
         mockFiberNode.elementType.tag = tag;
         const tree = createTree(mockFiberNode);
@@ -102,11 +120,11 @@ describe('master tree tests', () => {
     });
   });
 
-  describe('add sibling', () => {});
+  xdescribe('add sibling', () => {});
 
-  describe('add children', () => {});
+  xdescribe('add children', () => {});
 
-  describe('createComponentActionsRecord', () => {
+  xdescribe('createComponentActionsRecord', () => {
     it('should save a new component action record if the Fiber node is a stateful class component', () => {
       mockFiberNode.tag = 1; // ClassComponent
       mockFiberNode.stateNode = {

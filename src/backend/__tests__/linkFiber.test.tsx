@@ -35,7 +35,7 @@ function App(): JSX.Element {
   return <div>{fooState}</div>;
 }
 
-xdescribe('unit test for linkFiber', () => {
+describe('unit test for linkFiber', () => {
   beforeAll(async () => {
     await SERVER;
     const args = puppeteer

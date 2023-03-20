@@ -2,6 +2,7 @@
 import {
   // object with tree structure
   Fiber,
+  ComponentData,
 } from '../../types/backendTypes';
 import {
   FunctionComponent,
@@ -118,24 +119,17 @@ export default function createTree(currentFiberNode: Fiber): Tree {
 
     // --------------INITIALIZE OBJECT TO CONTAIN COMPONENT DATA---------------
     let newState: 'stateless' | object = 'stateless';
-    let componentData: {
-      actualDuration?: number;
-      actualStartTime?: number;
-      selfBaseDuration?: number;
-      treeBaseDuration?: number;
-      props: {};
-      context: {};
-      state?: {};
-      hooksState?: {};
-      hooksIndex?: number[];
-      index?: number;
-    } = {
+    let componentData: ComponentData = {
       actualDuration,
       actualStartTime,
       selfBaseDuration,
       treeBaseDuration,
       props: {},
       context: {},
+      state: null,
+      index: null,
+      hooksState: null,
+      hooksIndex: null,
     };
 
     // ---------------APPEND PROP DATA FROM REACT DEV TOOL----------------------
@@ -227,7 +221,10 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           // We then store them along with the corresponding memoizedState.queue,
           // which includes the dispatch() function we use to change their state.
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
+          // console.log('hooksState');
+          console.log(componentName, elementType);
           const hooksNames = getHooksNames(elementType.toString());
+          console.log('TESThooksNames', hooksNames);
           // Intialize state & index:
           // newState.hooksState = [];
           componentData.hooksState = {};
