@@ -4,6 +4,7 @@ import componentActionsRecord from '../models/masterState';
 import createTree from '../controllers/createTree/createTree';
 import Tree from '../models/tree';
 import React, { useState } from 'react';
+import { serializeState, scrubUnserializableMembers } from '../models/tree';
 import {
   allowedComponentTypes,
   nextJSDefaultComponent,
@@ -62,7 +63,7 @@ describe('master tree tests', () => {
     componentActionsRecord.clear();
   });
   describe('create tree tests', () => {
-    xit('should return a Tree if we pass in a empty fiber node', () => {
+    it('should return a Tree if we pass in a empty fiber node', () => {
       const tree = createTree(mockFiberNode);
       const children = tree.children;
 
@@ -73,7 +74,7 @@ describe('master tree tests', () => {
       expect(children[0].state).toEqual('stateless');
     });
 
-    xit('should filter out NextJS default components with no children or siblings', () => {
+    it('should filter out NextJS default components with no children or siblings', () => {
       for (let name of nextJSDefaultComponent) {
         mockFiberNode.elementType.name = name;
         const tree = createTree(mockFiberNode);
@@ -99,14 +100,14 @@ describe('master tree tests', () => {
       }
     });
 
-    xit('should filter out remix default components with no children or siblings', () => {
+    it('should filter out remix default components with no children or siblings', () => {
       for (let name of remixDefaultComponents) {
         mockFiberNode.elementType.name = name;
         const tree = createTree(mockFiberNode);
       }
     });
 
-    xit('should only traverse allowed components', () => {
+    it('should only traverse allowed components', () => {
       for (let tag of allowedComponentTypes) {
         mockFiberNode.elementType.tag = tag;
         const tree = createTree(mockFiberNode);
@@ -120,11 +121,38 @@ describe('master tree tests', () => {
     });
   });
 
-  xdescribe('add sibling', () => {});
+  describe('add sibling', () => {});
 
-  xdescribe('add children', () => {});
+  describe('add children', () => {});
 
-  xdescribe('createComponentActionsRecord', () => {
+  describe('serializing state', () => {
+    const dummyState = {
+      counter: 1,
+      playerOne: 'X',
+      board: [
+        ['', 'O', 'X'],
+        ['', 'O', 'X'],
+        ['O', 'X', ''],
+      ],
+    };
+
+    const circularState: { [key: string]: any } = {};
+    circularState.circ = circularState;
+
+    const serializedState = serializeState(dummyState);
+    const serializedCircularState = serializeState(circularState);
+
+    it('should create a deep copy of state', () => {
+      expect(dummyState).toEqual(serializedState);
+      expect(dummyState).not.toBe(serializedState);
+    });
+
+    it('should detect circular state', () => {
+      expect(serializedCircularState).toEqual('circularState');
+    });
+  });
+
+  describe('createComponentActionsRecord', () => {
     it('should save a new component action record if the Fiber node is a stateful class component', () => {
       mockFiberNode.tag = 1; // ClassComponent
       mockFiberNode.stateNode = {

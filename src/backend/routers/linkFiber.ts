@@ -1,25 +1,4 @@
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable max-len */
-/* eslint-disable indent */
-/* eslint-disable brace-style */
-/* eslint-disable comma-dangle */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable func-names */
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-param-reassign */
-/* eslint-disable-next-line no-mixed-operators */
-
-// import typescript types
-import {
-  // tree
-  Snapshot,
-  // jump, pause
-  Status,
-  // object with tree structure
-  FiberRoot,
-} from '../types/backendTypes';
+import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
 import { DevTools } from '../types/linkFiberTypes';
 import updateAndSendSnapShotTree from './snapShot';
 
@@ -98,10 +77,12 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
   // TODO: Convert this into async/await & add try/catch
 
   return () => {
+    console.log('testing called');
     // -------------------CHECK REACT DEVTOOL INSTALLATION----------------------
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     // Obtain React Devtools Object:
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    // console.log('React Dev Tools:', devTools);
     // If React Devtools is not installed, object will be undefined.
     if (!devTools) {
       return;

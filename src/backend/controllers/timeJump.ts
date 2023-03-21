@@ -67,7 +67,7 @@ async function updateReactFiberTree(
   const { index, state, hooksIndex, hooksState } = targetSnapshot.componentData;
   // ------------------------STATEFUL CLASS COMPONENT-------------------------
   // Check if it is a stateful class component
-  // Index can be zero => falsy value => DO NOT REMOVE UNDEFINED
+  // Index can be zero => falsy value => DO NOT REMOVE NULL
   if (index !== null) {
     // Obtain the BOUND update method at the given index
     const classComponent = componentActionsRecord.getComponentByIndex(index);
@@ -85,7 +85,7 @@ async function updateReactFiberTree(
   // Check if it is a stateful functional component
   // if yes, grab all relevant components for this snapshot by its index
   // call dispatch on each component passing in the corresponding currState value
-  //index can be zero => falsy value => DO NOT REMOVE UNDEFINED
+  //index can be zero => falsy value => DO NOT REMOVE NULL
   if (hooksIndex !== null) {
     // Obtain the array of BOUND update methods at the given indexes.
     // NOTE: each useState will be a separate update method. So if a component have 3 useState, we will obtain an array of 3 update methods.
