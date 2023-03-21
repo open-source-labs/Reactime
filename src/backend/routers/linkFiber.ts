@@ -77,7 +77,6 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
   // TODO: Convert this into async/await & add try/catch
 
   return () => {
-    console.log('testing called');
     // -------------------CHECK REACT DEVTOOL INSTALLATION----------------------
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     // Obtain React Devtools Object:
@@ -101,6 +100,7 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
     const reactInstance = devTools.renderers.get(1);
     // If target application is not a React App, this will return undefined.
     if (!reactInstance) {
+      console.log('not a react instance', reactInstance);
       return;
     }
     // If target application is a React App, send a message to front end.
@@ -124,7 +124,7 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
     // ---------OBTAIN THE INITIAL FIBEROOTNODE FROM REACT DEV TOOL-------------
     // Obtain the FiberRootNode, which is the first value in the FiberRoot Set:
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-    console.log('linkFiber', { fiberRoot });
+    console.log('fiberRoot', fiberRoot);
 
     // ----------INITIALIZE THE TREE SNAP SHOT ON CHROME EXTENSION--------------
     throttledUpdateSnapshot(fiberRoot); // only runs on start up
