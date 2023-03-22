@@ -47,17 +47,17 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
    * @function throttledUpdateSnapshot - a function that will wait for at least MIN_TIME_BETWEEN_UPDATE ms, before updating the tree snapShot being displayed on the Chrome Extension.
    */
   const throttledUpdateSnapshot = throttle(async (fiberRoot) => {
-    console.log('linkFiber - RERENDER');
+    // console.log('linkFiber - RERENDER');
     // If not jumping
     if (!mode.jumping) {
-      console.log('linkFiber - SEND SNAPSHOT');
+      // console.log('linkFiber - SEND SNAPSHOT');
       // Update and Send SnapShot tree to front end
       updateAndSendSnapShotTree(snapShot, fiberRoot);
     }
 
     // If navigating to another route during jumping:
     else if (mode.navigating) {
-      console.log('linkFiber - NAVIGATING');
+      // console.log('linkFiber - NAVIGATING');
       // Reset the array containing update methods:
       componentActionsRecord.clear();
       // Obtain new update methods for the current route:
@@ -100,7 +100,6 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
     const reactInstance = devTools.renderers.get(1);
     // If target application is not a React App, this will return undefined.
     if (!reactInstance) {
-      console.log('not a react instance', reactInstance);
       return;
     }
     // If target application is a React App, send a message to front end.
@@ -124,7 +123,7 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
     // ---------OBTAIN THE INITIAL FIBEROOTNODE FROM REACT DEV TOOL-------------
     // Obtain the FiberRootNode, which is the first value in the FiberRoot Set:
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-    console.log('fiberRoot', fiberRoot);
+    // console.log('fiberRoot', fiberRoot);
 
     // ----------INITIALIZE THE TREE SNAP SHOT ON CHROME EXTENSION--------------
     throttledUpdateSnapshot(fiberRoot); // only runs on start up
