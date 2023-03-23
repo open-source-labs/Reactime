@@ -24,6 +24,7 @@
     "buildlegacy": "webpack --mode production",
     "devlegacy": "webpack --mode development --watch",
     "test": "jest --verbose --coverage",
+    "test-backend": "jest --verbose --coverage src/backend",
     "test-on": "./node_modules/.bin/jest $1",
     "docker-test-lint": "eslint --ext .js --ext .jsx src",
     "docs": "typedoc --json docs --inputFiles src/app --inputFiles src/backend --readme docs/readme.md",

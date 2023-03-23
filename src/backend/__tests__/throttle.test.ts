@@ -14,7 +14,7 @@ describe('throttle unit tests', () => {
   });
 
   it('should return a function', () => {
-    const result = throttle(() => {}, 1000);
+    const result = throttle(mockCallback, 1000);
     expect(typeof result).toBe('function');
   });
 
@@ -56,7 +56,9 @@ describe('throttle unit tests', () => {
     expect(mockCallback).toHaveBeenCalledTimes(2);
 
     throttledFunc();
-    jest.advanceTimersByTime(1500);
+    jest.advanceTimersByTime(100);
+    throttledFunc();
+    jest.advanceTimersByTime(901);
     expect(mockCallback).toHaveBeenCalledTimes(3);
   });
 });
