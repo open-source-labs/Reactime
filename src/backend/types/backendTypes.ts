@@ -58,13 +58,16 @@ export interface MsgData {
  * @member props -
  */
 export interface ComponentData {
-  index?: number;
-  hooksIndex?: number;
   actualDuration?: number;
   actualStartTime?: number;
   selfBaseDuration?: number;
   treeBaseDuration?: number;
-  props?: any;
+  props: {};
+  context: {};
+  state: {} | null;
+  hooksState: {} | null;
+  hooksIndex: number[] | null;
+  index: number | null;
 }
 
 /**
@@ -244,5 +247,4 @@ export type Fiber = {
  */
 export type FiberRoot = {
   current: Fiber;
-  Nok_Nok: string;
 };

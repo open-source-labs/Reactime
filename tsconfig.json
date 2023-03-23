@@ -11,6 +11,7 @@
     // --------------------------MODULES----------------------------------------
     // Specifies the module format for the compiled TypeScript files
     "module": "es6",
+    "downlevelIteration": true,
     // Specifies the folder where TypeScript should look for type definition files.
     "typeRoots": ["./node_modules/@types"],
     // Specifies which global types to include in the project.

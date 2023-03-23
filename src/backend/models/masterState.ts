@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
-/* eslint-disable no-plusplus */
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
 /**
  * @type ComponentAction - an array of actions that can be performed on a component
  */

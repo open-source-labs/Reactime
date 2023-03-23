@@ -1,25 +1,4 @@
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable max-len */
-/* eslint-disable indent */
-/* eslint-disable brace-style */
-/* eslint-disable comma-dangle */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable func-names */
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-param-reassign */
-/* eslint-disable-next-line no-mixed-operators */
-
-// import typescript types
-import {
-  // tree
-  Snapshot,
-  // jump, pause
-  Status,
-  // object with tree structure
-  FiberRoot,
-} from '../types/backendTypes';
+import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
 import { DevTools } from '../types/linkFiberTypes';
 import updateAndSendSnapShotTree from './snapShot';
 
@@ -68,17 +47,17 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
    * @function throttledUpdateSnapshot - a function that will wait for at least MIN_TIME_BETWEEN_UPDATE ms, before updating the tree snapShot being displayed on the Chrome Extension.
    */
   const throttledUpdateSnapshot = throttle(async (fiberRoot) => {
-    console.log('linkFiber - RERENDER');
+    // console.log('linkFiber - RERENDER');
     // If not jumping
     if (!mode.jumping) {
-      console.log('linkFiber - SEND SNAPSHOT');
+      // console.log('linkFiber - SEND SNAPSHOT');
       // Update and Send SnapShot tree to front end
       updateAndSendSnapShotTree(snapShot, fiberRoot);
     }
 
     // If navigating to another route during jumping:
     else if (mode.navigating) {
-      console.log('linkFiber - NAVIGATING');
+      // console.log('linkFiber - NAVIGATING');
       // Reset the array containing update methods:
       componentActionsRecord.clear();
       // Obtain new update methods for the current route:
@@ -102,6 +81,7 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     // Obtain React Devtools Object:
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    // console.log('React Dev Tools:', devTools);
     // If React Devtools is not installed, object will be undefined.
     if (!devTools) {
       return;
@@ -143,7 +123,7 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
     // ---------OBTAIN THE INITIAL FIBEROOTNODE FROM REACT DEV TOOL-------------
     // Obtain the FiberRootNode, which is the first value in the FiberRoot Set:
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-    console.log('linkFiber', { fiberRoot });
+    // console.log('fiberRoot', fiberRoot);
 
     // ----------INITIALIZE THE TREE SNAP SHOT ON CHROME EXTENSION--------------
     throttledUpdateSnapshot(fiberRoot); // only runs on start up

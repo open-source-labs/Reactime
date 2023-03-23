@@ -1,105 +1,182 @@
-/* eslint-disable jest/no-disabled-tests */
-/* eslint-disable react/state-in-constructor */
-/* eslint-disable lines-between-class-members */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable import/order */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable react/jsx-filename-extension */
-import { string } from 'prop-types';
-import React, { useState } from 'react';
-import { render } from 'react-dom';
-import linkFiberStart from '../routers/linkFiber';
+import linkFiberInitialization from '../routers/linkFiber';
+import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
+import Tree from '../models/tree';
+import { DevTools } from '../types/linkFiberTypes';
+import updateAndSendSnapShotTree from '../routers/snapShot';
+import throttle from '../controllers/throttle';
 
-const puppeteer = require('puppeteer');
-const SERVER = require('../puppeteerServer');
-
-// Apple uses port 5000 for Air Play.
-const APP = 'http://localhost:5001';
-
-let linkFiber;
-let mode;
-let snapShot;
-
-let browser;
-let page;
-
-interface fooState {
-  foo: string;
-  setFoo?: (string) => void;
-}
-function App(): JSX.Element {
-  const [fooState, setFooState] = useState({
-    foo: 'bar',
-  });
-  return <div>{fooState}</div>;
-}
-
-xdescribe('unit test for linkFiber', () => {
-  beforeAll(async () => {
-    await SERVER;
-    const args = puppeteer
-      .defaultArgs()
-      .filter((arg) => String(arg).toLowerCase() !== '--disable-extensions');
-    browser = await puppeteer.launch({
-      args: args.concat([
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '---extensions-on-chrome-urls',
-        '--whitelisted-extension-id=fmkadmapgofadopljbjfkapdkoienihi',
-        '--whitelisted-extension-id=hilpbahfbckghckaiafiiinjkeagmfhn',
-        '--load-extension=/mnt/d/Libraries/Documents/codeRepos/reactime/src/extension/build',
-      ]),
-      devtools: true,
-      ignoreDefaultArgs: true,
-    });
-
-    const c = await puppeteer.connect({
-      browserWSEndpoint: browser.wsEndpoint(),
-      ignoreHTTPSErrors: false,
-    });
-
-    page = await browser.newPage();
-  });
-
-  afterAll(async () => {
-    await SERVER.close();
-
-    await browser.close();
-  });
+describe('linkFiber', () => {
+  let snapShot: Snapshot;
+  let mode: Status;
+  let linkFiber;
+  let fiberRoot: FiberRoot;
+  const mockPostMessage = jest.fn();
 
   beforeEach(() => {
-    snapShot = { tree: null };
+    // Create snapshot and mode objects
+    snapShot = {
+      tree: new Tree('root', 'root'),
+    };
     mode = {
       jumping: false,
       paused: false,
+      navigating: undefined,
     };
-    linkFiber = linkFiberStart(snapShot, mode);
 
-    page.waitForFunction(
-      async (lf) => {
-        const container = document.createElement('div');
-        render(<App />, container);
-        lf(container);
+    fiberRoot = {
+      current: {
+        tag: 3,
+        key: null,
+        elementType: 'div',
+        type: 'div',
+        stateNode: {},
+        child: null,
+        sibling: null,
+        index: 0,
+        memoizedState: null,
+        memoizedProps: {},
+        dependencies: null,
+        _debugHookTypes: [],
       },
-      {},
-      linkFiber,
-    );
+    };
+
+    linkFiber = linkFiberInitialization(snapShot, mode);
+    // Set up mock postMessage function
+    window.postMessage = mockPostMessage;
+
+    // Set up mock React DevTools global hook
+    (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__ = {
+      renderers: new Map<1, { version: string }>([[1, { version: '16' }]]),
+      inject: jest.fn(),
+      supportsFiber: true,
+      onCommitFiberRoot: jest.fn((...args) => {
+        console.log(...args);
+      }),
+      onCommitFiberUnmount: jest.fn(),
+      rendererInterfaces: {},
+      getFiberRoots: jest.fn(() => [{ current: { tag: 3 } }]),
+    };
   });
 
-  test('type of tree should be an object', () => {
-    expect(typeof snapShot.tree).toBe('object');
+  afterEach(() => {
+    jest.clearAllMocks();
+    delete window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
   });
 
-  test.skip('linkFiber should mutate the snapshot tree property', () => {
-    expect(snapShot.tree.state).toBe('root');
-    expect(snapShot.tree.children).toHaveLength(1);
-    expect(snapShot.tree.children[0].component.state.foo).toBe('bar');
+  describe('link fiber initiliaztion', () => {
+    it('link fiber should return a function', () => {
+      expect(typeof linkFiber).toBe('function');
+    });
+
+    it('returned function should not throw an error', () => {
+      expect(() => linkFiber()).not.toThrowError();
+    });
   });
 
-  test.skip('linkFiber should modify the setState of the stateful component', () => {
-    expect(snapShot.tree.children[0].component.setState.linkFiberChanged).toBe(true);
+  describe('React dev tools and react app check', () => {
+    it('should send message to front end that React DevTools is installed', () => {
+      linkFiber();
+      expect(mockPostMessage).toHaveBeenCalled();
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        {
+          action: 'devToolsInstalled',
+          payload: 'devToolsInstalled',
+        },
+        '*',
+      );
+    });
+
+    it('should not do anything if React Devtools is not installed', () => {
+      delete window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+      expect(() => linkFiber()).not.toThrowError();
+      expect(mockPostMessage).not.toHaveBeenCalled();
+    });
+
+    it('should send a message to the front end if the target application is a React App', () => {
+      linkFiber();
+      // the third call is from the onCommitFiberRoot() function
+      expect(mockPostMessage).toHaveBeenCalledTimes(3);
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        {
+          action: 'devToolsInstalled',
+          payload: 'devToolsInstalled',
+        },
+        '*',
+      );
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        {
+          action: 'aReactApp',
+          payload: 'aReactApp',
+        },
+        '*',
+      );
+    });
+
+    it('should not do anything if the target application is not a React App', () => {
+      (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__.renderers = new Map();
+      linkFiber();
+      expect(mockPostMessage).not.toHaveBeenCalledTimes(3);
+    });
+  });
+
+  describe('document visibility', () => {
+    it('should initiate an event listener for visibility change', () => {
+      const addEventListenerSpy = jest.spyOn(document, 'addEventListener');
+      linkFiber();
+      expect(addEventListenerSpy).toHaveBeenCalledWith('visibilitychange', expect.any(Function));
+    });
+  });
+
+  describe('throttledUpdateSnapshot', () => {
+    const mockUpdateAndSendSnapShotTree = jest.fn();
+
+    beforeEach(() => {
+      jest.useFakeTimers();
+      mockUpdateAndSendSnapShotTree.mockClear();
+    });
+
+    afterEach(() => {
+      jest.runOnlyPendingTimers();
+      jest.useRealTimers();
+    });
+
+    it('throttled function should be called with the correct arguments', () => {
+      const throttledUpdateSnapshot = throttle(mockUpdateAndSendSnapShotTree, 1000);
+      const onCoolDown = true;
+      const isCallQueued = true;
+      throttledUpdateSnapshot(onCoolDown, isCallQueued);
+
+      expect(mockUpdateAndSendSnapShotTree).toHaveBeenCalledWith(onCoolDown, isCallQueued);
+    });
+
+    it('should call updateAndSendSnapShotTree only once per 100ms', () => {
+      const throttledUpdateSnapshot = throttle(mockUpdateAndSendSnapShotTree, 100);
+      throttledUpdateSnapshot();
+      expect(mockUpdateAndSendSnapShotTree).toHaveBeenCalledTimes(1);
+      throttledUpdateSnapshot();
+      expect(mockUpdateAndSendSnapShotTree).toHaveBeenCalledTimes(1);
+      jest.advanceTimersByTime(100);
+      expect(mockUpdateAndSendSnapShotTree).toHaveBeenCalledTimes(2);
+    });
+
+    it('should call throttle after visibility change', () => {
+      const throttledUpdateSnapshot = throttle(mockUpdateAndSendSnapShotTree, 100);
+      // Simulate visibility change
+      const visibilityChangeEvent = new Event('visibilitychange');
+      document.dispatchEvent(visibilityChangeEvent);
+      expect(throttle).toHaveBeenCalled();
+    });
+  });
+
+  describe('addOneMoreStep', () => {
+    it('should add a new step to the current path in the snapshot tree', () => {});
+  });
+
+  describe('onCommitFiberRoot', () => {
+    it('should call throttledUpdateSnapshot', () => {
+      linkFiber();
+      const onCommitFiberRoot = window.__REACT_DEVTOOLS_GLOBAL_HOOK__?.onCommitFiberRoot;
+      expect(onCommitFiberRoot).toHaveBeenCalled();
+    });
   });
 });
-
-SERVER.close();

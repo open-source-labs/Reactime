@@ -6,6 +6,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
 import { Route } from './routes';
+import { ComponentData } from '../types/backendTypes';
 
 // ComponentNames is used to store a mapping between a component's unique identifier and its name. This mapping is used to reconstruct the component instances during deserialization.
 let componentNames = {};
@@ -52,7 +53,7 @@ class Tree {
 
   name: string;
 
-  componentData: {};
+  componentData: ComponentData;
 
   children: Tree[];
 

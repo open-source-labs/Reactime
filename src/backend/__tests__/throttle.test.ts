@@ -18,7 +18,7 @@ describe('throttle unit tests', () => {
     expect(typeof result).toBe('function');
   });
 
-  test('throttled function should be called with the correct arguments', () => {
+  it('throttled function should be called with the correct arguments', () => {
     const throttledFunc = throttle(mockCallback, 1000);
 
     throttledFunc(1, 2, 3);

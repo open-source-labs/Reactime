@@ -2,6 +2,7 @@
 import {
   // object with tree structure
   Fiber,
+  ComponentData,
 } from '../../types/backendTypes';
 import {
   FunctionComponent,
@@ -37,7 +38,6 @@ import {
  */
 // TODO: Not sure why the ritd need to be outside of the createTree function. Want to put inside, but in case this need to be keep track for front end.
 export default function createTree(currentFiberNode: Fiber): Tree {
-  const circularComponentTable = new Set();
   let rtidCounter = 0;
   return _createTree(currentFiberNode, new Tree('root', 'root'));
 
@@ -48,14 +48,6 @@ export default function createTree(currentFiberNode: Fiber): Tree {
    * @returns An instance of a Tree Object
    */
   function _createTree(currentFiberNode: Fiber, tree: Tree): Tree {
-    // ----------------------UPDATE VISITED FIBER NODE SET----------------------
-    // Base Case: if has visited the component, return
-    if (circularComponentTable.has(currentFiberNode)) {
-      return;
-    } else {
-      circularComponentTable.add(currentFiberNode);
-    }
-    
     // ------------------OBTAIN DATA FROM THE CURRENT FIBER NODE----------------
     // Destructure the current fiber node:
     const {
@@ -127,24 +119,17 @@ export default function createTree(currentFiberNode: Fiber): Tree {
 
     // --------------INITIALIZE OBJECT TO CONTAIN COMPONENT DATA---------------
     let newState: 'stateless' | object = 'stateless';
-    let componentData: {
-      actualDuration?: number;
-      actualStartTime?: number;
-      selfBaseDuration?: number;
-      treeBaseDuration?: number;
-      props: {};
-      context: {};
-      state?: {};
-      hooksState?: {};
-      hooksIndex?: number[];
-      index?: number;
-    } = {
+    let componentData: ComponentData = {
       actualDuration,
       actualStartTime,
       selfBaseDuration,
       treeBaseDuration,
       props: {},
       context: {},
+      state: null,
+      index: null,
+      hooksState: null,
+      hooksIndex: null,
     };
 
     // ---------------APPEND PROP DATA FROM REACT DEV TOOL----------------------
@@ -162,46 +147,46 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       }
     }
 
-    // ------------APPEND CONTEXT DATA FROM REACT DEV TOOL----------------
-    // memoizedState
-    // Note: if user use ReactHook, memoizedState.memoizedState can be a falsy value such as null, false, ... => need to specify this data is not undefined
-    if (
-      (tag === FunctionComponent || tag === ClassComponent || tag === IndeterminateComponent) &&
-      memoizedState?.memoizedState !== undefined
-    ) {
-      // If user uses Redux, context data will be stored in memoizedState of the Provider component => grab context object stored in the memoizedState
-      if (elementType.name === 'Provider') {
-        Object.assign(
-          componentData.context,
-          getStateAndContextData(memoizedState, elementType.name, _debugHookTypes),
-        );
-      }
-      // Else if user use ReactHook to define state => all states will be stored in memoizedState => grab all states stored in the memoizedState
-      // else {
-      //   Object.assign(
-      //     componentData.state,
-      //     getStateAndContextData(memoizedState, elementType.name, _debugHookTypes),
-      //   );
-      // }
-    }
-    // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
-    // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
-    // TODO: need to render this context provider when user use useContext hook.
-    if (tag === ContextProvider && !elementType._context.displayName) {
-      let stateData = memoizedProps.value;
-      if (stateData === null || typeof stateData !== 'object') {
-        stateData = { CONTEXT: stateData };
-      }
-      componentData.context = filterAndFormatData(stateData);
-      componentName = 'Context';
-    }
-
-    // DEPRECATED: This code might have worked previously. However, with the update of React Dev Tool, context can no longer be pulled using this method.
-    // Check to see if the component has any context:
-    // if the component uses the useContext hook, we want to grab the context object and add it to the componentData object for that fiber
-    // if (tag === FunctionComponent && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
-    //   componentData.context = convertDataToString(dependencies.firstContext.memoizedValue);
+    // // ------------APPEND CONTEXT DATA FROM REACT DEV TOOL----------------
+    // // memoizedState
+    // // Note: if user use ReactHook, memoizedState.memoizedState can be a falsy value such as null, false, ... => need to specify this data is not undefined
+    // if (
+    //   (tag === FunctionComponent || tag === ClassComponent || tag === IndeterminateComponent) &&
+    //   memoizedState?.memoizedState !== undefined
+    // ) {
+    //   // If user uses Redux, context data will be stored in memoizedState of the Provider component => grab context object stored in the memoizedState
+    //   if (elementType.name === 'Provider') {
+    //     Object.assign(
+    //       componentData.context,
+    //       getStateAndContextData(memoizedState, elementType.name, _debugHookTypes),
+    //     );
+    //   }
+    //   // Else if user use ReactHook to define state => all states will be stored in memoizedState => grab all states stored in the memoizedState
+    //   // else {
+    //   //   Object.assign(
+    //   //     componentData.state,
+    //   //     getStateAndContextData(memoizedState, elementType.name, _debugHookTypes),
+    //   //   );
+    //   // }
     // }
+    // // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
+    // // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
+    // // TODO: need to render this context provider when user use useContext hook.
+    // if (tag === ContextProvider && !elementType._context.displayName) {
+    //   let stateData = memoizedProps.value;
+    //   if (stateData === null || typeof stateData !== 'object') {
+    //     stateData = { CONTEXT: stateData };
+    //   }
+    //   componentData.context = filterAndFormatData(stateData);
+    //   componentName = 'Context';
+    // }
+
+    // // DEPRECATED: This code might have worked previously. However, with the update of React Dev Tool, context can no longer be pulled using this method.
+    // // Check to see if the component has any context:
+    // // if the component uses the useContext hook, we want to grab the context object and add it to the componentData object for that fiber
+    // // if (tag === FunctionComponent && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
+    // //   componentData.context = convertDataToString(dependencies.firstContext.memoizedValue);
+    // // }
 
     // ---------OBTAIN STATE & SET STATE METHODS FROM CLASS COMPONENT-----------
     // Check if node is a stateful class component when user use setState.
@@ -227,6 +212,8 @@ export default function createTree(currentFiberNode: Fiber): Tree {
         tag === ContextProvider) &&
       memoizedState
     ) {
+      console.log('Component Name', componentName);
+      console.log('Memoized State: ', memoizedState);
       if (memoizedState.queue) {
         try {
           // Hooks states are stored as a linked list using memoizedState.next,
@@ -234,7 +221,10 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           // We then store them along with the corresponding memoizedState.queue,
           // which includes the dispatch() function we use to change their state.
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
+          // console.log('hooksState');
+          console.log(componentName, elementType);
           const hooksNames = getHooksNames(elementType.toString());
+          console.log('TESThooksNames', hooksNames);
           // Intialize state & index:
           // newState.hooksState = [];
           componentData.hooksState = {};
