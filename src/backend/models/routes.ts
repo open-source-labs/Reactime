@@ -47,7 +47,6 @@ export class Routes {
     const currentRoute: Route = this.routeHistory[this.current];
     // Check if the new url is different from the current url
     const isNavigating = currentRoute.url !== url;
-
     if (isNavigating) {
       // Check if current is not equal to routeHistory.length - 1 becuase if it doesnt, we need to rebuild history
       if (this.current !== this.routeHistory.length - 1) {
@@ -65,28 +64,6 @@ export class Routes {
     }
     // If the new url is the same as the current url, return the current route
     return currentRoute;
-
-    // Create a new Route
-
-    // // Obtain the last visited route within routeHistory stack
-    // let route: Route = this.routeHistory[this.current];
-
-    // // If the passed in window url does not match with the last visited route
-    // // => user has navigated to another route
-    // if (route.url !== url) {
-    //   // If the last visited index is not the last position in routeHistory stack. This happens when user uses the timeJump functionality.
-    //   // => Rebuild the browserHistory
-    //   if (this.current !== this.routeHistory.length - 1) {
-    //     this.rebuildHistory(url);
-    //   }
-    //   // Create a new route instance from the passed in url.
-    //   route = new Route(url, (this.id += 1));
-    //   // Push the new route to routeHistory stack.
-    //   this.routeHistory.push(route);
-    //   // Update the last visited index.
-    //   this.current = this.routeHistory.length - 1;
-    // }
-    // return route;
   }
 
   /**
@@ -96,6 +73,7 @@ export class Routes {
    * Rebuilds the browser history stack using the copy of the stack maintained in the `routeHistory` stack. https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState, https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
    */
   private rebuildHistory(url: string): void {
+    console.log('RebuildHistory Called');
     // Replace window history with the next route
     window.history.replaceState('', '', this.routeHistory[this.current + 1].url);
     // For each route in routeHistory after the next route, add to window history
@@ -123,7 +101,7 @@ export class Routes {
     );
     // If the target route is not found, throw an error
     if (targetIndex === -1) {
-      throw Error('Error at Routes.navigage: targetIndex is undefined');
+      throw new Error('Error at Routes.navigage: targetIndex is undefined');
     }
     // Calculate the difference in index between the current route and the target route
     const delta: number = targetIndex - this.current;
@@ -137,35 +115,6 @@ export class Routes {
     }
     // If the difference is 0, return false to indicate that no navigation occurred
     return false;
-
-    // let targetIndex: number | undefined;
-    // // Loop through the routeHistory stack
-    // for (let i = 0; i < this.routeHistory.length; i += 1) {
-    //   // If within the route history, found a match of url & id from the passed in route, update `targetIndex`
-    //   if (this.routeHistory[i].url === route.url && this.routeHistory[i].id === route.id) {
-    //     targetIndex = i;
-    //   }
-    // }
-
-    // if (typeof targetIndex === 'undefined') {
-    //   throw Error('Error at Routes.navigage: targetIndex is undefined');
-    // }
-    // /**
-    //  * The position in the window history to which you want to move, relative to the current page. A negative value moves backwards, a positive value moves forwards.
-    //  */
-    // console.log({ targetIndex, current: this.current, history: this.routeHistory });
-    // const delta: number = targetIndex - this.current;
-
-    // // Update the position within routeHistory stack
-    // this.current += delta;
-
-    // // if delta != 0 => need to navigate to another page
-    // if (delta !== 0) {
-    //   // Navigate to that page based on delta steps
-    //   window.history.go(delta);
-    //   return true;
-    // }
-    // return false;
   }
 }
 
