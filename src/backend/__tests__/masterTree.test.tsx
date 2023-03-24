@@ -4,7 +4,7 @@ import componentActionsRecord from '../models/masterState';
 import createTree from '../controllers/createTree/createTree';
 import Tree from '../models/tree';
 import React, { useState } from 'react';
-import { serializeState, scrubUnserializableMembers } from '../models/tree';
+import { serializeState } from '../models/tree';
 import {
   allowedComponentTypes,
   nextJSDefaultComponent,
