@@ -1,43 +1,43 @@
-import timeJumpInitiation from '../controllers/timeJump';
-import { Status } from '../types/backendTypes';
-import Tree from '../models/tree';
+// import timeJumpInitiation from '../controllers/timeJump';
+// import { Status } from '../types/backendTypes';
+// import Tree from '../models/tree';
 
-describe('timeJumpInitiation', () => {
-  const mockMode: Status = { jumping: false, paused: true };
-  const mockTreeSnapshot: Tree = new Tree({});
+// describe('timeJumpInitiation', () => {
+//   const mockMode: Status = { jumping: false, paused: true };
+//   const mockTreeSnapshot: Tree = new Tree({});
 
-  beforeEach(() => {
-    // Reset mode before each test
-    mockMode.jumping = false;
-  });
+//   beforeEach(() => {
+//     // Reset mode before each test
+//     mockMode.jumping = false;
+//   });
 
-  it('should return a function that updates the React Fiber Tree based on the target snapshot', async () => {
-    // Call timeJumpInitiation and get the returned function
-    const timeJump = timeJumpInitiation(mockMode);
-    expect(typeof timeJump).toBe('function');
+//   it('should return a function that updates the React Fiber Tree based on the target snapshot', async () => {
+//     // Call timeJumpInitiation and get the returned function
+//     const timeJump = timeJumpInitiation(mockMode);
+//     expect(typeof timeJump).toBe('function');
 
-    // Call the returned function with the mock target snapshot
-    await timeJump(mockTreeSnapshot);
+//     // Call the returned function with the mock target snapshot
+//     await timeJump(mockTreeSnapshot);
 
-    // Assert that the mode's jumping property is true
-    expect(mockMode.jumping).toBe(true);
-  });
+//     // Assert that the mode's jumping property is true
+//     expect(mockMode.jumping).toBe(true);
+//   });
 
-  it('should reset the jumping mode to false when the mouse is over the browser', async () => {
-    // Call timeJumpInitiation and get the returned function
-    const timeJump = timeJumpInitiation(mockMode);
-    expect(typeof timeJump).toBe('function');
+//   it('should reset the jumping mode to false when the mouse is over the browser', async () => {
+//     // Call timeJumpInitiation and get the returned function
+//     const timeJump = timeJumpInitiation(mockMode);
+//     expect(typeof timeJump).toBe('function');
 
-    // Call the returned function with the mock target snapshot
-    await timeJump(mockTreeSnapshot);
+//     // Call the returned function with the mock target snapshot
+//     await timeJump(mockTreeSnapshot);
 
-    // Simulate mouseover event
-    window.dispatchEvent(new MouseEvent('mouseover'));
+//     // Simulate mouseover event
+//     window.dispatchEvent(new MouseEvent('mouseover'));
 
-    // Assert that the mode's jumping property is false
-    expect(mockMode.jumping).toBe(false);
-  });
-});
+//     // Assert that the mode's jumping property is false
+//     expect(mockMode.jumping).toBe(false);
+//   });
+// });
 
 // import timeJumpRequire from '../timeJump';
 // import componentActionsRecord from '../masterState';

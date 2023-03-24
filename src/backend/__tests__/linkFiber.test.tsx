@@ -24,12 +24,9 @@ describe('linkFiber', () => {
 
   afterAll(() => {
     // Clean up the fake DOM environment
-    global.window = undefined;
-    global.document = undefined;
     dom.window.close();
   });
   beforeEach(() => {
-    routes = new Routes();
     window.history.replaceState = jest.fn();
     window.history.pushState = jest.fn();
   });
