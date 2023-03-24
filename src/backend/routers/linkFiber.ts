@@ -6,7 +6,7 @@ import updateAndSendSnapShotTree from './snapShot';
 // getHooksNames - helper function to grab the getters/setters from `elementType`
 import throttle from '../controllers/throttle';
 import componentActionsRecord from '../models/masterState';
-import _createComponentActionsRecord from '../controllers/createTree/createComponentActionsRecord';
+import createComponentActionsRecord from '../controllers/createTree/createComponentActionsRecord';
 
 // Set global variables to use in exported module and helper functions
 declare global {
@@ -62,7 +62,7 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => void 
       componentActionsRecord.clear();
       // Obtain new update methods for the current route:
       const { current } = fiberRoot;
-      _createComponentActionsRecord(current);
+      createComponentActionsRecord(current);
       // Invoke timeJump, which is stored in mode.navigating, to update React Application FiberTree based on the snapshotTree
       await mode.navigating();
     }

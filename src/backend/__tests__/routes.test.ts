@@ -1,8 +1,23 @@
+import { JSDOM } from 'jsdom';
+
 import { Routes, Route } from '../models/routes';
 
 describe('Route class testing', () => {
   let routes: Routes;
+  let dom: JSDOM;
+  beforeAll(() => {
+    // Set up a fake DOM environment with JSDOM
+    dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', { url: 'http://localhost' });
+    global.window = dom.window;
+    global.document = dom.window.document;
+  });
 
+  afterAll(() => {
+    // Clean up the fake DOM environment
+    global.window = undefined;
+    global.document = undefined;
+    dom.window.close();
+  });
   beforeEach(() => {
     routes = new Routes();
     window.history.replaceState = jest.fn();
