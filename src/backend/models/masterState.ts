@@ -22,7 +22,7 @@ export default {
    * @function clear - Clears componentActionsRecord
    */
   clear: () => {
-    componentActionsRecord[window.location.href] = [];
+    componentActionsRecord = [];
     index = 0;
   },
 
@@ -32,12 +32,12 @@ export default {
    * @returns number
    */
   saveNew: (component): number => {
-    componentActionsRecord[window.location.href].push(component);
+    componentActionsRecord.push(component);
     // componentActionsRecord[index] = component;
     // index++;
 
     // return index - 1;
-    return componentActionsRecord[window.location.href].length - 1;
+    return componentActionsRecord.length - 1;
   },
   // ----------------------------CLASS COMPONENT--------------------------------
   /**
@@ -45,8 +45,7 @@ export default {
    * @param inputIndex - index of component inside `componentActionsRecord` coming from `timeJump.ts`
    * @returns - an object containing the bound setState method
    */
-  getComponentByIndex: (inputIndex: number): any | undefined =>
-    componentActionsRecord[window.location.href][inputIndex],
+  getComponentByIndex: (inputIndex: number): any | undefined => componentActionsRecord[inputIndex],
 
   //---------------------------FUNCTIONAL COMPONENT-----------------------------
   /**
@@ -55,17 +54,15 @@ export default {
    * @returns - an array of objects containing the bound dispatch methods
    */
   getComponentByIndexHooks: (inputIndex: Array<number> = []): any[] | undefined => {
-    const validIndex = inputIndex.filter(
-      (index) => componentActionsRecord[window.location.href]?.[index],
-    );
+    const validIndex = inputIndex.filter((index) => componentActionsRecord?.[index]);
     if (!validIndex.length) return undefined;
 
-    return validIndex.map((index) => componentActionsRecord[window.location.href][index]);
+    return validIndex.map((index) => componentActionsRecord[index]);
   },
   // ----------------------------------DEBUGGING--------------------------------
   /**
    * @function getAllComponents - This method is used for debugging purpose to access the array of setState/dispatch methods
    * @returns - an array of objects containing the bound methods for updating state
    */
-  getAllComponents: (): any[] => componentActionsRecord[window.location.href],
+  getAllComponents: (): any[] => componentActionsRecord,
 };

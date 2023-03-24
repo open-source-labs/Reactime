@@ -12,7 +12,6 @@ import 'regenerator-runtime/runtime';
 import linkFiberInitialization from './routers/linkFiber';
 import timeJumpInitialization from './controllers/timeJump';
 import { Snapshot, Status, MsgData } from './types/backendTypes';
-import componentActionsRecord from './models/masterState';
 import routes from './models/routes';
 
 // * State snapshot object initialized here

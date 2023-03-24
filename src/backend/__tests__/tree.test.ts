@@ -73,7 +73,7 @@ xdescribe('Tree unit test', () => {
   });
 
   xdescribe('Adding children', () => {
-    const returnChild = newTree.addChild('stateful', 'child', {}, null);
+    const returnChild: Tree = newTree.addChild('stateful', 'child', {}, null);
 
     it("should have the child be in the children's array property", () => {
       // check if returnChild is in the children array property of tree that invoked addChild
