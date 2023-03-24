@@ -1,21 +1,12 @@
-/**
- * @type ComponentAction - an array of actions that can be performed on a component
- */
-export type ComponentAction = {
-  [url: string]: any[];
-};
-
-export type ComponentActionRecord = ComponentAction[];
-
 // The HookState data structure is an array that holds the current value of a hook's state, as well as a dispatch function that is used to update that state.
 // Information on these components include ComponentData as well as state
 // For class components, there will be one "component" for each snapshot
 // For functional components that utilize Hooks, there will be one "component"
+
+import { index } from 'd3';
+
 // for each setter/getter every time we have a new snapshot
-let componentActionsRecord: ComponentActionRecord = [];
-// index keeps track of the current position in the array
-let index: number;
-index = 0;
+let componentActionsRecord = [];
 
 export default {
   /**
@@ -23,7 +14,6 @@ export default {
    */
   clear: () => {
     componentActionsRecord = [];
-    index = 0;
   },
 
   /**
@@ -33,10 +23,6 @@ export default {
    */
   saveNew: (component): number => {
     componentActionsRecord.push(component);
-    // componentActionsRecord[index] = component;
-    // index++;
-
-    // return index - 1;
     return componentActionsRecord.length - 1;
   },
   // ----------------------------CLASS COMPONENT--------------------------------
@@ -53,12 +39,13 @@ export default {
    * @param inputIndex - index of component inside `componentActionsRecord` coming from `timeJump.ts`
    * @returns - an array of objects containing the bound dispatch methods
    */
-  getComponentByIndexHooks: (inputIndex: Array<number> = []): any[] | undefined => {
-    const validIndex = inputIndex.filter((index) => componentActionsRecord?.[index]);
-    if (!validIndex.length) return undefined;
+  getComponentByIndexHooks: (inputIndex: Array<number>): any[] =>
+    inputIndex
+      // filter for only index exists in componentActionsRecord
+      .filter((index) => index in componentActionsRecord)
+      // get the corresponding dispath method at position index
+      .map((index) => componentActionsRecord[index]),
 
-    return validIndex.map((index) => componentActionsRecord[index]);
-  },
   // ----------------------------------DEBUGGING--------------------------------
   /**
    * @function getAllComponents - This method is used for debugging purpose to access the array of setState/dispatch methods
