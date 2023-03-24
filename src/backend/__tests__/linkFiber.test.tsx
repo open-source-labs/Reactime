@@ -6,6 +6,7 @@ import updateAndSendSnapShotTree from '../routers/snapShot';
 import throttle from '../controllers/throttle';
 import createTree from '../controllers/createTree/createTree';
 import routes from '../models/routes';
+import { JSDOM } from 'jsdom';
 
 describe('linkFiber', () => {
   let snapShot: Snapshot;
@@ -13,6 +14,25 @@ describe('linkFiber', () => {
   let linkFiber;
   let fiberRoot: FiberRoot;
   const mockPostMessage = jest.fn();
+  let dom: JSDOM;
+  beforeAll(() => {
+    // Set up a fake DOM environment with JSDOM
+    dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', { url: 'http://localhost' });
+    global.window = dom.window;
+    global.document = dom.window._document;
+  });
+
+  afterAll(() => {
+    // Clean up the fake DOM environment
+    global.window = undefined;
+    global.document = undefined;
+    dom.window.close();
+  });
+  beforeEach(() => {
+    routes = new Routes();
+    window.history.replaceState = jest.fn();
+    window.history.pushState = jest.fn();
+  });
 
   beforeEach(() => {
     // Create snapshot and mode objects
