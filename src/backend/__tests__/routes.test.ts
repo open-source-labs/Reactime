@@ -14,8 +14,6 @@ describe('Route class testing', () => {
 
   afterAll(() => {
     // Clean up the fake DOM environment
-    global.window = undefined;
-    global.document = undefined;
     dom.window.close();
   });
   beforeEach(() => {
