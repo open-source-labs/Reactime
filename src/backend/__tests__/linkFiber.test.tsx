@@ -31,7 +31,7 @@ describe('linkFiber', () => {
     // Set up a fake DOM environment with JSDOM
     const indexHTML = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf-8');
     dom = await new JSDOM(indexHTML, { url: 'http://localhost' });
-    global.window = dom.window;
+    global.window = dom.window as unknown as Window & typeof globalThis;
     global.document = dom.window._document;
 
     // Initialize Fiber Root:
