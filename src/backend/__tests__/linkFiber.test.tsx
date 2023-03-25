@@ -20,11 +20,11 @@ describe('linkFiber', () => {
   let snapshot: Snapshot;
   let mode: Status;
   let linkFiber: () => Promise<void>;
-  let linkFiberDelayed;
-  let timeJump;
+  let linkFiberDelayed: (resolve: any) => NodeJS.Timeout;
+  let timeJump: (targetSnapshot: Tree) => Promise<void>;
   let fiberRoot: FiberRoot;
   let devTools: DevTools;
-  let onCommitFiberRootDelayed;
+  let onCommitFiberRootDelayed: (resolve: any) => NodeJS.Timeout;
   const DELAY = 75;
   const mockPostMessage = jest.fn();
   let dom: JSDOM;
