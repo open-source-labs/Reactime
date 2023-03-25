@@ -1,5 +1,5 @@
-import Tree from '../models/tree';
-import { serializeState } from '../models/tree';
+import Tree from './models/tree';
+import { serializeState } from './models/tree';
 
 describe('Serialize state unit test', () => {
   it('should create a deep copy of state', () => {
