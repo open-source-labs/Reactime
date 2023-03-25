@@ -24,6 +24,8 @@ describe('linkFiber', () => {
   let timeJump;
   let fiberRoot: FiberRoot;
   let devTools: DevTools;
+  let onCommitFiberRootDelayed;
+  const DELAY = 75;
   const mockPostMessage = jest.fn();
   let dom: JSDOM;
 
@@ -55,7 +57,7 @@ describe('linkFiber', () => {
     // Obtain linkFiber function
     linkFiber = linkFiberInitialization(snapshot, mode);
     // Since linkFiber invoke a throttle function that get delay for 70 ms, between each test, linkFiber need to be delayed for 75 ms to ensure no overlapping async calls.
-    linkFiberDelayed = (resolve) => setTimeout(async () => resolve(await linkFiber()), 75);
+    linkFiberDelayed = (resolve) => setTimeout(async () => resolve(await linkFiber()), DELAY);
     timeJump = timeJumpInitialization(mode);
     // Set up mock postMessage function
     window.postMessage = mockPostMessage;
@@ -67,6 +69,12 @@ describe('linkFiber', () => {
       getFiberRoots: (renderID = 0) => new Set([fiberRoot]),
     };
     devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    // Since onCommitFiberRoot invoke a throttle function that get delay for 70 ms, between each test, onCommitFiberRoot need to be delayed for 75 ms to ensure no overlapping async calls.
+    onCommitFiberRootDelayed = (resolve) =>
+      setTimeout(
+        async () => resolve(await devTools.onCommitFiberRoot(0, fiberRoot, 'high')),
+        DELAY,
+      );
   });
 
   afterEach(() => {
@@ -160,9 +168,7 @@ describe('linkFiber', () => {
       document.dispatchEvent(visibilityChangeEvent);
       // Reset count of mockPostMessage
       mockPostMessage.mockClear();
-      await new Promise((resolve) =>
-        setTimeout(async () => resolve(await devTools.onCommitFiberRoot(0, fiberRoot, 'high')), 75),
-      );
+      await new Promise(onCommitFiberRootDelayed);
       // If document hidden, no message/snapshot will be posted
       expect(mockPostMessage).not.toHaveBeenCalled();
     });
@@ -194,9 +200,7 @@ describe('linkFiber', () => {
 
       // After modified fiberRoot to classComponent, onCommitFiberRoot should send snapSot of classPayload
       fiberRoot = { current: classComponent };
-      await new Promise((resolve) =>
-        setTimeout(async () => resolve(await devTools.onCommitFiberRoot(0, fiberRoot, 'high')), 75),
-      );
+      await new Promise(onCommitFiberRootDelayed);
       expect(mockPostMessage).toHaveBeenCalledWith(
         {
           action: 'recordSnap',
@@ -216,9 +220,7 @@ describe('linkFiber', () => {
 
       // Simulate jumping and navigating
       mode.jumping = true;
-      await new Promise((resolve) =>
-        setTimeout(async () => resolve(await devTools.onCommitFiberRoot(0, fiberRoot, 'high')), 75),
-      );
+      await new Promise(onCommitFiberRootDelayed);
       // During jumping &/or navigating, should not post any message/snapshot to front end
       expect(mockPostMessage).not.toHaveBeenCalled();
     });
@@ -239,17 +241,13 @@ describe('linkFiber', () => {
       // Simulate jumping and navigating
       mode.jumping = true;
       mode.navigating = () => timeJump(updateClassPayload);
-      await new Promise((resolve) =>
-        setTimeout(async () => resolve(await devTools.onCommitFiberRoot(0, fiberRoot, 'high')), 75),
-      );
+      await new Promise(onCommitFiberRootDelayed);
       // During jumping &/or navigating, should not post any message/snapshot to front end
       expect(mockPostMessage).not.toHaveBeenCalled();
 
       // After navigate, react application should have updateClassPayload
       mode.jumping = false;
-      await new Promise((resolve) =>
-        setTimeout(async () => resolve(await devTools.onCommitFiberRoot(0, fiberRoot, 'high')), 75),
-      );
+      await new Promise(onCommitFiberRootDelayed);
       expect(mockPostMessage).toHaveBeenCalledTimes(1);
       expect(mockPostMessage).toHaveBeenCalledWith(
         {

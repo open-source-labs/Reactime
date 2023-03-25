@@ -25,7 +25,7 @@ const MIN_TIME_BETWEEN_UPDATE = 10;
  */
 const throttledUpdateSnapshot = throttle(
   async (fiberRoot: FiberRoot, mode: Status, snapShot: Snapshot) => {
-    console.log('linkFiber - RERENDER');
+    // console.log('linkFiber - RERENDER');
     // If not jumping
     if (!mode.jumping) {
       // console.log('linkFiber - SEND SNAPSHOT');
