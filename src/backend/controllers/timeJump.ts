@@ -24,7 +24,6 @@ export default function timeJumpInitiation(mode: Status) {
    * @param targetSnapshot - The target snapshot to re-render. The payload from index.ts is assigned to targetSnapshot
    */
   return async function timeJump(targetSnapshot: Tree): Promise<void> {
-    console.log({ targetSnapshot: targetSnapshot.children[0] });
     mode.jumping = true;
     console.log('timeJump - START JUMPING');
     // Reset mode.navigating
@@ -70,11 +69,6 @@ async function updateReactFiberTree(
   // Check if it is a stateful class component
   // Index can be zero => falsy value => DO NOT REMOVE NULL
   if (index !== null) {
-    console.log({
-      componentActionsRecord: componentActionsRecord.getAllComponents()[0].state,
-      state,
-      name: targetSnapshot.name,
-    });
     // Obtain the BOUND update method at the given index
     const classComponent = componentActionsRecord.getComponentByIndex(index);
     // Update component state
@@ -84,8 +78,6 @@ async function updateReactFiberTree(
     );
     // Iterate through new children after state has been set
     targetSnapshot.children.forEach((child) => updateReactFiberTree(child, circularComponentTable));
-    console.log({ componentActionsRecord: componentActionsRecord.getAllComponents() });
-
     return;
   }
 

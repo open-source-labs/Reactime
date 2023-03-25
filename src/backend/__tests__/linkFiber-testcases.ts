@@ -50,8 +50,8 @@ export const classComponent: Fiber = {
   sibling: null,
   stateNode: {
     state: { count: 0 },
-    setState: function (newState) {
-      this.state = newState;
+    setState: function (callback) {
+      this.state = { ...callback() };
     },
   },
   child: null,
@@ -86,4 +86,9 @@ classPayload.addChild({ count: 0 }, 'IncrementClass', componentData, null);
 
 export const updateClassPayload = new Tree('root', 'root');
 updateClassPayload.route = rootPayload.route;
-updateClassPayload.addChild({ count: 2 }, 'IncrementClass', { ...componentData, count: 2 }, null);
+updateClassPayload.addChild(
+  { count: 2 },
+  'IncrementClass',
+  { ...componentData, state: { count: 2 } },
+  null,
+);

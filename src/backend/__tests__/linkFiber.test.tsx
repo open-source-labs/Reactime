@@ -2,16 +2,12 @@ import linkFiberInitialization from '../routers/linkFiber';
 import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
 import Tree from '../models/tree';
 import { DevTools } from '../types/linkFiberTypes';
-import updateAndSendSnapShotTree from '../routers/snapShot';
-import throttle from '../controllers/throttle';
-import createTree from '../controllers/createTree/createTree';
-import routes from '../models/routes';
+
 import { JSDOM } from 'jsdom';
 import path from 'path';
 import fs from 'fs';
 import componentActionsRecord from '../models/masterState';
 import {
-  functionalComponent,
   classComponent,
   root,
   rootPayload,
@@ -19,10 +15,6 @@ import {
   updateClassPayload,
 } from './linkFiber-testcases';
 import timeJumpInitialization from '../controllers/timeJump';
-// import Increment from './Increment'; // functional component
-// import React from 'react';
-// import { createRoot } from 'react-dom/client';
-// import { FunctionComponent } from '../types/backendTypes';
 
 describe('linkFiber', () => {
   let snapshot: Snapshot;
@@ -42,15 +34,6 @@ describe('linkFiber', () => {
     global.window = dom.window;
     global.document = dom.window._document;
 
-    // Append functional component on browser:
-    // const domNode = document.getElementById('root');
-    // const root = await createRoot(domNode);
-    // root.render(<Increment />);
-
-    // Get the fiber root object
-    // fiberRoot = root._internalRoot;
-
-    // fiberRoot.current = { ...fiberRoot.current, elementType: Increment, tag: FunctionComponent };
     // Initialize Fiber Root:
     fiberRoot = { current: root };
   });
@@ -58,12 +41,6 @@ describe('linkFiber', () => {
   afterAll(() => {
     // Clean up the fake DOM environment
     dom.window.close();
-  });
-
-  beforeEach(() => {
-    // routes = new Routes();
-    // window.history.replaceState = jest.fn();
-    // window.history.pushState = jest.fn();
   });
 
   beforeEach(() => {
@@ -231,6 +208,21 @@ describe('linkFiber', () => {
   });
 
   describe('mode unit tests', () => {
+    it('should not send snapshot if mode is jumping & not navigating', async () => {
+      // When first initialize linkFiber, should not have the update class payload
+      fiberRoot = { current: classComponent };
+      await new Promise(linkFiberDelayed);
+      mockPostMessage.mockClear();
+
+      // Simulate jumping and navigating
+      mode.jumping = true;
+      await new Promise((resolve) =>
+        setTimeout(async () => resolve(await devTools.onCommitFiberRoot(0, fiberRoot, 'high')), 75),
+      );
+      // During jumping &/or navigating, should not post any message/snapshot to front end
+      expect(mockPostMessage).not.toHaveBeenCalled();
+    });
+
     it('should update react fiber tree based on the payload from frontend when mode is navigating', async () => {
       // When first initialize linkFiber, should not have the update class payload
       fiberRoot = { current: classComponent };
@@ -246,28 +238,26 @@ describe('linkFiber', () => {
 
       // Simulate jumping and navigating
       mode.jumping = true;
-      console.log(updateClassPayload.children[0]);
       mode.navigating = () => timeJump(updateClassPayload);
       await new Promise((resolve) =>
         setTimeout(async () => resolve(await devTools.onCommitFiberRoot(0, fiberRoot, 'high')), 75),
       );
-      console.log('MODE UNIT TEST', componentActionsRecord.getAllComponents()[0].state.toString());
       // During jumping &/or navigating, should not post any message/snapshot to front end
       expect(mockPostMessage).not.toHaveBeenCalled();
 
       // After navigate, react application should have updateClassPayload
-      // mode.jumping = false;
-      // await new Promise((resolve) =>
-      //   setTimeout(async () => resolve(await devTools.onCommitFiberRoot(0, fiberRoot, 'high')), 75),
-      // );
-      // expect(mockPostMessage).toHaveBeenCalledTimes(1);
-      // expect(mockPostMessage).toHaveBeenCalledWith(
-      //   {
-      //     action: 'recordSnap',
-      //     payload: updateClassPayload,
-      //   },
-      //   '*',
-      // );
+      mode.jumping = false;
+      await new Promise((resolve) =>
+        setTimeout(async () => resolve(await devTools.onCommitFiberRoot(0, fiberRoot, 'high')), 75),
+      );
+      expect(mockPostMessage).toHaveBeenCalledTimes(1);
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        {
+          action: 'recordSnap',
+          payload: updateClassPayload,
+        },
+        '*',
+      );
     });
   });
 });
