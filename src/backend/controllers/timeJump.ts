@@ -24,6 +24,7 @@ export default function timeJumpInitiation(mode: Status) {
    * @param targetSnapshot - The target snapshot to re-render. The payload from index.ts is assigned to targetSnapshot
    */
   return async function timeJump(targetSnapshot: Tree): Promise<void> {
+    console.log({ targetSnapshot: targetSnapshot.children[0] });
     mode.jumping = true;
     console.log('timeJump - START JUMPING');
     // Reset mode.navigating
@@ -31,10 +32,10 @@ export default function timeJumpInitiation(mode: Status) {
     // Traverse the snapshotTree to update ReactFiberTree
     updateReactFiberTree(targetSnapshot).then(() => {
       // Remove Event listener for mouse over
-      removeEventListener('mouseover', resetJumpingMode);
+      document.removeEventListener('mouseover', resetJumpingMode);
       // Since in order to change state, user will need to navigate to browser
       // => set an event listener to resetJumpingMode when mouse is over the browser
-      addEventListener('mouseover', resetJumpingMode, { once: true });
+      document.addEventListener('mouseover', resetJumpingMode, { once: true });
     });
   };
 }
@@ -69,6 +70,11 @@ async function updateReactFiberTree(
   // Check if it is a stateful class component
   // Index can be zero => falsy value => DO NOT REMOVE NULL
   if (index !== null) {
+    console.log({
+      componentActionsRecord: componentActionsRecord.getAllComponents()[0].state,
+      state,
+      name: targetSnapshot.name,
+    });
     // Obtain the BOUND update method at the given index
     const classComponent = componentActionsRecord.getComponentByIndex(index);
     // Update component state
@@ -78,6 +84,8 @@ async function updateReactFiberTree(
     );
     // Iterate through new children after state has been set
     targetSnapshot.children.forEach((child) => updateReactFiberTree(child, circularComponentTable));
+    console.log({ componentActionsRecord: componentActionsRecord.getAllComponents() });
+
     return;
   }
 

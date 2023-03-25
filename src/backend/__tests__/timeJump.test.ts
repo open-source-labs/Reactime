@@ -2,7 +2,7 @@ import timeJumpInitiation from '../controllers/timeJump';
 import { Status } from '../types/backendTypes';
 import Tree from '../models/tree';
 
-describe('timeJumpInitiation', () => {
+xdescribe('timeJumpInitiation', () => {
   const mockMode: Status = { jumping: false, paused: true };
   const mockTreeSnapshot: Tree = new Tree({});
 

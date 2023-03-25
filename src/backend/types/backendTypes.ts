@@ -168,14 +168,14 @@ export type Fiber = {
   tag: WorkTag;
 
   // Unique identifier of this child.
-  key: null | string;
+  // key: null | string;
 
   // The value of element.type which is used to preserve the identity during
   // reconciliation of this child.
   elementType: any;
 
   // The resolved function/class/ associated with this fiber.
-  type: any;
+  // type: any;
 
   // The local state associated with this fiber.
   stateNode: any;
@@ -195,7 +195,7 @@ export type Fiber = {
   // Singly Linked List Tree Structure.
   child: Fiber | null;
   sibling: Fiber | null;
-  index: number;
+  // index: number;
 
   // Input is the data coming into process this fiber. Arguments. Props.
   // pendingProps: any, // This type will be more specific once we overload the tag.
@@ -235,9 +235,9 @@ export type Fiber = {
   // This field is only set when the enableProfilerTimer flag is enabled.
   treeBaseDuration?: number;
 
-  dependencies: any;
+  // dependencies: any;
 
-  _debugHookTypes: string[];
+  _debugHookTypes: string[] | null;
 };
 
 /**

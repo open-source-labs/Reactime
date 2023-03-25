@@ -138,6 +138,7 @@
     "jscharting-react": "^1.2.1",
     "prettier": "2.8.4",
     "puppeteer": "^14.3.0",
+    "react-devtools-core": "^4.27.3",
     "sass": "^1.26.10",
     "sass-loader": "^7.3.1",
     "sinon-chrome": "^3.0.1",

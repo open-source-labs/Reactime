@@ -74,7 +74,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       elementType?.name ||
       'nameless';
 
-    // console.log('LinkFiber', {
+    // console.log('CREATE TREE', {
     //   currentFiberNode,
     //   tag,
     //   // elementType,
@@ -212,8 +212,6 @@ export default function createTree(currentFiberNode: Fiber): Tree {
         tag === ContextProvider) &&
       memoizedState
     ) {
-      console.log('Component Name', componentName);
-      console.log('Memoized State: ', memoizedState);
       if (memoizedState.queue) {
         try {
           // Hooks states are stored as a linked list using memoizedState.next,
@@ -221,10 +219,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           // We then store them along with the corresponding memoizedState.queue,
           // which includes the dispatch() function we use to change their state.
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
-          // console.log('hooksState');
-          console.log(componentName, elementType);
           const hooksNames = getHooksNames(elementType.toString());
-          console.log('TESThooksNames', hooksNames);
           // Intialize state & index:
           // newState.hooksState = [];
           componentData.hooksState = {};
