@@ -6,7 +6,8 @@
       "^.+\\.(js|ts|tsx)$": "ts-jest"
     },
     "testPathIgnorePatterns": [
-      "www"
+      "www",
+      "./src/backend/__tests__/ignore"
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)"

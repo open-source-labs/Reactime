@@ -7,7 +7,7 @@ import {
   rootPayload,
   classPayload,
   updateClassPayload,
-} from './linkFiber-testcases';
+} from './ignore/linkFiber-testcases';
 import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
 import Tree from '../models/tree';
 import { DevTools } from '../types/linkFiberTypes';

@@ -1,9 +1,9 @@
-import Tree from '../models/tree';
-import routes from '../models/routes';
-import { ComponentData, Fiber } from '../types/backendTypes';
-import { FunctionComponent, ClassComponent, HostRoot } from '../types/backendTypes';
-import IncrementFunc from './IncrementFunc';
-import IncrementClass from './IncrementClass';
+import Tree from '../../models/tree';
+import routes from '../../models/routes';
+import { ComponentData, Fiber } from '../../types/backendTypes';
+import { FunctionComponent, ClassComponent, HostRoot } from '../../types/backendTypes';
+import IncrementFunc from '../IncrementFunc';
+import IncrementClass from '../IncrementClass';
 
 export const root: Fiber = {
   tag: HostRoot,
