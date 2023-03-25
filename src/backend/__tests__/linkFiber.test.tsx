@@ -1,11 +1,5 @@
 import linkFiberInitialization from '../routers/linkFiber';
-import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
-import Tree from '../models/tree';
-import { DevTools } from '../types/linkFiberTypes';
-
-import { JSDOM } from 'jsdom';
-import path from 'path';
-import fs from 'fs';
+import timeJumpInitialization from '../controllers/timeJump';
 import componentActionsRecord from '../models/masterState';
 import {
   classComponent,
@@ -14,7 +8,12 @@ import {
   classPayload,
   updateClassPayload,
 } from './linkFiber-testcases';
-import timeJumpInitialization from '../controllers/timeJump';
+import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
+import Tree from '../models/tree';
+import { DevTools } from '../types/linkFiberTypes';
+import { JSDOM } from 'jsdom';
+import path from 'path';
+import fs from 'fs';
 
 describe('linkFiber', () => {
   let snapshot: Snapshot;
@@ -25,14 +24,14 @@ describe('linkFiber', () => {
   let fiberRoot: FiberRoot;
   let devTools: DevTools;
   let onCommitFiberRootDelayed: (resolve: any) => NodeJS.Timeout;
-  const DELAY = 75;
+  const DELAY = 75; //ms
   const mockPostMessage = jest.fn();
   let dom: JSDOM;
 
-  beforeAll(async () => {
+  beforeAll(() => {
     // Set up a fake DOM environment with JSDOM
     const indexHTML = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf-8');
-    dom = await new JSDOM(indexHTML, { url: 'http://localhost' });
+    dom = new JSDOM(indexHTML, { url: 'http://localhost' });
     global.window = dom.window as unknown as Window & typeof globalThis;
     global.document = dom.window._document;
 
@@ -54,11 +53,15 @@ describe('linkFiber', () => {
       jumping: false,
       paused: false,
     };
-    // Obtain linkFiber function
+
+    // Initialize linkFiber
     linkFiber = linkFiberInitialization(snapshot, mode);
     // Since linkFiber invoke a throttle function that get delay for 70 ms, between each test, linkFiber need to be delayed for 75 ms to ensure no overlapping async calls.
     linkFiberDelayed = (resolve) => setTimeout(async () => resolve(await linkFiber()), DELAY);
+
+    // Initialize timeJump
     timeJump = timeJumpInitialization(mode);
+
     // Set up mock postMessage function
     window.postMessage = mockPostMessage;
 
