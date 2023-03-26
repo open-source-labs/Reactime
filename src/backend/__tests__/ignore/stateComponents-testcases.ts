@@ -1,10 +1,11 @@
 import Tree from '../../models/tree';
 import routes from '../../models/routes';
-import { ComponentData, Fiber, FiberRoot } from '../../types/backendTypes';
+import { ComponentData, Fiber } from '../../types/backendTypes';
 import { FunctionComponent, ClassComponent, HostRoot } from '../../types/backendTypes';
 import IncrementFunc from './IncrementFunc';
 import IncrementClass from './IncrementClass';
-import { transformSync } from '@babel/core';
+import componentActionsRecord from '../../models/masterState';
+import deepCopy from './deepCopy';
 
 // ----------------------------TEST CASES FOR ROOT------------------------------
 export const root: Fiber = {
@@ -60,6 +61,7 @@ const functionalComponentData: ComponentData = {
   state: null,
 };
 
+componentActionsRecord.clear();
 export const functionalPayload: Tree = new Tree('root', 'root');
 functionalPayload.route = rootPayload.route;
 functionalPayload.addChild({ count: 0 }, 'IncrementFunc', functionalComponentData, null);
@@ -101,11 +103,12 @@ const classComponentData: ComponentData = {
   state: { count: 0 },
 };
 
+componentActionsRecord.clear();
 export const classPayload = new Tree('root', 'root');
 classPayload.route = rootPayload.route;
-
 classPayload.addChild({ count: 0 }, 'IncrementClass', classComponentData, null);
 
+componentActionsRecord.clear();
 export const updateClassPayload = new Tree('root', 'root');
 updateClassPayload.route = rootPayload.route;
 updateClassPayload.addChild(
@@ -116,6 +119,7 @@ updateClassPayload.addChild(
 );
 
 // -----------------------TEST CASE FOR MIX OF COMPONENTS-----------------------
+componentActionsRecord.clear();
 export const mixComponents: Fiber = deepCopy(root);
 mixComponents.child = deepCopy(functionalComponent);
 mixComponents.sibling = deepCopy(classComponent);
@@ -164,18 +168,3 @@ classPayloadMix.componentData = {
 mixPayload.children[0].children.push(deepCopy(classPayloadMix));
 
 // console.dir(mixPayload, { depth: null });
-
-function deepCopy(obj) {
-  if (obj === null || typeof obj !== 'object') {
-    return obj;
-  }
-  const copy = Array.isArray(obj) ? [] : {};
-  Object.keys(obj).forEach((key) => {
-    if (typeof obj[key] === 'function') {
-      copy[key] = obj[key];
-    } else {
-      copy[key] = deepCopy(obj[key]);
-    }
-  });
-  return copy;
-}

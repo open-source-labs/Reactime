@@ -1,123 +1,213 @@
-import createComponentActionsRecord from '../controllers/createTree/createComponentActionsRecord';
-import { Fiber, FunctionComponent, ClassComponent } from '../types/backendTypes';
-import componentActionsRecord from '../models/masterState';
 import createTree from '../controllers/createTree/createTree';
+import componentActionsRecord from '../models/masterState';
+import createComponentActionsRecord from '../controllers/createTree/createComponentActionsRecord';
+import {
+  Fiber,
+  FunctionComponent,
+  ClassComponent,
+  IndeterminateComponent,
+  ComponentData,
+  WorkTag,
+} from '../types/backendTypes';
 import Tree from '../models/tree';
-import React, { useState } from 'react';
+import {
+  root,
+  functionalComponent,
+  functionalPayload,
+  classComponent,
+  classPayload,
+} from './ignore/stateComponents-testcases';
+
 import { serializeState } from '../models/tree';
 import {
   allowedComponentTypes,
   nextJSDefaultComponent,
   remixDefaultComponents,
 } from '../models/filterConditions';
+import deepCopy from './ignore/deepCopy';
 
 describe('master tree tests', () => {
-  let mockTree = new Tree('root', 'root');
+  let treeRoot: Tree;
   let mockFiberNode: Fiber;
-  let mockSiblingNode: Fiber;
+  const mockComponentData: ComponentData = {
+    actualDuration: 1,
+    actualStartTime: 2,
+    selfBaseDuration: 3,
+    treeBaseDuration: 4,
+    context: {},
+    hooksIndex: null,
+    hooksState: null,
+    index: null,
+    props: {},
+    state: null,
+  };
+  let mockFiberTree: Tree;
   let mockChildNode: Fiber;
-  function MockFunctionalComponent() {
-    const [count, setCount] = useState(0);
-    return (
-      <div>
-        <button className='increment' onClick={() => setCount(count + 1)}>
-          You clicked me {count} times.
-        </button>
-      </div>
-    );
-  }
+  let mockChildTree: Tree;
+  let mockSiblingNode: Fiber;
+  let mockSiblingTree: Tree;
 
   beforeEach(() => {
+    // create tree root:
+    treeRoot = new Tree('root', 'root');
     // create a mock Fiber node with relevant properties
-    mockFiberNode = {
-      sibling: null,
-      stateNode: {},
-      child: null,
-      memoizedState: null,
-      elementType: {},
-      tag: 2, // IndeterminateComponent
-      // key: null,
-      // type: null,
-      // index: 0,
-      memoizedProps: null,
-      // dependencies: null,
-      _debugHookTypes: [],
-    };
+    mockFiberNode = { ...root, tag: IndeterminateComponent };
+    mockFiberTree = new Tree('root', 'root');
+    mockFiberTree.addChild('stateless', 'nameless', mockComponentData, null);
 
     // create a mock child Fiber node with relevant properties for class component
-    mockChildNode = {
-      ...mockFiberNode,
-      tag: 1,
-      elementType: { name: 'child' },
-      stateNode: { state: { counter: 0 }, props: { start: 0 } },
-    };
+    mockChildNode = deepCopy(classComponent);
+    // Since payload will have a root then the component, need to extract the child component
+    mockChildTree = deepCopy(classPayload.children[0]);
 
     // create a mock sibling Fiber node with relevant properties for class component
-    mockSiblingNode = {
-      ...mockFiberNode,
-      tag: 0,
-      elementType: MockFunctionalComponent,
-      memoizedState: { memoizedState: 1, queue: [{}, { state: { value: 'test' } }], next: null },
-    };
+    mockSiblingNode = deepCopy(functionalComponent);
+    // Since payload will have a root then the component, need to extract the child component
+    mockSiblingTree = deepCopy(functionalPayload.children[0]);
+
     // clear the saved component actions record
     componentActionsRecord.clear();
   });
-  xdescribe('create tree tests', () => {
-    it('should return a Tree if we pass in a empty fiber node', () => {
-      const tree = createTree(mockFiberNode);
-      const children = tree.children;
-
-      expect(tree).toBeInstanceOf(Tree);
-      expect(tree.name).toEqual('root');
-      expect(tree.state).toEqual('root');
-      expect(children[0].name).toEqual('nameless');
-      expect(children[0].state).toEqual('stateless');
-    });
-
-    it('should filter out NextJS default components with no children or siblings', () => {
-      for (let name of nextJSDefaultComponent) {
-        mockFiberNode.elementType.name = name;
+  describe('createTree Unit test', () => {
+    describe('Filter components that are from NextJS, Remix or not from allowed component types', () => {
+      it('should return a Tree if we pass in a empty fiber node', () => {
         const tree = createTree(mockFiberNode);
-        const newTree = new Tree('root', 'root');
-        expect(tree).toEqual(newTree);
-      }
+        expect(tree).toEqual(mockFiberTree);
+      });
+
+      it('should filter out NextJS default components with no children or siblings', () => {
+        for (let name of nextJSDefaultComponent) {
+          mockFiberNode.elementType = { name };
+          const tree = createTree(mockFiberNode);
+          expect(tree).toEqual(treeRoot);
+          expect(tree).not.toEqual(mockFiberTree);
+        }
+      });
+      it('should filter out remix default components with no children or siblings', () => {
+        for (let name of remixDefaultComponents) {
+          mockFiberNode.elementType = { name };
+          const tree = createTree(mockFiberNode);
+          expect(tree).toEqual(treeRoot);
+          expect(tree).not.toEqual(mockFiberTree);
+        }
+      });
+
+      it('should only traverse allowed components', () => {
+        for (let tag: any = 1; tag <= 24; tag++) {
+          mockFiberNode.tag = tag;
+          const tree = createTree(mockFiberNode);
+          if (allowedComponentTypes.has(tag)) {
+            expect(tree).toEqual(mockFiberTree);
+          } else {
+            expect(tree).toEqual(treeRoot);
+          }
+        }
+      });
+      it('should filter out NextJS & Remix default components with children and/or siblings', () => {
+        (mockChildTree.componentData as ComponentData).index = 0;
+        (mockSiblingTree.componentData as ComponentData).hooksIndex = [1];
+        treeRoot.children.push(mockChildTree);
+        treeRoot.children.push(mockSiblingTree);
+        for (let name of nextJSDefaultComponent) {
+          componentActionsRecord.clear(); // reset index counts for component actions
+          mockFiberNode.elementType = { name };
+          mockFiberNode.child = mockChildNode;
+          mockFiberNode.sibling = mockSiblingNode;
+          const tree = createTree(mockFiberNode);
+          const children = tree.children;
+          expect(children.length).toEqual(2);
+          expect(children[0]).toEqual(mockChildTree);
+          expect(children[1]).toEqual(mockSiblingTree);
+          expect(tree).toEqual(treeRoot);
+        }
+        for (let name of remixDefaultComponents) {
+          componentActionsRecord.clear(); // reset index counts for component actions
+          mockFiberNode.elementType = { name };
+          mockFiberNode.child = mockChildNode;
+          mockFiberNode.sibling = mockSiblingNode;
+          const tree = createTree(mockFiberNode);
+          const children = tree.children;
+          expect(children.length).toEqual(2);
+          expect(children[0]).toEqual(mockChildTree);
+          expect(children[1]).toEqual(mockSiblingTree);
+          expect(tree).toEqual(treeRoot);
+        }
+      });
     });
+    describe('Display component props information', () => {
+      const memoizedProps = {
+        propVal: 0,
+        propFunc: jest.fn,
+        propObj: { dummy: 'dummy' },
+      };
+      const props = {
+        propVal: 0,
+        propFunc: 'function',
+        propObj: JSON.stringify({ dummy: 'dummy' }),
+      };
+      it('should display functional props information', () => {
+        mockChildNode.memoizedProps = memoizedProps;
+        (mockChildTree.componentData as ComponentData).props = props;
+        treeRoot.children.push(mockChildTree);
 
-    // it('should filter out NextJS default components with children and/or siblings', () => {
-    //   for (let name of nextJSDefaultComponent) {
-    //     mockFiberNode.elementType.name = name;
-    //     mockFiberNode.child = mockChildNode;
-    //     mockFiberNode.sibling = mockSiblingNode;
-    //     const tree = createTree(mockFiberNode);
-    //     const children = tree.children;
-    //     const firstChild = children[0];
-    //     const secondChild = children[1];
-    //     console.log('First Child', firstChild);
-    //     console.log('Second Child', secondChild);
-    //     expect(children.length).toEqual(2);
-    //     expect(firstChild.componentData.state).toEqual({ counter: 0 });
-    //     expect(secondChild.componentData.hooksState);
-    //   }
-    // });
+        const tree = createTree(mockChildNode);
+        expect(tree).toEqual(treeRoot);
+      });
+      it('should display class props information', () => {
+        mockSiblingNode.memoizedProps = memoizedProps;
+        (mockSiblingTree.componentData as ComponentData).props = props;
+        treeRoot.children.push(mockSiblingTree);
 
-    it('should filter out remix default components with no children or siblings', () => {
-      for (let name of remixDefaultComponents) {
-        mockFiberNode.elementType.name = name;
-        const tree = createTree(mockFiberNode);
-      }
-    });
+        const tree = createTree(mockSiblingNode);
+        expect(tree).toEqual(treeRoot);
+      });
+      it('should display React router props information', () => {
+        (mockSiblingTree.componentData as ComponentData) = {
+          ...(mockSiblingTree.componentData as ComponentData),
+          props: { pathname: '/tictactoe' },
+          hooksIndex: null,
+          hooksState: null,
+        };
+        mockSiblingTree.state = 'stateless';
 
-    it('should only traverse allowed components', () => {
-      for (let tag of allowedComponentTypes) {
-        mockFiberNode.elementType.tag = tag;
+        // For components in react router, there are different way to extract pathname prop
+        const reactRouterProp = {
+          Router: { location: { pathname: '/tictactoe' } },
+          RenderedRoute: { match: { pathname: '/tictactoe' } },
+        };
+
+        for (const componentName in reactRouterProp) {
+          // Router Component
+          mockSiblingNode.memoizedProps = {
+            ...memoizedProps,
+            ...reactRouterProp[componentName],
+          };
+          mockSiblingNode.elementType = { name: componentName };
+          mockSiblingTree.name = componentName;
+          treeRoot.children = [mockSiblingTree];
+
+          const routerTree = createTree(mockSiblingNode);
+          expect(routerTree).toEqual(treeRoot);
+        }
+      });
+
+      it('should display props information of multiple components', () => {
+        mockChildNode.memoizedProps = memoizedProps;
+        (mockChildTree.componentData as ComponentData).props = props;
+        treeRoot.children.push(mockChildTree);
+        mockSiblingNode.memoizedProps = { ...memoizedProps, name: 'sibling' };
+        (mockSiblingTree.componentData as ComponentData).props = { ...props, name: 'sibling' };
+        treeRoot.children.push(mockSiblingTree);
+
+        mockFiberNode.child = mockChildNode;
+        mockFiberNode.sibling = mockSiblingNode;
         const tree = createTree(mockFiberNode);
         const children = tree.children;
-
-        expect(tree.name).toEqual('root');
-        expect(tree.state).toEqual('root');
-        expect(children[0].name).toEqual('nameless');
-        expect(children[0].state).toEqual('stateless');
-      }
+        expect(children.length).toEqual(2);
+        expect(children[0]).toEqual(mockChildTree);
+        expect(children[1]).toEqual(mockSiblingTree);
+        expect(tree).toEqual(treeRoot);
+      });
     });
   });
 
@@ -190,8 +280,12 @@ describe('master tree tests', () => {
     });
 
     describe('Adding children', () => {
-      const newTree: Tree = new Tree('root', 'root');
-      const child: Tree = newTree.addChild('stateful', 'child', {}, null);
+      let newTree: Tree;
+      let child: Tree;
+      beforeEach(() => {
+        newTree = new Tree('root', 'root');
+        child = newTree.addChild('stateful', 'child', {}, null);
+      });
 
       it('should return a new tree child', () => {
         expect(child).toBeInstanceOf(Tree);

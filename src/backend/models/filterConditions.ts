@@ -27,9 +27,10 @@ import {
   Block,
   OffscreenComponent,
   LegacyHiddenComponent,
+  WorkTag,
 } from '../types/backendTypes';
 
-export const allowedComponentTypes = new Set([
+export const allowedComponentTypes: Set<WorkTag> = new Set([
   FunctionComponent,
   ClassComponent,
   ContextProvider,

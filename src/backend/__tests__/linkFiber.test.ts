@@ -11,7 +11,7 @@ import {
   functionalPayload,
   mixComponents,
   mixPayload,
-} from './ignore/linkFiber-testcases';
+} from './ignore/stateComponents-testcases';
 import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
 import Tree from '../models/tree';
 import { DevTools } from '../types/linkFiberTypes';
