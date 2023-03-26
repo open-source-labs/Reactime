@@ -25,7 +25,7 @@ export default function updateAndSendSnapShotTree(snapshot: Snapshot, fiberRoot:
   // Save the current window url to route
   payload.route = routes.addRoute(window.location.href);
   // console.log('send snapshot', {
-  //   payload: payload,
+  //   payload: payload.children[0],
   //   componentAction: componentActionsRecord.getAllComponents(),
   // });
 

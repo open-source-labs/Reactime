@@ -2,11 +2,15 @@ import linkFiberInitialization from '../routers/linkFiber';
 import timeJumpInitialization from '../controllers/timeJump';
 import componentActionsRecord from '../models/masterState';
 import {
-  classComponent,
   root,
   rootPayload,
+  classComponent,
   classPayload,
   updateClassPayload,
+  functionalComponent,
+  functionalPayload,
+  mixComponents,
+  mixPayload,
 } from './ignore/linkFiber-testcases';
 import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
 import Tree from '../models/tree';
@@ -34,9 +38,6 @@ describe('linkFiber', () => {
     dom = new JSDOM(indexHTML, { url: 'http://localhost' });
     global.window = dom.window as unknown as Window & typeof globalThis;
     global.document = dom.window._document;
-
-    // Initialize Fiber Root:
-    fiberRoot = { current: root };
   });
 
   afterAll(() => {
@@ -53,6 +54,8 @@ describe('linkFiber', () => {
       jumping: false,
       paused: false,
     };
+    // Initialize Fiber Root:
+    fiberRoot = { current: root };
 
     // Initialize linkFiber
     linkFiber = linkFiberInitialization(snapshot, mode);
@@ -190,7 +193,7 @@ describe('linkFiber', () => {
       expect(orginalOnCommitFiberRoot).not.toEqual(monkeyPatchOnCommitFiberRoot);
     });
 
-    it('should send a snapshot when new fiberRoot is committed', async () => {
+    it('should send a snapshot when new fiberRoot is committed for a class component', async () => {
       // When first initialize linkFiber, should send snapShot of rootPayload
       await new Promise(linkFiberDelayed);
       expect(mockPostMessage).toHaveBeenCalledWith(
@@ -200,7 +203,7 @@ describe('linkFiber', () => {
         },
         '*',
       );
-
+      mockPostMessage.mockClear();
       // After modified fiberRoot to classComponent, onCommitFiberRoot should send snapSot of classPayload
       fiberRoot = { current: classComponent };
       await new Promise(onCommitFiberRootDelayed);
@@ -208,6 +211,54 @@ describe('linkFiber', () => {
         {
           action: 'recordSnap',
           payload: classPayload,
+        },
+        '*',
+      );
+    });
+
+    it('should send a snapshot when new fiberRoot is committed for a functional  component', async () => {
+      // When first initialize linkFiber, should send snapShot of rootPayload
+      await new Promise(linkFiberDelayed);
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        {
+          action: 'recordSnap',
+          payload: rootPayload,
+        },
+        '*',
+      );
+      mockPostMessage.mockClear();
+
+      // After modified fiberRoot to functionalComponent, onCommitFiberRoot should send snapSot of functionalPayload
+      fiberRoot = { current: functionalComponent };
+      await new Promise(onCommitFiberRootDelayed);
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        {
+          action: 'recordSnap',
+          payload: functionalPayload,
+        },
+        '*',
+      );
+    });
+
+    it('should send a snapshot when new fiberRoot is commited for mixture of components', async () => {
+      // When first initialize linkFiber, should send snapShot of rootPayload
+      await new Promise(linkFiberDelayed);
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        {
+          action: 'recordSnap',
+          payload: rootPayload,
+        },
+        '*',
+      );
+      mockPostMessage.mockClear();
+
+      // After modified fiberRoot to mixComponents, onCommitFiberRoot should send snapSot of mixPayload
+      fiberRoot = { current: mixComponents };
+      await new Promise(onCommitFiberRootDelayed);
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        {
+          action: 'recordSnap',
+          payload: mixPayload,
         },
         '*',
       );

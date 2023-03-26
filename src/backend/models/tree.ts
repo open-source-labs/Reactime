@@ -16,7 +16,6 @@ export function serializeState(state) {
     return JSON.parse(JSON.stringify(state));
   } catch (e) {
     // if there is an error, that means there is circular state i.e state that depends on itself
-    console.log('circular');
     return 'circularState';
   }
 }

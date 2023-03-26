@@ -17,7 +17,7 @@ import componentActionsRecord from '../../models/masterState';
 import {
   getHooksNames,
   getHooksStateAndUpdateMethod,
-  getStateAndContextData,
+  // getStateAndContextData, //COMMENT OUT SINCE EXTRACTING CONTEXT IS STILL IN EXPERIMENT
   filterAndFormatData,
 } from './statePropExtractors';
 import {
@@ -84,7 +84,6 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     //     elementType?.render?.name ||
     //     elementType?.name ||
     //     elementType,
-    //   remix: remixDefaultComponents.has(componentName),
     //   // memoizedProps,
     //   // memoizedState,
     //   // stateNode,
@@ -147,6 +146,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       }
     }
 
+    // COMMENT OUT SINCE EXTRACTING CONTEXT IS STILL IN EXPERIMENT
     // // ------------APPEND CONTEXT DATA FROM REACT DEV TOOL----------------
     // // memoizedState
     // // Note: if user use ReactHook, memoizedState.memoizedState can be a falsy value such as null, false, ... => need to specify this data is not undefined

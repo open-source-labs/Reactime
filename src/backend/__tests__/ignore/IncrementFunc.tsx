@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-function Increment() {
+function IncrementFunc() {
   const [count, setCount] = useState(0);
   return (
     <div>
@@ -10,4 +10,4 @@ function Increment() {
   );
 }
 
-export default Increment;
+export default IncrementFunc;
