@@ -31,10 +31,10 @@ export default function timeJumpInitiation(mode: Status) {
     // Traverse the snapshotTree to update ReactFiberTree
     updateReactFiberTree(targetSnapshot).then(() => {
       // Remove Event listener for mouse over
-      removeEventListener('mouseover', resetJumpingMode);
+      document.removeEventListener('mouseover', resetJumpingMode);
       // Since in order to change state, user will need to navigate to browser
       // => set an event listener to resetJumpingMode when mouse is over the browser
-      addEventListener('mouseover', resetJumpingMode, { once: true });
+      document.addEventListener('mouseover', resetJumpingMode, { once: true });
     });
   };
 }

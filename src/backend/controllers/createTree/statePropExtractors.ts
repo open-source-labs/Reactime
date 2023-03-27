@@ -7,85 +7,12 @@ import {
   // object with tree structure
   Fiber,
 } from '../../types/backendTypes';
+import { exclude } from '../../models/filterConditions';
 // TODO: Determine what Component Data Type we are sending back for state, context, & props
 type ReactimeData = {
   [key: string]: any;
 };
-/**
- * A set of excluded props and variable name
- */
-const exclude = new Set([
-  'alternate',
-  'basename',
-  'baseQueue',
-  'baseState',
-  'child',
-  'childLanes',
-  'children',
-  'Consumer',
-  'context',
-  'create',
-  'deps',
-  'dependencies',
-  'destroy',
-  'dispatch',
-  'location',
-  'effects',
-  'element',
-  'elementType',
-  'firstBaseUpdate',
-  'firstEffect',
-  'flags',
-  'get key',
-  'getState',
-  'hash',
-  'key',
-  'lanes',
-  'lastBaseUpdate',
-  'lastEffect',
-  'liftedStore',
-  'navigator',
-  'memoizedState',
-  'mode',
-  'navigationType',
-  'next',
-  'nextEffect',
-  'pending',
-  'parentSub',
-  'pathnameBase',
-  'pendingProps',
-  'Provider',
-  'updateQueue',
-  'ref',
-  'replaceReducer',
-  'responders',
-  'return',
-  'route',
-  'routeContext',
-  'search',
-  'shared',
-  'sibling',
-  'state',
-  'store',
-  'subscribe',
-  'subscription',
-  'stateNode',
-  'tag',
-  'type',
-  '_calculateChangedBits',
-  '_context',
-  '_currentRenderer',
-  '_currentRenderer2',
-  '_currentValue',
-  '_currentValue2',
-  '_owner',
-  '_self',
-  '_source',
-  '_store',
-  '_threadCount',
-  '$$typeof',
-  '@@observable',
-]);
+
 // ------------FILTER DATA FROM REACT DEV TOOL && CONVERT TO STRING-------------
 /**
  * This function receives raw Data from REACT DEV TOOL and filter the Data based on the exclude list. The filterd data is then converted to string (if applicable) before being sent to reacTime front end.
@@ -118,67 +45,76 @@ export function filterAndFormatData(
         reactimeData[key] = reactDevData[key];
       }
     } catch (err) {
-      console.log('EROOR: linkFiber', { reactDevData, key });
-      // throw Error(`Error caught at converDataToString: ${err}`);
-    }
-  }
-  return reactimeData;
-}
-// ------------------------FILTER STATE & CONTEXT DATA--------------------------
-/**
- * This function is used to filter the state data of a component.
- * All propperty name that are in the central `exclude` list would be filtered out.
- * If passed in memoizedState is a not an object (a.k.a a primitive type), a default name would be provided.
- * @param memoizedState - The current state of the component associated with the current Fiber node.
- * @param _debugHookTypes - An array of hooks used for debugging purposes.
- * @param componentName - Name of the evaluated component
- * @returns - The updated state data object to send to front end of ReactTime
- */
-export function getStateAndContextData(
-  memoizedState: Fiber['memoizedState'],
-  componentName: string,
-  _debugHookTypes: Fiber['_debugHookTypes'],
-) {
-  // Initialize a list of componentName that would not be evaluated for State Data:
-  const ignoreComponent = new Set(['BrowserRouter', 'Router']);
-  if (ignoreComponent.has(componentName)) return;
-
-  // Initialize object to store state and context data of the component
-  const reactimeData: ReactimeData = {};
-  // Initialize counter for the default naming. If user use reactHook, such as useState, react will only pass in the value, and not the variable name of the state.
-  let stateCounter = 1;
-  let refCounter = 1;
-
-  // Loop through each hook inside the _debugHookTypes array.
-  // NOTE: _debugHookTypes.length === height of memoizedState tree.
-  for (const hook of _debugHookTypes) {
-    // useContext does not create any state => skip
-    if (hook === 'useContext') {
+      // COMMENT OUT TO AVOID PRINTTING ON THE CONSOLE OF USER - KEEP IT FOR DEBUGGING PURPOSE
+      // console.log({
+      //   Message: 'Error in createTree during obtaining props information',
+      //   potentialRootCause: 'circular component/failed during JSON stringify',
+      //   reactDevData,
+      //   key,
+      //   err,
+      // });
+      // we will skip any props that cause an error
       continue;
     }
-    // If user use useState reactHook => React will only pass in the value of state & not the name of the state => create a default name:
-    else if (hook === 'useState') {
-      const defaultName = `State ${stateCounter}`;
-      reactimeData[defaultName] = memoizedState.memoizedState;
-      stateCounter++;
-    }
-    // If user use useRef reactHook => React will store memoizedState in current object:
-    else if (hook === 'useRef') {
-      const defaultName = `Ref ${refCounter}`;
-      reactimeData[defaultName] = memoizedState.memoizedState.current;
-      refCounter++;
-    }
-    // If user use Redux to contain their context => the context object will be stored using useMemo Hook, as of for Rect Dev Tool v4.27.2
-    // Note: Provider is not a reserved component name for redux. User may name their component as Provider, which will break this logic. However, it is a good assumption that if user have a custom provider component, it would have a more specific naming such as ThemeProvider.
-    else if (hook === 'useMemo' && componentName === 'Provider') {
-      filterAndFormatData(memoizedState.memoizedState[0], reactimeData);
-    }
-    //Move on to the next level of memoizedState tree.
-    memoizedState = memoizedState?.next;
   }
-  // Return the updated state data object to send to front end of ReactTime
   return reactimeData;
 }
+// COMMENT OUT SINCE EXTRACTING CONTEXT IS STILL IN EXPERIMENT
+// // ------------------------FILTER STATE & CONTEXT DATA--------------------------
+// /**
+//  * This function is used to filter the state data of a component.
+//  * All propperty name that are in the central `exclude` list would be filtered out.
+//  * If passed in memoizedState is a not an object (a.k.a a primitive type), a default name would be provided.
+//  * @param memoizedState - The current state of the component associated with the current Fiber node.
+//  * @param _debugHookTypes - An array of hooks used for debugging purposes.
+//  * @param componentName - Name of the evaluated component
+//  * @returns - The updated state data object to send to front end of ReactTime
+//  */
+// export function getStateAndContextData(
+//   memoizedState: Fiber['memoizedState'],
+//   componentName: string,
+//   _debugHookTypes: Fiber['_debugHookTypes'],
+// ) {
+//   // Initialize a list of componentName that would not be evaluated for State Data:
+//   const ignoreComponent = new Set(['BrowserRouter', 'Router']);
+//   if (ignoreComponent.has(componentName)) return;
+
+//   // Initialize object to store state and context data of the component
+//   const reactimeData: ReactimeData = {};
+//   // Initialize counter for the default naming. If user use reactHook, such as useState, react will only pass in the value, and not the variable name of the state.
+//   let stateCounter = 1;
+//   let refCounter = 1;
+
+//   // Loop through each hook inside the _debugHookTypes array.
+//   // NOTE: _debugHookTypes.length === height of memoizedState tree.
+//   for (const hook of _debugHookTypes) {
+//     // useContext does not create any state => skip
+//     if (hook === 'useContext') {
+//       continue;
+//     }
+//     // If user use useState reactHook => React will only pass in the value of state & not the name of the state => create a default name:
+//     else if (hook === 'useState') {
+//       const defaultName = `State ${stateCounter}`;
+//       reactimeData[defaultName] = memoizedState.memoizedState;
+//       stateCounter++;
+//     }
+//     // If user use useRef reactHook => React will store memoizedState in current object:
+//     else if (hook === 'useRef') {
+//       const defaultName = `Ref ${refCounter}`;
+//       reactimeData[defaultName] = memoizedState.memoizedState.current;
+//       refCounter++;
+//     }
+//     // If user use Redux to contain their context => the context object will be stored using useMemo Hook, as of for Rect Dev Tool v4.27.2
+//     // Note: Provider is not a reserved component name for redux. User may name their component as Provider, which will break this logic. However, it is a good assumption that if user have a custom provider component, it would have a more specific naming such as ThemeProvider.
+//     else if (hook === 'useMemo' && componentName === 'Provider') {
+//       filterAndFormatData(memoizedState.memoizedState[0], reactimeData);
+//     }
+//     //Move on to the next level of memoizedState tree.
+//     memoizedState = memoizedState?.next;
+//   }
+//   // Return the updated state data object to send to front end of ReactTime
+//   return reactimeData;
+// }
 
 // ----------------------GET HOOK STATE AND DISPATCH METHOD---------------------
 /**
@@ -217,12 +153,7 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
   let AST: any;
   try {
     AST = JSXParser.parse(elementType).body;
-  } catch (e) {
-    throw Error('Error occurs at helpers getHooksName.ts Cannot parse functional component.');
-  }
-  console.log('parsed JSX', AST);
-  // Begin search for hook names, only if ast has a body property.
-  try {
+    // Begin search for hook names, only if ast has a body property.
     // Statements get all the names of the hooks. For example: useCount, useWildcard, ...
     const statements: { hookName: string; varName: string }[] = [];
     /** All module exports always start off as a single 'FunctionDeclaration' type
@@ -234,7 +165,6 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
       if (functionDec.expression?.body) declarationBody = functionDec.expression.body.body;
       // check if functionDec.expression.body exists, then set declarationBody to functionDec's body
       else declarationBody = functionDec.body?.body ?? [];
-      console.log('declaration body', declarationBody);
       // Traverse through the function's funcDecs and Expression Statements
       declarationBody.forEach((elem: any) => {
         // Hooks will always be contained in a variable declaration
@@ -242,13 +172,25 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
           // Obtain the declarations array from elem.
           const { declarations } = elem;
           // Obtain the reactHook:
-          console.log('Callee', declarations[0].init.callee);
-          const reactHook: string = declarations[0]?.init?.callee?.expressions[1]?.property?.name;
+          // Due to difference in babel transpilation in browser vs for jest test, expression is stored in differen location
+          const expression =
+            declarations[0]?.init?.callee?.expressions || //work for browser
+            declarations[0]?.init?.arguments[0]?.callee?.expressions; //work for jest test
+          let reactHook: string;
+          reactHook = expression[1].property?.name;
           if (reactHook === 'useState') {
             // Obtain the variable being set:
-            let varName: string = declarations[1]?.id?.name;
+            let varName: string =
+              declarations[1]?.id?.name || // work react application
+              (Array.isArray(declarations[0]?.id?.elements)
+                ? declarations[0]?.id?.elements[0]?.name
+                : undefined); //work for nextJS application
             // Obtain the setState method:
-            let hookName: string = declarations[2]?.id?.name;
+            let hookName: string =
+              declarations[2]?.id?.name || // work react application
+              (Array.isArray(declarations[0]?.id?.elements)
+                ? declarations[0]?.id?.elements[0]?.name
+                : undefined); //work for nextJS & Remix
             // Push reactHook & varName to statements array
             statements.push({ hookName, varName });
           }
@@ -257,8 +199,7 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
     });
     return statements;
   } catch (err) {
-    console.log(err);
-    throw new Error();
+    throw new Error('getHooksNameError' + err.message);
   }
 }
 

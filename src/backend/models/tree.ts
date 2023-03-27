@@ -1,29 +1,14 @@
-/* eslint-disable no-plusplus */
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable no-multiple-empty-lines */
-/* eslint-disable max-classes-per-file */
-/* eslint-disable no-console */
-/* eslint-disable no-param-reassign */
 import { Route } from './routes';
 import { ComponentData } from '../types/backendTypes';
 
 // ComponentNames is used to store a mapping between a component's unique identifier and its name. This mapping is used to reconstruct the component instances during deserialization.
 let componentNames = {};
 
-// Functions dont serialize properly so we need to scrub for that
-export function scrubUnserializableMembers(tree: Tree): Tree {
-  Object.entries(tree.state).forEach((keyValuePair) => {
-    if (typeof keyValuePair[1] === 'function') tree.state[keyValuePair[0]] = 'function';
-  });
-  return tree;
-}
-
 // Making a deep clone of state becuase we want to make a copy
 /**
  * @function serializeState - In the context of React, state is often used to store data that determines the behavior and appearance of a component. By serializing the state, we can preserve the component's data across page refreshes, server-side rendering, and other transitions. Additionally, by serializing the state and passing it to a child component, we can create a deep clone of the state, which allows the child component to manipulate the state without affecting the original component. This is useful in situations where we want to keep the state of the parent component immutable, but still allow child components to modify a copy of the state.
  * @param state - Object that contains the current state of the application or system that needs to be serialized.
- * @returns
+ * @returns - Depclone of the passed in state. If there is any circulate state, return 'circularState'
  */
 export function serializeState(state) {
   try {
@@ -31,7 +16,6 @@ export function serializeState(state) {
     return JSON.parse(JSON.stringify(state));
   } catch (e) {
     // if there is an error, that means there is circular state i.e state that depends on itself
-    console.log('circular');
     return 'circularState';
   }
 }
@@ -53,7 +37,7 @@ class Tree {
 
   name: string;
 
-  componentData: ComponentData;
+  componentData: ComponentData | {};
 
   children: Tree[];
 
@@ -74,11 +58,11 @@ class Tree {
   constructor(
     state: string | {},
     name = 'nameless',
-    componentData: {} = {},
+    componentData: ComponentData | {} = {},
     rtid: string | null = null,
   ) {
     this.children = [];
-    this.componentData = JSON.parse(JSON.stringify(componentData));
+    this.componentData = componentData;
     this.state = state === 'root' ? 'root' : serializeState(state);
     this.name = name;
     this.rtid = rtid;
@@ -118,7 +102,12 @@ class Tree {
    * @param rtid - ??
    * @returns - return new tree instance that is child
    */
-  addChild(state: string | {}, name: string, componentData: {}, rtid: any): Tree {
+  addChild(
+    state: Tree['state'],
+    name: Tree['name'],
+    componentData: Tree['componentData'],
+    rtid: Tree['rtid'],
+  ): Tree {
     // Get unique name by invoking checkForDuplicates method
     const uniqueName = this.checkForDuplicates(name);
     // Instantiates new child Tree with state, uniqueName, componentData and rtid

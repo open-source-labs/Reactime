@@ -5,10 +5,10 @@
  * @returns A function that limits input function, `callback`, from being called more than once every `MIN_TIME_BETWEEN_UPDATE` milliseconds
  *
  */
-export default function throttle(
-  callback: (...args: any) => void,
+export default function throttle<T extends (...args: any) => any>(
+  callback: T,
   MIN_TIME_BETWEEN_UPDATE: number,
-): Function {
+): (...arg: Parameters<T>) => ReturnType<T> {
   // Initialize boolean flags for callback, throttledFunc
   /**
    * A boolean variable tracking if MIN_TIME_BETWEEN_UPDATE has passed
@@ -34,7 +34,7 @@ export default function throttle(
 
   let timeout: NodeJS.Timeout;
   // Wrap the passed-in function callback in a callback function that "throttles" (puts a limit on) the number of calls that can be made to function in a given period of time (ms)
-  return function throttledFunc(...args: Parameters<typeof callback>) {
+  return function throttledFunc(...args: Parameters<T>): ReturnType<T> {
     // CASE 1: In cooldown mode and we already have a function waiting to be executed, so do nothing
     if (isOnCooldown && isCallQueued) return;
 
@@ -78,4 +78,3 @@ export default function throttle(
     }
   };
 }
-

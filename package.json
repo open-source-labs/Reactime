@@ -6,7 +6,11 @@
       "^.+\\.(js|ts|tsx)$": "ts-jest"
     },
     "testPathIgnorePatterns": [
-      "www"
+      "www",
+      "./src/backend/__tests__/ignore"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/src/backend/__tests__/ignore/"
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)"
@@ -98,7 +102,6 @@
   ],
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.12.7",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/plugin-proposal-decorators": "^7.10.5",
     "@babel/preset-env": "^7.12.7",
@@ -138,6 +141,7 @@
     "jscharting-react": "^1.2.1",
     "prettier": "2.8.4",
     "puppeteer": "^14.3.0",
+    "react-devtools-core": "^4.27.3",
     "sass": "^1.26.10",
     "sass-loader": "^7.3.1",
     "sinon-chrome": "^3.0.1",

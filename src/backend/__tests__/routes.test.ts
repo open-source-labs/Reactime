@@ -8,14 +8,12 @@ describe('Route class testing', () => {
   beforeAll(() => {
     // Set up a fake DOM environment with JSDOM
     dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', { url: 'http://localhost' });
-    global.window = dom.window;
-    global.document = dom.window.document;
+    global.window = dom.window as unknown as Window & typeof globalThis;
+    global.document = dom.window._document;
   });
 
   afterAll(() => {
     // Clean up the fake DOM environment
-    global.window = undefined;
-    global.document = undefined;
     dom.window.close();
   });
   beforeEach(() => {

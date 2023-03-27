@@ -17,7 +17,7 @@ import componentActionsRecord from '../../models/masterState';
 import {
   getHooksNames,
   getHooksStateAndUpdateMethod,
-  getStateAndContextData,
+  // getStateAndContextData, //COMMENT OUT SINCE EXTRACTING CONTEXT IS STILL IN EXPERIMENT
   filterAndFormatData,
 } from './statePropExtractors';
 import {
@@ -74,7 +74,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       elementType?.name ||
       'nameless';
 
-    // console.log('LinkFiber', {
+    // console.log('CREATE TREE', {
     //   currentFiberNode,
     //   tag,
     //   // elementType,
@@ -84,7 +84,6 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     //     elementType?.render?.name ||
     //     elementType?.name ||
     //     elementType,
-    //   remix: remixDefaultComponents.has(componentName),
     //   // memoizedProps,
     //   // memoizedState,
     //   // stateNode,
@@ -147,6 +146,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       }
     }
 
+    // COMMENT OUT SINCE EXTRACTING CONTEXT IS STILL IN EXPERIMENT
     // // ------------APPEND CONTEXT DATA FROM REACT DEV TOOL----------------
     // // memoizedState
     // // Note: if user use ReactHook, memoizedState.memoizedState can be a falsy value such as null, false, ... => need to specify this data is not undefined
@@ -212,8 +212,6 @@ export default function createTree(currentFiberNode: Fiber): Tree {
         tag === ContextProvider) &&
       memoizedState
     ) {
-      console.log('Component Name', componentName);
-      console.log('Memoized State: ', memoizedState);
       if (memoizedState.queue) {
         try {
           // Hooks states are stored as a linked list using memoizedState.next,
@@ -221,10 +219,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           // We then store them along with the corresponding memoizedState.queue,
           // which includes the dispatch() function we use to change their state.
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
-          // console.log('hooksState');
-          console.log(componentName, elementType);
           const hooksNames = getHooksNames(elementType.toString());
-          console.log('TESThooksNames', hooksNames);
           // Intialize state & index:
           // newState.hooksState = [];
           componentData.hooksState = {};
@@ -239,9 +234,12 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           // TODO: Refactor this, this is currently being used for Tree & Diff tabs
           newState = componentData.hooksState;
         } catch (err) {
-          console.log('ERROR: Failed Element during JSX parsing', {
-            componentName,
-          });
+          // COMMENT OUT TO AVOID PRINTTING ON THE CONSOLE OF USER - KEEP IT FOR DEBUGGING PURPOSE
+          // console.log({
+          //   Message: 'Error in createTree during obtaining state from functionalComponent',
+          //   componentName,
+          //   err,
+          // });
         }
       }
     }
