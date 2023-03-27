@@ -1,7 +1,7 @@
 const acorn = require('acorn');
 const jsx = require('acorn-jsx');
 const JSXParser = acorn.Parser.extend(jsx());
-import { HookStates, Fiber } from '../types/backendTypes';
+import { HookStates, HookStateItem, Fiber } from '../types/backendTypes';
 import { exclude } from '../models/filterConditions';
 
 type ReactimeData = {
@@ -10,6 +10,7 @@ type ReactimeData = {
 // ------------FILTER DATA FROM REACT DEV TOOL && CONVERT TO STRING-------------
 /**
  * This function receives raw Data from REACT DEV TOOL and filter the Data based on the exclude list. The filterd data is then converted to string (if applicable) before being sent to reacTime front end.
+ * NOTE: the formating is important since Chrome will only accept JSON.stringfiable object. Circular object & function are not JSON stringifiable.
  *
  * @param reactDevData - The data object obtained from React Devtool. Ex: memoizedProps, memoizedState
  * @param reactimeData - The cached data from the current component. This can be data about states, context and/or props of the component.
@@ -64,8 +65,10 @@ export function filterAndFormatData(
  * @return An array of array of HookStateItem objects
  *
  */
-export function getHooksStateAndUpdateMethod(memoizedState: Fiber['memoizedState']): HookStates {
-  const hooksStates: HookStates = [];
+export function getHooksStateAndUpdateMethod(
+  memoizedState: Fiber['memoizedState'],
+): Array<HookStateItem> {
+  const hooksStates: Array<HookStateItem> = [];
   while (memoizedState) {
     if (memoizedState.queue) {
       hooksStates.push({

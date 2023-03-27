@@ -62,7 +62,8 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     } = currentFiberNode;
 
     // Obtain component name:
-    let componentName =
+    /** Name of the current component */
+    let componentName: string =
       elementType?._context?.displayName || //For ContextProvider
       elementType?._result?.name || //For lazy Component
       elementType?.render?.name ||
@@ -111,17 +112,19 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     };
 
     // ---------------APPEND PROP DATA FROM REACT DEV TOOL----------------------
-    // Check to see if the parent component has any props
+    // Check to see if the currentFiberNode has any props
     if (memoizedProps) {
       switch (elementType.name) {
+        // If component comes from React Router, extract only pathname:
         case 'Router':
           componentData.props = { pathname: memoizedProps?.location?.pathname };
           break;
         case 'RenderedRoute':
           componentData.props = { pathname: memoizedProps?.match?.pathname };
           break;
+        // Else filter & format props data to ensure they are JSON stringify-able, before sending to front end
         default:
-          Object.assign(componentData.props, filterAndFormatData(memoizedProps));
+          componentData.props = filterAndFormatData(memoizedProps);
       }
     }
 
@@ -160,15 +163,8 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     //   componentName = 'Context';
     // }
 
-    // // DEPRECATED: This code might have worked previously. However, with the update of React Dev Tool, context can no longer be pulled using this method.
-    // // Check to see if the component has any context:
-    // // if the component uses the useContext hook, we want to grab the context object and add it to the componentData object for that fiber
-    // // if (tag === FunctionComponent && _debugHookTypes && dependencies?.firstContext?.memoizedValue) {
-    // //   componentData.context = convertDataToString(dependencies.firstContext.memoizedValue);
-    // // }
-
     // ---------OBTAIN STATE & SET STATE METHODS FROM CLASS COMPONENT-----------
-    // Check if node is a stateful class component when user use setState.
+    // Check if currentFiberNode is a stateful class component when user use setState.
     // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
     // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
     if ((tag === ClassComponent || tag === IndeterminateComponent) && stateNode?.state) {
@@ -176,12 +172,14 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       componentData.index = componentActionsRecord.saveNew(stateNode);
       // Save state information in componentData.
       componentData.state = stateNode.state;
-      // Passess to front end
+      // Pass to front end
       newState = componentData.state;
     }
 
     // --------OBTAIN STATE & DISPATCH METHODS FROM FUNCTIONAL COMPONENT--------
-    // Check if node is a hooks useState function
+    // Check if currentFiberNode is a stateful functional component when user use useState hook.
+    // If user use useState to define/manage state, the state object will be stored in memoizedState => grab the state object & its update method (dispatch) from memoizedState
+    // Example: for Stateful buttons demo-app: Increment is a stateful component that use useState hook to store state data.
     if (
       (tag === FunctionComponent ||
         tag === IndeterminateComponent ||
@@ -191,20 +189,21 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     ) {
       if (memoizedState.queue) {
         try {
+          // Obtain all hooksStates & the corresponding udpate method from memoizedState
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
+          // Obtain variable names by parsing the function definition stored in elementType.
           const hooksNames = getHooksNames(elementType.toString());
           // Intialize state & index:
-          // newState.hooksState = [];
           componentData.hooksState = {};
           componentData.hooksIndex = [];
+
           hooksStates.forEach(({ state, component }, i) => {
             // Save component's state and dispatch() function to our record for future time-travel state changing. Add record index to snapshot so we can retrieve.
             componentData.hooksIndex.push(componentActionsRecord.saveNew(component));
-            // Passess to front end
+            // Save state information in componentData.
             componentData.hooksState[hooksNames[i].varName] = state;
           });
-          // Passess to front end
-          // TODO: Refactor this, this is currently being used for Tree & Diff tabs
+          // Pass to front end
           newState = componentData.hooksState;
         } catch (err) {
           // COMMENT OUT TO AVOID PRINTTING ON THE CONSOLE OF USER - KEEP IT FOR DEBUGGING PURPOSE
@@ -223,11 +222,6 @@ export default function createTree(currentFiberNode: Fiber): Tree {
      * `rtid` - The `Root ID` is a unique identifier that is assigned to each React root instance in a React application.
      */
     let rtid: string | null = null;
-    /**
-     * The updated tree after adding the `componentData` obtained from `currentFiberNode`
-     */
-    let childNode: Tree = tree;
-    // We want to add this fiber node to the snapshot
 
     // Grab JSX Component & replace the 'fromLinkFiber' class value
     if (currentFiberNode.child?.stateNode?.setAttribute) {
@@ -246,10 +240,12 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       }
       currentFiberNode.child.stateNode.classList.add(rtid);
     }
-    rtidCounter += 1; // I THINK THIS SHOULD BE UP IN THE IF STATEMENT. Still unsure the use of rtid
+    rtidCounter += 1;
 
-    // Append the childNode to the tree
-    childNode = tree.addChild(newState, componentName, componentData, rtid);
+    /**
+     * The updated tree after adding the `componentData` obtained from `currentFiberNode`
+     */
+    const childNode = tree.addChild(newState, componentName, componentData, rtid);
 
     // ---------------------TRAVERSE TO NEXT FIBERNODE--------------------------
     // If currentFiberNode has children, recurse on children

@@ -42,25 +42,38 @@ export interface MsgData {
 
 /**
  * @type ComponentData -
- * @member index -
- * @member hooksIndex -
- * @member actualDuration -
- * @member actualStartTime -
- * @member selfBaseDuration -
- * @member treeBaseDuration -
- * @member props -
+ * @member actualDuration - The time taken to render the current Fiber node and its descendants during the previous render cycle. This value is used to optimize the rendering of components and to provide performance metrics to developers.
+ * @member actualStartTime - The time at which the rendering of the current Fiber node started during the previous render cycle.
+ * @member context - {in experiment} - An object contains all context information of the current component
+ * @member index - {class component only} - The index of the bound setState method stored in `componentActionsRecord`
+ * @member hooksState - {functional component only} - An object contains all states of the current functional component
+ * @member hooksIndex - {functional component only} - An array of index of the bound dispatch method stored in `componentActionsRecord`
+ * @member props - An object contains all props of the current component
+ * @member selfBaseDuration - The base duration of the current Fiber node's render phase (excluding the time taken to render its children). This field is only set when the enableProfilerTimer flag is enabled.
+ * @member state - {class component only} - An object contains all states of the current class component
+ * @member treeBaseDuration - The total base duration of the current Fiber node's subtree. This field is only set when the enableProfilerTimer flag is enabled.
  */
 export interface ComponentData {
+  /** The time taken to render the current Fiber node and its descendants during the previous render cycle. */
   actualDuration?: number;
+  /** The time at which the rendering of the current Fiber node started during the previous render cycle. */
   actualStartTime?: number;
-  selfBaseDuration?: number;
-  treeBaseDuration?: number;
-  props: { [key: string]: any };
+  /** {in experiment} - An object contains all context information of the current component */
   context: {};
-  state: { [key: string]: any } | null;
-  hooksState: {} | null;
-  hooksIndex: number[] | null;
+  /** {class component only} - The index of the bound setState method stored in `componentActionsRecord`  */
   index: number | null;
+  /** {functional component only} - An object contains all states of the current functional component */
+  hooksState: {} | null;
+  /** {functional component only} - An array of index of the bound dispatch method stored in `componentActionsRecord` */
+  hooksIndex: number[] | null;
+  /** An object contains all props of the current component */
+  props: { [key: string]: any };
+  /** The base duration of the current Fiber node's render phase (excluding the time taken to render its children). */
+  selfBaseDuration?: number;
+  /** An object contains all states of the current class component */
+  state: { [key: string]: any } | null;
+  /** The total base duration of the current Fiber node's subtree. */
+  treeBaseDuration?: number;
 }
 
 /**
@@ -108,9 +121,9 @@ export type WorkTag =
 export const FunctionComponent = 0;
 export const ClassComponent = 1;
 /** Before we know whether it is function or class */
-export const IndeterminateComponent = 2; 
+export const IndeterminateComponent = 2;
 /** Root of a host tree. Could be nested inside another node. */
-export const HostRoot = 3; 
+export const HostRoot = 3;
 /** A subtree. Could be an entry point to a different renderer. */
 export const HostPortal = 4;
 /**
