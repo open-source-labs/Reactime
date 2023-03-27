@@ -167,7 +167,6 @@ describe('linkFiber', () => {
       // Initialize linkFiber:
       await new Promise(linkFiberDelayed);
       expect(mockPostMessage).toHaveBeenCalledTimes(3);
-
       // Simulate document hidden
       Object.defineProperty(document, 'hidden', { value: true });
       const visibilityChangeEvent = new window.Event('visibilitychange');
