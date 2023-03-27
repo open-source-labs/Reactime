@@ -64,7 +64,7 @@ export interface ComponentData {
   treeBaseDuration?: number;
   props: { [key: string]: any };
   context: {};
-  state: {} | null;
+  state: { [key: string]: any } | null;
   hooksState: {} | null;
   hooksIndex: number[] | null;
   index: number | null;

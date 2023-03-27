@@ -45,8 +45,16 @@ export function filterAndFormatData(
         reactimeData[key] = reactDevData[key];
       }
     } catch (err) {
-      console.log('EROOR: linkFiber', { reactDevData, key });
-      // throw Error(`Error caught at converDataToString: ${err}`);
+      // COMMENT OUT TO AVOID PRINTTING ON THE CONSOLE OF USER - KEEP IT FOR DEBUGGING PURPOSE
+      // console.log({
+      //   Message: 'Error in createTree during obtaining props information',
+      //   potentialRootCause: 'circular component/failed during JSON stringify',
+      //   reactDevData,
+      //   key,
+      //   err,
+      // });
+      // we will skip any props that cause an error
+      continue;
     }
   }
   return reactimeData;
@@ -170,12 +178,19 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
             declarations[0]?.init?.arguments[0]?.callee?.expressions; //work for jest test
           let reactHook: string;
           reactHook = expression[1].property?.name;
-
           if (reactHook === 'useState') {
             // Obtain the variable being set:
-            let varName: string = declarations[1]?.id?.name;
+            let varName: string =
+              declarations[1]?.id?.name || // work react application
+              (Array.isArray(declarations[0]?.id?.elements)
+                ? declarations[0]?.id?.elements[0]?.name
+                : undefined); //work for nextJS application
             // Obtain the setState method:
-            let hookName: string = declarations[2]?.id?.name;
+            let hookName: string =
+              declarations[2]?.id?.name || // work react application
+              (Array.isArray(declarations[0]?.id?.elements)
+                ? declarations[0]?.id?.elements[0]?.name
+                : undefined); //work for nextJS
             // Push reactHook & varName to statements array
             statements.push({ hookName, varName });
           }

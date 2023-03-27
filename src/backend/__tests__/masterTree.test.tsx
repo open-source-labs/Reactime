@@ -9,6 +9,7 @@ import {
   ComponentData,
   WorkTag,
 } from '../types/backendTypes';
+import { IncrementFuncMultiStates } from './ignore/IncrementFunc';
 import Tree from '../models/tree';
 import {
   root,
@@ -26,6 +27,7 @@ import {
   exclude,
 } from '../models/filterConditions';
 import deepCopy from './ignore/deepCopy';
+import { Children } from 'react';
 
 describe('master tree tests', () => {
   let treeRoot: Tree;
@@ -43,8 +45,11 @@ describe('master tree tests', () => {
     state: null,
   };
   let mockFiberTree: Tree;
+  /** `mockChildNode` is a CLASS COMPONENT*/
   let mockChildNode: Fiber;
   let mockChildTree: Tree;
+
+  /** `mockSibilingNode` is a FUNCTIONAL COMPONENT*/
   let mockSiblingNode: Fiber;
   let mockSiblingTree: Tree;
 
@@ -136,20 +141,12 @@ describe('master tree tests', () => {
       });
     });
     describe('Display component props information', () => {
-      const memoizedProps: {
-        propVal: number;
-        propFunc: Function;
-        propObj: { [key: string]: any };
-      } = {
+      const memoizedProps = {
         propVal: 0,
         propFunc: jest.fn,
         propObj: { dummy: 'dummy' },
       };
-      const props: {
-        propVal: number;
-        propFunc: 'function';
-        propObj: string;
-      } = {
+      const props = {
         propVal: 0,
         propFunc: 'function',
         propObj: JSON.stringify({ dummy: 'dummy' }),
@@ -226,40 +223,218 @@ describe('master tree tests', () => {
         expect(tree).toEqual(treeRoot);
       });
 
-      xit('should display props information of multiple components', () => {
-        // Trim the root to get position of mockFiber for append child and sibiling
-        const mockFiberTreeTrimRoot = mockFiberTree.children[0];
-
-        // Add child(class) component with props:
-        mockChildNode.memoizedProps = { ...memoizedProps, name: 'child' };
-        (mockChildTree.componentData as ComponentData).props = { ...props, name: 'child' };
-        (mockChildTree.componentData as ComponentData).index = 0;
-        mockFiberTreeTrimRoot.children.push(mockChildTree);
-
-        // Add sibiling(functional) component with props:
-        mockSiblingNode.memoizedProps = { ...memoizedProps, name: 'sibling' };
-        (mockSiblingTree.componentData as ComponentData).props = { ...props, name: 'sibling' };
-        (mockSiblingTree.componentData as ComponentData).hooksIndex = [1];
-        mockFiberTreeTrimRoot.children.push(mockSiblingTree);
-
-        // Modify mockFiberNode to have 2 children: mockChildNode & mockSibilngNode
-        mockFiberNode.child = mockChildNode;
-        mockFiberNode.child.sibling = mockSiblingNode;
-
+      it('should display props information of multiple components', () => {
+        // Construct Fiber Node (root => FiberNode => child1 => child2 & sibling1)
+        mockChildNode.memoizedProps = memoizedProps;
+        const child1 = deepCopy(mockChildNode);
+        child1.memoizedProps.name = 'child1';
+        const child2 = deepCopy(mockChildNode);
+        child2.memoizedProps.name = 'child2';
+        mockSiblingNode.memoizedProps = memoizedProps;
+        const sibling1 = deepCopy(mockSiblingNode);
+        sibling1.memoizedProps.name = 'sibling1';
+        mockFiberNode.child = child1;
+        child1.child = child2;
+        child2.sibling = sibling1;
         const tree = createTree(mockFiberNode);
+
+        // Construct result tree (root => FiberTree => childTree1 => childTree2 & siblingTree1)
+        (mockChildTree.componentData as ComponentData).props = props;
+        const childTree1 = deepCopy(mockChildTree);
+        childTree1.name = 'IncrementClass';
+        (childTree1.componentData as ComponentData).props.name = 'child1';
+        (childTree1.componentData as ComponentData).index = 0;
+        const childTree2 = deepCopy(mockChildTree);
+        childTree2.name = 'IncrementClass1';
+        (childTree2.componentData as ComponentData).props.name = 'child2';
+        (childTree2.componentData as ComponentData).index = 1;
+        (mockSiblingTree.componentData as ComponentData).props = props;
+        const siblingTree1 = deepCopy(mockSiblingTree);
+        siblingTree1.name = 'IncrementFunc';
+        (siblingTree1.componentData as ComponentData).hooksIndex = [2];
+        (siblingTree1.componentData as ComponentData).props.name = 'sibling1';
+
+        mockFiberTree.children[0].children = [childTree1];
+        childTree1.children.push(childTree2, siblingTree1);
+
+        // Compare the two trees:
         expect(tree).toEqual(mockFiberTree);
       });
     });
     describe('Display component states information', () => {
-      it('should display functional state information', () => {
-        mockChildNode.stateNode = {
-          
-        }
+      const stateNode = {
+        state: {
+          propVal: 0,
+          propObj: { dummy: 'dummy' },
+        },
+        setState: function (cb: Function) {
+          this.state = cb();
+        }.bind(this),
+      };
+      const classState = stateNode.state;
+
+      const memoizedState = {
+        memoizedState: { dummy: 'dummy' },
+        next: null,
+        queue: {
+          dispatch: function (newState) {
+            this.memoizedState = newState;
+          }.bind(this),
+        },
+      };
+      const memoizedState2 = {
+        memoizedState: { dummy2: 'dummy2' },
+        next: null,
+        queue: {
+          dispatch: function (newState) {
+            this.memoizedState = newState;
+          }.bind(this),
+        },
+      };
+      // Note: the key count is the variable state name within the incrementFunction that is assigned to mockSiblingTree
+      const functionalState = { count: memoizedState.memoizedState };
+      const functionalState2 = { count1: memoizedState2.memoizedState };
+      it('should display stateless if functional state empty', () => {
+        // Construct Fiber Node (root => childNode)
+        mockChildNode.stateNode = null;
+        const tree = createTree(mockChildNode);
+
+        // Construct Result Tree (root => childTree)
+        mockChildTree.state = 'stateless';
+        (mockChildTree.componentData as ComponentData).state = null;
+        (mockChildTree.componentData as ComponentData).index = null;
+        treeRoot.children.push(mockChildTree);
+
+        // Compare the two trees:
+        expect(tree).toEqual(treeRoot);
       });
-      xit('should display class state information', () => {});
+
+      it('should display class state information', () => {
+        // Construct Fiber Node (root => childNode)
+        mockChildNode.stateNode = stateNode;
+        const tree = createTree(mockChildNode);
+
+        // Construct Result Tree (root => childTree)
+        mockChildTree.state = classState;
+        (mockChildTree.componentData as ComponentData).state = classState;
+        treeRoot.children.push(mockChildTree);
+
+        // Compare the two trees:
+        expect(tree).toEqual(treeRoot);
+      });
+
+      it('should keep track of class state index', () => {
+        // Construct Fiber Node (root => FiberNode => child1 => child 2 & 3)
+        mockChildNode.stateNode = stateNode;
+        const child1 = deepCopy(mockChildNode);
+        const child2 = deepCopy(mockChildNode);
+        const child3 = deepCopy(mockChildNode);
+        mockFiberNode.child = child1;
+        child1.child = child2;
+        child2.sibling = child3;
+        const tree = createTree(mockFiberNode);
+
+        // Construct result tree (root => FiberTree => childTree1 => childTree2 & childTree3)
+        (mockChildTree.componentData as ComponentData).state = classState;
+        mockChildTree.state = classState;
+        const childTree1 = deepCopy(mockChildTree);
+        childTree1.name = 'IncrementClass';
+        (childTree1.componentData as ComponentData).index = 0;
+        const childTree2 = deepCopy(mockChildTree);
+        childTree2.name = 'IncrementClass1';
+        (childTree2.componentData as ComponentData).index = 1;
+        const childTree3 = deepCopy(mockChildTree);
+        childTree3.name = 'IncrementClass2';
+        (childTree3.componentData as ComponentData).index = 2;
+        mockFiberTree.children[0].children = [childTree1];
+        childTree1.children.push(childTree2, childTree3);
+
+        // Compare the two trees:
+        expect(tree).toEqual(mockFiberTree);
+      });
+
+      it('should display stateless if functional state empty', () => {
+        // Construct Fiber Node (root => siblingNode)
+        mockSiblingNode.memoizedState = null;
+        const tree = createTree(mockSiblingNode);
+        // Construct Result Tree (root => siblingTree)
+
+        mockSiblingTree.state = 'stateless';
+        (mockSiblingTree.componentData as ComponentData).hooksState = null;
+        (mockSiblingTree.componentData as ComponentData).hooksIndex = null;
+        treeRoot.children.push(mockSiblingTree);
+
+        // Compare the two trees:
+        expect(tree).toEqual(treeRoot);
+      });
+
+      it('should display functional state information', () => {
+        // Construct Fiber Node (root => siblingNode)
+        mockSiblingNode.memoizedState = memoizedState;
+        const tree = createTree(mockSiblingNode);
+
+        // Construct Result Tree (root => siblingTree)
+
+        mockSiblingTree.state = functionalState;
+        (mockSiblingTree.componentData as ComponentData).hooksState = functionalState;
+        treeRoot.children.push(mockSiblingTree);
+
+        // Compare the two trees:
+        expect(tree).toEqual(treeRoot);
+      });
+
+      it('should keep track of functional state index', () => {
+        // Construct Fiber Node (root => FiberNode => sibling1 => sibling 2 & 3)
+        // sibling 3 will have 2 states
+        mockSiblingNode.memoizedState = memoizedState;
+        const sibling1 = deepCopy(mockSiblingNode);
+        const sibling2 = deepCopy(mockSiblingNode);
+        const sibling3 = deepCopy(mockSiblingNode);
+        sibling3.memoizedState.next = memoizedState2;
+        sibling3.elementType = IncrementFuncMultiStates;
+        mockFiberNode.child = sibling1;
+        sibling1.child = sibling2;
+        sibling2.sibling = sibling3;
+        const tree = createTree(mockFiberNode);
+
+        // Construct result tree (root => FiberTree => siblingTree1 => siblingTree2 & siblingTree3)
+        // sibling 3 will have 2 states
+        mockSiblingTree.state = functionalState;
+        (mockSiblingTree.componentData as ComponentData).hooksState = functionalState;
+        const siblingTree1 = deepCopy(mockSiblingTree);
+        siblingTree1.name = 'IncrementFunc';
+        (siblingTree1.componentData as ComponentData).hooksIndex = [0];
+        const siblingTree2 = deepCopy(mockSiblingTree);
+        siblingTree2.name = 'IncrementFunc1';
+        (siblingTree2.componentData as ComponentData).hooksIndex = [1];
+        const siblingTree3 = deepCopy(mockSiblingTree);
+        siblingTree3.name = 'IncrementFuncMultiStates';
+        siblingTree3.state = { ...functionalState, ...functionalState2 };
+        Object.assign((siblingTree3.componentData as ComponentData).hooksState!, functionalState2);
+        (siblingTree3.componentData as ComponentData).hooksIndex = [2, 3];
+        mockFiberTree.children[0].children = [siblingTree1];
+        siblingTree1.children.push(siblingTree2, siblingTree3);
+
+        // Compare the two trees:
+        expect(tree).toEqual(mockFiberTree);
+      });
     });
-    xdescribe('Replace fromLinkFiber class value', () => {
-      it('NEED UNDERSTANDING OF WHY FROMLINKFIBER IS NEEDED TO MAKE TESTING', () => {});
+
+    describe('Replace fromLinkFiber class value', () => {
+      xit('NEED UNDERSTANDING THE PURPOSE OF FROMLINKFIBER FOR FRONTEND, testing below is just to ensure functionality is working', () => {});
+      describe('should update linkFiber information as applicable', () => {
+        it('should add LinkFiber if there is no classlist', () => {
+          // Construct Fiber Node (root => childNode)
+          mockChildNode.stateNode.setAttribute = jest.fn;
+          mockChildNode.stateNode.classList = [];
+          const tree = createTree(mockChildNode);
+
+          // Construct Result Tree (root => childTree)
+          treeRoot.children.push(mockChildTree);
+          // Compare the two trees:
+          expect(tree).toEqual(treeRoot);
+        });
+      });
     });
   });
 

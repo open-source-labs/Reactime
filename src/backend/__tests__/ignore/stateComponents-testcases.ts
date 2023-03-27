@@ -89,6 +89,9 @@ export const classComponent: Fiber = {
   treeBaseDuration: 4,
   _debugHookTypes: null,
 };
+classComponent.stateNode.setState = classComponent.stateNode.setState.bind(
+  classComponent.stateNode,
+);
 
 const classComponentData: ComponentData = {
   actualDuration: 1,
