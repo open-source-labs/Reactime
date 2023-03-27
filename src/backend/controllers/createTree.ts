@@ -1,25 +1,21 @@
-// import typescript types
-import {
-  // object with tree structure
-  Fiber,
-  ComponentData,
-} from '../types/backendTypes';
-import {
-  FunctionComponent,
-  ClassComponent,
-  IndeterminateComponent, // Before we know whether it is function or class
-  ContextProvider,
-} from '../types/backendTypes';
-// import function that creates a tree
-import Tree from '../models/tree';
-// passes the data down to its components
-import componentActionsRecord from '../models/masterState';
+// --------------------------START OF IMPORT------------------------------------
 import {
   getHooksNames,
   getHooksStateAndUpdateMethod,
   // getStateAndContextData, //COMMENT OUT SINCE EXTRACTING CONTEXT IS STILL IN EXPERIMENT
   filterAndFormatData,
 } from './statePropExtractors';
+
+import { Fiber, ComponentData } from '../types/backendTypes';
+import {
+  FunctionComponent,
+  ClassComponent,
+  IndeterminateComponent,
+  ContextProvider,
+} from '../types/backendTypes';
+
+import Tree from '../models/tree';
+import componentActionsRecord from '../models/masterState';
 import {
   nextJSDefaultComponent,
   remixDefaultComponents,
@@ -54,7 +50,6 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       sibling,
       stateNode,
       child,
-      // with memoizedState we can grab the root type and construct an Abstract Syntax Tree from the hooks structure using Acorn in order to extract the hook getters and match them with their corresponding setters in an object
       memoizedState,
       memoizedProps,
       elementType,
@@ -63,7 +58,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       actualStartTime,
       selfBaseDuration,
       treeBaseDuration,
-      _debugHookTypes,
+      // _debugHookTypes, //COMMENT OUT SINCE EXTRACTING CONTEXT IS STILL IN EXPERIMENT
     } = currentFiberNode;
 
     // Obtain component name:
@@ -71,25 +66,9 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       elementType?._context?.displayName || //For ContextProvider
       elementType?._result?.name || //For lazy Component
       elementType?.render?.name ||
-      elementType?.name ||
+      elementType?.name || //For Functional/Class Component
       'nameless';
 
-    // console.log('CREATE TREE', {
-    //   currentFiberNode,
-    //   tag,
-    //   // elementType,
-    //   componentName:
-    //     elementType?._context?.displayName || //For ContextProvider
-    //     elementType?._result?.name || //For lazy Component
-    //     elementType?.render?.name ||
-    //     elementType?.name ||
-    //     elementType,
-    //   // memoizedProps,
-    //   // memoizedState,
-    //   // stateNode,
-    //   // dependencies,
-    //   // _debugHookTypes,
-    // });
     // --------------------FILTER COMPONENTS/FIBER NODE-------------------------
     /**
      * For the snapshot tree,
@@ -193,13 +172,11 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
     // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
     if ((tag === ClassComponent || tag === IndeterminateComponent) && stateNode?.state) {
-      // Save component's state and setState() function to our record for future
-      // time-travel state changing. Add record index to snapshot so we can retrieve.
+      // Save component's state and setState() function to our record for future time-travel state changing. Add record index to snapshot so we can retrieve.
       componentData.index = componentActionsRecord.saveNew(stateNode);
       // Save state information in componentData.
       componentData.state = stateNode.state;
       // Passess to front end
-      // TODO: Refactor this, this is currently being used for Tree & Diff tabs
       newState = componentData.state;
     }
 
@@ -208,16 +185,12 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     if (
       (tag === FunctionComponent ||
         tag === IndeterminateComponent ||
-        //TODO: Need to figure out why we need context provider
+        //TODO: Need reasoning for why we evaluate context provider
         tag === ContextProvider) &&
       memoizedState
     ) {
       if (memoizedState.queue) {
         try {
-          // Hooks states are stored as a linked list using memoizedState.next,
-          // so we must traverse through the list and get the states.
-          // We then store them along with the corresponding memoizedState.queue,
-          // which includes the dispatch() function we use to change their state.
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
           const hooksNames = getHooksNames(elementType.toString());
           // Intialize state & index:
