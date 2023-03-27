@@ -2,21 +2,21 @@
 import {
   // object with tree structure
   Fiber,
-} from '../../types/backendTypes';
+} from '../types/backendTypes';
 import {
   FunctionComponent,
   ClassComponent,
   IndeterminateComponent, // Before we know whether it is function or class
   ContextProvider,
-} from '../../types/backendTypes';
+} from '../types/backendTypes';
 // passes the data down to its components
-import componentActionsRecord from '../../models/masterState';
+import componentActionsRecord from '../models/masterState';
 import { getHooksStateAndUpdateMethod } from './statePropExtractors';
 import {
   nextJSDefaultComponent,
   remixDefaultComponents,
   allowedComponentTypes,
-} from '../../models/filterConditions';
+} from '../models/filterConditions';
 
 // ------------------------CREATE COMPONENT ACTIONS RECORD----------------------
 /**

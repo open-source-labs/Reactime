@@ -3,17 +3,17 @@ import {
   // object with tree structure
   Fiber,
   ComponentData,
-} from '../../types/backendTypes';
+} from '../types/backendTypes';
 import {
   FunctionComponent,
   ClassComponent,
   IndeterminateComponent, // Before we know whether it is function or class
   ContextProvider,
-} from '../../types/backendTypes';
+} from '../types/backendTypes';
 // import function that creates a tree
-import Tree from '../../models/tree';
+import Tree from '../models/tree';
 // passes the data down to its components
-import componentActionsRecord from '../../models/masterState';
+import componentActionsRecord from '../models/masterState';
 import {
   getHooksNames,
   getHooksStateAndUpdateMethod,
@@ -24,7 +24,7 @@ import {
   nextJSDefaultComponent,
   remixDefaultComponents,
   allowedComponentTypes,
-} from '../../models/filterConditions';
+} from '../models/filterConditions';
 
 // -------------------------CREATE TREE TO SEND TO FRONT END--------------------
 /**

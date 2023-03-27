@@ -6,7 +6,7 @@ import updateAndSendSnapShotTree from './snapShot';
 // getHooksNames - helper function to grab the getters/setters from `elementType`
 import throttle from '../controllers/throttle';
 import componentActionsRecord from '../models/masterState';
-import createComponentActionsRecord from '../controllers/createTree/createComponentActionsRecord';
+import createComponentActionsRecord from '../controllers/createComponentActionsRecord';
 
 // Set global variables to use in exported module and helper functions
 declare global {

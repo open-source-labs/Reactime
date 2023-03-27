@@ -6,8 +6,8 @@ import {
   HookStates,
   // object with tree structure
   Fiber,
-} from '../../types/backendTypes';
-import { exclude } from '../../models/filterConditions';
+} from '../types/backendTypes';
+import { exclude } from '../models/filterConditions';
 // TODO: Determine what Component Data Type we are sending back for state, context, & props
 type ReactimeData = {
   [key: string]: any;
