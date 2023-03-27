@@ -52,7 +52,6 @@ describe('linkFiber', () => {
     };
     mode = {
       jumping: false,
-      paused: false,
     };
     // Initialize Fiber Root:
     fiberRoot = { current: root };

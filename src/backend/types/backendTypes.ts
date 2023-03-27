@@ -1,41 +1,34 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Tree from '../models/tree';
 
 /**
- * @type Tree - The snapshot of the current tree
- * @member tree - {Tree} - The tree structure to send to front end
+ * Contain snapshot of the current ReactFiber tree
+ * @member tree - A snapshot of ReactFiber Tree to send to front end
  */
 export interface Snapshot {
+  /** A snapshot of ReactFiber Tree to send to front end */
   tree: Tree;
 }
 
 /**
- * @type Status - object that describes where we are
- * @member jumping - whether we are jumping steps by
- * @member paused - true/false for whether pausing to see the state
+ * Indicate if mode is jumping/not jumping or navigating during jumping
+ * @member jumping - Describe whether we are jumping
+ *
+ * When `jumping = true`, no new snapShot will be sent to front end.
+ * @member navigating - Cache timeJump function to be invoked after ReactFibe tree update with new states from new route
+ * @example if user uses click left/right arrow or play button, front end will post a message `jumpToSnap` and a payload of the cached snapShot tree, we will set `jumping = true`
+ * @example if during jumping, we navigate to another route, such as from buttons to tictactoe, backend will set `navigating = cache of timeJump function`
  */
 export interface Status {
+  /**
+   * Describe whether we are jumping
+   *
+   * When `jumping = true`, no new snapShot will be sent to front end.
+   */
   jumping: boolean;
-  paused: boolean;
+  /** Cache timeJump function to be invoked after ReactFibe tree update with new states from new route*/
   navigating?: Function;
 }
 
-/**
- * This is what is shown in developer tools??
- * @type SnapshotNode
- * @member name -
- * @member state -
- * @member children -
- */
-export interface SnapshotNode {
-  name: string;
-  state: {
-    location?: any;
-  };
-  children: any[];
-}
 /**
  * @type MsgData - obj with data object that will be sent to window?
  * @member data - an object with action & payload properties
