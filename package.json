@@ -85,8 +85,11 @@
     "Kevin HoEun Lee",
     "Kevin Ngo",
     "Kim Mai Nguyen",
+    "Lance Ziegler",
     "Lina Shin",
     "Nathanael Wa Mwenze",
+    "Ngoc Zwolinski",
+    "Peter Lam",
     "Prasanna Malla",
     "Rajeeb Banstola",
     "Raymond Kwan",
@@ -98,7 +101,8 @@
     "Tania Lind",
     "Viet Nguyen",
     "Wilton Lee",
-    "Yujin Kang"
+    "Yujin Kang",
+    "Zachary Freeman"
   ],
   "license": "ISC",
   "devDependencies": {
