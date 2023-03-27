@@ -190,7 +190,7 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
               declarations[2]?.id?.name || // work react application
               (Array.isArray(declarations[0]?.id?.elements)
                 ? declarations[0]?.id?.elements[0]?.name
-                : undefined); //work for nextJS
+                : undefined); //work for nextJS & Remix
             // Push reactHook & varName to statements array
             statements.push({ hookName, varName });
           }
