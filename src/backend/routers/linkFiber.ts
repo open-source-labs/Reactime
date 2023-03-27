@@ -1,9 +1,6 @@
 import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
 import { DevTools } from '../types/linkFiberTypes';
 import updateAndSendSnapShotTree from './snapShot';
-
-// throttle returns a function that can be called any number of times (possibly in quick succession) but will only invoke the callback at most once every x ms
-// getHooksNames - helper function to grab the getters/setters from `elementType`
 import throttle from '../controllers/throttle';
 import componentActionsRecord from '../models/masterState';
 import createComponentActionsRecord from '../controllers/createComponentActionsRecord';
@@ -19,23 +16,23 @@ declare global {
 /**
  * @constant MIN_TIME_BETWEEN_UPDATE - The minimum time (ms) between each re-render/update of the snapShot tree being displayed on the Chrome Extension.
  */
-const MIN_TIME_BETWEEN_UPDATE = 10;
+const MIN_TIME_BETWEEN_UPDATE = 70;
 /**
  * @function throttledUpdateSnapshot - a function that will wait for at least MIN_TIME_BETWEEN_UPDATE ms, before updating the tree snapShot being displayed on the Chrome Extension.
+ * @param fiberRoot - the root of ReactFiber Tree
+ * @param mode - mode is jumping/not jumping or navigating during jumping
+ * @param snapShot - the tree snapshot to send to Front End or obtained from Front End during timeJump
  */
 const throttledUpdateSnapshot = throttle(
   async (fiberRoot: FiberRoot, mode: Status, snapShot: Snapshot) => {
-    // console.log('linkFiber - RERENDER');
     // If not jumping
     if (!mode.jumping) {
-      // console.log('linkFiber - SEND SNAPSHOT');
       // Update and Send SnapShot tree to front end
       updateAndSendSnapShotTree(snapShot, fiberRoot);
     }
 
     // If navigating to another route during jumping:
     else if (mode.navigating) {
-      // console.log('linkFiber - NAVIGATING');
       // Reset the array containing update methods:
       componentActionsRecord.clear();
       // Obtain new update methods for the current route:
@@ -44,11 +41,7 @@ const throttledUpdateSnapshot = throttle(
       // Invoke timeJump, which is stored in mode.navigating, to update React Application FiberTree based on the snapshotTree
       await mode.navigating();
     }
-
-    // Else:
-    // else {
-    //   console.log('linkFiber - REACT FIBER TREE UPDATED');
-    // }
+    // NOTE: if not navigating during jumping, timeJump is invoked in index.ts file.
   },
   MIN_TIME_BETWEEN_UPDATE,
 );
@@ -57,18 +50,16 @@ const throttledUpdateSnapshot = throttle(
  * @function linkFiber - linkFiber contains core module functionality, exported as an anonymous function, perform the following logic:
  * 1. Check if React Dev Tool is installed.
  * 2. Check if the target application (on the browser) is a valid react application.
- * 3. Initiate a event listener for visibility update of the target React Applicaiton.
+ * 3. Initiate a event listener for visibility update of the target React Application.
  * 4. Obtain the initial fiberRootNode, which is the root node of the fiber tree
- * 5. Initialize the fiber tree snapShot on Chrome Extension.
+ * 5. Initialize the fiber tree snapShot to send to Front End, later rendered on Chrome Extension.
  * 6. Monkey patching the onCommitFiberRoot from REACT DEV TOOL to obtain updated data after React Applicaiton is re-rendered.
  * @param snapShot The current snapshot (i.e fiber tree)
  * @param mode The current mode (i.e. jumping, time-traveling, or paused)
  * @return a function to be invoked by index.js that initiates snapshot monitoring
  */
 export default function linkFiber(snapShot: Snapshot, mode: Status): () => Promise<void> {
-  /**
-   * A boolean value indicate if the target React Application is visible
-   */
+  /** A boolean value indicate if the target React Application is visible */
   let isVisible: boolean = true;
   /**
    * Every React application has one or more DOM elements that act as containers. React creates a fiber root object for each of those containers.
@@ -78,18 +69,13 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => Promi
   let fiberRoot: FiberRoot;
 
   // Return a function to be invoked by index.js that initiates snapshot monitoring
-  // TODO: Convert this into async/await & add try/catch
-
-  return async () => {
+  return async function linkFiberInitialization() {
     // -------------------CHECK REACT DEVTOOL INSTALLATION----------------------
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     // Obtain React Devtools Object:
     const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-    // console.log('React Dev Tools:', devTools);
     // If React Devtools is not installed, object will be undefined.
-    if (!devTools) {
-      return;
-    }
+    if (!devTools) return;
     // If React Devtools is installed, send a message to front end.
     window.postMessage(
       {
@@ -127,7 +113,7 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => Promi
     // ---------OBTAIN THE INITIAL FIBEROOTNODE FROM REACT DEV TOOL-------------
     // Obtain the FiberRootNode, which is the first value in the FiberRoot Set:
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
-    // console.log('fiberRoot', fiberRoot);
+
     // ----------INITIALIZE THE TREE SNAP SHOT ON CHROME EXTENSION--------------
     await throttledUpdateSnapshot(fiberRoot, mode, snapShot); // only runs on start up
 

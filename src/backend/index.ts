@@ -28,19 +28,19 @@ const linkFiber = linkFiberInitialization(snapShot, mode);
 const timeJump = timeJumpInitialization(mode);
 
 /**
- * Invoke linkFiber to perform the follwoing:
+ * Invoke linkFiber to perform the following:
  * 1. Check for ReactDev installation, valid target React App
- * 2. Obtain the intial ReactFiber Tree from target React App
+ * 2. Obtain the initial ReactFiber Tree from target React App
  * 3. Send a snapshot of ReactFiber Tree to frontend/Chrome Extension
  */
 linkFiber();
 
-// -----------------SET UP EVENT LISTENER FOR TIME TRAVEL-----------------------
+// --------------INITIALIZE EVENT LISTENER FOR TIME TRAVEL----------------------
 /**
- * On the chrome extension, if user click left/right arrow or the play button (a.k.a time travel functionality), frontend will send a message jumpToSnap with payload of the cached snapShot tree at the current step
+ * On the chrome extension, if user click left/right arrow or the play button (a.k.a time travel functionality), frontend will send a message `jumpToSnap` with payload of the cached snapShot tree at the current step
  * 1. Set jumping mode to true => dictate we are jumping => no new snapshot will be sent to frontend
  * 2. If navigate to a new route during jumping => cache timeJump in navigate.
- *    Otherwise, invoke timeJump to update ReactFiber tree with cached data     from the snapshot payload
+ * 3. If not navigate during jumping =>  invoke timeJump to update ReactFiber tree with cached data from the snapshot payload
  */
 window.addEventListener('message', async ({ data: { action, payload } }: MsgData) => {
   switch (action) {
