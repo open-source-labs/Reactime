@@ -28,6 +28,7 @@ import {
 } from '../models/filterConditions';
 import deepCopy from './ignore/deepCopy';
 import { Children } from 'react';
+import _ from 'lodash';
 
 describe('master tree tests', () => {
   let treeRoot: Tree;
@@ -421,20 +422,7 @@ describe('master tree tests', () => {
     });
 
     describe('Replace fromLinkFiber class value', () => {
-      xit('NEED UNDERSTANDING THE PURPOSE OF FROMLINKFIBER FOR FRONTEND, testing below is just to ensure functionality is working', () => {});
-      describe('should update linkFiber information as applicable', () => {
-        it('should add LinkFiber if there is no classlist', () => {
-          // Construct Fiber Node (root => childNode)
-          mockChildNode.stateNode.setAttribute = jest.fn;
-          mockChildNode.stateNode.classList = [];
-          const tree = createTree(mockChildNode);
-
-          // Construct Result Tree (root => childTree)
-          treeRoot.children.push(mockChildTree);
-          // Compare the two trees:
-          expect(tree).toEqual(treeRoot);
-        });
-      });
+      xit('NEED UNDERSTANDING THE PURPOSE OF FROMLINKFIBER FOR FRONTEND, currently unable to replicate DOMTokenList instance', () => {});
     });
   });
 
@@ -545,7 +533,7 @@ describe('master tree tests', () => {
     });
   });
 
-  describe('createComponentActionsRecord', () => {
+  describe('createComponentActionsRecord unit test', () => {
     it('should save a new component action record if the Fiber node is a stateful class component', () => {
       mockFiberNode.tag = ClassComponent;
       mockFiberNode.stateNode = {
