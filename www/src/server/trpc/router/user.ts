@@ -1,13 +1,14 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure } from '../trpc';
 
 export const userRouter = router({
   createUser: publicProcedure
-    .input(z.object({
-      name: z.string(),
-      email: z.string().email()}),
-
+    .input(
+      z.object({
+        name: z.string(),
+        email: z.string().email(),
+      }),
     ) // name and email
     .mutation(async ({ input, ctx }) => {
       // we want to add to our database with the name, email, admin defaulted to false as column values
@@ -15,15 +16,13 @@ export const userRouter = router({
         data: {
           name: input.name,
           email: input.email,
-        }
-      })
+        },
+      });
     }),
-  findAll: publicProcedure
-    .query(async ({ctx}) => {
-      return await ctx.prisma.user.findMany();
-    })
+  findAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.user.findMany();
+  }),
 });
-
 
 //const greeting = trpc.userRouter.hello({text: ""});
 

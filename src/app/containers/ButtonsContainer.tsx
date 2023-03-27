@@ -60,46 +60,22 @@ function ButtonsContainer(): JSX.Element {
   } = tabs[currentTab];
 
   return (
-    <div className="buttons-container">
-      <button
-        className="pause-button"
-        type="button"
-        onClick={() => dispatch(toggleMode('paused'))}
-      >
-        {paused ? (
-          <FontAwesomeIcon icon={faUnlock} />
-        ) : (
-          <FontAwesomeIcon icon={faLock} />
-        )}
+    <div className='buttons-container'>
+      <button className='pause-button' type='button' onClick={() => dispatch(toggleMode('paused'))}>
+        {paused ? <FontAwesomeIcon icon={faUnlock} /> : <FontAwesomeIcon icon={faLock} />}
         {paused ? 'Unlock' : 'Lock'}
       </button>
 
-      <button
-        className="split-button"
-        type="button"
-        onClick={() => dispatch(toggleSplit())}
-      >
-        {split ? (
-          <FontAwesomeIcon icon={faSquare} />
-        ) : (
-          <FontAwesomeIcon icon={faColumns} />
-        )}
+      <button className='split-button' type='button' onClick={() => dispatch(toggleSplit())}>
+        {split ? <FontAwesomeIcon icon={faSquare} /> : <FontAwesomeIcon icon={faColumns} />}
         {split ? 'Unsplit' : 'Split'}
       </button>
 
-      <button
-        className="export-button"
-        type="button"
-        onClick={() => exportHandler(snapshots)}
-      >
+      <button className='export-button' type='button' onClick={() => exportHandler(snapshots)}>
         <FontAwesomeIcon icon={faDownload} />
         Download
       </button>
-      <button
-        className="import-button"
-        type="button"
-        onClick={() => importHandler(dispatch)}
-      >
+      <button className='import-button' type='button' onClick={() => importHandler(dispatch)}>
         <FontAwesomeIcon icon={faUpload} />
         Upload
       </button>

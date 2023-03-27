@@ -18,7 +18,10 @@ describe('Unit testing for SwitchApp.jsx', () => {
     currentTab: 100,
     tabs: {
       100: {
-        snapshots: [1, 2, 3, 4], viewIndex: 1, sliderIndex: 1, title: 'component',
+        snapshots: [1, 2, 3, 4],
+        viewIndex: 1,
+        sliderIndex: 1,
+        title: 'component',
       },
     },
   };

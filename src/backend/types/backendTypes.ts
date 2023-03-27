@@ -1,18 +1,34 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Tree from '../tree';
+import Tree from '../models/tree';
 
+/**
+ * @type Tree - The snapshot of the current tree
+ * @member tree - {Tree} - The tree structure to send to front end
+ */
 export interface Snapshot {
   tree: Tree;
-  unfilteredTree: null;
 }
 
-export interface Mode {
+/**
+ * @type Status - object that describes where we are
+ * @member jumping - whether we are jumping steps by
+ * @member paused - true/false for whether pausing to see the state
+ */
+export interface Status {
   jumping: boolean;
   paused: boolean;
+  navigating?: Function;
 }
 
+/**
+ * This is what is shown in developer tools??
+ * @type SnapshotNode
+ * @member name -
+ * @member state -
+ * @member children -
+ */
 export interface SnapshotNode {
   name: string;
   state: {
@@ -20,7 +36,10 @@ export interface SnapshotNode {
   };
   children: any[];
 }
-
+/**
+ * @type MsgData - obj with data object that will be sent to window?
+ * @member data - an object with action & payload properties
+ */
 export interface MsgData {
   data: {
     action: string;
@@ -28,27 +47,44 @@ export interface MsgData {
   };
 }
 
+/**
+ * @type ComponentData -
+ * @member index -
+ * @member hooksIndex -
+ * @member actualDuration -
+ * @member actualStartTime -
+ * @member selfBaseDuration -
+ * @member treeBaseDuration -
+ * @member props -
+ */
 export interface ComponentData {
-  index?: number;
-  hooksIndex?: number;
   actualDuration?: number;
   actualStartTime?: number;
   selfBaseDuration?: number;
   treeBaseDuration?: number;
-  props?: any,
+  props: { [key: string]: any };
+  context: {};
+  state: { [key: string]: any } | null;
+  hooksState: {} | null;
+  hooksIndex: number[] | null;
+  index: number | null;
 }
 
+/**
+ * @type HookStateItem
+ * @member state -
+ * @member component -
+ */
 export interface HookStateItem {
   state: any;
   component: any;
 }
 
+/**
+ * HookeStates is an array of HookeStateItem
+ * Each HookStateItem is an object with state & component properties
+ */
 export type HookStates = Array<HookStateItem>;
-
-export interface State {
-  state?: {} | number;
-  hooksState?: HookStates;
-}
 
 export type WorkTag =
   | 0
@@ -82,6 +118,9 @@ export const ClassComponent = 1;
 export const IndeterminateComponent = 2; // Before we know whether it is function or class
 export const HostRoot = 3; // Root of a host tree. Could be nested inside another node.
 export const HostPortal = 4; // A subtree. Could be an entry point to a different renderer.
+/**
+ * Host Component: a type of component that represents a native DOM element in the browser environment, such as div, span, input, h1 etc.
+ */
 export const HostComponent = 5; // has stateNode of html elements
 export const HostText = 6;
 export const Fragment = 7;
@@ -103,19 +142,40 @@ export const Block = 22;
 export const OffscreenComponent = 23;
 export const LegacyHiddenComponent = 24;
 
+/**
+ * @type Fiber - The internal data structure that represents a `fiberNode` or a component in the React component tree
+ *
+ * {@link https://indepth.dev/posts/1008/inside-fiber-in-depth-overview-of-the-new-reconciliation-algorithm-in-react}
+ * @member actualDuration - The time taken to render the current Fiber node and its descendants during the previous render cycle. This value is used to optimize the rendering of components and to provide performance metrics to developers.
+ * @member actualStartTime - The time at which the rendering of the current Fiber node started during the previous render cycle.
+ * @member child - Pointer to the first child.
+ * @member dependencies - An array of values (such as state or props) that the current Fiber node depends on. This is used to determine whether the node needs to be re-rendered.
+ * @member elementType  - The type of the current Fiber node's element (e.g. the component function or class, or the DOM element type). Example: div, h1,
+ * @member index - Index of the current Fiber node. Ex: if a div has 3 headings. The first child is heading with index = 0. The next sibling is a heading with index = 1 & the last sibling is a heading with index = 2.
+ * @member key - Unique identifier of this child, used to identify the node when rendering lists of components.
+ * @member memoizedProps - The current props of the component associated with the current Fiber node.
+ * @member memoizedState - The current state of the component associated with the current Fiber node.
+ * @member selfBaseDuration - The base duration of the current Fiber node's render phase (excluding the time taken to render its children). This field is only set when the enableProfilerTimer flag is enabled.
+ * @member sibling - Pointer to next sibling
+ * @member stateNode - The local state associated with this fiber.
+ * @member tag - The type of the current Fiber node, such as FunctionComponent, ClassComponent, or HostComponent (for DOM elements).
+ * @member treeBaseDuration - The total base duration of the current Fiber node's subtree. This field is only set when the enableProfilerTimer flag is enabled.
+ * @member type - Same as elementType.
+ * @member _debugHookTypes - An array of hooks used for debugging purposes.
+ */
 export type Fiber = {
   // Tag identifying the type of fiber.
   tag: WorkTag;
 
   // Unique identifier of this child.
-  key: null | string;
+  // key: null | string;
 
   // The value of element.type which is used to preserve the identity during
   // reconciliation of this child.
   elementType: any;
 
   // The resolved function/class/ associated with this fiber.
-  type: any;
+  // type: any;
 
   // The local state associated with this fiber.
   stateNode: any;
@@ -135,7 +195,7 @@ export type Fiber = {
   // Singly Linked List Tree Structure.
   child: Fiber | null;
   sibling: Fiber | null;
-  index: number;
+  // index: number;
 
   // Input is the data coming into process this fiber. Arguments. Props.
   // pendingProps: any, // This type will be more specific once we overload the tag.
@@ -175,7 +235,16 @@ export type Fiber = {
   // This field is only set when the enableProfilerTimer flag is enabled.
   treeBaseDuration?: number;
 
-  dependencies: any;
+  // dependencies: any;
 
-  _debugHookTypes: any;
+  _debugHookTypes: string[] | null;
+};
+
+/**
+ * @type FiberRoot - The internal data structure that represents a fiberRootNode or the top-level node of a single component tree
+ *
+ * FiberRoot data structure has several properties. For Reactime, we only access the `current` property which contains the tree structure made of `fiberNode`. Each `fiberNode` contains a component data in the React component tree.
+ */
+export type FiberRoot = {
+  current: Fiber;
 };

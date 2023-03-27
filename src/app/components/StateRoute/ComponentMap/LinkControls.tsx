@@ -35,7 +35,7 @@ type Props = {
 // use BFS to put all the nodes under snapShots(which is the tree node) into an array
 const nodeList = [];
 
-const collectNodes = node => {
+const collectNodes = (node) => {
   nodeList.splice(0, nodeList.length);
   /* We used the .splice method here to ensure that nodeList
   did not accumulate with page refreshes */
@@ -43,7 +43,7 @@ const collectNodes = node => {
   for (let i = 0; i < nodeList.length; i += 1) {
     const cur = nodeList[i];
     if (cur.children?.length > 0) {
-      cur.children.forEach(child => nodeList.push(child));
+      cur.children.forEach((child) => nodeList.push(child));
     }
   }
 };
@@ -63,64 +63,63 @@ export default function LinkControls({
 
   return (
     <div style={controlStyles}>
-
       {/* Controls for the layout selection */}
       <label>Layout:</label>
-      &nbsp;
-      {' '}
+      &nbsp;{' '}
       {/* This is a non-breaking space - Prevents an automatic line break at this position */}
       <select
-        onClick={e => e.stopPropagation()}
-        onChange={e => setLayout(e.target.value)}
+        onClick={(e) => e.stopPropagation()}
+        onChange={(e) => setLayout(e.target.value)}
         // value={layout}
         style={dropDownStyle}
       >
-        <option value="cartesian">Cartesian</option>
-        <option value="polar">Polar</option>
+        <option value='cartesian'>Cartesian</option>
+        <option value='polar'>Polar</option>
       </select>
       &nbsp;&nbsp;
-
       {/* Controls for the Orientation selection, this dropdown will be disabled when the polar layout is selected as it is not needed */}
       <label>Orientation:</label>
       &nbsp;
       <select
-        onClick={e => e.stopPropagation()}
-        onChange={e => setOrientation(e.target.value)}
+        onClick={(e) => e.stopPropagation()}
+        onChange={(e) => setOrientation(e.target.value)}
         disabled={layout === 'polar'}
         style={dropDownStyle}
       >
-        <option value="vertical">Vertical</option>
-        <option value="horizontal">Horizontal</option>
+        <option value='vertical'>Vertical</option>
+        <option value='horizontal'>Horizontal</option>
       </select>
       &nbsp;&nbsp;
-
       {/* Controls for the link selections. */}
       <label>Link:</label>
       &nbsp;
       <select
-        onClick={e => e.stopPropagation()}
-        onChange={e => setLinkType(e.target.value)}
+        onClick={(e) => e.stopPropagation()}
+        onChange={(e) => setLinkType(e.target.value)}
         style={dropDownStyle}
       >
-        <option value="diagonal">Diagonal</option>
-        <option value="step">Step</option>
-        <option value="line">Line</option>
+        <option value='diagonal'>Diagonal</option>
+        <option value='step'>Step</option>
+        <option value='line'>Line</option>
       </select>
-
       {/* Controls for the select selections. */}
       <label> Select:</label>
       &nbsp;
       <select
-        id="selectInput"
-        name="nodeOptions"
-        onChange={e => setSelectedNode(e.target.value)}
+        id='selectInput'
+        name='nodeOptions'
+        onChange={(e) => setSelectedNode(e.target.value)}
         style={dropDownStyle}
       >
-        {nodeList.map(node => (
-          node.children.length > 0 && <option key={node.name} value={node.name}>{node.name}</option>
-        ))}
+        {nodeList.map(
+          (node) =>
+            node.children.length > 0 && (
+              <option key={node.name} value={node.name}>
+                {node.name}
+              </option>
+            ),
+        )}
       </select>
-
       {/* This is the slider control for the step option */}
       {linkType === 'step' && layout !== 'polar' && (
         <>
@@ -128,12 +127,12 @@ export default function LinkControls({
           <label>Step:</label>
           &nbsp;
           <input
-            onClick={e => e.stopPropagation()}
-            type="range"
+            onClick={(e) => e.stopPropagation()}
+            type='range'
             min={0}
             max={1}
             step={0.1}
-            onChange={e => setStepPercent(Number(e.target.value))}
+            onChange={(e) => setStepPercent(Number(e.target.value))}
             value={stepPercent}
             disabled={linkType !== 'step' || layout === 'polar'}
           />

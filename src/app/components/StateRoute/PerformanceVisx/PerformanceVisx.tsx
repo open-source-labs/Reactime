@@ -3,13 +3,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable max-len */
 import React, { useState, useEffect } from 'react';
-import {
-  MemoryRouter as Router,
-  Route,
-  NavLink,
-  Switch,
-  Redirect,
-} from 'react-router-dom';
+import { MemoryRouter as Router, Route, NavLink, Switch, Redirect } from 'react-router-dom';
 import RenderingFrequency from './RenderingFrequency';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
@@ -49,9 +43,13 @@ const collectNodes = (snaps, componentName) => {
         if (x !== 0 && componentsResult.length !== 0) {
           // needs to be stringified because values are hard to determine if
           // true or false if in they're seen as objects
-          if (JSON.stringify(Object.values(componentsResult[newChange
-            ? componentsResult.length - 1 : trackChanges])[0])
-            !== JSON.stringify(cur.componentData.props)) {
+          if (
+            JSON.stringify(
+              Object.values(
+                componentsResult[newChange ? componentsResult.length - 1 : trackChanges],
+              )[0],
+            ) !== JSON.stringify(cur.componentData.props)
+          ) {
             newChange = true;
             const props = { [`snapshot${x}`]: { ...cur.componentData.props } };
             componentsResult.push(props);
@@ -83,7 +81,7 @@ const collectNodes = (snaps, componentName) => {
   return finalResults;
 };
 
-type currNum = number
+type currNum = number;
 
 /* DATA HANDLING HELPER FUNCTIONS */
 const traverse = (snapshot, data, snapshots, currTotalRender: currNum = 0): void => {
@@ -94,9 +92,7 @@ const traverse = (snapshot, data, snapshots, currTotalRender: currNum = 0): void
     const componentName = child.name + -[idx + 1];
 
     // Get component Rendering Time
-    const renderTime = Number(
-      Number.parseFloat(child.componentData.actualDuration).toPrecision(5),
-    );
+    const renderTime = Number(Number.parseFloat(child.componentData.actualDuration).toPrecision(5));
     // sums render time for all children
     const childrenRenderTime = currTotalRender + renderTime;
     // components as keys and set the value to their rendering time
@@ -140,7 +136,7 @@ const allStorage = (): Series[] => {
 const getSnapshotIds = (obj, snapshotIds = []): string[] => {
   snapshotIds.push(`${obj.name}.${obj.branch}`);
   if (obj.children) {
-    obj.children.forEach(child => {
+    obj.children.forEach((child) => {
       getSnapshotIds(child, snapshotIds);
     });
   }
@@ -164,9 +160,7 @@ const getPerfMetrics = (snapshots, snapshotsIds): PerfData => {
 /* EXPORT COMPONENT */
 const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
   // hook used to dispatch onhover action in react
-  const {
-    width, height, snapshots, hierarchy,
-  } = props;
+  const { width, height, snapshots, hierarchy } = props;
   const [{ currentTabInApp }, dispatch] = useStoreContext();
   const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
@@ -250,7 +244,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
   let maxHeight = 0;
   if (snapshot !== 'All Snapshots') {
     // filter barStack to make it equal to an array of length 1 with object matching snapshot ID to mirror the data.barStack object's shape
-    const checkData = [data.barStack.find(comp => comp.snapshotId === snapshot)];
+    const checkData = [data.barStack.find((comp) => comp.snapshotId === snapshot)];
     const holdData = [];
     // looping through checkData which is composed of a single snapshot while pushing key/values to a new object and setting maxHeight
     for (const key in checkData[0]) {
@@ -295,39 +289,34 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
     if (hierarchy) {
       return <RenderingFrequency data={data.componentData} />;
     }
-    return <div className="noState">{NO_STATE_MSG}</div>;
+    return <div className='noState'>{NO_STATE_MSG}</div>;
   };
 
   // This will redirect to the proper tabs during the tutorial
   const renderForTutorial = () => {
-    if (currentTabInApp === 'performance') return <Redirect to="/" />;
-    if (currentTabInApp === 'performance-comparison') return <Redirect to="/comparison" />;
+    if (currentTabInApp === 'performance') return <Redirect to='/' />;
+    if (currentTabInApp === 'performance-comparison') return <Redirect to='/comparison' />;
     return null;
   };
 
   return (
     <Router>
-      <div className="performance-nav-bar-container">
-        <NavLink
-          className="router-link-performance"
-          activeClassName="is-active"
-          exact
-          to="/"
-        >
+      <div className='performance-nav-bar-container'>
+        <NavLink className='router-link-performance' activeClassName='is-active' exact to='/'>
           Snapshots View
         </NavLink>
         <NavLink
-          className="router-link-performance"
-          id="router-link-performance-comparison"
-          activeClassName="is-active"
-          to="/comparison"
+          className='router-link-performance'
+          id='router-link-performance-comparison'
+          activeClassName='is-active'
+          to='/comparison'
         >
           Comparison View
         </NavLink>
         <NavLink
-          className="router-link-performance"
-          activeClassName="is-active"
-          to="/componentdetails"
+          className='router-link-performance'
+          activeClassName='is-active'
+          to='/componentdetails'
         >
           Component Details
         </NavLink>
@@ -336,9 +325,9 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
       {renderForTutorial()}
 
       <Switch>
-        <Route path="/comparison" render={renderComparisonBargraph} />
-        <Route path="/componentdetails" render={renderComponentDetailsView} />
-        <Route path="/" render={renderBargraph} />
+        <Route path='/comparison' render={renderComparisonBargraph} />
+        <Route path='/componentdetails' render={renderComponentDetailsView} />
+        <Route path='/' render={renderBargraph} />
       </Switch>
     </Router>
   );

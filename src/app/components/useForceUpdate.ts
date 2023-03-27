@@ -4,5 +4,5 @@ import { useState } from 'react';
 // The state information is irrelevant but an update is needed to force a re-render
 export default function useForceUpdate() {
   const [, setValue] = useState(0);
-  return () => setValue(value => value + 1);
+  return () => setValue((value) => value + 1);
 }

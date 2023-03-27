@@ -7,22 +7,20 @@ import { useStoreContext } from '../store';
 const { Handle } = Slider;
 
 interface handleProps {
-  value: number,
-  dragging: boolean,
-  index: number
+  value: number;
+  dragging: boolean;
+  index: number;
 }
 
 const handle = (props: handleProps) => {
-  const {
-    value, dragging, index, ...restProps
-  } = props;
+  const { value, dragging, index, ...restProps } = props;
 
   return (
     <Tooltip
-      prefixCls="rc-slider-tooltip"
+      prefixCls='rc-slider-tooltip'
       overlay={value}
       visible={dragging}
-      placement="top"
+      placement='top'
       key={index}
     >
       <Handle value={value} {...restProps} />

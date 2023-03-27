@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { onHover, onHoverExit, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 
-const RenderingFrequency = props => {
+const RenderingFrequency = (props) => {
   const perfData = props.data;
   const [store, dispatch] = useStoreContext();
   useEffect(() => {
@@ -13,7 +13,7 @@ const RenderingFrequency = props => {
   }, []);
   return (
     <div>
-      {Object.keys(perfData).map(componentName => {
+      {Object.keys(perfData).map((componentName) => {
         const currentComponent = perfData[componentName];
         return (
           <ComponentCard
@@ -21,8 +21,7 @@ const RenderingFrequency = props => {
             componentName={componentName}
             stateType={currentComponent.stateType}
             averageRenderTime={(
-              currentComponent.totalRenderTime
-              / currentComponent.renderFrequency
+              currentComponent.totalRenderTime / currentComponent.renderFrequency
             ).toFixed(3)}
             renderFrequency={currentComponent.renderFrequency}
             rtid={currentComponent.rtid}
@@ -35,13 +34,7 @@ const RenderingFrequency = props => {
 };
 
 const ComponentCard = (props): JSX.Element => {
-  const {
-    componentName,
-    stateType,
-    averageRenderTime,
-    renderFrequency,
-    information,
-  } = props;
+  const { componentName, stateType, averageRenderTime, renderFrequency, information } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const [expand, setExpand] = useState(false);
 
@@ -50,27 +43,22 @@ const ComponentCard = (props): JSX.Element => {
 
   const dataComponentArray = [];
   for (let i = 0; i < information.length; i++) {
-    dataComponentArray.push(<DataComponent key={`DataComponent${i}`} header={Object.keys(information[i])} paragraphs={Object.values(information[i])} />);
+    dataComponentArray.push(
+      <DataComponent
+        key={`DataComponent${i}`}
+        header={Object.keys(information[i])}
+        paragraphs={Object.values(information[i])}
+      />,
+    );
   }
 
   return (
-    <div className="borderStyling">
-      <div
-        className={expand ? 'ExpandStyledGridElement' : 'StyledGridElement'}
-      >
-        <div className="RenderLeft">
-          <h3>
-            {componentName}
-            {' '}
-          </h3>
+    <div className='borderStyling'>
+      <div className={expand ? 'ExpandStyledGridElement' : 'StyledGridElement'}>
+        <div className='RenderLeft'>
+          <h3>{componentName} </h3>
           <h4>{stateType}</h4>
-          <h4>
-            average time:
-            {' '}
-            {averageRenderTime}
-            {' '}
-            ms
-          </h4>
+          <h4>average time: {averageRenderTime} ms</h4>
         </div>
         <div
           onClick={() => {
@@ -80,33 +68,25 @@ const ComponentCard = (props): JSX.Element => {
               setExpand(true);
             }
           }}
-          className="RenderRight"
+          className='RenderRight'
         >
           <p>{renderFrequency}</p>
         </div>
       </div>
-      <div className={expand === true ? 'DataComponent' : null} >
+      <div className={expand === true ? 'DataComponent' : null}>
         {expand === true ? dataComponentArray : null}
       </div>
     </div>
   );
 };
 
-const DataComponent = props => {
-  const {
-    header,
-    paragraphs,
-  } = props;
+const DataComponent = (props) => {
+  const { header, paragraphs } = props;
 
   return (
-    <div className="borderCheck">
-      <h4>
-        {' '}
-        {header}
-      </h4>
-      <p>
-        {`renderTime: ${paragraphs[0].rendertime}`}
-      </p>
+    <div className='borderCheck'>
+      <h4> {header}</h4>
+      <p>{`renderTime: ${paragraphs[0].rendertime}`}</p>
     </div>
   );
 };

@@ -1,3 +1,6 @@
 [submodule "tests/manual-tests/recoilTest"]
 	path = tests/manual-tests/recoilTest
 	url = https://github.com/kevinfey/recoilTest
+[submodule "reactime-website"]
+	path = reactime-website
+	url = https://github.com/reactimetravel/reactime-website

@@ -1,4 +1,4 @@
-import {screen, render} from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import People, { Profile } from '../src/pages/components/TeamSection';
 
@@ -9,7 +9,6 @@ it('test to see if all the contributor images show up', async () => {
   const image = screen.getAllByTestId('image');
   expect(image.length).toBe(72);
 });
-
 
 test('the value from the profile attribute should be in the src', async () => {
   render(<Profile key='' profile='react' name='' />);

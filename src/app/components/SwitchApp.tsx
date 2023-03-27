@@ -3,13 +3,12 @@ import Select from 'react-select';
 import { useStoreContext } from '../store';
 import { setTab } from '../actions/actions';
 
-
 const SwitchAppDropdown = () => {
   const [{ currentTab, tabs }, dispatch] = useStoreContext();
 
-  const tabsArray:any[] = [];
-  Object.keys(tabs).forEach(tab => {
-    tabsArray.unshift({ value: tab, label: tabs[tab].title});
+  const tabsArray: any[] = [];
+  Object.keys(tabs).forEach((tab) => {
+    tabsArray.unshift({ value: tab, label: tabs[tab].title });
   });
 
   const currTab = {
@@ -22,17 +21,17 @@ const SwitchAppDropdown = () => {
       const outline = state.isSelected ? 'transparent' : 'transparent';
       const margin = 0;
 
-      return {...provided, outline, margin};
-    }
-  }
+      return { ...provided, outline, margin };
+    },
+  };
 
   return (
     <Select
-      className="tab-select-container"
-      classNamePrefix="tab-select"
+      className='tab-select-container'
+      classNamePrefix='tab-select'
       value={currTab}
       styles={customStyles}
-      onChange={e => {
+      onChange={(e) => {
         dispatch(setTab(parseInt(e.value, 10)));
       }}
       options={tabsArray}

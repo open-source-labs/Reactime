@@ -18,11 +18,11 @@ const Row = (props: RowProps) => {
         column={i}
         handleBoxClick={props.handleBoxClick}
         value={props.values[i]}
-      ></Box>
+      ></Box>,
     );
   }
 
-  return <div className="row">{boxes}</div>;
+  return <div className='row'>{boxes}</div>;
 };
 
 export default Row;

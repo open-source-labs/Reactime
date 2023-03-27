@@ -6,12 +6,7 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 import React from 'react';
-import {
-  MemoryRouter as Router,
-  Route,
-  NavLink,
-  Switch,
-} from 'react-router-dom';
+import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom';
 import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap/ComponentMap';
@@ -23,7 +18,6 @@ import WebMetrics from '../WebMetrics';
 const History = require('./History').default;
 
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
-
 
 export interface StateRouteProps {
   snapshot: {
@@ -49,15 +43,19 @@ const StateRoute = (props: StateRouteProps) => {
   const renderComponentMap = () => {
     if (hierarchy) {
       return (
-        <ParentSize className="componentMapContainer">
+        <ParentSize className='componentMapContainer'>
           {({ width, height }) => (
             // eslint-disable-next-line react/prop-types
-            <ComponentMap currentSnapshot={currLocation.stateSnapshot} width={width} height={height} />
+            <ComponentMap
+              currentSnapshot={currLocation.stateSnapshot}
+              width={width}
+              height={height}
+            />
           )}
         </ParentSize>
       );
     }
-    return <div className="noState">{NO_STATE_MSG}</div>;
+    return <div className='noState'>{NO_STATE_MSG}</div>;
   };
 
   // the hierarchy gets set upon the first click on the page
@@ -84,7 +82,7 @@ const StateRoute = (props: StateRouteProps) => {
         </ParentSize>
       );
     }
-    return <div className="noState">{NO_STATE_MSG}</div>;
+    return <div className='noState'>{NO_STATE_MSG}</div>;
   };
 
   // the hierarchy gets set on the first click in the page
@@ -94,11 +92,13 @@ const StateRoute = (props: StateRouteProps) => {
     if (hierarchy) {
       return <Tree snapshot={snapshot} />;
     }
-    return <div className="noState">{NO_STATE_MSG}</div>;
+    return <div className='noState'>{NO_STATE_MSG}</div>;
   };
   const renderWebMetrics = () => {
-    let LCPColor: String; let FIDColor: String; let FCPColor: String; let
-      TTFBColor: String;
+    let LCPColor: String;
+    let FIDColor: String;
+    let FCPColor: String;
+    let TTFBColor: String;
 
     if (webMetrics.LCP <= 2000) LCPColor = '#0bce6b';
     if (webMetrics.LCP > 2000 && webMetrics.LCP < 4000) LCPColor = '#E56543';
@@ -113,40 +113,40 @@ const StateRoute = (props: StateRouteProps) => {
     if (webMetrics.TTFB > 600) TTFBColor = '#fc2000';
 
     return (
-      <div className="web-metrics-container">
+      <div className='web-metrics-container'>
         <WebMetrics
           color={LCPColor}
           series={(webMetrics.LCP / 2500) * 100}
-          formatted={val => (Number.isNaN(val)
-            ? '- ms'
-            : `${((val / 100) * 2500).toFixed(2)} ms`)}
-          label="LCP"
-          name="Largest Contentful Paint"
-          description="Measures loading performance. The benchmark is less than 2500 ms."
+          formatted={(val) =>
+            Number.isNaN(val) ? '- ms' : `${((val / 100) * 2500).toFixed(2)} ms`
+          }
+          label='LCP'
+          name='Largest Contentful Paint'
+          description='Measures loading performance. The benchmark is less than 2500 ms.'
         />
         <WebMetrics
           color={FIDColor}
           series={webMetrics.FID * 25}
-          formatted={val => (Number.isNaN(val) ? '- ms' : `${(val / 25).toFixed(2)} ms`)}
-          label="FID"
-          name="First Input Delay"
-          description="Measures interactivity. The benchmark is less than 100 ms."
+          formatted={(val) => (Number.isNaN(val) ? '- ms' : `${(val / 25).toFixed(2)} ms`)}
+          label='FID'
+          name='First Input Delay'
+          description='Measures interactivity. The benchmark is less than 100 ms.'
         />
         <WebMetrics
           color={FCPColor}
           series={(webMetrics.FCP / 1000) * 100}
-          formatted={val => `${((val / 100) * 1000).toFixed(2)} ms`}
-          label="FCP"
-          name="First Contentful Paint"
-          description="Measures the time it takes the browser to render the first piece of DOM content. No benchmark."
+          formatted={(val) => `${((val / 100) * 1000).toFixed(2)} ms`}
+          label='FCP'
+          name='First Contentful Paint'
+          description='Measures the time it takes the browser to render the first piece of DOM content. No benchmark.'
         />
         <WebMetrics
           color={TTFBColor}
           series={(webMetrics.TTFB / 10) * 100}
-          formatted={val => `${((val / 100) * 10).toFixed(2)} ms`}
-          label="TTFB"
-          name="Time to First Byte"
-          description="Measures the time it takes for a browser to receive the first byte of page content. The benchmark is 600 ms."
+          formatted={(val) => `${((val / 100) * 10).toFixed(2)} ms`}
+          label='TTFB'
+          name='Time to First Byte'
+          description='Measures the time it takes for a browser to receive the first byte of page content. The benchmark is 600 ms.'
         />
       </div>
     );
@@ -169,51 +169,42 @@ const StateRoute = (props: StateRouteProps) => {
         </ParentSize>
       );
     }
-    return <div className="noState">{NO_STATE_MSG}</div>;
+    return <div className='noState'>{NO_STATE_MSG}</div>;
   };
 
   return (
     <Router>
-      <div className="navbar">
-        <NavLink
-          className="router-link map-tab"
-          activeClassName="is-active"
-          exact
-          to="/"
-        >
+      <div className='navbar'>
+        <NavLink className='router-link map-tab' activeClassName='is-active' exact to='/'>
           Map
         </NavLink>
         <NavLink
-          className="router-link performance-tab"
-          activeClassName="is-active"
-          to="/performance"
+          className='router-link performance-tab'
+          activeClassName='is-active'
+          to='/performance'
         >
           Performance
         </NavLink>
-        <NavLink
-          className="router-link history-tab"
-          activeClassName="is-active"
-          to="/history"
-        >
+        <NavLink className='router-link history-tab' activeClassName='is-active' to='/history'>
           History
         </NavLink>
         <NavLink
-          className="router-link web-metrics-tab"
-          activeClassName="is-active"
-          to="/webMetrics"
+          className='router-link web-metrics-tab'
+          activeClassName='is-active'
+          to='/webMetrics'
         >
           Web Metrics
         </NavLink>
-        <NavLink className="router-link tree-tab" activeClassName="is-active" to="/tree">
+        <NavLink className='router-link tree-tab' activeClassName='is-active' to='/tree'>
           Tree
         </NavLink>
       </div>
       <Switch>
-        <Route path="/performance" render={renderPerfView} />
-        <Route path="/history" render={renderHistory} />
-        <Route path="/webMetrics" render={renderWebMetrics} />
-        <Route path="/tree" render={renderTree} />
-        <Route path="/" render={renderComponentMap} />
+        <Route path='/performance' render={renderPerfView} />
+        <Route path='/history' render={renderHistory} />
+        <Route path='/webMetrics' render={renderWebMetrics} />
+        <Route path='/tree' render={renderTree} />
+        <Route path='/' render={renderComponentMap} />
       </Switch>
     </Router>
   );
