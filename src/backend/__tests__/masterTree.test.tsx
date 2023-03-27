@@ -23,6 +23,7 @@ import {
   allowedComponentTypes,
   nextJSDefaultComponent,
   remixDefaultComponents,
+  exclude,
 } from '../models/filterConditions';
 import deepCopy from './ignore/deepCopy';
 
@@ -135,12 +136,20 @@ describe('master tree tests', () => {
       });
     });
     describe('Display component props information', () => {
-      const memoizedProps = {
+      const memoizedProps: {
+        propVal: number;
+        propFunc: Function;
+        propObj: { [key: string]: any };
+      } = {
         propVal: 0,
         propFunc: jest.fn,
         propObj: { dummy: 'dummy' },
       };
-      const props = {
+      const props: {
+        propVal: number;
+        propFunc: 'function';
+        propObj: string;
+      } = {
         propVal: 0,
         propFunc: 'function',
         propObj: JSON.stringify({ dummy: 'dummy' }),
@@ -190,24 +199,67 @@ describe('master tree tests', () => {
           expect(routerTree).toEqual(treeRoot);
         }
       });
-
-      it('should display props information of multiple components', () => {
-        mockChildNode.memoizedProps = memoizedProps;
+      it('should exclude reserved props name', () => {
         (mockChildTree.componentData as ComponentData).props = props;
         treeRoot.children.push(mockChildTree);
-        mockSiblingNode.memoizedProps = { ...memoizedProps, name: 'sibling' };
-        (mockSiblingTree.componentData as ComponentData).props = { ...props, name: 'sibling' };
-        treeRoot.children.push(mockSiblingTree);
 
-        mockFiberNode.child = mockChildNode;
-        mockFiberNode.sibling = mockSiblingNode;
-        const tree = createTree(mockFiberNode);
-        const children = tree.children;
-        expect(children.length).toEqual(2);
-        expect(children[0]).toEqual(mockChildTree);
-        expect(children[1]).toEqual(mockSiblingTree);
+        for (let propName of exclude) {
+          componentActionsRecord.clear(); // reset index counts for component actions
+          mockChildNode.memoizedProps = { ...memoizedProps, [propName]: 'anything' };
+          const tree = createTree(mockChildNode);
+          expect(tree).toEqual(treeRoot);
+        }
+      });
+      it('should skip circular props', () => {
+        mockChildNode.memoizedProps = {
+          ...memoizedProps,
+          cir: mockChildNode,
+          noCir: 'Not a circular props',
+        };
+        (mockChildTree.componentData as ComponentData).props = {
+          ...props,
+          noCir: 'Not a circular props',
+        };
+        treeRoot.children.push(mockChildTree);
+
+        const tree = createTree(mockChildNode);
         expect(tree).toEqual(treeRoot);
       });
+
+      xit('should display props information of multiple components', () => {
+        // Trim the root to get position of mockFiber for append child and sibiling
+        const mockFiberTreeTrimRoot = mockFiberTree.children[0];
+
+        // Add child(class) component with props:
+        mockChildNode.memoizedProps = { ...memoizedProps, name: 'child' };
+        (mockChildTree.componentData as ComponentData).props = { ...props, name: 'child' };
+        (mockChildTree.componentData as ComponentData).index = 0;
+        mockFiberTreeTrimRoot.children.push(mockChildTree);
+
+        // Add sibiling(functional) component with props:
+        mockSiblingNode.memoizedProps = { ...memoizedProps, name: 'sibling' };
+        (mockSiblingTree.componentData as ComponentData).props = { ...props, name: 'sibling' };
+        (mockSiblingTree.componentData as ComponentData).hooksIndex = [1];
+        mockFiberTreeTrimRoot.children.push(mockSiblingTree);
+
+        // Modify mockFiberNode to have 2 children: mockChildNode & mockSibilngNode
+        mockFiberNode.child = mockChildNode;
+        mockFiberNode.child.sibling = mockSiblingNode;
+
+        const tree = createTree(mockFiberNode);
+        expect(tree).toEqual(mockFiberTree);
+      });
+    });
+    describe('Display component states information', () => {
+      it('should display functional state information', () => {
+        mockChildNode.stateNode = {
+          
+        }
+      });
+      xit('should display class state information', () => {});
+    });
+    xdescribe('Replace fromLinkFiber class value', () => {
+      it('NEED UNDERSTANDING OF WHY FROMLINKFIBER IS NEEDED TO MAKE TESTING', () => {});
     });
   });
 

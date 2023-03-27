@@ -234,8 +234,10 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           // TODO: Refactor this, this is currently being used for Tree & Diff tabs
           newState = componentData.hooksState;
         } catch (err) {
-          console.log('ERROR: Failed Element during JSX parsing', {
+          console.log({
+            Message: 'Error in createTree during obtaining state from functionalComponent',
             componentName,
+            err,
           });
         }
       }

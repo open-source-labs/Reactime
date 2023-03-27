@@ -62,7 +62,7 @@ export interface ComponentData {
   actualStartTime?: number;
   selfBaseDuration?: number;
   treeBaseDuration?: number;
-  props: {};
+  props: { [key: string]: any };
   context: {};
   state: {} | null;
   hooksState: {} | null;

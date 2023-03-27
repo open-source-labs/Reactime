@@ -7,85 +7,12 @@ import {
   // object with tree structure
   Fiber,
 } from '../../types/backendTypes';
+import { exclude } from '../../models/filterConditions';
 // TODO: Determine what Component Data Type we are sending back for state, context, & props
 type ReactimeData = {
   [key: string]: any;
 };
-/**
- * A set of excluded props and variable name
- */
-const exclude = new Set([
-  'alternate',
-  'basename',
-  'baseQueue',
-  'baseState',
-  'child',
-  'childLanes',
-  'children',
-  'Consumer',
-  'context',
-  'create',
-  'deps',
-  'dependencies',
-  'destroy',
-  'dispatch',
-  'location',
-  'effects',
-  'element',
-  'elementType',
-  'firstBaseUpdate',
-  'firstEffect',
-  'flags',
-  'get key',
-  'getState',
-  'hash',
-  'key',
-  'lanes',
-  'lastBaseUpdate',
-  'lastEffect',
-  'liftedStore',
-  'navigator',
-  'memoizedState',
-  'mode',
-  'navigationType',
-  'next',
-  'nextEffect',
-  'pending',
-  'parentSub',
-  'pathnameBase',
-  'pendingProps',
-  'Provider',
-  'updateQueue',
-  'ref',
-  'replaceReducer',
-  'responders',
-  'return',
-  'route',
-  'routeContext',
-  'search',
-  'shared',
-  'sibling',
-  'state',
-  'store',
-  'subscribe',
-  'subscription',
-  'stateNode',
-  'tag',
-  'type',
-  '_calculateChangedBits',
-  '_context',
-  '_currentRenderer',
-  '_currentRenderer2',
-  '_currentValue',
-  '_currentValue2',
-  '_owner',
-  '_self',
-  '_source',
-  '_store',
-  '_threadCount',
-  '$$typeof',
-  '@@observable',
-]);
+
 // ------------FILTER DATA FROM REACT DEV TOOL && CONVERT TO STRING-------------
 /**
  * This function receives raw Data from REACT DEV TOOL and filter the Data based on the exclude list. The filterd data is then converted to string (if applicable) before being sent to reacTime front end.
@@ -218,11 +145,7 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
   let AST: any;
   try {
     AST = JSXParser.parse(elementType).body;
-  } catch (e) {
-    throw Error('Error occurs at helpers getHooksName.ts Cannot parse functional component.');
-  }
-  // Begin search for hook names, only if ast has a body property.
-  try {
+    // Begin search for hook names, only if ast has a body property.
     // Statements get all the names of the hooks. For example: useCount, useWildcard, ...
     const statements: { hookName: string; varName: string }[] = [];
     /** All module exports always start off as a single 'FunctionDeclaration' type
@@ -261,7 +184,7 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
     });
     return statements;
   } catch (err) {
-    throw new Error();
+    throw new Error('getHooksNameError' + err.message);
   }
 }
 
