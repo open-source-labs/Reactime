@@ -1,0 +1,149 @@
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fff4f4;
+}
+
+h1,
+h4 {
+  text-align: center;
+}
+
+/* Navbar */
+
+.nav {
+  background-color: #ff6569;
+
+  display: flex;
+  justify-content: space-evenly;
+
+  padding: 30px;
+  height: 30px;
+}
+
+.link {
+  flex-grow: 1;
+
+  font-size: 1.5em;
+  text-decoration: none;
+  text-align: center;
+
+  color: #fff4f4;
+}
+
+.link:hover {
+  font-size: 2em;
+}
+
+/* About */
+
+.about {
+  background-color: #ffffff;
+  color: #330002;
+
+  padding-top: 1em;
+  padding-bottom: 2em;
+  padding-right: 4em;
+  padding-left: 4em;
+  margin-top: 2em;
+
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+/* Tic-Tac-Toe */
+
+.board {
+  background-color: #ffffff;
+  color: #330002;
+
+  margin-top: 2em;
+
+  padding-top: 1em;
+  padding-bottom: 1em;
+  padding-left: 4em;
+  padding-right: 4em;
+
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.box {
+  background-color: #62d6fb;
+  border-style: solid;
+  border-color: #ffffff;
+  border-radius: 5px;
+
+  height: 100px;
+  width: 100px;
+
+  font-size: 4em;
+}
+
+#reset {
+  color: #ff6569;
+  font-size: 1.5em;
+
+  background-color: #ffffff;
+  border-style: solid;
+  border-color: #ff6569;
+  border-radius: 5px;
+
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  width: 100%;
+
+  padding: 0.5em;
+}
+
+#reset:hover {
+  color: #ffffff;
+  background-color: #ff6569;
+}
+
+/* Counter */
+
+.buttons {
+  background-color: #ffffff;
+  color: #330002;
+
+  padding-top: 1em;
+  padding-bottom: 2em;
+  padding-right: 4em;
+  padding-left: 4em;
+  margin-top: 2em;
+
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.increment {
+  color: #ffffff;
+  font-size: 1.5em;
+
+  background-color: #ff6569;
+  border-style: solid;
+  border-color: #ffffff;
+  border-radius: 5px;
+
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  width: 100%;
+
+  padding: 0.5em;
+}
+
+.increment:hover {
+  background-color: #62d6fb;
+}

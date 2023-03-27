@@ -25,10 +25,7 @@ const colors = {
   base0F: '#e96ba8',
 };
 
-const getItemString = (
-  type,
-  data: { state?: object | string; name: string; children: [] }
-) => {
+const getItemString = (type, data: { state?: object | string; name: string; children: [] }) => {
   if (data && data.name) {
     return <span>{data.name}</span>;
   }
@@ -47,7 +44,7 @@ interface TreeProps {
 
 const Tree = (props: TreeProps) => {
   const { snapshot } = props;
-  const [ store, dispatch] = useStoreContext();
+  const [store, dispatch] = useStoreContext();
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('history'));

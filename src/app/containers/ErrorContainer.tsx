@@ -13,16 +13,25 @@ function ErrorContainer(): any {
   const titleTracker = useRef(currentTitle);
   const timeout = useRef(null);
 
-  function launch(): void{ dispatch(launchContentScript(tabs[currentTab])); }
+  function launch(): void {
+    dispatch(launchContentScript(tabs[currentTab]));
+  }
 
   // check if tabObj exists > set status
-  const status = { contentScriptLaunched: false, reactDevToolsInstalled: false, targetPageisaReactApp: false };
-  if (tabs[currentTab]) { Object.assign(status, tabs[currentTab].status); }
+  const status = {
+    contentScriptLaunched: false,
+    reactDevToolsInstalled: false,
+    targetPageisaReactApp: false,
+  };
+  if (tabs[currentTab]) {
+    Object.assign(status, tabs[currentTab].status);
+  }
 
   // hook that sets timer while waiting for a snapshot from the background script, resets if the tab changes/reloads
   useEffect(() => {
     function setLoadingArray(i: number, value: boolean) {
-      if (loadingArray[i] !== value) { // avoid unecessary state changes
+      if (loadingArray[i] !== value) {
+        // avoid unecessary state changes
         const loadingArrayClone = [...loadingArray];
         loadingArrayClone[i] = value;
         setLoading(loadingArrayClone);
@@ -43,7 +52,9 @@ function ErrorContainer(): any {
     // if content script hasnt been found, set timer or immediately resolve
     if (!status.contentScriptLaunched) {
       if (loadingArray[0] === true) {
-        timeout.current = setTimeout(() => { setLoadingArray(0, false); }, 1500);
+        timeout.current = setTimeout(() => {
+          setLoadingArray(0, false);
+        }, 1500);
       }
     } else {
       setLoadingArray(0, false);
@@ -54,19 +65,20 @@ function ErrorContainer(): any {
     if (loadingArray[1] === false && status.reactDevToolsInstalled === true) {
       setLoadingArray(2, false);
     }
+
+    //Unload async function when Error Container is unmounted
+    return () => {
+      clearTimeout(timeout.current);
+    };
   }, [status, currentTitle, timeout, loadingArray]);
 
   return (
-    <div className="error-container">
-      <img src="../assets/logo-no-version.png" alt="Reactime Logo" height="50px" />
+    <div className='error-container'>
+      <img src='../assets/logo-no-version.png' alt='Reactime Logo' height='50px' />
 
-      <h2>
-        Launching Reactime on tab:
-        {' '}
-        {currentTitle}
-      </h2>
+      <h2>Launching Reactime on tab: {currentTitle}</h2>
 
-      <div className="loaderChecks">
+      <div className='loaderChecks'>
         <p>Checking if content script has been launched on current tab</p>
         <Loader loading={loadingArray[0]} result={status.contentScriptLaunched} />
 
@@ -75,19 +87,14 @@ function ErrorContainer(): any {
 
         <p>Checking if target is a compatible React app</p>
         <Loader loading={loadingArray[2]} result={status.targetPageisaReactApp} />
-
       </div>
 
       <br />
-      <div className="errorMsg">
+      <div className='errorMsg'>
         <ErrorMsg loadingArray={loadingArray} status={status} launchContent={launch} />
       </div>
       <br />
-      <a
-        href="https://reactime.dev/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <a href='https://reactime.dev/' target='_blank' rel='noopener noreferrer'>
         Please visit reactime.dev to more info.
       </a>
     </div>

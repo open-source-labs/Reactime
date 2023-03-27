@@ -22,68 +22,82 @@ const state = {
         branch: 0,
         stateSnapshot: {
           state: {},
-          children: [{
-            state: { test: 'test' },
-            name: 'App',
-            componentData: { actualDuration: 3.5 },
-          }],
+          children: [
+            {
+              state: { test: 'test' },
+              name: 'App',
+              componentData: { actualDuration: 3.5 },
+            },
+          ],
           route: {
             id: 1,
             url: 'http://localhost:8080/',
           },
         },
-        children: [{
-          index: 1,
-          name: 2,
-          branch: 0,
-          stateSnapshot: {
-            state: {},
-            children: [{
-              state: { test: 'test' },
-              name: 'App',
-              componentData: { actualDuration: 3.5 },
-            }],
-            route: {
-              id: 2,
-              url: 'http://localhost:8080/',
-            },
-          },
-          children: [{
-            index: 2,
-            name: 3,
+        children: [
+          {
+            index: 1,
+            name: 2,
             branch: 0,
             stateSnapshot: {
               state: {},
-              children: [{
-                state: { test: 'test' },
-                name: 'App',
-                componentData: { actualDuration: 3.5 },
-              }],
-              route: {
-                id: 3,
-                url: 'http://localhost:8080/',
-              },
-            },
-            children: [{
-              index: 3,
-              name: 4,
-              branch: 0,
-              stateSnapshot: {
-                state: {},
-                children: [{
+              children: [
+                {
                   state: { test: 'test' },
                   name: 'App',
                   componentData: { actualDuration: 3.5 },
-                }],
-                route: {
-                  id: 4,
-                  url: 'http://localhost:8080/test/',
                 },
+              ],
+              route: {
+                id: 2,
+                url: 'http://localhost:8080/',
               },
-              children: [],
-            }],
-          }],
-        }],
+            },
+            children: [
+              {
+                index: 2,
+                name: 3,
+                branch: 0,
+                stateSnapshot: {
+                  state: {},
+                  children: [
+                    {
+                      state: { test: 'test' },
+                      name: 'App',
+                      componentData: { actualDuration: 3.5 },
+                    },
+                  ],
+                  route: {
+                    id: 3,
+                    url: 'http://localhost:8080/',
+                  },
+                },
+                children: [
+                  {
+                    index: 3,
+                    name: 4,
+                    branch: 0,
+                    stateSnapshot: {
+                      state: {},
+                      children: [
+                        {
+                          state: { test: 'test' },
+                          name: 'App',
+                          componentData: { actualDuration: 3.5 },
+                        },
+                      ],
+                      route: {
+                        id: 4,
+                        url: 'http://localhost:8080/test/',
+                      },
+                    },
+                    children: [],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       },
       currLocation: {
         index: 0,

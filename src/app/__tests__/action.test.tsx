@@ -59,12 +59,7 @@ describe('unit testing for Action.tsx', () => {
 
   describe('Jump Button', () => {
     test("should render a div with a className 'jump-button' inside action-component", () => {
-      expect(
-        wrapper
-          .find('.action-component')
-          .children()
-          .find('.jump-button'),
-      ).toHaveLength(1);
+      expect(wrapper.find('.action-component').children().find('.jump-button')).toHaveLength(1);
     });
 
     test('should invoke dispatch method when clicked', () => {

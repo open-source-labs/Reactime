@@ -58,7 +58,11 @@ describe('MainContainer rendering', () => {
     state.currentTab = 87;
     state.tabs[87] = {
       snapshots: [{}],
-      status: { contentScriptLaunched: true, reactDevToolsInstalled: true, targetPageisaReactApp: true },
+      status: {
+        contentScriptLaunched: true,
+        reactDevToolsInstalled: true,
+        targetPageisaReactApp: true,
+      },
       viewIndex: -1,
       sliderIndex: 0,
       mode: {},

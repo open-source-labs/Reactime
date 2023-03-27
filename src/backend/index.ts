@@ -6,40 +6,50 @@
 /**
  * 'reactime' module has a single export
  * @function linkFiber
-*/
+ */
 // regenerator runtime supports async functionality
 import 'regenerator-runtime/runtime';
-import linkFiberStart from './linkFiber';
-import timeJumpStart from './timeJump';
-import {
-  Snapshot, Mode, MsgData,
-} from './types/backendTypes';
+import linkFiberInitialization from './routers/linkFiber';
+import timeJumpInitialization from './controllers/timeJump';
+import { Snapshot, Status, MsgData } from './types/backendTypes';
+import routes from './models/routes';
 
 // * State snapshot object initialized here
 const snapShot: Snapshot = {
   tree: null,
-  unfilteredTree: null,
 };
 
-const mode: Mode = {
+const mode: Status = {
   jumping: false,
   paused: false,
 };
 
 // linkFiber is now assigned the default function exported from the file linkFiber.ts
-const linkFiber = linkFiberStart(snapShot, mode);
+
+console.log('Index ts Initiation');
+const linkFiber = linkFiberInitialization(snapShot, mode);
 // timeJump is now assigned the default function exported from the file timeJump.ts
-const timeJump = timeJumpStart(mode);
+const timeJump = timeJumpInitialization(mode);
 
 // * Event listener for time-travel actions
-window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
+window.addEventListener('message', async ({ data: { action, payload } }: MsgData) => {
   switch (action) {
     case 'jumpToSnap':
-      timeJump(payload, true); // * This sets state with given payload
-      break;
-
-    case 'setPause':
-      mode.paused = payload;
+      console.log('Index ts - jumpToSnap', { payload });
+      // Set mode to jumping to prevent snapShot being sent to frontEnd
+      // NOTE: mode.jumping is set to false inside the timeJump.ts
+      mode.jumping = true;
+      // Check if we are navigating to another route
+      const navigating: boolean = routes.navigate(payload.route);
+      // If need to navigate
+      if (navigating) {
+        // Pass timeJump function to mode.navigating => which will be invoked during onCommitFiberRoot:
+        mode.navigating = () => timeJump(payload);
+      }
+      // If not navitating, invoke timeJump immediately to update React Application FiberTree based on the snapshotTree
+      else {
+        await timeJump(payload); // * This sets state with given payload
+      }
       break;
 
     default:

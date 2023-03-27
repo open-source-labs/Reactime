@@ -17,14 +17,12 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-//Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly. 
+//Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
 const Split = require('react-split');
 
 function MainContainer(): JSX.Element {
   const [store, dispatch] = useStoreContext();
-  const {
-    tabs, currentTab, port, split,
-  } = store;
+  const { tabs, currentTab, port, split } = store;
   const [actionView, setActionView] = useState(true);
   // this function handles Time Jump sidebar view
   const toggleActionContainer = () => {
@@ -49,17 +47,13 @@ function MainContainer(): JSX.Element {
     const currentPort = chrome.runtime.connect();
     // listen for a message containing snapshots from the background script
     currentPort.onMessage.addListener(
-    // parameter message is an object with following type script properties
-      (message: {
-        action: string;
-        payload: Record<string, unknown>;
-        sourceTab: number;
-      }) => {
+      // parameter message is an object with following type script properties
+      (message: { action: string; payload: Record<string, unknown>; sourceTab: number }) => {
         const { action, payload, sourceTab } = message;
         let maxTab: number;
         if (!sourceTab) {
           const tabsArray: Array<string> = Object.keys(payload);
-          const numTabsArray: number[] = tabsArray.map(tab => Number(tab));
+          const numTabsArray: number[] = tabsArray.map((tab) => Number(tab));
           maxTab = Math.max(...numTabsArray);
         }
         switch (action) {
@@ -105,15 +99,16 @@ function MainContainer(): JSX.Element {
   });
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
-  if (!tabs[currentTab] || !tabs[currentTab].status.reactDevToolsInstalled || !tabs[currentTab].status.targetPageisaReactApp) {
-    return (
-      <ErrorContainer />
-    );
+  if (
+    !tabs[currentTab] ||
+    !tabs[currentTab].status.reactDevToolsInstalled ||
+    !tabs[currentTab].status.targetPageisaReactApp
+  ) {
+    return <ErrorContainer />;
   }
 
-  const {
-    currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics,
-  } = tabs[currentTab];
+  const { currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =
+    tabs[currentTab];
   // if viewIndex is -1, then use the sliderIndex instead
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
   // cleaning hierarchy and snapshotView from stateless data
@@ -140,14 +135,12 @@ function MainContainer(): JSX.Element {
     if (newObj.children) {
       newObj.children = [];
       if (obj.children.length > 0) {
-        obj.children.forEach(
-          (element: { state?: object | string; children?: [] }) => {
-            if (element.state !== 'stateless' || element.children.length > 0) {
-              const clean = statelessCleaning(element);
-              newObj.children.push(clean);
-            }
-          },
-        );
+        obj.children.forEach((element: { state?: object | string; children?: [] }) => {
+          if (element.state !== 'stateless' || element.children.length > 0) {
+            const clean = statelessCleaning(element);
+            newObj.children.push(clean);
+          }
+        });
       }
     }
     return newObj;
@@ -158,7 +151,7 @@ function MainContainer(): JSX.Element {
   function handleSplit(currentSplitMode: boolean): JSX.Element {
     if (!currentSplitMode) {
       return (
-        <div className="state-container-container">
+        <div className='state-container-container'>
           <StateContainer
             webMetrics={webMetrics}
             viewIndex={viewIndex}
@@ -175,7 +168,7 @@ function MainContainer(): JSX.Element {
         sizes={[50, 50]}
         minSize={200}
         snapOffset={1}
-        className="split"
+        className='split'
         gutterStyle={function () {
           return {
             backgroundColor: 'dimgrey',
@@ -204,14 +197,14 @@ function MainContainer(): JSX.Element {
   }
 
   return (
-    <div className="main-container">
-      <div id="bodyContainer" className="body-container">
+    <div className='main-container'>
+      <div id='bodyContainer' className='body-container'>
         <ActionContainer
           actionView={actionView}
           setActionView={setActionView}
           toggleActionContainer={toggleActionContainer}
         />
-        {snapshots.length ? (handleSplit(split)) : null}
+        {snapshots.length ? handleSplit(split) : null}
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
       </div>

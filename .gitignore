@@ -5,7 +5,6 @@ node_modules/
 .DS_Store
 src/extension/build/bundles
 package/reactime-*.tgz
-tictactoe
 parents
 coverage
 src/extension/build.zip
@@ -16,3 +15,4 @@ sandboxes/manual-tests/NextJS/.next
 .vscode
 src/app/components/Map.tsx
 package-lock.json
+yarn.lock

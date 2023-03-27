@@ -1,8 +1,6 @@
 // Web vital metrics calculated by 'web-vitals' npm package to be displayed
 // in Web Metrics tab of Reactime app.
-import {
-  getTTFB, getLCP, getFID, getFCP, getCLS,
-} from 'web-vitals';
+import { getTTFB, getLCP, getFID, getFCP, getCLS } from 'web-vitals';
 
 // Reactime application starts off with this file, and will send
 // first message to background.js for initial tabs object set up.
@@ -12,7 +10,7 @@ let firstMessage = true;
 // Listens for window messages (from the injected script on the DOM)
 let isRecording = true;
 
-window.addEventListener('message', msg => {
+window.addEventListener('message', (msg) => {
   // Event listener runs constantly based on actions
   // recorded on the test application from backend files (linkFiber.ts).
   // Background.js has a listener that includes switch cases, depending on
@@ -40,8 +38,8 @@ window.addEventListener('message', msg => {
 });
 
 // Listening for messages from the UI of the Reactime extension.
-chrome.runtime.onMessage.addListener(request => {
-  const { action }: { action: string; } = request;
+chrome.runtime.onMessage.addListener((request) => {
+  const { action }: { action: string } = request;
   if (action) {
     // Message being sent from background.js
     // This is toggling the record button on Reactime when clicked
