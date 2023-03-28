@@ -251,6 +251,12 @@ Reactime offers debugging and performance tools for Next.js apps: time-traveling
 debugging, preventing unnecessary components re-renders and making your
 application faster.
 
+### 🔹 Remix
+
+Reactime offers debugging and performance tools for Remix apps (in beta). Support still
+needs to be added for multi-route time traveling. Every other feature works.
+
+
 ### 🔹 TypeScript Support
 
 Reactime offers support for TypeScript applications using stateful class
@@ -282,19 +288,14 @@ of the structure and interfaces of the codebase.
 - Declarative titles in the actions sidebar
 - Interative Tutorial Walkthrough
 - Toggle feature allowing temporary pause of state monitoring
-- Updated frontend diagram:
 
-<p align="center">
-<img src="./assets/frontend-diagram.png" />
 
 ### <b>Bug Fixes</b>
-
 - Search bar now searches for specific nodes successfully
 - Tab titles of chrome browser tabs not running an application in development
   mode are no longer affected by Reactime
-- Multiple black screens fixed
+- Overhauled Asynchronous calls to eliminate memory leaks due to unused async activities in the background.
 - Improved UI and performance
-- No longer inject scripts to non-target applications
 
 ## <b>Read More</b>
 - [Reactime 18.0. Better than ever](https://medium.com/@zdf2424/reactime-18-0-better-than-ever-148b81606257)
