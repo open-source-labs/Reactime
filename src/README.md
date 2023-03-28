@@ -6,9 +6,48 @@ Our mission at Reactime is to maintain and iterate constantly, but never at the 
 
 ## Building from source
 
-1. If you have already installed Reactime from the Chrome Web Store, disable or uninstall it.
-2. Run `yarn` to install all dependencies.
-3. Run `yarn dev`. This will start a `webpack` process which watches for file changes and whenever it sees some, automatically rebuilds the webpack bundles used by the extension.
+1. [Download]("https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en") React Dev Tools from the Chrome Webstore Here
+
+2. Clone down the Reactime repo onto your machine.
+
+```
+git clone https://github.com/open-source-labs/reactime.git
+```
+
+3. Install dependencies and build.
+
+```
+cd reactime
+npm install --force
+npm run dev
+```
+With release of Node v18.12.1 (LTS) on 11/4/22, the script has been updated to 'npm run dev' || 'npm run build' for backwards compatibility.<br/>
+For version Node v16.16.0, please use script 'npm run devlegacy' || 'npm run buildlegacy'
+
+4. Spin up the demo application.
+
+```
+cd demo-app
+npm install
+npm run dev
+```
+Similar approach for Next.js and Remix demo apps
+
+5. Add Reactime to your Chrome extensions.
+
+-   Navigate to chrome://extensions
+-   Select “Load Unpacked”
+-   Choose reactime > src > extension > build
+-   Navigate to http://localhost:8080/ to inspect the demo application using Reactime!
+    <br>
+
+<p align="center">
+  <img src="./assets/reactime-dev-setup.gif" />
+</p>
+
+<h2>Documentation for Consideration</h2>
+<h4>Can Reactime be integrated with Redux compatibility so applications using Redux can track state in Reactime?</h4>
+Yes, but it would be very time-consuming and not the most feasible option while Redux devtools exists already. With how Redux devtools is currently set up, a developer is unable to use Redux devtools as a third-party user and integrate its functionality into their own application, as Redux devtools is meant to be used directly on an application using Redux for state-tracking purposes. Since the devtools do not appear to have a public API for integrated use in an application or it simply does not exist, Redux devtools would need to be rebuilt from the ground up and then integrated into Reactime, or built into Reactime directly still from scratch.
 4. Go to `chrome://extensions`
 5. Ensure Developer mode is enabled
 6. Click `Load unpacked`
@@ -48,7 +87,7 @@ src/
 │       ├── createComponentActionsRecord.ts # Update the componentActionsRecord with new bound state-update methods
 │       ├── createTree.ts         # Construct a tree snapshot from the FiberRoot tree given by ReactFiber.
 │       ├── statePropExtractor.ts # Helper functions to extract & format prop, state, and context data
-│       ├── throttle.ts           # 
+│       ├── throttle.ts           #
 │       ├── timeJump.ts           # Rerenders DOM based on snapshot from background script
 │   ├── models/
 │       ├── filterConditions.ts   #
@@ -56,7 +95,7 @@ src/
 │       ├── routes.ts             # Interfaces with the browser history stack
 │       ├── tree.ts               # Custom structure to send to background
 │   ├── routers/
-│       ├── linkFiber.ts          # Check for all requirement to start Reactime and  
+│       ├── linkFiber.ts          # Check for all requirement to start Reactime and
 │       ├── snapShot.ts           #
 │   ├── types/                    # Typescript interfaces
 │   ├── index.ts                  # Starting point for backend functionality
@@ -80,7 +119,9 @@ src/
 2. The _backend_ folder contains the set of all scripts that we inject into our "target" application via `background.js`
    - In Reactime, its main role is to generate data and handle time-jump requests from the background script in our _extension_ folder.
 
-![BACKEND DATA FLOW](../assets/backend.png)
+![BACKEND RECORD SNAPSHOT DATA FLOW](../assets/backend-recordSnapshot.png)
+
+![BACKEND TIME TRAVEL DATA FLOW](../assets/backend-timeTravel.png)
 
 3. The _extension_ folder is where the `contentScript.js` and `background.js` are located.
    - Like regular web apps, Chrome Extensions are event-based. The background script is where one typically monitors for browser triggers (e.g. events like closing a tab, for example). The content script is what allows us to read or write to our target web application, usually as a result of [messages passed](https://developer.chrome.com/extensions/messaging) from the background script.
@@ -88,7 +129,7 @@ src/
 
 ## Diagramming
 
-All the diagrams of data flows are avaliable on [MIRO](https://miro.com/app/board/o9J_lejUqLQ=/)
+All the diagrams of data flows are avaliable on [MIRO](https://miro.com/app/board/uXjVPictrsM=/)
 
 ## Data Flow Architecture
 
@@ -102,6 +143,9 @@ The general flow of data is described in the following steps:
 
 3. Likewise, when Reactime emits an action due to user interaction -- a "jump" request for example -- a message will be passed from Reactime via the background script to the content script. Then, the content script will pass a message to the target application containing a payload that represents the state the user wants the DOM to reflect or "jump" to.
    - One important thing to note here is that this jump action must be dispatched in the target application (i.e. _backend_ land), because only there do we have direct access to the DOM.
+
+## Reacti.me Website:
+See [Reacti.me README](https://github.com/reactimetravel/reactime-website/blob/main/README.md) for instruction of how to update the website
 
 ## Console.log
 
