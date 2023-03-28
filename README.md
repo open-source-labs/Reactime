@@ -30,7 +30,7 @@
 
 <h5 align="center">
 <br>
-  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href='/DeveloperREADME.md'>DEVELOPER INSTALL</a> &nbsp; • &nbsp; <a href='./src/README.md'>DEVELOPER README</a>
+  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href='./src/README.md'>DEVELOPER README</a>
   <br>
 </h5>
 <br>
@@ -40,8 +40,14 @@
 </p>
 
 <p align="center">
-  <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.dev">Website</a> • <a href="#read-more">Read More</a>
+  <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://www.reacti.me/">Website</a> • <a href="#read-more">Read More</a>
 </p>
+
+<b>Reactime 18.0</b> introduces a range of new and improved features aimed at optimizing performance and enhancing compatibility. 
+With support for Next.js and Remix, increased testing coverage(93% backend, frontend needs more), and structural improvements to the codebase. 
+Additionally, we are proud to announce the launch of our newly redesigned website, which serves as a hub for the latest updates and information about Reactime. 
+To aid with debugging, we have included demo applications for Next.js and Remix, enabling future iterators to test and troubleshoot with greater ease and efficiency.
+
 
 <b>Reactime 17.0</b>
 We are pleased to announce the release of Reactime 17.0,
@@ -128,10 +134,8 @@ locally.
 ### Looking to contribute to Reactime?
 
 <i>Please refer to Developer Install for a detailed guide:</i>
-<a href='/DeveloperREADME.md'>Developer Install</a>
 
-After you finish the Develpoer Install, checkout
-[the developer README](src/README.md) for more info on the project, and
+Refer [DEVELOPER README](src/README.md) for more info on the project, and
 instructions on building from source.
 
 ## <b>How to Use</b>
@@ -156,7 +160,7 @@ clicking the right mouse button “Reload frame”.
 ### ❓ <b>I found a bug in Reactime</b>
 
 Reactime is an open source project, and we’d really appreciate your help with
-improving user experience. Please read [the developer README](src/README.md),
+improving user experience. Please read [DEVELOPER README](src/README.md),
 and create a pull request (or issue) to propose and collaborate on changes to a
 repository.
 
@@ -293,8 +297,8 @@ of the structure and interfaces of the codebase.
 - No longer inject scripts to non-target applications
 
 ## <b>Read More</b>
+- [Reactime 18.0. Better than ever](https://medium.com/@zdf2424/reactime-18-0-better-than-ever-148b81606257)
 - [Reactime v17.0.0: Now with support for the Context API, and a modern UI](https://medium.com/@reactime/reactime-v17-0-0-now-with-support-for-the-context-api-and-a-modern-ui-f0edf9e54dae)
-- [Reactime XVI: Clean-up Time](https://medium.com/@emintahirov1996/reactime-xvi-cleanup-time-a14ba3dcc8a6)
 - [Reactime XVI: Clean-up Time](https://medium.com/@emintahirov1996/reactime-xvi-cleanup-time-a14ba3dcc8a6)
 - [Inter-Route Time Travel with Reactime](https://medium.com/@robbytiptontol/inter-route-time-travel-with-reactime-d84cd55ec73b)
 - [Time-Travel State with Reactime](https://medium.com/better-programming/time-traveling-state-with-reactime-6-0-53fdc3ae2a20)
@@ -381,6 +385,10 @@ of the structure and interfaces of the codebase.
 - **Kristina Wallen** - [@kristinawallen](https://github.com/kristinawallen)
 - **Quan Le** - [@blachfog](https://github.com/Blachfog)
 - **Robert Maeda** - [@robmaeda](https://github.com/robmaeda)
+- **Lance Ziegler** - [@lanceziegler](https://github.com/lanceziegler)
+- **Ngoc Zwolinski** - [@ngoczwolinski](https://github.com/ngoczwolinski)
+- **Peter Lam** - [@dev-plam](https://github.com/dev-plam)
+- **Zachary Freeman** - [@zacharydfreeman](https://github.com/zacharydfreeman/)
 
 ## <b>License </b>
 
