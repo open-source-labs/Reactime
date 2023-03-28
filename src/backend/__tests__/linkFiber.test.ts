@@ -12,7 +12,7 @@ import {
   mixComponents,
   mixPayload,
 } from './ignore/stateComponents-testcases';
-import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
+import { Status, FiberRoot } from '../types/backendTypes';
 import Tree from '../models/tree';
 import { DevTools } from '../types/linkFiberTypes';
 import { JSDOM } from 'jsdom';
@@ -20,7 +20,6 @@ import path from 'path';
 import fs from 'fs';
 
 describe('linkFiber', () => {
-  let snapshot: Snapshot;
   let mode: Status;
   let linkFiber: () => Promise<void>;
   let linkFiberDelayed: (resolve: any) => NodeJS.Timeout;
@@ -46,19 +45,14 @@ describe('linkFiber', () => {
   });
 
   beforeEach(() => {
-    // Create snapshot and mode objects
-    snapshot = {
-      tree: new Tree('root', 'root'),
-    };
     mode = {
       jumping: false,
-      paused: false,
     };
     // Initialize Fiber Root:
     fiberRoot = { current: root };
 
     // Initialize linkFiber
-    linkFiber = linkFiberInitialization(snapshot, mode);
+    linkFiber = linkFiberInitialization(mode);
     // Since linkFiber invoke a throttle function that get delay for 70 ms, between each test, linkFiber need to be delayed for 75 ms to ensure no overlapping async calls.
     linkFiberDelayed = (resolve) => setTimeout(async () => resolve(await linkFiber()), DELAY);
 

@@ -3,8 +3,6 @@
 // For class components, there will be one "component" for each snapshot
 // For functional components that utilize Hooks, there will be one "component"
 
-import { index } from 'd3';
-
 // for each setter/getter every time we have a new snapshot
 let componentActionsRecord = [];
 
@@ -18,12 +16,11 @@ export default {
 
   /**
    * @function saveNew - Adds a new component to the componentActionsRecord array and returns its index.
-   * @param component
-   * @returns number
+   * @param component - An object that contains bound update method. For class component, the udpate method is `setState`. For functional component, the update method is `dispatch`.
+   * @returns - the index of the newly added component
    */
   saveNew: (component): number => {
-    componentActionsRecord.push(component);
-    return componentActionsRecord.length - 1;
+    return componentActionsRecord.push(component) - 1;
   },
   // ----------------------------CLASS COMPONENT--------------------------------
   /**
