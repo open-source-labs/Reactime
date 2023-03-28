@@ -16,7 +16,7 @@ To get an overview of the project, read the [README](README.md). Here are some r
 
 ## Getting started
 
-To navigate our codebase with confidence, see the Developer READMEs [Developer Installation](/DeveloperREADME.md) and [Developer Guidelines](/src/README.md) :confetti_ball:.
+To navigate our codebase with confidence, see the [Developer Guidelines](/src/README.md) :confetti_ball:.
 
 ### Issues
 
