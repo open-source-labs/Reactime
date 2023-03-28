@@ -81,15 +81,11 @@ export interface ComponentData {
  * @member component - contains bound dispatch method to update state of the current functional component
  */
 export interface HookStateItem {
+  /** states within the current functional component */
   state: any;
+  /** an object contains bound dispatch method to update state of the current functional component */
   component: any;
 }
-
-/**
- * HookeStates is an array of HookeStateItem
- * Each HookStateItem is an object with state & component properties
- */
-export type HookStates = Array<HookStateItem>;
 
 export type WorkTag =
   | 0

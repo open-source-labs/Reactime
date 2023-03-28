@@ -23,28 +23,25 @@ const MIN_TIME_BETWEEN_UPDATE = 70;
  * @param mode - mode is jumping/not jumping or navigating during jumping
  * @param snapShot - the tree snapshot to send to Front End or obtained from Front End during timeJump
  */
-const throttledUpdateSnapshot = throttle(
-  async (fiberRoot: FiberRoot, mode: Status, snapShot: Snapshot) => {
-    // If not jumping
-    if (!mode.jumping) {
-      // Update and Send SnapShot tree to front end
-      updateAndSendSnapShotTree(snapShot, fiberRoot);
-    }
+const throttledUpdateSnapshot = throttle(async (fiberRoot: FiberRoot, mode: Status) => {
+  // If not jumping
+  if (!mode.jumping) {
+    // Update and Send SnapShot tree to front end
+    updateAndSendSnapShotTree(fiberRoot);
+  }
 
-    // If navigating to another route during jumping:
-    else if (mode.navigating) {
-      // Reset the array containing update methods:
-      componentActionsRecord.clear();
-      // Obtain new update methods for the current route:
-      const { current } = fiberRoot;
-      createComponentActionsRecord(current);
-      // Invoke timeJump, which is stored in mode.navigating, to update React Application FiberTree based on the snapshotTree
-      await mode.navigating();
-    }
-    // NOTE: if not navigating during jumping, timeJump is invoked in index.ts file.
-  },
-  MIN_TIME_BETWEEN_UPDATE,
-);
+  // If navigating to another route during jumping:
+  else if (mode.navigating) {
+    // Reset the array containing update methods:
+    componentActionsRecord.clear();
+    // Obtain new update methods for the current route:
+    const { current } = fiberRoot;
+    createComponentActionsRecord(current);
+    // Invoke timeJump, which is stored in mode.navigating, to update React Application FiberTree based on the snapshotTree
+    await mode.navigating();
+  }
+  // NOTE: if not navigating during jumping, timeJump is invoked in index.ts file.
+}, MIN_TIME_BETWEEN_UPDATE);
 
 /**
  * @function linkFiber - linkFiber contains core module functionality, exported as an anonymous function, perform the following logic:
@@ -58,7 +55,7 @@ const throttledUpdateSnapshot = throttle(
  * @param mode The current mode (i.e. jumping, time-traveling, or paused)
  * @return a function to be invoked by index.js that initiates snapshot monitoring
  */
-export default function linkFiber(snapShot: Snapshot, mode: Status): () => Promise<void> {
+export default function linkFiber(mode: Status): () => Promise<void> {
   /** A boolean value indicate if the target React Application is visible */
   let isVisible: boolean = true;
   /**
@@ -115,7 +112,7 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => Promi
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
 
     // ----------INITIALIZE THE TREE SNAP SHOT ON CHROME EXTENSION--------------
-    await throttledUpdateSnapshot(fiberRoot, mode, snapShot); // only runs on start up
+    await throttledUpdateSnapshot(fiberRoot, mode); // only runs on start up
 
     // --------MONKEY PATCHING THE onCommitFiberRoot FROM REACT DEV TOOL--------
     // React has inherent methods that are called with react fiber
@@ -131,7 +128,7 @@ export default function linkFiber(snapShot: Snapshot, mode: Status): () => Promi
         // Obtain the updated FiberRootNode, after the target React application re-renders
         const fiberRoot = args[1];
         // If the target React application is visible, send a request to update the snapShot tree displayed on Chrome Extension
-        if (isVisible) throttledUpdateSnapshot(fiberRoot, mode, snapShot);
+        if (isVisible) throttledUpdateSnapshot(fiberRoot, mode);
         // After our added work is completed we invoke the original onComitFiberRoot function
         return onCommitFiberRoot(...args);
       };

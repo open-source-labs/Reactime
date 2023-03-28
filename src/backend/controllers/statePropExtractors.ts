@@ -1,7 +1,7 @@
 const acorn = require('acorn');
 const jsx = require('acorn-jsx');
 const JSXParser = acorn.Parser.extend(jsx());
-import { HookStates, HookStateItem, Fiber } from '../types/backendTypes';
+import { HookStateItem, Fiber } from '../types/backendTypes';
 import { exclude } from '../models/filterConditions';
 
 type ReactimeData = {

@@ -10,12 +10,7 @@ import timeJumpInitialization from './controllers/timeJump';
 import { Snapshot, Status, MsgData } from './types/backendTypes';
 import routes from './models/routes';
 
-// -------------------------INITIALIZE SNAPSHOT & MODE--------------------------
-/** The snapshot of the current ReactFiber tree */
-const snapShot: Snapshot = {
-  tree: null,
-};
-
+// -------------------------INITIALIZE MODE--------------------------
 /** Indicate if mode is jumping/not jumping or navigating during jumping */
 const mode: Status = {
   jumping: false,
@@ -23,7 +18,7 @@ const mode: Status = {
 
 // ---------------------INITIALIZE LINKFIBER & TIMEJUMP-------------------------
 // linkFiber is now assigned the default ASYNC function exported from the file linkFiber.ts
-const linkFiber = linkFiberInitialization(snapShot, mode);
+const linkFiber = linkFiberInitialization(mode);
 // timeJump is now assigned the default ASYNC function exported from the file timeJump.ts
 const timeJump = timeJumpInitialization(mode);
 

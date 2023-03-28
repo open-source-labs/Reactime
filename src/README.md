@@ -45,10 +45,10 @@ src/
 │   │                             # Focus especially on linkFiber, timeJump, tree, and helpers
 │   ├── __tests__/                #
 │   ├── controllers/              #
-│       ├── createComponentActionsRecord.ts #
-│       ├── createTree.ts         #
-│       ├── statePropExtractor.ts #
-│       ├── throttle.ts           #
+│       ├── createComponentActionsRecord.ts # Update the componentActionsRecord with new bound state-update methods
+│       ├── createTree.ts         # Construct a tree snapshot from the FiberRoot tree given by ReactFiber.
+│       ├── statePropExtractor.ts # Helper functions to extract & format prop, state, and context data
+│       ├── throttle.ts           # 
 │       ├── timeJump.ts           # Rerenders DOM based on snapshot from background script
 │   ├── models/
 │       ├── filterConditions.ts   #
@@ -56,7 +56,7 @@ src/
 │       ├── routes.ts             # Interfaces with the browser history stack
 │       ├── tree.ts               # Custom structure to send to background
 │   ├── routers/
-│       ├── linkFiber.ts          #
+│       ├── linkFiber.ts          # Check for all requirement to start Reactime and  
 │       ├── snapShot.ts           #
 │   ├── types/                    # Typescript interfaces
 │   ├── index.ts                  # Starting point for backend functionality
