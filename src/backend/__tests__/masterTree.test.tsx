@@ -1,6 +1,6 @@
-import createTree from '../controllers/createTree/createTree';
+import createTree from '../controllers/createTree';
 import componentActionsRecord from '../models/masterState';
-import createComponentActionsRecord from '../controllers/createTree/createComponentActionsRecord';
+import createComponentActionsRecord from '../controllers/createComponentActionsRecord';
 import {
   Fiber,
   FunctionComponent,
