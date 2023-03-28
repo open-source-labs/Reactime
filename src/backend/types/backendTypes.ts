@@ -1,41 +1,34 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Tree from '../models/tree';
 
 /**
- * @type Tree - The snapshot of the current tree
- * @member tree - {Tree} - The tree structure to send to front end
+ * Contain snapshot of the current ReactFiber tree
+ * @member tree - A snapshot of ReactFiber Tree to send to front end
  */
 export interface Snapshot {
+  /** A snapshot of ReactFiber Tree to send to front end */
   tree: Tree;
 }
 
 /**
- * @type Status - object that describes where we are
- * @member jumping - whether we are jumping steps by
- * @member paused - true/false for whether pausing to see the state
+ * Indicate if mode is jumping/not jumping or navigating during jumping
+ * @member jumping - Describe whether we are jumping
+ *
+ * When `jumping = true`, no new snapShot will be sent to front end.
+ * @member navigating - Cache timeJump function to be invoked after ReactFibe tree update with new states from new route
+ * @example if user uses click left/right arrow or play button, front end will post a message `jumpToSnap` and a payload of the cached snapShot tree, we will set `jumping = true`
+ * @example if during jumping, we navigate to another route, such as from buttons to tictactoe, backend will set `navigating = cache of timeJump function`
  */
 export interface Status {
+  /**
+   * Describe whether we are jumping
+   *
+   * When `jumping = true`, no new snapShot will be sent to front end.
+   */
   jumping: boolean;
-  paused: boolean;
+  /** Cache timeJump function to be invoked after ReactFibe tree update with new states from new route*/
   navigating?: Function;
 }
 
-/**
- * This is what is shown in developer tools??
- * @type SnapshotNode
- * @member name -
- * @member state -
- * @member children -
- */
-export interface SnapshotNode {
-  name: string;
-  state: {
-    location?: any;
-  };
-  children: any[];
-}
 /**
  * @type MsgData - obj with data object that will be sent to window?
  * @member data - an object with action & payload properties
@@ -49,42 +42,50 @@ export interface MsgData {
 
 /**
  * @type ComponentData -
- * @member index -
- * @member hooksIndex -
- * @member actualDuration -
- * @member actualStartTime -
- * @member selfBaseDuration -
- * @member treeBaseDuration -
- * @member props -
+ * @member actualDuration - The time taken to render the current Fiber node and its descendants during the previous render cycle. This value is used to optimize the rendering of components and to provide performance metrics to developers.
+ * @member actualStartTime - The time at which the rendering of the current Fiber node started during the previous render cycle.
+ * @member context - {in experiment} - An object contains all context information of the current component
+ * @member index - {class component only} - The index of the bound setState method stored in `componentActionsRecord`
+ * @member hooksState - {functional component only} - An object contains all states of the current functional component
+ * @member hooksIndex - {functional component only} - An array of index of the bound dispatch method stored in `componentActionsRecord`
+ * @member props - An object contains all props of the current component
+ * @member selfBaseDuration - The base duration of the current Fiber node's render phase (excluding the time taken to render its children). This field is only set when the enableProfilerTimer flag is enabled.
+ * @member state - {class component only} - An object contains all states of the current class component
+ * @member treeBaseDuration - The total base duration of the current Fiber node's subtree. This field is only set when the enableProfilerTimer flag is enabled.
  */
 export interface ComponentData {
+  /** The time taken to render the current Fiber node and its descendants during the previous render cycle. */
   actualDuration?: number;
+  /** The time at which the rendering of the current Fiber node started during the previous render cycle. */
   actualStartTime?: number;
-  selfBaseDuration?: number;
-  treeBaseDuration?: number;
-  props: { [key: string]: any };
+  /** {in experiment} - An object contains all context information of the current component */
   context: {};
-  state: { [key: string]: any } | null;
-  hooksState: {} | null;
-  hooksIndex: number[] | null;
+  /** {class component only} - The index of the bound setState method stored in `componentActionsRecord`  */
   index: number | null;
+  /** {functional component only} - An object contains all states of the current functional component */
+  hooksState: {} | null;
+  /** {functional component only} - An array of index of the bound dispatch method stored in `componentActionsRecord` */
+  hooksIndex: number[] | null;
+  /** An object contains all props of the current component */
+  props: { [key: string]: any };
+  /** The base duration of the current Fiber node's render phase (excluding the time taken to render its children). */
+  selfBaseDuration?: number;
+  /** An object contains all states of the current class component */
+  state: { [key: string]: any } | null;
+  /** The total base duration of the current Fiber node's subtree. */
+  treeBaseDuration?: number;
 }
 
 /**
- * @type HookStateItem
- * @member state -
- * @member component -
+ * @member state - states within the current functional component
+ * @member component - contains bound dispatch method to update state of the current functional component
  */
 export interface HookStateItem {
+  /** states within the current functional component */
   state: any;
+  /** an object contains bound dispatch method to update state of the current functional component */
   component: any;
 }
-
-/**
- * HookeStates is an array of HookeStateItem
- * Each HookStateItem is an object with state & component properties
- */
-export type HookStates = Array<HookStateItem>;
 
 export type WorkTag =
   | 0
@@ -115,9 +116,12 @@ export type WorkTag =
 
 export const FunctionComponent = 0;
 export const ClassComponent = 1;
-export const IndeterminateComponent = 2; // Before we know whether it is function or class
-export const HostRoot = 3; // Root of a host tree. Could be nested inside another node.
-export const HostPortal = 4; // A subtree. Could be an entry point to a different renderer.
+/** Before we know whether it is function or class */
+export const IndeterminateComponent = 2;
+/** Root of a host tree. Could be nested inside another node. */
+export const HostRoot = 3;
+/** A subtree. Could be an entry point to a different renderer. */
+export const HostPortal = 4;
 /**
  * Host Component: a type of component that represents a native DOM element in the browser environment, such as div, span, input, h1 etc.
  */
@@ -149,94 +153,79 @@ export const LegacyHiddenComponent = 24;
  * @member actualDuration - The time taken to render the current Fiber node and its descendants during the previous render cycle. This value is used to optimize the rendering of components and to provide performance metrics to developers.
  * @member actualStartTime - The time at which the rendering of the current Fiber node started during the previous render cycle.
  * @member child - Pointer to the first child.
- * @member dependencies - An array of values (such as state or props) that the current Fiber node depends on. This is used to determine whether the node needs to be re-rendered.
- * @member elementType  - The type of the current Fiber node's element (e.g. the component function or class, or the DOM element type). Example: div, h1,
- * @member index - Index of the current Fiber node. Ex: if a div has 3 headings. The first child is heading with index = 0. The next sibling is a heading with index = 1 & the last sibling is a heading with index = 2.
- * @member key - Unique identifier of this child, used to identify the node when rendering lists of components.
+ * @member elementType  - The type of the current Fiber node's element (e.g. the component function or class, or the DOM element type). For class/functional component, elmementType stores the function definition.
  * @member memoizedProps - The current props of the component associated with the current Fiber node.
  * @member memoizedState - The current state of the component associated with the current Fiber node.
  * @member selfBaseDuration - The base duration of the current Fiber node's render phase (excluding the time taken to render its children). This field is only set when the enableProfilerTimer flag is enabled.
  * @member sibling - Pointer to next sibling
- * @member stateNode - The local state associated with this fiber.
+ * @member stateNode - The local state associated with this fiber. For classComponent, stateNode contains current state and the bound update methods of the component
  * @member tag - The type of the current Fiber node, such as FunctionComponent, ClassComponent, or HostComponent (for DOM elements).
  * @member treeBaseDuration - The total base duration of the current Fiber node's subtree. This field is only set when the enableProfilerTimer flag is enabled.
- * @member type - Same as elementType.
  * @member _debugHookTypes - An array of hooks used for debugging purposes.
  */
 export type Fiber = {
-  // Tag identifying the type of fiber.
-  tag: WorkTag;
-
-  // Unique identifier of this child.
-  // key: null | string;
-
-  // The value of element.type which is used to preserve the identity during
-  // reconciliation of this child.
-  elementType: any;
-
-  // The resolved function/class/ associated with this fiber.
-  // type: any;
-
-  // The local state associated with this fiber.
-  stateNode: any;
-
-  // Conceptual aliases
-  // parent : Instance -> return The parent happens to be the same as the
-  // return fiber since we've merged the fiber and instance.
-
-  // Remaining fields belong to Fiber
-
-  // The Fiber to return to after finishing processing this one.
-  // This is effectively the parent, but there can be multiple parents (two)
-  // so this is only the parent of the thing we're currently processing.
-  // It is conceptually the same as the return address of a stack frame.
-  // return: Fiber | null,
-
-  // Singly Linked List Tree Structure.
-  child: Fiber | null;
-  sibling: Fiber | null;
-  // index: number;
-
-  // Input is the data coming into process this fiber. Arguments. Props.
-  // pendingProps: any, // This type will be more specific once we overload the tag.
-  // memoizedProps: any, // The props used to create the output.
-
-  // The state used to create the output
-  memoizedState: any;
-
-  memoizedProps: any;
-
-  // Singly linked list fast path to the next fiber with side-effects.
-  // nextEffect: Fiber | null,
-
-  // This is a pooled version of a Fiber. Every fiber that gets updated will
-  // eventually have a pair. There are cases when we can clean up pairs to save
-  // memory if we need to.
-  // alternate: Fiber | null,
-
-  // Time spent rendering this Fiber and its descendants for the current update.
-  // This tells us how well the tree makes use of sCU for memoization.
-  // It is reset to 0 each time we render and only updated when we don't bailout.
-  // This field is only set when the enableProfilerTimer flag is enabled.
+  /**
+   * Time spent rendering this Fiber and its descendants for the current update.
+   *
+   * This tells us how well the tree makes use of sCU for memoization. It is reset to 0 each time we render and only updated when we don't bailout.
+   *
+   * This field is only set when the enableProfilerTimer flag is enabled.
+   */
   actualDuration?: number;
 
-  // If the Fiber is currently active in the "render" phase,
-  // This marks the time at which the work began.
-  // This field is only set when the enableProfilerTimer flag is enabled.
+  /**
+   * If the Fiber is currently active in the "render" phase, this marks the time at which the work began.
+   *
+   * This field is only set when the enableProfilerTimer flag is enabled.
+   */
   actualStartTime?: number;
 
-  // Duration of the most recent render time for this Fiber.
-  // This value is not updated when we bailout for memoization purposes.
-  // This field is only set when the enableProfilerTimer flag is enabled.
+  // Singly Linked List Tree Structure.
+  /** Pointer to the first child. */
+  child: Fiber | null;
+
+  /**
+   * The type of the current Fiber node's element (e.g. the component function or class, or the DOM element type).
+   *
+   * For class/functional component, elmementType stores the function definition.
+   */
+  elementType: any;
+
+  /** The current props of the component associated with the current Fiber node. */
+  memoizedState: any;
+
+  /** The current state of the component associated with the current Fiber node. */
+  memoizedProps: any;
+
+  /**
+   * Duration of the most recent render time for this Fiber. This value is not updated when we bailout for memoization purposes.
+   *
+   * This field is only set when the enableProfilerTimer flag is enabled.
+   */
   selfBaseDuration?: number;
 
-  // Sum of base times for all descendants of this Fiber.
-  // This value bubbles up during the "complete" phase.
-  // This field is only set when the enableProfilerTimer flag is enabled.
+  // Singly Linked List Tree Structure.
+  /**  Pointer to next sibling */
+  sibling: Fiber | null;
+
+  /**
+   * The local state associated with this fiber.
+   *
+   * For classComponent, stateNode contains current state and the bound update methods of the component.
+   */
+  stateNode: any;
+
+  /** The type of the current Fiber node, such as FunctionComponent, ClassComponent, or HostComponent (for DOM elements). */
+  tag: WorkTag;
+
+  /**
+   * Sum of base times for all descendants of this Fiber. This value bubbles up during the "complete" phase.
+   *
+   * This field is only set when the enableProfilerTimer flag is enabled.
+   */
   treeBaseDuration?: number;
 
-  // dependencies: any;
-
+  /** An array of hooks used for debugging purposes. */
   _debugHookTypes: string[] | null;
 };
 

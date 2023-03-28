@@ -16,7 +16,6 @@ export default function timeJumpInitiation(mode: Status) {
    * This function is to reset jumping mode to false when user hover the mouse over the browser body
    */
   const resetJumpingMode = (): void => {
-    console.log('timeJump - STOP JUMPING');
     mode.jumping = false;
   };
   /**
@@ -25,7 +24,6 @@ export default function timeJumpInitiation(mode: Status) {
    */
   return async function timeJump(targetSnapshot: Tree): Promise<void> {
     mode.jumping = true;
-    console.log('timeJump - START JUMPING');
     // Reset mode.navigating
     delete mode.navigating;
     // Traverse the snapshotTree to update ReactFiberTree

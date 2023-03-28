@@ -35,10 +35,10 @@ export default function throttle<T extends (...args: any) => any>(
   let timeout: NodeJS.Timeout;
   // Wrap the passed-in function callback in a callback function that "throttles" (puts a limit on) the number of calls that can be made to function in a given period of time (ms)
   return function throttledFunc(...args: Parameters<T>): ReturnType<T> {
-    // CASE 1: In cooldown mode and we already have a function waiting to be executed, so do nothing
+    // CASE 1: In cooldown mode and we have a function waiting to be executed, so do nothing
     if (isOnCooldown && isCallQueued) return;
 
-    // CASE 2: In cooldown mode, but we have no functions waiting to be executed, so just make note that we now have a call waiting to be executed and return
+    // CASE 2: In cooldown mode, but we have no functions waiting to be executed, so just make note that we now have a callback waiting to be executed and then return
     if (isOnCooldown) {
       isCallQueued = true;
       return;
@@ -59,9 +59,9 @@ export default function throttle<T extends (...args: any) => any>(
      * @returns void
      */
     function runAfterTimeout() {
-      // If there is callback in the queue
+      // If there is callback in the queue, execute callback immediately
       if (isCallQueued) {
-        // Execute the function callback immediately
+        // Execute callback
         callback(...args);
         // Initiate a new cooldown period and reset the "call queue"
         isOnCooldown = true;
@@ -70,7 +70,7 @@ export default function throttle<T extends (...args: any) => any>(
         clearTimeout(timeout);
         setTimeout(runAfterTimeout, MIN_TIME_BETWEEN_UPDATE);
       }
-      // If not callback in queue, end the cooldown period
+      // If no callback in queue, end the cooldown period
       else {
         // End cooldown period after MIN_TIME_BETWEEN_UPDATE has passed
         isOnCooldown = false;

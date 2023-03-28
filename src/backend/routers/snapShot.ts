@@ -1,8 +1,7 @@
-import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
-// passes the data down to its components
+import { Snapshot, FiberRoot } from '../types/backendTypes';
 import componentActionsRecord from '../models/masterState';
 import routes from '../models/routes';
-import createTree from '../controllers/createTree/createTree';
+import createTree from '../controllers/createTree';
 
 // -------------------------UPDATE & SEND TREE SNAP SHOT------------------------
 /**
@@ -13,22 +12,16 @@ import createTree from '../controllers/createTree/createTree';
  * @param fiberRoot The `fiberRootNode`, which is the root node of the fiber tree is stored in the current property of the fiber root object which we can use to traverse the tree
  */
 // updating tree depending on current mode on the panel (pause, etc)
-export default function updateAndSendSnapShotTree(snapshot: Snapshot, fiberRoot: FiberRoot): void {
+export default function updateAndSendSnapShotTree(fiberRoot: FiberRoot): void {
   // This is the currently active root fiber(the mutable root of the tree)
   const { current } = fiberRoot;
-  // Clear all of the legacy actions from old fiber tree becuase we are about to create a new one
+  // Clear all of the legacy actions from old fiber tree because we are about to create a new one
   componentActionsRecord.clear();
-  // Calls the createTree function which creates the new Fiber tree and adds it to tree property on the snapShot object
-  snapshot.tree = createTree(current);
-  // Make a deep copy of the tree:
-  const payload = snapshot.tree;
+  // Calls the createTree function which creates the new snapshot tree and store new state update method to compoenActionsRecord
+  /** The snapshot of the current ReactFiber tree */
+  const payload = createTree(current);
   // Save the current window url to route
   payload.route = routes.addRoute(window.location.href);
-  // console.log('send snapshot', {
-  //   payload: payload.children[0],
-  //   componentAction: componentActionsRecord.getAllComponents(),
-  // });
-
   // method safely enables cross-origin communication between Window objects;
   // e.g., between a page and a pop-up that it spawned, or between a page
   // and an iframe embedded within it.
