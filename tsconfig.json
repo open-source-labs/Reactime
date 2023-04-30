@@ -75,6 +75,7 @@
   "exclude": [
     "./src/app/__tests__",
     "./src/backend/__tests__",
+    "./src/app/__tests__new",
     "node_modules",
     "./src/extension/build/bundles"
   ],
