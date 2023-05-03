@@ -24,6 +24,9 @@ const SwitchAppDropdown = () => {
       return { ...provided, outline, margin };
     },
   };
+  console.log('currTab', currTab);
+  console.log('customStyles', customStyles);
+  console.log('tabsArray', tabsArray);
 
   return (
     <Select

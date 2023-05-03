@@ -58,7 +58,7 @@ function ButtonsContainer(): JSX.Element {
     snapshots,
     mode: { paused },
   } = tabs[currentTab];
-
+  // console.log()
   return (
     <div className='buttons-container'>
       <button className='pause-button' type='button' onClick={() => dispatch(toggleMode('paused'))}>

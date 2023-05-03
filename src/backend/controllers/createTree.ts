@@ -60,6 +60,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       treeBaseDuration,
       // _debugHookTypes, //COMMENT OUT SINCE EXTRACTING CONTEXT IS STILL IN EXPERIMENT
     } = currentFiberNode;
+    // console.log('current fiber node from createTree', currentFiberNode);
 
     // Obtain component name:
     /** Name of the current component */
@@ -154,6 +155,10 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     // // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
     // // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
     // // TODO: need to render this context provider when user use useContext hook.
+    //
+    // we want to grab the state that's being changed in this specific use context
+    // "this is using usecontext, here is the context(state)"
+    //
     // if (tag === ContextProvider && !elementType._context.displayName) {
     //   let stateData = memoizedProps.value;
     //   if (stateData === null || typeof stateData !== 'object') {
@@ -193,6 +198,8 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
           // Obtain variable names by parsing the function definition stored in elementType.
           const hooksNames = getHooksNames(elementType.toString());
+          // console.log(hooksStates);
+          // console.log(hooksNames);
           // Intialize state & index:
           componentData.hooksState = {};
           componentData.hooksIndex = [];
@@ -257,6 +264,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     }
 
     // ------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING------
+    // console.log('this is a test for jackie pls');
     return tree;
   }
 }

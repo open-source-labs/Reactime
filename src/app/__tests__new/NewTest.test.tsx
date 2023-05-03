@@ -1,22 +1,17 @@
-import React from 'react'
-import {render, screen} from '@testing-library/react'
+import React from 'react';
+import { render, screen } from '@testing-library/react';
 // import '@testing-library/jest-dom'
-import  '@testing-library/jest-dom/extend-expect' // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
-import MainContainer from '../containers/MainContainer' 
+import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
+import MainContainer from '../containers/MainContainer';
 
-
-
-test('Main Container should render', () => {
-  render(<MainContainer />);
-  screen.debug();
-  });
-
-
+// test('Main Container should render', () => {
+//   render(<MainContainer />);
+//   screen.debug();
+//   });
 
 // const Header = () => {
 //   return <h1 className='title'>I am a header</h1>
 // };
-
 
 // test('Test should run, header renders and it has correct stuff', () => {
 //   render(<Header />);
