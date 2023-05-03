@@ -140,31 +140,35 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
           // console.log('expression', declarations[0]?.init?.arguments?.arguments[0]?.callee?.expressions);
           const expression =
             declarations[0]?.init?.callee?.expressions || //work for browser
-            (declarations[0]?.init?.arguments &&
-              declarations[0]?.init?.arguments[0]?.callee?.expressions); //work for jest test; Mark's notes: so this was where the app was breaking. ES6 functions inside functional components were hitting this line and crashing when it tried to access arguments[0] and arguments didn't exist.
-          // declarations[0]?.init?.arguments?.arguments[0]?.callee?.expressions; //work for jest test
+            //Mark's notes: so this was where the app was breaking. ES6 functions (e.g. const handleClick = () => {}) inside functional components were hitting this line and crashing when it tried to access arguments[0] and arguments didn't exist.
+            declarations[0]?.init?.arguments?.[0]?.callee?.expressions; //work for jest test;
 
-          // console.log('looked for expression, found:', expression);
-          if (expression === undefined) return; //Mark's Note: for a functional definition that isn't a hook, it won't have the callee being searched for above. This line will cause this forEach execution to stop here in this case.
+          console.log('looked for expression, found:', expression);
+          //Mark's Note: for a functional definition that isn't a hook, it won't have the callee being searched for above. This line will cause this forEach execution to stop here in this case.
+          if (expression === undefined) return;
           let reactHook: string;
           reactHook = expression[1].property?.name;
           if (reactHook === 'useState') {
             // Obtain the variable being set:
+            //Mark's note: changed to point to second to last element of declarations because webpack adds an extra variable when converting files that use ES6, so the previous pointer wasn't working for this case
             let varName: string =
-              declarations[declarations.length - 2]?.id?.name || // work react application; Mark's note: changed to point to second to last element of declarations because webpack added an extra variable and therefor declaration in the middle of the array cuz es6
+              declarations[declarations.length - 2]?.id?.name || // work react application;
               (Array.isArray(declarations[0]?.id?.elements)
                 ? declarations[0]?.id?.elements[0]?.name
                 : undefined); //work for nextJS application
             // Obtain the setState method:
+            //Mark's note: changed to point to last element of declarations because webpack adds an extra variable when converting files that use ES6, so the previous pointer wasn't working for this case
             let hookName: string =
-              declarations[declarations.length - 1]?.id?.name || // work react application; Mark's note: changed to point to last element of declarations because webpack added an extra variable and therefor declaration in the middle of the array cuz es6
+              declarations[declarations.length - 1]?.id?.name || // work react application;
               (Array.isArray(declarations[0]?.id?.elements)
                 ? declarations[0]?.id?.elements[0]?.name
                 : undefined); //work for nextJS & Remix
             // Push reactHook & varName to statements array
             /**
-             * Mark's notes, it's interesting that they don't want to
-             * pass on reactHook 'useState'. I wonder why.
+             * Mark's notes, I'd like to alter the structure of the data
+             * to pass on the reactHook 'useState'. That way the user will
+             * eventually be able to view the difference between variables
+             * stored via useState and useContext
              */
             statements.push({ hookName, varName });
           }

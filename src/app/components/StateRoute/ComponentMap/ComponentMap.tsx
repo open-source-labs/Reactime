@@ -8,7 +8,7 @@
 /* eslint-disable guard-for-in */
 // @ts-nocheck
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
@@ -47,9 +47,9 @@ export default function ComponentMap({
   const [orientation, setOrientation] = useState('vertical');
   const [linkType, setLinkType] = useState('diagonal');
   const [stepPercent, setStepPercent] = useState(10);
-  const [Tooltip, setTooltip] = useState(false);
   const [selectedNode, setSelectedNode] = useState('root');
   const [, dispatch] = useStoreContext();
+  const toolTipTimeoutID = useRef(null);
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('map'));
@@ -191,7 +191,6 @@ export default function ComponentMap({
         <LinearGradient id='links-gradient' from='#fd9b93' to='#fe6e9e' />
         <rect
           onClick={() => {
-            setTooltip(false);
             hideTooltip();
           }}
           width={totalWidth}
@@ -266,7 +265,6 @@ export default function ComponentMap({
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
-                            setTooltip(false);
                           }}
                         />
                       )}
@@ -290,16 +288,48 @@ export default function ComponentMap({
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
-                            setTooltip(false);
                           }}
-                          onMouseOver={(event) => {
-                            setTooltip(true);
+                          // Mouse Enter Rect (Component Node) -----------------------------------------------------------------------
+                          /** This onMouseEnter event fires when the mouse first moves/hovers over a component node.
+                           * The supplied event listener callback produces a Tooltip element for the current node. */ 
+                          
+                          onMouseEnter={(event) => {
+                            /** This 'if' statement block checks to see if you've just left another component node
+                             * by seeing if there's a current setTimeout waiting to close that component node's 
+                             * tooltip (see onMouseLeave immediately below).
+                             * This setTimeout gives the mouse time to enter the tooltip element so the tooltip 
+                             * can persist. If instead of entering said tooltip element you've left the previous 
+                             * component node to enter this component node, this logic will clear the timeout event,
+                             * and close the tooltip. */
+                            if (toolTipTimeoutID.current !== null) {
+                              clearTimeout(toolTipTimeoutID.current);
+                              hideTooltip();
+                            }
+                            /** The following line resets the toolTipTimeoutID.current to null, showing that there
+                            * are no current setTimeouts running. I placed this outside of the above if statement  
+                            * to make sure there are no edge cases that would allow for the toolTipTimeoutID.current
+                            * to hold onto an old reference. */
+                            toolTipTimeoutID.current = null;
+                            //This generates a tooltip for the component node the mouse has entered.
                             handleMouseAndClickOver(event);
                           }}
-                          // with onmouseOver, this produces a hover over effect for the Tooltip
-                          onMouseOut={() => {
-                            hideTooltip();
-                            setTooltip(false);
+
+                          // Mouse Leave Rect (Component Node) --------------------------------------------------------------------------
+                          /** This onMouseLeave event fires when the mouse leaves a component node.
+                           * The supplied event listener callback generates a setTimeout call which gives the 
+                           * mouse a certain amount of time between leaving the current component node and 
+                           * closing the tooltip for that node.
+                           * If the mouse enters the tooltip before the timeout delay has passed, the 
+                           * setTimeout event will be canceled. */
+                          onMouseLeave={() => {
+                            // This line invokes setTimeout and saves its ID to the useRef var toolTipTimeoutID
+                            toolTipTimeoutID.current = setTimeout(() => {
+                              // hideTooltip unmounts the tooltip
+                              hideTooltip();
+                              // As the timeout has been executed, the timeoutID can be reset to null
+                              toolTipTimeoutID.current = null;
+                              //There is a delay of 300 ms
+                            }, 300);
                           }}
                         />
                       )}
@@ -329,33 +359,48 @@ export default function ComponentMap({
           top={tooltipTop}
           left={tooltipLeft}
           style={tooltipStyles}
-          onClick={hideTooltip}
+          
+          //------------- Mouse Over TooltipInPortal--------------------------------------------------------------------
+          /** This onMouseEnter fires when the mouse first moves/hovers over the tooltip
+           * The supplied event listener callback stops the setTimeout that was going to 
+           * close the tooltip from firing */ 
+          
+          onMouseEnter={() => {
+            // The setTimeoutID stored in toolTipTimeoutID.current is from the setTimeout initiated by leaving the 
+            // component node that generated the tooltip. If you've triggered an onMouseEnter event in that tooltip,
+            clearTimeout(toolTipTimeoutID.current);
+            // This line resets the timeoutID to null
+            toolTipTimeoutID.current = null;
+          }}
+
+          //------------- Mouse Leave TooltipInPortal -----------------------------------------------------------------
+          /** This onMouseLeave event fires when the mouse leaves the tooltip 
+           * The supplied event listener callback unmounts the tooltip */
+          onMouseLeave={() => {
+            // hideTooltip unmounts the tooltip
+            hideTooltip();
+          }}
         >
-          <div
-            onClick={() => {
-              setTooltip(false);
-              hideTooltip();
-            }}
-          >
+          <div>
             <div style={{}}>
               {' '}
               <strong>{tooltipData.name}</strong>{' '}
             </div>
             <div> Render time: {formatRenderTime(tooltipData.componentData.actualDuration)} </div>
             <div className='stateTip'>
-              State:
-              {formatState(tooltipData.state)}
+              State: {formatState(tooltipData.state)}
             </div>
             <div style={React.scrollStyle}>
               <div className='tooltipWrapper'>
                 <h2>Props:</h2>
                 {formatData(tooltipData.componentData.props, 'props')}
               </div>
-
+              
+              {/* Currently no use for this field
               <div className='tooltipWrapper'>
                 <h2>Initial Context:</h2>
                 {formatData(tooltipData.componentData.context, 'context')}
-              </div>
+              </div> */}
 
               <div className='tooltipWrapper'>
                 <h2>State:</h2>
