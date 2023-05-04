@@ -7,22 +7,60 @@ import MainContainer from '../containers/MainContainer';
 import App from '../components/App';
 import SwitchAppDropdown from '../components/SwitchApp';
 
-test('Main Container should render', () => {
-  render(<MainContainer />);
-  screen.debug();
-});
-// test('App should render', () => {
-//   render(<App />);
-//   screen.debug();
-// });
-// test('Switchapp should render', () => {
-//   render(<SwitchAppDropdown />);
-//   screen.debug();
-// });
+// notes: beforeAll? can render in here before then testing
+// after render, can check if the element that has been rendered has props of testing data.
+// issues with inrtinsic values, possibly typescript issue
+// basically it seems like switchappdropdown is expecting a specific type
+// but the component itself doesnt seem like it's in ts?
 
-// test('Test should run, header renders and it has correct stuff', () => {
-//   render(<Header />);
-//   // Extract header
-//   screen.debug();
-//   // allows the DOM to be rendered
-// });
+// Instrinsic Attributes type is a built in TS type that represents defualt attributes like id, className, style
+// so maybe switchappdropdown needs be assigned a type instead of auto assigned intrinsic? 
+
+describe('Tests for components', () => {
+  describe('Testing Switchapp', () => {
+    let dropdown;
+    const props = {
+      currTab: {
+        label: 'Testing',
+        value: 12353,
+      },
+      styles: {},
+      options: [],
+    };
+    test('Testing', () => {
+      render(<SwitchAppDropdown value= />);
+    });
+  });
+});
+
+// return (
+//   <Select
+//     className='tab-select-container'
+//     classNamePrefix='tab-select'
+//     value={currTab}
+//     styles={customStyles}
+//     onChange={(e) => {
+//       dispatch(setTab(parseInt(e.value, 10)));
+//     }}
+//     options={tabsArray}
+//   />
+// );
+// describe('LabeledText', () => {
+//   let text;
+//   const props = {
+//     label: 'Mega',
+//     text: 'Markets',
+//   };
+
+//   beforeAll(() => {
+//     text = render(<LabeledText {...props} />)
+
+//   });
+
+//   test('Renders the passed-in text with the label in bold', () => {
+//     expect(text.getByText("Mega:").nextSibling).toHaveTextContent('Markets');
+//     expect(text.getByText('Mega:')).toHaveStyle('font-weight: bold')
+//   });
+// console.log('currTab', currTab);
+// console.log('customStyles', customStyles);
+// console.log('tabsArray', tabsArray);
