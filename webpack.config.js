@@ -21,6 +21,11 @@ const config = {
    * Bundle each entry point into one "chunk" & store it in the extension/build/bundles folder
    * When load the unpacked extension in the chrome extension store, the src/extension/build folder is selected => load all bundles (app, backend, background & content script)
    */
+  watchOptions: {
+    poll: true,
+    ignored: /node_modules/
+  },
+  
   output: {
     path: path.resolve(__dirname, 'src/extension/build/bundles'),
     filename: '[name].bundle.js',
