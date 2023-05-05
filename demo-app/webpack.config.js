@@ -50,4 +50,8 @@ module.exports = {
       secure: false,
     },
   },
+  watchOptions: {
+    poll: true,
+    ignored: /node_modules/
+  },
 };
