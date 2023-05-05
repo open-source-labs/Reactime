@@ -83,9 +83,7 @@ export function getHooksStateAndUpdateMethod(
 
 // ---------------------GET STATE VAR NAME & HOOK NAME--------------------------
 /**
- * This function receive a string representation of a functional component. 
- * This function then uses JSX parser to traverse through the function string, 
- * and extract the state variable name and its corresponding setState method.
+ * This function receive a string representation of a functional component. This function then use JSX parser to traverse through the function string, and extract the state variable name and its corresponding setState method.
  * @param elementType - The string representation of a functional component
  * @returns - An array of objects with key: hookName (the name of setState method) | value: varName (the state variable name)
  */
@@ -100,8 +98,8 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
     const statements: { hookName: string; varName: string }[] = [];
     /** All module exports always start off as a single 'FunctionDeclaration' type
      * Other types: "BlockStatement" / "ExpressionStatement" / "ReturnStatement"
-     * Iterate through AST of every function(al component) declaration
-     * Check within each function(al component) declaration if there are hook declarations & variable name declaration */
+     * Iterate through AST of every functional component declaration
+     * Check within each functional component declaration if there are hook declarations & variable name declaration */
     AST.forEach((functionDec: any) => {
       let declarationBody: any;
       if (functionDec.expression?.body) declarationBody = functionDec.expression.body.body;
@@ -124,15 +122,15 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
           reactHook = expression[1].property?.name;
           if (reactHook === 'useState') {
             // Obtain the variable being set:
-            // Points to second to last element of declarations because webpack adds an extra variable when converting files that use ES6, so the previous pointer wasn't working for this case
             let varName: string =
+              // Points to second to last element of declarations because webpack adds an extra variable when converting files that use ES6
               declarations[declarations.length - 2]?.id?.name || // work react application; 
               (Array.isArray(declarations[0]?.id?.elements)
                 ? declarations[0]?.id?.elements[0]?.name
                 : undefined); //work for nextJS application
             // Obtain the setState method:
-            // Points to last element of declarations because webpack adds an extra variable when converting files that use ES6, so the previous pointer wasn't working for this case
             let hookName: string =
+              //Points to last element of declarations because webpack adds an extra variable when converting files that use ES6
               declarations[declarations.length - 1]?.id?.name || // work react application; 
               (Array.isArray(declarations[0]?.id?.elements)
                 ? declarations[0]?.id?.elements[0]?.name
