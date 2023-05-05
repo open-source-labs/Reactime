@@ -95,3 +95,37 @@ export interface BarGraphComparisonAction {
   series?: number;
   setAction: (e: boolean | string) => void;
 }
+
+interface StateContainerProps {
+  snapshot: Record<
+    number,
+    {
+      name?: string;
+      componentData?: Record<string, unknown>;
+      state?: Record<string, unknown>;
+      stateSnaphot?: Record<string, unknown>;
+      children?: unknown[];
+    }
+  >;
+  toggleActionContainer?: any;
+  webMetrics?: object;
+  hierarchy: Record<string, unknown>;
+  snapshots?: [];
+  viewIndex?: number;
+  currLocation?: object;
+}
+
+export interface TravelContainerProps {
+  snapshotsLength: number;
+}
+
+export interface Obj {
+  stateSnapshot: {
+    route: any;
+    children: any[];
+  };
+  name: number;
+  branch: number;
+  index: number;
+  children?: [];
+}

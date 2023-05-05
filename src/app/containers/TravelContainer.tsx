@@ -11,12 +11,16 @@ import {
   resetSlider,
 } from '../actions/actions';
 import { useStoreContext } from '../store';
+import { TravelContainerProps } from '../components/FrontendTypes';
 
-const speeds = [
+const speeds: {
+  value: number;
+  label: string;
+}[] = [
   { value: 2000, label: '0.5x' },
   { value: 1000, label: '1.0x' },
   { value: 500, label: '2.0x' },
-];
+];  
 
 // start slider movement
 function play(
@@ -25,7 +29,7 @@ function play(
   dispatch: (a: any) => void,
   snapshotsLength: number,
   sliderIndex: number,
-) {
+): void {
   if (playing) {
     dispatch(pause());
   } else {
@@ -35,7 +39,7 @@ function play(
       dispatch(resetSlider());
       currentIndex = 0;
     }
-    const intervalId = setInterval(() => {
+    const intervalId: NodeJS.Timeout = setInterval(() => {
       if (currentIndex < snapshotsLength - 1) {
         dispatch(playForward());
         currentIndex += 1;
@@ -45,10 +49,6 @@ function play(
     }, speed);
     dispatch(startPlaying(intervalId));
   }
-}
-
-interface TravelContainerProps {
-  snapshotsLength: number;
 }
 
 function TravelContainer(props: TravelContainerProps): JSX.Element {
