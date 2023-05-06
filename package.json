@@ -1,27 +1,6 @@
 {
   "name": "reactime",
   "description": "build web extension bundle.js",
-  "jest": {
-    "transform": {
-      "^.+\\.(js|ts|tsx)$": "ts-jest"
-    },
-    "testPathIgnorePatterns": [
-      "www",
-      "./src/backend/__tests__/ignore"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/src/backend/__tests__/ignore/"
-    ],
-    "transformIgnorePatterns": [
-      "/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)"
-    ],
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ]
-  },
   "scripts": {
     "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode production",
     "dev": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode development --watch",
@@ -29,6 +8,9 @@
     "devlegacy": "webpack --mode development --watch",
     "test": "jest --verbose --coverage",
     "test-backend": "jest --verbose --coverage src/backend",
+    "test-frontend": "jest --verbose --coverage src/app",
+    "test-newfront": "jest --verbose --coverage src/app/__tests__new",
+    "test-zo": "jest --verbose --coverage src/app/__tests__zo",
     "test-on": "./node_modules/.bin/jest $1",
     "docker-test-lint": "eslint --ext .js --ext .jsx src",
     "docs": "typedoc --json docs --inputFiles src/app --inputFiles src/backend --readme docs/readme.md",
@@ -110,9 +92,12 @@
     "@babel/plugin-proposal-decorators": "^7.10.5",
     "@babel/preset-env": "^7.12.7",
     "@babel/preset-react": "^7.12.7",
+    "@babel/preset-typescript": "^7.21.5",
     "@emotion/babel-plugin": "^11.7.2",
+    "@inrupt/jest-jsdom-polyfills": "^1.6.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
     "@types/chai": "^4.2.14",
     "@types/chrome": "^0.0.119",
     "@types/d3": "^7.4.0",
@@ -134,15 +119,19 @@
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jest": "^22.21.0",
+    "eslint-plugin-jest-dom": "^4.0.3",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^1.7.0",
+    "eslint-plugin-testing-library": "^5.10.3",
     "express": "^4.17.1",
     "jest": "^29.5.0",
     "jest-cli": "^26.1.0",
     "jest-diff": "^26.1.0",
+    "jest-environment-jsdom": "^29.5.0",
     "jest-runner-eslint": "^2.0.0",
     "jscharting-react": "^1.2.1",
+    "jsdom": "^21.1.2",
     "prettier": "2.8.4",
     "puppeteer": "^14.3.0",
     "react-devtools-core": "^4.27.3",
@@ -195,12 +184,12 @@
     "d3-scale-chromatic": "^3.0.0",
     "d3-shape": "^2.0.0",
     "d3-zoom": "^3.0.0",
+    "identity-obj-proxy": "^3.0.0",
     "immer": "^9.0.12",
     "intro.js": "^5.0.0",
     "intro.js-react": "^0.6.0",
     "jest-runner": "^26.1.0",
     "jscharting": "^3.0.2",
-    "jsdom": "^21.1.1",
     "jsondiffpatch": "^0.3.11",
     "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
