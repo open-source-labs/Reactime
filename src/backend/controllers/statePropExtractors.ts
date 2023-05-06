@@ -78,17 +78,11 @@ export function getHooksStateAndUpdateMethod(
     }
     memoizedState = memoizedState.next;
   }
-  // console.log('hooksStates from getHooksStateAndUpdateMethod');
-  // console.log(hooksStates);
-  //confirmed Sudoku home data successfully in hooksStates via console log
   return hooksStates;
 }
 
 // ---------------------GET STATE VAR NAME & HOOK NAME--------------------------
 /**
- * This function receive a string representation of a functional component.
- * This function then uses JSX parser to traverse through the function string,
- * and extract the state variable name and its corresponding setState method.
  * This function receive a string representation of a functional component. This function then use JSX parser to traverse through the function string, and extract the state variable name and its corresponding setState method.
  * @param elementType - The string representation of a functional component
  * @returns - An array of objects with key: hookName (the name of setState method) | value: varName (the state variable name)
@@ -112,8 +106,6 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
       // check if functionDec.expression.body exists, then set declarationBody to functionDec's body
       else declarationBody = functionDec.body?.body ?? [];
       // Traverse through the function's funcDecs and Expression Statements
-      console.log('declarationBody');
-      console.log(declarationBody);
       declarationBody.forEach((elem: any) => {
         // Hooks will always be contained in a variable declaration
         if (elem.type === 'VariableDeclaration') {
@@ -121,25 +113,9 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
           const { declarations } = elem;
           // Obtain the reactHook:
           // Due to difference in babel transpilation in browser vs for jest test, expression is stored in differen location
-          console.log('Found variable declaration, elem declarations:', declarations);
-          // console.log('dec[0]', declarations[0]);
-          // console.log('init',declarations[0]?.init);
-          // console.log('callee',declarations[0]?.init?.callee);
-          // console.log('expressions', declarations[0]?.init?.callee?.expressions);
-          // console.log('Line 2!');
-          // console.log('args', declarations[0]?.init?.arguments);
-          // console.log('args[0]', declarations[0]?.init?.arguments?.arguments[0]);
-          // console.log('callee', declarations[0]?.init?.arguments?.arguments[0]?.callee);
-          // console.log('expression', declarations[0]?.init?.arguments?.arguments[0]?.callee?.expressions);
           const expression =
             declarations[0]?.init?.callee?.expressions || //work for browser
-            //Mark's notes: so this was where the app was breaking. ES6 functions (e.g. const handleClick = () => {}) inside functional components were hitting this line and crashing when it tried to access arguments[0] and arguments didn't exist.
             declarations[0]?.init?.arguments?.[0]?.callee?.expressions; //work for jest test;
-
-          console.log('looked for expression, found:', expression);
-          //Mark's Note: for a functional definition that isn't a hook, it won't have the callee being searched for above. This line will cause this forEach execution to stop here in this case.
-          if (expression === undefined) return;
-          declarations[0]?.init?.arguments?.[0]?.callee?.expressions; //work for jest test;
           // A functional declaration within a component that isn't a hook won't have the callee being searched for above. This line will cause this forEach execution to stop here in this case.
           if (expression === undefined) return;
           let reactHook: string;
@@ -147,7 +123,6 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
           if (reactHook === 'useState') {
             // Obtain the variable being set:
             let varName: string =
-              declarations[declarations.length - 2]?.id?.name || // work react application;
               // Points to second to last element of declarations because webpack adds an extra variable when converting files that use ES6
               declarations[declarations.length - 2]?.id?.name || // work react application;
               (Array.isArray(declarations[0]?.id?.elements)
@@ -155,19 +130,12 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
                 : undefined); //work for nextJS application
             // Obtain the setState method:
             let hookName: string =
-              declarations[declarations.length - 1]?.id?.name || // work react application;
               //Points to last element of declarations because webpack adds an extra variable when converting files that use ES6
               declarations[declarations.length - 1]?.id?.name || // work react application;
               (Array.isArray(declarations[0]?.id?.elements)
                 ? declarations[0]?.id?.elements[0]?.name
                 : undefined); //work for nextJS & Remix
             // Push reactHook & varName to statements array
-            /**
-             * Mark's notes, I'd like to alter the structure of the data
-             * to pass on the reactHook 'useState'. That way the user will
-             * eventually be able to view the difference between variables
-             * stored via useState and useContext
-             */
             statements.push({ hookName, varName });
           }
         }
