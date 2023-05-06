@@ -6,25 +6,7 @@ import React, { useState } from 'react';
 import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom';
 import StateRoute from '../components/StateRoute/StateRoute';
 import DiffRoute from '../components/DiffRoute';
-
-interface StateContainerProps {
-  snapshot: Record<
-    number,
-    {
-      name?: string;
-      componentData?: Record<string, unknown>;
-      state?: Record<string, unknown>;
-      stateSnaphot?: Record<string, unknown>;
-      children?: unknown[];
-    }
-  >;
-  toggleActionContainer?: any;
-  webMetrics?: object;
-  hierarchy: Record<string, unknown>;
-  snapshots?: [];
-  viewIndex?: number;
-  currLocation?: object;
-}
+import { StateContainerProps } from '../components/FrontendTypes';
 
 // eslint-disable-next-line react/prop-types
 const StateContainer = (props: StateContainerProps): JSX.Element => {

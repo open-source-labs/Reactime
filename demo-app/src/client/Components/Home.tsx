@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Home() {
+function Home(): JSX.Element {
   return (
     <div className='about'>
       <h1>Lorem Ipsum</h1>

@@ -61,7 +61,7 @@ const Action = (props: ActionProps): JSX.Element => {
    * @function cleanTime: Displays render times for state changes
    * @returns render display time in seconds in milliseconds
    */
-  const cleanTime = () => {
+    const cleanTime = ():string => {
     if (!componentData || !componentData.actualDuration) {
       return 'NO TIME';
     }
@@ -87,7 +87,7 @@ const Action = (props: ActionProps): JSX.Element => {
     }
     return `+${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`;
   };
-  const displayTime = cleanTime();
+  const displayTime: string = cleanTime();
 
   const optionsCursorTrueWithMargin = {
     followCursor: true,

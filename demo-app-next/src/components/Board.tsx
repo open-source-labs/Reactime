@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Row from "./Row";
-import { BoardText, BoardContent, Scoreboard, Player } from "../types/types";
+import { BoardContent, Scoreboard, Player } from "../types/types";
 
 type BoardState = {
   board: BoardContent;
@@ -11,7 +11,7 @@ type BoardState = {
 };
 
 class Board extends Component<{}, BoardState> {
-  constructor(props: any) {
+  constructor(props: unknown) {
     super(props);
     this.state = {
       board: this.newBoard(),
@@ -25,7 +25,7 @@ class Board extends Component<{}, BoardState> {
     this.handleBoxClick = this.handleBoxClick.bind(this);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate():void {
     this.checkForWinner();
   }
 
@@ -127,7 +127,7 @@ class Board extends Component<{}, BoardState> {
     this.setState({ board: boardCopy, currentPlayer: newPlayer });
   }
 
-  render() {
+  render(): JSX.Element {
     const rows: Array<JSX.Element> = [];
     for (let i = 0; i < 3; i++) {
       rows.push(
@@ -139,7 +139,7 @@ class Board extends Component<{}, BoardState> {
         />
       );
     }
-    const { X, O }: Scoreboard = this.state.scoreboard;
+    // const { X, O }: Scoreboard = this.state.scoreboard;
 
     return (
       <div className="board">
