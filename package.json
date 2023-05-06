@@ -9,7 +9,7 @@
     "test": "jest --verbose --coverage",
     "test-backend": "jest --verbose --coverage src/backend",
     "test-frontend": "jest --verbose --coverage src/app",
-    "test-newfront": "jest --verbose --coverage src/app/__tests__new",
+    "test-jn": "jest --verbose --coverage src/app/__tests__jn",
     "test-zo": "jest --verbose --coverage src/app/__tests__zo",
     "test-on": "./node_modules/.bin/jest $1",
     "docker-test-lint": "eslint --ext .js --ext .jsx src",
