@@ -5,27 +5,7 @@
 import React from 'react';
 import ReactHover, { Trigger, Hover } from 'react-hover';
 import { changeView, changeSlider } from '../actions/actions';
-
-/**
- * @template ActionProps Props for the action component
- */
-
-interface ActionProps {
-  key: string;
-  selected: boolean;
-  last: boolean;
-  index: number;
-  sliderIndex: number;
-  dispatch: (a: { type: string; payload: unknown; }) => void;
-  displayName: string;
-  componentName: string;
-  componentData: { actualDuration: number } | undefined;
-  routePath: unknown;
-  state?: Record<string, unknown>;
-  viewIndex: number | undefined;
-  isCurrIndex: boolean;
-  handleOnkeyDown: (e: unknown, i: number) => void;
-}
+import { ActionProps } from '../components/FrontendTypes';
 
 /**
  * @function Action
