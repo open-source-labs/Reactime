@@ -16,15 +16,15 @@ interface ActionProps {
   last: boolean;
   index: number;
   sliderIndex: number;
-  dispatch: (a: any) => void;
+  dispatch: (a: { type: string; payload: unknown; }) => void;
   displayName: string;
   componentName: string;
   componentData: { actualDuration: number } | undefined;
-  routePath: any;
+  routePath: unknown;
   state?: Record<string, unknown>;
   viewIndex: number | undefined;
   isCurrIndex: boolean;
-  handleOnkeyDown: (e: any, i: number) => any;
+  handleOnkeyDown: (e: unknown, i: number) => void;
 }
 
 /**
@@ -66,7 +66,7 @@ const Action = (props: ActionProps): JSX.Element => {
       return 'NO TIME';
     }
     let seconds: number | string;
-    let milliseconds: any = componentData.actualDuration;
+    let milliseconds: any  = componentData.actualDuration;
     if (Math.floor(componentData.actualDuration) > 60) {
       seconds = Math.floor(componentData.actualDuration / 60);
       seconds = JSON.stringify(seconds);
@@ -89,7 +89,7 @@ const Action = (props: ActionProps): JSX.Element => {
   };
   const displayTime: string = cleanTime();
 
-  const optionsCursorTrueWithMargin = {
+  const optionsCursorTrueWithMargin: {} = {
     followCursor: true,
     shiftX: 20,
     shiftY: 0,
