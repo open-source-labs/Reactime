@@ -2,11 +2,8 @@ import React from 'react';
 import { diff, formatters } from 'jsondiffpatch';
 import ReactHtmlParser from 'react-html-parser';
 import { useStoreContext } from '../store';
+import { DiffProps } from '../components/FrontendTypes';
 
-interface DiffProps {
-  snapshot: { state?: Record<string, unknown> };
-  show?: boolean | undefined;
-}
 /**
  * Displays tree showing specific two versions of tree
  * one with specific state changes, the other the whole tree
