@@ -30,7 +30,7 @@ function exportHandler(snapshots: []): void {
   URL.revokeObjectURL(fileDownload.href);
 }
 
-function importHandler(dispatch: (a: unknown) => void) {
+function importHandler(dispatch: (a: unknown) => void): void {
   const fileUpload = document.createElement('input');
   fileUpload.setAttribute('type', 'file');
 
