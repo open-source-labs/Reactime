@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-filename-extension */
-import React, {useEffect} from 'react'
-import {render, screen, fireEvent} from '@testing-library/react'
-import  '@testing-library/jest-dom/extend-expect'
-import ActionContainer from '../containers/ActionContainer'
+import React, { useEffect } from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import ActionContainer from '../containers/ActionContainer';
 import { useStoreContext } from '../store';
-
-
 
 const state = {
   tabs: {
@@ -108,58 +106,44 @@ const state = {
 };
 
 const dispatch = jest.fn();
-const resetSlider = jest.fn()
-jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn())
+const resetSlider = jest.fn();
+jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn());
 jest.mock('../store');
 useStoreContext.mockImplementation(() => [state, dispatch]);
 
 const MockRouteDescription = jest.fn();
 jest.mock('../components/RouteDescription', () => () => {
   MockRouteDescription();
-  return (
-  <div>
-    MockRouteDescription
-   </div> 
-    );
+  return <div>MockRouteDescription</div>;
 });
 
 const MockSwitchApp = jest.fn();
 jest.mock('../components/SwitchApp', () => () => {
   MockSwitchApp();
-  return (
-  <div>
-    MockSwitchApp
-   </div> 
-    );
+  return <div>MockSwitchApp</div>;
 });
 
-
-
 describe('unit testing for ActionContainer', () => {
-  
   beforeEach(() => {
     useStoreContext.mockClear();
     dispatch.mockClear();
-    render(<ActionContainer actionView={true}/>);
+    render(<ActionContainer actionView={true} />);
   });
 
-  test("Expect top arrow to be rendered", () => {
-      expect(screen.getByRole('complementary')).toBeInTheDocument()
+  test('Expect top arrow to be rendered', () => {
+    expect(screen.getByRole('complementary')).toBeInTheDocument();
+  });
 
-    });
+  test('Expect RouteDescription to be rendered', () => {
+    expect(screen.getAllByText('MockRouteDescription')).toHaveLength(2);
+  });
 
-    test("Expect RouteDescription to be rendered", () => {
-      expect(screen.getAllByText('MockRouteDescription')).toHaveLength(2)
+  test('Expect SwitchApp to be rendered', () => {
+    expect(screen.getByText('MockSwitchApp')).toBeInTheDocument();
+  });
 
-    });
-
-    test("Expect SwitchApp to be rendered", () => {
-      expect(screen.getByText('MockSwitchApp')).toBeInTheDocument()
-    });
-
-    test("Click works on clear button", async () => {
-      fireEvent.click(screen.getAllByRole('button')[0])
-      await expect(dispatch).toHaveBeenCalledTimes(1)
-    });
-
+  test('Click works on clear button', async () => {
+    fireEvent.click(screen.getAllByRole('button')[0]);
+    await expect(dispatch).toHaveBeenCalledTimes(1);
+  });
 });
