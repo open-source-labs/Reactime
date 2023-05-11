@@ -34,7 +34,7 @@ describe('unit testing for ErrorContainer.tsx', () => {
   test('Reactime website shows as expected', () => {
     render(<ErrorContainer />);
     expect(
-      screen.getByText('Please visit the Reactime webiste for more info.'),
+      screen.getByText('Please visit the Reactime website for more info.'),
     ).toBeInTheDocument();
   });
 
@@ -67,7 +67,6 @@ describe('unit testing for ErrorContainer.tsx', () => {
     test('When currentTitle has a target title', () => {
       state.currentTitle = 'Test Page';
       render(<ErrorContainer />);
-      screen.debug();
       expect(screen.getByText(`Launching Reactime on tab: Test Page`)).toBeInTheDocument();
       expect(screen.queryByText(`Launching Reactime on tab: No Target`)).not.toBeInTheDocument();
     });

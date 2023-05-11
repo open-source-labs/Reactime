@@ -16,6 +16,13 @@ const props = {
 const parseError = jest.fn();
 
 describe('unit testing for ErrorContainer.tsx', () => {
+  describe('When there are no errors', () => {
+    test('Returns empty div', () => {
+      const { container } = render(<ErrorMsg {...props} />);
+      expect(container.firstChild).toBeNull();
+    });
+  });
+
   describe("when there's a RDT Error", () => {
     test('RDT error related text shows', () => {
       props.status.reactDevToolsInstalled = false;
