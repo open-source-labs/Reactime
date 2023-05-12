@@ -2,7 +2,7 @@ import React from 'react';
 import { diff, formatters } from 'jsondiffpatch';
 import ReactHtmlParser from 'react-html-parser';
 import { useStoreContext } from '../store';
-import { DiffProps } from '../components/FrontendTypes';
+import { DiffProps, StatelessCleanning } from '../components/FrontendTypes';
 
 /**
  * Displays tree showing specific two versions of tree
@@ -10,12 +10,12 @@ import { DiffProps } from '../components/FrontendTypes';
  * @param props props from maincontainer
  * @returns a diff tree or a string stating no state changes have happened
  */
-function Diff(props: DiffProps) {
+function Diff(props: DiffProps): JSX.Element {
   const { snapshot, show } = props;
   const [mainState] = useStoreContext();
   const { currentTab, tabs } = mainState; // k/v pairs of mainstate store object being created
   const { snapshots, viewIndex, sliderIndex } = tabs[currentTab];
-  let previous;
+  let previous:unknown;
 
   // previous follows viewIndex or sliderIndex
   if (viewIndex !== -1) {
@@ -26,13 +26,7 @@ function Diff(props: DiffProps) {
   }
 
   // cleaning preview from stateless data
-  const statelessCleanning = (obj: {
-    name?: string;
-    componentData?: Record<string, unknown>;
-    state?: string | any;
-    stateSnaphot?: Record<string, unknown>;
-    children?: any[];
-  }) => {
+  const statelessCleanning = (obj: StatelessCleanning) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;
@@ -63,13 +57,13 @@ function Diff(props: DiffProps) {
   };
 
   // displays stateful data
-  const previousDisplay = statelessCleanning(previous);
+  const previousDisplay: StatelessCleanning = statelessCleanning(previous);
   // diff function returns a comparison of two objects, one has an updated change
   // just displays stateful data
-  const delta = diff(previousDisplay, snapshot);
+  const delta: StatelessCleanning = diff(previousDisplay, snapshot);
   // returns html in string
   // just displays stateful data
-  const html = formatters.html.format(delta, previousDisplay);
+  const html: StatelessCleanning = formatters.html.format(delta, previousDisplay);
   if (show) formatters.html.showUnchanged();
   else formatters.html.hideUnchanged();
 
