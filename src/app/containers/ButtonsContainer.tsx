@@ -15,7 +15,7 @@ import Tutorial from '../components/Tutorial';
 
 function exportHandler(snapshots: []): void {
   // create invisible download anchor link
-  const fileDownload:HTMLAnchorElement = document.createElement('a');
+  const fileDownload: HTMLAnchorElement = document.createElement('a');
 
   // set file in anchor link
   fileDownload.href = URL.createObjectURL(
