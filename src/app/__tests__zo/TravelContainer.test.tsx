@@ -24,7 +24,6 @@ const state = {
 
 // mock play?
 const play = jest.fn(() => console.log('legit'));
-// play.mockImplementation(() => console.log('legit'));
 
 const dispatch = jest.fn();
 useStoreContext.mockImplementation(() => [state, dispatch]);

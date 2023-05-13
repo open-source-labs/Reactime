@@ -5,12 +5,6 @@ import '@testing-library/jest-dom/extend-expect'; // needed this to extend the j
 
 import Dropdown from '../components/Dropdown';
 
-// interface DropdownProps {
-//   selectedSpeed: { value: number; label: string };
-//   speeds: { value: number; label: string }[];
-//   setSpeed: () => void;
-// }
-
 describe('Dropdown test', () => {
   const speeds = [
     { value: 1, label: 'test1' },

@@ -62,6 +62,7 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
       <button
         className='play-button'
         type='button'
+        // data-testid, prop for testing in RTL
         data-testid='play-button-test'
         onClick={() => play(selectedSpeed.value, playing, dispatch, snapshotsLength, sliderIndex)}
       >
