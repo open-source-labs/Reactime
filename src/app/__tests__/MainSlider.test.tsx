@@ -7,6 +7,7 @@ import MainSlider from '../components/MainSlider';
 import { useStoreContext } from '../store';
 
 jest.mock('../store');
+const mockeduseStoreContext = jest.mocked(useStoreContext);
 
 describe('Unit testing for MainSlider.jsx', () => {
   const props = {
@@ -23,7 +24,7 @@ describe('Unit testing for MainSlider.jsx', () => {
   };
 
   const dispatch = jest.fn();
-  useStoreContext.mockImplementation(() => [state, dispatch]);
+  mockeduseStoreContext.mockImplementation(() => [state, dispatch]);
 
   describe('When user only has one snapshot to view', () => {
     test('Component should have min, max, value with correct values to indicate slider position for correct tab', () => {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import { TextEncoder } from 'util';
 global.TextEncoder = TextEncoder;
@@ -9,17 +8,11 @@ import { useStoreContext } from '../store';
 
 // const { Steps } = require('intro.js-react');
 jest.mock('../store');
+const mockedUsedStoreContext = jest.mocked(useStoreContext);
+// useStoreContext as jest.Mock<useStoreContext>.mockImplementaton(() => [state, dispatch])
 
 global.URL.createObjectURL = jest.fn(() => 'https://pdf.com');
 global.URL.revokeObjectURL = jest.fn();
-
-const fileDownload = {
-  href: jest.fn(),
-};
-
-const URL = { revokeObjectURL: jest.fn() };
-// @ts-ignore
-// jest.spyOn(document, 'createElement').mockImplementation(() => fileDownload);
 
 describe('Unit testing for ButtonContainer', () => {
   beforeEach;
@@ -46,11 +39,12 @@ describe('Unit testing for ButtonContainer', () => {
   const importHandler = jest.fn();
   const fileDownload = jest.fn();
 
-  useStoreContext.mockImplementation(() => [state, dispatch]);
+  mockedUsedStoreContext.mockImplementation(() => [state, dispatch]);
+  // useStoreContext.mockImplementation(() => [state, dispatch]);
 
   beforeEach(() => {
     dispatch.mockClear();
-    useStoreContext.mockClear();
+    mockedUsedStoreContext.mockClear();
     currentTab.mode = {
       paused: false,
       persist: false,

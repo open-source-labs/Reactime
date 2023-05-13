@@ -106,10 +106,11 @@ const state = {
 };
 
 const dispatch = jest.fn();
-const resetSlider = jest.fn();
 jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn());
 jest.mock('../store');
-useStoreContext.mockImplementation(() => [state, dispatch]);
+
+const mockeduseStoreContext = jest.mocked(useStoreContext);
+mockeduseStoreContext.mockImplementation(() => [state, dispatch]);
 
 const MockRouteDescription = jest.fn();
 jest.mock('../components/RouteDescription', () => () => {
@@ -125,7 +126,7 @@ jest.mock('../components/SwitchApp', () => () => {
 
 describe('unit testing for ActionContainer', () => {
   beforeEach(() => {
-    useStoreContext.mockClear();
+    mockeduseStoreContext.mockClear();
     dispatch.mockClear();
     render(<ActionContainer actionView={true} />);
   });
