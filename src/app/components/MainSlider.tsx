@@ -3,16 +3,11 @@ import Slider from 'rc-slider';
 import Tooltip from 'rc-tooltip';
 import { changeSlider, pause } from '../actions/actions';
 import { useStoreContext } from '../store';
+import { HandleProps, MainSliderProps } from '../components/FrontendTypes';
 
 const { Handle } = Slider;
 
-interface handleProps {
-  value: number;
-  dragging: boolean;
-  index: number;
-}
-
-const handle = (props: handleProps) => {
+const handle = (props: HandleProps): JSX.Element => {
   const { value, dragging, index, ...restProps } = props;
 
   return (
@@ -28,11 +23,8 @@ const handle = (props: handleProps) => {
   );
 };
 
-interface MainSliderProps {
-  snapshotsLength: number;
-}
 
-function MainSlider(props: MainSliderProps) {
+function MainSlider(props: MainSliderProps): JSX.Element {
   const { snapshotsLength } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { currLocation } = tabs[currentTab];

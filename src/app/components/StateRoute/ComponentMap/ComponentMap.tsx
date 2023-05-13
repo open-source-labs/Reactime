@@ -20,7 +20,7 @@ import getLinkComponent from './getLinkComponent';
 import { toggleExpanded, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 
-const defaultMargin = {
+const defaultMargin: {} = {
   top: 30,
   left: 30,
   right: 55,
@@ -95,7 +95,7 @@ export default function ComponentMap({
     scroll: true,
   });
 
-  const tooltipStyles = {
+  const tooltipStyles: {} = {
     ...defaultStyles,
     minWidth: 60,
     maxWidth: 300,
@@ -108,7 +108,7 @@ export default function ComponentMap({
     pointerEvents: 'all !important',
   };
 
-  const scrollStyle = {
+  const scrollStyle: {} = {
     minWidth: '60',
     maxWidth: '300',
     minHeight: '20px',
@@ -117,13 +117,13 @@ export default function ComponentMap({
     overflowWrap: 'break-word',
   };
 
-  const formatRenderTime = (time: number): string => {
+  const formatRenderTime: string = (time: number): string => {
     const renderTime = time.toFixed(3);
     return `${renderTime} ms `;
   };
 
-  const formatData = (data, type) => {
-    const contextFormat = [];
+  const formatData: []  = (data, type) => {
+    const contextFormat: string[] = [];
     for (const key in data) {
       // Suggestion: update the front end to display as a list if we have object
       let inputData = data[key];
@@ -135,15 +135,15 @@ export default function ComponentMap({
     return contextFormat;
   };
 
-  const formatState = (state) => {
+  const formatState: string[] = (state) => {
     if (state === 'stateless') return ['stateless'];
     return ['stateful'];
   };
 
   // places all nodes into a flat array
-  const nodeList = [];
+  const nodeList: [] = [];
 
-  const collectNodes = (node) => {
+  const collectNodes: void = (node) => {
     nodeList.splice(0, nodeList.length);
     nodeList.push(node);
     for (let i = 0; i < nodeList.length; i += 1) {
@@ -170,7 +170,7 @@ export default function ComponentMap({
   findSelectedNode();
 
   // controls for the map
-  const LinkComponent = getLinkComponent({ layout, linkType, orientation });
+  const LinkComponent: React.ComponentType<unknown> = getLinkComponent({ layout, linkType, orientation });
   return totalWidth < 10 ? null : (
     <div>
       <LinkControls
@@ -218,14 +218,14 @@ export default function ComponentMap({
                 ))}
 
                 {tree.descendants().map((node, key) => {
-                  const widthFunc = (name) => {
+                  const widthFunc:number = (name) => {
                     const nodeLength = name.length;
                     if (nodeLength < 5) return nodeLength + 40;
                     if (nodeLength < 10) return nodeLength + 60;
                     return nodeLength + 70;
                   };
-                  const width = widthFunc(node.data.name);
-                  const height = 25;
+                  const width:number = widthFunc(node.data.name);
+                  const height:number = 25;
 
                   let top: number;
                   let left: number;
@@ -242,7 +242,7 @@ export default function ComponentMap({
                   }
 
                   // mousing controls & Tooltip display logic
-                  const handleMouseAndClickOver = (event) => {
+                  const handleMouseAndClickOver: void = (event) => {
                     const coords = localPoint(event.target.ownerSVGElement, event);
                     const tooltipObj = { ...node.data };
 
