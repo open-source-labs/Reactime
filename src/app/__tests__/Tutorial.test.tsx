@@ -9,7 +9,7 @@ import Tutorial from '../components/Tutorial';
 
 const dispatch = jest.fn();
 const props = {
-  currentTabInApp: undefined,
+  currentTabInApp: 'map',
   dispatch,
 };
 

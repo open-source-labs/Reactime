@@ -17,9 +17,10 @@ const state = {
 
 const play = jest.fn();
 const dispatch = jest.fn();
-useStoreContext.mockImplementation(() => [state, dispatch]);
 
 jest.mock('../store');
+const mockedStoreContext = jest.mocked(useStoreContext);
+mockedStoreContext.mockImplementation(() => [state, dispatch]);
 
 const mockSlider = jest.fn();
 jest.mock('../components/MainSlider', () => (props) => {

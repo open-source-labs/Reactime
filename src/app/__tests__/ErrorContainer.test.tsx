@@ -17,8 +17,10 @@ jest.mock('../components/ErrorMsg', () => () => {
 });
 
 jest.mock('../store');
+const mockeduseStoreContext = jest.mocked(useStoreContext);
+
 const dispatch = jest.fn();
-useStoreContext.mockImplementation(() => [state, dispatch]);
+mockeduseStoreContext.mockImplementation(() => [state, dispatch]);
 
 describe('unit testing for ErrorContainer.tsx', () => {
   test('logo image renders as expected', () => {

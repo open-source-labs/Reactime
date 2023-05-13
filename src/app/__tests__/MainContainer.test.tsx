@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import MainContainer from '../containers/MainContainer';
@@ -40,7 +41,8 @@ const state = {
 const dispatch = jest.fn();
 jest.mock('../../../node_modules/intro.js/introjs.css', () => jest.fn());
 jest.mock('../store');
-useStoreContext.mockImplementation(() => [state, dispatch]);
+const mockedUseStoreContext = jest.mocked(useStoreContext);
+mockedUseStoreContext.mockImplementation(() => [state, dispatch]);
 
 global.chrome = chrome;
 const port = {
@@ -86,9 +88,10 @@ describe('With no snapshots, should not render any containers', () => {
 describe('With snapshots, should render all containers', () => {
   beforeEach(() => {
     render(<MainContainer />);
-    useStoreContext.mockClear();
+    mockedUseStoreContext.mockClear();
     dispatch.mockClear();
     mockErrorContainer.mockClear();
+    // @ts-ignore
     state.currentTab = 87;
     state.tabs[87] = {
       snapshots: [{}],
