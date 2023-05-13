@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
-import user from '@testing-library/user-event';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { TextEncoder } from 'util';
 global.TextEncoder = TextEncoder;
 import '@testing-library/jest-dom/extend-expect';
 import Tutorial from '../components/Tutorial';
-const { Steps } = require('intro.js-react');
+// const { Steps } = require('intro.js-react');
 
 const dispatch = jest.fn();
 const props = {
@@ -14,9 +13,6 @@ const props = {
   dispatch,
 };
 
-const state = {
-  stepsEnabled: true,
-};
 let currentStepIndex = 5;
 
 describe('Before Tutorial is entered', () => {

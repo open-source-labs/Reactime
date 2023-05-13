@@ -1,16 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-filename-extension */
-
-import { shallow, configure } from 'enzyme';
 import React from 'react';
-import Adapter from 'enzyme-adapter-react-16';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 import ActionContainer from '../containers/ActionContainer';
 import { useStoreContext } from '../store';
-import { emptySnapshots } from '../actions/actions';
-import Action from '../components/Action';
-import RouteDescription from '../components/RouteDescription';
-
-configure({ adapter: new (Adapter as any)() });
 
 const state = {
   tabs: {
@@ -112,33 +106,44 @@ const state = {
 };
 
 const dispatch = jest.fn();
-
+const resetSlider = jest.fn();
+jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn());
 jest.mock('../store');
 useStoreContext.mockImplementation(() => [state, dispatch]);
 
-let wrapper;
-
-// actionView={true} must be passed in to <ActionContainer /> in beforeEach() to deal with new
-// conditional rendering in ActionContainer that shows/hides time-travel functionality
-
-beforeEach(() => {
-  wrapper = shallow(<ActionContainer actionView={true} />);
-  // wrapper2 = shallow(<RouteDescription />);
-  useStoreContext.mockClear();
-  dispatch.mockClear();
+const MockRouteDescription = jest.fn();
+jest.mock('../components/RouteDescription', () => () => {
+  MockRouteDescription();
+  return <div>MockRouteDescription</div>;
 });
 
-describe('testing the emptySnapshot button', () => {
-  test('emptySnapshot button should dispatch action upon click', () => {
-    wrapper.find('.empty-button').simulate('click');
-    expect(dispatch.mock.calls.length).toBe(1);
-  });
-  test('emptying snapshots should send emptySnapshot action to dispatch', () => {
-    wrapper.find('.empty-button').simulate('click');
-    expect(dispatch.mock.calls[0][0]).toEqual(emptySnapshots());
-  });
+const MockSwitchApp = jest.fn();
+jest.mock('../components/SwitchApp', () => () => {
+  MockSwitchApp();
+  return <div>MockSwitchApp</div>;
 });
 
-test('number of RouteDescription components should reflect number of unique routes', () => {
-  expect(wrapper.find(RouteDescription).length).toBe(2);
+describe('unit testing for ActionContainer', () => {
+  beforeEach(() => {
+    useStoreContext.mockClear();
+    dispatch.mockClear();
+    render(<ActionContainer actionView={true} />);
+  });
+
+  test('Expect top arrow to be rendered', () => {
+    expect(screen.getByRole('complementary')).toBeInTheDocument();
+  });
+
+  test('Expect RouteDescription to be rendered', () => {
+    expect(screen.getAllByText('MockRouteDescription')).toHaveLength(2);
+  });
+
+  test('Expect SwitchApp to be rendered', () => {
+    expect(screen.getByText('MockSwitchApp')).toBeInTheDocument();
+  });
+
+  test('Click works on clear button', async () => {
+    fireEvent.click(screen.getAllByRole('button')[0]);
+    await expect(dispatch).toHaveBeenCalledTimes(1);
+  });
 });
