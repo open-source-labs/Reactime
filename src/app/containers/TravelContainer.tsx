@@ -20,7 +20,7 @@ const speeds: {
   { value: 2000, label: '0.5x' },
   { value: 1000, label: '1.0x' },
   { value: 500, label: '2.0x' },
-];  
+];
 
 // start slider movement
 function play(
@@ -62,6 +62,7 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
       <button
         className='play-button'
         type='button'
+        data-testid='play-button-test'
         onClick={() => play(selectedSpeed.value, playing, dispatch, snapshotsLength, sliderIndex)}
       >
         {playing ? 'Pause' : 'Play'}
