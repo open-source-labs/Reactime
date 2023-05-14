@@ -219,41 +219,63 @@
 
 // tool tip styles
 
-
 .visx-tooltip{
   overflow-y: auto;
   overflow-wrap: break-word;
   pointer-events:all !important;
 }
-.props, .stateTip{
+
+.stateTip{
   margin-top: 3px;
   line-height: 1;
   height: 100%;
   overflow-y: hidden;
   max-height: 400px;
 }
-.props{
-  margin-top: 3px;
-}
-.props p{
+
+.stateTip p {
   line-height:1;
   margin-top: 3px;
   margin-bottom: 0px;
 }
-.stateTip p{
-  line-height:1;
-  margin-top: 3px;
-  margin-bottom: 0px;
-}
+
 .historyToolTip{
   z-index: 2;
 }
 
-
 .state-container .router-link {
   border: 0.5px solid black;
 }
-/* if state view is  width is less than 500px, stack the body containers */
-// @media (max-width: 500px) {
 
-// }
+.tooltipData {
+  background-color: #373737;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 2px;
+  max-height: 30vh;
+  // border: 5px solid rgba(0, 0, 0, 0.9);
+}
+
+.tooltipData-JSONTree {
+  list-style: none;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  margin-left: 2px;
+  margin-right: 2px;
+  padding: 0px;
+  overflow-y: auto;
+  max-height: 30vh;
+  scrollbar-color:#919499 #51565e;
+
+}
+
+.tooltipData-JSONTree::-webkit-scrollbar-thumb {
+  background:#919499;
+
+}
+
+.tooltipData-JSONTree::-webkit-scrollbar-track{
+  background:#51565e;
+}
+
+
