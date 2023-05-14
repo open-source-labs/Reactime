@@ -178,7 +178,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .enter()
       .append('g')
       .style('cursor', 'pointer')
-      .on('click', (d) => {
+      .on('click', (event, d) => {
         dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
       })
