@@ -142,7 +142,6 @@ function History(props: Record<string, unknown>): JSX.Element {
       const treeRoot = d3.hierarchy(data);
       return d3.tree().size([innerWidth, innerHeight])(treeRoot);
     };
-    // const hierarchy = d3.hierarchy(root);
     const d3root = tree(root);
 
     const currNode = labelCurrentNode(d3root);
@@ -181,28 +180,36 @@ function History(props: Record<string, unknown>): JSX.Element {
       .on('click', (event, d) => {
         dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
-      })
-      // added to display state change information to node tree
-      .on('mouseover', (event, d) => {
-        const [x, y] = d3.pointer(event);
+
         // created popup div and appended it to display div(returned in this function)
         // D3 doesn't utilize z-index for priority,
         // rather decides on placement by order of rendering
         // needed to define the return div with a className to have a target to append to
         // with the correct level of priority
-        const div = d3
-          .select('.display')
-          .append('div')
-          .attr('class', 'tooltip')
-          .style('left', `${event.clientX}px`)
-          .style('top', `${event.clientY}px`);
-        d3.selectAll('.tooltip').html(findDiff(d.data.index));
-      })
-      .on('mouseout', (d) => {
-        // when appending divs on mouseover the appended dives would not disappear
-        // when using D3's 'transition' on mouseover/mouseout
-        // solution: remove all tooltop divs on mouseout
-        d3.selectAll('.tooltip').remove();
+        function renderToolTip() {
+          const [x, y] = d3.pointer(event);
+          const div = d3
+            .select('.display:first-child')
+            .append('div')
+            .attr('class', `tooltip`)
+            .attr('id', `tt-${d.data.index}`)
+            .style('left', `${event.clientX}px`)
+            .style('top', `${event.clientY}px`)
+            .style('max-height', `25%`)
+            .style('overflow', `scroll`);
+          d3.selectAll('.tooltip').html(findDiff(d.data.index));
+        }
+
+        if (d3.selectAll('.tooltip')._groups['0'].length === 0) {
+          renderToolTip();
+        } else {
+          if (d3.selectAll(`#tt-${d.data.index}`)._groups['0'].length === 0) {
+            d3.selectAll('.tooltip').remove();
+            renderToolTip();
+          } else {
+            d3.selectAll('.tooltip').remove();
+          }
+        }
       })
       .attr('transform', (d) => `translate(${d.x},${d.y})`);
 
