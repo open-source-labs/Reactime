@@ -194,8 +194,8 @@ function History(props: Record<string, unknown>): JSX.Element {
           .select('.display')
           .append('div')
           .attr('class', 'tooltip')
-          .style('left', `${x}px`)
-          .style('top', `${y}px`);
+          .style('left', `${event.clientX}px`)
+          .style('top', `${event.clientY}px`);
         d3.selectAll('.tooltip').html(findDiff(d.data.index));
       })
       .on('mouseout', (d) => {
