@@ -52,14 +52,13 @@ describe('Unit testing for ButtonContainer', () => {
   });
 
   describe('When button container is loaded', () => {
-    test('should have 5 buttons ', () => {
+    test('should have 4 buttons ', () => {
       render(<ButtonsContainer />);
-      expect(screen.getAllByRole('button')).toHaveLength(5);
+      expect(screen.getAllByRole('button')).toHaveLength(4);
       expect(screen.getAllByRole('button')[0]).toHaveTextContent('Lock');
-      expect(screen.getAllByRole('button')[1]).toHaveTextContent('Split');
-      expect(screen.getAllByRole('button')[2]).toHaveTextContent('Download');
-      expect(screen.getAllByRole('button')[3]).toHaveTextContent('Upload');
-      expect(screen.getAllByRole('button')[4]).toHaveTextContent('How to use');
+      expect(screen.getAllByRole('button')[1]).toHaveTextContent('Download');
+      expect(screen.getAllByRole('button')[2]).toHaveTextContent('Upload');
+      expect(screen.getAllByRole('button')[3]).toHaveTextContent('How to use');
     });
   });
 
@@ -74,10 +73,10 @@ describe('Unit testing for ButtonContainer', () => {
   describe('Upload/Download', () => {
     test('Clicking upload and download buttons', async () => {
       render(<ButtonsContainer />);
+      fireEvent.click(screen.getAllByRole('button')[1]);
       fireEvent.click(screen.getAllByRole('button')[2]);
-      fireEvent.click(screen.getAllByRole('button')[3]);
+      expect(screen.getAllByRole('button')[1]).toBeInTheDocument();
       expect(screen.getAllByRole('button')[2]).toBeInTheDocument();
-      expect(screen.getAllByRole('button')[3]).toBeInTheDocument();
     });
   });
 });
