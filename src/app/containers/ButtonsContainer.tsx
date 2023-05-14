@@ -65,12 +65,6 @@ function ButtonsContainer(): JSX.Element {
         {paused ? <FontAwesomeIcon icon={faUnlock} /> : <FontAwesomeIcon icon={faLock} />}
         {paused ? 'Unlock' : 'Lock'}
       </button>
-
-      <button className='split-button' type='button' onClick={() => dispatch(toggleSplit())}>
-        {split ? <FontAwesomeIcon icon={faSquare} /> : <FontAwesomeIcon icon={faColumns} />}
-        {split ? 'Unsplit' : 'Split'}
-      </button>
-
       <button className='export-button' type='button' onClick={() => exportHandler(snapshots)}>
         <FontAwesomeIcon icon={faDownload} />
         Download
