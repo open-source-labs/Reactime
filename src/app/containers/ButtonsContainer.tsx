@@ -8,7 +8,7 @@ import {
   faUnlock,
   faLock,
 } from '@fortawesome/free-solid-svg-icons';
-import { importSnapshots, toggleMode, toggleSplit } from '../actions/actions';
+import { importSnapshots, toggleMode } from '../actions/actions';
 import { useStoreContext } from '../store';
 
 import Tutorial from '../components/Tutorial';
@@ -53,7 +53,7 @@ function importHandler(dispatch: (a: unknown) => void) {
 }
 
 function ButtonsContainer(): JSX.Element {
-  const [{ tabs, currentTab, split, currentTabInApp }, dispatch] = useStoreContext();
+  const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
   const {
     snapshots,
     mode: { paused },
@@ -62,15 +62,9 @@ function ButtonsContainer(): JSX.Element {
   return (
     <div className='buttons-container'>
       <button className='pause-button' type='button' onClick={() => dispatch(toggleMode('paused'))}>
-        {paused ? <FontAwesomeIcon icon={faUnlock} /> : <FontAwesomeIcon icon={faLock} />}
-        {paused ? 'Unlock' : 'Lock'}
+        {paused ? <FontAwesomeIcon icon={faLock} /> : <FontAwesomeIcon icon={faUnlock} />}
+        {paused ? 'Locked' : 'Unlocked'}
       </button>
-
-      <button className='split-button' type='button' onClick={() => dispatch(toggleSplit())}>
-        {split ? <FontAwesomeIcon icon={faSquare} /> : <FontAwesomeIcon icon={faColumns} />}
-        {split ? 'Unsplit' : 'Split'}
-      </button>
-
       <button className='export-button' type='button' onClick={() => exportHandler(snapshots)}>
         <FontAwesomeIcon icon={faDownload} />
         Download

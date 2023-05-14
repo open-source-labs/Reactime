@@ -135,13 +135,6 @@ export default class Tutorial extends React.Component<tutorialProps, tutorialSta
             position: 'top',
           },
           {
-            title: 'Split Button',
-            element: '.split-button',
-            intro:
-              '<ul> <li>Use button to split Reactime into two windows in order to view multiple tabs simultaneously</li> </ul>',
-            position: 'top',
-          },
-          {
             title: 'Download Button',
             element: '.export-button',
             intro: '<ul><li>Use button to download a JSON file of all snapshots</li> </ul>',
@@ -281,7 +274,7 @@ export default class Tutorial extends React.Component<tutorialProps, tutorialSta
           ref={(steps) => (this.steps = steps)}
         />
         <button className='howToUse-button' type='button' onClick={() => startIntro()}>
-          <FontAwesomeIcon icon={faQuestion} /> How to use
+          <FontAwesomeIcon icon={faQuestion} /> Tutorial
         </button>
       </>
     );

@@ -13,7 +13,6 @@ export const NEW_SNAPSHOTS = 'NEW_SNAPSHOTS';
 export const SET_TAB = 'SET_TAB';
 export const DELETE_TAB = 'DELETE_TAB';
 export const NO_DEV = 'NO_DEV';
-export const TOGGLE_SPLIT = 'TOGGLE_SPLIT';
 export const TOGGLE_EXPANDED = 'TOGGLE_EXPANDED';
 export const LAUNCH_CONTENT = 'LAUNCH_CONTENT';
 export const SLIDER_ZERO = 'SLIDER_ZERO';

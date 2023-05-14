@@ -13,14 +13,12 @@ const initialState: {
   port: null | number;
   currentTab: null | number;
   currentTitle: null | string;
-  split: null | boolean;
   tabs: unknown;
   currentTabInApp: null | string;
 } = {
   port: null,
   currentTab: null,
   currentTitle: 'No Target',
-  split: false,
   tabs: {},
   currentTabInApp: null,
 };

@@ -5,9 +5,11 @@ export const save = (newSeries, newSeriesName) => ({
   type: types.SAVE,
   payload: { newSeries, newSeriesName },
 });
+
 export const deleteSeries = () => ({
   type: types.DELETE_SERIES,
 });
+
 export const toggleMode = (mode) => ({
   type: types.TOGGLE_MODE,
   payload: mode,
@@ -84,10 +86,6 @@ export const deleteTab = (tab) => ({
 export const noDev = (tab) => ({
   type: types.NO_DEV,
   payload: tab,
-});
-
-export const toggleSplit = () => ({
-  type: types.TOGGLE_SPLIT,
 });
 
 export const toggleExpanded = (node) => ({

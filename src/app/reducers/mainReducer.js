@@ -328,10 +328,6 @@ export default (state, action) =>
         }
         break;
       }
-      case types.TOGGLE_SPLIT: {
-        draft.split = !draft.split;
-        break;
-      }
       case types.TOGGLE_EXPANDED: {
         // find correct node from currLocation and toggle isExpanded
         const checkChildren = (node) => {
