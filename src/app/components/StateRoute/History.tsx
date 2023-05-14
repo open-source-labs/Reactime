@@ -193,10 +193,11 @@ function History(props: Record<string, unknown>): JSX.Element {
             .append('div')
             .attr('class', `tooltip`)
             .attr('id', `tt-${d.data.index}`)
-            .style('left', `${event.clientX}px`)
-            .style('top', `${event.clientY}px`)
+            .style('left', `${event.clientX - 10}px`)
+            .style('top', `${event.clientY - 10}px`)
             .style('max-height', `25%`)
             .style('overflow', `scroll`);
+          console.log(findDiff(d.data.index));
           d3.selectAll('.tooltip').html(findDiff(d.data.index));
         }
 
@@ -211,7 +212,44 @@ function History(props: Record<string, unknown>): JSX.Element {
           }
         }
       })
-      .attr('transform', (d) => `translate(${d.x},${d.y})`);
+      .on('mouseenter', function (event, d) {
+        const [x, y] = d3.pointer(event);
+        if (d3.selectAll('.tooltip')._groups['0'].length === 0) {
+          const div = d3
+            .select('.display:first-child')
+            .append('div')
+            .attr('class', `tooltip`)
+            .attr('id', `tt-${d.data.index}`)
+            .style('left', `${event.clientX + 0}px`)
+            .style('top', `${event.clientY + 0}px`)
+            .style('max-height', `25%`)
+            .style('overflow', `auto`)
+            .on('mouseenter', function (event, d) {})
+            .on('mouseleave', function (event, d) {
+              d3.selectAll('.tooltip').remove().style('display', 'hidden');
+            });
+
+          d3.selectAll('.tooltip').html(findDiff(d.data.index));
+        }
+      })
+      .on('mouseleave', function (event, d) {
+        if (event.relatedTarget.id !== `tt-${d.data.index}`) {
+          d3.selectAll('.tooltip').transition().delay(100).remove();
+        }
+      })
+
+      .attr('transform', function (d) {
+        return `translate(${d.x},${d.y})`;
+      });
+
+    const tooltip = d3
+      .select('.tooltip')
+      .on('mousemove', function (event, d) {
+        d3.select('.tooltip').style('opacity', '1');
+      })
+      .on('mouseleave', function (event, d) {
+        d3.selectAll('.tooltip').remove();
+      });
 
     node
       .append('circle')
