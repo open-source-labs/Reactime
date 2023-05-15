@@ -43,11 +43,20 @@
   <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://www.reacti.me/">Website</a> • <a href="#read-more">Read More</a>
 </p>
 
-<b>Reactime 18.0</b> introduces a range of new and improved features aimed at optimizing performance and enhancing compatibility. 
-With support for Next.js and Remix, increased testing coverage(93% backend, frontend needs more), and structural improvements to the codebase. 
-Additionally, we are proud to announce the launch of our newly redesigned website, which serves as a hub for the latest updates and information about Reactime. 
-To aid with debugging, we have included demo applications for Next.js and Remix, enabling future iterators to test and troubleshoot with greater ease and efficiency.
+<b>Reactime 19.0</b> comes with UI updates to enhance the developer's experience, as well as a much-needed revamping of the codesbase to reflect current industry standards and better maintainability for future contributors.
 
+<i>UI Updates</i>
+
+To handle displaying large amounts of data, we have changed how nested structures like objects and arrays are displayed to now be collapsible and scrollable. In addition, we've updated component information to include the necessary component "key" information, and data now also persists on hover, eliminating the need to leave the cursor in one place.
+
+<i>Under the Hood</i>
+
+We are happy to say that we've migrated from Enzyme to React Testing Library to eliminate the need for the Enzyme adapter, converted from JavaScript to TypeScript to ensure type safety, and updated the traversal of the React Fiber Tree to accurately extract useState data for previously unsupported edge cases.
+
+<b>Reactime 18.0</b> introduces a range of new and improved features aimed at optimizing performance and enhancing compatibility.
+With support for Next.js and Remix, increased testing coverage(93% backend, frontend needs more), and structural improvements to the codebase.
+Additionally, we are proud to announce the launch of our newly redesigned website, which serves as a hub for the latest updates and information about Reactime.
+To aid with debugging, we have included demo applications for Next.js and Remix, enabling future iterators to test and troubleshoot with greater ease and efficiency.
 
 <b>Reactime 17.0</b>
 We are pleased to announce the release of Reactime 17.0,
@@ -55,52 +64,10 @@ which includes several new and improved features. Context API support has now be
 You can now monitor state stored in context if your component is subscribed to context changes.
 We also improved the tooltip UI on our tree diagram to improve readability.
 In addition, we have redesigned the Reactime.dev website using Tailwind CSS,
- resulting in a clean, modern design with an intuitive layout.
- To stay informed about future updates, you can now sign up for email notifications.
+resulting in a clean, modern design with an intuitive layout.
+To stay informed about future updates, you can now sign up for email notifications.
 
-<b>Reactime 16.0</b> presents the codebase with substantial, much-needed
-clean-up. From the backend and frontend to testing, the Reactime XVI team has:
-removed vestigial code, added comments to clarify code, implemented 100% testing
-coverage for the codebase, compartmentalized and modularized files, and
-implemented typescript.
-
-The primary purpose of this update is to allow easier understanding of
-Reactime's codebase by individuals or groups wishing to further update Reactime,
-keeping this great developer tool alive.
-
-With release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
-'npm run dev' || 'npm run build' for backwards compatibility.<br/> For version
-Node v16.16.0, please use script 'npm run devlegacy' || 'npm run buildlegacy'
-
-Previously, <b>Reactime 14.0 and 15.0</b> added the exciting features below:
-
-I. React Router Compatibility <br> Reactime is now compatible with React Router
-applications! Prior to Reactime 14.0, recording state snapshots as the user
-navigated across various routes was possible, but time travel debugging was only
-possible for the current route (i.e. jumping back to a prior state at a
-different route was not possible). In order to streamline debugging of
-applications with multiple routes, Reactime 14.0 added functionality that allows
-the user to time-travel back to different routes, including live updating in the
-browser to reflect the state of their application at that previously visited
-route.
-
-II. Classifying State Snapshots by Route <br> The list of state snapshots in the
-Reactime dashboard is now classified by route to give the developer visual cues
-of the snapshot-route relationship and make time travel debugging of various
-routes easier.
-
-III. Filtering Performance Metrics By Route <br> The Reactime dashboard includes
-a stacked bar graph showing render times for each component, with a separate bar
-stack for each snapshot. With Reactime 14.0, this composite bar graph can now be
-filtered by route to allow the developer to review detailed performance data by
-route.
-
-IV. Visualize And Compare Components Within a Snapshot <br> Users not only have
-access to multiple snapshots, but can now zone into a specified snapshot more
-granularly through a new visualization consisting of its individual components.
-These new graphs are rendered directly in the same Performance tab in Reactime
-and provide details for each component when the user hovers over, providing a
-new visual comparison of components across a single chosen state.
+If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
 
 <p align="center">
 <img src="./assets/snapshot-comparison.gif" />
@@ -152,6 +119,10 @@ Reactime initially runs using the dev tools global hook from the Chrome API. It
 takes time for Chrome to load this. Try refreshing your application a couple
 times until you see Reactime running.
 
+### ❓ <b>Why do I need to have React Dev Tools enabled?</b>
+
+Reactime works in tandem with the React Developer Tools to access a React application's Fiber tree; under the hood, Reactime traverses the Fiber tree through the React Developer Tool's global hook, pulling all relevant information needed to display to the developer
+
 ### ❓ <b>There is a black screen instead of the Reactime extension</b>
 
 Try refreshing the application you want to test and refresh the DevTools by
@@ -176,7 +147,7 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 
 You can view your application's file structure and click on a snapshot to view
 your app's state. State can be visualized in a Component Graph, JSON Tree, or
-Performance Graph. Snapshots can be diffed with the previous snapshot, which can
+Performance Graph. Snapshots can be compared with the previous snapshot, which can
 be viewed in Diff mode.
 <br>
 <br>
@@ -256,7 +227,6 @@ application faster.
 Reactime offers debugging and performance tools for Remix apps (in beta). Support still
 needs to be added for multi-route time traveling. Every other feature works.
 
-
 ### 🔹 TypeScript Support
 
 Reactime offers support for TypeScript applications using stateful class
@@ -281,16 +251,13 @@ of the structure and interfaces of the codebase.
 - A dropdown to support development of projects on multiple tabs
 - A slider to move through snapshots quickly
 - A play button to move through snapshots automatically
-- A lock button, which stops recording each snapshot
-- A persist button to keep snapshots upon refresh (handy when changing code and
-  debugging)
 - Download/upload the current snapshots in memory
 - Declarative titles in the actions sidebar
 - Interative Tutorial Walkthrough
 - Toggle feature allowing temporary pause of state monitoring
 
-
 ### <b>Bug Fixes</b>
+
 - Search bar now searches for specific nodes successfully
 - Tab titles of chrome browser tabs not running an application in development
   mode are no longer affected by Reactime
@@ -298,6 +265,8 @@ of the structure and interfaces of the codebase.
 - Improved UI and performance
 
 ## <b>Read More</b>
+
+- [NAME OF 19'S MEDIUM ARTICLE](linkhere)
 - [Reactime 18.0. Better than ever](https://medium.com/@zdf2424/reactime-18-0-better-than-ever-148b81606257)
 - [Reactime v17.0.0: Now with support for the Context API, and a modern UI](https://medium.com/@reactime/reactime-v17-0-0-now-with-support-for-the-context-api-and-a-modern-ui-f0edf9e54dae)
 - [Reactime XVI: Clean-up Time](https://medium.com/@emintahirov1996/reactime-xvi-cleanup-time-a14ba3dcc8a6)
@@ -390,6 +359,10 @@ of the structure and interfaces of the codebase.
 - **Ngoc Zwolinski** - [@ngoczwolinski](https://github.com/ngoczwolinski)
 - **Peter Lam** - [@dev-plam](https://github.com/dev-plam)
 - **Zachary Freeman** - [@zacharydfreeman](https://github.com/zacharydfreeman/)
+- **Jackie Yuan** - [@yuanjackie1](https://github.com/yuanjackie1)
+- **Jasmine Noor** - [@jasnoo](https://github.com/jasnoo)
+- **Minzo Kim** - [@minzo-kim](https://github.com/minzo-kim)
+- **Mark Teets** - [@MarkTeets](https://github.com/MarkTeets)
 
 ## <b>License </b>
 
