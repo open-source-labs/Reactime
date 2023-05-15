@@ -225,18 +225,8 @@
   pointer-events:all !important;
 }
 
-.stateTip{
-  margin-top: 3px;
-  line-height: 1;
-  height: 100%;
-  overflow-y: hidden;
-  max-height: 400px;
-}
-
-.stateTip p {
-  line-height:1;
-  margin-top: 3px;
-  margin-bottom: 0px;
+.tooltipKey {
+  margin-bottom: -1px;
 }
 
 .historyToolTip{
@@ -253,7 +243,6 @@
   margin-bottom: 4px;
   padding: 2px;
   max-height: 30vh;
-  // border: 5px solid rgba(0, 0, 0, 0.9);
 }
 
 .tooltipData-JSONTree {
@@ -266,7 +255,6 @@
   overflow-y: auto;
   max-height: 30vh;
   scrollbar-color:#919499 #51565e;
-
 }
 
 .tooltipData-JSONTree::-webkit-scrollbar-thumb {
@@ -277,5 +265,3 @@
 .tooltipData-JSONTree::-webkit-scrollbar-track{
   background:#51565e;
 }
-
-

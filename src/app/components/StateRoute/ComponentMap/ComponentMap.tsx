@@ -100,7 +100,7 @@ export default function ComponentMap({
     ...defaultStyles,
     minWidth: 60,
     maxWidth: 300,
-    backgroundColor: 'rgba(0,0,0,0.9)',
+    backgroundColor: 'rgb(15,15,15)',
     color: 'white',
     fontSize: '14px',
     lineHeight: '18px',
@@ -121,11 +121,6 @@ export default function ComponentMap({
   const formatRenderTime = (time: number): string => {
     const renderTime = time.toFixed(3);
     return `${renderTime} ms `;
-  };
-
-  const formatState = (state) => {
-    if (state === 'stateless') return ['stateless'];
-    return ['stateful'];
   };
 
   // places all nodes into a flat array
@@ -355,21 +350,19 @@ export default function ComponentMap({
           }}
         >
           <div>
-            <div style={{}}>
-              {' '}
-              <strong>{tooltipData.name}</strong>{' '}
+            <div>
+              <strong>{tooltipData.name}</strong>
+            </div>
+            <div className='tooltipKey'>
+              key: {tooltipData.componentData.key !== null ? tooltipData.componentData.key : 'null'}
             </div>
             <div> Render time: {formatRenderTime(tooltipData.componentData.actualDuration)} </div>
-            <div className='stateTip'>
-              State: {formatState(tooltipData.state)}
-            </div>
-            <div style={React.scrollStyle}>
-              
+            
+            <div>
               <ToolTipDataDisplay
                 containerName='Props' 
                 dataObj={tooltipData.componentData.props}
               />
-
               <ToolTipDataDisplay
                 containerName='State'
                 dataObj={tooltipData.componentData.hooksIndex
