@@ -5,7 +5,7 @@
 import React from 'react';
 import ReactHover, { Trigger, Hover } from 'react-hover';
 import { changeView, changeSlider } from '../actions/actions';
-import { ActionProps } from '../components/FrontendTypes';
+import { ActionProps, OptionsCursorTrueWithMargin } from '../components/FrontendTypes';
 
 /**
  * @function Action
@@ -41,12 +41,12 @@ const Action = (props: ActionProps): JSX.Element => {
    * @function cleanTime: Displays render times for state changes
    * @returns render display time in seconds in milliseconds
    */
-    const cleanTime = ():string => {
+    const cleanTime = (): string => {
     if (!componentData || !componentData.actualDuration) {
       return 'NO TIME';
     }
     let seconds: number | string;
-    let milliseconds: any  = componentData.actualDuration;
+    let milliseconds: any = componentData.actualDuration;
     if (Math.floor(componentData.actualDuration) > 60) {
       seconds = Math.floor(componentData.actualDuration / 60);
       seconds = JSON.stringify(seconds);
@@ -57,8 +57,8 @@ const Action = (props: ActionProps): JSX.Element => {
     } else {
       seconds = '00';
     }
-    milliseconds = Number.parseFloat(milliseconds).toFixed(2);
-    const arrayMilliseconds = milliseconds.split('.');
+    milliseconds = Number.parseFloat(milliseconds as string).toFixed(2);
+    const arrayMilliseconds: string | number = milliseconds.split('.');
     if (arrayMilliseconds[0].length < 2) {
       arrayMilliseconds[0] = '0'.concat(arrayMilliseconds[0]);
     }
@@ -69,7 +69,7 @@ const Action = (props: ActionProps): JSX.Element => {
   };
   const displayTime: string = cleanTime();
 
-  const optionsCursorTrueWithMargin: {} = {
+  const optionsCursorTrueWithMargin: OptionsCursorTrueWithMargin = {
     followCursor: true,
     shiftX: 20,
     shiftY: 0,
@@ -79,7 +79,7 @@ const Action = (props: ActionProps): JSX.Element => {
     <div className='individual-action'>
       <div
         // Invoking keyboard functionality; functionality is in ActionContainer;
-        onKeyDown={(e) => handleOnkeyDown(e, viewIndex)}
+        onKeyDown={(e):void => handleOnkeyDown(e, viewIndex)}
         className={selected || last ? 'action-component selected' : 'action-component'}
         onClick={() => {
           dispatch(changeView(index));
@@ -112,7 +112,7 @@ const Action = (props: ActionProps): JSX.Element => {
               ) : (
                 <button
                   className='jump-button'
-                  onClick={(e: any): void => {
+                  onClick={(e): void => {
                     e.stopPropagation();
                     dispatch(changeSlider(index));
                     dispatch(changeView(index));
