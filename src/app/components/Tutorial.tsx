@@ -237,6 +237,47 @@ export default class Tutorial extends React.Component<tutorialProps, tutorialSta
           },
         ];
         break;
+      case 'webmetrics':
+        steps = [
+          {
+            title: 'Webmetrics Tab',
+            element: '.web-metrics-container',
+            intro: 'This section will show 4 webmetrics for your page.',
+            position: 'top',
+          },
+          {
+            title: 'LCP',
+            element: document.querySelectorAll('.metric')[0],
+            intro:
+              '<strong>Largest Contentful Paint</strong><br/>The amount of time it takes for the largest image, video or text block within the viewport to be fully rendered and interactive.',
+            position: 'top',
+          },
+
+          {
+            title: 'FID',
+            element: document.querySelectorAll('.metric')[1],
+            intro:
+              '<strong>First Input Delay</strong><br/>A measurement of load responsiveness, the time from the first user interaction (for example, a click) to the browser responding to that interaction.',
+            position: 'top',
+          },
+
+          {
+            title: 'FCP',
+            element: document.querySelectorAll('.metric')[2],
+            intro:
+              '<strong>First Contentful Paint</strong><br/>The amount of time it takes to render the first DOM element of any variety',
+            position: 'top',
+          },
+
+          {
+            title: 'TTFB',
+            element: document.querySelectorAll('.metric')[3],
+            intro:
+              "<strong>Time to first Byte</strong><br/>The amount of time it takes for a user's browser to receive the first byte of page content from the server.",
+            position: 'top',
+          },
+        ];
+        break;
       default:
         steps = [
           {
