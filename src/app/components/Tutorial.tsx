@@ -8,23 +8,15 @@ import 'intro.js/introjs.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
+import { TutorialProps, TutorialState, StepsObj } from '../components/FrontendTypes';
 
 //Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
 const { Steps } = require('intro.js-react');
 
-interface tutorialProps {
-  dispatch: (object) => void;
-  currentTabInApp: string;
-}
-
-interface tutorialState {
-  stepsEnabled: boolean;
-}
-
 // This is the tutorial displayed when the "How to use" button is clicked
 // This needs to be a class component to be compatible with updateStepElement from intro.js
-export default class Tutorial extends React.Component<tutorialProps, tutorialState> {
-  constructor(props: tutorialProps) {
+export default class Tutorial extends Component<TutorialProps, TutorialState> {
+  constructor(props: TutorialProps) {
     super(props);
     this.state = {
       stepsEnabled: false,
@@ -82,14 +74,8 @@ export default class Tutorial extends React.Component<tutorialProps, tutorialSta
       this.setState({ stepsEnabled: true });
     };
 
-    interface stepsObj {
-      title: string;
-      element?: string;
-      intro: string;
-      position: string;
-    }
 
-    let steps: stepsObj[] = [];
+    let steps: StepsObj[] = [];
 
     switch (currentTabInApp) {
       case 'map':
