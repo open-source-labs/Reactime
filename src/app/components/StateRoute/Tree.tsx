@@ -49,7 +49,7 @@ const Tree = (props: TreeProps) => {
   const [store, dispatch] = useStoreContext();
 
   useEffect(() => {
-    dispatch(setCurrentTabInApp('history'));
+    dispatch(setCurrentTabInApp('tree'));
   }, []);
 
   return (

@@ -242,7 +242,7 @@ export default class Tutorial extends React.Component<tutorialProps, tutorialSta
           {
             title: 'Webmetrics Tab',
             element: '.web-metrics-container',
-            intro: 'This section will show 4 webmetrics for your page.',
+            intro: 'This section will show 4 webmetrics for your page when it loads.',
             position: 'top',
           },
           {
@@ -273,7 +273,57 @@ export default class Tutorial extends React.Component<tutorialProps, tutorialSta
             title: 'TTFB',
             element: document.querySelectorAll('.metric')[3],
             intro:
-              "<strong>Time to first Byte</strong><br/>The amount of time it takes for a user's browser to receive the first byte of page content from the server.",
+              "<strong>Time To First Byte</strong><br/>The amount of time it takes for a user's browser to receive the first byte of page content from the server.",
+            position: 'top',
+          },
+        ];
+        break;
+      case 'history':
+        steps = [
+          {
+            title: 'History Tab',
+            element: '.display',
+            intro:
+              'The history tab shows all snapshots as a timeline and includes branches to represent divergent state history created from time traveling backwards and making new state changes.',
+            position: 'top',
+          },
+          {
+            title: 'Viewing History Snapshot',
+            element: document.querySelectorAll('.snapshotNode')[0],
+            intro:
+              'Each node will represent a snapshot in the page. <ul><li>A single snapshot will show as a node while multiple snapshots will be represented as a timeline.</li><li>Highlighting over one will show any state changes compared to the previous snapshot. </li><li>Clicking a node will set the snapshot as the current one.</li></ul>',
+            position: 'top',
+          },
+          {
+            title: 'Navigating through Snapshots',
+            element: '.routedescription',
+            intro: 'All snapshots can also be seen and navigated here as well.',
+            position: 'right',
+          },
+
+          {
+            title: 'Clicking on Jump Button',
+            element: document.querySelectorAll('.individual-action')[0],
+            intro:
+              'The button on the right of each snapshot can be used to jump to a given point in state to view the state history at that point.',
+            position: 'right',
+          },
+          {
+            title: 'Renaming The Snapshot',
+            element: document.querySelectorAll('.action-component-text')[0],
+            intro:
+              'A snapshot can be renamed to provided more clarity or distinguish specific snapshots.',
+            position: 'left',
+          },
+        ];
+        break;
+      case 'tree':
+        steps = [
+          {
+            title: 'Tree Tab',
+            element: '.display',
+            intro:
+              'The tree tab can be used to view a text display of the state snapshots in a JSON format.',
             position: 'top',
           },
         ];

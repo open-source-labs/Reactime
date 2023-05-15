@@ -177,6 +177,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .enter()
       .append('g')
       .style('cursor', 'pointer')
+      .attr('class', `snapshotNode`)
       .on('click', (event, d) => {
         dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
@@ -253,6 +254,7 @@ function History(props: Record<string, unknown>): JSX.Element {
 
     node
       .append('circle')
+
       .attr('fill', (d) => {
         if (d.data.index === currLocation.index) {
           return 'red';
