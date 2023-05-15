@@ -197,16 +197,17 @@ function MainContainer(): JSX.Element {
   }
 
   return (
-    <div className='main-container'>
+    <div key='main' className='main-container'>
       <div id='bodyContainer' className='body-container'>
         <ActionContainer
+          key='action'
           actionView={actionView}
           setActionView={setActionView}
           toggleActionContainer={toggleActionContainer}
         />
         {snapshots.length ? handleSplit(split) : null}
-        <TravelContainer snapshotsLength={snapshots.length} />
-        <ButtonsContainer />
+        <TravelContainer key='travel' snapshotsLength={snapshots.length} />
+        <ButtonsContainer key='button' />
       </div>
     </div>
   );

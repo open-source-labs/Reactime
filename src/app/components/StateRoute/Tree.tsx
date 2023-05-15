@@ -40,21 +40,27 @@ interface TreeProps {
     stateSnaphot?: object;
     children?: any[];
   };
+  snapshots?;
+  currLocation?;
 }
 
 const Tree = (props: TreeProps) => {
-  const { snapshot } = props;
+  const { snapshot, snapshots, currLocation } = props;
   const [store, dispatch] = useStoreContext();
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('history'));
   }, []);
 
+  console.log('props:', props);
+  // console.log('snapshot:', snapshot);
+  // console.group('store:', store);
   return (
     <>
       {snapshot && (
         <JSONTree
-          data={snapshot}
+          data={snapshots[currLocation['index']] || snapshot}
+          // data={snapshot}
           theme={{ extend: colors, tree: () => ({ className: 'json-tree' }) }}
           shouldExpandNode={() => true}
           getItemString={getItemString}
