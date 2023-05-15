@@ -52,9 +52,6 @@ const Tree = (props: TreeProps) => {
     dispatch(setCurrentTabInApp('history'));
   }, []);
 
-  console.log('props:', props);
-  // console.log('snapshot:', snapshot);
-  // console.group('store:', store);
   return (
     <>
       {snapshot && (
