@@ -178,7 +178,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .enter()
       .append('g')
       .style('cursor', 'pointer')
-      .on('click', (d) => {
+      .on('click', (event, d) => {
         dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
       })
@@ -194,8 +194,8 @@ function History(props: Record<string, unknown>): JSX.Element {
           .select('.display')
           .append('div')
           .attr('class', 'tooltip')
-          .style('left', `${x}px`)
-          .style('top', `${y}px`);
+          .style('left', `${event.clientX}px`)
+          .style('top', `${event.clientY}px`);
         d3.selectAll('.tooltip').html(findDiff(d.data.index));
       })
       .on('mouseout', (d) => {

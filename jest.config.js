@@ -6,8 +6,8 @@ module.exports = {
   transform: {
     '^.+\\.(js|ts|tsx)$': 'ts-jest',
   },
-  testPathIgnorePatterns: ['www', './src/backend/__tests__/ignore'],
-  coveragePathIgnorePatterns: ['/src/backend/__tests__/ignore/'],
+  testPathIgnorePatterns: ['www', './src/backend/__tests__/ignore', './src/app/__tests__enzyme/ignore'],
+  coveragePathIgnorePatterns: ['/src/backend/__tests__/ignore/', '/src/app/__tests__enzyme/ignore'],
   transformIgnorePatterns: ['/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)'],
   testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$',
   moduleFileExtensions: ['ts', 'tsx', 'js'],

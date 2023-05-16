@@ -94,8 +94,8 @@ function ErrorContainer(): JSX.Element  {
         <ErrorMsg loadingArray={loadingArray} status={status} launchContent={launch} />
       </div>
       <br />
-      <a href='https://reactime.dev/' target='_blank' rel='noopener noreferrer'>
-        Please visit reactime.dev to more info.
+      <a href='https://www.reacti.me/' target='_blank' rel='noopener noreferrer'>
+        Please visit the Reactime website for more info.
       </a>
     </div>
   );

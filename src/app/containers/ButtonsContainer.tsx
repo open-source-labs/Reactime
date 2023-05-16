@@ -15,7 +15,7 @@ import Tutorial from '../components/Tutorial';
 
 function exportHandler(snapshots: []): void {
   // create invisible download anchor link
-  const fileDownload:HTMLAnchorElement = document.createElement('a');
+  const fileDownload: HTMLAnchorElement = document.createElement('a');
 
   // set file in anchor link
   fileDownload.href = URL.createObjectURL(
@@ -30,7 +30,7 @@ function exportHandler(snapshots: []): void {
   URL.revokeObjectURL(fileDownload.href);
 }
 
-function importHandler(dispatch: (a: unknown) => void) {
+function importHandler(dispatch: (a: unknown) => void): void {
   const fileUpload = document.createElement('input');
   fileUpload.setAttribute('type', 'file');
 
@@ -65,12 +65,6 @@ function ButtonsContainer(): JSX.Element {
         {paused ? <FontAwesomeIcon icon={faUnlock} /> : <FontAwesomeIcon icon={faLock} />}
         {paused ? 'Unlock' : 'Lock'}
       </button>
-
-      <button className='split-button' type='button' onClick={() => dispatch(toggleSplit())}>
-        {split ? <FontAwesomeIcon icon={faSquare} /> : <FontAwesomeIcon icon={faColumns} />}
-        {split ? 'Unsplit' : 'Split'}
-      </button>
-
       <button className='export-button' type='button' onClick={() => exportHandler(snapshots)}>
         <FontAwesomeIcon icon={faDownload} />
         Download

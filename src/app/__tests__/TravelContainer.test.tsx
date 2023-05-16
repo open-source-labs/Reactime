@@ -1,85 +1,126 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/jsx-filename-extension */
-import { shallow, configure } from 'enzyme';
 import React from 'react';
-import Adapter from 'enzyme-adapter-react-16';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import TravelContainer from '../containers/TravelContainer';
-import MainSlider from '../components/MainSlider';
-import Dropdown from '../components/Dropdown';
 import { useStoreContext } from '../store';
-import { moveBackward, moveForward } from '../actions/actions';
-
-configure({ adapter: new (Adapter as any)() });
 
 const state = {
   tabs: {
     87: {
-      snapshots: [1, 2, 3, 4],
-      sliderIndex: 2,
-      playing: true,
+      snapshots: [0, 1, 2, 3], // because snapshot index starts at 0
+      sliderIndex: 3,
+      playing: false,
     },
   },
   currentTab: 87,
 };
 
+const play = jest.fn();
 const dispatch = jest.fn();
+
 jest.mock('../store');
-useStoreContext.mockImplementation(() => [state, dispatch]);
+const mockedStoreContext = jest.mocked(useStoreContext);
+mockedStoreContext.mockImplementation(() => [state, dispatch]);
 
-let wrapper;
-
-beforeEach(() => {
-  wrapper = shallow(<TravelContainer snapshotsLength={2} />);
-  useStoreContext.mockClear();
-  dispatch.mockClear();
+const mockSlider = jest.fn();
+jest.mock('../components/MainSlider', () => (props) => {
+  mockSlider(props);
+  return <div>MockSlider</div>;
 });
 
-describe('<TravelContainer /> rendering', () => {
-  test('should render three buttons', () => {
-    expect(wrapper.find('button')).toHaveLength(3);
+const mockDropDown = jest.fn();
+jest.mock('../components/Dropdown', () => (props) => {
+  mockDropDown(props);
+  return <div>mockDropDown</div>;
+});
+
+describe('All elements appear in the TravelContainer module', () => {
+  beforeEach(() => {
+    dispatch.mockClear();
+    render(<TravelContainer snapshotsLength={0} />);
   });
-  test('should render one MainSlider', () => {
-    expect(wrapper.find(MainSlider)).toHaveLength(1);
+
+  test('first button contains text Play', () => {
+    let buttons = screen.getAllByRole('button');
+    expect(buttons[0]).toHaveTextContent('Play');
   });
-  test('should render one Dropdown', () => {
-    expect(wrapper.find(Dropdown)).toHaveLength(1);
+
+  test('MainSlider exists in document', () => {
+    expect(screen.getByText('MockSlider')).toBeInTheDocument();
+  });
+  test('Dropdown exists in document', () => {
+    expect(screen.getByText('mockDropDown')).toBeInTheDocument();
+  });
+
+  test('Backward button exists in document', () => {
+    let buttons = screen.getAllByRole('button');
+    expect(buttons[1]).toHaveTextContent('<');
+  });
+
+  test('Foward button exists in document', () => {
+    let buttons = screen.getAllByRole('button');
+    expect(buttons[2]).toHaveTextContent('>');
   });
 });
 
-describe('testing the backward-button', () => {
-  test('should dispatch action upon click', () => {
-    wrapper.find('.backward-button').simulate('click');
-    expect(dispatch.mock.calls.length).toBe(1);
+describe('Testing backward and forward button', () => {
+  beforeEach(() => {
+    dispatch.mockClear();
+    render(<TravelContainer snapshotsLength={0} />);
   });
 
-  test('should send moveBackward action to dispatch', () => {
-    wrapper.find('.backward-button').simulate('click');
-    expect(dispatch.mock.calls[0][0]).toEqual(moveBackward());
-  });
-});
-
-describe('testing the forward-button', () => {
-  test('should dispatch action upon click', () => {
-    wrapper.find('.forward-button').simulate('click');
-    expect(dispatch.mock.calls.length).toBe(1);
+  test('Clicking < Button button will triger button', async () => {
+    let buttons = screen.getAllByRole('button');
+    expect(buttons[1]).toHaveTextContent('<');
+    fireEvent.click(buttons[1]);
+    await expect(dispatch).toHaveBeenCalledTimes(1);
   });
 
-  test('should send moveforward action to dispatch', () => {
-    wrapper.find('.forward-button').simulate('click');
-    expect(dispatch.mock.calls[0][0]).toEqual(moveForward());
+  test('Clicking > Button button will triger button', async () => {
+    let buttons = screen.getAllByRole('button');
+    expect(buttons[2]).toHaveTextContent('>');
+    fireEvent.click(buttons[2]);
+    await expect(dispatch).toHaveBeenCalledTimes(1);
   });
 });
 
-describe('testing the play-button', () => {
-  test("should display 'pause' if playing is true", () => {
+describe('Testing play/pause button', () => {
+  beforeEach(() => {
+    dispatch.mockClear();
+  });
+
+  test('Play button is rendered', () => {
+    render(<TravelContainer snapshotsLength={0} />);
+    const playButton = screen.getByTestId('play-button-test');
+    expect(playButton).toBeInTheDocument();
+  });
+  test('Play initially says Play', () => {
+    render(<TravelContainer snapshotsLength={0} />);
+    const playButton = screen.getByTestId('play-button-test');
+    expect(playButton.textContent).toBe('Play');
+  });
+
+  test('Clicking Play button will triger button', async () => {
+    render(<TravelContainer snapshotsLength={0} />);
+    const playButton = screen.getByTestId('play-button-test');
+    expect(playButton.textContent).toBe('Play');
+    fireEvent.click(playButton);
+    await expect(dispatch).toHaveBeenCalledTimes(1);
+  });
+
+  test('Play says Pause when `Playing` is set to False', () => {
     state.tabs[87].playing = true;
-    wrapper = shallow(<TravelContainer snapshotsLength={2} />);
-    expect(wrapper.find('.play-button').text()).toBe('Pause');
+    render(<TravelContainer snapshotsLength={0} />);
+    const playButton = screen.getByTestId('play-button-test');
+    expect(playButton.textContent).toBe('Pause');
   });
 
-  test('should display play if playing is false', () => {
+  test('Clicking Pause button will trigger button', async () => {
+    render(<TravelContainer snapshotsLength={0} />);
+    const playButton = screen.getByTestId('play-button-test');
+    expect(playButton.textContent).toBe('Pause');
+    fireEvent.click(playButton);
+    await expect(dispatch).toHaveBeenCalledTimes(1);
     state.tabs[87].playing = false;
-    wrapper = shallow(<TravelContainer snapshotsLength={2} />);
-    expect(wrapper.find('.play-button').text()).toBe('Play');
   });
 });

@@ -5,27 +5,7 @@
 import React from 'react';
 import ReactHover, { Trigger, Hover } from 'react-hover';
 import { changeView, changeSlider } from '../actions/actions';
-
-/**
- * @template ActionProps Props for the action component
- */
-
-interface ActionProps {
-  key: string;
-  selected: boolean;
-  last: boolean;
-  index: number;
-  sliderIndex: number;
-  dispatch: (a: any) => void;
-  displayName: string;
-  componentName: string;
-  componentData: { actualDuration: number } | undefined;
-  routePath: any;
-  state?: Record<string, unknown>;
-  viewIndex: number | undefined;
-  isCurrIndex: boolean;
-  handleOnkeyDown: (e: any, i: number) => any;
-}
+import { ActionProps } from '../components/FrontendTypes';
 
 /**
  * @function Action
@@ -66,7 +46,7 @@ const Action = (props: ActionProps): JSX.Element => {
       return 'NO TIME';
     }
     let seconds: number | string;
-    let milliseconds: any = componentData.actualDuration;
+    let milliseconds: any  = componentData.actualDuration;
     if (Math.floor(componentData.actualDuration) > 60) {
       seconds = Math.floor(componentData.actualDuration / 60);
       seconds = JSON.stringify(seconds);
@@ -89,7 +69,7 @@ const Action = (props: ActionProps): JSX.Element => {
   };
   const displayTime: string = cleanTime();
 
-  const optionsCursorTrueWithMargin = {
+  const optionsCursorTrueWithMargin: {} = {
     followCursor: true,
     shiftX: 20,
     shiftY: 0,
