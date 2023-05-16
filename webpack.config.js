@@ -110,7 +110,7 @@ const config = {
 
   // Add `.ts` and `.tsx` as a resolvable extension.
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
 };
 

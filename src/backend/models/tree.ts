@@ -1,7 +1,7 @@
 import { Route } from './routes';
 import { ComponentData } from '../types/backendTypes';
 
-// ComponentNames is used to store a mapping between a component's unique identifier and its name. This mapping is used to reconstruct the component instances during deserialization.
+/** ComponentNames is used to store a mapping between a component's unique identifier and its name. This mapping is used to reconstruct the component instances during deserialization.*/
 let componentNames = {};
 
 // Making a deep clone of state becuase we want to make a copy
@@ -33,7 +33,7 @@ export function serializeState(state) {
  * @param route - an object representing the route associated with the node.
  */
 class Tree {
-  state: string | {}; // TODO: should change this to stateless || statefull
+  state: string | {}; // TODO: should change this to stateless | statefull | root
 
   name: string;
 
@@ -86,11 +86,22 @@ class Tree {
     // if parent node is root, initialize the componentNames object
     if (this.name === 'root') componentNames = {};
 
+    //Original code, left for group review
     // Numerize the component name if found duplicate
     // Ex: A board has 3 rows => Row, Row1, Row2
     // Ex: Each row has 3 boxes => Box, Box1, Box2, ..., Box8
     componentNames[name] = componentNames[name] + 1 || 0;
     name += componentNames[name] ? componentNames[name] : '';
+    
+    /**
+     * Mark's notes: I know we start at 0 for arrays but I found it weird
+     *  that you'd see a component 'Box' and then the second one would be labeled 
+     * 'Box1'. So I changed the second one to be 'Box2'. What I'd like to do is iterate
+     *  over the the componentNames array and if any component name is > 1, find the first 
+     *  one and make that one 'Box1', but one thing at a time 
+     */
+    // componentNames[name] = componentNames[name] + 1 || 1;
+    // if (componentNames[name] > 1) name += componentNames[name]
 
     return name;
   }
