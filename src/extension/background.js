@@ -434,7 +434,7 @@ chrome.tabs.onActivated.addListener((info) => {
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: 'reactime',
-    title: 'Mark\'s Reactime 19',
+    title: 'Reactime',
     contexts: ['page', 'selection', 'image', 'link'],
   });
 });
