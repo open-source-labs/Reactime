@@ -115,9 +115,10 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
           // Due to difference in babel transpilation in browser vs for jest test, expression is stored in differen location
           const expression =
             declarations[0]?.init?.callee?.expressions || //work for browser
-            declarations[0]?.init?.arguments?.[0]?.callee?.expressions; //work for jest test;
-          // A functional declaration within a component that isn't a hook won't have the callee being searched for above. This line will cause this forEach execution to stop here in this case.
-          if (expression === undefined) return;
+            declarations[0]?.init?.arguments?.[0]?.callee?.expressions; //work for jest test; 
+
+          //For a functional definition that isn't a hook, it won't have the callee being searched for above. This line will cause this forEach execution to stop here in this case.
+          if (expression === undefined) return; 
           let reactHook: string;
           reactHook = expression[1].property?.name;
           if (reactHook === 'useState') {

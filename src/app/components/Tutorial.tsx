@@ -260,7 +260,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           ref={(steps) => (this.steps = steps)}
         />
         <button className='howToUse-button' type='button' onClick={() => startIntro()}>
-          <FontAwesomeIcon icon={faQuestion} /> How to use
+          <FontAwesomeIcon icon={faQuestion} /> Tutorial
         </button>
       </>
     );

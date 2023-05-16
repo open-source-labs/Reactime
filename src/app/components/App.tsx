@@ -13,7 +13,6 @@ const initialState: InitialStateProps = {
   port: null,
   currentTab: null,
   currentTitle: 'No Target',
-  split: false,
   tabs: {},
   currentTabInApp: null,
 };
