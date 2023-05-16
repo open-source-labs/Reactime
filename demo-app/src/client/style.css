@@ -5,7 +5,7 @@ body {
   background-color: #FFF4F4;
 }
 
-h1, h4 {
+h1, h2, h4 {
   text-align: center;
 }
 
@@ -146,4 +146,23 @@ h1, h4 {
 
 .increment:hover {
   background-color: #62d6fb;
+}
+
+.hook-data-section {
+  border: 2px solid #FF6569;
+  border-radius: 5px;
+  margin: 10px 0;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hook-data-section h4 {
+  margin: 2px 0;
+}
+
+.hook-data-section p {
+  text-align: center;
+  margin: 8px;
 }
