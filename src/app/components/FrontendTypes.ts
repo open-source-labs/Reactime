@@ -138,7 +138,6 @@ export interface InitialStateProps {
   port: null | number;
   currentTab: null | number;
   currentTitle: null | string;
-  split: null | boolean;
   tabs: unknown;
   currentTabInApp: null | string;
 }
