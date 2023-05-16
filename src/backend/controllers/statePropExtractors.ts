@@ -100,7 +100,7 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
      * Other types: "BlockStatement" / "ExpressionStatement" / "ReturnStatement"
      * Iterate through AST of every functional component declaration
      * Check within each functional component declaration if there are hook declarations & variable name declaration */
-    AST.forEach((functionDec: {expression: {body: {body: {}}}, body: {body: {}}}) => {
+    AST.forEach((functionDec: any) => {
       let declarationBody: any;
       if (functionDec.expression?.body) declarationBody = functionDec.expression.body.body;
       // check if functionDec.expression.body exists, then set declarationBody to functionDec's body
