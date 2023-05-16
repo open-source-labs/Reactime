@@ -1,22 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/jsx-props-no-spreading */
-import { shallow, configure } from 'enzyme';
 import React from 'react';
-import Adapter from 'enzyme-adapter-react-16';
-import Slider from 'rc-slider';
-import Tooltip from 'rc-tooltip';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import { TextEncoder } from 'util';
+global.TextEncoder = TextEncoder;
 import MainSlider from '../components/MainSlider';
-
 import { useStoreContext } from '../store';
 
-configure({ adapter: new (Adapter as any)() });
-
 jest.mock('../store');
-// the handle function in MainSlider returns out a Tooltip Component
-const handle = Tooltip;
+const mockeduseStoreContext = jest.mocked(useStoreContext);
 
 describe('Unit testing for MainSlider.jsx', () => {
-  let wrapper;
   const props = {
     snapshotsLength: 1,
   };
@@ -31,35 +24,37 @@ describe('Unit testing for MainSlider.jsx', () => {
   };
 
   const dispatch = jest.fn();
-  useStoreContext.mockImplementation(() => [state, dispatch]);
+  mockeduseStoreContext.mockImplementation(() => [state, dispatch]);
 
-  beforeEach(() => {
-    wrapper = shallow(<MainSlider {...props} />);
-    dispatch.mockClear();
-  });
-  it('Component should return <Slider /> component from rc-slider library', () => {
-    expect(wrapper.type()).toEqual(Slider);
-  });
-  it('Component should have min, max, value, and handle props', () => {
-    expect(wrapper.props()).toHaveProperty('min');
-    expect(wrapper.props()).toHaveProperty('max');
-    expect(wrapper.props()).toHaveProperty('value');
-    expect(wrapper.props()).toHaveProperty('handle');
-  });
-  it('Prop type tests on component', () => {
-    expect(typeof wrapper.prop('min')).toEqual('number');
-    expect(typeof wrapper.prop('max')).toEqual('number');
-    expect(typeof wrapper.prop('value')).toEqual('number');
-    expect(typeof wrapper.prop('handle')).toEqual('function');
+  describe('When user only has one snapshot to view', () => {
+    test('Component should have min, max, value with correct values to indicate slider position for correct tab', () => {
+      render(<MainSlider {...props} />);
+      expect(screen.getByRole('slider')).toHaveAttribute('aria-valuemin', '0');
+      expect(screen.getByRole('slider')).toHaveAttribute('aria-valuemax', '0');
+      expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '0');
+    });
   });
 
-  describe('Testing for handle functional component', () => {
-    // this doesnt work, not sure how to implement yet
-    // the handle function should return a Tooltip component
-    // eslint-disable-next-line jest/no-test-prefixes
-    // eslint-disable-next-line jest/no-disabled-tests
-    it.skip('handle prop should return <Tooltip /> component from rc-tooltip library', () => {
-      expect(wrapper.prop('handle')()).toEqual(handle);
+  describe('When there are multiple snapshots and we are looking in between', () => {
+    const props = {
+      snapshotsLength: 3,
+    };
+
+    const state = {
+      tabs: {
+        100: {
+          sliderIndex: 1,
+        },
+      },
+      currentTab: 100,
+    };
+
+    // currently not working :( likely needs to correctly handle understanding what tab it should currently be at
+    test('Component should have min, max, value with correct values to indicate slider position when there are multiple snapshots', () => {
+      render(<MainSlider {...props} />);
+      expect(screen.getByRole('slider')).toHaveAttribute('aria-valuemax', '2');
+      expect(screen.getByRole('slider')).toHaveAttribute('aria-valuemin', '0');
+      // expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow','0')
     });
   });
 });

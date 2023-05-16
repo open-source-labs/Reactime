@@ -115,23 +115,23 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
           // Due to difference in babel transpilation in browser vs for jest test, expression is stored in differen location
           const expression =
             declarations[0]?.init?.callee?.expressions || //work for browser
-            declarations[0]?.init?.arguments?.[0]?.callee?.expressions; //work for jest test; 
+            declarations[0]?.init?.arguments?.[0]?.callee?.expressions; //work for jest test;
           // A functional declaration within a component that isn't a hook won't have the callee being searched for above. This line will cause this forEach execution to stop here in this case.
-          if (expression === undefined) return; 
+          if (expression === undefined) return;
           let reactHook: string;
           reactHook = expression[1].property?.name;
           if (reactHook === 'useState') {
             // Obtain the variable being set:
             let varName: string =
               // Points to second to last element of declarations because webpack adds an extra variable when converting files that use ES6
-              declarations[declarations.length - 2]?.id?.name || // work react application; 
+              declarations[declarations.length - 2]?.id?.name || // work react application;
               (Array.isArray(declarations[0]?.id?.elements)
                 ? declarations[0]?.id?.elements[0]?.name
                 : undefined); //work for nextJS application
             // Obtain the setState method:
             let hookName: string =
               //Points to last element of declarations because webpack adds an extra variable when converting files that use ES6
-              declarations[declarations.length - 1]?.id?.name || // work react application; 
+              declarations[declarations.length - 1]?.id?.name || // work react application;
               (Array.isArray(declarations[0]?.id?.elements)
                 ? declarations[0]?.id?.elements[0]?.name
                 : undefined); //work for nextJS & Remix

@@ -154,6 +154,8 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     // // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
     // // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
     // // TODO: need to render this context provider when user use useContext hook.
+    //
+    //
     // if (tag === ContextProvider && !elementType._context.displayName) {
     //   let stateData = memoizedProps.value;
     //   if (stateData === null || typeof stateData !== 'object') {
@@ -193,6 +195,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
           // Obtain variable names by parsing the function definition stored in elementType.
           const hooksNames = getHooksNames(elementType.toString());
+
           // Intialize state & index:
           componentData.hooksState = {};
           componentData.hooksIndex = [];
@@ -257,6 +260,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     }
 
     // ------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING------
+
     return tree;
   }
 }

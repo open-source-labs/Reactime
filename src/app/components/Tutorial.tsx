@@ -121,13 +121,6 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
             position: 'top',
           },
           {
-            title: 'Split Button',
-            element: '.split-button',
-            intro:
-              '<ul> <li>Use button to split Reactime into two windows in order to view multiple tabs simultaneously</li> </ul>',
-            position: 'top',
-          },
-          {
             title: 'Download Button',
             element: '.export-button',
             intro: '<ul><li>Use button to download a JSON file of all snapshots</li> </ul>',
