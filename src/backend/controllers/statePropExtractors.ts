@@ -123,7 +123,6 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
           reactHook = expression[1].property?.name;
           if (reactHook === 'useState') {
             // Obtain the variable being set:
-            //This points to second to last element of declarations because webpack adds an extra variable when converting files that use ES6, so the previous pointer wasn't working for this case
             let varName: string =
               // Points to second to last element of declarations because webpack adds an extra variable when converting files that use ES6
               declarations[declarations.length - 2]?.id?.name || // work react application;
@@ -131,7 +130,6 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
                 ? declarations[0]?.id?.elements[0]?.name
                 : undefined); //work for nextJS application
             // Obtain the setState method:
-            //This points to last element of declarations because webpack adds an extra variable when converting files that use ES6, so the previous pointer wasn't working for this case
             let hookName: string =
               //Points to last element of declarations because webpack adds an extra variable when converting files that use ES6
               declarations[declarations.length - 1]?.id?.name || // work react application;
