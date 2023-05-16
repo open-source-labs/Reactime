@@ -191,7 +191,6 @@ function History(props: Record<string, unknown>): JSX.Element {
             .style('top', `${event.clientY - 10}px`)
             .style('max-height', `25%`)
             .style('overflow', `scroll`);
-          console.log(findDiff(d.data.index));
           d3.selectAll('.tooltip').html(findDiff(d.data.index));
         }
 
@@ -201,8 +200,6 @@ function History(props: Record<string, unknown>): JSX.Element {
           if (d3.selectAll(`#tt-${d.data.index}`)._groups['0'].length === 0) {
             d3.selectAll('.tooltip').remove();
             renderToolTip();
-          } else {
-            d3.selectAll('.tooltip').remove();
           }
         }
       })
