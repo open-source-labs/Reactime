@@ -13,9 +13,9 @@ import { useStoreContext } from '../store';
 
 import Tutorial from '../components/Tutorial';
 
-function exportHandler(snapshots: []) {
+function exportHandler(snapshots: []): void {
   // create invisible download anchor link
-  const fileDownload = document.createElement('a');
+  const fileDownload: HTMLAnchorElement = document.createElement('a');
 
   // set file in anchor link
   fileDownload.href = URL.createObjectURL(
@@ -30,7 +30,7 @@ function exportHandler(snapshots: []) {
   URL.revokeObjectURL(fileDownload.href);
 }
 
-function importHandler(dispatch: (a: unknown) => void) {
+function importHandler(dispatch: (a: unknown) => void): void {
   const fileUpload = document.createElement('input');
   fileUpload.setAttribute('type', 'file');
 

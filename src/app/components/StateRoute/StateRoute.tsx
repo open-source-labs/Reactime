@@ -14,25 +14,12 @@ import { changeView, changeSlider } from '../../actions/actions';
 import { useStoreContext } from '../../store';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetrics from '../WebMetrics';
+import { StateRouteProps } from '../../components/FrontendTypes'
 
 const History = require('./History').default;
 
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
 
-export interface StateRouteProps {
-  snapshot: {
-    name?: string;
-    componentData?: object;
-    state?: string | object;
-    stateSnaphot?: object;
-    children?: any[];
-  };
-  hierarchy: any;
-  snapshots: [];
-  viewIndex: number;
-  webMetrics: object;
-  currLocation: object;
-}
 
 const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex, webMetrics, currLocation } = props;
@@ -63,7 +50,7 @@ const StateRoute = (props: StateRouteProps) => {
   // if true, we invoke the D3 render chart with hierarchy
   // by invoking History component, and passing in all the props required to render D3 elements and perform timeJump from clicking of node
   // otherwise we send an alert to the user that no state was found.
-  const renderHistory = () => {
+  const renderHistory:JSX.Element = () => {
     if (hierarchy) {
       return (
         <ParentSize>

@@ -1,24 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import { configure, shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import { changeView, changeSlider } from '../actions/actions';
+import { render, screen } from '@testing-library/react';
+import user from '@testing-library/user-event';
+import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
+import Action from '../components/Action';
 
-const Action = require('../components/Action').default;
-
-configure({ adapter: new (Adapter as any)() });
+// @ts-ignore
+Action.cleanTime = jest.fn().mockReturnValue();
 
 describe('unit testing for Action.tsx', () => {
-  let wrapper;
   const props = {
     key: 'actions2',
     selected: true,
     last: false,
     index: 2,
     sliderIndex: 2,
+    isCurrIndex: false,
+    routePath: '',
     dispatch: jest.fn(),
     displayName: '3.0',
     componentName: 'App',
@@ -30,46 +27,36 @@ describe('unit testing for Action.tsx', () => {
     viewIndex: 2,
     handleOnkeyDown: jest.fn(),
   };
+
   beforeEach(() => {
-    wrapper = shallow(<Action {...props} />);
+    props.isCurrIndex = false;
+    props.componentData = { actualDuration: 3.5 };
     props.dispatch.mockClear();
   });
 
-  describe('Component', () => {
-    test.skip("should have a className 'action-component selected' if props.selected is true", () => {
-      wrapper.setProps({ selected: true });
-      expect(wrapper.hasClass('action-component selected')).toEqual(true);
+  describe('When a component is shown on the page', () => {
+    test('Action snapshot should be shown as Snapshot: 3.0', () => {
+      render(<Action {...props} />);
+      expect(screen.getByPlaceholderText('Snapshot: 3.0')).toBeInTheDocument();
     });
 
-    test("shouldn't have a className 'action-component selected' if props.selected is false", () => {
-      wrapper.setProps({ selected: false });
-      expect(wrapper.hasClass('action-component selected')).toEqual(false);
+    test('two buttons with time and Current when not at current snapshot', () => {
+      props.isCurrIndex = true;
+      render(<Action {...props} />);
+      expect(screen.getAllByRole('button')).toHaveLength(2);
+      expect(screen.getAllByRole('button')[0]).toHaveTextContent('+00:03.50');
+      expect(screen.getAllByRole('button')[1]).toHaveTextContent('Current');
     });
 
-    test('should invoke dispatch method when clicked', () => {
-      wrapper.find('.action-component').simulate('click');
-      expect(props.dispatch).toHaveBeenCalled();
+    test('Action snapshot should be shown as Snapshot: 3.0', () => {
+      render(<Action {...props} />);
+      expect(screen.getByPlaceholderText('Snapshot: 3.0')).toBeInTheDocument();
     });
 
-    test('dispatch should send a changeView action', () => {
-      wrapper.find('.action-component').simulate('click');
-      expect(props.dispatch.mock.calls[0][0]).toEqual(changeView(props.index));
-    });
-  });
-
-  describe('Jump Button', () => {
-    test("should render a div with a className 'jump-button' inside action-component", () => {
-      expect(wrapper.find('.action-component').children().find('.jump-button')).toHaveLength(1);
-    });
-
-    test('should invoke dispatch method when clicked', () => {
-      wrapper.find('.jump-button').simulate('click', { stopPropagation() {} });
-      expect(props.dispatch).toHaveBeenCalled();
-    });
-
-    test('dispatch should send a changeSlider action', () => {
-      wrapper.find('.jump-button').simulate('click', { stopPropagation() {} });
-      expect(props.dispatch.mock.calls[0][0]).toEqual(changeSlider(props.index));
+    test("when there's no have no duration data", () => {
+      props.componentData = undefined;
+      render(<Action {...props} />);
+      expect(screen.getAllByRole('button')[0]).toHaveTextContent('NO TIME');
     });
   });
 });

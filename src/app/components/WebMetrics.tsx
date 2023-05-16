@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Charts from 'react-apexcharts';
 import ReactHover, { Trigger, Hover } from 'react-hover';
-
+import { OptionsCursorTrueWithMargin } from '../components/FrontendTypes';
 import { setCurrentTabInApp } from '../actions/actions';
 import { useStoreContext } from '../store';
 
@@ -95,7 +95,7 @@ const radialGraph = (props) => {
   //   dispatch(setCurrentTabInApp('history'));
   // }, []);
 
-  const optionsCursorTrueWithMargin = {
+  const optionsCursorTrueWithMargin: OptionsCursorTrueWithMargin = {
     followCursor: true,
     shiftX: 20,
     shiftY: 0,

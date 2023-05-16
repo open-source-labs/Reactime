@@ -8,7 +8,7 @@ type RowProps = {
   row: number;
 };
 
-const Row = (props: RowProps) => {
+const Row = (props: RowProps): JSX.Element => {
   const boxes: Array<JSX.Element> = [];
   for (let i = 0; i < 3; i++) {
     boxes.push(
@@ -22,7 +22,7 @@ const Row = (props: RowProps) => {
     );
   }
 
-  return <div className='row'>{boxes}</div>;
+  return <><div className='row'>{boxes}</div></>;
 };
 
 export default Row;

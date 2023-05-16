@@ -1,6 +1,7 @@
 import Navbar from "../components/navbar";
+import React from "react"
 
-export default function Home() {
+export default function Home():JSX.Element {
   return (
     <div>
       <Navbar />
