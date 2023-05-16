@@ -18,7 +18,7 @@ let currentStepIndex = 5;
 describe('Before Tutorial is entered', () => {
   test('How to use button exists', () => {
     render(<Tutorial {...props} />);
-    expect(screen.getByText('How to use')).toBeInTheDocument();
+    expect(screen.getByText('Tutorial')).toBeInTheDocument();
   });
 
   test('User clicking "How to use" while on map tab button starts map tutorial ', () => {
