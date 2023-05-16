@@ -27,7 +27,7 @@ const StateRoute = (props: StateRouteProps) => {
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
 
   // Map
-  const renderComponentMap = (): JSX.Element  => {
+  const renderComponentMap = () => {
     if (hierarchy) {
       return (
         <ParentSize className='componentMapContainer'>
@@ -50,7 +50,7 @@ const StateRoute = (props: StateRouteProps) => {
   // if true, we invoke the D3 render chart with hierarchy
   // by invoking History component, and passing in all the props required to render D3 elements and perform timeJump from clicking of node
   // otherwise we send an alert to the user that no state was found.
-  const renderHistory = (): JSX.Element  => {
+  const renderHistory:JSX.Element = () => {
     if (hierarchy) {
       return (
         <ParentSize>
