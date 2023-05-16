@@ -77,7 +77,7 @@ const StateRoute = (props: StateRouteProps) => {
   // if true invoke render Tree with snapshot
   const renderTree = () => {
     if (hierarchy) {
-      return <Tree snapshot={snapshot} />;
+      return <Tree snapshot={snapshot} snapshots={snapshots} currLocation={currLocation} />;
     }
     return <div className='noState'>{NO_STATE_MSG}</div>;
   };

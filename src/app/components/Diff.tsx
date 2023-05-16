@@ -15,7 +15,7 @@ function Diff(props: DiffProps): JSX.Element {
   const [mainState] = useStoreContext();
   const { currentTab, tabs } = mainState; // k/v pairs of mainstate store object being created
   const { snapshots, viewIndex, sliderIndex } = tabs[currentTab];
-  let previous:unknown;
+  let previous: unknown;
 
   // previous follows viewIndex or sliderIndex
   if (viewIndex !== -1) {
@@ -66,7 +66,6 @@ function Diff(props: DiffProps): JSX.Element {
   const html: StatelessCleanning = formatters.html.format(delta, previousDisplay);
   if (show) formatters.html.showUnchanged();
   else formatters.html.hideUnchanged();
-
   if (previous === undefined || delta === undefined) {
     return (
       <div className='no-data-message'>
