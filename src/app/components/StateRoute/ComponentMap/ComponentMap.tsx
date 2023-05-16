@@ -19,21 +19,15 @@ import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import { toggleExpanded, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
+import { LinkTypesProps, DefaultMargin, ToolTipStyles } from '../../../components/FrontendTypes'
 
-const defaultMargin: {} = {
+const defaultMargin: DefaultMargin = {
   top: 30,
   left: 30,
   right: 55,
   bottom: 70,
 };
 
-export type LinkTypesProps = {
-  width: number;
-  height: number;
-  margin?: { top: number; right: number; bottom: number; left: number };
-  snapshots: Record<string, unknown>;
-  currentSnapshot?: Record<string, unknown>;
-};
 
 export default function ComponentMap({
   // imported props to be used to display the dendrogram
@@ -95,7 +89,7 @@ export default function ComponentMap({
     scroll: true,
   });
 
-  const tooltipStyles: {} = {
+  const tooltipStyles: ToolTipStyles = {
     ...defaultStyles,
     minWidth: 60,
     maxWidth: 300,

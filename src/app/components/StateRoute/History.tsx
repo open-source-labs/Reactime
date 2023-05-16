@@ -5,18 +5,11 @@ import React, { useEffect } from 'react';
 // formatting findDiff return data to show the changes with colors, aligns with actions.tsx
 import { diff, formatters } from 'jsondiffpatch';
 import * as d3 from 'd3';
-
+import { DefaultMargin } from '../../components/FrontendTypes';
 import { changeView, changeSlider, setCurrentTabInApp } from '../../actions/actions';
 import { useStoreContext } from '../../store';
 
-interface defaultMargin {
-  top: number;
-  left: number;
-  right: number;
-  bottom: number;
-}
-
-const defaultMargin: defaultMargin = {
+const defaultMargin: DefaultMargin = {
   top: 30,
   left: 30,
   right: 55,
