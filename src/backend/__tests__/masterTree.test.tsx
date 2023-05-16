@@ -38,6 +38,7 @@ describe('master tree tests', () => {
     actualStartTime: 2,
     selfBaseDuration: 3,
     treeBaseDuration: 4,
+    key: null,
     context: {},
     hooksIndex: null,
     hooksState: null,
