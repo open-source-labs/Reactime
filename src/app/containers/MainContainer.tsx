@@ -17,7 +17,6 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-
 function MainContainer(): JSX.Element {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTab, port } = store;
@@ -154,17 +153,18 @@ function MainContainer(): JSX.Element {
           setActionView={setActionView}
           toggleActionContainer={toggleActionContainer}
         />
-        {snapshots.length ?
+        {snapshots.length ? (
           <div className='state-container-container'>
-          <StateContainer
-            webMetrics={webMetrics}
-            viewIndex={viewIndex}
-            snapshot={snapshotDisplay}
-            hierarchy={hierarchyDisplay}
-            snapshots={snapshots}
-            currLocation={currLocation}
-          />
-        </div> : null}
+            <StateContainer
+              webMetrics={webMetrics}
+              viewIndex={viewIndex}
+              snapshot={snapshotDisplay}
+              hierarchy={hierarchyDisplay}
+              snapshots={snapshots}
+              currLocation={currLocation}
+            />
+          </div>
+        ) : null}
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
       </div>
