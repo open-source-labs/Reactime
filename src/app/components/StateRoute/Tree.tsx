@@ -40,8 +40,7 @@ const Tree = (props: TreeProps) => {
   useEffect(() => {
     dispatch(setCurrentTabInApp('tree'));
   }, []);
-  console.log(snapshots);
-  console.log(currLocation);
+
   return (
     <>
       {snapshot && (
