@@ -40,13 +40,13 @@ const Tree = (props: TreeProps) => {
   useEffect(() => {
     dispatch(setCurrentTabInApp('tree'));
   }, []);
-
+  console.log(snapshots);
+  console.log(currLocation);
   return (
     <>
       {snapshot && (
         <JSONTree
-          data={snapshots[currLocation['index']] || snapshot}
-          // data={snapshot}
+          data={snapshots[currLocation.index] || snapshot}
           theme={{ extend: colors, tree: () => ({ className: 'json-tree' }) }}
           shouldExpandNode={() => true}
           getItemString={getItemString}

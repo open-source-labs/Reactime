@@ -88,8 +88,6 @@ const radialGraph = (props) => {
     },
   };
 
-  // This updates currentTabInApp which is used to determine what tutorial to display (depending on the active tab within Reactime)
-  // Code is commented out because it interferes with the testing suite
   const [store, dispatch] = useStoreContext();
   useEffect(() => {
     dispatch(setCurrentTabInApp('webmetrics'));
