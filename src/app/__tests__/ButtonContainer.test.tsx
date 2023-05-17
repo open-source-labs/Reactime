@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
+import '@testing-library/jest-dom/extend-expect';
 import { TextEncoder } from 'util';
 global.TextEncoder = TextEncoder;
 import ButtonsContainer from '../containers/ButtonsContainer';
@@ -55,10 +55,10 @@ describe('Unit testing for ButtonContainer', () => {
     test('should have 4 buttons ', () => {
       render(<ButtonsContainer />);
       expect(screen.getAllByRole('button')).toHaveLength(4);
-      expect(screen.getAllByRole('button')[0]).toHaveTextContent('Lock');
+      expect(screen.getAllByRole('button')[0]).toHaveTextContent('Unlocked');
       expect(screen.getAllByRole('button')[1]).toHaveTextContent('Download');
       expect(screen.getAllByRole('button')[2]).toHaveTextContent('Upload');
-      expect(screen.getAllByRole('button')[3]).toHaveTextContent('How to use');
+      expect(screen.getAllByRole('button')[3]).toHaveTextContent('Tutorial');
     });
   });
 
@@ -66,7 +66,7 @@ describe('Unit testing for ButtonContainer', () => {
     test('Button should show as unlocked', () => {
       state.tabs['87'].mode.paused = true;
       render(<ButtonsContainer />);
-      expect(screen.getAllByRole('button')[0]).toHaveTextContent('Unlock');
+      expect(screen.getAllByRole('button')[0]).toHaveTextContent('Locked');
     });
   });
 
