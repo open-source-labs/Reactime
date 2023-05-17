@@ -2,7 +2,7 @@
 
 ## Brief
 
-Our mission at Reactime is to maintain and iterate constantly, but never at the expense of future developers.<br />We know how hard it is to quickly get up to speed and onboard in a new codebase.<br />So, here are some helpful pointers to help you hit the ground running. 🏃🏾💨
+Our mission at Reactime is to maintain and iterate constantly, but never at the expense of future developers. We know how hard it is to quickly get up to speed and onboard in a new codebase. So here are some helpful pointers to help you hit the ground running. 🏃🏾💨
 
 ## Building from source
 
@@ -41,18 +41,18 @@ Similar approach for Next.js and Remix demo apps
 - Select “Load Unpacked”
 - Choose reactime > src > extension > build
 - Navigate to http://localhost:8080/ to inspect the demo application using Reactime!
-  <br>
 
-<p align="center">
-  <img src="./assets/reactime-dev-setup.gif" />
-</p>
+## Linting
 
-## For Future Iterators 
+_Before_ beginning development, especially on teams, make sure to configure your linter and code formatting to conform to one unified setting (We recommend [the Airbnb style guide](https://github.com/airbnb/javascript)!) This will make reviewing PRs much more readable and less error-prone. &nbsp;  
+&nbsp;  
+
+# Possible Avenues for Future Iterators 
 Here are some notes on the current state of Reactime and considerations for future development.
 
-<h2> Testing </h2>
+## Testing
 
-For Reactime unit tests, pre-v.19 there were tests built out in two places. Backend tests were in backend >\__tests__. Frontend tests were in src > app >\__tests__. In v19, we specifically focused on rebuilding front tests to use React Testing Library (RTL) + Jest. Previously, front end testing existed but utilized Enzyme + Jest . Our decision to move to RTL stemmed on the fact that Enzyme did not support React V17 (third party Enzyme adaptor libraries were created to provide support to previous React versions, but were still very much out of date) and that Enzyme is no longer industry standard. We began the process of creating new frontend tests but they are not complete and this is a great place for future iterators to build out more. Since the new suite of RTL tests are not fully complete, we have kept the older Enzyme tests within the codebase to be referenced (src > app > __tests__enzyme). However, these will not be included in the tests run in the testing scripts.
+For Reactime unit tests, pre-v.19 there were tests built out in two places. Backend tests were in backend >\_\_tests\_\_. Frontend tests were in src > app >\_\_tests\_\_. In v19, we specifically focused on rebuilding front tests to use React Testing Library (RTL) + Jest. Previously, front end testing existed but utilized Enzyme + Jest . Our decision to move to RTL stemmed on the fact that Enzyme did not support React V17 (third party Enzyme adaptor libraries were created to provide support to previous React versions, but were still very much out of date) and that Enzyme is no longer industry standard. We began the process of creating new frontend tests but they are not complete and this is a great place for future iterators to build out more. Since the new suite of RTL tests are not fully complete, we have kept the older Enzyme tests within the codebase to be referenced (src > app > __tests__enzyme). However, these will not be included in the tests run in the testing scripts.
 
 ## Including Support for Hooks Beyond useState
 Reactime currently shows data stored via useState, but does not show data stored via other hooks such as useContext or useReducer. While showing this data would be simple, maintaining the time travel functionality of Reactime with these hooks would not. Please see file demo-app/src/client/Components/ButtonsWithMoreHooks.jsx for more details.
@@ -68,20 +68,12 @@ To see how hook data is stored in the fiber tree:
 
 Any changes to console.logs in Reactime can be seen by refreshing the browser the app is running in.
 
-
 ## Redux
 
 Can Reactime be integrated with Redux compatibility so applications using Redux can track state in Reactime?
 
 Yes, but it would be very time-consuming and not the most feasible option while Redux devtools exists already. With how Redux devtools is currently set up, a developer is unable to use Redux devtools as a third-party user and integrate its functionality into their own application, as Redux devtools is meant to be used directly on an application using Redux for state-tracking purposes. Since the devtools do not appear to have a public API for integrated use in an application or it simply does not exist, Redux devtools would need to be rebuilt from the ground up and then integrated into Reactime, or built into Reactime directly still from scratch.
 
-
-## Quick Tips
-
-- _Before_ beginning development, especially on teams, make sure to configure your linter and code formatting to conform to one unified setting (We recommend [the Airbnb style guide](https://github.com/airbnb/javascript)!) This will make reviewing PRs much more readable and less error-prone.
-
-- With release of Node v18.12.1 (LTS) on 11/4/22, the script has been updated to 'npm run dev' | 'npm run build' for backwards compatibility.<br/>
-For version Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 
 # File Structure
 
