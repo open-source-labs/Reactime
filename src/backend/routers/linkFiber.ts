@@ -111,6 +111,8 @@ export default function linkFiber(mode: Status): () => Promise<void> {
     // Obtain the FiberRootNode, which is the first value in the FiberRoot Set:
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
 
+    // console.log('Initial fiber root', fiberRoot);
+    
     // ----------INITIALIZE THE TREE SNAP SHOT ON CHROME EXTENSION--------------
     await throttledUpdateSnapshot(fiberRoot, mode); // only runs on start up
 
@@ -127,6 +129,8 @@ export default function linkFiber(mode: Status): () => Promise<void> {
       return function (...args: Parameters<typeof onCommitFiberRoot>) {
         // Obtain the updated FiberRootNode, after the target React application re-renders
         const fiberRoot = args[1];
+
+        // console.log('Updated fiber root', fiberRoot);
 
         // If the target React application is visible, send a request to update the snapShot tree displayed on Chrome Extension
         if (isVisible) throttledUpdateSnapshot(fiberRoot, mode);
