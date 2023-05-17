@@ -21,6 +21,7 @@ cd reactime
 npm install --force
 npm run dev
 ```
+
 With release of Node v18.12.1 (LTS) on 11/4/22, the script has been updated to 'npm run dev' || 'npm run build' for backwards compatibility.<br/>
 For version Node v16.16.0, please use script 'npm run devlegacy' || 'npm run buildlegacy'
 
@@ -31,15 +32,16 @@ cd demo-app
 npm install
 npm run dev
 ```
+
 Similar approach for Next.js and Remix demo apps
 
 5. Add Reactime to your Chrome extensions.
 
--   Navigate to chrome://extensions
--   Select “Load Unpacked”
--   Choose reactime > src > extension > build
--   Navigate to http://localhost:8080/ to inspect the demo application using Reactime!
-    <br>
+- Navigate to chrome://extensions
+- Select “Load Unpacked”
+- Choose reactime > src > extension > build
+- Navigate to http://localhost:8080/ to inspect the demo application using Reactime!
+  <br>
 
 <p align="center">
   <img src="./assets/reactime-dev-setup.gif" />
@@ -69,7 +71,8 @@ In the _src_ folder, there are three directories we care about: _app_, _backend_
 ```
 src/
 ├── app/                          # Frontend code
-│   ├── __tests__/                #
+│   ├── __tests__/                # React Testing Library
+│   ├── __tests__enzyme/          # Legacy Enzyme tests
 │   ├── actions/                  # Redux action creators
 │   ├── components/               # React components
 │   ├── constants/                #
@@ -145,6 +148,7 @@ The general flow of data is described in the following steps:
    - One important thing to note here is that this jump action must be dispatched in the target application (i.e. _backend_ land), because only there do we have direct access to the DOM.
 
 ## Reacti.me Website:
+
 See [Reacti.me README](https://github.com/reactimetravel/reactime-website/blob/main/README.md) for instruction of how to update the website
 
 ## Console.log
@@ -209,3 +213,16 @@ Some relevant sections are reproduced below:
   1. The content script
   2. The chrome extension "front-end" **(_NOT_ the interface of the browser, this is an important distinction.)**
 - In other words, a background script works as a sort of middleman, directly maintaining connection with its parent extension, and acting as a proxy enabling communication between it and the content script.
+
+## Past Medium Articles for Reference
+
+- [Reactime 18.0. Better than ever](https://medium.com/@zdf2424/reactime-18-0-better-than-ever-148b81606257)
+- [Reactime v17.0.0: Now with support for the Context API, and a modern UI](https://medium.com/@reactime/reactime-v17-0-0-now-with-support-for-the-context-api-and-a-modern-ui-f0edf9e54dae)
+- [Reactime XVI: Clean-up Time](https://medium.com/@emintahirov1996/reactime-xvi-cleanup-time-a14ba3dcc8a6)
+- [Inter-Route Time Travel with Reactime](https://medium.com/@robbytiptontol/inter-route-time-travel-with-reactime-d84cd55ec73b)
+- [Time-Travel State with Reactime](https://medium.com/better-programming/time-traveling-state-with-reactime-6-0-53fdc3ae2a20)
+- [React Fiber and Reactime](https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8)
+- [Meet Reactime - a time-traveling State Debugger for React](https://medium.com/@yujinkay/meet-reactime-a-time-traveling-state-debugger-for-react-24f0fce96802)
+- [Deep in Weeds with Reactime, Concurrent React_fiberRoot, and Browser History Caching](https://itnext.io/deep-in-the-weeds-with-reactime-concurrent-react-fiberroot-and-browser-history-caching-7ce9d7300abb)
+- [Time-Traveling Through React State with Reactime 9.0](https://rxlina.medium.com/time-traveling-through-react-state-with-reactime-9-0-371dbdc99319)
+- [What time is it? Reactime!](https://medium.com/@liuedar/what-time-is-it-reactime-fd7267b9eb89)
