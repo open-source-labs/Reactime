@@ -28,7 +28,7 @@
 <br>
 
 <p align="center">
-<img src="./assets/new-reactime.gif" />
+<img src="./assets/v19/Overview.gif" />
 </p>
 
 <p align="center">
@@ -47,7 +47,7 @@ be viewed in Diff mode.
 <br>
 
 <p align="center">
-<img src="./assets/map-viewing.gif" />
+<img src="./assets/v19/map.gif" />
 </p>
 <br>
 
@@ -60,10 +60,9 @@ name.
 <br>
 <br>
 
-<p align="center">
+<!-- <p align="center">
 <img src="./assets/action-comparison.gif" />
-</p>
-<br>
+</p> -->
 
 ### 🔹 Components Comparison
 
@@ -75,7 +74,7 @@ each component upon hovering.
 <br>
 
 <p align="center">
-<img src="./assets/components-viewing.gif" />
+<img src="./assets/v19/performance.gif" />
 </p>
 <br>
 
@@ -88,7 +87,7 @@ snapshot will be displayed in Chrome DevTools under the Reactime panel.
 <br>
 
 <p align="center">
-<img src="./assets/history-tree.gif" />
+<img src="./assets/v19/history.gif" />
 </p>
 <br>
 
