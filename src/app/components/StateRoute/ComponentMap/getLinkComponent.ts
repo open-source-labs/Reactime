@@ -12,7 +12,7 @@ import {
   LinkVerticalLine,
   LinkRadialLine,
 } from '@visx/shape';
-import { LinkComponent } from '../../../components/FrontendTypes'
+import { LinkComponent } from '../../../FrontendTypes'
 
 export default function getLinkComponent({
   layout,

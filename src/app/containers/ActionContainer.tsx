@@ -8,7 +8,7 @@ import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
 import RouteDescription from '../components/RouteDescription';
-import { Obj } from '../components/FrontendTypes';
+import { Obj } from '../FrontendTypes';
 
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');

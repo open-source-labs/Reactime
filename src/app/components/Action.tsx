@@ -5,7 +5,7 @@
 import React from 'react';
 import ReactHover, { Trigger, Hover } from 'react-hover';
 import { changeView, changeSlider } from '../actions/actions';
-import { ActionProps, OptionsCursorTrueWithMargin } from '../components/FrontendTypes';
+import { ActionProps, OptionsCursorTrueWithMargin } from '../FrontendTypes';
 
 /**
  * @function Action

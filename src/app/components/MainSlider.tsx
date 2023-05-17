@@ -3,7 +3,7 @@ import Slider from 'rc-slider';
 import Tooltip from 'rc-tooltip';
 import { changeSlider, pause } from '../actions/actions';
 import { useStoreContext } from '../store';
-import { HandleProps, MainSliderProps } from '../components/FrontendTypes';
+import { HandleProps, MainSliderProps } from '../FrontendTypes';
 
 const { Handle } = Slider;
 

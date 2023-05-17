@@ -14,7 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import { deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-import { TooltipData, Margin, BarGraphComparisonAction, ActionObj } from '../../FrontendTypes';
+import { TooltipData, Margin, BarGraphComparisonAction, ActionObj } from '../../../FrontendTypes';
 
 /* DEFAULTS */
 const margin: Margin = {

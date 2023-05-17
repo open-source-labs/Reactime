@@ -8,7 +8,7 @@ import 'intro.js/introjs.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
-import { TutorialProps, TutorialState, StepsObj } from '../components/FrontendTypes';
+import { TutorialProps, TutorialState, StepsObj } from '../FrontendTypes';
 
 //Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
 const { Steps } = require('intro.js-react');

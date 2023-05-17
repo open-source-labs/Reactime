@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom';
 import StateRoute from '../components/StateRoute/StateRoute';
 import DiffRoute from '../components/DiffRoute';
-import { StateContainerProps } from '../components/FrontendTypes';
+import { StateContainerProps } from '../FrontendTypes';
 
 // eslint-disable-next-line react/prop-types
 const StateContainer = (props: StateContainerProps): JSX.Element => {

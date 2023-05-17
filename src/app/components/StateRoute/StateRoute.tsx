@@ -14,7 +14,7 @@ import { changeView, changeSlider } from '../../actions/actions';
 import { useStoreContext } from '../../store';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetrics from '../WebMetrics';
-import { StateRouteProps } from '../../components/FrontendTypes'
+import { StateRouteProps } from '../../FrontendTypes'
 
 const History = require('./History').default;
 

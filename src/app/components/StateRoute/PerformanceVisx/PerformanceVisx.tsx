@@ -10,7 +10,7 @@ import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useStoreContext } from '../../../store';
 import { setCurrentTabInApp } from '../../../actions/actions';
-import { PerfData, Series, PerformanceVisxProps } from '../../FrontendTypes';
+import { PerfData, Series, PerformanceVisxProps } from '../../../FrontendTypes';
 
 const collectNodes = (snaps, componentName) => {
   const componentsResult = [];

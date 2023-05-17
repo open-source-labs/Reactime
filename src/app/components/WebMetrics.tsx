@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Charts from 'react-apexcharts';
 import ReactHover, { Trigger, Hover } from 'react-hover';
-import { OptionsCursorTrueWithMargin } from '../components/FrontendTypes';
+import { OptionsCursorTrueWithMargin } from '../FrontendTypes';
 import { setCurrentTabInApp } from '../actions/actions';
 import { useStoreContext } from '../store';
 

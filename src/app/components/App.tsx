@@ -3,7 +3,7 @@ import { MemoryRouter as Router } from 'react-router-dom';
 import MainContainer from '../containers/MainContainer';
 import { StoreContext } from '../store';
 import mainReducer from '../reducers/mainReducer.js';
-import { InitialStateProps } from '../components/FrontendTypes';
+import { InitialStateProps } from '../FrontendTypes';
 // currentTab is the current active tab within Google Chrome.
 // This is used to decide what tab Reactime should be monitoring. This can be "locked"
 // currentTabInApp is the current active tab within Reactime (Map, Performance, History, etc).
