@@ -47,12 +47,10 @@ Similar approach for Next.js and Remix demo apps
   <img src="./assets/reactime-dev-setup.gif" />
 </p>
 
-<h2> For Future Iterators </h2>
-
 ## For Future Iterators 
 Here are some notes on the current state of Reactime and considerations for future development.
 
-## Testing
+<h2> Testing </h2>
 
 For Reactime unit tests, pre-v.19 there were tests built out in two places. Backend tests were in backend >\__tests__. Frontend tests were in src > app >\__tests__. In v19, we specifically focused on rebuilding front tests to use React Testing Library (RTL) + Jest. Previously, front end testing existed but utilized Enzyme + Jest . Our decision to move to RTL stemmed on the fact that Enzyme did not support React V17 (third party Enzyme adaptor libraries were created to provide support to previous React versions, but were still very much out of date) and that Enzyme is no longer industry standard. We began the process of creating new frontend tests but they are not complete and this is a great place for future iterators to build out more. Since the new suite of RTL tests are not fully complete, we have kept the older Enzyme tests within the codebase to be referenced (src > app > __tests__enzyme). However, these will not be included in the tests run in the testing scripts.
 
