@@ -188,8 +188,7 @@
 .import-button,
 .howToUse-button,
 .export-button,
-.pause-button,
-.split-button {
+.pause-button {
   @extend %button-shared;
   color: white;
   border-color: transparent;
@@ -199,8 +198,7 @@
 .import-button:hover,
 .howToUse-button:hover,
 .export-button:hover,
-.pause-button:hover,
-.split-button:hover {
+.pause-button:hover {
   @extend %button-shared;
   color: #62d6fb;
   box-shadow: 1px 1px 2px 1px rgba(30, 86, 171, 0.25);

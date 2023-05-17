@@ -17,12 +17,9 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
-//Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
-const Split = require('react-split');
-
 function MainContainer(): JSX.Element {
   const [store, dispatch] = useStoreContext();
-  const { tabs, currentTab, port, split } = store;
+  const { tabs, currentTab, port } = store;
   const [actionView, setActionView] = useState(true);
   // this function handles Time Jump sidebar view
   const toggleActionContainer = () => {
@@ -148,54 +145,6 @@ function MainContainer(): JSX.Element {
   const snapshotDisplay = statelessCleaning(snapshotView);
   const hierarchyDisplay = statelessCleaning(hierarchy);
 
-  function handleSplit(currentSplitMode: boolean): JSX.Element {
-    if (!currentSplitMode) {
-      return (
-        <div className='state-container-container'>
-          <StateContainer
-            webMetrics={webMetrics}
-            viewIndex={viewIndex}
-            snapshot={snapshotDisplay}
-            hierarchy={hierarchyDisplay}
-            snapshots={snapshots}
-            currLocation={currLocation}
-          />
-        </div>
-      );
-    }
-    return (
-      <Split
-        sizes={[50, 50]}
-        minSize={200}
-        snapOffset={1}
-        className='split'
-        gutterStyle={function () {
-          return {
-            backgroundColor: 'dimgrey',
-            width: '8px',
-          };
-        }}
-      >
-        <StateContainer
-          webMetrics={webMetrics}
-          viewIndex={viewIndex}
-          snapshot={snapshotDisplay}
-          hierarchy={hierarchyDisplay}
-          snapshots={snapshots}
-          currLocation={currLocation}
-        />
-        <StateContainer
-          webMetrics={webMetrics}
-          viewIndex={viewIndex}
-          snapshot={snapshotDisplay}
-          hierarchy={hierarchyDisplay}
-          snapshots={snapshots}
-          currLocation={currLocation}
-        />
-      </Split>
-    );
-  }
-
   return (
     <div className='main-container'>
       <div id='bodyContainer' className='body-container'>
@@ -204,7 +153,18 @@ function MainContainer(): JSX.Element {
           setActionView={setActionView}
           toggleActionContainer={toggleActionContainer}
         />
-        {snapshots.length ? handleSplit(split) : null}
+        {snapshots.length ? (
+          <div className='state-container-container'>
+            <StateContainer
+              webMetrics={webMetrics}
+              viewIndex={viewIndex}
+              snapshot={snapshotDisplay}
+              hierarchy={hierarchyDisplay}
+              snapshots={snapshots}
+              currLocation={currLocation}
+            />
+          </div>
+        ) : null}
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
       </div>

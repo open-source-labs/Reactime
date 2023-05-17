@@ -44,6 +44,7 @@ export default function timeJumpInitiation(mode: Status) {
  *
  */
 async function updateReactFiberTree(
+  //TypeScript Note: Adding a tree type to targetSnapshot throws errors for destructuring componentData below. Not sure how precisely to fix
   targetSnapshot,
   circularComponentTable: Set<any> = new Set(),
 ): Promise<void> {

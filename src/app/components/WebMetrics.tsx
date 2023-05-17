@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Charts from 'react-apexcharts';
 import ReactHover, { Trigger, Hover } from 'react-hover';
-
+import { OptionsCursorTrueWithMargin } from '../components/FrontendTypes';
 import { setCurrentTabInApp } from '../actions/actions';
 import { useStoreContext } from '../store';
 
@@ -88,14 +88,12 @@ const radialGraph = (props) => {
     },
   };
 
-  // This updates currentTabInApp which is used to determine what tutorial to display (depending on the active tab within Reactime)
-  // Code is commented out because it interferes with the testing suite
-  // const [ store, dispatch] = useStoreContext();
-  // useEffect(() => {
-  //   dispatch(setCurrentTabInApp('history'));
-  // }, []);
+  const [store, dispatch] = useStoreContext();
+  useEffect(() => {
+    dispatch(setCurrentTabInApp('webmetrics'));
+  }, []);
 
-  const optionsCursorTrueWithMargin = {
+  const optionsCursorTrueWithMargin: OptionsCursorTrueWithMargin = {
     followCursor: true,
     shiftX: 20,
     shiftY: 0,

@@ -5,18 +5,11 @@ import React, { useEffect } from 'react';
 // formatting findDiff return data to show the changes with colors, aligns with actions.tsx
 import { diff, formatters } from 'jsondiffpatch';
 import * as d3 from 'd3';
-
+import { DefaultMargin } from '../../components/FrontendTypes';
 import { changeView, changeSlider, setCurrentTabInApp } from '../../actions/actions';
 import { useStoreContext } from '../../store';
 
-interface defaultMargin {
-  top: number;
-  left: number;
-  right: number;
-  bottom: number;
-}
-
-const defaultMargin: defaultMargin = {
+const defaultMargin: DefaultMargin = {
   top: 30,
   left: 30,
   right: 55,
@@ -142,7 +135,6 @@ function History(props: Record<string, unknown>): JSX.Element {
       const treeRoot = d3.hierarchy(data);
       return d3.tree().size([innerWidth, innerHeight])(treeRoot);
     };
-    // const hierarchy = d3.hierarchy(root);
     const d3root = tree(root);
 
     const currNode = labelCurrentNode(d3root);
@@ -178,36 +170,81 @@ function History(props: Record<string, unknown>): JSX.Element {
       .enter()
       .append('g')
       .style('cursor', 'pointer')
-      .on('click', (d) => {
+      .attr('class', `snapshotNode`)
+      .on('click', (event, d) => {
         dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
-      })
-      // added to display state change information to node tree
-      .on('mouseover', (event, d) => {
-        const [x, y] = d3.pointer(event);
+
         // created popup div and appended it to display div(returned in this function)
         // D3 doesn't utilize z-index for priority,
         // rather decides on placement by order of rendering
         // needed to define the return div with a className to have a target to append to
         // with the correct level of priority
-        const div = d3
-          .select('.display')
-          .append('div')
-          .attr('class', 'tooltip')
-          .style('left', `${x}px`)
-          .style('top', `${y}px`);
-        d3.selectAll('.tooltip').html(findDiff(d.data.index));
+        function renderToolTip() {
+          const [x, y] = d3.pointer(event);
+          const div = d3
+            .select('.display:first-child')
+            .append('div')
+            .attr('class', `tooltip`)
+            .attr('id', `tt-${d.data.index}`)
+            .style('left', `${event.clientX - 10}px`)
+            .style('top', `${event.clientY - 10}px`)
+            .style('max-height', `25%`)
+            .style('overflow', `scroll`);
+          d3.selectAll('.tooltip').html(findDiff(d.data.index));
+        }
+
+        if (d3.selectAll('.tooltip')._groups['0'].length === 0) {
+          renderToolTip();
+        } else {
+          if (d3.selectAll(`#tt-${d.data.index}`)._groups['0'].length === 0) {
+            d3.selectAll('.tooltip').remove();
+            renderToolTip();
+          }
+        }
       })
-      .on('mouseout', (d) => {
-        // when appending divs on mouseover the appended dives would not disappear
-        // when using D3's 'transition' on mouseover/mouseout
-        // solution: remove all tooltop divs on mouseout
+      .on('mouseenter', function (event, d) {
+        const [x, y] = d3.pointer(event);
+        if (d3.selectAll('.tooltip')._groups['0'].length === 0) {
+          const div = d3
+            .select('.display:first-child')
+            .append('div')
+            .attr('class', `tooltip`)
+            .attr('id', `tt-${d.data.index}`)
+            .style('left', `${event.clientX + 0}px`)
+            .style('top', `${event.clientY + 0}px`)
+            .style('max-height', `25%`)
+            .style('overflow', `auto`)
+            .on('mouseenter', function (event, d) {})
+            .on('mouseleave', function (event, d) {
+              d3.selectAll('.tooltip').remove().style('display', 'hidden');
+            });
+
+          d3.selectAll('.tooltip').html(findDiff(d.data.index));
+        }
+      })
+      .on('mouseleave', function (event, d) {
+        if (event.relatedTarget.id !== `tt-${d.data.index}`) {
+          d3.selectAll('.tooltip').transition().delay(100).remove();
+        }
+      })
+
+      .attr('transform', function (d) {
+        return `translate(${d.x},${d.y})`;
+      });
+
+    const tooltip = d3
+      .select('.tooltip')
+      .on('mousemove', function (event, d) {
+        d3.select('.tooltip').style('opacity', '1');
+      })
+      .on('mouseleave', function (event, d) {
         d3.selectAll('.tooltip').remove();
-      })
-      .attr('transform', (d) => `translate(${d.x},${d.y})`);
+      });
 
     node
       .append('circle')
+
       .attr('fill', (d) => {
         if (d.data.index === currLocation.index) {
           return 'red';

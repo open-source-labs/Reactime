@@ -27,7 +27,7 @@ function createTabObj(title) {
     snapshots: [],
     // index here is the tab index that shows total amount of state changes
     index: 0,
-    //* this is our pointer so we know what the current state the user is checking
+    //* currLocation points to the current state the user is checking
     // (this accounts for time travel aka when user clicks jump on the UI)
     currLocation: null,
     // points to the node that will generate the next child set by newest node or jump
@@ -53,6 +53,9 @@ function createTabObj(title) {
 }
 
 // Each node stores a history of the link fiber tree.
+// In practice, new Nodes are passed the following arguments:
+// 1. param 'obj' : arg request.payload, which is an object containing a tree from snapShot.ts and a route property
+// 2. param tabObj: arg tabsObj[tabId], which is an object that holds info about a specific tab. Should change the name of tabObj to tabCollection or something
 class Node {
   constructor(obj, tabObj) {
     // continues the order of number of total state changes
@@ -84,6 +87,9 @@ function countCurrName(rootNode, name) {
 
 // Adds a new node to the current location.
 // Invoked in the case 'recordSnap'.
+// In practice, sendToHierarchy is passed the following arguments:
+// 1. param tabObj : arg tabObj[tabId]
+// 2. param newNode : arg an instance of the Node class
 function sendToHierarchy(tabObj, newNode) {
   if (!tabObj.currLocation) {
     tabObj.currLocation = newNode;
@@ -248,7 +254,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else {
     return true;
   }
-  // everytime we get a new tabid, add it to the object
+  // everytime we get a new tabId, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) {
     tabsObj[tabId] = createTabObj(tabTitle);
   }
@@ -323,6 +329,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
 
       // DUPLICATE SNAPSHOT CHECK
+      // This may be where the bug is coming from that when Reactime fails to collect
+      // state. If they happen to take the same actual duration, it won't record the snapshot.
       const previousSnap =
         tabsObj[tabId]?.currLocation?.stateSnapshot?.children[0]?.componentData?.actualDuration;
       const incomingSnap = request.payload.children[0].componentData.actualDuration;
@@ -357,7 +365,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true; // attempt to fix close port error
 });
 
-// when tab is closed, remove the tabid from the tabsObj
+// when tab is closed, remove the tabId from the tabsObj
 chrome.tabs.onRemoved.addListener((tabId) => {
   // tell devtools which tab to delete
   if (portsArr.length > 0) {

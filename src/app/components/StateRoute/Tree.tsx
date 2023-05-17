@@ -3,6 +3,7 @@ import JSONTree from 'react-json-tree';
 
 import { setCurrentTabInApp } from '../../actions/actions';
 import { useStoreContext } from '../../store';
+import { TreeProps } from '../../components/FrontendTypes';
 
 const colors = {
   scheme: 'paraiso',
@@ -32,29 +33,22 @@ const getItemString = (type, data: { state?: object | string; name: string; chil
   return <span />;
 };
 
-interface TreeProps {
-  snapshot: {
-    name?: string;
-    componentData?: object;
-    state?: string | object;
-    stateSnaphot?: object;
-    children?: any[];
-  };
-}
-
 const Tree = (props: TreeProps) => {
-  const { snapshot } = props;
+  const { snapshot, snapshots, currLocation } = props;
+  // @ts-ignore
   const [store, dispatch] = useStoreContext();
 
   useEffect(() => {
-    dispatch(setCurrentTabInApp('history'));
+    dispatch(setCurrentTabInApp('tree'));
   }, []);
 
   return (
     <>
       {snapshot && (
+        // @ts-ignore
         <JSONTree
-          data={snapshot}
+          // @ts-ignore
+          data={snapshots[currLocation.index] || snapshot}
           theme={{ extend: colors, tree: () => ({ className: 'json-tree' }) }}
           shouldExpandNode={() => true}
           getItemString={getItemString}

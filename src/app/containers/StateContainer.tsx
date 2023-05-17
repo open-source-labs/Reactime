@@ -10,7 +10,7 @@ import { StateContainerProps } from '../components/FrontendTypes';
 
 // eslint-disable-next-line react/prop-types
 const StateContainer = (props: StateContainerProps): JSX.Element => {
-  const { snapshot, hierarchy, snapshots, viewIndex, webMetrics, currLocation, snapshots } = props;
+  const { snapshot, hierarchy, snapshots, viewIndex, webMetrics, currLocation } = props;
 
   return (
     <Router>

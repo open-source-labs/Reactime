@@ -44,6 +44,7 @@ export interface MsgData {
  * @type ComponentData -
  * @member actualDuration - The time taken to render the current Fiber node and its descendants during the previous render cycle. This value is used to optimize the rendering of components and to provide performance metrics to developers.
  * @member actualStartTime - The time at which the rendering of the current Fiber node started during the previous render cycle.
+ * @member key - The key a user assigned to the component or null if they didn't assign one
  * @member context - {in experiment} - An object contains all context information of the current component
  * @member index - {class component only} - The index of the bound setState method stored in `componentActionsRecord`
  * @member hooksState - {functional component only} - An object contains all states of the current functional component
@@ -58,6 +59,8 @@ export interface ComponentData {
   actualDuration?: number;
   /** The time at which the rendering of the current Fiber node started during the previous render cycle. */
   actualStartTime?: number;
+  /**The key a user assigned to the component or null if they didn't assign one */
+  key: string | null;
   /** {in experiment} - An object contains all context information of the current component */
   context: {};
   /** {class component only} - The index of the bound setState method stored in `componentActionsRecord`  */
@@ -154,6 +157,7 @@ export const LegacyHiddenComponent = 24;
  * @member actualStartTime - The time at which the rendering of the current Fiber node started during the previous render cycle.
  * @member child - Pointer to the first child.
  * @member elementType  - The type of the current Fiber node's element (e.g. the component function or class, or the DOM element type). For class/functional component, elmementType stores the function definition.
+ * @member key - The key a user assigned to the component or null if they didn't assign one
  * @member memoizedProps - The current props of the component associated with the current Fiber node.
  * @member memoizedState - The current state of the component associated with the current Fiber node.
  * @member selfBaseDuration - The base duration of the current Fiber node's render phase (excluding the time taken to render its children). This field is only set when the enableProfilerTimer flag is enabled.
@@ -191,10 +195,15 @@ export type Fiber = {
    */
   elementType: any;
 
-  /** The current props of the component associated with the current Fiber node. */
+  /**
+   * Unique key string assigned by the user when making component on null if they didn't assign one
+   */
+  key: string | null;
+
+  /** The current state for a functional component associated with the current Fiber node. */
   memoizedState: any;
 
-  /** The current state of the component associated with the current Fiber node. */
+  /** The current props of the component associated with the current Fiber node. */
   memoizedProps: any;
 
   /**

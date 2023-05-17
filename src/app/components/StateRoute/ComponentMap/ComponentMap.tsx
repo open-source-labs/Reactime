@@ -17,23 +17,18 @@ import { localPoint } from '@visx/event';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
+import ToolTipDataDisplay from './ToolTipDataDisplay';
 import { toggleExpanded, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
+import { LinkTypesProps, DefaultMargin, ToolTipStyles } from '../../../components/FrontendTypes'
 
-const defaultMargin = {
+const defaultMargin: DefaultMargin = {
   top: 30,
   left: 30,
   right: 55,
   bottom: 70,
 };
 
-export type LinkTypesProps = {
-  width: number;
-  height: number;
-  margin?: { top: number; right: number; bottom: number; left: number };
-  snapshots: Record<string, unknown>;
-  currentSnapshot?: Record<string, unknown>;
-};
 
 export default function ComponentMap({
   // imported props to be used to display the dendrogram
@@ -95,11 +90,11 @@ export default function ComponentMap({
     scroll: true,
   });
 
-  const tooltipStyles = {
+  const tooltipStyles: ToolTipStyles = {
     ...defaultStyles,
     minWidth: 60,
     maxWidth: 300,
-    backgroundColor: 'rgba(0,0,0,0.9)',
+    backgroundColor: 'rgb(15,15,15)',
     color: 'white',
     fontSize: '14px',
     lineHeight: '18px',
@@ -108,7 +103,7 @@ export default function ComponentMap({
     pointerEvents: 'all !important',
   };
 
-  const scrollStyle = {
+  const scrollStyle: {} = {
     minWidth: '60',
     maxWidth: '300',
     minHeight: '20px',
@@ -117,33 +112,15 @@ export default function ComponentMap({
     overflowWrap: 'break-word',
   };
 
-  const formatRenderTime = (time: number): string => {
+  const formatRenderTime: string = (time: number): string => {
     const renderTime = time.toFixed(3);
     return `${renderTime} ms `;
   };
 
-  const formatData = (data, type) => {
-    const contextFormat = [];
-    for (const key in data) {
-      // Suggestion: update the front end to display as a list if we have object
-      let inputData = data[key];
-      if (inputData !== null && typeof inputData === 'object') {
-        inputData = JSON.stringify(inputData);
-      }
-      contextFormat.push(<p className={`${type}-item`}>{`${key}: ${inputData}`}</p>);
-    }
-    return contextFormat;
-  };
-
-  const formatState = (state) => {
-    if (state === 'stateless') return ['stateless'];
-    return ['stateful'];
-  };
-
   // places all nodes into a flat array
-  const nodeList = [];
+  const nodeList: [] = [];
 
-  const collectNodes = (node) => {
+  const collectNodes: void = (node) => {
     nodeList.splice(0, nodeList.length);
     nodeList.push(node);
     for (let i = 0; i < nodeList.length; i += 1) {
@@ -170,7 +147,7 @@ export default function ComponentMap({
   findSelectedNode();
 
   // controls for the map
-  const LinkComponent = getLinkComponent({ layout, linkType, orientation });
+  const LinkComponent: React.ComponentType<unknown> = getLinkComponent({ layout, linkType, orientation });
   return totalWidth < 10 ? null : (
     <div>
       <LinkControls
@@ -218,14 +195,14 @@ export default function ComponentMap({
                 ))}
 
                 {tree.descendants().map((node, key) => {
-                  const widthFunc = (name) => {
+                  const widthFunc:number = (name) => {
                     const nodeLength = name.length;
                     if (nodeLength < 5) return nodeLength + 40;
                     if (nodeLength < 10) return nodeLength + 60;
                     return nodeLength + 70;
                   };
-                  const width = widthFunc(node.data.name);
-                  const height = 25;
+                  const width:number = widthFunc(node.data.name);
+                  const height:number = 25;
 
                   let top: number;
                   let left: number;
@@ -242,7 +219,7 @@ export default function ComponentMap({
                   }
 
                   // mousing controls & Tooltip display logic
-                  const handleMouseAndClickOver = (event) => {
+                  const handleMouseAndClickOver: void = (event) => {
                     const coords = localPoint(event.target.ownerSVGElement, event);
                     const tooltipObj = { ...node.data };
 
@@ -296,19 +273,13 @@ export default function ComponentMap({
                           onMouseEnter={(event) => {
                             /** This 'if' statement block checks to see if you've just left another component node
                              * by seeing if there's a current setTimeout waiting to close that component node's 
-                             * tooltip (see onMouseLeave immediately below).
-                             * This setTimeout gives the mouse time to enter the tooltip element so the tooltip 
-                             * can persist. If instead of entering said tooltip element you've left the previous 
-                             * component node to enter this component node, this logic will clear the timeout event,
-                             * and close the tooltip. */
+                             * tooltip (see onMouseLeave immediately below). If so it clears the tooltip generated 
+                             * from that component node so a new tooltip for the node you've just entered can render. */
                             if (toolTipTimeoutID.current !== null) {
                               clearTimeout(toolTipTimeoutID.current);
                               hideTooltip();
                             }
-                            /** The following line resets the toolTipTimeoutID.current to null, showing that there
-                            * are no current setTimeouts running. I placed this outside of the above if statement  
-                            * to make sure there are no edge cases that would allow for the toolTipTimeoutID.current
-                            * to hold onto an old reference. */
+                            // Removes the previous timeoutID to avoid errors
                             toolTipTimeoutID.current = null;
                             //This generates a tooltip for the component node the mouse has entered.
                             handleMouseAndClickOver(event);
@@ -322,13 +293,11 @@ export default function ComponentMap({
                            * If the mouse enters the tooltip before the timeout delay has passed, the 
                            * setTimeout event will be canceled. */
                           onMouseLeave={() => {
-                            // This line invokes setTimeout and saves its ID to the useRef var toolTipTimeoutID
+                            // Store setTimeout ID so timeout can be cleared if necessary
                             toolTipTimeoutID.current = setTimeout(() => {
                               // hideTooltip unmounts the tooltip
                               hideTooltip();
-                              // As the timeout has been executed, the timeoutID can be reset to null
                               toolTipTimeoutID.current = null;
-                              //There is a delay of 300 ms
                             }, 300);
                           }}
                         />
@@ -361,56 +330,39 @@ export default function ComponentMap({
           style={tooltipStyles}
           
           //------------- Mouse Over TooltipInPortal--------------------------------------------------------------------
-          /** This onMouseEnter fires when the mouse first moves/hovers over the tooltip
-           * The supplied event listener callback stops the setTimeout that was going to 
-           * close the tooltip from firing */ 
-          
+          /** After the mouse enters the tooltip, it's able to persist by clearing the setTimeout
+           *  that would've unmounted it */ 
           onMouseEnter={() => {
-            // The setTimeoutID stored in toolTipTimeoutID.current is from the setTimeout initiated by leaving the 
-            // component node that generated the tooltip. If you've triggered an onMouseEnter event in that tooltip,
             clearTimeout(toolTipTimeoutID.current);
-            // This line resets the timeoutID to null
             toolTipTimeoutID.current = null;
           }}
 
           //------------- Mouse Leave TooltipInPortal -----------------------------------------------------------------
-          /** This onMouseLeave event fires when the mouse leaves the tooltip 
-           * The supplied event listener callback unmounts the tooltip */
+          /** When the mouse leaves the tooltip, the tooltip unmounts */
           onMouseLeave={() => {
-            // hideTooltip unmounts the tooltip
             hideTooltip();
           }}
         >
           <div>
-            <div style={{}}>
-              {' '}
-              <strong>{tooltipData.name}</strong>{' '}
+            <div>
+              <strong>{tooltipData.name}</strong>
+            </div>
+            <div className='tooltipKey'>
+              Key: {tooltipData.componentData.key !== null ? tooltipData.componentData.key : 'null'}
             </div>
             <div> Render time: {formatRenderTime(tooltipData.componentData.actualDuration)} </div>
-            <div className='stateTip'>
-              State: {formatState(tooltipData.state)}
-            </div>
-            <div style={React.scrollStyle}>
-              <div className='tooltipWrapper'>
-                <h2>Props:</h2>
-                {formatData(tooltipData.componentData.props, 'props')}
-              </div>
-              
-              {/* Currently no use for this field
-              <div className='tooltipWrapper'>
-                <h2>Initial Context:</h2>
-                {formatData(tooltipData.componentData.context, 'context')}
-              </div> */}
-
-              <div className='tooltipWrapper'>
-                <h2>State:</h2>
-                {formatData(
-                  tooltipData.componentData.hooksIndex
-                    ? tooltipData.componentData.hooksState
-                    : tooltipData.componentData.state,
-                  'state',
-                )}
-              </div>
+            
+            <div>
+              <ToolTipDataDisplay
+                containerName='Props' 
+                dataObj={tooltipData.componentData.props}
+              />
+              <ToolTipDataDisplay
+                containerName='State'
+                dataObj={tooltipData.componentData.hooksIndex
+                  ? tooltipData.componentData.hooksState
+                  : tooltipData.componentData.state}
+              />
             </div>
           </div>
         </TooltipInPortal>
