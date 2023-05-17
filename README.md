@@ -223,10 +223,10 @@ Reactime is an open source project, and we'd love to hear from you about
 improving the user experience. Please read [DEVELOPER README](src/README.md),
 and create a pull request (or issue) to propose and collaborate on changes to Reactime.
 
-### ❓ <b>Node version compatiability</b>
+### ❓ <b>Node version compatibility</b>
 
 With release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
-'npm run dev' | 'npm run build' for backwards compatibility.<br/> For version
+'npm run dev' | 'npm run build' for backwards compatbility.<br/> For version
 Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 
 ## <b>Read More</b>
