@@ -55,9 +55,9 @@ Here are some notes on the current state of Reactime and considerations for futu
 For Reactime unit tests, pre-v.19 there were tests built out in two places. Backend tests were in backend >\_\_tests\_\_. Frontend tests were in src > app >\_\_tests\_\_. In v19, we specifically focused on rebuilding front tests to use React Testing Library (RTL) + Jest. Previously, front end testing existed but utilized Enzyme + Jest . Our decision to move to RTL stemmed on the fact that Enzyme did not support React V17 (third party Enzyme adaptor libraries were created to provide support to previous React versions, but were still very much out of date) and that Enzyme is no longer industry standard. We began the process of creating new frontend tests but they are not complete and this is a great place for future iterators to build out more. Since the new suite of RTL tests are not fully complete, we have kept the older Enzyme tests within the codebase to be referenced (src > app > __tests__enzyme). However, these will not be included in the tests run in the testing scripts.
 
 ## Including Support for Hooks Beyond useState
-Reactime currently shows data stored via useState, but does not show data stored via other hooks such as useContext or useReducer. While showing this data would be simple, maintaining the time travel functionality of Reactime with these hooks would not. Please see file demo-app/src/client/Components/ButtonsWithMoreHooks.jsx for more details.
+Reactime currently shows data stored via useState, but does not show data stored via other hooks such as useContext or useReducer. While showing this data would be simple, maintaining the time travel functionality of Reactime with these hooks would not. *Please see file demo-app/src/client/Components/ButtonsWithMoreHooks.jsx for more details.*
 
-To see how hook data is stored in the fiber tree:
+To see how hook data is stored on the fiber tree:
 
 1. Change demo-app/src/client/Router.tsx to use utilize the ButtonsWithMoreHooks component
 2. Have the “Load Unpacked” version of Reactime in your chrome extension.
@@ -67,6 +67,14 @@ To see how hook data is stored in the fiber tree:
 6. Navigate through the fiber tree in the console until you find the tree node for demo-app/src/client/Components/IncrementWithMoreHooks.jsx to see hook data.
 
 Any changes to console.logs in Reactime can be seen by refreshing the browser the app is running in.
+
+## Replace Functionality for Outdated Packages
+Packages emotion/core and material-ui/core haven't been updated to use React 18. This is the reason npm install --force is necessary when installing the dependencies of Reactime. Replacing the functionality these packages perform and removing them from Reactime would ensure compatibility moving forward. 
+
+React Developer Tools has deprecated \_\_REACT\_DEVTOOLS\_GLOBAL\_HOOK\_\_, which Reactime uses to extract a running application's fiber tree. At the time of the release of Reactime 19 (May 2023), this tool still works reliably to deliver said fiber tree. This will likely be the case until the React version (React version 18.2 at time of writing) undergoes updates that diverge beyond compatibility with \_\_REACT\_DEVTOOLS\_GLOBAL\_HOOK\_\_. At this time, Reactime will need to change how it extracts an application's fiber tree.
+
+Changing how Reactime extracts the fiber tree before said React version update may yeild diminishing result, as whatever method will also need to be updated to match React's breaking updates.
+
 
 ## Redux
 
@@ -235,7 +243,7 @@ Some relevant sections are reproduced below:
 - [Reactime XVI: Clean-up Time](https://medium.com/@emintahirov1996/reactime-xvi-cleanup-time-a14ba3dcc8a6)
 - [Inter-Route Time Travel with Reactime](https://medium.com/@robbytiptontol/inter-route-time-travel-with-reactime-d84cd55ec73b)
 - [Time-Travel State with Reactime](https://medium.com/better-programming/time-traveling-state-with-reactime-6-0-53fdc3ae2a20)
-- [React Fiber and Reactime](https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8)
+- [Reactime 4: React Fiber and Reactime](https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8)
 - [Meet Reactime - a time-traveling State Debugger for React](https://medium.com/@yujinkay/meet-reactime-a-time-traveling-state-debugger-for-react-24f0fce96802)
 - [Deep in Weeds with Reactime, Concurrent React_fiberRoot, and Browser History Caching](https://itnext.io/deep-in-the-weeds-with-reactime-concurrent-react-fiberroot-and-browser-history-caching-7ce9d7300abb)
 - [Time-Traveling Through React State with Reactime 9.0](https://rxlina.medium.com/time-traveling-through-react-state-with-reactime-9-0-371dbdc99319)
