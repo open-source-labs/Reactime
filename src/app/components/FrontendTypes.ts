@@ -234,7 +234,7 @@ export interface TutorialState {
 
 export interface StepsObj {
   title: string;
-  element?: string;
+  element?: string | Element;
   intro: string;
   position: string;
 }
