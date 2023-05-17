@@ -32,11 +32,9 @@ export interface TreeProps {
     state?: string | object;
     stateSnaphot?: object;
     children?: any[];
-    snapshots?:[];
-    currLocation?:object;
-
-
   };
+  snapshots?:[];
+  currLocation?:object;
 }
 
 export interface BarStackProp {
