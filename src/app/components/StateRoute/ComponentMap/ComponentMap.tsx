@@ -348,7 +348,7 @@ export default function ComponentMap({
               <strong>{tooltipData.name}</strong>
             </div>
             <div className='tooltipKey'>
-              key: {tooltipData.componentData.key !== null ? tooltipData.componentData.key : 'null'}
+              Key: {tooltipData.componentData.key !== null ? tooltipData.componentData.key : 'null'}
             </div>
             <div> Render time: {formatRenderTime(tooltipData.componentData.actualDuration)} </div>
             

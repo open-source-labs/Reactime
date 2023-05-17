@@ -3,6 +3,7 @@ import { ComponentData } from '../types/backendTypes';
 
 /** ComponentNames is used to store a mapping between a component's unique identifier and its name. This mapping is used to reconstruct the component instances during deserialization.*/
 let componentNames = {};
+let rootTree;
 
 // Making a deep clone of state becuase we want to make a copy
 /**
@@ -17,6 +18,25 @@ export function serializeState(state) {
   } catch (e) {
     // if there is an error, that means there is circular state i.e state that depends on itself
     return 'circularState';
+  }
+}
+
+/**
+ * Tree.name's come from the name of the component, but these names should be unique. When a second component
+ * is used in a single tree, this function is called in checkForDuplicates to the change the Tree.name of the 
+ * first component to have a "1" at the end. 
+ * 
+ * @param tree A tree class instance
+ * @param name The name being checked
+ */
+function changeFirstInstanceName(tree: Tree, name: string): void {
+  for (const child of tree.children) {
+    if (child.name === name) {
+      child.name += 1;
+      return;
+    } else {
+      changeFirstInstanceName(child, name)
+    }
   }
 }
 
@@ -71,40 +91,32 @@ class Tree {
   // Returns a unique name ready to be used for when new components gets added to the tree
   /**
    * @function checkForDuplicates - Generates a unique name for a component that is being added to the component tree
-   * @param name
-   * @returns
+   * @param name Component name
+   * @returns Unique name for Tree.name
    */
   checkForDuplicates(name: string): string {
+    if (this.name === 'root') {
+      componentNames = {};
+      rootTree = this;
+    }
+  
     /**
-     * The condition for check empty name does not seem to ever be reached
-     * Commented and did not remove for potential future use
+     * If a duplicate name is found, adds a number to the end of the name so it'll show up uniquely 
+     * in the component map. For example, if only one "Box" component is found, it's name will be "Box".
+     * However, after a second "Box" component is found, the first box will be renamed "Box1" and the 
+     * second box will be named "Box2". When the third box is found it'll be named "Box3", and so on.
      */
-    // check for empty name
-    // if (name === '' && typeof this.rtid === 'string') {
-    //   name = this.rtid.replace('fromLinkFiber', '');
-    // }
-    // if parent node is root, initialize the componentNames object
-    if (this.name === 'root') componentNames = {};
+    componentNames[name] = componentNames[name] + 1 || 1;
 
-    //Original code, left for group review
-    // Numerize the component name if found duplicate
-    // Ex: A board has 3 rows => Row, Row1, Row2
-    // Ex: Each row has 3 boxes => Box, Box1, Box2, ..., Box8
-    componentNames[name] = componentNames[name] + 1 || 0;
-    name += componentNames[name] ? componentNames[name] : '';
-    
-    /**
-     * Mark's notes: I know we start at 0 for arrays but I found it weird
-     *  that you'd see a component 'Box' and then the second one would be labeled 
-     * 'Box1'. So I changed the second one to be 'Box2'. What I'd like to do is iterate
-     *  over the the componentNames array and if any component name is > 1, find the first 
-     *  one and make that one 'Box1', but one thing at a time 
-     */
-    // componentNames[name] = componentNames[name] + 1 || 1;
-    // if (componentNames[name] > 1) name += componentNames[name]
+    if (componentNames[name] === 2) {
+      changeFirstInstanceName(rootTree, name);
+    }
+
+    if (componentNames[name] > 1) name += componentNames[name];
 
     return name;
   }
+
   /**
    *
    * @param state - string if root, serialized state otherwise
