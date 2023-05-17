@@ -5,7 +5,7 @@ import Loader from '../components/Loader';
 import ErrorMsg from '../components/ErrorMsg';
 import { useStoreContext } from '../store';
 
-function ErrorContainer(): JSX.Element  {
+function ErrorContainer(): JSX.Element {
   const [store, dispatch] = useStoreContext();
   const { tabs, currentTitle, currentTab } = store;
   // hooks for error checks
@@ -94,8 +94,12 @@ function ErrorContainer(): JSX.Element  {
         <ErrorMsg loadingArray={loadingArray} status={status} launchContent={launch} />
       </div>
       <br />
-      <a href='https://www.reacti.me/' target='_blank' rel='noopener noreferrer'>
-        Please visit the Reactime website for more info.
+      <a
+        href='https://github.com/open-source-labs/reactime'
+        target='_blank'
+        rel='noopener noreferrer'
+      >
+        Please visit the Reactime Github for more info.
       </a>
     </div>
   );

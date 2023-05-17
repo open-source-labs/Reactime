@@ -35,6 +35,7 @@ const getItemString = (type, data: { state?: object | string; name: string; chil
 
 const Tree = (props: TreeProps) => {
   const { snapshot, snapshots, currLocation } = props;
+  // @ts-ignore
   const [store, dispatch] = useStoreContext();
 
   useEffect(() => {
@@ -44,7 +45,9 @@ const Tree = (props: TreeProps) => {
   return (
     <>
       {snapshot && (
+        // @ts-ignore
         <JSONTree
+          // @ts-ignore
           data={snapshots[currLocation.index] || snapshot}
           theme={{ extend: colors, tree: () => ({ className: 'json-tree' }) }}
           shouldExpandNode={() => true}

@@ -35,9 +35,7 @@ describe('unit testing for ErrorContainer.tsx', () => {
 
   test('Reactime website shows as expected', () => {
     render(<ErrorContainer />);
-    expect(
-      screen.getByText('Please visit the Reactime website for more info.'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Please visit the Reactime Github for more info.')).toBeInTheDocument();
   });
 
   describe('Loading Checks show up as expected', () => {
