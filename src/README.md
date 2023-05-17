@@ -47,12 +47,10 @@ Similar approach for Next.js and Remix demo apps
   <img src="./assets/reactime-dev-setup.gif" />
 </p>
 
-# For Future Iterators
+<h2> For Future Iterators </h2>
+
+## For Future Iterators 
 Here are some notes on the current state of Reactime and considerations for future development.
-
-
-
-
 
 ## Testing
 
@@ -102,6 +100,7 @@ src/
 │   ├── containers/               # More React components
 │   ├── reducers/                 # Redux mechanism for updating state
 │   ├── styles/                   #
+│   ├── FrontendTypes.ts          # Library of typescript interfaces 
 │   ├── index.tsx                 # Starting point for root App component
 │   ├── module.d.ts               #
 │   └── store.tsx                 #
