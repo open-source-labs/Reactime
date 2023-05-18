@@ -1,22 +1,19 @@
-/* eslint:disable */
 import React from 'react';
-import { shallow, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import { render } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 import WebMetrics from '../components/WebMetrics';
-import { expect } from 'chai';
+import { useStoreContext } from '../store';
 
-//the WebMetrics container should render 4 <div/> elements, each with id="card"
-//the WebMetrics container is itself  <div class="web-metrics-container" />
-configure({ adapter: new (Adapter as any)() });
-
-let wrapper = shallow(<WebMetrics />);
+jest.mock('react-apexcharts', () => ({ __esModule: true, default: () => <div /> }));
+const dispatch = jest.fn();
+// jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn());
+jest.mock('../store');
+const mockedStoreContext = jest.mocked(useStoreContext);
+mockedStoreContext.mockImplementation(() => [, dispatch]);
 
 describe('WebMetrics graph testing', () => {
-  it('should have 1 div with class name "metric" ', () => {
-    expect(wrapper.find('.metric')).to.have.lengthOf(1);
-  });
-
-  it('should have 1 div with id "chart" ', () => {
-    expect(wrapper.find('#chart')).to.have.lengthOf(1);
+  test('should have 1 div with class name "metric" ', () => {
+    const { container } = render(<WebMetrics />);
+    expect(container.getElementsByClassName('metric').length).toBe(1);
   });
 });

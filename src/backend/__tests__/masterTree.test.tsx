@@ -38,6 +38,7 @@ describe('master tree tests', () => {
     actualStartTime: 2,
     selfBaseDuration: 3,
     treeBaseDuration: 4,
+    key: null,
     context: {},
     hooksIndex: null,
     hooksState: null,
@@ -242,11 +243,11 @@ describe('master tree tests', () => {
         // Construct result tree (root => FiberTree => childTree1 => childTree2 & siblingTree1)
         (mockChildTree.componentData as ComponentData).props = props;
         const childTree1 = deepCopy(mockChildTree);
-        childTree1.name = 'IncrementClass';
+        childTree1.name = 'IncrementClass1';
         (childTree1.componentData as ComponentData).props.name = 'child1';
         (childTree1.componentData as ComponentData).index = 0;
         const childTree2 = deepCopy(mockChildTree);
-        childTree2.name = 'IncrementClass1';
+        childTree2.name = 'IncrementClass2';
         (childTree2.componentData as ComponentData).props.name = 'child2';
         (childTree2.componentData as ComponentData).index = 1;
         (mockSiblingTree.componentData as ComponentData).props = props;
@@ -339,13 +340,13 @@ describe('master tree tests', () => {
         (mockChildTree.componentData as ComponentData).state = classState;
         mockChildTree.state = classState;
         const childTree1 = deepCopy(mockChildTree);
-        childTree1.name = 'IncrementClass';
+        childTree1.name = 'IncrementClass1';
         (childTree1.componentData as ComponentData).index = 0;
         const childTree2 = deepCopy(mockChildTree);
-        childTree2.name = 'IncrementClass1';
+        childTree2.name = 'IncrementClass2';
         (childTree2.componentData as ComponentData).index = 1;
         const childTree3 = deepCopy(mockChildTree);
-        childTree3.name = 'IncrementClass2';
+        childTree3.name = 'IncrementClass3';
         (childTree3.componentData as ComponentData).index = 2;
         mockFiberTree.children[0].children = [childTree1];
         childTree1.children.push(childTree2, childTree3);
@@ -403,10 +404,10 @@ describe('master tree tests', () => {
         mockSiblingTree.state = functionalState;
         (mockSiblingTree.componentData as ComponentData).hooksState = functionalState;
         const siblingTree1 = deepCopy(mockSiblingTree);
-        siblingTree1.name = 'IncrementFunc';
+        siblingTree1.name = 'IncrementFunc1';
         (siblingTree1.componentData as ComponentData).hooksIndex = [0];
         const siblingTree2 = deepCopy(mockSiblingTree);
-        siblingTree2.name = 'IncrementFunc1';
+        siblingTree2.name = 'IncrementFunc2';
         (siblingTree2.componentData as ComponentData).hooksIndex = [1];
         const siblingTree3 = deepCopy(mockSiblingTree);
         siblingTree3.name = 'IncrementFuncMultiStates';
@@ -525,8 +526,8 @@ describe('master tree tests', () => {
         expect(child.children).toHaveLength(2);
         expect(child.children[0]).toBe(nextChild1);
         expect(child.children[1]).toBe(nextChild2);
-        expect(nextChild1.name).toBe('child1');
-        expect(nextChild2.name).toBe('child2');
+        expect(nextChild1.name).toBe('child2');
+        expect(nextChild2.name).toBe('child3');
       });
 
       xit('should be able to add multiple children and sibilings', () => {});

@@ -1,12 +1,12 @@
-/* eslint-disable react/prop-types */
+// /* eslint-disable react/prop-types */
 
 import React from 'react';
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { ClipLoader } from 'react-spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
-const override = css`
+const override: SerializedStyles = css`
   display: inline;
   margin: 0 auto;
 `;

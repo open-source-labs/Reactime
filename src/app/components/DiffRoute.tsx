@@ -1,19 +1,7 @@
 import React from 'react';
 import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom';
 import Diff from './Diff';
-
-interface DiffRouteProps {
-  snapshot: Record<
-    string,
-    {
-      name?: string;
-      componentData?: Record<string, unknown>;
-      state?: string | unknown;
-      stateSnaphot?: Record<string, unknown>;
-      children?: unknown[];
-    }
-  >;
-}
+import { DiffRouteProps } from '../FrontendTypes';
 
 const DiffRoute = (props: DiffRouteProps): JSX.Element => (
   <Router>

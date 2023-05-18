@@ -8,23 +8,15 @@ import 'intro.js/introjs.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
+import { TutorialProps, TutorialState, StepsObj } from '../FrontendTypes';
 
 //Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
 const { Steps } = require('intro.js-react');
 
-interface tutorialProps {
-  dispatch: (object) => void;
-  currentTabInApp: string;
-}
-
-interface tutorialState {
-  stepsEnabled: boolean;
-}
-
 // This is the tutorial displayed when the "How to use" button is clicked
 // This needs to be a class component to be compatible with updateStepElement from intro.js
-export default class Tutorial extends React.Component<tutorialProps, tutorialState> {
-  constructor(props: tutorialProps) {
+export default class Tutorial extends Component<TutorialProps, TutorialState> {
+  constructor(props: TutorialProps) {
     super(props);
     this.state = {
       stepsEnabled: false,
@@ -82,14 +74,8 @@ export default class Tutorial extends React.Component<tutorialProps, tutorialSta
       this.setState({ stepsEnabled: true });
     };
 
-    interface stepsObj {
-      title: string;
-      element?: string;
-      intro: string;
-      position: string;
-    }
 
-    let steps: stepsObj[] = [];
+    let steps: StepsObj[] = [];
 
     switch (currentTabInApp) {
       case 'map':
@@ -132,13 +118,6 @@ export default class Tutorial extends React.Component<tutorialProps, tutorialSta
             element: '.pause-button',
             intro:
               "<ul><li>Use button to lock Reactime to the target application's tab in the Chrome Browser</li></ul>",
-            position: 'top',
-          },
-          {
-            title: 'Split Button',
-            element: '.split-button',
-            intro:
-              '<ul> <li>Use button to split Reactime into two windows in order to view multiple tabs simultaneously</li> </ul>',
             position: 'top',
           },
           {
@@ -244,6 +223,97 @@ export default class Tutorial extends React.Component<tutorialProps, tutorialSta
           },
         ];
         break;
+      case 'webmetrics':
+        steps = [
+          {
+            title: 'Webmetrics Tab',
+            element: '.web-metrics-container',
+            intro: 'This section will show 4 webmetrics for your page when it loads.',
+            position: 'top',
+          },
+          {
+            title: 'LCP',
+            element: document.querySelectorAll('.metric')[0],
+            intro:
+              '<strong>Largest Contentful Paint</strong><br/>The amount of time it takes for the largest image, video or text block within the viewport to be fully rendered and interactive.',
+            position: 'top',
+          },
+
+          {
+            title: 'FID',
+            element: document.querySelectorAll('.metric')[1],
+            intro:
+              '<strong>First Input Delay</strong><br/>A measurement of load responsiveness, the time from the first user interaction (for example, a click) to the browser responding to that interaction.',
+            position: 'top',
+          },
+
+          {
+            title: 'FCP',
+            element: document.querySelectorAll('.metric')[2],
+            intro:
+              '<strong>First Contentful Paint</strong><br/>The amount of time it takes to render the first DOM element of any variety',
+            position: 'top',
+          },
+
+          {
+            title: 'TTFB',
+            element: document.querySelectorAll('.metric')[3],
+            intro:
+              "<strong>Time To First Byte</strong><br/>The amount of time it takes for a user's browser to receive the first byte of page content from the server.",
+            position: 'top',
+          },
+        ];
+        break;
+      case 'history':
+        steps = [
+          {
+            title: 'History Tab',
+            element: '.display',
+            intro:
+              'The history tab shows all snapshots as a timeline and includes branches to represent divergent state history created from time traveling backwards and making new state changes.',
+            position: 'top',
+          },
+          {
+            title: 'Viewing History Snapshot',
+            element: document.querySelectorAll('.snapshotNode')[0],
+            intro:
+              'Each node will represent a snapshot in the page. <ul><li>A single snapshot will show as a node while multiple snapshots will be represented as a timeline.</li><li>Highlighting over one will show any state changes compared to the previous snapshot. </li><li>Clicking a node will set the snapshot as the current one.</li></ul>',
+            position: 'top',
+          },
+          {
+            title: 'Navigating through Snapshots',
+            element: '.routedescription',
+            intro: 'All snapshots can also be seen and navigated here as well.',
+            position: 'right',
+          },
+
+          {
+            title: 'Clicking on Jump Button',
+            element: document.querySelectorAll('.individual-action')[0],
+            intro:
+              'The button on the right of each snapshot can be used to jump to a given point in state to view the state history at that point.',
+            position: 'right',
+          },
+          {
+            title: 'Renaming The Snapshot',
+            element: document.querySelectorAll('.action-component-text')[0],
+            intro:
+              'A snapshot can be renamed to provided more clarity or distinguish specific snapshots.',
+            position: 'left',
+          },
+        ];
+        break;
+      case 'tree':
+        steps = [
+          {
+            title: 'Tree Tab',
+            element: '.display',
+            intro:
+              'The tree tab can be used to view a text display of the state snapshots in a JSON format.',
+            position: 'top',
+          },
+        ];
+        break;
       default:
         steps = [
           {
@@ -281,7 +351,7 @@ export default class Tutorial extends React.Component<tutorialProps, tutorialSta
           ref={(steps) => (this.steps = steps)}
         />
         <button className='howToUse-button' type='button' onClick={() => startIntro()}>
-          <FontAwesomeIcon icon={faQuestion} /> How to use
+          <FontAwesomeIcon icon={faQuestion} /> Tutorial
         </button>
       </>
     );

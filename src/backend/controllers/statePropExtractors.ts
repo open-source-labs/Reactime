@@ -98,8 +98,8 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
     const statements: { hookName: string; varName: string }[] = [];
     /** All module exports always start off as a single 'FunctionDeclaration' type
      * Other types: "BlockStatement" / "ExpressionStatement" / "ReturnStatement"
-     * Iterate through AST of every function declaration
-     * Check within each function declaration if there are hook declarations & variable name declaration */
+     * Iterate through AST of every functional component declaration
+     * Check within each functional component declaration if there are hook declarations & variable name declaration */
     AST.forEach((functionDec: any) => {
       let declarationBody: any;
       if (functionDec.expression?.body) declarationBody = functionDec.expression.body.body;
@@ -115,19 +115,24 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
           // Due to difference in babel transpilation in browser vs for jest test, expression is stored in differen location
           const expression =
             declarations[0]?.init?.callee?.expressions || //work for browser
-            declarations[0]?.init?.arguments[0]?.callee?.expressions; //work for jest test
+            declarations[0]?.init?.arguments?.[0]?.callee?.expressions; //work for jest test; 
+
+          //For a functional definition that isn't a hook, it won't have the callee being searched for above. This line will cause this forEach execution to stop here in this case.
+          if (expression === undefined) return; 
           let reactHook: string;
           reactHook = expression[1].property?.name;
           if (reactHook === 'useState') {
             // Obtain the variable being set:
             let varName: string =
-              declarations[1]?.id?.name || // work react application
+              // Points to second to last element of declarations because webpack adds an extra variable when converting files that use ES6
+              declarations[declarations.length - 2]?.id?.name || // work react application;
               (Array.isArray(declarations[0]?.id?.elements)
                 ? declarations[0]?.id?.elements[0]?.name
                 : undefined); //work for nextJS application
             // Obtain the setState method:
             let hookName: string =
-              declarations[2]?.id?.name || // work react application
+              //Points to last element of declarations because webpack adds an extra variable when converting files that use ES6
+              declarations[declarations.length - 1]?.id?.name || // work react application;
               (Array.isArray(declarations[0]?.id?.elements)
                 ? declarations[0]?.id?.elements[0]?.name
                 : undefined); //work for nextJS & Remix

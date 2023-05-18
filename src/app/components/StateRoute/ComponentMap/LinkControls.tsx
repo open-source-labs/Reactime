@@ -1,12 +1,13 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
+import { LinkControlProps, ControlStyles, DropDownStyle, Node } from '../../../FrontendTypes'
 // Font size of the Controls label and Dropdowns
-const controlStyles = {
+const controlStyles: ControlStyles = {
   fontSize: '12px',
   padding: '10px',
 };
-
-const dropDownStyle = {
+ 
+const dropDownStyle: DropDownStyle = {
   margin: '0.5em',
   fontSize: '12px',
   fontFamily: 'Roboto, sans-serif',
@@ -18,24 +19,10 @@ const dropDownStyle = {
   padding: '2px',
 };
 
-type Props = {
-  layout: string;
-  orientation: string;
-  linkType: string;
-  stepPercent: number;
-  selectedNode: string;
-  setLayout: (layout: string) => void;
-  setOrientation: (orientation: string) => void;
-  setLinkType: (linkType: string) => void;
-  setStepPercent: (percent: number) => void;
-  setSelectedNode: (selectedNode: string) => void;
-  snapShots: Record<string, unknown>;
-};
-
 // use BFS to put all the nodes under snapShots(which is the tree node) into an array
-const nodeList = [];
+const nodeList: Node[] = [];
 
-const collectNodes = (node) => {
+const collectNodes = (node: Node): void => {
   nodeList.splice(0, nodeList.length);
   /* We used the .splice method here to ensure that nodeList
   did not accumulate with page refreshes */
@@ -58,7 +45,7 @@ export default function LinkControls({
   setStepPercent,
   setSelectedNode,
   snapShots,
-}: Props): JSX.Element {
+}: LinkControlProps): JSX.Element {
   collectNodes(snapShots);
 
   return (

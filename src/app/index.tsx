@@ -1,7 +1,14 @@
 /* eslint-disable react/jsx-filename-extension */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import App from './components/App';
 import './styles/main.scss';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+//Updated rendering sytax for React 18
+const root = createRoot(document.getElementById("root"));
+root.render(
+  // Strict mode is for developers to better track best practices 
+  // <StrictMode>
+    <App/>
+  // </StrictMode>
+);

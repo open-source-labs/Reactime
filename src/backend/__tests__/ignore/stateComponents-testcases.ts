@@ -11,6 +11,7 @@ import deepCopy from './deepCopy';
 export const root: Fiber = {
   tag: HostRoot,
   elementType: null,
+  key: null,
   sibling: null,
   stateNode: null,
   child: null,
@@ -31,6 +32,7 @@ export const functionalComponent: Fiber = {
   elementType: IncrementFunc,
   sibling: null,
   stateNode: null,
+  key: null,
   child: null,
   memoizedState: {
     memoizedState: 0,
@@ -53,6 +55,7 @@ const functionalComponentData: ComponentData = {
   actualStartTime: 2,
   selfBaseDuration: 3,
   treeBaseDuration: 4,
+  key: null,
   context: {},
   hooksIndex: [0],
   hooksState: { count: 0 },
@@ -72,6 +75,7 @@ export const classComponent: Fiber = {
   tag: ClassComponent,
   elementType: IncrementClass,
   sibling: null,
+  key: null,
   stateNode: {
     state: { count: 0 },
     setState: function (callback) {
@@ -98,6 +102,7 @@ const classComponentData: ComponentData = {
   actualStartTime: 2,
   selfBaseDuration: 3,
   treeBaseDuration: 4,
+  key: null,
   context: {},
   hooksIndex: null,
   hooksState: null,

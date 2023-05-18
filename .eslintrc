@@ -3,10 +3,12 @@
     "airbnb",
     "plugin:jest/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:testing-library/react", // added in for RTL tests
+    "plugin:jest-dom/recommended" // added in for RTL tests
   ],
   "root": true,
-  "plugins": ["jest", "react", "react-hooks", "@typescript-eslint"],
+  "plugins": ["jest", "react", "react-hooks", "@typescript-eslint", "testing-library", "jest-dom"],
   "rules": {
     "arrow-parens": [2, "as-needed"],
     "import/no-unresolved": "off",

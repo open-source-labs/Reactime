@@ -23,7 +23,7 @@ import {
   BarGraphComparisonProps,
   ActionObj,
   Series,
-} from '../../FrontendTypes';
+} from '../../../FrontendTypes';
 // import { BarStack as BarStacks } from '@visx/shape/lib/types';
 
 /* DEFAULTS */

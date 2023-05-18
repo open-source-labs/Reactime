@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-function Increment() {
+function Increment(): JSX.Element {
   const [count, setCount] = useState(0);
   return (
     <div>

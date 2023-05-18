@@ -12,16 +12,13 @@ import {
   LinkVerticalLine,
   LinkRadialLine,
 } from '@visx/shape';
+import { LinkComponent } from '../../../FrontendTypes'
 
 export default function getLinkComponent({
   layout,
   linkType,
   orientation,
-}: {
-  layout: string;
-  linkType: string;
-  orientation: string;
-}): React.ComponentType<unknown> {
+}: LinkComponent): React.ComponentType<unknown> {
   let LinkComponent: React.ComponentType<unknown>;
 
   if (layout === 'polar') {
