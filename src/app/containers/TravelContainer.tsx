@@ -11,7 +11,7 @@ import {
   resetSlider,
 } from '../actions/actions';
 import { useStoreContext } from '../store';
-import { TravelContainerProps } from '../components/FrontendTypes';
+import { TravelContainerProps } from '../FrontendTypes';
 
 const speeds: {
   value: number;

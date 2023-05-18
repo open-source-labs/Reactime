@@ -1,6 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
-import { DropdownProps } from '../components/FrontendTypes'
+import { DropdownProps } from '../FrontendTypes'
 
 const Dropdown = (props: DropdownProps): JSX.Element => {
   const { speeds, setSpeed, selectedSpeed } = props;

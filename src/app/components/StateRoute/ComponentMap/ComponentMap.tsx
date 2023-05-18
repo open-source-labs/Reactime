@@ -20,7 +20,7 @@ import getLinkComponent from './getLinkComponent';
 import ToolTipDataDisplay from './ToolTipDataDisplay';
 import { toggleExpanded, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-import { LinkTypesProps, DefaultMargin, ToolTipStyles } from '../../../components/FrontendTypes'
+import { LinkTypesProps, DefaultMargin, ToolTipStyles } from '../../../FrontendTypes'
 
 const defaultMargin: DefaultMargin = {
   top: 30,

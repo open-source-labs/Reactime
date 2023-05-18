@@ -2,7 +2,7 @@ import React from 'react';
 import { diff, formatters } from 'jsondiffpatch';
 import ReactHtmlParser from 'react-html-parser';
 import { useStoreContext } from '../store';
-import { DiffProps, StatelessCleanning } from '../components/FrontendTypes';
+import { DiffProps, StatelessCleanning } from '../FrontendTypes';
 
 /**
  * Displays tree showing specific two versions of tree

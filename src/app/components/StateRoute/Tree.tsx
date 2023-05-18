@@ -3,7 +3,7 @@ import JSONTree from 'react-json-tree';
 
 import { setCurrentTabInApp } from '../../actions/actions';
 import { useStoreContext } from '../../store';
-import { TreeProps } from '../../components/FrontendTypes';
+import { TreeProps } from '../../FrontendTypes';
 
 const colors = {
   scheme: 'paraiso',

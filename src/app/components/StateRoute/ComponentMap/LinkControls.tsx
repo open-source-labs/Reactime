@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import { LinkControlProps, ControlStyles, DropDownStyle, Node } from '../../../components/FrontendTypes'
+import { LinkControlProps, ControlStyles, DropDownStyle, Node } from '../../../FrontendTypes'
 // Font size of the Controls label and Dropdowns
 const controlStyles: ControlStyles = {
   fontSize: '12px',
