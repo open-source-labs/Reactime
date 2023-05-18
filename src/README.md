@@ -139,7 +139,7 @@ src/
 
 # Diagrams
 
-All the diagrams of data flows are avaliable on [MIRO](https://miro.com/app/board/uXjVPictrsM=/)
+All the diagrams of data flows are available on [MIRO](https://miro.com/app/board/uXjVPictrsM=/)
 
 1. The _app_ folder is responsible for the Single Page Application that you see when you open the chrome dev tools under the Reactime tab.
 
