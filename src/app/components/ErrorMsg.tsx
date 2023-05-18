@@ -2,7 +2,7 @@
 import React from 'react';
 
 // parses loadingArray and status and returns the correct message
-function parseError(loadingArray: [], status: any): string {
+function parseError(loadingArray: [], status: Record<string, unknown>): string {
   let stillLoading = true;
   loadingArray.forEach((e) => {
     if (e === false) stillLoading = false;

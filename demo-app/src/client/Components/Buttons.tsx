@@ -1,7 +1,7 @@
 import React from 'react';
 import Increment from './Increment';
 
-function Buttons() {
+function Buttons(): JSX.Element {
   const buttons = [];
   for (let i = 0; i < 4; i++) {
     buttons.push(<Increment key={i} />);

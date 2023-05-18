@@ -16,17 +16,9 @@
   <a href="https://github.com/oslabs-beta/reactime">
     <img src="https://img.shields.io/github/license/oslabs-beta/reactime" alt="GitHub">
   </a>
-  <a href="https://travis-ci.com/oslabs-beta/reactime">
-    <img src="https://travis-ci.com/oslabs-beta/reactime.svg?branch=master" alt="Build Status">
-  </a>
-  <a href="http://badge.fury.io/js/reactime">
-    <img src="https://badge.fury.io/js/reactime.svg" alt="npm version">
-  </a>
     <img src="https://img.shields.io/badge/babel%20preset-airbnb-ff69b4" alt="BabelPresetPrefs">
     <img src="https://img.shields.io/badge/linted%20with-eslint-blueviolet" alt="LintPrefs">
 </p>
-
-<!-- [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime) [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime) [![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime) ![BabelPresetPrefs](https://img.shields.io/badge/babel%20preset-airbnb-ff69b4) ![LintPrefs](https://img.shields.io/badge/linted%20with-eslint-blueviolet) -->
 
 <h5 align="center">
 <br>
@@ -36,153 +28,26 @@
 <br>
 
 <p align="center">
-<img src="./assets/new-reactime.gif" />
+<img src="./assets/v19/Overview.gif" />
 </p>
 
 <p align="center">
-  <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://www.reacti.me/">Website</a> • <a href="#read-more">Read More</a>
+  <a href="https://www.reacti.me/">Website</a> 
 </p>
 
-<b>Reactime 18.0</b> introduces a range of new and improved features aimed at optimizing performance and enhancing compatibility. 
-With support for Next.js and Remix, increased testing coverage(93% backend, frontend needs more), and structural improvements to the codebase. 
-Additionally, we are proud to announce the launch of our newly redesigned website, which serves as a hub for the latest updates and information about Reactime. 
-To aid with debugging, we have included demo applications for Next.js and Remix, enabling future iterators to test and troubleshoot with greater ease and efficiency.
-
-
-<b>Reactime 17.0</b>
-We are pleased to announce the release of Reactime 17.0,
-which includes several new and improved features. Context API support has now been added.
-You can now monitor state stored in context if your component is subscribed to context changes.
-We also improved the tooltip UI on our tree diagram to improve readability.
-In addition, we have redesigned the Reactime.dev website using Tailwind CSS,
- resulting in a clean, modern design with an intuitive layout.
- To stay informed about future updates, you can now sign up for email notifications.
-
-<b>Reactime 16.0</b> presents the codebase with substantial, much-needed
-clean-up. From the backend and frontend to testing, the Reactime XVI team has:
-removed vestigial code, added comments to clarify code, implemented 100% testing
-coverage for the codebase, compartmentalized and modularized files, and
-implemented typescript.
-
-The primary purpose of this update is to allow easier understanding of
-Reactime's codebase by individuals or groups wishing to further update Reactime,
-keeping this great developer tool alive.
-
-With release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
-'npm run dev' || 'npm run build' for backwards compatibility.<br/> For version
-Node v16.16.0, please use script 'npm run devlegacy' || 'npm run buildlegacy'
-
-Previously, <b>Reactime 14.0 and 15.0</b> added the exciting features below:
-
-I. React Router Compatibility <br> Reactime is now compatible with React Router
-applications! Prior to Reactime 14.0, recording state snapshots as the user
-navigated across various routes was possible, but time travel debugging was only
-possible for the current route (i.e. jumping back to a prior state at a
-different route was not possible). In order to streamline debugging of
-applications with multiple routes, Reactime 14.0 added functionality that allows
-the user to time-travel back to different routes, including live updating in the
-browser to reflect the state of their application at that previously visited
-route.
-
-II. Classifying State Snapshots by Route <br> The list of state snapshots in the
-Reactime dashboard is now classified by route to give the developer visual cues
-of the snapshot-route relationship and make time travel debugging of various
-routes easier.
-
-III. Filtering Performance Metrics By Route <br> The Reactime dashboard includes
-a stacked bar graph showing render times for each component, with a separate bar
-stack for each snapshot. With Reactime 14.0, this composite bar graph can now be
-filtered by route to allow the developer to review detailed performance data by
-route.
-
-IV. Visualize And Compare Components Within a Snapshot <br> Users not only have
-access to multiple snapshots, but can now zone into a specified snapshot more
-granularly through a new visualization consisting of its individual components.
-These new graphs are rendered directly in the same Performance tab in Reactime
-and provide details for each component when the user hovers over, providing a
-new visual comparison of components across a single chosen state.
-
-<p align="center">
-<img src="./assets/snapshot-comparison.gif" />
-
-After installing Reactime, you can test its functionalities with your React
-application in development mode.
-
-Please note, the time jumping feature will <b>ONLY</b> work when your
-application is running in <b>development mode</b>. In production mode, you are
-able to view your application’s component map but no additional features.
-
-## <b>Installation</b>
-
-To get started, install the Reactime
-[extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga)
-from Chrome Web Store.
-
-NOTE: The React Developer Tools
-[extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
-is also required for Reactime to run, if you do not already have it installed on
-your browser.
-
-### Manual Installation
-
-Go to Chrome Extensions (make sure Chrome Extension is in Developer Mode) for
-manual installation in (https://developer.chrome.com/extensions/faq#faq-dev-01)
-and click on Load Unpacked. Use `src/extension/build/` to load this extension.
-Turn on 'Allow access to file URLs' in extension details page if testing
-locally.
-
-### Looking to contribute to Reactime?
-
-<i>Please refer to Developer Install for a detailed guide:</i>
-
-Refer [DEVELOPER README](src/README.md) for more info on the project, and
-instructions on building from source.
-
-## <b>How to Use</b>
-
-After installing the Chrome extension, just open up your project in the browser.
-
-Then open up your Chrome DevTools and navigate to the Reactime panel.
-
-## <b>Troubleshooting</b>
-
-### ❓ <b>Why is Reactime telling me that no React application is found?</b>
-
-Reactime initially runs using the dev tools global hook from the Chrome API. It
-takes time for Chrome to load this. Try refreshing your application a couple
-times until you see Reactime running.
-
-### ❓ <b>There is a black screen instead of the Reactime extension</b>
-
-Try refreshing the application you want to test and refresh the DevTools by
-clicking the right mouse button “Reload frame”.
-
-### ❓ <b>I found a bug in Reactime</b>
-
-Reactime is an open source project, and we’d really appreciate your help with
-improving user experience. Please read [DEVELOPER README](src/README.md),
-and create a pull request (or issue) to propose and collaborate on changes to a
-repository.
-
-### ❓ <b>Node version compatiability</b>
-
-With release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
-'npm run dev' | 'npm run build' for backwards compatibility.<br/> For version
-Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
-
-## <b>Features</b>
+## <h1>Features</h1>
 
 ### 🔹 Viewing
 
 You can view your application's file structure and click on a snapshot to view
 your app's state. State can be visualized in a Component Graph, JSON Tree, or
-Performance Graph. Snapshots can be diffed with the previous snapshot, which can
+Performance Graph. Snapshots can be compared with the previous snapshot, which can
 be viewed in Diff mode.
 <br>
 <br>
 
 <p align="center">
-<img src="./assets/map-viewing.gif" />
+<img src="./assets/v19/map.gif" />
 </p>
 <br>
 
@@ -195,22 +60,21 @@ name.
 <br>
 <br>
 
-<p align="center">
+<!-- <p align="center">
 <img src="./assets/action-comparison.gif" />
-</p>
-<br>
+</p> -->
 
 ### 🔹 Components Comparison
 
 When toggled to a specific snapshot, a visualization of the individual
-components of the snapshow will be displayed. This can be done under the same
+components of the snapshot will be displayed. This can be done under the same
 Performance tab where the snapshots are rendered. You will also find details of
 each component upon hovering.
 <br>
 <br>
 
 <p align="center">
-<img src="./assets/components-viewing.gif" />
+<img src="./assets/v19/performance.gif" />
 </p>
 <br>
 
@@ -223,7 +87,7 @@ snapshot will be displayed in Chrome DevTools under the Reactime panel.
 <br>
 
 <p align="center">
-<img src="./assets/history-tree.gif" />
+<img src="./assets/v19/history.gif" />
 </p>
 <br>
 
@@ -256,7 +120,6 @@ application faster.
 Reactime offers debugging and performance tools for Remix apps (in beta). Support still
 needs to be added for multi-route time traveling. Every other feature works.
 
-
 ### 🔹 TypeScript Support
 
 Reactime offers support for TypeScript applications using stateful class
@@ -273,41 +136,102 @@ of the structure and interfaces of the codebase.
 
 ### <b>Additional Features</b>
 
-- Identifying unnecessary re-renders
-- Single-click to view tooltip details on state visualizations
+- In-app tab specific tutorial walkthroughs
+- Hover over a component to view tooltip details on state visualizations
 - Double-click to collapse child components
-- A reverse filter with autofill to focus on a portion of the component map
-- Ability to pan and zoom on state visualizations
+- Click to focus on a portion of the component map
 - A dropdown to support development of projects on multiple tabs
-- A slider to move through snapshots quickly
-- A play button to move through snapshots automatically
-- A lock button, which stops recording each snapshot
-- A persist button to keep snapshots upon refresh (handy when changing code and
-  debugging)
+- Intuitive navigation between state snapshots
 - Download/upload the current snapshots in memory
-- Declarative titles in the actions sidebar
-- Interative Tutorial Walkthrough
-- Toggle feature allowing temporary pause of state monitoring
+- Locked/unlocked feature allowing temporary pause of state monitoring
 
+<h1>What's New!</h1>
 
-### <b>Bug Fixes</b>
-- Search bar now searches for specific nodes successfully
-- Tab titles of chrome browser tabs not running an application in development
-  mode are no longer affected by Reactime
-- Overhauled Asynchronous calls to eliminate memory leaks due to unused async activities in the background.
-- Improved UI and performance
+<b>Reactime 19.0</b> comes with UI updates to enhance the developer's experience, as well as a much-needed revamping of the codebase to reflect current industry standards and better maintainability for future contributors.
+
+<i>UI Updates</i>
+
+To handle displaying large amounts of data, we have changed how nested structures like objects and arrays are displayed to now be collapsible and scrollable. In addition, we've updated component information to include the necessary component "key" information, and data now also persists on hover, eliminating the need to leave the cursor in one place.
+
+<i>Under the Hood</i>
+
+We are happy to say that we've migrated from Enzyme to React Testing Library to eliminate the need for the Enzyme adapter, converted from JavaScript to TypeScript to ensure type safety, and updated the traversal of the React Fiber Tree to accurately extract useState data for previously unsupported edge cases.
+
+If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
+
+<p align="center">
+
+<h1>Installation</h1>
+
+To get started, install the Reactime
+[extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga)
+from Chrome Web Store.
+
+After installing Reactime, you can test its functionalities with your React
+application in development mode.
+
+Please note, the time jumping feature will <b>ONLY</b> work when your
+application is running in <b>development mode</b>. In production mode, you are
+able to view your application’s component map but no additional features.
+
+NOTE: The React Developer Tools
+[extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+is also required for Reactime to run, if you do not already have it installed on
+your browser.
+
+### Manual Installation
+
+Go to Chrome Extensions (make sure Chrome Extension is in Developer Mode) for
+manual installation in (https://developer.chrome.com/extensions/faq#faq-dev-01)
+and click on Load Unpacked. Use `src/extension/build/` to load this extension.
+Turn on 'Allow access to file URLs' in extension details page if testing
+locally.
+
+### Looking to contribute to Reactime?
+
+<i>Please refer to Developer Install for a detailed guide:</i>
+
+Refer [DEVELOPER README](src/README.md) for more info on the project, and
+instructions on building from source.
+
+### <b>How to Use</b>
+
+After installing the Chrome extension, just open up your project in the browser.
+
+Then open up your Chrome DevTools and navigate to the Reactime panel.
+
+## <b>Troubleshooting</b>
+
+### ❓ <b>Why is Reactime telling me that no React application is found?</b>
+
+Reactime initially runs using the dev tools global hook from the Chrome API. It
+takes time for Chrome to load this. Try refreshing your application a couple
+times until you see Reactime running.
+
+### ❓ <b>Why do I need to have React Dev Tools enabled?</b>
+
+Reactime works in tandem with the React Developer Tools to access a React application's Fiber tree; under the hood, Reactime traverses the Fiber tree through the React Developer Tool's global hook, pulling all relevant information needed to display to the developer
+
+### ❓ <b>There is a black screen instead of the Reactime extension</b>
+
+Try refreshing the application you want to test and refresh the DevTools by
+clicking the right mouse button “Reload frame”.
+
+### ❓ <b>I found a bug in Reactime</b>
+
+Reactime is an open source project, and we'd love to hear from you about
+improving the user experience. Please read [DEVELOPER README](src/README.md),
+and create a pull request (or issue) to propose and collaborate on changes to Reactime.
+
+### ❓ <b>Node version compatibility</b>
+
+With release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
+'npm run dev' | 'npm run build' for backwards compatibility.<br/> For version
+Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 
 ## <b>Read More</b>
-- [Reactime 18.0. Better than ever](https://medium.com/@zdf2424/reactime-18-0-better-than-ever-148b81606257)
-- [Reactime v17.0.0: Now with support for the Context API, and a modern UI](https://medium.com/@reactime/reactime-v17-0-0-now-with-support-for-the-context-api-and-a-modern-ui-f0edf9e54dae)
-- [Reactime XVI: Clean-up Time](https://medium.com/@emintahirov1996/reactime-xvi-cleanup-time-a14ba3dcc8a6)
-- [Inter-Route Time Travel with Reactime](https://medium.com/@robbytiptontol/inter-route-time-travel-with-reactime-d84cd55ec73b)
-- [Time-Travel State with Reactime](https://medium.com/better-programming/time-traveling-state-with-reactime-6-0-53fdc3ae2a20)
-- [React Fiber and Reactime](https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8)
-- [Meet Reactime - a time-traveling State Debugger for React](https://medium.com/@yujinkay/meet-reactime-a-time-traveling-state-debugger-for-react-24f0fce96802)
-- [Deep in Weeds with Reactime, Concurrent React_fiberRoot, and Browser History Caching](https://itnext.io/deep-in-the-weeds-with-reactime-concurrent-react-fiberroot-and-browser-history-caching-7ce9d7300abb)
-- [Time-Traveling Through React State with Reactime 9.0](https://rxlina.medium.com/time-traveling-through-react-state-with-reactime-9-0-371dbdc99319)
-- [What time is it? Reactime!](https://medium.com/@liuedar/what-time-is-it-reactime-fd7267b9eb89)
+
+- [It's time for Reactime 19.0!](linkhere)
 
 ## <b>Authors</b>
 
@@ -390,6 +314,10 @@ of the structure and interfaces of the codebase.
 - **Ngoc Zwolinski** - [@ngoczwolinski](https://github.com/ngoczwolinski)
 - **Peter Lam** - [@dev-plam](https://github.com/dev-plam)
 - **Zachary Freeman** - [@zacharydfreeman](https://github.com/zacharydfreeman/)
+- **Jackie Yuan** - [@yuanjackie1](https://github.com/yuanjackie1)
+- **Jasmine Noor** - [@jasnoo](https://github.com/jasnoo)
+- **Minzo Kim** - [@minzo-kim](https://github.com/minzo-kim)
+- **Mark Teets** - [@MarkTeets](https://github.com/MarkTeets)
 
 ## <b>License </b>
 

@@ -10,7 +10,7 @@ export default {
   /**
    * @function clear - Clears componentActionsRecord
    */
-  clear: () => {
+  clear: (): void => {
     componentActionsRecord = [];
   },
 

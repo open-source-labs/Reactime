@@ -5,27 +5,7 @@
 import React from 'react';
 import ReactHover, { Trigger, Hover } from 'react-hover';
 import { changeView, changeSlider } from '../actions/actions';
-
-/**
- * @template ActionProps Props for the action component
- */
-
-interface ActionProps {
-  key: string;
-  selected: boolean;
-  last: boolean;
-  index: number;
-  sliderIndex: number;
-  dispatch: (a: any) => void;
-  displayName: string;
-  componentName: string;
-  componentData: { actualDuration: number } | undefined;
-  routePath: any;
-  state?: Record<string, unknown>;
-  viewIndex: number | undefined;
-  isCurrIndex: boolean;
-  handleOnkeyDown: (e: any, i: number) => any;
-}
+import { ActionProps, OptionsCursorTrueWithMargin } from '../FrontendTypes';
 
 /**
  * @function Action
@@ -61,7 +41,7 @@ const Action = (props: ActionProps): JSX.Element => {
    * @function cleanTime: Displays render times for state changes
    * @returns render display time in seconds in milliseconds
    */
-  const cleanTime = () => {
+    const cleanTime = (): string => {
     if (!componentData || !componentData.actualDuration) {
       return 'NO TIME';
     }
@@ -77,8 +57,8 @@ const Action = (props: ActionProps): JSX.Element => {
     } else {
       seconds = '00';
     }
-    milliseconds = Number.parseFloat(milliseconds).toFixed(2);
-    const arrayMilliseconds = milliseconds.split('.');
+    milliseconds = Number.parseFloat(milliseconds as string).toFixed(2);
+    const arrayMilliseconds: string | number = milliseconds.split('.');
     if (arrayMilliseconds[0].length < 2) {
       arrayMilliseconds[0] = '0'.concat(arrayMilliseconds[0]);
     }
@@ -87,9 +67,9 @@ const Action = (props: ActionProps): JSX.Element => {
     }
     return `+${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`;
   };
-  const displayTime = cleanTime();
+  const displayTime: string = cleanTime();
 
-  const optionsCursorTrueWithMargin = {
+  const optionsCursorTrueWithMargin: OptionsCursorTrueWithMargin = {
     followCursor: true,
     shiftX: 20,
     shiftY: 0,
@@ -99,7 +79,7 @@ const Action = (props: ActionProps): JSX.Element => {
     <div className='individual-action'>
       <div
         // Invoking keyboard functionality; functionality is in ActionContainer;
-        onKeyDown={(e) => handleOnkeyDown(e, viewIndex)}
+        onKeyDown={(e):void => handleOnkeyDown(e, viewIndex)}
         className={selected || last ? 'action-component selected' : 'action-component'}
         onClick={() => {
           dispatch(changeView(index));
@@ -132,7 +112,7 @@ const Action = (props: ActionProps): JSX.Element => {
               ) : (
                 <button
                   className='jump-button'
-                  onClick={(e: any): void => {
+                  onClick={(e): void => {
                     e.stopPropagation();
                     dispatch(changeSlider(index));
                     dispatch(changeView(index));

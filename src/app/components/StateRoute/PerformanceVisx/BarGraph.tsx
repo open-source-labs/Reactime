@@ -10,7 +10,7 @@ import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
 import { onHover, onHoverExit, save } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-import { snapshot, TooltipData, Margin, BarGraphProps } from '../../FrontendTypes';
+import { snapshot, TooltipData, Margin, BarGraphProps } from '../../../FrontendTypes';
 
 /* DEFAULTS */
 const margin = {

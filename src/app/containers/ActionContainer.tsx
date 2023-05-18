@@ -8,6 +8,7 @@ import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
 import RouteDescription from '../components/RouteDescription';
+import { Obj } from '../FrontendTypes';
 
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
@@ -22,20 +23,11 @@ function ActionContainer(props): JSX.Element {
   const { toggleActionContainer, actionView, setActionView } = props;
   const [recordingActions, setRecordingActions] = useState(true);
 
-  let actionsArr = [];
-  const hierarchyArr: any[] = [];
+  let actionsArr: JSX.Element[] = [];
+  const hierarchyArr: (number | {})[] = [];
 
   // function to traverse state from hierarchy and also getting information on display name and component name
-  const displayArray = (obj: {
-    stateSnapshot: {
-      route: any;
-      children: any[];
-    };
-    name: number;
-    branch: number;
-    index: number;
-    children?: [];
-  }) => {
+  const displayArray = (obj: Obj): void => {
     if (
       obj.stateSnapshot.children.length > 0 &&
       obj.stateSnapshot.children[0] &&
@@ -56,7 +48,7 @@ function ActionContainer(props): JSX.Element {
       hierarchyArr.push(newObj);
     }
     if (obj.children) {
-      obj.children.forEach((element) => {
+      obj.children.forEach((element): void => {
         displayArray(element);
       });
     }
@@ -67,7 +59,7 @@ function ActionContainer(props): JSX.Element {
   if (hierarchy) displayArray(hierarchy);
 
   // handles keyboard presses, function passes an event and index of each action-component
-  function handleOnKeyDown(e: KeyboardEvent, i: number) {
+  function handleOnKeyDown(e: KeyboardEvent, i: number): void {
     let currIndex = i;
     // up arrow key pressed
     if (e.key === 'ArrowUp') {
@@ -89,7 +81,9 @@ function ActionContainer(props): JSX.Element {
     }
   }
   // Sort by index.
-  hierarchyArr.sort((a, b) => a.index - b.index);
+
+  hierarchyArr.sort((a:Obj, b:Obj):number => a.index - b.index);
+
   actionsArr = hierarchyArr.map(
     (snapshot: {
       routePath: any;
@@ -128,7 +122,7 @@ function ActionContainer(props): JSX.Element {
   }, [setActionView]);
 
   // Function sends message to background.js which sends message to the content script
-  const toggleRecord = () => {
+  const toggleRecord = (): void => {
     port.postMessage({
       action: 'toggleRecord',
       tabId: currentTab,
@@ -142,7 +136,7 @@ function ActionContainer(props): JSX.Element {
     [route: string]: [];
   };
 
-  const routes = {};
+  const routes: {} = {};
   for (let i = 0; i < actionsArr.length; i += 1) {
     if (!routes.hasOwnProperty(actionsArr[i].props.routePath)) {
       routes[actionsArr[i].props.routePath] = [actionsArr[i]];

@@ -1,11 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
-
-interface DropdownProps {
-  selectedSpeed: { value: number; label: string };
-  speeds: { value: number; label: string }[];
-  setSpeed: () => void;
-}
+import { DropdownProps } from '../FrontendTypes'
 
 const Dropdown = (props: DropdownProps): JSX.Element => {
   const { speeds, setSpeed, selectedSpeed } = props;

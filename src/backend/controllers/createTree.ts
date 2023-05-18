@@ -34,7 +34,7 @@ import {
  */
 // TODO: Not sure why the ritd need to be outside of the _createTree function. Want to put inside, but in case this need to be keep track for front end.
 export default function createTree(currentFiberNode: Fiber): Tree {
-  let rtidCounter = 0;
+  let rtidCounter: number = 0;
   return _createTree(currentFiberNode, new Tree('root', 'root'));
 
   /**
@@ -53,6 +53,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       memoizedState,
       memoizedProps,
       elementType,
+      key,
       tag,
       actualDuration,
       actualStartTime,
@@ -64,7 +65,8 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     // Obtain component name:
     /** Name of the current component */
     let componentName: string =
-      elementType?._context?.displayName || //For ContextProvider
+      elementType?._context?.displayName || //For ContextProviders like Route, Navigation, Location
+      (elementType?._context &&  'ContextProvider') || //Mark's note: useContext providers weren't showing up the way listed in the line above, I actually couldn't find the name of the context provider on the react dev tools fiber tree.
       elementType?._result?.name || //For lazy Component
       elementType?.render?.name ||
       elementType?.name || //For Functional/Class Component
@@ -103,6 +105,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       actualStartTime,
       selfBaseDuration,
       treeBaseDuration,
+      key,
       props: {},
       context: {},
       state: null,
@@ -116,15 +119,36 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     if (memoizedProps) {
       switch (elementType.name) {
         // If component comes from React Router, extract only pathname:
-        case 'Router':
+        case 'Router': {
           componentData.props = { pathname: memoizedProps?.location?.pathname };
           break;
-        case 'RenderedRoute':
+        }
+        case 'RenderedRoute': {
           componentData.props = { pathname: memoizedProps?.match?.pathname };
           break;
+        }
+        // For react-router components Route, Navigation, or Location, the elementType won't have a name property, so elementType.name will be undefined.
+        // The following switch case will be entered and will pass limited info to these element's props, but if none of the 
+        // "if" statements are entered and a break statements isn't executed, the default case will still be entered
+        case undefined: {
+          // console.log('in undefined', elementType);
+          if (elementType._context?.displayName === "Route") {
+            componentData.props = { pathname: memoizedProps?.value?.matches?.[0]?.pathname };
+            break;
+          }
+          if (elementType._context?.displayName === "Navigation") {
+            componentData.props = { basename: memoizedProps?.value?.basename };
+            break;
+          }
+          if (elementType._context?.displayName === "Location") {
+            componentData.props = { pathname: memoizedProps?.value?.location?.pathname };
+            break;
+          }
+        }
         // Else filter & format props data to ensure they are JSON stringify-able, before sending to front end
-        default:
+        default: {
           componentData.props = filterAndFormatData(memoizedProps);
+        }
       }
     }
 
@@ -152,8 +176,10 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     //   // }
     // }
     // // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
-    // // Different from other provider, such as Routes, BrowswerRouter, ReactRedux, ..., Context.Provider does not have a displayName
+    // // Different from other provider, such as Routes, BrowserRouter, ReactRedux, ..., Context.Provider does not have a displayName
     // // TODO: need to render this context provider when user use useContext hook.
+    //
+    //
     // if (tag === ContextProvider && !elementType._context.displayName) {
     //   let stateData = memoizedProps.value;
     //   if (stateData === null || typeof stateData !== 'object') {
@@ -182,9 +208,14 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     // Example: for Stateful buttons demo-app: Increment is a stateful component that use useState hook to store state data.
     if (
       (tag === FunctionComponent ||
-        tag === IndeterminateComponent ||
-        //TODO: Need reasoning for why we evaluate context provider
-        tag === ContextProvider) &&
+       tag === IndeterminateComponent ||
+       //TODO: Need reasoning for why we evaluate context provider
+       /**
+        * So far I haven't seen a case where hook data is stored for ContextProviders in memoized state. So far
+        * I've seen some data a non-null memoize state on browser router, but queue is null. Routes has some good info on memoized props,
+        * but that's not being addressed here. useContext providers also have null for memoized state.
+        */
+       tag === ContextProvider) &&
       memoizedState
     ) {
       if (memoizedState.queue) {
@@ -193,6 +224,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
           // Obtain variable names by parsing the function definition stored in elementType.
           const hooksNames = getHooksNames(elementType.toString());
+
           // Intialize state & index:
           componentData.hooksState = {};
           componentData.hooksIndex = [];
@@ -257,6 +289,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     }
 
     // ------------RETURN THE TREE OUTPUT & PASS TO FRONTEND FOR RENDERING------
+
     return tree;
   }
 }
