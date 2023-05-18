@@ -70,7 +70,7 @@ function Diff(props: DiffProps): JSX.Element {
     return (
       <div className='no-data-message'>
         {' '}
-        No state change detected. Trigger an event to change state.{' '}
+        Make state changes and click on a Snapshot to see the difference between that snapshot and the previous one.{' '}
       </div>
     );
   }
