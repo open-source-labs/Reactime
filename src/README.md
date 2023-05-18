@@ -42,6 +42,8 @@ Similar approach for Next.js and Remix demo apps
 - Choose reactime > src > extension > build
 - Navigate to http://localhost:8080/ to inspect the demo application using Reactime!
 
+![extension](../assets/reactime-dev-setup.gif)
+
 ## Linting
 
 _Before_ beginning development, especially on teams, make sure to configure your linter and code formatting to conform to one unified setting (We recommend [the Airbnb style guide](https://github.com/airbnb/javascript)!) This will make reviewing PRs much more readable and less error-prone. &nbsp;  
