@@ -1,7 +1,8 @@
-const { TextEncoder } = require('util');
+const { TextEncoder, TextDecoder } = require('util');
 module.exports = {
   globals: {
     TextEncoder: TextEncoder,
+    TextDecoder: TextDecoder
   },
   transform: {
     '^.+\\.(js|ts|tsx)$': 'ts-jest',
