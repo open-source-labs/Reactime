@@ -1,4 +1,4 @@
 {
   "presets": ["airbnb", "@babel/preset-typescript"],
-  "plugins": ["@emotion"]
+  // "plugins": ["@emotion"]
 }
