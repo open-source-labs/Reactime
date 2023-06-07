@@ -17,7 +17,7 @@ const handleResult = (result: boolean): JSX.Element =>
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const Loader = ({ loading, result }): JSX.Element =>
   loading ? (
-    <ClipLoader color='#123abc' size={30} loading={loading} />
+    <ClipLoader color='#123abc' size={30} loading={loading} style={{ display: "inline", margin: "0 auto" }}/>
   ) : (
     handleResult(result)
   );
