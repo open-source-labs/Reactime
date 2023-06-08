@@ -32,7 +32,7 @@ import {
  * @param currentFiberNode A Fiber object
  * @return An instance of a Tree object
  */
-// TODO: Not sure why the ritd need to be outside of the _createTree function. Want to put inside, but in case this need to be keep track for front end.
+// TODO: Not sure why the ritd need to be outside of the _createTree function. Want to put inside, but in case this need to be keep track for front end. 
 export default function createTree(currentFiberNode: Fiber): Tree {
   let rtidCounter: number = 0;
   return _createTree(currentFiberNode, new Tree('root', 'root'));
