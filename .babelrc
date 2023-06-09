@@ -1,8 +1,4 @@
 {
-<<<<<<< HEAD
   "presets": ["airbnb", "@babel/preset-typescript"],
   // "plugins": ["@emotion"]
-=======
-  "presets": ["airbnb", "@babel/preset-typescript"]
->>>>>>> dev
 }
