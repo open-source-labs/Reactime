@@ -12,8 +12,10 @@ import { Obj } from '../FrontendTypes';
 
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
+  const sliderTrack = document.querySelector('.rc-slider-track');
   if (slider) {
     slider.setAttribute('style', 'left: 0');
+    sliderTrack.setAttribute('style', 'width: 0');
   }
 };
 
