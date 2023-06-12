@@ -12,7 +12,7 @@
   border-radius: 5px;
   cursor: pointer;
   line-height: 1.5em;
-  font: 400 14px 'Roboto', sans-serif;
+  font: 400 16px 'Roboto', sans-serif;
   // font-size: $button-text-size;
   width: 120px;
   background: $red-color-gradient;
@@ -107,7 +107,7 @@
   border-radius: 3px;
   background-color: #565a61;
   font: normal 11px 'Roboto', sans-serif;
-  color: #b0b0b0;
+  color: #FFFFFF;
   transform: rotateX(90deg);
   transition: opacity 300ms, transform 0.15s linear;
   opacity: 0;
@@ -143,6 +143,8 @@
   border-color: transparent;
   background: $blue-color-gradient;
   border-radius: 5px;
+  font-weight: 500;
+  font-size: 16px;
 }
 
 .play-button:hover {
