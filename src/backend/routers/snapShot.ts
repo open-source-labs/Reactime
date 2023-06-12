@@ -13,7 +13,6 @@ import createTree from '../controllers/createTree';
  */
 // updating tree depending on current mode on the panel (pause, etc)
 export default function updateAndSendSnapShotTree(fiberRoot: FiberRoot): void {
-    
   // This is the currently active root fiber(the mutable root of the tree)
   const { current } = fiberRoot;
   // Clear all of the legacy actions from old fiber tree because we are about to create a new one
@@ -30,7 +29,6 @@ export default function updateAndSendSnapShotTree(fiberRoot: FiberRoot): void {
   // the postMessage action will be received on the content script to later update the tabsObj
   // this will fire off everytime there is a change in test application
   // convert the payload from a fiber tree to an object to avoid a data clone error when postMessage processes the argument
-  // compare payload and clonedDeepPayload with isIdentical
   const obj = JSON.parse(JSON.stringify(payload));
   window.postMessage(
     {
