@@ -25,7 +25,6 @@ const StateRoute = (props: StateRouteProps) => {
   const { snapshot, hierarchy, snapshots, viewIndex, webMetrics, currLocation } = props; 
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
-  console.log()
 
   // Map
   const renderComponentMap = () => {
