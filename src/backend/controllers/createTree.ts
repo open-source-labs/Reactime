@@ -152,12 +152,47 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       }
     }
 
-    
+    // COMMENT OUT SINCE EXTRACTING CONTEXT IS STILL IN EXPERIMENT
+    // // ------------APPEND CONTEXT DATA FROM REACT DEV TOOL----------------
+    // // memoizedState
+    // // Note: if user use ReactHook, memoizedState.memoizedState can be a falsy value such as null, false, ... => need to specify this data is not undefined
+    // if (
+    //   (tag === FunctionComponent || tag === ClassComponent || tag === IndeterminateComponent) &&
+    //   memoizedState?.memoizedState !== undefined
+    // ) {
+    //   // If user uses Redux, context data will be stored in memoizedState of the Provider component => grab context object stored in the memoizedState
+    //   if (elementType.name === 'Provider') {
+    //     Object.assign(
+    //       componentData.context,
+    //       getStateAndContextData(memoizedState, elementType.name, _debugHookTypes),
+    //     );
+    //   }
+    //   // Else if user use ReactHook to define state => all states will be stored in memoizedState => grab all states stored in the memoizedState
+    //   // else {
+    //   //   Object.assign(
+    //   //     componentData.state,
+    //   //     getStateAndContextData(memoizedState, elementType.name, _debugHookTypes),
+    //   //   );
+    //   // }
+    // }
+    // // if user uses useContext hook, context data will be stored in memoizedProps.value of the Context.Provider component => grab context object stored in memoizedprops
+    // // Different from other provider, such as Routes, BrowserRouter, ReactRedux, ..., Context.Provider does not have a displayName
+    // // TODO: need to render this context provider when user use useContext hook.
+    //
+    //
+    // if (tag === ContextProvider && !elementType._context.displayName) {
+    //   let stateData = memoizedProps.value;
+    //   if (stateData === null || typeof stateData !== 'object') {
+    //     stateData = { CONTEXT: stateData };
+    //   }
+    //   componentData.context = filterAndFormatData(stateData);
+    //   componentName = 'Context';
+    // }
 
     // ---------OBTAIN STATE & SET STATE METHODS FROM CLASS COMPONENT-----------
     // Check if currentFiberNode is a stateful class component when user use setState.
     // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
-    // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
+    // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store stat
     if ((tag === ClassComponent || tag === IndeterminateComponent) && stateNode?.state) {
       // Save component's state and setState() function to our record for future time-travel state changing. Add record index to snapshot so we can retrieve.
       componentData.index = componentActionsRecord.saveNew(stateNode);

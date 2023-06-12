@@ -2,7 +2,6 @@ import { Snapshot, FiberRoot } from '../types/backendTypes';
 import componentActionsRecord from '../models/masterState';
 import routes from '../models/routes';
 import createTree from '../controllers/createTree';
-const _ = require('lodash');
 
 // -------------------------UPDATE & SEND TREE SNAP SHOT------------------------
 /**
@@ -32,12 +31,7 @@ export default function updateAndSendSnapShotTree(fiberRoot: FiberRoot): void {
   // this will fire off everytime there is a change in test application
   // convert the payload from a fiber tree to an object to avoid a data clone error when postMessage processes the argument
   // compare payload and clonedDeepPayload with isIdentical
-  // console.log('are they identical?', isIdentical(payload, clonedDeepPayload));
-  // console.log('typeof payload', typeof payload);
   const obj = JSON.parse(JSON.stringify(payload));
-  // console.log('righton, this is the obj: ', obj)
-  // console.log('typeof obj', typeof obj);
-  console.log('passing in obj');
   window.postMessage(
     {
       action: 'recordSnap',
