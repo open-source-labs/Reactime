@@ -52,7 +52,7 @@
 	border-color: $border-slider;
 }
 .rc-slider-handle:active {
-	background: #e4494b;
+	background: #f00004;
 	border-color: $border-slider;
 	cursor: -webkit-grabbing;
 	cursor: grabbing;
@@ -62,7 +62,7 @@
 	top: 18px;
 	left: 0;
 	width: 100%;
-	font-size: 12px;
+	font-size: 16px;
 }
 .rc-slider-mark-text {
 	position: absolute;
@@ -226,7 +226,7 @@
 	padding: 6px 2px;
 	min-width: 24px;
 	height: 24px;
-	font-size: 12px;
+	font-size: 16px;
 	line-height: 1;
 	color: #fff;
 	text-align: center;
