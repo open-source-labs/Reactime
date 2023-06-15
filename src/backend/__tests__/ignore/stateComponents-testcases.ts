@@ -139,7 +139,7 @@ export const mixPayload = new Tree('root', 'root');
 mixPayload.route = rootPayload.route;
 
 // Outer Func Comp
-let funcPayloadMix = new Tree({ count: 0 }, 'IncrementFunc', functionalComponentData, null);
+let funcPayloadMix = new Tree({ count: 0 }, 'IncrementFunc1', functionalComponentData, null);
 funcPayloadMix.componentData = {
   ...funcPayloadMix.componentData,
   hooksState: { count: 0 },
@@ -157,13 +157,12 @@ classPayloadMix.componentData = {
 mixPayload.children.push(deepCopy(classPayloadMix));
 
 // Inner Func Comp
-funcPayloadMix = new Tree({ count: 0 }, 'IncrementFunc', functionalComponentData, null);
+funcPayloadMix = new Tree({ count: 0 }, 'IncrementFunc2', functionalComponentData, null);
 funcPayloadMix.componentData = {
   ...funcPayloadMix.componentData,
   hooksState: { count: 0 },
   hooksIndex: [1],
 };
-funcPayloadMix.name = 'IncrementFunc1';
 mixPayload.children[0].children.push(deepCopy(funcPayloadMix));
 
 // Inner Class Comp
