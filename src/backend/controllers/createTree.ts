@@ -32,7 +32,7 @@ import {
  * @param currentFiberNode A Fiber object
  * @return An instance of a Tree object
  */
-// TODO: Not sure why the ritd need to be outside of the _createTree function. Want to put inside, but in case this need to be keep track for front end. 
+// TODO: Not sure why the ritd need to be outside of the _createTree function. Want to put inside, but in case this need to be keep track for front end.
 export default function createTree(currentFiberNode: Fiber): Tree {
   let rtidCounter: number = 0;
   return _createTree(currentFiberNode, new Tree('root', 'root'));
@@ -192,7 +192,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     // ---------OBTAIN STATE & SET STATE METHODS FROM CLASS COMPONENT-----------
     // Check if currentFiberNode is a stateful class component when user use setState.
     // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
-    // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store stat
+    // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
     if ((tag === ClassComponent || tag === IndeterminateComponent) && stateNode?.state) {
       // Save component's state and setState() function to our record for future time-travel state changing. Add record index to snapshot so we can retrieve.
       componentData.index = componentActionsRecord.saveNew(stateNode);

@@ -22,10 +22,9 @@ const NO_STATE_MSG = 'No state change detected. Trigger an event to change state
 
 
 const StateRoute = (props: StateRouteProps) => {
-  const { snapshot, hierarchy, snapshots, viewIndex, webMetrics, currLocation } = props; 
+  const { snapshot, hierarchy, snapshots, viewIndex, webMetrics, currLocation } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
-  console.log()
 
   // Map
   const renderComponentMap = () => {
