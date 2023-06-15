@@ -4,6 +4,7 @@
   padding: 3px;
   outline: transparent;
   color: white;
+  font-size: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,7 +38,7 @@
   border-radius: 3px;
   cursor: pointer;
   line-height: 1.5em;
-  font: 300 14px 'Roboto', sans-serif;
+  font: 300 16px 'Roboto', sans-serif;
   font-size: $button-text-size;
   width: 120px;
   background: $red-color-gradient;
@@ -95,7 +96,7 @@
   border-radius: 3px;
   background: $grey-color-gradient;
   font: normal 16px 'Roboto', sans-serif;
-  color: #b0b0b0;
+  color: #FFFFFF;
 }
 
 .jump-button {
@@ -105,7 +106,7 @@
   width: 70px;
   border: transparent;
   border-radius: 3px;
-  background-color: #565a61;
+  background-color: #232529;
   font: normal 16px 'Roboto', sans-serif;
   color: #FFFFFF;
   transform: rotateX(90deg);
@@ -127,7 +128,7 @@
   width: 70px;
   border: transparent;
   border-radius: 3px;
-  font: normal 11px 'Roboto', sans-serif;
+  font: normal 16px 'Roboto', sans-serif;
 }
 
 .empty-button:hover {
@@ -192,6 +193,7 @@
 .export-button,
 .pause-button {
   @extend %button-shared;
+  font-size: 16px;
   color: white;
   border-color: transparent;
   background: $blue-color-gradient;
@@ -225,7 +227,7 @@
   align-items: center;
   cursor: pointer;
   line-height: 1.5em;
-  font: 300 14px 'Roboto', sans-serif;
+  font: 300 16px 'Roboto', sans-serif;
   font-size: $button-text-size;
 
   background: $brand-color;

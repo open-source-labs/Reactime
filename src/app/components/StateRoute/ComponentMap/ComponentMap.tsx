@@ -96,7 +96,7 @@ export default function ComponentMap({
     maxWidth: 300,
     backgroundColor: 'rgb(15,15,15)',
     color: 'white',
-    fontSize: '14px',
+    fontSize: '16px',
     lineHeight: '18px',
     fontFamily: 'Roboto',
     zIndex: 100,
