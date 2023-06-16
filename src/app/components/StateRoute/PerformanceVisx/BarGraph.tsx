@@ -7,7 +7,7 @@ import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
-import { schemeSet3 } from 'd3-scale-chromatic';
+import { schemeSet1 } from 'd3-scale-chromatic';
 import { onHover, onHoverExit, save } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 import { snapshot, TooltipData, Margin, BarGraphProps } from '../../../FrontendTypes';
@@ -19,14 +19,14 @@ const margin = {
   bottom: 0,
   left: 50,
 };
-const axisColor = '#FF6569';
+const axisColor = '#F00008';
 const background = '#242529';
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
   backgroundColor: 'rgba(0,0,0,0.9)',
   color: 'white',
-  fontSize: '14px',
+  fontSize: '16px',
   lineHeight: '18px',
   fontFamily: 'Roboto',
 };
@@ -75,10 +75,10 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     domain: [0, data.maxTotalRender],
     nice: true,
   });
-  // Gives each bar on the graph a color using schemeSet3 imported from D3
+  // Gives each bar on the graph a color using schemeSet1 imported from D3
   const colorScale = scaleOrdinal<string>({
     domain: keys,
-    range: schemeSet3,
+    range: schemeSet1,
   });
 
   // setting max dimensions and scale ranges
@@ -268,16 +268,16 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
             textAnchor: 'middle',
           })}
         />
-        <Text x={-yMax / 2 - 75} y='15' transform='rotate(-90)' fontSize={12} fill='#FFFFFF'>
+        <Text x={-yMax / 2 - 75} y='15' transform='rotate(-90)' fontSize={16} fill='#FFFFFF'>
           Rendering Time (ms)
         </Text>
         <br />
         {snapshot === 'All Snapshots' ? (
-          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill='#FFFFFF'>
+          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={16} fill='#FFFFFF'>
             Snapshot ID
           </Text>
         ) : (
-          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={12} fill='#FFFFFF'>
+          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={16} fill='#FFFFFF'>
             Components
           </Text>
         )}
