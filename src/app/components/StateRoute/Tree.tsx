@@ -48,7 +48,7 @@ const Tree = (props: TreeProps) => {
         // @ts-ignore
         <JSONTree
           // @ts-ignore
-          data={snapshots[currLocation.index] || snapshot} 
+          data={snapshots[currLocation.index] || snapshot}
           theme={{ extend: colors, tree: () => ({ className: 'json-tree' }) }}
           shouldExpandNode={() => true}
           getItemString={getItemString}
