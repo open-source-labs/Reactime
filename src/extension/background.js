@@ -45,7 +45,7 @@ function createTabObj(title) {
     // Note: Persist is a now defunct feature. Paused = Locked
     mode: {
       persist: false,
-      paused: false,
+      paused: true,
     },
     // stores web metrics calculated by the content script file
     webMetrics: {},
