@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import user from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import Action from '../components/Action';
 
@@ -53,7 +52,7 @@ describe('unit testing for Action.tsx', () => {
       expect(screen.getByPlaceholderText('Snapshot: 3.0')).toBeInTheDocument();
     });
 
-    test("when there's no have no duration data", () => {
+    test("when there's no duration data", () => {
       props.componentData = undefined;
       render(<Action {...props} />);
       expect(screen.getAllByRole('button')[0]).toHaveTextContent('NO TIME');

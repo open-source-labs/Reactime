@@ -23,11 +23,10 @@ describe('Before Tutorial is entered', () => {
 
   test('User clicking "How to use" while on map tab button starts map tutorial ', () => {
     props.currentTabInApp = 'map';
-
     render(<Tutorial {...props} />);
     fireEvent.click(screen.getByRole('button'));
     expect(
-      screen.getByText('A performance and state managment tool for React apps.'),
+      screen.getByText('A performance and state management tool for React apps.'),
     ).toBeInTheDocument();
   });
 

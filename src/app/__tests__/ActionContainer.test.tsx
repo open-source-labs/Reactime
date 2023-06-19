@@ -143,8 +143,8 @@ describe('unit testing for ActionContainer', () => {
     expect(screen.getByText('MockSwitchApp')).toBeInTheDocument();
   });
 
-  test('Click works on clear button', async () => {
+  test('Click works on clear button', () => {
     fireEvent.click(screen.getAllByRole('button')[0]);
-    await expect(dispatch).toHaveBeenCalledTimes(1);
+    expect(dispatch).toHaveBeenCalledTimes(1);
   });
 });
