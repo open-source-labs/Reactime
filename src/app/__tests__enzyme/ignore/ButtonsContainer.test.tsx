@@ -18,7 +18,6 @@ const state = {
       mode: {
         paused: false,
         locked: false,
-        persist: false,
       },
     },
   },
@@ -42,7 +41,6 @@ describe('testing the bottom buttons', () => {
     useStoreContext.mockClear();
     currentTab.mode = {
       paused: false,
-      persist: false,
     };
   });
 
@@ -66,24 +64,4 @@ describe('testing the bottom buttons', () => {
     });
   });
 
-  describe.skip('persist button testing', () => {
-    beforeEach(() => {
-      wrapper.find('.persist-button').simulate('click');
-    });
-
-    test('persist button dispatches upon click', () => {
-      expect(dispatch.mock.calls.length).toBe(1);
-    });
-
-    test('persist button dispatches toggleMode action', () => {
-      expect(dispatch.mock.calls[0][0]).toEqual(toggleMode('persist'));
-    });
-
-    test('persist button displays state', () => {
-      expect(wrapper.find('.persist-button').text()).toBe('<FontAwesomeIcon />Persist');
-      state.tabs[state.currentTab].mode.persist = true;
-      wrapper = shallow(<ButtonsContainer />);
-      expect(wrapper.find('.persist-button').text()).toBe('<FontAwesomeIcon />Unpersist');
-    });
-  });
 });

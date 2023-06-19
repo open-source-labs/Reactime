@@ -32,7 +32,6 @@ describe('mainReducer testing', () => {
           mode: {
             paused: false,
             locked: false,
-            persist: false,
           },
           intervalId: 87,
           playing: true,
@@ -116,7 +115,6 @@ describe('mainReducer testing', () => {
           mode: {
             paused: false,
             locked: false,
-            persist: false,
           },
           intervalId: 75,
           playing: false,
@@ -279,25 +277,16 @@ describe('mainReducer testing', () => {
       const { mode } = mainReducer(state, toggleMode('paused')).tabs[currentTab];
       expect(mode.paused).toBe(true);
       expect(mode.locked).toBe(false);
-      expect(mode.persist).toBe(false);
     });
     it('clicking lock button should only change lock mode', () => {
       const { mode } = mainReducer(state, toggleMode('locked')).tabs[currentTab];
       expect(mode.paused).toBe(false);
       expect(mode.locked).toBe(true);
-      expect(mode.persist).toBe(false);
-    });
-    it('clicking persist button should only change persist mode', () => {
-      const { mode } = mainReducer(state, toggleMode('persist')).tabs[currentTab];
-      expect(mode.paused).toBe(false);
-      expect(mode.locked).toBe(false);
-      expect(mode.persist).toBe(true);
     });
     it('undefined payload does nothing', () => {
       const { mode } = mainReducer(state, toggleMode('undefined')).tabs[currentTab];
       expect(mode.paused).toBe(false);
       expect(mode.locked).toBe(false);
-      expect(mode.persist).toBe(false);
     });
   });
 
@@ -326,7 +315,6 @@ describe('mainReducer testing', () => {
         mode: {
           paused: false,
           locked: false,
-          persist: false,
         },
         intervalId: 912,
         playing: true,

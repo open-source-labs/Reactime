@@ -26,7 +26,6 @@ describe('Unit testing for ButtonContainer', () => {
         mode: {
           paused: false,
           locked: false,
-          persist: false,
         },
       },
     },
@@ -47,7 +46,6 @@ describe('Unit testing for ButtonContainer', () => {
     mockedUsedStoreContext.mockClear();
     currentTab.mode = {
       paused: false,
-      persist: false,
     };
   });
 
