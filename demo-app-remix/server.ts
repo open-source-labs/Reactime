@@ -28,7 +28,7 @@ app.use(morgan("tiny"));
 app.all(
   "*",
   process.env.NODE_ENV === "development"
-    ? (req, res, next) => {
+    ? (req: any, res: any, next: any) => {
         purgeRequireCache();
 
         return createRequestHandler({
@@ -41,7 +41,7 @@ app.all(
         mode: process.env.NODE_ENV,
       })
 );
-const port = process.env.PORT || 3003;
+const port: number | string = process.env.PORT || 3003;
 
 app.listen(port, () => {
   console.log(`Express server listening on port ${port}`);
