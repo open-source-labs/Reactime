@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import Action from '../components/Action';
-import { changeView } from '../actions/actions';
+import { changeView, changeSlider } from '../actions/actions';
 
 // @ts-ignore
 Action.cleanTime = jest.fn().mockReturnValue();
@@ -69,25 +69,32 @@ describe('unit testing for Action.tsx', () => {
     test('Using the ArrowUp key on Action snapshot should trigger handleOnKeyDown', () => {
       render(<Action {...props} />);
       fireEvent.keyDown(screen.getByRole('presentation'), {key: 'ArrowUp', code: 'ArrowUp', charCode: 38});
-      expect(props.handleOnkeyDown).toHaveBeenCalled();;
+      expect(props.handleOnkeyDown).toHaveBeenCalled();
     });
 
     test('Using the ArrowDown key on Action snapshot should trigger handleOnKeyDown', () => {
       render(<Action {...props} />);
       fireEvent.keyDown(screen.getByRole('presentation'), {key: 'ArrowDown', code: 'ArrowDown', charCode: 40});
-      expect(props.handleOnkeyDown).toHaveBeenCalled();;
+      expect(props.handleOnkeyDown).toHaveBeenCalled();
     });
 
     test('Using the Enter key on Action snapshot should trigger handleOnKeyDown', () => {
       render(<Action {...props} />);
       fireEvent.keyDown(screen.getByRole('presentation'), {key: 'Enter', code: 'Enter', charCode: 13});
-      expect(props.handleOnkeyDown).toHaveBeenCalled();;
+      expect(props.handleOnkeyDown).toHaveBeenCalled();
     });
 
     test('Clicking the snapshot should trigger onClick', () => {
       render(<Action {...props} />);
       fireEvent.click(screen.getByRole('presentation'));
       expect(props.dispatch).toHaveBeenCalledWith(changeView(2));;
+    });
+
+    test('Clicking Jump button should trigger changeSlider and changeView', () => {
+      render(<Action {...props} />);
+      fireEvent.click(screen.getAllByRole('button')[1]);
+      expect(props.dispatch).toHaveBeenCalledWith(changeSlider(2));
+      expect(props.dispatch).toHaveBeenCalledWith(changeView(2));
     });
   });
 });
