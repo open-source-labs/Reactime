@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import Action from '../components/Action';
@@ -58,13 +58,17 @@ describe('unit testing for Action.tsx', () => {
       render(<Action {...props} />);
       expect(screen.getAllByRole('button')[0]).toHaveTextContent('NO TIME');
     });
-  });
 
-  describe('When actualDuration exceeds 60', () => {
-    test('Time should be formatted correctly', () => {
+    test('When actualDuration exceeds 60, time should be formatted correctly', () => {
       props.componentData.actualDuration = 75; 
       render(<Action {...props} />);
       expect(screen.getAllByRole('button')[0]).toHaveTextContent('+01:15.00');
+    });
+
+    test('Using the ArrowUp key on Action snapshot should trigger handleOnKeyDown', () => {
+      render(<Action {...props} />);
+      fireEvent.keyDown(screen.getByRole('presentation'), {key: 'ArrowUp', code: 'ArrowUp', charCode: 38});
+      expect(props.handleOnkeyDown).toHaveBeenCalled();;
     });
   });
 });
