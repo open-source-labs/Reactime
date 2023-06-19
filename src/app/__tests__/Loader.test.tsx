@@ -6,7 +6,7 @@ import Loader from '../components/Loader';
 describe('unit testing for Loader.tsx', () => {
   test('renders a loading icon', () => {
     const { container } = render(<Loader loading={true} result={false} />);
-    expect(container.firstChild).toHaveClass('css-xp4o0b');
+    expect(container.firstChild).toHaveClass('css-1tm071a');
   });
 
   test('renders a fail icon', () => {

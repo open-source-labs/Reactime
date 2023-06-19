@@ -70,11 +70,14 @@ async function updateReactFiberTree(
   if (index !== null) {
     // Obtain the BOUND update method at the given index
     const classComponent = componentActionsRecord.getComponentByIndex(index);
-    // Update component state
-    await classComponent.setState(
-      // prevState contains the states of the snapshots we are jumping FROM, not jumping TO
-      (prevState) => state,
-    );
+    // This conditional avoids the error that occurs when classComponent is undefined
+    if (classComponent !== undefined) {
+      // Update component state
+      await classComponent.setState(
+        // prevState contains the states of the snapshots we are jumping FROM, not jumping TO
+        (prevState) => state,
+      );
+    }
     // Iterate through new children after state has been set
     targetSnapshot.children.forEach((child) => updateReactFiberTree(child, circularComponentTable));
     return;

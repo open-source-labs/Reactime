@@ -24,9 +24,8 @@ describe('Unit testing for ButtonContainer', () => {
         sliderIndex: 0,
         viewIndex: -1,
         mode: {
-          paused: false,
+          paused: true,
           locked: false,
-          persist: false,
         },
       },
     },
@@ -46,7 +45,7 @@ describe('Unit testing for ButtonContainer', () => {
     dispatch.mockClear();
     mockedUsedStoreContext.mockClear();
     currentTab.mode = {
-      paused: false,
+      paused: true,
       persist: false,
     };
   });
@@ -55,18 +54,18 @@ describe('Unit testing for ButtonContainer', () => {
     test('it should have 4 buttons', () => {
       render(<ButtonsContainer />);
       expect(screen.getAllByRole('button')).toHaveLength(4);
-      expect(screen.getAllByRole('button')[0]).toHaveTextContent('Unlocked');
+      expect(screen.getAllByRole('button')[0]).toHaveTextContent('Locked');
       expect(screen.getAllByRole('button')[1]).toHaveTextContent('Download');
       expect(screen.getAllByRole('button')[2]).toHaveTextContent('Upload');
       expect(screen.getAllByRole('button')[3]).toHaveTextContent('Tutorial');
     });
   });
 
-  describe('When view is locked', () => {
-    test('Button should show as locked', () => {
+  describe('When view is unlock', () => {
+    test('Button should show as unlocked', () => {
       state.tabs['87'].mode.paused = true;
       render(<ButtonsContainer />);
-      expect(screen.getAllByRole('button')[0]).toHaveTextContent('Locked');
+      expect(screen.getAllByRole('button')[0]).toHaveTextContent('Unlocked');
     });
   });
 

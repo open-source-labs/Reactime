@@ -16,12 +16,12 @@ const props = {
 let currentStepIndex = 5;
 
 describe('Before Tutorial is entered', () => {
-  test('How to use button exists', () => {
+  test('Tutorial button exists', () => {
     render(<Tutorial {...props} />);
     expect(screen.getByText('Tutorial')).toBeInTheDocument();
   });
 
-  test('User clicking "How to use" while on map tab button starts map tutorial ', () => {
+  test('User clicking tutorial button while on map tab starts map tutorial ', () => {
     props.currentTabInApp = 'map';
     render(<Tutorial {...props} />);
     fireEvent.click(screen.getByRole('button'));
@@ -30,17 +30,31 @@ describe('Before Tutorial is entered', () => {
     ).toBeInTheDocument();
   });
 
-  test('User clicking "How to use" while on performance tab button starts performance tutorial ', () => {
+  test('User clicking tutorial button while on performance tab starts performance tutorial ', () => {
     props.currentTabInApp = 'performance';
     render(<Tutorial {...props} />);
     fireEvent.click(screen.getByRole('button'));
     expect(screen.getByText('Performance Tab')).toBeInTheDocument();
   });
 
-  test('User clicking "How to use" while on performance comparison tab, no tutorial available ', () => {
-    props.currentTabInApp = 'performance-comparison';
-    currentStepIndex = 1;
+  test('User clicking tutorial button while on history tab starts history tutorial ', () => {
+    props.currentTabInApp = 'history';
     render(<Tutorial {...props} />);
     fireEvent.click(screen.getByRole('button'));
+    expect(screen.getByText('History Tab')).toBeInTheDocument();
+  });
+
+  test('User clicking tutorial button while on web metrics tab starts web metrics tutorial ', () => {
+    props.currentTabInApp = 'webmetrics';
+    render(<Tutorial {...props} />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getByText('Webmetrics Tab')).toBeInTheDocument();
+  });
+
+  test('User clicking tutorial button while on tree tab starts tree tutorial ', () => {
+    props.currentTabInApp = 'tree';
+    render(<Tutorial {...props} />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getByText('Tree Tab')).toBeInTheDocument();
   });
 });
