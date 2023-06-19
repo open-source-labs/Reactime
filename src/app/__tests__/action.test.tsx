@@ -59,4 +59,12 @@ describe('unit testing for Action.tsx', () => {
       expect(screen.getAllByRole('button')[0]).toHaveTextContent('NO TIME');
     });
   });
+
+  describe('When actualDuration exceeds 60', () => {
+    test('Time should be formatted correctly', () => {
+      props.componentData.actualDuration = 75; 
+      render(<Action {...props} />);
+      expect(screen.getAllByRole('button')[0]).toHaveTextContent('+01:15.00');
+    });
+  });
 });
