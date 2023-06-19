@@ -70,5 +70,17 @@ describe('unit testing for Action.tsx', () => {
       fireEvent.keyDown(screen.getByRole('presentation'), {key: 'ArrowUp', code: 'ArrowUp', charCode: 38});
       expect(props.handleOnkeyDown).toHaveBeenCalled();;
     });
+
+    test('Using the ArrowDown key on Action snapshot should trigger handleOnKeyDown', () => {
+      render(<Action {...props} />);
+      fireEvent.keyDown(screen.getByRole('presentation'), {key: 'ArrowDown', code: 'ArrowDown', charCode: 40});
+      expect(props.handleOnkeyDown).toHaveBeenCalled();;
+    });
+
+    test('Using the Enter key on Action snapshot should trigger handleOnKeyDown', () => {
+      render(<Action {...props} />);
+      fireEvent.keyDown(screen.getByRole('presentation'), {key: 'Enter', code: 'Enter', charCode: 13});
+      expect(props.handleOnkeyDown).toHaveBeenCalled();;
+    });
   });
 });
