@@ -63,7 +63,7 @@ describe('Unit testing for ButtonContainer', () => {
 
   describe('When view is unlock', () => {
     test('Button should show as unlocked', () => {
-      state.tabs['87'].mode.paused = true;
+      state.tabs['87'].mode.paused = false;
       render(<ButtonsContainer />);
       expect(screen.getAllByRole('button')[0]).toHaveTextContent('Unlocked');
     });
