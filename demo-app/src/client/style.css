@@ -1,8 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+:root {
+  --primary-red-color: #F00008;
+  --background-color1: #f6f6f6;
+  --secondary-blue-color: #62d6fb;
+  --fire-rose-red: #FF6569;
+  --secondary-color: #6288fb;
+  --text-color: #330002;
+}
 
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #FFF4F4;
+  font-family: 'Lato', sans-serif;
+  background-color: var(--background-color1);
 }
 
 h1, h2, h4 {
@@ -12,7 +22,19 @@ h1, h2, h4 {
 /* Navbar */
 
 .nav {
-  background-color: #FF6569;
+  background-image: linear-gradient(
+  0deg,
+  hsl(358deg 100% 47%) 5%,
+  hsl(359deg 90% 51%) 24%,
+  hsl(360deg 91% 54%) 33%,
+  hsl(360deg 93% 57%) 41%,
+  hsl(360deg 94% 59%) 48%,
+  hsl(360deg 95% 60%) 54%,
+  hsl(359deg 97% 62%) 61%,
+  hsl(359deg 98% 64%) 69%,
+  hsl(359deg 99% 65%) 79%,
+  hsl(358deg 100% 67%) 100%
+);
 
   display: flex;
   justify-content: space-evenly;
@@ -75,7 +97,7 @@ h1, h2, h4 {
 }
 
 .box {
-  background-color: #62d6fb;
+  background-color: var(--secondary-blue-color);
   border-style: solid;
   border-color: #ffffff;
   border-radius: 5px;
@@ -87,7 +109,7 @@ h1, h2, h4 {
 }
 
 #reset {
-  color: #FF6569;
+  color: var(--primary-red-color);
   font-size: 1.5em;
 
   background-color: #ffffff;
@@ -105,7 +127,7 @@ h1, h2, h4 {
 
 #reset:hover {
   color: #ffffff;
-  background-color: #FF6569
+  background-color: var(--primary-red-color)
 }
 
 /* Counter */
@@ -131,7 +153,7 @@ h1, h2, h4 {
   color: #ffffff;
   font-size: 1.5em;
 
-  background-color: #FF6569;
+  background-color: var(--primary-red-color);
   border-style: solid;
   border-color: #ffffff;
   border-radius: 5px;
@@ -145,11 +167,11 @@ h1, h2, h4 {
 }
 
 .increment:hover {
-  background-color: #62d6fb;
+  background-color: var(--secondary-blue-color);
 }
 
 .hook-data-section {
-  border: 2px solid #FF6569;
+  border: 2px solid --primary-red-color;
   border-radius: 5px;
   margin: 10px 0;
   padding: 8px;
