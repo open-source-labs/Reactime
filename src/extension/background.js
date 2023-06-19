@@ -42,10 +42,9 @@ function createTabObj(title) {
       reactDevToolsInstalled: false,
       targetPageisaReactApp: false,
     },
-    // Note: Persist is a now defunct feature. Paused = Locked
+    // Note: Paused = Locked
     mode: {
-      persist: false,
-      paused: true,
+      paused: false,
     },
     // stores web metrics calculated by the content script file
     webMetrics: {},
@@ -203,10 +202,6 @@ chrome.runtime.onConnect.addListener((port) => {
       // Pause = lock on tab
       case 'setPause':
         tabsObj[tabId].mode.paused = payload;
-        return true;
-      // persist is now depreacted
-      case 'setPersist':
-        tabsObj[tabId].mode.persist = payload;
         return true;
       case 'launchContentScript':
         chrome.scripting.executeScript({

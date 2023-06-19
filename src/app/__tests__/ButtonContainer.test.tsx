@@ -26,7 +26,6 @@ describe('Unit testing for ButtonContainer', () => {
         mode: {
           paused: true,
           locked: false,
-          persist: false,
         },
       },
     },

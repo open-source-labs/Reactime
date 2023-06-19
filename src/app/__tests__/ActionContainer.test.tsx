@@ -5,6 +5,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ActionContainer from '../containers/ActionContainer';
 import { useStoreContext } from '../store';
+import TravelContainer from '../containers/TravelContainer';
 
 const state = {
   tabs: {
@@ -146,5 +147,19 @@ describe('unit testing for ActionContainer', () => {
   test('Click works on clear button', async () => {
     fireEvent.click(screen.getAllByRole('button')[0]);
     await expect(dispatch).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('integration testing for ActionContainer', () => {
+  beforeEach(() => {
+    mockeduseStoreContext.mockClear();
+    dispatch.mockClear();
+    render(<ActionContainer actionView={true} />);
+    render(<TravelContainer snapshotsLength={0} />);
+  });
+
+  test('Slider resets on clear button', () => {
+    fireEvent.click(screen.getAllByRole('button')[0]);
+    expect(screen.getByRole('slider')).toHaveStyle('left: 0');
   });
 });
