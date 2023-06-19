@@ -54,7 +54,7 @@ describe('unit testing for Action.tsx', () => {
       expect(screen.getByPlaceholderText('Snapshot: 3.0')).toBeInTheDocument();
     });
 
-    test("when there's no have no duration data", () => {
+    test("when there's no duration data", () => {
       props.componentData = undefined;
       render(<Action {...props} />);
       expect(screen.getAllByRole('button')[0]).toHaveTextContent('NO TIME');

@@ -82,7 +82,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
         steps = [
           {
             title: 'Reactime Tutorial',
-            intro: 'A performance and state managment tool for React apps.',
+            intro: 'A performance and state management tool for React apps.',
             position: 'top',
           },
           {

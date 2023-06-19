@@ -15,7 +15,6 @@ const state = {
   currentTab: 87,
 };
 
-const play = jest.fn();
 const dispatch = jest.fn();
 
 jest.mock('../store');
@@ -48,6 +47,7 @@ describe('All elements appear in the TravelContainer module', () => {
   test('MainSlider exists in document', () => {
     expect(screen.getByText('MockSlider')).toBeInTheDocument();
   });
+
   test('Dropdown exists in document', () => {
     expect(screen.getByText('mockDropDown')).toBeInTheDocument();
   });
@@ -57,7 +57,7 @@ describe('All elements appear in the TravelContainer module', () => {
     expect(buttons[1]).toHaveTextContent('<');
   });
 
-  test('Foward button exists in document', () => {
+  test('Forward button exists in document', () => {
     let buttons = screen.getAllByRole('button');
     expect(buttons[2]).toHaveTextContent('>');
   });
@@ -69,18 +69,18 @@ describe('Testing backward and forward button', () => {
     render(<TravelContainer snapshotsLength={0} />);
   });
 
-  test('Clicking < Button button will triger button', async () => {
+  test('Clicking < Button button will trigger button', () => {
     let buttons = screen.getAllByRole('button');
     expect(buttons[1]).toHaveTextContent('<');
     fireEvent.click(buttons[1]);
-    await expect(dispatch).toHaveBeenCalledTimes(1);
+    expect(dispatch).toHaveBeenCalledTimes(1);
   });
 
-  test('Clicking > Button button will triger button', async () => {
+  test('Clicking > Button button will trigger button', () => {
     let buttons = screen.getAllByRole('button');
     expect(buttons[2]).toHaveTextContent('>');
     fireEvent.click(buttons[2]);
-    await expect(dispatch).toHaveBeenCalledTimes(1);
+    expect(dispatch).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -94,33 +94,34 @@ describe('Testing play/pause button', () => {
     const playButton = screen.getByTestId('play-button-test');
     expect(playButton).toBeInTheDocument();
   });
+
   test('Play initially says Play', () => {
     render(<TravelContainer snapshotsLength={0} />);
     const playButton = screen.getByTestId('play-button-test');
     expect(playButton.textContent).toBe('Play');
   });
 
-  test('Clicking Play button will triger button', async () => {
+  test('Clicking Play button will trigger button', () => {
     render(<TravelContainer snapshotsLength={0} />);
     const playButton = screen.getByTestId('play-button-test');
     expect(playButton.textContent).toBe('Play');
     fireEvent.click(playButton);
-    await expect(dispatch).toHaveBeenCalledTimes(1);
+    expect(dispatch).toHaveBeenCalledTimes(1);
   });
 
-  test('Play says Pause when `Playing` is set to False', () => {
+  test('Play says Pause when `Playing` is set to true', () => {
     state.tabs[87].playing = true;
     render(<TravelContainer snapshotsLength={0} />);
     const playButton = screen.getByTestId('play-button-test');
     expect(playButton.textContent).toBe('Pause');
   });
 
-  test('Clicking Pause button will trigger button', async () => {
+  test('Clicking Pause button will trigger button', () => {
     render(<TravelContainer snapshotsLength={0} />);
     const playButton = screen.getByTestId('play-button-test');
     expect(playButton.textContent).toBe('Pause');
     fireEvent.click(playButton);
-    await expect(dispatch).toHaveBeenCalledTimes(1);
+    expect(dispatch).toHaveBeenCalledTimes(1);
     state.tabs[87].playing = false;
   });
 });

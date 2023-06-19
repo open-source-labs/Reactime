@@ -23,11 +23,13 @@ jest.mock('../containers/TravelContainer', () => (props) => {
   mockTravelContainer(props);
   return <div>mockTravelContainer</div>;
 });
+
 const mockButtonsContainer = jest.fn();
 jest.mock('../containers/ButtonsContainer', () => (props) => {
   mockButtonsContainer(props);
   return <div>mockButtonsContainer</div>;
 });
+
 const mockErrorContainer = jest.fn();
 jest.mock('../containers/ErrorContainer', () => (props) => {
   mockErrorContainer(props);

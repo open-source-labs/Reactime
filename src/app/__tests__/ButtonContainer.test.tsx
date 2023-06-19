@@ -51,7 +51,7 @@ describe('Unit testing for ButtonContainer', () => {
   });
 
   describe('When button container is loaded', () => {
-    test('should have 4 buttons ', () => {
+    test('it should have 4 buttons', () => {
       render(<ButtonsContainer />);
       expect(screen.getAllByRole('button')).toHaveLength(4);
       expect(screen.getAllByRole('button')[0]).toHaveTextContent('Locked');
