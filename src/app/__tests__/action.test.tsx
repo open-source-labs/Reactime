@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import Action from '../components/Action';
+import { changeView } from '../actions/actions';
 
 // @ts-ignore
 Action.cleanTime = jest.fn().mockReturnValue();
@@ -81,6 +82,12 @@ describe('unit testing for Action.tsx', () => {
       render(<Action {...props} />);
       fireEvent.keyDown(screen.getByRole('presentation'), {key: 'Enter', code: 'Enter', charCode: 13});
       expect(props.handleOnkeyDown).toHaveBeenCalled();;
+    });
+
+    test('Clicking the snapshot should trigger onClick', () => {
+      render(<Action {...props} />);
+      fireEvent.click(screen.getByRole('presentation'));
+      expect(props.dispatch).toHaveBeenCalledWith(changeView(2));;
     });
   });
 });
