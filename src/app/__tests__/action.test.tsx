@@ -1,8 +1,9 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import Action from '../components/Action';
+import { changeView, changeSlider } from '../actions/actions';
 
 // @ts-ignore
 Action.cleanTime = jest.fn().mockReturnValue();
@@ -57,6 +58,43 @@ describe('unit testing for Action.tsx', () => {
       props.componentData = undefined;
       render(<Action {...props} />);
       expect(screen.getAllByRole('button')[0]).toHaveTextContent('NO TIME');
+    });
+
+    test('When actualDuration exceeds 60, time should be formatted correctly', () => {
+      props.componentData.actualDuration = 75; 
+      render(<Action {...props} />);
+      expect(screen.getAllByRole('button')[0]).toHaveTextContent('+01:15.00');
+    });
+
+    test('Using the ArrowUp key on Action snapshot should trigger handleOnKeyDown', () => {
+      render(<Action {...props} />);
+      fireEvent.keyDown(screen.getByRole('presentation'), {key: 'ArrowUp', code: 'ArrowUp', charCode: 38});
+      expect(props.handleOnkeyDown).toHaveBeenCalled();
+    });
+
+    test('Using the ArrowDown key on Action snapshot should trigger handleOnKeyDown', () => {
+      render(<Action {...props} />);
+      fireEvent.keyDown(screen.getByRole('presentation'), {key: 'ArrowDown', code: 'ArrowDown', charCode: 40});
+      expect(props.handleOnkeyDown).toHaveBeenCalled();
+    });
+
+    test('Using the Enter key on Action snapshot should trigger handleOnKeyDown', () => {
+      render(<Action {...props} />);
+      fireEvent.keyDown(screen.getByRole('presentation'), {key: 'Enter', code: 'Enter', charCode: 13});
+      expect(props.handleOnkeyDown).toHaveBeenCalled();
+    });
+
+    test('Clicking the snapshot should trigger onClick', () => {
+      render(<Action {...props} />);
+      fireEvent.click(screen.getByRole('presentation'));
+      expect(props.dispatch).toHaveBeenCalledWith(changeView(2));;
+    });
+
+    test('Clicking Jump button should trigger changeSlider and changeView', () => {
+      render(<Action {...props} />);
+      fireEvent.click(screen.getAllByRole('button')[1]);
+      expect(props.dispatch).toHaveBeenCalledWith(changeSlider(2));
+      expect(props.dispatch).toHaveBeenCalledWith(changeView(2));
     });
   });
 });
