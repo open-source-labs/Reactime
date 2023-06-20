@@ -108,8 +108,8 @@ const radialGraph = (props) => {
               options={state.options}
               series={state.series}
               type='radialBar'
-              height={200}
-              width={200}
+              height={350}
+              width={350}
             />
           </div>
         </Trigger>

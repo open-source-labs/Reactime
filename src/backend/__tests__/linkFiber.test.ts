@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 import linkFiberInitialization from '../routers/linkFiber';
 import timeJumpInitialization from '../controllers/timeJump';
 import componentActionsRecord from '../models/masterState';

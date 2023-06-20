@@ -4,17 +4,18 @@
 $text-font-stack: 'Roboto', sans-serif !default;
 
 /// @type Color
-$fiery-rose: #ff6569;
+/// fiery-rose changed from ff6569 to F00008 globally to improve contrast
+$fiery-rose: #F00008;
 $blue-brand: #62d6fb;
 
 /// @type Color
 $blue-color-gradient: linear-gradient(145deg, #69e5ff, #58c1e2);
-$red-color-gradient: linear-gradient(145deg, #ff6569, #e65558);
+$red-color-gradient: linear-gradient(145deg, #f92f35, #f00008);
 $grey-color-gradient: linear-gradient(145deg, #5c6068, #4d5157);
 
 /// @type Color:
 $box-shadow-blue: inset 5px 5px 10px #53b6d5, inset -5px -5px 10px #71f6ff;
-$box-shadow-red: inset 5px 5px 10px #d95053, inset -5px -5px 10px #ff6c71;
+$box-shadow-red: inset 5px 5px 10px #ff0004, inset -5px -5px 10px #f9393f;
 
 /// @type Color
 $text-color: #e7e7e7;
@@ -58,4 +59,4 @@ $background-rc-color: #e9e9e9 !default;
 $highlight-color: rgba(224, 224, 224, 0.5) !default;
 
 /// @type Font Size
-$button-text-size: 12px;
+$button-text-size: 16px;

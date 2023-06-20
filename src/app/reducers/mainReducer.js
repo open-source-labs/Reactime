@@ -217,9 +217,6 @@ export default (state, action) =>
           case 'paused':
             actionText = 'setPause';
             break;
-          case 'persist':
-            actionText = 'setPersist';
-            break;
           default:
             break;
         }

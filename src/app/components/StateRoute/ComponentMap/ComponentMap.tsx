@@ -96,7 +96,7 @@ export default function ComponentMap({
     maxWidth: 300,
     backgroundColor: 'rgb(15,15,15)',
     color: 'white',
-    fontSize: '14px',
+    fontSize: '16px',
     lineHeight: '18px',
     fontFamily: 'Roboto',
     zIndex: 100,
@@ -165,7 +165,7 @@ export default function ComponentMap({
       />
 
       <svg ref={containerRef} width={totalWidth} height={totalHeight}>
-        <LinearGradient id='links-gradient' from='#fd9b93' to='#fe6e9e' />
+        <LinearGradient id='links-gradient' from='#e75e62' to='#f00008' />
         <rect
           onClick={() => {
             hideTooltip();
@@ -188,7 +188,7 @@ export default function ComponentMap({
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    stroke='#ff6569'
+                    stroke='#F00008'
                     strokeWidth='1'
                     fill='none'
                   />
@@ -196,10 +196,11 @@ export default function ComponentMap({
 
                 {tree.descendants().map((node, key) => {
                   const widthFunc:number = (name) => {
+                    // is this the name of the component - so if it's longer it will make the box wider?
                     const nodeLength = name.length;
-                    if (nodeLength < 5) return nodeLength + 40;
-                    if (nodeLength < 10) return nodeLength + 60;
-                    return nodeLength + 70;
+                    if (nodeLength < 5) return nodeLength + 80; // change from 40 to 80, to see what's affected
+                    if (nodeLength < 10) return nodeLength + 120; // change from 60 to 120 to see what's affected
+                    return nodeLength + 140;  // change from 70 to 140 to see what happens
                   };
                   const width:number = widthFunc(node.data.name);
                   const height:number = 25;
@@ -236,9 +237,9 @@ export default function ComponentMap({
                     <Group top={top} left={left} key={key} className='rect'>
                       {node.depth === 0 && (
                         <circle
-                          r={12}
+                          r={25} // increase from 12 to 25 to improve visibility
                           fill="url('#links-gradient')"
-                          stroke='#ff6569'
+                          stroke='#F00008' // changing to red #F00008 to increase readability with sharper contrast
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
@@ -256,7 +257,7 @@ export default function ComponentMap({
                           fill={node.children ? '#161521' : '#62d6fb'}
                           stroke={
                             node.data.isExpanded && node.data.children.length > 0
-                              ? '#ff6569'
+                              ? '#F00008' // changed to #F00008 for higher contrast
                               : '#4D4D4D'
                           }
                           strokeWidth={1.5}
