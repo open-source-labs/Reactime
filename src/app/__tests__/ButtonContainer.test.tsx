@@ -58,7 +58,6 @@ describe('Unit testing for ButtonContainer', () => {
       render(<ButtonsContainer />);
       expect(screen.getAllByRole('button')).toHaveLength(4);
       expect(screen.getAllByRole('button')[0]).toHaveTextContent('Unlocked');
-      console.log('button:', screen.getAllByRole('button')[0])
       expect(screen.getAllByRole('button')[1]).toHaveTextContent('Download');
       expect(screen.getAllByRole('button')[2]).toHaveTextContent('Upload');
       expect(screen.getAllByRole('button')[3]).toHaveTextContent('Tutorial');
