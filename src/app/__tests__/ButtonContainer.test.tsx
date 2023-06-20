@@ -48,7 +48,6 @@ describe('Unit testing for ButtonContainer', () => {
     mockedUsedStoreContext.mockClear();
     currentTab.mode = {
       paused: true,
-      persist: false,
     };
   });
 
@@ -73,9 +72,9 @@ describe('Unit testing for ButtonContainer', () => {
 
   describe('When view is lock', () => {
     test('Button should show as locked', () => {
-      state.tabs['87'].mode.paused = false;
+      state.tabs['87'].mode.paused = true;
       render(<ButtonsContainer />);
-      expect(screen.getAllByRole('button')[0]).toHaveTextContent('Unlocked');
+      expect(screen.getAllByRole('button')[0]).toHaveTextContent('Locked');
     });
   });
 
