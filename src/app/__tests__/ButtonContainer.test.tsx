@@ -5,6 +5,8 @@ import { TextEncoder } from 'util';
 global.TextEncoder = TextEncoder;
 import ButtonsContainer from '../containers/ButtonsContainer';
 import { useStoreContext } from '../store';
+import userEvent from '@testing-library/user-event';
+import { toggleMode } from '../actions/actions';
 
 // const { Steps } = require('intro.js-react');
 jest.mock('../store');
@@ -68,6 +70,24 @@ describe('Unit testing for ButtonContainer', () => {
       expect(screen.getAllByRole('button')[0]).toHaveTextContent('Unlocked');
     });
   });
+
+  describe('When view is lock', () => {
+    test('Button should show as locked', () => {
+      state.tabs['87'].mode.paused = false;
+      render(<ButtonsContainer />);
+      expect(screen.getAllByRole('button')[0]).toHaveTextContent('Unlocked');
+    });
+  });
+
+  describe('Clicking pause-button toggles locked/unlocked', () => {
+    test('When button is unlocked and it is clicked', async () => {
+      render(<ButtonsContainer />);
+      const button = screen.getAllByRole('button')[0];
+      await userEvent.click(button);
+      expect(dispatch).toHaveBeenCalledWith(toggleMode('paused'));
+    });
+  });
+
 
   describe('Upload/Download', () => {
     test('Clicking upload and download buttons', async () => {
