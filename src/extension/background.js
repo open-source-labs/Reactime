@@ -44,7 +44,7 @@ function createTabObj(title) {
     },
     // Note: Paused = Locked
     mode: {
-      paused: false,
+      paused: true,
     },
     // stores web metrics calculated by the content script file
     webMetrics: {},
