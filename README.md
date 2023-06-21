@@ -28,7 +28,7 @@
 <br>
 
 <p align="center">
-<img src="./assets/v19/Overview.gif" />
+<img src="./assets/v20/Overview.gif" />
 </p>
 
 <p align="center">
@@ -47,7 +47,7 @@ be viewed in Diff mode.
 <br>
 
 <p align="center">
-<img src="./assets/v19/map.gif" />
+<img src="./assets/v20/map.gif" />
 </p>
 <br>
 
@@ -60,10 +60,6 @@ name.
 <br>
 <br>
 
-<!-- <p align="center">
-<img src="./assets/action-comparison.gif" />
-</p> -->
-
 ### 🔹 Components Comparison
 
 When toggled to a specific snapshot, a visualization of the individual
@@ -71,11 +67,6 @@ components of the snapshot will be displayed. This can be done under the same
 Performance tab where the snapshots are rendered. You will also find details of
 each component upon hovering.
 <br>
-<br>
-
-<p align="center">
-<img src="./assets/v19/performance.gif" />
-</p>
 <br>
 
 ### 🔹 Recording
@@ -87,7 +78,7 @@ snapshot will be displayed in Chrome DevTools under the Reactime panel.
 <br>
 
 <p align="center">
-<img src="./assets/v19/history.gif" />
+<img src="./assets/v20/history.gif" />
 </p>
 <br>
 
@@ -147,15 +138,15 @@ of the structure and interfaces of the codebase.
 
 <h1>What's New!</h1>
 
-<b>Reactime 19.0</b> comes with UI updates to enhance the developer's experience, as well as a much-needed revamping of the codebase to reflect current industry standards and better maintainability for future contributors.
-
-<i>UI Updates</i>
-
-To handle displaying large amounts of data, we have changed how nested structures like objects and arrays are displayed to now be collapsible and scrollable. In addition, we've updated component information to include the necessary component "key" information, and data now also persists on hover, eliminating the need to leave the cursor in one place.
+Reactime 20.0 includes several key improvements under the hood to improve performance and resolve existing bugs, as well as a revamped UX to achieve WCAG compatibility.
 
 <i>Under the Hood</i>
 
-We are happy to say that we've migrated from Enzyme to React Testing Library to eliminate the need for the Enzyme adapter, converted from JavaScript to TypeScript to ensure type safety, and updated the traversal of the React Fiber Tree to accurately extract useState data for previously unsupported edge cases.
+We have resolved several persistent bugs, including a major issue that caused apps using Reactime to crash when using login or submit functionality. As part of our effort to improve Reactime performance overall, we have continued to implement TypeScript throughout the codebase and created new tests with React Testing Library. We have also made testing more robust, improving existing tests and fixing broken test environments. Lastly, we have upgraded Reactime by removing some deprecated code and packages, reducing compilation errors.
+
+<i>Accessibility</i>
+
+We have updated the UX, seeking consistency with the Web Content Accessibility Guidelines (WCAG). Specifically, we have improved the size and design of target elements throughout Reactime and carefully chosen new color contrasts to ensure WCAG compatibility.
 
 If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
 
@@ -231,7 +222,7 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 
 ## <b>Read More</b>
 
-- [It's time for Reactime 19.0!](linkhere)
+- [It's time for Reactime 20.0!](linkhere)
 
 ## <b>Authors</b>
 
@@ -318,6 +309,10 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 - **Jasmine Noor** - [@jasnoo](https://github.com/jasnoo)
 - **Minzo Kim** - [@minzo-kim](https://github.com/minzo-kim)
 - **Mark Teets** - [@MarkTeets](https://github.com/MarkTeets)
+- **Nick Huemmer** - [@NickHuemmer](https://github.com/ElDuke717)
+- **James McCollough** - [@j-mccoll](https://github.com/j-mccoll)
+- **Mike Bednarz** - [@mikebednarz](https://github.com/mikebednarz)
+- **Sergei Liubchenko** - [@sergeylvq](https://github.com/sergeylvq)
 
 ## <b>License </b>
 
