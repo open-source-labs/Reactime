@@ -47,17 +47,15 @@ Similar approach for Next.js and Remix demo apps
 ## Linting
 
 _Before_ beginning development, especially on teams, make sure to configure your linter and code formatting to conform to one unified setting (We recommend [the Airbnb style guide](https://github.com/airbnb/javascript)!) This will make reviewing PRs much more readable and less error-prone. &nbsp;  
-&nbsp;  
+&nbsp;
 
-# Possible Avenues for Future Iterators 
+# Possible Avenues for Future Iterators
+
 Here are some notes on the current state of Reactime and considerations for future development.
 
-## Testing
-
-For Reactime unit tests, pre-v.19 there were tests built out in two places. Backend tests were in backend >\_\_tests\_\_. Frontend tests were in src > app >\_\_tests\_\_. In v19, we specifically focused on rebuilding front tests to use React Testing Library (RTL) + Jest. Previously, front end testing existed but utilized Enzyme + Jest . Our decision to move to RTL stemmed on the fact that Enzyme did not support React V17 (third party Enzyme adaptor libraries were created to provide support to previous React versions, but were still very much out of date) and that Enzyme is no longer industry standard. We began the process of creating new frontend tests but they are not complete and this is a great place for future iterators to build out more. Since the new suite of RTL tests are not fully complete, we have kept the older Enzyme tests within the codebase to be referenced (src > app > __tests__enzyme). However, these will not be included in the tests run in the testing scripts.
-
 ## Including Support for Hooks Beyond useState
-Reactime currently shows data stored via useState, but does not show data stored via other hooks such as useContext or useReducer. While showing this data would be simple, maintaining the time travel functionality of Reactime with these hooks would not. *Please see file demo-app/src/client/Components/ButtonsWithMoreHooks.jsx for more details.*
+
+Reactime currently shows data stored via useState, but does not show data stored via other hooks such as useContext or useReducer. While showing this data would be simple, maintaining the time travel functionality of Reactime with these hooks would not. _Please see file demo-app/src/client/Components/ButtonsWithMoreHooks.jsx for more details._
 
 To see how hook data is stored on the fiber tree:
 
@@ -71,19 +69,18 @@ To see how hook data is stored on the fiber tree:
 Any changes to console.logs in Reactime can be seen by refreshing the browser the app is running in.
 
 ## Replace Functionality for Outdated Packages
-Packages emotion/core and material-ui/core haven't been updated to use React 18. This is the reason npm install --force is necessary when installing the dependencies of Reactime. Replacing the functionality these packages perform and removing them from Reactime would ensure compatibility moving forward. 
 
-React Developer Tools has deprecated \_\_REACT\_DEVTOOLS\_GLOBAL\_HOOK\_\_, which Reactime uses to extract a running application's fiber tree. At the time of the release of Reactime 19 (May 2023), this tool still works reliably to deliver said fiber tree. This will likely be the case until the React version (React version 18.2 at time of writing) undergoes updates that diverge beyond compatibility with \_\_REACT\_DEVTOOLS\_GLOBAL\_HOOK\_\_. At this time, Reactime will need to change how it extracts an application's fiber tree.
+Material-ui/core hasn't been updated to use React 18. This is the reason npm install --force is necessary when installing the dependencies of Reactime. Replacing the functionality this package performs and removing it from Reactime would ensure compatibility moving forward.
 
-Changing how Reactime extracts the fiber tree before said React version update may yeild diminishing result, as whatever method will also need to be updated to match React's breaking updates.
+React Developer Tools has deprecated \_\_REACT_DEVTOOLS_GLOBAL_HOOK\_\_, which Reactime uses to extract a running application's fiber tree. At the time of the release of Reactime 20 (June 2023), this tool still works reliably to deliver said fiber tree. This will likely be the case until the React version (React version 18.2 at time of writing) undergoes updates that diverge beyond compatibility with \_\_REACT_DEVTOOLS_GLOBAL_HOOK\_\_. At this time, Reactime will need to change how it extracts an application's fiber tree.
 
+Changing how Reactime extracts the fiber tree before said React version update may yield diminishing result, as whatever method will also need to be updated to match React's breaking updates.
 
 ## Redux
 
 Can Reactime be integrated with Redux compatibility so applications using Redux can track state in Reactime?
 
 Yes, but it would be very time-consuming and not the most feasible option while Redux devtools exists already. With how Redux devtools is currently set up, a developer is unable to use Redux devtools as a third-party user and integrate its functionality into their own application, as Redux devtools is meant to be used directly on an application using Redux for state-tracking purposes. Since the devtools do not appear to have a public API for integrated use in an application or it simply does not exist, Redux devtools would need to be rebuilt from the ground up and then integrated into Reactime, or built into Reactime directly still from scratch.
-
 
 # File Structure
 
@@ -93,14 +90,13 @@ In the _src_ folder, there are three directories we care about: _app_, _backend_
 src/
 ├── app/                          # Frontend code
 │   ├── __tests__/                # React Testing Library
-│   ├── __tests__enzyme/          # Legacy Enzyme tests
 │   ├── actions/                  # Redux action creators
 │   ├── components/               # React components
 │   ├── constants/                #
 │   ├── containers/               # More React components
 │   ├── reducers/                 # Redux mechanism for updating state
 │   ├── styles/                   #
-│   ├── FrontendTypes.ts          # Library of typescript interfaces 
+│   ├── FrontendTypes.ts          # Library of typescript interfaces
 │   ├── index.tsx                 # Starting point for root App component
 │   ├── module.d.ts               #
 │   └── store.tsx                 #
@@ -126,8 +122,7 @@ src/
 │   ├── index.ts                  # Starting point for backend functionality
 │   ├── index.d.ts                # Definitely Type file for Index
 │   ├── module.d.ts               #
-│   ├── package.json              #
-│   ├── puppeteerServer.js        #
+│   ├── puppeteerServer.ts        #
 │
 ├── extension/                    # Chrome Extension code
 │   ├── build/                    # Destination for bundles and manifest.json (Chrome config file)
@@ -156,7 +151,6 @@ All the diagrams of data flows are available on [MIRO](https://miro.com/app/boar
    - Like regular web apps, Chrome Extensions are event-based. The background script is where one typically monitors for browser triggers (e.g. events like closing a tab, for example). The content script is what allows us to read or write to our target web application, usually as a result of [messages passed](https://developer.chrome.com/extensions/messaging) from the background script.
    - These two files help us handle requests both from the web browser and from the Reactime extension itself
 
-
 ## Data Flow Architecture
 
 The general flow of data is described in the following steps:
@@ -169,7 +163,6 @@ The general flow of data is described in the following steps:
 
 3. Likewise, when Reactime emits an action due to user interaction -- a "jump" request for example -- a message will be passed from Reactime via the background script to the content script. Then, the content script will pass a message to the target application containing a payload that represents the state the user wants the DOM to reflect or "jump" to.
    - One important thing to note here is that this jump action must be dispatched in the target application (i.e. _backend_ land), because only there do we have direct access to the DOM.
-
 
 # Reacti.me Website:
 
@@ -238,7 +231,18 @@ Some relevant sections are reproduced below:
   2. The chrome extension "front-end" **(_NOT_ the interface of the browser, this is an important distinction.)**
 - In other words, a background script works as a sort of middleman, directly maintaining connection with its parent extension, and acting as a proxy enabling communication between it and the content script.
 
+# Launching to Chrome Web Store
+
+Once you are ready for launch, follow these steps to simplify deployment to the Chrome Web Store:
+
+   1. Run npm run build in Reactime to build the production version of Reactime
+   2. Right click on the build folder and click “compress” to make a compressed zip version of the build folder. The compressed zip is what you will upload to the Chrome Web Store
+   3. Navigate to the Chrome Web Store Developer Dashboard (logged in with Reactime credentials). Go to Build > Package > Upload new package, and when prompted, upload the build.zip file
+   4. Update the Store Listing and that’s it! Click “Submit for review” and wait for the Chrome store to process your request
+
 # Past Medium Articles for Reference
+
+- [Reactime 20: Reactime just keeps getting better!](https://medium.com/@njhuemmer/reactime-just-keeps-getting-better-b37659ff8b71)
 - [Reactime 19: What time is it? It’s still Reactime!](https://medium.com/@minzo.kim/what-time-is-it-its-still-reactime-d496adfa908c)
 - [Reactime 18.0. Better than ever](https://medium.com/@zdf2424/reactime-18-0-better-than-ever-148b81606257)
 - [Reactime v17.0.0: Now with support for the Context API, and a modern UI](https://medium.com/@reactime/reactime-v17-0-0-now-with-support-for-the-context-api-and-a-modern-ui-f0edf9e54dae)

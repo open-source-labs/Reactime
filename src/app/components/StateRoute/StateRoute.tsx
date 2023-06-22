@@ -107,7 +107,7 @@ const StateRoute = (props: StateRouteProps) => {
           formatted={(val) =>
             Number.isNaN(val) ? '- ms' : `${((val / 100) * 2500).toFixed(2)} ms`
           }
-          label='LCP'
+          label='Largest Contentful Paint'
           name='Largest Contentful Paint'
           description='Measures loading performance. The benchmark is less than 2500 ms.'
         />
@@ -115,7 +115,7 @@ const StateRoute = (props: StateRouteProps) => {
           color={FIDColor}
           series={webMetrics.FID * 25}
           formatted={(val) => (Number.isNaN(val) ? '- ms' : `${(val / 25).toFixed(2)} ms`)}
-          label='FID'
+          label='First Input Delay'
           name='First Input Delay'
           description='Measures interactivity. The benchmark is less than 100 ms.'
         />
@@ -123,7 +123,7 @@ const StateRoute = (props: StateRouteProps) => {
           color={FCPColor}
           series={(webMetrics.FCP / 1000) * 100}
           formatted={(val) => `${((val / 100) * 1000).toFixed(2)} ms`}
-          label='FCP'
+          label='First Contentful Paint'
           name='First Contentful Paint'
           description='Measures the time it takes the browser to render the first piece of DOM content. No benchmark.'
         />
@@ -131,7 +131,7 @@ const StateRoute = (props: StateRouteProps) => {
           color={TTFBColor}
           series={(webMetrics.TTFB / 10) * 100}
           formatted={(val) => `${((val / 100) * 10).toFixed(2)} ms`}
-          label='TTFB'
+          label='Time To First Byte'
           name='Time to First Byte'
           description='Measures the time it takes for a browser to receive the first byte of page content. The benchmark is 600 ms.'
         />

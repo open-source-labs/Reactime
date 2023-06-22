@@ -13,8 +13,6 @@ const props = {
   launchContent: null,
 };
 
-const parseError = jest.fn();
-
 describe('unit testing for ErrorContainer.tsx', () => {
   describe('When there are no errors', () => {
     test('Returns empty div', () => {
@@ -34,7 +32,7 @@ describe('unit testing for ErrorContainer.tsx', () => {
     });
   });
 
-  describe("when there's a Content Script Errorr", () => {
+  describe("when there's a Content Script Error", () => {
     test('Content Script Error related text shows', () => {
       props.status.contentScriptLaunched = false;
       render(<ErrorMsg {...props} />);

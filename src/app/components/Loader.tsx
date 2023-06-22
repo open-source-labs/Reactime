@@ -1,15 +1,9 @@
 // /* eslint-disable react/prop-types */
 
 import React from 'react';
-import { css, SerializedStyles } from '@emotion/react';
 import { ClipLoader } from 'react-spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-
-const override: SerializedStyles = css`
-  display: inline;
-  margin: 0 auto;
-`;
 
 // Displays the result of the check when loading is done
 const handleResult = (result: boolean): JSX.Element =>
@@ -23,7 +17,7 @@ const handleResult = (result: boolean): JSX.Element =>
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const Loader = ({ loading, result }): JSX.Element =>
   loading ? (
-    <ClipLoader color='#123abc' css={override} size={30} loading={loading} />
+    <ClipLoader color='#123abc' size={30} loading={loading} />
   ) : (
     handleResult(result)
   );

@@ -10,7 +10,7 @@
 }
 
 .MuiSwitch-switchBase {
-  color: #ff6569 !important;
+  color: #F00008 !important;
 }
 
 .MuiSwitch-track {
@@ -24,7 +24,7 @@
 #routes-formcontrol {
   padding: 3px;
   margin-left: 50px;
-  font: 400 14px 'Roboto', sans-serif;
+  font: 400 16px 'Roboto', sans-serif;
   text-align: left;
   // min-width: 10em;
   // max-height: 50%;
@@ -33,19 +33,19 @@
 #routes-dropdown {
   color: white !important;
   // background-color: #ff6569 !important;
-  font: 400 14px 'Roboto', sans-serif;
+  font: 400 16px 'Roboto', sans-serif;
   text-align: left;
 }
 
 .saveSeriesContainer {
   #routes-select, #snapshot-select {
-    background-color: #ff6569 !important;
+    background-color: #F00008 !important;
   }
 }
 
 #routes-select, #snapshot-select{
   color: white !important;
-  font: 400 14px 'Roboto', sans-serif;
+  font: 400 16px 'Roboto', sans-serif;
   text-align: left;
   width: 120px;
   height: 30px;

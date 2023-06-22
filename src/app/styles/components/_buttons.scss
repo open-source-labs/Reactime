@@ -4,6 +4,7 @@
   padding: 3px;
   outline: transparent;
   color: white;
+  font-size: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,7 +13,7 @@
   border-radius: 5px;
   cursor: pointer;
   line-height: 1.5em;
-  font: 400 14px 'Roboto', sans-serif;
+  font: 400 16px 'Roboto', sans-serif;
   // font-size: $button-text-size;
   width: 120px;
   background: $red-color-gradient;
@@ -37,7 +38,7 @@
   border-radius: 3px;
   cursor: pointer;
   line-height: 1.5em;
-  font: 300 14px 'Roboto', sans-serif;
+  font: 300 16px 'Roboto', sans-serif;
   font-size: $button-text-size;
   width: 120px;
   background: $red-color-gradient;
@@ -60,8 +61,8 @@
   border-radius: 3px;
   cursor: pointer;
   line-height: 1.5em;
-  font: 300 14px 'Roboto', sans-serif;
-  font-size: $button-text-size;
+  font: 500 16px 'Roboto', sans-serif;
+  // font-size: $button-text-size; increase the font size and contrast for readability
   width: 120px;
   background: #62d6fb;
 }
@@ -90,27 +91,36 @@
   outline: none;
   height: 20px;
   margin-bottom: 8px;
-  width: 70px;
+  width: 100px;
   border: none;
-  border-radius: 3px;
-  background: $grey-color-gradient;
-  font: normal 11px 'Roboto', sans-serif;
-  color: #b0b0b0;
+  /* border-radius: 3px; */
+  background: linear-gradient(145deg, #5c6068, #4d5157);
+  font: normal 16px "Roboto", sans-serif;
+  color: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
 }
 
 .jump-button {
   outline: none;
   height: 20px;
   margin-bottom: 8px;
-  width: 70px;
+  width: 100px;
   border: transparent;
   border-radius: 3px;
-  background-color: #565a61;
-  font: normal 11px 'Roboto', sans-serif;
-  color: #b0b0b0;
+  background-color: #232529;
+  font: normal 16px "Roboto", sans-serif;
+  color: #FFFFFF;
   transform: rotateX(90deg);
   transition: opacity 300ms, transform 0.15s linear;
   opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  padding-bottom: 5px;
 }
 
 .jump-button:hover {
@@ -124,10 +134,10 @@
   outline: none;
   height: 20px;
   margin-bottom: 8px;
-  width: 70px;
+  width: 100px;
   border: transparent;
   border-radius: 3px;
-  font: normal 11px 'Roboto', sans-serif;
+  font: normal 16px 'Roboto', sans-serif;
 }
 
 .empty-button:hover {
@@ -143,6 +153,8 @@
   border-color: transparent;
   background: $blue-color-gradient;
   border-radius: 5px;
+  font-weight: 500;
+  font-size: 16px;
 }
 
 .play-button:hover {
@@ -190,6 +202,7 @@
 .export-button,
 .pause-button {
   @extend %button-shared;
+  font-size: 16px;
   color: white;
   border-color: transparent;
   background: $blue-color-gradient;
@@ -223,7 +236,7 @@
   align-items: center;
   cursor: pointer;
   line-height: 1.5em;
-  font: 300 14px 'Roboto', sans-serif;
+  font: 300 16px 'Roboto', sans-serif;
   font-size: $button-text-size;
 
   background: $brand-color;

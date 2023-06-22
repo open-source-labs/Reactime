@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { TextEncoder } from 'util';
 global.TextEncoder = TextEncoder;
@@ -40,21 +40,11 @@ describe('Unit testing for MainSlider.jsx', () => {
       snapshotsLength: 3,
     };
 
-    const state = {
-      tabs: {
-        100: {
-          sliderIndex: 1,
-        },
-      },
-      currentTab: 100,
-    };
-
-    // currently not working :( likely needs to correctly handle understanding what tab it should currently be at
     test('Component should have min, max, value with correct values to indicate slider position when there are multiple snapshots', () => {
       render(<MainSlider {...props} />);
       expect(screen.getByRole('slider')).toHaveAttribute('aria-valuemax', '2');
       expect(screen.getByRole('slider')).toHaveAttribute('aria-valuemin', '0');
-      // expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow','0')
+      expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow','0')
     });
   });
 });

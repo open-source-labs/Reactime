@@ -5,6 +5,8 @@ import { TextEncoder } from 'util';
 global.TextEncoder = TextEncoder;
 import ButtonsContainer from '../containers/ButtonsContainer';
 import { useStoreContext } from '../store';
+import userEvent from '@testing-library/user-event';
+import { toggleMode } from '../actions/actions';
 
 // const { Steps } = require('intro.js-react');
 jest.mock('../store');
@@ -24,9 +26,8 @@ describe('Unit testing for ButtonContainer', () => {
         sliderIndex: 0,
         viewIndex: -1,
         mode: {
-          paused: false,
+          paused: true,
           locked: false,
-          persist: false,
         },
       },
     },
@@ -46,16 +47,15 @@ describe('Unit testing for ButtonContainer', () => {
     dispatch.mockClear();
     mockedUsedStoreContext.mockClear();
     currentTab.mode = {
-      paused: false,
-      persist: false,
+      paused: true,
     };
   });
 
   describe('When button container is loaded', () => {
-    test('should have 4 buttons ', () => {
+    test('it should have 4 buttons', () => {
       render(<ButtonsContainer />);
       expect(screen.getAllByRole('button')).toHaveLength(4);
-      expect(screen.getAllByRole('button')[0]).toHaveTextContent('Unlocked');
+      expect(screen.getAllByRole('button')[0]).toHaveTextContent('Locked');
       expect(screen.getAllByRole('button')[1]).toHaveTextContent('Download');
       expect(screen.getAllByRole('button')[2]).toHaveTextContent('Upload');
       expect(screen.getAllByRole('button')[3]).toHaveTextContent('Tutorial');
@@ -64,11 +64,29 @@ describe('Unit testing for ButtonContainer', () => {
 
   describe('When view is unlock', () => {
     test('Button should show as unlocked', () => {
+      state.tabs['87'].mode.paused = false;
+      render(<ButtonsContainer />);
+      expect(screen.getAllByRole('button')[0]).toHaveTextContent('Unlocked');
+    });
+  });
+
+  describe('When view is lock', () => {
+    test('Button should show as locked', () => {
       state.tabs['87'].mode.paused = true;
       render(<ButtonsContainer />);
       expect(screen.getAllByRole('button')[0]).toHaveTextContent('Locked');
     });
   });
+
+  describe('Clicking pause-button toggles locked/unlocked', () => {
+    test('When button is unlocked and it is clicked', async () => {
+      render(<ButtonsContainer />);
+      const button = screen.getAllByRole('button')[0];
+      await userEvent.click(button);
+      expect(dispatch).toHaveBeenCalledWith(toggleMode('paused'));
+    });
+  });
+
 
   describe('Upload/Download', () => {
     test('Clicking upload and download buttons', async () => {

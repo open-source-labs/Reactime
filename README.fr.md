@@ -36,7 +36,7 @@
 <br>
 
 <p align="center">
-<img src="./assets/new-reactime.gif" />
+<img src="./assets/v20/Overview.gif" />
 </p>
 
 <p align="center">
@@ -124,6 +124,13 @@ Après avoir cloné ce référentiel, les développeurs peuvent simplement exéc
 - télécharger les snapshots actuels en mémoire
 - titres déclaratifs dans la barre latérale des actions
 
+<h1>Quoi de neuf !</h1>
+Reactime 20.0 inclut plusieurs améliorations clés sous le capot pour améliorer les performances et résoudre les bogues existants, ainsi qu'une UX remaniée pour atteindre la compatibilité WCAG.
+
+Nous avons résolu plusieurs bogues persistants, y compris un problème majeur qui faisait planter les applications utilisant Reactime lors de l'utilisation de la fonctionnalité de connexion ou de soumission. Dans le cadre de nos efforts pour améliorer les performances globales de Reactime, nous avons continué à implémenter TypeScript dans toute la base de code et créé de nouveaux tests avec React Testing Library. Nous avons également rendu les tests plus robustes, améliorant les tests existants et corrigeant les environnements de test défectueux. Enfin, nous avons mis à jour Reactime en supprimant certains codes et packages obsolètes, réduisant ainsi les erreurs de compilation.
+
+Nous avons mis à jour l'UX, en recherchant la cohérence avec les directives pour l'accessibilité des contenus Web (WCAG). Plus précisément, nous avons amélioré la taille et la conception des éléments cibles dans Reactime et soigneusement choisi de nouveaux contrastes de couleurs.
+
 ## <b>En savoir plus</b>
 
 - [Time-Travel State with Reactime](https://medium.com/better-programming/time-traveling-state-with-reactime-6-0-53fdc3ae2a20)
@@ -202,6 +209,14 @@ Après avoir cloné ce référentiel, les développeurs peuvent simplement exéc
 - **Ngoc Zwolinski** - [@ngoczwolinski](https://github.com/ngoczwolinski)
 - **Peter Lam** - [@dev-plam](https://github.com/dev-plam)
 - **Zachary Freeman** - [@zacharydfreeman](https://github.com/zacharydfreeman/)
+- **Jackie Yuan** - [@yuanjackie1](https://github.com/yuanjackie1)
+- **Jasmine Noor** - [@jasnoo](https://github.com/jasnoo)
+- **Minzo Kim** - [@minzo-kim](https://github.com/minzo-kim)
+- **Mark Teets** - [@MarkTeets](https://github.com/MarkTeets)
+- **Nick Huemmer** - [@NickHuemmer](https://github.com/ElDuke717)
+- **James McCollough** - [@j-mccoll](https://github.com/j-mccoll)
+- **Mike Bednarz** - [@mikebednarz](https://github.com/mikebednarz)
+- **Sergei Liubchenko** - [@sergeylvq](https://github.com/sergeylvq)
 
 ## <b>License </b>
 

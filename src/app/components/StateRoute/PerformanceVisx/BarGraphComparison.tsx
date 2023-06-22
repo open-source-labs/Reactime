@@ -9,7 +9,7 @@ import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
-import { schemeSet3 } from 'd3-scale-chromatic';
+import { schemeTableau10 } from 'd3-scale-chromatic';
 import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -104,7 +104,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   });
   // the domain array will assign each key a different color to make rectangle boxes
   // and use range to set the color scheme each bar
-  const duplicate = schemeSet3.slice();
+  const duplicate = schemeTableau10.slice();
   const colorScale = scaleOrdinal<string, string>({
     domain: keys,
     range: duplicate,

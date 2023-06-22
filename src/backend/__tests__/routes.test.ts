@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 import { JSDOM } from 'jsdom';
 
 import { Routes, Route } from '../models/routes';
