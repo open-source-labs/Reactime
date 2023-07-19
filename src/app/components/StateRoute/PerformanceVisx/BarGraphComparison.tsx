@@ -247,7 +247,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
               )}
             </Select>
           </FormControl>
-          <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4>
+          <h4 style={{ padding: '0 1rem' }}>COMPARE Actions </h4>
           <FormControl variant='outlined' className={classes.formControl}>
             <Select
               style={{ color: 'white' }}
