@@ -241,7 +241,7 @@ const StyledSelect = styled(Select)({
             Clear All Series
           </button>
           <h4 className='compare-series-box' style={{ padding: '0 1rem' }}>
-            Compare --Series:{' '}
+            Compare Series:{' '}
           </h4>
           <StyledFormControl id='selectSeries' variant='outlined'>
             <StyledSelect
