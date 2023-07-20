@@ -8,10 +8,11 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
-import { makeStyles } from '@material-ui/core/styles';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
+import { styled } from '@mui/system';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+
 import { deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 import { TooltipData, Margin, BarGraphComparisonAction, ActionObj } from '../../../FrontendTypes';
@@ -97,24 +98,41 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   renderingScale.range([yMax, 0]);
 
   // useStyles will change the styling on save series dropdown feature
-  const useStyles = makeStyles((theme) => ({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 80,
-      height: 30,
-    },
-    select: {
-      minWidth: 80,
-      fontSize: '.75rem',
-      fontWeight: '200',
-      border: '1px solid grey',
-      borderRadius: 4,
-      color: 'grey',
-      height: 30,
-    },
-  }));
+  // const useStyles = makeStyles((theme) => ({
+  //   formControl: {
+  //     margin: theme.spacing(1),
+  //     minWidth: 80,
+  //     height: 30,
+  //   },
+  //   select: {
+  //     minWidth: 80,
+  //     fontSize: '.75rem',
+  //     fontWeight: '200',
+  //     border: '1px solid grey',
+  //     borderRadius: 4,
+  //     color: 'grey',
+  //     height: 30,
+  //   },
+  // }));
 
-  const classes = useStyles();
+  // const classes = useStyles();
+
+  const StyledFormControl = styled(FormControl)(({ theme }) => ({
+    margin: theme.spacing(1),
+    minWidth: 80,
+    height: 30,
+  }));
+  
+  const StyledSelect = styled(Select)({
+    minWidth: 80,
+    fontSize: '.75rem',
+    fontWeight: 200,
+    border: '1px solid grey',
+    borderRadius: 4,
+    color: 'grey',
+    height: 30,
+  });
+  
 
   const handleSeriesChange = (event) => {
     if (!event) return;
@@ -165,12 +183,12 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
             Clear All Series
           </button>
           <h4 style={{ padding: '0 1rem' }}>Compare Series: </h4>
-          <FormControl variant='outlined' className={classes.formControl}>
-            <Select
+          <StyledFormControl variant='outlined'>
+            <StyledSelect
               style={{ color: 'white' }}
               labelId='simple-select-outlined-label'
               id='simple-select-outlined'
-              className={classes.select}
+              
               value={series}
               onChange={handleSeriesChange}
             >
@@ -183,15 +201,15 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
                   </MenuItem>
                 ))
               )}
-            </Select>
-          </FormControl>
+            </StyledSelect>
+          </StyledFormControl>
           <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4>
-          <FormControl variant='outlined' className={classes.formControl}>
-            <Select
+          <StyledFormControl variant='outlined'>
+            <StyledSelect
               style={{ color: 'white' }}
               labelId='snapshot-select'
               id='snapshot-select'
-              className={classes.select}
+              
               value={action} // snapshots
               onChange={handleActionChange}
             >
@@ -204,8 +222,8 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
                   </MenuItem>
                 ))
               )}
-            </Select>
-          </FormControl>
+            </StyledSelect>
+          </StyledFormControl>
         </div>
       </div>
 
