@@ -64,14 +64,15 @@ function ErrorContainer(): JSX.Element {
       setLoadingArray(1, true);
       setLoadingArray(2, true);
 
+      // if there is a current timeout set, we clear it
       if (timeout.current) {
         clearTimeout(timeout.current);
         timeout.current = null;
       }
     }
 
+    // We check our status object and see if contentScriptLaunched is false
     // if content script hasnt been found, set timer or immediately resolve
-    // check our status object and see if contentScriptLaunched is false
     if (!status.contentScriptLaunched) {
       // if contentScriptLaunched is false, we check our loadingArray state at position [0]
       if (loadingArray[0] === true) {

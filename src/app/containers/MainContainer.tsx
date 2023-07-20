@@ -17,12 +17,16 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
+/*
+  This is the main container where everything in our application is rendered
+*/
+
 function MainContainer(): JSX.Element {
   // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (store/dispatch) are from the useReducer function invocation in the App component
   const [store, dispatch] = useStoreContext();
-  // we continue to destructure store and get the tabs/currentTab/port
+  // we continue to destructure 'store' and get the tabs/currentTab/port
   const { tabs, currentTab, port } = store;
-  // We create a local state actionView and set it to true
+  // We create a local state 'actionView' and set it to true
   const [actionView, setActionView] = useState(true);
 
   // this function handles Time Jump sidebar view
@@ -35,10 +39,8 @@ function MainContainer(): JSX.Element {
     // toggles the addition or the removal of the 'no-aside' class
     toggleElem.classList.toggle('no-aside');
 
-    // hides the record toggle button from Actions Container in Time Jump sidebar view
     const recordBtn = document.getElementById('recordBtn');
-
-    // switches whether to display the button by changing the display property between none and flex
+    // switches whether to display the record toggle button by changing the display property between none and flex
     if (recordBtn.style.display === 'none') {
       recordBtn.style.display = 'flex';
     } else {
@@ -51,7 +53,7 @@ function MainContainer(): JSX.Element {
     if (port) return;
 
     // chrome.runtime allows our application to retrieve our service worker (our eventual bundles/background.bundle.js after running npm run build), details about the manifest, and allows us to listen and respond to events in our application lifecycle.
-    // we connect our listeners to our service worker
+    // we connect to our service worker
     const currentPort = chrome.runtime.connect();
 
     // listen for a message containing snapshots from the background script
@@ -72,7 +74,7 @@ function MainContainer(): JSX.Element {
           const tabsArray: Array<string> = Object.keys(payload);
           // we then map out our tabsArray where we convert each string into a number
           const numTabsArray: number[] = tabsArray.map((tab) => Number(tab));
-          // we then get the number of tabs we have
+          // we then get the largest tab number value
           maxTab = Math.max(...numTabsArray);
         }
 
@@ -120,7 +122,7 @@ function MainContainer(): JSX.Element {
     // assign port to state so it could be used by other components
     dispatch(setPort(currentPort));
 
-    // NOTE: There is no dependency array declared here.
+    // !!!!! NOTE: There is no dependency array declared here. This may result in an infinite loop. Needs more investigation !!!!!
   });
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
