@@ -182,7 +182,7 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
           >
             Clear All Series
           </button>
-          <h4 style={{ padding: '0 1rem' }}>Compare --Series: </h4>
+          <h4 style={{ padding: '0 1rem' }}>Compare Series: </h4>
           <StyledFormControl variant='outlined'>
             <StyledSelect
               style={{ color: 'white' }}
