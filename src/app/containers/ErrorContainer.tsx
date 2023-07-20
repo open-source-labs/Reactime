@@ -6,7 +6,7 @@ import ErrorMsg from '../components/ErrorMsg';
 import { useStoreContext } from '../store';
 
 /*
-This is the loading popup that a user may get when first initalizing the application. This page checks:
+This is the loading screen that a user may get when first initalizing the application. This page checks:
 
   1. if the content script has been launched on the current tab
   2. if React Dev Tools has been installed

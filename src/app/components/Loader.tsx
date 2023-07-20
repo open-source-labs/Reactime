@@ -5,7 +5,14 @@ import { ClipLoader } from 'react-spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
-// Displays the result of the check when loading is done
+/*
+This file is what decides what icon (loading, checkmark, exclamation point) is displayed next to the checks in the ErrorContainer loading screen:
+
+  1. if the content script has been launched on the current tab
+  2. if React Dev Tools has been installed
+  3. if target tab contains a compatible React app
+*/
+
 const handleResult = (result: boolean): JSX.Element =>
   result ? (
     // if result boolean is true, we display a checkmark icon

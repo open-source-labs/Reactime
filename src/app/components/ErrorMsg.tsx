@@ -1,6 +1,15 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 
+/*
+This file determines what text will be displayed to the user if any one of the following fail to load:
+
+  1. if the content script has been launched on the current tab
+  2. if React Dev Tools has been installed
+  3. if target tab contains a compatible React app
+
+*/
+
 // parses loadingArray and status and returns the correct message
 function parseError(loadingArray: [], status: Record<string, unknown>): string {
   let stillLoading = true;
@@ -9,7 +18,8 @@ function parseError(loadingArray: [], status: Record<string, unknown>): string {
   });
   // As long as everything is still loading dont diplay an error message
   if (stillLoading) return 'default';
-  // Return first status that fails
+
+  // If we're done loading everything, return the first status that fails
   if (!status.contentScriptLaunched) return 'Content Script Error';
   if (!status.reactDevToolsInstalled) return 'RDT Error';
   if (!status.targetPageisaReactApp) return 'Not React App';
@@ -17,6 +27,7 @@ function parseError(loadingArray: [], status: Record<string, unknown>): string {
 }
 
 function ErrorMsg({ loadingArray, status, launchContent }): JSX.Element {
+  // we use the evaluated result (string) of parseError and match it to the case so that an appropriate error message will be displayed to the user
   switch (parseError(loadingArray, status)) {
     case 'Content Script Error':
       return (
