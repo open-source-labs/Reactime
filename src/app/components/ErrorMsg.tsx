@@ -27,7 +27,7 @@ function parseError(loadingArray: [], status: Record<string, unknown>): string {
 }
 
 function ErrorMsg({ loadingArray, status, launchContent }): JSX.Element {
-  // we use the evaluated result (string) of parseError and match it to the case so that an appropriate error message will be displayed to the user
+  // we use the evaluated result (string) of 'parseError' and match it to the case so that an appropriate error message will be displayed to the user
   switch (parseError(loadingArray, status)) {
     case 'Content Script Error':
       return (
