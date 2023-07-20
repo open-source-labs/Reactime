@@ -2,7 +2,7 @@
   "name": "reactime",
   "description": "build web extension bundle.js",
   "scripts": {
-    "build": "webpack --mode production",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode production",
     "dev": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode development --watch",
     "buildlegacy": "webpack --mode production",
     "devlegacy": "webpack --mode development --watch",
