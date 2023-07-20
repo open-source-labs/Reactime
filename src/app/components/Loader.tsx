@@ -8,8 +8,10 @@ import { faCheck, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 // Displays the result of the check when loading is done
 const handleResult = (result: boolean): JSX.Element =>
   result ? (
+    // if result boolean is true, we display a checkmark icon
     <FontAwesomeIcon icon={faCheck} className='check' size='lg' />
   ) : (
+    // if the result boolean is false, we display a fail icon
     <FontAwesomeIcon icon={faExclamationCircle} className='fail' size='lg' />
   );
 
@@ -17,8 +19,10 @@ const handleResult = (result: boolean): JSX.Element =>
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const Loader = ({ loading, result }): JSX.Element =>
   loading ? (
+    // if the loadingArray value is true, we display a loading icon
     <ClipLoader color='#123abc' size={30} loading={loading} />
   ) : (
+    // else we display a component produced by handleResult depending on if the result parameter (which takes an argument from the status object in ErrorContainer) is true or false
     handleResult(result)
   );
 
