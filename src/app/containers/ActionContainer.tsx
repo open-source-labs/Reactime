@@ -10,6 +10,8 @@ import { useStoreContext } from '../store';
 import RouteDescription from '../components/RouteDescription';
 import { Obj } from '../FrontendTypes';
 
+
+// resetSlider locates the rc-slider elements on the document and resets it's style attributes
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
   const sliderTrack = document.querySelector('.rc-slider-track');
@@ -19,21 +21,35 @@ const resetSlider = () => {
   }
 };
 
+
 function ActionContainer(props): JSX.Element {
+  // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
   const [{ tabs, currentTab, port }, dispatch] = useStoreContext();
+
+  // we destructure the currentTab object
   const { currLocation, hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
+
+  // we destructure our props object
   const { toggleActionContainer, actionView, setActionView } = props;
+
+  // We create a local state 'recordingActions' and set it to true
   const [recordingActions, setRecordingActions] = useState(true);
 
+  // we create an array 'actionsArr' that will hold elements we create later on
   let actionsArr: JSX.Element[] = [];
+  // we create an array 'hierarchyArr' that will hold objects and numbers
   const hierarchyArr: (number | {})[] = [];
 
   // function to traverse state from hierarchy and also getting information on display name and component name
   const displayArray = (obj: Obj): void => {
     if (
+      // if the stateSnapshot has a non-empty children array
       obj.stateSnapshot.children.length > 0 &&
+      // and there is an element
       obj.stateSnapshot.children[0] &&
+      // with a state
       obj.stateSnapshot.children[0].state &&
+      // and a name
       obj.stateSnapshot.children[0].name
     ) {
       const newObj: Record<string, unknown> = {
