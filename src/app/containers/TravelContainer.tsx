@@ -13,6 +13,11 @@ import {
 import { useStoreContext } from '../store';
 import { TravelContainerProps } from '../FrontendTypes';
 
+/*
+  This container renders the time-travel play button, seek bar, playback controls, and the playback speed dropdown, located towards the bottom of the application, above the locked, download, upload, and tutorial buttons
+*/
+
+//
 const speeds: {
   value: number;
   label: string;
