@@ -26,25 +26,15 @@ const resetSlider = () => {
 
 
 function ActionContainer(props): JSX.Element {
-  // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
-  const [{ tabs, currentTab, port }, dispatch] = useStoreContext();
-
-  // we destructure the currentTab object
-  const { currLocation, hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
-
-  // we destructure our props object
-  const { toggleActionContainer, actionView, setActionView } = props;
-
-  // We create a local state 'recordingActions' and set it to true
-  const [recordingActions, setRecordingActions] = useState(true);
-
-  // we create an array 'actionsArr' that will hold elements we create later on
-  let actionsArr: JSX.Element[] = [];
+  const [{ tabs, currentTab, port }, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
+  const { currLocation, hierarchy, sliderIndex, viewIndex } = tabs[currentTab]; // we destructure the currentTab object
+  const { toggleActionContainer, actionView, setActionView } = props; // we destructure our props object
+  const [recordingActions, setRecordingActions] = useState(true); // We create a local state 'recordingActions' and set it to true
+  let actionsArr: JSX.Element[] = []; // we create an array 'actionsArr' that will hold elements we create later on
   // we create an array 'hierarchyArr' that will hold objects and numbers
   const hierarchyArr: (number | {})[] = [];
 
   /* 
-
   function to traverse state from hierarchy and also getting information on display name and component name
   
   the obj parameter is an object with the following structure:
@@ -58,22 +48,16 @@ function ActionContainer(props): JSX.Element {
     index: number;
     children?: [];
     }
-
   */
 
   const displayArray = (obj: Obj): void => {
     if (
-      // if the 'stateSnapshot' has a non-empty 'children' array
-      obj.stateSnapshot.children.length > 0 &&
-      // and there is an element
-      obj.stateSnapshot.children[0] &&
-      // with a 'state'
-      obj.stateSnapshot.children[0].state &&
-      // and a 'name'
-      obj.stateSnapshot.children[0].name
+      obj.stateSnapshot.children.length > 0 && // if the 'stateSnapshot' has a non-empty 'children' array
+      obj.stateSnapshot.children[0] && // and there is an element
+      obj.stateSnapshot.children[0].state && // with a 'state'
+      obj.stateSnapshot.children[0].name // and a 'name'
     ) {
-      // we create a new Record object (whose property keys are Keys and whose property values are Type. This utility can be used to map the properties of a type to another type) and populate it's properties with relevant values from our argument 'obj'.
-      const newObj: Record<string, unknown> = {
+      const newObj: Record<string, unknown> = { // we create a new Record object (whose property keys are Keys and whose property values are Type. This utility can be used to map the properties of a type to another type) and populate it's properties with relevant values from our argument 'obj'.
         index: obj.index,
         displayName: `${obj.name}.${obj.branch}`,
         state: obj.stateSnapshot.children[0].state,
@@ -84,11 +68,10 @@ function ActionContainer(props): JSX.Element {
             ? ''
             : obj.stateSnapshot.children[0].componentData,
       };
-      // we push our record object into 'hiearchyArr' defined on line 41
-      hierarchyArr.push(newObj);
+      hierarchyArr.push(newObj); // we push our record object into 'hiearchyArr' defined on line 35
     }
-    // if argument has a 'children' array, we iterate through it and run 'displayArray' on each element
-    if (obj.children) {
+
+    if (obj.children) {  // if argument has a 'children' array, we iterate through it and run 'displayArray' on each element
       obj.children.forEach((element): void => {
         displayArray(element);
       });
@@ -96,27 +79,25 @@ function ActionContainer(props): JSX.Element {
   };
 
   // the hierarchy gets set on the first click in the page
-  // when page in refreshed we may not have a hierarchy so we need to check if hierarchy was initialized
-  // if true invoke displayArray to display the hierarchy
-  if (hierarchy) displayArray(hierarchy);
+  if (hierarchy) displayArray(hierarchy); // when page is refreshed we may not have a hierarchy so we need to check if hierarchy was initialized. If it was initialized, invoke displayArray to display the hierarchy
 
   // This function allows us to use our arrow keys to jump between snapshots. It passes an event and the index of each action-component. Using the arrow keys allows us to highligh snapshots and the enter key jumps to the selected snapshot
   function handleOnKeyDown(e: KeyboardEvent, i: number): void {
     let currIndex = i;
-    // up arrow key pressed
-    if (e.key === 'ArrowUp') {
+    
+    if (e.key === 'ArrowUp') { // up arrow key pressed
       currIndex -= 1;
       if (currIndex < 0) return;
       dispatch(changeView(currIndex));
     }
-    // down arrow key pressed
-    else if (e.key === 'ArrowDown') {
+    
+    else if (e.key === 'ArrowDown') { // down arrow key pressed
       currIndex += 1;
       if (currIndex > hierarchyArr.length - 1) return;
       dispatch(changeView(currIndex));
     }
-    // enter key pressed
-    else if (e.key === 'Enter') {
+    
+    else if (e.key === 'Enter') { // enter key pressed
       e.stopPropagation(); // prevents further propagation of the current event in the capturing and bubbling phases
       e.preventDefault(); // needed or will trigger onClick right after
       dispatch(changeSlider(currIndex));
@@ -136,12 +117,10 @@ function ActionContainer(props): JSX.Element {
       componentName: string;
       componentData: { actualDuration: number } | undefined;
     }) => {
-      // destructure index from snapshot
-      const { index } = snapshot;
-      // boolean on whether the current index is the same as the viewIndex
-      const selected = index === viewIndex;
-      // boolean on whether the view index is less than 0 and if the index is the same as the last snapshot's index value in hierarchyArr
-      const last = viewIndex === -1 && index === hierarchyArr.length - 1;
+      const { index } = snapshot; // destructure index from snapshot
+      const selected = index === viewIndex; // boolean on whether the current index is the same as the viewIndex
+      const last = viewIndex === -1 && index === hierarchyArr.length - 1; // boolean on whether the view index is less than 0 and if the index is the same as the last snapshot's index value in hierarchyArr
+
       /*
       ====================================================
       // boolean 
@@ -172,6 +151,7 @@ function ActionContainer(props): JSX.Element {
   useEffect(() => {
     setActionView(true);
     // !!!! Why is the dependency array the function being called within the useEffect? !!!!
+    // may not call an infinite loop since it involves a setter function
   }, [setActionView]);
 
   // Function sends message to background.js which sends message to the content script
@@ -180,23 +160,20 @@ function ActionContainer(props): JSX.Element {
       action: 'toggleRecord',
       tabId: currentTab,
     });
-    // Record button's icon is being togggled on click
-    setRecordingActions(!recordingActions);
+    setRecordingActions(!recordingActions); // Record button's icon is being togggled on click
   };
 
-  // Logic to create the route description components
   type routes = {
     [route: string]: [];
   };
 
-  const routes: {} = {};
-  // iterate through our actionsArr
-  for (let i = 0; i < actionsArr.length; i += 1) {
-    // if 'routes' doesn't have a property key that is the same as the current component at index[i] routePath we create an array with the first element being the component at index [i]. If it does exist, we push the component at index [i] to the apporpriate routes[routePath]
+  const routes: {} = {}; // Logic to create the route description components begin
+  
+  for (let i = 0; i < actionsArr.length; i += 1) { // iterate through our actionsArr
     if (!routes.hasOwnProperty(actionsArr[i].props.routePath)) {
-      routes[actionsArr[i].props.routePath] = [actionsArr[i]];
-    } else {
-      routes[actionsArr[i].props.routePath].push(actionsArr[i]);
+      routes[actionsArr[i].props.routePath] = [actionsArr[i]]; // if 'routes' doesn't have a property key that is the same as the current component at index[i] routePath we create an array with the first element being the component at index [i]. 
+    } else { 
+      routes[actionsArr[i].props.routePath].push(actionsArr[i]); // If it does exist, we push the component at index [i] to the apporpriate routes[routePath]
     }
   }
 

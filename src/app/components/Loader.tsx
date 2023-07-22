@@ -15,22 +15,18 @@ This file is what decides what icon (loading, checkmark, exclamation point) is d
 
 const handleResult = (result: boolean): JSX.Element =>
   result ? (
-    // if result boolean is true, we display a checkmark icon
-    <FontAwesomeIcon icon={faCheck} className='check' size='lg' />
+    <FontAwesomeIcon icon={faCheck} className='check' size='lg' /> // if result boolean is true, we display a checkmark icon
   ) : (
-    // if the result boolean is false, we display a fail icon
-    <FontAwesomeIcon icon={faExclamationCircle} className='fail' size='lg' />
+    <FontAwesomeIcon icon={faExclamationCircle} className='fail' size='lg' /> // if the result boolean is false, we display a fail icon
   );
 
-// Returns the Loader component
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+// Returns the 'Loader' component
 const Loader = ({ loading, result }): JSX.Element =>
   loading ? (
-    // if the loadingArray value is true, we display a loading icon
-    <ClipLoader color='#123abc' size={30} loading={loading} />
+    <ClipLoader color='#123abc' size={30} loading={loading} /> // if the loadingArray value is true, we display a loading icon
   ) : (
-    // else we display a component produced by handleResult depending on if the result parameter (which takes an argument from the status object in ErrorContainer) is true or false
-    handleResult(result)
+    handleResult(result) // else we display a component produced by 'handleResult' depending on if the result parameter (which takes an argument from the status object in 'ErrorContainer') is true or false
   );
 
 export default Loader;

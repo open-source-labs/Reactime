@@ -16,8 +16,8 @@ function parseError(loadingArray: [], status: Record<string, unknown>): string {
   loadingArray.forEach((e) => {
     if (e === false) stillLoading = false;
   });
-  // As long as everything is still loading dont diplay an error message
-  if (stillLoading) return 'default';
+
+  if (stillLoading) return 'default'; // As long as everything is still loading dont diplay an error message
 
   // If we're done loading everything, return the first status that fails
   if (!status.contentScriptLaunched) return 'Content Script Error';
@@ -27,8 +27,7 @@ function parseError(loadingArray: [], status: Record<string, unknown>): string {
 }
 
 function ErrorMsg({ loadingArray, status, launchContent }): JSX.Element {
-  // we use the evaluated result (string) of 'parseError' and match it to the case so that an appropriate error message will be displayed to the user
-  switch (parseError(loadingArray, status)) {
+  switch (parseError(loadingArray, status)) { // parseError returns a string based on the loadingArray and status. The returned string is matched to a case so that an appropriate error message will be displayed to the user
     case 'Content Script Error':
       return (
         <div>
