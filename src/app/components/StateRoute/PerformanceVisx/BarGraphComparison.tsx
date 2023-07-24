@@ -138,21 +138,20 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   // const classes = useStyles();
 
   const StyledFormControl = styled(FormControl)(({ theme }) => ({
-  margin: theme.spacing(1),
-  minWidth: 80,
-  height: 30,
-}));
+    margin: theme.spacing(1),
+    minWidth: 80,
+    height: 30,
+  }));
 
-const StyledSelect = styled(Select)({
-  minWidth: 80,
-  fontSize: '.75rem',
-  fontWeight: 200,
-  border: '1px solid grey',
-  borderRadius: 4,
-  color: 'grey',
-  height: 30,
-});
-
+  const StyledSelect = styled(Select)({
+    minWidth: 80,
+    fontSize: '.75rem',
+    fontWeight: 200,
+    border: '1px solid grey',
+    borderRadius: 4,
+    color: 'grey',
+    height: 30,
+  });
 
   const handleSeriesChange = (event: Event) => {
     if (!event) return;
@@ -247,7 +246,6 @@ const StyledSelect = styled(Select)({
             <StyledSelect
               style={{ color: 'white' }}
               labelId='simple-select-outlined-label'
-              
               open={open}
               onClose={handleClose}
               onOpen={handleOpen}
@@ -266,12 +264,11 @@ const StyledSelect = styled(Select)({
             </StyledSelect>
           </StyledFormControl>
           <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4>
-          <StyledFormControl variant='outlined' >
+          <StyledFormControl variant='outlined'>
             <StyledSelect
               style={{ color: 'white' }}
               labelId='snapshot-select'
               id='snapshot-select'
-              
               open={picOpen}
               onClose={picHandleClose}
               onOpen={picHandleOpen}
