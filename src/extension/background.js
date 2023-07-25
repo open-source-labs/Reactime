@@ -181,20 +181,18 @@ chrome.runtime.onConnect.addListener((port) => {
 
     switch (action) {
       case 'import': // create a snapshot property on tabId and set equal to tabs object
-        const savedSnapshot = payload
-        console.log('background.js savedSnapshot:', savedSnapshot)
+        const savedSnapshot = payload;
+        console.log('background.js savedSnapshot:', savedSnapshot);
         // may need do something like filter payload from stateless
         tabsObj[tabId].snapshots = savedSnapshot.snapshots;
 
         // reset snapshots to page last state recorded
-        tabsObj[tabId].snapshots = savedSnapshot.snapshots
-
-
+        tabsObj[tabId].snapshots = savedSnapshot.snapshots;
 
         // resets hierarchy
         tabsObj[tabId].hierarchy.children = savedSnapshot.hierarchy.children;
         // resets hierarchy to page last state recorded
-        tabsObj[tabId].hierarchy.stateSnapshot = savedSnapshot.hierarchy.stateSnapshot
+        tabsObj[tabId].hierarchy.stateSnapshot = savedSnapshot.hierarchy.stateSnapshot;
         // resets currLocation to page last state recorded
         tabsObj[tabId].currLocation = savedSnapshot.currLocation;
         tabsObj[tabId].index = savedSnapshot.index;

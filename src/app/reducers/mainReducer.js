@@ -14,7 +14,7 @@ export default (state, action) =>
     //console.log(tabs[currentTab]);
     //console.log('properties of tabs[currentTab]:', hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex)
 
-      //console.log('reducer file!', 'hierarchy:', hierarchy, 'tabs:', tabs)
+    //console.log('reducer file!', 'hierarchy:', hierarchy, 'tabs:', tabs)
 
     // eslint-disable-next-line max-len
     // function that finds the index in the hierarchy and extracts the name of the equivalent index to add to the post message
@@ -44,7 +44,7 @@ export default (state, action) =>
     switch (action.type) {
       // This saves the series user wants to save to chrome local storage
       case types.SAVE: {
-        console.log('save action reducer!', 'payload:', action.payload)
+        console.log('save action reducer!', 'payload:', action.payload);
         const { newSeries, newSeriesName } = action.payload;
         if (!tabs[currentTab].seriesSavedStatus) {
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
@@ -185,8 +185,8 @@ export default (state, action) =>
         break;
       }
       case types.EMPTY: {
-        console.log('-----clear snapshots reducer----')
-        console.log('state before:', state.tabs[currentTab])
+        console.log('-----clear snapshots reducer----');
+        console.log('state before:', state.tabs[currentTab]);
 
         // send msg to background script
         port.postMessage({ action: 'emptySnap', tabId: currentTab }); //communicate with background.js
@@ -220,10 +220,10 @@ export default (state, action) =>
         break;
       }
       case types.IMPORT: {
-          // Log the value of tabs[currentTab].snapshots before the update
-        console.log('-----import snapshots reducer----')
-        console.log('state before:', state.tabs[currentTab])
-        console.log('action payload:', action.payload)
+        // Log the value of tabs[currentTab].snapshots before the update
+        console.log('-----import snapshots reducer----');
+        console.log('state before:', state.tabs[currentTab]);
+        console.log('action payload:', action.payload);
 
         port.postMessage({
           action: 'import',
@@ -254,11 +254,8 @@ export default (state, action) =>
         tabs[currentTab].currBranch = savedSnapshot.Branch;
         tabs[currentTab].seriesSavedStatus = false;
 
-      
         //============
         //tabs[currentTab].snapshots = action.payload.snapshots;
-        
-
 
         // console.log('New snapshots:', action.payload);
         // console.log('updated tabs[CurrentTab].snapshots:', tabs[currentTab].snapshots)
