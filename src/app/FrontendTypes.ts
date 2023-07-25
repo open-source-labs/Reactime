@@ -33,8 +33,8 @@ export interface TreeProps {
     stateSnaphot?: object;
     children?: any[];
   };
-  snapshots?:[];
-  currLocation?:object;
+  snapshots?: [];
+  currLocation?: object;
 }
 
 export interface BarStackProp {
@@ -159,7 +159,7 @@ export interface ActionProps {
   last: boolean;
   index: number;
   sliderIndex: number;
-  dispatch: (a: { type: string; payload: unknown; }) => void;
+  dispatch: (a: { type: string; payload: unknown }) => void;
   displayName: string;
   componentName: string;
   componentData: { actualDuration: number } | undefined;
@@ -249,7 +249,7 @@ export interface LinkControlProps {
   setStepPercent: (percent: number) => void;
   setSelectedNode: (selectedNode: string) => void;
   snapShots: Record<string, unknown>;
-};
+}
 
 export interface ControlStyles {
   fontSize: string;
@@ -270,7 +270,7 @@ export interface DropDownStyle {
 
 export interface Node {
   children?: Node[];
-  name?: string
+  name?: string;
   // other properties here
 }
 
@@ -286,7 +286,7 @@ export interface LinkTypesProps {
   margin?: { top: number; right: number; bottom: number; left: number };
   snapshots: Record<string, unknown>;
   currentSnapshot?: Record<string, unknown>;
-};
+}
 
 export interface ToolTipStyles {
   defaultStyles: React.CSSProperties;
@@ -307,12 +307,12 @@ export interface OptionsCursorTrueWithMargin {
   shiftY: number;
 }
 
-export interface StatelessCleanning {
+export interface StatelessCleaning {
   name?: string;
   componentData?: Record<string, unknown>;
   state?: string | {};
   stateSnaphot?: Record<string, unknown>;
-  children?: StatelessCleanning[];
+  children?: StatelessCleaning[];
 }
 
 export interface Snapshots {

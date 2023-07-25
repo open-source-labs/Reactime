@@ -353,7 +353,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         reloaded[tabId] = false;
       } else {
         tabsObj[tabId].snapshots.push(request.payload);
-        //! INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN!!!!
+        // INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN
         if (!tabsObj[tabId][index]) {
           sendToHierarchy(tabsObj[tabId], new Node(request.payload, tabsObj[tabId]));
         }

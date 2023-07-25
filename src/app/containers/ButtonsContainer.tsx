@@ -13,29 +13,49 @@ import { useStoreContext } from '../store';
 
 import Tutorial from '../components/Tutorial';
 
+// function exportHandler takes in a parameter snapshots which is typed as an array
+// the function does not return anything so the type is void
 function exportHandler(snapshots: []): void {
   // create invisible download anchor link
+  // fileDownload is typed as HTMLAnchorElement
+  // HTML anchor element has the <a></a> tag
   const fileDownload: HTMLAnchorElement = document.createElement('a');
 
   // set file in anchor link
+  // href is the reference to the URL object created from the Blob
   fileDownload.href = URL.createObjectURL(
+    // Blob obj is raw data, json is raw, stringify the snapshots as json so the Blob can access the raw data
     new Blob([JSON.stringify(snapshots)], { type: 'application/json' }),
   );
 
   // set anchor as file download and click it
+  // anchor element has a download attribute
+  // snapshot.json is what the file name will be once the file is downloaded locally
   fileDownload.setAttribute('download', 'snapshot.json');
+  // click is a method on all HTML elements
+  // simulates a mouse click, triggering the element's click event
   fileDownload.click();
 
   // remove file url
+  // after file is downloaded, remove the href
   URL.revokeObjectURL(fileDownload.href);
 }
 
 function importHandler(dispatch: (a: unknown) => void): void {
+  // create input element
+  // fileUpload is HTMLInputElement, which is an interface for HTML input elements
+  // accepts data from user
   const fileUpload = document.createElement('input');
+  // file is a type attribute on the input element, allows users to select a file
   console.log('fileUpload element:', fileUpload)
   fileUpload.setAttribute('type', 'file');
 
+  // onChange is when value of HTML element is changed
+  // parameter for onChange is an event
   fileUpload.onchange = (e: Event) => {
+    // FileReader is an object
+    // reads contents of local files in async
+    // can use file or blob objects
     const reader = new FileReader();
     console.log('on change triggered')
     //console.log('reader :', reader);
@@ -49,8 +69,14 @@ function importHandler(dispatch: (a: unknown) => void): void {
     }
 
     reader.onload = () => {
+      // once the local file has been loaded, result property on FileReader object returns the file's contents
+      // then take contents and convert to a string
       console.log('on load triggered:')
       const test = reader.result.toString();
+      // dispatch sends the result of calling importSnapshots on the json parsed data from the file contents from the new FileReader object
+      // importSnapshots defined in actions/actions.ts/line 71, it returns an action object with a type and payload, payload is newSnaps parameter
+      // dispatch function is being called with that action object which gets sent to the reducer in reducers/mainReducer.js/line 203
+      // this updates the current tab
       return dispatch(importSnapshots(JSON.parse(test)));
     };
     // const eventFiles = e.target as HTMLInputElement;

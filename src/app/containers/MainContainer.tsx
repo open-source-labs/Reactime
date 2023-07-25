@@ -17,32 +17,42 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 
+/*
+  This is the main container where everything in our application is rendered
+*/
+
 function MainContainer(): JSX.Element {
-  const [store, dispatch] = useStoreContext();
-  const { tabs, currentTab, port } = store;
-  const [actionView, setActionView] = useState(true);
+  
+  const [store, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (store/dispatch) are from the useReducer function invocation in the App component
+  
+  const { tabs, currentTab, port } = store; // we continue to destructure 'store' and get the tabs/currentTab/port
+  
+  const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
+
   // this function handles Time Jump sidebar view
   const toggleActionContainer = () => {
-    setActionView(!actionView);
-    // aside is like an added text that appears "on the side" aside some text.
-    const toggleElem = document.querySelector('aside');
-    toggleElem.classList.toggle('no-aside');
-    // hides the record toggle button from Actions Container in Time Jump sidebar view
+    setActionView(!actionView); // sets actionView to the opposite boolean value
+
+    const toggleElem = document.querySelector('aside'); // aside is like an added text that appears "on the side" aside some text.
+    toggleElem.classList.toggle('no-aside'); // toggles the addition or the removal of the 'no-aside' class
+
     const recordBtn = document.getElementById('recordBtn');
-    if (recordBtn.style.display === 'none') {
+
+    if (recordBtn.style.display === 'none') { // switches whether to display the record toggle button by changing the display property between none and flex
       recordBtn.style.display = 'flex';
     } else {
       recordBtn.style.display = 'none';
     }
   };
+  
   // let port;
   useEffect(() => {
-    // only open port once
-    if (port) return;
+    if (port) return; // only open port once so if it exists, do not run useEffect again
 
-    // open long-lived connection with background script
-    const currentPort = chrome.runtime.connect();
-    // listen for a message containing snapshots from the background script
+    // chrome.runtime allows our application to retrieve our service worker (our eventual bundles/background.bundle.js after running npm run build), details about the manifest, and allows us to listen and respond to events in our application lifecycle.
+    const currentPort = chrome.runtime.connect(); // we connect to our service worker
+
+    // listen for a message containing snapshots from the /extension/build/background.js service worker
     currentPort.onMessage.addListener(
       // parameter message is an object with following type script properties
       (message: { 
@@ -52,11 +62,14 @@ function MainContainer(): JSX.Element {
       }) => {
         const { action, payload, sourceTab } = message;
         let maxTab: number;
-        if (!sourceTab) {
-          const tabsArray: Array<string> = Object.keys(payload);
-          const numTabsArray: number[] = tabsArray.map((tab) => Number(tab));
-          maxTab = Math.max(...numTabsArray);
+
+        if (!sourceTab) { // if the sourceTab doesn't exist or is 0
+          const tabsArray: Array<string> = Object.keys(payload); // we create a tabsArray of strings composed of keys from our payload object
+          const numTabsArray: number[] = tabsArray.map((tab) => Number(tab)); // we then map out our tabsArray where we convert each string into a number
+        
+          maxTab = Math.max(...numTabsArray); // we then get the largest tab number value
         }
+
         switch (action) {
           case 'deleteTab': {
             dispatch(deleteTab(payload));
@@ -86,17 +99,15 @@ function MainContainer(): JSX.Element {
           }
           default:
         }
-        return true;
+        return true; // we return true so that the connection stays open, otherwise the message channel will close
       },
     );
 
-    currentPort.onDisconnect.addListener(() => {
-      console.log('this port is disconnecting line 79');
-      // disconnecting
+    currentPort.onDisconnect.addListener(() => { // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
+      console.log('this port is disconnecting line 53');
     });
 
-    // assign port to state so it could be used by other components
-    dispatch(setPort(currentPort));
+    dispatch(setPort(currentPort)); // assign port to state so it could be used by other components
   });
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
@@ -108,10 +119,9 @@ function MainContainer(): JSX.Element {
     return <ErrorContainer />;
   }
 
-  const { currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =
-    tabs[currentTab];
-  // if viewIndex is -1, then use the sliderIndex instead
-  const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex];
+  const { currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } = tabs[currentTab]; // we destructure the currentTab object
+  const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex]; // if viewIndex is -1, then use the sliderIndex instead
+
   // cleaning hierarchy and snapshotView from stateless data
   const statelessCleaning = (obj: {
     name?: string;
