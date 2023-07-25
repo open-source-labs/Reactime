@@ -10,6 +10,11 @@ import { useStoreContext } from '../store';
 import RouteDescription from '../components/RouteDescription';
 import { Obj } from '../FrontendTypes';
 
+/*
+  This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
+*/
+
+// resetSlider locates the rc-slider elements on the document and resets it's style attributes
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
   const sliderTrack = document.querySelector('.rc-slider-track');
@@ -19,24 +24,40 @@ const resetSlider = () => {
   }
 };
 
-function ActionContainer(props): JSX.Element {
-  const [{ tabs, currentTab, port }, dispatch] = useStoreContext();
-  const { currLocation, hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
-  const { toggleActionContainer, actionView, setActionView } = props;
-  const [recordingActions, setRecordingActions] = useState(true);
 
-  let actionsArr: JSX.Element[] = [];
+function ActionContainer(props): JSX.Element {
+  const [{ tabs, currentTab, port }, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
+  const { currLocation, hierarchy, sliderIndex, viewIndex } = tabs[currentTab]; // we destructure the currentTab object
+  const { toggleActionContainer, actionView, setActionView } = props; // we destructure our props object
+  const [recordingActions, setRecordingActions] = useState(true); // We create a local state 'recordingActions' and set it to true
+  let actionsArr: JSX.Element[] = []; // we create an array 'actionsArr' that will hold elements we create later on
+  // we create an array 'hierarchyArr' that will hold objects and numbers
   const hierarchyArr: (number | {})[] = [];
 
-  // function to traverse state from hierarchy and also getting information on display name and component name
+  /* 
+  function to traverse state from hierarchy and also getting information on display name and component name
+  
+  the obj parameter is an object with the following structure:
+    {
+      stateSnapshot: {
+        route: any;
+        children: any[];
+      };
+    name: number;
+    branch: number;
+    index: number;
+    children?: [];
+    }
+  */
+
   const displayArray = (obj: Obj): void => {
     if (
-      obj.stateSnapshot.children.length > 0 &&
-      obj.stateSnapshot.children[0] &&
-      obj.stateSnapshot.children[0].state &&
-      obj.stateSnapshot.children[0].name
+      obj.stateSnapshot.children.length > 0 && // if the 'stateSnapshot' has a non-empty 'children' array
+      obj.stateSnapshot.children[0] && // and there is an element
+      obj.stateSnapshot.children[0].state && // with a 'state'
+      obj.stateSnapshot.children[0].name // and a 'name'
     ) {
-      const newObj: Record<string, unknown> = {
+      const newObj: Record<string, unknown> = { // we create a new Record object (whose property keys are Keys and whose property values are Type. This utility can be used to map the properties of a type to another type) and populate it's properties with relevant values from our argument 'obj'.
         index: obj.index,
         displayName: `${obj.name}.${obj.branch}`,
         state: obj.stateSnapshot.children[0].state,
@@ -47,45 +68,46 @@ function ActionContainer(props): JSX.Element {
             ? ''
             : obj.stateSnapshot.children[0].componentData,
       };
-      hierarchyArr.push(newObj);
+      hierarchyArr.push(newObj); // we push our record object into 'hiearchyArr' defined on line 35
     }
-    if (obj.children) {
+
+    if (obj.children) {  // if argument has a 'children' array, we iterate through it and run 'displayArray' on each element
       obj.children.forEach((element): void => {
         displayArray(element);
       });
     }
   };
-  // the hierarchy gets set on the first click in the page
-  // when page in refreshed we may not have a hierarchy so we need to check if hierarchy was initialized
-  // if true invoke displayArray to display the hierarchy
-  if (hierarchy) displayArray(hierarchy);
 
-  // handles keyboard presses, function passes an event and index of each action-component
+  // the hierarchy gets set on the first click in the page
+  if (hierarchy) displayArray(hierarchy); // when page is refreshed we may not have a hierarchy so we need to check if hierarchy was initialized. If it was initialized, invoke displayArray to display the hierarchy
+
+  // This function allows us to use our arrow keys to jump between snapshots. It passes an event and the index of each action-component. Using the arrow keys allows us to highligh snapshots and the enter key jumps to the selected snapshot
   function handleOnKeyDown(e: KeyboardEvent, i: number): void {
     let currIndex = i;
-    // up arrow key pressed
-    if (e.key === 'ArrowUp') {
+    
+    if (e.key === 'ArrowUp') { // up arrow key pressed
       currIndex -= 1;
       if (currIndex < 0) return;
       dispatch(changeView(currIndex));
     }
-    // down arrow key pressed
-    else if (e.key === 'ArrowDown') {
+    
+    else if (e.key === 'ArrowDown') { // down arrow key pressed
       currIndex += 1;
       if (currIndex > hierarchyArr.length - 1) return;
       dispatch(changeView(currIndex));
     }
-    // enter key pressed
-    else if (e.key === 'Enter') {
-      e.stopPropagation();
+    
+    else if (e.key === 'Enter') { // enter key pressed
+      e.stopPropagation(); // prevents further propagation of the current event in the capturing and bubbling phases
       e.preventDefault(); // needed or will trigger onClick right after
       dispatch(changeSlider(currIndex));
     }
   }
-  // Sort by index.
 
+  // Sort hierarchyArr by index property of each object. This will be useful when later when we build our components so that our components will be displayed in index/chronological order
   hierarchyArr.sort((a:Obj, b:Obj):number => a.index - b.index);
 
+  // we create a map of components that are constructed from "hierarchyArr's" elements/snapshots
   actionsArr = hierarchyArr.map(
     (snapshot: {
       routePath: any;
@@ -95,9 +117,16 @@ function ActionContainer(props): JSX.Element {
       componentName: string;
       componentData: { actualDuration: number } | undefined;
     }) => {
-      const { index } = snapshot;
-      const selected = index === viewIndex;
-      const last = viewIndex === -1 && index === hierarchyArr.length - 1;
+      const { index } = snapshot; // destructure index from snapshot
+      const selected = index === viewIndex; // boolean on whether the current index is the same as the viewIndex
+      const last = viewIndex === -1 && index === hierarchyArr.length - 1; // boolean on whether the view index is less than 0 and if the index is the same as the last snapshot's index value in hierarchyArr
+
+      /*
+      ====================================================
+      // boolean 
+      // Not sure what currLocation is at this time
+      ====================================================
+      */
       const isCurrIndex = index === currLocation.index;
       return (
         <Action
@@ -121,6 +150,8 @@ function ActionContainer(props): JSX.Element {
   );
   useEffect(() => {
     setActionView(true);
+    // !!!! Why is the dependency array the function being called within the useEffect? !!!!
+    // may not call an infinite loop since it involves a setter function
   }, [setActionView]);
 
   // Function sends message to background.js which sends message to the content script
@@ -129,21 +160,20 @@ function ActionContainer(props): JSX.Element {
       action: 'toggleRecord',
       tabId: currentTab,
     });
-    // Record button's icon is being togggled on click
-    setRecordingActions(!recordingActions);
+    setRecordingActions(!recordingActions); // Record button's icon is being togggled on click
   };
 
-  // Logic to create the route description components
   type routes = {
     [route: string]: [];
   };
 
-  const routes: {} = {};
-  for (let i = 0; i < actionsArr.length; i += 1) {
+  const routes: {} = {}; // Logic to create the route description components begin
+  
+  for (let i = 0; i < actionsArr.length; i += 1) { // iterate through our actionsArr
     if (!routes.hasOwnProperty(actionsArr[i].props.routePath)) {
-      routes[actionsArr[i].props.routePath] = [actionsArr[i]];
-    } else {
-      routes[actionsArr[i].props.routePath].push(actionsArr[i]);
+      routes[actionsArr[i].props.routePath] = [actionsArr[i]]; // if 'routes' doesn't have a property key that is the same as the current component at index[i] routePath we create an array with the first element being the component at index [i]. 
+    } else { 
+      routes[actionsArr[i].props.routePath].push(actionsArr[i]); // If it does exist, we push the component at index [i] to the apporpriate routes[routePath]
     }
   }
 

@@ -7,6 +7,10 @@ import ReactHover, { Trigger, Hover } from 'react-hover';
 import { changeView, changeSlider } from '../actions/actions';
 import { ActionProps, OptionsCursorTrueWithMargin } from '../FrontendTypes';
 
+/*
+  This render's the individual snapshot components on the left side column
+*/
+
 /**
  * @function Action
  * @param selected : The selected action in the array of state changes
@@ -21,9 +25,9 @@ import { ActionProps, OptionsCursorTrueWithMargin } from '../FrontendTypes';
  * @method handleOnkeyDown Executes key commands
  *
  */
-// index and delta props were removed from Action.jsx  */
-// viewIndex and handleonkeyDown added to props
+
 const Action = (props: ActionProps): JSX.Element => {
+  // We destructure the 'props' that were passed into this component
   const {
     selected,
     last,
@@ -41,34 +45,61 @@ const Action = (props: ActionProps): JSX.Element => {
    * @function cleanTime: Displays render times for state changes
    * @returns render display time in seconds in milliseconds
    */
-    const cleanTime = (): string => {
+
+
+  const cleanTime = (): string => {
+    // if there is no 'componentData' or 'componentData.actualDuration' return "NO TIME"
     if (!componentData || !componentData.actualDuration) {
       return 'NO TIME';
     }
+
+    // seconds is undefined but can take a number or a string
     let seconds: number | string;
+    // milliseconds is of any type and taken from the 'componentData.actualDuration'
     let milliseconds: any = componentData.actualDuration;
+
+    // if the milliseconds is greater than 60
     if (Math.floor(componentData.actualDuration) > 60) {
+      // we divide our milliseconds by 60 to determine our seconds
       seconds = Math.floor(componentData.actualDuration / 60);
+      // and we convert our seconds into a string
       seconds = JSON.stringify(seconds);
+      // if the seconds string is only a single digit
       if (seconds.length < 2) {
+        // we can add a 0 in front of it so that if 'seconds = "1"' it will come out as 'seconds = "01"'
         seconds = '0'.concat(seconds);
       }
+      // Our true milliseconds then becomes the remainder of dividing our initial milliseconds by 60
       milliseconds = Math.floor(componentData.actualDuration % 60);
     } else {
+      // if we haven't even reached one second yet, our seconds are 00
       seconds = '00';
     }
+
+    // we convert our milliseconds string into a floating point number that has up to two decimal places.
     milliseconds = Number.parseFloat(milliseconds as string).toFixed(2);
+
+    // we split our milliseconds using the decimal and come out with an array of two numbers
     const arrayMilliseconds: string | number = milliseconds.split('.');
+
+    // if our millisecond string only has one digit
     if (arrayMilliseconds[0].length < 2) {
+      // we add a 0 in front of it so that in the a sample number of '1' becomes '01'
       arrayMilliseconds[0] = '0'.concat(arrayMilliseconds[0]);
     }
+    // if this is the initial snapshot
     if (index === 0) {
+      // we give it a timestamp
       return `${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`;
     }
+    // if these are succeeding snapshots, we add a '+' to the timestamp
     return `+${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`;
   };
+
+  // we run cleanTime on the creation of this component so that we can get the timestamp
   const displayTime: string = cleanTime();
 
+  // creates an options object that 'ReactHover' component will use to modify it's behaviour
   const optionsCursorTrueWithMargin: OptionsCursorTrueWithMargin = {
     followCursor: true,
     shiftX: 20,
