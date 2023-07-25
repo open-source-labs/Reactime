@@ -2,7 +2,7 @@ import React from 'react';
 import { diff, formatters } from 'jsondiffpatch';
 import ReactHtmlParser from 'react-html-parser';
 import { useStoreContext } from '../store';
-import { DiffProps, StatelessCleanning } from '../FrontendTypes';
+import { DiffProps, StatelessCleaning } from '../FrontendTypes';
 
 /**
  * Displays tree showing specific two versions of tree
@@ -26,7 +26,7 @@ function Diff(props: DiffProps): JSX.Element {
   }
 
   // cleaning preview from stateless data
-  const statelessCleanning = (obj: StatelessCleanning) => {
+  const statelessCleaning = (obj: StatelessCleaning) => {
     const newObj = { ...obj };
     if (newObj.name === 'nameless') {
       delete newObj.name;
@@ -38,7 +38,7 @@ function Diff(props: DiffProps): JSX.Element {
       delete newObj.state;
     }
     if (newObj.stateSnaphot) {
-      newObj.stateSnaphot = statelessCleanning(obj.stateSnaphot);
+      newObj.stateSnaphot = statelessCleaning(obj.stateSnaphot);
     }
     if (newObj.children) {
       newObj.children = [];
@@ -46,7 +46,7 @@ function Diff(props: DiffProps): JSX.Element {
         obj.children.forEach(
           (element: { state?: Record<string, unknown> | string; children?: [] }) => {
             if (element.state !== 'stateless' || element.children.length > 0) {
-              const clean = statelessCleanning(element);
+              const clean = statelessCleaning(element);
               newObj.children.push(clean);
             }
           },
@@ -57,20 +57,21 @@ function Diff(props: DiffProps): JSX.Element {
   };
 
   // displays stateful data
-  const previousDisplay: StatelessCleanning = statelessCleanning(previous);
+  const previousDisplay: StatelessCleaning = statelessCleaning(previous);
   // diff function returns a comparison of two objects, one has an updated change
   // just displays stateful data
-  const delta: StatelessCleanning = diff(previousDisplay, snapshot);
+  const delta: StatelessCleaning = diff(previousDisplay, snapshot);
   // returns html in string
   // just displays stateful data
-  const html: StatelessCleanning = formatters.html.format(delta, previousDisplay);
+  const html: StatelessCleaning = formatters.html.format(delta, previousDisplay);
   if (show) formatters.html.showUnchanged();
   else formatters.html.hideUnchanged();
   if (previous === undefined || delta === undefined) {
     return (
       <div className='no-data-message'>
         {' '}
-        Make state changes and click on a Snapshot to see the difference between that snapshot and the previous one.{' '}
+        Make state changes and click on a Snapshot to see the difference between that snapshot and
+        the previous one.{' '}
       </div>
     );
   }
