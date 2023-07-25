@@ -1,7 +1,7 @@
 // @ts-nocheck
 /// <reference lib="dom" />
 /* eslint-disable no-param-reassign */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BarStack } from '@visx/shape';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
@@ -10,7 +10,12 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeTableau10 } from 'd3-scale-chromatic';
-
+import { styled } from '@mui/system';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import { useTheme } from '@mui/material/styles';
+import { Button } from '@mui/material';
 import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 import {
@@ -45,9 +50,13 @@ const tooltipStyles = {
 const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { width, height, data, comparison, setSeries, series, setAction } = props;
-  const [snapshots] = React.useState(0);
-  const [open, setOpen] = React.useState(false);
-  const [picOpen, setPicOpen] = React.useState(false);
+  const [snapshots] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [picOpen, setPicOpen] = useState(false);
+  //tracking whether or not the clear series button is clicked
+  const [buttonLoad, setButtonLoad] = useState(false);
+
+  const theme = useTheme();
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance-comparison'));
   }, [dispatch]);
@@ -197,22 +206,22 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     return data.barStack;
   }
 
-  const animateButton = (e: MouseEvent) => {
-    e.preventDefault();
-    const target = e.target as HTMLButtonElement;
-    if (target) {
-      target.classList.add('animate');
-      target.innerHTML = 'Deleted!';
-      setTimeout(() => {
-        target.innerHTML = 'Clear All Series';
-        target.classList.remove('animate');
-      }, 1000);
-    }
-  };
-  const classname = document.getElementsByClassName('delete-button');
-  for (let i = 0; i < classname.length; i += 1) {
-    classname[i].addEventListener('click', animateButton, false);
-  }
+  // const animateButton = (e: MouseEvent) => {
+  //   e.preventDefault();
+  //   const target = e.target as HTMLButtonElement;
+  //   if (target) {
+  //     target.classList.add('animate');
+  //     target.innerHTML = 'Deleted!';
+  //     setTimeout(() => {
+  //       target.innerHTML = 'Clear All Series';
+  //       target.classList.remove('animate');
+  //     }, 1000);
+  //   }
+  // };
+  // const classname = document.getElementsByClassName('delete-button');
+  // for (let i = 0; i < classname.length; i += 1) {
+  //   classname[i].addEventListener('click', animateButton, false);
+  // }
   const seriesList: ActionObj[][] = comparison.map((action: Series) => action.data.barStack);
   const actionsList: ActionObj[] = seriesList.flat();
   const testList: string[] = actionsList.map((elem: ActionObj) => elem.name);
@@ -226,19 +235,34 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     <div>
       <div className='series-options-container'>
         <div className='dropdown-and-delete-series-container'>
-          <button
-            type='button'
+          <Button
+            variant='contained'
+            // type='button'
             className='delete-button'
             onClick={() => {
+              setButtonLoad(true);
               dispatch(deleteSeries());
+
+              setTimeout(() => {
+                setButtonLoad(false);
+              }, 1000);
             }}
+            style={
+              buttonLoad
+                ? { backgroundColor: theme.palette.primary.main }
+                : { backgroundColor: '#f21861' }
+            }
           >
-            Clear All Series
-          </button>
+            {buttonLoad ? 'Deleted' : 'Clear Series'}
+          </Button>
           <h4 className='compare-series-box' style={{ padding: '0 1rem' }}>
             Compare Series:{' '}
           </h4>
-          <StyledFormControl id='selectSeries' variant='outlined'>
+          <StyledFormControl
+            id='selectSeries'
+            variant='outlined'
+            sx={{ backgroundColor: 'secondary.main' }}
+          >
             <StyledSelect
               style={{ color: 'white' }}
               labelId='simple-select-outlined-label'
