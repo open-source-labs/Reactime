@@ -81,7 +81,7 @@ function ButtonsContainer(): JSX.Element {
         {paused ? <FontAwesomeIcon icon={faLock} /> : <FontAwesomeIcon icon={faUnlock} />}
         {paused ? 'Locked' : 'Unlocked'}
       </button>
-      <button className='export-button' type='button' onClick={() => exportHandler(snapshots)}>
+      <button className='export-button' type='button' onClick={() => exportHandler(tabs[currentTab])}>
         <FontAwesomeIcon icon={faDownload} />
         Download
       </button>

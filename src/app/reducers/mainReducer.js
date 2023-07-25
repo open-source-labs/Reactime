@@ -185,21 +185,28 @@ export default (state, action) =>
         break;
       }
       case types.EMPTY: {
-        // send msg to background script
         console.log('-----clear snapshots reducer----')
         console.log('state before:', state.tabs[currentTab])
 
-        port.postMessage({ action: 'emptySnap', tabId: currentTab });
+        // send msg to background script
+        port.postMessage({ action: 'emptySnap', tabId: currentTab }); //communicate with background.js
+
+        // properties associated with timetravel + seek bar
         tabs[currentTab].sliderIndex = 0;
         tabs[currentTab].viewIndex = 0;
         tabs[currentTab].playing = false;
-        const lastSnapshot = tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1];
+
+        const lastSnapshot = tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1]; // first snapshot?
+
         // resets hierarchy to page last state recorded
         tabs[currentTab].hierarchy.stateSnapshot = { ...lastSnapshot };
+
         // resets hierarchy
         tabs[currentTab].hierarchy.children = [];
+
         // resets snapshots to page last state recorded
         tabs[currentTab].snapshots = [lastSnapshot];
+
         // resets currLocation to page last state recorded
         tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
         tabs[currentTab].index = 1;
@@ -216,16 +223,40 @@ export default (state, action) =>
           // Log the value of tabs[currentTab].snapshots before the update
         console.log('-----import snapshots reducer----')
         console.log('state before:', state.tabs[currentTab])
-        
+        console.log('action payload:', action.payload)
 
         port.postMessage({
           action: 'import',
-          payload: action.payload,
+          payload: action.payload, //.snapshots,
           tabId: currentTab,
         });
+
+        //============
+        const savedSnapshot = action.payload;
+
+        tabs[currentTab].sliderIndex = savedSnapshot.sliderIndex;
+        tabs[currentTab].viewIndex = savedSnapshot.viewIndex;
+        tabs[currentTab].playing = false;
+
+        // resets hierarchy to page last state recorded
+        tabs[currentTab].hierarchy.stateSnapshot = savedSnapshot.hierarchy.stateSnapshot;
+
+        // resets hierarchy
+        tabs[currentTab].hierarchy.children = savedSnapshot.hierarchy.children;
+
+        // resets snapshots to page last state recorded
+        tabs[currentTab].snapshots = savedSnapshot.snapshots;
+
+        // resets currLocation to page last state recorded
+        tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+        tabs[currentTab].index = savedSnapshot.index;
+        tabs[currentTab].currParent = savedSnapshot.currParent;
+        tabs[currentTab].currBranch = savedSnapshot.Branch;
+        tabs[currentTab].seriesSavedStatus = false;
+
       
-    
-        tabs[currentTab].snapshots = action.payload;
+        //============
+        //tabs[currentTab].snapshots = action.payload.snapshots;
         
 
 
