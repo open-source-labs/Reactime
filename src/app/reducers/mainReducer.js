@@ -1,12 +1,20 @@
 import { produce } from 'immer';
 import _, { values } from 'lodash';
 import * as types from '../constants/actionTypes.ts';
+import { current } from 'immer';
 
 export default (state, action) =>
   produce(state, (draft) => {
     const { port, currentTab, tabs } = draft;
     const { hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex } =
       tabs[currentTab] || {};
+
+    // console.log('----consoles before reducer funcs!-----')
+    // console.log('state:', state)
+    //console.log(tabs[currentTab]);
+    //console.log('properties of tabs[currentTab]:', hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex)
+
+      //console.log('reducer file!', 'hierarchy:', hierarchy, 'tabs:', tabs)
 
     // eslint-disable-next-line max-len
     // function that finds the index in the hierarchy and extracts the name of the equivalent index to add to the post message
@@ -36,6 +44,7 @@ export default (state, action) =>
     switch (action.type) {
       // This saves the series user wants to save to chrome local storage
       case types.SAVE: {
+        console.log('save action reducer!', 'payload:', action.payload)
         const { newSeries, newSeriesName } = action.payload;
         if (!tabs[currentTab].seriesSavedStatus) {
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
@@ -177,6 +186,9 @@ export default (state, action) =>
       }
       case types.EMPTY: {
         // send msg to background script
+        console.log('-----clear snapshots reducer----')
+        console.log('state before:', state.tabs[currentTab])
+
         port.postMessage({ action: 'emptySnap', tabId: currentTab });
         tabs[currentTab].sliderIndex = 0;
         tabs[currentTab].viewIndex = 0;
@@ -201,12 +213,26 @@ export default (state, action) =>
         break;
       }
       case types.IMPORT: {
+          // Log the value of tabs[currentTab].snapshots before the update
+        console.log('-----import snapshots reducer----')
+        console.log('state before:', state.tabs[currentTab])
+        
+
         port.postMessage({
           action: 'import',
           payload: action.payload,
           tabId: currentTab,
         });
+      
+    
         tabs[currentTab].snapshots = action.payload;
+        
+
+
+        // console.log('New snapshots:', action.payload);
+        // console.log('updated tabs[CurrentTab].snapshots:', tabs[currentTab].snapshots)
+        //console.log('state after:', state)
+
         break;
       }
       case types.TOGGLE_MODE: {

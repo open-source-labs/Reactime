@@ -32,24 +32,38 @@ function exportHandler(snapshots: []): void {
 
 function importHandler(dispatch: (a: unknown) => void): void {
   const fileUpload = document.createElement('input');
+  console.log('fileUpload element:', fileUpload)
   fileUpload.setAttribute('type', 'file');
 
   fileUpload.onchange = (e: Event) => {
     const reader = new FileReader();
+    console.log('on change triggered')
+    //console.log('reader :', reader);
+
+    const eventFiles = e.target as HTMLInputElement;
+    // console.log('e.target:', e.target)
+    // console.log('event files:', eventFiles.files[0]);
+   
+    if (eventFiles) {
+      reader.readAsText(eventFiles.files[0]);
+    }
+
     reader.onload = () => {
+      console.log('on load triggered:')
       const test = reader.result.toString();
       return dispatch(importSnapshots(JSON.parse(test)));
     };
-    const eventFiles = e.target as HTMLInputElement;
-    if (eventFiles?.hasOwnProperty('files')) {
-      // const eventFiles = target as HTMLInputElement;
-      if (eventFiles) {
-        reader.readAsText(eventFiles.files[0]);
-      }
-    }
+    // const eventFiles = e.target as HTMLInputElement;
+    // if (eventFiles?.hasOwnProperty('files')) {
+    //   // const eventFiles = target as HTMLInputElement;
+    //   if (eventFiles) {
+    //     reader.readAsText(eventFiles.files[0]);
+    //   }
+    // }
   };
 
   fileUpload.click();
+  //console.log('dispatch importSnapshots successful')
 }
 
 function ButtonsContainer(): JSX.Element {
@@ -58,6 +72,8 @@ function ButtonsContainer(): JSX.Element {
     snapshots,
     mode: { paused },
   } = tabs[currentTab];
+
+  console.log('----state after any change----', tabs[currentTab])
 
   return (
     <div className='buttons-container'>

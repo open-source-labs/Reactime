@@ -45,7 +45,11 @@ function MainContainer(): JSX.Element {
     // listen for a message containing snapshots from the background script
     currentPort.onMessage.addListener(
       // parameter message is an object with following type script properties
-      (message: { action: string; payload: Record<string, unknown>; sourceTab: number }) => {
+      (message: { 
+        action: string; 
+        payload: Record<string, unknown>; 
+        sourceTab: number 
+      }) => {
         const { action, payload, sourceTab } = message;
         let maxTab: number;
         if (!sourceTab) {
