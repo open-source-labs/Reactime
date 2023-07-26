@@ -237,6 +237,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
         <div className='dropdown-and-delete-series-container'>
           <Button
             variant='contained'
+            sx={{ p: 1 }}
             // type='button'
             className='delete-button'
             onClick={() => {

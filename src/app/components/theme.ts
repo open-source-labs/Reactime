@@ -13,7 +13,7 @@ const theme = createTheme({
         root: {
           // Some CSS
           fontSize: '0.8rem',
-          letterSpacing: '0.2rem',
+          letterSpacing: '0.1rem',
           lineHeight: '0.8rem',
         },
       },
