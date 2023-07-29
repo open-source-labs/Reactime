@@ -161,6 +161,11 @@ chrome.runtime.onConnect.addListener((port) => {
  
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
 
+  console.log('console logging port on initial connection')
+  console.log(port)
+  console.log('console logging portArray on initial connection')
+  console.log(portsArr)
+
   // On Reactime launch: make sure RT's active tab is correct
   if (portsArr.length > 0) {
     portsArr.forEach((bg) => // go through each port object (each Reactime instance)
