@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 import _, { values } from 'lodash';
 import * as types from '../constants/actionTypes.ts';
-import { current } from 'immer';
+// import { current } from 'immer';
 
 export default (state, action) =>
   produce(state, (draft) => {
