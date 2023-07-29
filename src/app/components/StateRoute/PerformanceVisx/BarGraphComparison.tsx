@@ -152,9 +152,9 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     minWidth: 80,
     fontSize: '.75rem',
     fontWeight: 200,
-    border: '1px solid grey',
-    borderRadius: 4,
-    color: 'grey',
+    // border: '1px solid grey',
+    // borderRadius: 4,
+    // color: 'grey',
     height: 30,
   });
 
@@ -262,7 +262,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           <StyledFormControl
             id='selectSeries'
             variant='outlined'
-            sx={{ backgroundColor: 'secondary.main' }}
+            sx={{ backgroundColor: theme.palette.primary.main }}
           >
             <StyledSelect
               style={{ color: 'white' }}

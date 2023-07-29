@@ -4,9 +4,13 @@ const theme = createTheme({
     primary: {
       main: '#556cd4',
     },
+    secondary: {
+      main: '#32a852',
+    },
   },
   components: {
     // Name of the component
+
     MuiButton: {
       styleOverrides: {
         // Name of the slot
@@ -18,6 +22,13 @@ const theme = createTheme({
         },
       },
     },
+    // MuiSelect: {
+    //   styleOverrides: {
+    //     root: {
+    //       main: '#556cd4',
+    //     },
+    //   },
+    // },
   },
 });
 
