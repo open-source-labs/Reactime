@@ -16,19 +16,27 @@ import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetrics from '../WebMetrics';
 import { StateRouteProps } from '../../FrontendTypes'
 
+/*
+  Loads the appropriate StateRoute view and renders the Map, Performance, History, Webmetrics, and Tree navbar buttons after clicking on the 'State' button located near the top rightmost corner.
+*/
+
 const History = require('./History').default;
-
-const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
-
+const NO_STATE_MSG = 'No state change detected. Trigger an event to change state'; // message to be returned if there has been no state change detected in our hooked/target app
 
 const StateRoute = (props: StateRouteProps) => {
-  const { snapshot, hierarchy, snapshots, viewIndex, webMetrics, currLocation } = props;
+  const { 
+    snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
+    hierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
+    snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
+    viewIndex, // from 'tabs[currentTab]' object in 'MainContainer'
+    webMetrics, // from 'tabs[currentTab]' object in 'MainContainer'
+    currLocation // from 'tabs[currentTab]' object in 'MainContainer'
+  } = props;
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
 
-  // Map
   const renderComponentMap = () => {
-    if (hierarchy) {
+    if (hierarchy) { // if hierarchy was initialized/created render the Map
       return (
         <ParentSize className='componentMapContainer'>
           {({ width, height }) => (
@@ -42,16 +50,11 @@ const StateRoute = (props: StateRouteProps) => {
         </ParentSize>
       );
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className='noState'>{NO_STATE_MSG}</div>; // otherwise, inform the user that there has been no state change in the target/hooked application.
   };
 
-  // the hierarchy gets set upon the first click on the page
-  // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
-  // if true, we invoke the D3 render chart with hierarchy
-  // by invoking History component, and passing in all the props required to render D3 elements and perform timeJump from clicking of node
-  // otherwise we send an alert to the user that no state was found.
   const renderHistory:JSX.Element = () => {
-    if (hierarchy) {
+    if (hierarchy) { // if hierarchy was initialized/created render the history
       return (
         <ParentSize>
           {({ width, height }) => (
@@ -69,17 +72,14 @@ const StateRoute = (props: StateRouteProps) => {
         </ParentSize>
       );
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className='noState'>{NO_STATE_MSG}</div>; // otherwise, inform the user that there has been no state change in the target/hooked application.
   };
 
-  // the hierarchy gets set on the first click in the page
-  // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
-  // if true invoke render Tree with snapshot
   const renderTree = () => {
-    if (hierarchy) {
+    if (hierarchy) { // if a hierarchy has been created/initialized, render the appropriate tree based on the active snapshot
       return <Tree snapshot={snapshot} snapshots={snapshots} currLocation={currLocation} />;
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className='noState'>{NO_STATE_MSG}</div>; // otherwise, inform the user that there has been no state change in the target/hooked application.
   };
   const renderWebMetrics = () => {
     let LCPColor: String;
@@ -87,6 +87,7 @@ const StateRoute = (props: StateRouteProps) => {
     let FCPColor: String;
     let TTFBColor: String;
 
+    // adjust the strings that represent colors of the webmetrics performance bar for 'Largest Contentful Paint (LCP)', 'First Input Delay (FID)', 'First Contentfuly Paint (FCP)', and 'Time to First Byte (TTFB)' based on webMetrics outputs. 
     if (webMetrics.LCP <= 2000) LCPColor = '#0bce6b';
     if (webMetrics.LCP > 2000 && webMetrics.LCP < 4000) LCPColor = '#E56543';
     if (webMetrics.LCP > 4000) LCPColor = '#fc2000';
@@ -140,7 +141,7 @@ const StateRoute = (props: StateRouteProps) => {
   };
 
   const renderPerfView = () => {
-    if (hierarchy) {
+    if (hierarchy) { // if hierarchy was initialized/created render the PerformanceVisx
       return (
         <ParentSize>
           {({ width, height }) => (
@@ -156,7 +157,7 @@ const StateRoute = (props: StateRouteProps) => {
         </ParentSize>
       );
     }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
+    return <div className='noState'>{NO_STATE_MSG}</div>; // otherwise, inform the user that there has been no state change in the target/hooked application.
   };
 
   return (

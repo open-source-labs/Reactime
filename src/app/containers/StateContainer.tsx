@@ -11,12 +11,12 @@ import { StateContainerProps } from '../FrontendTypes';
 // eslint-disable-next-line react/prop-types
 const StateContainer = (props: StateContainerProps): JSX.Element => {
   const { 
-    snapshot, // from 'tabs[currentTab]' object from 'MainContainer'
-    hierarchy, // from 'tabs[currentTab]' object from 'MainContainer'
-    snapshots, // from 'tabs[currentTab].snapshotDisplay' object from 'MainContainer'
-    viewIndex, // from 'tabs[currentTab]' object from 'MainContainer'
-    webMetrics, // from 'tabs[currentTab]' object from 'MainContainer'
-    currLocation // from 'tabs[currentTab]' object from 'MainContainer'
+    snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
+    hierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
+    snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
+    viewIndex, // from 'tabs[currentTab]' object in 'MainContainer'
+    webMetrics, // from 'tabs[currentTab]' object in 'MainContainer'
+    currLocation // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
 
   return (

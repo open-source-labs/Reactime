@@ -5,44 +5,62 @@ import { useStoreContext } from '../store';
 import { DiffProps, StatelessCleaning } from '../FrontendTypes';
 
 /**
- * Displays tree showing specific two versions of tree
+ * Displays tree showing two specific versions of tree:
  * one with specific state changes, the other the whole tree
  * @param props props from maincontainer
  * @returns a diff tree or a string stating no state changes have happened
  */
+
 function Diff(props: DiffProps): JSX.Element {
-  const { snapshot, show } = props;
-  const [mainState] = useStoreContext();
-  const { currentTab, tabs } = mainState; // k/v pairs of mainstate store object being created
+  const { 
+    snapshot, // snapshot from 'tabs[currentTab]' object in 'MainContainer'
+    show // boolean that is dependent on the 'Route' path
+  } = props;
+  const [mainState] = useStoreContext(); // useStoreContext() returns our global state object (which was initialized as 'initialState' in 'App.tsx')
+  const { currentTab, tabs } = mainState; // 'currentTab' (type: number) and 'tabs' (type: object) are destructured from 'mainState'
   const { snapshots, viewIndex, sliderIndex } = tabs[currentTab];
-  let previous: unknown;
 
-  // previous follows viewIndex or sliderIndex
-  if (viewIndex !== -1) {
-    // if tab isnt selected, view index is set to -1
-    previous = snapshots[viewIndex - 1];
+  let previous: unknown// = (viewIndex !== -1) ? snapshots[viewIndex - 1] : previous = snapshots[sliderIndex - 1]
+
+  if (viewIndex !== -1) { // snapshots should not have any property < 0. A viewIndex of '-1' means that we had a snapshot index that occurred before the initial snapshot of the application state... which is impossible. '-1' therefore means reset to the last/most recent snapshot.
+    previous = snapshots[viewIndex - 1]; // set previous to the snapshot that is before the one we are currently viewing
   } else {
-    previous = snapshots[sliderIndex - 1];
+    previous = snapshots[sliderIndex - 1]; // if viewIndex was an impossible index, we will get our snapshots index using 'sliderIndex.' sliderIndex should have already been reset to the latest snapshot index. Previous is then set to the snapshot that occurred immediately before our most recent snapshot.
   }
+ 
+  /*
+    State snapshot objects have the following structure: 
+    {
+      children: array of objects
+      componentData: object
+      isExpanded: Boolean
+      name: string
+      route: object
+      state: string
+    }
 
-  // cleaning preview from stateless data
+     // cleaning preview from stateless data
+  */
   const statelessCleaning = (obj: StatelessCleaning) => {
-    const newObj = { ...obj };
-    if (newObj.name === 'nameless') {
-      delete newObj.name;
+    const newObj = { ...obj }; // duplicate our input object into a new object
+
+    if (newObj.name === 'nameless') { // if our new object's name is nameless
+      delete newObj.name; // delete the name property
     }
-    if (newObj.componentData) {
-      delete newObj.componentData;
+    if (newObj.componentData) { // if our new object has a componentData property
+      delete newObj.componentData; // delete the componentData property
     }
-    if (newObj.state === 'stateless') {
-      delete newObj.state;
+    if (newObj.state === 'stateless') { // if if our new object's state is stateless
+      delete newObj.state; // delete the state property
     }
-    if (newObj.stateSnaphot) {
-      newObj.stateSnaphot = statelessCleaning(obj.stateSnaphot);
+
+    if (newObj.stateSnaphot) { // if our new object has a stateSnaphot property
+      newObj.stateSnaphot = statelessCleaning(obj.stateSnaphot); // run statelessCleaning on the stateSnapshot
     }
-    if (newObj.children) {
+    
+    if (newObj.children) { // if our new object has a children property
       newObj.children = [];
-      if (obj.children.length > 0) {
+      if (obj.children.length > 0) { // and if our input object's children property is non-empty, go through each children object and determine objects that need to be cleaned through statelessCleaning. Those that are cleaned through this process are then pushed to the new object's children array.
         obj.children.forEach(
           (element: { state?: Record<string, unknown> | string; children?: [] }) => {
             if (element.state !== 'stateless' || element.children.length > 0) {
@@ -53,14 +71,15 @@ function Diff(props: DiffProps): JSX.Element {
         );
       }
     }
-    return newObj;
+    return newObj; // return the cleaned state snapshot(s)
   };
 
-  // displays stateful data
-  const previousDisplay: StatelessCleaning = statelessCleaning(previous);
+  const previousDisplay: StatelessCleaning = statelessCleaning(previous);  // displays stateful data
+
   // diff function returns a comparison of two objects, one has an updated change
   // just displays stateful data
   const delta: StatelessCleaning = diff(previousDisplay, snapshot);
+
   // returns html in string
   // just displays stateful data
   const html: StatelessCleaning = formatters.html.format(delta, previousDisplay);

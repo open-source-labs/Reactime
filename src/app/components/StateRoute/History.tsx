@@ -23,10 +23,10 @@ function History(props: Record<string, unknown>): JSX.Element {
     width: totalWidth,
     height: totalHeight,
     margin = defaultMargin,
-    hierarchy,
-    dispatch,
-    currLocation,
-    snapshots,
+    hierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
+    dispatch, // from useStoreContext in 'StateRoute'
+    currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
+    snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
   } = props;
   const [, dispatch] = useStoreContext();
 
