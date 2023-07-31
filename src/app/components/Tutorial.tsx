@@ -9,9 +9,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
 import { TutorialProps, TutorialState, StepsObj } from '../FrontendTypes';
+//Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
 import { Button } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-//Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
 const { Steps } = require('intro.js-react');
 
 // This is the tutorial displayed when the "How to use" button is clicked

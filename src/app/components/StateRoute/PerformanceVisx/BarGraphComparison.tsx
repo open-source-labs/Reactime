@@ -17,12 +17,6 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { useTheme } from '@mui/material/styles';
 import { Button } from '@mui/material';
-import { styled } from '@mui/system';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import { useTheme } from '@mui/material/styles';
-import { Button } from '@mui/material';
 import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 import {
@@ -216,6 +210,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             variant='contained'
             sx={{ p: 2, color: 'white' }}
             // type='button'
+            >
           <Button
             variant='contained'
             sx={{ p: 2, color: 'white' }}
