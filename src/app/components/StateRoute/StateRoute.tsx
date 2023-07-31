@@ -59,7 +59,7 @@ const StateRoute = (props: StateRouteProps) => {
         <ParentSize>
           {({ width, height }) => (
             <History
-              width={width}
+              width={width} 
               height={height}
               hierarchy={hierarchy}
               dispatch={dispatch}

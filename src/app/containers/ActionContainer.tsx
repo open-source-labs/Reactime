@@ -90,13 +90,13 @@ function ActionContainer(props): JSX.Element {
     let currIndex = i;
     
     if (e.key === 'ArrowUp') { // up arrow key pressed
-      currIndex -= 1;
+      currIndex--;
       if (currIndex < 0) return;
       dispatch(changeView(currIndex));
     }
     
     else if (e.key === 'ArrowDown') { // down arrow key pressed
-      currIndex += 1;
+      currIndex++;
       if (currIndex > hierarchyArr.length - 1) return;
       dispatch(changeView(currIndex));
     }
@@ -202,8 +202,7 @@ function ActionContainer(props): JSX.Element {
             <button
               className='empty-button'
               onClick={() => {
-                dispatch(emptySnapshots());
-                // set slider back to zero, visually
+                dispatch(emptySnapshots()); // set slider back to zero, visually
                 resetSlider();
               }}
               type='button'

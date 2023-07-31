@@ -35,9 +35,9 @@ export default function ComponentMap({
   width: totalWidth,
   height: totalHeight,
   margin = defaultMargin,
-  currentSnapshot,
+  currentSnapshot, // from 'tabs[currentTab].stateSnapshot object in 'MainContainer'
 }: LinkTypesProps): JSX.Element {
-  // importing custom hooks for the selection tabs.
+  
   const [layout, setLayout] = useState('cartesian');
   const [orientation, setOrientation] = useState('vertical');
   const [linkType, setLinkType] = useState('diagonal');
@@ -47,7 +47,7 @@ export default function ComponentMap({
   const toolTipTimeoutID = useRef(null);
 
   useEffect(() => {
-    dispatch(setCurrentTabInApp('map'));
+    dispatch(setCurrentTabInApp('map')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'map' to facilitate render.
   }, [dispatch]);
 
   // setting the margins for the Map to render in the tab window.

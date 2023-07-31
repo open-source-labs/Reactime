@@ -49,7 +49,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const [open, setOpen] = React.useState(false);
   const [picOpen, setPicOpen] = React.useState(false);
   useEffect(() => {
-    dispatch(setCurrentTabInApp('performance-comparison'));
+    dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison' to facilitate render.
   }, [dispatch]);
 
   const currentIndex: number = tabs[currentTab].sliderIndex;

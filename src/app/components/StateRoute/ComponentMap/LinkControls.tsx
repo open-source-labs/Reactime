@@ -36,14 +36,14 @@ const collectNodes = (node: Node): void => {
 };
 
 export default function LinkControls({
-  layout,
-  linkType,
-  stepPercent,
-  setLayout,
-  setOrientation,
-  setLinkType,
-  setStepPercent,
-  setSelectedNode,
+  layout, // from the layout local state (initially 'cartesian') in 'ComponentMap'
+  linkType, // from linkType local state (initially 'vertical') in 'ComponentMap'
+  stepPercent, // from stepPercent local state (initially '10') in 'ComponentMap'
+  setLayout, // from the layout local state in 'ComponentMap'
+  setOrientation, // from the orientation local state in 'ComponentMap'
+  setLinkType, // from the linkType local state in 'ComponentMap'
+  setStepPercent, // from the stepPercent local state in 'ComponentMap'
+  setSelectedNode, // from the selectedNode local state in 'ComponentMap'
   snapShots,
 }: LinkControlProps): JSX.Element {
   collectNodes(snapShots);

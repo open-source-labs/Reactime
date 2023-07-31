@@ -93,8 +93,8 @@ const radialGraph = (props) => {
   };
 
   const [store, dispatch] = useStoreContext(); // used to get the dispatch function from our storeContext
-  useEffect(() => { // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics.' to facilitate render.
-    dispatch(setCurrentTabInApp('webmetrics'));
+  useEffect(() => { 
+    dispatch(setCurrentTabInApp('webmetrics')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.
   }, []);
 
   const optionsCursorTrueWithMargin: OptionsCursorTrueWithMargin = {
