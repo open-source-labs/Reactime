@@ -1,13 +1,4 @@
 import * as React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faUpload,
-  faDownload,
-  faSquare,
-  faColumns,
-  faUnlock,
-  faLock,
-} from '@fortawesome/free-solid-svg-icons';
 import { importSnapshots, toggleMode } from '../actions/actions';
 import { useStoreContext } from '../store';
 import { Button } from '@mui/material';
