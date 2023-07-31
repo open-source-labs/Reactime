@@ -17,7 +17,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+
 
 // function exportHandler takes in a parameter snapshots which is typed as an array
 // the function does not return anything so the type is void
@@ -99,7 +99,7 @@ function ButtonsContainer(): JSX.Element {
         type='button'
         onClick={() => dispatch(toggleMode('paused'))}
       >
-        {paused ? <LockIcon /> : <LockOpenIcon />}
+        {paused ? <LockIcon sx={{pr: 1}}/> : <LockOpenIcon sx={{pr: 1}}/>}
         {paused ? 'Locked' : 'Unlocked'}
       </Button>
       <Button
@@ -108,11 +108,11 @@ function ButtonsContainer(): JSX.Element {
         type='button'
         onClick={() => exportHandler(snapshots)}
       >
-        <FileDownloadIcon />
+        <FileDownloadIcon sx={{pr: 1}}/>
         Download
       </Button>
       <Button variant='outlined' className='import-button' onClick={() => importHandler(dispatch)}>
-        <FileUploadIcon />
+        <FileUploadIcon sx={{pr: 1}}/>
         Upload
       </Button>
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}
