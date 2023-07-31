@@ -17,6 +17,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 // function exportHandler takes in a parameter snapshots which is typed as an array
 // the function does not return anything so the type is void

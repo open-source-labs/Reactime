@@ -10,6 +10,7 @@ import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
 import { TutorialProps, TutorialState, StepsObj } from '../FrontendTypes';
 import { Button } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 //Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
 const { Steps } = require('intro.js-react');
 
@@ -355,7 +356,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           type='button'
           onClick={() => startIntro()}
         >
-          <FontAwesomeIcon icon={faQuestion} /> Tutorial
+          <HelpOutlineIcon /> Tutorial
         </Button>
       </>
     );
