@@ -122,25 +122,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
-  // useStyles will change the styling on save series dropdown feature
-  // const useStyles = makeStyles((theme) => ({
-  //   formControl: {
-  //     margin: theme.spacing(1),
-  //     minWidth: 80,
-  //     height: 30,
-  //   },
-  //   select: {
-  //     minWidth: 80,
-  //     fontSize: '.75rem',
-  //     fontWeight: 200,
-  //     border: '1px solid grey',
-  //     borderRadius: 4,
-  //     color: 'grey',
-  //     height: 30,
-  //   },
-  // }));
 
-  // const classes = useStyles();
 
   const StyledFormControl = styled(FormControl)(({ theme }) => ({
     margin: theme.spacing(1),
@@ -152,9 +134,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     minWidth: 80,
     fontSize: '.75rem',
     fontWeight: 200,
-    border: '1px solid grey',
-    borderRadius: 4,
-    color: 'grey',
     height: 30,
   });
 
@@ -206,22 +185,22 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     return data.barStack;
   }
 
-  // const animateButton = (e: MouseEvent) => {
-  //   e.preventDefault();
-  //   const target = e.target as HTMLButtonElement;
-  //   if (target) {
-  //     target.classList.add('animate');
-  //     target.innerHTML = 'Deleted!';
-  //     setTimeout(() => {
-  //       target.innerHTML = 'Clear All Series';
-  //       target.classList.remove('animate');
-  //     }, 1000);
-  //   }
-  // };
-  // const classname = document.getElementsByClassName('delete-button');
-  // for (let i = 0; i < classname.length; i += 1) {
-  //   classname[i].addEventListener('click', animateButton, false);
-  // }
+  const animateButton = (e: MouseEvent) => {
+    e.preventDefault();
+    const target = e.target as HTMLButtonElement;
+    if (target) {
+      target.classList.add('animate');
+      target.innerHTML = 'Deleted!';
+      setTimeout(() => {
+        target.innerHTML = 'Clear All Series';
+        target.classList.remove('animate');
+      }, 1000);
+    }
+  };
+  const classname = document.getElementsByClassName('delete-button');
+  for (let i = 0; i < classname.length; i += 1) {
+    classname[i].addEventListener('click', animateButton, false);
+  }
   const seriesList: ActionObj[][] = comparison.map((action: Series) => action.data.barStack);
   const actionsList: ActionObj[] = seriesList.flat();
   const testList: string[] = actionsList.map((elem: ActionObj) => elem.name);
@@ -235,9 +214,8 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     <div>
       <div className='series-options-container'>
         <div className='dropdown-and-delete-series-container'>
-          <Button
-            variant='contained'
-            // type='button'
+          <button
+            type='button'
             className='delete-button'
             onClick={() => {
               setButtonLoad(true);
@@ -247,24 +225,14 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                 setButtonLoad(false);
               }, 1000);
             }}
-            style={
-              buttonLoad
-                ? { backgroundColor: theme.palette.primary.main }
-                : { backgroundColor: '#f21861' }
-            }
           >
             {buttonLoad ? 'Deleted' : 'Clear Series'}
           </Button>
           <h4 className='compare-series-box' style={{ padding: '0 1rem' }}>
             Compare Series:{' '}
           </h4>
-          <StyledFormControl
-            id='selectSeries'
-            variant='outlined'
-            sx={{ backgroundColor: 'secondary.main' }}
-          >
+          <StyledFormControl id='selectSeries' variant='outlined'>
             <StyledSelect
-              style={{ color: 'white' }}
               labelId='simple-select-outlined-label'
               open={open}
               onClose={handleClose}
@@ -309,7 +277,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
       </div>
 
       <svg ref={containerRef} width={width} height={height}>
-        {}
+        { }
         <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
         <Grid
           top={margin.top}
