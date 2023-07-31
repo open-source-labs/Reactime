@@ -6,8 +6,6 @@ import mainReducer from '../reducers/mainReducer.js';
 import { InitialStateProps } from '../FrontendTypes';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme';
 // currentTab is the current active tab within Google Chrome.
 // This is used to decide what tab Reactime should be monitoring. This can be "locked"
 // currentTabInApp is the current active tab within Reactime (Map, Performance, History, etc).
