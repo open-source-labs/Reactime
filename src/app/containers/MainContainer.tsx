@@ -54,12 +54,13 @@ function MainContainer(): JSX.Element {
 
     // listen for a message containing snapshots from the /extension/build/background.js service worker
     currentPort.onMessage.addListener(
-      (message: { // parameter message is an object with following type script properties
+      // parameter message is an object with following type script properties
+      (message: { 
         action: string; 
         payload: Record<string, unknown>; 
         sourceTab: number 
       }) => {
-        const { action, payload, sourceTab } = message; // we destructure message into action, payload, sourceTab
+        const { action, payload, sourceTab } = message;
         let maxTab: number;
 
         if (!sourceTab) { // if the sourceTab doesn't exist or is 0

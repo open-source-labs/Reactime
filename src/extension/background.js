@@ -132,15 +132,44 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   }
 }
 
+/*
+  The 'chrome.runtime' API allows a connection to the background service worker (background.js).
+  This allows us to set up listener's for when we connect, message, and disconnect the script.
+*/
+
 // Establishing incoming connection with Reactime.
 chrome.runtime.onConnect.addListener((port) => {
-  // port is one end of the connection - an object
-  // push every port connected to the ports array
-  portsArr.push(port);
+  /*
+    On initial connection, there is an onConnect event emitted. The 'addlistener' method provides a communication channel object ('port') when we connect to the service worker ('background.js') and applies it as the argument to it's 1st callback parameter.
+
+    the 'port' (type: communication channel object) is the communication channel between different components within our Chrome extension, not to a port on the Chrome browser tab or the extension's port on the Chrome browser.
+  
+    The port object facilitates communication between the Reactime front-end and this 'background.js' script. This allows you to: 
+    1. send messages and data
+      (look for 'onMessage'/'postMessage' methods within this page)
+    2. receive messages and data
+      (look for 'addListener' methods within this page)
+    between the front-end and the background.
+  
+    To establish communication between different parts of your extension:
+      for the connecting end: use chrome.runtime.connect() 
+      for the listening end: use chrome.runtime.onConnect. 
+    Once the connection is established, a port object is passed to the addListener callback function, allowing you to start exchanging data.
+  
+    Again, this port object is used for communication within your extension, not for communication with external ports or tabs in the Chrome browser. If you need to interact with specific tabs or external ports, you would use other APIs or methods, such as chrome.tabs or other Chrome Extension APIs.
+  */
+ 
+  portsArr.push(port); // push each Reactime communication channel object to the portsArr
+
+  console.log('console logging port on initial connection')
+  console.log(port)
+  console.log('console logging portArray on initial connection')
+  console.log(portsArr)
+
   // On Reactime launch: make sure RT's active tab is correct
   if (portsArr.length > 0) {
-    portsArr.forEach((bg) =>
-      bg.postMessage({
+    portsArr.forEach((bg) => // go through each port object (each Reactime instance)
+      bg.postMessage({  // send passed in action object as a message to the current port
         action: 'changeTab',
         payload: { tabId: activeTab.id, title: activeTab.title },
       }),
@@ -182,39 +211,48 @@ chrome.runtime.onConnect.addListener((port) => {
     switch (action) {
       case 'import': // create a snapshot property on tabId and set equal to tabs object
         // may need do something like filter payload from stateless
-        tabsObj[tabId].snapshots = payload;
-        return true;
+        tabsObj[tabId].snapshots = payload.snapshots; // reset snapshots to page last state recorded
+        // tabsObj[tabId].hierarchy = savedSnapshot.hierarchy; // why don't we just use hierarchy? Because it breaks everything...
+        tabsObj[tabId].hierarchy.children = payload.hierarchy.children; // resets hierarchy to last state recorded
+        tabsObj[tabId].hierarchy.stateSnapshot = payload.hierarchy.stateSnapshot; // resets hierarchy to last state recorded
+        tabsObj[tabId].currLocation = payload.currLocation; // resets currLocation to last state recorded
+        tabsObj[tabId].index = payload.index; //reset index to last state recorded
+        tabsObj[tabId].currParent = payload.currParent; // reset currParent to last state recorded
+        tabsObj[tabId].currBranch = payload.currBranch; // reset currBranch to last state recorded
+
+        return true; // return true so that port remains open
+
       case 'emptySnap':
-        // reset snapshots to page last state recorded
-        tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]];
-        // resets hierarchy
-        tabsObj[tabId].hierarchy.children = [];
-        // resets hierarchy to page last state recorded
-        tabsObj[tabId].hierarchy.stateSnapshot = {
+        tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]]; // reset snapshots to page last state recorded
+        tabsObj[tabId].hierarchy.children = []; // resets hierarchy
+        tabsObj[tabId].hierarchy.stateSnapshot = { // resets hierarchy to page last state recorded
           ...tabsObj[tabId].snapshots[0],
         };
-        // resets currLocation to page last state recorded
-        tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
-        tabsObj[tabId].index = 1;
-        tabsObj[tabId].currParent = 0;
-        tabsObj[tabId].currBranch = 1;
-        return true;
-      // Pause = lock on tab
-      case 'setPause':
+        tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy; // resets currLocation to page last state recorded
+        tabsObj[tabId].index = 1; //reset index
+        tabsObj[tabId].currParent = 0; // reset currParent
+        tabsObj[tabId].currBranch = 1; // reset currBranch
+        return true; // return true so that port remains open
+      
+      case 'setPause': // Pause = lock on tab
         tabsObj[tabId].mode.paused = payload;
-        return true;
+        return true; // return true so that port remains open
+
       case 'launchContentScript':
         chrome.scripting.executeScript({
           target: { tabId },
           files: ['bundles/content.bundle.js'],
         });
         return true;
+
       case 'jumpToSnap':
         chrome.tabs.sendMessage(tabId, msg);
         return true; // attempt to fix message port closing error, consider return Promise
+
       case 'toggleRecord':
         chrome.tabs.sendMessage(tabId, msg);
         return true;
+
       default:
         return true;
     }

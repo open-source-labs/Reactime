@@ -2,6 +2,7 @@
 /// <reference lib="dom" />
 /* eslint-disable no-param-reassign */
 import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BarStack } from '@visx/shape';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
@@ -10,6 +11,12 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeTableau10 } from 'd3-scale-chromatic';
+import { styled } from '@mui/system';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import { useTheme } from '@mui/material/styles';
+import { Button } from '@mui/material';
 import { styled } from '@mui/system';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -50,6 +57,13 @@ const tooltipStyles = {
 const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { width, height, data, comparison, setSeries, series, setAction } = props;
+  const [snapshots] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [picOpen, setPicOpen] = useState(false);
+  //tracking whether or not the clear series button is clicked
+  const [buttonLoad, setButtonLoad] = useState(false);
+
+  const theme = useTheme();
   const [snapshots] = useState(0);
   const [open, setOpen] = useState(false);
   const [picOpen, setPicOpen] = useState(false);
@@ -122,25 +136,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
-  // useStyles will change the styling on save series dropdown feature
-  // const useStyles = makeStyles((theme) => ({
-  //   formControl: {
-  //     margin: theme.spacing(1),
-  //     minWidth: 80,
-  //     height: 30,
-  //   },
-  //   select: {
-  //     minWidth: 80,
-  //     fontSize: '.75rem',
-  //     fontWeight: 200,
-  //     border: '1px solid grey',
-  //     borderRadius: 4,
-  //     color: 'grey',
-  //     height: 30,
-  //   },
-  // }));
 
-  // const classes = useStyles();
 
   const StyledFormControl = styled(FormControl)(({ theme }) => ({
     margin: theme.spacing(1),
@@ -203,22 +199,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     return data.barStack;
   }
 
-  // const animateButton = (e: MouseEvent) => {
-  //   e.preventDefault();
-  //   const target = e.target as HTMLButtonElement;
-  //   if (target) {
-  //     target.classList.add('animate');
-  //     target.innerHTML = 'Deleted!';
-  //     setTimeout(() => {
-  //       target.innerHTML = 'Clear All Series';
-  //       target.classList.remove('animate');
-  //     }, 1000);
-  //   }
-  // };
-  // const classname = document.getElementsByClassName('delete-button');
-  // for (let i = 0; i < classname.length; i += 1) {
-  //   classname[i].addEventListener('click', animateButton, false);
-  // }
   const seriesList: ActionObj[][] = comparison.map((action: Series) => action.data.barStack);
   const actionsList: ActionObj[] = seriesList.flat();
   const testList: string[] = actionsList.map((elem: ActionObj) => elem.name);
@@ -236,10 +216,19 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             variant='contained'
             sx={{ p: 2, color: 'white' }}
             // type='button'
+          <Button
+            variant='contained'
+            sx={{ p: 2, color: 'white' }}
+            // type='button'
             className='delete-button'
             onClick={() => {
               setButtonLoad(true);
+              setButtonLoad(true);
               dispatch(deleteSeries());
+
+              setTimeout(() => {
+                setButtonLoad(false);
+              }, 1000);
 
               setTimeout(() => {
                 setButtonLoad(false);
@@ -253,16 +242,18 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           >
             {buttonLoad ? 'Deleted' : 'Clear Series'}
           </Button>
+            {buttonLoad ? 'Deleted' : 'Clear Series'}
+          </Button>
           <h4 className='compare-series-box' style={{ padding: '0 1rem' }}>
             Compare Series:{' '}
           </h4>
           <StyledFormControl
             id='selectSeries'
             variant='outlined'
-            sx={{ backgroundColor: theme.palette.primary.main }}
+            label='compares series'
+          // sx={{ backgroundColor: theme.palette.primary.main }}
           >
             <StyledSelect
-              style={{ color: 'red' }}
               labelId='simple-select-outlined-label'
               open={open}
               onClose={handleClose}
@@ -307,7 +298,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
       </div>
 
       <svg ref={containerRef} width={width} height={height}>
-        {}
+        { }
         <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
         <Grid
           top={margin.top}

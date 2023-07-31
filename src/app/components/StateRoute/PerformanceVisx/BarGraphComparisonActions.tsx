@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BarStack } from '@visx/shape';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
@@ -8,6 +8,13 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
+
+import { styled } from '@mui/system';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import { useTheme } from '@mui/material/styles';
+import { Button } from '@mui/material';
 
 import { deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
@@ -38,6 +45,11 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   const [snapshots] = React.useState(0);
   const [setOpen] = React.useState(false);
   const [setPicOpen] = React.useState(false);
+
+  const [buttonLoad, setButtonLoad] = useState(false);
+  const theme = useTheme();
+
+
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance-comparison'));
   }, []);
@@ -93,26 +105,6 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   seriesNameScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
-  // useStyles will change the styling on save series dropdown feature
-  // const useStyles = makeStyles((theme) => ({
-  //   formControl: {
-  //     margin: theme.spacing(1),
-  //     minWidth: 80,
-  //     height: 30,
-  //   },
-  //   select: {
-  //     minWidth: 80,
-  //     fontSize: '.75rem',
-  //     fontWeight: '200',
-  //     border: '1px solid grey',
-  //     borderRadius: 4,
-  //     color: 'grey',
-  //     height: 30,
-  //   },
-  // }));
-
-  // const classes = useStyles();
-
   const StyledFormControl = styled(FormControl)(({ theme }) => ({
     margin: theme.spacing(1),
     minWidth: 80,
@@ -123,9 +115,6 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
     minWidth: 80,
     fontSize: '.75rem',
     fontWeight: 200,
-    border: '1px solid grey',
-    borderRadius: 4,
-    color: 'grey',
     height: 30,
   });
 
@@ -141,19 +130,8 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
     setSeries(false);
   };
 
-  const animateButton = function (e) {
-    e.preventDefault();
-    e.target.classList.add('animate');
-    e.target.innerHTML = 'Deleted!';
-    setTimeout(() => {
-      e.target.innerHTML = 'Clear All Series';
-      e.target.classList.remove('animate');
-    }, 1000);
-  };
-  const classname = document.getElementsByClassName('delete-button');
-  for (let i = 0; i < classname.length; i += 1) {
-    classname[i].addEventListener('click', animateButton, false);
-  }
+  
+
   const seriesList = comparison.map((elem) => elem.data.barStack);
   const actionsList = seriesList.flat();
   const testList = actionsList.map((elem) => elem.name);
@@ -167,16 +145,28 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
     <div>
       <div className='series-options-container'>
         <div className='dropdown-and-delete-series-container'>
-          <button
+        <Button
+            variant='contained'
+            sx={{ p: 2, color: 'white' }}
             className='delete-button'
             onClick={() => {
+              setButtonLoad(true);
               setAction(false);
               setSeries(true);
               dispatch(deleteSeries());
+
+              setTimeout(() => {
+                setButtonLoad(false);
+              }, 1000);
             }}
+            style={
+              buttonLoad
+                ? { backgroundColor: theme.palette.primary.main }
+                : { backgroundColor: theme.palette.secondary.main }
+            }
           >
-            Clear All Series
-          </button>
+            {buttonLoad ? 'Deleted' : 'Clear Series'}
+          </Button>
           <h4 style={{ padding: '0 1rem' }}>Compare Series: </h4>
           <StyledFormControl variant='outlined'>
             <StyledSelect
