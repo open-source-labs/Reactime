@@ -14,7 +14,7 @@ import { DiffProps, StatelessCleaning } from '../FrontendTypes';
 function Diff(props: DiffProps): JSX.Element {
   const { 
     snapshot, // snapshot from 'tabs[currentTab]' object in 'MainContainer'
-    show // boolean that is dependent on the 'Route' path
+    show // boolean that is dependent on the 'Route' path; true if 'Route' path === '/diffRaw'
   } = props;
   const [mainState] = useStoreContext(); // useStoreContext() returns our global state object (which was initialized as 'initialState' in 'App.tsx')
   const { currentTab, tabs } = mainState; // 'currentTab' (type: number) and 'tabs' (type: object) are destructured from 'mainState'
@@ -60,7 +60,7 @@ function Diff(props: DiffProps): JSX.Element {
     
     if (newObj.children) { // if our new object has a children property
       newObj.children = [];
-      if (obj.children.length > 0) { // and if our input object's children property is non-empty, go through each children object and determine objects that need to be cleaned through statelessCleaning. Those that are cleaned through this process are then pushed to the new object's children array.
+      if (obj.children.length > 0) { // and if our input object's children property is non-empty, go through each children object from our input object and determine, if the object being iterated on either has a stateless state or has a children array with a non-zero amount of objects. Objects that fulfill the above that need to be cleaned through statelessCleaning. Those that are cleaned through this process are then pushed to the new object's children array.
         obj.children.forEach(
           (element: { state?: Record<string, unknown> | string; children?: [] }) => {
             if (element.state !== 'stateless' || element.children.length > 0) {
@@ -74,18 +74,16 @@ function Diff(props: DiffProps): JSX.Element {
     return newObj; // return the cleaned state snapshot(s)
   };
 
-  const previousDisplay: StatelessCleaning = statelessCleaning(previous);  // displays stateful data
+  const previousDisplay: StatelessCleaning = statelessCleaning(previous);  // displays stateful data from the first snapshot that was taken before our current snapshot.
 
-  // diff function returns a comparison of two objects, one has an updated change
-  // just displays stateful data
-  const delta: StatelessCleaning = diff(previousDisplay, snapshot);
+  const delta: StatelessCleaning = diff(previousDisplay, snapshot); // diff function from 'jsondiffpatch' returns the difference in state between 'previousDisplay' and 'snapshot' 
 
-  // returns html in string
-  // just displays stateful data
-  const html: StatelessCleaning = formatters.html.format(delta, previousDisplay);
-  if (show) formatters.html.showUnchanged();
-  else formatters.html.hideUnchanged();
-  if (previous === undefined || delta === undefined) {
+  const html: StatelessCleaning = formatters.html.format(delta, previousDisplay); // formatters function from 'jsondiffpatch' returns an html string that shows the difference between delta and the previousDisplay
+
+  if (show) formatters.html.showUnchanged(); // shows unchanged values if we're on the '/diffRaw' path
+  else formatters.html.hideUnchanged(); // hides unchanged values
+  
+  if (previous === undefined || delta === undefined) { // if there has been no state changes on the target/hooked application, previous and delta would be undefined.
     return (
       <div className='no-data-message'>
         {' '}
@@ -94,7 +92,7 @@ function Diff(props: DiffProps): JSX.Element {
       </div>
     );
   }
-  return <div>{ReactHtmlParser(html)}</div>;
+  return <div>{ReactHtmlParser(html)}</div>; // ReactHTMLParser from 'react-html-parser' package converts the HTML string into a react component.
 }
 
 export default Diff;

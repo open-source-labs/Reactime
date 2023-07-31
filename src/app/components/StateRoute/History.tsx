@@ -9,6 +9,10 @@ import { DefaultMargin } from '../../FrontendTypes';
 import { changeView, changeSlider, setCurrentTabInApp } from '../../actions/actions';
 import { useStoreContext } from '../../store';
 
+/*
+  Render's history page after history button has been selected. Allows user to traverse state history and relevant state branches.
+*/
+
 const defaultMargin: DefaultMargin = {
   top: 30,
   left: 30,
@@ -28,10 +32,10 @@ function History(props: Record<string, unknown>): JSX.Element {
     currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
     snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
   } = props;
-  const [, dispatch] = useStoreContext();
+  const [, dispatch] = useStoreContext(); // use the dispatch that is connected with our storeContext
 
   const svgRef = React.useRef(null);
-  const root = JSON.parse(JSON.stringify(hierarchy));
+  const root = JSON.parse(JSON.stringify(hierarchy)); // why do we stringify and then parse our hierarchy back to JSON? (asked 7/31/23)
 
   // setting the margins for the Map to render in the tab window.
   const innerWidth: number = totalWidth - margin.left - margin.right;
@@ -128,6 +132,7 @@ function History(props: Record<string, unknown>): JSX.Element {
   /**
    * @method makeD3Tree :Creates a new D3 Tree
    */
+
   const makeD3Tree = () => {
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove(); // Clear svg content before adding new elements

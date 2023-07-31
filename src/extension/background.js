@@ -187,6 +187,7 @@ chrome.runtime.onConnect.addListener((port) => {
         break;
       }
     }
+    return true // added 7/30/23
   });
 
   // listen for message containing a snapshot from devtools and send it to contentScript -
@@ -409,6 +410,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   delete tabsObj[tabId];
   delete reloaded[tabId];
   delete firstSnapshotReceived[tabId];
+  return true; // added 7/30/23
 });
 
 // when a new url is loaded on the same tab,
@@ -436,6 +438,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
       tabsObj[tabId] = createTabObj(changeInfo.title);
     }
   }
+  return true; // added 7/30/23
 });
 
 // when tab view is changed, put the tabid as the current tab
@@ -455,6 +458,7 @@ chrome.tabs.onActivated.addListener((info) => {
       }
     }
   });
+  return true; // added 7/30/23
 });
 
 // when reactime is installed
@@ -465,6 +469,7 @@ chrome.runtime.onInstalled.addListener(() => {
     title: 'Reactime',
     contexts: ['page', 'selection', 'image', 'link'],
   });
+  return true; // added 7/30/23
 });
 
 // when context menu is clicked, listen for the menuItemId,
@@ -479,4 +484,5 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     url: chrome.runtime.getURL('panel.html'),
   };
   if (menuItemId === 'reactime') chrome.windows.create(options);
+  return true; // added 7/30/23
 });

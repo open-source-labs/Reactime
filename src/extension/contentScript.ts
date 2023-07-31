@@ -10,6 +10,14 @@ let firstMessage = true;
 // Listens for window messages (from the injected script on the DOM)
 let isRecording = true;
 
+//event listener testing
+window.addEventListener("unhandledrejection", (event) => {
+  console.log('window event listener')
+  console.log('Promise error from message received from contentScript')
+  console.log('promise', event.promise)
+  console.log('reason', event.reason)
+})
+
 window.addEventListener('message', (msg) => {
   // Event listener runs constantly based on actions
   // recorded on the test application from backend files (linkFiber.ts).
@@ -35,6 +43,8 @@ window.addEventListener('message', (msg) => {
   if (action === 'aReactApp') {
     chrome.runtime.sendMessage(msg.data);
   }
+
+  return true // newest return true to determine if this solves current unhandled exceptions.
 });
 
 // Listening for messages from the UI of the Reactime extension.

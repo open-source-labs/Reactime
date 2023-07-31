@@ -5,11 +5,15 @@ import { OptionsCursorTrueWithMargin } from '../FrontendTypes';
 import { setCurrentTabInApp } from '../actions/actions';
 import { useStoreContext } from '../store';
 
+/*
+  Used to render a single radial graph on the 'Web Metrics' tab
+*/
+
 const radialGraph = (props) => {
   const state = {
-    series: [props.series],
+    series: [props.series], // series appears to be the scale at which data is displayed based on the type of webMetrics measured.
     options: {
-      colors: [props.color],
+      colors: [props.color], // color of the webmetrics performance bar from 'StateRoute'
       chart: {
         height: 100,
         width: 100,
@@ -88,8 +92,8 @@ const radialGraph = (props) => {
     },
   };
 
-  const [store, dispatch] = useStoreContext();
-  useEffect(() => {
+  const [store, dispatch] = useStoreContext(); // used to get the dispatch function from our storeContext
+  useEffect(() => { // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics.' to facilitate render.
     dispatch(setCurrentTabInApp('webmetrics'));
   }, []);
 
@@ -100,8 +104,8 @@ const radialGraph = (props) => {
   };
 
   return (
-    <div className='metric'>
-      <ReactHover options={optionsCursorTrueWithMargin}>
+    <div className='metric'> 
+      <ReactHover options={optionsCursorTrueWithMargin}> 
         <Trigger type='trigger'>
           <div id='chart'>
             <Charts
@@ -114,10 +118,9 @@ const radialGraph = (props) => {
           </div>
         </Trigger>
         <Hover type='hover'>
-          <div style={{ zIndex: 1, position: 'relative', padding: '0.5rem 1rem' }} id='hover-box'>
-            <p>
-              <strong>{props.name}</strong>
-            </p>
+          <div style={{zIndex: 1, position: 'relative', padding: '0.5rem 1rem'}} id='hover-box'>
+          {/* <div style="zIndex: 1; position: relative; padding: 0.5rem 1rem;" id='hover-box'> */}
+            <p><strong>{props.name}</strong></p>
             <p>{props.description}</p>
           </div>
         </Hover>

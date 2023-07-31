@@ -94,7 +94,17 @@ async function updateReactFiberTree(
     const functionalComponent = componentActionsRecord.getComponentByIndexHooks(hooksIndex);
     // Update component state
     for (let i in functionalComponent) {
-      await functionalComponent[i].dispatch(Object.values(hooksState)[i]);
+      try {
+        await functionalComponent[i].dispatch(Object.values(hooksState)[i])
+      } catch(err) {
+        console.log('error in timeJump')
+        console.log('hooksIndex', hooksIndex)
+        console.log('hookState', hooksState)
+        console.log('[i]', i)
+        console.log('functionalComponent', functionalComponent)
+        console.log('functionalComponent[i]', functionalComponent[i])
+        console.log(err)
+      }
     }
     // Iterate through new children after state has been set
     targetSnapshot.children.forEach((child) => updateReactFiberTree(child));
