@@ -152,6 +152,8 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
             className='delete-button'
             onClick={() => {
               setButtonLoad(true);
+              setAction(false);
+              setSeries(true);
               dispatch(deleteSeries());
 
               setTimeout(() => {
