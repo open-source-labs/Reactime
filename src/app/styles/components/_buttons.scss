@@ -289,7 +289,7 @@
 
 .series-options-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   margin: 0 1rem;
 }
@@ -301,6 +301,7 @@
 .dropdown-and-delete-series-container {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .close-button-container {
