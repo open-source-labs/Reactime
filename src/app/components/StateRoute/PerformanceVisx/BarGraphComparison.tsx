@@ -152,9 +152,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     minWidth: 80,
     fontSize: '.75rem',
     fontWeight: 200,
-    // border: '1px solid grey',
-    // borderRadius: 4,
-    // color: 'grey',
     height: 30,
   });
 
@@ -237,7 +234,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
         <div className='dropdown-and-delete-series-container'>
           <Button
             variant='contained'
-            sx={{ p: 1 }}
+            sx={{ p: 2, color: 'white' }}
             // type='button'
             className='delete-button'
             onClick={() => {
@@ -251,7 +248,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             style={
               buttonLoad
                 ? { backgroundColor: theme.palette.primary.main }
-                : { backgroundColor: '#f21861' }
+                : { backgroundColor: theme.palette.secondary.main }
             }
           >
             {buttonLoad ? 'Deleted' : 'Clear Series'}
@@ -265,7 +262,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             sx={{ backgroundColor: theme.palette.primary.main }}
           >
             <StyledSelect
-              style={{ color: 'white' }}
+              style={{ color: 'red' }}
               labelId='simple-select-outlined-label'
               open={open}
               onClose={handleClose}

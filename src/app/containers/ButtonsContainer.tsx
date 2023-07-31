@@ -10,8 +10,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { importSnapshots, toggleMode } from '../actions/actions';
 import { useStoreContext } from '../store';
+import { Button } from '@mui/material';
 
 import Tutorial from '../components/Tutorial';
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 // function exportHandler takes in a parameter snapshots which is typed as an array
 // the function does not return anything so the type is void
@@ -87,18 +92,28 @@ function ButtonsContainer(): JSX.Element {
 
   return (
     <div className='buttons-container'>
-      <button className='pause-button' type='button' onClick={() => dispatch(toggleMode('paused'))}>
-        {paused ? <FontAwesomeIcon icon={faLock} /> : <FontAwesomeIcon icon={faUnlock} />}
+      <Button
+        variant='outlined'
+        className='pause-button'
+        type='button'
+        onClick={() => dispatch(toggleMode('paused'))}
+      >
+        {paused ? <LockIcon /> : <LockOpenIcon />}
         {paused ? 'Locked' : 'Unlocked'}
-      </button>
-      <button className='export-button' type='button' onClick={() => exportHandler(snapshots)}>
-        <FontAwesomeIcon icon={faDownload} />
+      </Button>
+      <Button
+        variant='outlined'
+        className='export-button'
+        type='button'
+        onClick={() => exportHandler(snapshots)}
+      >
+        <FileDownloadIcon />
         Download
-      </button>
-      <button className='import-button' type='button' onClick={() => importHandler(dispatch)}>
-        <FontAwesomeIcon icon={faUpload} />
+      </Button>
+      <Button variant='outlined' className='import-button' onClick={() => importHandler(dispatch)}>
+        <FileUploadIcon />
         Upload
-      </button>
+      </Button>
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}
       <Tutorial dispatch={dispatch} currentTabInApp={currentTabInApp} />
     </div>

@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
 import { TutorialProps, TutorialState, StepsObj } from '../FrontendTypes';
-
+import { Button } from '@mui/material';
 //Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
 const { Steps } = require('intro.js-react');
 
@@ -73,7 +73,6 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
       }
       this.setState({ stepsEnabled: true });
     };
-
 
     let steps: StepsObj[] = [];
 
@@ -350,9 +349,14 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           onBeforeChange={(currentStepIndex) => onChangeHandler(currentStepIndex)}
           ref={(steps) => (this.steps = steps)}
         />
-        <button className='howToUse-button' type='button' onClick={() => startIntro()}>
+        <Button
+          variant='outlined'
+          className='howToUse-button'
+          type='button'
+          onClick={() => startIntro()}
+        >
           <FontAwesomeIcon icon={faQuestion} /> Tutorial
-        </button>
+        </Button>
       </>
     );
   }
