@@ -29,7 +29,6 @@ const defaultMargin: DefaultMargin = {
   bottom: 70,
 };
 
-
 export default function ComponentMap({
   // imported props to be used to display the dendrogram
   width: totalWidth,
@@ -37,7 +36,6 @@ export default function ComponentMap({
   margin = defaultMargin,
   currentSnapshot, // from 'tabs[currentTab].stateSnapshot object in 'MainContainer'
 }: LinkTypesProps): JSX.Element {
-  
   const [layout, setLayout] = useState('cartesian'); // We create a local state "layout" and set it to a string 'cartesian'
   const [orientation, setOrientation] = useState('vertical'); // We create a local state "orientation" and set it to a string 'vertical'. 
   const [linkType, setLinkType] = useState('diagonal'); // We create a local state "linkType" and set it to a string 'diagonal'. 
@@ -86,9 +84,15 @@ export default function ComponentMap({
     }
   }
 
-  // Tooltip stuff:
-  const { tooltipData, tooltipLeft, tooltipTop, tooltipOpen, showTooltip, hideTooltip } =
-    useTooltip();
+  // Tooltip stuff that was destructured from the returned object from 'useTooltip()'
+  const { 
+    tooltipData, // value/data that tooltip may need to render
+    tooltipLeft, // number used for tooltip positioning
+    tooltipTop, // number used for tooltip positioning
+    tooltipOpen, // boolean whether the tooltip state is open or closed
+    showTooltip, // function to set tooltip state
+    hideTooltip // function to close a tooltip
+  } = useTooltip(); // returns an object with several properties that you can use to manage the tooltip state of your component
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal({
     detectBounds: true,
@@ -122,8 +126,7 @@ export default function ComponentMap({
     return `${renderTime} ms `;
   };
 
-  // places all nodes into a flat array
-  const nodeList: [] = [];
+  const nodeList: [] = []; // create a nodeList array to store our nodes as a flat array
 
   const collectNodes: void = (node) => {
     nodeList.splice(0, nodeList.length);
@@ -137,18 +140,21 @@ export default function ComponentMap({
       }
     }
   };
+
   collectNodes(currentSnapshot);
   // @ts
   // find the node that has been selected and use it as the root
   let startNode = null;
   let rootNode;
-  const findSelectedNode = () => {
+
+  const findSelectedNode = () => { // iterates through each node of nodeList and sets the rootNode and startNode to a node with the name root
     for (const node of nodeList) {
       if (node.name === 'root') rootNode = node;
-      if (node.name === selectedNode) startNode = node;
+      if (node.name === selectedNode) startNode = node; // selectedNode label initialized as 'root'
     }
     if (startNode === null) startNode = rootNode;
   };
+
   findSelectedNode();
 
   // controls for the map
@@ -156,12 +162,12 @@ export default function ComponentMap({
   return totalWidth < 10 ? null : (
     <div>
       <LinkControls
-        layout={layout}
-        orientation={orientation}
-        linkType={linkType}
-        stepPercent={stepPercent}
+        layout={layout} 
+        orientation={orientation} 
+        linkType={linkType} 
+        stepPercent={stepPercent} 
         snapShots={currentSnapshot}
-        selectedNode={selectedNode}
+        selectedNode={selectedNode} 
         setLayout={setLayout}
         setOrientation={setOrientation}
         setLinkType={setLinkType}
@@ -200,25 +206,28 @@ export default function ComponentMap({
                 ))}
 
                 {tree.descendants().map((node, key) => {
-                  const widthFunc:number = (name) => {
-                    // is this the name of the component - so if it's longer it will make the box wider?
+                  const widthFunc:number = (name) => { // function that takes in a node's name and returns a number that is related to the length of the name.
                     const nodeLength = name.length;
-                    if (nodeLength < 5) return nodeLength + 80; // change from 40 to 80, to see what's affected
-                    if (nodeLength < 10) return nodeLength + 120; // change from 60 to 120 to see what's affected
-                    return nodeLength + 140;  // change from 70 to 140 to see what happens
+                    if (nodeLength <= 5) return nodeLength + 80; // returns a number between 80-85
+                    if (nodeLength <= 10) return nodeLength + 120; // returns a number between 125-130
+                    return nodeLength + 140;  // returns a number greater than 150
                   };
-                  const width:number = widthFunc(node.data.name);
-                  const height:number = 25;
 
+                  const width:number = widthFunc(node.data.name); // the width is determined by the length of the node.name
+                  const height:number = 25;
                   let top: number;
                   let left: number;
+
+
                   if (layout === 'polar') {
                     const [radialX, radialY] = pointRadial(node.x, node.y);
                     top = radialY;
                     left = radialX;
+
                   } else if (orientation === 'vertical') {
                     top = node.y;
                     left = node.x;
+                    
                   } else {
                     top = node.x;
                     left = node.y;
