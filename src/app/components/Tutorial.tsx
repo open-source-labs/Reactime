@@ -7,13 +7,15 @@ import { Component } from 'react';
 import 'intro.js/introjs.css';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
 import { TutorialProps, TutorialState, StepsObj } from '../FrontendTypes';
-//Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
 import { Button } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-const { Steps } = require('intro.js-react');
+const { Steps } = require('intro.js-react'); //Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
 
-// This is the tutorial displayed when the "How to use" button is clicked
-// This needs to be a class component to be compatible with updateStepElement from intro.js
+/*
+  This is the tutorial displayed when the "How to use" button is clicked
+  This needs to be a class component to be compatible with updateStepElement from intro.js
+*/
+
 export default class Tutorial extends Component<TutorialProps, TutorialState> {
   constructor(props: TutorialProps) {
     super(props);

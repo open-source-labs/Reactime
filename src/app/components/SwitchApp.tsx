@@ -10,31 +10,25 @@ import { setTab } from '../actions/actions';
 */
 
 const SwitchAppDropdown = (): JSX.Element => {
-  // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
-  const [{ currentTab, tabs }, dispatch] = useStoreContext();
-  // tabsArray is an empty array that will take objects as it's elements
-  const tabsArray: {}[] = [];
+  const [{ currentTab, tabs }, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
+  
+  const tabsArray: {}[] = []; // tabsArray is an empty array that will take objects as it's elements
 
-  // We populate our 'tabsArray' with objects derived from the 'tab' that is currently being iterated on.
-  Object.keys(tabs).forEach((tab) => {
+  Object.keys(tabs).forEach((tab) => { // We populate our 'tabsArray' with objects derived from the 'tab' that is currently being iterated on.
     tabsArray.unshift({ value: tab, label: tabs[tab].title });
   });
 
-  // we create a 'currTab' object and populate it's values from the 'currentTab' that was destructured from our context object
-  const currTab: {} = {
+  const currTab: {} = {   // we create a 'currTab' object and populate it's values from the 'currentTab' that was destructured from our context object
     value: currentTab,
     label: tabs[currentTab].title,
   };
 
   const customStyles: {} = {
-    // we define a menu method that takes in two parameters
-    menu: (provided, state):{} => {
-      // why does this ternary even matter if the end result is the same?
-      const outline: string = state.isSelected ? 'transparent' : 'transparent';
+    menu: (provided, state):{} => { // we define a menu method that takes in two parameters
+      const outline: string = state.isSelected ? 'transparent' : 'transparent'; // why does this ternary even matter if the end result is the same?
       const margin: number = 0;
 
-      // we return an object that adds the ouline and margin to the provided object
-      return { ...provided, outline, margin };
+      return { ...provided, outline, margin }; // we return an object that adds the ouline and margin to the provided object
     },
   };
 
