@@ -206,7 +206,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             className='delete-button'
             onClick={() => {
               setButtonLoad(true);
-              setButtonLoad(true);
               dispatch(deleteSeries());
 
               setTimeout(() => {
