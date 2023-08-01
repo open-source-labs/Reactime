@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 #RenderContainer {
   display: flex;
@@ -24,7 +24,7 @@
 #routes-formcontrol {
   padding: 3px;
   margin-left: 50px;
-  font: 400 16px 'Roboto', sans-serif;
+  font: 400 16px 'Outfit', sans-serif;
   text-align: left;
   // min-width: 10em;
   // max-height: 50%;
@@ -33,7 +33,7 @@
 #routes-dropdown {
   color: white !important;
   // background-color: #ff6569 !important;
-  font: 400 16px 'Roboto', sans-serif;
+  font: 400 16px 'Outfit', sans-serif;
   text-align: left;
 }
 
@@ -45,7 +45,7 @@
 
 #routes-select, #snapshot-select{
   color: white !important;
-  font: 400 16px 'Roboto', sans-serif;
+  font: 400 16px 'Outfit', sans-serif;
   text-align: left;
   width: 120px;
   height: 30px;

@@ -5,12 +5,11 @@
 import * as React from 'react';
 import { Component } from 'react';
 import 'intro.js/introjs.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
 import { TutorialProps, TutorialState, StepsObj } from '../FrontendTypes';
-
 //Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
+import { Button } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 const { Steps } = require('intro.js-react');
 
 // This is the tutorial displayed when the "How to use" button is clicked
@@ -73,7 +72,6 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
       }
       this.setState({ stepsEnabled: true });
     };
-
 
     let steps: StepsObj[] = [];
 
@@ -350,9 +348,14 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           onBeforeChange={(currentStepIndex) => onChangeHandler(currentStepIndex)}
           ref={(steps) => (this.steps = steps)}
         />
-        <button className='howToUse-button' type='button' onClick={() => startIntro()}>
-          <FontAwesomeIcon icon={faQuestion} /> Tutorial
-        </button>
+        <Button
+          variant='outlined'
+          className='howToUse-button'
+          type='button'
+          onClick={() => startIntro()}
+        >
+          <HelpOutlineIcon sx={{pr: 1}}/> Tutorial
+        </Button>
       </>
     );
   }
