@@ -49,11 +49,9 @@ export default function LinkControls({
   collectNodes(snapShots);
 
   return (
-    <div style={controlStyles}>
-      {/* Controls for the layout selection */}
+    <div style={controlStyles}> {/* Controls for the layout selection */}
       <label>Layout:</label>
-      &nbsp;{' '}
-      {/* This is a non-breaking space - Prevents an automatic line break at this position */}
+      &nbsp;{' '} {/* This is a non-breaking space - Prevents an automatic line break at this position */}
       <select
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => setLayout(e.target.value)}
@@ -64,8 +62,8 @@ export default function LinkControls({
         <option value='polar'>Polar</option>
       </select>
       &nbsp;&nbsp;
-      {/* Controls for the Orientation selection, this dropdown will be disabled when the polar layout is selected as it is not needed */}
-      <label>Orientation:</label>
+    
+      <label>Orientation:</label> {/* Controls for the Orientation selection, this dropdown will be disabled when the polar layout is selected as it is not needed */}
       &nbsp;
       <select
         onClick={(e) => e.stopPropagation()}
@@ -77,8 +75,9 @@ export default function LinkControls({
         <option value='horizontal'>Horizontal</option>
       </select>
       &nbsp;&nbsp;
-      {/* Controls for the link selections. */}
-      <label>Link:</label>
+    
+      
+      <label>Link:</label> {/* Controls for the link selections. */}
       &nbsp;
       <select
         onClick={(e) => e.stopPropagation()}
@@ -89,8 +88,9 @@ export default function LinkControls({
         <option value='step'>Step</option>
         <option value='line'>Line</option>
       </select>
-      {/* Controls for the select selections. */}
-      <label> Select:</label>
+
+      
+      <label> Select:</label> {/* Controls for the select selections. */}
       &nbsp;
       <select
         id='selectInput'
@@ -107,6 +107,7 @@ export default function LinkControls({
             ),
         )}
       </select>
+
       {/* This is the slider control for the step option */}
       {linkType === 'step' && layout !== 'polar' && (
         <>

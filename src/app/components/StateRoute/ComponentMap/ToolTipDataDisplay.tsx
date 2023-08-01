@@ -1,6 +1,9 @@
 import React from 'react';
 import JSONTree from 'react-json-tree';
 
+/*
+  Code that show's the tooltip of our JSON tree
+*/
 
 const colors = {
   scheme: 'paraiso',

@@ -58,7 +58,7 @@ export default function ComponentMap({
   let sizeHeight: number;
 
   /*
-    This sets the starting position for the root node on the maps display. 
+    We begin setting the starting position for the root node on the maps display. 
     The 'polar layout' sets the root node to the relative center of the display box based on the size of the browser window. 
     The 'cartesian layout' (else conditional) sets the root nodes location either in the left middle *or top middle of the browser window relative to the size of the browser.
   */
@@ -84,7 +84,6 @@ export default function ComponentMap({
     }
   }
 
-  // Tooltip stuff that was destructured from the returned object from 'useTooltip()'
   const { 
     tooltipData, // value/data that tooltip may need to render
     tooltipLeft, // number used for tooltip positioning
@@ -128,14 +127,14 @@ export default function ComponentMap({
 
   const nodeList: [] = []; // create a nodeList array to store our nodes as a flat array
 
-  const collectNodes: void = (node) => {
-    nodeList.splice(0, nodeList.length);
-    nodeList.push(node);
-    for (let i = 0; i < nodeList.length; i += 1) {
+  const collectNodes: void = (node) => { // function that takes in a node (snapshot) as it's argument and modifies 'nodeList' so that the node and it's children are all within the flattened 'nodeList'.
+    nodeList.splice(0, nodeList.length); // deletes all the nodes in nodelist
+    nodeList.push(node); // pushes the snapshot into nodeList
+    for (let i = 0; i < nodeList.length; i += 1) { // iterate through the nodeList that contains our snapshot
       const cur = nodeList[i];
-      if (cur.children && cur.children.length > 0) {
-        for (const child of cur.children) {
-          nodeList.push(child);
+      if (cur.children && cur.children.length > 0) { // if the currently itereated snapshot has non-zero children...
+        for (const child of cur.children) { // iterate through each child in the children array
+          nodeList.push(child); // add the child to the nodeList
         }
       }
     }
@@ -155,7 +154,7 @@ export default function ComponentMap({
     if (startNode === null) startNode = rootNode;
   };
 
-  findSelectedNode();
+  findSelectedNode(); // locates the rootNode... do we really need this? This function is only used once... it's here.
 
   // controls for the map
   const LinkComponent: React.ComponentType<unknown> = getLinkComponent({ layout, linkType, orientation });
@@ -206,7 +205,7 @@ export default function ComponentMap({
                 ))}
 
                 {tree.descendants().map((node, key) => {
-                  const widthFunc:number = (name) => { // function that takes in a node's name and returns a number that is related to the length of the name.
+                  const widthFunc:number = (name) => { // function that takes in a node's name and returns a number that is related to the length of the name. Used for determining the node width.
                     const nodeLength = name.length;
                     if (nodeLength <= 5) return nodeLength + 80; // returns a number between 80-85
                     if (nodeLength <= 10) return nodeLength + 120; // returns a number between 125-130
@@ -260,6 +259,7 @@ export default function ComponentMap({
                           }}
                         />
                       )}
+
                       {/* This creates the rectangle boxes for each component
                        and sets it relative position to other parent nodes of the same level. */}
                       {node.depth !== 0 && (
@@ -271,7 +271,7 @@ export default function ComponentMap({
                           fill={node.children ? '#161521' : '#62d6fb'}
                           stroke={
                             node.data.isExpanded && node.data.children.length > 0
-                              ? '#F00008' // changed to #F00008 for higher contrast
+                              ? '#F00008'
                               : '#4D4D4D'
                           }
                           strokeWidth={1.5}
@@ -281,6 +281,7 @@ export default function ComponentMap({
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
                           }}
+                          
                           // Mouse Enter Rect (Component Node) -----------------------------------------------------------------------
                           /** This onMouseEnter event fires when the mouse first moves/hovers over a component node.
                            * The supplied event listener callback produces a Tooltip element for the current node. */ 
@@ -317,6 +318,7 @@ export default function ComponentMap({
                           }}
                         />
                       )}
+
                       {/* Display text inside of each component node */}
                       <text
                         dy='.33em'
