@@ -38,13 +38,14 @@ export default function ComponentMap({
   currentSnapshot, // from 'tabs[currentTab].stateSnapshot object in 'MainContainer'
 }: LinkTypesProps): JSX.Element {
   
-  const [layout, setLayout] = useState('cartesian');
-  const [orientation, setOrientation] = useState('vertical');
-  const [linkType, setLinkType] = useState('diagonal');
-  const [stepPercent, setStepPercent] = useState(10);
-  const [selectedNode, setSelectedNode] = useState('root');
-  const [, dispatch] = useStoreContext();
-  const toolTipTimeoutID = useRef(null);
+  const [layout, setLayout] = useState('cartesian'); // We create a local state "layout" and set it to a string 'cartesian'
+  const [orientation, setOrientation] = useState('vertical'); // We create a local state "orientation" and set it to a string 'vertical'. 
+  const [linkType, setLinkType] = useState('diagonal'); // We create a local state "linkType" and set it to a string 'diagonal'. 
+  const [stepPercent, setStepPercent] = useState(10); // We create a local state "stepPercent" and set it to a number '10'.
+  const [selectedNode, setSelectedNode] = useState('root'); // We create a local state "selectedNode" and set it to a string 'root'. 
+  const [, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function to get access to our dispatch function
+
+  const toolTipTimeoutID = useRef(null); //useRef stores stateful data that’s not needed for rendering.
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('map')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'map' to facilitate render.
@@ -58,24 +59,28 @@ export default function ComponentMap({
   let sizeWidth: number;
   let sizeHeight: number;
 
-  // This sets the starting position for the root node on the maps display.
-  // the polar layout sets the root node to the relative center of the display box
-  // based on the size of the browser window.
-  // the else conditional statements determines the root nodes location either in the left middle
-  // or top middle of the browser window relative to the size of the browser.
-  if (layout === 'polar') {
+  /*
+    This sets the starting position for the root node on the maps display. 
+    The 'polar layout' sets the root node to the relative center of the display box based on the size of the browser window. 
+    The 'cartesian layout' (else conditional) sets the root nodes location either in the left middle *or top middle of the browser window relative to the size of the browser.
+  */
+
+  if (layout === 'polar') { // 'polar layout' option
     origin = {
       x: innerWidth / 2,
       y: innerHeight / 2,
     };
+
+    // set the sizeWidth and sizeHeight
     sizeWidth = 2 * Math.PI;
     sizeHeight = Math.min(innerWidth, innerHeight) / 2;
-  } else {
+
+  } else { // 'cartesian layout' option
     origin = { x: 0, y: 0 };
     if (orientation === 'vertical') {
       sizeWidth = innerWidth;
       sizeHeight = innerHeight;
-    } else {
+    } else { // if the orientation isn't vertical, swap the width and the height
       sizeWidth = innerHeight;
       sizeHeight = innerWidth;
     }

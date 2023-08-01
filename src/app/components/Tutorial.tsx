@@ -49,7 +49,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
       }
       if (currentTabInApp === 'performance' && currentStepIndex === 5) {
         this.steps.updateStepElement(currentStepIndex);
-        dispatch(('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison.' to facilitate render.
+        dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison.' to facilitate render.
       }
       if (currentTabInApp === 'performance-comparison' && currentStepIndex === 6) {
         dispatch(tutorialSaveSeriesToggle(false));
