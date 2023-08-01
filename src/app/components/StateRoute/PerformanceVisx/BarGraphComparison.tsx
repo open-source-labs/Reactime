@@ -2,7 +2,6 @@
 /// <reference lib="dom" />
 /* eslint-disable no-param-reassign */
 import React, { useEffect, useState } from 'react';
-import React, { useEffect, useState } from 'react';
 import { BarStack } from '@visx/shape';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
@@ -51,13 +50,6 @@ const tooltipStyles = {
 const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { width, height, data, comparison, setSeries, series, setAction } = props;
-  const [snapshots] = useState(0);
-  const [open, setOpen] = useState(false);
-  const [picOpen, setPicOpen] = useState(false);
-  //tracking whether or not the clear series button is clicked
-  const [buttonLoad, setButtonLoad] = useState(false);
-
-  const theme = useTheme();
   const [snapshots] = useState(0);
   const [open, setOpen] = useState(false);
   const [picOpen, setPicOpen] = useState(false);
@@ -210,20 +202,10 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             variant='contained'
             sx={{ p: 2, color: 'white' }}
             // type='button'
-            >
-          <Button
-            variant='contained'
-            sx={{ p: 2, color: 'white' }}
-            // type='button'
             className='delete-button'
             onClick={() => {
               setButtonLoad(true);
-              setButtonLoad(true);
               dispatch(deleteSeries());
-
-              setTimeout(() => {
-                setButtonLoad(false);
-              }, 1000);
 
               setTimeout(() => {
                 setButtonLoad(false);
@@ -233,10 +215,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
               buttonLoad
                 ? { backgroundColor: theme.palette.primary.main }
                 : { backgroundColor: theme.palette.secondary.main }
-            }
-          >
-            {buttonLoad ? 'Deleted' : 'Clear Series'}
-          </Button>
+            }>
             {buttonLoad ? 'Deleted' : 'Clear Series'}
           </Button>
           <h4 className='compare-series-box' style={{ padding: '0 1rem' }}>
