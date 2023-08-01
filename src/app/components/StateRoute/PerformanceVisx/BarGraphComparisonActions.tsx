@@ -110,14 +110,13 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
     minWidth: 80,
     height: 30,
   }));
-  
+
   const StyledSelect = styled(Select)({
     minWidth: 80,
     fontSize: '.75rem',
     fontWeight: 200,
     height: 30,
   });
-  
 
   const handleSeriesChange = (event) => {
     if (!event) return;
@@ -174,7 +173,6 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
               style={{ color: 'white' }}
               labelId='simple-select-outlined-label'
               id='simple-select-outlined'
-              
               value={series}
               onChange={handleSeriesChange}
             >
@@ -195,7 +193,6 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
               style={{ color: 'white' }}
               labelId='snapshot-select'
               id='snapshot-select'
-              
               value={action} // snapshots
               onChange={handleActionChange}
             >

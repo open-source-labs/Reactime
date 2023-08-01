@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 .save-series-button {
   padding: 3px;
@@ -13,7 +13,7 @@
   border-radius: 5px;
   cursor: pointer;
   line-height: 1.5em;
-  font: 400 16px 'Roboto', sans-serif;
+  font: 400 16px 'Outfit', sans-serif;
   // font-size: $button-text-size;
   width: 120px;
   background: $red-color-gradient;
@@ -38,14 +38,14 @@
   border-radius: 3px;
   cursor: pointer;
   line-height: 1.5em;
-  font: 300 16px 'Roboto', sans-serif;
+  font: 300 16px 'Outfit', sans-serif;
   font-size: $button-text-size;
   width: 120px;
-  background: $red-color-gradient;
+  // background: $red-color-gradient;
   height: 30px;
 
   &.animate {
-    background: rgb(41, 164, 41);
+    background-color: rgb(41, 164, 41);
   }
 }
 
@@ -61,7 +61,7 @@
   border-radius: 3px;
   cursor: pointer;
   line-height: 1.5em;
-  font: 500 16px 'Roboto', sans-serif;
+  font: 500 16px 'Outfit', sans-serif;
   // font-size: $button-text-size; increase the font size and contrast for readability
   width: 120px;
   background: #62d6fb;
@@ -95,8 +95,8 @@
   border: none;
   /* border-radius: 3px; */
   background: linear-gradient(145deg, #5c6068, #4d5157);
-  font: normal 16px "Roboto", sans-serif;
-  color: #FFFFFF;
+  font: normal 16px 'Outfit', sans-serif;
+  color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -111,8 +111,8 @@
   border: transparent;
   border-radius: 3px;
   background-color: #232529;
-  font: normal 16px "Roboto", sans-serif;
-  color: #FFFFFF;
+  font: normal 16px 'Outfit', sans-serif;
+  color: #ffffff;
   transform: rotateX(90deg);
   transition: opacity 300ms, transform 0.15s linear;
   opacity: 0;
@@ -137,7 +137,7 @@
   width: 100px;
   border: transparent;
   border-radius: 3px;
-  font: normal 16px 'Roboto', sans-serif;
+  font: normal 16px 'Outfit', sans-serif;
 }
 
 .empty-button:hover {
@@ -236,7 +236,7 @@
   align-items: center;
   cursor: pointer;
   line-height: 1.5em;
-  font: 300 16px 'Roboto', sans-serif;
+  font: 300 16px 'Outfit', sans-serif;
   font-size: $button-text-size;
 
   background: $brand-color;
@@ -251,16 +251,11 @@
 .dropdown-dark {
   background: #444;
   border-color: #111111 #0a0a0a black;
-  background-image: -webkit-linear-gradient(
-    top,
-    transparent,
-    rgba(0, 0, 0, 0.4)
-  );
+  background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
   background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
   background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
   background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
-  -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1),
-    0 1px 1px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
