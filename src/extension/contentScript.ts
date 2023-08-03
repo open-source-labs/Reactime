@@ -35,8 +35,6 @@ window.addEventListener('message', (msg) => {
   if (action === 'aReactApp') {
     chrome.runtime.sendMessage(msg.data);
   }
-
-  return true // newest return true to determine if this solves current unhandled exceptions.
 });
 
 // Listening for messages from the UI of the Reactime extension.
