@@ -93,9 +93,12 @@ export default function ComponentMap({
     hideTooltip // function to close a tooltip
   } = useTooltip(); // returns an object with several properties that you can use to manage the tooltip state of your component
 
-  const { containerRef, TooltipInPortal } = useTooltipInPortal({
-    detectBounds: true,
-    scroll: true,
+  const {
+    containerRef, // Access to the container's bounding box. This will be empty on first render. 
+    TooltipInPortal // TooltipWithBounds in a Portal, outside of your component DOM tree
+  } = useTooltipInPortal({ // Visx hook
+    detectBounds: true, // use TooltipWithBounds
+    scroll: true, // when tooltip containers are scrolled, this will correctly update the Tooltip position
   });
 
   const tooltipStyles: ToolTipStyles = {

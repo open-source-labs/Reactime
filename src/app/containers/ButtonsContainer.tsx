@@ -9,7 +9,6 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 
-
 // function exportHandler takes in a parameter snapshots which is typed as an array
 // the function does not return anything so the type is void
 function exportHandler(snapshots: []): void {
@@ -44,7 +43,7 @@ function importHandler(dispatch: (a: unknown) => void): void {
   // accepts data from user
   const fileUpload = document.createElement('input');
   // file is a type attribute on the input element, allows users to select a file
-  console.log('fileUpload element:', fileUpload)
+  console.log('fileUpload element:', fileUpload);
   fileUpload.setAttribute('type', 'file');
 
   // onChange is when value of HTML element is changed
@@ -54,13 +53,13 @@ function importHandler(dispatch: (a: unknown) => void): void {
     // reads contents of local files in async
     // can use file or blob objects
     const reader = new FileReader();
-    console.log('on change triggered')
+    console.log('on change triggered');
     //console.log('reader :', reader);
 
     const eventFiles = e.target as HTMLInputElement;
     // console.log('e.target:', e.target)
     // console.log('event files:', eventFiles.files[0]);
-   
+
     if (eventFiles) {
       reader.readAsText(eventFiles.files[0]);
     }
@@ -68,7 +67,7 @@ function importHandler(dispatch: (a: unknown) => void): void {
     reader.onload = () => {
       // once the local file has been loaded, result property on FileReader object returns the file's contents
       // then take contents and convert to a string
-      console.log('on load triggered:')
+      console.log('on load triggered:');
       const test = reader.result.toString();
       // dispatch sends the result of calling importSnapshots on the json parsed data from the file contents from the new FileReader object
       // importSnapshots defined in actions/actions.ts/line 71, it returns an action object with a type and payload, payload is newSnaps parameter
@@ -96,7 +95,7 @@ function ButtonsContainer(): JSX.Element {
     mode: { paused },
   } = tabs[currentTab];
 
-  console.log('----state after any change----', tabs[currentTab])
+  console.log('----state after any change----', tabs[currentTab]);
 
   return (
     <div className='buttons-container'>
@@ -106,7 +105,7 @@ function ButtonsContainer(): JSX.Element {
         type='button'
         onClick={() => dispatch(toggleMode('paused'))}
       >
-        {paused ? <LockIcon sx={{pr: 1}}/> : <LockOpenIcon sx={{pr: 1}}/>}
+        {paused ? <LockIcon sx={{ pr: 1 }} /> : <LockOpenIcon sx={{ pr: 1 }} />}
         {paused ? 'Locked' : 'Unlocked'}
       </Button>
       <Button
@@ -115,11 +114,11 @@ function ButtonsContainer(): JSX.Element {
         type='button'
         onClick={() => exportHandler(tabs[currentTab])}
       >
-        <FileDownloadIcon sx={{pr: 1}}/>
+        <FileDownloadIcon sx={{ pr: 1 }} />
         Download
       </Button>
       <Button variant='outlined' className='import-button' onClick={() => importHandler(dispatch)}>
-        <FileUploadIcon sx={{pr: 1}}/>
+        <FileUploadIcon sx={{ pr: 1 }} />
         Upload
       </Button>
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}

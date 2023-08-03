@@ -8,14 +8,11 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
-
 import { styled } from '@mui/system';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { useTheme } from '@mui/material/styles';
-import { Button } from '@mui/material';
-
 import { deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 import { TooltipData, Margin, BarGraphComparisonAction, ActionObj } from '../../../FrontendTypes';
@@ -39,8 +36,8 @@ const tooltipStyles = {
   fontFamily: 'Roboto',
 };
 
-const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
-  const [dispatch] = useStoreContext();
+const BarGraphComparisonActions = (props: BarGraphComparisonAction): JSX.Element=> {
+  const [dispatch] = useStoreContext(); // used to get the dispatch function from our storeContext
   const {
     width, // from stateRoute container
     height, // from stateRoute container
@@ -51,38 +48,43 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
     setAction, // setter function to update the state located in 'PerfomanceVisx'
     action // boolean from state set in 'PerformanceVisx'
   } = props;
-  const [snapshots] = React.useState(0);
-  const [setOpen] = React.useState(false);
-  const [setPicOpen] = React.useState(false);
-  const theme = useTheme();
-  useEffect(() => {
+  const [snapshots] = React.useState(0); // creates a local state snapshots and sets it to a value of 0 (why is there no setter function? 08/03/2023)
+  const [setOpen] = React.useState(false); // creates a local state setOpen and sets it to false (why is there no setter function? Also this is never used in this file... 08/03/2023)
+  const [setPicOpen] = React.useState(false); // creates a local state setPicOpen and sets it to false (why is there no setter function? Also this is never used in this file... 08/03/2023)
+  const theme = useTheme(); // MUI hook that allows access to theme variables inside your functional React components 
+
+  useEffect(() => { // send dispatch only on initial page load
     dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison' to facilitate render.
   }, []);
 
-  const { tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip } =
-    useTooltip<TooltipData>();
+  const {
+    tooltipOpen, // boolean whether the tooltip state is open or closed
+    tooltipLeft, // number used for tooltip positioning
+    tooltipTop, // number used for tooltip positioning
+    tooltipData, // value/data that tooltip may need to render
+    hideTooltip, // function to close a tooltip
+    showTooltip  // function to set tooltip state
+  } = useTooltip<TooltipData>(); // returns an object with several properties that you can use to manage the tooltip state of your component
+
   let tooltipTimeout: number;
 
-  const { containerRef, TooltipInPortal } = useTooltipInPortal();
+  const {
+    containerRef, // Access to the container's bounding box. This will be empty on first render. 
+    TooltipInPortal // TooltipWithBounds in a Portal, outside of your component DOM tree
+  } = useTooltipInPortal(); // Visx hook
+
   const keys = Object.keys(data[0]).filter(
     (componentName) =>
       componentName !== 'name' && componentName !== 'seriesName' && componentName !== 'snapshotId',
   );
-  // data accessor (used to generate scales) and formatter (add units for on hover box)
-  const getSeriesName = (action: ActionObj): string => action.seriesName;
-
-  // create visualization SCALES with cleaned data.
-  // the domain array/xAxisPoints elements will place the bars along the x-axis
-  const seriesNameScale = scaleBand<string>({
-    domain: data.map(getSeriesName),
+  
+  const getSeriesName = (action: ActionObj): string => action.seriesName; // data accessor (used to generate scales) and formatter (add units for on hover box)
+  const seriesNameScale = scaleBand<string>({ // create visualization SCALES with cleaned data.
+    domain: data.map(getSeriesName), // the domain array/xAxisPoints elements will place the bars along the x-axis
     padding: 0.2,
   });
-  // This function will iterate through the snapshots of the series,
-  // and grab the highest render times (sum of all component times).
-  // We'll then use it in the renderingScale function and compare
-  // with the render time of the current tab.
-  // The max render time will determine the Y-axis's highest number.
-  const calculateMaxTotalRender = () => {
+
+  const calculateMaxTotalRender = () => { // This function will iterate through the snapshots of the series, and grab the highest render times (the sum of all component times). We'll then use it in the renderingScale function and compare with the render time of the current tab. The max render time will determine the Y-axis's highest number.
     let currentMax = -Infinity;
     for (let i = 0; i < data.length; i += 1) {
       let currentSum = 0;
@@ -92,14 +94,12 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
     return currentMax;
   };
 
-  // the domain array on rendering scale will set the coordinates for Y-aix points.
-  const renderingScale = scaleLinear<number>({
-    domain: [0, calculateMaxTotalRender()],
-    nice: true,
+  const renderingScale = scaleLinear<number>({ 
+    domain: [0, calculateMaxTotalRender()], // [minY, maxY] the domain array on rendering scale will set the coordinates for Y-axis points.
+    nice: true, // boolean on whether to round extreme values
   });
-  // the domain array will assign each key a different color to make rectangle boxes
-  // and use range to set the color scheme each bar
-  const colorScale = scaleOrdinal<string>({
+
+  const colorScale = scaleOrdinal<string>({ // the domain array will assign each key a different color to make rectangle boxes and use range to set the color scheme each bar
     domain: keys,
     range: schemeSet3,
   });
@@ -134,8 +134,6 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
     setAction(event.target.value);
     setSeries(false);
   };
-
-  
 
   const seriesList = comparison.map((elem) => elem.data.barStack);
   const actionsList = seriesList.flat();
