@@ -12,6 +12,7 @@ import {
 } from '../actions/actions';
 import { useStoreContext } from '../store';
 import { TravelContainerProps } from '../FrontendTypes';
+import { Button } from '@mui/material';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 
@@ -64,7 +65,8 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
 
   return (
     <div className='travel-container'>
-      <button
+      <Button
+      variant="contained"
         className='play-button'
         type='button'
         // data-testid, prop for testing in RTL
@@ -72,14 +74,14 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
         onClick={() => play(selectedSpeed.value, playing, dispatch, snapshotsLength, sliderIndex)}
       >
         {playing ? 'Pause' : 'Play'}
-      </button>
+      </Button>
       <MainSlider snapshotsLength={snapshotsLength} />
-      <button className='backward-button' onClick={() => dispatch(moveBackward())} type='button'>
-        <FastRewindIcon sx={{mr: 1, color: '#000'}}/>
-      </button>
-      <button className='forward-button' onClick={() => dispatch(moveForward())} type='button'>
+      <Button variant="contained" className='backward-button' onClick={() => dispatch(moveBackward())} type='button'>
+        <FastRewindIcon sx={{xm: 1, color: '#000'}}/>
+      </Button>
+      <Button variant="contained" className='forward-button' onClick={() => dispatch(moveForward())} type='button'>
         <FastForwardIcon />
-      </button>
+      </Button>
       <Dropdown speeds={speeds} selectedSpeed={selectedSpeed} setSpeed={setSpeed} />
     </div>
   );
