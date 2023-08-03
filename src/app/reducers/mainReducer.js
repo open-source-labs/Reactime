@@ -426,7 +426,7 @@ export default (state, action) =>
       }
 
       case types.TUTORIAL_SAVE_SERIES_TOGGLE: {
-        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload };
+        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload }; // sets the tab[currentTab]'s 'seriesSavedStatus' property to the payload.
         break;
       }
 
