@@ -29,16 +29,16 @@ import { ActionProps, OptionsCursorTrueWithMargin } from '../FrontendTypes';
 const Action = (props: ActionProps): JSX.Element => {
   // We destructure the 'props' that were passed into this component
   const {
-    selected,
-    last,
-    index,
-    sliderIndex,
+    selected, // boolean on whether the current index is the same as the viewIndex from 'ActionContainer'
+    last, // boolean on (whether the view index is less than 0) AND if (the index is the same as the last snapshot's index value in hierarchyArr) from 'ActionContainer'
+    index, // from snapshot.index in "ActionContainer's" 'hierarchyArr'
+    sliderIndex, // from tabs[currentTab] object from 'ActionContainer'
     dispatch,
-    displayName,
-    componentData,
-    viewIndex,
+    displayName, // from snapshot.displayName in "ActionContainer's" 'hierarchyArr'
+    componentData, // from snapshot.componentData in "ActionContainer's" 'hierarchyArr'
+    viewIndex, // from tabs[currentTab] object from 'ActionContainer'
     isCurrIndex,
-    handleOnkeyDown,
+    handleOnkeyDown, // function that allows arrows keys to jump between snapshots defined in 'ActionContainer.tsx'
   } = props;
 
   /**
@@ -48,56 +48,42 @@ const Action = (props: ActionProps): JSX.Element => {
 
 
   const cleanTime = (): string => {
-    // if there is no 'componentData' or 'componentData.actualDuration' return "NO TIME"
-    if (!componentData || !componentData.actualDuration) {
+    if (!componentData || !componentData.actualDuration) { // if there is no 'componentData' or 'componentData.actualDuration'
       return 'NO TIME';
     }
 
-    // seconds is undefined but can take a number or a string
-    let seconds: number | string;
-    // milliseconds is of any type and taken from the 'componentData.actualDuration'
-    let milliseconds: any = componentData.actualDuration;
+    let seconds: number | string; // seconds is undefined but can take a number or a string
+    let milliseconds: any = componentData.actualDuration; // milliseconds is of any type and taken from the 'componentData.actualDuration'
 
-    // if the milliseconds is greater than 60
-    if (Math.floor(componentData.actualDuration) > 60) {
-      // we divide our milliseconds by 60 to determine our seconds
-      seconds = Math.floor(componentData.actualDuration / 60);
-      // and we convert our seconds into a string
-      seconds = JSON.stringify(seconds);
-      // if the seconds string is only a single digit
-      if (seconds.length < 2) {
-        // we can add a 0 in front of it so that if 'seconds = "1"' it will come out as 'seconds = "01"'
-        seconds = '0'.concat(seconds);
-      }
-      // Our true milliseconds then becomes the remainder of dividing our initial milliseconds by 60
-      milliseconds = Math.floor(componentData.actualDuration % 60);
+    if (Math.floor(componentData.actualDuration) > 60) { // if the milliseconds is greater than 60
+      seconds = Math.floor(componentData.actualDuration / 60); // we divide our milliseconds by 60 to determine our seconds
+      seconds = JSON.stringify(seconds); // and we convert our seconds into a string
+      
+      if (seconds.length < 2) { // if the seconds string is only a single digit
+        seconds = '0'.concat(seconds); // we can add a 0 in front of it so that if 'seconds = "1"' it will come out as 'seconds = "01"'
+      }   
+      milliseconds = Math.floor(componentData.actualDuration % 60); // Our true milliseconds then becomes the remainder of dividing our initial milliseconds by 60
+
     } else {
-      // if we haven't even reached one second yet, our seconds are 00
-      seconds = '00';
+      seconds = '00'; // if we haven't even reached one second yet, our seconds are 00
     }
 
-    // we convert our milliseconds string into a floating point number that has up to two decimal places.
-    milliseconds = Number.parseFloat(milliseconds as string).toFixed(2);
+    milliseconds = Number.parseFloat(milliseconds as string).toFixed(2); // we convert our milliseconds string into a floating point number that has up to two decimal places.
+    const arrayMilliseconds: string | number = milliseconds.split('.'); // we split our milliseconds using the decimal and come out with an array of two numbers
 
-    // we split our milliseconds using the decimal and come out with an array of two numbers
-    const arrayMilliseconds: string | number = milliseconds.split('.');
-
-    // if our millisecond string only has one digit
-    if (arrayMilliseconds[0].length < 2) {
-      // we add a 0 in front of it so that in the a sample number of '1' becomes '01'
-      arrayMilliseconds[0] = '0'.concat(arrayMilliseconds[0]);
+    
+    if (arrayMilliseconds[0].length < 2) { // if our millisecond string only has one digit
+      arrayMilliseconds[0] = '0'.concat(arrayMilliseconds[0]); // we add a 0 in front of it so that in the a sample number of '1' becomes '01'
     }
-    // if this is the initial snapshot
-    if (index === 0) {
-      // we give it a timestamp
-      return `${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`;
+    
+    if (index === 0) { // if this is the initial snapshot
+      return `${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`; // we give it a timestamp
     }
-    // if these are succeeding snapshots, we add a '+' to the timestamp
-    return `+${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`;
+    return `+${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`; // if these are succeeding snapshots, we add a '+' to the timestamp
   };
 
-  // we run cleanTime on the creation of this component so that we can get the timestamp
-  const displayTime: string = cleanTime();
+  const displayTime: string = cleanTime(); // we run cleanTime on the creation of this component so that we can get the timestamp
+
 
   // creates an options object that 'ReactHover' component will use to modify it's behaviour
   const optionsCursorTrueWithMargin: OptionsCursorTrueWithMargin = {
@@ -109,7 +95,6 @@ const Action = (props: ActionProps): JSX.Element => {
   return (
     <div className='individual-action'>
       <div
-        // Invoking keyboard functionality; functionality is in ActionContainer;
         onKeyDown={(e):void => handleOnkeyDown(e, viewIndex)}
         className={selected || last ? 'action-component selected' : 'action-component'}
         onClick={() => {

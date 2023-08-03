@@ -1,12 +1,20 @@
 import { produce } from 'immer';
 import _, { values } from 'lodash';
 import * as types from '../constants/actionTypes.ts';
+// import { current } from 'immer';
 
 export default (state, action) =>
   produce(state, (draft) => {
     const { port, currentTab, tabs } = draft;
     const { hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex } =
       tabs[currentTab] || {};
+
+    // console.log('----consoles before reducer funcs!-----')
+    // console.log('state:', state)
+    //console.log(tabs[currentTab]);
+    //console.log('properties of tabs[currentTab]:', hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex)
+
+    //console.log('reducer file!', 'hierarchy:', hierarchy, 'tabs:', tabs)
 
     // eslint-disable-next-line max-len
     // function that finds the index in the hierarchy and extracts the name of the equivalent index to add to the post message
@@ -36,6 +44,7 @@ export default (state, action) =>
     switch (action.type) {
       // This saves the series user wants to save to chrome local storage
       case types.SAVE: {
+        console.log('save action reducer!', 'payload:', action.payload);
         const { newSeries, newSeriesName } = action.payload;
         if (!tabs[currentTab].seriesSavedStatus) {
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
@@ -54,6 +63,7 @@ export default (state, action) =>
         }
         break;
       }
+
       // Delete case will delete ALL stored series in chrome local storage. To see  chrome storage related data
       // Chrome Extension Manager (chrome:extensions) --> background page link --> Application Tab
       case types.DELETE_SERIES: {
@@ -73,6 +83,7 @@ export default (state, action) =>
         tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: false };
         break;
       }
+
       case types.ON_HOVER_EXIT: {
         port.postMessage({
           action: 'onHoverExit',
@@ -113,6 +124,7 @@ export default (state, action) =>
         }
         break;
       }
+
       case types.MOVE_FORWARD: {
         if (sliderIndex < snapshots.length - 1) {
           const newIndex = sliderIndex + 1;
@@ -138,6 +150,7 @@ export default (state, action) =>
         }
         break;
       }
+
       case types.SLIDER_ZERO: {
         // eslint-disable-next-line max-len
         // resets name to 0 to send to background.js the current name in the jump action
@@ -151,6 +164,7 @@ export default (state, action) =>
         tabs[currentTab].sliderIndex = 0;
         break;
       }
+
       case types.CHANGE_VIEW: {
         // unselect view if same index was selected
         if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
@@ -159,6 +173,7 @@ export default (state, action) =>
         // tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
         break;
       }
+
       case types.CHANGE_SLIDER: {
         // eslint-disable-next-line max-len
         // finds the name by the action.payload parsing through the hierarchy to send to background.js the current name in the jump action
@@ -175,19 +190,23 @@ export default (state, action) =>
         tabs[currentTab].sliderIndex = action.payload;
         break;
       }
+
       case types.EMPTY: {
-        // send msg to background script
-        port.postMessage({ action: 'emptySnap', tabId: currentTab });
+        console.log('-----clear snapshots reducer----');
+        console.log('state before:', state.tabs[currentTab]);
+
+        port.postMessage({ action: 'emptySnap', tabId: currentTab }); //communicate with background.js (service worker)
+
+        // properties associated with timetravel + seek bar
         tabs[currentTab].sliderIndex = 0;
         tabs[currentTab].viewIndex = 0;
         tabs[currentTab].playing = false;
-        const lastSnapshot = tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1];
-        // resets hierarchy to page last state recorded
-        tabs[currentTab].hierarchy.stateSnapshot = { ...lastSnapshot };
-        // resets hierarchy
-        tabs[currentTab].hierarchy.children = [];
-        // resets snapshots to page last state recorded
-        tabs[currentTab].snapshots = [lastSnapshot];
+
+        const lastSnapshot = tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1]; // the most recent snapshot
+        tabs[currentTab].hierarchy.stateSnapshot = { ...lastSnapshot }; // resets hierarchy to page last state recorded
+        tabs[currentTab].hierarchy.children = []; // resets hierarchy
+        tabs[currentTab].snapshots = [lastSnapshot]; // resets snapshots to page last state recorded
+
         // resets currLocation to page last state recorded
         tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
         tabs[currentTab].index = 1;
@@ -196,17 +215,54 @@ export default (state, action) =>
         tabs[currentTab].seriesSavedStatus = false;
         break;
       }
+
       case types.SET_PORT: {
         draft.port = action.payload;
         break;
       }
+
       case types.IMPORT: {
+        // Log the value of tabs[currentTab].snapshots before the update
+        console.log('-----import snapshots reducer----');
+        console.log('state before:', state.tabs[currentTab]);
+        console.log('action payload:', action.payload);
+
         port.postMessage({
           action: 'import',
-          payload: action.payload,
+          payload: action.payload, //.snapshots,
           tabId: currentTab,
         });
-        tabs[currentTab].snapshots = action.payload;
+
+        //============
+        const savedSnapshot = action.payload;
+
+        tabs[currentTab].sliderIndex = savedSnapshot.sliderIndex;
+        tabs[currentTab].viewIndex = savedSnapshot.viewIndex;
+        tabs[currentTab].playing = false;
+
+        // resets hierarchy to page last state recorded
+        tabs[currentTab].hierarchy.stateSnapshot = savedSnapshot.hierarchy.stateSnapshot;
+
+        // resets hierarchy
+        tabs[currentTab].hierarchy.children = savedSnapshot.hierarchy.children;
+
+        // resets snapshots to page last state recorded
+        tabs[currentTab].snapshots = savedSnapshot.snapshots;
+
+        // resets currLocation to page last state recorded
+        tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+        tabs[currentTab].index = savedSnapshot.index;
+        tabs[currentTab].currParent = savedSnapshot.currParent;
+        tabs[currentTab].currBranch = savedSnapshot.Branch;
+        tabs[currentTab].seriesSavedStatus = false;
+
+        //============
+        //tabs[currentTab].snapshots = action.payload.snapshots;
+
+        // console.log('New snapshots:', action.payload);
+        // console.log('updated tabs[CurrentTab].snapshots:', tabs[currentTab].snapshots)
+        //console.log('state after:', state)
+
         break;
       }
       case types.TOGGLE_MODE: {
@@ -304,10 +360,12 @@ export default (state, action) =>
         }
         break;
       }
+
       case types.DELETE_TAB: {
         delete draft.tabs[action.payload];
         break;
       }
+
       case types.LAUNCH_CONTENT: {
         // Fired when user clicks launch button on the error page. Send msg to background to launch
         port.postMessage({
@@ -317,6 +375,7 @@ export default (state, action) =>
         });
         break;
       }
+
       case types.NO_DEV: {
         const { payload } = action;
         if (tabs[currentTab]) {
@@ -325,6 +384,7 @@ export default (state, action) =>
         }
         break;
       }
+
       case types.TOGGLE_EXPANDED: {
         // find correct node from currLocation and toggle isExpanded
         const checkChildren = (node) => {
@@ -341,6 +401,7 @@ export default (state, action) =>
         checkChildren(tabs[currentTab].currLocation.stateSnapshot);
         break;
       }
+
       case types.SET_CURRENT_LOCATION: {
         const { payload } = action;
         const persistIsExpanded = (newNode, oldNode) => {
@@ -358,14 +419,17 @@ export default (state, action) =>
         tabs[currentTab].currLocation = payload[currentTab].currLocation;
         break;
       }
+      
       case types.SET_CURRENT_TAB_IN_APP: {
         draft.currentTabInApp = action.payload;
         break;
       }
+
       case types.TUTORIAL_SAVE_SERIES_TOGGLE: {
         tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload };
         break;
       }
+
       default:
         throw new Error(`nonexistent action: ${action.type}`);
     }

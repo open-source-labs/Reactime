@@ -52,13 +52,12 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const { width, height, data, comparison, setSeries, series, setAction } = props;
   const [snapshots] = useState(0);
   const [open, setOpen] = useState(false);
-  const [picOpen, setPicOpen] = useState(false);
-  //tracking whether or not the clear series button is clicked
-  const [buttonLoad, setButtonLoad] = useState(false);
-
+  const [picOpen, setPicOpen] = useState(false); 
+  const [buttonLoad, setButtonLoad] = useState(false); //tracking whether or not the clear series button is clicked
   const theme = useTheme();
+
   useEffect(() => {
-    dispatch(setCurrentTabInApp('performance-comparison'));
+    dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison' to facilitate render.
   }, [dispatch]);
 
   const currentIndex: number = tabs[currentTab].sliderIndex;
@@ -197,6 +196,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     <div>
       <div className='series-options-container'>
         <div className='dropdown-and-delete-series-container'>
+          
           <Button
             variant='contained'
             sx={{ p: 2, color: 'white' }}
@@ -286,7 +286,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
       </div>
 
       <svg ref={containerRef} width={width} height={height}>
-        {}
+        { }
         <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
         <Grid
           top={margin.top}

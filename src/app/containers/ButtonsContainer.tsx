@@ -1,13 +1,4 @@
 import * as React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faUpload,
-  faDownload,
-  faSquare,
-  faColumns,
-  faUnlock,
-  faLock,
-} from '@fortawesome/free-solid-svg-icons';
 import { importSnapshots, toggleMode } from '../actions/actions';
 import { useStoreContext } from '../store';
 import { Button } from '@mui/material';
@@ -17,6 +8,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+
 
 // function exportHandler takes in a parameter snapshots which is typed as an array
 // the function does not return anything so the type is void
@@ -52,6 +44,7 @@ function importHandler(dispatch: (a: unknown) => void): void {
   // accepts data from user
   const fileUpload = document.createElement('input');
   // file is a type attribute on the input element, allows users to select a file
+  console.log('fileUpload element:', fileUpload)
   fileUpload.setAttribute('type', 'file');
 
   // onChange is when value of HTML element is changed
@@ -61,9 +54,21 @@ function importHandler(dispatch: (a: unknown) => void): void {
     // reads contents of local files in async
     // can use file or blob objects
     const reader = new FileReader();
+    console.log('on change triggered')
+    //console.log('reader :', reader);
+
+    const eventFiles = e.target as HTMLInputElement;
+    // console.log('e.target:', e.target)
+    // console.log('event files:', eventFiles.files[0]);
+   
+    if (eventFiles) {
+      reader.readAsText(eventFiles.files[0]);
+    }
+
     reader.onload = () => {
       // once the local file has been loaded, result property on FileReader object returns the file's contents
       // then take contents and convert to a string
+      console.log('on load triggered:')
       const test = reader.result.toString();
       // dispatch sends the result of calling importSnapshots on the json parsed data from the file contents from the new FileReader object
       // importSnapshots defined in actions/actions.ts/line 71, it returns an action object with a type and payload, payload is newSnaps parameter
@@ -71,16 +76,17 @@ function importHandler(dispatch: (a: unknown) => void): void {
       // this updates the current tab
       return dispatch(importSnapshots(JSON.parse(test)));
     };
-    const eventFiles = e.target as HTMLInputElement;
-    if (eventFiles?.hasOwnProperty('files')) {
-      // const eventFiles = target as HTMLInputElement;
-      if (eventFiles) {
-        reader.readAsText(eventFiles.files[0]);
-      }
-    }
+    // const eventFiles = e.target as HTMLInputElement;
+    // if (eventFiles?.hasOwnProperty('files')) {
+    //   // const eventFiles = target as HTMLInputElement;
+    //   if (eventFiles) {
+    //     reader.readAsText(eventFiles.files[0]);
+    //   }
+    // }
   };
 
   fileUpload.click();
+  //console.log('dispatch importSnapshots successful')
 }
 
 function ButtonsContainer(): JSX.Element {
@@ -90,6 +96,8 @@ function ButtonsContainer(): JSX.Element {
     mode: { paused },
   } = tabs[currentTab];
 
+  console.log('----state after any change----', tabs[currentTab])
+
   return (
     <div className='buttons-container'>
       <Button
@@ -98,7 +106,7 @@ function ButtonsContainer(): JSX.Element {
         type='button'
         onClick={() => dispatch(toggleMode('paused'))}
       >
-        {paused ? <LockIcon /> : <LockOpenIcon />}
+        {paused ? <LockIcon sx={{pr: 1}}/> : <LockOpenIcon sx={{pr: 1}}/>}
         {paused ? 'Locked' : 'Unlocked'}
       </Button>
       <Button
@@ -107,11 +115,11 @@ function ButtonsContainer(): JSX.Element {
         type='button'
         onClick={() => exportHandler(tabs[currentTab])}
       >
-        <FileDownloadIcon />
+        <FileDownloadIcon sx={{pr: 1}}/>
         Download
       </Button>
       <Button variant='outlined' className='import-button' onClick={() => importHandler(dispatch)}>
-        <FileUploadIcon />
+        <FileUploadIcon sx={{pr: 1}}/>
         Upload
       </Button>
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}

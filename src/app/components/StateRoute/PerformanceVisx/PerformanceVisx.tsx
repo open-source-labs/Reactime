@@ -164,7 +164,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
   const [snapshot, setSnapshot] = useState('All Snapshots');
   // snapshots = 3.0
   useEffect(() => {
-    dispatch(setCurrentTabInApp('performance'));
+    dispatch(setCurrentTabInApp('performance')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance' to facilitate render.
   }, [dispatch]);
 
   // Creates the actions array used to populate the compare actions dropdown
