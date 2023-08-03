@@ -52,13 +52,12 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const { width, height, data, comparison, setSeries, series, setAction } = props;
   const [snapshots] = useState(0);
   const [open, setOpen] = useState(false);
-  const [picOpen, setPicOpen] = useState(false);
-  //tracking whether or not the clear series button is clicked
-  const [buttonLoad, setButtonLoad] = useState(false);
-
+  const [picOpen, setPicOpen] = useState(false); 
+  const [buttonLoad, setButtonLoad] = useState(false); //tracking whether or not the clear series button is clicked
   const theme = useTheme();
+
   useEffect(() => {
-    dispatch(setCurrentTabInApp('performance-comparison'));
+    dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison' to facilitate render.
   }, [dispatch]);
 
   const currentIndex: number = tabs[currentTab].sliderIndex;
@@ -214,8 +213,11 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     <div>
       <div className='series-options-container'>
         <div className='dropdown-and-delete-series-container'>
-          <button
-            type='button'
+          
+          <Button
+            variant='contained'
+            sx={{ p: 2, color: 'white' }}
+            // type='button'
             className='delete-button'
             onClick={() => {
               setButtonLoad(true);
@@ -225,9 +227,12 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                 setButtonLoad(false);
               }, 1000);
             }}
-          >
+            style={ buttonLoad ? { backgroundColor: theme.palette.primary.main }
+                : { backgroundColor: theme.palette.secondary.main }
+            }>
             {buttonLoad ? 'Deleted' : 'Clear Series'}
           </Button>
+            
           <h4 className='compare-series-box' style={{ padding: '0 1rem' }}>
             Compare Series:{' '}
           </h4>

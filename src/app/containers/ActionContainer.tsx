@@ -28,7 +28,11 @@ const resetSlider = () => {
 function ActionContainer(props): JSX.Element {
   const [{ tabs, currentTab, port }, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
   const { currLocation, hierarchy, sliderIndex, viewIndex } = tabs[currentTab]; // we destructure the currentTab object
-  const { toggleActionContainer, actionView, setActionView } = props; // we destructure our props object
+  const { 
+    toggleActionContainer, // function that handles Time Jump Sidebar view from MainContainer
+    actionView, // local state declared in MainContainer
+    setActionView // function to update actionView state declared in MainContainer
+  } = props;
   const [recordingActions, setRecordingActions] = useState(true); // We create a local state 'recordingActions' and set it to true
   let actionsArr: JSX.Element[] = []; // we create an array 'actionsArr' that will hold elements we create later on
   // we create an array 'hierarchyArr' that will hold objects and numbers
@@ -86,13 +90,13 @@ function ActionContainer(props): JSX.Element {
     let currIndex = i;
     
     if (e.key === 'ArrowUp') { // up arrow key pressed
-      currIndex -= 1;
+      currIndex--;
       if (currIndex < 0) return;
       dispatch(changeView(currIndex));
     }
     
     else if (e.key === 'ArrowDown') { // down arrow key pressed
-      currIndex += 1;
+      currIndex++;
       if (currIndex > hierarchyArr.length - 1) return;
       dispatch(changeView(currIndex));
     }
@@ -104,7 +108,7 @@ function ActionContainer(props): JSX.Element {
     }
   }
 
-  // Sort hierarchyArr by index property of each object. This will be useful when later when we build our components so that our components will be displayed in index/chronological order
+  // Sort hierarchyArr by index property of each object. This will be useful later when we render the components: components will be displayed in index/chronological order
   hierarchyArr.sort((a:Obj, b:Obj):number => a.index - b.index);
 
   // we create a map of components that are constructed from "hierarchyArr's" elements/snapshots
@@ -120,13 +124,6 @@ function ActionContainer(props): JSX.Element {
       const { index } = snapshot; // destructure index from snapshot
       const selected = index === viewIndex; // boolean on whether the current index is the same as the viewIndex
       const last = viewIndex === -1 && index === hierarchyArr.length - 1; // boolean on whether the view index is less than 0 and if the index is the same as the last snapshot's index value in hierarchyArr
-
-      /*
-      ====================================================
-      // boolean 
-      // Not sure what currLocation is at this time
-      ====================================================
-      */
       const isCurrIndex = index === currLocation.index;
       return (
         <Action
@@ -205,8 +202,7 @@ function ActionContainer(props): JSX.Element {
             <button
               className='empty-button'
               onClick={() => {
-                dispatch(emptySnapshots());
-                // set slider back to zero, visually
+                dispatch(emptySnapshots()); // set slider back to zero, visually
                 resetSlider();
               }}
               type='button'
