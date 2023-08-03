@@ -122,26 +122,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
-  // useStyles will change the styling on save series dropdown feature
-  // const useStyles = makeStyles((theme) => ({
-  //   formControl: {
-  //     margin: theme.spacing(1),
-  //     minWidth: 80,
-  //     height: 30,
-  //   },
-  //   select: {
-  //     minWidth: 80,
-  //     fontSize: '.75rem',
-  //     fontWeight: 200,
-  //     border: '1px solid grey',
-  //     borderRadius: 4,
-  //     color: 'grey',
-  //     height: 30,
-  //   },
-  // }));
-
-  // const classes = useStyles();
-
   const StyledFormControl = styled(FormControl)(({ theme }) => ({
     margin: theme.spacing(1),
     minWidth: 160,
@@ -150,9 +130,10 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
 
   const StyledSelect = styled(Select)({
     minWidth: 160,
-    fontSize: '.75rem',
+    fontSize: '1.2rem',
     fontWeight: 200,
     height: 30,
+    border: '1px solid #da262c',
   });
 
   const handleSeriesChange = (event: Event) => {
@@ -203,22 +184,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     return data.barStack;
   }
 
-  // const animateButton = (e: MouseEvent) => {
-  //   e.preventDefault();
-  //   const target = e.target as HTMLButtonElement;
-  //   if (target) {
-  //     target.classList.add('animate');
-  //     target.innerHTML = 'Deleted!';
-  //     setTimeout(() => {
-  //       target.innerHTML = 'Clear All Series';
-  //       target.classList.remove('animate');
-  //     }, 1000);
-  //   }
-  // };
-  // const classname = document.getElementsByClassName('delete-button');
-  // for (let i = 0; i < classname.length; i += 1) {
-  //   classname[i].addEventListener('click', animateButton, false);
-  // }
   const seriesList: ActionObj[][] = comparison.map((action: Series) => action.data.barStack);
   const actionsList: ActionObj[] = seriesList.flat();
   const testList: string[] = actionsList.map((elem: ActionObj) => elem.name);
@@ -231,84 +196,93 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   return (
     <div>
       <div className='series-options-container'>
-        {/* <div className='dropdown-and-delete-series-container'> */}
-        <Button
-          variant='contained'
-          sx={{ p: 2, color: 'white' }}
-          // type='button'
-          className='delete-button'
-          onClick={() => {
-            setButtonLoad(true);
-            dispatch(deleteSeries());
+        <div className='dropdown-and-delete-series-container'>
+          <Button
+            variant='contained'
+            sx={{ p: 2, color: 'white' }}
+            // type='button'
+            className='delete-button'
+            onClick={() => {
+              setButtonLoad(true);
+              dispatch(deleteSeries());
 
-            setTimeout(() => {
-              setButtonLoad(false);
-            }, 1000);
-          }}
-          style={
-            buttonLoad
-              ? { backgroundColor: theme.palette.secondary.main }
-              : { backgroundColor: theme.palette.primary.main }
-          }
-        >
-          {buttonLoad ? 'Deleted' : 'Clear Series'}
-        </Button>
-        {/* <h4 className='compare-series-box' style={{ padding: '0 1rem' }}>
+              setTimeout(() => {
+                setButtonLoad(false);
+              }, 1000);
+            }}
+            style={
+              buttonLoad
+                ? { backgroundColor: '#62d6fb' }
+                : { backgroundColor: '#ff6569', color: 'black' }
+            }
+          >
+            {buttonLoad ? 'Deleted' : 'Clear Series'}
+          </Button>
+          {/* <h4 className='compare-series-box' style={{ padding: '0 1rem' }}>
             Compare Series:{' '}
           </h4> */}
-        <StyledFormControl
-          sx={{ m: 1, minwidth: 160 }}
-          size='medium'
-          id='selectSeries'
-          variant='outlined'
-          label='compares series'
-          // sx={{ backgroundColor: theme.palette.primary.main }}
-        >
-          <InputLabel id='selectSeries'>Compare Series</InputLabel>
-          <StyledSelect
-            // labelId='simple-select-outlined-label'
-            // id='simple-select-outlined'
-            open={open}
-            onClose={handleClose}
-            onOpen={handleOpen}
-            value={series}
-            onChange={handleSeriesChange}
+          <StyledFormControl
+            variant='filled'
+            // style={{ color: 'white' }}
+            // size='medium'
+            // id='selectSeries'
+            // variant='outlined'
+            // label='compares series'
+            // sx={{ backgroundColor: theme.palette.primary.main }}
           >
-            {!comparison.length ? (
-              <MenuItem>No series available</MenuItem>
-            ) : (
-              comparison.map((tabElem, index) => (
-                <MenuItem key={`MenuItem${tabElem.name}`} value={index}>
-                  {tabElem.name}
-                </MenuItem>
-              ))
-            )}
-          </StyledSelect>
-        </StyledFormControl>
-        {/* <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4> */}
-        <StyledFormControl variant='outlined'>
-          <InputLabel>Compare Actions</InputLabel>
-          <StyledSelect
-            style={{ color: 'white' }}
-            labelId='snapshot-select'
-            id='snapshot-select'
-            open={picOpen}
-            onClose={picHandleClose}
-            onOpen={picHandleOpen}
-            value='' // snapshots
-            onChange={handleActionChange}
-          >
-            {!comparison[snapshots] ? (
-              <MenuItem>No snapshots available</MenuItem>
-            ) : (
-              finalList.map((elem) => (
-                <MenuItem value={elem}>{elem}</MenuItem>
-                // <MenuItem value="test">{}</MenuItem>
-              ))
-            )}
-          </StyledSelect>
-        </StyledFormControl>
-        {/* </div> */}
+            <InputLabel
+              id='simple-select-outlined-label'
+              sx={{ fontSize: '1.2rem' }}
+              style={{ color: 'white' }}
+            >
+              Compare Series
+            </InputLabel>
+            <StyledSelect
+              labelId='simple-select-outlined-label'
+              id='simple-select-outlined-label'
+              open={open}
+              onClose={handleClose}
+              onOpen={handleOpen}
+              value={series}
+              onChange={handleSeriesChange}
+            >
+              {!comparison.length ? (
+                <MenuItem>No series available</MenuItem>
+              ) : (
+                comparison.map((tabElem, index) => (
+                  <MenuItem key={`MenuItem${tabElem.name}`} value={index}>
+                    {tabElem.name}
+                  </MenuItem>
+                ))
+              )}
+            </StyledSelect>
+          </StyledFormControl>
+          {/* <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4> */}
+          <StyledFormControl variant='filled'>
+            <InputLabel
+              id='snapshot-select-label'
+              sx={{ fontSize: '1.2rem' }}
+              style={{ color: 'white' }}
+            >
+              Compare Actions
+            </InputLabel>
+            <StyledSelect
+              labelId='snapshot-select-label'
+              id='snapshot-select-label'
+              open={picOpen}
+              onClose={picHandleClose}
+              onOpen={picHandleOpen}
+              value={} // snapshots
+              onChange={handleActionChange}
+            >
+              {!comparison[snapshots] ? (
+                <MenuItem>No snapshots available</MenuItem>
+              ) : (
+                finalList.map((elem) => <MenuItem value={elem}>{elem}</MenuItem>)
+              )}
+            </StyledSelect>
+          </StyledFormControl>
+        </div>
       </div>
 
       <svg ref={containerRef} width={width} height={height}>

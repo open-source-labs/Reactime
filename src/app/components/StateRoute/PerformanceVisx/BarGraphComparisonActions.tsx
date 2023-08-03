@@ -8,7 +8,12 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
-
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/system';
+import { useTheme } from '@mui/material/styles';
 import { deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 import { TooltipData, Margin, BarGraphComparisonAction, ActionObj } from '../../../FrontendTypes';
@@ -34,10 +39,20 @@ const tooltipStyles = {
 
 const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   const [dispatch] = useStoreContext();
-  const { width, height, data, comparison, setSeries, series, setAction, action } = props;
+  const {
+    width, // from stateRoute container
+    height, // from stateRoute container
+    data, // returned value from invoking getActions() in 'PerformanceVisx' which is an array of objects
+    comparison, // returned value from invoking 'allStorage()' in 'PerformanceVisx' which is an array of objects
+    setSeries, // setter function to update the state located in 'PerfomanceVisx'
+    series, // boolean from state set in 'PerformanceVisx'
+    setAction, // setter function to update the state located in 'PerfomanceVisx'
+    action // boolean from state set in 'PerformanceVisx'
+  } = props;
   const [snapshots] = React.useState(0);
   const [setOpen] = React.useState(false);
   const [setPicOpen] = React.useState(false);
+  const theme = useTheme();
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance-comparison'));
   }, []);

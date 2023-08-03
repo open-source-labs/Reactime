@@ -203,7 +203,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
     return (
       <BarGraphComparisonActions
         comparison={allStorage()}
-        data={getActions()}
+        data={data} // getActions()
         width={width}
         height={height}
         setSeries={setSeries}

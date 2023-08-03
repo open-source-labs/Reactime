@@ -1,15 +1,12 @@
 /* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
 import Action from '../components/Action';
 import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
 import RouteDescription from '../components/RouteDescription';
 import { Obj } from '../FrontendTypes';
-import { Button } from '@mui/material';
+import { Button, Switch } from '@mui/material';
 
 /*
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
@@ -193,11 +190,7 @@ function ActionContainer(props): JSX.Element {
         </div>
         <a type='button' id='recordBtn' onClick={toggleRecord}>
           <i />
-          {recordingActions ? (
-            <FontAwesomeIcon className='fa-regular' icon={faToggleOn} />
-          ) : (
-            <FontAwesomeIcon className='fa-regular' icon={faToggleOff} />
-          )}
+          {recordingActions ? <Switch defaultChecked /> : <Switch />}
         </a>
       </div>
       {actionView ? (
@@ -207,6 +200,7 @@ function ActionContainer(props): JSX.Element {
             <Button
               variant='contained'
               className='empty-button'
+              style={{ backgroundColor: '#ff6569' }}
               onClick={() => {
                 dispatch(emptySnapshots());
                 // set slider back to zero, visually
