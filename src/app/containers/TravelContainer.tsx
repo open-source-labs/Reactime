@@ -68,6 +68,7 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
       <Button
       variant="contained"
         className='play-button'
+        sx={{height: 25, p: 0, mr: 1, ml: 1}}
         type='button'
         // data-testid, prop for testing in RTL
         data-testid='play-button-test'
@@ -76,11 +77,11 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
         {playing ? 'Pause' : 'Play'}
       </Button>
       <MainSlider snapshotsLength={snapshotsLength} />
-      <Button variant="contained" className='backward-button' onClick={() => dispatch(moveBackward())} type='button'>
-        <FastRewindIcon sx={{xm: 1, color: '#000'}}/>
+      <Button variant="contained" className='backward-button' onClick={() => dispatch(moveBackward())} type='button' sx={{height: 25, minWidth: 30, p: 0, mr: 1}}>
+        <FastRewindIcon sx={{color: '#000'}}/>
       </Button>
-      <Button variant="contained" className='forward-button' onClick={() => dispatch(moveForward())} type='button'>
-        <FastForwardIcon />
+      <Button variant="contained" className='forward-button' onClick={() => dispatch(moveForward())} type='button' sx={{height: 25, minWidth: 30, p: 0}}>
+        <FastForwardIcon sx={{color: '#000'}}/>
       </Button>
       <Dropdown speeds={speeds} selectedSpeed={selectedSpeed} setSpeed={setSpeed} />
     </div>

@@ -156,6 +156,7 @@
   border-radius: 5px;
   font-weight: 500;
   font-size: 16px;
+  justify-content: center;
 }
 
 .play-button:hover {
@@ -167,7 +168,8 @@
 .backward-button {
   width: 30px;
   height: 25px;
-  margin: 7px;
+  // margin: 7px;
+  padding: 0px;
   color: $brand-color;
   border-color: transparent;
   background: $blue-color-gradient;
