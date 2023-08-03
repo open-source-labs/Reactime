@@ -14,6 +14,8 @@ const { Steps } = require('intro.js-react'); //Must be required in. This enables
 /*
   This is the tutorial displayed when the "How to use" button is clicked
   This needs to be a class component to be compatible with updateStepElement from intro.js
+
+  currently written as class components vs functional components.
 */
 
 export default class Tutorial extends Component<TutorialProps, TutorialState> {
