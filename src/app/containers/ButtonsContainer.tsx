@@ -113,7 +113,7 @@ function ButtonsContainer(): JSX.Element {
         variant='outlined'
         className='export-button'
         type='button'
-        onClick={() => exportHandler(snapshots)}
+        onClick={() => exportHandler(tabs[currentTab])}
       >
         <FileDownloadIcon sx={{pr: 1}}/>
         Download
