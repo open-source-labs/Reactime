@@ -166,10 +166,6 @@
 }
 
 .backward-button {
-  width: 30px;
-  height: 25px;
-  // margin: 7px;
-  padding: 0px;
   color: $brand-color;
   border-color: transparent;
   background: $blue-color-gradient;
@@ -177,21 +173,18 @@
 }
 
 .forward-button {
-  width: 30px;
-  height: 25px;
-  margin: 7px;
   color: $brand-color;
   border-color: transparent;
   background: $blue-color-gradient;
   border-radius: 5px;
 }
 
-.play-button:focus,
-.backward-button:focus,
-.forward-button:focus {
-  outline: none;
-  box-shadow: $box-shadow-blue;
-}
+// .play-button:focus,
+// .backward-button:focus,
+// .forward-button:focus {
+//   outline: none;
+//   box-shadow: $box-shadow-blue;
+// }
 
 .forward-button:hover,
 .backward-button:hover {
@@ -200,16 +193,16 @@
   cursor: pointer;
 }
 
-.import-button,
-.howToUse-button,
-.export-button,
-.pause-button {
-  @extend %button-shared;
-  font-size: 16px;
-  color: white;
-  border-color: transparent;
-  background: $blue-color-gradient;
-}
+// .import-button,
+// .howToUse-button,
+// .export-button,
+// .pause-button {
+//   @extend %button-shared;
+//   font-size: 16px;
+//   color: white;
+//   border-color: transparent;
+//   background: $blue-color-gradient;
+// }
 
 .import-button:hover,
 .howToUse-button:hover,
