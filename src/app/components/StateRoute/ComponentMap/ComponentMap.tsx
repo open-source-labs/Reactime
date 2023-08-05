@@ -39,7 +39,7 @@ export default function ComponentMap({
   const [layout, setLayout] = useState('cartesian'); // We create a local state "layout" and set it to a string 'cartesian'
   const [orientation, setOrientation] = useState('vertical'); // We create a local state "orientation" and set it to a string 'vertical'. 
   const [linkType, setLinkType] = useState('diagonal'); // We create a local state "linkType" and set it to a string 'diagonal'. 
-  const [stepPercent, setStepPercent] = useState(10); // We create a local state "stepPercent" and set it to a number '10'.
+  const [stepPercent, setStepPercent] = useState(0.5); // We create a local state "stepPercent" and set it to a number '0.5'. This will be used to scale the Map component's link: Step to 50%
   const [selectedNode, setSelectedNode] = useState('root'); // We create a local state "selectedNode" and set it to a string 'root'. 
   const [, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function to get access to our dispatch function
 

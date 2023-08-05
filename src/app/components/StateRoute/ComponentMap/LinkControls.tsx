@@ -38,7 +38,7 @@ const collectNodes = (node: Node): void => {
 export default function LinkControls({
   layout, // from the layout local state (initially 'cartesian') in 'ComponentMap'
   linkType, // from linkType local state (initially 'vertical') in 'ComponentMap'
-  stepPercent, // from stepPercent local state (initially '10') in 'ComponentMap'
+  stepPercent, // from stepPercent local state (initially '0.5') in 'ComponentMap'
   setLayout, // from the layout local state in 'ComponentMap'
   setOrientation, // from the orientation local state in 'ComponentMap'
   setLinkType, // from the linkType local state in 'ComponentMap'
@@ -63,7 +63,8 @@ export default function LinkControls({
       </select>
       &nbsp;&nbsp;
     
-      <label>Orientation:</label> {/* Controls for the Orientation selection, this dropdown will be disabled when the polar layout is selected as it is not needed */}
+      <label>Orientation:</label> {/* Toggle record button to pause state changes on target application */}
+      {/* Controls for the Orientation selection, this dropdown will be disabled when the polar layout is selected as it is not needed */}
       &nbsp;
       <select
         onClick={(e) => e.stopPropagation()}

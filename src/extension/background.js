@@ -168,7 +168,7 @@ chrome.runtime.onConnect.addListener((port) => {
         action: 'changeTab',
         payload: { tabId: activeTab.id, title: activeTab.title },
       })
-      setInterval(() => { // interval used to keep connection to MainContainer alive
+    const keepAliveServiceWorker = setInterval(() => { // interval used to keep connection to MainContainer alive
         bg.postMessage({
           action: 'keepAlive' // messages sent to port to keep connection alive
         })

@@ -135,15 +135,16 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
 
   const StyledFormControl = styled(FormControl)(({ theme }) => ({ // applies the theme style to the FormControl component
     margin: theme.spacing(1),
-    minWidth: 80,
+    minWidth: 160,
     height: 30,
   }));
 
   const StyledSelect = styled(Select)({ // applies the object to customize the style of the 'Select' component
     minWidth: 80,
-    fontSize: '.75rem',
+    fontSize: '1.2rem',
     fontWeight: 200,
     height: 30,
+    border: '1px solid #da262c',
   });
 
   const handleSeriesChange = (event: Event) => {

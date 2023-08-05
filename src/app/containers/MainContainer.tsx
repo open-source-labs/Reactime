@@ -51,7 +51,7 @@ function MainContainer(): JSX.Element {
     // chrome.runtime allows our application to retrieve our service worker (our eventual bundles/background.bundle.js after running npm run build), details about the manifest, and allows us to listen and respond to events in our application lifecycle.
     const currentPort = chrome.runtime.connect(); // we connect to our service worker
 
-    setInterval(() => { // interval to keep connection to background.js alive
+    const keepAliveMainContainer = setInterval(() => { // interval to keep connection to background.js alive
     currentPort.postMessage({
       action: 'keepAlive' // messages sent to port to keep connection alive
     })
@@ -109,7 +109,7 @@ function MainContainer(): JSX.Element {
     );
 
     currentPort.onDisconnect.addListener(() => { // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
-      console.log('this port is disconnecting line 53');
+      console.log('this port is disconnecting line 52');
     });
 
     dispatch(setPort(currentPort)); // assign port to state so it could be used by other components
