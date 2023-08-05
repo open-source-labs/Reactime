@@ -57,7 +57,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const theme = useTheme();
 
   useEffect(() => {
-    dispatch(setCurrentTabInApp('performance-comparison'));
+    dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison' to facilitate render.
   }, [dispatch]);
 
   const currentIndex: number = tabs[currentTab].sliderIndex;

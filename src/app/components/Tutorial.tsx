@@ -7,13 +7,17 @@ import { Component } from 'react';
 import 'intro.js/introjs.css';
 import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
 import { TutorialProps, TutorialState, StepsObj } from '../FrontendTypes';
-//Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
 import { Button } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-const { Steps } = require('intro.js-react');
+const { Steps } = require('intro.js-react'); //Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
 
-// This is the tutorial displayed when the "How to use" button is clicked
-// This needs to be a class component to be compatible with updateStepElement from intro.js
+/*
+  This is the tutorial displayed when the "How to use" button is clicked
+  This needs to be a class component to be compatible with updateStepElement from intro.js
+
+  currently written as class components vs functional components.
+*/
+
 export default class Tutorial extends Component<TutorialProps, TutorialState> {
   constructor(props: TutorialProps) {
     super(props);
@@ -48,7 +52,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
       }
       if (currentTabInApp === 'performance' && currentStepIndex === 5) {
         this.steps.updateStepElement(currentStepIndex);
-        dispatch(setCurrentTabInApp('performance-comparison'));
+        dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison.' to facilitate render.
       }
       if (currentTabInApp === 'performance-comparison' && currentStepIndex === 6) {
         dispatch(tutorialSaveSeriesToggle(false));
@@ -68,7 +72,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
         currentTabInApp === 'performance-comparison' ||
         currentTabInApp === 'performance-component-details'
       ) {
-        dispatch(setCurrentTabInApp('performance'));
+        dispatch(setCurrentTabInApp('performance')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance' to facilitate render.
       }
       this.setState({ stepsEnabled: true });
     };
