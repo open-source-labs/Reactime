@@ -19,6 +19,11 @@ window.addEventListener('message', (msg) => {
     // One-time request tells the background script that the tab has reloaded.
     chrome.runtime.sendMessage({ action: 'tabReload' });
     firstMessage = false;
+    setInterval(() => { // interval to keep connection to service worker connection alive
+      chrome.runtime.sendMessage({
+        action: 'keepAlive' // messages sent to port to keep connection alive
+      })
+    }, 295000) // messages must happen within five minutes
   }
 
   // After tabs object has been created from firstMessage, backend (linkFiber.ts)

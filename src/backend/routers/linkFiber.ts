@@ -70,7 +70,10 @@ export default function linkFiber(mode: Status): () => Promise<void> {
     // -------------------CHECK REACT DEVTOOL INSTALLATION----------------------
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     // Obtain React Devtools Object:
-    const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    let devTools; // changed to a different version of getting hook (08/04/2023)
+    while (!devTools) {
+      devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    }
     // If React Devtools is not installed, object will be undefined.
     if (!devTools) return;
     // If React Devtools is installed, send a message to front end.

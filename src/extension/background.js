@@ -163,12 +163,17 @@ chrome.runtime.onConnect.addListener((port) => {
 
   // On Reactime launch: make sure RT's active tab is correct
   if (portsArr.length > 0) {
-    portsArr.forEach((bg) => // go through each port object (each Reactime instance)
+    portsArr.forEach((bg) => {// go through each port object (each Reactime instance)
       bg.postMessage({  // send passed in action object as a message to the current port
         action: 'changeTab',
         payload: { tabId: activeTab.id, title: activeTab.title },
-      }),
-    );
+      })
+      setInterval(() => { // interval used to keep connection to MainContainer alive
+        bg.postMessage({
+          action: 'keepAlive' // messages sent to port to keep connection alive
+        })
+      }, 295000) // messages must happen within five minutes
+    });
   }
 
   // send tabs obj to the connected devtools as soon as connection to devtools is made
@@ -283,7 +288,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
   // everytime we get a new tabId, add it to the object
-  if (isReactTimeTravel && !(tabId in tabsObj)) {
+  while (isReactTimeTravel && !(tabId in tabsObj)) { // changed if to while 8/4/2023
     tabsObj[tabId] = createTabObj(tabTitle);
   }
 
