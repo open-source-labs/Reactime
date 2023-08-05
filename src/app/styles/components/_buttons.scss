@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 
 .save-series-button {
   padding: 3px;
@@ -155,6 +156,7 @@
   border-radius: 5px;
   font-weight: 500;
   font-size: 16px;
+  justify-content: center;
 }
 
 .play-button:hover {
@@ -164,9 +166,6 @@
 }
 
 .backward-button {
-  width: 30px;
-  height: 25px;
-  margin: 7px;
   color: $brand-color;
   border-color: transparent;
   background: $blue-color-gradient;
@@ -174,21 +173,18 @@
 }
 
 .forward-button {
-  width: 30px;
-  height: 25px;
-  margin: 7px;
   color: $brand-color;
   border-color: transparent;
   background: $blue-color-gradient;
   border-radius: 5px;
 }
 
-.play-button:focus,
-.backward-button:focus,
-.forward-button:focus {
-  outline: none;
-  box-shadow: $box-shadow-blue;
-}
+// .play-button:focus,
+// .backward-button:focus,
+// .forward-button:focus {
+//   outline: none;
+//   box-shadow: $box-shadow-blue;
+// }
 
 .forward-button:hover,
 .backward-button:hover {
@@ -197,16 +193,16 @@
   cursor: pointer;
 }
 
-.import-button,
-.howToUse-button,
-.export-button,
-.pause-button {
-  @extend %button-shared;
-  font-size: 16px;
-  color: white;
-  border-color: transparent;
-  background: $blue-color-gradient;
-}
+// .import-button,
+// .howToUse-button,
+// .export-button,
+// .pause-button {
+//   @extend %button-shared;
+//   font-size: 16px;
+//   color: white;
+//   border-color: transparent;
+//   background: $blue-color-gradient;
+// }
 
 .import-button:hover,
 .howToUse-button:hover,
