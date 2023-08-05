@@ -79,7 +79,7 @@ export interface BarGraphBase {
 
 export interface BarGraphComparisonProps extends BarGraphBase {
   setSeries: (e: boolean | string) => void;
-  series: boolean; // was number 8/3/2023
+  series: number | boolean; // was number 8/3/2023
   setAction: (e: boolean | string) => void;
 }
 
