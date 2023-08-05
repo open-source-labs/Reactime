@@ -18,14 +18,7 @@ import { useTheme } from '@mui/material/styles';
 import { Button } from '@mui/material';
 import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-import {
-  snapshot,
-  TooltipData,
-  Margin,
-  BarGraphComparisonProps,
-  ActionObj,
-  Series,
-} from '../../../FrontendTypes';
+import { snapshot, TooltipData, Margin, BarGraphComparisonProps, ActionObj, Series } from '../../../FrontendTypes';
 
 /* DEFAULTS */
 const margin: Margin = {
@@ -49,8 +42,8 @@ const tooltipStyles = {
 const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
-    width, // from stateRoute container
-    height, // from stateRoute container
+    width, // from ParentSize provided in StateRoute
+    height, // from ParentSize provided in StateRoute
     data, // Acquired from getPerfMetrics(snapshots, getSnapshotIds(hierarchy)) in 'PerformanceVisx'
     comparison, // result from invoking 'allStorage' in 'PerformanceVisx'
     setSeries, // setter function to update the state located in 'PerfomanceVisx'

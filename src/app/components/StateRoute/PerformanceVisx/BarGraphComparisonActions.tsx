@@ -40,8 +40,8 @@ const tooltipStyles = {
 const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   const [dispatch] = useStoreContext(); // used to get the dispatch function from our storeContext
   const {
-    width, // from stateRoute container
-    height, // from stateRoute container
+    width, // from ParentSize provided in StateRoute
+    height, // from ParentSize provided in StateRoute
     data, 
     comparison, // returned value from invoking 'allStorage()' in 'PerformanceVisx' which is an array of objects
     setSeries, // setter function to update the state located in 'PerfomanceVisx'
