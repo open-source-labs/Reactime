@@ -26,7 +26,6 @@ import {
   ActionObj,
   Series,
 } from '../../../FrontendTypes';
-// import { BarStack as BarStacks } from '@visx/shape/lib/types';
 
 /* DEFAULTS */
 const margin: Margin = {
@@ -49,12 +48,20 @@ const tooltipStyles = {
 
 const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { width, height, data, comparison, setSeries, series, setAction } = props;
-  const [snapshots] = useState(0);
-  const [open, setOpen] = useState(false);
-  const [picOpen, setPicOpen] = useState(false); 
+  const {
+    width, // from stateRoute container
+    height, // from stateRoute container
+    data, // Acquired from getPerfMetrics(snapshots, getSnapshotIds(hierarchy)) in 'PerformanceVisx'
+    comparison, // result from invoking 'allStorage' in 'PerformanceVisx'
+    setSeries, // setter function to update the state located in 'PerfomanceVisx'
+    series, // initialized as boolean, can be an object, from state set in 'PerformanceVisx'
+    setAction // setter function to update the state located in 'PerfomanceVisx'
+  } = props;
+  const [snapshots] = useState(0); // creates a local state snapshots and sets it to a value of 0 (why is there no setter function? Also, why use state when it's only referenced once and never changed? 08/03/2023)
+  const [open, setOpen] = useState(false); // creates a local state setOpen and sets it to false (why is there no setter function? 08/03/2023)
+  const [picOpen, setPicOpen] = useState(false); // creates a local state setPicOpen and sets it to false (why is there no setter function? 08/03/2023)
   const [buttonLoad, setButtonLoad] = useState(false); //tracking whether or not the clear series button is clicked
-  const theme = useTheme();
+  const theme = useTheme(); // MUI hook that allows access to theme variables inside your functional React components
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison' to facilitate render.
@@ -62,53 +69,58 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
 
   const currentIndex: number = tabs[currentTab].sliderIndex;
 
-  const { tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip } =
-    useTooltip<TooltipData>();
+  const { 
+    tooltipData, // value/data that tooltip may need to render
+    tooltipLeft, // number used for tooltip positioning
+    tooltipTop, // number used for tooltip positioning
+    tooltipOpen, // boolean whether the tooltip state is open or closed
+    showTooltip, // function to set tooltip state
+    hideTooltip, // function to close a tooltip
+  } = useTooltip<TooltipData>(); // returns an object with several properties that you can use to manage the tooltip state of your component
   let tooltipTimeout: number;
 
-  const { containerRef, TooltipInPortal } = useTooltipInPortal();
+  const {
+    containerRef, // Access to the container's bounding box. This will be empty on first render.
+    TooltipInPortal, // Visx component that renders Tooltip or TooltipWithBounds in a Portal, outside of your component DOM tree
+  } = useTooltipInPortal();
 
   const keys: string[] = Object.keys(data.componentData);
 
   // data accessor (used to generate scales) and formatter (add units for on hover box)
   const getSnapshotId = (d: snapshot) => d.snapshotId;
   const formatSnapshotId = (id: string): string => `Snapshot ID: ${id}`;
-  const formatRenderTime = (time: string): string => `${time} ms `;
+  const formatRenderTime = (time: string): string => `${time} ms`;
   const getCurrentTab = (storedSeries: ActionObj) => storedSeries.currentTab;
 
   // create visualization SCALES with cleaned data
-  // the domain array/xAxisPoints elements will place the bars along the x-axis
   const xAxisPoints: string[] = ['currentTab', 'comparison'];
   const snapshotIdScale = scaleBand<string>({
-    domain: xAxisPoints,
+    domain: xAxisPoints, // the domain array/xAxisPoints elements will place the bars along the x-axis
     padding: 0.2,
   });
-  // This function will iterate through the snapshots of the series,
-  // and grab the highest render times (sum of all component times).
-  // We'll then use it in the renderingScale function and compare
-  // with the render time of the current tab.
-  // The max render time will determine the Y-axis's highest number.
-  const calculateMaxTotalRender = (serie: number): number => {
+
+  const calculateMaxTotalRender = (serie: number): number => { // This function will iterate through the snapshots of the series, and grab the highest render times (sum of all component times). We'll then use it in the renderingScale function and compare with the render time of the current tab. The max render time will determine the Y-axis's highest number.
     const currentSeriesBarStacks: ActionObj[] = !comparison[serie]
       ? []
       : comparison[serie].data.barStack;
     if (currentSeriesBarStacks.length === 0) return 0;
+
     let currentMax = -Infinity;
+
     for (let i = 0; i < currentSeriesBarStacks.length; i += 1) {
       const renderTimes: number[] = Object.values(currentSeriesBarStacks[i]).slice(1);
       const renderTotal: number = renderTimes.reduce((acc, curr) => acc + curr);
+
       if (renderTotal > currentMax) currentMax = renderTotal;
     }
     return currentMax;
   };
 
-  // the domain array on rendering scale will set the coordinates for Y-axis points.
-  const renderingScale = scaleLinear<number>({
-    domain: [0, Math.max(calculateMaxTotalRender(series), data.maxTotalRender)],
+  const renderingScale = scaleLinear<number>({ // this function will use the domain array to assign each key a different color to make rectangle boxes and use range to set the color scheme each bar
+    domain: [0, Math.max(calculateMaxTotalRender(series), data.maxTotalRender)], // [minY, maxY] the domain array on rendering scale will set the coordinates for Y-axis points.
     nice: true,
   });
-  // the domain array will assign each key a different color to make rectangle boxes
-  // and use range to set the color scheme each bar
+
   const duplicate = schemeTableau10.slice();
   const colorScale = scaleOrdinal<string, string>({
     domain: keys,
@@ -121,15 +133,13 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
-
-
-  const StyledFormControl = styled(FormControl)(({ theme }) => ({
+  const StyledFormControl = styled(FormControl)(({ theme }) => ({ // applies the theme style to the FormControl component
     margin: theme.spacing(1),
     minWidth: 80,
     height: 30,
   }));
 
-  const StyledSelect = styled(Select)({
+  const StyledSelect = styled(Select)({ // applies the object to customize the style of the 'Select' component
     minWidth: 80,
     fontSize: '.75rem',
     fontWeight: 200,
@@ -170,14 +180,14 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     setPicOpen(true);
   };
 
-  // manually assignin X -axis points with tab ID.
-  function setXpointsComparison() {
+  function setXpointsComparison() { // manually assigning X -axis points with tab ID.
     comparison[series].data.barStack.forEach((elem: ActionObj) => {
       elem.currentTab = 'comparison';
     });
     return comparison[series].data.barStack;
   }
-  function setXpointsCurrentTab() {
+
+  function setXpointsCurrentTab() { 
     data.barStack.forEach((element) => {
       element.currentTab = 'currentTab';
     });
@@ -206,7 +216,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             onClick={() => {
               setButtonLoad(true);
               dispatch(deleteSeries());
-
               setTimeout(() => {
                 setButtonLoad(false);
               }, 1000);
@@ -224,7 +233,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             id='selectSeries'
             variant='outlined'
             label='compares series'
-          // sx={{ backgroundColor: theme.palette.primary.main }}
           >
             <StyledSelect
               labelId='simple-select-outlined-label'
@@ -262,7 +270,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
               ) : (
                 finalList.map((elem) => (
                   <MenuItem value={elem}>{elem}</MenuItem>
-                  // <MenuItem value="test">{}</MenuItem>
                 ))
               )}
             </StyledSelect>
@@ -271,7 +278,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
       </div>
 
       <svg ref={containerRef} width={width} height={height}>
-        { }
         <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
         <Grid
           top={margin.top}
@@ -287,20 +293,15 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
         <Group top={margin.top} left={margin.left}>
           <BarStack
             // Current Tab bar stack.
-            data={setXpointsCurrentTab()}
-            keys={keys}
-            x={getCurrentTab}
-            xScale={snapshotIdScale}
-            yScale={renderingScale}
-            color={colorScale}
+            data={setXpointsCurrentTab()} // array of data that generates a stack
+            keys={keys} // array of keys corresponding to stack layers
+            x={getCurrentTab} // returns the value mapped to the x of a bar
+            xScale={snapshotIdScale} // takes in a value and maps it to an x axis position
+            yScale={renderingScale} // takes in a value and maps it to an y axis position
+            color={colorScale} // returns the desired color for a bar with a given key and index
           >
-            {(barStacks) =>
-              barStacks.map((barStack, idx) => {
-                // Uses map method to iterate through all components,
-                // creating a rect component (from visx) for each iteration.
-                // height/width/etc. are calculated by visx.
-                // to set X and Y scale, it  will used the p`assed in function and
-                // will run it on the array thats outputted by data
+            {(barStacks) => // overides render function which is past the configured stack generator
+              barStacks.map((barStack, idx) => { // Uses map method to iterate through all components, creating a rect component, from visx, for each iteration. height, width, etc are calculated by visx to set X and Y scale. The scaler will used the passed in function and will run it on the array thats outputted by data
                 const bar = barStack.bars[currentIndex];
                 if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                   bar.height = 0;
@@ -315,7 +316,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                     fill={bar.color}
                     /* TIP TOOL EVENT HANDLERS */
                     // Hides tool tip once cursor moves off the current rect
-                    onMouseLeave={() => {
+                    onMouseLeave={() => { // Hides tool tip once cursor moves off the current rect
                       dispatch(
                         onHoverExit(data.componentData[bar.key].rtid),
                         (tooltipTimeout = window.setTimeout(() => {
@@ -324,7 +325,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                       );
                     }}
                     // Cursor position in window updates position of the tool tip
-                    onMouseMove={(event) => {
+                    onMouseMove={(event) => { // Cursor position in window updates position of the tool tip
                       dispatch(onHover(data.componentData[bar.key].rtid));
                       if (tooltipTimeout) clearTimeout(tooltipTimeout);
                       const top = event.clientY - margin.top - bar.height;
@@ -341,12 +342,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             }
           </BarStack>
           <BarStack
-            // Comparison Barstack (populates based on series selected)
-            // to set X and Y scale, it  will used the passed in function and
-            // will run it on the array thats outputted by data
-            // setXpointsComparison()}
-            // comparison[series].data.barStack
-            data={!comparison[series] ? [] : setXpointsComparison()}
+            data={!comparison[series] ? [] : setXpointsComparison()} // Comparison Barstack (populates based on series selected) to set X and Y scale, it  will used the passed in function and will run it on the array thats outputted by data. setXpointsComparison() iterates through each ActionObj in comparison[series].data.barStack, assigns a currentTab = 'comparison property, and returns the modified comparison[series].data.barStack if comparison[series] does not exist
             keys={keys}
             x={getCurrentTab}
             xScale={snapshotIdScale}
@@ -354,10 +350,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             color={colorScale}
           >
             {(barStacks) =>
-              barStacks.map((barStack, idx) => {
-                // Uses map method to iterate through all components,
-                // creating a rect component (from visx) for each iteration.
-                // height/width/etc. are calculated by visx.
+              barStacks.map((barStack, idx) => { // Uses map method to iterate through all components, creating a react component (from visx) for each iteration. height/width/etc. are calculated by visx.
                 if (!barStack.bars[currentIndex]) {
                   return <h1>No Comparison</h1>;
                 }
@@ -374,8 +367,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                     width={bar.width}
                     fill={bar.color}
                     /* TIP TOOL EVENT HANDLERS */
-                    // Hides tool tip once cursor moves off the current rect
-                    onMouseLeave={() => {
+                    onMouseLeave={() => { // Hides tool tip once cursor moves off the current rect
                       dispatch(
                         onHoverExit(data.componentData[bar.key].rtid),
                         (tooltipTimeout = window.setTimeout(() => {
@@ -383,8 +375,8 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                         }, 300)),
                       );
                     }}
-                    // Cursor position in window updates position of the tool tip
-                    onMouseMove={(event) => {
+                    
+                    onMouseMove={(event) => { // Cursor position in window updates position of the tool tip
                       dispatch(onHover(data.componentData[bar.key].rtid));
                       if (tooltipTimeout) clearTimeout(tooltipTimeout);
                       const top = event.clientY - margin.top - bar.height;
@@ -447,8 +439,8 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             {' '}
             <strong>{tooltipData.key}</strong>{' '}
           </div>
-          <div>{data.componentData[tooltipData.key].stateType}</div>
-          <div> {formatRenderTime(tooltipData.bar.data[tooltipData.key])} </div>
+          <div>{'State: ' + data.componentData[tooltipData.key].stateType}</div>
+          <div>{'Render time: ' + formatRenderTime(tooltipData.bar.data[tooltipData.key])}</div>
           <div>
             {' '}
             <small>{formatSnapshotId(getSnapshotId(tooltipData.bar.data))}</small>
