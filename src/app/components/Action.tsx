@@ -29,14 +29,14 @@ import { ActionProps, OptionsCursorTrueWithMargin } from '../FrontendTypes';
 const Action = (props: ActionProps): JSX.Element => {
   // We destructure the 'props' that were passed into this component
   const {
-    selected, // boolean on whether the current index is the same as the viewIndex from 'ActionContainer'
-    last, // boolean on (whether the view index is less than 0) AND if (the index is the same as the last snapshot's index value in hierarchyArr) from 'ActionContainer'
+    selected, // boolean on whether the current index is the same as the viewIndex in 'ActionContainer'
+    last, // boolean on (whether the view index is less than 0) AND if (the index is the same as the last snapshot's index value in hierarchyArr) in 'ActionContainer'
     index, // from snapshot.index in "ActionContainer's" 'hierarchyArr'
-    sliderIndex, // from tabs[currentTab] object from 'ActionContainer'
+    sliderIndex, // from tabs[currentTab] object in 'ActionContainer'
     dispatch,
     displayName, // from snapshot.displayName in "ActionContainer's" 'hierarchyArr'
     componentData, // from snapshot.componentData in "ActionContainer's" 'hierarchyArr'
-    viewIndex, // from tabs[currentTab] object from 'ActionContainer'
+    viewIndex, // from tabs[currentTab] object in 'ActionContainer'
     isCurrIndex,
     handleOnkeyDown, // function that allows arrows keys to jump between snapshots defined in 'ActionContainer.tsx'
   } = props;

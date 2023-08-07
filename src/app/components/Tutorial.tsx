@@ -9,7 +9,7 @@ import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions
 import { TutorialProps, TutorialState, StepsObj } from '../FrontendTypes';
 import { Button } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-const { Steps } = require('intro.js-react'); //Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly.
+const { Steps } = require('intro.js-react'); //Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly. The package 'intro.js-react' is small React wrapper around Intro.js. The wrapper provides support for both steps and hints. https://introjs.com/docs/
 
 /*
   This is the tutorial displayed when the "How to use" button is clicked
@@ -35,38 +35,42 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
   public refs: any;
 
   render(): JSX.Element {
-    const { currentTabInApp, dispatch } = this.props;
+    const {
+      currentTabInApp, // 'currentTabInApp' from 'ButtonsContainer' after useStoreContext()
+      dispatch // 'dispatch' from 'ButtonsContainer' after useStoreContext()
+    } = this.props;
 
     // This updates the steps so that they can target dynamically rendered elements
-    const onChangeHandler = (currentStepIndex: number) => {
+    const onChangeHandler = (currentStepIndex: number) => { // takes in the current step and updates the tab[currentTab]'s seriesSavedStatus based on conditions and updates the element associated with the step.
       if (currentTabInApp === 'performance' && currentStepIndex === 1) {
-        dispatch(tutorialSaveSeriesToggle('inputBoxOpen'));
-        this.steps.updateStepElement(currentStepIndex);
+        dispatch(tutorialSaveSeriesToggle('inputBoxOpen')); // sends a dispatch that update's tab[currentTab]'s 'seriesSavedStatus' to 'inputBoxOpen'
+        this.steps.updateStepElement(currentStepIndex); // Built in intro.js API that updates element associated with step
       }
+
       if (currentTabInApp === 'performance' && currentStepIndex === 2) {
         this.steps.updateStepElement(currentStepIndex);
       }
+
       if (currentTabInApp === 'performance' && currentStepIndex === 4) {
-        dispatch(tutorialSaveSeriesToggle('saved'));
+        dispatch(tutorialSaveSeriesToggle('saved')); // sends a dispatch that update's tab[currentTab]'s 'seriesSavedStatus' to 'saved'
         this.steps.updateStepElement(currentStepIndex);
       }
+
       if (currentTabInApp === 'performance' && currentStepIndex === 5) {
         this.steps.updateStepElement(currentStepIndex);
         dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison.' to facilitate render.
       }
+
       if (currentTabInApp === 'performance-comparison' && currentStepIndex === 6) {
-        dispatch(tutorialSaveSeriesToggle(false));
+        dispatch(tutorialSaveSeriesToggle(false)); // sends a dispatch that update's tab[currentTab]'s 'seriesSavedStatus' to the boolean 'false'
       }
     };
 
-    const onExit = () => {
-      this.setState({ stepsEnabled: false });
+    const onExit = () => { // This callback is called when the tutorial exits
+      this.setState({ stepsEnabled: false }); // sets stepsEnabled to false in this component's state
     };
-    const startIntro = () => {
-      // If "How to use" is clicked while in the performance tab,
-      // we'll navigate to the snapshops view before starting the tutorial
-      // This is because the tutorial steps are designed to begin on the snapshots sub-tab
-      // Check out the PerformanceVisx component to see the route redirect logic
+
+    const startIntro = () => { // If "How to use" is clicked while in the performance tab, we'll navigate to the snapshops view before starting the tutorial. This is because the tutorial steps are designed to begin on the snapshots sub-tab. Check out the 'PerformanceVisx' component to see the route redirect logic
       if (
         currentTabInApp === 'performance' ||
         currentTabInApp === 'performance-comparison' ||
@@ -74,10 +78,10 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
       ) {
         dispatch(setCurrentTabInApp('performance')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance' to facilitate render.
       }
-      this.setState({ stepsEnabled: true });
+      this.setState({ stepsEnabled: true }); // sets stepsEnabled to false in this component's state
     };
 
-    let steps: StepsObj[] = [];
+    let steps: StepsObj[] = []; // the steps array will be populated with tutorial elements based on the 'currentTabInApp' case. This allows for specific tutorials based on the current page the user is viewing.
 
     switch (currentTabInApp) {
       case 'map':
@@ -331,26 +335,26 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
     return (
       <>
         <Steps
-          enabled={this.state.stepsEnabled}
-          steps={steps}
-          initialStep={0}
-          onExit={onExit}
+          enabled={this.state.stepsEnabled} // Defines if steps are visible or not, default is false
+          steps={steps} // Array of steps
+          initialStep={0} // Step index to start with when showing the steps
+          onExit={onExit} // Callback called when the steps are disabled. Keeps track of state when steps are dismissed with an Intro.js event and not the enabled prop
           options={{
             tooltipClass: 'customTooltip',
-            scrollToElement: false,
-            showProgress: true,
-            showStepNumbers: true,
-            showBullets: false,
-            exitOnOverlayClick: false,
-            doneLabel: 'Done',
-            nextLabel: 'Next',
-            hideNext: false,
-            skipLabel: 'Skip',
-            keyboardNavigation: true,
-            overlayOpacity: 0.85,
+            scrollToElement: false, // Enables scrolling to hidden elements
+            showProgress: true, // Shows progress indicator
+            showStepNumbers: true, // Show steps number in a red circle
+            showBullets: false, // Show bullets
+            exitOnOverlayClick: false, // Exit by clicking on the overlay layer
+            doneLabel: 'Done', // Done button label
+            nextLabel: 'Next', // Next button label
+            hideNext: false, // Hide the Next button in the last step
+            skipLabel: 'Skip', // Skip button label
+            keyboardNavigation: true, // allows navigation between steps using the keyboard
+            overlayOpacity: 0.85, // opacity of the overlay
           }}
-          onBeforeChange={(currentStepIndex) => onChangeHandler(currentStepIndex)}
-          ref={(steps) => (this.steps = steps)}
+          onBeforeChange={(currentStepIndex) => onChangeHandler(currentStepIndex)} // Callback called before changing the current step. 
+          ref={(steps) => (this.steps = steps)} // ref allows access to intro.js API
         />
         <Button
           variant='outlined'
