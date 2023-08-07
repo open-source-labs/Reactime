@@ -58,8 +58,7 @@ function ActionContainer(props): JSX.Element {
       obj.stateSnapshot.children[0].state && // with a 'state'
       obj.stateSnapshot.children[0].name // and a 'name'
     ) {
-      const newObj: Record<string, unknown> = {
-        // we create a new Record object (whose property keys are Keys and whose property values are Type. This utility can be used to map the properties of a type to another type) and populate it's properties with relevant values from our argument 'obj'.
+      const newObj: Record<string, unknown> = { // we create a new Record object (whose property keys are Keys and whose property values are Type. This utility can be used to map the properties of a type to another type) and populate it's properties with relevant values from our argument 'obj'.
         index: obj.index,
         displayName: `${obj.name}.${obj.branch}`,
         state: obj.stateSnapshot.children[0].state,
@@ -73,8 +72,7 @@ function ActionContainer(props): JSX.Element {
       hierarchyArr.push(newObj); // we push our record object into 'hiearchyArr' defined on line 35
     }
 
-    if (obj.children) {
-      // if argument has a 'children' array, we iterate through it and run 'displayArray' on each element
+    if (obj.children) { // if argument has a 'children' array, we iterate through it and run 'displayArray' on each element
       obj.children.forEach((element): void => {
         displayArray(element);
       });
@@ -98,8 +96,7 @@ function ActionContainer(props): JSX.Element {
       currIndex++;
       if (currIndex > hierarchyArr.length - 1) return;
       dispatch(changeView(currIndex));
-    } else if (e.key === 'Enter') {
-      // enter key pressed
+    } else if (e.key === 'Enter') { // enter key pressed
       e.stopPropagation(); // prevents further propagation of the current event in the capturing and bubbling phases
       e.preventDefault(); // needed or will trigger onClick right after
       dispatch(changeSlider(currIndex));
@@ -108,8 +105,6 @@ function ActionContainer(props): JSX.Element {
 
   // Sort hierarchyArr by index property of each object. This will be useful when later when we build our components so that our components will be displayed in index/chronological order
   hierarchyArr.sort((a: Obj, b: Obj): number => a.index - b.index);
-  // Sort hierarchyArr by index property of each object. This will be useful later when we render the components: components will be displayed in index/chronological order
-  hierarchyArr.sort((a:Obj, b:Obj):number => a.index - b.index);
 
   // we create a map of components that are constructed from "hierarchyArr's" elements/snapshots
   actionsArr = hierarchyArr.map(
