@@ -279,11 +279,16 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
               )}
             </StyledSelect>
           </StyledFormControl>
-          {/* <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4> */}
+
+          {/*==============================================================================================================================*/}
+          {/*commented the below portion out, as bargraphComparisonActions.tsx is not currently functional */}
+          {/*==============================================================================================================================*/}
+
+          {/* {   <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4>
           <StyledFormControl variant='filled'>
             {' '}
             {/* MUI styled 'FormControl' component */}
-            <InputLabel
+          {/* <InputLabel
               id='snapshot-select-label'
               sx={{ fontSize: '1.2rem' }}
               style={{ color: 'white' }}
@@ -306,8 +311,11 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
               )}
             </StyledSelect>
           </StyledFormControl>
+          */}
         </div>
       </div>
+      {/*==============================================================================================================================*/}
+      {/*==============================================================================================================================*/}
 
       <svg ref={containerRef} width={width} height={height}>
         {}
