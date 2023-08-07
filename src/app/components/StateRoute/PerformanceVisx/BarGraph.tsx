@@ -34,49 +34,53 @@ const tooltipStyles = {
 const BarGraph = (props: BarGraphProps): JSX.Element => {
   const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const {
-    width,
-    height,
-    data,
-    comparison,
-    setRoute,
-    allRoutes,
-    filteredSnapshots,
-    snapshot,
-    setSnapshot,
+    width, // from stateRoute container
+    height, // from stateRoute container
+    data, // Acquired from getPerfMetrics(snapshots, getSnapshotIds(hierarchy)) in 'PerformanceVisx'
+    comparison, // result from invoking 'allStorage' in 'PerformanceVisx'
+    setRoute, // updates the 'route' state in 'PerformanceVisx'
+    allRoutes, // array containing urls from 'PerformanceVisx'
+    filteredSnapshots, // array containing url's that exist and with route === url.pathname
+    snapshot, // state that is initialized to 'All Snapshots' in 'PerformanceVisx'
+    setSnapshot, // updates the 'snapshot' state in 'PerformanceVisx'
   } = props;
   const [seriesNameInput, setSeriesNameInput] = useState(`Series ${comparison.length + 1}`);
-  const { tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip } =
-    useTooltip<TooltipData>();
+  const {
+    tooltipOpen, // boolean whether the tooltip state is open or closed
+    tooltipLeft, // number used for tooltip positioning
+    tooltipTop, // number used for tooltip positioning
+    tooltipData, // value/data that tooltip may need to render
+    hideTooltip, // function to close a tooltip
+    showTooltip // function to set tooltip state
+  } = useTooltip<TooltipData>(); // returns an object with several properties that you can use to manage the tooltip state of your component
   let tooltipTimeout: number;
-  const { containerRef, TooltipInPortal } = useTooltipInPortal({
-    detectBounds: true,
-    scroll: true,
+  const { 
+    containerRef, // Access to the container's bounding box. This will be empty on first render. 
+    TooltipInPortal // TooltipWithBounds in a Portal, outside of your component DOM tree
+   } = useTooltipInPortal({ // Visx hook
+    detectBounds: true, // use TooltipWithBounds
+    scroll: true, // when tooltip containers are scrolled, this will correctly update the Tooltip position
   });
 
   const keys = Object.keys(data.componentData);
+  const getSnapshotId = (d: snapshot) => d.snapshotId; // data accessor (used to generate scales) and formatter (add units for on hover box). d comes from data.barstack post filtered data
 
-  // data accessor (used to generate scales) and formatter (add units for on hover box)
-  // d coming from data.barstack post filtered data
-  const getSnapshotId = (d: snapshot) => d.snapshotId;
+  const getSnapshotId = (d: snapshot) => d.snapshotId; // data accessor (used to generate scales) and formatter (add units for on hover box). d comes from data.barstack post filtered data
+  const formatSnapshotId = (id) => `Snapshot ID: ${id}`; // returns snapshot id when invoked in tooltip section
+  const formatRenderTime = (time) => `${time} ms `; // returns render time when invoked in tooltip section
 
-  // returns snapshot id when invoked in tooltip section
-  const formatSnapshotId = (id) => `Snapshot ID: ${id}`;
-  // returns render time when invoked in tooltip section
-  const formatRenderTime = (time) => `${time} ms `;
-
-  // create visualization SCALES with cleaned data
-  const snapshotIdScale = scaleBand<string>({
+  
+  const snapshotIdScale = scaleBand<string>({ // create visualization SCALES with cleaned data
     domain: data.barStack.map(getSnapshotId),
     padding: 0.2,
   });
 
-  // Adjusts y axis to match/ bar height
-  const renderingScale = scaleLinear<number>({
+  const renderingScale = scaleLinear<number>({ // Adjusts y axis to match/ bar height
     domain: [0, data.maxTotalRender],
     nice: true,
   });
-  // Gives each bar on the graph a color using schemeSet1 imported from D3
-  const colorScale = scaleOrdinal<string>({
+  
+  const colorScale = scaleOrdinal<string>({ // Gives each bar on the graph a color using schemeSet1 imported from D3
     domain: keys,
     range: schemeSet1,
   });
@@ -92,9 +96,9 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     title: tabs[currentTab].title,
     data,
   };
-  // use this to animate the save series button. It
-  useEffect(() => {
-    const saveButtons = document.getElementsByClassName('save-series-button');
+
+  useEffect(() => { // Animates the save series button.
+    const saveButtons = document.getElementsByClassName('save-series-button'); // finds the buttom in the DOM
     for (let i = 0; i < saveButtons.length; i++) {
       if (tabs[currentTab].seriesSavedStatus === 'saved') {
         saveButtons[i].classList.add('animate');
@@ -106,22 +110,21 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     }
   });
 
-  // CURRENTLY DOES NOT SAVE
-  const saveSeriesClickHandler = () => {
+  const saveSeriesClickHandler = () => { // function to save the currently selected series
     if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
       const actionNames = document.getElementsByClassName('actionname');
       for (let i = 0; i < actionNames.length; i += 1) {
         toStorage.data.barStack[i].name = actionNames[i].value;
       }
-      dispatch(save(toStorage, seriesNameInput));
-      setSeriesNameInput(`Series ${comparison.length}`);
+      dispatch(save(toStorage, seriesNameInput)); // saves the series under seriesName
+      setSeriesNameInput(`Series ${comparison.length}`); // sends a reducer that saves the series/toStorage object the user wants to chrome local storage
       return;
     }
-    dispatch(save(toStorage));
+    dispatch(save(toStorage)); // sends a reducer that saves the series/toStorage object the user wants to chrome local storage
   };
 
-  // Need to change so textbox isn't empty before saving
-  const textbox =
+  
+  const textbox = // Need to change so textbox isn't empty before saving
     tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? (
       <input
         type='text'
@@ -194,8 +197,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
             {(barStacks) =>
               barStacks.map((barStack) =>
                 barStack.bars.map((bar) => {
-                  // Hides new components if components don't exist in previous snapshots.
-                  if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
+                  if (Number.isNaN(bar.bar[1]) || bar.height < 0) { // Hides new components if components don't exist in previous snapshots.
                     bar.height = 0;
                   }
                   return (
@@ -206,9 +208,9 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
                       height={bar.height === 0 ? null : bar.height}
                       width={bar.width}
                       fill={bar.color}
+
                       /* TIP TOOL EVENT HANDLERS */
-                      // Hides tool tip once cursor moves off the current rect.
-                      onMouseLeave={() => {
+                      onMouseLeave={() => { // Hides tool tip once cursor moves off the current rect.
                         dispatch(
                           onHoverExit(data.componentData[bar.key].rtid),
                           (tooltipTimeout = window.setTimeout(() => {
@@ -216,8 +218,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
                           }, 300)),
                         );
                       }}
-                      // Cursor position in window updates position of the tool tip.
-                      onMouseMove={(event) => {
+                      onMouseMove={(event) => { // Cursor position in window updates position of the tool tip.
                         dispatch(onHover(data.componentData[bar.key].rtid));
                         if (tooltipTimeout) clearTimeout(tooltipTimeout);
                         const top;
@@ -282,11 +283,9 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           </Text>
         )}
       </svg>
+
       {/* FOR HOVER OVER DISPLAY */}
-      {/* Ths conditional statement displays a different tooltip
-      configuration depending on if we are trying do display a specific
-      snapshot through options menu or all snapshots together in bargraph */}
-      {tooltipOpen && tooltipData && (
+      {tooltipOpen && tooltipData && ( // Ths conditional statement displays a different tooltip configuration depending on if we are trying do display a specific snapshot through options menu or all snapshots together in bargraph
         <TooltipInPortal
           key={Math.random()} // update tooltip bounds each render
           top={tooltipTop}
@@ -297,8 +296,8 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
             {' '}
             <strong>{tooltipData.key}</strong>{' '}
           </div>
-          <div>{data.componentData[tooltipData.key].stateType}</div>
-          <div> {formatRenderTime(tooltipData.bar.data[tooltipData.key])} </div>
+          <div>{'State: ' + data.componentData[tooltipData.key].stateType}</div>
+          <div> {'Render time: ' + formatRenderTime(tooltipData.bar.data[tooltipData.key])} </div>
           <div>
             {' '}
             <small>{formatSnapshotId(getSnapshotId(tooltipData.bar.data))}</small>

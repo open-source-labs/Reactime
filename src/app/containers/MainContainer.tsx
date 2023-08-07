@@ -45,13 +45,18 @@ function MainContainer(): JSX.Element {
     }
   };
   
-  // let port;
   useEffect(() => {
     if (port) return; // only open port once so if it exists, do not run useEffect again
 
     // chrome.runtime allows our application to retrieve our service worker (our eventual bundles/background.bundle.js after running npm run build), details about the manifest, and allows us to listen and respond to events in our application lifecycle.
     const currentPort = chrome.runtime.connect(); // we connect to our service worker
 
+    const keepAliveMainContainer = setInterval(() => { // interval to keep connection to background.js alive
+    currentPort.postMessage({
+      action: 'keepAlive' // messages sent to port to keep connection alive
+    })
+    }, 295000) // messages must happen within five minutes
+    
     // listen for a message containing snapshots from the /extension/build/background.js service worker
     currentPort.onMessage.addListener(
       // parameter message is an object with following type script properties
@@ -63,7 +68,7 @@ function MainContainer(): JSX.Element {
         const { action, payload, sourceTab } = message;
         let maxTab: number;
 
-        if (!sourceTab) { // if the sourceTab doesn't exist or is 0
+        if (!sourceTab && action !== 'keepAlive') { // if the sourceTab doesn't exist or is 0 and it is not a 'keepAlive' action
           const tabsArray: Array<string> = Object.keys(payload); // we create a tabsArray of strings composed of keys from our payload object
           const numTabsArray: number[] = tabsArray.map((tab) => Number(tab)); // we then map out our tabsArray where we convert each string into a number
         
@@ -104,7 +109,7 @@ function MainContainer(): JSX.Element {
     );
 
     currentPort.onDisconnect.addListener(() => { // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
-      console.log('this port is disconnecting line 53');
+      console.log('this port is disconnecting line 52');
     });
 
     dispatch(setPort(currentPort)); // assign port to state so it could be used by other components

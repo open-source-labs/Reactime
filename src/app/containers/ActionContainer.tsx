@@ -1,14 +1,12 @@
 /* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
 import Action from '../components/Action';
 import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../actions/actions';
 import { useStoreContext } from '../store';
 import RouteDescription from '../components/RouteDescription';
 import { Obj } from '../FrontendTypes';
+import { Button, Switch } from '@mui/material';
 
 /*
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
@@ -23,7 +21,6 @@ const resetSlider = () => {
     sliderTrack.setAttribute('style', 'width: 0');
   }
 };
-
 
 function ActionContainer(props): JSX.Element {
   const [{ tabs, currentTab, port }, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
@@ -75,7 +72,7 @@ function ActionContainer(props): JSX.Element {
       hierarchyArr.push(newObj); // we push our record object into 'hiearchyArr' defined on line 35
     }
 
-    if (obj.children) {  // if argument has a 'children' array, we iterate through it and run 'displayArray' on each element
+    if (obj.children) { // if argument has a 'children' array, we iterate through it and run 'displayArray' on each element
       obj.children.forEach((element): void => {
         displayArray(element);
       });
@@ -99,17 +96,15 @@ function ActionContainer(props): JSX.Element {
       currIndex++;
       if (currIndex > hierarchyArr.length - 1) return;
       dispatch(changeView(currIndex));
-    }
-    
-    else if (e.key === 'Enter') { // enter key pressed
+    } else if (e.key === 'Enter') { // enter key pressed
       e.stopPropagation(); // prevents further propagation of the current event in the capturing and bubbling phases
       e.preventDefault(); // needed or will trigger onClick right after
       dispatch(changeSlider(currIndex));
     }
   }
 
-  // Sort hierarchyArr by index property of each object. This will be useful later when we render the components: components will be displayed in index/chronological order
-  hierarchyArr.sort((a:Obj, b:Obj):number => a.index - b.index);
+  // Sort hierarchyArr by index property of each object. This will be useful when later when we build our components so that our components will be displayed in index/chronological order
+  hierarchyArr.sort((a: Obj, b: Obj): number => a.index - b.index);
 
   // we create a map of components that are constructed from "hierarchyArr's" elements/snapshots
   actionsArr = hierarchyArr.map(
@@ -165,11 +160,12 @@ function ActionContainer(props): JSX.Element {
   };
 
   const routes: {} = {}; // Logic to create the route description components begin
-  
-  for (let i = 0; i < actionsArr.length; i += 1) { // iterate through our actionsArr
+
+  for (let i = 0; i < actionsArr.length; i += 1) {
+    // iterate through our actionsArr
     if (!routes.hasOwnProperty(actionsArr[i].props.routePath)) {
-      routes[actionsArr[i].props.routePath] = [actionsArr[i]]; // if 'routes' doesn't have a property key that is the same as the current component at index[i] routePath we create an array with the first element being the component at index [i]. 
-    } else { 
+      routes[actionsArr[i].props.routePath] = [actionsArr[i]]; // if 'routes' doesn't have a property key that is the same as the current component at index[i] routePath we create an array with the first element being the component at index [i].
+    } else {
       routes[actionsArr[i].props.routePath].push(actionsArr[i]); // If it does exist, we push the component at index [i] to the apporpriate routes[routePath]
     }
   }
@@ -188,19 +184,17 @@ function ActionContainer(props): JSX.Element {
         </div>
         <a type='button' id='recordBtn' onClick={toggleRecord}>
           <i />
-          {recordingActions ? (
-            <FontAwesomeIcon className='fa-regular' icon={faToggleOn} />
-          ) : (
-            <FontAwesomeIcon className='fa-regular' icon={faToggleOff} />
-          )}
+          {recordingActions ? <Switch defaultChecked /> : <Switch />}
         </a>
       </div>
       {actionView ? (
         <div className='action-button-wrapper'>
           <SwitchAppDropdown />
           <div className='action-component exclude'>
-            <button
+            <Button
+              variant='contained'
               className='empty-button'
+              style={{ backgroundColor: '#ff6569' }}
               onClick={() => {
                 dispatch(emptySnapshots()); // set slider back to zero, visually
                 resetSlider();
@@ -208,7 +202,7 @@ function ActionContainer(props): JSX.Element {
               type='button'
             >
               Clear
-            </button>
+            </Button>
           </div>
           {/* Rendering of route description components */}
           {Object.keys(routes).map((route, i) => (

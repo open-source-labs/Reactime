@@ -8,19 +8,7 @@ export default (state, action) =>
     const { port, currentTab, tabs } = draft;
     const { hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex } =
       tabs[currentTab] || {};
-
-    // console.log('----consoles before reducer funcs!-----')
-    // console.log('state:', state)
-    //console.log(tabs[currentTab]);
-    //console.log('properties of tabs[currentTab]:', hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex)
-
-    //console.log('reducer file!', 'hierarchy:', hierarchy, 'tabs:', tabs)
-
-    // eslint-disable-next-line max-len
-    // function that finds the index in the hierarchy and extracts the name of the equivalent index to add to the post message
     // eslint-disable-next-line consistent-return
-
-    // (action.payload, hierarchy)
     const findName = (index, obj) => {
       // eslint-disable-next-line eqeqeq
       if (obj && obj.index == index) {
@@ -44,7 +32,6 @@ export default (state, action) =>
     switch (action.type) {
       // This saves the series user wants to save to chrome local storage
       case types.SAVE: {
-        console.log('save action reducer!', 'payload:', action.payload);
         const { newSeries, newSeriesName } = action.payload;
         if (!tabs[currentTab].seriesSavedStatus) {
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
@@ -192,9 +179,6 @@ export default (state, action) =>
       }
 
       case types.EMPTY: {
-        console.log('-----clear snapshots reducer----');
-        console.log('state before:', state.tabs[currentTab]);
-
         port.postMessage({ action: 'emptySnap', tabId: currentTab }); //communicate with background.js (service worker)
 
         // properties associated with timetravel + seek bar
@@ -223,17 +207,12 @@ export default (state, action) =>
 
       case types.IMPORT: {
         // Log the value of tabs[currentTab].snapshots before the update
-        console.log('-----import snapshots reducer----');
-        console.log('state before:', state.tabs[currentTab]);
-        console.log('action payload:', action.payload);
-
         port.postMessage({
           action: 'import',
           payload: action.payload, //.snapshots,
           tabId: currentTab,
         });
 
-        //============
         const savedSnapshot = action.payload;
 
         tabs[currentTab].sliderIndex = savedSnapshot.sliderIndex;
@@ -255,14 +234,6 @@ export default (state, action) =>
         tabs[currentTab].currParent = savedSnapshot.currParent;
         tabs[currentTab].currBranch = savedSnapshot.Branch;
         tabs[currentTab].seriesSavedStatus = false;
-
-        //============
-        //tabs[currentTab].snapshots = action.payload.snapshots;
-
-        // console.log('New snapshots:', action.payload);
-        // console.log('updated tabs[CurrentTab].snapshots:', tabs[currentTab].snapshots)
-        //console.log('state after:', state)
-
         break;
       }
       case types.TOGGLE_MODE: {
@@ -426,7 +397,7 @@ export default (state, action) =>
       }
 
       case types.TUTORIAL_SAVE_SERIES_TOGGLE: {
-        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload };
+        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload }; // sets the tab[currentTab]'s 'seriesSavedStatus' property to the payload.
         break;
       }
 

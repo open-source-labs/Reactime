@@ -61,10 +61,10 @@ function ErrorContainer(): JSX.Element {
 
     if (!status.contentScriptLaunched) { // if content script hasnt been launched/found, set a timer or immediately update 'loadingArray' state
 
-      if (loadingArray[0] === true) { // if loadingArray[0] is true, then that means our timeout.current is still null so we now set it to a setTimeout function that will flip loadingArray[0] to false after 1.5 seconds
+      if (loadingArray[0] === true) { // if loadingArray[0] is true, then that means our timeout.current is still null so we now set it to a setTimeout function that will flip loadingArray[0] to false after 3 seconds
         timeout.current = setTimeout(() => {
           setLoadingArray(0, false);
-        }, 1500);
+        }, 3000); // increased from 1500
       }
     } else {
       setLoadingArray(0, false) // if status.contentScriptLaunched is true, that means timeout.current !== null. This means that useEffect was triggered previously.
