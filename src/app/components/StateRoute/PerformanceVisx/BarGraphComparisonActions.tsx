@@ -13,6 +13,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { useTheme } from '@mui/material/styles';
+import { Button } from '@mui/material';
 import { deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 import { TooltipData, Margin, BarGraphComparisonAction, ActionObj } from '../../../FrontendTypes';
@@ -36,12 +37,12 @@ const tooltipStyles = {
   fontFamily: 'Roboto',
 };
 
-const BarGraphComparisonActions = (props: BarGraphComparisonAction): JSX.Element=> {
+const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   const [dispatch] = useStoreContext(); // used to get the dispatch function from our storeContext
   const {
-    width, // from stateRoute container
-    height, // from stateRoute container
-    data, // returned value from invoking getActions() in 'PerformanceVisx' which is an array of objects
+    width, // from ParentSize provided in StateRoute
+    height, // from ParentSize provided in StateRoute
+    data, 
     comparison, // returned value from invoking 'allStorage()' in 'PerformanceVisx' which is an array of objects
     setSeries, // setter function to update the state located in 'PerfomanceVisx'
     series, // boolean from state set in 'PerformanceVisx'
@@ -51,7 +52,6 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction): JSX.Element
   const [snapshots] = React.useState(0); // creates a local state snapshots and sets it to a value of 0 (why is there no setter function? 08/03/2023)
   const [setOpen] = React.useState(false); // creates a local state setOpen and sets it to false (why is there no setter function? Also this is never used in this file... 08/03/2023)
   const [setPicOpen] = React.useState(false); // creates a local state setPicOpen and sets it to false (why is there no setter function? Also this is never used in this file... 08/03/2023)
-  const theme = useTheme(); // MUI hook that allows access to theme variables inside your functional React components 
 
   useEffect(() => { // send dispatch only on initial page load
     dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison' to facilitate render.
@@ -63,9 +63,8 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction): JSX.Element
     tooltipTop, // number used for tooltip positioning
     tooltipData, // value/data that tooltip may need to render
     hideTooltip, // function to close a tooltip
-    showTooltip  // function to set tooltip state
+    showTooltip // function to set tooltip state
   } = useTooltip<TooltipData>(); // returns an object with several properties that you can use to manage the tooltip state of your component
-
   let tooltipTimeout: number;
 
   const {
@@ -75,7 +74,9 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction): JSX.Element
 
   const keys = Object.keys(data[0]).filter(
     (componentName) =>
-      componentName !== 'name' && componentName !== 'seriesName' && componentName !== 'snapshotId',
+      componentName !== 'name' &&
+      componentName !== 'seriesName' &&
+      componentName !== 'snapshotId',
   );
   
   const getSeriesName = (action: ActionObj): string => action.seriesName; // data accessor (used to generate scales) and formatter (add units for on hover box)
@@ -94,7 +95,8 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction): JSX.Element
     return currentMax;
   };
 
-  const renderingScale = scaleLinear<number>({ 
+  // the domain array on rendering scale will set the coordinates for Y-aix points.
+  const renderingScale = scaleLinear<number>({
     domain: [0, calculateMaxTotalRender()], // [minY, maxY] the domain array on rendering scale will set the coordinates for Y-axis points.
     nice: true, // boolean on whether to round extreme values
   });
@@ -157,7 +159,6 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction): JSX.Element
               setAction(false);
               setSeries(true);
               dispatch(deleteSeries());
-
               setTimeout(() => {
                 setButtonLoad(false);
               }, 1000);
@@ -268,6 +269,7 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction): JSX.Element
               )
             }
           </BarStack>
+          {/* Insert Action Comparison Barstack here */}
         </Group>
         <AxisLeft
           top={margin.top}

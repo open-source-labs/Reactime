@@ -24,8 +24,8 @@ const defaultMargin: DefaultMargin = {
 // below we destructure the props
 function History(props: Record<string, unknown>): JSX.Element {
   const {
-    width: totalWidth,
-    height: totalHeight,
+    width: totalWidth, // from ParentSize provided in StateRoute
+    height: totalHeight, // from ParentSize provided in StateRoute
     margin = defaultMargin,
     hierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
     dispatch, // from useStoreContext in 'StateRoute'

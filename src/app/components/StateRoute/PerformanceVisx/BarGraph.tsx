@@ -54,10 +54,10 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     showTooltip // function to set tooltip state
   } = useTooltip<TooltipData>(); // returns an object with several properties that you can use to manage the tooltip state of your component
   let tooltipTimeout: number;
-  const {
+  const { 
     containerRef, // Access to the container's bounding box. This will be empty on first render. 
     TooltipInPortal // TooltipWithBounds in a Portal, outside of your component DOM tree
-  } = useTooltipInPortal({ // Visx hook
+   } = useTooltipInPortal({ // Visx hook
     detectBounds: true, // use TooltipWithBounds
     scroll: true, // when tooltip containers are scrolled, this will correctly update the Tooltip position
   });
@@ -65,15 +65,17 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
   const keys = Object.keys(data.componentData);
   const getSnapshotId = (d: snapshot) => d.snapshotId; // data accessor (used to generate scales) and formatter (add units for on hover box). d comes from data.barstack post filtered data
 
+  const getSnapshotId = (d: snapshot) => d.snapshotId; // data accessor (used to generate scales) and formatter (add units for on hover box). d comes from data.barstack post filtered data
   const formatSnapshotId = (id) => `Snapshot ID: ${id}`; // returns snapshot id when invoked in tooltip section
   const formatRenderTime = (time) => `${time} ms `; // returns render time when invoked in tooltip section
 
+  
   const snapshotIdScale = scaleBand<string>({ // create visualization SCALES with cleaned data
     domain: data.barStack.map(getSnapshotId),
     padding: 0.2,
   });
 
-  const renderingScale = scaleLinear<number>({  // Adjusts y axis to match/ bar height
+  const renderingScale = scaleLinear<number>({ // Adjusts y axis to match/ bar height
     domain: [0, data.maxTotalRender],
     nice: true,
   });
@@ -94,7 +96,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     title: tabs[currentTab].title,
     data,
   };
-  
+
   useEffect(() => { // Animates the save series button.
     const saveButtons = document.getElementsByClassName('save-series-button'); // finds the buttom in the DOM
     for (let i = 0; i < saveButtons.length; i++) {
@@ -108,19 +110,20 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     }
   });
 
-  const saveSeriesClickHandler = () => { // CURRENTLY DOES NOT SAVE
+  const saveSeriesClickHandler = () => { // function to save the currently selected series
     if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
       const actionNames = document.getElementsByClassName('actionname');
       for (let i = 0; i < actionNames.length; i += 1) {
         toStorage.data.barStack[i].name = actionNames[i].value;
       }
-      dispatch(save(toStorage, seriesNameInput));
-      setSeriesNameInput(`Series ${comparison.length}`);
+      dispatch(save(toStorage, seriesNameInput)); // saves the series under seriesName
+      setSeriesNameInput(`Series ${comparison.length}`); // sends a reducer that saves the series/toStorage object the user wants to chrome local storage
       return;
     }
     dispatch(save(toStorage)); // sends a reducer that saves the series/toStorage object the user wants to chrome local storage
   };
 
+  
   const textbox = // Need to change so textbox isn't empty before saving
     tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? (
       <input
@@ -215,7 +218,6 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
                           }, 300)),
                         );
                       }}
-                      
                       onMouseMove={(event) => { // Cursor position in window updates position of the tool tip.
                         dispatch(onHover(data.componentData[bar.key].rtid));
                         if (tooltipTimeout) clearTimeout(tooltipTimeout);
@@ -294,8 +296,8 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
             {' '}
             <strong>{tooltipData.key}</strong>{' '}
           </div>
-          <div>{data.componentData[tooltipData.key].stateType}</div>
-          <div> {formatRenderTime(tooltipData.bar.data[tooltipData.key])} </div>
+          <div>{'State: ' + data.componentData[tooltipData.key].stateType}</div>
+          <div> {'Render time: ' + formatRenderTime(tooltipData.bar.data[tooltipData.key])} </div>
           <div>
             {' '}
             <small>{formatSnapshotId(getSnapshotId(tooltipData.bar.data))}</small>
