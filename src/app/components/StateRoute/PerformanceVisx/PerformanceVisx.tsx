@@ -195,11 +195,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
   }, [dispatch]);
 
   const renderComparisonBargraph = () => {
-    console.log('hierarchy', hierarchy);
-    console.log('series', series);
-    console.log('hierarchy && series !== false', hierarchy && series !== false);
     if (hierarchy && series !== false) {
-      console.log('barGraphComparison triggered');
       return (
         <BarGraphComparison
           comparison={allStorage()}
@@ -212,7 +208,6 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
         />
       );
     }
-    console.log('barGraphComparisonActions triggered');
     return (
       <BarGraphComparisonActions
         comparison={allStorage()}
