@@ -139,7 +139,9 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     minWidth: 160,
     height: 30,
   }));
-
+  {
+    /* StyledSelect to use for MUI select components to maintain consistent styling for all select components*/
+  }
   const StyledSelect = styled(Select)({
     // applies the object to customize the style of the 'Select' component
     minWidth: 160,
@@ -219,6 +221,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     <div>
       <div className='series-options-container'>
         <div className='dropdown-and-delete-series-container'>
+          {/*'Clear Series' MUI button that clears any saved series*/}
           <Button
             variant='contained'
             sx={{ p: 2, color: 'white' }}
@@ -240,17 +243,9 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           >
             {buttonLoad ? 'Deleted' : 'Clear Series'}
           </Button>
-          {/* <h4 className='compare-series-box' style={{ padding: '0 1rem' }}>
-            Compare Series:{' '}
-          </h4> */}
+          {/* Mui 'Compare Series Dropdown Starts here */}
           <StyledFormControl // MUI styled 'FormControl' component
             variant='filled'
-            // style={{ color: 'white' }}
-            // size='medium'
-            // id='selectSeries'
-            // variant='outlined'
-            // label='compares series'
-            // sx={{ backgroundColor: theme.palette.primary.main }}
           >
             <InputLabel
               id='simple-select-outlined-label'
@@ -279,6 +274,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
               )}
             </StyledSelect>
           </StyledFormControl>
+          {/* Mui 'Compare Series Dropdown ENDS here */}
 
           {/*==============================================================================================================================*/}
           {/*commented the below portion out, as bargraphComparisonActions.tsx is not currently functional, can re implement later on */}
