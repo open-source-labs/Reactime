@@ -281,7 +281,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           </StyledFormControl>
 
           {/*==============================================================================================================================*/}
-          {/*commented the below portion out, as bargraphComparisonActions.tsx is not currently functional */}
+          {/*commented the below portion out, as bargraphComparisonActions.tsx is not currently functional, can re implement later on */}
           {/*==============================================================================================================================*/}
 
           {/* {   <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4>
