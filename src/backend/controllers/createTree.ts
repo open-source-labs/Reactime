@@ -131,7 +131,6 @@ export default function createTree(currentFiberNode: Fiber): Tree {
         // The following switch case will be entered and will pass limited info to these element's props, but if none of the 
         // "if" statements are entered and a break statements isn't executed, the default case will still be entered
         case undefined: {
-          // console.log('in undefined', elementType);
           if (elementType._context?.displayName === "Route") {
             componentData.props = { pathname: memoizedProps?.value?.matches?.[0]?.pathname };
             break;
@@ -238,7 +237,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           // Pass to front end
           newState = componentData.hooksState;
         } catch (err) {
-          // COMMENT OUT TO AVOID PRINTTING ON THE CONSOLE OF USER - KEEP IT FOR DEBUGGING PURPOSE
+          // COMMENT OUT TO AVOID PRINTING ON THE CONSOLE OF USER - KEEP IT FOR DEBUGGING PURPOSE
           // console.log({
           //   Message: 'Error in createTree during obtaining state from functionalComponent',
           //   componentName,

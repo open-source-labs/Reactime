@@ -9,95 +9,44 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 
+function exportHandler(snapshots: []): void { // function that takes in our tabs[currentTab] object to be exported as a JSON file. NOTE: TypeScript needs to be updated
+  const fileDownload: HTMLAnchorElement = document.createElement('a'); // invisible HTML element that will hold our tabs[currentTab] object
 
-// function exportHandler takes in a parameter snapshots which is typed as an array
-// the function does not return anything so the type is void
-function exportHandler(snapshots: []): void {
-  // create invisible download anchor link
-  // fileDownload is typed as HTMLAnchorElement
-  // HTML anchor element has the <a></a> tag
-  const fileDownload: HTMLAnchorElement = document.createElement('a');
-
-  // set file in anchor link
-  // href is the reference to the URL object created from the Blob
-  fileDownload.href = URL.createObjectURL(
-    // Blob obj is raw data, json is raw, stringify the snapshots as json so the Blob can access the raw data
-    new Blob([JSON.stringify(snapshots)], { type: 'application/json' }),
+  fileDownload.href = URL.createObjectURL( // href is the reference to the URL object created from the Blob
+    new Blob([JSON.stringify(snapshots)], { type: 'application/json' }), // Blob obj is raw data. The tabs[currentTab] object is stringified so the Blob can access the raw data
   );
 
-  // set anchor as file download and click it
-  // anchor element has a download attribute
-  // snapshot.json is what the file name will be once the file is downloaded locally
-  fileDownload.setAttribute('download', 'snapshot.json');
-  // click is a method on all HTML elements
-  // simulates a mouse click, triggering the element's click event
-  fileDownload.click();
+  fileDownload.setAttribute('download', 'snapshot.json'); // We set a download attribute with snapshots.json as the file name. This allows us to download the file when the element is 'clicked.' The file will be named snapshots.json once the file is downloaded locally
+  fileDownload.click(); // click is a method on all HTML elements that simulates a mouse click, triggering the element's click event
 
-  // remove file url
-  // after file is downloaded, remove the href
-  URL.revokeObjectURL(fileDownload.href);
+  URL.revokeObjectURL(fileDownload.href); // after file is downloaded, remove the href
 }
 
-function importHandler(dispatch: (a: unknown) => void): void {
-  // create input element
-  // fileUpload is HTMLInputElement, which is an interface for HTML input elements
-  // accepts data from user
-  const fileUpload = document.createElement('input');
-  // file is a type attribute on the input element, allows users to select a file
-  console.log('fileUpload element:', fileUpload)
-  fileUpload.setAttribute('type', 'file');
+function importHandler(dispatch: (a: unknown) => void): void { // function handles the importing of a tabs[currentTab] object when the upload button is selected
+  const fileUpload = document.createElement('input'); // invisible HTML element that will hold our uploaded tabs[currentTab] object
+  fileUpload.setAttribute('type', 'file'); // Attributes added to HTML element
 
-  // onChange is when value of HTML element is changed
-  // parameter for onChange is an event
-  fileUpload.onchange = (e: Event) => {
-    // FileReader is an object
-    // reads contents of local files in async
-    // can use file or blob objects
-    const reader = new FileReader();
-    console.log('on change triggered')
-    //console.log('reader :', reader);
-
-    const eventFiles = e.target as HTMLInputElement;
-    // console.log('e.target:', e.target)
-    // console.log('event files:', eventFiles.files[0]);
+  fileUpload.onchange = (e: Event) => { // onChange is when value of HTML element is changed
+    const reader = new FileReader(); // FileReader is an object that reads contents of local files in async. It can use file or blob objects
+    const eventFiles = e.target as HTMLInputElement; // uploaded tabs[currentTab] object is stored as the event.target
    
-    if (eventFiles) {
-      reader.readAsText(eventFiles.files[0]);
+    if (eventFiles) { // if the fileUpload element has an eventFiles
+      reader.readAsText(eventFiles.files[0]); // the reader parses the file into a string and stores it within the reader object
     }
 
     reader.onload = () => {
-      // once the local file has been loaded, result property on FileReader object returns the file's contents
-      // then take contents and convert to a string
-      console.log('on load triggered:')
-      const test = reader.result.toString();
-      // dispatch sends the result of calling importSnapshots on the json parsed data from the file contents from the new FileReader object
-      // importSnapshots defined in actions/actions.ts/line 71, it returns an action object with a type and payload, payload is newSnaps parameter
-      // dispatch function is being called with that action object which gets sent to the reducer in reducers/mainReducer.js/line 203
-      // this updates the current tab
-      return dispatch(importSnapshots(JSON.parse(test)));
+      const test = reader.result.toString(); // once the local file has been loaded, result property on FileReader object returns the file's contents and then converts the file contents to a string
+      return dispatch(importSnapshots(JSON.parse(test))); // dispatch sends the result of of converting our tabs[currentTab] object => string => JSON Object. This updates the current tab
     };
-    // const eventFiles = e.target as HTMLInputElement;
-    // if (eventFiles?.hasOwnProperty('files')) {
-    //   // const eventFiles = target as HTMLInputElement;
-    //   if (eventFiles) {
-    //     reader.readAsText(eventFiles.files[0]);
-    //   }
-    // }
   };
 
-  fileUpload.click();
-  //console.log('dispatch importSnapshots successful')
+  fileUpload.click(); // click is a method on all HTML elements that simulates a mouse click, triggering the element's click event
 }
 
 function ButtonsContainer(): JSX.Element {
   const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
-  const {
-    snapshots,
-    mode: { paused },
-  } = tabs[currentTab];
-
-  console.log('----state after any change----', tabs[currentTab])
-
+  const { snapshots, mode: { paused }} = tabs[currentTab];
+  
   return (
     <div className='buttons-container'>
       <Button
@@ -113,7 +62,7 @@ function ButtonsContainer(): JSX.Element {
         variant='outlined'
         className='export-button'
         type='button'
-        onClick={() => exportHandler(snapshots)}
+        onClick={() => exportHandler(tabs[currentTab])}
       >
         <FileDownloadIcon sx={{pr: 1}}/>
         Download
