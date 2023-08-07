@@ -10,7 +10,7 @@
 }
 
 .MuiSwitch-switchBase {
-  color: #F00008 !important;
+  color: #f00008 !important;
 }
 
 .MuiSwitch-track {
@@ -38,12 +38,23 @@
 }
 
 .saveSeriesContainer {
-  #routes-select, #snapshot-select {
-    background-color: #F00008 !important;
+  #routes-select,
+  #snapshot-select {
+    background-color: #f00008 !important;
   }
 }
 
-#routes-select, #snapshot-select{
+.saveSeriesContainer {
+  #routes-select,
+  #snapshot-select {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+#routes-select,
+#snapshot-select {
   color: white !important;
   font: 400 16px 'Outfit', sans-serif;
   text-align: left;

@@ -55,7 +55,7 @@ function ButtonsContainer(): JSX.Element {
         type='button'
         onClick={() => dispatch(toggleMode('paused'))}
       >
-        {paused ? <LockIcon sx={{pr: 1}}/> : <LockOpenIcon sx={{pr: 1}}/>}
+        {paused ? <LockIcon sx={{ pr: 1 }} /> : <LockOpenIcon sx={{ pr: 1 }} />}
         {paused ? 'Locked' : 'Unlocked'}
       </Button>
       <Button
@@ -64,11 +64,11 @@ function ButtonsContainer(): JSX.Element {
         type='button'
         onClick={() => exportHandler(tabs[currentTab])}
       >
-        <FileDownloadIcon sx={{pr: 1}}/>
+        <FileDownloadIcon sx={{ pr: 1 }} />
         Download
       </Button>
       <Button variant='outlined' className='import-button' onClick={() => importHandler(dispatch)}>
-        <FileUploadIcon sx={{pr: 1}}/>
+        <FileUploadIcon sx={{ pr: 1 }} />
         Upload
       </Button>
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}

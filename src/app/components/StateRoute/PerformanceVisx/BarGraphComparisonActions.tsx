@@ -53,11 +53,7 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   const [setOpen] = React.useState(false); // creates a local state setOpen and sets it to false (why is there no setter function? Also this is never used in this file... 08/03/2023)
   const [setPicOpen] = React.useState(false); // creates a local state setPicOpen and sets it to false (why is there no setter function? Also this is never used in this file... 08/03/2023)
 
-  const [buttonLoad, setButtonLoad] = useState(false);
-  const theme = useTheme(); // MUI hook that allows access to theme variables inside your functional React components
-
-
-  useEffect(() => {
+  useEffect(() => { // send dispatch only on initial page load
     dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison' to facilitate render.
   }, []);
 
@@ -82,13 +78,10 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
       componentName !== 'seriesName' &&
       componentName !== 'snapshotId',
   );
-  // data accessor (used to generate scales) and formatter (add units for on hover box)
-  const getSeriesName = (action: ActionObj): string => action.seriesName;
-
-  // create visualization SCALES with cleaned data.
-  // the domain array/xAxisPoints elements will place the bars along the x-axis
-  const seriesNameScale = scaleBand<string>({
-    domain: data.map(getSeriesName),
+  
+  const getSeriesName = (action: ActionObj): string => action.seriesName; // data accessor (used to generate scales) and formatter (add units for on hover box)
+  const seriesNameScale = scaleBand<string>({ // create visualization SCALES with cleaned data.
+    domain: data.map(getSeriesName), // the domain array/xAxisPoints elements will place the bars along the x-axis
     padding: 0.2,
   });
 

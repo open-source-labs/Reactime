@@ -24,11 +24,13 @@ const initialState: InitialStateProps = { // we initialize what our initialState
 function App(): JSX.Element {
   return (
     <ThemeProvider theme={theme}>
-    <Router> {/* we wrap our application with the <Router> tag so that all components that are nested will have the react-router context */}
-      <StoreContext.Provider value={useReducer(mainReducer, initialState)}> {/* we wrap our MainContainer with the provider so that we will be able to use the store context. We create our store by using useReducer and passing it into the value property */}
-        <MainContainer />
-      </StoreContext.Provider>
-    </Router>
+      <Router>
+        {/* we wrap our application with the <Router> tag so that all components that are nested will have the react-router context */}
+        <StoreContext.Provider value={useReducer(mainReducer, initialState)}>
+          {/* we wrap our MainContainer with the provider so that we will be able to use the store context. We create our store by using useReducer and passing it into the value property */}
+          <MainContainer />
+        </StoreContext.Provider>
+      </Router>
     </ThemeProvider>
   );
 }

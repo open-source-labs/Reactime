@@ -63,6 +63,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
   });
 
   const keys = Object.keys(data.componentData);
+  const getSnapshotId = (d: snapshot) => d.snapshotId; // data accessor (used to generate scales) and formatter (add units for on hover box). d comes from data.barstack post filtered data
 
   const getSnapshotId = (d: snapshot) => d.snapshotId; // data accessor (used to generate scales) and formatter (add units for on hover box). d comes from data.barstack post filtered data
   const formatSnapshotId = (id) => `Snapshot ID: ${id}`; // returns snapshot id when invoked in tooltip section
@@ -207,6 +208,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
                       height={bar.height === 0 ? null : bar.height}
                       width={bar.width}
                       fill={bar.color}
+
                       /* TIP TOOL EVENT HANDLERS */
                       onMouseLeave={() => { // Hides tool tip once cursor moves off the current rect.
                         dispatch(
@@ -281,6 +283,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           </Text>
         )}
       </svg>
+
       {/* FOR HOVER OVER DISPLAY */}
       {tooltipOpen && tooltipData && ( // Ths conditional statement displays a different tooltip configuration depending on if we are trying do display a specific snapshot through options menu or all snapshots together in bargraph
         <TooltipInPortal

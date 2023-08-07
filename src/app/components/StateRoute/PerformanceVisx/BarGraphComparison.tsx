@@ -15,7 +15,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { useTheme } from '@mui/material/styles';
-import { Button } from '@mui/material';
+import { Button, InputLabel } from '@mui/material';
 import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 import { snapshot, TooltipData, Margin, BarGraphComparisonProps, ActionObj, Series } from '../../../FrontendTypes';
@@ -116,8 +116,8 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
 
   const duplicate = schemeTableau10.slice();
   const colorScale = scaleOrdinal<string, string>({
-    domain: keys,
-    range: duplicate,
+    domain: keys, // the domain array will assign each key a different color to make rectangle boxes
+    range: duplicate, // and use range to set the color scheme each bar
   });
 
   // setting max dimensions and scale ranges
@@ -131,9 +131,12 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     minWidth: 160,
     height: 30,
   }));
-
-  const StyledSelect = styled(Select)({ // applies the object to customize the style of the 'Select' component
-    minWidth: 80,
+  {
+    /* StyledSelect to use for MUI select components to maintain consistent styling for all select components*/
+  }
+  const StyledSelect = styled(Select)({
+    // applies the object to customize the style of the 'Select' component
+    minWidth: 160,
     fontSize: '1.2rem',
     fontWeight: 200,
     height: 30,
@@ -141,7 +144,9 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   });
 
   const handleSeriesChange = (event: Event) => {
-    if (!event) return;
+    if (!event) {
+      return;
+    }
     const target = event.target as HTMLInputElement;
     if (target) {
       setSeries(target.value);
@@ -201,7 +206,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     <div>
       <div className='series-options-container'>
         <div className='dropdown-and-delete-series-container'>
-          
+          {/*'Clear Series' MUI button that clears any saved series*/}
           <Button
             variant='contained'
             sx={{ p: 2, color: 'white' }}
@@ -214,26 +219,32 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                 setButtonLoad(false);
               }, 1000);
             }}
-            style={ buttonLoad ? { backgroundColor: theme.palette.primary.main }
-                : { backgroundColor: theme.palette.secondary.main }
-            }>
+            style={
+              buttonLoad
+                ? { backgroundColor: '#62d6fb' }
+                : { backgroundColor: '#ff6569', color: 'black' }
+            }
+          >
             {buttonLoad ? 'Deleted' : 'Clear Series'}
           </Button>
-            
-          <h4 className='compare-series-box' style={{ padding: '0 1rem' }}>
-            Compare Series:{' '}
-          </h4>
-          <StyledFormControl
-            id='selectSeries'
-            variant='outlined'
-            label='compares series'
+          {/* Mui 'Compare Series Dropdown Starts here */}
+          <StyledFormControl // MUI styled 'FormControl' component
+            variant='filled'
           >
-            <StyledSelect
+            <InputLabel
+              id='simple-select-outlined-label'
+              sx={{ fontSize: '1.2rem' }}
+              style={{ color: 'white' }}
+            >
+              Compare Series
+            </InputLabel>
+            <StyledSelect // MUI styled 'select' component
               labelId='simple-select-outlined-label'
+              id='simple-select-outlined-label'
               open={open}
               onClose={handleClose}
               onOpen={handleOpen}
-              value={series}
+              value={series} // added 8/3/2023
               onChange={handleSeriesChange}
             >
               {!comparison.length ? (
@@ -247,29 +258,44 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
               )}
             </StyledSelect>
           </StyledFormControl>
-          <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4>
-          <StyledFormControl variant='outlined'>
-            <StyledSelect
+          {/* Mui 'Compare Series Dropdown ENDS here */}
+
+          {/*==============================================================================================================================*/}
+          {/*commented the below portion out, as bargraphComparisonActions.tsx is not currently functional, can re implement later on */}
+          {/*==============================================================================================================================*/}
+
+          {/* {   <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4>
+          <StyledFormControl variant='filled'>
+            {' '}
+            {/* MUI styled 'FormControl' component */}
+          {/* <InputLabel
+              id='snapshot-select-label'
+              sx={{ fontSize: '1.2rem' }}
               style={{ color: 'white' }}
-              labelId='snapshot-select'
-              id='snapshot-select'
+            >
+              Compare Actions
+            </InputLabel>
+            <StyledSelect // MUI styled 'Select' component
+              labelId='snapshot-select-label'
+              id='snapshot-select-label'
               open={picOpen}
               onClose={picHandleClose}
               onOpen={picHandleOpen}
-              value='' // snapshots
+              value={action} // snapshots
               onChange={handleActionChange}
             >
               {!comparison[snapshots] ? (
                 <MenuItem>No snapshots available</MenuItem>
               ) : (
-                finalList.map((elem) => (
-                  <MenuItem value={elem}>{elem}</MenuItem>
-                ))
+                finalList.map((elem) => <MenuItem value={elem}>{elem}</MenuItem>)
               )}
             </StyledSelect>
           </StyledFormControl>
+          */}
         </div>
       </div>
+      {/*==============================================================================================================================*/}
+      {/*==============================================================================================================================*/}
 
       <svg ref={containerRef} width={width} height={height}>
         <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />

@@ -42,14 +42,13 @@
   font: 300 16px 'Outfit', sans-serif;
   font-size: $button-text-size;
   width: 120px;
-  // background: $red-color-gradient;
   height: 30px;
 
   &.animate {
     background-color: rgb(41, 164, 41);
   }
 }
-
+//need to check if this is necessary 8/3/23
 .empty-button {
   padding: 3px;
   outline: transparent;
@@ -62,7 +61,7 @@
   border-radius: 3px;
   cursor: pointer;
   line-height: 1.5em;
-  font: 500 16px 'Outfit', sans-serif;
+  font: 500 16px 'Roboto', sans-serif;
   // font-size: $button-text-size; increase the font size and contrast for readability
   width: 120px;
   background: #62d6fb;
@@ -284,9 +283,9 @@
 }
 
 .series-options-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  // display: flex;
+  // justify-content: space-evenly;
+  // align-items: center;
   margin: 0 1rem;
 }
 
@@ -297,6 +296,8 @@
 .dropdown-and-delete-series-container {
   display: flex;
   align-items: center;
+  justify-content: space-around;
+  margin: 16px 0 24px 0;
 }
 
 .close-button-container {
