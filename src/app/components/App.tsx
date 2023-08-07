@@ -13,8 +13,7 @@ import theme from './theme';
   This is used to determine the proper tutorial to render when How To button is pressed.
 */
 
-const initialState: InitialStateProps = {
-  // we initialize what our initialState is here
+const initialState: InitialStateProps = { // we initialize what our initialState is here
   port: null,
   currentTab: null,
   currentTitle: 'No Target',
