@@ -144,19 +144,14 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   });
 
   const handleSeriesChange = (event: Event) => {
-    console.log('handleSeriesChangeTriggered');
     if (!event) {
-      console.log('event not found, no change in series');
       return;
     }
     const target = event.target as HTMLInputElement;
     if (target) {
-      console.log('handleSeriesChange setSeries target.value', target.value);
       setSeries(target.value);
       setAction(false);
-      console.log('setSeries and setAction changed');
     }
-    console.log('setSeries and setAction NOT changed');
   };
 
   const handleClose = () => {
@@ -168,11 +163,9 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   };
 
   const handleActionChange = (event: Event) => {
-    console.log('handleActionChange Triggered THIS IS THE ONE WE WANT');
     const target = event.target as HTMLInputElement;
     if (!target.value) return;
     if (target) {
-      console.log('handleActionChange setSeries target.value', target.value);
       setAction(target.value);
       setSeries(false);
     }
