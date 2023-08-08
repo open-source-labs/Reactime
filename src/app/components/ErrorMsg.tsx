@@ -31,7 +31,11 @@ function ErrorMsg({ loadingArray, status, launchContent }): JSX.Element {
     case 'Content Script Error':
       return (
         <div>
+          If you encounter this error on the initial launch of Reactime, refresh the webpage you are developing.
+          <br />
+          <br />
           Could not connect to the Target App. Try closing Reactime and reloading the page.
+          <br />
           <br />
           NOTE: By default Reactime only launches the content script on URLS starting with
           localhost.
@@ -48,7 +52,11 @@ function ErrorMsg({ loadingArray, status, launchContent }): JSX.Element {
     case 'RDT Error':
       return (
         <div>
+          If you encounter this error on the initial launch of Reactime, refresh the webpage you are developing.
+          <br />
+          <br />
           React Dev Tools isnt installed!
+          <br />
           <br />
           <a
             href='https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en'
