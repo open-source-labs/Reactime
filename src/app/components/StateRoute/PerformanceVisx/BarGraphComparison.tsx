@@ -10,7 +10,6 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeTableau10 } from 'd3-scale-chromatic';
-import { styled } from '@mui/system';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -207,7 +206,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                 : { backgroundColor: '#ff6569', color: 'black' }
             }
           >
-            {buttonLoad ? 'Deleted' : 'Clear Series'}
+            {buttonLoad ? 'Deleted' : 'Clear All Series'}
           </Button>
 
           <FormControl sx={{ m: 1, minWidth: 180 }} size='small'>
