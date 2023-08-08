@@ -1,15 +1,16 @@
 {
   "name": "Reactime",
-  "version": "20.0.0",
+  "version": "21.0.0",
   "devtools_page": "devtools.html",
   "description": "A Chrome extension that helps debug React applications by memorizing the state of components with every render.",
-  "manifest_version": 3,
+  "manifest_version": 4,
   "background": {
     "service_worker": "bundles/background.bundle.js"
   },
+
   "icons": {
-    "48": "assets/icon48.png",
-    "128": "assets/icon128.png"
+    "48": "assets/whiteBlackSquareIcon48.png",
+    "128": "assets/whiteBlackSquareIcon128.png"
   },
   "content_scripts": [
     {
