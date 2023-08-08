@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
-import JSONTree from 'react-json-tree';
-
+import JSONTree from 'react-json-tree'; // React JSON Viewer Component
 import { setCurrentTabInApp } from '../../actions/actions';
 import { useStoreContext } from '../../store';
 import { TreeProps } from '../../FrontendTypes';
+
+/*
+  Creats a component based on the JSON. Options may be passed into the props of the JSONTree component
+*/
 
 const colors = {
   scheme: 'paraiso',
@@ -26,7 +29,7 @@ const colors = {
   base0F: '#e96ba8',
 };
 
-const getItemString = (type, data: { state?: object | string; name: string; children: [] }) => {
+const getItemString = (type, data: { state?: object | string; name: string; children: [] }) => { // function that allows the customization of how arrays, objects, and iterable nodes are displayed.
   if (data && data.name) {
     return <span>{data.name}</span>;
   }
@@ -34,12 +37,16 @@ const getItemString = (type, data: { state?: object | string; name: string; chil
 };
 
 const Tree = (props: TreeProps) => {
-  const { snapshot, snapshots, currLocation } = props;
+  const { 
+    snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
+    snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
+    currLocation // from 'tabs[currentTab]' object in 'MainContainer'
+  } = props;
   // @ts-ignore
   const [store, dispatch] = useStoreContext();
 
   useEffect(() => {
-    dispatch(setCurrentTabInApp('tree'));
+    dispatch(setCurrentTabInApp('tree')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'tree' to facilitate render.
   }, []);
 
   return (
@@ -48,11 +55,11 @@ const Tree = (props: TreeProps) => {
         // @ts-ignore
         <JSONTree
           // @ts-ignore
-          data={snapshots[currLocation.index] || snapshot}
-          theme={{ extend: colors, tree: () => ({ className: 'json-tree' }) }}
-          shouldExpandNode={() => true}
-          getItemString={getItemString}
-          labelRenderer={(raw: any[]) => {
+          data={snapshots[currLocation.index] || snapshot} // data to be rendered, a snapshot object
+          theme={{ extend: colors, tree: () => ({ className: 'json-tree' }) }} // theme set to a base16 theme that has been extended to include  "className: 'json-tree'"
+          shouldExpandNodeInitially={() => true} // determines if node should be expanded when it first renders (root is expanded by default)
+          getItemString={getItemString} // allows the customization of how arrays, objects, and iterable nodes are displayed.
+          labelRenderer={(raw: any[]) => { //  renders a label if the first element of raw is a number.
             return typeof raw[0] !== 'number' ? <span>{raw[0]}</span> : null;
           }}
         />

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BarStack } from '@visx/shape';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
@@ -8,10 +8,12 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet3 } from 'd3-scale-chromatic';
-import { makeStyles } from '@material-ui/core/styles';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
+import { styled } from '@mui/system';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import { useTheme } from '@mui/material/styles';
+import { Button } from '@mui/material';
 import { deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
 import { TooltipData, Margin, BarGraphComparisonAction, ActionObj } from '../../../FrontendTypes';
@@ -36,39 +38,54 @@ const tooltipStyles = {
 };
 
 const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
-  const [dispatch] = useStoreContext();
-  const { width, height, data, comparison, setSeries, series, setAction, action } = props;
-  const [snapshots] = React.useState(0);
-  const [setOpen] = React.useState(false);
-  const [setPicOpen] = React.useState(false);
-  useEffect(() => {
-    dispatch(setCurrentTabInApp('performance-comparison'));
+  const [dispatch] = useStoreContext(); // used to get the dispatch function from our storeContext
+  const {
+    width, // from ParentSize provided in StateRoute
+    height, // from ParentSize provided in StateRoute
+    data, 
+    comparison, // returned value from invoking 'allStorage()' in 'PerformanceVisx' which is an array of objects
+    setSeries, // setter function to update the state located in 'PerfomanceVisx'
+    series, // boolean from state set in 'PerformanceVisx'
+    setAction, // setter function to update the state located in 'PerfomanceVisx'
+    action // boolean from state set in 'PerformanceVisx'
+  } = props;
+  const [snapshots] = React.useState(0); // creates a local state snapshots and sets it to a value of 0 (why is there no setter function? 08/03/2023)
+  const [setOpen] = React.useState(false); // creates a local state setOpen and sets it to false (why is there no setter function? Also this is never used in this file... 08/03/2023)
+  const [setPicOpen] = React.useState(false); // creates a local state setPicOpen and sets it to false (why is there no setter function? Also this is never used in this file... 08/03/2023)
+
+  useEffect(() => { // send dispatch only on initial page load
+    dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison' to facilitate render.
   }, []);
 
-  const { tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip } =
-    useTooltip<TooltipData>();
+  const {
+    tooltipOpen, // boolean whether the tooltip state is open or closed
+    tooltipLeft, // number used for tooltip positioning
+    tooltipTop, // number used for tooltip positioning
+    tooltipData, // value/data that tooltip may need to render
+    hideTooltip, // function to close a tooltip
+    showTooltip // function to set tooltip state
+  } = useTooltip<TooltipData>(); // returns an object with several properties that you can use to manage the tooltip state of your component
   let tooltipTimeout: number;
 
-  const { containerRef, TooltipInPortal } = useTooltipInPortal();
+  const {
+    containerRef, // Access to the container's bounding box. This will be empty on first render. 
+    TooltipInPortal // TooltipWithBounds in a Portal, outside of your component DOM tree
+  } = useTooltipInPortal(); // Visx hook
+
   const keys = Object.keys(data[0]).filter(
     (componentName) =>
-      componentName !== 'name' && componentName !== 'seriesName' && componentName !== 'snapshotId',
+      componentName !== 'name' &&
+      componentName !== 'seriesName' &&
+      componentName !== 'snapshotId',
   );
-  // data accessor (used to generate scales) and formatter (add units for on hover box)
-  const getSeriesName = (action: ActionObj): string => action.seriesName;
-
-  // create visualization SCALES with cleaned data.
-  // the domain array/xAxisPoints elements will place the bars along the x-axis
-  const seriesNameScale = scaleBand<string>({
-    domain: data.map(getSeriesName),
+  
+  const getSeriesName = (action: ActionObj): string => action.seriesName; // data accessor (used to generate scales) and formatter (add units for on hover box)
+  const seriesNameScale = scaleBand<string>({ // create visualization SCALES with cleaned data.
+    domain: data.map(getSeriesName), // the domain array/xAxisPoints elements will place the bars along the x-axis
     padding: 0.2,
   });
-  // This function will iterate through the snapshots of the series,
-  // and grab the highest render times (sum of all component times).
-  // We'll then use it in the renderingScale function and compare
-  // with the render time of the current tab.
-  // The max render time will determine the Y-axis's highest number.
-  const calculateMaxTotalRender = () => {
+
+  const calculateMaxTotalRender = () => { // This function will iterate through the snapshots of the series, and grab the highest render times (the sum of all component times). We'll then use it in the renderingScale function and compare with the render time of the current tab. The max render time will determine the Y-axis's highest number.
     let currentMax = -Infinity;
     for (let i = 0; i < data.length; i += 1) {
       let currentSum = 0;
@@ -80,12 +97,11 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
 
   // the domain array on rendering scale will set the coordinates for Y-aix points.
   const renderingScale = scaleLinear<number>({
-    domain: [0, calculateMaxTotalRender()],
-    nice: true,
+    domain: [0, calculateMaxTotalRender()], // [minY, maxY] the domain array on rendering scale will set the coordinates for Y-axis points.
+    nice: true, // boolean on whether to round extreme values
   });
-  // the domain array will assign each key a different color to make rectangle boxes
-  // and use range to set the color scheme each bar
-  const colorScale = scaleOrdinal<string>({
+
+  const colorScale = scaleOrdinal<string>({ // the domain array will assign each key a different color to make rectangle boxes and use range to set the color scheme each bar
     domain: keys,
     range: schemeSet3,
   });
@@ -96,25 +112,18 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   seriesNameScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
-  // useStyles will change the styling on save series dropdown feature
-  const useStyles = makeStyles((theme) => ({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 80,
-      height: 30,
-    },
-    select: {
-      minWidth: 80,
-      fontSize: '.75rem',
-      fontWeight: '200',
-      border: '1px solid grey',
-      borderRadius: 4,
-      color: 'grey',
-      height: 30,
-    },
+  const StyledFormControl = styled(FormControl)(({ theme }) => ({
+    margin: theme.spacing(1),
+    minWidth: 80,
+    height: 30,
   }));
 
-  const classes = useStyles();
+  const StyledSelect = styled(Select)({
+    minWidth: 80,
+    fontSize: '.75rem',
+    fontWeight: 200,
+    height: 30,
+  });
 
   const handleSeriesChange = (event) => {
     if (!event) return;
@@ -128,19 +137,6 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
     setSeries(false);
   };
 
-  const animateButton = function (e) {
-    e.preventDefault();
-    e.target.classList.add('animate');
-    e.target.innerHTML = 'Deleted!';
-    setTimeout(() => {
-      e.target.innerHTML = 'Clear All Series';
-      e.target.classList.remove('animate');
-    }, 1000);
-  };
-  const classname = document.getElementsByClassName('delete-button');
-  for (let i = 0; i < classname.length; i += 1) {
-    classname[i].addEventListener('click', animateButton, false);
-  }
   const seriesList = comparison.map((elem) => elem.data.barStack);
   const actionsList = seriesList.flat();
   const testList = actionsList.map((elem) => elem.name);
@@ -154,23 +150,33 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
     <div>
       <div className='series-options-container'>
         <div className='dropdown-and-delete-series-container'>
-          <button
+        <Button
+            variant='contained'
+            sx={{ p: 2, color: 'white' }}
             className='delete-button'
             onClick={() => {
+              setButtonLoad(true);
               setAction(false);
               setSeries(true);
               dispatch(deleteSeries());
+              setTimeout(() => {
+                setButtonLoad(false);
+              }, 1000);
             }}
+            style={
+              buttonLoad
+                ? { backgroundColor: theme.palette.primary.main }
+                : { backgroundColor: theme.palette.secondary.main }
+            }
           >
-            Clear All Series
-          </button>
+            {buttonLoad ? 'Deleted' : 'Clear Series'}
+          </Button>
           <h4 style={{ padding: '0 1rem' }}>Compare Series: </h4>
-          <FormControl variant='outlined' className={classes.formControl}>
-            <Select
+          <StyledFormControl variant='outlined'>
+            <StyledSelect
               style={{ color: 'white' }}
               labelId='simple-select-outlined-label'
               id='simple-select-outlined'
-              className={classes.select}
               value={series}
               onChange={handleSeriesChange}
             >
@@ -183,15 +189,14 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
                   </MenuItem>
                 ))
               )}
-            </Select>
-          </FormControl>
+            </StyledSelect>
+          </StyledFormControl>
           <h4 style={{ padding: '0 1rem' }}>Compare Actions </h4>
-          <FormControl variant='outlined' className={classes.formControl}>
-            <Select
+          <StyledFormControl variant='outlined'>
+            <StyledSelect
               style={{ color: 'white' }}
               labelId='snapshot-select'
               id='snapshot-select'
-              className={classes.select}
               value={action} // snapshots
               onChange={handleActionChange}
             >
@@ -204,8 +209,8 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
                   </MenuItem>
                 ))
               )}
-            </Select>
-          </FormControl>
+            </StyledSelect>
+          </StyledFormControl>
         </div>
       </div>
 
@@ -264,6 +269,7 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
               )
             }
           </BarStack>
+          {/* Insert Action Comparison Barstack here */}
         </Group>
         <AxisLeft
           top={margin.top}
