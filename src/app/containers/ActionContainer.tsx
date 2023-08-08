@@ -142,8 +142,6 @@ function ActionContainer(props): JSX.Element {
   );
   useEffect(() => {
     setActionView(true);
-    // !!!! Why is the dependency array the function being called within the useEffect? !!!!
-    // may not call an infinite loop since it involves a setter function
   }, [setActionView]);
 
   // Function sends message to background.js which sends message to the content script
