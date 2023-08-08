@@ -64,8 +64,6 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
 
   const keys = Object.keys(data.componentData);
   const getSnapshotId = (d: snapshot) => d.snapshotId; // data accessor (used to generate scales) and formatter (add units for on hover box). d comes from data.barstack post filtered data
-
-  const getSnapshotId = (d: snapshot) => d.snapshotId; // data accessor (used to generate scales) and formatter (add units for on hover box). d comes from data.barstack post filtered data
   const formatSnapshotId = (id) => `Snapshot ID: ${id}`; // returns snapshot id when invoked in tooltip section
   const formatRenderTime = (time) => `${time} ms `; // returns render time when invoked in tooltip section
 
