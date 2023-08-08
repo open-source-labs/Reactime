@@ -270,7 +270,10 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             </StyledSelect>
           </StyledFormControl> */}
           <FormControl sx={{ m: 1, minWidth: 180 }} size='small'>
-            <InputLabel id='simple-select-outlined-label' sx={{ color: 'white' }}>
+            <InputLabel
+              id='simple-select-outlined-label'
+              sx={{ color: 'white', lineHeight: 1, fontWeight: 400 }}
+            >
               Compare Series
             </InputLabel>
             <Select
@@ -282,17 +285,26 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
               onClose={handleClose}
               onOpen={handleOpen}
               onChange={handleSeriesChange}
-              sx={{ backgroundColor: '#58c1e2', color: 'white' }}
+              sx={{
+                backgroundColor: '#53b6d5',
+                color: 'white',
+                height: 34,
+                fontWeight: 400,
+                pt: 0,
+                pb: 0,
+              }}
             >
-              <MenuItem>None</MenuItem>
               {!comparison.length ? (
                 <MenuItem>No series available</MenuItem>
               ) : (
-                comparison.map((tabElem, index) => (
-                  <MenuItem key={`MenuItem${tabElem.name}`} value={index}>
-                    {tabElem.name}
-                  </MenuItem>
-                ))
+                [
+                  <MenuItem>None</MenuItem>,
+                  ...comparison.map((tabElem, index) => (
+                    <MenuItem key={`MenuItem${tabElem.name}`} value={index}>
+                      {tabElem.name}
+                    </MenuItem>
+                  )),
+                ]
               )}
             </Select>
           </FormControl>
