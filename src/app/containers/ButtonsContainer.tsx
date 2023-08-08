@@ -2,7 +2,6 @@ import * as React from 'react';
 import { importSnapshots, toggleMode } from '../actions/actions';
 import { useStoreContext } from '../store';
 import { Button } from '@mui/material';
-
 import Tutorial from '../components/Tutorial';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
