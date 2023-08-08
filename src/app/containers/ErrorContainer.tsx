@@ -4,7 +4,6 @@ import { launchContentScript } from '../actions/actions';
 import Loader from '../components/Loader';
 import ErrorMsg from '../components/ErrorMsg';
 import { useStoreContext } from '../store';
-
 /*
 This is the loading screen that a user may get when first initalizing the application. This page checks:
 
@@ -93,7 +92,7 @@ function ErrorContainer(): JSX.Element {
 
   return (
     <div className='error-container'>
-      <img src='../assets/logos/whiteBlackSquareLogo.png' alt='Reactime Logo' height='50px' />
+      <img src='../assets/whiteBlackSquareLogo.png' alt='Reactime Logo' height='50px' />
 
       <h2>Launching Reactime on tab: {currentTitle}</h2>
 
