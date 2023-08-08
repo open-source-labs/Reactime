@@ -155,9 +155,6 @@ const getPerfMetrics = (snapshots, snapshotsIds): PerfData => {
     const seriesArr: Series[] = project === null ? [] : JSON.parse(project);
     const actionsArr = [];
 
-    console.log("Project:", project)
-    console.log('seriesArr:', seriesArr)
-
     if (seriesArr.length) {
       for (let i = 0; i < seriesArr.length; i += 1) {
         for (const actionObj of seriesArr[i].data.barStack) {
