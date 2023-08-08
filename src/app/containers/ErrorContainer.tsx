@@ -4,7 +4,6 @@ import { launchContentScript } from '../actions/actions';
 import Loader from '../components/Loader';
 import ErrorMsg from '../components/ErrorMsg';
 import { useStoreContext } from '../store';
-
 /*
 This is the loading screen that a user may get when first initalizing the application. This page checks:
 
@@ -25,49 +24,56 @@ function ErrorContainer(): JSX.Element {
     dispatch(launchContentScript(tabs[currentTab]));
   }
 
-  const status = { // We create a status object that we may use later if tabs[currentTab] exists
+  const status = {
+    // We create a status object that we may use later if tabs[currentTab] exists
     contentScriptLaunched: false,
     reactDevToolsInstalled: false,
     targetPageisaReactApp: false,
   };
 
-  
-  if (tabs[currentTab]) { // If we do have a tabs[currentTab] object, we replace the status obj we declared above  with the properties of the tabs[currentTab].status
+  if (tabs[currentTab]) {
+    // If we do have a tabs[currentTab] object, we replace the status obj we declared above  with the properties of the tabs[currentTab].status
     Object.assign(status, tabs[currentTab].status);
   }
 
   // hook that sets timer while waiting for a snapshot from the background script, resets if the tab changes/reloads
   useEffect(() => {
-    // We declare a function 
-    function setLoadingArray(i: number, value: boolean) { // 'setLoadingArray' checks an element in our 'loadingArray' local state and compares it with passed in boolean argument. If they don't match, we update our local state replacing the selected element with the boolean argument
-      if (loadingArray[i] !== value) { // this conditional helps us avoid unecessary state changes if the element and the value are already the same
+    // We declare a function
+    function setLoadingArray(i: number, value: boolean) {
+      // 'setLoadingArray' checks an element in our 'loadingArray' local state and compares it with passed in boolean argument. If they don't match, we update our local state replacing the selected element with the boolean argument
+      if (loadingArray[i] !== value) {
+        // this conditional helps us avoid unecessary state changes if the element and the value are already the same
         const loadingArrayClone = [...loadingArray];
         loadingArrayClone[i] = value;
         setLoading(loadingArrayClone);
       }
     }
 
-    if (titleTracker.current !== currentTitle) { // if the current tab changes/reloads, we reset loadingArray to it's default [true, true, true]
+    if (titleTracker.current !== currentTitle) {
+      // if the current tab changes/reloads, we reset loadingArray to it's default [true, true, true]
       titleTracker.current = currentTitle;
       setLoadingArray(0, true);
       setLoadingArray(1, true);
       setLoadingArray(2, true);
 
-      if (timeout.current) { // if there is a current timeout set, we clear it
+      if (timeout.current) {
+        // if there is a current timeout set, we clear it
         clearTimeout(timeout.current);
         timeout.current = null;
       }
     }
 
-    if (!status.contentScriptLaunched) { // if content script hasnt been launched/found, set a timer or immediately update 'loadingArray' state
+    if (!status.contentScriptLaunched) {
+      // if content script hasnt been launched/found, set a timer or immediately update 'loadingArray' state
 
-      if (loadingArray[0] === true) { // if loadingArray[0] is true, then that means our timeout.current is still null so we now set it to a setTimeout function that will flip loadingArray[0] to false after 3 seconds
+      if (loadingArray[0] === true) {
+        // if loadingArray[0] is true, then that means our timeout.current is still null so we now set it to a setTimeout function that will flip loadingArray[0] to false after 3 seconds
         timeout.current = setTimeout(() => {
           setLoadingArray(0, false);
         }, 3000); // increased from 1500
       }
     } else {
-      setLoadingArray(0, false) // if status.contentScriptLaunched is true, that means timeout.current !== null. This means that useEffect was triggered previously.
+      setLoadingArray(0, false); // if status.contentScriptLaunched is true, that means timeout.current !== null. This means that useEffect was triggered previously.
     }
 
     // The next two if statements are written in a way to allow the checking of 'content script hook', 'reactDevTools check', and 'target page is a react app' to be run in chronological order.
@@ -86,7 +92,7 @@ function ErrorContainer(): JSX.Element {
 
   return (
     <div className='error-container'>
-      <img src='../assets/logo-no-version.png' alt='Reactime Logo' height='50px' />
+      <img src='../assets/whiteBlackSquareLogo.png' alt='Reactime Logo' height='50px' />
 
       <h2>Launching Reactime on tab: {currentTitle}</h2>
 

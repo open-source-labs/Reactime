@@ -18,7 +18,7 @@ import { useTheme } from '@mui/material/styles';
 import { Button, InputLabel } from '@mui/material';
 import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-import { snapshot, TooltipData, Margin, BarGraphComparisonProps, ActionObj, Series } from '../../../FrontendTypes';
+import { snapshot, TooltipData, Margin, BarGraphComparisonProps, ActionObj, Series, } from '../../../FrontendTypes';
 
 /* DEFAULTS */
 const margin: Margin = {
@@ -48,7 +48,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     comparison, // result from invoking 'allStorage' in 'PerformanceVisx'
     setSeries, // setter function to update the state located in 'PerfomanceVisx'
     series, // initialized as boolean, can be an object, from state set in 'PerformanceVisx'
-    setAction // setter function to update the state located in 'PerfomanceVisx'
+    setAction, // setter function to update the state located in 'PerfomanceVisx'
   } = props;
   const [snapshots] = useState(0); // creates a local state snapshots and sets it to a value of 0 (why is there no setter function? Also, why use state when it's only referenced once and never changed? 08/03/2023)
   const [open, setOpen] = useState(false); // creates a local state setOpen and sets it to false (why is there no setter function? 08/03/2023)
@@ -62,7 +62,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
 
   const currentIndex: number = tabs[currentTab].sliderIndex;
 
-  const { 
+  const {
     tooltipData, // value/data that tooltip may need to render
     tooltipLeft, // number used for tooltip positioning
     tooltipTop, // number used for tooltip positioning
@@ -126,23 +126,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
-  const StyledFormControl = styled(FormControl)(({ theme }) => ({ // applies the theme style to the FormControl component
-    margin: theme.spacing(1),
-    minWidth: 160,
-    height: 30,
-  }));
-  {
-    /* StyledSelect to use for MUI select components to maintain consistent styling for all select components*/
-  }
-  const StyledSelect = styled(Select)({
-    // applies the object to customize the style of the 'Select' component
-    minWidth: 160,
-    fontSize: '1.2rem',
-    fontWeight: 200,
-    height: 30,
-    border: '1px solid #da262c',
-  });
-
   const handleSeriesChange = (event: Event) => {
     if (!event) {
       return;
@@ -186,7 +169,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     return comparison[series].data.barStack;
   }
 
-  function setXpointsCurrentTab() { 
+  function setXpointsCurrentTab() {
     data.barStack.forEach((element) => {
       element.currentTab = 'currentTab';
     });
@@ -210,7 +193,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           <Button
             variant='contained'
             sx={{ p: 2, color: 'white' }}
-            // type='button'
             className='delete-button'
             onClick={() => {
               setButtonLoad(true);
@@ -227,37 +209,46 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           >
             {buttonLoad ? 'Deleted' : 'Clear Series'}
           </Button>
-          {/* Mui 'Compare Series Dropdown Starts here */}
-          <StyledFormControl // MUI styled 'FormControl' component
-            variant='filled'
-          >
+
+          <FormControl sx={{ m: 1, minWidth: 180 }} size='small'>
             <InputLabel
               id='simple-select-outlined-label'
-              sx={{ fontSize: '1.2rem' }}
-              style={{ color: 'white' }}
+              sx={{ color: 'white', lineHeight: 1, fontWeight: 400 }}
             >
               Compare Series
             </InputLabel>
-            <StyledSelect // MUI styled 'select' component
+            <Select
+              variant='filled'
               labelId='simple-select-outlined-label'
               id='simple-select-outlined-label'
-              open={open}
+              value={series}
+              label='Compare Series'
               onClose={handleClose}
               onOpen={handleOpen}
-              value={series} // added 8/3/2023
               onChange={handleSeriesChange}
+              sx={{
+                backgroundColor: '#53b6d5',
+                color: 'white',
+                height: 34,
+                fontWeight: 400,
+                pt: 0,
+                pb: 0,
+              }}
             >
               {!comparison.length ? (
                 <MenuItem>No series available</MenuItem>
               ) : (
-                comparison.map((tabElem, index) => (
-                  <MenuItem key={`MenuItem${tabElem.name}`} value={index}>
-                    {tabElem.name}
-                  </MenuItem>
-                ))
+                [
+                  <MenuItem>None</MenuItem>,
+                  ...comparison.map((tabElem, index) => (
+                    <MenuItem key={`MenuItem${tabElem.name}`} value={index}>
+                      {tabElem.name}
+                    </MenuItem>
+                  )),
+                ]
               )}
-            </StyledSelect>
-          </StyledFormControl>
+            </Select>
+          </FormControl>
           {/* Mui 'Compare Series Dropdown ENDS here */}
 
           {/*==============================================================================================================================*/}
@@ -292,10 +283,10 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             </StyledSelect>
           </StyledFormControl>
           */}
+      {/*==============================================================================================================================*/}
+      {/*==============================================================================================================================*/}
         </div>
       </div>
-      {/*==============================================================================================================================*/}
-      {/*==============================================================================================================================*/}
 
       <svg ref={containerRef} width={width} height={height}>
         <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
@@ -311,8 +302,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           xOffset={snapshotIdScale.bandwidth() / 2}
         />
         <Group top={margin.top} left={margin.left}>
-          <BarStack
-            // Current Tab bar stack.
+          <BarStack // Current Tab bar stack.
             data={setXpointsCurrentTab()} // array of data that generates a stack
             keys={keys} // array of keys corresponding to stack layers
             x={getCurrentTab} // returns the value mapped to the x of a bar
@@ -320,8 +310,11 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             yScale={renderingScale} // takes in a value and maps it to an y axis position
             color={colorScale} // returns the desired color for a bar with a given key and index
           >
-            {(barStacks) => // overides render function which is past the configured stack generator
-              barStacks.map((barStack, idx) => { // Uses map method to iterate through all components, creating a rect component, from visx, for each iteration. height, width, etc are calculated by visx to set X and Y scale. The scaler will used the passed in function and will run it on the array thats outputted by data
+            {(
+              barStacks, // overides render function which is past the configured stack generator
+            ) =>
+              barStacks.map((barStack, idx) => {
+                // Uses map method to iterate through all components, creating a rect component, from visx, for each iteration. height, width, etc are calculated by visx to set X and Y scale. The scaler will used the passed in function and will run it on the array thats outputted by data
                 const bar = barStack.bars[currentIndex];
                 if (Number.isNaN(bar.bar[1]) || bar.height < 0) {
                   bar.height = 0;
@@ -336,7 +329,8 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                     fill={bar.color}
                     /* TIP TOOL EVENT HANDLERS */
                     // Hides tool tip once cursor moves off the current rect
-                    onMouseLeave={() => { // Hides tool tip once cursor moves off the current rect
+                    onMouseLeave={() => {
+                      // Hides tool tip once cursor moves off the current rect
                       dispatch(
                         onHoverExit(data.componentData[bar.key].rtid),
                         (tooltipTimeout = window.setTimeout(() => {
@@ -345,7 +339,8 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                       );
                     }}
                     // Cursor position in window updates position of the tool tip
-                    onMouseMove={(event) => { // Cursor position in window updates position of the tool tip
+                    onMouseMove={(event) => {
+                      // Cursor position in window updates position of the tool tip
                       dispatch(onHover(data.componentData[bar.key].rtid));
                       if (tooltipTimeout) clearTimeout(tooltipTimeout);
                       const top = event.clientY - margin.top - bar.height;
@@ -370,7 +365,8 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             color={colorScale}
           >
             {(barStacks) =>
-              barStacks.map((barStack, idx) => { // Uses map method to iterate through all components, creating a react component (from visx) for each iteration. height/width/etc. are calculated by visx.
+              barStacks.map((barStack, idx) => {
+                // Uses map method to iterate through all components, creating a react component (from visx) for each iteration. height/width/etc. are calculated by visx.
                 if (!barStack.bars[currentIndex]) {
                   return <h1>No Comparison</h1>;
                 }
@@ -387,7 +383,8 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                     width={bar.width}
                     fill={bar.color}
                     /* TIP TOOL EVENT HANDLERS */
-                    onMouseLeave={() => { // Hides tool tip once cursor moves off the current rect
+                    onMouseLeave={() => {
+                      // Hides tool tip once cursor moves off the current rect
                       dispatch(
                         onHoverExit(data.componentData[bar.key].rtid),
                         (tooltipTimeout = window.setTimeout(() => {
@@ -395,8 +392,8 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                         }, 300)),
                       );
                     }}
-                    
-                    onMouseMove={(event) => { // Cursor position in window updates position of the tool tip
+                    onMouseMove={(event) => {
+                      // Cursor position in window updates position of the tool tip
                       dispatch(onHover(data.componentData[bar.key].rtid));
                       if (tooltipTimeout) clearTimeout(tooltipTimeout);
                       const top = event.clientY - margin.top - bar.height;
