@@ -18,14 +18,7 @@ import { useTheme } from '@mui/material/styles';
 import { Button, InputLabel } from '@mui/material';
 import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
 import { useStoreContext } from '../../../store';
-import {
-  snapshot,
-  TooltipData,
-  Margin,
-  BarGraphComparisonProps,
-  ActionObj,
-  Series,
-} from '../../../FrontendTypes';
+import { snapshot, TooltipData, Margin, BarGraphComparisonProps, ActionObj, Series, } from '../../../FrontendTypes';
 
 /* DEFAULTS */
 const margin: Margin = {
@@ -99,8 +92,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     padding: 0.2,
   });
 
-  const calculateMaxTotalRender = (serie: number): number => {
-    // This function will iterate through the snapshots of the series, and grab the highest render times (sum of all component times). We'll then use it in the renderingScale function and compare with the render time of the current tab. The max render time will determine the Y-axis's highest number.
+  const calculateMaxTotalRender = (serie: number): number => { // This function will iterate through the snapshots of the series, and grab the highest render times (sum of all component times). We'll then use it in the renderingScale function and compare with the render time of the current tab. The max render time will determine the Y-axis's highest number.
     const currentSeriesBarStacks: ActionObj[] = !comparison[serie]
       ? []
       : comparison[serie].data.barStack;
@@ -117,8 +109,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     return currentMax;
   };
 
-  const renderingScale = scaleLinear<number>({
-    // this function will use the domain array to assign each key a different color to make rectangle boxes and use range to set the color scheme each bar
+  const renderingScale = scaleLinear<number>({ // this function will use the domain array to assign each key a different color to make rectangle boxes and use range to set the color scheme each bar
     domain: [0, Math.max(calculateMaxTotalRender(series), data.maxTotalRender)], // [minY, maxY] the domain array on rendering scale will set the coordinates for Y-axis points.
     nice: true,
   });
@@ -171,8 +162,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     setPicOpen(true);
   };
 
-  function setXpointsComparison() {
-    // manually assigning X -axis points with tab ID.
+  function setXpointsComparison() { // manually assigning X -axis points with tab ID.
     comparison[series].data.barStack.forEach((elem: ActionObj) => {
       elem.currentTab = 'comparison';
     });
@@ -203,7 +193,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           <Button
             variant='contained'
             sx={{ p: 2, color: 'white' }}
-            // type='button'
             className='delete-button'
             onClick={() => {
               setButtonLoad(true);
@@ -294,10 +283,10 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             </StyledSelect>
           </StyledFormControl>
           */}
+      {/*==============================================================================================================================*/}
+      {/*==============================================================================================================================*/}
         </div>
       </div>
-      {/*==============================================================================================================================*/}
-      {/*==============================================================================================================================*/}
 
       <svg ref={containerRef} width={width} height={height}>
         <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
@@ -313,8 +302,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           xOffset={snapshotIdScale.bandwidth() / 2}
         />
         <Group top={margin.top} left={margin.left}>
-          <BarStack
-            // Current Tab bar stack.
+          <BarStack // Current Tab bar stack.
             data={setXpointsCurrentTab()} // array of data that generates a stack
             keys={keys} // array of keys corresponding to stack layers
             x={getCurrentTab} // returns the value mapped to the x of a bar
