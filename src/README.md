@@ -235,10 +235,10 @@ Some relevant sections are reproduced below:
 
 Once you are ready for launch, follow these steps to simplify deployment to the Chrome Web Store:
 
-   1. Run npm run build in Reactime to build the production version of Reactime
-   2. Right click on the build folder and click “compress” to make a compressed zip version of the build folder. The compressed zip is what you will upload to the Chrome Web Store
-   3. Navigate to the Chrome Web Store Developer Dashboard (logged in with Reactime credentials). Go to Build > Package > Upload new package, and when prompted, upload the build.zip file
-   4. Update the Store Listing and that’s it! Click “Submit for review” and wait for the Chrome store to process your request
+1.  Run npm run build in Reactime to build the production version of Reactime
+2.  Right click on the build folder and click “compress” to make a compressed zip version of the build folder. The compressed zip is what you will upload to the Chrome Web Store
+3.  Navigate to the Chrome Web Store Developer Dashboard (logged in with Reactime credentials). Go to Build > Package > Upload new package, and when prompted, upload the build.zip file
+4.  Update the Store Listing and that’s it! Click “Submit for review” and wait for the Chrome store to process your request
 
 # Past Medium Articles for Reference
 
