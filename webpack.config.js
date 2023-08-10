@@ -23,9 +23,9 @@ const config = {
    */
   watchOptions: {
     poll: true,
-    ignored: /node_modules/
+    ignored: /node_modules/,
   },
-  
+
   output: {
     path: path.resolve(__dirname, 'src/extension/build/bundles'),
     filename: '[name].bundle.js',

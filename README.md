@@ -1,6 +1,7 @@
-<h1 align="center">
+    <h1 align="center">
+
   <br>
-    <img src ="./assets/readme-logo-300-no-version.png" width="300"/>
+    <img src ="./assets/logos/chromeExtensionIcons/marqueePromoTitle.png"/>
     <br>
     <br>
   React Performance Tool
@@ -9,7 +10,7 @@
   <br>
 </h1>
 
-<h4 align="center"> Reactime is an open source Chrome developer tool for time travel debugging and performance monitoring in React applications. Reactime enables developers to record snapshots of application state, jump between and inspect state snapshots, and monitor performance metrics such as component render time and render frequency. </h4>
+<h4 align="center"> Reactime is an open-source Chrome developer tool for time travel debugging and performance monitoring in React applications. Reactime enables developers to record snapshots of application state, jump between and inspect state snapshots, and monitor performance metrics such as component render time and render frequency. </h4>
 
 <br>
 <p align="center">
@@ -28,7 +29,7 @@
 <br>
 
 <p align="center">
-<img src="./assets/v20/Overview.gif" />
+<img src="./assets/gifs/main_v21.gif" />
 </p>
 
 <p align="center">
@@ -47,14 +48,22 @@ be viewed in Diff mode.
 <br>
 
 <p align="center">
-<img src="./assets/v20/map.gif" />
+<img src="./assets/gifs/timeTravelHistory_v21.gif" />
 </p>
+<br>
+
+### 🔹 Recording
+
+Whenever the state is changed (whenever setState, useState is called), this
+extension will create a snapshot of the current state tree and record it. Each
+snapshot will be displayed in Chrome DevTools under the Reactime panel.
+<br>
 <br>
 
 ### 🔹 Snapshot Series and Action Comparison
 
 You can save a series of state snapshots and use it to analyze changes in
-component render performance between current and previous series of snapshots.
+component render performance between the current and the previous series of snapshots.
 You can also name specific snapshots and compare all snapshots with the same
 name.
 <br>
@@ -69,16 +78,14 @@ each component upon hovering.
 <br>
 <br>
 
-### 🔹 Recording
+### 🔹 Download/Upload Snapshots
 
-Whenever state is changed (whenever setState, useState is called), this
-extension will create a snapshot of the current state tree and record it. Each
-snapshot will be displayed in Chrome DevTools under the Reactime panel.
+Download the recorded snapshots as a JSON file and upload them to access state trees across different sessions.
 <br>
 <br>
 
 <p align="center">
-<img src="./assets/v20/history.gif" />
+<img src="./assets/gifs/importExport_v21.gif" />
 </p>
 <br>
 
@@ -90,7 +97,7 @@ Performance tab in Chrome DevTools under the Reactime panel.
 
 ### 🔹 Jumping
 
-Using the actions sidebar, a user can jump to any previous recorded snapshots.
+Using the actions sidebar, a user can jump to any previously recorded snapshots.
 Hitting the jump button on any snapshot will allow a user to view state data at
 any point in the history of the target application.
 
@@ -103,7 +110,7 @@ features and visual representation of the tree components.
 ### 🔹 Next.js
 
 Reactime offers debugging and performance tools for Next.js apps: time-traveling
-debugging, preventing unnecessary components re-renders and making your
+debugging, preventing unnecessary component re-renders and making your
 application faster.
 
 ### 🔹 Remix
@@ -115,7 +122,7 @@ needs to be added for multi-route time traveling. Every other feature works.
 
 Reactime offers support for TypeScript applications using stateful class
 components and functional components. Further testing and development is
-required for custom hooks, and Concurrent Mode.
+required for custom hooks and Concurrent Mode.
 
 ### 🔹 Documentation
 
@@ -127,26 +134,25 @@ of the structure and interfaces of the codebase.
 
 ### <b>Additional Features</b>
 
-- In-app tab specific tutorial walkthroughs
+- In-app tab-specific tutorial walkthroughs
 - Hover over a component to view tooltip details on state visualizations
 - Double-click to collapse child components
 - Click to focus on a portion of the component map
-- A dropdown to support development of projects on multiple tabs
+- A dropdown to support the development of projects on multiple tabs
 - Intuitive navigation between state snapshots
-- Download/upload the current snapshots in memory
 - Locked/unlocked feature allowing temporary pause of state monitoring
 
 <h1>What's New!</h1>
 
-Reactime 20.0 includes several key improvements under the hood to improve performance and resolve existing bugs, as well as a revamped UX to achieve WCAG compatibility.
+Reactime 21.0 focuses on several key performance issues to improve application stability and reliability, bug fixes, a revamped UI, and the inclusion of a state export and import feature.
 
 <i>Under the Hood</i>
 
-We have resolved several persistent bugs, including a major issue that caused apps using Reactime to crash when using login or submit functionality. As part of our effort to improve Reactime performance overall, we have continued to implement TypeScript throughout the codebase and created new tests with React Testing Library. We have also made testing more robust, improving existing tests and fixing broken test environments. Lastly, we have upgraded Reactime by removing some deprecated code and packages, reducing compilation errors.
+We have resolved several persistent bugs that would result in a black screen during regular application use. One of the major causes of Reactime’s black screen bug was related to the use of deprecated packages, such as an outdated Material UI package. Another source of black screens and poor user experience appeared to be related to the application frequently terminating ports. This prevented Reactime’s contentScript.ts, background.js, and MainContainer.tsx from communicating with the developer’s application. Through the implementation of a ‘keepAlive’ function, we allow the connection to stay long-lived for longer. Updating the current Material UI package from v4 to v5 and implementing keepAlive connections have resulted in a drastic decrease in port disconnects.
 
-<i>Accessibility</i>
+In an effort to improve maintainability and application longevity, there were several engineering interventions that were implemented. One of the goals for Reactime 21.0 was to decrease the dependency on external libraries and packages, which we have done by updating or removing packages. While the documentation for the backend and extension was adequate, there was a severe lack of documentation of all the front-end components. Reactime 21.0 has changed this with documentation covering more than 90% of front-end component logic. We have also added new images and charts so future developers can understand how components are interconnected. These improvements should lead to faster development of features in the future.
 
-We have updated the UX, seeking consistency with the Web Content Accessibility Guidelines (WCAG). Specifically, we have improved the size and design of target elements throughout Reactime and carefully chosen new color contrasts to ensure WCAG compatibility.
+For user experience, we focused on several major goals. The new download and upload feature allows developers to download their current state history so that developers may share their findings or review them later down the road. Another focus was to remove features that did not meet Reactime’s standards for user experience. The “Compare Actions” option has been removed until the feature becomes more concrete. The initial application load screen has had timings loosened to allow developers with slower computers to allow better connection between Reactime and their application. Loading error messages have been improved to allow easier initial troubleshooting to decrease frustration. Last but not least, while we have now migrated to Material UI v5, we have started the slow transition to convert various components into Material UI. Along with a new take on Reactime’s logo, this has resulted in a cleaner and more modern appearance.
 
 If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
 
@@ -175,7 +181,7 @@ your browser.
 Go to Chrome Extensions (make sure Chrome Extension is in Developer Mode) for
 manual installation in (https://developer.chrome.com/extensions/faq#faq-dev-01)
 and click on Load Unpacked. Use `src/extension/build/` to load this extension.
-Turn on 'Allow access to file URLs' in extension details page if testing
+Turn on 'Allow access to file URLs' in the extension details page if testing
 locally.
 
 ### Looking to contribute to Reactime?
@@ -196,7 +202,7 @@ Then open up your Chrome DevTools and navigate to the Reactime panel.
 ### ❓ <b>Why is Reactime telling me that no React application is found?</b>
 
 Reactime initially runs using the dev tools global hook from the Chrome API. It
-takes time for Chrome to load this. Try refreshing your application a couple
+takes time for Chrome to load this. Try refreshing your application a couple of
 times until you see Reactime running.
 
 ### ❓ <b>Why do I need to have React Dev Tools enabled?</b>
@@ -210,19 +216,19 @@ clicking the right mouse button “Reload frame”.
 
 ### ❓ <b>I found a bug in Reactime</b>
 
-Reactime is an open source project, and we'd love to hear from you about
+Reactime is an open-source project, and we'd love to hear from you about
 improving the user experience. Please read [DEVELOPER README](src/README.md),
 and create a pull request (or issue) to propose and collaborate on changes to Reactime.
 
 ### ❓ <b>Node version compatibility</b>
 
-With release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
+With the release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
 'npm run dev' | 'npm run build' for backwards compatibility.<br/> For version
 Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 
 ## <b>Read More</b>
 
-- [It's time for Reactime 20.0!](linkhere)
+- [Cheers to Reactime, Version 21!](https://medium.com/@brok3turtl3/cheers-to-reactime-version-21-fa4dafa4bc74)
 
 ## <b>Authors</b>
 
@@ -313,6 +319,11 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 - **James McCollough** - [@j-mccoll](https://github.com/j-mccoll)
 - **Mike Bednarz** - [@mikebednarz](https://github.com/mikebednarz)
 - **Sergei Liubchenko** - [@sergeylvq](https://github.com/sergeylvq)
+- **Yididia Ketema** - [@yididiaketema](https://github.com/yididiaketema)
+- **Morah Geist** - [@morahgeist](https://github.com/morahgeist)
+- **Eivind Del Fierro** - [@EivindDelFierro](https://github.com/EivindDelFierro)
+- **Kyle Bell** - [@KyEBell](https://github.com/KyEBell)
+- **Sean Kelly** - [@brok3turtl3](https://github.com/brok3turtl3)
 
 ## <b>License </b>
 
