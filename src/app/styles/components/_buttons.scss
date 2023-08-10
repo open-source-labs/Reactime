@@ -15,7 +15,6 @@
   cursor: pointer;
   line-height: 1.5em;
   font: 400 16px 'Outfit', sans-serif;
-  // font-size: $button-text-size;
   width: 120px;
   background: $red-color-gradient;
   height: 30px;
@@ -48,7 +47,7 @@
     background-color: rgb(41, 164, 41);
   }
 }
-//need to check if this is necessary 8/3/23
+
 .empty-button {
   padding: 3px;
   outline: transparent;
@@ -62,7 +61,6 @@
   cursor: pointer;
   line-height: 1.5em;
   font: 500 16px 'Roboto', sans-serif;
-  // font-size: $button-text-size; increase the font size and contrast for readability
   width: 120px;
   background: #62d6fb;
 }
@@ -93,7 +91,6 @@
   margin-bottom: 8px;
   width: 100px;
   border: none;
-  /* border-radius: 3px; */
   background: linear-gradient(145deg, #5c6068, #4d5157);
   font: normal 16px 'Outfit', sans-serif;
   color: #ffffff;
@@ -178,30 +175,12 @@
   border-radius: 5px;
 }
 
-// .play-button:focus,
-// .backward-button:focus,
-// .forward-button:focus {
-//   outline: none;
-//   box-shadow: $box-shadow-blue;
-// }
-
 .forward-button:hover,
 .backward-button:hover {
   background: $blue-color-gradient;
   transform: translate3d(0, -3px, 0);
   cursor: pointer;
 }
-
-// .import-button,
-// .howToUse-button,
-// .export-button,
-// .pause-button {
-//   @extend %button-shared;
-//   font-size: 16px;
-//   color: white;
-//   border-color: transparent;
-//   background: $blue-color-gradient;
-// }
 
 .import-button:hover,
 .howToUse-button:hover,
@@ -283,9 +262,6 @@
 }
 
 .series-options-container {
-  // display: flex;
-  // justify-content: space-evenly;
-  // align-items: center;
   margin: 0 1rem;
 }
 
@@ -325,7 +301,6 @@
 
 /* sidebar button open and closing functionality */
 aside {
-  // width: 250px;
   background: #242529;
   color: #fff;
   transition: width 1s;
@@ -337,8 +312,6 @@ aside {
 }
 
 .toggle {
-  // width: 40px;
-  // height: 10px;
   display: block;
   position: relative;
   margin-top: 1rem;

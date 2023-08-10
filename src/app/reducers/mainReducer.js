@@ -1,7 +1,6 @@
 import { produce } from 'immer';
 import _, { values } from 'lodash';
 import * as types from '../constants/actionTypes.ts';
-// import { current } from 'immer';
 
 export default (state, action) =>
   produce(state, (draft) => {
@@ -209,7 +208,7 @@ export default (state, action) =>
         // Log the value of tabs[currentTab].snapshots before the update
         port.postMessage({
           action: 'import',
-          payload: action.payload, //.snapshots,
+          payload: action.payload,
           tabId: currentTab,
         });
 

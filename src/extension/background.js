@@ -288,7 +288,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
   // everytime we get a new tabId, add it to the object
-  while (isReactTimeTravel && !(tabId in tabsObj)) { // changed if to while 8/4/2023
+  if (isReactTimeTravel && !(tabId in tabsObj)) { 
     tabsObj[tabId] = createTabObj(tabTitle);
   }
 
@@ -330,7 +330,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         script.setAttribute('type', 'text/javascript');
         script.setAttribute('src', file);
         // eslint-disable-next-line prefer-template
-        // document.title = tab + '-' + document.title; // error of injecting random number
         htmlBody.appendChild(script);
       };
 

@@ -22,13 +22,6 @@ const theme = createTheme({
         },
       },
     },
-    // MuiSelect: {
-    //   styleOverrides: {
-    //     root: {
-    //       main: '#556cd4',
-    //     },
-    //   },
-    // },
   },
 });
 

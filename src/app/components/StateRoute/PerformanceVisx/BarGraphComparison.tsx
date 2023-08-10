@@ -10,7 +10,6 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeTableau10 } from 'd3-scale-chromatic';
-import { styled } from '@mui/system';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -135,24 +134,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   snapshotIdScale.rangeRound([0, xMax]);
   renderingScale.range([yMax, 0]);
 
-  // const StyledFormControl = styled(FormControl)(({ theme }) => ({
-  //   // applies the theme style to the FormControl component
-  //   margin: theme.spacing(1),
-  //   minWidth: 160,
-  //   height: 30,
-  // }));
-
-  // StyledSelect to use for MUI select components to maintain consistent styling for all select components
-
-  // const StyledSelect = styled(Select)({
-  //   // applies the object to customize the style of the 'Select' component
-  //   minWidth: 160,
-  //   fontSize: '1.2rem',
-  //   fontWeight: 200,
-  //   height: 30,
-  //   border: '1px solid #da262c',
-  // });
-
   const handleSeriesChange = (event: Event) => {
     if (!event) {
       return;
@@ -221,7 +202,6 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           <Button
             variant='contained'
             sx={{ p: 2, color: 'white' }}
-            // type='button'
             className='delete-button'
             onClick={() => {
               setButtonLoad(true);
@@ -236,39 +216,9 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
                 : { backgroundColor: '#ff6569', color: 'black' }
             }
           >
-            {buttonLoad ? 'Deleted' : 'Clear Series'}
+            {buttonLoad ? 'Deleted' : 'Clear All Series'}
           </Button>
-          {/* Mui 'Compare Series Dropdown Starts here */}
-          {/* <StyledFormControl // MUI styled 'FormControl' component
-            variant='filled'
-          >
-            <InputLabel
-              id='simple-select-outlined-label'
-              sx={{ fontSize: '1.2rem' }}
-              style={{ color: 'white' }}
-            >
-              Compare Series
-            </InputLabel>
-            <StyledSelect // MUI styled 'select' component
-              labelId='simple-select-outlined-label'
-              id='simple-select-outlined-label'
-              open={open}
-              onClose={handleClose}
-              onOpen={handleOpen}
-              value={series} // added 8/3/2023
-              onChange={handleSeriesChange}
-            >
-              {!comparison.length ? (
-                <MenuItem>No series available</MenuItem>
-              ) : (
-                comparison.map((tabElem, index) => (
-                  <MenuItem key={`MenuItem${tabElem.name}`} value={index}>
-                    {tabElem.name}
-                  </MenuItem>
-                ))
-              )}
-            </StyledSelect>
-          </StyledFormControl> */}
+
           <FormControl sx={{ m: 1, minWidth: 180 }} size='small'>
             <InputLabel
               id='simple-select-outlined-label'
@@ -342,10 +292,10 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
             </StyledSelect>
           </StyledFormControl>
           */}
+          {/*==============================================================================================================================*/}
+          {/*==============================================================================================================================*/}
         </div>
       </div>
-      {/*==============================================================================================================================*/}
-      {/*==============================================================================================================================*/}
 
       <svg ref={containerRef} width={width} height={height}>
         <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
@@ -361,8 +311,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           xOffset={snapshotIdScale.bandwidth() / 2}
         />
         <Group top={margin.top} left={margin.left}>
-          <BarStack
-            // Current Tab bar stack.
+          <BarStack // Current Tab bar stack.
             data={setXpointsCurrentTab()} // array of data that generates a stack
             keys={keys} // array of keys corresponding to stack layers
             x={getCurrentTab} // returns the value mapped to the x of a bar

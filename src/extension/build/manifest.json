@@ -7,6 +7,7 @@
   "background": {
     "service_worker": "bundles/background.bundle.js"
   },
+
   "icons": {
     "48": "assets/whiteBlackSquareIcon48.png",
     "128": "assets/whiteBlackSquareIcon128.png"
