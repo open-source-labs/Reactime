@@ -73,7 +73,6 @@ export class Routes {
    * Rebuilds the browser history stack using the copy of the stack maintained in the `routeHistory` stack. https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState, https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
    */
   private rebuildHistory(url: string): void {
-    console.log('RebuildHistory Called');
     // Replace window history with the next route
     window.history.replaceState('', '', this.routeHistory[this.current + 1].url);
     // For each route in routeHistory after the next route, add to window history

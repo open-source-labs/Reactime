@@ -7,6 +7,10 @@ import ReactHover, { Trigger, Hover } from 'react-hover';
 import { changeView, changeSlider } from '../actions/actions';
 import { ActionProps, OptionsCursorTrueWithMargin } from '../FrontendTypes';
 
+/*
+  This render's the individual snapshot components on the left side column
+*/
+
 /**
  * @function Action
  * @param selected : The selected action in the array of state changes
@@ -21,54 +25,67 @@ import { ActionProps, OptionsCursorTrueWithMargin } from '../FrontendTypes';
  * @method handleOnkeyDown Executes key commands
  *
  */
-// index and delta props were removed from Action.jsx  */
-// viewIndex and handleonkeyDown added to props
+
 const Action = (props: ActionProps): JSX.Element => {
+  // We destructure the 'props' that were passed into this component
   const {
-    selected,
-    last,
-    index,
-    sliderIndex,
+    selected, // boolean on whether the current index is the same as the viewIndex in 'ActionContainer'
+    last, // boolean on (whether the view index is less than 0) AND if (the index is the same as the last snapshot's index value in hierarchyArr) in 'ActionContainer'
+    index, // from snapshot.index in "ActionContainer's" 'hierarchyArr'
+    sliderIndex, // from tabs[currentTab] object in 'ActionContainer'
     dispatch,
-    displayName,
-    componentData,
-    viewIndex,
+    displayName, // from snapshot.displayName in "ActionContainer's" 'hierarchyArr'
+    componentData, // from snapshot.componentData in "ActionContainer's" 'hierarchyArr'
+    viewIndex, // from tabs[currentTab] object in 'ActionContainer'
     isCurrIndex,
-    handleOnkeyDown,
+    handleOnkeyDown, // function that allows arrows keys to jump between snapshots defined in 'ActionContainer.tsx'
   } = props;
 
   /**
    * @function cleanTime: Displays render times for state changes
    * @returns render display time in seconds in milliseconds
    */
-    const cleanTime = (): string => {
-    if (!componentData || !componentData.actualDuration) {
+
+
+  const cleanTime = (): string => {
+    if (!componentData || !componentData.actualDuration) { // if there is no 'componentData' or 'componentData.actualDuration'
       return 'NO TIME';
     }
-    let seconds: number | string;
-    let milliseconds: any = componentData.actualDuration;
-    if (Math.floor(componentData.actualDuration) > 60) {
-      seconds = Math.floor(componentData.actualDuration / 60);
-      seconds = JSON.stringify(seconds);
-      if (seconds.length < 2) {
-        seconds = '0'.concat(seconds);
-      }
-      milliseconds = Math.floor(componentData.actualDuration % 60);
-    } else {
-      seconds = '00';
-    }
-    milliseconds = Number.parseFloat(milliseconds as string).toFixed(2);
-    const arrayMilliseconds: string | number = milliseconds.split('.');
-    if (arrayMilliseconds[0].length < 2) {
-      arrayMilliseconds[0] = '0'.concat(arrayMilliseconds[0]);
-    }
-    if (index === 0) {
-      return `${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`;
-    }
-    return `+${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`;
-  };
-  const displayTime: string = cleanTime();
 
+    let seconds: number | string; // seconds is undefined but can take a number or a string
+    let milliseconds: any = componentData.actualDuration; // milliseconds is of any type and taken from the 'componentData.actualDuration'
+
+    if (Math.floor(componentData.actualDuration) > 60) { // if the milliseconds is greater than 60
+      seconds = Math.floor(componentData.actualDuration / 60); // we divide our milliseconds by 60 to determine our seconds
+      seconds = JSON.stringify(seconds); // and we convert our seconds into a string
+      
+      if (seconds.length < 2) { // if the seconds string is only a single digit
+        seconds = '0'.concat(seconds); // we can add a 0 in front of it so that if 'seconds = "1"' it will come out as 'seconds = "01"'
+      }   
+      milliseconds = Math.floor(componentData.actualDuration % 60); // Our true milliseconds then becomes the remainder of dividing our initial milliseconds by 60
+
+    } else {
+      seconds = '00'; // if we haven't even reached one second yet, our seconds are 00
+    }
+
+    milliseconds = Number.parseFloat(milliseconds as string).toFixed(2); // we convert our milliseconds string into a floating point number that has up to two decimal places.
+    const arrayMilliseconds: string | number = milliseconds.split('.'); // we split our milliseconds using the decimal and come out with an array of two numbers
+
+    
+    if (arrayMilliseconds[0].length < 2) { // if our millisecond string only has one digit
+      arrayMilliseconds[0] = '0'.concat(arrayMilliseconds[0]); // we add a 0 in front of it so that in the a sample number of '1' becomes '01'
+    }
+    
+    if (index === 0) { // if this is the initial snapshot
+      return `${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`; // we give it a timestamp
+    }
+    return `+${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`; // if these are succeeding snapshots, we add a '+' to the timestamp
+  };
+
+  const displayTime: string = cleanTime(); // we run cleanTime on the creation of this component so that we can get the timestamp
+
+
+  // creates an options object that 'ReactHover' component will use to modify it's behaviour
   const optionsCursorTrueWithMargin: OptionsCursorTrueWithMargin = {
     followCursor: true,
     shiftX: 20,
@@ -78,7 +95,6 @@ const Action = (props: ActionProps): JSX.Element => {
   return (
     <div className='individual-action'>
       <div
-        // Invoking keyboard functionality; functionality is in ActionContainer;
         onKeyDown={(e):void => handleOnkeyDown(e, viewIndex)}
         className={selected || last ? 'action-component selected' : 'action-component'}
         onClick={() => {

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 #RenderContainer {
   display: flex;
@@ -10,7 +10,7 @@
 }
 
 .MuiSwitch-switchBase {
-  color: #F00008 !important;
+  color: #f00008 !important;
 }
 
 .MuiSwitch-track {
@@ -24,28 +24,36 @@
 #routes-formcontrol {
   padding: 3px;
   margin-left: 50px;
-  font: 400 16px 'Roboto', sans-serif;
+  font: 400 16px 'Outfit', sans-serif;
   text-align: left;
-  // min-width: 10em;
-  // max-height: 50%;
 }
 
 #routes-dropdown {
   color: white !important;
-  // background-color: #ff6569 !important;
-  font: 400 16px 'Roboto', sans-serif;
+  font: 400 16px 'Outfit', sans-serif;
   text-align: left;
 }
 
 .saveSeriesContainer {
-  #routes-select, #snapshot-select {
-    background-color: #F00008 !important;
+  #routes-select,
+  #snapshot-select {
+    background-color: #f00008 !important;
   }
 }
 
-#routes-select, #snapshot-select{
+.saveSeriesContainer {
+  #routes-select,
+  #snapshot-select {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+#routes-select,
+#snapshot-select {
   color: white !important;
-  font: 400 16px 'Roboto', sans-serif;
+  font: 400 16px 'Outfit', sans-serif;
   text-align: left;
   width: 120px;
   height: 30px;

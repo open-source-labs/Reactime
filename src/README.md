@@ -2,7 +2,7 @@
 
 ## Brief
 
-Our mission at Reactime is to maintain and iterate constantly, but never at the expense of future developers. We know how hard it is to quickly get up to speed and onboard in a new codebase. So here are some helpful pointers to help you hit the ground running. 🏃🏾💨
+Our mission at Reactime is to maintain and iterate constantly, but never at the expense of future developers. We know how hard it is to quickly get up to speed and onboard in a new codebase. So here are some helpful pointers to help you hit the ground running. 🏃🏾
 
 ## Building from source
 
@@ -18,9 +18,11 @@ git clone https://github.com/open-source-labs/reactime.git
 
 ```
 cd reactime
-npm install --force
+npm install --legacy-peer-deps
 npm run dev
 ```
+
+If ‘npm install –legacy-peer-deps’ doesn’t work, install dependencies using ‘npm install --force’
 
 With release of Node v18.12.1 (LTS) on 11/4/22, the script has been updated to 'npm run dev' || 'npm run build' for backwards compatibility.<br/>
 For version Node v16.16.0, please use script 'npm run devlegacy' || 'npm run buildlegacy'
@@ -41,8 +43,9 @@ Similar approach for Next.js and Remix demo apps
 - Select “Load Unpacked”
 - Choose reactime > src > extension > build
 - Navigate to http://localhost:8080/ to inspect the demo application using Reactime!
+- Once the initial build has been completed and loaded into chrome as an unpacked extension, you may enter the root directory and run ‘npm run dev’ to hot load the chrome extension. You should see ‘[ Starting the Chrome Hot Plugin Reload Server... ]’. You should now be able to see changes without having to rebuild the extension. If for some reason it does not, feel free to rebuild and then try the Hot Plugin Reload Server again.
 
-![extension](../assets/reactime-dev-setup.gif)
+![extension](../assets/gifs/reactime-dev-setup.gif)
 
 ## Linting
 
@@ -70,17 +73,26 @@ Any changes to console.logs in Reactime can be seen by refreshing the browser th
 
 ## Replace Functionality for Outdated Packages
 
-Material-ui/core hasn't been updated to use React 18. This is the reason npm install --force is necessary when installing the dependencies of Reactime. Replacing the functionality this package performs and removing it from Reactime would ensure compatibility moving forward.
+Package dependencies need to be trimmed down, updated, and/or removed. Peer dependency errors are the reason npm install --force may be necessary when installing the dependencies of Reactime. While Reactime v21.0 has reduced package dependency errors for developers from multiple pages of errors down to ~15 errors, the goal is to decrease overall package/library dependency to a minimum to promote long-term maintainability
 
-React Developer Tools has deprecated \_\_REACT_DEVTOOLS_GLOBAL_HOOK\_\_, which Reactime uses to extract a running application's fiber tree. At the time of the release of Reactime 20 (June 2023), this tool still works reliably to deliver said fiber tree. This will likely be the case until the React version (React version 18.2 at time of writing) undergoes updates that diverge beyond compatibility with \_\_REACT_DEVTOOLS_GLOBAL_HOOK\_\_. At this time, Reactime will need to change how it extracts an application's fiber tree.
+Material-ui/core has been updated to use React 18. Future developers may choose to remove Material-ui/core from the application to ensure compatibility in the future or continue to build out the UI. The choice is yours!
 
-Changing how Reactime extracts the fiber tree before said React version update may yield diminishing result, as whatever method will also need to be updated to match React's breaking updates.
+React Developer Tools has NOT deprecated \_\_REACT_DEVTOOLS_GLOBAL_HOOK\_\_. However, Reactime v21 has sleuthed and learned the following from the team at React:
+
+Ruslan Lesiutin (https://github.com/hoxyq) from Meta/ Facebook responded on July 28, 2023
+“Hey @morahgeist,
+We don't have plans on removing the global hook currently, this is still the primary way on how React and React DevTools interact, but it doesn't mean that any other extensions / applications should inject into this hook and use it. You should always take that into account that APIs inside this hook can have breaking changes.
+In a long term, there are plans to implement more reliable API contract of what DevTools can expose from React to other tools, but I don't have any timelines and details yet.”
 
 ## Redux
 
-Can Reactime be integrated with Redux compatibility so applications using Redux can track state in Reactime?
+Can Reactime functionality be extended so applications using Redux can track state in Reactime?
 
 Yes, but it would be very time-consuming and not the most feasible option while Redux devtools exists already. With how Redux devtools is currently set up, a developer is unable to use Redux devtools as a third-party user and integrate its functionality into their own application, as Redux devtools is meant to be used directly on an application using Redux for state-tracking purposes. Since the devtools do not appear to have a public API for integrated use in an application or it simply does not exist, Redux devtools would need to be rebuilt from the ground up and then integrated into Reactime, or built into Reactime directly still from scratch.
+
+Can Reactime be refactored into a Redux application?
+
+Yes, in fact, it should be. Reactime currently uses [Immer](https://github.com/immerjs/immer#readme) to handle immutable data structures. The foundation for Redux is already there, as Reactime uses reducers, a store, action creators, and action types. Adding a state management library like Redux, would allow for further application stability and maintainability as it would decrease the amount of less frequently maintained package/libraries.
 
 # File Structure
 
@@ -89,46 +101,46 @@ In the _src_ folder, there are three directories we care about: _app_, _backend_
 ```
 src/
 ├── app/                          # Frontend code
-│   ├── __tests__/                # React Testing Library
-│   ├── actions/                  # Redux action creators
-│   ├── components/               # React components
-│   ├── constants/                #
-│   ├── containers/               # More React components
-│   ├── reducers/                 # Redux mechanism for updating state
-│   ├── styles/                   #
-│   ├── FrontendTypes.ts          # Library of typescript interfaces
-│   ├── index.tsx                 # Starting point for root App component
-│   ├── module.d.ts               #
-│   └── store.tsx                 #
+│   ├── __tests__/                # React Testing Library
+│   ├── actions/                  # Redux action creators
+│   ├── components/               # React components
+│   ├── constants/                #
+│   ├── containers/               # More React components
+│   ├── reducers/                 # Redux mechanism for updating state
+│   ├── styles/                   #
+│   ├── FrontendTypes.ts          # Library of typescript interfaces
+│   ├── index.tsx                 # Starting point for root App component
+│   ├── module.d.ts               #
+│   └── store.tsx                 #
 │
 ├── backend/                      # "Backend" code (injected into target app)
-│   │                             # Focus especially on linkFiber, timeJump, tree, and helpers
-│   ├── __tests__/                #
-│   ├── controllers/              #
-│       ├── createComponentActionsRecord.ts # Update the componentActionsRecord with new bound state-update methods
-│       ├── createTree.ts         # Construct a tree snapshot from the FiberRoot tree given by ReactFiber.
-│       ├── statePropExtractor.ts # Helper functions to extract & format prop, state, and context data
-│       ├── throttle.ts           #
-│       ├── timeJump.ts           # Rerenders DOM based on snapshot from background script
-│   ├── models/
-│       ├── filterConditions.ts   #
-│       ├── masterState.ts        # Component action record interface
-│       ├── routes.ts             # Interfaces with the browser history stack
-│       ├── tree.ts               # Custom structure to send to background
-│   ├── routers/
-│       ├── linkFiber.ts          # Check for all requirement to start Reactime and
-│       ├── snapShot.ts           #
-│   ├── types/                    # Typescript interfaces
-│   ├── index.ts                  # Starting point for backend functionality
-│   ├── index.d.ts                # Definitely Type file for Index
-│   ├── module.d.ts               #
-│   ├── puppeteerServer.ts        #
+│   │                             # Focus especially on linkFiber, timeJump, tree, and helpers
+│   ├── __tests__/                #
+│   ├── controllers/              #
+│       ├── createComponentActionsRecord.ts # Update the componentActionsRecord with new bound state-update methods
+│       ├── createTree.ts         # Construct a tree snapshot from the FiberRoot tree given by ReactFiber.
+│       ├── statePropExtractor.ts # Helper functions to extract & format prop, state, and context data
+│       ├── throttle.ts           #
+│       ├── timeJump.ts           # Rerenders DOM based on snapshot from background script
+│   ├── models/
+│       ├── filterConditions.ts   #
+│       ├── masterState.ts        # Component action record interface
+│       ├── routes.ts             # Interfaces with the browser history stack
+│       ├── tree.ts               # Custom structure to send to background
+│   ├── routers/
+│       ├── linkFiber.ts          # Check for all requirement to start Reactime and
+│       ├── snapShot.ts           #
+│   ├── types/                    # Typescript interfaces
+│   ├── index.ts                  # Starting point for backend functionality
+│   ├── index.d.ts                # Definitely Type file for Index
+│   ├── module.d.ts               #
+│   ├── puppeteerServer.ts        #
 │
 ├── extension/                    # Chrome Extension code
-│   ├── build/                    # Destination for bundles and manifest.json (Chrome config file)
+│   ├── build/                    # Destination for bundles and manifest.json (Chrome config file)
 │   │                             #
-│   ├── background.js             # Chrome Background Script
-│   └── contentScript.ts          # Chrome Content Script
+│   ├── background.js             # Chrome Background Script
+│   └── contentScript.ts          # Chrome Content Script
 └──
 ```
 
@@ -137,6 +149,10 @@ src/
 All the diagrams of data flows are available on [MIRO](https://miro.com/app/board/uXjVPictrsM=/)
 
 1. The _app_ folder is responsible for the Single Page Application that you see when you open the chrome dev tools under the Reactime tab.
+
+![FRONTEND DEPENDENCY CHART](../assets/Front_End_Dependency_Chart_v21.png)
+
+![BACKEND DEPENDENCY CHART](../assets/Back_End_Dependency_Chart_v21.png)
 
 ![FRONTEND DATA FLOW](../assets/frontend-diagram.png)
 
@@ -148,7 +164,7 @@ All the diagrams of data flows are available on [MIRO](https://miro.com/app/boar
 ![BACKEND TIME TRAVEL DATA FLOW](../assets/backend-timeTravel.png)
 
 3. The _extension_ folder is where the `contentScript.js` and `background.js` are located.
-   - Like regular web apps, Chrome Extensions are event-based. The background script is where one typically monitors for browser triggers (e.g. events like closing a tab, for example). The content script is what allows us to read or write to our target web application, usually as a result of [messages passed](https://developer.chrome.com/extensions/messaging) from the background script.
+   - Like regular web apps, Chrome Extensions are event-based. The background script (aka service worker) is where one typically monitors for browser triggers (e.g. events like closing a tab, for example). The content script is what allows us to read or write to our target web application, usually as a result of [messages passed](https://developer.chrome.com/extensions/messaging) from the background script.
    - These two files help us handle requests both from the web browser and from the Reactime extension itself
 
 ## Data Flow Architecture
@@ -166,7 +182,8 @@ The general flow of data is described in the following steps:
 
 # Reacti.me Website:
 
-See [Reacti.me README](https://github.com/reactimetravel/reactime-website/blob/main/README.md) for instruction of how to update the website
+See [Reacti.me README](https://github.com/reactimetravel/reactime-website/blob/main/README.md) for instruction of how to update the website.
+Note: all other domain names that may still function are no longer registered/paid for by Codesmith. These websites may be removed at any time. Please focus on renewing Reacti.me as the primary domain for future iterations to remain consistent.
 
 # Console logs
 
@@ -179,7 +196,7 @@ Console.logs from the Extension folder you can find here:
 - Chrome Extension (Developer mode)
 - Background page
 
-![extension](../assets/extension-console.gif)
+![extension](../assets/gifs/extension-console.gif)
 
 ### <b> /src/app </b>
 
@@ -188,7 +205,7 @@ Console.logs from the App folder you can find here:
 - Chrome Browser
 - Inspect
 
-![frontend](../assets/console.gif)
+![frontend](../assets/gifs/console.gif)
 
 ### <b> /src/backend </b>
 
@@ -197,7 +214,7 @@ Console.logs from the App folder you can find here:
 - Open the Reactime extension in Chrome
 - Click "Inspect" on Reactime
 
-![backend](../assets/reactime-console.gif)
+![backend](../assets/gifs/reactime-console.gif)
 
 # Chrome Developer Resources
 
@@ -224,7 +241,7 @@ Some relevant sections are reproduced below:
 >
 > Once it has been loaded, a background page will stay running as long as it is performing an action, such as calling a Chrome API or issuing a network request.
 >
-> Additionally, the background page will not unload until all visible views and all message ports are closed. Note that opening a view does not cause the event page to load, but only prevents it from closing once loaded. ([Source](https://developer.chrome.com/extensions/background_pages))
+> Additionally, the background page <b>will not unload until all visible views and all message ports are closed.</b> Note that opening a view does not cause the event page to load, but only prevents it from closing once loaded. ([Source](https://developer.chrome.com/extensions/background_pages))
 
 - You can think of background scripts serving a purpose analogous to that of a **server** in the client/server paradigm. Much like a server, our `background.js` listens constantly for messages (i.e. requests) from two main places:
   1. The content script
@@ -235,12 +252,14 @@ Some relevant sections are reproduced below:
 
 Once you are ready for launch, follow these steps to simplify deployment to the Chrome Web Store:
 
-   1. Run npm run build in Reactime to build the production version of Reactime
-   2. Right click on the build folder and click “compress” to make a compressed zip version of the build folder. The compressed zip is what you will upload to the Chrome Web Store
-   3. Navigate to the Chrome Web Store Developer Dashboard (logged in with Reactime credentials). Go to Build > Package > Upload new package, and when prompted, upload the build.zip file
-   4. Update the Store Listing and that’s it! Click “Submit for review” and wait for the Chrome store to process your request
+1.  Run npm run build in Reactime to build the production version of Reactime
+2.  Right click on the build folder and click “compress” to make a compressed zip version of the build folder. The compressed zip is what you will upload to the Chrome Web Store
+3.  Navigate to the Chrome Web Store Developer Dashboard (logged in with Reactime credentials). Go to Build > Package > Upload new package, and when prompted, upload the build.zip file
+4.  Update the Store Listing and that’s it! Click “Submit for review” and wait for the Chrome store to process your request
 
 # Past Medium Articles for Reference
+
+-[Reactime 21: Cheers to Reactime, Version 21!](https://medium.com/@brok3turtl3/cheers-to-reactime-version-21-fa4dafa4bc74)
 
 - [Reactime 20: Reactime just keeps getting better!](https://medium.com/@njhuemmer/reactime-just-keeps-getting-better-b37659ff8b71)
 - [Reactime 19: What time is it? It’s still Reactime!](https://medium.com/@minzo.kim/what-time-is-it-its-still-reactime-d496adfa908c)

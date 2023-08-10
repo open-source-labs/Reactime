@@ -3,9 +3,11 @@
  * @function linkFiber
  */
 // --------------------------START OF IMPORT------------------------------------
-// regenerator runtime supports async functionality
+// regenerator runtime supports async functionality : This package implements a fully-functional source transformation that takes the syntax for generators/yield from ECMAScript 2015 or ES2015 and Asynchronous Iteration proposal and spits out efficient JS-of-today (ES5) that behaves the same way.
 import 'regenerator-runtime/runtime';
+// linkFiberInitialization (actually uses the function linkFiber but is labeled here as linkFiberInitialization, returns a function). When this returned function is invoked, it checks if devTools is installed, checks if the website is a reactApp, adds event listeners for timetravel, and allows us to obtain the initial FiberRoot Node from react dev tool
 import linkFiberInitialization from './routers/linkFiber';
+// timeJumpInitialization (actually uses the function timeJumpInitiation but is labeled here as linkFiberInitialization, returns a function) returns a function that sets jumping to false and handles timetravel feature
 import timeJumpInitialization from './controllers/timeJump';
 import { Snapshot, Status, MsgData } from './types/backendTypes';
 import routes from './models/routes';

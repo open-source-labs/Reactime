@@ -1,78 +1,75 @@
 import * as React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faUpload,
-  faDownload,
-  faSquare,
-  faColumns,
-  faUnlock,
-  faLock,
-} from '@fortawesome/free-solid-svg-icons';
 import { importSnapshots, toggleMode } from '../actions/actions';
 import { useStoreContext } from '../store';
-
+import { Button } from '@mui/material';
 import Tutorial from '../components/Tutorial';
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
-function exportHandler(snapshots: []): void {
-  // create invisible download anchor link
-  const fileDownload: HTMLAnchorElement = document.createElement('a');
+function exportHandler(snapshots: []): void { // function that takes in our tabs[currentTab] object to be exported as a JSON file. NOTE: TypeScript needs to be updated
+  const fileDownload: HTMLAnchorElement = document.createElement('a'); // invisible HTML element that will hold our tabs[currentTab] object
 
-  // set file in anchor link
-  fileDownload.href = URL.createObjectURL(
-    new Blob([JSON.stringify(snapshots)], { type: 'application/json' }),
+  fileDownload.href = URL.createObjectURL( // href is the reference to the URL object created from the Blob
+    new Blob([JSON.stringify(snapshots)], { type: 'application/json' }), // Blob obj is raw data. The tabs[currentTab] object is stringified so the Blob can access the raw data
   );
 
-  // set anchor as file download and click it
-  fileDownload.setAttribute('download', 'snapshot.json');
-  fileDownload.click();
+  fileDownload.setAttribute('download', 'snapshot.json'); // We set a download attribute with snapshots.json as the file name. This allows us to download the file when the element is 'clicked.' The file will be named snapshots.json once the file is downloaded locally
+  fileDownload.click(); // click is a method on all HTML elements that simulates a mouse click, triggering the element's click event
 
-  // remove file url
-  URL.revokeObjectURL(fileDownload.href);
+  URL.revokeObjectURL(fileDownload.href); // after file is downloaded, remove the href
 }
 
-function importHandler(dispatch: (a: unknown) => void): void {
-  const fileUpload = document.createElement('input');
-  fileUpload.setAttribute('type', 'file');
+function importHandler(dispatch: (a: unknown) => void): void { // function handles the importing of a tabs[currentTab] object when the upload button is selected
+  const fileUpload = document.createElement('input'); // invisible HTML element that will hold our uploaded tabs[currentTab] object
+  fileUpload.setAttribute('type', 'file'); // Attributes added to HTML element
 
-  fileUpload.onchange = (e: Event) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const test = reader.result.toString();
-      return dispatch(importSnapshots(JSON.parse(test)));
-    };
-    const eventFiles = e.target as HTMLInputElement;
-    if (eventFiles?.hasOwnProperty('files')) {
-      // const eventFiles = target as HTMLInputElement;
-      if (eventFiles) {
-        reader.readAsText(eventFiles.files[0]);
-      }
+  fileUpload.onchange = (e: Event) => { // onChange is when value of HTML element is changed
+    const reader = new FileReader(); // FileReader is an object that reads contents of local files in async. It can use file or blob objects
+    const eventFiles = e.target as HTMLInputElement; // uploaded tabs[currentTab] object is stored as the event.target
+   
+    if (eventFiles) { // if the fileUpload element has an eventFiles
+      reader.readAsText(eventFiles.files[0]); // the reader parses the file into a string and stores it within the reader object
     }
+
+    reader.onload = () => {
+      const test = reader.result.toString(); // once the local file has been loaded, result property on FileReader object returns the file's contents and then converts the file contents to a string
+      return dispatch(importSnapshots(JSON.parse(test))); // dispatch sends the result of of converting our tabs[currentTab] object => string => JSON Object. This updates the current tab
+    };
   };
 
-  fileUpload.click();
+  fileUpload.click(); // click is a method on all HTML elements that simulates a mouse click, triggering the element's click event
 }
 
 function ButtonsContainer(): JSX.Element {
   const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
-  const {
-    snapshots,
-    mode: { paused },
-  } = tabs[currentTab];
-
+  const { snapshots, mode: { paused }} = tabs[currentTab];
+  
   return (
     <div className='buttons-container'>
-      <button className='pause-button' type='button' onClick={() => dispatch(toggleMode('paused'))}>
-        {paused ? <FontAwesomeIcon icon={faLock} /> : <FontAwesomeIcon icon={faUnlock} />}
+      <Button
+        variant='outlined'
+        className='pause-button'
+        type='button'
+        onClick={() => dispatch(toggleMode('paused'))}
+      >
+        {paused ? <LockIcon sx={{ pr: 1 }} /> : <LockOpenIcon sx={{ pr: 1 }} />}
         {paused ? 'Locked' : 'Unlocked'}
-      </button>
-      <button className='export-button' type='button' onClick={() => exportHandler(snapshots)}>
-        <FontAwesomeIcon icon={faDownload} />
+      </Button>
+      <Button
+        variant='outlined'
+        className='export-button'
+        type='button'
+        onClick={() => exportHandler(tabs[currentTab])}
+      >
+        <FileDownloadIcon sx={{ pr: 1 }} />
         Download
-      </button>
-      <button className='import-button' type='button' onClick={() => importHandler(dispatch)}>
-        <FontAwesomeIcon icon={faUpload} />
+      </Button>
+      <Button variant='outlined' className='import-button' onClick={() => importHandler(dispatch)}>
+        <FileUploadIcon sx={{ pr: 1 }} />
         Upload
-      </button>
+      </Button>
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}
       <Tutorial dispatch={dispatch} currentTabInApp={currentTabInApp} />
     </div>
