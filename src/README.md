@@ -2,7 +2,7 @@
 
 ## Brief
 
-Our mission at Reactime is to maintain and iterate constantly, but never at the expense of future developers. We know how hard it is to quickly get up to speed and onboard in a new codebase. So here are some helpful pointers to help you hit the ground running. 🏃🏾💨
+Our mission at Reactime is to maintain and iterate constantly, but never at the expense of future developers. We know how hard it is to quickly get up to speed and onboard in a new codebase. So here are some helpful pointers to help you hit the ground running. 🏃🏾
 
 ## Building from source
 
@@ -22,7 +22,7 @@ npm install --legacy-peer-deps
 npm run dev
 ```
 
-(if ‘–legacy-peer-deps’ doesn’t work, use the ‘–force’ flag)
+If ‘npm install –legacy-peer-deps’ doesn’t work, install dependencies using ‘npm install --force’
 
 With release of Node v18.12.1 (LTS) on 11/4/22, the script has been updated to 'npm run dev' || 'npm run build' for backwards compatibility.<br/>
 For version Node v16.16.0, please use script 'npm run devlegacy' || 'npm run buildlegacy'
@@ -45,7 +45,7 @@ Similar approach for Next.js and Remix demo apps
 - Navigate to http://localhost:8080/ to inspect the demo application using Reactime!
 - Once the initial build has been completed and loaded into chrome as an unpacked extension, you may enter the root directory and run ‘npm run dev’ to hot load the chrome extension. You should see ‘[ Starting the Chrome Hot Plugin Reload Server... ]’. You should now be able to see changes without having to rebuild the extension. If for some reason it does not, feel free to rebuild and then try the Hot Plugin Reload Server again.
 
-![extension](../assets/reactime-dev-setup.gif)
+![extension](../assets/gifs/reactime-dev-setup.gif)
 
 ## Linting
 
@@ -73,7 +73,7 @@ Any changes to console.logs in Reactime can be seen by refreshing the browser th
 
 ## Replace Functionality for Outdated Packages
 
-Package dependencies need to be trimmed down, updated, and/or removed. Peer dependency errors are the reason npm install --force is necessary when installing the dependencies of Reactime.
+Package dependencies need to be trimmed down, updated, and/or removed. Peer dependency errors are the reason npm install --force may be necessary when installing the dependencies of Reactime. While Reactime v21.0 has reduced package dependency errors for developers from multiple pages of errors down to ~15 errors, the goal is to decrease overall package/library dependency to a minimum to promote long-term maintainability
 
 Material-ui/core has been updated to use React 18. Future developers may choose to remove Material-ui/core from the application to ensure compatibility in the future or continue to build out the UI. The choice is yours!
 
@@ -89,6 +89,10 @@ In a long term, there are plans to implement more reliable API contract of what 
 Can Reactime functionality be extended so applications using Redux can track state in Reactime?
 
 Yes, but it would be very time-consuming and not the most feasible option while Redux devtools exists already. With how Redux devtools is currently set up, a developer is unable to use Redux devtools as a third-party user and integrate its functionality into their own application, as Redux devtools is meant to be used directly on an application using Redux for state-tracking purposes. Since the devtools do not appear to have a public API for integrated use in an application or it simply does not exist, Redux devtools would need to be rebuilt from the ground up and then integrated into Reactime, or built into Reactime directly still from scratch.
+
+Can Reactime be refactored into a Redux application?
+
+Yes, in fact, it should be. Reactime currently uses [Immer](https://github.com/immerjs/immer#readme) to handle immutable data structures. The foundation for Redux is already there, as Reactime uses reducers, a store, action creators, and action types. Adding a state management library like Redux, would allow for further application stability and maintainability as it would decrease the amount of less frequently maintained package/libraries.
 
 # File Structure
 
@@ -148,7 +152,7 @@ All the diagrams of data flows are available on [MIRO](https://miro.com/app/boar
 
 ![FRONTEND DEPENDENCY CHART](../assets/Front_End_Dependency_Chart_v21.png)
 
-![BACKEND DEPENDENCY CHART](../assets/BackEndDependencyChart.png)
+![BACKEND DEPENDENCY CHART](../assets/Back_End_Dependency_Chart_v21.png)
 
 ![FRONTEND DATA FLOW](../assets/frontend-diagram.png)
 
@@ -192,7 +196,7 @@ Console.logs from the Extension folder you can find here:
 - Chrome Extension (Developer mode)
 - Background page
 
-![extension](../assets/extension-console.gif)
+![extension](../assets/gifs/extension-console.gif)
 
 ### <b> /src/app </b>
 
@@ -201,7 +205,7 @@ Console.logs from the App folder you can find here:
 - Chrome Browser
 - Inspect
 
-![frontend](../assets/console.gif)
+![frontend](../assets/gifs/console.gif)
 
 ### <b> /src/backend </b>
 
@@ -210,7 +214,7 @@ Console.logs from the App folder you can find here:
 - Open the Reactime extension in Chrome
 - Click "Inspect" on Reactime
 
-![backend](../assets/reactime-console.gif)
+![backend](../assets/gifs/reactime-console.gif)
 
 # Chrome Developer Resources
 
@@ -255,7 +259,7 @@ Once you are ready for launch, follow these steps to simplify deployment to the 
 
 # Past Medium Articles for Reference
 
--[Reactime 21: ]
+-[Reactime 21: Cheers to Reactime, Version 21!](https://medium.com/@brok3turtl3/cheers-to-reactime-version-21-fa4dafa4bc74)
 
 - [Reactime 20: Reactime just keeps getting better!](https://medium.com/@njhuemmer/reactime-just-keeps-getting-better-b37659ff8b71)
 - [Reactime 19: What time is it? It’s still Reactime!](https://medium.com/@minzo.kim/what-time-is-it-its-still-reactime-d496adfa908c)
