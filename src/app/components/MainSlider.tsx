@@ -36,7 +36,8 @@ function MainSlider(props: MainSliderProps): JSX.Element {
   const { tabs, currentTab } = useSelector((state: any) => state.main);
   const { currLocation } = tabs[currentTab]; // we destructure the currentTab object
 
-
+  //10/04/2023 -> line 35 useState is local, should we change this to handle our global state.
+  
   useEffect(() => {
     if (currLocation) { // if we have a 'currLocation'
       setSliderIndex(currLocation.index); // set our slider thumb position to the 'currLocation.index'
