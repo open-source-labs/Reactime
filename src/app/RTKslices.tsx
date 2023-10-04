@@ -339,6 +339,7 @@ export const mainSlice = createSlice({
     importSnapshots: (state, action) => {
       console.log('importSnapshots')
       const { port, tabs, currentTab } = state;
+
       // Log the value of tabs[currentTab].snapshots before the update
       port.postMessage({
         action: 'import',
@@ -368,6 +369,11 @@ export const mainSlice = createSlice({
       tabs[currentTab].currBranch = savedSnapshot.Branch;
       tabs[currentTab].seriesSavedStatus = false;
     },
+    tutorialSaveSeriesToggle: (state, action) => {
+      const { tabs, currentTab } = state;
+      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload }
+
+    }
   },
 })
 
@@ -391,7 +397,8 @@ export const {
   moveBackward,
   resetSlider,
   toggleMode,
-  importSnapshots
+  importSnapshots,
+  tutorialSaveSeriesToggle
 } =  mainSlice.actions
 
 
