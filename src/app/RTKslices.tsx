@@ -202,7 +202,19 @@ export const mainSlice = createSlice({
       tabs[currentTab].playing = false;
       tabs[currentTab].intervalId = null;
     },
+    launchContentScript: (state, action) => {
+      console.log('launchContentScript: ', current(state));
 
+      const { tabs, currentTab } = state;
+      const { port } = tabs[currentTab] || {};
+
+      // Fired when user clicks launch button on the error page. Send msg to background to launch
+      port.postMessage({
+        action: 'launchContentScript',
+        payload: action.payload,
+        tabId: currentTab,
+      });
+    },
     playForward: (state, action) => {
       const {port, tabs, currentTab} = state
       const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
@@ -356,7 +368,6 @@ export const mainSlice = createSlice({
               tabs[currentTab].currBranch = savedSnapshot.Branch;
               tabs[currentTab].seriesSavedStatus = false;
     }
-
   },
 })
 
@@ -373,6 +384,7 @@ export const {
   changeSlider,
   setCurrentTabInApp,
   pause,
+  launchContentScript,
   playForward,
   startPlaying,
   moveForward,
