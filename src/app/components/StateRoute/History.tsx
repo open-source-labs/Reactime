@@ -33,7 +33,7 @@ function History(props: Record<string, unknown>): JSX.Element {
     height: totalHeight, // from ParentSize provided in StateRoute
     margin = defaultMargin,
     hierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
-    dispatch, // from useStoreContext in 'StateRoute'
+    // dispatch, // from useStoreContext in 'StateRoute'
     currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
     snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
   } = props;
