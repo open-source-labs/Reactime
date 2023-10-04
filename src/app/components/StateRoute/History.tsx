@@ -8,11 +8,12 @@ import * as d3 from 'd3';
 import { DefaultMargin } from '../../FrontendTypes';
 //removed changeView from line 11 and added it as an import on line 16 from RTKSlices
 // import { changeView, changeSlider,setCurrentTabInApp } from '../../actions/actions';
-import { useStoreContext } from '../../store';
+// import { useStoreContext } from '../../store';
 //importing these methods for RTK
 import { useSelector, useDispatch } from 'react-redux';
 //import the relevant actions that are used within this file for the slice we are creating
-import { changeView, changeSlider, setCurrentTabInApp } from '../../RTKslices'
+import { changeView, changeSlider, setCurrentTabInApp } from '../../RTKslices';
+
 /*
   Render's history page after history button has been selected. Allows user to traverse state history and relevant state branches.
 */
@@ -39,11 +40,11 @@ function History(props: Record<string, unknown>): JSX.Element {
   
   //Commented out dispatch: 10/03/23 3:18 PM from original
   // const [, dispatch] = useStoreContext(); // use the dispatch that is connected with our storeContext
-  
+
   //here we are adding useSelector and useDispatch for RTK state conversion
   const dispatch = useDispatch();
-  const currentTab = useSelector(state => state.history.currentTab)
-  const tabs = useSelector(state => state.history.tabs)
+  const currentTab = useSelector(state => state.main.currentTab)
+  const tabs = useSelector(state => state.main.tabs)
 
   const svgRef = React.useRef(null);
   const root = JSON.parse(JSON.stringify(hierarchy)); // why do we stringify and then parse our hierarchy back to JSON? (asked 7/31/23)
@@ -195,6 +196,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .style('cursor', 'pointer')
       .attr('class', `snapshotNode`)
       .on('click', (event, d) => {
+        console.log('d.data.index: ', d.data.index)
         dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
         /*
