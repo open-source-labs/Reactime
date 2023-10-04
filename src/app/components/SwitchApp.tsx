@@ -1,7 +1,10 @@
 import React from 'react';
 import Select from 'react-select';
-import { useStoreContext } from '../store';
-import { setTab } from '../actions/actions';
+//commented out for RTK
+// import { useStoreContext } from '../store'; 
+import { setTab } from '../RTKslices';
+//importing these methods for RTK
+import { useSelector, useDispatch } from 'react-redux';
 
 /*
   This is the dropdown menu on the left column above the 'clear' button and the state snapshots list. It allows us to switch between which website/application we are currently working on.
@@ -10,8 +13,13 @@ import { setTab } from '../actions/actions';
 */
 
 const SwitchAppDropdown = (): JSX.Element => {
-  const [{ currentTab, tabs }, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
-  
+  //commented out to implement RTK
+  // const [{ currentTab, tabs }, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
+    //here we are adding useSelector and useDispatch for RTK state conversion
+    const dispatch = useDispatch();
+    const currentTab = useSelector((state: any) => state.main.currentTab)
+    const tabs = useSelector((state: any) => state.main.tabs)  
+
   const tabsArray: {}[] = []; // tabsArray is an empty array that will take objects as it's elements
 
   Object.keys(tabs).forEach((tab) => { // We populate our 'tabsArray' with objects derived from the 'tab' that is currently being iterated on.

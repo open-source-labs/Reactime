@@ -192,7 +192,7 @@ export const mainSlice = createSlice({
       console.log('SET CURRENT TAB IN APP');
       state.currentTabInApp = action.payload;
     },
-    pause: (state, action) => {
+    pause: (state) => {
       console.log('pause: ', current(state));
 
       const {tabs, currentTab} = state
@@ -215,7 +215,159 @@ export const mainSlice = createSlice({
         tabId: currentTab,
       });
     },
-    
+    playForward: (state, action) => {
+      const {port, tabs, currentTab} = state
+      const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
+
+      if (sliderIndex < snapshots.length - 1) {
+        const newIndex = sliderIndex + 1;
+        // eslint-disable-next-line max-len
+        // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
+        const nameFromIndex = findName(newIndex, hierarchy);
+
+        port.postMessage({
+          action: 'jumpToSnap',
+          payload: snapshots[newIndex],
+          index: newIndex,
+          name: nameFromIndex,
+          tabId: currentTab,
+        });
+
+        tabs[currentTab].sliderIndex = newIndex;
+
+        // message is coming from the user
+        if (!action.payload) {
+          clearInterval(intervalId);
+          tabs[currentTab].playing = false;
+        }
+      }
+    },
+    startPlaying : (state, action) => {
+      const {tabs, currentTab} = state
+
+      tabs[currentTab].playing = true;
+      tabs[currentTab].intervalId = action.payload;
+    },
+    moveForward: (state, action) => {
+      const {port, tabs, currentTab} = state
+      const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
+
+      if (sliderIndex < snapshots.length - 1) {
+        const newIndex = sliderIndex + 1;
+        // eslint-disable-next-line max-len
+        // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
+        const nameFromIndex = findName(newIndex, hierarchy);
+
+        port.postMessage({
+          action: 'jumpToSnap',
+          payload: snapshots[newIndex],
+          index: newIndex,
+          name: nameFromIndex,
+          tabId: currentTab,
+        });
+
+        tabs[currentTab].sliderIndex = newIndex;
+
+        // message is coming from the user
+        if (!action.payload) {
+          clearInterval(intervalId);
+          tabs[currentTab].playing = false;
+        }
+      }
+    },
+    moveBackward : (state, action) => {
+      const {port, tabs, currentTab} = state
+      const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
+
+      if (sliderIndex > 0) {
+        const newIndex = sliderIndex - 1;
+        // eslint-disable-next-line max-len
+        // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
+        const nameFromIndex = findName(newIndex, hierarchy);
+
+        port.postMessage({
+          action: 'jumpToSnap',
+          payload: snapshots[newIndex],
+          index: newIndex,
+          name: nameFromIndex,
+          tabId: currentTab,
+          newProp: 'newPropFromReducer',
+        });
+        clearInterval(intervalId);
+
+        tabs[currentTab].sliderIndex = newIndex;
+        tabs[currentTab].playing = false;
+      }
+    },
+
+    resetSlider: (state) => {
+      const {port, tabs, currentTab} = state
+      const { snapshots, sliderIndex} = tabs[currentTab] || {};
+
+       // eslint-disable-next-line max-len
+        // resets name to 0 to send to background.js the current name in the jump action
+        port.postMessage({
+          action: 'jumpToSnap',
+          index: 0,
+          name: 0,
+          payload: snapshots[0],
+          tabId: currentTab,
+        });
+        tabs[currentTab].sliderIndex = 0;
+    },
+
+
+
+    toggleMode: (state, action)=>{
+      console.log('Toggle Mode')
+      const { port, tabs, currentTab } = state;
+      const {mode} = tabs[currentTab] || {};
+      mode[action.payload] = !mode[action.payload];
+        const newMode = mode[action.payload];
+        let actionText;
+        switch (action.payload) {
+          case 'paused':
+            actionText = 'setPause';
+          default:
+        }
+        port.postMessage({
+          action: actionText,
+          payload: newMode,
+          tabId: currentTab,
+        });
+    },
+    importSnapshots: (state, action) => {
+      console.log('importSnapshots')
+      const { port, tabs, currentTab } = state;
+              // Log the value of tabs[currentTab].snapshots before the update
+              port.postMessage({
+                action: 'import',
+                payload: action.payload,
+                tabId: currentTab,
+              });
+      
+              const savedSnapshot = action.payload;
+      
+              tabs[currentTab].sliderIndex = savedSnapshot.sliderIndex;
+              tabs[currentTab].viewIndex = savedSnapshot.viewIndex;
+              tabs[currentTab].playing = false;
+      
+              // resets hierarchy to page last state recorded
+              tabs[currentTab].hierarchy.stateSnapshot = savedSnapshot.hierarchy.stateSnapshot;
+      
+              // resets hierarchy
+              tabs[currentTab].hierarchy.children = savedSnapshot.hierarchy.children;
+      
+              // resets snapshots to page last state recorded
+              tabs[currentTab].snapshots = savedSnapshot.snapshots;
+      
+              // resets currLocation to page last state recorded
+              tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+              tabs[currentTab].index = savedSnapshot.index;
+              tabs[currentTab].currParent = savedSnapshot.currParent;
+              tabs[currentTab].currBranch = savedSnapshot.Branch;
+              tabs[currentTab].seriesSavedStatus = false;
+    }
   },
 })
 
@@ -233,6 +385,13 @@ export const {
   setCurrentTabInApp,
   pause,
   launchContentScript,
+  playForward,
+  startPlaying,
+  moveForward,
+  moveBackward,
+  resetSlider,
+  toggleMode,
+  importSnapshots
 } =  mainSlice.actions
 
 
