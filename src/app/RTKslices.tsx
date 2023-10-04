@@ -202,6 +202,19 @@ export const mainSlice = createSlice({
       tabs[currentTab].playing = false;
       tabs[currentTab].intervalId = null;
     },
+    launchContentScript: (state, action) => {
+      console.log('launchContentScript: ', current(state));
+
+      const { tabs, currentTab } = state;
+      const { port } = tabs[currentTab] || {};
+
+      // Fired when user clicks launch button on the error page. Send msg to background to launch
+      port.postMessage({
+        action: 'launchContentScript',
+        payload: action.payload,
+        tabId: currentTab,
+      });
+    },
     
   },
 })
@@ -219,6 +232,7 @@ export const {
   changeSlider,
   setCurrentTabInApp,
   pause,
+  launchContentScript,
 } =  mainSlice.actions
 
 
