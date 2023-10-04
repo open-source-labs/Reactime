@@ -305,15 +305,15 @@ export const mainSlice = createSlice({
       const { snapshots, sliderIndex} = tabs[currentTab] || {};
 
        // eslint-disable-next-line max-len
-        // resets name to 0 to send to background.js the current name in the jump action
-        port.postMessage({
-          action: 'jumpToSnap',
-          index: 0,
-          name: 0,
-          payload: snapshots[0],
-          tabId: currentTab,
-        });
-        tabs[currentTab].sliderIndex = 0;
+      // resets name to 0 to send to background.js the current name in the jump action
+      port.postMessage({
+        action: 'jumpToSnap',
+        index: 0,
+        name: 0,
+        payload: snapshots[0],
+        tabId: currentTab,
+      });
+      tabs[currentTab].sliderIndex = 0;
     },
 
 
@@ -323,51 +323,51 @@ export const mainSlice = createSlice({
       const { port, tabs, currentTab } = state;
       const {mode} = tabs[currentTab] || {};
       mode[action.payload] = !mode[action.payload];
-        const newMode = mode[action.payload];
-        let actionText;
-        switch (action.payload) {
-          case 'paused':
-            actionText = 'setPause';
-          default:
-        }
-        port.postMessage({
-          action: actionText,
-          payload: newMode,
-          tabId: currentTab,
-        });
+      const newMode = mode[action.payload];
+      let actionText;
+      switch (action.payload) {
+        case 'paused':
+          actionText = 'setPause';
+        default:
+      }
+      port.postMessage({
+        action: actionText,
+        payload: newMode,
+        tabId: currentTab,
+      });
     },
     importSnapshots: (state, action) => {
       console.log('importSnapshots')
       const { port, tabs, currentTab } = state;
-              // Log the value of tabs[currentTab].snapshots before the update
-              port.postMessage({
-                action: 'import',
-                payload: action.payload,
-                tabId: currentTab,
-              });
-      
-              const savedSnapshot = action.payload;
-      
-              tabs[currentTab].sliderIndex = savedSnapshot.sliderIndex;
-              tabs[currentTab].viewIndex = savedSnapshot.viewIndex;
-              tabs[currentTab].playing = false;
-      
-              // resets hierarchy to page last state recorded
-              tabs[currentTab].hierarchy.stateSnapshot = savedSnapshot.hierarchy.stateSnapshot;
-      
-              // resets hierarchy
-              tabs[currentTab].hierarchy.children = savedSnapshot.hierarchy.children;
-      
-              // resets snapshots to page last state recorded
-              tabs[currentTab].snapshots = savedSnapshot.snapshots;
-      
-              // resets currLocation to page last state recorded
-              tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
-              tabs[currentTab].index = savedSnapshot.index;
-              tabs[currentTab].currParent = savedSnapshot.currParent;
-              tabs[currentTab].currBranch = savedSnapshot.Branch;
-              tabs[currentTab].seriesSavedStatus = false;
-    }
+      // Log the value of tabs[currentTab].snapshots before the update
+      port.postMessage({
+        action: 'import',
+        payload: action.payload,
+        tabId: currentTab,
+      });
+
+      const savedSnapshot = action.payload;
+
+      tabs[currentTab].sliderIndex = savedSnapshot.sliderIndex;
+      tabs[currentTab].viewIndex = savedSnapshot.viewIndex;
+      tabs[currentTab].playing = false;
+
+      // resets hierarchy to page last state recorded
+      tabs[currentTab].hierarchy.stateSnapshot = savedSnapshot.hierarchy.stateSnapshot;
+
+      // resets hierarchy
+      tabs[currentTab].hierarchy.children = savedSnapshot.hierarchy.children;
+
+      // resets snapshots to page last state recorded
+      tabs[currentTab].snapshots = savedSnapshot.snapshots;
+
+      // resets currLocation to page last state recorded
+      tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+      tabs[currentTab].index = savedSnapshot.index;
+      tabs[currentTab].currParent = savedSnapshot.currParent;
+      tabs[currentTab].currBranch = savedSnapshot.Branch;
+      tabs[currentTab].seriesSavedStatus = false;
+    },
   },
 })
 
