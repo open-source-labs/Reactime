@@ -14,18 +14,27 @@ import {
   noDev,
   setCurrentLocation,
   pause,
-} from '../actions/actions';
-import { useStoreContext } from '../store';
+} from '../RTKslices';
+import { useDispatch, useSelector } from 'react-redux';
+//importing mainContainerslice 
+// import { mainSlice } from '../RTKslices';
+//commented out for RTK
+// import { useStoreContext } from '../store';
 
 /*
   This is the main container where everything in our application is rendered
 */
 
 function MainContainer(): JSX.Element {
+  const dispatch = useDispatch();
+
+  // const [store, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (store/dispatch) are from the useReducer function invocation in the App component
   
-  const [store, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (store/dispatch) are from the useReducer function invocation in the App component
-  
-  const { tabs, currentTab, port } = store; // we continue to destructure 'store' and get the tabs/currentTab/port
+  // const { tabs, currentTab, port } = store; // we continue to destructure 'store' and get the tabs/currentTab/port
+
+  const currentTab = useSelector((state: any) => state.main.currentTab);
+  const tabs = useSelector((state: any) => state.main.tabs);
+  const port = useSelector((state: any) => state.main.port);
   
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
 
@@ -50,7 +59,7 @@ function MainContainer(): JSX.Element {
 
     // chrome.runtime allows our application to retrieve our service worker (our eventual bundles/background.bundle.js after running npm run build), details about the manifest, and allows us to listen and respond to events in our application lifecycle.
     const currentPort = chrome.runtime.connect(); // we connect to our service worker
-
+    console.log('currentPort', currentPort);
     const keepAliveMainContainer = setInterval(() => { // interval to keep connection to background.js alive
     currentPort.postMessage({
       action: 'keepAlive' // messages sent to port to keep connection alive
@@ -111,7 +120,7 @@ function MainContainer(): JSX.Element {
     currentPort.onDisconnect.addListener(() => { // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
       console.log('this port is disconnecting line 52');
     });
-
+    console.log('currentPort', currentPort);
     dispatch(setPort(currentPort)); // assign port to state so it could be used by other components
   });
 
