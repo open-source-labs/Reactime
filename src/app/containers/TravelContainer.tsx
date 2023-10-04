@@ -11,13 +11,12 @@ import {
   resetSlider,
 } from '../RTKslices';
 import { useDispatch, useSelector } from 'react-redux';
+//Commented out useStoreContext
 // import { useStoreContext } from '../store';
 import { TravelContainerProps } from '../FrontendTypes';
 import { Button } from '@mui/material';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
 import FastForwardIcon from '@mui/icons-material/FastForward';
-
-//Pause, plsayForward, startPlaying, moveForward, moveBackward
 
 /*
   This container renders the time-travel play button, seek bar, playback controls, and the playback speed dropdown, located towards the bottom of the application, above the locked, download, upload, and tutorial buttons
@@ -37,10 +36,10 @@ const speeds: {
 function play( // function that will start/pause slider movement
   speed: number,
   playing: boolean,
+  dispatch: (a: any) => void,
   snapshotsLength: number,
   sliderIndex: number,
 ): void {
-  const dispatch = useDispatch();
   if (playing) { // if already playing, clicking the button will pause the slider
     dispatch(pause());
   } else {
@@ -81,7 +80,7 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
         // data-testid, prop for testing in RTL
         data-testid='play-button-test'
         //REMOVED DISPATCH FROM PLAY
-        onClick={() => play(selectedSpeed.value, playing, snapshotsLength, sliderIndex)}
+        onClick={() => play(selectedSpeed.value, playing, dispatch, snapshotsLength, sliderIndex)}
       >
         {playing ? 'Pause' : 'Play'}
       </Button>
