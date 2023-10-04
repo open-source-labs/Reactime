@@ -38,6 +38,8 @@ export const mainSlice = createSlice({
     //we removed the action parameter because we kept getting an error within actionContainer file on line 204
     //as it expected an argument or payload to be passed in
     emptySnapshots: (state) => {
+      console.log('emptySnapshots: ', current(state));
+
       const { tabs, currentTab } = state;
       const { port } = tabs[currentTab] || {};
 
@@ -58,6 +60,9 @@ export const mainSlice = createSlice({
       tabs[currentTab].currParent = 0;
       tabs[currentTab].currBranch = 1;
       tabs[currentTab].seriesSavedStatus = false;
+
+      console.log('emptySnapshots state end: ', current(state));
+
     },
     addNewSnapshots: (state, action) => {
       console.log('addNewSnapshots: ', state);
@@ -89,6 +94,8 @@ export const mainSlice = createSlice({
           };
         }
       });
+      console.log('addNewSnapshots: state end ', state);
+
     },
     initialConnect: (state, action) => {
       console.log('initialConnect: ', current(state));
@@ -111,13 +118,17 @@ export const mainSlice = createSlice({
       // only set first tab if current tab is non existent
       const firstTab = parseInt(Object.keys(payload)[0], 10);
       if (currentTab === undefined || currentTab === null) state.currentTab = firstTab;
-      
+      console.log('initialConnect: state end', current(state));
+
     },
     setPort: (state, action) => {
       console.log('setPort: ', current(state));
       console.log('ACTION', action);
 
       state.port = action.payload;
+
+      console.log('setPort: state end', current(state));
+
     },
     setTab: (state, action) => {
       console.log('setTab: ', current(state));
@@ -133,10 +144,14 @@ export const mainSlice = createSlice({
             state.currentTitle = action.payload.title;
         };
       }
+      console.log('setTab: state end', current(state));
+
     },
     deleteTab : (state, action) => {
       console.log('deleteTab: ', current(state));
       delete state.tabs[action.payload];
+      console.log('deleteTab: state end', current(state));
+
     },
     noDev: (state, action) => {
       console.log('noDev: ', current(state));
@@ -146,6 +161,8 @@ export const mainSlice = createSlice({
         const { reactDevToolsInstalled } = payload[currentTab].status;
         tabs[currentTab].status.reactDevToolsInstalled = reactDevToolsInstalled
       }
+      console.log('noDev: state end', current(state));
+
     },
     setCurrentLocation: (state, action) => {
       console.log('setCurrentLocation: ', current(state));
@@ -164,15 +181,21 @@ export const mainSlice = createSlice({
         tabs[currentTab].currLocation.stateSnapshot,
       );
       tabs[currentTab].currLocation = payload[currentTab].currLocation;
+      console.log('setCurrentLocation: state end', current(state));
+
     },
     changeView: (state, action) => {
+      console.log('changeView: ', current(state));
+
       const {tabs, currentTab} = state;
       const {viewIndex} = tabs[currentTab] || {};
 
       tabs[currentTab].viewIndex = viewIndex === action.payload ? -1 : action.payload;
+      console.log('changeView: state end', current(state));
+
     },
     changeSlider: (state, action) => {
-      console.log('CHANGE SLIDER');
+      console.log('changeSlider: ', current(state));
       const { port, currentTab, tabs } = state;
       const { hierarchy, snapshots } = tabs[currentTab] || {};
 
@@ -187,10 +210,14 @@ export const mainSlice = createSlice({
       });
       
       tabs[currentTab].sliderIndex = action.payload;
+      console.log('changeSlider: state end', current(state));
+
     },
     setCurrentTabInApp: (state, action) => {
-      console.log('SET CURRENT TAB IN APP');
+      console.log('setCurrentTabInApp: ', current(state));
       state.currentTabInApp = action.payload;
+      console.log('setCurrentTabInApp: state end', current(state));
+
     },
     pause: (state) => {
       console.log('pause: ', current(state));
@@ -201,6 +228,8 @@ export const mainSlice = createSlice({
       clearInterval(intervalId);
       tabs[currentTab].playing = false;
       tabs[currentTab].intervalId = null;
+      console.log('pause: state end', current(state));
+
     },
     launchContentScript: (state, action) => {
       console.log('launchContentScript: ', current(state));
@@ -214,8 +243,12 @@ export const mainSlice = createSlice({
         payload: action.payload,
         tabId: currentTab,
       });
+      console.log('launchContentScript: state end', current(state));
+
     },
     playForward: (state, action) => {
+      console.log('playForward: ', current(state));
+
       const {port, tabs, currentTab} = state
       const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
 
@@ -241,14 +274,21 @@ export const mainSlice = createSlice({
           tabs[currentTab].playing = false;
         }
       }
+      console.log('playForward: state end', current(state));
+
     },
     startPlaying : (state, action) => {
-      const {tabs, currentTab} = state
+      console.log('startPlaying: ', current(state));
 
+      const {tabs, currentTab} = state
       tabs[currentTab].playing = true;
       tabs[currentTab].intervalId = action.payload;
+      console.log('startPlaying: state end', current(state));
+
     },
     moveForward: (state, action) => {
+      console.log('moveForward: ', current(state));
+
       const {port, tabs, currentTab} = state
       const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
 
@@ -274,8 +314,12 @@ export const mainSlice = createSlice({
           tabs[currentTab].playing = false;
         }
       }
+      console.log('moveForward: state end', current(state));
+
     },
     moveBackward : (state, action) => {
+      console.log('moveBackward: ', current(state));
+
       const {port, tabs, currentTab} = state
       const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
 
@@ -298,47 +342,60 @@ export const mainSlice = createSlice({
         tabs[currentTab].sliderIndex = newIndex;
         tabs[currentTab].playing = false;
       }
+      console.log('moveBackward: state end', current(state));
+
     },
 
     resetSlider: (state) => {
+      console.log('resetSlider: ', current(state));
+
       const {port, tabs, currentTab} = state
       const { snapshots, sliderIndex} = tabs[currentTab] || {};
 
        // eslint-disable-next-line max-len
-      // resets name to 0 to send to background.js the current name in the jump action
-      port.postMessage({
-        action: 'jumpToSnap',
-        index: 0,
-        name: 0,
-        payload: snapshots[0],
-        tabId: currentTab,
-      });
-      tabs[currentTab].sliderIndex = 0;
+        // resets name to 0 to send to background.js the current name in the jump action
+        port.postMessage({
+          action: 'jumpToSnap',
+          index: 0,
+          name: 0,
+          payload: snapshots[0],
+          tabId: currentTab,
+        });
+        tabs[currentTab].sliderIndex = 0;
+        console.log('resetSlider: state end', current(state));
+
+
     },
 
 
 
     toggleMode: (state, action)=>{
-      console.log('Toggle Mode')
+      console.log('Toggle Mode: ', current(state));
+
       const { port, tabs, currentTab } = state;
       const {mode} = tabs[currentTab] || {};
       mode[action.payload] = !mode[action.payload];
-      const newMode = mode[action.payload];
-      let actionText;
-      switch (action.payload) {
-        case 'paused':
-          actionText = 'setPause';
-        default:
-      }
-      port.postMessage({
-        action: actionText,
-        payload: newMode,
-        tabId: currentTab,
-      });
+        const newMode = mode[action.payload];
+        let actionText;
+        switch (action.payload) {
+          case 'paused':
+            actionText = 'setPause';
+          default:
+        }
+        port.postMessage({
+          action: actionText,
+          payload: newMode,
+          tabId: currentTab,
+        });
+        console.log('Toggle Mode: state end', current(state));
+
+
     },
     importSnapshots: (state, action) => {
-      console.log('importSnapshots')
+      console.log('importSnapshots: ', current(state));
+
       const { port, tabs, currentTab } = state;
+
       // Log the value of tabs[currentTab].snapshots before the update
       port.postMessage({
         action: 'import',
@@ -367,7 +424,14 @@ export const mainSlice = createSlice({
       tabs[currentTab].currParent = savedSnapshot.currParent;
       tabs[currentTab].currBranch = savedSnapshot.Branch;
       tabs[currentTab].seriesSavedStatus = false;
+      console.log('importSnapshots: state end', current(state));
+
     },
+    tutorialSaveSeriesToggle: (state, action) => {
+      const { tabs, currentTab } = state;
+      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload }
+
+    }
   },
 })
 
@@ -391,7 +455,8 @@ export const {
   moveBackward,
   resetSlider,
   toggleMode,
-  importSnapshots
+  importSnapshots,
+  tutorialSaveSeriesToggle
 } =  mainSlice.actions
 
 

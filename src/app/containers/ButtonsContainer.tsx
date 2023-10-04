@@ -78,7 +78,10 @@ function ButtonsContainer(): JSX.Element {
         Upload
       </Button>
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}
-      <Tutorial dispatch={dispatch} currentTabInApp={currentTabInApp} />
+      <Tutorial
+      //commented out so we can use useDispatch in Tutorial.tsx
+      //  dispatch={dispatch} 
+       currentTabInApp={currentTabInApp} />
     </div>
   );
 }

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Slider from 'rc-slider';
 import Tooltip from 'rc-tooltip';
-import { changeSlider, pause } from '../actions/actions';
-import { useStoreContext } from '../store';
+import { changeSlider, pause } from '../RTKslices';
+// import { useStoreContext } from '../store';
+import { useDispatch, useSelector } from 'react-redux';
 import { HandleProps, MainSliderProps } from '../FrontendTypes';
 
 const { Handle } = Slider; // component constructor of Slider that allows customization of the handle
@@ -28,11 +29,15 @@ const handle = (props: HandleProps): JSX.Element => {
 
 
 function MainSlider(props: MainSliderProps): JSX.Element {
+  const dispatch = useDispatch();
   const { snapshotsLength } = props; // destructure props to get our total number of snapshots
-  const [{ tabs, currentTab }, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
-  const { currLocation } = tabs[currentTab]; // we destructure the currentTab object
+  // const [{ tabs, currentTab }, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
   const [sliderIndex, setSliderIndex] = useState(0); // create a local state 'sliderIndex' and set it to 0. 
+  const { tabs, currentTab } = useSelector((state: any) => state.main);
+  const { currLocation } = tabs[currentTab]; // we destructure the currentTab object
 
+  //10/04/2023 -> line 35 useState is local, should we change this to handle our global state.
+  
   useEffect(() => {
     if (currLocation) { // if we have a 'currLocation'
       setSliderIndex(currLocation.index); // set our slider thumb position to the 'currLocation.index'
