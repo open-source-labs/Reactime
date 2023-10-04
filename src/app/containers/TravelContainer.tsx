@@ -9,12 +9,15 @@ import {
   moveForward,
   moveBackward,
   resetSlider,
-} from '../actions/actions';
-import { useStoreContext } from '../store';
+} from '../RTKslices';
+import { useDispatch, useSelector } from 'react-redux';
+// import { useStoreContext } from '../store';
 import { TravelContainerProps } from '../FrontendTypes';
 import { Button } from '@mui/material';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
 import FastForwardIcon from '@mui/icons-material/FastForward';
+
+//Pause, plsayForward, startPlaying, moveForward, moveBackward
 
 /*
   This container renders the time-travel play button, seek bar, playback controls, and the playback speed dropdown, located towards the bottom of the application, above the locked, download, upload, and tutorial buttons
@@ -29,14 +32,15 @@ const speeds: {
   { value: 1000, label: '1.0x' },
   { value: 500, label: '2.0x' },
 ];
-
+//NOTE HERE REMOVED THE DISPATCH FUNCTION IN THE TYPE SCRIPT:
+//USING THE BUILT IN DISPATCH 
 function play( // function that will start/pause slider movement
   speed: number,
   playing: boolean,
-  dispatch: (a: any) => void,
   snapshotsLength: number,
   sliderIndex: number,
 ): void {
+  const dispatch = useDispatch();
   if (playing) { // if already playing, clicking the button will pause the slider
     dispatch(pause());
   } else {
@@ -47,7 +51,7 @@ function play( // function that will start/pause slider movement
     }
     const intervalId: NodeJS.Timeout = setInterval(() => { // sets interval period to wait before advancing 'currentIndex'/slider
       if (currentIndex < snapshotsLength - 1) { // as long as we're not the last snapshot, increment slider up through our dispatch and increment index
-        dispatch(playForward());
+        dispatch(playForward(true));
         currentIndex += 1;
       } else {
         dispatch(pause()); // pause the slider when we reach the end
@@ -60,8 +64,12 @@ function play( // function that will start/pause slider movement
 function TravelContainer(props: TravelContainerProps): JSX.Element {
   const { snapshotsLength } = props;
   const [selectedSpeed, setSpeed] = useState(speeds[1]); // create a new local state selectedSpeed and set it to the second element of the 'speeds' array (1.0x speed)
-  const [{ tabs, currentTab }, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
-  const { sliderIndex, playing } = tabs[currentTab]; // we destructure the currentTab object
+  
+  // const [{ tabs, currentTab }, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
+  // const { sliderIndex, playing } = tabs[currentTab]; // we destructure the currentTab object
+  const dispatch = useDispatch();
+  const { tabs, currentTab } = useSelector((state: any) => state.main);
+  const { sliderIndex, playing } = tabs[currentTab];
 
   return (
     <div className='travel-container'>
@@ -72,15 +80,16 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
         type='button'
         // data-testid, prop for testing in RTL
         data-testid='play-button-test'
-        onClick={() => play(selectedSpeed.value, playing, dispatch, snapshotsLength, sliderIndex)}
+        //REMOVED DISPATCH FROM PLAY
+        onClick={() => play(selectedSpeed.value, playing, snapshotsLength, sliderIndex)}
       >
         {playing ? 'Pause' : 'Play'}
       </Button>
       <MainSlider snapshotsLength={snapshotsLength} />
-      <Button variant="contained" className='backward-button' onClick={() => dispatch(moveBackward())} type='button' sx={{height: 25, minWidth: 30, p: 0, mr: 1}}>
+      <Button variant="contained" className='backward-button' onClick={() => dispatch(moveBackward(false))} type='button' sx={{height: 25, minWidth: 30, p: 0, mr: 1}}>
         <FastRewindIcon sx={{color: '#000'}}/>
       </Button>
-      <Button variant="contained" className='forward-button' onClick={() => dispatch(moveForward())} type='button' sx={{height: 25, minWidth: 30, p: 0}}>
+      <Button variant="contained" className='forward-button' onClick={() => dispatch(moveForward(false))} type='button' sx={{height: 25, minWidth: 30, p: 0}}>
         <FastForwardIcon sx={{color: '#000'}}/>
       </Button>
       <Dropdown speeds={speeds} selectedSpeed={selectedSpeed} setSpeed={setSpeed} />
