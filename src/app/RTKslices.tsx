@@ -367,6 +367,11 @@ export const mainSlice = createSlice({
               tabs[currentTab].currParent = savedSnapshot.currParent;
               tabs[currentTab].currBranch = savedSnapshot.Branch;
               tabs[currentTab].seriesSavedStatus = false;
+    },
+    tutorialSaveSeriesToggle: (state, action) => {
+      const { tabs, currentTab } = state;
+      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload }
+
     }
   },
 })
@@ -391,7 +396,8 @@ export const {
   moveBackward,
   resetSlider,
   toggleMode,
-  importSnapshots
+  importSnapshots,
+  tutorialSaveSeriesToggle
 } =  mainSlice.actions
 
 
