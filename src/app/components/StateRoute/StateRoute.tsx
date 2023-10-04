@@ -11,7 +11,8 @@ import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap/ComponentMap';
 import { changeView, changeSlider } from '../../actions/actions';
-import { useStoreContext } from '../../store';
+// import { useStoreContext } from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetrics from '../WebMetrics';
 import { StateRouteProps } from '../../FrontendTypes'
@@ -32,7 +33,11 @@ const StateRoute = (props: StateRouteProps) => {
     webMetrics, // from 'tabs[currentTab]' object in 'MainContainer'
     currLocation // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  // const [{ tabs, currentTab }, dispatch] = useStoreContext();
+
+  // Don't believe we need dispatch here because all it was used for was to prop drill, and I removed that functionality
+  // const dispatch = useDispatch();
+  const { tabs, currentTab } = useSelector((state: any) => state.main);
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
 
   const renderComponentMap = () => {
@@ -62,7 +67,8 @@ const StateRoute = (props: StateRouteProps) => {
               width={width} 
               height={height}
               hierarchy={hierarchy}
-              dispatch={dispatch}
+              // Commented out dispatch that was prop drilled as conversion to RTK might invalidate need for prop drilling to access dispatch
+              // dispatch={dispatch}
               sliderIndex={sliderIndex}
               viewIndex={viewIndex}
               currLocation={currLocation}
