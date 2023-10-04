@@ -159,7 +159,7 @@ export interface ActionProps {
   last: boolean;
   index: number;
   sliderIndex: number;
-  dispatch: (a: { type: string; payload: unknown }) => void;
+  // dispatch: (a: { type: string; payload: unknown }) => void;
   displayName: string;
   componentName: string;
   componentData: { actualDuration: number } | undefined;

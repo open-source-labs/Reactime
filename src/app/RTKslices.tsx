@@ -364,6 +364,7 @@ export const mainSlice = createSlice({
         tabs[currentTab].sliderIndex = 0;
         console.log('resetSlider: state end', current(state));
 
+
     },
 
 
@@ -388,40 +389,47 @@ export const mainSlice = createSlice({
         });
         console.log('Toggle Mode: state end', current(state));
 
+
     },
     importSnapshots: (state, action) => {
       console.log('importSnapshots: ', current(state));
 
       const { port, tabs, currentTab } = state;
-              // Log the value of tabs[currentTab].snapshots before the update
-              port.postMessage({
-                action: 'import',
-                payload: action.payload,
-                tabId: currentTab,
-              });
-      
-              const savedSnapshot = action.payload;
-      
-              tabs[currentTab].sliderIndex = savedSnapshot.sliderIndex;
-              tabs[currentTab].viewIndex = savedSnapshot.viewIndex;
-              tabs[currentTab].playing = false;
-      
-              // resets hierarchy to page last state recorded
-              tabs[currentTab].hierarchy.stateSnapshot = savedSnapshot.hierarchy.stateSnapshot;
-      
-              // resets hierarchy
-              tabs[currentTab].hierarchy.children = savedSnapshot.hierarchy.children;
-      
-              // resets snapshots to page last state recorded
-              tabs[currentTab].snapshots = savedSnapshot.snapshots;
-      
-              // resets currLocation to page last state recorded
-              tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
-              tabs[currentTab].index = savedSnapshot.index;
-              tabs[currentTab].currParent = savedSnapshot.currParent;
-              tabs[currentTab].currBranch = savedSnapshot.Branch;
-              tabs[currentTab].seriesSavedStatus = false;
-              console.log('importSnapshots: state end', current(state));
+
+      // Log the value of tabs[currentTab].snapshots before the update
+      port.postMessage({
+        action: 'import',
+        payload: action.payload,
+        tabId: currentTab,
+      });
+
+      const savedSnapshot = action.payload;
+
+      tabs[currentTab].sliderIndex = savedSnapshot.sliderIndex;
+      tabs[currentTab].viewIndex = savedSnapshot.viewIndex;
+      tabs[currentTab].playing = false;
+
+      // resets hierarchy to page last state recorded
+      tabs[currentTab].hierarchy.stateSnapshot = savedSnapshot.hierarchy.stateSnapshot;
+
+      // resets hierarchy
+      tabs[currentTab].hierarchy.children = savedSnapshot.hierarchy.children;
+
+      // resets snapshots to page last state recorded
+      tabs[currentTab].snapshots = savedSnapshot.snapshots;
+
+      // resets currLocation to page last state recorded
+      tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+      tabs[currentTab].index = savedSnapshot.index;
+      tabs[currentTab].currParent = savedSnapshot.currParent;
+      tabs[currentTab].currBranch = savedSnapshot.Branch;
+      tabs[currentTab].seriesSavedStatus = false;
+      console.log('importSnapshots: state end', current(state));
+
+    },
+    tutorialSaveSeriesToggle: (state, action) => {
+      const { tabs, currentTab } = state;
+      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload }
 
     }
   },
@@ -447,7 +455,8 @@ export const {
   moveBackward,
   resetSlider,
   toggleMode,
-  importSnapshots
+  importSnapshots,
+  tutorialSaveSeriesToggle
 } =  mainSlice.actions
 
 
