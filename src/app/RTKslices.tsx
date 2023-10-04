@@ -192,7 +192,7 @@ export const mainSlice = createSlice({
       console.log('SET CURRENT TAB IN APP');
       state.currentTabInApp = action.payload;
     },
-    pause: (state, action) => {
+    pause: (state) => {
       console.log('pause: ', current(state));
 
       const {tabs, currentTab} = state
@@ -202,6 +202,110 @@ export const mainSlice = createSlice({
       tabs[currentTab].playing = false;
       tabs[currentTab].intervalId = null;
     },
+
+    playForward: (state, action) => {
+      const {port, tabs, currentTab} = state
+      const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
+
+      if (sliderIndex < snapshots.length - 1) {
+        const newIndex = sliderIndex + 1;
+        // eslint-disable-next-line max-len
+        // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
+        const nameFromIndex = findName(newIndex, hierarchy);
+
+        port.postMessage({
+          action: 'jumpToSnap',
+          payload: snapshots[newIndex],
+          index: newIndex,
+          name: nameFromIndex,
+          tabId: currentTab,
+        });
+
+        tabs[currentTab].sliderIndex = newIndex;
+
+        // message is coming from the user
+        if (!action.payload) {
+          clearInterval(intervalId);
+          tabs[currentTab].playing = false;
+        }
+      }
+    },
+    startPlaying : (state, action) => {
+      const {tabs, currentTab} = state
+
+      tabs[currentTab].playing = true;
+      tabs[currentTab].intervalId = action.payload;
+    },
+    moveForward: (state, action) => {
+      const {port, tabs, currentTab} = state
+      const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
+
+      if (sliderIndex < snapshots.length - 1) {
+        const newIndex = sliderIndex + 1;
+        // eslint-disable-next-line max-len
+        // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
+        const nameFromIndex = findName(newIndex, hierarchy);
+
+        port.postMessage({
+          action: 'jumpToSnap',
+          payload: snapshots[newIndex],
+          index: newIndex,
+          name: nameFromIndex,
+          tabId: currentTab,
+        });
+
+        tabs[currentTab].sliderIndex = newIndex;
+
+        // message is coming from the user
+        if (!action.payload) {
+          clearInterval(intervalId);
+          tabs[currentTab].playing = false;
+        }
+      }
+    },
+    moveBackward : (state, action) => {
+      const {port, tabs, currentTab} = state
+      const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
+
+      if (sliderIndex > 0) {
+        const newIndex = sliderIndex - 1;
+        // eslint-disable-next-line max-len
+        // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
+        const nameFromIndex = findName(newIndex, hierarchy);
+
+        port.postMessage({
+          action: 'jumpToSnap',
+          payload: snapshots[newIndex],
+          index: newIndex,
+          name: nameFromIndex,
+          tabId: currentTab,
+          newProp: 'newPropFromReducer',
+        });
+        clearInterval(intervalId);
+
+        tabs[currentTab].sliderIndex = newIndex;
+        tabs[currentTab].playing = false;
+      }
+    },
+
+    resetSlider: (state) => {
+      const {port, tabs, currentTab} = state
+      const { snapshots, sliderIndex} = tabs[currentTab] || {};
+
+       // eslint-disable-next-line max-len
+        // resets name to 0 to send to background.js the current name in the jump action
+        port.postMessage({
+          action: 'jumpToSnap',
+          index: 0,
+          name: 0,
+          payload: snapshots[0],
+          tabId: currentTab,
+        });
+        tabs[currentTab].sliderIndex = 0;
+    },
+
+
+
     toggleMode: (state, action)=>{
       console.log('Toggle Mode')
       const { port, tabs, currentTab } = state;
@@ -252,6 +356,7 @@ export const mainSlice = createSlice({
               tabs[currentTab].currBranch = savedSnapshot.Branch;
               tabs[currentTab].seriesSavedStatus = false;
     }
+
   },
 })
 
@@ -268,6 +373,11 @@ export const {
   changeSlider,
   setCurrentTabInApp,
   pause,
+  playForward,
+  startPlaying,
+  moveForward,
+  moveBackward,
+  resetSlider,
   toggleMode,
   importSnapshots
 } =  mainSlice.actions
