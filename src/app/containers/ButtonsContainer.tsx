@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { importSnapshots, toggleMode } from '../actions/actions';
-import { useStoreContext } from '../store';
+// import { importSnapshots, toggleMode } from '../actions/actions';
+// import { useStoreContext } from '../store';
 import { Button } from '@mui/material';
 import Tutorial from '../components/Tutorial';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { toggleMode, importSnapshots } from '../RTKslices';
+import { useDispatch, useSelector } from 'react-redux';
 
 function exportHandler(snapshots: []): void { // function that takes in our tabs[currentTab] object to be exported as a JSON file. NOTE: TypeScript needs to be updated
   const fileDownload: HTMLAnchorElement = document.createElement('a'); // invisible HTML element that will hold our tabs[currentTab] object
@@ -43,8 +45,13 @@ function importHandler(dispatch: (a: unknown) => void): void { // function handl
 }
 
 function ButtonsContainer(): JSX.Element {
-  const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
-  const { snapshots, mode: { paused }} = tabs[currentTab];
+  // const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
+  // const [state, dispatch] = useStoreContext();
+  const dispatch = useDispatch();
+  const currentTab = useSelector((state: any) => state.main.currentTab);
+  const tabs = useSelector((state: any)=>state.main.tabs);
+  const currentTabInApp = useSelector((state: any)=> state.main.currentTabInApp);
+  const { mode: { paused }} = tabs[currentTab];
   
   return (
     <div className='buttons-container'>
