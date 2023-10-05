@@ -431,6 +431,23 @@ export const mainSlice = createSlice({
       const { tabs, currentTab } = state;
       tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload }
 
+    },
+    deleteSeries: (state) => {
+      const { tabs, currentTab } = state;
+      const allStorage = () => {
+        const keys = Object.keys(localStorage);
+        let i = keys.length;
+        while (i--) {
+          localStorage.removeItem(keys[i]);
+        }
+      };
+      allStorage();
+      Object.keys(tabs).forEach((tab) => {
+        tabs[tab] = {
+          ...tabs[tab],
+        };
+      });
+      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: false };
     }
   },
 })
@@ -456,7 +473,8 @@ export const {
   resetSlider,
   toggleMode,
   importSnapshots,
-  tutorialSaveSeriesToggle
+  tutorialSaveSeriesToggle,
+  deleteSeries
 } =  mainSlice.actions
 
 
