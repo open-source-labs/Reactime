@@ -1,5 +1,6 @@
 import { createSlice, current } from '@reduxjs/toolkit';
 import { InitialStateProps } from './FrontendTypes';
+import _ from 'lodash';
 
 const initialState: InitialStateProps = { // we initialize what our initialState is here
     port: null,
@@ -432,6 +433,21 @@ export const mainSlice = createSlice({
       tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload }
 
     },
+    toggleExpanded: (state, action) => {
+      const { tabs, currentTab } = state;
+      // find correct node from currLocation and toggle isExpanded
+      const checkChildren = (node) => {
+        if (_.isEqual(node, action.payload))
+          node.isExpanded = !node.isExpanded;
+        else if (node.children) {
+          node.children.forEach(child => {
+            checkChildren(child);
+          });
+        }
+      };
+      checkChildren(tabs[currentTab].currLocation.stateSnapshot);
+    },
+
     deleteSeries: (state) => {
       const { tabs, currentTab } = state;
       const allStorage = () => {
@@ -474,6 +490,7 @@ export const {
   toggleMode,
   importSnapshots,
   tutorialSaveSeriesToggle,
+  toggleExpanded,
   deleteSeries
 } =  mainSlice.actions
 

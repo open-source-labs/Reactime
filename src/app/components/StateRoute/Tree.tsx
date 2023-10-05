@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import JSONTree from 'react-json-tree'; // React JSON Viewer Component
-import { setCurrentTabInApp } from '../../actions/actions';
-import { useStoreContext } from '../../store';
+import { setCurrentTabInApp } from '../../RTKslices';
+// import { useStoreContext } from '../../store';
+import { useDispatch } from 'react-redux';
 import { TreeProps } from '../../FrontendTypes';
 
 /*
@@ -43,7 +44,8 @@ const Tree = (props: TreeProps) => {
     currLocation // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
   // @ts-ignore
-  const [store, dispatch] = useStoreContext();
+  // const [store, dispatch] = useStoreContext();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('tree')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'tree' to facilitate render.
