@@ -448,6 +448,23 @@ export const mainSlice = createSlice({
       checkChildren(tabs[currentTab].currLocation.stateSnapshot);
     },
 
+    deleteSeries: (state) => {
+      const { tabs, currentTab } = state;
+      const allStorage = () => {
+        const keys = Object.keys(localStorage);
+        let i = keys.length;
+        while (i--) {
+          localStorage.removeItem(keys[i]);
+        }
+      };
+      allStorage();
+      Object.keys(tabs).forEach((tab) => {
+        tabs[tab] = {
+          ...tabs[tab],
+        };
+      });
+      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: false };
+    }
   },
 })
 
@@ -474,6 +491,7 @@ export const {
   importSnapshots,
   tutorialSaveSeriesToggle,
   toggleExpanded,
+  deleteSeries
 } =  mainSlice.actions
 
 

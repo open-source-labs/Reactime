@@ -15,8 +15,10 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { useTheme } from '@mui/material/styles';
 import { Button, InputLabel } from '@mui/material';
-import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../actions/actions';
-import { useStoreContext } from '../../../store';
+import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../RTKslices';
+// import { useStoreContext } from '../../../store';
+//importing useSelector and useDispatch for rtk conversion
+import { useSelector, useDispatch } from 'react-redux';
 import {
   snapshot,
   TooltipData,
@@ -46,7 +48,12 @@ const tooltipStyles = {
 };
 
 const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  //commented out line 51 to add hooks for RTK transition
+  // const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const dispatch = useDispatch();
+  const tabs = useSelector(state => state.main.tabs);
+  const currentTab = useSelector(state => state.main.currentTab);
+
   const {
     width, // from ParentSize provided in StateRoute
     height, // from ParentSize provided in StateRoute
