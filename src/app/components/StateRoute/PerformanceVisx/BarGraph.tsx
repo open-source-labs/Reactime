@@ -8,8 +8,9 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet1 } from 'd3-scale-chromatic';
-import { onHover, onHoverExit, save } from '../../../actions/actions';
-import { useStoreContext } from '../../../store';
+import { onHover, onHoverExit, save } from '../../../RTKslices';
+// import { useStoreContext } from '../../../store';
+import { useDispatch, useSelector } from 'react-redux';
 import { snapshot, TooltipData, Margin, BarGraphProps } from '../../../FrontendTypes';
 
 /* DEFAULTS */
@@ -32,7 +33,10 @@ const tooltipStyles = {
 };
 
 const BarGraph = (props: BarGraphProps): JSX.Element => {
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const dispatch = useDispatch();
+  // const [{ tabs, currentTab }, dispatch] = useStoreContext();
+  const { tabs, currentTab } = useSelector((state: any) => state.main);
+
   const {
     width, // from stateRoute container
     height, // from stateRoute container
