@@ -18,8 +18,9 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import ToolTipDataDisplay from './ToolTipDataDisplay';
-import { toggleExpanded, setCurrentTabInApp } from '../../../actions/actions';
-import { useStoreContext } from '../../../store';
+import { toggleExpanded, setCurrentTabInApp } from '../../../RTKslices';
+// import { useStoreContext } from '../../../store';
+import { useDispatch } from 'react-redux';
 import { LinkTypesProps, DefaultMargin, ToolTipStyles } from '../../../FrontendTypes'
 
 const defaultMargin: DefaultMargin = {
@@ -41,7 +42,8 @@ export default function ComponentMap({
   const [linkType, setLinkType] = useState('diagonal'); // We create a local state "linkType" and set it to a string 'diagonal'. 
   const [stepPercent, setStepPercent] = useState(0.5); // We create a local state "stepPercent" and set it to a number '0.5'. This will be used to scale the Map component's link: Step to 50%
   const [selectedNode, setSelectedNode] = useState('root'); // We create a local state "selectedNode" and set it to a string 'root'. 
-  const [, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function to get access to our dispatch function
+  // const [, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function to get access to our dispatch function
+  const dispatch = useDispatch();
 
   const toolTipTimeoutID = useRef(null); //useRef stores stateful data that’s not needed for rendering.
 
