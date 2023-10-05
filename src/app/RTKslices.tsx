@@ -499,7 +499,7 @@ export const {
   tutorialSaveSeriesToggle,
   onHover,
   onHoverExit,
-
+  save
 } =  mainSlice.actions
 
 
