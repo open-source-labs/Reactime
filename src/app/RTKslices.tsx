@@ -431,6 +431,46 @@ export const mainSlice = createSlice({
       const { tabs, currentTab } = state;
       tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload }
 
+    },
+
+    onHover: (state, action) => {
+      const { currentTab, port } = state;
+
+      port.postMessage({
+        action: 'onHover',
+        payload: action.payload,
+        tabId: currentTab,
+      });
+    },
+
+    onHoverExit: (state, action) => {
+      const { currentTab, port } = state;
+
+      port.postMessage({
+        action: 'onHoverExit',
+        payload: action.payload,
+        tabId: currentTab,
+      });
+    },
+
+    save: (state, action) => {
+      const { currentTab, tabs } = state;
+
+      const { newSeries, newSeriesName } = action.payload;
+        if (!tabs[currentTab].seriesSavedStatus) {
+          tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
+        }
+        // Runs if series name input box is active.
+        // Updates chrome local storage with the newly saved series. Console logging the seriesArray grabbed from local storage may be helpful.
+        if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
+          //Set a type for seriesArray 10/04/2023
+          let seriesArray: any = localStorage.getItem('project');
+          seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
+          newSeries.name = newSeriesName;
+          seriesArray.push(newSeries);
+          localStorage.setItem('project', JSON.stringify(seriesArray));
+          tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
+        }
     }
   },
 })
@@ -456,7 +496,10 @@ export const {
   resetSlider,
   toggleMode,
   importSnapshots,
-  tutorialSaveSeriesToggle
+  tutorialSaveSeriesToggle,
+  onHover,
+  onHoverExit,
+
 } =  mainSlice.actions
 
 
