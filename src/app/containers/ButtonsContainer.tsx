@@ -80,7 +80,7 @@ function ButtonsContainer(): JSX.Element {
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}
       <Tutorial
       //commented out so we can use useDispatch in Tutorial.tsx
-      //  dispatch={dispatch} 
+       dispatch={dispatch} 
        currentTabInApp={currentTabInApp} />
     </div>
   );

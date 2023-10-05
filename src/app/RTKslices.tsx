@@ -40,10 +40,11 @@ export const mainSlice = createSlice({
     emptySnapshots: (state) => {
       console.log('emptySnapshots: ', current(state));
 
-      const { tabs, currentTab } = state;
-      const { port } = tabs[currentTab] || {};
+      const { tabs, currentTab, port } = state;
+      console.log('currentTab exists??: ', tabs[currentTab]);
+      console.log('port: ', port);
 
-      port.portMessage({ action: 'emptySnap', tabId: currentTab });
+      port.postMessage({ action: 'emptySnap', tabId: currentTab });
 
       tabs[currentTab].sliderIndex = 0;
       tabs[currentTab].viewIndex = 0;
@@ -51,7 +52,7 @@ export const mainSlice = createSlice({
 
       const lastSnapshot = tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1];
 
-      tabs[currentTab].hiearchy.stateSnaphot = { ...lastSnapshot };
+      tabs[currentTab].hierarchy.stateSnapshot = { ...lastSnapshot };
       tabs[currentTab].hierarchy.children = [];
       tabs[currentTab].snapshots = [lastSnapshot];
 
@@ -234,8 +235,7 @@ export const mainSlice = createSlice({
     launchContentScript: (state, action) => {
       console.log('launchContentScript: ', current(state));
 
-      const { tabs, currentTab } = state;
-      const { port } = tabs[currentTab] || {};
+      const { tabs, currentTab, port } = state;
 
       // Fired when user clicks launch button on the error page. Send msg to background to launch
       port.postMessage({
