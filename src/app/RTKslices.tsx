@@ -65,7 +65,7 @@ export const mainSlice = createSlice({
 
     },
     addNewSnapshots: (state, action) => {
-      console.log('addNewSnapshots: ', state);
+      console.log('addNewSnapshots: ', current(state));
       const { tabs } = state;
 
       const { payload } = action;
@@ -94,7 +94,7 @@ export const mainSlice = createSlice({
           };
         }
       });
-      console.log('addNewSnapshots: state end ', state);
+      console.log('addNewSnapshots: state end ', current(state));
 
     },
     initialConnect: (state, action) => {
