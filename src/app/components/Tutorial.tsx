@@ -36,13 +36,10 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
   public refs: any;
 
   render(): JSX.Element {
-    // const {
-    //   currentTabInApp, // 'currentTabInApp' from 'ButtonsContainer' after useStoreContext()
-    //   dispatch // 'dispatch' from 'ButtonsContainer' after useStoreContext()
-    // } = this.props;
-
-    const dispatch = useDispatch();
-    const currentTabInApp = useSelector((state: any) => state.main.currentTabInApp);
+    const {
+      currentTabInApp, // 'currentTabInApp' from 'ButtonsContainer' after useSelector()
+      dispatch // 'dispatch' from 'ButtonsContainer' after useDispatch()
+    } = this.props;
 
     // This updates the steps so that they can target dynamically rendered elements
     const onChangeHandler = (currentStepIndex: number) => { // takes in the current step and updates the tab[currentTab]'s seriesSavedStatus based on conditions and updates the element associated with the step.

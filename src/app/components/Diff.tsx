@@ -3,6 +3,7 @@ import { diff, formatters } from 'jsondiffpatch';
 import ReactHtmlParser from 'react-html-parser';
 import { useStoreContext } from '../store';
 import { DiffProps, StatelessCleaning } from '../FrontendTypes';
+import { useSelector } from 'react-redux';
 
 /**
  * Displays tree showing two specific versions of tree:
@@ -16,8 +17,9 @@ function Diff(props: DiffProps): JSX.Element {
     snapshot, // snapshot from 'tabs[currentTab]' object in 'MainContainer'
     show // boolean that is dependent on the 'Route' path; true if 'Route' path === '/diffRaw'
   } = props;
-  const [mainState] = useStoreContext(); // useStoreContext() returns our global state object (which was initialized as 'initialState' in 'App.tsx')
-  const { currentTab, tabs } = mainState; // 'currentTab' (type: number) and 'tabs' (type: object) are destructured from 'mainState'
+  // const [mainState] = useStoreContext(); // useStoreContext() returns our global state object (which was initialized as 'initialState' in 'App.tsx')
+  // const { currentTab, tabs } = mainState; // 'currentTab' (type: number) and 'tabs' (type: object) are destructured from 'mainState'
+  const { currentTab, tabs } = useSelector((state: any) => state.main);
   const { snapshots, viewIndex, sliderIndex } = tabs[currentTab];
 
   let previous: unknown// = (viewIndex !== -1) ? snapshots[viewIndex - 1] : previous = snapshots[sliderIndex - 1]
