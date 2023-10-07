@@ -13,6 +13,8 @@ import {
   deleteTab,
   noDev,
   setCurrentLocation,
+  disconnected,
+  endReconnect,
   pause,
 } from '../RTKslices';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,6 +37,7 @@ function MainContainer(): JSX.Element {
   const currentTab = useSelector((state: any) => state.main.currentTab);
   const tabs = useSelector((state: any) => state.main.tabs);
   const port = useSelector((state: any) => state.main.port);
+  const { connectionStatus, reconnectRequested } = useSelector((state: any) => state.main);
   
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
 
@@ -53,19 +56,22 @@ function MainContainer(): JSX.Element {
       recordBtn.style.display = 'none';
     }
   };
-  
-  useEffect(() => {
-    if (port) return; // only open port once so if it exists, do not run useEffect again
 
+  useEffect(() => {
+    console.log('LOL: ', port);
+    if (port) return; // only open port once so if it exists, do not run useEffect again
+    console.log('Okie')
     // chrome.runtime allows our application to retrieve our service worker (our eventual bundles/background.bundle.js after running npm run build), details about the manifest, and allows us to listen and respond to events in our application lifecycle.
     const currentPort = chrome.runtime.connect(); // we connect to our service worker
     console.log('currentPort', currentPort);
-    const keepAliveMainContainer = setInterval(() => { // interval to keep connection to background.js alive
-    currentPort.postMessage({
-      action: 'keepAlive' // messages sent to port to keep connection alive
-    })
-    }, 295000) // messages must happen within five minutes
-    
+    const keepAliveMainContainer = () => { // interval to keep connection to background.js alive
+      console.log('Hi :))');
+      currentPort.postMessage({
+        action: 'keepAlive' // messages sent to port to keep connection alive
+      });
+    } // messages must happen within ~five minutes
+    setInterval(keepAliveMainContainer, 30000);
+
     // listen for a message containing snapshots from the /extension/build/background.js service worker
     currentPort.onMessage.addListener(
       // parameter message is an object with following type script properties
@@ -117,12 +123,27 @@ function MainContainer(): JSX.Element {
       },
     );
 
+    // chrome.runtime.connect().onDisconnect.addListener(() => { // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
     currentPort.onDisconnect.addListener(() => { // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
       console.log('this port is disconnecting line 52');
+      
+      dispatch(disconnected());
     });
+
     console.log('currentPort', currentPort);
     dispatch(setPort(currentPort)); // assign port to state so it could be used by other components
+    // if (!connectionStatus && reconnectRequested) dispatch(endReconnect());
   });
+
+  // useEffect(() => {
+  //   if (initialization) return;
+    // chrome.runtime.connect().onDisconnect.addListener(() => { // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
+    //   console.log('this port is disconnecting line 52');
+      
+    //   dispatch(disconnected());
+    // });
+  // });
+
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
   if (
