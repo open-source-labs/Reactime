@@ -42,7 +42,7 @@ export const mainSlice = createSlice({
       console.log('emptySnapshots: ', current(state));
 
       const { tabs, currentTab, port } = state;
-      console.log('currentTab exists??: ', tabs[currentTab]);
+      console.log('currentTab exists??: ', current(tabs[currentTab]));
       console.log('port: ', port);
 
       port.postMessage({ action: 'emptySnap', tabId: currentTab });
@@ -58,6 +58,7 @@ export const mainSlice = createSlice({
       tabs[currentTab].snapshots = [lastSnapshot];
 
       tabs[currentTab].currLocation = tabs[currentTab].hiearchy;
+      console.log('tabs[currentTab] is ', current(tabs[currentTab]));
       tabs[currentTab].index = 1;
       tabs[currentTab].currParent = 0;
       tabs[currentTab].currBranch = 1;
@@ -471,7 +472,8 @@ export const mainSlice = createSlice({
           seriesArray.push(newSeries);
           localStorage.setItem('project', JSON.stringify(seriesArray));
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
-        },
+        }
+      },
     toggleExpanded: (state, action) => {
       const { tabs, currentTab } = state;
       // find correct node from currLocation and toggle isExpanded
