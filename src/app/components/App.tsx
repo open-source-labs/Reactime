@@ -19,6 +19,8 @@ const initialState: InitialStateProps = { // we initialize what our initialState
   currentTitle: 'No Target',
   tabs: {},
   currentTabInApp: null,
+  connectionStatus: true,
+  reconnectRequested: false,
 };
 
 function App(): JSX.Element {

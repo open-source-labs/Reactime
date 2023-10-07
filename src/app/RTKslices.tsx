@@ -8,6 +8,8 @@ const initialState: InitialStateProps = { // we initialize what our initialState
     currentTitle: 'No Target',
     tabs: {},
     currentTabInApp: null,
+    connectionStatus: true,
+    reconnectRequested: false,
   };
 
 const findName = (index, obj) => {
@@ -149,7 +151,7 @@ export const mainSlice = createSlice({
       console.log('setTab: state end', current(state));
 
     },
-    deleteTab : (state, action) => {
+    deleteTab: (state, action) => {
       console.log('deleteTab: ', current(state));
       delete state.tabs[action.payload];
       console.log('deleteTab: state end', current(state));
@@ -367,9 +369,6 @@ export const mainSlice = createSlice({
 
 
     },
-
-
-
     toggleMode: (state, action)=>{
       console.log('Toggle Mode: ', current(state));
 
@@ -471,7 +470,8 @@ export const mainSlice = createSlice({
           seriesArray.push(newSeries);
           localStorage.setItem('project', JSON.stringify(seriesArray));
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
-        },
+        }
+      },
     toggleExpanded: (state, action) => {
       const { tabs, currentTab } = state;
       // find correct node from currLocation and toggle isExpanded
@@ -503,6 +503,22 @@ export const mainSlice = createSlice({
         };
       });
       tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: false };
+    },
+    disconnected: (state) => {
+      console.log('disconnected: ', current(state));
+      state.connectionStatus = false;
+      console.log('disconnected: state end', current(state));
+    },
+    startReconnect: (state) => {
+      console.log('startReconnect: ', current(state));
+      state.reconnectRequested = true;
+      console.log('startReconnect: state end', current(state));
+    },
+    endReconnect: (state) => {
+      console.log('startReconnect: ', current(state));
+      state.reconnectRequested = false;
+      state.connectionStatus = true;
+      console.log('startReconnect: state end', current(state));
     }
   },
 })
@@ -533,7 +549,10 @@ export const {
   onHoverExit,
   save,
   toggleExpanded,
-  deleteSeries
+  deleteSeries,
+  disconnected,
+  startReconnect,
+  endReconnect,
 } =  mainSlice.actions
 
 
