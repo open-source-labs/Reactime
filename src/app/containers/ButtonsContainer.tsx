@@ -1,14 +1,19 @@
 import * as React from 'react';
+//importing useState from react to handle local state for button reconnect functionality
+import { useState } from 'react';
 // import { importSnapshots, toggleMode } from '../actions/actions';
 // import { useStoreContext } from '../store';
 import { Button } from '@mui/material';
+//importing necesary material UI components for dialogue popup
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import Tutorial from '../components/Tutorial';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { toggleMode, importSnapshots } from '../RTKslices';
+import { toggleMode, importSnapshots, startReconnect } from '../RTKslices';
 import { useDispatch, useSelector } from 'react-redux';
+import StatusDot from '../components/StatusDot'; 
 
 function exportHandler(snapshots: []): void { // function that takes in our tabs[currentTab] object to be exported as a JSON file. NOTE: TypeScript needs to be updated
   const fileDownload: HTMLAnchorElement = document.createElement('a'); // invisible HTML element that will hold our tabs[currentTab] object
@@ -44,6 +49,7 @@ function importHandler(dispatch: (a: unknown) => void): void { // function handl
   fileUpload.click(); // click is a method on all HTML elements that simulates a mouse click, triggering the element's click event
 }
 
+
 function ButtonsContainer(): JSX.Element {
   // const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
   // const [state, dispatch] = useStoreContext();
@@ -51,8 +57,27 @@ function ButtonsContainer(): JSX.Element {
   const currentTab = useSelector((state: any) => state.main.currentTab);
   const tabs = useSelector((state: any)=>state.main.tabs);
   const currentTabInApp = useSelector((state: any)=> state.main.currentTabInApp);
+  const connectionStatus = useSelector((state: any)=> state.main.connectionStatus);
   const { mode: { paused }} = tabs[currentTab];
-  
+  //adding a local state using useState for the reconnect button functionality
+  const [reconnectDialogOpen, setReconnectDialogOpen] = useState(false);
+
+  //logic for handling dialog box opening and closing
+  const handleReconnectClick = () => {
+    connectionStatus ? setReconnectDialogOpen(true) : dispatch(startReconnect());
+  }
+
+  const handleReconnectConfirm = () => {
+    //reconnection logic here
+    dispatch(startReconnect());
+    setReconnectDialogOpen(false);
+  }
+
+  const handleReconnectCancel = () => {
+    //closing the dialog
+    setReconnectDialogOpen(false);
+  }
+
   return (
     <div className='buttons-container'>
       <Button
@@ -82,6 +107,35 @@ function ButtonsContainer(): JSX.Element {
       //commented out so we can use useDispatch in Tutorial.tsx
        dispatch={dispatch} 
        currentTabInApp={currentTabInApp} />
+      {/* adding a button for reconnection functionality 10/5/2023 */}
+      <Button
+        variant='outlined'
+        className='reconnect-button'
+        type='button'
+        //update onClick functionality to include a popup that contains....
+        onClick={handleReconnectClick}
+        endIcon={
+          <span style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <StatusDot status={connectionStatus ? 'active' : 'inactive'} />
+          </span>
+        }
+        >
+        Reconnect
+      </Button>
+      <Dialog open={reconnectDialogOpen} onClose={handleReconnectCancel}>
+          <DialogTitle>Reconnect Confirmation</DialogTitle>
+          <DialogContent>
+            {/* //insert info here on current connection status */}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleReconnectCancel} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleReconnectConfirm} color="primary">
+              Confirm Reconnect
+            </Button>
+          </DialogActions>
+        </Dialog>
     </div>
   );
 }
