@@ -59,7 +59,9 @@ export const mainSlice = createSlice({
       tabs[currentTab].hierarchy.children = [];
       tabs[currentTab].snapshots = [lastSnapshot];
 
-      tabs[currentTab].currLocation = tabs[currentTab].hiearchy;
+      //there is a typo here
+      tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+      console.log('tabsHieracyh', tabs[currentTab].hierarchy);
       tabs[currentTab].index = 1;
       tabs[currentTab].currParent = 0;
       tabs[currentTab].currBranch = 1;
@@ -472,6 +474,7 @@ export const mainSlice = createSlice({
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
         }
       },
+      
     toggleExpanded: (state, action) => {
       const { tabs, currentTab } = state;
       // find correct node from currLocation and toggle isExpanded
