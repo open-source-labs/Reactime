@@ -163,21 +163,18 @@ chrome.runtime.onConnect.addListener((port) => {
 
   // On Reactime launch: make sure RT's active tab is correct
   if (portsArr.length > 0) {
+    console.log('yo');
     portsArr.forEach((bg) => {// go through each port object (each Reactime instance)
       bg.postMessage({  // send passed in action object as a message to the current port
         action: 'changeTab',
         payload: { tabId: activeTab.id, title: activeTab.title },
       })
-    const keepAliveServiceWorker = setInterval(() => { // interval used to keep connection to MainContainer alive
-        bg.postMessage({
-          action: 'keepAlive' // messages sent to port to keep connection alive
-        })
-      }, 295000) // messages must happen within five minutes
     });
   }
 
   // send tabs obj to the connected devtools as soon as connection to devtools is made
   if (Object.keys(tabsObj).length > 0) {
+    console.log('yuh');
     port.postMessage({
       action: 'initialConnectSnapshots',
       payload: tabsObj,
@@ -197,6 +194,7 @@ chrome.runtime.onConnect.addListener((port) => {
   // listen for message containing a snapshot from devtools and send it to contentScript -
   // (i.e. they're all related to the button actions on Reactime)
   port.onMessage.addListener((msg) => {
+    console.log('pls: ', msg);
     // msg is action denoting a time jump in devtools
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:

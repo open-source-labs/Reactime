@@ -10,6 +10,7 @@ const initialState: InitialStateProps = { // we initialize what our initialState
     currentTabInApp: null,
     connectionStatus: true,
     reconnectRequested: false,
+    hasInitialized: false,
   };
 
 const findName = (index, obj) => {
@@ -510,6 +511,7 @@ export const mainSlice = createSlice({
     disconnected: (state) => {
       console.log('disconnected: ', current(state));
       state.connectionStatus = false;
+      state.port = initialState.port;
       console.log('disconnected: state end', current(state));
     },
     startReconnect: (state) => {
@@ -522,6 +524,11 @@ export const mainSlice = createSlice({
       state.reconnectRequested = false;
       state.connectionStatus = true;
       console.log('startReconnect: state end', current(state));
+    },
+    firstInitialization: (state) => {
+      console.log('firstInitialization: ', current(state));
+      state.hasInitalized = true;
+      console.log('firstInitialization: state end', current(state));
     }
   },
 })
@@ -556,6 +563,7 @@ export const {
   disconnected,
   startReconnect,
   endReconnect,
+  firstInitialization
 } =  mainSlice.actions
 
 
