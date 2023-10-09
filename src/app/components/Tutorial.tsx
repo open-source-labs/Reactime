@@ -5,7 +5,6 @@
 import * as React from 'react';
 import { Component } from 'react';
 import 'intro.js/introjs.css';
-// import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
 import { TutorialProps, TutorialState, StepsObj } from '../FrontendTypes';
 import { Button } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';

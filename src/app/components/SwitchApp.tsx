@@ -1,7 +1,5 @@
 import React from 'react';
 import Select from 'react-select';
-//commented out for RTK
-// import { useStoreContext } from '../store'; 
 import { setTab } from '../RTKslices';
 //importing these methods for RTK
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,8 +11,6 @@ import { useSelector, useDispatch } from 'react-redux';
 */
 
 const SwitchAppDropdown = (): JSX.Element => {
-  //commented out to implement RTK
-  // const [{ currentTab, tabs }, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
     //here we are adding useSelector and useDispatch for RTK state conversion
     const dispatch = useDispatch();
     const currentTab = useSelector((state: any) => state.main.currentTab)

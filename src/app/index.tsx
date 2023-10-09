@@ -3,8 +3,6 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './components/App';
 import './styles/main.scss';
-
-//adding this line below 11:35 AM 10/03/23
 import {store} from './RTKstore'; //imported RTK Store
 import {Provider} from 'react-redux'; //imported Provider 
 

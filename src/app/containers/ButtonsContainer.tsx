@@ -1,8 +1,6 @@
 import * as React from 'react';
 //importing useState from react to handle local state for button reconnect functionality
 import { useState } from 'react';
-// import { importSnapshots, toggleMode } from '../actions/actions';
-// import { useStoreContext } from '../store';
 import { Button } from '@mui/material';
 //importing necesary material UI components for dialogue popup
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
@@ -51,8 +49,6 @@ function importHandler(dispatch: (a: unknown) => void): void { // function handl
 
 
 function ButtonsContainer(): JSX.Element {
-  // const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
-  // const [state, dispatch] = useStoreContext();
   const dispatch = useDispatch();
   const currentTab = useSelector((state: any) => state.main.currentTab);
   const tabs = useSelector((state: any)=>state.main.tabs);
