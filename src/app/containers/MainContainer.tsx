@@ -15,7 +15,6 @@ import {
   setCurrentLocation,
   disconnected,
   endReconnect,
-  firstInitialization,
   pause,
 } from '../RTKslices';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,10 +57,11 @@ function MainContainer(): JSX.Element {
     }
   };
 
-  const handleDisconnect = (): void => {
-    console.log('unexpected port disconnect');
-      
-    dispatch(disconnected());
+  const handleDisconnect = (msg): void => {
+    if (msg === 'portDisconnect') {
+      console.log('unexpected port disconnect: ', msg);
+      dispatch(disconnected());
+    }
   }
 
   useEffect(() => {
@@ -119,32 +119,25 @@ function MainContainer(): JSX.Element {
           }
           default:
         }
-        return true; // we return true so that the connection stays open, otherwise the message channel will close
+        // return true; // we return true so that the connection stays open, otherwise the message channel will close
       },
     );
 
-    if (currentPort.onDisconnect.hasListener(handleDisconnect))
-      currentPort.onDisconnect.removeListener(handleDisconnect)
 
+    if (chrome.runtime.onMessage.hasListener(handleDisconnect))
+      chrome.runtime.onMessage.removeListener(handleDisconnect);
+  
     // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
-    currentPort.onDisconnect.addListener(handleDisconnect);
+    chrome.runtime.onMessage.addListener(handleDisconnect);
 
-    // setInterval(() => {
+    // setTimeout(() => {
     //   console.log('disconnecting')
     //   currentPort.disconnect();
-    //   dispatch(disconnected());
-    // }, 15000);
-
-    // console.log('Look for listeners bro: ', currentPort.onDisconnect.hasListener(handleDisconnect));
+    // }, 30000);
 
     if (currentPort) dispatch(setPort(currentPort)); // assign port to state so it could be used by other components
     if (!connectionStatus && reconnectRequested) dispatch(endReconnect());
   });
-
-  // useEffect(() => {
-  //   console.log('Onlys runs on initialzation');
-  //   dispatch(firstInitialization());
-  // }, [])
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
   if (

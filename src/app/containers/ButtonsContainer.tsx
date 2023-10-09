@@ -1,6 +1,6 @@
 import * as React from 'react';
 //importing useState from react to handle local state for button reconnect functionality
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // import { importSnapshots, toggleMode } from '../actions/actions';
 // import { useStoreContext } from '../store';
 import { Button } from '@mui/material';
@@ -61,22 +61,28 @@ function ButtonsContainer(): JSX.Element {
   const { mode: { paused }} = tabs[currentTab];
   //adding a local state using useState for the reconnect button functionality
   const [reconnectDialogOpen, setReconnectDialogOpen] = useState(false);
+  const [disconnectedDialogOpen, setDisconnectedDialogOpen] = useState(false);
 
   //logic for handling dialog box opening and closing
   const handleReconnectClick = () => {
-    connectionStatus ? setReconnectDialogOpen(true) : dispatch(startReconnect());
+    connectionStatus ? setReconnectDialogOpen(true) : setDisconnectedDialogOpen(true);
   }
 
   const handleReconnectConfirm = () => {
     //reconnection logic here
     dispatch(startReconnect());
-    setReconnectDialogOpen(false);
+    // reconnectDialogOpen ? setReconnectDialogOpen(false) : setDisconnectedDialogOpen(false);
+    handleReconnectCancel();
   }
 
   const handleReconnectCancel = () => {
     //closing the dialog
-    setReconnectDialogOpen(false);
+    reconnectDialogOpen ? setReconnectDialogOpen(false) : setDisconnectedDialogOpen(false);
   }
+
+  useEffect(() => {
+    if (!connectionStatus) setDisconnectedDialogOpen(true);
+  }, [connectionStatus])
 
   return (
     <div className='buttons-container'>
@@ -138,7 +144,7 @@ function ButtonsContainer(): JSX.Element {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={!connectionStatus} onClose={handleReconnectCancel}>
+      <Dialog open={disconnectedDialogOpen} onClose={handleReconnectCancel}>
         <DialogTitle>Reactime Disconnected</DialogTitle>
         <DialogContent>
           {/* //insert info here on current connection status */}

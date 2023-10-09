@@ -511,12 +511,13 @@ export const mainSlice = createSlice({
     disconnected: (state) => {
       console.log('disconnected: ', current(state));
       state.connectionStatus = false;
-      state.port = initialState.port;
+      // state.port = initialState.port;
       console.log('disconnected: state end', current(state));
     },
     startReconnect: (state) => {
       console.log('startReconnect: ', current(state));
       state.reconnectRequested = true;
+      state.port = initialState.port;
       console.log('startReconnect: state end', current(state));
     },
     endReconnect: (state) => {
@@ -524,11 +525,6 @@ export const mainSlice = createSlice({
       state.reconnectRequested = false;
       state.connectionStatus = true;
       console.log('startReconnect: state end', current(state));
-    },
-    firstInitialization: (state) => {
-      console.log('firstInitialization: ', current(state));
-      state.hasInitalized = true;
-      console.log('firstInitialization: state end', current(state));
     }
   },
 })
@@ -563,7 +559,6 @@ export const {
   disconnected,
   startReconnect,
   endReconnect,
-  firstInitialization
 } =  mainSlice.actions
 
 
