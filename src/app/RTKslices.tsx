@@ -400,8 +400,6 @@ export const mainSlice = createSlice({
       const { currentTab, tabs } = state;
 
       const { newSeries, newSeriesName } = action.payload;
-      console.log('action payload', action.payload)
-      console.log('newSeries', newSeries)
         if (!tabs[currentTab].seriesSavedStatus) {
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
           return;
@@ -413,10 +411,7 @@ export const mainSlice = createSlice({
           let seriesArray: any = localStorage.getItem('project');
           seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
           // seriesArray = seriesArray ? JSON.parse(seriesArray) : [];
-          console.log('seriesArray', seriesArray)
           newSeries.name = newSeriesName;
-          console.log(typeof seriesArray)
-          console.log(Array.isArray(seriesArray))
           seriesArray.push(newSeries);
           localStorage.setItem('project', JSON.stringify(seriesArray));
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };

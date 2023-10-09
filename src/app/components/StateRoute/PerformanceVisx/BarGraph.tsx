@@ -113,10 +113,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
   });
 
   const saveSeriesClickHandler = () => { // function to save the currently selected series
-    console.log('Testing to see if we got into the save button')
-    console.log('save sries status', tabs[currentTab].seriesSavedStatus);
     if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
-      console.log('Did going inside if condition work')
       const actionNames = document.getElementsByClassName('actionname');
       for (let i = 0; i < actionNames.length; i += 1) {
         toStorage.data.barStack[i].name = actionNames[i].value;
