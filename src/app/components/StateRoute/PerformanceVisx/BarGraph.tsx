@@ -124,11 +124,12 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
       console.log('this is seriesnameINput', seriesNameInput);
       console.log('this is toStorage', toStorage);
       dispatch(save({ newSeries: toStorage, newSeriesName: seriesNameInput })); // saves the series under seriesName
-      console.log('this is seriesName', seriesName);
       setSeriesNameInput(`Series ${comparison.length}`); // sends a reducer that saves the series/toStorage object the user wants to chrome local storage
       return;
     }
-    dispatch(save(toStorage)); // sends a reducer that saves the series/toStorage object the user wants to chrome local storage
+    // dispatch(save(toStorage)); // sends a reducer that saves the series/toStorage object the user wants to chrome local storage
+    dispatch(save({ newSeries: toStorage, newSeriesName: '' })); // or use a default value for newSeriesName
+
   };
 
   

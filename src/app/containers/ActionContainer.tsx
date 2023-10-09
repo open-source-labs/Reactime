@@ -4,11 +4,10 @@ import Action from '../components/Action';
 import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../RTKslices';
 import { useDispatch, useSelector } from 'react-redux';
-// import { useStoreContext } from '../store';
 import RouteDescription from '../components/RouteDescription';
 import { Obj } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
-// import { mainSlice } from '../RTKslices';
+
 /*
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
 */
@@ -29,8 +28,6 @@ function ActionContainer(props): JSX.Element {
   const tabs = useSelector((state: any) => state.main.tabs)
   const port = useSelector((state: any) => state.main.port)
 
-
-  // const [{ tabs, currentTab, port }, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
   const { currLocation, hierarchy, sliderIndex, viewIndex } = tabs[currentTab]; // we destructure the currentTab object
   const { 
     toggleActionContainer, // function that handles Time Jump Sidebar view from MainContainer

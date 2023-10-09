@@ -2,7 +2,7 @@ import React, { useReducer } from 'react';
 import { MemoryRouter as Router } from 'react-router-dom';
 import MainContainer from '../containers/MainContainer';
 import { StoreContext } from '../store';
-import mainReducer from '../reducers/mainReducer.js';
+// import mainReducer from '../reducers/mainReducer.js';
 import { InitialStateProps } from '../FrontendTypes';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
@@ -13,15 +13,15 @@ import theme from './theme';
   This is used to determine the proper tutorial to render when How To button is pressed.
 */
 
-const initialState: InitialStateProps = { // we initialize what our initialState is here
-  port: null,
-  currentTab: null,
-  currentTitle: 'No Target',
-  tabs: {},
-  currentTabInApp: null,
-  connectionStatus: true,
-  reconnectRequested: false,
-};
+// const initialState: InitialStateProps = { // we initialize what our initialState is here
+//   port: null,
+//   currentTab: null,
+//   currentTitle: 'No Target',
+//   tabs: {},
+//   currentTabInApp: null,
+//   connectionStatus: true,
+//   reconnectRequested: false,
+// };
 
 function App(): JSX.Element {
   return (

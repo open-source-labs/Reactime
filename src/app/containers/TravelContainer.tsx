@@ -11,8 +11,6 @@ import {
   resetSlider,
 } from '../RTKslices';
 import { useDispatch, useSelector } from 'react-redux';
-//Commented out useStoreContext
-// import { useStoreContext } from '../store';
 import { TravelContainerProps } from '../FrontendTypes';
 import { Button } from '@mui/material';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
@@ -63,9 +61,7 @@ function play( // function that will start/pause slider movement
 function TravelContainer(props: TravelContainerProps): JSX.Element {
   const { snapshotsLength } = props;
   const [selectedSpeed, setSpeed] = useState(speeds[1]); // create a new local state selectedSpeed and set it to the second element of the 'speeds' array (1.0x speed)
-  
-  // const [{ tabs, currentTab }, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (dispatch) are from the useReducer function invocation in the App component
-  // const { sliderIndex, playing } = tabs[currentTab]; // we destructure the currentTab object
+
   const dispatch = useDispatch();
   const { tabs, currentTab } = useSelector((state: any) => state.main);
   const { sliderIndex, playing } = tabs[currentTab];

@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { launchContentScript } from '../RTKslices';
 import Loader from '../components/Loader';
 import ErrorMsg from '../components/ErrorMsg';
-// import { useStoreContext } from '../store';
 import { useDispatch, useSelector } from 'react-redux';
 /*
 This is the loading screen that a user may get when first initalizing the application. This page checks:
@@ -15,9 +14,7 @@ This is the loading screen that a user may get when first initalizing the applic
 
 function ErrorContainer(): JSX.Element {
   const dispatch = useDispatch();
-  // const [store, dispatch] = useStoreContext(); // We destructure the returned context object from the invocation of the 'useStoreContext' function. Properties not found on the 'initialState' object ('store'/'dispatch') are from the 'useReducer' function invocation in the 'App' component
   const { tabs, currentTitle, currentTab } = useSelector((state: any) => state.main);
-  // const { tabs, currentTitle, currentTab } = store; // We continue to destructure 'store' and get the 'tabs'/'currentTab'/'port'
   const [loadingArray, setLoading] = useState([true, true, true]); // We create a local state "loadingArray" and set it to an array with three true elements. These will be used as hooks for error checking against a 'status' object that is declared later in a few lines. 'loadingArray' is used later in the return statement to display a spinning loader icon if it's true. If it's false, either a checkmark icon or an exclamation icon will be displayed to the user.
   const titleTracker = useRef(currentTitle); // useRef returns an object with a property 'initialValue' and a value of whatever was passed in. This allows us to reference a value that's not needed for rendering
   const timeout = useRef(null);

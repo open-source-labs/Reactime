@@ -18,10 +18,6 @@ import {
   pause,
 } from '../RTKslices';
 import { useDispatch, useSelector } from 'react-redux';
-//importing mainContainerslice 
-// import { mainSlice } from '../RTKslices';
-//commented out for RTK
-// import { useStoreContext } from '../store';
 
 /*
   This is the main container where everything in our application is rendered
@@ -29,10 +25,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 function MainContainer(): JSX.Element {
   const dispatch = useDispatch();
-
-  // const [store, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (store/dispatch) are from the useReducer function invocation in the App component
-  
-  // const { tabs, currentTab, port } = store; // we continue to destructure 'store' and get the tabs/currentTab/port
 
   const currentTab = useSelector((state: any) => state.main.currentTab);
   const tabs = useSelector((state: any) => state.main.tabs);
