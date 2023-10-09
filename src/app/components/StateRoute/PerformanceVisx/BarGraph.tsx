@@ -113,15 +113,17 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
   });
 
   const saveSeriesClickHandler = () => { // function to save the currently selected series
+    console.log('we are in save series click handler')
     if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
+      console.log('we are inside the conditional within saveSeriesClickHandler')
+      console.log('this is the comparison.length', comparison.length)
       const actionNames = document.getElementsByClassName('actionname');
       for (let i = 0; i < actionNames.length; i += 1) {
         toStorage.data.barStack[i].name = actionNames[i].value;
       }
-
-      // dispatch(save(toStorage, seriesNameInput)); // saves the series under seriesName
-      dispatch(save({ newSeries: toStorage, newSeriesName: seriesNameInput }));
-
+      console.log('this is seriesnameINput', seriesNameInput);
+      console.log('this is toStorage', toStorage);
+      dispatch(save({ newSeries: toStorage, newSeriesName: seriesNameInput })); // saves the series under seriesName
       setSeriesNameInput(`Series ${comparison.length}`); // sends a reducer that saves the series/toStorage object the user wants to chrome local storage
       return;
     }
