@@ -38,8 +38,6 @@ const Action = (props: ActionProps): JSX.Element => {
     last, // boolean on (whether the view index is less than 0) AND if (the index is the same as the last snapshot's index value in hierarchyArr) in 'ActionContainer'
     index, // from snapshot.index in "ActionContainer's" 'hierarchyArr'
     sliderIndex, // from tabs[currentTab] object in 'ActionContainer'
-    //commented out dispatch that was prop drilled as conversion to RTX might invalidate need for prop drilling to access dispatch
-    // dispatch,
     displayName, // from snapshot.displayName in "ActionContainer's" 'hierarchyArr'
     componentData, // from snapshot.componentData in "ActionContainer's" 'hierarchyArr'
     viewIndex, // from tabs[currentTab] object in 'ActionContainer'
