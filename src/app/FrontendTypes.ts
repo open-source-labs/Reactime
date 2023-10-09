@@ -324,3 +324,5 @@ export interface Snapshots {
   component3: number;
   'all others': number;
 }
+
+

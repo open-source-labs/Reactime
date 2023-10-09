@@ -32,20 +32,13 @@ const findName = (index, obj) => {
   }
 };
 
-
 export const mainSlice = createSlice({
   name: 'main',
   initialState,
   reducers: {
-    //this originally has a action paramater !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! in case something doesn't work later on
-    //we removed the action parameter because we kept getting an error within actionContainer file on line 204
-    //as it expected an argument or payload to be passed in
+   
     emptySnapshots: (state) => {
-      console.log('emptySnapshots: ', current(state));
-
       const { tabs, currentTab, port } = state;
-      console.log('currentTab exists??: ', current(tabs[currentTab]));
-      console.log('port: ', port);
 
       port.postMessage({ action: 'emptySnap', tabId: currentTab });
 
@@ -59,19 +52,15 @@ export const mainSlice = createSlice({
       tabs[currentTab].hierarchy.children = [];
       tabs[currentTab].snapshots = [lastSnapshot];
 
-      //there is a typo here
       tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
       console.log('tabsHieracyh', tabs[currentTab].hierarchy);
       tabs[currentTab].index = 1;
       tabs[currentTab].currParent = 0;
       tabs[currentTab].currBranch = 1;
       tabs[currentTab].seriesSavedStatus = false;
-
-      console.log('emptySnapshots state end: ', current(state));
-
     },
+
     addNewSnapshots: (state, action) => {
-      console.log('addNewSnapshots: ', current(state));
       const { tabs } = state;
 
       const { payload } = action;
@@ -100,15 +89,14 @@ export const mainSlice = createSlice({
           };
         }
       });
-      console.log('addNewSnapshots: state end ', current(state));
-
     },
+
     initialConnect: (state, action) => {
-      console.log('initialConnect: ', current(state));
       const {tabs, tab, currentTab} = state;
       const { hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex } =
       tabs[currentTab] || {};
       const { payload } = action;
+      
       Object.keys(payload).forEach((tab) => {
         // check if tab exists in memory
         // add new tab
@@ -124,56 +112,47 @@ export const mainSlice = createSlice({
       // only set first tab if current tab is non existent
       const firstTab = parseInt(Object.keys(payload)[0], 10);
       if (currentTab === undefined || currentTab === null) state.currentTab = firstTab;
-      console.log('initialConnect: state end', current(state));
-
     },
+
     setPort: (state, action) => {
-      console.log('setPort: ', current(state));
-      console.log('ACTION', action);
-
       state.port = action.payload;
-
-      console.log('setPort: state end', current(state));
-
     },
+
     setTab: (state, action) => {
-      console.log('setTab: ', current(state));
       const { tabs, currentTab } = state;
       const {mode} = tabs[currentTab] || {};
 
       if (!mode?.paused) {
         if (typeof action.payload === 'number') {
           state.currentTab = action.payload;
+          return;
         } else if (typeof action.payload === 'object') {
           state.currentTab = action.payload.tabId;
           if (action.payload?.title)
             state.currentTitle = action.payload.title;
+            return;
         };
       }
-      console.log('setTab: state end', current(state));
-
     },
+
     deleteTab: (state, action) => {
-      console.log('deleteTab: ', current(state));
       delete state.tabs[action.payload];
-      console.log('deleteTab: state end', current(state));
-
     },
+
     noDev: (state, action) => {
-      console.log('noDev: ', current(state));
       const { payload } = action;
       const {tabs, currentTab} = state;
+
       if (tabs[currentTab]) {
         const { reactDevToolsInstalled } = payload[currentTab].status;
         tabs[currentTab].status.reactDevToolsInstalled = reactDevToolsInstalled
       }
-      console.log('noDev: state end', current(state));
-
     },
+
     setCurrentLocation: (state, action) => {
-      console.log('setCurrentLocation: ', current(state));
       const {tabs, currentTab} = state
       const { payload } = action;
+
       const persistIsExpanded = (newNode, oldNode) => {
         newNode.isExpanded = oldNode ? oldNode.isExpanded : true;
         if (newNode.children) {
@@ -187,21 +166,16 @@ export const mainSlice = createSlice({
         tabs[currentTab].currLocation.stateSnapshot,
       );
       tabs[currentTab].currLocation = payload[currentTab].currLocation;
-      console.log('setCurrentLocation: state end', current(state));
-
     },
-    changeView: (state, action) => {
-      console.log('changeView: ', current(state));
 
+    changeView: (state, action) => {
       const {tabs, currentTab} = state;
       const {viewIndex} = tabs[currentTab] || {};
 
       tabs[currentTab].viewIndex = viewIndex === action.payload ? -1 : action.payload;
-      console.log('changeView: state end', current(state));
-
     },
+
     changeSlider: (state, action) => {
-      console.log('changeSlider: ', current(state));
       const { port, currentTab, tabs } = state;
       const { hierarchy, snapshots } = tabs[currentTab] || {};
 
@@ -216,18 +190,13 @@ export const mainSlice = createSlice({
       });
       
       tabs[currentTab].sliderIndex = action.payload;
-      console.log('changeSlider: state end', current(state));
-
     },
+
     setCurrentTabInApp: (state, action) => {
-      console.log('setCurrentTabInApp: ', current(state));
       state.currentTabInApp = action.payload;
-      console.log('setCurrentTabInApp: state end', current(state));
-
     },
-    pause: (state) => {
-      console.log('pause: ', current(state));
 
+    pause: (state) => {
       const {tabs, currentTab} = state
       const {intervalId} = tabs[currentTab] || {};
 
@@ -237,9 +206,8 @@ export const mainSlice = createSlice({
       console.log('pause: state end', current(state));
 
     },
-    launchContentScript: (state, action) => {
-      console.log('launchContentScript: ', current(state));
 
+    launchContentScript: (state, action) => {
       const { tabs, currentTab, port } = state;
 
       // Fired when user clicks launch button on the error page. Send msg to background to launch
@@ -248,12 +216,9 @@ export const mainSlice = createSlice({
         payload: action.payload,
         tabId: currentTab,
       });
-      console.log('launchContentScript: state end', current(state));
-
     },
-    playForward: (state, action) => {
-      console.log('playForward: ', current(state));
 
+    playForward: (state, action) => {
       const {port, tabs, currentTab} = state
       const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
 
@@ -279,21 +244,16 @@ export const mainSlice = createSlice({
           tabs[currentTab].playing = false;
         }
       }
-      console.log('playForward: state end', current(state));
-
     },
-    startPlaying : (state, action) => {
-      console.log('startPlaying: ', current(state));
 
+    startPlaying : (state, action) => {
       const {tabs, currentTab} = state
+
       tabs[currentTab].playing = true;
       tabs[currentTab].intervalId = action.payload;
-      console.log('startPlaying: state end', current(state));
-
     },
-    moveForward: (state, action) => {
-      console.log('moveForward: ', current(state));
 
+    moveForward: (state, action) => {
       const {port, tabs, currentTab} = state
       const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
 
@@ -319,12 +279,9 @@ export const mainSlice = createSlice({
           tabs[currentTab].playing = false;
         }
       }
-      console.log('moveForward: state end', current(state));
-
     },
-    moveBackward : (state, action) => {
-      console.log('moveBackward: ', current(state));
 
+    moveBackward : (state, action) => {
       const {port, tabs, currentTab} = state
       const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
 
@@ -347,13 +304,9 @@ export const mainSlice = createSlice({
         tabs[currentTab].sliderIndex = newIndex;
         tabs[currentTab].playing = false;
       }
-      console.log('moveBackward: state end', current(state));
-
     },
 
     resetSlider: (state) => {
-      console.log('resetSlider: ', current(state));
-
       const {port, tabs, currentTab} = state
       const { snapshots, sliderIndex} = tabs[currentTab] || {};
 
@@ -367,13 +320,9 @@ export const mainSlice = createSlice({
           tabId: currentTab,
         });
         tabs[currentTab].sliderIndex = 0;
-        console.log('resetSlider: state end', current(state));
-
-
     },
-    toggleMode: (state, action)=>{
-      console.log('Toggle Mode: ', current(state));
 
+    toggleMode: (state, action)=>{
       const { port, tabs, currentTab } = state;
       const {mode} = tabs[currentTab] || {};
       mode[action.payload] = !mode[action.payload];
@@ -382,20 +331,18 @@ export const mainSlice = createSlice({
         switch (action.payload) {
           case 'paused':
             actionText = 'setPause';
+            break;
           default:
+            break;
         }
         port.postMessage({
           action: actionText,
           payload: newMode,
           tabId: currentTab,
         });
-        console.log('Toggle Mode: state end', current(state));
-
-
     },
-    importSnapshots: (state, action) => {
-      console.log('importSnapshots: ', current(state));
 
+    importSnapshots: (state, action) => {
       const { port, tabs, currentTab } = state;
 
       // Log the value of tabs[currentTab].snapshots before the update
@@ -426,13 +373,11 @@ export const mainSlice = createSlice({
       tabs[currentTab].currParent = savedSnapshot.currParent;
       tabs[currentTab].currBranch = savedSnapshot.Branch;
       tabs[currentTab].seriesSavedStatus = false;
-      console.log('importSnapshots: state end', current(state));
-
     },
+
     tutorialSaveSeriesToggle: (state, action) => {
       const { tabs, currentTab } = state;
       tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload }
-
     },
 
     onHover: (state, action) => {
@@ -461,6 +406,8 @@ export const mainSlice = createSlice({
       const { newSeries, newSeriesName } = action.payload;
         if (!tabs[currentTab].seriesSavedStatus) {
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
+          //testing return to fix save functionality
+          return;
         }
         // Runs if series name input box is active.
         // Updates chrome local storage with the newly saved series. Console logging the seriesArray grabbed from local storage may be helpful.
@@ -468,12 +415,15 @@ export const mainSlice = createSlice({
           //Set a type for seriesArray 10/04/2023
           let seriesArray: any = localStorage.getItem('project');
           seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
+          // seriesArray = seriesArray ? JSON.parse(seriesArray) : [];
           newSeries.name = newSeriesName;
           seriesArray.push(newSeries);
           localStorage.setItem('project', JSON.stringify(seriesArray));
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
+          //testing return to fix save functionality instead of break
+          return;
         }
-      },
+    },
       
     toggleExpanded: (state, action) => {
       const { tabs, currentTab } = state;
@@ -507,22 +457,20 @@ export const mainSlice = createSlice({
       });
       tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: false };
     },
+
     disconnected: (state) => {
-      console.log('disconnected: ', current(state));
       state.connectionStatus = false;
-      console.log('disconnected: state end', current(state));
     },
+
     startReconnect: (state) => {
-      console.log('startReconnect: ', current(state));
       state.reconnectRequested = true;
-      console.log('startReconnect: state end', current(state));
     },
+
     endReconnect: (state) => {
-      console.log('startReconnect: ', current(state));
       state.reconnectRequested = false;
       state.connectionStatus = true;
-      console.log('startReconnect: state end', current(state));
     }
+
   },
 })
 
@@ -557,235 +505,3 @@ export const {
   startReconnect,
   endReconnect,
 } =  mainSlice.actions
-
-
-// // emptySnapshots, changeView, changeSlider
-// export const actionContainerSlice = createSlice({
-//   name: 'containerSlice',
-//   initialState: initialState,
-//   reducers: {
-//     emptySnapshots: (state, action) => {
-      
-//     },
-//     changeView: (state, action) => {
-
-//     },
-//     changeSlider: (state, action) => {
-
-//     }
-//   }
-// });
-
-
-/*
-export const mainContainerSlice = createSlice({
-  name: 'mainContainer',
-  initialState: initialState,
-  reducers: {
-    addNewSnapshots: (state, action) => {
-      console.log('addNewSnapshots: ', state);
-      const { tabs } = state;
-
-      const { payload } = action;
-      Object.keys(tabs).forEach(tab => {
-        if (!payload[tab])
-          delete tabs[tab];
-        else {
-          const persistIsExpanded = (newNode, oldNode) => {
-            newNode.isExpanded = oldNode ? oldNode.isExpanded : true;
-            if (newNode.children) {
-              newNode.children.forEach((child, i) => {
-                persistIsExpanded(child, oldNode?.children[i]);
-              });
-            }
-          };
-          persistIsExpanded(
-            payload[tab].currLocation.stateSnapshot,
-            tabs[tab].currLocation.stateSnapshot,
-          );
-
-          const { snapshots: newSnaps } = payload[tab];
-          tabs[tab] = {
-            ...payload[tab],
-            sliderIndex: newSnaps.length - 1,
-            seriesSavedStatus: false,
-          };
-        }
-      });
-    },
-    initialConnect: (state, action) => {
-      console.log('initialConnect: ', current(state));
-      const {tabs, tab, currentTab} = state;
-      const { hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex } =
-      tabs[currentTab] || {};
-      const { payload } = action;
-      Object.keys(payload).forEach((tab) => {
-        // check if tab exists in memory
-        // add new tab
-        tabs[tab] = {
-          ...payload[tab],
-          sliderIndex: 0,
-          viewIndex: -1,
-          intervalId: null,
-          playing: false,
-        };
-      });
-
-      // only set first tab if current tab is non existent
-      const firstTab = parseInt(Object.keys(payload)[0], 10);
-      if (currentTab === undefined || currentTab === null) state.currentTab = firstTab;
-      
-    },
-
-    setPort: (state, action) => {
-      console.log('setPort: ', current(state));
-      console.log('ACTION', action);
-
-      state.port = action.payload;
-    },
-
-    setTab: (state, action) => {
-      console.log('setTab: ', current(state));
-      const { tabs, currentTab } = state;
-      const {mode} = tabs[currentTab] || {};
-
-      if (!mode?.paused) {
-        if (typeof action.payload === 'number') {
-          state.currentTab = action.payload;
-        } else if (typeof action.payload === 'object') {
-          state.currentTab = action.payload.tabId;
-          if (action.payload?.title)
-            state.currentTitle = action.payload.title;
-        };
-      }
-    },
-
-    deleteTab : (state, action) => {
-      console.log('deleteTab: ', current(state));
-      delete state.tabs[action.payload];
-    },
-
-
-    noDev: (state, action) => {
-      console.log('noDev: ', current(state));
-      const { payload } = action;
-      const {tabs, currentTab} = state;
-      if (tabs[currentTab]) {
-        const { reactDevToolsInstalled } = payload[currentTab].status;
-        tabs[currentTab].status.reactDevToolsInstalled = reactDevToolsInstalled
-      }
-    },
-    
-    setCurrentLocation: (state, action) => {
-      console.log('setCurrentLocation: ', current(state));
-      const {tabs, currentTab} = state
-      const { payload } = action;
-      const persistIsExpanded = (newNode, oldNode) => {
-        newNode.isExpanded = oldNode ? oldNode.isExpanded : true;
-        if (newNode.children) {
-          newNode.children.forEach((child, i) => {
-            persistIsExpanded(child, oldNode?.children[i]);
-          });
-        }
-      };
-      persistIsExpanded(
-        payload[currentTab].currLocation.stateSnapshot,
-        tabs[currentTab].currLocation.stateSnapshot,
-      );
-      tabs[currentTab].currLocation = payload[currentTab].currLocation;
-    },
-    
-    changeView: (state, action) => {
-      const {tabs, currentTab} = state;
-      const {viewIndex} = tabs[currentTab] || {};
-
-      tabs[currentTab].viewIndex = viewIndex === action.payload ? -1 : action.payload;
-    },
-    changeSlider: (state, action) => {
-      console.log('CHANGE SLIDER');
-      const { port, currentTab, tabs } = state;
-      const { hierarchy, snapshots } = tabs[currentTab] || {};
-
-      const nameFromIndex = findName(action.payload, hierarchy);
-
-      port.postMessage({
-        action: 'jumpToSnap',
-        payload: snapshots[action.payload],
-        index: action.payload,
-        name: nameFromIndex,
-        tabId: currentTab,
-      });
-      
-      tabs[currentTab].sliderIndex = action.payload;
-    },
-    setCurrentTabInApp: (state, action) => {
-      console.log('SET CURRENT TAB IN APP');
-      state.currentTabInApp = action.payload;
-    },
-
-    pause: (state, action) => {
-      console.log('pause: ', current(state));
-
-      const {tabs, currentTab} = state
-      const {intervalId} = tabs[currentTab] || {};
-
-      clearInterval(intervalId);
-      tabs[currentTab].playing = false;
-      tabs[currentTab].intervalId = null;
-
-      
-    },
-  },
-});
-*/
-
-// export const historySlice = createSlice({
-//   name: 'history',
-//   initialState: initialState,
-//   reducers: {
-//     changeView: (state, action) => {
-//       const {tabs, currentTab} = state;
-//       const {viewIndex} = tabs[currentTab] || {};
-
-//       tabs[currentTab].viewIndex = viewIndex === action.payload ? -1 : action.payload;
-//     },
-//     changeSlider: (state, action) => {
-//       console.log('CHANGE SLIDER');
-//       const { port, currentTab, tabs } = state;
-//       const { hierarchy, snapshots } = tabs[currentTab] || {};
-
-//       const nameFromIndex = findName(action.payload, hierarchy);
-
-//       port.postMessage({
-//         action: 'jumpToSnap',
-//         payload: snapshots[action.payload],
-//         index: action.payload,
-//         name: nameFromIndex,
-//         tabId: currentTab,
-//       });
-      
-//       tabs[currentTab].sliderIndex = action.payload;
-//     },
-//     setCurrentTabInApp: (state, action) => {
-//       console.log('SET CURRENT TAB IN APP');
-//       state.currentTabInApp = action.payload;
-//     },
-//   },
-// });
-
-
-
-// export const {
-//   addNewSnapshots,
-//   initialConnect,
-//   setPort,
-//   setTab,
-//   deleteTab,
-//   noDev,
-//   setCurrentLocation,
-//   pause} = mainContainerSlice.actions;
-
-// export const { changeView, changeSlider, setCurrentTabInApp } = historySlice.actions;
-
-
-
