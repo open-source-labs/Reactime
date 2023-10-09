@@ -144,10 +144,12 @@ export const mainSlice = createSlice({
       if (!mode?.paused) {
         if (typeof action.payload === 'number') {
           state.currentTab = action.payload;
+          return;
         } else if (typeof action.payload === 'object') {
           state.currentTab = action.payload.tabId;
           if (action.payload?.title)
             state.currentTitle = action.payload.title;
+            return;
         };
       }
       console.log('setTab: state end', current(state));
@@ -382,7 +384,9 @@ export const mainSlice = createSlice({
         switch (action.payload) {
           case 'paused':
             actionText = 'setPause';
+            break;
           default:
+            break;
         }
         port.postMessage({
           action: actionText,
@@ -461,6 +465,8 @@ export const mainSlice = createSlice({
       const { newSeries, newSeriesName } = action.payload;
         if (!tabs[currentTab].seriesSavedStatus) {
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
+          //testing return to fix save functionality
+          return;
         }
         // Runs if series name input box is active.
         // Updates chrome local storage with the newly saved series. Console logging the seriesArray grabbed from local storage may be helpful.
@@ -472,6 +478,8 @@ export const mainSlice = createSlice({
           seriesArray.push(newSeries);
           localStorage.setItem('project', JSON.stringify(seriesArray));
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
+          //testing return to fix save functionality instead of break
+          return;
         }
       },
       
