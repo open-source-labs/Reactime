@@ -15,8 +15,6 @@ import FormControl from '@mui/material/FormControl';
 import { useTheme } from '@mui/material/styles';
 import { Button } from '@mui/material';
 import { deleteSeries, setCurrentTabInApp } from '../../../RTKslices';
-// import { useStoreContext } from '../../../store';
-//importing useSelector and useDispatch for rtk conversion
 import { useDispatch } from 'react-redux';
 import { TooltipData, Margin, BarGraphComparisonAction, ActionObj } from '../../../FrontendTypes';
 
@@ -40,8 +38,6 @@ const tooltipStyles = {
 };
 
 const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
-  //commented out line 44 to add hooks for RTK transition
-  // const [dispatch] = useStoreContext(); // used to get the dispatch function from our storeContext
   const dispatch = useDispatch();
   const {
     width, // from ParentSize provided in StateRoute

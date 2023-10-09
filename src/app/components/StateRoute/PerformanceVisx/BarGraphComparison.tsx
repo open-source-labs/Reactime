@@ -16,8 +16,6 @@ import FormControl from '@mui/material/FormControl';
 import { useTheme } from '@mui/material/styles';
 import { Button, InputLabel } from '@mui/material';
 import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../RTKslices';
-// import { useStoreContext } from '../../../store';
-//importing useSelector and useDispatch for rtk conversion
 import { useSelector, useDispatch } from 'react-redux';
 import {
   snapshot,
@@ -48,8 +46,6 @@ const tooltipStyles = {
 };
 
 const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
-  //commented out line 51 to add hooks for RTK transition
-  // const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const dispatch = useDispatch();
   const tabs = useSelector(state => state.main.tabs);
   const currentTab = useSelector(state => state.main.currentTab);
