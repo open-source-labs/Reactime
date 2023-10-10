@@ -2,10 +2,8 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
-// import { onHover, onHoverExit, setCurrentTabInApp } from '../../../actions/actions';
 import { setCurrentTabInApp } from '../../../RTKslices';
-// import { useStoreContext } from '../../../store';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 /*
   
@@ -13,7 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const RenderingFrequency = (props) => {
   const perfData = props.data;
-  // const [store, dispatch] = useStoreContext();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison' to facilitate render.
@@ -43,9 +40,6 @@ const RenderingFrequency = (props) => {
 
 const ComponentCard = (props): JSX.Element => {
   const { componentName, stateType, averageRenderTime, renderFrequency, information } = props;
-  // const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  // const tabs = useSelector((state:any)=>state.main.tabs)
-  // const currentTab = useSelector((state:any)=>state.main.currentTab);
   const [expand, setExpand] = useState(false);
 
   // render time for each component from each snapshot

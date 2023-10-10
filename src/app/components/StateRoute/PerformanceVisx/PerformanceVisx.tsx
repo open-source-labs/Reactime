@@ -8,7 +8,6 @@ import RenderingFrequency from './RenderingFrequency';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
-// import { useStoreContext } from '../../../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentTabInApp } from '../../../RTKslices';
 import { PerfData, Series, PerformanceVisxProps } from '../../../FrontendTypes';
@@ -179,7 +178,6 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
     snapshots, // from 'tabs[currentTab]' object in 'MainContainer'
     hierarchy // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
-  // const [{ currentTabInApp }, dispatch] = useStoreContext();
   const dispatch = useDispatch();
   const { currentTabInApp } = useSelector((state: any) => state.main);
   const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';

@@ -134,9 +134,6 @@ function ActionContainer(props): JSX.Element {
           componentData={snapshot.componentData}
           selected={selected}
           last={last}
-          //not sure if we need to prop drill dispatch anymore as we can import it directly within action component
-          //line 142 commented out for this reason above
-          // dispatch={dispatch}
           sliderIndex={sliderIndex}
           handleOnkeyDown={handleOnKeyDown}
           viewIndex={viewIndex}

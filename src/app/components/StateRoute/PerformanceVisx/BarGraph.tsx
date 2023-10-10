@@ -9,7 +9,6 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet1 } from 'd3-scale-chromatic';
 import { onHover, onHoverExit, save } from '../../../RTKslices';
-// import { useStoreContext } from '../../../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { snapshot, TooltipData, Margin, BarGraphProps } from '../../../FrontendTypes';
 
@@ -34,7 +33,6 @@ const tooltipStyles = {
 
 const BarGraph = (props: BarGraphProps): JSX.Element => {
   const dispatch = useDispatch();
-  // const [{ tabs, currentTab }, dispatch] = useStoreContext();
   const { tabs, currentTab } = useSelector((state: any) => state.main);
 
   const {
@@ -127,9 +125,8 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
       setSeriesNameInput(`Series ${comparison.length}`); // sends a reducer that saves the series/toStorage object the user wants to chrome local storage
       return;
     }
-    // dispatch(save(toStorage)); // sends a reducer that saves the series/toStorage object the user wants to chrome local storage
+    //if for some reason, code doesn't hit in first conditional, we have error handling below to account it
     dispatch(save({ newSeries: toStorage, newSeriesName: '' })); // or use a default value for newSeriesName
-
   };
 
   

@@ -1,6 +1,6 @@
 import * as React from 'react';
 //importing useState from react to handle local state for button reconnect functionality
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
 //importing necesary material UI components for dialogue popup
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
@@ -50,29 +50,32 @@ function importHandler(dispatch: (a: unknown) => void): void { // function handl
 
 function ButtonsContainer(): JSX.Element {
   const dispatch = useDispatch();
-  const currentTab = useSelector((state: any) => state.main.currentTab);
-  const tabs = useSelector((state: any)=>state.main.tabs);
-  const currentTabInApp = useSelector((state: any)=> state.main.currentTabInApp);
-  const connectionStatus = useSelector((state: any)=> state.main.connectionStatus);
+  const {currentTab, tabs, currentTabInApp, connectionStatus} = useSelector((state: any)=> state.main);
   const { mode: { paused }} = tabs[currentTab];
+
   //adding a local state using useState for the reconnect button functionality
   const [reconnectDialogOpen, setReconnectDialogOpen] = useState(false);
+  const [disconnectedDialogOpen, setDisconnectedDialogOpen] = useState(false);
 
   //logic for handling dialog box opening and closing
   const handleReconnectClick = () => {
-    connectionStatus ? setReconnectDialogOpen(true) : dispatch(startReconnect());
+    connectionStatus ? setReconnectDialogOpen(true) : setDisconnectedDialogOpen(true);
   }
 
   const handleReconnectConfirm = () => {
     //reconnection logic here
     dispatch(startReconnect());
-    setReconnectDialogOpen(false);
+    handleReconnectCancel();
   }
 
   const handleReconnectCancel = () => {
     //closing the dialog
-    setReconnectDialogOpen(false);
+    reconnectDialogOpen ? setReconnectDialogOpen(false) : setDisconnectedDialogOpen(false);
   }
+
+  useEffect(() => {
+    if (!connectionStatus) setDisconnectedDialogOpen(true);
+  }, [connectionStatus])
 
   return (
     <div className='buttons-container'>
@@ -100,7 +103,6 @@ function ButtonsContainer(): JSX.Element {
       </Button>
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}
       <Tutorial
-      //commented out so we can use useDispatch in Tutorial.tsx
        dispatch={dispatch} 
        currentTabInApp={currentTabInApp} />
       {/* adding a button for reconnection functionality 10/5/2023 */}
@@ -119,19 +121,41 @@ function ButtonsContainer(): JSX.Element {
         Reconnect
       </Button>
       <Dialog open={reconnectDialogOpen} onClose={handleReconnectCancel}>
-          <DialogTitle>Reconnect Confirmation</DialogTitle>
-          <DialogContent>
-            {/* //insert info here on current connection status */}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleReconnectCancel} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleReconnectConfirm} color="primary">
-              Confirm Reconnect
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <DialogTitle>WARNING</DialogTitle>
+        <DialogContent>
+          {/* //insert info here on current connection status */}
+          <h3>Status: {connectionStatus ? 'Connected' : 'Disconnected'}</h3>
+          Reconnecting while Reactime is still connected to application will clear all current data. Are you sure you want to proceed with the reconnection?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleReconnectCancel()} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => handleReconnectConfirm()} color="primary">
+            Confirm Reconnect
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={disconnectedDialogOpen} onClose={handleReconnectCancel}>
+        <DialogTitle>Reactime Disconnected</DialogTitle>
+        <DialogContent>
+          {/* //insert info here on current connection status */}
+          <h3>Status: {connectionStatus ? 'Connected' : 'Disconnected'}</h3>
+          Reactime has unexpectedly disconnected from your application. To continue using Reactime, please reconnect.
+          WARNING: Reconnecting will clear all data currently stored in Reactime, so consider downloading the data before proceeding with the reconnection, if needed.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleReconnectCancel()} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => exportHandler(tabs[currentTab])} color="primary">
+            Download
+          </Button>
+          <Button onClick={() => handleReconnectConfirm()} color="primary">
+            Reconnect
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
