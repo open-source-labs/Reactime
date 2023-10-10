@@ -1,9 +1,12 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import user from '@testing-library/user-event';
+// import user from '@testing-library/user-event'; //might be unused
 import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import Action from '../components/Action';
-import { changeView, changeSlider } from '../actions/actions';
+import { changeView, changeSlider } from '../RTKslices';
+import { Provider } from 'react-redux';
+import { store } from '../RTKstore'; //importing store for testing to give us access to Redux Store we configured
+
 
 // @ts-ignore
 Action.cleanTime = jest.fn().mockReturnValue();

@@ -4,8 +4,10 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ActionContainer from '../containers/ActionContainer';
-import { useStoreContext } from '../store';
+// import { useStoreContext } from '../store';
 import TravelContainer from '../containers/TravelContainer';
+import { useDispatch } from 'react-redux';
+import {store} from '../'
 
 const state = {
   tabs: {
@@ -163,3 +165,81 @@ describe('integration testing for ActionContainer', () => {
     expect(screen.getByRole('slider')).toHaveStyle('left: 0');
   });
 });
+
+
+// To convert your existing test file to use Redux Toolkit, you need to update your test setup to work with Redux Toolkit's `configureStore` and create a Redux store. Assuming you already have a Redux store and slice set up, here's how you can modify your test file:
+
+// 1. Import `configureStore` from Redux Toolkit and the Redux store you want to use in your tests.
+
+// ```javascript
+// import { render, screen, fireEvent } from '@testing-library/react';
+// import { Provider } from 'react-redux'; // Import Provider from react-redux
+// import { configureStore } from '@reduxjs/toolkit'; // Import configureStore from Redux Toolkit
+// import ActionContainer from '../containers/ActionContainer';
+// import TravelContainer from '../containers/TravelContainer';
+
+// // Import your Redux store and slice here if not already done
+// import { rootReducer } from '../store'; // Replace with your actual reducer and store
+// ```
+
+// 2. Create a Redux store with `configureStore` and pass it as a prop to your components.
+
+// ```javascript
+// const store = configureStore({
+//   reducer: rootReducer, // Replace with your actual reducer
+// });
+
+// describe('unit testing for ActionContainer', () => {
+//   beforeEach(() => {
+//     render(
+//       <Provider store={store}>
+//         <ActionContainer actionView={true} />
+//       </Provider>
+//     );
+//   });
+
+//   // Your tests here
+// });
+
+// describe('integration testing for ActionContainer', () => {
+//   beforeEach(() => {
+//     render(
+//       <Provider store={store}>
+//         <ActionContainer actionView={true} />
+//         <TravelContainer snapshotsLength={0} />
+//       </Provider>
+//     );
+//   });
+
+//   // Your tests here
+// });
+// ```
+
+// 3. Ensure that you import and use `useDispatch` from `react-redux` for your component testing as follows:
+
+// ```javascript
+// import { useDispatch, useSelector } from 'react-redux'; // Import useDispatch and useSelector from react-redux
+// ```
+
+// And in your component code where you use `dispatch`, use `useDispatch`:
+
+// ```javascript
+// const dispatch = useDispatch();
+// ```
+
+// 4. Update your tests accordingly to work with Redux Toolkit's `configureStore`. For example, if you have a test that checks if `dispatch` is called, you can do something like this:
+
+// ```javascript
+// test('Click works on clear button', () => {
+//   const { getByRole } = render(
+//     <Provider store={store}>
+//       <ActionContainer actionView={true} />
+//     </Provider>
+//   );
+
+//   fireEvent.click(getByRole('button'));
+//   expect(dispatch).toHaveBeenCalledTimes(1);
+// });
+// ```
+
+// With these modifications, your test file should work with Redux Toolkit and your existing Redux store and slice. Make sure to replace `rootReducer` with your actual reducer and adjust the imports as needed for your project's structure.
