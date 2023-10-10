@@ -412,7 +412,6 @@ export const mainSlice = createSlice({
         // Runs if series name input box is active.
         // Updates chrome local storage with the newly saved series. Console logging the seriesArray grabbed from local storage may be helpful.
         if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
-          
           let seriesArray: any = localStorage.getItem('project');
           seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
           newSeries.name = newSeriesName;
