@@ -463,6 +463,7 @@ export const mainSlice = createSlice({
 
     startReconnect: (state) => {
       state.reconnectRequested = true;
+      state.port = initialState.port;
     },
 
     endReconnect: (state) => {

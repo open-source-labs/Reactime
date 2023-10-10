@@ -160,7 +160,7 @@ chrome.runtime.onConnect.addListener((port) => {
   */
  
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
-
+ 
   // On Reactime launch: make sure RT's active tab is correct
   if (portsArr.length > 0) {
     portsArr.forEach((bg) => {// go through each port object (each Reactime instance)
@@ -168,11 +168,6 @@ chrome.runtime.onConnect.addListener((port) => {
         action: 'changeTab',
         payload: { tabId: activeTab.id, title: activeTab.title },
       })
-    const keepAliveServiceWorker = setInterval(() => { // interval used to keep connection to MainContainer alive
-        bg.postMessage({
-          action: 'keepAlive' // messages sent to port to keep connection alive
-        })
-      }, 295000) // messages must happen within five minutes
     });
   }
 
@@ -186,9 +181,11 @@ chrome.runtime.onConnect.addListener((port) => {
 
   // every time devtool is closed, remove the port from portsArr
   port.onDisconnect.addListener((e) => {
+    console.log('PORT DISCONNECTED');
     for (let i = 0; i < portsArr.length; i += 1) {
       if (portsArr[i] === e) {
         portsArr.splice(i, 1);
+        chrome.runtime.sendMessage('portDisconnect');
         break;
       }
     }
@@ -220,7 +217,7 @@ chrome.runtime.onConnect.addListener((port) => {
         tabsObj[tabId].currParent = payload.currParent; // reset currParent to last state recorded
         tabsObj[tabId].currBranch = payload.currBranch; // reset currBranch to last state recorded
 
-        return true; // return true so that port remains open
+        // return true; // return true so that port remains open
 
       case 'emptySnap':
         tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]]; // reset snapshots to page last state recorded
@@ -232,29 +229,29 @@ chrome.runtime.onConnect.addListener((port) => {
         tabsObj[tabId].index = 1; //reset index
         tabsObj[tabId].currParent = 0; // reset currParent
         tabsObj[tabId].currBranch = 1; // reset currBranch
-        return true; // return true so that port remains open
+        // return true; // return true so that port remains open
       
       case 'setPause': // Pause = lock on tab
         tabsObj[tabId].mode.paused = payload;
-        return true; // return true so that port remains open
+        // return true; // return true so that port remains open
 
       case 'launchContentScript':
         chrome.scripting.executeScript({
           target: { tabId },
           files: ['bundles/content.bundle.js'],
         });
-        return true;
+        // return true;
 
       case 'jumpToSnap':
         chrome.tabs.sendMessage(tabId, msg);
-        return true; // attempt to fix message port closing error, consider return Promise
+        // return true; // attempt to fix message port closing error, consider return Promise
 
       case 'toggleRecord':
         chrome.tabs.sendMessage(tabId, msg);
-        return true;
+        // return true;
 
       default:
-        return true;
+        // return true;
     }
   });
 });
@@ -263,7 +260,7 @@ chrome.runtime.onConnect.addListener((port) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
-    return true;
+    // return true;
   }
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
@@ -285,7 +282,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   ) {
     isReactTimeTravel = true;
   } else {
-    return true;
+    // return true;
   }
   // everytime we get a new tabId, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) { 
@@ -394,7 +391,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     default:
       break;
   }
-  return true; // attempt to fix close port error
+  // return true; // attempt to fix close port error
 });
 
 // when tab is closed, remove the tabId from the tabsObj
