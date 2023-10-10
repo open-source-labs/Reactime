@@ -19,11 +19,6 @@ window.addEventListener('message', (msg) => {
     // One-time request tells the background script that the tab has reloaded.
     chrome.runtime.sendMessage({ action: 'tabReload' });
     firstMessage = false;
-    // const keepAliveContentScript = setInterval(() => { // interval to keep connection to service worker connection alive
-      // chrome.runtime.sendMessage({
-      //   action: 'keepAlive' // messages sent to port to keep connection alive
-      // })
-    // }, 295000) // messages must happen within five minutes
   }
 
   // After tabs object has been created from firstMessage, backend (linkFiber.ts)
@@ -57,11 +52,9 @@ chrome.runtime.onMessage.addListener((request) => {
     }
     // After the jumpToSnap action has been sent back to background js,
     // it will send the same action to backend files (index.ts) for it execute the jump feature
-    if (action === 'portDisconnect') console.log('RECEIVED PORT DISCONNECT MESSAGE contentScript')
     // '*' == target window origin required for event to be dispatched, '*' = no preference
-    // window.postMessage(request, '*');
+    window.postMessage(request, '*');
   }
-  // return true; // attempt to fix port closing console error
 });
 
 

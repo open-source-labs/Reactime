@@ -14,8 +14,7 @@ import {
   noDev,
   setCurrentLocation,
   disconnected,
-  endReconnect,
-  pause,
+  endReconnect
 } from '../RTKslices';
 import { useDispatch, useSelector } from 'react-redux';
 //importing mainContainerslice 
@@ -59,18 +58,16 @@ function MainContainer(): JSX.Element {
 
   const handleDisconnect = (msg): void => {
     if (msg === 'portDisconnect') {
-      console.log('unexpected port disconnect: ', msg);
+      console.log('unexpected port disconnection');
       dispatch(disconnected());
     }
   }
 
   useEffect(() => {
-    console.log('LOL: ', port);
     if (port) return; // only open port once so if it exists, do not run useEffect again
-    console.log('Okie')
+
     // chrome.runtime allows our application to retrieve our service worker (our eventual bundles/background.bundle.js after running npm run build), details about the manifest, and allows us to listen and respond to events in our application lifecycle.
     const currentPort = chrome.runtime.connect(); // we connect to our service worker
-    console.log('currentPort', currentPort);
 
     // listen for a message containing snapshots from the /extension/build/background.js service worker
     currentPort.onMessage.addListener(
@@ -119,24 +116,22 @@ function MainContainer(): JSX.Element {
           }
           default:
         }
-        // return true; // we return true so that the connection stays open, otherwise the message channel will close
       },
     );
 
 
     if (chrome.runtime.onMessage.hasListener(handleDisconnect))
-      chrome.runtime.onMessage.removeListener(handleDisconnect);
+    chrome.runtime.onMessage.removeListener(handleDisconnect);
   
     // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
     chrome.runtime.onMessage.addListener(handleDisconnect);
 
-    // setTimeout(() => {
-    //   console.log('disconnecting')
-    //   currentPort.disconnect();
-    // }, 30000);
+    // assign port to state so it could be used by other components
+    if (currentPort)
+      dispatch(setPort(currentPort));
 
-    if (currentPort) dispatch(setPort(currentPort)); // assign port to state so it could be used by other components
-    if (!connectionStatus && reconnectRequested) dispatch(endReconnect());
+    if (!connectionStatus && reconnectRequested)
+      dispatch(endReconnect());
   });
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)

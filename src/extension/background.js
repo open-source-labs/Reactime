@@ -159,14 +159,10 @@ chrome.runtime.onConnect.addListener((port) => {
     Again, this port object is used for communication within your extension, not for communication with external ports or tabs in the Chrome browser. If you need to interact with specific tabs or external ports, you would use other APIs or methods, such as chrome.tabs or other Chrome Extension APIs.
   */
  
-  console.log('ATTEMPTING CONNECTION');
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
-  console.log('portsArr: ', portsArr);
-
+ 
   // On Reactime launch: make sure RT's active tab is correct
   if (portsArr.length > 0) {
-    console.log('yo');
-    console.log('activeTab: ', activeTab)
     portsArr.forEach((bg) => {// go through each port object (each Reactime instance)
       bg.postMessage({  // send passed in action object as a message to the current port
         action: 'changeTab',
@@ -177,7 +173,6 @@ chrome.runtime.onConnect.addListener((port) => {
 
   // send tabs obj to the connected devtools as soon as connection to devtools is made
   if (Object.keys(tabsObj).length > 0) {
-    console.log('yuh');
     port.postMessage({
       action: 'initialConnectSnapshots',
       payload: tabsObj,
@@ -186,7 +181,7 @@ chrome.runtime.onConnect.addListener((port) => {
 
   // every time devtool is closed, remove the port from portsArr
   port.onDisconnect.addListener((e) => {
-    console.log('PORT DISCONNECTED BACKGROUND');
+    console.log('PORT DISCONNECTED');
     for (let i = 0; i < portsArr.length; i += 1) {
       if (portsArr[i] === e) {
         portsArr.splice(i, 1);
@@ -199,7 +194,6 @@ chrome.runtime.onConnect.addListener((port) => {
   // listen for message containing a snapshot from devtools and send it to contentScript -
   // (i.e. they're all related to the button actions on Reactime)
   port.onMessage.addListener((msg) => {
-    console.log('pls: ', msg);
     // msg is action denoting a time jump in devtools
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:

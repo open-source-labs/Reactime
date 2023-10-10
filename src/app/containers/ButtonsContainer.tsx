@@ -54,11 +54,9 @@ function ButtonsContainer(): JSX.Element {
   // const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
   // const [state, dispatch] = useStoreContext();
   const dispatch = useDispatch();
-  const currentTab = useSelector((state: any) => state.main.currentTab);
-  const tabs = useSelector((state: any)=>state.main.tabs);
-  const currentTabInApp = useSelector((state: any)=> state.main.currentTabInApp);
-  const {connectionStatus, hasInitialized} = useSelector((state: any)=> state.main);
+  const {currentTab, tabs, currentTabInApp, connectionStatus} = useSelector((state: any)=> state.main);
   const { mode: { paused }} = tabs[currentTab];
+
   //adding a local state using useState for the reconnect button functionality
   const [reconnectDialogOpen, setReconnectDialogOpen] = useState(false);
   const [disconnectedDialogOpen, setDisconnectedDialogOpen] = useState(false);
@@ -71,7 +69,6 @@ function ButtonsContainer(): JSX.Element {
   const handleReconnectConfirm = () => {
     //reconnection logic here
     dispatch(startReconnect());
-    // reconnectDialogOpen ? setReconnectDialogOpen(false) : setDisconnectedDialogOpen(false);
     handleReconnectCancel();
   }
 
