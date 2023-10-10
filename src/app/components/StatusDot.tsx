@@ -1,5 +1,4 @@
 import React from 'react';
-// import { styled } from '@mui/system';
 import styled from 'styled-components';
 
 const Dot = styled('div')({
@@ -10,7 +9,7 @@ const Dot = styled('div')({
 });
 
 const StatusDot = ({ status }) => {
-  let color;
+  let color: 'green' | 'red';
   switch (status) {
     case 'active':
       color = 'green';

@@ -2,9 +2,7 @@ import React, { useEffect } from 'react';
 import Charts from 'react-apexcharts';
 import ReactHover, { Trigger, Hover } from 'react-hover';
 import { OptionsCursorTrueWithMargin } from '../FrontendTypes';
-// import { setCurrentTabInApp } from '../actions/actions';
 import { setCurrentTabInApp } from '../RTKslices'
-// import { useStoreContext } from '../store';
 import { useDispatch } from 'react-redux';
 /*
   Used to render a single radial graph on the 'Web Metrics' tab
@@ -94,7 +92,6 @@ const radialGraph = (props) => {
     },
   };
 
-  // const [store, dispatch] = useStoreContext(); // used to get the dispatch function from our storeContext
 
   useEffect(() => { 
     dispatch(setCurrentTabInApp('webmetrics')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.

@@ -10,9 +10,8 @@ import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom
 import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap/ComponentMap';
-import { changeView, changeSlider } from '../../actions/actions';
-// import { useStoreContext } from '../../store';
-import { useDispatch, useSelector } from 'react-redux';
+import { changeView, changeSlider } from '../../RTKslices';
+import { useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetrics from '../WebMetrics';
 import { StateRouteProps } from '../../FrontendTypes'
@@ -33,10 +32,8 @@ const StateRoute = (props: StateRouteProps) => {
     webMetrics, // from 'tabs[currentTab]' object in 'MainContainer'
     currLocation // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
-  // const [{ tabs, currentTab }, dispatch] = useStoreContext();
 
-  // Don't believe we need dispatch here because all it was used for was to prop drill, and I removed that functionality
-  // const dispatch = useDispatch();
+  
   const { tabs, currentTab } = useSelector((state: any) => state.main);
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
 
@@ -155,6 +152,7 @@ const StateRoute = (props: StateRouteProps) => {
               width={width}
               height={height}
               snapshots={snapshots}
+              // note: is propdrilled within Performance Visx, but doesn't seem to be used
               changeSlider={changeSlider}
               changeView={changeView}
               hierarchy={hierarchy}

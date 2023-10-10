@@ -1,8 +1,6 @@
 import * as React from 'react';
 //importing useState from react to handle local state for button reconnect functionality
 import { useState, useEffect } from 'react';
-// import { importSnapshots, toggleMode } from '../actions/actions';
-// import { useStoreContext } from '../store';
 import { Button } from '@mui/material';
 //importing necesary material UI components for dialogue popup
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
@@ -51,8 +49,6 @@ function importHandler(dispatch: (a: unknown) => void): void { // function handl
 
 
 function ButtonsContainer(): JSX.Element {
-  // const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
-  // const [state, dispatch] = useStoreContext();
   const dispatch = useDispatch();
   const {currentTab, tabs, currentTabInApp, connectionStatus} = useSelector((state: any)=> state.main);
   const { mode: { paused }} = tabs[currentTab];
@@ -107,7 +103,6 @@ function ButtonsContainer(): JSX.Element {
       </Button>
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}
       <Tutorial
-      //commented out so we can use useDispatch in Tutorial.tsx
        dispatch={dispatch} 
        currentTabInApp={currentTabInApp} />
       {/* adding a button for reconnection functionality 10/5/2023 */}
