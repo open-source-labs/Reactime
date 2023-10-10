@@ -10,7 +10,6 @@ const initialState: InitialStateProps = { // we initialize what our initialState
     currentTabInApp: null,
     connectionStatus: true,
     reconnectRequested: false,
-    hasInitialized: false,
   };
 
 const findName = (index, obj) => {
