@@ -4,11 +4,12 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ActionContainer from '../containers/ActionContainer';
-// import { useStoreContext } from '../store';
-import TravelContainer from '../containers/TravelContainer';
-import { useDispatch } from 'react-redux';
-import {store} from '../'
 
+import TravelContainer from '../containers/TravelContainer';
+import { useDispatch, useSelector } from 'react-redux';
+import {store} from '../RTKstore';
+import { Provider } from 'react-redux';
+import { mainSlice } from '../RTKslices';
 const state = {
   tabs: {
     87: {
@@ -107,13 +108,18 @@ const state = {
   },
   currentTab: 87,
 };
+const dispatch = useDispatch();
+// const dispatch = jest.fn();
+// jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn());
+// jest.mock('../store');
 
-const dispatch = jest.fn();
-jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn());
-jest.mock('../store');
+// const mockeduseStoreContext = jest.mocked(useStoreContext);
+// mockeduseStoreContext.mockImplementation(() => [state, dispatch]);
 
-const mockeduseStoreContext = jest.mocked(useStoreContext);
-mockeduseStoreContext.mockImplementation(() => [state, dispatch]);
+// const getStateMock = jest.spyOn(store, 'getState').mockReturnValue(state.main); // Replace 'state' with your desired initial state
+
+
+// const dispatchMock = jest.spyOn(store, 'dispatch'); // Create a spy for the dispatch function
 
 const MockRouteDescription = jest.fn();
 jest.mock('../components/RouteDescription', () => () => {
@@ -129,9 +135,13 @@ jest.mock('../components/SwitchApp', () => () => {
 
 describe('unit testing for ActionContainer', () => {
   beforeEach(() => {
-    mockeduseStoreContext.mockClear();
-    dispatch.mockClear();
-    render(<ActionContainer actionView={true} />);
+    // mockeduseStoreContext.mockClear();
+    // dispatch.mockClear();
+    render(
+    <Provider store={store}>
+      <ActionContainer actionView={true} />
+      </Provider>
+    );
   });
 
   test('Expect top arrow to be rendered', () => {
@@ -154,10 +164,18 @@ describe('unit testing for ActionContainer', () => {
 
 describe('integration testing for ActionContainer', () => {
   beforeEach(() => {
-    mockeduseStoreContext.mockClear();
-    dispatch.mockClear();
-    render(<ActionContainer actionView={true} />);
-    render(<TravelContainer snapshotsLength={0} />);
+    // mockeduseStoreContext.mockClear();
+    // dispatch.mockClear();
+    render(
+      <Provider store={store}>
+    <ActionContainer actionView={true} />
+    </Provider>
+    );
+    render(
+      <Provider store={store}>
+    <TravelContainer snapshotsLength={0} />
+    </Provider>
+    );
   });
 
   test('Slider resets on clear button', () => {
