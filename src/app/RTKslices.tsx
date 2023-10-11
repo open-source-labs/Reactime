@@ -24,6 +24,7 @@ const findName = (index, obj) => {
       objChildArray.push(findName(index, objChild));
     }
   }
+  console.log(objChildArray);
   // eslint-disable-next-line no-restricted-syntax
   for (const objChildName of objChildArray) {
     if (objChildName) {
@@ -170,16 +171,43 @@ export const mainSlice = createSlice({
 
     changeView: (state, action) => {
       const {tabs, currentTab} = state;
+      console.log('this is state:', current(state))
+      console.log('this is tabs:', current(tabs))
+      console.log('this is currentabs:', currentTab)
+      console.log('this is tabs[currentab]', current(tabs[currentTab]))
       const {viewIndex} = tabs[currentTab] || {};
-
+      console.log('hi this is viewIndex:', viewIndex);
+      console.log('this is action payload', action.payload)
       tabs[currentTab].viewIndex = viewIndex === action.payload ? -1 : action.payload;
+        // if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
+        // else tabs[currentTab].viewIndex = action.payload;
+        // tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+
+    //  case types.CHANGE_VIEW: {
+    //     // unselect view if same index was selected
+    //     // console.log('action:', action)
+    //     // console.log('state: ', state)
+    //     if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
+    //     else tabs[currentTab].viewIndex = action.payload;
+    //     // update currLocation
+    //     // tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+    //     break;
+    //   }
+
     },
 
     changeSlider: (state, action) => {
       const { port, currentTab, tabs } = state;
       const { hierarchy, snapshots } = tabs[currentTab] || {};
 
+      console.log('this is PORT', port);
+      console.log('this is hierarchy', current(hierarchy));
+      console.log('this is SNapshots', current(snapshots));
+
       const nameFromIndex = findName(action.payload, hierarchy);
+
+      console.log('this is action payload', action.payload);
+      console.log('this is nameFromIndex', nameFromIndex);
 
       port.postMessage({
         action: 'jumpToSnap',
@@ -412,7 +440,6 @@ export const mainSlice = createSlice({
         // Runs if series name input box is active.
         // Updates chrome local storage with the newly saved series. Console logging the seriesArray grabbed from local storage may be helpful.
         if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
-          
           let seriesArray: any = localStorage.getItem('project');
           seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
           newSeries.name = newSeriesName;
