@@ -118,14 +118,14 @@ describe('Unit testing for Action.tsx', () => {
       expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));
     });
 
-    // test('Clicking Jump button should trigger changeSlider and changeView', () => {
-    //   render(   
-    //     <Action {...props} />
-    //   );
-    //   fireEvent.click(screen.getAllByRole('button')[1]);
-    //   expect(props.dispatch).toHaveBeenCalledWith(changeSlider(props.index));
-    //   expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));
-    // });
+    test('Clicking Jump button should trigger changeSlider and changeView', () => {
+      render(   
+        <Action {...props} />
+      );
+      fireEvent.click(screen.getAllByRole('button')[1]);
+      expect(props.dispatch).toHaveBeenCalledWith(changeSlider(props.index));
+      expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));
+    });
   });
 });
 
