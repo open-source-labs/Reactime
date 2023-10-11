@@ -115,7 +115,7 @@ describe('Unit testing for Action.tsx', () => {
         <Action {...props} />
       )
       fireEvent.click(screen.getByRole('presentation'));
-      expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));;
+      expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));
     });
 
     // test('Clicking Jump button should trigger changeSlider and changeView', () => {
