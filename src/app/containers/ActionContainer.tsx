@@ -62,7 +62,10 @@ function ActionContainer(props): JSX.Element {
       obj.stateSnapshot.children[0].state && // with a 'state'
       obj.stateSnapshot.children[0].name // and a 'name'
     ) {
-      const newObj: Record<string, unknown> = { // we create a new Record object (whose property keys are Keys and whose property values are Type. This utility can be used to map the properties of a type to another type) and populate it's properties with relevant values from our argument 'obj'.
+      const newObj: Record<string, unknown> = { 
+        // we create a new Record object (whose property keys are Keys and whose property values are Type. 
+        //This utility can be used to map the properties of a type to another type) and populate it's properties with 
+        //relevant values from our argument 'obj'.
         index: obj.index,
         displayName: `${obj.name}.${obj.branch}`,
         state: obj.stateSnapshot.children[0].state,
