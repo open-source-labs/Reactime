@@ -151,16 +151,16 @@
 //         break;
 //       }
 
-//       case types.CHANGE_VIEW: {
-//         // unselect view if same index was selected
-//         // console.log('action:', action)
-//         // console.log('state: ', state)
-//         if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
-//         else tabs[currentTab].viewIndex = action.payload;
-//         // update currLocation
-//         // tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
-//         break;
-//       }
+    //   case types.CHANGE_VIEW: {
+    //     // unselect view if same index was selected
+    //     // console.log('action:', action)
+    //     // console.log('state: ', state)
+    //     if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
+    //     else tabs[currentTab].viewIndex = action.payload;
+    //     // update currLocation
+    //     // tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+    //     break;
+    //   }
 
 //       case types.CHANGE_SLIDER: {
 //         // eslint-disable-next-line max-len

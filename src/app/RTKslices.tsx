@@ -170,14 +170,29 @@ export const mainSlice = createSlice({
 
     changeView: (state, action) => {
       const {tabs, currentTab} = state;
-      console.log('this is state:', current(state))
-      console.log('this is tabs:', tabs)
-      console.log('this is currentabs:', currentTab)
-      console.log('this is tabs[currentab]', tabs[currentTab])
+      // console.log('this is state:', current(state))
+      // console.log('this is tabs:', current(tabs))
+      // console.log('this is currentabs:', currentTab)
+      // console.log('this is tabs[currentab]', current(tabs[currentTab]))
       const {viewIndex} = tabs[currentTab] || {};
       console.log('hi this is viewIndex:', viewIndex);
       console.log('this is action payload', action.payload)
-      tabs[currentTab].viewIndex = viewIndex === action.payload ? -1 : action.payload;
+      // tabs[currentTab].viewIndex = viewIndex === action.payload ? -1 : action.payload;
+        if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
+        else tabs[currentTab].viewIndex = action.payload;
+        tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+
+    //  case types.CHANGE_VIEW: {
+    //     // unselect view if same index was selected
+    //     // console.log('action:', action)
+    //     // console.log('state: ', state)
+    //     if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
+    //     else tabs[currentTab].viewIndex = action.payload;
+    //     // update currLocation
+    //     // tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+    //     break;
+    //   }
+
     },
 
     changeSlider: (state, action) => {
