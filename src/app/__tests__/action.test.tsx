@@ -110,22 +110,22 @@ describe('Unit testing for Action.tsx', () => {
   //     expect(props.handleOnkeyDown).toHaveBeenCalled();
   //   });
 
-    test('Clicking the snapshot should trigger onClick', () => {
-      render(     
-        <Action {...props} />
-      )
-      fireEvent.click(screen.getByRole('presentation'));
-      expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));;
-    });
-
-    // test('Clicking Jump button should trigger changeSlider and changeView', () => {
-    //   render(   
+    // test('Clicking the snapshot should trigger onClick', () => {
+    //   render(     
     //     <Action {...props} />
-    //   );
-    //   fireEvent.click(screen.getAllByRole('button')[1]);
-    //   expect(props.dispatch).toHaveBeenCalledWith(changeSlider(props.index));
-    //   expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));
+    //   )
+    //   fireEvent.click(screen.getByRole('presentation'));
+    //   expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));;
     // });
+
+    test('Clicking Jump button should trigger changeSlider and changeView', () => {
+      render(   
+        <Action {...props} />
+      );
+      fireEvent.click(screen.getAllByRole('button')[1]);
+      expect(props.dispatch).toHaveBeenCalledWith(changeSlider(props.index));
+      expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));
+    });
   });
 });
 
