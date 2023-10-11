@@ -170,8 +170,13 @@ export const mainSlice = createSlice({
 
     changeView: (state, action) => {
       const {tabs, currentTab} = state;
+      console.log('this is state:', current(state))
+      console.log('this is tabs:', tabs)
+      console.log('this is currentabs:', currentTab)
+      console.log('this is tabs[currentab]', tabs[currentTab])
       const {viewIndex} = tabs[currentTab] || {};
-
+      console.log('hi this is viewIndex:', viewIndex);
+      console.log('this is action payload', action.payload)
       tabs[currentTab].viewIndex = viewIndex === action.payload ? -1 : action.payload;
     },
 

@@ -1,15 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-filename-extension */
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render as rtlRender, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ActionContainer from '../containers/ActionContainer';
-
+// import { useStoreContext } from '../store';
 import TravelContainer from '../containers/TravelContainer';
-import { useDispatch, useSelector } from 'react-redux';
-import {store} from '../RTKstore';
-import { Provider } from 'react-redux';
-import { mainSlice } from '../RTKslices';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { store } from '../RTKstore';
+//so far i have imported provider, usedispatch, useselector, and store 
+//wrapped components in provider
+
+const render = component => rtlRender(
+  <Provider store={store}>
+    {component}
+  </Provider>
+)
+
 const state = {
   tabs: {
     87: {
@@ -108,19 +115,36 @@ const state = {
   },
   currentTab: 87,
 };
-const dispatch = useDispatch();
-// const dispatch = jest.fn();
-// jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn());
-// jest.mock('../store');
+//creates jest mock function to simulate behavior of functions/methods
+const dispatch = jest.fn();
 
-// const mockeduseStoreContext = jest.mocked(useStoreContext);
-// mockeduseStoreContext.mockImplementation(() => [state, dispatch]);
-
-// const getStateMock = jest.spyOn(store, 'getState').mockReturnValue(state.main); // Replace 'state' with your desired initial state
+//TESTING OUR CODE HERRE
 
 
-// const dispatchMock = jest.spyOn(store, 'dispatch'); // Create a spy for the dispatch function
 
+
+//ORGINAL CODE HERE
+
+jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn());
+jest.mock('../store');
+
+//jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn());: 
+//This line spies on the useEffect function from React, replacing it with a mocked implementation that returns an empty Jest mock function, 
+//effectively disabling its actual side effects during testing.
+
+//jest.mock('../store');: 
+//This line mocks the import of a module located at '../store', which can be useful to isolate components from real Redux store behavior 
+//and provide custom mock behavior for testing purposes.
+
+
+const mockeduseStoreContext = jest.mocked(useStoreContext);
+mockeduseStoreContext.mockImplementation(() => [state, dispatch]);
+// jest.mocked(useStoreContext): This part of the code uses Jest's jest.mocked function to create a mocked version of the useStoreContext function. The jest.mocked function is used to mock functions and methods. It creates a mock that can be configured with custom behavior.
+
+// mockeduseStoreContext.mockImplementation(() => [state, dispatch]): After creating the mock, this line configures the mock to implement a specific behavior. In this case, it specifies that when useStoreContext is called, it should return an array containing two values: state and dispatch.
+
+
+////////////////////////////////////////////////////////////////////////////////////
 const MockRouteDescription = jest.fn();
 jest.mock('../components/RouteDescription', () => () => {
   MockRouteDescription();
@@ -135,129 +159,45 @@ jest.mock('../components/SwitchApp', () => () => {
 
 describe('unit testing for ActionContainer', () => {
   beforeEach(() => {
-    // mockeduseStoreContext.mockClear();
-    // dispatch.mockClear();
+    mockeduseStoreContext.mockClear();
+    dispatch.mockClear();
     render(
-    <Provider store={store}>
       <ActionContainer actionView={true} />
-      </Provider>
-    );
+    )
   });
 
   test('Expect top arrow to be rendered', () => {
     expect(screen.getByRole('complementary')).toBeInTheDocument();
   });
 
-  test('Expect RouteDescription to be rendered', () => {
-    expect(screen.getAllByText('MockRouteDescription')).toHaveLength(2);
-  });
-
-  test('Expect SwitchApp to be rendered', () => {
-    expect(screen.getByText('MockSwitchApp')).toBeInTheDocument();
-  });
-
-  test('Click works on clear button', () => {
-    fireEvent.click(screen.getAllByRole('button')[0]);
-    expect(dispatch).toHaveBeenCalledTimes(1);
-  });
-});
-
-describe('integration testing for ActionContainer', () => {
-  beforeEach(() => {
-    // mockeduseStoreContext.mockClear();
-    // dispatch.mockClear();
-    render(
-      <Provider store={store}>
-    <ActionContainer actionView={true} />
-    </Provider>
-    );
-    render(
-      <Provider store={store}>
-    <TravelContainer snapshotsLength={0} />
-    </Provider>
-    );
-  });
-
-  test('Slider resets on clear button', () => {
-    fireEvent.click(screen.getAllByRole('button')[0]);
-    expect(screen.getByRole('slider')).toHaveStyle('left: 0');
-  });
-});
-
-
-// To convert your existing test file to use Redux Toolkit, you need to update your test setup to work with Redux Toolkit's `configureStore` and create a Redux store. Assuming you already have a Redux store and slice set up, here's how you can modify your test file:
-
-// 1. Import `configureStore` from Redux Toolkit and the Redux store you want to use in your tests.
-
-// ```javascript
-// import { render, screen, fireEvent } from '@testing-library/react';
-// import { Provider } from 'react-redux'; // Import Provider from react-redux
-// import { configureStore } from '@reduxjs/toolkit'; // Import configureStore from Redux Toolkit
-// import ActionContainer from '../containers/ActionContainer';
-// import TravelContainer from '../containers/TravelContainer';
-
-// // Import your Redux store and slice here if not already done
-// import { rootReducer } from '../store'; // Replace with your actual reducer and store
-// ```
-
-// 2. Create a Redux store with `configureStore` and pass it as a prop to your components.
-
-// ```javascript
-// const store = configureStore({
-//   reducer: rootReducer, // Replace with your actual reducer
-// });
-
-// describe('unit testing for ActionContainer', () => {
-//   beforeEach(() => {
-//     render(
-//       <Provider store={store}>
-//         <ActionContainer actionView={true} />
-//       </Provider>
-//     );
+//   test('Expect RouteDescription to be rendered', () => {
+//     expect(screen.getAllByText('MockRouteDescription')).toHaveLength(2);
 //   });
 
-//   // Your tests here
+//   test('Expect SwitchApp to be rendered', () => {
+//     expect(screen.getByText('MockSwitchApp')).toBeInTheDocument();
+//   });
+
+//   test('Click works on clear button', () => {
+//     fireEvent.click(screen.getAllByRole('button')[0]);
+//     expect(dispatch).toHaveBeenCalledTimes(1);
+//   });
 // });
 
 // describe('integration testing for ActionContainer', () => {
 //   beforeEach(() => {
+//     mockeduseStoreContext.mockClear();
+//     dispatch.mockClear();
 //     render(
-//       <Provider store={store}>
-//         <ActionContainer actionView={true} />
-//         <TravelContainer snapshotsLength={0} />
-//       </Provider>
-//     );
+//       <ActionContainer actionView={true} />
+//     )
+//     render(
+//       <TravelContainer snapshotsLength={0} />
+//     )
 //   });
 
-//   // Your tests here
-// });
-// ```
-
-// 3. Ensure that you import and use `useDispatch` from `react-redux` for your component testing as follows:
-
-// ```javascript
-// import { useDispatch, useSelector } from 'react-redux'; // Import useDispatch and useSelector from react-redux
-// ```
-
-// And in your component code where you use `dispatch`, use `useDispatch`:
-
-// ```javascript
-// const dispatch = useDispatch();
-// ```
-
-// 4. Update your tests accordingly to work with Redux Toolkit's `configureStore`. For example, if you have a test that checks if `dispatch` is called, you can do something like this:
-
-// ```javascript
-// test('Click works on clear button', () => {
-//   const { getByRole } = render(
-//     <Provider store={store}>
-//       <ActionContainer actionView={true} />
-//     </Provider>
-//   );
-
-//   fireEvent.click(getByRole('button'));
-//   expect(dispatch).toHaveBeenCalledTimes(1);
-// });
-// ```
-
-// With these modifications, your test file should work with Redux Toolkit and your existing Redux store and slice. Make sure to replace `rootReducer` with your actual reducer and adjust the imports as needed for your project's structure.
+//   test('Slider resets on clear button', () => {
+//     fireEvent.click(screen.getAllByRole('button')[0]);
+//     expect(screen.getByRole('slider')).toHaveStyle('left: 0');
+//   });
+});
