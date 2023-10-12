@@ -14,9 +14,12 @@ import {
   noDev,
   setCurrentLocation,
   disconnected,
-  endReconnect
+  endReconnect,
+  launchContentScript,
 } from '../RTKslices';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { Status } from '../../backend/types/backendTypes';
 
 /*
   This is the main container where everything in our application is rendered
@@ -118,12 +121,17 @@ function MainContainer(): JSX.Element {
     // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
     chrome.runtime.onMessage.addListener(handleDisconnect);
 
+    setTimeout(() => {
+      currentPort.disconnect();
+    }, 17000)
+
     // assign port to state so it could be used by other components
     if (currentPort)
       dispatch(setPort(currentPort));
 
-    if (!connectionStatus && reconnectRequested)
+    if (!connectionStatus && reconnectRequested) {
       dispatch(endReconnect());
+    }
   });
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)

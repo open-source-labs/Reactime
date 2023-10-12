@@ -290,6 +290,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   switch (action) {
+    case 'attemptReconnect': {
+      console.log('AYO');
+
+      const success = true;
+      sendResponse({ success });
+      break;
+    }
     case 'jumpToSnap': {
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
       if (portsArr.length > 0) {
