@@ -137,6 +137,7 @@ function ButtonsContainer(): JSX.Element {
             : <>
                 Reactime has unexpectedly disconnected from your application. To continue using Reactime, please reconnect. 
                 <br />
+                <br />
                 WARNING: Reconnecting will clear all data currently stored in Reactime, so consider downloading the data before proceeding with the reconnection, if needed.
               </>}
         </DialogContent>
