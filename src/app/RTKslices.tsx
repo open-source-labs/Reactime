@@ -172,9 +172,9 @@ export const mainSlice = createSlice({
     changeView: (state, action) => {
       const {tabs, currentTab} = state;
       console.log('this is state:', current(state))
-      console.log('this is tabs:', current(tabs))
+      console.log('this is tabs:', tabs)
       console.log('this is currentabs:', currentTab)
-      console.log('this is tabs[currentab]', current(tabs[currentTab]))
+      console.log('this is tabs[currentab]', tabs[currentTab])
       const {viewIndex} = tabs[currentTab] || {};
       console.log('hi this is viewIndex:', viewIndex);
       console.log('this is action payload', action.payload)
@@ -201,8 +201,8 @@ export const mainSlice = createSlice({
       const { hierarchy, snapshots } = tabs[currentTab] || {};
 
       console.log('this is PORT', port);
-      console.log('this is hierarchy', current(hierarchy));
-      console.log('this is SNapshots', current(snapshots));
+      console.log('this is hierarchy', hierarchy);
+      console.log('this is SNapshots', snapshots);
 
       const nameFromIndex = findName(action.payload, hierarchy);
 
