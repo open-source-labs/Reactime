@@ -185,7 +185,8 @@
 .import-button:hover,
 .howToUse-button:hover,
 .export-button:hover,
-.pause-button:hover {
+.pause-button:hover,
+.reconnect-button:hover {
   @extend %button-shared;
   color: #62d6fb;
   box-shadow: 1px 1px 2px 1px rgba(30, 86, 171, 0.25);
@@ -368,3 +369,58 @@ aside {
 }
 
 /* ^ sidebar button open and closing functionality */
+.reconnect-button-pop-up {
+  padding: 3px;
+  outline: transparent;
+  background: $red-color-gradient; 
+  color: $text-color !important;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  line-height: 1.5em;
+  font: 500 $button-text-size $text-font-stack;
+  width: 120px;
+  &:hover {
+    color: black !important;
+    background-color: $highlight-color;
+  }
+}
+
+.cancel-button-pop-up {
+  padding: 3px;
+  outline: transparent;
+  color: black;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  line-height: 1.5em;
+  font: 500 $button-text-size $text-font-stack;
+  width: 120px;
+  &:hover {
+    color: $text-color;
+    background-color: $highlight-color;
+  }
+}
+
+.close-icon-pop-up {
+  cursor: pointer;
+  color: $text-color;
+  font-size: 20px; 
+  padding-right: 10px;
+}
+
+.download-button-pop-up {
+  cursor: pointer;
+  border: none;
+  font: 500 $button-text-size $text-font-stack;
+  width: 120px;
+  border-radius: 3px;
+  line-height: 1.5em;
+  outline: transparent;
+  background: $blue-color-gradient;
+  box-shadow: $box-shadow-blue;
+  &:hover {
+    color: $text-color;
+    background-color: $highlight-color;
+  }
+}
