@@ -4,9 +4,8 @@ import { render as rtlRender, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import Action from '../components/Action';
 import { changeView, changeSlider } from '../RTKslices';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider } from 'react-redux';
 import { store } from '../RTKstore'; //importing store for testing to give us access to Redux Store we configured
-
 
 
 // @ts-ignore
@@ -122,14 +121,14 @@ describe('Unit testing for Action.tsx', () => {
       expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));
     });
 
-    // test('Clicking Jump button should trigger changeSlider and changeView', () => {
-    //   render(   
-    //     <Action {...props} />
-    //   );
-    //   fireEvent.click(screen.getAllByRole('button')[1]);
-    //   expect(props.dispatch).toHaveBeenCalledWith(changeSlider(props.index));
-    //   expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));
-    // });
+    test('Clicking Jump button should trigger changeSlider and changeView', () => {
+      render(   
+        <Action {...props} />
+      );
+      fireEvent.click(screen.getAllByRole('button')[1]);
+      expect(props.dispatch).toHaveBeenCalledWith(changeSlider(props.index));
+      expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));
+    });
   });
 });
 
