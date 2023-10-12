@@ -4,12 +4,18 @@ import React from 'react';
 import { render as rtlRender, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ActionContainer from '../containers/ActionContainer';
-// import { useStoreContext } from '../store';
+import { useStoreContext } from '../store';
 import TravelContainer from '../containers/TravelContainer';
-// import { Provider, useDispatch, useSelector } from 'react-redux';
-// import { store } from '../RTKstore';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { store } from '../RTKstore';
 //so far i have imported provider, usedispatch, useselector, and store 
 //wrapped components in provider
+
+// jest.mock('react-redux', () => ({
+//   ...jest.requireActual('react-redux'), // include all the exports from the actual react-redux module
+//   useDispatch: jest.fn(),
+//   useSelector: jest.fn() //override the useDispatch from the react redux module with a jest mock function
+// }));
 
 const render = component => rtlRender(
   <Provider store={store}>
@@ -118,30 +124,15 @@ const state = {
 //creates jest mock function to simulate behavior of functions/methods
 const dispatch = jest.fn();
 
-//TESTING OUR CODE HERRE
-
-
-
-
-//ORGINAL CODE HERE
-
 jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn());
-jest.mock('../store');
-
-//jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn());: 
 //This line spies on the useEffect function from React, replacing it with a mocked implementation that returns an empty Jest mock function, 
 //effectively disabling its actual side effects during testing.
-
-//jest.mock('../store');: 
+jest.mock('../store');
 //This line mocks the import of a module located at '../store', which can be useful to isolate components from real Redux store behavior 
 //and provide custom mock behavior for testing purposes.
 
-
 const mockeduseStoreContext = jest.mocked(useStoreContext);
-mockeduseStoreContext.mockImplementation(() => [state, dispatch]);
-// jest.mocked(useStoreContext): This part of the code uses Jest's jest.mocked function to create a mocked version of the useStoreContext function. The jest.mocked function is used to mock functions and methods. It creates a mock that can be configured with custom behavior.
-
-// mockeduseStoreContext.mockImplementation(() => [state, dispatch]): After creating the mock, this line configures the mock to implement a specific behavior. In this case, it specifies that when useStoreContext is called, it should return an array containing two values: state and dispatch.
+mockeduseStoreContext.mockImplementation(() => [state, dispatch]); //After creating the mock, this line configures the mock to implement a specific behavior. In this case, it specifies that when useStoreContext is called, it should return an array containing two values: state and dispatch.
 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -170,34 +161,34 @@ describe('unit testing for ActionContainer', () => {
     expect(screen.getByRole('complementary')).toBeInTheDocument();
   });
 
-//   test('Expect RouteDescription to be rendered', () => {
-//     expect(screen.getAllByText('MockRouteDescription')).toHaveLength(2);
-//   });
+  test('Expect RouteDescription to be rendered', () => {
+    expect(screen.getAllByText('MockRouteDescription')).toHaveLength(2);
+  });
 
-//   test('Expect SwitchApp to be rendered', () => {
-//     expect(screen.getByText('MockSwitchApp')).toBeInTheDocument();
-//   });
+  test('Expect SwitchApp to be rendered', () => {
+    expect(screen.getByText('MockSwitchApp')).toBeInTheDocument();
+  });
 
-//   test('Click works on clear button', () => {
-//     fireEvent.click(screen.getAllByRole('button')[0]);
-//     expect(dispatch).toHaveBeenCalledTimes(1);
-//   });
-// });
+  test('Click works on clear button', () => {
+    fireEvent.click(screen.getAllByRole('button')[0]);
+    expect(dispatch).toHaveBeenCalledTimes(1);
+  });
+});
 
-// describe('integration testing for ActionContainer', () => {
-//   beforeEach(() => {
-//     mockeduseStoreContext.mockClear();
-//     dispatch.mockClear();
-//     render(
-//       <ActionContainer actionView={true} />
-//     )
-//     render(
-//       <TravelContainer snapshotsLength={0} />
-//     )
-//   });
+describe('integration testing for ActionContainer', () => {
+  beforeEach(() => {
+    mockeduseStoreContext.mockClear();
+    dispatch.mockClear();
+    render(
+      <ActionContainer actionView={true} />
+    )
+    render(
+      <TravelContainer snapshotsLength={0} />
+    )
+  });
 
-//   test('Slider resets on clear button', () => {
-//     fireEvent.click(screen.getAllByRole('button')[0]);
-//     expect(screen.getByRole('slider')).toHaveStyle('left: 0');
-//   });
+  test('Slider resets on clear button', () => {
+    fireEvent.click(screen.getAllByRole('button')[0]);
+    expect(screen.getByRole('slider')).toHaveStyle('left: 0');
+  });
 });

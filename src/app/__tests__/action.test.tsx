@@ -6,16 +6,17 @@ import Action from '../components/Action';
 import { changeView, changeSlider } from '../RTKslices';
 import { Provider } from 'react-redux';
 import { store } from '../RTKstore'; //importing store for testing to give us access to Redux Store we configured
-import * as reactRedux from 'react-redux'
+import { useDispatch } from 'react-redux' //import all exports from react-redux as an object, reactRedux
 
 // @ts-ignore
 Action.cleanTime = jest.fn().mockReturnValue();
-
+//create a mock of the react-redux module
 jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'), // Use the actual react-redux module except for the functions you want to mock
-  useDispatch: jest.fn(),
+  ...jest.requireActual('react-redux'), // include all the exports from the actual react-redux module
+  useDispatch: jest.fn(), //override the useDispatch from the react redux module with a jest mock function
 }));
 
+//wraps the component with our provider each time we use render
 const render = component => rtlRender(
   <Provider store={store}>
     {component}
@@ -23,11 +24,12 @@ const render = component => rtlRender(
 )
 
 describe('Unit testing for Action.tsx', () => {
-  // const useSelectorMock = jest.spyOn(reactRedux, 'useSelector')
-  // const useDispatchMock = jest.spyOn(reactRedux, 'useDispatch')
-  const useDispatchMock = reactRedux.useDispatch as jest.Mock;
-  const dummyDispatch = jest.fn();
+  //declare a var useDispatchMock, and assign it to the useDispatch from the reactRedux object, and set it's type as jest.Mock
+  //we expect useDispatchMock to have a type assertion of jest.Mock
+  const useDispatchMock = useDispatch as jest.Mock;
+  const dummyDispatch = jest.fn(); //define a mock function and store it in the var dummyDispatch
   useDispatchMock.mockReturnValue(dummyDispatch);
+  //when the test runs, its going to see that the component invokes useDispatch, but since we have it overridden as a jest mock func, it'll run that instead, and we set it up so that when the jest mock func runs, it returns dummy dispatch to run in its place. This allows us to check the number of times dummy dispatch was called, which would represent the number of times useDispatch was called.
   const props = {
     key: 'actions2',
     selected: true,
@@ -130,8 +132,6 @@ describe('Unit testing for Action.tsx', () => {
     });
 
     test('Clicking Jump button should trigger changeSlider and changeView', () => {
-      // const dummyDispatch = jest.fn();
-      // useDispatchMock.mockReturnValue(dummyDispatch);
       render(   
         <Action {...props} />
       );
@@ -141,18 +141,3 @@ describe('Unit testing for Action.tsx', () => {
     });
   });
 });
-
-//these were the tests for 9 and 10 before our changes... in progress
-
-// test('Clicking the snapshot should trigger onClick', () => {
-//   render(<Action {...props} />);
-//   fireEvent.click(screen.getByRole('presentation'));
-//   expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));;
-// });
-
-// test('Clicking Jump button should trigger changeSlider and changeView', () => {
-//   render(<Action {...props} />);
-//   fireEvent.click(screen.getAllByRole('button')[1]);
-//   expect(props.dispatch).toHaveBeenCalledWith(changeSlider(props.index));
-//   expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));
-// });
