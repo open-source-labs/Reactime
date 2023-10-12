@@ -143,7 +143,7 @@ export interface InitialStateProps {
   tabs: unknown;
   currentTabInApp: null | string;
   connectionStatus: boolean;
-  reconnectRequested: boolean;
+  connectRequested: boolean;
 }
 
 export interface DiffProps {

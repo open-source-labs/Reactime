@@ -14,7 +14,7 @@ import {
   noDev,
   setCurrentLocation,
   disconnected,
-  endReconnect,
+  endConnect,
   launchContentScript,
 } from '../RTKslices';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,9 +31,10 @@ function MainContainer(): JSX.Element {
   const currentTab = useSelector((state: any) => state.main.currentTab);
   const tabs = useSelector((state: any) => state.main.tabs);
   const port = useSelector((state: any) => state.main.port);
-  const { connectionStatus, reconnectRequested } = useSelector((state: any) => state.main);
+  const { connectionStatus, connectRequested } = useSelector((state: any) => state.main);
   
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
+  const [currentPort, setCurrentPort] = useState(null);
 
   // this function handles Time Jump sidebar view
   const toggleActionContainer = () => {
@@ -58,11 +59,58 @@ function MainContainer(): JSX.Element {
     }
   }
 
+  const handleConnect = () => {
+    const maxRetries = 10;
+    const retryInterval = 1000;
+    const maxTimeout = 15000
+
+    return new Promise((resolve) => {
+      let port: chrome.runtime.Port;
+      console.log('init port: ', port)
+
+      const attemptReconnection = (retries: number, startTime: number) => {
+        // console.log('WORKING')
+        if (retries <= maxRetries && Date.now() - startTime < maxTimeout) {
+          if (retries === 1) port = chrome.runtime.connect();
+          console.log('HITTING IF');
+          chrome.runtime.sendMessage({ action: 'attemptReconnect' }, (response) => {
+            if (response && response.success) {
+              console.log('Reconnect Success: ', response.success);
+              resolve(port);
+            } else {
+              console.log('Reconnect failed: ', !response && response.success);
+    
+              setTimeout(() => {
+                console.log('trying!')
+                attemptReconnection(retries + 1, startTime);
+              }, retryInterval);
+            }
+          });
+        } else {
+          console.log('PORT CONNECT FAILED');
+          resolve(null);
+        }
+      };
+      attemptReconnection(1, Date.now());
+    });
+  }
+
   useEffect(() => {
-    if (port) return; // only open port once so if it exists, do not run useEffect again
+    if (!connectRequested) return; // only open port once so if it exists, do not run useEffect again
 
     // chrome.runtime allows our application to retrieve our service worker (our eventual bundles/background.bundle.js after running npm run build), details about the manifest, and allows us to listen and respond to events in our application lifecycle.
-    const currentPort = chrome.runtime.connect(); // we connect to our service worker
+
+    handleConnect()
+    .then((port) => {
+      if (port) {
+        console.log('PORT SUCCESS: ', port)
+        setCurrentPort(port);
+      } else {
+        console.log('PORT FAIL: ', port);
+      }
+    });
+
+    console.log('that port tho: ', currentPort);
 
     // listen for a message containing snapshots from the /extension/build/background.js service worker
     currentPort.onMessage.addListener(
@@ -129,9 +177,7 @@ function MainContainer(): JSX.Element {
     if (currentPort)
       dispatch(setPort(currentPort));
 
-    if (!connectionStatus && reconnectRequested) {
-      dispatch(endReconnect());
-    }
+    dispatch(endConnect());
   });
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)

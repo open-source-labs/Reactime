@@ -137,6 +137,8 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   This allows us to set up listener's for when we connect, message, and disconnect the script.
 */
 
+let portSuccessfullyConnected = false;
+
 // Establishing incoming connection with Reactime.
 chrome.runtime.onConnect.addListener((port) => {
   /*
@@ -158,6 +160,9 @@ chrome.runtime.onConnect.addListener((port) => {
   
     Again, this port object is used for communication within your extension, not for communication with external ports or tabs in the Chrome browser. If you need to interact with specific tabs or external ports, you would use other APIs or methods, such as chrome.tabs or other Chrome Extension APIs.
   */
+
+  console.log('Port: ', port);
+  portSuccessfullyConnected = port ? true : false;
  
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
  
@@ -291,9 +296,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   switch (action) {
     case 'attemptReconnect': {
-      console.log('AYO');
+      console.log('portConnection: ', portSuccessfullyConnected);
 
-      const success = true;
+      const success = portSuccessfullyConnected;
       sendResponse({ success });
       break;
     }

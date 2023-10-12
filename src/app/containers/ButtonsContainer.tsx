@@ -64,35 +64,35 @@ function ButtonsContainer(): JSX.Element {
   }
 
   const handleReconnectConfirm = () => {
-    const maxRetries = 10;
-    const retryInterval = 1000;
-    const maxTimeout = 15000
+    // const maxRetries = 10;
+    // const retryInterval = 1000;
+    // const maxTimeout = 15000
 
-    const attemptReconnection = (retries: number, startTime: number) => {
-      console.log('WORKING')
-      if (retries <= maxRetries && Date.now() - startTime < maxTimeout) {
-        console.log('HITTING IF');
-        chrome.runtime.sendMessage({ action: 'attemptReconnect' }, (response) => {
-          console.log('response: ', response);
-          // if (response && response.success) {
-          //   console.log('SUCCESS')
-          // } else {
-          //   console.log('Reconnect failed: ', !response && response.success);
+    // const attemptReconnection = (retries: number, startTime: number) => {
+    //   console.log('WORKING')
+    //   if (retries <= maxRetries && Date.now() - startTime < maxTimeout) {
+    //     console.log('HITTING IF');
+    //     chrome.runtime.sendMessage({ action: 'attemptReconnect' }, (response) => {
+    //       console.log('response: ', response);
+    //       // if (response && response.success) {
+    //       //   console.log('SUCCESS')
+    //       // } else {
+    //       //   console.log('Reconnect failed: ', !response && response.success);
   
-          //   setTimeout(() => {
-          //     console.log('trying!')
-          //     attemptReconnection(retries + 1, startTime);
-          //   }, retryInterval);
-          // }
-        });
-      } else {
-        console.log('Max tries completed');
-      }
-    }
+    //       //   setTimeout(() => {
+    //       //     console.log('trying!')
+    //       //     attemptReconnection(retries + 1, startTime);
+    //       //   }, retryInterval);
+    //       // }
+    //     });
+    //   } else {
+    //     console.log('Max tries completed');
+    //   }
+    // }
 
     handleReconnectCancel();
-    attemptReconnection(1, Date.now());
-    // dispatch(startReconnect);
+    dispatch(startReconnect);
+    // attemptReconnection(1, Date.now());
   }
 
   const handleReconnectCancel = () => {
