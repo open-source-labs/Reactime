@@ -69,3 +69,40 @@
   background: none;
   outline: none;
 }
+
+.dialog-pop-up {
+  border: 1px solid $border-color;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+}
+
+.dialog-pop-up-header {
+  background-color: $brand-color;
+  color: $text-color;
+  padding: 12px 20px; 
+  font-size: 20px; 
+  font-family: $text-font-stack;
+}
+
+.dialog-pop-up-contents {
+  padding: 20px; 
+  background-color: $brand-color;
+  color: $text-color; 
+  font-family: $text-font-stack;
+  line-height: 1.4; 
+}
+
+.dialog-pop-up-actions {
+  padding: 15px;
+  background-color: $head-color; 
+}
+
+
+.close-icon-pop-up-div {
+  height: 40px;
+  width: 100%;
+  background-color: $light-background-color;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
