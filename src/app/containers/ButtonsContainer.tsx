@@ -12,6 +12,8 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { toggleMode, importSnapshots, startReconnect } from '../RTKslices';
 import { useDispatch, useSelector } from 'react-redux';
 import StatusDot from '../components/StatusDot'; 
+import LoopIcon from '@mui/icons-material/Loop';
+import CloseIcon from '@mui/icons-material/Close';
 
 function exportHandler(snapshots: []): void { // function that takes in our tabs[currentTab] object to be exported as a JSON file. NOTE: TypeScript needs to be updated
   const fileDownload: HTMLAnchorElement = document.createElement('a'); // invisible HTML element that will hold our tabs[currentTab] object
@@ -118,26 +120,35 @@ function ButtonsContainer(): JSX.Element {
           </span>
         }
         >
+        <LoopIcon sx={{ pr: 1 }} />
         Reconnect
       </Button>
-      <Dialog open={reconnectDialogOpen} onClose={handleReconnectCancel}>
-        <DialogTitle>WARNING</DialogTitle>
-        <DialogContent>
-          {/* //insert info here on current connection status */}
-          <h3>Status: {connectionStatus ? 'Connected' : 'Disconnected'}</h3>
-          {connectionStatus
-          ? 'Reconnecting while Reactime is still connected to application will clear all current data. Are you sure you want to proceed with the reconnection?'
-          : 'Reactime has unexpectedly disconnected from your application. To continue using Reactime, please reconnect. WARNING: Reconnecting will clear all data currently stored in Reactime, so consider downloading the data before proceeding with the reconnection, if needed' }
+      <Dialog className="dialog-pop-up"open={reconnectDialogOpen} onClose={handleReconnectCancel}>
+        <div className='close-icon-pop-up-div' >
+        <CloseIcon type="button" onClick={() => handleReconnectCancel()} className='close-icon-pop-up'/>
+        </div>
+        <DialogTitle className='dialog-pop-up-header'>WARNING</DialogTitle>
+        <DialogContent className='dialog-pop-up-contents'>
+            <h3>Status: {connectionStatus ? 'Connected' : 'Disconnected'}</h3>
+            {connectionStatus
+            ? <>
+                Reconnecting while Reactime is still connected to the application will clear all current data. Are you sure you want to proceed with the reconnection?
+              </>
+            : <>
+                Reactime has unexpectedly disconnected from your application. To continue using Reactime, please reconnect. 
+                <br />
+                WARNING: Reconnecting will clear all data currently stored in Reactime, so consider downloading the data before proceeding with the reconnection, if needed.
+              </>}
         </DialogContent>
-        {/* I don't know how to split this up ^ I wanted there to be a break between "please reconnect." and "WARNING:" but idk how */}
-        <DialogActions>
-          <Button onClick={() => handleReconnectCancel()} color="primary">
+
+        <DialogActions className='dialog-pop-up-actions'>
+          <Button onClick={() => handleReconnectCancel()} className="cancel-button-pop-up" type="button" variant="contained" style={{ backgroundColor: '#474c55' }}> 
             Cancel
           </Button>
-          { !connectionStatus && <Button onClick={() => exportHandler(tabs[currentTab])} color="primary">
+          {!connectionStatus && <Button onClick={() => exportHandler(tabs[currentTab])} type="button" className="download-button-pop-up" variant="contained" color="primary">
             Download
           </Button> }
-          <Button onClick={() => handleReconnectConfirm()} color="primary">
+          <Button onClick={() => handleReconnectConfirm()} type="button" className="reconnect-button-pop-up" variant="contained" style={{ backgroundColor: '#F00008' }}>
             Reconnect
           </Button>
         </DialogActions>
