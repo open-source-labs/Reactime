@@ -73,22 +73,22 @@
 .dialog-pop-up {
   border: 1px solid $border-color;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+  padding: 13px;
 }
 
 .dialog-pop-up-header {
-  background-color: $brand-color;
   color: $text-color;
-  padding: 12px 20px; 
+  padding: 8px 16px;  
   font-size: 20px; 
   font-family: $text-font-stack;
 }
 
 .dialog-pop-up-contents {
-  padding: 20px; 
   background-color: $brand-color;
   color: $text-color; 
   font-family: $text-font-stack;
-  line-height: 1.4; 
+  line-height: 1.4;  
+  padding: 0px 15px 15px 15px !important;  
 }
 
 .dialog-pop-up-actions {
@@ -104,5 +104,12 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+}
+
+.warning-header-container {
+  background-color: $brand-color;
+  display: flex;
+  align-items: center;
+  height: 20%;
 }
 
