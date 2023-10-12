@@ -6,8 +6,8 @@ import '@testing-library/jest-dom/extend-expect';
 import ActionContainer from '../containers/ActionContainer';
 // import { useStoreContext } from '../store';
 import TravelContainer from '../containers/TravelContainer';
-import { Provider, useDispatch, useSelector } from 'react-redux';
-import { store } from '../RTKstore';
+// import { Provider, useDispatch, useSelector } from 'react-redux';
+// import { store } from '../RTKstore';
 //so far i have imported provider, usedispatch, useselector, and store 
 //wrapped components in provider
 
