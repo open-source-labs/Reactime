@@ -203,7 +203,7 @@ function ActionContainer(props): JSX.Element {
                 dispatch(emptySnapshots()); // set slider back to zero, visually
                 resetSlider();
               }}
-              type='button'
+              type='button' 
             >
               Clear
             </Button>

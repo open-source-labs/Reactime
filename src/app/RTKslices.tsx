@@ -40,6 +40,7 @@ export const mainSlice = createSlice({
    
     emptySnapshots: (state) => {
       const { tabs, currentTab, port } = state;
+      console.log("this is state 2", current(state));
 
       port.postMessage({ action: 'emptySnap', tabId: currentTab });
 
