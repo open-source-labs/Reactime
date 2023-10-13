@@ -186,16 +186,16 @@ describe('unit testing for ActionContainer', () => {
 // });
 
 // describe('integration testing for ActionContainer', () => {
-//   beforeEach(() => {
-//     mockeduseStoreContext.mockClear();
-//     dispatch.mockClear();
-//     render(
-//       <ActionContainer actionView={true} />
-//     )
-//     render(
-//       <TravelContainer snapshotsLength={0} />
-//     )
-//   });
+  // beforeEach(() => {
+  //   mockeduseStoreContext.mockClear();
+  //   dispatch.mockClear();
+  //   render(
+  //     <ActionContainer actionView={true} />
+  //   )
+  //   render(
+  //     <TravelContainer snapshotsLength={0} />
+  //   )
+  // });
 
 //   test('Slider resets on clear button', () => {
 //     fireEvent.click(screen.getAllByRole('button')[0]);
