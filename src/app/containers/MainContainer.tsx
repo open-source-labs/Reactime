@@ -15,11 +15,8 @@ import {
   setCurrentLocation,
   disconnected,
   endConnect,
-  launchContentScript,
 } from '../RTKslices';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { Status } from '../../backend/types/backendTypes';
 
 /*
   This is the main container where everything in our application is rendered
@@ -31,10 +28,9 @@ function MainContainer(): JSX.Element {
   const currentTab = useSelector((state: any) => state.main.currentTab);
   const tabs = useSelector((state: any) => state.main.tabs);
   const port = useSelector((state: any) => state.main.port);
-  const { connectionStatus, connectRequested } = useSelector((state: any) => state.main);
+  const { connectRequested } = useSelector((state: any) => state.main);
   
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
-  const [currentPort, setCurrentPort] = useState(null);
 
   // this function handles Time Jump sidebar view
   const toggleActionContainer = () => {
@@ -52,6 +48,9 @@ function MainContainer(): JSX.Element {
     }
   };
 
+
+
+
   const handleDisconnect = (msg): void => {
     if (msg === 'portDisconnect') {
       console.log('unexpected port disconnection');
@@ -62,7 +61,7 @@ function MainContainer(): JSX.Element {
   const handleConnect = () => {
     const maxRetries = 10;
     const retryInterval = 1000;
-    const maxTimeout = 15000
+    const maxTimeout = 15000;
 
     return new Promise((resolve) => {
       let port: chrome.runtime.Port;
@@ -71,8 +70,9 @@ function MainContainer(): JSX.Element {
       const attemptReconnection = (retries: number, startTime: number) => {
         // console.log('WORKING')
         if (retries <= maxRetries && Date.now() - startTime < maxTimeout) {
-          if (retries === 1) port = chrome.runtime.connect();
-          console.log('HITTING IF');
+          if (retries === 1)
+            port = chrome.runtime.connect();
+          // console.log('HITTING IF');
           chrome.runtime.sendMessage({ action: 'attemptReconnect' }, (response) => {
             if (response && response.success) {
               console.log('Reconnect Success: ', response.success);
@@ -81,7 +81,7 @@ function MainContainer(): JSX.Element {
               console.log('Reconnect failed: ', !response && response.success);
     
               setTimeout(() => {
-                console.log('trying!')
+                console.log('trying!', retries)
                 attemptReconnection(retries + 1, startTime);
               }, retryInterval);
             }
@@ -95,90 +95,89 @@ function MainContainer(): JSX.Element {
     });
   }
 
+  const messageListener = (message: { 
+    action: string; 
+    payload: Record<string, unknown>; 
+    sourceTab: number 
+  }) => {
+    const { action, payload, sourceTab } = message;
+    let maxTab: number;
+
+    if (!sourceTab && action !== 'keepAlive') { // if the sourceTab doesn't exist or is 0 and it is not a 'keepAlive' action
+      const tabsArray: Array<string> = Object.keys(payload); // we create a tabsArray of strings composed of keys from our payload object
+      const numTabsArray: number[] = tabsArray.map((tab) => Number(tab)); // we then map out our tabsArray where we convert each string into a number
+    
+      maxTab = Math.max(...numTabsArray); // we then get the largest tab number value
+    }
+
+    switch (action) {
+      case 'deleteTab': {
+        dispatch(deleteTab(payload));
+        break;
+      }
+      case 'devTools': {
+        dispatch(noDev(payload));
+        break;
+      }
+      case 'changeTab': {
+        console.log('received changeTab message')
+        dispatch(setTab(payload));
+        break;
+      }
+      case 'sendSnapshots': {
+        dispatch(setTab(sourceTab));
+        // set state with the information received from the background script
+        dispatch(addNewSnapshots(payload));
+        break;
+      }
+      case 'initialConnectSnapshots': {
+        dispatch(initialConnect(payload));
+        break;
+      }
+      case 'setCurrentLocation': {
+        dispatch(setCurrentLocation(payload));
+        break;
+      }
+      default:
+    }
+  }
+
   useEffect(() => {
     if (!connectRequested) return; // only open port once so if it exists, do not run useEffect again
 
     // chrome.runtime allows our application to retrieve our service worker (our eventual bundles/background.bundle.js after running npm run build), details about the manifest, and allows us to listen and respond to events in our application lifecycle.
 
     handleConnect()
-    .then((port) => {
+    .then((port: chrome.runtime.Port | null) => {
       if (port) {
         console.log('PORT SUCCESS: ', port)
-        setCurrentPort(port);
+        
+        const currentPort = port;
+        
+        if (chrome.runtime.onMessage.hasListener(messageListener))
+          chrome.runtime.onMessage.removeListener(messageListener);
+
+        // listen for a message containing snapshots from the /extension/build/background.js service worker
+        currentPort.onMessage.addListener(messageListener);
+        
+        currentPort.postMessage({ initialized: true });
+        console.log('posted message');
+
+        if (chrome.runtime.onMessage.hasListener(handleDisconnect))
+          chrome.runtime.onMessage.removeListener(handleDisconnect);
+      
+        // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
+        chrome.runtime.onMessage.addListener(handleDisconnect);
+
+        // assign port to state so it could be used by other components
+        dispatch(setPort(currentPort));
+
+        dispatch(endConnect());
       } else {
         console.log('PORT FAIL: ', port);
       }
     });
-
-    console.log('that port tho: ', currentPort);
-
-    // listen for a message containing snapshots from the /extension/build/background.js service worker
-    currentPort.onMessage.addListener(
-      // parameter message is an object with following type script properties
-      (message: { 
-        action: string; 
-        payload: Record<string, unknown>; 
-        sourceTab: number 
-      }) => {
-        const { action, payload, sourceTab } = message;
-        let maxTab: number;
-
-        if (!sourceTab && action !== 'keepAlive') { // if the sourceTab doesn't exist or is 0 and it is not a 'keepAlive' action
-          const tabsArray: Array<string> = Object.keys(payload); // we create a tabsArray of strings composed of keys from our payload object
-          const numTabsArray: number[] = tabsArray.map((tab) => Number(tab)); // we then map out our tabsArray where we convert each string into a number
-        
-          maxTab = Math.max(...numTabsArray); // we then get the largest tab number value
-        }
-
-        switch (action) {
-          case 'deleteTab': {
-            dispatch(deleteTab(payload));
-            break;
-          }
-          case 'devTools': {
-            dispatch(noDev(payload));
-            break;
-          }
-          case 'changeTab': {
-            dispatch(setTab(payload));
-            break;
-          }
-          case 'sendSnapshots': {
-            dispatch(setTab(sourceTab));
-            // set state with the information received from the background script
-            dispatch(addNewSnapshots(payload));
-            break;
-          }
-          case 'initialConnectSnapshots': {
-            dispatch(initialConnect(payload));
-            break;
-          }
-          case 'setCurrentLocation': {
-            dispatch(setCurrentLocation(payload));
-            break;
-          }
-          default:
-        }
-      },
-    );
-
-
-    if (chrome.runtime.onMessage.hasListener(handleDisconnect))
-    chrome.runtime.onMessage.removeListener(handleDisconnect);
-  
-    // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
-    chrome.runtime.onMessage.addListener(handleDisconnect);
-
-    setTimeout(() => {
-      currentPort.disconnect();
-    }, 17000)
-
-    // assign port to state so it could be used by other components
-    if (currentPort)
-      dispatch(setPort(currentPort));
-
-    dispatch(endConnect());
-  });
+  }, [connectRequested]);
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
   if (

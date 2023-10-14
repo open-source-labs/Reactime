@@ -116,7 +116,9 @@ export const mainSlice = createSlice({
     },
 
     setPort: (state, action) => {
+      console.log('port start: ', current(state))
       state.port = action.payload;
+      console.log('port end: ', current(state))
     },
 
     setTab: (state, action) => {
