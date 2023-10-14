@@ -152,7 +152,7 @@ describe('Integration testing for ActionContainer.tsx', () => {
         expect(setActionViewMock).toHaveBeenCalledWith(true);
         expect(clearButton).toBeInTheDocument();
       });
-})
+});
 
 
 
