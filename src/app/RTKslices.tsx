@@ -9,7 +9,7 @@ const initialState: InitialStateProps = { // we initialize what our initialState
     tabs: {},
     currentTabInApp: null,
     connectionStatus: true,
-    reconnectRequested: false,
+    connectRequested: true,
   };
 
 const findName = (index, obj) => {
@@ -117,7 +117,9 @@ export const mainSlice = createSlice({
     },
 
     setPort: (state, action) => {
+      console.log('port start: ', current(state))
       state.port = action.payload;
+      console.log('port end: ', current(state))
     },
 
     setTab: (state, action) => {
@@ -490,12 +492,12 @@ export const mainSlice = createSlice({
     },
 
     startReconnect: (state) => {
-      state.reconnectRequested = true;
+      state.connectRequested = true;
       state.port = initialState.port;
     },
 
-    endReconnect: (state) => {
-      state.reconnectRequested = false;
+    endConnect: (state) => {
+      state.connectRequested = false;
       state.connectionStatus = true;
     }
 
@@ -531,5 +533,5 @@ export const {
   deleteSeries,
   disconnected,
   startReconnect,
-  endReconnect,
+  endConnect,
 } =  mainSlice.actions

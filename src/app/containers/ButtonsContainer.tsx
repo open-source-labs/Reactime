@@ -58,7 +58,6 @@ function ButtonsContainer(): JSX.Element {
 
   //adding a local state using useState for the reconnect button functionality
   const [reconnectDialogOpen, setReconnectDialogOpen] = useState(false);
-  const [disconnectedDialogOpen, setDisconnectedDialogOpen] = useState(false);
 
   //logic for handling dialog box opening and closing
   const handleReconnectClick = () => {
@@ -66,9 +65,8 @@ function ButtonsContainer(): JSX.Element {
   }
 
   const handleReconnectConfirm = () => {
-    //reconnection logic here
-    dispatch(startReconnect());
     handleReconnectCancel();
+    dispatch(startReconnect());
   }
 
   const handleReconnectCancel = () => {
