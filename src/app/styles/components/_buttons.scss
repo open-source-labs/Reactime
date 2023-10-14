@@ -406,7 +406,8 @@ aside {
   cursor: pointer;
   color: $text-color;
   font-size: 20px; 
-  padding-right: 10px;
+  padding-right: 8px;
+  color: black;
 }
 
 .download-button-pop-up {
@@ -423,4 +424,10 @@ aside {
     color: $text-color;
     background-color: $highlight-color;
   }
+}
+
+.warning-icon-pop-up {
+  color: #d72828;
+  margin-left: 5px;
+  margin-right: -22px;
 }

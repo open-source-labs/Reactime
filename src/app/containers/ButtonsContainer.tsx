@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import StatusDot from '../components/StatusDot'; 
 import LoopIcon from '@mui/icons-material/Loop';
 import CloseIcon from '@mui/icons-material/Close';
+import WarningIcon from '@mui/icons-material/Warning';
 
 function exportHandler(snapshots: []): void { // function that takes in our tabs[currentTab] object to be exported as a JSON file. NOTE: TypeScript needs to be updated
   const fileDownload: HTMLAnchorElement = document.createElement('a'); // invisible HTML element that will hold our tabs[currentTab] object
@@ -57,7 +58,6 @@ function ButtonsContainer(): JSX.Element {
 
   //adding a local state using useState for the reconnect button functionality
   const [reconnectDialogOpen, setReconnectDialogOpen] = useState(false);
-  const [disconnectedDialogOpen, setDisconnectedDialogOpen] = useState(false);
 
   //logic for handling dialog box opening and closing
   const handleReconnectClick = () => {
@@ -65,9 +65,8 @@ function ButtonsContainer(): JSX.Element {
   }
 
   const handleReconnectConfirm = () => {
-    //reconnection logic here
-    dispatch(startReconnect());
     handleReconnectCancel();
+    dispatch(startReconnect());
   }
 
   const handleReconnectCancel = () => {
@@ -127,7 +126,10 @@ function ButtonsContainer(): JSX.Element {
         <div className='close-icon-pop-up-div' >
         <CloseIcon type="button" onClick={() => handleReconnectCancel()} className='close-icon-pop-up'/>
         </div>
-        <DialogTitle className='dialog-pop-up-header'>WARNING</DialogTitle>
+        <div className="warning-header-container">
+          <WarningIcon className='warning-icon-pop-up'/>
+          <DialogTitle className='dialog-pop-up-header'>WARNING</DialogTitle>
+        </div>
         <DialogContent className='dialog-pop-up-contents'>
             <h3>Status: {connectionStatus ? 'Connected' : 'Disconnected'}</h3>
             {connectionStatus

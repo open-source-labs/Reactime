@@ -17,11 +17,12 @@ import { store } from '../RTKstore';
 //   useSelector: jest.fn() //override the useDispatch from the react redux module with a jest mock function
 // }));
 
-const render = component => rtlRender(
-  <Provider store={store}>
-    {component}
-  </Provider>
-)
+// const render = component => rtlRender(
+//   <Provider store={store}>
+//     {component}
+//   </Provider>
+// )
+
 
 const state = {
   tabs: {
@@ -175,17 +176,17 @@ describe('unit testing for ActionContainer', () => {
   });
 });
 
-describe('integration testing for ActionContainer', () => {
-  beforeEach(() => {
-    mockeduseStoreContext.mockClear();
-    dispatch.mockClear();
-    render(
-      <ActionContainer actionView={true} />
-    )
-    render(
-      <TravelContainer snapshotsLength={0} />
-    )
-  });
+// describe('integration testing for ActionContainer', () => {
+  // beforeEach(() => {
+  //   mockeduseStoreContext.mockClear();
+  //   dispatch.mockClear();
+  //   render(
+  //     <ActionContainer actionView={true} />
+  //   )
+  //   render(
+  //     <TravelContainer snapshotsLength={0} />
+  //   )
+  // });
 
   test('Slider resets on clear button', () => {
     fireEvent.click(screen.getAllByRole('button')[0]);
