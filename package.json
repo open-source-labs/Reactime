@@ -237,6 +237,7 @@
     "react-spinners": "^0.11.0",
     "recoil": "0.0.10",
     "redux": "^4.2.1",
+    "redux-mock-store": "^1.5.4",
     "styled-components": "^6.0.4",
     "util": "^0.12.4",
     "web-vitals": "^1.1.0",

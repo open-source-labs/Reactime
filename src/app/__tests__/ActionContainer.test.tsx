@@ -4,18 +4,19 @@ import React from 'react';
 import { render as rtlRender, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ActionContainer from '../containers/ActionContainer';
-// import { useStoreContext } from '../store';
+import { useStoreContext } from '../store';
 import TravelContainer from '../containers/TravelContainer';
-// import { Provider, useDispatch, useSelector } from 'react-redux';
-// import { store } from '../RTKstore';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { store } from '../RTKstore';
 //so far i have imported provider, usedispatch, useselector, and store 
 //wrapped components in provider
 
-const render = component => rtlRender(
-  <Provider store={store}>
-    {component}
-  </Provider>
-)
+// const render = component => rtlRender(
+//   <Provider store={store}>
+//     {component}
+//   </Provider>
+// )
+
 
 const state = {
   tabs: {
@@ -185,16 +186,16 @@ describe('unit testing for ActionContainer', () => {
 // });
 
 // describe('integration testing for ActionContainer', () => {
-//   beforeEach(() => {
-//     mockeduseStoreContext.mockClear();
-//     dispatch.mockClear();
-//     render(
-//       <ActionContainer actionView={true} />
-//     )
-//     render(
-//       <TravelContainer snapshotsLength={0} />
-//     )
-//   });
+  // beforeEach(() => {
+  //   mockeduseStoreContext.mockClear();
+  //   dispatch.mockClear();
+  //   render(
+  //     <ActionContainer actionView={true} />
+  //   )
+  //   render(
+  //     <TravelContainer snapshotsLength={0} />
+  //   )
+  // });
 
 //   test('Slider resets on clear button', () => {
 //     fireEvent.click(screen.getAllByRole('button')[0]);

@@ -40,6 +40,7 @@ export const mainSlice = createSlice({
    
     emptySnapshots: (state) => {
       const { tabs, currentTab, port } = state;
+      console.log("this is state 2", current(state));
 
       port.postMessage({ action: 'emptySnap', tabId: currentTab });
 
@@ -208,8 +209,8 @@ export const mainSlice = createSlice({
 
       const nameFromIndex = findName(action.payload, hierarchy);
 
-      console.log('this is action payload', action.payload);
-      console.log('this is nameFromIndex', nameFromIndex);
+      // console.log('this is action payload', action.payload);
+      // console.log('this is nameFromIndex', nameFromIndex);
 
       port.postMessage({
         action: 'jumpToSnap',
