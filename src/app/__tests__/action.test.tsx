@@ -18,6 +18,7 @@ jest.mock('react-redux', () => ({
   useDispatch: jest.fn(), // set up a mock function for useDispatch
 }));
 
+//wraps the component with our provider each time we use render
 const render = component => rtlRender(
   <Provider store={store}>
     {component}
@@ -130,8 +131,6 @@ describe('Unit testing for Action.tsx', () => {
     });
 
     test('Clicking Jump button should trigger changeSlider and changeView', () => {
-      // const dummyDispatch = jest.fn();
-      // useDispatchMock.mockReturnValue(dummyDispatch);
       render(   
         <Action {...props} />
       );
