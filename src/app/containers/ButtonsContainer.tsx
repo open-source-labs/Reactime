@@ -98,7 +98,10 @@ function ButtonsContainer(): JSX.Element {
         <FileDownloadIcon sx={{ pr: 1 }} />
         Download
       </Button>
-      <Button variant='outlined' className='import-button' onClick={() => importHandler(dispatch)}>
+      <Button
+      variant='outlined'
+      className='import-button'
+      onClick={() => importHandler(dispatch)}>
         <FileUploadIcon sx={{ pr: 1 }} />
         Upload
       </Button>
