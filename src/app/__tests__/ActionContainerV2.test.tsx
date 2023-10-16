@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { store } from '../RTKstore';
 import { mainSlice } from '../RTKslices'
-
+import { useDispatch } from 'react-redux';
 //Note for testing:
 //typically, jest.mock is commonly used in unit testing to isolate the code under test. 
 //In contrast, when performing integration testing of components with a real Redux store, 
@@ -137,11 +137,58 @@ const render = component => rtlRender(
     </Provider>
 );
 
+const MockRouteDescription = jest.fn();
+jest.mock('../components/RouteDescription', () => () => {
+  MockRouteDescription();
+  return <div>MockRouteDescription</div>;
+});
+
+const MockSwitchApp = jest.fn();
+jest.mock('../components/SwitchApp', () => () => {
+  MockSwitchApp();
+  return <div>MockSwitchApp</div>;
+});
 //need to add this mockFunction for setActionView
 //because in actual actioncontainer componenent, it is prop drilled down from maincontainer
 //here we set it as a jest.fn() 
 //then we pass it into our actionContainer on render
 const setActionViewMock = jest.fn();
+
+jest.mock('react-redux', () => ({
+  ...jest.requireActual('react-redux'), // Use the actual react-redux module except for the functions you want to mock
+  useDispatch: jest.fn(), // set up a mock function for useDispatch
+}));
+
+// const dispatch = jest.fn();
+
+describe('unit testing for ActionContainer', ()=>{
+  const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 18
+  const dummyDispatch = jest.fn(); //separate mock function created because we need to explicitly define on line 30 what 
+  useDispatchMock.mockReturnValue(dummyDispatch);//exactly useDispatchMock returns (which is a jest.fn())
+  beforeEach(()=>{
+    render(<ActionContainer actionView = {true} setActionView={setActionViewMock}/>)
+  });
+
+  test('expect top arrow to be rendered', ()=>{
+    // render(<ActionContainer actionView = {true} setActionView={setActionViewMock}/>)
+    expect(screen.getByRole('complementary')).toBeInTheDocument();
+  });
+
+  test('Expect RouteDescription to be rendered', () => {
+    // render(<ActionContainer actionView = {true} setActionView={setActionViewMock}/>)
+    expect(screen.getAllByText('MockRouteDescription')).toHaveLength(2);
+  });
+
+  test('Expect SwitchApp to be rendered', () => {
+    // render(<ActionContainer actionView = {true} setActionView={setActionViewMock}/>)
+    expect(screen.getByText('MockSwitchApp')).toBeInTheDocument();
+  });
+
+  test('Click works on clear button', () => {
+    fireEvent.click(screen.getAllByRole('button')[0]);
+    expect(dummyDispatch).toHaveBeenCalledTimes(1);
+  });
+})
 
 describe('Integration testing for ActionContainer.tsx', () => {
     test('renders the ActionContainer component', () => {
@@ -151,6 +198,13 @@ describe('Integration testing for ActionContainer.tsx', () => {
         const clearButton = screen.getByText('Clear'); // Use an existing element
         expect(setActionViewMock).toHaveBeenCalledWith(true);
         expect(clearButton).toBeInTheDocument();
+      });
+
+      test('Slider resets on clear button', ()=>{
+        render(<ActionContainer actionView = {true} setActionView={setActionViewMock}/>)
+        render( <TravelContainer snapshotsLength={0} />)
+        fireEvent.click(screen.getAllByRole('button')[0]);
+        expect(screen.getByRole('slider')).toHaveStyle('left: 0');
       });
 });
 
