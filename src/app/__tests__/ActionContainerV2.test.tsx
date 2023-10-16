@@ -118,7 +118,7 @@ import { mainSlice } from '../RTKslices'
           tabs: customTabs, // Replace with the actual (testing) tab data
           currentTabInApp: null,
           connectionStatus: false,
-          reconnectRequested: false,
+          connectRequested: true,
         },
       };
 
