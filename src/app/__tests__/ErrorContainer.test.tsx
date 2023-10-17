@@ -5,7 +5,7 @@ import ErrorContainer from '../containers/ErrorContainer';
 // import { useStoreContext } from '../store';
 import { configureStore } from '@reduxjs/toolkit';
 import { mainSlice } from '../RTKslices'
-import { useDispatch, Provider } from 'react-redux';
+import { Provider } from 'react-redux';
 
 const customTabs = {
   87: {
