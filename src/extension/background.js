@@ -137,9 +137,6 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   This allows us to set up listener's for when we connect, message, and disconnect the script.
 */
 
-// let initialized = false;
-let portSuccessfullyConnected = false;
-
 // Establishing incoming connection with Reactime.
 chrome.runtime.onConnect.addListener((port) => {
   /*
@@ -161,31 +158,24 @@ chrome.runtime.onConnect.addListener((port) => {
   
     Again, this port object is used for communication within your extension, not for communication with external ports or tabs in the Chrome browser. If you need to interact with specific tabs or external ports, you would use other APIs or methods, such as chrome.tabs or other Chrome Extension APIs.
   */
-
-  console.log('Port: ', port);
-  portSuccessfullyConnected = port ? true : false;
  
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
 
-  port.onMessage.addListener((msg) => {
-    console.log('background message: ', msg);
-    if (msg.initialized && portsArr.length > 0) {
-      console.log('sending changeTab message!!!!');
-      portsArr.forEach((bg) => {// go through each port object (each Reactime instance)
-        bg.postMessage({  // send passed in action object as a message to the current port
-          action: 'changeTab',
-          payload: { tabId: activeTab.id, title: activeTab.title },
-        })
-      });
-    }
-    if (msg.initialized && Object.keys(tabsObj).length > 0) {
-      console.log('sending initialConnectSnapshots message!!!!!')
-      port.postMessage({
-        action: 'initialConnectSnapshots',
-        payload: tabsObj,
-      });
-    }
-  });
+  if (portsArr.length > 0) {
+    portsArr.forEach((bg) => {// go through each port object (each Reactime instance)
+      bg.postMessage({  // send passed in action object as a message to the current port
+        action: 'changeTab',
+        payload: { tabId: activeTab.id, title: activeTab.title },
+      })
+    });
+  }
+
+  if (Object.keys(tabsObj).length > 0) {
+    port.postMessage({
+      action: 'initialConnectSnapshots',
+      payload: tabsObj,
+    });
+  }
 
   // every time devtool is closed, remove the port from portsArr
   port.onDisconnect.addListener((e) => {
@@ -225,7 +215,7 @@ chrome.runtime.onConnect.addListener((port) => {
         tabsObj[tabId].currParent = payload.currParent; // reset currParent to last state recorded
         tabsObj[tabId].currBranch = payload.currBranch; // reset currBranch to last state recorded
 
-        // return true; // return true so that port remains open
+        return true; // return true so that port remains open
 
       case 'emptySnap':
         tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]]; // reset snapshots to page last state recorded
@@ -237,29 +227,29 @@ chrome.runtime.onConnect.addListener((port) => {
         tabsObj[tabId].index = 1; //reset index
         tabsObj[tabId].currParent = 0; // reset currParent
         tabsObj[tabId].currBranch = 1; // reset currBranch
-        // return true; // return true so that port remains open
+        return true; // return true so that port remains open
       
       case 'setPause': // Pause = lock on tab
         tabsObj[tabId].mode.paused = payload;
-        // return true; // return true so that port remains open
+        return true; // return true so that port remains open
 
       case 'launchContentScript':
         chrome.scripting.executeScript({
           target: { tabId },
           files: ['bundles/content.bundle.js'],
         });
-        // return true;
+        return true;
 
       case 'jumpToSnap':
         chrome.tabs.sendMessage(tabId, msg);
-        // return true; // attempt to fix message port closing error, consider return Promise
+        return true; // attempt to fix message port closing error, consider return Promise
 
       case 'toggleRecord':
         chrome.tabs.sendMessage(tabId, msg);
-        // return true;
+        return true;
 
       default:
-        // return true;
+        return true;
     }
   });
 });
@@ -268,7 +258,7 @@ chrome.runtime.onConnect.addListener((port) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
-    // return true;
+    return true;
   }
   const tabTitle = sender.tab.title;
   const tabId = sender.tab.id;
@@ -290,7 +280,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   ) {
     isReactTimeTravel = true;
   } else {
-    // return true;
+    return true;
   }
   // everytime we get a new tabId, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) { 
@@ -406,7 +396,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     default:
       break;
   }
-  // return true; // attempt to fix close port error
+  return true; // attempt to fix close port error
 });
 
 // when tab is closed, remove the tabId from the tabsObj

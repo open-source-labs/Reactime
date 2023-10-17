@@ -108,6 +108,7 @@ export class Routes {
     this.current += delta;
     // If the difference is not 0, navigate to the target route using window.history.go() method
     if (delta !== 0) {
+      console.log('OS: ', navigator.platform);
       window.history.go(delta);
       // Return true to indicate that the navigation was successful
       return true;
