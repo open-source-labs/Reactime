@@ -143,41 +143,27 @@ function MainContainer(): JSX.Element {
   }
 
   useEffect(() => {
-    if (!connectRequested) return; // only open port once so if it exists, do not run useEffect again
-
-    // chrome.runtime allows our application to retrieve our service worker (our eventual bundles/background.bundle.js after running npm run build), details about the manifest, and allows us to listen and respond to events in our application lifecycle.
-
-    handleConnect()
-    .then((port: chrome.runtime.Port | null) => {
-      if (port) {
-        console.log('PORT SUCCESS: ', port)
+    if (port) return; // only open port once so if it exists, do not run useEffect again
         
-        const currentPort = port;
-        
-        if (chrome.runtime.onMessage.hasListener(messageListener))
-          chrome.runtime.onMessage.removeListener(messageListener);
+    const currentPort = chrome.runtime.connect();
+    
+    while (chrome.runtime.onMessage.hasListener(messageListener))
+      chrome.runtime.onMessage.removeListener(messageListener);
+    
+    // listen for a message containing snapshots from the /extension/build/background.js service worker
+    currentPort.onMessage.addListener(messageListener);
+    
+    while (chrome.runtime.onMessage.hasListener(handleDisconnect))
+      chrome.runtime.onMessage.removeListener(handleDisconnect);
+    
+    // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
+    chrome.runtime.onMessage.addListener(handleDisconnect);
+    
+    // assign port to state so it could be used by other components
+    dispatch(setPort(currentPort));
 
-        // listen for a message containing snapshots from the /extension/build/background.js service worker
-        currentPort.onMessage.addListener(messageListener);
-        
-        currentPort.postMessage({ initialized: true });
-        console.log('posted message');
-
-        if (chrome.runtime.onMessage.hasListener(handleDisconnect))
-          chrome.runtime.onMessage.removeListener(handleDisconnect);
-      
-        // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
-        chrome.runtime.onMessage.addListener(handleDisconnect);
-
-        // assign port to state so it could be used by other components
-        dispatch(setPort(currentPort));
-
-        dispatch(endConnect());
-      } else {
-        console.log('PORT FAIL: ', port);
-      }
-    });
-  }, [connectRequested]);
+    dispatch(endConnect());
+  });
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
   if (
