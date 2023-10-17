@@ -5,11 +5,13 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { mainSlice } from '../RTKslices'
 import { useDispatch } from 'react-redux';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from '../components/theme';
 import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 
 const customTabs = {
     87: {
-      snapshots: [1, 2, 3, 4],
+      snapshots: [0, 1, 2, 3],
       hierarchy: {
         index: 0,
         name: 1,
@@ -100,6 +102,7 @@ const customTabs = {
       },
       sliderIndex: 3, //updated to 3 
       viewIndex: -1,
+      playing: false,
     },
   }
 
@@ -124,11 +127,15 @@ const customStore = configureStore({
       getDefaultMiddleware({ serializableCheck: false }),
   });
   
-  const render = component => rtlRender(
+  const renderWithTheme = (component) => {
+    return rtlRender(
       <Provider store={customStore}>
-        {component}
+        <ThemeProvider theme={theme}>
+          {component}
+        </ThemeProvider>
       </Provider>
-  );
+    );
+  };
 
 const mockSlider = jest.fn();
 jest.mock('../components/MainSlider', () => (props) => {
@@ -149,7 +156,7 @@ jest.mock('react-redux', () => ({
 
 describe('All elements appear in the TravelContainer module', () => {
     beforeEach(() => {
-      render(<TravelContainer snapshotsLength={0} />);
+      renderWithTheme(<TravelContainer snapshotsLength={0} />);
     });
   
     test('first button contains text Play', () => {
@@ -166,19 +173,19 @@ describe('All elements appear in the TravelContainer module', () => {
     });
   
     test('Backward button exists in document', () => {
-      let buttons = screen.getAllByRole('button');
-      expect(buttons[1]).toHaveTextContent('<');
-    });
+        // Use the getByLabelText query to find the button by its label
+        const backwardButton = screen.getByLabelText('Backward');
+        expect(backwardButton).toBeInTheDocument();
+      });
   
-    test('Forward button exists in document', () => {
-      let buttons = screen.getAllByRole('button');
-      expect(buttons[2]).toHaveTextContent('>');
-    });
+      test('Forward button exists in document', () => {
+        const forwardButton = screen.getByLabelText('Forward');
+        expect(forwardButton).toBeInTheDocument();
+      });
   });
-  
+   
 //   describe('Testing backward and forward button', () => {
 //     beforeEach(() => {
-//       dispatch.mockClear();
 //       render(<TravelContainer snapshotsLength={0} />);
 //     });
   
