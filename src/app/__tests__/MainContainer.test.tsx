@@ -2,7 +2,23 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import MainContainer from '../containers/MainContainer';
-import { useStoreContext } from '../store';
+
+//Added :
+import { useDispatch, useSelector } from 'react-redux';
+
+jest.mock('react-redux', () => ({
+  useDispatch: jest.fn(),
+  useSelector: jest.fn(),
+}));
+
+const mockState = {
+  main: {
+    tabs: {},
+    currentTab: null,
+  },
+};
+
+// End 
 
 const chrome = require('sinon-chrome');
 
@@ -36,15 +52,12 @@ jest.mock('../containers/ErrorContainer', () => (props) => {
   return <div>mockErrorContainer</div>;
 });
 
-const state = {
-  tabs: {},
-  currentTab: null,
-};
 const dispatch = jest.fn();
+
 jest.mock('../../../node_modules/intro.js/introjs.css', () => jest.fn());
-jest.mock('../store');
-const mockedUseStoreContext = jest.mocked(useStoreContext);
-mockedUseStoreContext.mockImplementation(() => [state, dispatch]);
+
+useDispatch.mockReturnValue(dispatch);
+useSelector.mockImplementation(callback => callback(mockState));
 
 global.chrome = chrome;
 const port = {
@@ -90,12 +103,11 @@ describe('With no snapshots, should not render any containers', () => {
 describe('With snapshots, should render all containers', () => {
   beforeEach(() => {
     render(<MainContainer />);
-    mockedUseStoreContext.mockClear();
     dispatch.mockClear();
     mockErrorContainer.mockClear();
     // @ts-ignore
-    state.currentTab = 87;
-    state.tabs[87] = {
+    mockState.main.currentTab = 87;
+    mockState.main.tabs[87] = {
       snapshots: [{}],
       status: {
         contentScriptLaunched: true,
