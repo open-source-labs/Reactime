@@ -14,7 +14,7 @@ import { changeView, changeSlider } from '../../RTKslices';
 import { useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetrics from '../WebMetrics';
-import { StateRouteProps } from '../../FrontendTypes'
+import { StateRouteProps } from '../../FrontendTypes';
 
 /*
   Loads the appropriate StateRoute view and renders the Map, Performance, History, Webmetrics, and Tree navbar buttons after clicking on the 'State' button located near the top rightmost corner.
@@ -24,21 +24,21 @@ const History = require('./History').default;
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state'; // message to be returned if there has been no state change detected in our hooked/target app
 
 const StateRoute = (props: StateRouteProps) => {
-  const { 
+  const {
     snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
     hierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
     snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
     viewIndex, // from 'tabs[currentTab]' object in 'MainContainer'
     webMetrics, // from 'tabs[currentTab]' object in 'MainContainer'
-    currLocation // from 'tabs[currentTab]' object in 'MainContainer'
+    currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
 
-  
   const { tabs, currentTab } = useSelector((state: any) => state.main);
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
 
   const renderComponentMap = () => {
-    if (hierarchy) { // if hierarchy was initialized/created render the Map
+    if (hierarchy) {
+      // if hierarchy was initialized/created render the Map
       return (
         <ParentSize className='componentMapContainer'>
           {({ width, height }) => (
@@ -55,13 +55,14 @@ const StateRoute = (props: StateRouteProps) => {
     return <div className='noState'>{NO_STATE_MSG}</div>; // otherwise, inform the user that there has been no state change in the target/hooked application.
   };
 
-  const renderHistory:JSX.Element = () => {
-    if (hierarchy) { // if hierarchy was initialized/created render the history
+  const renderHistory: JSX.Element = () => {
+    if (hierarchy) {
+      // if hierarchy was initialized/created render the history
       return (
         <ParentSize>
           {({ width, height }) => (
             <History
-              width={width} 
+              width={width}
               height={height}
               hierarchy={hierarchy}
               // Commented out dispatch that was prop drilled as conversion to RTK might invalidate need for prop drilling to access dispatch
@@ -79,7 +80,8 @@ const StateRoute = (props: StateRouteProps) => {
   };
 
   const renderTree = () => {
-    if (hierarchy) { // if a hierarchy has been created/initialized, render the appropriate tree based on the active snapshot
+    if (hierarchy) {
+      // if a hierarchy has been created/initialized, render the appropriate tree based on the active snapshot
       return <Tree snapshot={snapshot} snapshots={snapshots} currLocation={currLocation} />;
     }
     return <div className='noState'>{NO_STATE_MSG}</div>; // otherwise, inform the user that there has been no state change in the target/hooked application.
@@ -89,8 +91,9 @@ const StateRoute = (props: StateRouteProps) => {
     let FIDColor: String;
     let FCPColor: String;
     let TTFBColor: String;
+    let CLSColor: String;
 
-    // adjust the strings that represent colors of the webmetrics performance bar for 'Largest Contentful Paint (LCP)', 'First Input Delay (FID)', 'First Contentfuly Paint (FCP)', and 'Time to First Byte (TTFB)' based on webMetrics outputs. 
+    // adjust the strings that represent colors of the webmetrics performance bar for 'Largest Contentful Paint (LCP)', 'First Input Delay (FID)', 'First Contentfuly Paint (FCP)', and 'Time to First Byte (TTFB)' based on webMetrics outputs.
     if (webMetrics.LCP <= 2000) LCPColor = '#0bce6b';
     if (webMetrics.LCP > 2000 && webMetrics.LCP < 4000) LCPColor = '#E56543';
     if (webMetrics.LCP > 4000) LCPColor = '#fc2000';
@@ -102,6 +105,10 @@ const StateRoute = (props: StateRouteProps) => {
     if (webMetrics.FCP > 1100) FCPColor = '#fc2000';
     if (webMetrics.TTFB <= 600) TTFBColor = '#0bce6b';
     if (webMetrics.TTFB > 600) TTFBColor = '#fc2000';
+    if (webMetrics.CLS <= 0.1) TTFBColor = '#0bce6b';
+    if (webMetrics.CLS > 0.1 && webMetrics.CLS <= 0.25) TTFBColor = '#E56543';
+    if (webMetrics.CLS > 0.25) TTFBColor = '#fc2000';
+    console.log('WEBMETRICS YOOO', webMetrics);
 
     return (
       <div className='web-metrics-container'>
@@ -139,12 +146,21 @@ const StateRoute = (props: StateRouteProps) => {
           name='Time to First Byte'
           description='Measures the time it takes for a browser to receive the first byte of page content. The benchmark is 600 ms.'
         />
+        <WebMetrics
+          color={CLSColor}
+          series={webMetrics.CLS * 10}
+          formatted={(val) => (Number.isNaN(val) ? 'CLS Score: N/A' : `CLS Score: ${val / 10}`)}
+          label='Cumulative Layout Shift'
+          name='Cumulative Layout Shift'
+          description='Calculates the shifting of elements while the page is being downloaded and rendered.'
+        />
       </div>
     );
   };
 
   const renderPerfView = () => {
-    if (hierarchy) { // if hierarchy was initialized/created render the PerformanceVisx
+    if (hierarchy) {
+      // if hierarchy was initialized/created render the PerformanceVisx
       return (
         <ParentSize>
           {({ width, height }) => (
