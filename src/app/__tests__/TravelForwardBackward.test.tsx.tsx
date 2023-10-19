@@ -5,8 +5,6 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { mainSlice } from '../RTKslices'
 import { useDispatch } from 'react-redux';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from '../components/theme';
 import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 
 const customTabs = {
@@ -127,93 +125,41 @@ const customStore = configureStore({
       getDefaultMiddleware({ serializableCheck: false }),
   });
   
-  const renderWithTheme = (component) => {
+  const render = (component) => {
     return rtlRender(
       <Provider store={customStore}>
-        <ThemeProvider theme={theme}>
           {component}
-        </ThemeProvider>
       </Provider>
     );
   };
 
-const mockSlider = jest.fn();
-jest.mock('../components/MainSlider', () => (props) => {
-  mockSlider(props);
-  return <div>MockSlider</div>;
-});
-
-const mockDropDown = jest.fn();
-jest.mock('../components/Dropdown', () => (props) => {
-  mockDropDown(props);
-  return <div>mockDropDown</div>;
-});
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'), // Use the actual react-redux module except for the functions you want to mock
     useDispatch: jest.fn(), // set up a mock function for useDispatch
-  }));
-
-describe('All elements appear in the TravelContainer module', () => {
-    beforeEach(() => {
-      renderWithTheme(<TravelContainer snapshotsLength={0} />);
-    });
-  
-    test('first button contains text Play', () => {
-      let buttons = screen.getAllByRole('button');
-      expect(buttons[0]).toHaveTextContent('Play');
-    });
-  
-    test('MainSlider exists in document', () => {
-      expect(screen.getByText('MockSlider')).toBeInTheDocument();
-    });
-  
-    test('Dropdown exists in document', () => {
-      expect(screen.getByText('mockDropDown')).toBeInTheDocument();
-    });
-  
-    test('Backward button exists in document', () => {
-        // Use the getByLabelText query to find the button by its label
-        const backwardButton = screen.getByLabelText('Backward');
-        expect(backwardButton).toBeInTheDocument();
-      });
-  
-      test('Forward button exists in document', () => {
-        const forwardButton = screen.getByLabelText('Forward');
-        expect(forwardButton).toBeInTheDocument();
-      });
-  });
-  
-  describe('Testing play/pause button', () => {
+  }));  
+ 
+//needed to isolate the testing of the forward and backward buttons as behavior was affected when within the travelContainer file
+ 
+ describe('Testing backward and forward button', () => {
     const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 154
     const dummyDispatch = jest.fn();
     useDispatchMock.mockReturnValue(dummyDispatch);
     beforeEach(() => {
-      renderWithTheme(<TravelContainer snapshotsLength={0}/>);
+      render(<TravelContainer snapshotsLength={0} />);
       dummyDispatch.mockClear();
     });
   
-    test('Play button is rendered', () => {
-      const playButton = screen.getByTestId('play-button-test');
-      expect(playButton).toBeInTheDocument();
-    });
-  
-    test('Play initially says Play', () => {
-      const playButton = screen.getByTestId('play-button-test');
-      expect(playButton.textContent).toBe('Play');
-    });
-  
-    test('Clicking Play button will trigger dispatch', () => {
-      const playButton = screen.getByTestId('play-button-test');
-      expect(playButton.textContent).toBe('Play');
-      fireEvent.click(playButton);
+    test('Clicking < Button button will trigger button', () => {
+      let buttons = screen.getAllByRole('button');
+      console.log(buttons);
+      fireEvent.click(buttons[1]);
       expect(dummyDispatch).toHaveBeenCalledTimes(1);
     });
   
-    test('Clicking Pause button will trigger dispatch', () => {
-      customInitialState.main.tabs[87].playing = true;
-      const playButton = screen.getByTestId('play-button-test');
-      fireEvent.click(playButton);
+    test('Clicking > Button button will trigger button', () => {
+      let buttons = screen.getAllByRole('button');
+      fireEvent.click(buttons[2]);
       expect(dummyDispatch).toHaveBeenCalledTimes(1);
     });
   });

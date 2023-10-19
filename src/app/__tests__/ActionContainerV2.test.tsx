@@ -166,7 +166,7 @@ describe('unit testing for ActionContainer', ()=>{
   const dummyDispatch = jest.fn(); //separate mock function created because we need to explicitly define on line 30 what 
   useDispatchMock.mockReturnValue(dummyDispatch);//exactly useDispatchMock returns (which is a jest.fn())
   beforeEach(()=>{
-    render(<ActionContainer actionView = {true} setActionView={setActionViewMock}/>)
+    render(<ActionContainer actionView={true} setActionView={setActionViewMock}/>)
   });
 
   test('expect top arrow to be rendered', ()=>{
