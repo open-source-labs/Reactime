@@ -1,6 +1,6 @@
 // Web vital metrics calculated by 'web-vitals' npm package to be displayed
 // in Web Metrics tab of Reactime app.
-import { getTTFB, getLCP, getFID, getFCP, getCLS } from 'web-vitals';
+import { onTTFB, onLCP, onFID, onFCP, onCLS, onINP } from 'web-vitals';
 
 // Reactime application starts off with this file, and will send
 // first message to background.js for initial tabs object set up.
@@ -74,11 +74,13 @@ const gatherMetrics = ({ name, value }) => {
 };
 
 // Functions that calculate web metric values.
-getTTFB(gatherMetrics);
-getLCP(gatherMetrics);
-getFID(gatherMetrics);
-getFCP(gatherMetrics);
-getCLS(gatherMetrics);
+onTTFB(gatherMetrics);
+onLCP(gatherMetrics);
+onFID(gatherMetrics);
+onFCP(gatherMetrics);
+onCLS(gatherMetrics);
+onINP(gatherMetrics);
+
 
 // Send message to background.js for injecting the initial script
 // into the app's DOM.
