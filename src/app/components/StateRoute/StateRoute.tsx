@@ -155,7 +155,7 @@ const StateRoute = (props: StateRouteProps) => {
         <WebMetrics
           color={CLSColor}
           series={webMetrics.CLS * 10}
-          formatted={(val) => `CLS Score: ${(Number.isNaN(val) ? 'N/A' : `${val / 10}`)}`}
+          formatted={(val) => `CLS Score: ${(Number.isNaN(val) ? 'N/A' : `${(val / 10).toFixed(3)}`)}`}
           label='Cumulative Layout Shift'
           name='Cumulative Layout Shift'
           description='Calculates the shifting of elements while the page is being downloaded and rendered.'
