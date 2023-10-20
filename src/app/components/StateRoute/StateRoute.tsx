@@ -92,6 +92,7 @@ const StateRoute = (props: StateRouteProps) => {
     let FCPColor: String;
     let TTFBColor: String;
     let CLSColor: String;
+    let INPColor: String;
 
     // adjust the strings that represent colors of the webmetrics performance bar for 'Largest Contentful Paint (LCP)', 'First Input Delay (FID)', 'First Contentfuly Paint (FCP)', and 'Time to First Byte (TTFB)' based on webMetrics outputs.
     if (webMetrics.LCP <= 2000) LCPColor = '#0bce6b';
@@ -108,6 +109,11 @@ const StateRoute = (props: StateRouteProps) => {
     if (webMetrics.CLS <= 0.1) TTFBColor = '#0bce6b';
     if (webMetrics.CLS > 0.1 && webMetrics.CLS <= 0.25) TTFBColor = '#E56543';
     if (webMetrics.CLS > 0.25) TTFBColor = '#fc2000';
+
+    //INP Stuff - Turns it red? change this to green
+    if (webMetrics.INP <= 200) INPColor = '#0bce6b';
+    if (webMetrics.INP <= 500) INPColor = '#E56543';
+    if (webMetrics.INP > 500) INPColor = '#fc2000';
     console.log('WEBMETRICS YOOO', webMetrics);
 
     return (
@@ -149,10 +155,18 @@ const StateRoute = (props: StateRouteProps) => {
         <WebMetrics
           color={CLSColor}
           series={webMetrics.CLS * 10}
-          formatted={(val) => (Number.isNaN(val) ? 'CLS Score: N/A' : `CLS Score: ${val / 10}`)}
+          formatted={(val) => `CLS Score: ${(Number.isNaN(val) ? 'N/A' : `${(val / 10).toFixed(3)}`)}`}
           label='Cumulative Layout Shift'
           name='Cumulative Layout Shift'
           description='Calculates the shifting of elements while the page is being downloaded and rendered.'
+        />
+        <WebMetrics
+          color={INPColor}
+          series={(webMetrics.INP / 10) * 100}
+          formatted={(val) => `INP Value: ${(Number.isNaN(val) ? 'N/A' : `${val / 10}`)}`}
+          label='Interaction to Next Paint'
+          name='Interaction to Next Paint'
+          description={`Assesses a page's overall responsiveness to user interactions by observing the latency of all click, tap, and keyboard interactions that occur throughout the lifespan of a user's visit to a page`}
         />
       </div>
     );
