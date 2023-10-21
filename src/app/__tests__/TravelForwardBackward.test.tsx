@@ -152,7 +152,6 @@ jest.mock('react-redux', () => ({
   
     test('Clicking < Button button will trigger button', () => {
       let buttons = screen.getAllByRole('button');
-      console.log(buttons);
       fireEvent.click(buttons[1]);
       expect(dummyDispatch).toHaveBeenCalledTimes(1);
     });

@@ -122,7 +122,6 @@ const traverse = (snapshot, data, snapshots, currTotalRender: currNum = 0): void
 const allStorage = (): Series[] => {
   let values = localStorage.getItem('project');
   const newValues: Series[] = values === null ? [] : JSON.parse(values);
-  console.log('this is newValues', newValues);
   return newValues;
 };
 

@@ -48,53 +48,13 @@ function MainContainer(): JSX.Element {
     }
   };
 
-
-
-
+  // Function handles when Reactime unexpectedly disconnects
   const handleDisconnect = (msg): void => {
-    if (msg === 'portDisconnect') {
-      console.log('unexpected port disconnection');
+    if (msg === 'portDisconnect')
       dispatch(disconnected());
-    }
   }
 
-  const handleConnect = () => {
-    const maxRetries = 10;
-    const retryInterval = 1000;
-    const maxTimeout = 15000;
-
-    return new Promise((resolve) => {
-      let port: chrome.runtime.Port;
-      console.log('init port: ', port)
-
-      const attemptReconnection = (retries: number, startTime: number) => {
-        // console.log('WORKING')
-        if (retries <= maxRetries && Date.now() - startTime < maxTimeout) {
-          if (retries === 1)
-            port = chrome.runtime.connect();
-          // console.log('HITTING IF');
-          chrome.runtime.sendMessage({ action: 'attemptReconnect' }, (response) => {
-            if (response && response.success) {
-              console.log('Reconnect Success: ', response.success);
-              resolve(port);
-            } else {
-              console.log('Reconnect failed: ', !response && response.success);
-    
-              setTimeout(() => {
-                console.log('trying!', retries)
-                attemptReconnection(retries + 1, startTime);
-              }, retryInterval);
-            }
-          });
-        } else {
-          console.log('PORT CONNECT FAILED');
-          resolve(null);
-        }
-      };
-      attemptReconnection(1, Date.now());
-    });
-  }
-
+  // Function to listen for a message containing snapshots from the /extension/build/background.js service worker
   const messageListener = (message: { 
     action: string; 
     payload: Record<string, unknown>; 
@@ -120,7 +80,6 @@ function MainContainer(): JSX.Element {
         break;
       }
       case 'changeTab': {
-        console.log('received changeTab message')
         dispatch(setTab(payload));
         break;
       }
@@ -145,18 +104,21 @@ function MainContainer(): JSX.Element {
   useEffect(() => {
     if (port) return; // only open port once so if it exists, do not run useEffect again
         
+    // Connect ot port and assign evaluated result (obj) to currentPort
     const currentPort = chrome.runtime.connect();
     
-    while (chrome.runtime.onMessage.hasListener(messageListener))
-      chrome.runtime.onMessage.removeListener(messageListener);
+    // If messageListener exists on currentPort, remove it
+    while (currentPort.onMessage.hasListener(messageListener))
+      currentPort.onMessage.removeListener(messageListener);
     
-    // listen for a message containing snapshots from the /extension/build/background.js service worker
+    // Add messageListener to the currentPort
     currentPort.onMessage.addListener(messageListener);
     
+    // If handleDisconnect exists on chrome.runtime, remove it
     while (chrome.runtime.onMessage.hasListener(handleDisconnect))
       chrome.runtime.onMessage.removeListener(handleDisconnect);
     
-    // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
+    // add handleDisconnect to chrome.runtime
     chrome.runtime.onMessage.addListener(handleDisconnect);
     
     // assign port to state so it could be used by other components

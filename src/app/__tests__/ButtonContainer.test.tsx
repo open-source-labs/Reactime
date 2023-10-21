@@ -176,7 +176,6 @@ describe('Unit testing for ButtonContainer', () => {
     test('it should have 5 buttons', () => {
       customInitialState.main.connectionStatus = true;
       render(<ButtonsContainer />);
-      // console.log(screen.getAllByRole('button')[4])
       expect(screen.getAllByRole('button')).toHaveLength(5);
       expect(screen.getAllByRole('button')[0]).toHaveTextContent('Locked');
       expect(screen.getAllByRole('button')[1]).toHaveTextContent('Download');
