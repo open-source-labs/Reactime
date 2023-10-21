@@ -10,7 +10,7 @@ import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom
 import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap/ComponentMap';
-import { changeView, changeSlider } from '../../RTKslices';
+import { changeView, changeSlider } from '../../slices/mainSlice';
 import { useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetrics from '../WebMetrics';
@@ -106,11 +106,9 @@ const StateRoute = (props: StateRouteProps) => {
     if (webMetrics.FCP > 1100) FCPColor = '#fc2000';
     if (webMetrics.TTFB <= 600) TTFBColor = '#0bce6b';
     if (webMetrics.TTFB > 600) TTFBColor = '#fc2000';
-    if (webMetrics.CLS <= 0.1) TTFBColor = '#0bce6b';
-    if (webMetrics.CLS > 0.1 && webMetrics.CLS <= 0.25) TTFBColor = '#E56543';
-    if (webMetrics.CLS > 0.25) TTFBColor = '#fc2000';
-
-    //INP Stuff - Turns it red? change this to green
+    if (webMetrics.CLS <= 0.1) CLSColor = '#0bce6b';
+    if (webMetrics.CLS > 0.1 && webMetrics.CLS <= 0.25) CLSColor = '#E56543';
+    if (webMetrics.CLS > 0.25) CLSColor = '#fc2000';
     if (webMetrics.INP <= 200) INPColor = '#0bce6b';
     if (webMetrics.INP <= 500) INPColor = '#E56543';
     if (webMetrics.INP > 500) INPColor = '#fc2000';
@@ -154,10 +152,10 @@ const StateRoute = (props: StateRouteProps) => {
         <WebMetrics
           color={CLSColor}
           series={webMetrics.CLS * 10}
-          formatted={(val) => `CLS Score: ${(Number.isNaN(val) ? 'N/A' : `${(val / 10).toFixed(3)}`)}`}
+          formatted={(val) => `CLS Score: ${(Number.isNaN(val) ? 'N/A' : `${val / 10 < 0.01 ? 0 : (val / 10).toFixed(2)}`)}`}
           label='Cumulative Layout Shift'
           name='Cumulative Layout Shift'
-          description='Calculates the shifting of elements while the page is being downloaded and rendered.'
+          description={`Quantifies the visual stability of a web page by measuring layout shifts during the application's loading and interaction.`}
         />
         <WebMetrics
           color={INPColor}

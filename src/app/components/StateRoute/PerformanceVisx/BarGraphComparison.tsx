@@ -15,7 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { useTheme } from '@mui/material/styles';
 import { Button, InputLabel } from '@mui/material';
-import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../RTKslices';
+import { onHover, onHoverExit, deleteSeries, setCurrentTabInApp } from '../../../slices/mainSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   snapshot,

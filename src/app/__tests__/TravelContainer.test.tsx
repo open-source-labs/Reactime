@@ -3,7 +3,7 @@ import { render as rtlRender, screen, fireEvent } from '@testing-library/react';
 import TravelContainer from '../containers/TravelContainer';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import { mainSlice } from '../RTKslices'
+import { mainSlice } from '../slices/mainSlice'
 import { useDispatch } from 'react-redux';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../components/theme';

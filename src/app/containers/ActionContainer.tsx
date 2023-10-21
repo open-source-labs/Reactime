@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Action from '../components/Action';
 import SwitchAppDropdown from '../components/SwitchApp';
-import { emptySnapshots, changeView, changeSlider } from '../RTKslices';
+import { emptySnapshots, changeView, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import RouteDescription from '../components/RouteDescription';
 import { Obj } from '../FrontendTypes';

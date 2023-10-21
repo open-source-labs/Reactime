@@ -3,7 +3,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './components/App';
 import './styles/main.scss';
-import {store} from './RTKstore'; //imported RTK Store
+import {store} from './store'; //imported RTK Store
 import {Provider} from 'react-redux'; //imported Provider 
 
 //Updated rendering sytax for React 18

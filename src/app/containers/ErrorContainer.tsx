@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import React, { useState, useEffect, useRef } from 'react';
-import { launchContentScript } from '../RTKslices';
+import { launchContentScript } from '../slices/mainSlice';
 import Loader from '../components/Loader';
 import ErrorMsg from '../components/ErrorMsg';
 import { useDispatch, useSelector } from 'react-redux';

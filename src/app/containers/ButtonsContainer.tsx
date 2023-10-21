@@ -9,7 +9,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { toggleMode, importSnapshots, startReconnect } from '../RTKslices';
+import { toggleMode, importSnapshots, startReconnect } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import StatusDot from '../components/StatusDot'; 
 import LoopIcon from '@mui/icons-material/Loop';
@@ -137,13 +137,13 @@ function ButtonsContainer(): JSX.Element {
             <h3>Status: {connectionStatus ? 'Connected' : 'Disconnected'}</h3>
             {connectionStatus
             ? <>
-                Reconnecting while Reactime is still connected to the application will clear all current data. Are you sure you want to proceed with the reconnection?
+                Reconnecting while Reactime is still connected to the application may cause unforeseen issues. Are you sure you want to proceed with the reconnection?
               </>
             : <>
                 Reactime has unexpectedly disconnected from your application. To continue using Reactime, please reconnect. 
                 <br />
                 <br />
-                WARNING: Reconnecting will clear all data currently stored in Reactime, so consider downloading the data before proceeding with the reconnection, if needed.
+                WARNING: Reconnecting can sometimes cause unforeseen issues, consider downloading the data before proceeding with the reconnection, if needed.
               </>}
         </DialogContent>
 

@@ -18,7 +18,7 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import ToolTipDataDisplay from './ToolTipDataDisplay';
-import { toggleExpanded, setCurrentTabInApp } from '../../../RTKslices';
+import { toggleExpanded, setCurrentTabInApp } from '../../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 import { LinkTypesProps, DefaultMargin, ToolTipStyles } from '../../../FrontendTypes'
 

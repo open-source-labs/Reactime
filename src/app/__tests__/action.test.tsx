@@ -3,9 +3,9 @@ import { render as rtlRender, screen, fireEvent } from '@testing-library/react';
 // import user from '@testing-library/user-event'; //might be unused
 import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import Action from '../components/Action';
-import { changeView, changeSlider } from '../RTKslices';
+import { changeView, changeSlider } from '../slices/mainSlice';
 import { Provider } from 'react-redux';
-import { store } from '../RTKstore'; //importing store for testing to give us access to Redux Store we configured
+import { store } from '../store'; //importing store for testing to give us access to Redux Store we configured
 // import * as reactRedux from 'react-redux'
 import { useDispatch } from 'react-redux'; //more explicit about what we are importing from library for a more focused testing approach
 

@@ -9,7 +9,7 @@ import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentTabInApp } from '../../../RTKslices';
+import { setCurrentTabInApp } from '../../../slices/mainSlice';
 import { PerfData, Series, PerformanceVisxProps } from '../../../FrontendTypes';
 
 const collectNodes = (snaps, componentName) => {

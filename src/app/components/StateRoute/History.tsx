@@ -7,7 +7,7 @@ import { diff, formatters } from 'jsondiffpatch';
 import * as d3 from 'd3';
 import { DefaultMargin } from '../../FrontendTypes';
 import { useDispatch } from 'react-redux';
-import { changeView, changeSlider, setCurrentTabInApp } from '../../RTKslices';
+import { changeView, changeSlider, setCurrentTabInApp } from '../../slices/mainSlice';
 
 /*
   Render's history page after history button has been selected. Allows user to traverse state history and relevant state branches.

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Charts from 'react-apexcharts';
 import ReactHover, { Trigger, Hover } from 'react-hover';
 import { OptionsCursorTrueWithMargin } from '../FrontendTypes';
-import { setCurrentTabInApp } from '../RTKslices'
+import { setCurrentTabInApp } from '../slices/mainSlice'
 import { useDispatch } from 'react-redux';
 /*
   Used to render a single radial graph on the 'Web Metrics' tab

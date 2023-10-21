@@ -1,5 +1,5 @@
-import { createSlice, current } from '@reduxjs/toolkit';
-import { InitialStateProps } from './FrontendTypes';
+import { createSlice } from '@reduxjs/toolkit';
+import { InitialStateProps } from '../FrontendTypes';
 import _ from 'lodash';
 
 const initialState: InitialStateProps = { // we initialize what our initialState is here
@@ -98,7 +98,7 @@ export const mainSlice = createSlice({
     },
 
     initialConnect: (state, action) => {
-      const {tabs, tab, currentTab} = state;
+      const { tabs, tab, currentTab } = state;
       const { hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex } =
       tabs[currentTab] || {};
       const { payload } = action;
@@ -126,7 +126,7 @@ export const mainSlice = createSlice({
 
     setTab: (state, action) => {
       const { tabs, currentTab } = state;
-      const {mode} = tabs[currentTab] || {};
+      const { mode } = tabs[currentTab] || {};
 
       if (!mode?.paused) {
         if (typeof action.payload === 'number') {
@@ -156,7 +156,7 @@ export const mainSlice = createSlice({
     },
 
     setCurrentLocation: (state, action) => {
-      const {tabs, currentTab} = state
+      const { tabs, currentTab } = state
       const { payload } = action;
 
       const persistIsExpanded = (newNode, oldNode) => {
@@ -330,7 +330,7 @@ export const mainSlice = createSlice({
 
     toggleMode: (state, action)=>{
       const { port, tabs, currentTab } = state;
-      const {mode} = tabs[currentTab] || {};
+      const { mode } = tabs[currentTab] || {};
       mode[action.payload] = !mode[action.payload];
         const newMode = mode[action.payload];
         let actionText;
@@ -431,8 +431,9 @@ export const mainSlice = createSlice({
       const { tabs, currentTab } = state;
       // find correct node from currLocation and toggle isExpanded
       const checkChildren = (node) => {
-        if (_.isEqual(node, action.payload))
+        if (_.isEqual(node, action.payload)) {
           node.isExpanded = !node.isExpanded;
+        }
         else if (node.children) {
           node.children.forEach(child => {
             checkChildren(child);
