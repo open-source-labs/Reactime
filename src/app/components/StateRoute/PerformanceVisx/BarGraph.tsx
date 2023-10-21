@@ -8,7 +8,7 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { schemeSet1 } from 'd3-scale-chromatic';
-import { onHover, onHoverExit, save } from '../../../RTKslices';
+import { onHover, onHoverExit, save } from '../../../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { snapshot, TooltipData, Margin, BarGraphProps } from '../../../FrontendTypes';
 

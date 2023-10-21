@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Slider from 'rc-slider';
 import Tooltip from 'rc-tooltip';
-import { changeSlider, pause } from '../RTKslices';
+import { changeSlider, pause } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { HandleProps, MainSliderProps } from '../FrontendTypes';
 

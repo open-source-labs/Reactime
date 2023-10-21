@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
-import { setCurrentTabInApp } from '../../../RTKslices';
+import { setCurrentTabInApp } from '../../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 
 /*

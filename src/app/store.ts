@@ -1,6 +1,6 @@
 //Import store from redux tool kit
 import { configureStore } from '@reduxjs/toolkit';
-import { mainSlice } from './RTKslices'
+import { mainSlice } from './slices/mainSlice'
 
 //Export Store 
 export const store = configureStore({

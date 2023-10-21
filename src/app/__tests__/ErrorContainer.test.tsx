@@ -2,9 +2,8 @@ import React from 'react';
 import { render as rtlRender, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import ErrorContainer from '../containers/ErrorContainer';
-// import { useStoreContext } from '../store';
 import { configureStore } from '@reduxjs/toolkit';
-import { mainSlice } from '../RTKslices'
+import { mainSlice } from '../slices/mainSlice'
 import { Provider } from 'react-redux';
 
 const customTabs = {
@@ -107,7 +106,7 @@ const customInitialState = {
   main: {
     port: null,
     currentTab: 87, // Update with your desired value
-    currentTitle: 'No Target', //I updated this to 'No Target' to match the initialState in RTKslices.tsx. It used to be null, but that doesn't make sense because if it doesn't get updated, we would render null instead of No Target
+    currentTitle: 'No Target', //I updated this to 'No Target' to match the initialState in mainSlice.ts. It used to be null, but that doesn't make sense because if it doesn't get updated, we would render null instead of No Target
     tabs: customTabs, // Replace with the actual (testing) tab data
     currentTabInApp: 'null',
     connectionStatus: false,

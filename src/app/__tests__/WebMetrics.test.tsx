@@ -2,10 +2,9 @@ import React from 'react';
 import { render as rtlRender } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import WebMetrics from '../components/WebMetrics';
-// import { useStoreContext } from '../store';
 import { useDispatch, Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import { mainSlice } from '../RTKslices'
+import { mainSlice } from '../slices/mainSlice'
 
 jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'), // Use the actual react-redux module except for the functions you want to mock

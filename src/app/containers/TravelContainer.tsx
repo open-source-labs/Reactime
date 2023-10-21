@@ -9,7 +9,7 @@ import {
   moveForward,
   moveBackward,
   resetSlider,
-} from '../RTKslices';
+} from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { TravelContainerProps } from '../FrontendTypes';
 import { Button } from '@mui/material';

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import JSONTree from 'react-json-tree'; // React JSON Viewer Component
-import { setCurrentTabInApp } from '../../RTKslices';
+import { setCurrentTabInApp } from '../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 import { TreeProps } from '../../FrontendTypes';
 
@@ -29,7 +29,7 @@ const colors = {
   base0F: '#e96ba8',
 };
 
-const getItemString = (type, data: { state?: object | string; name: string; children: [] }) => { // function that allows the customization of how arrays, objects, and iterable nodes are displayed.
+const getItemString = (type: any, data: { state?: object | string; name: string; children: [] }) => { // function that allows the customization of how arrays, objects, and iterable nodes are displayed.
   if (data && data.name) {
     return <span>{data.name}</span>;
   }

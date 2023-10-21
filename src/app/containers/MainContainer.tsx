@@ -15,7 +15,7 @@ import {
   setCurrentLocation,
   disconnected,
   endConnect,
-} from '../RTKslices';
+} from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 /*

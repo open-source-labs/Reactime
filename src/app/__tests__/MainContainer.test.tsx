@@ -2,8 +2,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import MainContainer from '../containers/MainContainer';
-
-//Added :
 import { useDispatch, useSelector } from 'react-redux';
 
 jest.mock('react-redux', () => ({
@@ -16,9 +14,7 @@ const mockState = {
     tabs: {},
     currentTab: null,
   },
-};
-
-// End 
+};// End 
 
 const chrome = require('sinon-chrome');
 
@@ -63,6 +59,7 @@ global.chrome = chrome;
 const port = {
   onMessage: {
     addListener: () => {},
+    hasListener: () => {},
   },
   onDisconnect: {
     addListener: () => {},

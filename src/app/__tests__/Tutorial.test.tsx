@@ -5,7 +5,7 @@ import { TextEncoder } from 'util';
 global.TextEncoder = TextEncoder;
 import '@testing-library/jest-dom/extend-expect';
 import Tutorial from '../components/Tutorial';
-// const { Steps } = require('intro.js-react');
+
 
 const dispatch = jest.fn();
 const props = {

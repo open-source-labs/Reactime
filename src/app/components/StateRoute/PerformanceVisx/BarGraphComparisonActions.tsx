@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { useTheme } from '@mui/material/styles';
 import { Button } from '@mui/material';
-import { deleteSeries, setCurrentTabInApp } from '../../../RTKslices';
+import { deleteSeries, setCurrentTabInApp } from '../../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 import { TooltipData, Margin, BarGraphComparisonAction, ActionObj } from '../../../FrontendTypes';
 
