@@ -185,7 +185,6 @@ function History(props: Record<string, unknown>): JSX.Element {
       .style('cursor', 'pointer')
       .attr('class', `snapshotNode`)
       .on('click', (event, d) => {
-        console.log('d.data.index: ', d.data.index)
         dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
         /*

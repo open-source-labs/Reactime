@@ -24,7 +24,6 @@ const findName = (index, obj) => {
       objChildArray.push(findName(index, objChild));
     }
   }
-  console.log(objChildArray);
   // eslint-disable-next-line no-restricted-syntax
   for (const objChildName of objChildArray) {
     if (objChildName) {
@@ -40,22 +39,22 @@ export const mainSlice = createSlice({
    
     emptySnapshots: (state) => {
       const { tabs, currentTab, port } = state;
-      console.log("this is state 2", current(state));
 
-      port.postMessage({ action: 'emptySnap', tabId: currentTab });
+      port.postMessage({ action: 'emptySnap', tabId: currentTab }); //communicate with background.js (service worker)
 
+      // properties associated with timetravel + seek bar
       tabs[currentTab].sliderIndex = 0;
       tabs[currentTab].viewIndex = 0;
       tabs[currentTab].playing = false;
 
-      const lastSnapshot = tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1];
+      const lastSnapshot = tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1]; // the most recent snapshot
 
-      tabs[currentTab].hierarchy.stateSnapshot = { ...lastSnapshot };
-      tabs[currentTab].hierarchy.children = [];
-      tabs[currentTab].snapshots = [lastSnapshot];
+      tabs[currentTab].hierarchy.stateSnapshot = { ...lastSnapshot }; // resets hierarchy to page last state recorded
+      tabs[currentTab].hierarchy.children = []; // resets hierarchy
+      tabs[currentTab].snapshots = [lastSnapshot]; // resets snapshots to page last state recorded
 
+      // resets currLocation to page last state recorded
       tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
-      console.log('tabsHieracyh', tabs[currentTab].hierarchy);
       tabs[currentTab].index = 1;
       tabs[currentTab].currParent = 0;
       tabs[currentTab].currBranch = 1;
@@ -63,13 +62,14 @@ export const mainSlice = createSlice({
     },
 
     addNewSnapshots: (state, action) => {
-      const { tabs } = state;
+      const { tabs, currentTab } = state;
 
       const { payload } = action;
       Object.keys(tabs).forEach(tab => {
         if (!payload[tab])
           delete tabs[tab];
         else {
+          // maintain isExpanded prop from old stateSnapshot to preserve componentMap expansion
           const persistIsExpanded = (newNode, oldNode) => {
             newNode.isExpanded = oldNode ? oldNode.isExpanded : true;
             if (newNode.children) {
@@ -91,6 +91,10 @@ export const mainSlice = createSlice({
           };
         }
       });
+
+      // only set first tab if current tab is non existent
+      const firstTab = parseInt(Object.keys(payload)[0], 10);
+      if (currentTab === undefined || currentTab === null) state.currentTab = firstTab;
     },
 
     initialConnect: (state, action) => {
@@ -117,9 +121,7 @@ export const mainSlice = createSlice({
     },
 
     setPort: (state, action) => {
-      console.log('port start: ', current(state))
       state.port = action.payload;
-      console.log('port end: ', current(state))
     },
 
     setTab: (state, action) => {
@@ -174,43 +176,18 @@ export const mainSlice = createSlice({
 
     changeView: (state, action) => {
       const {tabs, currentTab} = state;
-      console.log('this is state:', current(state))
-      console.log('this is tabs:', tabs)
-      console.log('this is currentabs:', currentTab)
-      console.log('this is tabs[currentab]', tabs[currentTab])
       const {viewIndex} = tabs[currentTab] || {};
-      console.log('hi this is viewIndex:', viewIndex);
-      console.log('this is action payload', action.payload)
+      // unselect view if same index was selected
       tabs[currentTab].viewIndex = viewIndex === action.payload ? -1 : action.payload;
-        // if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
-        // else tabs[currentTab].viewIndex = action.payload;
-        // tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
-
-    //  case types.CHANGE_VIEW: {
-    //     // unselect view if same index was selected
-    //     // console.log('action:', action)
-    //     // console.log('state: ', state)
-    //     if (viewIndex === action.payload) tabs[currentTab].viewIndex = -1;
-    //     else tabs[currentTab].viewIndex = action.payload;
-    //     // update currLocation
-    //     // tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
-    //     break;
-    //   }
-
     },
 
     changeSlider: (state, action) => {
       const { port, currentTab, tabs } = state;
       const { hierarchy, snapshots } = tabs[currentTab] || {};
 
-      console.log('this is PORT', port);
-      console.log('this is hierarchy', hierarchy);
-      console.log('this is SNapshots', snapshots);
-
+      // finds the name by the action.payload parsing through the hierarchy to send to background.js the current name in the jump action
       const nameFromIndex = findName(action.payload, hierarchy);
-
-      // console.log('this is action payload', action.payload);
-      // console.log('this is nameFromIndex', nameFromIndex);
+      // nameFromIndex is a number based on which jump button is pushed
 
       port.postMessage({
         action: 'jumpToSnap',
@@ -234,8 +211,6 @@ export const mainSlice = createSlice({
       clearInterval(intervalId);
       tabs[currentTab].playing = false;
       tabs[currentTab].intervalId = null;
-      console.log('pause: state end', current(state));
-
     },
 
     launchContentScript: (state, action) => {
@@ -408,7 +383,7 @@ export const mainSlice = createSlice({
 
     tutorialSaveSeriesToggle: (state, action) => {
       const { tabs, currentTab } = state;
-      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload }
+      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload } // sets the tab[currentTab]'s 'seriesSavedStatus' property to the payload.
     },
 
     onHover: (state, action) => {
@@ -437,7 +412,6 @@ export const mainSlice = createSlice({
       const { newSeries, newSeriesName } = action.payload;
         if (!tabs[currentTab].seriesSavedStatus) {
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
-          //testing return to fix save functionality
           return;
         }
         // Runs if series name input box is active.
@@ -449,7 +423,6 @@ export const mainSlice = createSlice({
           seriesArray.push(newSeries);
           localStorage.setItem('project', JSON.stringify(seriesArray));
           tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
-          //testing return to fix save functionality instead of break
           return;
         }
     },

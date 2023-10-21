@@ -114,7 +114,6 @@ const StateRoute = (props: StateRouteProps) => {
     if (webMetrics.INP <= 200) INPColor = '#0bce6b';
     if (webMetrics.INP <= 500) INPColor = '#E56543';
     if (webMetrics.INP > 500) INPColor = '#fc2000';
-    console.log('WEBMETRICS YOOO', webMetrics);
 
     return (
       <div className='web-metrics-container'>

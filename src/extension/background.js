@@ -179,7 +179,6 @@ chrome.runtime.onConnect.addListener((port) => {
 
   // every time devtool is closed, remove the port from portsArr
   port.onDisconnect.addListener((e) => {
-    console.log('PORT DISCONNECTED');
     for (let i = 0; i < portsArr.length; i += 1) {
       if (portsArr[i] === e) {
         portsArr.splice(i, 1);
@@ -289,8 +288,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   switch (action) {
     case 'attemptReconnect': {
-      console.log('portConnection: ', portSuccessfullyConnected);
-
       const success = portSuccessfullyConnected;
       sendResponse({ success });
       break;
