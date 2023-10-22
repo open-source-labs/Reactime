@@ -121,6 +121,18 @@ const radialGraph = (props) => {
               <strong>{props.name}</strong>
             </p>
             <p>{props.description}</p>
+            <p>
+              <span style={{ color: '#0bce6b' }}>Good: </span>
+              {`< ${props.score[0]}`}
+            </p>
+            <p>
+              <span style={{ color: '#fc5a03' }}>Needs Improvement: </span>
+              {`< ${props.score[1]}`}
+            </p>
+            <p>
+              <span style={{ color: '#fc2000' }}>Poor: </span>
+              {`> ${props.score[1]}`}
+            </p>
           </div>
         </Hover>
       </ReactHover>

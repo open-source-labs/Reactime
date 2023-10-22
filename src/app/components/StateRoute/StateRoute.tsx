@@ -127,6 +127,7 @@ const StateRoute = (props: StateRouteProps) => {
           formatted={(_) =>
             typeof webMetrics.LCP !== 'number' ? '- ms' : `${webMetrics.LCP.toFixed(2)} ms`
           }
+          score={['2500 ms', '4000 ms']}
           label='Largest Contentful Paint'
           name='Largest Contentful Paint'
           description='Measures loading performance. The benchmark is less than 2500 ms.'
@@ -137,6 +138,7 @@ const StateRoute = (props: StateRouteProps) => {
           formatted={(_) =>
             typeof webMetrics.FID !== 'number' ? '- ms' : `${webMetrics.FID.toFixed(2)} ms`
           }
+          score={['100 ms', '300 ms']}
           label='First Input Delay'
           name='First Input Delay'
           description='Measures interactivity. The benchmark is less than 100 ms.'
@@ -147,6 +149,7 @@ const StateRoute = (props: StateRouteProps) => {
           formatted={(_) =>
             typeof webMetrics.FCP !== 'number' ? '- ms' : `${webMetrics.FCP.toFixed(2)} ms`
           }
+          score={['1800 ms', '3000 ms']}
           label='First Contentful Paint'
           name='First Contentful Paint'
           description='Measures the time it takes the browser to render the first piece of DOM content. No benchmark.'
@@ -157,6 +160,7 @@ const StateRoute = (props: StateRouteProps) => {
           formatted={(_) =>
             typeof webMetrics.TTFB !== 'number' ? '- ms' : `${webMetrics.TTFB.toFixed(2)} ms`
           }
+          score={['800 ms', '1800 ms']}
           label='Time To First Byte'
           name='Time to First Byte'
           description='Measures the time it takes for a browser to receive the first byte of page content. The benchmark is 600 ms.'
@@ -171,6 +175,7 @@ const StateRoute = (props: StateRouteProps) => {
                 : `${webMetrics.CLS < 0.01 ? '~0' : webMetrics.CLS.toFixed(2)}`
             }`
           }
+          score={['0.1', '0.25']}
           label='Cumulative Layout Shift'
           name='Cumulative Layout Shift'
           description={`Quantifies the visual stability of a web page by measuring layout shifts during the application's loading and interaction.`}
@@ -181,6 +186,7 @@ const StateRoute = (props: StateRouteProps) => {
           formatted={(_) =>
             typeof webMetrics.INP !== 'number' ? '- ms' : `${webMetrics.INP.toFixed(2)} ms`
           }
+          score={['200 ms', '500 ms']}
           label='Interaction to Next Paint'
           name='Interaction to Next Paint'
           description={`Assesses a page's overall responsiveness to user interactions by observing the latency of all click, tap, and keyboard interactions that occur throughout the lifespan of a user's visit to a page`}
