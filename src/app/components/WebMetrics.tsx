@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Charts from 'react-apexcharts';
 import ReactHover, { Trigger, Hover } from 'react-hover';
 import { OptionsCursorTrueWithMargin } from '../FrontendTypes';
-import { setCurrentTabInApp } from '../slices/mainSlice'
+import { setCurrentTabInApp } from '../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 /*
   Used to render a single radial graph on the 'Web Metrics' tab
@@ -78,8 +78,6 @@ const radialGraph = (props) => {
           shade: 'dark',
           type: 'horizontal',
           shadeIntensity: 0.1,
-          gradientToColors: props.color,
-          // gradientToColors: ['#fc2000', '#000000'],
           inverseColors: false,
           opacityFrom: 1,
           opacityTo: 1,
@@ -93,8 +91,7 @@ const radialGraph = (props) => {
     },
   };
 
-
-  useEffect(() => { 
+  useEffect(() => {
     dispatch(setCurrentTabInApp('webmetrics')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.
   }, []);
 
@@ -105,8 +102,8 @@ const radialGraph = (props) => {
   };
 
   return (
-    <div className='metric'> 
-      <ReactHover options={optionsCursorTrueWithMargin}> 
+    <div className='metric'>
+      <ReactHover options={optionsCursorTrueWithMargin}>
         <Trigger type='trigger'>
           <div id='chart'>
             <Charts
@@ -119,8 +116,10 @@ const radialGraph = (props) => {
           </div>
         </Trigger>
         <Hover type='hover'>
-          <div style={{zIndex: 1, position: 'relative', padding: '0.5rem 1rem'}} id='hover-box'>
-            <p><strong>{props.name}</strong></p>
+          <div style={{ zIndex: 1, position: 'relative', padding: '0.5rem 1rem' }} id='hover-box'>
+            <p>
+              <strong>{props.name}</strong>
+            </p>
             <p>{props.description}</p>
           </div>
         </Hover>
