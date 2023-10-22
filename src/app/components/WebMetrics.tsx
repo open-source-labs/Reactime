@@ -29,10 +29,16 @@ const radialGraph = (props) => {
           hollow: {
             margin: 0,
             size: '75%',
-            background: '#242529',
-            image: undefined,
+            background: 'transparent',
+            // background: '#242529',
+            image: props.overLimit
+              ? 'https://static.vecteezy.com/system/resources/thumbnails/012/042/301/small/warning-sign-icon-transparent-background-free-png.png'
+              : undefined,
+            imageWidth: 32,
+            imageHeight: 32,
             imageOffsetX: 0,
-            imageOffsetY: 0,
+            imageOffsetY: -64,
+            imageClipped: false,
             position: 'front',
             dropShadow: {
               enabled: false,
