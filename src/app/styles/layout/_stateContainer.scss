@@ -39,7 +39,7 @@
   margin: 6px;
 }
 
-.state-container .componentMapContainer{
+.state-container .componentMapContainer {
   height: 95% !important;
 }
 
@@ -206,7 +206,7 @@
 }
 
 #hover-box {
-  max-width: 150px;
+  max-width: 230px;
   background-color: #51565e;
   border-radius: 5px;
   color: white;
@@ -218,17 +218,17 @@
 
 // tool tip styles
 
-.visx-tooltip{
+.visx-tooltip {
   overflow-y: auto;
   overflow-wrap: break-word;
-  pointer-events:all !important;
+  pointer-events: all !important;
 }
 
 .tooltipKey {
   margin-bottom: -1px;
 }
 
-.historyToolTip{
+.historyToolTip {
   z-index: 2;
 }
 
@@ -253,14 +253,13 @@
   padding: 0px;
   overflow-y: auto;
   max-height: 30vh;
-  scrollbar-color:#919499 #51565e;
+  scrollbar-color: #919499 #51565e;
 }
 
 .tooltipData-JSONTree::-webkit-scrollbar-thumb {
-  background:#919499;
-
+  background: #919499;
 }
 
-.tooltipData-JSONTree::-webkit-scrollbar-track{
-  background:#51565e;
+.tooltipData-JSONTree::-webkit-scrollbar-track {
+  background: #51565e;
 }
