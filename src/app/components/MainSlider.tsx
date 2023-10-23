@@ -36,6 +36,7 @@ function MainSlider(props: MainSliderProps): JSX.Element {
   useEffect(() => {
     if (currLocation) {
       // if we have a 'currLocation'
+      //@ts-ignore
       setSliderIndex(currLocation.index); // set our slider thumb position to the 'currLocation.index'
     } else {
       setSliderIndex(0); // just set the thumb position to the beginning

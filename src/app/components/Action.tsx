@@ -99,6 +99,7 @@ const Action = (props: ActionProps): JSX.Element => {
   return (
     <div className='individual-action'>
       <div
+        // @ts-ignore
         onKeyDown={(e): void => handleOnkeyDown(e, viewIndex)}
         className={selected || last ? 'action-component selected' : 'action-component'}
         onClick={() => {

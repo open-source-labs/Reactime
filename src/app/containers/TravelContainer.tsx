@@ -80,6 +80,7 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
         // data-testid, prop for testing in RTL
         data-testid='play-button-test'
         //REMOVED DISPATCH FROM PLAY
+        // @ts-ignore
         onClick={() => play(selectedSpeed.value, playing, dispatch, snapshotsLength, sliderIndex)}
       >
         {playing ? 'Pause' : 'Play'}
