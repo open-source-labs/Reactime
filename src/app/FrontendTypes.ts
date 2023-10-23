@@ -102,6 +102,12 @@ export interface BarGraphComparisonAction {
   setAction: (e: boolean | string) => void;
 }
 
+export interface ActionContainerProps {
+  actionView: boolean;
+  setActionView: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleActionContainer: () => void;
+}
+
 export interface StateContainerProps {
   snapshot: Record<
     number,
@@ -169,7 +175,7 @@ export interface ActionProps {
   state?: Record<string, unknown>;
   viewIndex: number | undefined;
   isCurrIndex: boolean;
-  handleOnkeyDown: (e: unknown, i: number) => void;
+  handleOnkeyDown: (e: KeyboardEvent, i: number) => void;
 }
 
 export interface DiffRouteProps {

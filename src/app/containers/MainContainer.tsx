@@ -28,7 +28,6 @@ function MainContainer(): JSX.Element {
   const currentTab = useSelector((state: any) => state.main.currentTab);
   const tabs = useSelector((state: any) => state.main.tabs);
   const port = useSelector((state: any) => state.main.port);
-  const { connectRequested } = useSelector((state: any) => state.main);
   
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
 

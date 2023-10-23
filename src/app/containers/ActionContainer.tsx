@@ -5,7 +5,7 @@ import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import RouteDescription from '../components/RouteDescription';
-import { Obj } from '../FrontendTypes';
+import { ActionContainerProps, Obj } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
 
 /*
@@ -16,13 +16,14 @@ import { Button, Switch } from '@mui/material';
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
   const sliderTrack = document.querySelector('.rc-slider-track');
-  if (slider) {
+  if (slider && sliderTrack) {
     slider.setAttribute('style', 'left: 0');
     sliderTrack.setAttribute('style', 'width: 0');
   }
 };
 
-function ActionContainer(props): JSX.Element {
+function ActionContainer(props: ActionContainerProps): JSX.Element {
+  console.log('ActionContainer props: ', props);
   const dispatch = useDispatch();
   const currentTab = useSelector((state: any) => state.main.currentTab)
   const tabs = useSelector((state: any) => state.main.tabs)
