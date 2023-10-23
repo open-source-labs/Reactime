@@ -14,7 +14,7 @@ import { changeView, changeSlider } from '../../slices/mainSlice';
 import { useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetrics from '../WebMetrics';
-import { StateRouteProps } from '../../FrontendTypes';
+import { MainState, RootState, StateRouteProps } from '../../FrontendTypes';
 
 /*
   Loads the appropriate StateRoute view and renders the Map, Performance, History, Webmetrics, and Tree navbar buttons after clicking on the 'State' button located near the top rightmost corner.
@@ -33,7 +33,7 @@ const StateRoute = (props: StateRouteProps) => {
     currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
 
-  const { tabs, currentTab } = useSelector((state: any) => state.main);
+  const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
 
   const renderComponentMap = () => {

@@ -17,6 +17,7 @@ import {
   endConnect,
 } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { MainState, RootState } from '../FrontendTypes';
 
 /*
   This is the main container where everything in our application is rendered
@@ -25,9 +26,7 @@ import { useDispatch, useSelector } from 'react-redux';
 function MainContainer(): JSX.Element {
   const dispatch = useDispatch();
 
-  const currentTab = useSelector((state: any) => state.main.currentTab);
-  const tabs = useSelector((state: any) => state.main.tabs);
-  const port = useSelector((state: any) => state.main.port);
+  const { currentTab , tabs, port }: MainState = useSelector((state: RootState) => state.main);
   
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
 

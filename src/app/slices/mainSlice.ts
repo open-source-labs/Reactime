@@ -1,18 +1,21 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { InitialStateProps } from '../FrontendTypes';
+import { createSlice, current } from '@reduxjs/toolkit';
+import { MainState } from '../FrontendTypes';
 import _ from 'lodash';
 
-const initialState: InitialStateProps = { // we initialize what our initialState is here
-    port: null,
-    currentTab: null,
-    currentTitle: 'No Target',
-    tabs: {},
-    currentTabInApp: null,
-    connectionStatus: true,
-    connectRequested: true,
-  };
+const initialState: MainState = {
+  // we initialize what our initialState is here
+  port: null,
+  currentTab: null,
+  currentTitle: 'No Target',
+  tabs: {},
+  currentTabInApp: null,
+  connectionStatus: true,
+  connectRequested: true,
+};
 
-const findName = (index, obj) => {
+const findName = (index: number, obj) => {
+  console.log('findName index: ', index);
+  console.log('findName obj: ', current(obj));
   // eslint-disable-next-line eqeqeq
   if (obj && obj.index == index) {
     return obj.name;
@@ -36,7 +39,6 @@ export const mainSlice = createSlice({
   name: 'main',
   initialState,
   reducers: {
-   
     emptySnapshots: (state) => {
       const { tabs, currentTab, port } = state;
 
@@ -65,9 +67,8 @@ export const mainSlice = createSlice({
       const { tabs, currentTab } = state;
 
       const { payload } = action;
-      Object.keys(tabs).forEach(tab => {
-        if (!payload[tab])
-          delete tabs[tab];
+      Object.keys(tabs).forEach((tab) => {
+        if (!payload[tab]) delete tabs[tab];
         else {
           // maintain isExpanded prop from old stateSnapshot to preserve componentMap expansion
           const persistIsExpanded = (newNode, oldNode) => {
@@ -100,9 +101,9 @@ export const mainSlice = createSlice({
     initialConnect: (state, action) => {
       const { tabs, tab, currentTab } = state;
       const { hierarchy, snapshots, mode, intervalId, viewIndex, sliderIndex } =
-      tabs[currentTab] || {};
+        tabs[currentTab] || {};
       const { payload } = action;
-      
+
       Object.keys(payload).forEach((tab) => {
         // check if tab exists in memory
         // add new tab
@@ -134,10 +135,9 @@ export const mainSlice = createSlice({
           return;
         } else if (typeof action.payload === 'object') {
           state.currentTab = action.payload.tabId;
-          if (action.payload?.title)
-            state.currentTitle = action.payload.title;
-            return;
-        };
+          if (action.payload?.title) state.currentTitle = action.payload.title;
+          return;
+        }
       }
     },
 
@@ -147,16 +147,16 @@ export const mainSlice = createSlice({
 
     noDev: (state, action) => {
       const { payload } = action;
-      const {tabs, currentTab} = state;
+      const { tabs, currentTab } = state;
 
       if (tabs[currentTab]) {
         const { reactDevToolsInstalled } = payload[currentTab].status;
-        tabs[currentTab].status.reactDevToolsInstalled = reactDevToolsInstalled
+        tabs[currentTab].status.reactDevToolsInstalled = reactDevToolsInstalled;
       }
     },
 
     setCurrentLocation: (state, action) => {
-      const { tabs, currentTab } = state
+      const { tabs, currentTab } = state;
       const { payload } = action;
 
       const persistIsExpanded = (newNode, oldNode) => {
@@ -175,8 +175,8 @@ export const mainSlice = createSlice({
     },
 
     changeView: (state, action) => {
-      const {tabs, currentTab} = state;
-      const {viewIndex} = tabs[currentTab] || {};
+      const { tabs, currentTab } = state;
+      const { viewIndex } = tabs[currentTab] || {};
       // unselect view if same index was selected
       tabs[currentTab].viewIndex = viewIndex === action.payload ? -1 : action.payload;
     },
@@ -196,7 +196,7 @@ export const mainSlice = createSlice({
         name: nameFromIndex,
         tabId: currentTab,
       });
-      
+
       tabs[currentTab].sliderIndex = action.payload;
     },
 
@@ -205,8 +205,8 @@ export const mainSlice = createSlice({
     },
 
     pause: (state) => {
-      const {tabs, currentTab} = state
-      const {intervalId} = tabs[currentTab] || {};
+      const { tabs, currentTab } = state;
+      const { intervalId } = tabs[currentTab] || {};
 
       clearInterval(intervalId);
       tabs[currentTab].playing = false;
@@ -225,7 +225,7 @@ export const mainSlice = createSlice({
     },
 
     playForward: (state, action) => {
-      const {port, tabs, currentTab} = state
+      const { port, tabs, currentTab } = state;
       const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
 
       if (sliderIndex < snapshots.length - 1) {
@@ -252,15 +252,15 @@ export const mainSlice = createSlice({
       }
     },
 
-    startPlaying : (state, action) => {
-      const {tabs, currentTab} = state
+    startPlaying: (state, action) => {
+      const { tabs, currentTab } = state;
 
       tabs[currentTab].playing = true;
       tabs[currentTab].intervalId = action.payload;
     },
 
     moveForward: (state, action) => {
-      const {port, tabs, currentTab} = state
+      const { port, tabs, currentTab } = state;
       const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
 
       if (sliderIndex < snapshots.length - 1) {
@@ -287,8 +287,8 @@ export const mainSlice = createSlice({
       }
     },
 
-    moveBackward : (state, action) => {
-      const {port, tabs, currentTab} = state
+    moveBackward: (state, action) => {
+      const { port, tabs, currentTab } = state;
       const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
 
       if (sliderIndex > 0) {
@@ -313,39 +313,39 @@ export const mainSlice = createSlice({
     },
 
     resetSlider: (state) => {
-      const {port, tabs, currentTab} = state
-      const { snapshots, sliderIndex} = tabs[currentTab] || {};
+      const { port, tabs, currentTab } = state;
+      const { snapshots, sliderIndex } = tabs[currentTab] || {};
 
-       // eslint-disable-next-line max-len
-        // resets name to 0 to send to background.js the current name in the jump action
-        port.postMessage({
-          action: 'jumpToSnap',
-          index: 0,
-          name: 0,
-          payload: snapshots[0],
-          tabId: currentTab,
-        });
-        tabs[currentTab].sliderIndex = 0;
+      // eslint-disable-next-line max-len
+      // resets name to 0 to send to background.js the current name in the jump action
+      port.postMessage({
+        action: 'jumpToSnap',
+        index: 0,
+        name: 0,
+        payload: snapshots[0],
+        tabId: currentTab,
+      });
+      tabs[currentTab].sliderIndex = 0;
     },
 
-    toggleMode: (state, action)=>{
+    toggleMode: (state, action) => {
       const { port, tabs, currentTab } = state;
       const { mode } = tabs[currentTab] || {};
       mode[action.payload] = !mode[action.payload];
-        const newMode = mode[action.payload];
-        let actionText;
-        switch (action.payload) {
-          case 'paused':
-            actionText = 'setPause';
-            break;
-          default:
-            break;
-        }
-        port.postMessage({
-          action: actionText,
-          payload: newMode,
-          tabId: currentTab,
-        });
+      const newMode = mode[action.payload];
+      let actionText;
+      switch (action.payload) {
+        case 'paused':
+          actionText = 'setPause';
+          break;
+        default:
+          break;
+      }
+      port.postMessage({
+        action: actionText,
+        payload: newMode,
+        tabId: currentTab,
+      });
     },
 
     importSnapshots: (state, action) => {
@@ -383,7 +383,7 @@ export const mainSlice = createSlice({
 
     tutorialSaveSeriesToggle: (state, action) => {
       const { tabs, currentTab } = state;
-      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload } // sets the tab[currentTab]'s 'seriesSavedStatus' property to the payload.
+      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: action.payload }; // sets the tab[currentTab]'s 'seriesSavedStatus' property to the payload.
     },
 
     onHover: (state, action) => {
@@ -410,32 +410,31 @@ export const mainSlice = createSlice({
       const { currentTab, tabs } = state;
 
       const { newSeries, newSeriesName } = action.payload;
-        if (!tabs[currentTab].seriesSavedStatus) {
-          tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
-          return;
-        }
-        // Runs if series name input box is active.
-        // Updates chrome local storage with the newly saved series. Console logging the seriesArray grabbed from local storage may be helpful.
-        if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
-          let seriesArray: any = localStorage.getItem('project');
-          seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
-          newSeries.name = newSeriesName;
-          seriesArray.push(newSeries);
-          localStorage.setItem('project', JSON.stringify(seriesArray));
-          tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
-          return;
-        }
+      if (!tabs[currentTab].seriesSavedStatus) {
+        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
+        return;
+      }
+      // Runs if series name input box is active.
+      // Updates chrome local storage with the newly saved series. Console logging the seriesArray grabbed from local storage may be helpful.
+      if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
+        let seriesArray: any = localStorage.getItem('project');
+        seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
+        newSeries.name = newSeriesName;
+        seriesArray.push(newSeries);
+        localStorage.setItem('project', JSON.stringify(seriesArray));
+        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
+        return;
+      }
     },
-      
+
     toggleExpanded: (state, action) => {
       const { tabs, currentTab } = state;
       // find correct node from currLocation and toggle isExpanded
       const checkChildren = (node) => {
         if (_.isEqual(node, action.payload)) {
           node.isExpanded = !node.isExpanded;
-        }
-        else if (node.children) {
-          node.children.forEach(child => {
+        } else if (node.children) {
+          node.children.forEach((child) => {
             checkChildren(child);
           });
         }
@@ -466,6 +465,7 @@ export const mainSlice = createSlice({
     },
 
     startReconnect: (state) => {
+      console.log('STATE: ', current(state));
       state.connectRequested = true;
       state.port = initialState.port;
     },
@@ -473,10 +473,9 @@ export const mainSlice = createSlice({
     endConnect: (state) => {
       state.connectRequested = false;
       state.connectionStatus = true;
-    }
-
+    },
   },
-})
+});
 
 export const {
   emptySnapshots,
@@ -508,4 +507,4 @@ export const {
   disconnected,
   startReconnect,
   endConnect,
-} =  mainSlice.actions
+} = mainSlice.actions;

@@ -5,7 +5,7 @@ import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import RouteDescription from '../components/RouteDescription';
-import { ActionContainerProps, Obj } from '../FrontendTypes';
+import { ActionContainerProps, MainState, Obj, RootState } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
 
 /*
@@ -23,17 +23,14 @@ const resetSlider = () => {
 };
 
 function ActionContainer(props: ActionContainerProps): JSX.Element {
-  console.log('ActionContainer props: ', props);
   const dispatch = useDispatch();
-  const currentTab = useSelector((state: any) => state.main.currentTab)
-  const tabs = useSelector((state: any) => state.main.tabs)
-  const port = useSelector((state: any) => state.main.port)
+  const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
 
   const { currLocation, hierarchy, sliderIndex, viewIndex } = tabs[currentTab]; // we destructure the currentTab object
-  const { 
+  const {
     toggleActionContainer, // function that handles Time Jump Sidebar view from MainContainer
     actionView, // local state declared in MainContainer
-    setActionView // function to update actionView state declared in MainContainer
+    setActionView, // function to update actionView state declared in MainContainer
   } = props;
   const [recordingActions, setRecordingActions] = useState(true); // We create a local state 'recordingActions' and set it to true
   let actionsArr: JSX.Element[] = []; // we create an array 'actionsArr' that will hold elements we create later on
@@ -63,9 +60,9 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
       obj.stateSnapshot.children[0].state && // with a 'state'
       obj.stateSnapshot.children[0].name // and a 'name'
     ) {
-      const newObj: Record<string, unknown> = { 
-        // we create a new Record object (whose property keys are Keys and whose property values are Type. 
-        //This utility can be used to map the properties of a type to another type) and populate it's properties with 
+      const newObj: Record<string, unknown> = {
+        // we create a new Record object (whose property keys are Keys and whose property values are Type.
+        //This utility can be used to map the properties of a type to another type) and populate it's properties with
         //relevant values from our argument 'obj'.
         index: obj.index,
         displayName: `${obj.name}.${obj.branch}`,
@@ -80,7 +77,8 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
       hierarchyArr.push(newObj); // we push our record object into 'hiearchyArr' defined on line 35
     }
 
-    if (obj.children) { // if argument has a 'children' array, we iterate through it and run 'displayArray' on each element
+    if (obj.children) {
+      // if argument has a 'children' array, we iterate through it and run 'displayArray' on each element
       obj.children.forEach((element): void => {
         displayArray(element);
       });
@@ -93,18 +91,19 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   // This function allows us to use our arrow keys to jump between snapshots. It passes an event and the index of each action-component. Using the arrow keys allows us to highligh snapshots and the enter key jumps to the selected snapshot
   function handleOnKeyDown(e: KeyboardEvent, i: number): void {
     let currIndex = i;
-    
-    if (e.key === 'ArrowUp') { // up arrow key pressed
+
+    if (e.key === 'ArrowUp') {
+      // up arrow key pressed
       currIndex--;
       if (currIndex < 0) return;
       dispatch(changeView(currIndex));
-    }
-    
-    else if (e.key === 'ArrowDown') { // down arrow key pressed
+    } else if (e.key === 'ArrowDown') {
+      // down arrow key pressed
       currIndex++;
       if (currIndex > hierarchyArr.length - 1) return;
       dispatch(changeView(currIndex));
-    } else if (e.key === 'Enter') { // enter key pressed
+    } else if (e.key === 'Enter') {
+      // enter key pressed
       e.stopPropagation(); // prevents further propagation of the current event in the capturing and bubbling phases
       e.preventDefault(); // needed or will trigger onClick right after
       dispatch(changeSlider(currIndex));
@@ -204,7 +203,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
                 dispatch(emptySnapshots()); // set slider back to zero, visually
                 resetSlider();
               }}
-              type='button' 
+              type='button'
             >
               Clear
             </Button>

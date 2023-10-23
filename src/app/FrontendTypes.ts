@@ -142,11 +142,15 @@ export interface Obj {
   children?: [];
 }
 
-export interface InitialStateProps {
-  port: null | number;
+export interface RootState {
+  main: MainState;
+}
+
+export interface MainState {
+  port: null | chrome.runtime.Port;
   currentTab: null | number;
   currentTitle: null | string;
-  tabs: unknown;
+  tabs: { [k: string]: { [k: string]: unknown } } | {};
   currentTabInApp: null | string;
   connectionStatus: boolean;
   connectRequested: boolean;
@@ -330,5 +334,3 @@ export interface Snapshots {
   component3: number;
   'all others': number;
 }
-
-

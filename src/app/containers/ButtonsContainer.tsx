@@ -15,6 +15,7 @@ import StatusDot from '../components/StatusDot';
 import LoopIcon from '@mui/icons-material/Loop';
 import CloseIcon from '@mui/icons-material/Close';
 import WarningIcon from '@mui/icons-material/Warning';
+import { MainState, RootState } from '../FrontendTypes';
 
 function exportHandler(snapshots: []): void { // function that takes in our tabs[currentTab] object to be exported as a JSON file. NOTE: TypeScript needs to be updated
   const fileDownload: HTMLAnchorElement = document.createElement('a'); // invisible HTML element that will hold our tabs[currentTab] object
@@ -53,7 +54,7 @@ function importHandler(dispatch: (a: unknown) => void): void { // function handl
 
 function ButtonsContainer(): JSX.Element {
   const dispatch = useDispatch();
-  const {currentTab, tabs, currentTabInApp, connectionStatus} = useSelector((state: any)=> state.main);
+  const {currentTab, tabs, currentTabInApp, connectionStatus}: MainState = useSelector((state: RootState)=> state.main);
   const { mode: { paused }} = tabs[currentTab];
 
   //adding a local state using useState for the reconnect button functionality
