@@ -10,7 +10,7 @@ import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentTabInApp } from '../../../slices/mainSlice';
-import { PerfData, Series, PerformanceVisxProps } from '../../../FrontendTypes';
+import { PerfData, Series, PerformanceVisxProps, RootState, MainState } from '../../../FrontendTypes';
 
 const collectNodes = (snaps, componentName) => {
   const componentsResult = [];
@@ -178,7 +178,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
     hierarchy // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
   const dispatch = useDispatch();
-  const { currentTabInApp } = useSelector((state: any) => state.main);
+  const { currentTabInApp }: MainState = useSelector((state: RootState) => state.main);
   const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   const [series, setSeries] = useState(true);

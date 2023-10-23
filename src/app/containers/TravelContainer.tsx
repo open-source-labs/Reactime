@@ -11,7 +11,7 @@ import {
   resetSlider,
 } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { TravelContainerProps } from '../FrontendTypes';
+import { MainState, RootState, TravelContainerProps } from '../FrontendTypes';
 import { Button } from '@mui/material';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
 import FastForwardIcon from '@mui/icons-material/FastForward';
@@ -30,7 +30,7 @@ const speeds: {
   { value: 500, label: '2.0x' },
 ];
 //NOTE HERE REMOVED THE DISPATCH FUNCTION IN THE TYPE SCRIPT:
-//USING THE BUILT IN DISPATCH 
+//USING THE BUILT IN DISPATCH
 function play( // function that will start/pause slider movement
   speed: number,
   playing: boolean,
@@ -38,16 +38,20 @@ function play( // function that will start/pause slider movement
   snapshotsLength: number,
   sliderIndex: number,
 ): void {
-  if (playing) { // if already playing, clicking the button will pause the slider
+  if (playing) {
+    // if already playing, clicking the button will pause the slider
     dispatch(pause());
   } else {
     let currentIndex = sliderIndex; // the 'currentIndex' will be wherever the 'sliderIndex' is
-    if (currentIndex === snapshotsLength - 1) { // if we reach the last snapshot, reset the slider and the currentIndex
+    if (currentIndex === snapshotsLength - 1) {
+      // if we reach the last snapshot, reset the slider and the currentIndex
       dispatch(resetSlider());
       currentIndex = 0;
     }
-    const intervalId: NodeJS.Timeout = setInterval(() => { // sets interval period to wait before advancing 'currentIndex'/slider
-      if (currentIndex < snapshotsLength - 1) { // as long as we're not the last snapshot, increment slider up through our dispatch and increment index
+    const intervalId: NodeJS.Timeout = setInterval(() => {
+      // sets interval period to wait before advancing 'currentIndex'/slider
+      if (currentIndex < snapshotsLength - 1) {
+        // as long as we're not the last snapshot, increment slider up through our dispatch and increment index
         dispatch(playForward(true));
         currentIndex += 1;
       } else {
@@ -63,29 +67,44 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
   const [selectedSpeed, setSpeed] = useState(speeds[1]); // create a new local state selectedSpeed and set it to the second element of the 'speeds' array (1.0x speed)
 
   const dispatch = useDispatch();
-  const { tabs, currentTab } = useSelector((state: any) => state.main);
+  const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
   const { sliderIndex, playing } = tabs[currentTab];
 
   return (
     <div className='travel-container'>
       <Button
-      variant="contained"
+        variant='contained'
         className='play-button'
-        sx={{height: 25, p: 0, mr: 1, ml: 1}}
+        sx={{ height: 25, p: 0, mr: 1, ml: 1 }}
         type='button'
         // data-testid, prop for testing in RTL
         data-testid='play-button-test'
         //REMOVED DISPATCH FROM PLAY
+        // @ts-ignore
         onClick={() => play(selectedSpeed.value, playing, dispatch, snapshotsLength, sliderIndex)}
       >
         {playing ? 'Pause' : 'Play'}
       </Button>
       <MainSlider snapshotsLength={snapshotsLength} />
-      <Button variant="contained" className='backward-button' onClick={() => dispatch(moveBackward(false))} type='button' sx={{height: 25, minWidth: 30, p: 0, mr: 1}} aria-label='Backward'>
-        <FastRewindIcon sx={{color: '#000'}}/>
+      <Button
+        variant='contained'
+        className='backward-button'
+        onClick={() => dispatch(moveBackward(false))}
+        type='button'
+        sx={{ height: 25, minWidth: 30, p: 0, mr: 1 }}
+        aria-label='Backward'
+      >
+        <FastRewindIcon sx={{ color: '#000' }} />
       </Button>
-      <Button variant="contained" className='forward-button' onClick={() => dispatch(moveForward(false))} type='button' sx={{height: 25, minWidth: 30, p: 0}} aria-label='Forward'>
-        <FastForwardIcon sx={{color: '#000'}}/>
+      <Button
+        variant='contained'
+        className='forward-button'
+        onClick={() => dispatch(moveForward(false))}
+        type='button'
+        sx={{ height: 25, minWidth: 30, p: 0 }}
+        aria-label='Forward'
+      >
+        <FastForwardIcon sx={{ color: '#000' }} />
       </Button>
       <Dropdown speeds={speeds} selectedSpeed={selectedSpeed} setSpeed={setSpeed} />
     </div>

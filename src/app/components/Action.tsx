@@ -28,7 +28,6 @@ import { useDispatch } from 'react-redux';
  */
 
 const Action = (props: ActionProps): JSX.Element => {
-
   //here we are adding useSelector and useDispatch for RTK state conversion
   const dispatch = useDispatch();
 
@@ -50,44 +49,45 @@ const Action = (props: ActionProps): JSX.Element => {
    * @returns render display time in seconds in milliseconds
    */
 
-
   const cleanTime = (): string => {
-    if (!componentData || !componentData.actualDuration) { // if there is no 'componentData' or 'componentData.actualDuration'
+    if (!componentData || !componentData.actualDuration) {
+      // if there is no 'componentData' or 'componentData.actualDuration'
       return 'NO TIME';
     }
 
     let seconds: number | string; // seconds is undefined but can take a number or a string
     let milliseconds: any = componentData.actualDuration; // milliseconds is of any type and taken from the 'componentData.actualDuration'
 
-    if (Math.floor(componentData.actualDuration) > 60) { // if the milliseconds is greater than 60
+    if (Math.floor(componentData.actualDuration) > 60) {
+      // if the milliseconds is greater than 60
       seconds = Math.floor(componentData.actualDuration / 60); // we divide our milliseconds by 60 to determine our seconds
       seconds = JSON.stringify(seconds); // and we convert our seconds into a string
-      
-      if (seconds.length < 2) { // if the seconds string is only a single digit
-        seconds = '0'.concat(seconds); // we can add a 0 in front of it so that if 'seconds = "1"' it will come out as 'seconds = "01"'
-      }   
-      milliseconds = Math.floor(componentData.actualDuration % 60); // Our true milliseconds then becomes the remainder of dividing our initial milliseconds by 60
 
+      if (seconds.length < 2) {
+        // if the seconds string is only a single digit
+        seconds = '0'.concat(seconds); // we can add a 0 in front of it so that if 'seconds = "1"' it will come out as 'seconds = "01"'
+      }
+      milliseconds = Math.floor(componentData.actualDuration % 60); // Our true milliseconds then becomes the remainder of dividing our initial milliseconds by 60
     } else {
       seconds = '00'; // if we haven't even reached one second yet, our seconds are 00
     }
 
     milliseconds = Number.parseFloat(milliseconds as string).toFixed(2); // we convert our milliseconds string into a floating point number that has up to two decimal places.
-    const arrayMilliseconds: string | number = milliseconds.split('.'); // we split our milliseconds using the decimal and come out with an array of two numbers
+    const arrayMilliseconds: [string, number] = milliseconds.split('.'); // we split our milliseconds using the decimal and come out with an array of two numbers
 
-    
-    if (arrayMilliseconds[0].length < 2) { // if our millisecond string only has one digit
+    if (arrayMilliseconds[0].length < 2) {
+      // if our millisecond string only has one digit
       arrayMilliseconds[0] = '0'.concat(arrayMilliseconds[0]); // we add a 0 in front of it so that in the a sample number of '1' becomes '01'
     }
-    
-    if (index === 0) { // if this is the initial snapshot
+
+    if (index === 0) {
+      // if this is the initial snapshot
       return `${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`; // we give it a timestamp
     }
     return `+${seconds}:${arrayMilliseconds[0]}.${arrayMilliseconds[1]}`; // if these are succeeding snapshots, we add a '+' to the timestamp
   };
 
   const displayTime: string = cleanTime(); // we run cleanTime on the creation of this component so that we can get the timestamp
-
 
   // creates an options object that 'ReactHover' component will use to modify it's behaviour
   const optionsCursorTrueWithMargin: OptionsCursorTrueWithMargin = {
@@ -99,7 +99,8 @@ const Action = (props: ActionProps): JSX.Element => {
   return (
     <div className='individual-action'>
       <div
-        onKeyDown={(e):void => handleOnkeyDown(e, viewIndex)}
+        // @ts-ignore
+        onKeyDown={(e): void => handleOnkeyDown(e, viewIndex)}
         className={selected || last ? 'action-component selected' : 'action-component'}
         onClick={() => {
           dispatch(changeView(index));

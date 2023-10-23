@@ -10,7 +10,7 @@ import { Text } from '@visx/text';
 import { schemeSet1 } from 'd3-scale-chromatic';
 import { onHover, onHoverExit, save } from '../../../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { snapshot, TooltipData, Margin, BarGraphProps } from '../../../FrontendTypes';
+import { snapshot, TooltipData, Margin, BarGraphProps, RootState, MainState } from '../../../FrontendTypes';
 
 /* DEFAULTS */
 const margin = {
@@ -33,7 +33,7 @@ const tooltipStyles = {
 
 const BarGraph = (props: BarGraphProps): JSX.Element => {
   const dispatch = useDispatch();
-  const { tabs, currentTab } = useSelector((state: any) => state.main);
+  const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
 
   const {
     width, // from stateRoute container

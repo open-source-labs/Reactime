@@ -1,4 +1,5 @@
 import { SeriesPoint } from '@visx/shape/lib/types';
+import { Dispatch } from 'redux';
 
 export interface ActionObj {
   name: string;
@@ -102,6 +103,12 @@ export interface BarGraphComparisonAction {
   setAction: (e: boolean | string) => void;
 }
 
+export interface ActionContainerProps {
+  actionView: boolean;
+  setActionView: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleActionContainer: () => void;
+}
+
 export interface StateContainerProps {
   snapshot: Record<
     number,
@@ -136,14 +143,62 @@ export interface Obj {
   children?: [];
 }
 
-export interface InitialStateProps {
-  port: null | number;
-  currentTab: null | number;
-  currentTitle: null | string;
-  tabs: unknown;
-  currentTabInApp: null | string;
+export interface RootState {
+  main: MainState;
+}
+
+export interface InitialState {
+  port: null;
+  currentTab: null;
+  currentTitle: string;
+  tabs: {};
+  currentTabInApp: null;
   connectionStatus: boolean;
   connectRequested: boolean;
+}
+
+export interface MainState {
+  port: null | chrome.runtime.Port;
+  currentTab: number;
+  currentTitle: string;
+  tabs: { [k: string]: { [k: string]: unknown } };
+  currentTabInApp: string;
+  connectionStatus: boolean;
+  connectRequested: boolean;
+}
+
+export interface CurrentTab {
+  currBranch: number;
+  currLocation: { [k: string]: any };
+  currParent: number;
+  hierarchy: {
+    stateSnapshot: {
+      route: any;
+      children: any[];
+    };
+    name: number;
+    branch: number;
+    index: number;
+    children?: [];
+  };
+  index: number;
+  intervalId: null | number;
+  mode: { paused: boolean };
+  playing: boolean;
+  seriesSavedStatus: boolean;
+  sliderIndex: number;
+  snapshots: { [k: string]: any }[];
+  status: { [k: string]: any };
+  title: string;
+  viewIndex: number;
+  webMetrics: {
+    LCP: undefined | number;
+    FID: undefined | number;
+    FCP: undefined | number;
+    TTFB: undefined | number;
+    CLS: undefined | number;
+    INP: undefined | number;
+  };
 }
 
 export interface DiffProps {
@@ -169,7 +224,7 @@ export interface ActionProps {
   state?: Record<string, unknown>;
   viewIndex: number | undefined;
   isCurrIndex: boolean;
-  handleOnkeyDown: (e: unknown, i: number) => void;
+  handleOnkeyDown: (e: KeyboardEvent, i: number) => void;
 }
 
 export interface DiffRouteProps {
@@ -224,7 +279,7 @@ export interface DropdownProps {
 }
 
 export interface TutorialProps {
-  dispatch: (object) => void;
+  dispatch: Dispatch;
   currentTabInApp: string;
 }
 
@@ -324,5 +379,3 @@ export interface Snapshots {
   component3: number;
   'all others': number;
 }
-
-
