@@ -100,35 +100,47 @@ If Reactime loses its connection to the tab you're monitoring, simply click the 
 One of the most common issues that affects performance in React is unnecessary
 render cycles. This problem can be fixed by checking your renders in the
 Performance tab in Chrome DevTools under the Reactime panel.
+<br>
+<br>
 
 ### 🔹 Jumping
 
 Using the actions sidebar, a user can jump to any previously recorded snapshots.
 Hitting the jump button on any snapshot will allow a user to view state data at
 any point in the history of the target application.
+<br>
+<br>
 
 ### 🔹 Gatsby
 
 Reactime offers full support for Gatsby applications. You would be able to
 identify unnecessary renders, duration of each rendering, travel-debugging
 features and visual representation of the tree components.
+<br>
+<br>
 
 ### 🔹 Next.js
 
 Reactime offers debugging and performance tools for Next.js apps: time-traveling
 debugging, preventing unnecessary component re-renders and making your
 application faster.
+<br>
+<br>
 
 ### 🔹 Remix
 
 Reactime offers debugging and performance tools for Remix apps (in beta). Support still
 needs to be added for multi-route time traveling. Every other feature works.
+<br>
+<br>
 
 ### 🔹 TypeScript Support
 
 Reactime offers support for TypeScript applications using stateful class
 components and functional components. Further testing and development is
 required for custom hooks and Concurrent Mode.
+<br>
+<br>
 
 ### 🔹 Documentation
 
@@ -136,6 +148,7 @@ After cloning this repository, developers can simply run `npm run docs` at the
 root level and serve the dynamically generated `/docs/index.html` file on a
 browser. Doing so will provide a readable, extensible, and interactive GUI view
 of the structure and interfaces of the codebase.
+<br>
 <br>
 
 ### <b>Additional Features</b>
