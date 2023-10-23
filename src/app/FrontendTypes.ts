@@ -171,7 +171,16 @@ export interface CurrentTab {
   currBranch: number;
   currLocation: { [k: string]: any };
   currParent: number;
-  hierarchy: { [k: string]: any };
+  hierarchy: {
+    stateSnapshot: {
+      route: any;
+      children: any[];
+    };
+    name: number;
+    branch: number;
+    index: number;
+    children?: [];
+  };
   index: number;
   intervalId: null | number;
   mode: { paused: boolean };

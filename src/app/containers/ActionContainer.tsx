@@ -5,7 +5,7 @@ import SwitchAppDropdown from '../components/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import RouteDescription from '../components/RouteDescription';
-import { ActionContainerProps, MainState, Obj, RootState } from '../FrontendTypes';
+import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
 
 /*
@@ -26,7 +26,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   const dispatch = useDispatch();
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
 
-  const { currLocation, hierarchy, sliderIndex, viewIndex } = tabs[currentTab]; // we destructure the currentTab object
+  const { currLocation, hierarchy, sliderIndex, viewIndex }: Partial<CurrentTab> = tabs[currentTab]; // we destructure the currentTab object
   const {
     toggleActionContainer, // function that handles Time Jump Sidebar view from MainContainer
     actionView, // local state declared in MainContainer
@@ -89,7 +89,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   if (hierarchy) displayArray(hierarchy); // when page is refreshed we may not have a hierarchy so we need to check if hierarchy was initialized. If it was initialized, invoke displayArray to display the hierarchy
 
   // This function allows us to use our arrow keys to jump between snapshots. It passes an event and the index of each action-component. Using the arrow keys allows us to highligh snapshots and the enter key jumps to the selected snapshot
-  function handleOnKeyDown(e: KeyboardEvent, i: number): void {
+  function handleOnKeyDown(e: Partial<KeyboardEvent>, i: number): void {
     let currIndex = i;
 
     if (e.key === 'ArrowUp') {
