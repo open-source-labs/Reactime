@@ -1,7 +1,7 @@
 import React from 'react';
 import { diff, formatters } from 'jsondiffpatch';
 import ReactHtmlParser from 'react-html-parser';
-import { DiffProps, MainState, RootState, StatelessCleaning } from '../FrontendTypes';
+import { CurrentTab, DiffProps, MainState, RootState, StatelessCleaning } from '../FrontendTypes';
 import { useSelector } from 'react-redux';
 
 /**
@@ -17,14 +17,14 @@ function Diff(props: DiffProps): JSX.Element {
     show, // boolean that is dependent on the 'Route' path; true if 'Route' path === '/diffRaw'
   } = props;
   const { currentTab, tabs }: MainState = useSelector((state: RootState) => state.main);
-  const { snapshots, viewIndex, sliderIndex } = tabs[currentTab];
+  const { snapshots, viewIndex, sliderIndex }: Partial<CurrentTab> = tabs[currentTab];
 
   let previous: unknown; // = (viewIndex !== -1) ? snapshots[viewIndex - 1] : previous = snapshots[sliderIndex - 1]
 
-  if (viewIndex !== -1) {
+  if (viewIndex !== -1 && snapshots && viewIndex) {
     // snapshots should not have any property < 0. A viewIndex of '-1' means that we had a snapshot index that occurred before the initial snapshot of the application state... which is impossible. '-1' therefore means reset to the last/most recent snapshot.
     previous = snapshots[viewIndex - 1]; // set previous to the snapshot that is before the one we are currently viewing
-  } else {
+  } else if (snapshots && sliderIndex) {
     previous = snapshots[sliderIndex - 1]; // if viewIndex was an impossible index, we will get our snapshots index using 'sliderIndex.' sliderIndex should have already been reset to the latest snapshot index. Previous is then set to the snapshot that occurred immediately before our most recent snapshot.
   }
 

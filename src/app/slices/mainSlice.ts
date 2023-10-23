@@ -1,8 +1,8 @@
 import { createSlice, current } from '@reduxjs/toolkit';
-import { MainState } from '../FrontendTypes';
+import { InitialState } from '../FrontendTypes';
 import _ from 'lodash';
 
-const initialState: MainState = {
+const initialState: InitialState = {
   // we initialize what our initialState is here
   port: null,
   currentTab: null,

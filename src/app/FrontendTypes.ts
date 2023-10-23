@@ -1,4 +1,5 @@
 import { SeriesPoint } from '@visx/shape/lib/types';
+import { Dispatch } from 'redux';
 
 export interface ActionObj {
   name: string;
@@ -146,14 +147,49 @@ export interface RootState {
   main: MainState;
 }
 
-export interface MainState {
-  port: null | chrome.runtime.Port;
-  currentTab: null | number;
-  currentTitle: null | string;
-  tabs: { [k: string]: { [k: string]: unknown } } | {};
-  currentTabInApp: null | string;
+export interface InitialState {
+  port: null;
+  currentTab: null;
+  currentTitle: string;
+  tabs: {};
+  currentTabInApp: null;
   connectionStatus: boolean;
   connectRequested: boolean;
+}
+
+export interface MainState {
+  port: null | chrome.runtime.Port;
+  currentTab: number;
+  currentTitle: string;
+  tabs: { [k: string]: { [k: string]: unknown } };
+  currentTabInApp: string;
+  connectionStatus: boolean;
+  connectRequested: boolean;
+}
+
+export interface CurrentTab {
+  currBranch: number;
+  currLocation: { [k: string]: any };
+  currParent: number;
+  hierarchy: { [k: string]: any };
+  index: number;
+  intervalId: null | number;
+  mode: { paused: boolean };
+  playing: boolean;
+  seriesSavedStatus: boolean;
+  sliderIndex: number;
+  snapshots: { [k: string]: any }[];
+  status: { [k: string]: any };
+  title: string;
+  viewIndex: number;
+  webMetrics: {
+    LCP: undefined | number;
+    FID: undefined | number;
+    FCP: undefined | number;
+    TTFB: undefined | number;
+    CLS: undefined | number;
+    INP: undefined | number;
+  };
 }
 
 export interface DiffProps {
@@ -234,7 +270,7 @@ export interface DropdownProps {
 }
 
 export interface TutorialProps {
-  dispatch: (object) => void;
+  dispatch: Dispatch;
   currentTabInApp: string;
 }
 
