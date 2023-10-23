@@ -89,6 +89,18 @@ Download the recorded snapshots as a JSON file and upload them to access state t
 </p>
 <br>
 
+### 🔹 Reconnect and Status
+
+If Reactime loses its connection to the tab you're monitoring, simply click the "reconnect" button to resume your work. You'll notice a circle located to the right of the button, which will appear as either red (indicating disconnection) or green (signifying a successful reconnection).
+<br>
+<br>
+
+<p align="center">
+<img src="./assets/gifs/importExport_v21.gif" />
+</p>
+<br>
+
+
 ### 🔹 Re-render Optimization
 
 One of the most common issues that affects performance in React is unnecessary
