@@ -95,12 +95,6 @@ If Reactime loses its connection to the tab you're monitoring, simply click the 
 <br>
 <br>
 
-<p align="center">
-<img src="./assets/gifs/importExport_v21.gif" />
-</p>
-<br>
-
-
 ### 🔹 Re-render Optimization
 
 One of the most common issues that affects performance in React is unnecessary
