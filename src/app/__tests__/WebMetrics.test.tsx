@@ -121,6 +121,10 @@ const customInitialState = {
   },
 };
 
+const props = {
+  score: [5]
+};
+
 const customStore = configureStore({
   reducer: {
     main: mainSlice.reducer,
@@ -140,7 +144,7 @@ jest.mock('react-apexcharts', () => ({ __esModule: true, default: () => <div /> 
 
 describe('WebMetrics graph testing', () => {
   test('should have 1 div with class name "metric" ', () => {
-    const { container } = render(<WebMetrics />);
+    const { container } = render(<WebMetrics {...props}/>);
     expect(container.getElementsByClassName('metric').length).toBe(1);
   });
 });
