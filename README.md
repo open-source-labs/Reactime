@@ -29,7 +29,7 @@
 <br>
 
 <p align="center">
-<img src="./assets/gifs/main_v21.gif" />
+<img src="./assets/gifs/GeneralDemoGif.gif" />
 </p>
 
 <p align="center">
