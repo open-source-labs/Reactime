@@ -113,9 +113,9 @@ import { useDispatch } from 'react-redux';
         main: {
           port: null,
           currentTab: 87, // Update with your desired value
-          currentTitle: null,
+          currentTitle: 'test string',
           tabs: customTabs, // Replace with the actual (testing) tab data
-          currentTabInApp: null,
+          currentTabInApp: 'test string',
           connectionStatus: false,
           connectRequested: true,
         },
@@ -152,7 +152,7 @@ jest.mock('../components/SwitchApp', () => () => {
 //here we set it as a jest.fn() 
 //then we pass it into our actionContainer on render
 const setActionViewMock = jest.fn();
-
+const toggleActionContainer = jest.fn();
 jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'), // Use the actual react-redux module except for the functions you want to mock
   useDispatch: jest.fn(), // set up a mock function for useDispatch
@@ -165,7 +165,7 @@ describe('unit testing for ActionContainer', ()=>{
   const dummyDispatch = jest.fn(); //separate mock function created because we need to explicitly define on line 30 what 
   useDispatchMock.mockReturnValue(dummyDispatch);//exactly useDispatchMock returns (which is a jest.fn())
   beforeEach(()=>{
-    render(<ActionContainer actionView={true} setActionView={setActionViewMock}/>)
+    render(<ActionContainer actionView={true} setActionView={setActionViewMock}  toggleActionContainer ={toggleActionContainer}/>)
   });
 
   test('expect top arrow to be rendered', ()=>{
@@ -193,14 +193,14 @@ describe('Integration testing for ActionContainer.tsx', () => {
     test('renders the ActionContainer component', () => {
         //tests that the clearButton is rendered by testing if we can get "Clear"
         //need to set actionView to true to correctly render clearbutton
-        render(<ActionContainer setActionView={setActionViewMock} actionView={true}/>);
+        render(<ActionContainer setActionView={setActionViewMock} actionView={true} toggleActionContainer={toggleActionContainer}/>);
         const clearButton = screen.getByText('Clear'); // Use an existing element
         expect(setActionViewMock).toHaveBeenCalledWith(true);
         expect(clearButton).toBeInTheDocument();
       });
 
       test('Slider resets on clear button', ()=>{
-        render(<ActionContainer actionView = {true} setActionView={setActionViewMock}/>)
+        render(<ActionContainer actionView = {true} setActionView={setActionViewMock} toggleActionContainer={toggleActionContainer}/>)
         render( <TravelContainer snapshotsLength={0} />)
         fireEvent.click(screen.getAllByRole('button')[0]);
         expect(screen.getByRole('slider')).toHaveStyle('left: 0');
