@@ -48,7 +48,7 @@ be viewed in Diff mode.
 <br>
 
 <p align="center">
-<img src="./assets/gifs/TimeTravelGif22.gif" />
+<img src="./assets/gifs/TimeTravelGif.gif" />
 </p>
 <br>
 
