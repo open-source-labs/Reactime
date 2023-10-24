@@ -123,11 +123,11 @@ const customInitialState = {
 
 const customStore = configureStore({
 reducer: {
-main: mainSlice.reducer,
+  main: mainSlice.reducer,
 },
-preloadedState: customInitialState, // Provide custom initial state
-middleware: (getDefaultMiddleware) =>
-getDefaultMiddleware({ serializableCheck: false }),
+  preloadedState: customInitialState, // Provide custom initial state
+  middleware: (getDefaultMiddleware) =>
+  getDefaultMiddleware({ serializableCheck: false }),
 });
 
 const render = component => rtlRender(
