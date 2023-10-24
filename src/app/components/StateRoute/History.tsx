@@ -16,7 +16,7 @@ import { changeView, changeSlider, setCurrentTabInApp } from '../../slices/mainS
 const defaultMargin: DefaultMargin = {
   top: 30,
   left: 30,
-  right: 55,
+  right: 55, 
   bottom: 70,
 };
 
@@ -146,7 +146,7 @@ function History(props: Record<string, unknown>): JSX.Element {
 
   const makeD3Tree = () => {
     const svg = d3.select(svgRef.current); // d3.select Selects the first element/node that matches svgRef.current. If no element/node match returns an empty selection. If multiple elements/nodes match the selector, only the first matching element/node (in document order) will be selected.
-    svg.selectAll('*').remove(); // Selects all elements. The elements will be selected in document order (top-to-bottom). We then remove the selected elements/nodes from the DOM
+    svg.selectAll('*').remove(); // Selects all elements. The elements will be selected in document order (top-to-bottom). We then remove the selected elements/nodes from the DOM. This is important as to ensure that the SVG is empty before rendering the D3 based visualization to avoid interference/overlap with any previously rendered content.
 
     const tree = (data) => { // function that takes in data and turns it into a d3 tree.
       const treeRoot = d3.hierarchy(data); // 'd3.hierarchy' constructs a root node from the specified hierarchical data. 
@@ -156,28 +156,28 @@ function History(props: Record<string, unknown>): JSX.Element {
     const d3root = tree(root); // create a d3. tree from our root
     const currNode = labelCurrentNode(d3root); // iterate through our nodes and apply a color property
 
-    const g = svg
+    const g = svg //serves as a container for the nodes and links withi nthe D3 Visualization 
       .append('g') // create an element 'g' on svg
       .attr(
         'transform',
-        `translate(${margin.left},${d3root.height === 0 ? totalHeight / 2 : margin.top})`,
+        `translate(${margin.left},${d3root.height === 0 ? totalHeight / 2 : margin.top})`, //Set the position of the group 'g' by translating it horizontally by 'margin.left' pixels and vertically based on the conditional expression.
       );
 
-    const link = g
+    const link = g //responsible for rendering the links or connectors between the nodes in the d3 Tree
       .selectAll('.link') // select all elements that contain the string '.link' and return a selection
       .data(d3root.descendants().slice(1))
       .enter()
       .append('path')
       .attr('class', 'link')
-      .attr(
+      .attr( //defines the path attribute (d) for each link (edge) between nodes, using a Bézier curve (C) to connect the source node's coordinates (d.x, d.y) to the midpoint between the source and target nodes and then to the target node's coordinates (d.parent.x, d.parent.y)
         'd',
-        (d) =>
+        (d) => 
           `M${d.x},${d.y}C${d.x},${(d.y + d.parent.y) / 2} ${d.parent.x},${
             (d.y + d.parent.y) / 2
           } ${d.parent.x},${d.parent.y}`,
       );
 
-    const node = g
+    const node = g 
       .selectAll('.node')
       .data(d3root.descendants())
       .enter()
