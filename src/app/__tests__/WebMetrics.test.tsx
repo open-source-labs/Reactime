@@ -113,7 +113,7 @@ const customInitialState = {
   main: {
     port: null,
     currentTab: 87, // Update with your desired value
-    currentTitle: null,
+    currentTitle: 'test string',
     tabs: customTabs, // Replace with the actual (testing) tab data
     currentTabInApp: null,
     connectionStatus: false,
@@ -122,8 +122,8 @@ const customInitialState = {
 };
 
 const customStore = configureStore({
-reducer: {
-  main: mainSlice.reducer,
+  reducer: {
+    main: mainSlice.reducer,
 },
   preloadedState: customInitialState, // Provide custom initial state
   middleware: (getDefaultMiddleware) =>
@@ -131,16 +131,12 @@ reducer: {
 });
 
 const render = component => rtlRender(
-<Provider store={customStore}>
-{component}
-</Provider>
+  <Provider store={customStore}>
+      {component}
+  </Provider>
 );
+
 jest.mock('react-apexcharts', () => ({ __esModule: true, default: () => <div /> }));
-// const dispatch = jest.fn();
-// jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn());
-// jest.mock('../store');
-// const mockedStoreContext = jest.mocked(useStoreContext);
-// mockedStoreContext.mockImplementation(() => [, dummyDispatch]);
 
 describe('WebMetrics graph testing', () => {
   test('should have 1 div with class name "metric" ', () => {
