@@ -1,4 +1,4 @@
-import { createSlice, current } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { InitialState } from '../FrontendTypes';
 import _ from 'lodash';
 
@@ -14,8 +14,6 @@ const initialState: InitialState = {
 };
 
 const findName = (index: number, obj) => {
-  console.log('findName index: ', index);
-  console.log('findName obj: ', current(obj));
   // eslint-disable-next-line eqeqeq
   if (obj && obj.index == index) {
     return obj.name;
@@ -465,7 +463,6 @@ export const mainSlice = createSlice({
     },
 
     startReconnect: (state) => {
-      console.log('STATE: ', current(state));
       state.connectRequested = true;
       state.port = initialState.port;
     },
