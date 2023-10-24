@@ -73,7 +73,7 @@ Any changes to console.logs in Reactime can be seen by refreshing the browser th
 
 ## Replace Functionality for Outdated Packages
 
-Package dependencies need to be trimmed down, updated, and/or removed. Peer dependency errors are the reason npm install --force may be necessary when installing the dependencies of Reactime. While Reactime v21.0 has reduced package dependency errors for developers from multiple pages of errors down to ~15 errors, the goal is to decrease overall package/library dependency to a minimum to promote long-term maintainability
+Package dependencies need to be trimmed down, updated, and/or removed. Peer dependency errors are the reason npm install --force may be necessary when installing the dependencies of Reactime. While Reactime v22.0 has reduced package dependency errors for developers from multiple pages of errors down to ~15 errors, the goal is to decrease overall package/library dependency to a minimum to promote long-term maintainability
 
 Material-ui/core has been updated to use React 18. Future developers may choose to remove Material-ui/core from the application to ensure compatibility in the future or continue to build out the UI. The choice is yours!
 
@@ -90,9 +90,13 @@ Can Reactime functionality be extended so applications using Redux can track sta
 
 Yes, but it would be very time-consuming and not the most feasible option while Redux devtools exists already. With how Redux devtools is currently set up, a developer is unable to use Redux devtools as a third-party user and integrate its functionality into their own application, as Redux devtools is meant to be used directly on an application using Redux for state-tracking purposes. Since the devtools do not appear to have a public API for integrated use in an application or it simply does not exist, Redux devtools would need to be rebuilt from the ground up and then integrated into Reactime, or built into Reactime directly still from scratch.
 
-Can Reactime be refactored into a Redux application?
+## Main Slice Modularity 
 
-Yes, in fact, it should be. Reactime currently uses [Immer](https://github.com/immerjs/immer#readme) to handle immutable data structures. The foundation for Redux is already there, as Reactime uses reducers, a store, action creators, and action types. Adding a state management library like Redux, would allow for further application stability and maintainability as it would decrease the amount of less frequently maintained package/libraries.
+Currently, Reactime employs Redux Toolkit for state management. At present, all actions are housed within the mainSlice.ts file. As this file has expanded significantly, it would be beneficial to modularize it, creating separate slices for distinct components.
+
+## Testing
+
+While our current test coverage provides a sturdy base, the application can benefit from deeper exploration into critical user paths and broadening end-to-end testing scenarios. Embracing automation and periodic reviews can further ensure consistent quality and robustness in the face of evolving requirements.
 
 # File Structure
 
