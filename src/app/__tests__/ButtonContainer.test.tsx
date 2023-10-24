@@ -114,7 +114,7 @@ const customInitialState = {
   main: {
     port: null,
     currentTab: 87, // Update with your desired value
-    currentTitle: 'No Target',
+    currentTitle: 'test string',
     tabs: customTabs, // Replace with the actual (testing) tab data
     currentTabInApp: 'test string',
     connectionStatus: false,
