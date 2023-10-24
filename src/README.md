@@ -106,12 +106,12 @@ src/
 │   ├── components/               # React components
 │   ├── constants/                #
 │   ├── containers/               # More React components
-│   ├── reducers/                 # Redux mechanism for updating state
+│   ├── slices/                   # Redux Toolkit mechanism for updating state
 │   ├── styles/                   #
 │   ├── FrontendTypes.ts          # Library of typescript interfaces
 │   ├── index.tsx                 # Starting point for root App component
 │   ├── module.d.ts               #
-│   └── store.tsx                 #
+│   └── store.ts                  #
 │
 ├── backend/                      # "Backend" code (injected into target app)
 │   │                             # Focus especially on linkFiber, timeJump, tree, and helpers
