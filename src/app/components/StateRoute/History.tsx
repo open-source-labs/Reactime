@@ -26,7 +26,7 @@ function History(props: Record<string, unknown>): JSX.Element {
   const {
     width: totalWidth, // from ParentSize provided in StateRoute
     height: totalHeight, // from ParentSize provided in StateRoute
-    margin = defaultMargin,
+    margin = defaultMargin, //default margin is used when margins aren't passed into props
     hierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
     currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
     snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
@@ -184,7 +184,7 @@ function History(props: Record<string, unknown>): JSX.Element {
         return 'link'; // Apply only the 'link' class
       });
 
-    const node = g 
+    const node = g //responsible for rendering nodes in d3 visualization tree
       .selectAll('.node')
       .data(d3root.descendants())
       .enter()
@@ -192,7 +192,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .style('cursor', 'pointer')
       .attr('class', `snapshotNode`)
       .on('click', (event, d) => {
-        dispatch(changeView(d.data.index));
+        dispatch(changeView(d.data.index)); 
         dispatch(changeSlider(d.data.index));
         /*
           created popup div and appended it to display div(returned in this function) 
@@ -214,11 +214,11 @@ function History(props: Record<string, unknown>): JSX.Element {
         }
 
         if (d3.selectAll('.tooltip')._groups['0'].length === 0) {
-          renderToolTip();
+          renderToolTip(); //if there are no tooltips left in the doc, we call the function to create a new tooltip
         } else {
-          if (d3.selectAll(`#tt-${d.data.index}`)._groups['0'].length === 0) {
-            d3.selectAll('.tooltip').remove();
-            renderToolTip();
+          if (d3.selectAll(`#tt-${d.data.index}`)._groups['0'].length === 0) { // if there is no tooltip with the specific id
+            d3.selectAll('.tooltip').remove(); //remove any existing tooltips
+            renderToolTip(); //call the function again to create a new tooltip
           }
         }
       })
@@ -263,14 +263,13 @@ function History(props: Record<string, unknown>): JSX.Element {
 
     node
       .append('circle')
-
       .attr('fill', (d) => {
         if (d.data.index === currLocation.index) {
           return 'red';
         }
         return d.color ? d.color : '#555';
       })
-      .attr('r', 14);
+      .attr('r', 18); 
 
     node
       .append('text')
