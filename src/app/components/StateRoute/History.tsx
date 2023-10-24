@@ -156,7 +156,7 @@ function History(props: Record<string, unknown>): JSX.Element {
     const d3root = tree(root); // create a d3. tree from our root
     const currNode = labelCurrentNode(d3root); // iterate through our nodes and apply a color property
 
-    const g = svg //serves as a container for the nodes and links withi nthe D3 Visualization 
+    const g = svg //serves as a container for the nodes and links within the D3 Visualization of the tree
       .append('g') // create an element 'g' on svg
       .attr(
         'transform',
@@ -175,7 +175,14 @@ function History(props: Record<string, unknown>): JSX.Element {
           `M${d.x},${d.y}C${d.x},${(d.y + d.parent.y) / 2} ${d.parent.x},${
             (d.y + d.parent.y) / 2
           } ${d.parent.x},${d.parent.y}`,
-      );
+      )
+      .attr('class', (d) => {
+        // Adding a class based on the current node's data
+        if (d.data.index === currLocation.index) {
+          return 'link current-link'; // Apply both 'link' and 'current-link' classes
+        }
+        return 'link'; // Apply only the 'link' class
+      });
 
     const node = g 
       .selectAll('.node')
