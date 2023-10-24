@@ -96,7 +96,7 @@ If Reactime loses its connection to the tab you're monitoring, simply click the 
 <br>
 
 <p align="center">
-<img src="./assets/gifs/ReconnectGif.gif" />
+<img src="./assets/gifs/ReconnectGif22.gif" />
 </p>
 <br>
 
