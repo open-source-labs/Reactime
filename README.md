@@ -85,7 +85,7 @@ Download the recorded snapshots as a JSON file and upload them to access state t
 <br>
 
 <p align="center">
-<img src="./assets/gifs/importExport_v21.gif" />
+<img src="./assets/gifs/importExport_v22.gif" />
 </p>
 <br>
 
