@@ -150,9 +150,9 @@ All the diagrams of data flows are available on [MIRO](https://miro.com/app/boar
 
 1. The _app_ folder is responsible for the Single Page Application that you see when you open the chrome dev tools under the Reactime tab.
 
-![FRONTEND DEPENDENCY CHART](../assets/Front_End_Dependency_Chart_v21.png)
+![FRONTEND DEPENDENCY CHART](../assets/Front_End_Dependency_Chart_v22.jpg)
 
-![BACKEND DEPENDENCY CHART](../assets/Back_End_Dependency_Chart_v21.png)
+![BACKEND DEPENDENCY CHART](../assets/Back_End_Dependency_Chart_v22.jpg)
 
 ![FRONTEND DATA FLOW](../assets/frontend-diagram.png)
 
