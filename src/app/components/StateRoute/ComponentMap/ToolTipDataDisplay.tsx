@@ -17,7 +17,7 @@ const colors = {
   base06: '#b9b6b0',
   base07: '#e7e9db',
   base08: '#ef6155',
-  base09: '#824508',   //base09 is orange for booleans and numbers. This base in particular fails to match the entered color.
+  base09: '#824508', //base09 is orange for booleans and numbers. This base in particular fails to match the entered color.
   // base09: '#592bad', // alternative purple
   base0A: '#fec418',
   base0B: '#48b685',
@@ -27,13 +27,12 @@ const colors = {
   base0F: '#e96ba8',
 };
 
-
 const ToolTipDataDisplay = ({ containerName, dataObj }) => {
-  
-  const printableObject = {} // The key:value properties of printableObject will be rendered in the JSON Tree
-  
-  if (!dataObj) { // If state is null rather than an object, print "State: null" in tooltip
-      printableObject[containerName] = dataObj;
+  const printableObject = {}; // The key:value properties of printableObject will be rendered in the JSON Tree
+
+  if (!dataObj) {
+    // If state is null rather than an object, print "State: null" in tooltip
+    printableObject[containerName] = dataObj;
   } else {
     /*
       Props often contain circular references. 
@@ -55,22 +54,19 @@ const ToolTipDataDisplay = ({ containerName, dataObj }) => {
     /*
       Adds container name (State, Props, future different names for hooks) at top of object so everything nested in it will collapse when you click on it.
     */
-    printableObject[containerName] = data
+    printableObject[containerName] = data;
   }
 
   return (
-    <div
-      className='tooltipData'
-      key={`${containerName}-data-container`}
-    >
+    <div className='tooltipData' key={`${containerName}-data-container`}>
       <JSONTree
         data={printableObject} // data to be rendered, a snapshot object
         theme={{ extend: colors, tree: () => ({ className: `tooltipData-JSONTree` }) }} // theme set to a base16 theme that has been extended to include  "className: 'json-tree'"
         shouldExpandNodeInitially={() => true} // determines if node should be expanded when it first renders (root is expanded by default)
         hideRoot={true} // hides the root node
-        />
+      />
     </div>
-  )
+  );
 };
 
 export default ToolTipDataDisplay;

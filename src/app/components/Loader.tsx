@@ -15,9 +15,9 @@ This file is what decides what icon (loading, checkmark, exclamation point) is d
 
 const handleResult = (result: boolean): JSX.Element =>
   result ? (
-    <CheckCircleOutlineIcon className='check'/> // if result boolean is true, we display a checkmark icon
+    <CheckCircleOutlineIcon className='check' /> // if result boolean is true, we display a checkmark icon
   ) : (
-    <ErrorOutlineIcon className='fail'/> // if the result boolean is false, we display a fail icon
+    <ErrorOutlineIcon className='fail' /> // if the result boolean is false, we display a fail icon
   );
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

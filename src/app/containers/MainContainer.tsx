@@ -13,20 +13,21 @@ import {
   deleteTab,
   noDev,
   setCurrentLocation,
-  pause,
-} from '../actions/actions';
-import { useStoreContext } from '../store';
+  disconnected,
+  endConnect,
+} from '../slices/mainSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { MainState, RootState } from '../FrontendTypes';
 
 /*
   This is the main container where everything in our application is rendered
 */
 
 function MainContainer(): JSX.Element {
-  
-  const [store, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function. Properties not found on the initialState object (store/dispatch) are from the useReducer function invocation in the App component
-  
-  const { tabs, currentTab, port } = store; // we continue to destructure 'store' and get the tabs/currentTab/port
-  
+  const dispatch = useDispatch();
+
+  const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
+
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
 
   // this function handles Time Jump sidebar view
@@ -38,93 +39,107 @@ function MainContainer(): JSX.Element {
 
     const recordBtn = document.getElementById('recordBtn');
 
-    if (recordBtn.style.display === 'none') { // switches whether to display the record toggle button by changing the display property between none and flex
+    if (recordBtn.style.display === 'none') {
+      // switches whether to display the record toggle button by changing the display property between none and flex
       recordBtn.style.display = 'flex';
     } else {
       recordBtn.style.display = 'none';
     }
   };
-  
+
+  // Function handles when Reactime unexpectedly disconnects
+  const handleDisconnect = (msg): void => {
+    if (msg === 'portDisconnect') dispatch(disconnected());
+  };
+
+  // Function to listen for a message containing snapshots from the /extension/build/background.js service worker
+  const messageListener = (message: {
+    action: string;
+    payload: Record<string, unknown>;
+    sourceTab: number;
+  }) => {
+    const { action, payload, sourceTab } = message;
+    let maxTab: number;
+
+    if (!sourceTab && action !== 'keepAlive') {
+      // if the sourceTab doesn't exist or is 0 and it is not a 'keepAlive' action
+      const tabsArray: Array<string> = Object.keys(payload); // we create a tabsArray of strings composed of keys from our payload object
+      const numTabsArray: number[] = tabsArray.map((tab) => Number(tab)); // we then map out our tabsArray where we convert each string into a number
+
+      maxTab = Math.max(...numTabsArray); // we then get the largest tab number value
+    }
+
+    switch (action) {
+      case 'deleteTab': {
+        dispatch(deleteTab(payload));
+        break;
+      }
+      case 'devTools': {
+        dispatch(noDev(payload));
+        break;
+      }
+      case 'changeTab': {
+        dispatch(setTab(payload));
+        break;
+      }
+      case 'sendSnapshots': {
+        dispatch(setTab(sourceTab));
+        // set state with the information received from the background script
+        dispatch(addNewSnapshots(payload));
+        break;
+      }
+      case 'initialConnectSnapshots': {
+        dispatch(initialConnect(payload));
+        break;
+      }
+      case 'setCurrentLocation': {
+        dispatch(setCurrentLocation(payload));
+        break;
+      }
+      default:
+    }
+  };
+
   useEffect(() => {
     if (port) return; // only open port once so if it exists, do not run useEffect again
 
-    // chrome.runtime allows our application to retrieve our service worker (our eventual bundles/background.bundle.js after running npm run build), details about the manifest, and allows us to listen and respond to events in our application lifecycle.
-    const currentPort = chrome.runtime.connect(); // we connect to our service worker
+    // Connect ot port and assign evaluated result (obj) to currentPort
+    const currentPort = chrome.runtime.connect();
 
-    const keepAliveMainContainer = setInterval(() => { // interval to keep connection to background.js alive
-    currentPort.postMessage({
-      action: 'keepAlive' // messages sent to port to keep connection alive
-    })
-    }, 295000) // messages must happen within five minutes
-    
-    // listen for a message containing snapshots from the /extension/build/background.js service worker
-    currentPort.onMessage.addListener(
-      // parameter message is an object with following type script properties
-      (message: { 
-        action: string; 
-        payload: Record<string, unknown>; 
-        sourceTab: number 
-      }) => {
-        const { action, payload, sourceTab } = message;
-        let maxTab: number;
+    // If messageListener exists on currentPort, remove it
+    while (currentPort.onMessage.hasListener(messageListener))
+      currentPort.onMessage.removeListener(messageListener);
 
-        if (!sourceTab && action !== 'keepAlive') { // if the sourceTab doesn't exist or is 0 and it is not a 'keepAlive' action
-          const tabsArray: Array<string> = Object.keys(payload); // we create a tabsArray of strings composed of keys from our payload object
-          const numTabsArray: number[] = tabsArray.map((tab) => Number(tab)); // we then map out our tabsArray where we convert each string into a number
-        
-          maxTab = Math.max(...numTabsArray); // we then get the largest tab number value
-        }
+    // Add messageListener to the currentPort
+    currentPort.onMessage.addListener(messageListener);
 
-        switch (action) {
-          case 'deleteTab': {
-            dispatch(deleteTab(payload));
-            break;
-          }
-          case 'devTools': {
-            dispatch(noDev(payload));
-            break;
-          }
-          case 'changeTab': {
-            dispatch(setTab(payload));
-            break;
-          }
-          case 'sendSnapshots': {
-            dispatch(setTab(sourceTab));
-            // set state with the information received from the background script
-            dispatch(addNewSnapshots(payload));
-            break;
-          }
-          case 'initialConnectSnapshots': {
-            dispatch(initialConnect(payload));
-            break;
-          }
-          case 'setCurrentLocation': {
-            dispatch(setCurrentLocation(payload));
-            break;
-          }
-          default:
-        }
-        return true; // we return true so that the connection stays open, otherwise the message channel will close
-      },
-    );
+    // If handleDisconnect exists on chrome.runtime, remove it
+    while (chrome.runtime.onMessage.hasListener(handleDisconnect))
+      chrome.runtime.onMessage.removeListener(handleDisconnect);
 
-    currentPort.onDisconnect.addListener(() => { // used to track when the above connection closes unexpectedly. Remember that it should persist throughout the application lifecycle
-      console.log('this port is disconnecting line 52');
-    });
+    // add handleDisconnect to chrome.runtime
+    chrome.runtime.onMessage.addListener(handleDisconnect);
 
-    dispatch(setPort(currentPort)); // assign port to state so it could be used by other components
+    // assign port to state so it could be used by other components
+    dispatch(setPort(currentPort));
+
+    dispatch(endConnect());
   });
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
   if (
     !tabs[currentTab] ||
+    //@ts-ignore
     !tabs[currentTab].status.reactDevToolsInstalled ||
+    //@ts-ignore
     !tabs[currentTab].status.targetPageisaReactApp
   ) {
     return <ErrorContainer />;
   }
 
-  const { currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } = tabs[currentTab]; // we destructure the currentTab object
+  const { currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =
+    tabs[currentTab]; // we destructure the currentTab object
+  //@ts-ignore
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex]; // if viewIndex is -1, then use the sliderIndex instead
 
   // cleaning hierarchy and snapshotView from stateless data
@@ -172,18 +187,24 @@ function MainContainer(): JSX.Element {
           setActionView={setActionView}
           toggleActionContainer={toggleActionContainer}
         />
+        {/* @ts-ignore */}
         {snapshots.length ? (
           <div className='state-container-container'>
             <StateContainer
+              // @ts-ignore
               webMetrics={webMetrics}
+              // @ts-ignore
               viewIndex={viewIndex}
               snapshot={snapshotDisplay}
               hierarchy={hierarchyDisplay}
+              // @ts-ignore
               snapshots={snapshots}
+              // @ts-ignore
               currLocation={currLocation}
             />
           </div>
         ) : null}
+        {/* @ts-ignore */}
         <TravelContainer snapshotsLength={snapshots.length} />
         <ButtonsContainer />
       </div>

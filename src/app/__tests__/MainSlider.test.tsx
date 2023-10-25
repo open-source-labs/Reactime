@@ -1,30 +1,43 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render as rtlRender, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { TextEncoder } from 'util';
-global.TextEncoder = TextEncoder;
 import MainSlider from '../components/MainSlider';
-import { useStoreContext } from '../store';
+import { mainSlice } from '../slices/mainSlice';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 
-jest.mock('../store');
-const mockeduseStoreContext = jest.mocked(useStoreContext);
+const customTabs = {
+  100: {
+    sliderIndex: 1,
+  },
+};
+
+const customInitialState = {
+  main: {
+    port: null,
+    currentTab: 100,
+    currentTitle: null,
+    tabs: customTabs, // Replace with the actual (testing) tab data
+    currentTabInApp: null,
+    connectionStatus: false,
+    connectRequested: true,
+  },
+};
+
+const customStore = configureStore({
+  reducer: {
+    main: mainSlice.reducer,
+  },
+  preloadedState: customInitialState,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
+});
+
+const render = (component) => rtlRender(<Provider store={customStore}>{component}</Provider>);
 
 describe('Unit testing for MainSlider.jsx', () => {
   const props = {
     snapshotsLength: 1,
   };
-
-  const state = {
-    tabs: {
-      100: {
-        sliderIndex: 1,
-      },
-    },
-    currentTab: 100,
-  };
-
-  const dispatch = jest.fn();
-  mockeduseStoreContext.mockImplementation(() => [state, dispatch]);
 
   describe('When user only has one snapshot to view', () => {
     test('Component should have min, max, value with correct values to indicate slider position for correct tab', () => {
@@ -44,7 +57,7 @@ describe('Unit testing for MainSlider.jsx', () => {
       render(<MainSlider {...props} />);
       expect(screen.getByRole('slider')).toHaveAttribute('aria-valuemax', '2');
       expect(screen.getByRole('slider')).toHaveAttribute('aria-valuemin', '0');
-      expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow','0')
+      expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '0');
     });
   });
 });

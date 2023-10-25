@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import JSONTree from 'react-json-tree'; // React JSON Viewer Component
-import { setCurrentTabInApp } from '../../actions/actions';
-import { useStoreContext } from '../../store';
+import { setCurrentTabInApp } from '../../slices/mainSlice';
+import { useDispatch } from 'react-redux';
 import { TreeProps } from '../../FrontendTypes';
 
 /*
@@ -29,7 +29,11 @@ const colors = {
   base0F: '#e96ba8',
 };
 
-const getItemString = (type, data: { state?: object | string; name: string; children: [] }) => { // function that allows the customization of how arrays, objects, and iterable nodes are displayed.
+const getItemString = (
+  type: any,
+  data: { state?: object | string; name: string; children: [] },
+) => {
+  // function that allows the customization of how arrays, objects, and iterable nodes are displayed.
   if (data && data.name) {
     return <span>{data.name}</span>;
   }
@@ -37,13 +41,13 @@ const getItemString = (type, data: { state?: object | string; name: string; chil
 };
 
 const Tree = (props: TreeProps) => {
-  const { 
+  const {
     snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
     snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
-    currLocation // from 'tabs[currentTab]' object in 'MainContainer'
+    currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
   // @ts-ignore
-  const [store, dispatch] = useStoreContext();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('tree')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'tree' to facilitate render.
@@ -59,7 +63,8 @@ const Tree = (props: TreeProps) => {
           theme={{ extend: colors, tree: () => ({ className: 'json-tree' }) }} // theme set to a base16 theme that has been extended to include  "className: 'json-tree'"
           shouldExpandNodeInitially={() => true} // determines if node should be expanded when it first renders (root is expanded by default)
           getItemString={getItemString} // allows the customization of how arrays, objects, and iterable nodes are displayed.
-          labelRenderer={(raw: any[]) => { //  renders a label if the first element of raw is a number.
+          labelRenderer={(raw: any[]) => {
+            //  renders a label if the first element of raw is a number.
             return typeof raw[0] !== 'number' ? <span>{raw[0]}</span> : null;
           }}
         />

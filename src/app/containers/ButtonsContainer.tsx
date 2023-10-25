@@ -1,17 +1,28 @@
 import * as React from 'react';
-import { importSnapshots, toggleMode } from '../actions/actions';
-import { useStoreContext } from '../store';
+//importing useState from react to handle local state for button reconnect functionality
+import { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
+//importing necesary material UI components for dialogue popup
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import Tutorial from '../components/Tutorial';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { toggleMode, importSnapshots, startReconnect } from '../slices/mainSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import StatusDot from '../components/StatusDot';
+import LoopIcon from '@mui/icons-material/Loop';
+import CloseIcon from '@mui/icons-material/Close';
+import WarningIcon from '@mui/icons-material/Warning';
+import { MainState, RootState } from '../FrontendTypes';
 
-function exportHandler(snapshots: []): void { // function that takes in our tabs[currentTab] object to be exported as a JSON file. NOTE: TypeScript needs to be updated
+function exportHandler(snapshots: []): void {
+  // function that takes in our tabs[currentTab] object to be exported as a JSON file. NOTE: TypeScript needs to be updated
   const fileDownload: HTMLAnchorElement = document.createElement('a'); // invisible HTML element that will hold our tabs[currentTab] object
 
-  fileDownload.href = URL.createObjectURL( // href is the reference to the URL object created from the Blob
+  fileDownload.href = URL.createObjectURL(
+    // href is the reference to the URL object created from the Blob
     new Blob([JSON.stringify(snapshots)], { type: 'application/json' }), // Blob obj is raw data. The tabs[currentTab] object is stringified so the Blob can access the raw data
   );
 
@@ -21,15 +32,18 @@ function exportHandler(snapshots: []): void { // function that takes in our tabs
   URL.revokeObjectURL(fileDownload.href); // after file is downloaded, remove the href
 }
 
-function importHandler(dispatch: (a: unknown) => void): void { // function handles the importing of a tabs[currentTab] object when the upload button is selected
+function importHandler(dispatch: (a: unknown) => void): void {
+  // function handles the importing of a tabs[currentTab] object when the upload button is selected
   const fileUpload = document.createElement('input'); // invisible HTML element that will hold our uploaded tabs[currentTab] object
   fileUpload.setAttribute('type', 'file'); // Attributes added to HTML element
 
-  fileUpload.onchange = (e: Event) => { // onChange is when value of HTML element is changed
+  fileUpload.onchange = (e: Event) => {
+    // onChange is when value of HTML element is changed
     const reader = new FileReader(); // FileReader is an object that reads contents of local files in async. It can use file or blob objects
     const eventFiles = e.target as HTMLInputElement; // uploaded tabs[currentTab] object is stored as the event.target
-   
-    if (eventFiles) { // if the fileUpload element has an eventFiles
+
+    if (eventFiles) {
+      // if the fileUpload element has an eventFiles
       reader.readAsText(eventFiles.files[0]); // the reader parses the file into a string and stores it within the reader object
     }
 
@@ -43,9 +57,38 @@ function importHandler(dispatch: (a: unknown) => void): void { // function handl
 }
 
 function ButtonsContainer(): JSX.Element {
-  const [{ tabs, currentTab, currentTabInApp }, dispatch] = useStoreContext();
-  const { snapshots, mode: { paused }} = tabs[currentTab];
-  
+  const dispatch = useDispatch();
+  const { currentTab, tabs, currentTabInApp, connectionStatus }: MainState = useSelector(
+    (state: RootState) => state.main,
+  );
+  //@ts-ignore
+  const {
+    //@ts-ignore
+    mode: { paused },
+  } = tabs[currentTab];
+
+  //adding a local state using useState for the reconnect button functionality
+  const [reconnectDialogOpen, setReconnectDialogOpen] = useState(false);
+
+  //logic for handling dialog box opening and closing
+  const handleReconnectClick = () => {
+    setReconnectDialogOpen(true);
+  };
+
+  const handleReconnectConfirm = () => {
+    handleReconnectCancel();
+    dispatch(startReconnect());
+  };
+
+  const handleReconnectCancel = () => {
+    //closing the dialog
+    setReconnectDialogOpen(false);
+  };
+
+  useEffect(() => {
+    if (!connectionStatus) setReconnectDialogOpen(true);
+  }, [connectionStatus]);
+
   return (
     <div className='buttons-container'>
       <Button
@@ -61,6 +104,7 @@ function ButtonsContainer(): JSX.Element {
         variant='outlined'
         className='export-button'
         type='button'
+        //@ts-ignore
         onClick={() => exportHandler(tabs[currentTab])}
       >
         <FileDownloadIcon sx={{ pr: 1 }} />
@@ -72,6 +116,86 @@ function ButtonsContainer(): JSX.Element {
       </Button>
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}
       <Tutorial dispatch={dispatch} currentTabInApp={currentTabInApp} />
+      {/* adding a button for reconnection functionality 10/5/2023 */}
+      <Button
+        variant='outlined'
+        className='reconnect-button'
+        type='button'
+        //update onClick functionality to include a popup that contains....
+        onClick={handleReconnectClick}
+        endIcon={
+          <span style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <StatusDot status={connectionStatus ? 'active' : 'inactive'} />
+          </span>
+        }
+      >
+        <LoopIcon sx={{ pr: 1 }} />
+        Reconnect
+      </Button>
+      <Dialog className='dialog-pop-up' open={reconnectDialogOpen} onClose={handleReconnectCancel}>
+        <div className='close-icon-pop-up-div'>
+          <CloseIcon
+            type='button'
+            onClick={() => handleReconnectCancel()}
+            className='close-icon-pop-up'
+          />
+        </div>
+        <div className='warning-header-container'>
+          <WarningIcon className='warning-icon-pop-up' />
+          <DialogTitle className='dialog-pop-up-header'>WARNING</DialogTitle>
+        </div>
+        <DialogContent className='dialog-pop-up-contents'>
+          <h3>Status: {connectionStatus ? 'Connected' : 'Disconnected'}</h3>
+          {connectionStatus ? (
+            <>
+              Reconnecting while Reactime is still connected to the application may cause unforeseen
+              issues. Are you sure you want to proceed with the reconnection?
+            </>
+          ) : (
+            <>
+              Reactime has unexpectedly disconnected from your application. To continue using
+              Reactime, please reconnect.
+              <br />
+              <br />
+              WARNING: Reconnecting can sometimes cause unforeseen issues, consider downloading the
+              data before proceeding with the reconnection, if needed.
+            </>
+          )}
+        </DialogContent>
+
+        <DialogActions className='dialog-pop-up-actions'>
+          <Button
+            onClick={() => handleReconnectCancel()}
+            className='cancel-button-pop-up'
+            type='button'
+            variant='contained'
+            style={{ backgroundColor: '#474c55' }}
+          >
+            Cancel
+          </Button>
+          {!connectionStatus && (
+            <Button
+              // @ts-ignore
+              onClick={() => exportHandler(tabs[currentTab])}
+              type='button'
+              className='download-button-pop-up'
+              variant='contained'
+              color='primary'
+            >
+              Download
+            </Button>
+          )}
+          <Button
+            onClick={() => handleReconnectConfirm()}
+            type='button'
+            className='reconnect-button-pop-up'
+            variant='contained'
+            style={{ backgroundColor: '#F00008' }}
+          >
+            Reconnect
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

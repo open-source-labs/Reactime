@@ -5,12 +5,12 @@
 import * as React from 'react';
 import { Component } from 'react';
 import 'intro.js/introjs.css';
-import { tutorialSaveSeriesToggle, setCurrentTabInApp } from '../actions/actions';
 import { TutorialProps, TutorialState, StepsObj } from '../FrontendTypes';
 import { Button } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 const { Steps } = require('intro.js-react'); //Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly. The package 'intro.js-react' is small React wrapper around Intro.js. The wrapper provides support for both steps and hints. https://introjs.com/docs/
-
+import { setCurrentTabInApp, tutorialSaveSeriesToggle } from '../slices/mainSlice';
+import { useDispatch, useSelector } from 'react-redux';
 /*
   This is the tutorial displayed when the "How to use" button is clicked
   This needs to be a class component to be compatible with updateStepElement from intro.js
@@ -36,12 +36,13 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
 
   render(): JSX.Element {
     const {
-      currentTabInApp, // 'currentTabInApp' from 'ButtonsContainer' after useStoreContext()
-      dispatch // 'dispatch' from 'ButtonsContainer' after useStoreContext()
+      currentTabInApp, // 'currentTabInApp' from 'ButtonsContainer' after useSelector()
+      dispatch, // 'dispatch' from 'ButtonsContainer' after useDispatch()
     } = this.props;
 
     // This updates the steps so that they can target dynamically rendered elements
-    const onChangeHandler = (currentStepIndex: number) => { // takes in the current step and updates the tab[currentTab]'s seriesSavedStatus based on conditions and updates the element associated with the step.
+    const onChangeHandler = (currentStepIndex: number) => {
+      // takes in the current step and updates the tab[currentTab]'s seriesSavedStatus based on conditions and updates the element associated with the step.
       if (currentTabInApp === 'performance' && currentStepIndex === 1) {
         dispatch(tutorialSaveSeriesToggle('inputBoxOpen')); // sends a dispatch that update's tab[currentTab]'s 'seriesSavedStatus' to 'inputBoxOpen'
         this.steps.updateStepElement(currentStepIndex); // Built in intro.js API that updates element associated with step
@@ -66,11 +67,13 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
       }
     };
 
-    const onExit = () => { // This callback is called when the tutorial exits
+    const onExit = () => {
+      // This callback is called when the tutorial exits
       this.setState({ stepsEnabled: false }); // sets stepsEnabled to false in this component's state
     };
 
-    const startIntro = () => { // If "How to use" is clicked while in the performance tab, we'll navigate to the snapshops view before starting the tutorial. This is because the tutorial steps are designed to begin on the snapshots sub-tab. Check out the 'PerformanceVisx' component to see the route redirect logic
+    const startIntro = () => {
+      // If "How to use" is clicked while in the performance tab, we'll navigate to the snapshops view before starting the tutorial. This is because the tutorial steps are designed to begin on the snapshots sub-tab. Check out the 'PerformanceVisx' component to see the route redirect logic
       if (
         currentTabInApp === 'performance' ||
         currentTabInApp === 'performance-comparison' ||
@@ -353,7 +356,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
             keyboardNavigation: true, // allows navigation between steps using the keyboard
             overlayOpacity: 0.85, // opacity of the overlay
           }}
-          onBeforeChange={(currentStepIndex) => onChangeHandler(currentStepIndex)} // Callback called before changing the current step. 
+          onBeforeChange={(currentStepIndex) => onChangeHandler(currentStepIndex)} // Callback called before changing the current step.
           ref={(steps) => (this.steps = steps)} // ref allows access to intro.js API
         />
         <Button
@@ -362,7 +365,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           type='button'
           onClick={() => startIntro()}
         >
-          <HelpOutlineIcon sx={{pr: 1}}/> Tutorial
+          <HelpOutlineIcon sx={{ pr: 1 }} /> Tutorial
         </Button>
       </>
     );

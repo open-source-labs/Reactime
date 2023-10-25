@@ -18,9 +18,9 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import ToolTipDataDisplay from './ToolTipDataDisplay';
-import { toggleExpanded, setCurrentTabInApp } from '../../../actions/actions';
-import { useStoreContext } from '../../../store';
-import { LinkTypesProps, DefaultMargin, ToolTipStyles } from '../../../FrontendTypes'
+import { toggleExpanded, setCurrentTabInApp } from '../../../slices/mainSlice';
+import { useDispatch } from 'react-redux';
+import { LinkTypesProps, DefaultMargin, ToolTipStyles } from '../../../FrontendTypes';
 
 const defaultMargin: DefaultMargin = {
   top: 30,
@@ -37,11 +37,11 @@ export default function ComponentMap({
   currentSnapshot, // from 'tabs[currentTab].stateSnapshot object in 'MainContainer'
 }: LinkTypesProps): JSX.Element {
   const [layout, setLayout] = useState('cartesian'); // We create a local state "layout" and set it to a string 'cartesian'
-  const [orientation, setOrientation] = useState('vertical'); // We create a local state "orientation" and set it to a string 'vertical'. 
-  const [linkType, setLinkType] = useState('diagonal'); // We create a local state "linkType" and set it to a string 'diagonal'. 
+  const [orientation, setOrientation] = useState('vertical'); // We create a local state "orientation" and set it to a string 'vertical'.
+  const [linkType, setLinkType] = useState('diagonal'); // We create a local state "linkType" and set it to a string 'diagonal'.
   const [stepPercent, setStepPercent] = useState(0.5); // We create a local state "stepPercent" and set it to a number '0.5'. This will be used to scale the Map component's link: Step to 50%
-  const [selectedNode, setSelectedNode] = useState('root'); // We create a local state "selectedNode" and set it to a string 'root'. 
-  const [, dispatch] = useStoreContext(); // we destructure the returned context object from the invocation of the useStoreContext function to get access to our dispatch function
+  const [selectedNode, setSelectedNode] = useState('root'); // We create a local state "selectedNode" and set it to a string 'root'.
+  const dispatch = useDispatch();
 
   const toolTipTimeoutID = useRef(null); //useRef stores stateful data that’s not needed for rendering.
 
@@ -63,7 +63,8 @@ export default function ComponentMap({
     The 'cartesian layout' (else conditional) sets the root nodes location either in the left middle *or top middle of the browser window relative to the size of the browser.
   */
 
-  if (layout === 'polar') { // 'polar layout' option
+  if (layout === 'polar') {
+    // 'polar layout' option
     origin = {
       x: innerWidth / 2,
       y: innerHeight / 2,
@@ -72,31 +73,33 @@ export default function ComponentMap({
     // set the sizeWidth and sizeHeight
     sizeWidth = 2 * Math.PI;
     sizeHeight = Math.min(innerWidth, innerHeight) / 2;
-
-  } else { // 'cartesian layout' option
+  } else {
+    // 'cartesian layout' option
     origin = { x: 0, y: 0 };
     if (orientation === 'vertical') {
       sizeWidth = innerWidth;
       sizeHeight = innerHeight;
-    } else { // if the orientation isn't vertical, swap the width and the height
+    } else {
+      // if the orientation isn't vertical, swap the width and the height
       sizeWidth = innerHeight;
       sizeHeight = innerWidth;
     }
   }
 
-  const { 
+  const {
     tooltipData, // value/data that tooltip may need to render
     tooltipLeft, // number used for tooltip positioning
     tooltipTop, // number used for tooltip positioning
     tooltipOpen, // boolean whether the tooltip state is open or closed
     showTooltip, // function to set tooltip state
-    hideTooltip // function to close a tooltip
+    hideTooltip, // function to close a tooltip
   } = useTooltip(); // returns an object with several properties that you can use to manage the tooltip state of your component
 
   const {
-    containerRef, // Access to the container's bounding box. This will be empty on first render. 
-    TooltipInPortal // TooltipWithBounds in a Portal, outside of your component DOM tree
-  } = useTooltipInPortal({ // Visx hook
+    containerRef, // Access to the container's bounding box. This will be empty on first render.
+    TooltipInPortal, // TooltipWithBounds in a Portal, outside of your component DOM tree
+  } = useTooltipInPortal({
+    // Visx hook
     detectBounds: true, // use TooltipWithBounds
     scroll: true, // when tooltip containers are scrolled, this will correctly update the Tooltip position
   });
@@ -130,13 +133,17 @@ export default function ComponentMap({
 
   const nodeList: [] = []; // create a nodeList array to store our nodes as a flat array
 
-  const collectNodes: void = (node) => { // function that takes in a node (snapshot) as it's argument and modifies 'nodeList' so that the node and it's children are all within the flattened 'nodeList'.
+  const collectNodes: void = (node) => {
+    // function that takes in a node (snapshot) as it's argument and modifies 'nodeList' so that the node and it's children are all within the flattened 'nodeList'.
     nodeList.splice(0, nodeList.length); // deletes all the nodes in nodelist
     nodeList.push(node); // pushes the snapshot into nodeList
-    for (let i = 0; i < nodeList.length; i += 1) { // iterate through the nodeList that contains our snapshot
+    for (let i = 0; i < nodeList.length; i += 1) {
+      // iterate through the nodeList that contains our snapshot
       const cur = nodeList[i];
-      if (cur.children && cur.children.length > 0) { // if the currently itereated snapshot has non-zero children...
-        for (const child of cur.children) { // iterate through each child in the children array
+      if (cur.children && cur.children.length > 0) {
+        // if the currently itereated snapshot has non-zero children...
+        for (const child of cur.children) {
+          // iterate through each child in the children array
           nodeList.push(child); // add the child to the nodeList
         }
       }
@@ -149,7 +156,8 @@ export default function ComponentMap({
   let startNode = null;
   let rootNode;
 
-  const findSelectedNode = () => { // iterates through each node of nodeList and sets the rootNode and startNode to a node with the name root
+  const findSelectedNode = () => {
+    // iterates through each node of nodeList and sets the rootNode and startNode to a node with the name root
     for (const node of nodeList) {
       if (node.name === 'root') rootNode = node;
       if (node.name === selectedNode) startNode = node; // selectedNode label initialized as 'root'
@@ -160,16 +168,20 @@ export default function ComponentMap({
   findSelectedNode(); // locates the rootNode... do we really need this? This function is only used once... it's here.
 
   // controls for the map
-  const LinkComponent: React.ComponentType<unknown> = getLinkComponent({ layout, linkType, orientation });
+  const LinkComponent: React.ComponentType<unknown> = getLinkComponent({
+    layout,
+    linkType,
+    orientation,
+  });
   return totalWidth < 10 ? null : (
     <div>
       <LinkControls
-        layout={layout} 
-        orientation={orientation} 
-        linkType={linkType} 
-        stepPercent={stepPercent} 
+        layout={layout}
+        orientation={orientation}
+        linkType={linkType}
+        stepPercent={stepPercent}
         snapShots={currentSnapshot}
-        selectedNode={selectedNode} 
+        selectedNode={selectedNode}
         setLayout={setLayout}
         setOrientation={setOrientation}
         setLinkType={setLinkType}
@@ -208,28 +220,26 @@ export default function ComponentMap({
                 ))}
 
                 {tree.descendants().map((node, key) => {
-                  const widthFunc:number = (name) => { // function that takes in a node's name and returns a number that is related to the length of the name. Used for determining the node width.
+                  const widthFunc: number = (name) => {
+                    // function that takes in a node's name and returns a number that is related to the length of the name. Used for determining the node width.
                     const nodeLength = name.length;
                     if (nodeLength <= 5) return nodeLength + 80; // returns a number between 80-85
                     if (nodeLength <= 10) return nodeLength + 120; // returns a number between 125-130
-                    return nodeLength + 140;  // returns a number greater than 150
+                    return nodeLength + 140; // returns a number greater than 150
                   };
 
-                  const width:number = widthFunc(node.data.name); // the width is determined by the length of the node.name
-                  const height:number = 25;
+                  const width: number = widthFunc(node.data.name); // the width is determined by the length of the node.name
+                  const height: number = 25;
                   let top: number;
                   let left: number;
-
 
                   if (layout === 'polar') {
                     const [radialX, radialY] = pointRadial(node.x, node.y);
                     top = radialY;
                     left = radialX;
-
                   } else if (orientation === 'vertical') {
                     top = node.y;
                     left = node.x;
-                    
                   } else {
                     top = node.x;
                     left = node.y;
@@ -284,15 +294,14 @@ export default function ComponentMap({
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
                           }}
-                          
                           // Mouse Enter Rect (Component Node) -----------------------------------------------------------------------
                           /** This onMouseEnter event fires when the mouse first moves/hovers over a component node.
-                           * The supplied event listener callback produces a Tooltip element for the current node. */ 
-                          
+                           * The supplied event listener callback produces a Tooltip element for the current node. */
+
                           onMouseEnter={(event) => {
                             /** This 'if' statement block checks to see if you've just left another component node
-                             * by seeing if there's a current setTimeout waiting to close that component node's 
-                             * tooltip (see onMouseLeave immediately below). If so it clears the tooltip generated 
+                             * by seeing if there's a current setTimeout waiting to close that component node's
+                             * tooltip (see onMouseLeave immediately below). If so it clears the tooltip generated
                              * from that component node so a new tooltip for the node you've just entered can render. */
                             if (toolTipTimeoutID.current !== null) {
                               clearTimeout(toolTipTimeoutID.current);
@@ -303,13 +312,12 @@ export default function ComponentMap({
                             //This generates a tooltip for the component node the mouse has entered.
                             handleMouseAndClickOver(event);
                           }}
-
                           // Mouse Leave Rect (Component Node) --------------------------------------------------------------------------
                           /** This onMouseLeave event fires when the mouse leaves a component node.
-                           * The supplied event listener callback generates a setTimeout call which gives the 
-                           * mouse a certain amount of time between leaving the current component node and 
+                           * The supplied event listener callback generates a setTimeout call which gives the
+                           * mouse a certain amount of time between leaving the current component node and
                            * closing the tooltip for that node.
-                           * If the mouse enters the tooltip before the timeout delay has passed, the 
+                           * If the mouse enters the tooltip before the timeout delay has passed, the
                            * setTimeout event will be canceled. */
                           onMouseLeave={() => {
                             // Store setTimeout ID so timeout can be cleared if necessary
@@ -348,15 +356,13 @@ export default function ComponentMap({
           top={tooltipTop}
           left={tooltipLeft}
           style={tooltipStyles}
-          
           //------------- Mouse Over TooltipInPortal--------------------------------------------------------------------
           /** After the mouse enters the tooltip, it's able to persist by clearing the setTimeout
-           *  that would've unmounted it */ 
+           *  that would've unmounted it */
           onMouseEnter={() => {
             clearTimeout(toolTipTimeoutID.current);
             toolTipTimeoutID.current = null;
           }}
-
           //------------- Mouse Leave TooltipInPortal -----------------------------------------------------------------
           /** When the mouse leaves the tooltip, the tooltip unmounts */
           onMouseLeave={() => {
@@ -371,17 +377,16 @@ export default function ComponentMap({
               Key: {tooltipData.componentData.key !== null ? tooltipData.componentData.key : 'null'}
             </div>
             <div> Render time: {formatRenderTime(tooltipData.componentData.actualDuration)} </div>
-            
+
             <div>
-              <ToolTipDataDisplay
-                containerName='Props' 
-                dataObj={tooltipData.componentData.props}
-              />
+              <ToolTipDataDisplay containerName='Props' dataObj={tooltipData.componentData.props} />
               <ToolTipDataDisplay
                 containerName='State'
-                dataObj={tooltipData.componentData.hooksIndex
-                  ? tooltipData.componentData.hooksState
-                  : tooltipData.componentData.state}
+                dataObj={
+                  tooltipData.componentData.hooksIndex
+                    ? tooltipData.componentData.hooksState
+                    : tooltipData.componentData.state
+                }
               />
             </div>
           </div>

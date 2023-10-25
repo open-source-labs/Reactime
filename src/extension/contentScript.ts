@@ -1,6 +1,6 @@
 // Web vital metrics calculated by 'web-vitals' npm package to be displayed
 // in Web Metrics tab of Reactime app.
-import { getTTFB, getLCP, getFID, getFCP, getCLS } from 'web-vitals';
+import { onTTFB, onLCP, onFID, onFCP, onCLS, onINP } from 'web-vitals';
 
 // Reactime application starts off with this file, and will send
 // first message to background.js for initial tabs object set up.
@@ -19,11 +19,6 @@ window.addEventListener('message', (msg) => {
     // One-time request tells the background script that the tab has reloaded.
     chrome.runtime.sendMessage({ action: 'tabReload' });
     firstMessage = false;
-    const keepAliveContentScript = setInterval(() => { // interval to keep connection to service worker connection alive
-      chrome.runtime.sendMessage({
-        action: 'keepAlive' // messages sent to port to keep connection alive
-      })
-    }, 295000) // messages must happen within five minutes
   }
 
   // After tabs object has been created from firstMessage, backend (linkFiber.ts)
@@ -60,7 +55,6 @@ chrome.runtime.onMessage.addListener((request) => {
     // '*' == target window origin required for event to be dispatched, '*' = no preference
     window.postMessage(request, '*');
   }
-  return true; // attempt to fix port closing console error
 });
 
 // Performance metrics being calculated by the 'web-vitals' api and
@@ -78,11 +72,12 @@ const gatherMetrics = ({ name, value }) => {
 };
 
 // Functions that calculate web metric values.
-getTTFB(gatherMetrics);
-getLCP(gatherMetrics);
-getFID(gatherMetrics);
-getFCP(gatherMetrics);
-getCLS(gatherMetrics);
+onTTFB(gatherMetrics);
+onLCP(gatherMetrics);
+onFID(gatherMetrics);
+onFCP(gatherMetrics);
+onCLS(gatherMetrics);
+onINP(gatherMetrics);
 
 // Send message to background.js for injecting the initial script
 // into the app's DOM.

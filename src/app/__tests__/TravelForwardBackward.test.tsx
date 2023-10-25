@@ -1,21 +1,15 @@
 import React from 'react';
-import { render as rtlRender } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
-import WebMetrics from '../components/WebMetrics';
-import { useDispatch, Provider } from 'react-redux';
+import { render as rtlRender, screen, fireEvent } from '@testing-library/react';
+import TravelContainer from '../containers/TravelContainer';
+import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { mainSlice } from '../slices/mainSlice';
+import { useDispatch } from 'react-redux';
+import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'), // Use the actual react-redux module except for the functions you want to mock
-  useDispatch: jest.fn(), // set up a mock function for useDispatch
-}));
-const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 18
-const dummyDispatch = jest.fn(); //separate mock function created because we need to explicitly define on line 30 what
-useDispatchMock.mockReturnValue(dummyDispatch); //exactly useDispatchMock returns (which is a jest.fn())
 const customTabs = {
   87: {
-    snapshots: [1, 2, 3, 4],
+    snapshots: [0, 1, 2, 3],
     hierarchy: {
       index: 0,
       name: 1,
@@ -104,8 +98,9 @@ const customTabs = {
       name: 1,
       branch: 0,
     },
-    sliderIndex: 0,
+    sliderIndex: 3, //updated to 3
     viewIndex: -1,
+    playing: false,
   },
 };
 
@@ -113,16 +108,12 @@ const customInitialState = {
   main: {
     port: null,
     currentTab: 87, // Update with your desired value
-    currentTitle: 'test string',
+    currentTitle: null,
     tabs: customTabs, // Replace with the actual (testing) tab data
     currentTabInApp: null,
     connectionStatus: false,
     connectRequested: true,
   },
-};
-
-const props = {
-  score: [5],
 };
 
 const customStore = configureStore({
@@ -133,13 +124,35 @@ const customStore = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });
 
-const render = (component) => rtlRender(<Provider store={customStore}>{component}</Provider>);
+const render = (component) => {
+  return rtlRender(<Provider store={customStore}>{component}</Provider>);
+};
 
-jest.mock('react-apexcharts', () => ({ __esModule: true, default: () => <div /> }));
+jest.mock('react-redux', () => ({
+  ...jest.requireActual('react-redux'), // Use the actual react-redux module except for the functions you want to mock
+  useDispatch: jest.fn(), // set up a mock function for useDispatch
+}));
 
-describe('WebMetrics graph testing', () => {
-  test('should have 1 div with class name "metric" ', () => {
-    const { container } = render(<WebMetrics {...props} />);
-    expect(container.getElementsByClassName('metric').length).toBe(1);
+//needed to isolate the testing of the forward and backward buttons as behavior was affected when within the travelContainer file
+
+describe('Testing backward and forward button', () => {
+  const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 154
+  const dummyDispatch = jest.fn();
+  useDispatchMock.mockReturnValue(dummyDispatch);
+  beforeEach(() => {
+    render(<TravelContainer snapshotsLength={0} />);
+    dummyDispatch.mockClear();
+  });
+
+  test('Clicking < Button button will trigger button', () => {
+    let buttons = screen.getAllByRole('button');
+    fireEvent.click(buttons[1]);
+    expect(dummyDispatch).toHaveBeenCalledTimes(1);
+  });
+
+  test('Clicking > Button button will trigger button', () => {
+    let buttons = screen.getAllByRole('button');
+    fireEvent.click(buttons[2]);
+    expect(dummyDispatch).toHaveBeenCalledTimes(1);
   });
 });
