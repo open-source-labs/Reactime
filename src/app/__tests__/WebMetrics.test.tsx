@@ -4,15 +4,15 @@ import '@testing-library/jest-dom/extend-expect';
 import WebMetrics from '../components/WebMetrics';
 import { useDispatch, Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import { mainSlice } from '../slices/mainSlice'
+import { mainSlice } from '../slices/mainSlice';
 
 jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'), // Use the actual react-redux module except for the functions you want to mock
   useDispatch: jest.fn(), // set up a mock function for useDispatch
 }));
 const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 18
-const dummyDispatch = jest.fn(); //separate mock function created because we need to explicitly define on line 30 what 
-useDispatchMock.mockReturnValue(dummyDispatch);//exactly useDispatchMock returns (which is a jest.fn())
+const dummyDispatch = jest.fn(); //separate mock function created because we need to explicitly define on line 30 what
+useDispatchMock.mockReturnValue(dummyDispatch); //exactly useDispatchMock returns (which is a jest.fn())
 const customTabs = {
   87: {
     snapshots: [1, 2, 3, 4],
@@ -107,7 +107,7 @@ const customTabs = {
     sliderIndex: 0,
     viewIndex: -1,
   },
-}
+};
 
 const customInitialState = {
   main: {
@@ -122,29 +122,24 @@ const customInitialState = {
 };
 
 const props = {
-  score: [5]
+  score: [5],
 };
 
 const customStore = configureStore({
   reducer: {
     main: mainSlice.reducer,
-},
+  },
   preloadedState: customInitialState, // Provide custom initial state
-  middleware: (getDefaultMiddleware) =>
-  getDefaultMiddleware({ serializableCheck: false }),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });
 
-const render = component => rtlRender(
-  <Provider store={customStore}>
-      {component}
-  </Provider>
-);
+const render = (component) => rtlRender(<Provider store={customStore}>{component}</Provider>);
 
 jest.mock('react-apexcharts', () => ({ __esModule: true, default: () => <div /> }));
 
 describe('WebMetrics graph testing', () => {
   test('should have 1 div with class name "metric" ', () => {
-    const { container } = render(<WebMetrics {...props}/>);
+    const { container } = render(<WebMetrics {...props} />);
     expect(container.getElementsByClassName('metric').length).toBe(1);
   });
 });

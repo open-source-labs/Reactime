@@ -6,7 +6,6 @@ global.TextEncoder = TextEncoder;
 import '@testing-library/jest-dom/extend-expect';
 import Tutorial from '../components/Tutorial';
 
-
 const dispatch = jest.fn();
 const props = {
   currentTabInApp: 'map',

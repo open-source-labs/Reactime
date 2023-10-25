@@ -23,20 +23,19 @@ describe('Dropdown component test', () => {
 
   test('handles dropdown interaction and option selection', () => {
     const renderResult = render(
-      <Dropdown speeds={speeds} setSpeed={setSpeed} selectedSpeed={speeds[0]} />
+      <Dropdown speeds={speeds} setSpeed={setSpeed} selectedSpeed={speeds[0]} />,
     );
-  
+
     // Find the dropdown trigger element
     const dropdownTrigger = renderResult.getByText('test1');
-  
+
     // Simulate opening the dropdown
     fireEvent.mouseDown(dropdownTrigger);
-  
+
     // Simulate selecting an option
     fireEvent.click(renderResult.getByText('test2'));
-  
+
     // Ensure that setSpeed was called
     expect(setSpeed).toHaveBeenCalled();
   });
 });
-
