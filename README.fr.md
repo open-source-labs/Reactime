@@ -36,11 +36,11 @@
 <br>
 
 <p align="center">
-<img src="./assets/gifs/main_v21.gif" />
+<img src="./assets/gifs/GeneralDemoGif.gif" />
 </p>
 
 <p align="center">
-  <a href="#how-to-use">Manuel</a> • <a href="#features">Caractéristiques</a> • <a href="https://www.reacti.me/">Website</a> • <a href="#readmore">En savoir plus</a>
+  <a href="https://www.reacti.me/">Website</a>
 </p>
 
 ## <h1>Caractéristiques</h1>
@@ -52,7 +52,7 @@ Vous pouvez afficher la structure des fichiers de votre application et cliquer s
 <br>
 
 <p align="center">
-<img src="./assets/gifs/timeTravelHistory_v21.gif" />
+<img src="./assets/gifs/TimeTravelGif.gif" />
 </p>
 <br>
 
@@ -81,7 +81,7 @@ Vous pouvez exporter les instantanés sous forme de fichier JSON et les importer
 <br>
 
 <p align="center">
-<img src="./assets/gifs/importExport_v21.gif" />
+<img src="./assets/gifs/importExport_v22.gif" />
 </p>
 <br>
 
@@ -89,6 +89,11 @@ Vous pouvez exporter les instantanés sous forme de fichier JSON et les importer
 
 Si Reactime se déconnecte de l'application que vous surveillez, cliquez sur le bouton « Reconnect » pour reprendre votre travail. Il y a un petit cercle sur le bouton. Il sera vert si vous êtes connecté et rouge si vous êtes déconnecté.
 <br>
+<br>
+
+<p align="center">
+<img src="./assets/gifs/ReconnectGif22.gif" />
+</p>
 <br>
 
 ### 🔹 Optimisation du Rendu
@@ -156,28 +161,6 @@ Pour améliorer la maintenabilité, l'évolutivité et la longévité, nous avon
 Nous avons apporté de nombreux changements destinés à améliorer l'expérience utilisateur. Le premier est la fonction de reconnexion, conçue comme une mesure de protection pour les moments inattendus où un utilisateur est déconnecté. Lorsque cela se produit, une boîte de dialogue contextuelle intuitive apparaîtra instantanément, offrant aux utilisateurs un moyen transparent de replonger directement dans leur session, tout en offrant également la possibilité de télécharger des instantanés d'état enregistrés sous forme de fichier JSON. Nous avons également intégré un indicateur d'état dynamique qui affiche de manière transparente l'état actuel de l'application d'un utilisateur, indiquant s'il est en ligne ou hors ligne. Nous avons également enrichi l'application avec deux mesures de performances Web essentielles : « Cumulative Layout Shift » (CLS) et « Interaction to Next Paint » (INP). Ces mesures sont essentielles, car elles fournissent aux développeurs des informations sur la stabilité et la réactivité de la mise en page, leur permettant ainsi d'optimiser les interactions des utilisateurs avec précision.
 
 Si vous souhaitez en savoir plus sur les versions précédentes, cliquez <a href="https://github.com/open-source-labs/reactime/releases">ici !</a>
-
-## <b>Installation</b>
-
-Pour commencer, installer l’[extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) Reactime depuis le Chrome Web Store.
-
-REMARQUE: L'[extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en) React Developer Tools est également requise pour que Reactime s'exécute, si vous ne l'avez pas déjà installé sur votre navigateur.
-
-### <b>Installation Alternative</b>
-
-Utilisez `src/extension/build/build.zip` pour une installation manuelle en [mode Développeur](https://developer.chrome.com/extensions/faq#faq-dev-01). Activez "Autoriser l'accès aux URL de fichiers" dans la page des détails de l'extension si vous effectuez un test local.
-
-Actuellement, Reactime est compatible avec les applications React qui utilisent des composants à état (stateful) et Hooks, avec un support en version bêta de Recoil et de pour le Context API.
-
-<b>Reactime 18.0</b> introduit une gamme de fonctionnalités nouvelles et améliorées visant à optimiser les performances et à améliorer la compatibilité. Avec le support de Next.js et de Remix, une couverture de test accrue (93% backend, le frontend a encore besoin de plus de tests), ainsi que des améliorations structurelles de la base de code. De plus, nous sommes fiers d'annoncer le lancement de notre site web récemment redessiné, qui sert de centre pour les dernières mises à jour et informations sur Reactime. Pour aider à la débogage, nous avons inclus des applications de démonstration pour Next.js et Remix, permettant aux futurs itérateurs de tester et dépanner avec plus de facilité et d'efficacité.
-
-<b>Reactime version 7.0</b> beta peut vous aider à éviter les ré-rendus inutiles. Identifier les rendus inutiles dans vos applications React est le point de départ idéal pour identifier la plupart des problèmes de performances.
-La version beta 7.0 de Reactime corrige les bugs des anciennes versions et intègre des visualisations améliorées pour les relations entre les composants.
-Reactime 7.0 inclut également une documentation [typedoc](https://typedoc.org/api/) plus approfondie pour les développeurs souhaitant contribuer au code source.
-
-Après avoir installé Reactime, vous pouvez tester ses fonctionnalités avec votre application React en mode développement.
-
-Veuillez noter que la fonction de saut de temps fonctionnera UNIQUEMENT lorsque votre application s'exécute en mode développement. En mode production, vous pouvez afficher la carte des composants de votre application, mais aucune fonctionnalité supplémentaire.
 
 <p align="center">
 
