@@ -177,6 +177,10 @@ Reactime beta поддерживает приложения, написанны�
 - **James McCollough** - [@j-mccoll](https://github.com/j-mccoll)
 - **Mike Bednarz** - [@mikebednarz](https://github.com/mikebednarz)
 - **Sergei Liubchenko** - [@sergeylvq](https://github.com/sergeylvq)
+- **Christopher Stamper** - [@ctstamper](https://github.com/ctstamper)
+- **Jimmy Phy** - [@jimmally](https://github.com/jimmally)
+- **Andrew Byun** - [@AndrewByun](https://github.com/AndrewByun)
+- **Kelvin Mirhan** - [@kelvinmirhan](https://github.com/kelvinmirhan)
 
 ## <b>License </b>
 

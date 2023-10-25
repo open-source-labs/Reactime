@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-    <img src ="./assets/readme-logo-300-no-version.png" width="300"/>
+    <img src ="./assets/logos/chromeExtensionIcons/marqueePromoTitle.png"/>
     <br>
     <br>
   Outil de Performance pour React
@@ -36,26 +36,135 @@
 <br>
 
 <p align="center">
-<img src="./assets/v20/Overview.gif" />
+<img src="./assets/gifs/GeneralDemoGif.gif" />
 </p>
 
 <p align="center">
-  <a href="#how-to-use">Manuel</a> • <a href="#features">Caractéristiques</a> • <a href="https://reactime.dev">Website</a> • <a href="#readmore">En savoir plus</a>
+  <a href="https://www.reacti.me/">Website</a>
 </p>
 
-Actuellement, Reactime est compatible avec les applications React qui utilisent des composants à état (stateful) et Hooks, avec un support en version bêta de Recoil et de pour le Context API.
+## <h1>Caractéristiques</h1>
 
-<b>Reactime 18.0</b> introduit une gamme de fonctionnalités nouvelles et améliorées visant à optimiser les performances et à améliorer la compatibilité. Avec le support de Next.js et de Remix, une couverture de test accrue (93% backend, le frontend a encore besoin de plus de tests), ainsi que des améliorations structurelles de la base de code. De plus, nous sommes fiers d'annoncer le lancement de notre site web récemment redessiné, qui sert de centre pour les dernières mises à jour et informations sur Reactime. Pour aider à la débogage, nous avons inclus des applications de démonstration pour Next.js et Remix, permettant aux futurs itérateurs de tester et dépanner avec plus de facilité et d'efficacité.
+### 🔹 L'Exposition
 
-<b>Reactime version 7.0</b> beta peut vous aider à éviter les ré-rendus inutiles. Identifier les rendus inutiles dans vos applications React est le point de départ idéal pour identifier la plupart des problèmes de performances.
-La version beta 7.0 de Reactime corrige les bugs des anciennes versions et intègre des visualisations améliorées pour les relations entre les composants.
-Reactime 7.0 inclut également une documentation [typedoc](https://typedoc.org/api/) plus approfondie pour les développeurs souhaitant contribuer au code source.
+Vous pouvez afficher la structure des fichiers de votre application et cliquer sur un instantané pour afficher l'état de votre application. L'état peut être visualisé dans un graphique de composants, une arborescence JSON ou un graphique de performances. Les instantanés peuvent être comparés à l'instantané précédent, qui peut être visualisé en mode Diff.
+<br>
+<br>
 
-Après avoir installé Reactime, vous pouvez tester ses fonctionnalités avec votre application React en mode développement.
+<p align="center">
+<img src="./assets/gifs/TimeTravelGif.gif" />
+</p>
+<br>
 
-Veuillez noter que la fonction de saut de temps fonctionnera UNIQUEMENT lorsque votre application s'exécute en mode développement. En mode production, vous pouvez afficher la carte des composants de votre application, mais aucune fonctionnalité supplémentaire.
+### 🔹 Enregistrement
 
-## <b>Installation</b>
+Chaque fois que l'état est modifié (chaque fois que setState, useState est appelé), cette extension créera un instantané de l'arborescence d'état actuelle et l'enregistrera. Chaque instantané sera affiché dans Chrome DevTools sous le panneau Reactime.
+<br>
+<br>
+
+### 🔹 Série d'Instantanés et Comparaison d'Actions
+
+Vous pouvez enregistrer une série d'instantanés d'état et l'utilizer pour analyser les changements dans les performances de rendu des composants entre la série d'instantanés actuelle et la série précédente. Vous pouvez également nommer les instantanés spécifiquement et comparer tous les instantanés avec le même nom.
+<br>
+<br>
+
+### 🔹 Comparaison des Composants
+
+Lorsque vous avez sélectionné un instantané, un visualisation des composants individuels de l'instantané sera affichée. Cela peut être fait sous le même onglet de performances où les instantanés sont rendus. Vous pouvez également voir les détails d'un composant lorsque vous le survolez avec votre souris.
+<br>
+<br>
+
+### 🔹 Importer/Exporter des Instantanés
+
+Vous pouvez exporter les instantanés sous forme de fichier JSON et les importer pour accéder aux arborescences d'état sur différentes sessions.
+<br>
+<br>
+
+<p align="center">
+<img src="./assets/gifs/importExport_v22.gif" />
+</p>
+<br>
+
+### 🔹 Reconnexion et Statut
+
+Si Reactime se déconnecte de l'application que vous surveillez, cliquez sur le bouton « Reconnect » pour reprendre votre travail. Il y a un petit cercle sur le bouton. Il sera vert si vous êtes connecté et rouge si vous êtes déconnecté.
+<br>
+<br>
+
+<p align="center">
+<img src="./assets/gifs/ReconnectGif22.gif" />
+</p>
+<br>
+
+### 🔹 Optimisation du Rendu
+
+L'un des problèmes les plus courants affectant les performances dans React est rednu plusieurs fois. Ce problème peut être résolu en vérifiant vos rendus dans le Onglet Performances dans Chrome DevTools sous le panneau Reactime.
+<br>
+<br>
+
+### 🔹 Jumping
+
+Un utilisateur peut accéder à n'importe quel instantané précédemment enregistré à l'aide de la barre latérale d'actions. Si un utilisateur appuie sur le bouton « Jump » sur un instantané, il pourra voir les informations d'état à partir du moment où cet instantané a été créé pour la première fois.
+<br>
+<br>
+
+### 🔹 Gatsby
+
+Reactime offre un support complet pour les applications Gatsby.
+<br>
+<br>
+
+### 🔹 Next.js
+
+Reactime propose des outils de débogage et de performances pour les applications Next.js : débogage de voyage dans le temps, évitant les rendus de composants inutiles et rendant votre application plus rapide.
+<br>
+<br>
+
+### 🔹 Remix
+
+Reactime propose des outils de débogage et de performances pour les applications Remix (en version bêta).
+<br>
+<br>
+
+### 🔹 TypeScript
+
+Reactime offre la prise en charge des applications TypeScript utilisant des composants de classe avec état et des composants fonctionnels. Des tests et un développement supplémentaires sont nécessaires pour les hooks personnalisés.
+<br>
+<br>
+
+### Documentation
+
+Après avoir cloné ce référentiel, les développeurs peuvent simplement exécuter `npm run docs` au niveau racine et servir le fichier `/docs/index.html` généré dynamiquement sur un navigateur. Cela fournira une vue GUI lisible, extensible et interactive de la structure et des interfaces de la base de code.
+<br>
+<br>
+
+### <b>Caractéristiques Supplémentaires</b>
+
+- Tutoriels pour des onglets spécifiques
+- Passez la souris sur un composant pour afficher les détails de l'état
+- Double-cliquez pour masquer les composants enfants
+- Cliquez pour vous concentrer sur une partie de la carte des composants
+- A dropdown to support the development of projects on multiple tabs
+- Une liste déroulante pour accompagner le développement de projets sur plusieurs onglets
+- Fonctionnalité verrouillée/déverrouillée permettant une pause temporaire de la surveillance de l'état
+
+<h1>Quoi de Neuf!</h1>
+
+Reactime v22.0.0 a apporté des améliorations significatives, résolvant les problèmes de performances et renforçant la stabilité et la fiabilité globales de l'application. Pour que Reactime soit le meilleur possible, nous avons mis à jour les packages obsolètes et transféré la gestion des états vers Redux Toolkit. Ce changement stratégique modernise notre pile technologique et augmente la maintenabilité et l’évolutivité. Outre ces mises à niveau, cette version corrige également divers bugs. Le lancement de fonctionnalités telles que le bouton de reconnexion, une icône d'état et l'intégration de métriques Web clés – « Cumulative Layout Shift » (CLS) et « Interaction To Next Paint »(INP) – amplifie ses fonctionnalités et offre aux utilisateurs une expérience plus raffinée.
+
+<i>Regarder Plus Profondément</i>
+
+En résolvant les problèmes persistants de déconnexion/d'écran noir qui affectaient parfois les utilisateurs lors de l'utilisation régulière de l'application, nous avons apporté des améliorations décisives en supprimant la fonction « keepAlive » et en implémentant une logique robuste pour résoudre le problème principal. Cela nous a permis d'affiner le protocole de communication entre notre application et le navigateur, offrant ainsi une connexion plus cohérente et stable. Cela offre aux utilisateurs une voie de récupération rapide et constitue également une couche de protection supplémentaire contre toute déconnexion inattendue à l'avenir.
+
+Pour améliorer la maintenabilité, l'évolutivité et la longévité, nous avons mis à jour et supprimé progressivement certaines dépendances. Nous nous sommes éloignés de la bibliothèque Immer et avons transféré notre gestion d'état pour utiliser Redux Toolkit, tout en mettant à niveau l'API Web Vitals de la version 1.1.2 à 3.5.0, nous permettant d'utiliser une gamme plus large de métriques Web. Dans le cadre de cette transition, nous avons également converti tous les tests existants pour qu'ils fonctionnent avec le système de gestion d'état mis à jour, tout en élargissant encore les suites de tests pour augmenter la couverture globale des tests. Enfin, nous avons obtenu une augmentation notable de la couverture TypeScript, renforçant la qualité du code et la détection précoce des problèmes de développement potentiels.
+
+Nous avons apporté de nombreux changements destinés à améliorer l'expérience utilisateur. Le premier est la fonction de reconnexion, conçue comme une mesure de protection pour les moments inattendus où un utilisateur est déconnecté. Lorsque cela se produit, une boîte de dialogue contextuelle intuitive apparaîtra instantanément, offrant aux utilisateurs un moyen transparent de replonger directement dans leur session, tout en offrant également la possibilité de télécharger des instantanés d'état enregistrés sous forme de fichier JSON. Nous avons également intégré un indicateur d'état dynamique qui affiche de manière transparente l'état actuel de l'application d'un utilisateur, indiquant s'il est en ligne ou hors ligne. Nous avons également enrichi l'application avec deux mesures de performances Web essentielles : « Cumulative Layout Shift » (CLS) et « Interaction to Next Paint » (INP). Ces mesures sont essentielles, car elles fournissent aux développeurs des informations sur la stabilité et la réactivité de la mise en page, leur permettant ainsi d'optimiser les interactions des utilisateurs avec précision.
+
+Si vous souhaitez en savoir plus sur les versions précédentes, cliquez <a href="https://github.com/open-source-labs/reactime/releases">ici !</a>
+
+<p align="center">
+
+<h1>Installation</h1>
 
 Pour commencer, installer l’[extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) Reactime depuis le Chrome Web Store.
 
@@ -65,7 +174,13 @@ REMARQUE: L'[extension](https://chrome.google.com/webstore/detail/react-develope
 
 Utilisez `src/extension/build/build.zip` pour une installation manuelle en [mode Développeur](https://developer.chrome.com/extensions/faq#faq-dev-01). Activez "Autoriser l'accès aux URL de fichiers" dans la page des détails de l'extension si vous effectuez un test local.
 
-## <b>Manuel</b>
+### Voulez-vous contribuer à Reactime ?
+
+<i>Veuillez vous référer à la documentation du développeur pour un guide détaillé :</i>
+
+Consultez [DEVELOPER README](src/README.md) pour plus d'informations sur le projet et des instructions sur la construction à partir des sources.
+
+### <b>Manuel</b>
 
 Après avoir installé l’extension Chrome Reactime, ouvrez votre application dans le navigateur.
 
@@ -73,63 +188,17 @@ Ensuite, ouvrez vos Chrome DevTools et accédez au panneau Reactime.
 
 ## <b>Diagnostic des anomalies</b>
 
-### <b>Que faire quand Reactime ne trouve pas d’application React?</b>
+### ❓ <b>Que faire quand Reactime ne trouve pas d’application React?</b>
 
 Reactime s'exécute initialement à l'aide du hook global des outils de développement de l'API Chrome. Leur chargement dans Chrome peut prendre du temps. Essayez d'actualiser votre application plusieurs fois jusqu'à ce que Reactime s'exécute.
 
-### <b>Un écran noir s’affiche à la place de l’extension Reactime</b>
+### ❓ <b>Un écran noir s’affiche à la place de l’extension Reactime</b>
 
 Essayez d'actualiser l'application que vous souhaitez tester et actualisez les DevTools en cliquant sur le bouton droit de la souris «Recharger le cadre».
 
-### <b>J’ai trouvé un bug dans Reactime</b>
+### ❓ <b>J’ai trouvé un bug dans Reactime</b>
 
 Reactime est un projet open source, et toute aide de vore part sera grandement appréciée pour nous aider à améliorer l'expérience utilisateur. Veuillez créer une pull request (ou un problème) pour proposer et collaborer sur les modifications apportées à un référentiel.
-
-## <b>Caractéristiques</b>
-
-### Optimisation du rendu
-
-L'un des problèmes les plus courants qui affectent les performances dans React est les cycles de rendu inutiles. Ce problème peut être résolu en vérifiant vos rendus dans l'onglet Performances de Chrome DevTools sous le panneau Reactime.
-
-### Enregistrement
-
-Chaque fois que l'état est changé (chaque fois que setState, useState est appelé), cette extension crée un snapshot de l'arbre d'état actuelle et l'enregistre. Chaque instantané sera affiché dans Chrome DevTools sous le panneau Reactime.
-
-### Visualisation
-
-Vous pouvez cliquer sur un snapshot pour afficher l'état de votre application. L'état peut être visualisé dans un graphique de composants, une arbre JSON ou un graphique de performances. Les snapshots peuvent être différents d'un snapshot précédent, et peut être visualisé en mode Diff.
-
-### Jumping
-
-À l'aide de la barre latérale des actions, un utilisateur peut accéder à n'importe quel snapshot enregistré précédemment. Appuyer sur le bouton de saut sur n'importe quel snapshot permettra à un utilisateur d'afficher les données d'état à tout moment dans l'historique de l'application cible.
-
-### Support pour TypeScript
-
-Reactime propose un support bêta pour les applications TypeScript utilisant des composants de classe avec état et des composants fonctionnels. Des tests et un développement supplémentaires sont nécessaires pour les hooks personnalisés, l'API de contexte et le mode Concurrent.
-
-### Documentation
-
-Après avoir cloné ce référentiel, les développeurs peuvent simplement exécuter `npm run docs` au niveau racine et servir le fichier `/docs/index.html` généré dynamiquement sur un navigateur. Cela fournira une vue GUI lisible, extensible et interactive de la structure et des interfaces de la base de code.
-
-### <b>Caractéristiques supplémentaires</b>
-
-- identifier les rendus inutiles
-- fonctionnalité de survol pour afficher les détails des info-bulles sur les visualisations d'état
-- possibilité de panoramique et de zoom sur les visualisations d'état
-- une liste déroulante pour prendre en charge le développement de projets sur plusieurs onglets
-- un curseur pour parcourir rapidement les snapshots
-- un bouton de lecture pour se déplacer automatiquement dans les snapshots
-- un bouton de verrouillage, qui arrête l'enregistrement de chaque snapshot
-- un bouton persister pour conserver les snapshots lors de l'actualisation (pratique lors du changement de code et du débogage)
-- télécharger les snapshots actuels en mémoire
-- titres déclaratifs dans la barre latérale des actions
-
-<h1>Quoi de neuf !</h1>
-Reactime 20.0 inclut plusieurs améliorations clés sous le capot pour améliorer les performances et résoudre les bogues existants, ainsi qu'une UX remaniée pour atteindre la compatibilité WCAG.
-
-Nous avons résolu plusieurs bogues persistants, y compris un problème majeur qui faisait planter les applications utilisant Reactime lors de l'utilisation de la fonctionnalité de connexion ou de soumission. Dans le cadre de nos efforts pour améliorer les performances globales de Reactime, nous avons continué à implémenter TypeScript dans toute la base de code et créé de nouveaux tests avec React Testing Library. Nous avons également rendu les tests plus robustes, améliorant les tests existants et corrigeant les environnements de test défectueux. Enfin, nous avons mis à jour Reactime en supprimant certains codes et packages obsolètes, réduisant ainsi les erreurs de compilation.
-
-Nous avons mis à jour l'UX, en recherchant la cohérence avec les directives pour l'accessibilité des contenus Web (WCAG). Plus précisément, nous avons amélioré la taille et la conception des éléments cibles dans Reactime et soigneusement choisi de nouveaux contrastes de couleurs.
 
 ## <b>En savoir plus</b>
 
@@ -217,6 +286,10 @@ Nous avons mis à jour l'UX, en recherchant la cohérence avec les directives po
 - **James McCollough** - [@j-mccoll](https://github.com/j-mccoll)
 - **Mike Bednarz** - [@mikebednarz](https://github.com/mikebednarz)
 - **Sergei Liubchenko** - [@sergeylvq](https://github.com/sergeylvq)
+- **Christopher Stamper** - [@ctstamper](https://github.com/ctstamper)
+- **Jimmy Phy** - [@jimmally](https://github.com/jimmally)
+- **Andrew Byun** - [@AndrewByun](https://github.com/AndrewByun)
+- **Kelvin Mirhan** - [@kelvinmirhan](https://github.com/kelvinmirhan)
 
 ## <b>License </b>
 
