@@ -148,11 +148,11 @@ export interface RootState {
 }
 
 export interface InitialState {
-  port: null;
-  currentTab: null;
-  currentTitle: string;
-  tabs: {};
-  currentTabInApp: null;
+  port: null | chrome.runtime.Port;
+  currentTab: null | number;
+  currentTitle: null | string;
+  tabs: {} | { [k: string]: { [k: string]: unknown } };
+  currentTabInApp: null | string;
   connectionStatus: boolean;
   connectRequested: boolean;
 }

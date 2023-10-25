@@ -29,7 +29,7 @@
 <br>
 
 <p align="center">
-<img src="./assets/gifs/main_v21.gif" />
+<img src="./assets/gifs/GeneralDemoGif.gif" />
 </p>
 
 <p align="center">
@@ -48,7 +48,7 @@ be viewed in Diff mode.
 <br>
 
 <p align="center">
-<img src="./assets/gifs/timeTravelHistory_v21.gif" />
+<img src="./assets/gifs/TimeTravelGif.gif" />
 </p>
 <br>
 
@@ -85,7 +85,7 @@ Download the recorded snapshots as a JSON file and upload them to access state t
 <br>
 
 <p align="center">
-<img src="./assets/gifs/importExport_v21.gif" />
+<img src="./assets/gifs/importExport_v22.gif" />
 </p>
 <br>
 
@@ -93,6 +93,11 @@ Download the recorded snapshots as a JSON file and upload them to access state t
 
 If Reactime loses its connection to the tab you're monitoring, simply click the "reconnect" button to resume your work. You'll notice a circle located to the right of the button, which will appear as either red (indicating disconnection) or green (signifying a successful reconnection).
 <br>
+<br>
+
+<p align="center">
+<img src="./assets/gifs/ReconnectGif22.gif" />
+</p>
 <br>
 
 ### 🔹 Re-render Optimization

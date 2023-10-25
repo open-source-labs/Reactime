@@ -16,7 +16,7 @@ import { changeView, changeSlider, setCurrentTabInApp } from '../../slices/mainS
 const defaultMargin: DefaultMargin = {
   top: 30,
   left: 30,
-  right: 55,
+  right: 55, 
   bottom: 70,
 };
 
@@ -26,7 +26,7 @@ function History(props: Record<string, unknown>): JSX.Element {
   const {
     width: totalWidth, // from ParentSize provided in StateRoute
     height: totalHeight, // from ParentSize provided in StateRoute
-    margin = defaultMargin,
+    margin = defaultMargin, //default margin is used when margins aren't passed into props
     hierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
     currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
     snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
@@ -146,7 +146,7 @@ function History(props: Record<string, unknown>): JSX.Element {
 
   const makeD3Tree = () => {
     const svg = d3.select(svgRef.current); // d3.select Selects the first element/node that matches svgRef.current. If no element/node match returns an empty selection. If multiple elements/nodes match the selector, only the first matching element/node (in document order) will be selected.
-    svg.selectAll('*').remove(); // Selects all elements. The elements will be selected in document order (top-to-bottom). We then remove the selected elements/nodes from the DOM
+    svg.selectAll('*').remove(); // Selects all elements. The elements will be selected in document order (top-to-bottom). We then remove the selected elements/nodes from the DOM. This is important as to ensure that the SVG is empty before rendering the D3 based visualization to avoid interference/overlap with any previously rendered content.
 
     const tree = (data) => { // function that takes in data and turns it into a d3 tree.
       const treeRoot = d3.hierarchy(data); // 'd3.hierarchy' constructs a root node from the specified hierarchical data. 
@@ -156,28 +156,35 @@ function History(props: Record<string, unknown>): JSX.Element {
     const d3root = tree(root); // create a d3. tree from our root
     const currNode = labelCurrentNode(d3root); // iterate through our nodes and apply a color property
 
-    const g = svg
+    const g = svg //serves as a container for the nodes and links within the D3 Visualization of the tree
       .append('g') // create an element 'g' on svg
       .attr(
         'transform',
-        `translate(${margin.left},${d3root.height === 0 ? totalHeight / 2 : margin.top})`,
+        `translate(${margin.left},${d3root.height === 0 ? totalHeight / 2 : margin.top})`, //Set the position of the group 'g' by translating it horizontally by 'margin.left' pixels and vertically based on the conditional expression.
       );
 
-    const link = g
+    const link = g //responsible for rendering the links or connectors between the nodes in the d3 Tree
       .selectAll('.link') // select all elements that contain the string '.link' and return a selection
       .data(d3root.descendants().slice(1))
       .enter()
       .append('path')
       .attr('class', 'link')
-      .attr(
+      .attr( //defines the path attribute (d) for each link (edge) between nodes, using a Bézier curve (C) to connect the source node's coordinates (d.x, d.y) to the midpoint between the source and target nodes and then to the target node's coordinates (d.parent.x, d.parent.y)
         'd',
-        (d) =>
+        (d) => 
           `M${d.x},${d.y}C${d.x},${(d.y + d.parent.y) / 2} ${d.parent.x},${
             (d.y + d.parent.y) / 2
           } ${d.parent.x},${d.parent.y}`,
-      );
+      )
+      .attr('class', (d) => {
+        // Adding a class based on the current node's data
+        if (d.data.index === currLocation.index) {
+          return 'link current-link'; // Apply both 'link' and 'current-link' classes
+        }
+        return 'link'; // Apply only the 'link' class
+      });
 
-    const node = g
+    const node = g //responsible for rendering nodes in d3 visualization tree
       .selectAll('.node')
       .data(d3root.descendants())
       .enter()
@@ -185,7 +192,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .style('cursor', 'pointer')
       .attr('class', `snapshotNode`)
       .on('click', (event, d) => {
-        dispatch(changeView(d.data.index));
+        dispatch(changeView(d.data.index)); 
         dispatch(changeSlider(d.data.index));
         /*
           created popup div and appended it to display div(returned in this function) 
@@ -207,11 +214,11 @@ function History(props: Record<string, unknown>): JSX.Element {
         }
 
         if (d3.selectAll('.tooltip')._groups['0'].length === 0) {
-          renderToolTip();
+          renderToolTip(); //if there are no tooltips left in the doc, we call the function to create a new tooltip
         } else {
-          if (d3.selectAll(`#tt-${d.data.index}`)._groups['0'].length === 0) {
-            d3.selectAll('.tooltip').remove();
-            renderToolTip();
+          if (d3.selectAll(`#tt-${d.data.index}`)._groups['0'].length === 0) { // if there is no tooltip with the specific id
+            d3.selectAll('.tooltip').remove(); //remove any existing tooltips
+            renderToolTip(); //call the function again to create a new tooltip
           }
         }
       })
@@ -256,14 +263,13 @@ function History(props: Record<string, unknown>): JSX.Element {
 
     node
       .append('circle')
-
       .attr('fill', (d) => {
         if (d.data.index === currLocation.index) {
           return 'red';
         }
         return d.color ? d.color : '#555';
       })
-      .attr('r', 14);
+      .attr('r', 18); 
 
     node
       .append('text')
