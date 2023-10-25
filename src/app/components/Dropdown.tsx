@@ -1,6 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
-import { DropdownProps } from '../FrontendTypes'
+import { DropdownProps } from '../FrontendTypes';
 
 /*
   Allows the user to change the speed of the time-travel based on the selected dropdown value

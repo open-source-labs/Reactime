@@ -42,18 +42,19 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
   const {
     width, // from ParentSize provided in StateRoute
     height, // from ParentSize provided in StateRoute
-    data, 
+    data,
     comparison, // returned value from invoking 'allStorage()' in 'PerformanceVisx' which is an array of objects
     setSeries, // setter function to update the state located in 'PerfomanceVisx'
     series, // boolean from state set in 'PerformanceVisx'
     setAction, // setter function to update the state located in 'PerfomanceVisx'
-    action // boolean from state set in 'PerformanceVisx'
+    action, // boolean from state set in 'PerformanceVisx'
   } = props;
   const [snapshots] = React.useState(0); // creates a local state snapshots and sets it to a value of 0 (why is there no setter function? 08/03/2023)
   const [setOpen] = React.useState(false); // creates a local state setOpen and sets it to false (why is there no setter function? Also this is never used in this file... 08/03/2023)
   const [setPicOpen] = React.useState(false); // creates a local state setPicOpen and sets it to false (why is there no setter function? Also this is never used in this file... 08/03/2023)
 
-  useEffect(() => { // send dispatch only on initial page load
+  useEffect(() => {
+    // send dispatch only on initial page load
     dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison' to facilitate render.
   }, []);
 
@@ -63,29 +64,29 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
     tooltipTop, // number used for tooltip positioning
     tooltipData, // value/data that tooltip may need to render
     hideTooltip, // function to close a tooltip
-    showTooltip // function to set tooltip state
+    showTooltip, // function to set tooltip state
   } = useTooltip<TooltipData>(); // returns an object with several properties that you can use to manage the tooltip state of your component
   let tooltipTimeout: number;
 
   const {
-    containerRef, // Access to the container's bounding box. This will be empty on first render. 
-    TooltipInPortal // TooltipWithBounds in a Portal, outside of your component DOM tree
+    containerRef, // Access to the container's bounding box. This will be empty on first render.
+    TooltipInPortal, // TooltipWithBounds in a Portal, outside of your component DOM tree
   } = useTooltipInPortal(); // Visx hook
 
   const keys = Object.keys(data[0]).filter(
     (componentName) =>
-      componentName !== 'name' &&
-      componentName !== 'seriesName' &&
-      componentName !== 'snapshotId',
+      componentName !== 'name' && componentName !== 'seriesName' && componentName !== 'snapshotId',
   );
-  
+
   const getSeriesName = (action: ActionObj): string => action.seriesName; // data accessor (used to generate scales) and formatter (add units for on hover box)
-  const seriesNameScale = scaleBand<string>({ // create visualization SCALES with cleaned data.
+  const seriesNameScale = scaleBand<string>({
+    // create visualization SCALES with cleaned data.
     domain: data.map(getSeriesName), // the domain array/xAxisPoints elements will place the bars along the x-axis
     padding: 0.2,
   });
 
-  const calculateMaxTotalRender = () => { // This function will iterate through the snapshots of the series, and grab the highest render times (the sum of all component times). We'll then use it in the renderingScale function and compare with the render time of the current tab. The max render time will determine the Y-axis's highest number.
+  const calculateMaxTotalRender = () => {
+    // This function will iterate through the snapshots of the series, and grab the highest render times (the sum of all component times). We'll then use it in the renderingScale function and compare with the render time of the current tab. The max render time will determine the Y-axis's highest number.
     let currentMax = -Infinity;
     for (let i = 0; i < data.length; i += 1) {
       let currentSum = 0;
@@ -101,7 +102,8 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
     nice: true, // boolean on whether to round extreme values
   });
 
-  const colorScale = scaleOrdinal<string>({ // the domain array will assign each key a different color to make rectangle boxes and use range to set the color scheme each bar
+  const colorScale = scaleOrdinal<string>({
+    // the domain array will assign each key a different color to make rectangle boxes and use range to set the color scheme each bar
     domain: keys,
     range: schemeSet3,
   });
@@ -150,7 +152,7 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
     <div>
       <div className='series-options-container'>
         <div className='dropdown-and-delete-series-container'>
-        <Button
+          <Button
             variant='contained'
             sx={{ p: 2, color: 'white' }}
             className='delete-button'

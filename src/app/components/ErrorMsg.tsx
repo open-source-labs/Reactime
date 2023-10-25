@@ -27,16 +27,20 @@ function parseError(loadingArray: [], status: Record<string, unknown>): string {
 }
 
 function ErrorMsg({ loadingArray, status, launchContent }): JSX.Element {
-  switch (parseError(loadingArray, status)) { // parseError returns a string based on the loadingArray and status. The returned string is matched to a case so that an appropriate error message will be displayed to the user
+  switch (
+    parseError(loadingArray, status) // parseError returns a string based on the loadingArray and status. The returned string is matched to a case so that an appropriate error message will be displayed to the user
+  ) {
     case 'Content Script Error':
       return (
         <div>
           Could not connect to the Target App. Try closing Reactime and reloading the page.
           <br />
           <br />
-          If you encounter this error on the initial launch of Reactime, refresh the webpage you are developing. 
+          If you encounter this error on the initial launch of Reactime, refresh the webpage you are
+          developing.
           <br />
-          If Reactime is running as an iframe in your developer tools, right click on the Reactime application and click 'Reload Frame'
+          If Reactime is running as an iframe in your developer tools, right click on the Reactime
+          application and click 'Reload Frame'
           <br />
           <br />
           NOTE: By default Reactime only launches the content script on URLS starting with
@@ -57,9 +61,11 @@ function ErrorMsg({ loadingArray, status, launchContent }): JSX.Element {
           React Dev Tools is not installed!
           <br />
           <br />
-          If you encounter this error on the initial launch of Reactime, refresh the webpage you are developing. 
+          If you encounter this error on the initial launch of Reactime, refresh the webpage you are
+          developing.
           <br />
-          If Reactime is running as an iframe in your developer tools, right click on the Reactime application and click 'Reload Frame'
+          If Reactime is running as an iframe in your developer tools, right click on the Reactime
+          application and click 'Reload Frame'
           <br />
           <br />
           <a

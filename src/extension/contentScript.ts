@@ -57,8 +57,6 @@ chrome.runtime.onMessage.addListener((request) => {
   }
 });
 
-
-
 // Performance metrics being calculated by the 'web-vitals' api and
 // sent as an object to background.js.
 // To learn more about Chrome web vitals, see https://web.dev/vitals/.
@@ -81,8 +79,6 @@ onFCP(gatherMetrics);
 onCLS(gatherMetrics);
 onINP(gatherMetrics);
 
-
 // Send message to background.js for injecting the initial script
 // into the app's DOM.
 chrome.runtime.sendMessage({ action: 'injectScript' });
-

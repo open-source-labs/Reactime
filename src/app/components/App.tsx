@@ -15,7 +15,7 @@ function App(): JSX.Element {
     <ThemeProvider theme={theme}>
       <Router>
         {/* we wrap our application with the <Router> tag so that all components that are nested will have the react-router context */}
-          <MainContainer />
+        <MainContainer />
       </Router>
     </ThemeProvider>
   );

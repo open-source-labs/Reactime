@@ -10,7 +10,7 @@ import { DiffRouteProps } from '../FrontendTypes';
 // 'DiffRoute' only passed in prop is 'snapshot' from 'tabs[currentTab]' object in 'MainContainer'
 const DiffRoute = (props: DiffRouteProps): JSX.Element => (
   <Router>
-    <div className='navbar'> 
+    <div className='navbar'>
       <NavLink className='router-link' activeClassName='is-active' exact to='/'>
         Tree
       </NavLink>

@@ -20,7 +20,7 @@ const StatusDot = ({ status }) => {
     default:
       color = 'green';
   }
-  return (<Dot style={{ backgroundColor: color }}/>) 
+  return <Dot style={{ backgroundColor: color }} />;
 };
 
 export default StatusDot;
