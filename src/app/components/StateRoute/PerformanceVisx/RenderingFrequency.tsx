@@ -15,7 +15,7 @@ const RenderingFrequency = (props) => {
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance-comparison')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance-comparison' to facilitate render.
   }, []);
-  
+
   return (
     <div>
       {Object.keys(perfData).map((componentName) => {

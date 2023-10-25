@@ -175,7 +175,7 @@ function ButtonsContainer(): JSX.Element {
           </Button>
           {!connectionStatus && (
             <Button
-            // @ts-ignore
+              // @ts-ignore
               onClick={() => exportHandler(tabs[currentTab])}
               type='button'
               className='download-button-pop-up'

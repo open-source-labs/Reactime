@@ -23,9 +23,9 @@ export function serializeState(state) {
 
 /**
  * Tree.name's come from the name of the component, but these names should be unique. When a second component
- * is used in a single tree, this function is called in checkForDuplicates to the change the Tree.name of the 
- * first component to have a "1" at the end. 
- * 
+ * is used in a single tree, this function is called in checkForDuplicates to the change the Tree.name of the
+ * first component to have a "1" at the end.
+ *
  * @param tree A tree class instance
  * @param name The name being checked
  */
@@ -35,7 +35,7 @@ function changeFirstInstanceName(tree: Tree, name: string): void {
       child.name += 1;
       return;
     } else {
-      changeFirstInstanceName(child, name)
+      changeFirstInstanceName(child, name);
     }
   }
 }
@@ -99,11 +99,11 @@ class Tree {
       componentNames = {};
       rootTree = this;
     }
-  
+
     /**
-     * If a duplicate name is found, adds a number to the end of the name so it'll show up uniquely 
+     * If a duplicate name is found, adds a number to the end of the name so it'll show up uniquely
      * in the component map. For example, if only one "Box" component is found, it's name will be "Box".
-     * However, after a second "Box" component is found, the first box will be renamed "Box1" and the 
+     * However, after a second "Box" component is found, the first box will be renamed "Box1" and the
      * second box will be named "Box2". When the third box is found it'll be named "Box3", and so on.
      */
     componentNames[name] = componentNames[name] + 1 || 1;

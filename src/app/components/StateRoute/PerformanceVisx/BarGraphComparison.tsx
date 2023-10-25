@@ -47,8 +47,8 @@ const tooltipStyles = {
 
 const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
   const dispatch = useDispatch();
-  const tabs = useSelector(state => state.main.tabs);
-  const currentTab = useSelector(state => state.main.currentTab);
+  const tabs = useSelector((state) => state.main.tabs);
+  const currentTab = useSelector((state) => state.main.currentTab);
 
   const {
     width, // from ParentSize provided in StateRoute

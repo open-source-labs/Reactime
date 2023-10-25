@@ -7,5 +7,5 @@ import { useState } from 'react';
 
 export default function useForceUpdate(): () => number {
   const [, setValue] = useState(0);
-  return ():number => setValue((value:number): number => value + 1);
+  return (): number => setValue((value: number): number => value + 1);
 }

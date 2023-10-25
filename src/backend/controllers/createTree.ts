@@ -66,7 +66,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     /** Name of the current component */
     let componentName: string =
       elementType?._context?.displayName || //For ContextProviders like Route, Navigation, Location
-      (elementType?._context &&  'ContextProvider') || //Mark's note: useContext providers weren't showing up the way listed in the line above, I actually couldn't find the name of the context provider on the react dev tools fiber tree.
+      (elementType?._context && 'ContextProvider') || //Mark's note: useContext providers weren't showing up the way listed in the line above, I actually couldn't find the name of the context provider on the react dev tools fiber tree.
       elementType?._result?.name || //For lazy Component
       elementType?.render?.name ||
       elementType?.name || //For Functional/Class Component
@@ -128,18 +128,18 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           break;
         }
         // For react-router components Route, Navigation, or Location, the elementType won't have a name property, so elementType.name will be undefined.
-        // The following switch case will be entered and will pass limited info to these element's props, but if none of the 
+        // The following switch case will be entered and will pass limited info to these element's props, but if none of the
         // "if" statements are entered and a break statements isn't executed, the default case will still be entered
         case undefined: {
-          if (elementType._context?.displayName === "Route") {
+          if (elementType._context?.displayName === 'Route') {
             componentData.props = { pathname: memoizedProps?.value?.matches?.[0]?.pathname };
             break;
           }
-          if (elementType._context?.displayName === "Navigation") {
+          if (elementType._context?.displayName === 'Navigation') {
             componentData.props = { basename: memoizedProps?.value?.basename };
             break;
           }
-          if (elementType._context?.displayName === "Location") {
+          if (elementType._context?.displayName === 'Location') {
             componentData.props = { pathname: memoizedProps?.value?.location?.pathname };
             break;
           }
@@ -207,14 +207,14 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     // Example: for Stateful buttons demo-app: Increment is a stateful component that use useState hook to store state data.
     if (
       (tag === FunctionComponent ||
-       tag === IndeterminateComponent ||
-       //TODO: Need reasoning for why we evaluate context provider
-       /**
-        * So far I haven't seen a case where hook data is stored for ContextProviders in memoized state. So far
-        * I've seen some data a non-null memoize state on browser router, but queue is null. Routes has some good info on memoized props,
-        * but that's not being addressed here. useContext providers also have null for memoized state.
-        */
-       tag === ContextProvider) &&
+        tag === IndeterminateComponent ||
+        //TODO: Need reasoning for why we evaluate context provider
+        /**
+         * So far I haven't seen a case where hook data is stored for ContextProviders in memoized state. So far
+         * I've seen some data a non-null memoize state on browser router, but queue is null. Routes has some good info on memoized props,
+         * but that's not being addressed here. useContext providers also have null for memoized state.
+         */
+        tag === ContextProvider) &&
       memoizedState
     ) {
       if (memoizedState.queue) {

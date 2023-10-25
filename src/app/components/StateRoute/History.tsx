@@ -16,7 +16,7 @@ import { changeView, changeSlider, setCurrentTabInApp } from '../../slices/mainS
 const defaultMargin: DefaultMargin = {
   top: 30,
   left: 30,
-  right: 55, 
+  right: 55,
   bottom: 70,
 };
 
@@ -42,12 +42,15 @@ function History(props: Record<string, unknown>): JSX.Element {
   const innerWidth: number = totalWidth - margin.left - margin.right;
   const innerHeight: number = totalHeight - margin.top - margin.bottom - 60;
 
-  function labelCurrentNode(d3root) { // iterates through the parents of a node and applies a color property
-    if (d3root.data.index === currLocation.index) { // node.data aka d3root.data allows us to access associated node data. So if node.index === currLocation.index...
+  function labelCurrentNode(d3root) {
+    // iterates through the parents of a node and applies a color property
+    if (d3root.data.index === currLocation.index) {
+      // node.data aka d3root.data allows us to access associated node data. So if node.index === currLocation.index...
 
       let currNode = d3root; // make our input the currNode
 
-      while (currNode.parent) { // while there are parent nodes
+      while (currNode.parent) {
+        // while there are parent nodes
         currNode.color = '#999'; // change or give the node a color property
         currNode = currNode.parent; // change currNode to the parent
       }
@@ -59,20 +62,25 @@ function History(props: Record<string, unknown>): JSX.Element {
 
     let found;
 
-    if (!d3root.children) { // if root has no children array
+    if (!d3root.children) {
+      // if root has no children array
       return found; // return undefined
     }
 
-    d3root.children.forEach((child) => { // for each child node within the children array
-      if (!found) { // if found is undefined
+    d3root.children.forEach((child) => {
+      // for each child node within the children array
+      if (!found) {
+        // if found is undefined
         found = labelCurrentNode(child); //
       }
     });
     return found; // return's the found child node
   }
 
-  function findDiff(index) { // determines the difference between our current index and the index-1 snapshot and produces an html string
-    const statelessCleaning = (obj: { //'statelessCleaning' functions in the same way as the 'statelessCleaning' function in Diff.tsx
+  function findDiff(index) {
+    // determines the difference between our current index and the index-1 snapshot and produces an html string
+    const statelessCleaning = (obj: {
+      //'statelessCleaning' functions in the same way as the 'statelessCleaning' function in Diff.tsx
       name?: string;
       componentData?: object;
       state?: string | any;
@@ -81,22 +89,28 @@ function History(props: Record<string, unknown>): JSX.Element {
     }) => {
       const newObj = { ...obj }; // duplicate our input object into a new object
 
-      if (newObj.name === 'nameless') { // if our new object's name is nameless
+      if (newObj.name === 'nameless') {
+        // if our new object's name is nameless
         delete newObj.name; // delete the name property
       }
-      if (newObj.componentData) { // if our new object has a componentData property
+      if (newObj.componentData) {
+        // if our new object has a componentData property
         delete newObj.componentData; // delete the componentData property
       }
-      if (newObj.state === 'stateless') { // if if our new object's state is stateless
+      if (newObj.state === 'stateless') {
+        // if if our new object's state is stateless
         delete newObj.state; // delete the state property
       }
-      if (newObj.stateSnaphot) { // if our new object has a stateSnaphot property
+      if (newObj.stateSnaphot) {
+        // if our new object has a stateSnaphot property
         newObj.stateSnaphot = statelessCleaning(obj.stateSnaphot); // run statelessCleaning on the stateSnapshot
       }
 
-      if (newObj.children) { // if our new object has a children property
+      if (newObj.children) {
+        // if our new object has a children property
         newObj.children = [];
-        if (obj.children.length > 0) { // and if our input object's children property is non-empty, go through each children object from our input object and determine, if the object being iterated on either has a stateless state or has a children array with a non-zero amount of objects. Objects that fulfill the above that need to be cleaned through statelessCleaning. Those that are cleaned through this process are then pushed to the new object's children array.
+        if (obj.children.length > 0) {
+          // and if our input object's children property is non-empty, go through each children object from our input object and determine, if the object being iterated on either has a stateless state or has a children array with a non-zero amount of objects. Objects that fulfill the above that need to be cleaned through statelessCleaning. Those that are cleaned through this process are then pushed to the new object's children array.
           obj.children.forEach((element: { state?: object | string; children?: [] }) => {
             if (element.state !== 'stateless' || element.children.length > 0) {
               const clean = statelessCleaning(element);
@@ -108,20 +122,25 @@ function History(props: Record<string, unknown>): JSX.Element {
       return newObj; // return the cleaned state snapshot(s)
     };
 
-    function findStateChangeObj(delta, changedState = []) { // function determines whether delta has resulted in a changedState. Function would return an empty array if there were no changes to state and an array of objects that changed state.
-      if (!delta.children && !delta.state) { // if delta doesn't have a children property or a state property
+    function findStateChangeObj(delta, changedState = []) {
+      // function determines whether delta has resulted in a changedState. Function would return an empty array if there were no changes to state and an array of objects that changed state.
+      if (!delta.children && !delta.state) {
+        // if delta doesn't have a children property or a state property
         return changedState; // returns an empty array
       }
 
-      if (delta.state && delta.state[0] !== 'stateless') { // ignore stateless delta objects
+      if (delta.state && delta.state[0] !== 'stateless') {
+        // ignore stateless delta objects
         changedState.push(delta.state); // and push stateful delta objects to changedState
       }
 
-      if (!delta.children) { // if the delta doesn't have any children
+      if (!delta.children) {
+        // if the delta doesn't have any children
         return changedState; // return the changedState array with any and all stateful delta objects.
       }
 
-      Object.keys(delta.children).forEach((child) => { // but if the delta object did have children, we iterate through each child object
+      Object.keys(delta.children).forEach((child) => {
+        // but if the delta object did have children, we iterate through each child object
         // if (isNaN(child) === false) {
         changedState.push(...findStateChangeObj(delta.children[child])); // recursively call this function on each child object. Push every 'stateful' child into the changedState array.
         // }
@@ -130,7 +149,8 @@ function History(props: Record<string, unknown>): JSX.Element {
       return changedState; // return the changedState array with any and all stateful delta objects.
     }
 
-    const delta = diff( // 'diff' function from 'jsondiffpatch' returns the difference in state between the (snapshot that occurred before the indexed snapshot) and the (indexed snapshot).
+    const delta = diff(
+      // 'diff' function from 'jsondiffpatch' returns the difference in state between the (snapshot that occurred before the indexed snapshot) and the (indexed snapshot).
       statelessCleaning(snapshots[index - 1]),
       statelessCleaning(snapshots[index]),
     );
@@ -148,8 +168,9 @@ function History(props: Record<string, unknown>): JSX.Element {
     const svg = d3.select(svgRef.current); // d3.select Selects the first element/node that matches svgRef.current. If no element/node match returns an empty selection. If multiple elements/nodes match the selector, only the first matching element/node (in document order) will be selected.
     svg.selectAll('*').remove(); // Selects all elements. The elements will be selected in document order (top-to-bottom). We then remove the selected elements/nodes from the DOM. This is important as to ensure that the SVG is empty before rendering the D3 based visualization to avoid interference/overlap with any previously rendered content.
 
-    const tree = (data) => { // function that takes in data and turns it into a d3 tree.
-      const treeRoot = d3.hierarchy(data); // 'd3.hierarchy' constructs a root node from the specified hierarchical data. 
+    const tree = (data) => {
+      // function that takes in data and turns it into a d3 tree.
+      const treeRoot = d3.hierarchy(data); // 'd3.hierarchy' constructs a root node from the specified hierarchical data.
       return d3.tree().size([innerWidth, innerHeight])(treeRoot); // d3.tree creates a new tree layout with a size option of innerWidth (~line 41) and innerHeight (~line 42). We specify our new tree layout's root as 'treeRoot' which assigns an x and y property to each node to represent an [x, y] coordinate system.
     };
 
@@ -169,9 +190,10 @@ function History(props: Record<string, unknown>): JSX.Element {
       .enter()
       .append('path')
       .attr('class', 'link')
-      .attr( //defines the path attribute (d) for each link (edge) between nodes, using a Bézier curve (C) to connect the source node's coordinates (d.x, d.y) to the midpoint between the source and target nodes and then to the target node's coordinates (d.parent.x, d.parent.y)
+      .attr(
+        //defines the path attribute (d) for each link (edge) between nodes, using a Bézier curve (C) to connect the source node's coordinates (d.x, d.y) to the midpoint between the source and target nodes and then to the target node's coordinates (d.parent.x, d.parent.y)
         'd',
-        (d) => 
+        (d) =>
           `M${d.x},${d.y}C${d.x},${(d.y + d.parent.y) / 2} ${d.parent.x},${
             (d.y + d.parent.y) / 2
           } ${d.parent.x},${d.parent.y}`,
@@ -192,7 +214,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .style('cursor', 'pointer')
       .attr('class', `snapshotNode`)
       .on('click', (event, d) => {
-        dispatch(changeView(d.data.index)); 
+        dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
         /*
           created popup div and appended it to display div(returned in this function) 
@@ -216,7 +238,8 @@ function History(props: Record<string, unknown>): JSX.Element {
         if (d3.selectAll('.tooltip')._groups['0'].length === 0) {
           renderToolTip(); //if there are no tooltips left in the doc, we call the function to create a new tooltip
         } else {
-          if (d3.selectAll(`#tt-${d.data.index}`)._groups['0'].length === 0) { // if there is no tooltip with the specific id
+          if (d3.selectAll(`#tt-${d.data.index}`)._groups['0'].length === 0) {
+            // if there is no tooltip with the specific id
             d3.selectAll('.tooltip').remove(); //remove any existing tooltips
             renderToolTip(); //call the function again to create a new tooltip
           }
@@ -269,7 +292,7 @@ function History(props: Record<string, unknown>): JSX.Element {
         }
         return d.color ? d.color : '#555';
       })
-      .attr('r', 18); 
+      .attr('r', 18);
 
     node
       .append('text')
