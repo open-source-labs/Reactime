@@ -8,9 +8,15 @@ import RenderingFrequency from './RenderingFrequency';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
 import BarGraphComparisonActions from './BarGraphComparisonActions';
-import { useStoreContext } from '../../../store';
-import { setCurrentTabInApp } from '../../../actions/actions';
-import { PerfData, Series, PerformanceVisxProps } from '../../../FrontendTypes';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentTabInApp } from '../../../slices/mainSlice';
+import {
+  PerfData,
+  Series,
+  PerformanceVisxProps,
+  RootState,
+  MainState,
+} from '../../../FrontendTypes';
 
 const collectNodes = (snaps, componentName) => {
   const componentsResult = [];
@@ -150,23 +156,24 @@ const getPerfMetrics = (snapshots, snapshotsIds): PerfData => {
   return perfData;
 };
 
-  const getActions = () => { // Creates the actions array used to populate the compare actions dropdown (WORK IN PROGRESS)
-    const project = localStorage.getItem('project');
-    const seriesArr: Series[] = project === null ? [] : JSON.parse(project);
-    const actionsArr = [];
+const getActions = () => {
+  // Creates the actions array used to populate the compare actions dropdown (WORK IN PROGRESS)
+  const project = localStorage.getItem('project');
+  const seriesArr: Series[] = project === null ? [] : JSON.parse(project);
+  const actionsArr = [];
 
-    if (seriesArr.length) {
-      for (let i = 0; i < seriesArr.length; i += 1) {
-        for (const actionObj of seriesArr[i].data.barStack) {
-          if (actionObj.name === 'action') {
-            actionObj.seriesName = seriesArr[i].name;
-            actionsArr.push(actionObj);
-          }
+  if (seriesArr.length) {
+    for (let i = 0; i < seriesArr.length; i += 1) {
+      for (const actionObj of seriesArr[i].data.barStack) {
+        if (actionObj.name === 'action') {
+          actionObj.seriesName = seriesArr[i].name;
+          actionsArr.push(actionObj);
         }
       }
     }
-    return actionsArr;
-  };
+  }
+  return actionsArr;
+};
 
 /* EXPORT COMPONENT */
 const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
@@ -175,9 +182,10 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
     width, // from ParentSize provided in StateRoute
     height, // from ParentSize provided in StateRoute
     snapshots, // from 'tabs[currentTab]' object in 'MainContainer'
-    hierarchy // from 'tabs[currentTab]' object in 'MainContainer'
+    hierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
-  const [{ currentTabInApp }, dispatch] = useStoreContext();
+  const dispatch = useDispatch();
+  const { currentTabInApp }: MainState = useSelector((state: RootState) => state.main);
   const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
   const [series, setSeries] = useState(true);
@@ -217,20 +225,24 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
       />
     );
   };
-  
+
   const allRoutes = []; // create allRoutes variable to hold urls
   const filteredSnapshots = [];
-  
-  for (let i = 0; i < data.barStack.length; i += 1) { // loop through data.barStack
+
+  for (let i = 0; i < data.barStack.length; i += 1) {
+    // loop through data.barStack
     const url = new URL(data.barStack[i].route); // set url variable to new route url
-    if (!allRoutes.includes(url.pathname)) { // if all the routes do not have the pathname property on url then push it onto all routes array
+    if (!allRoutes.includes(url.pathname)) {
+      // if all the routes do not have the pathname property on url then push it onto all routes array
       allRoutes.push(url.pathname);
     }
-    if (route && route === url.pathname) { // if the route exists and it is equal to url.pathname then push data.barstack at i into filteredSnapshots array
+    if (route && route === url.pathname) {
+      // if the route exists and it is equal to url.pathname then push data.barstack at i into filteredSnapshots array
       filteredSnapshots.push(data.barStack[i]);
     }
   }
-  if (route !== 'All Routes') { // if route does not equal to All Routes, set data.barstack to filteredSnapshots array
+  if (route !== 'All Routes') {
+    // if route does not equal to All Routes, set data.barstack to filteredSnapshots array
     data.barStack = filteredSnapshots;
   }
 
@@ -238,8 +250,9 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
   if (snapshot !== 'All Snapshots') {
     const checkData = [data.barStack.find((comp) => comp.snapshotId === snapshot)]; // filter barStack to make it equal to an array of length 1 with object matching snapshot ID to mirror the data.barStack object's shape
     const holdData = [];
-    
-    for (const key in checkData[0]) { // looping through checkData which is composed of a single snapshot while pushing key/values to a new object and setting maxHeight
+
+    for (const key in checkData[0]) {
+      // looping through checkData which is composed of a single snapshot while pushing key/values to a new object and setting maxHeight
       if (key !== 'route' && key !== 'snapshotId') {
         if (maxHeight < checkData[0][key]) maxHeight = checkData[0][key];
         const name = {};
@@ -249,7 +262,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
         holdData[holdData.length - 1].snapshotId = key;
       }
     }
-    
+
     data.maxTotalRender = maxHeight * 1.15; // maxTotalRender height of bar is aligned to y-axis. 1.15 adjusts the numbers on the y-axis so the max bar's true height never reaches the max of the y-axis
     if (holdData) data.barStack = holdData; // assign holdData to data.barStack to be used later to create graph
   }
@@ -282,7 +295,8 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
     return <div className='noState'>{NO_STATE_MSG}</div>;
   };
 
-  const renderForTutorial = () => { // This will redirect to the proper tabs during the tutorial
+  const renderForTutorial = () => {
+    // This will redirect to the proper tabs during the tutorial
     if (currentTabInApp === 'performance') return <Redirect to='/' />;
     if (currentTabInApp === 'performance-comparison') return <Redirect to='/comparison' />;
     return null;

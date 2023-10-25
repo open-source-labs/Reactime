@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import { LinkControlProps, ControlStyles, DropDownStyle, Node } from '../../../FrontendTypes'
+import { LinkControlProps, ControlStyles, DropDownStyle, Node } from '../../../FrontendTypes';
 // Font size of the Controls label and Dropdowns
 const controlStyles: ControlStyles = {
   fontSize: '16px',
   padding: '10px',
 };
- 
+
 const dropDownStyle: DropDownStyle = {
   margin: '0.5em',
   fontSize: '16px',
@@ -49,9 +49,12 @@ export default function LinkControls({
   collectNodes(snapShots);
 
   return (
-    <div style={controlStyles}> {/* Controls for the layout selection */}
+    <div style={controlStyles}>
+      {' '}
+      {/* Controls for the layout selection */}
       <label>Layout:</label>
-      &nbsp;{' '} {/* This is a non-breaking space - Prevents an automatic line break at this position */}
+      &nbsp;{' '}
+      {/* This is a non-breaking space - Prevents an automatic line break at this position */}
       <select
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => setLayout(e.target.value)}
@@ -62,8 +65,8 @@ export default function LinkControls({
         <option value='polar'>Polar</option>
       </select>
       &nbsp;&nbsp;
-    
-      <label>Orientation:</label> {/* Toggle record button to pause state changes on target application */}
+      <label>Orientation:</label>{' '}
+      {/* Toggle record button to pause state changes on target application */}
       {/* Controls for the Orientation selection, this dropdown will be disabled when the polar layout is selected as it is not needed */}
       &nbsp;
       <select
@@ -76,8 +79,6 @@ export default function LinkControls({
         <option value='horizontal'>Horizontal</option>
       </select>
       &nbsp;&nbsp;
-    
-      
       <label>Link:</label> {/* Controls for the link selections. */}
       &nbsp;
       <select
@@ -89,8 +90,6 @@ export default function LinkControls({
         <option value='step'>Step</option>
         <option value='line'>Line</option>
       </select>
-
-      
       <label> Select:</label> {/* Controls for the select selections. */}
       &nbsp;
       <select
@@ -108,7 +107,6 @@ export default function LinkControls({
             ),
         )}
       </select>
-
       {/* This is the slider control for the step option */}
       {linkType === 'step' && layout !== 'polar' && (
         <>

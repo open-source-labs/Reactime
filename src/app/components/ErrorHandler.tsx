@@ -6,7 +6,7 @@ class ErrorHandler extends React.Component {
     this.state = { errorOccurred: false };
   }
 
-  componentDidCatch(error: string, info: string): void {
+  componentDidCatch(): void {
     this.setState({ errorOccurred: true });
   }
 

@@ -115,7 +115,7 @@ export default function linkFiber(mode: Status): () => Promise<void> {
     fiberRoot = devTools.getFiberRoots(1).values().next().value;
 
     // console.log('Initial fiber root', fiberRoot);
-    
+
     // ----------INITIALIZE THE TREE SNAP SHOT ON CHROME EXTENSION--------------
     await throttledUpdateSnapshot(fiberRoot, mode); // only runs on start up
 

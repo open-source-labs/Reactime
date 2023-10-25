@@ -2,14 +2,14 @@ import React, { useEffect } from 'react';
 import Charts from 'react-apexcharts';
 import ReactHover, { Trigger, Hover } from 'react-hover';
 import { OptionsCursorTrueWithMargin } from '../FrontendTypes';
-import { setCurrentTabInApp } from '../actions/actions';
-import { useStoreContext } from '../store';
-
+import { setCurrentTabInApp } from '../slices/mainSlice';
+import { useDispatch } from 'react-redux';
 /*
   Used to render a single radial graph on the 'Web Metrics' tab
 */
 
 const radialGraph = (props) => {
+  const dispatch = useDispatch();
   const state = {
     series: [props.series], // series appears to be the scale at which data is displayed based on the type of webMetrics measured.
     options: {
@@ -29,10 +29,16 @@ const radialGraph = (props) => {
           hollow: {
             margin: 0,
             size: '75%',
-            background: '#242529',
-            image: undefined,
+            background: 'transparent',
+            // background: '#242529',
+            image: props.overLimit
+              ? 'https://static.vecteezy.com/system/resources/thumbnails/012/042/301/small/warning-sign-icon-transparent-background-free-png.png'
+              : undefined,
+            imageWidth: 32,
+            imageHeight: 32,
             imageOffsetX: 0,
-            imageOffsetY: 0,
+            imageOffsetY: -64,
+            imageClipped: false,
             position: 'front',
             dropShadow: {
               enabled: false,
@@ -78,7 +84,6 @@ const radialGraph = (props) => {
           shade: 'dark',
           type: 'horizontal',
           shadeIntensity: 0.1,
-          gradientToColors: [props.color],
           inverseColors: false,
           opacityFrom: 1,
           opacityTo: 1,
@@ -92,8 +97,7 @@ const radialGraph = (props) => {
     },
   };
 
-  const [store, dispatch] = useStoreContext(); // used to get the dispatch function from our storeContext
-  useEffect(() => { 
+  useEffect(() => {
     dispatch(setCurrentTabInApp('webmetrics')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.
   }, []);
 
@@ -104,8 +108,8 @@ const radialGraph = (props) => {
   };
 
   return (
-    <div className='metric'> 
-      <ReactHover options={optionsCursorTrueWithMargin}> 
+    <div className='metric'>
+      <ReactHover options={optionsCursorTrueWithMargin}>
         <Trigger type='trigger'>
           <div id='chart'>
             <Charts
@@ -118,9 +122,23 @@ const radialGraph = (props) => {
           </div>
         </Trigger>
         <Hover type='hover'>
-          <div style={{zIndex: 1, position: 'relative', padding: '0.5rem 1rem'}} id='hover-box'>
-            <p><strong>{props.name}</strong></p>
+          <div style={{ zIndex: 1, position: 'relative', padding: '0.5rem 1rem' }} id='hover-box'>
+            <p>
+              <strong>{props.name}</strong>
+            </p>
             <p>{props.description}</p>
+            <p>
+              <span style={{ color: '#0bce6b' }}>Good: </span>
+              {`< ${props.score[0]}`}
+            </p>
+            <p>
+              <span style={{ color: '#fc5a03' }}>Needs Improvement: </span>
+              {`< ${props.score[1]}`}
+            </p>
+            <p>
+              <span style={{ color: '#fc2000' }}>Poor: </span>
+              {`> ${props.score[1]}`}
+            </p>
           </div>
         </Hover>
       </ReactHover>

@@ -29,7 +29,7 @@
 <br>
 
 <p align="center">
-<img src="./assets/gifs/main_v21.gif" />
+<img src="./assets/gifs/GeneralDemoGif.gif" />
 </p>
 
 <p align="center">
@@ -48,7 +48,7 @@ be viewed in Diff mode.
 <br>
 
 <p align="center">
-<img src="./assets/gifs/timeTravelHistory_v21.gif" />
+<img src="./assets/gifs/TimeTravelGif.gif" />
 </p>
 <br>
 
@@ -85,7 +85,18 @@ Download the recorded snapshots as a JSON file and upload them to access state t
 <br>
 
 <p align="center">
-<img src="./assets/gifs/importExport_v21.gif" />
+<img src="./assets/gifs/importExport_v22.gif" />
+</p>
+<br>
+
+### 🔹 Reconnect and Status
+
+If Reactime loses its connection to the tab you're monitoring, simply click the "reconnect" button to resume your work. You'll notice a circle located to the right of the button, which will appear as either red (indicating disconnection) or green (signifying a successful reconnection).
+<br>
+<br>
+
+<p align="center">
+<img src="./assets/gifs/ReconnectGif22.gif" />
 </p>
 <br>
 
@@ -94,35 +105,47 @@ Download the recorded snapshots as a JSON file and upload them to access state t
 One of the most common issues that affects performance in React is unnecessary
 render cycles. This problem can be fixed by checking your renders in the
 Performance tab in Chrome DevTools under the Reactime panel.
+<br>
+<br>
 
 ### 🔹 Jumping
 
 Using the actions sidebar, a user can jump to any previously recorded snapshots.
 Hitting the jump button on any snapshot will allow a user to view state data at
 any point in the history of the target application.
+<br>
+<br>
 
 ### 🔹 Gatsby
 
 Reactime offers full support for Gatsby applications. You would be able to
 identify unnecessary renders, duration of each rendering, travel-debugging
 features and visual representation of the tree components.
+<br>
+<br>
 
 ### 🔹 Next.js
 
 Reactime offers debugging and performance tools for Next.js apps: time-traveling
 debugging, preventing unnecessary component re-renders and making your
 application faster.
+<br>
+<br>
 
 ### 🔹 Remix
 
 Reactime offers debugging and performance tools for Remix apps (in beta). Support still
 needs to be added for multi-route time traveling. Every other feature works.
+<br>
+<br>
 
 ### 🔹 TypeScript Support
 
 Reactime offers support for TypeScript applications using stateful class
 components and functional components. Further testing and development is
 required for custom hooks and Concurrent Mode.
+<br>
+<br>
 
 ### 🔹 Documentation
 
@@ -130,6 +153,7 @@ After cloning this repository, developers can simply run `npm run docs` at the
 root level and serve the dynamically generated `/docs/index.html` file on a
 browser. Doing so will provide a readable, extensible, and interactive GUI view
 of the structure and interfaces of the codebase.
+<br>
 <br>
 
 ### <b>Additional Features</b>
@@ -144,15 +168,16 @@ of the structure and interfaces of the codebase.
 
 <h1>What's New!</h1>
 
-Reactime 21.0 focuses on several key performance issues to improve application stability and reliability, bug fixes, a revamped UI, and the inclusion of a state export and import feature.
+Reactime 22.0 heralds significant enhancements, addressing core performance issues and fortifying the overall application's stability and reliability. In our pursuit of consistent evolution, we've updated outdated packages and transitioned state management to Redux Toolkit. This strategic shift not only modernizes our tech stack but also ensures our application is positioned for easier maintenance and scalability in the future. Complementing these upgrades, this release also mends various bugs. The debut of features like the reconnection button, a status icon, and the integration of key web metrics – Cumulative Layout Shift (CLS) and Interaction To Next Paint (INP) – amplifies its functionality and offers users a more refined experience.
 
-<i>Under the Hood</i>
+<i>Taking a deeper look</i>
 
-We have resolved several persistent bugs that would result in a black screen during regular application use. One of the major causes of Reactime’s black screen bug was related to the use of deprecated packages, such as an outdated Material UI package. Another source of black screens and poor user experience appeared to be related to the application frequently terminating ports. This prevented Reactime’s contentScript.ts, background.js, and MainContainer.tsx from communicating with the developer’s application. Through the implementation of a ‘keepAlive’ function, we allow the connection to stay long-lived for longer. Updating the current Material UI package from v4 to v5 and implementing keepAlive connections have resulted in a drastic decrease in port disconnects.
+Addressing the persistent disconnection/black screen issues that occasionally affected users during regular application use, we made decisive improvements by removing the "keepAlive" function and implementing robust logic to fix the core issue. This enabled us to refine the communication protocol between our application and the Chrome extension API, delivering a more consistent and stable connection. To further enhance the user experience and foster resilience, we introduced a user-friendly reconnection feature. This not only offers users a swift recovery route but also acts as an added layer of protection against any unexpected disconnections in the future.
 
-In an effort to improve maintainability and application longevity, there were several engineering interventions that were implemented. One of the goals for Reactime 21.0 was to decrease the dependency on external libraries and packages, which we have done by updating or removing packages. While the documentation for the backend and extension was adequate, there was a severe lack of documentation of all the front-end components. Reactime 21.0 has changed this with documentation covering more than 90% of front-end component logic. We have also added new images and charts so future developers can understand how components are interconnected. These improvements should lead to faster development of features in the future.
+In an effort to improve maintainability, scalability, and longevity, we updated and phased out certain dependencies. To name a few, we moved away from the Immer library and transitioned our state management to use Redux Toolkit, while upgrading the Web Vitals API from version 1.1.2 to 3.5.0, allowing us to harness a broader range of web metrics. As part of this transition, we also converted all of the existing tests to work with the updated state management system, while further expanding testing suites to increase overall testing coverage. Lastly, we achieved a notable increase in TypeScript coverage, strengthening code quality and early detection of potential development issues.
 
-For user experience, we focused on several major goals. The new download and upload feature allows developers to download their current state history so that developers may share their findings or review them later down the road. Another focus was to remove features that did not meet Reactime’s standards for user experience. The “Compare Actions” option has been removed until the feature becomes more concrete. The initial application load screen has had timings loosened to allow developers with slower computers to allow better connection between Reactime and their application. Loading error messages have been improved to allow easier initial troubleshooting to decrease frustration. Last but not least, while we have now migrated to Material UI v5, we have started the slow transition to convert various components into Material UI. Along with a new take on Reactime’s logo, this has resulted in a cleaner and more modern appearance.
+For an improved user experience, we set our sights on several impactful enhancements. First on our list is the reconnection feature, designed as a protective measure for those unexpected moments when a user gets disconnected. In such events, an intuitive pop-up dialog will instantly emerge, offering users a seamless way to dive right back into their session, while also offering the option to download recorded snapshots of state as a JSON file. Complementing this, we've integrated a dynamic status indicator that transparently displays a user's current app status, highlighting whether they're online or offline. But that's not all. We've enriched the application with two vital web performance metrics: Cumulative Layout Shift (CLS) and Interaction to Next Paint (INP). These metrics are pivotal, providing developers with insights into layout stability and responsiveness, empowering them to optimize user interactions with precision.
+
 
 If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
 
@@ -228,7 +253,7 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 
 ## <b>Read More</b>
 
-- [Cheers to Reactime, Version 21!](https://medium.com/@brok3turtl3/cheers-to-reactime-version-21-fa4dafa4bc74)
+- [Reactime: Real-time Debugging, Timeless Results](https://medium.com/@kelvinmirhan/reactime-real-time-debugging-timeless-results-3f163b721d01)
 
 ## <b>Authors</b>
 
@@ -324,6 +349,10 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 - **Eivind Del Fierro** - [@EivindDelFierro](https://github.com/EivindDelFierro)
 - **Kyle Bell** - [@KyEBell](https://github.com/KyEBell)
 - **Sean Kelly** - [@brok3turtl3](https://github.com/brok3turtl3)
+- **Christopher Stamper** - [@ctstamper](https://github.com/ctstamper)
+- **Jimmy Phy** - [@jimmally](https://github.com/jimmally)
+- **Andrew Byun** - [@AndrewByun](https://github.com/AndrewByun)
+- **Kelvin Mirhan** - [@kelvinmirhan](https://github.com/kelvinmirhan)
 
 ## <b>License </b>
 

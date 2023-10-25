@@ -26,7 +26,7 @@ describe('unit testing for ErrorContainer.tsx', () => {
       props.status.reactDevToolsInstalled = false;
       render(<ErrorMsg {...props} />);
       expect(
-        screen.getByText('React Dev Tools isnt installed!', { exact: false }),
+        screen.getByText('React Dev Tools is not installed!', { exact: false }), //edited this to say is not installed instead of isn't, matches the expected return string from ErrorMsg.tsx
       ).toBeInTheDocument();
       props.status.reactDevToolsInstalled = true;
     });
