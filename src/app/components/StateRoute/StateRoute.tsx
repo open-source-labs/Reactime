@@ -192,7 +192,7 @@ const StateRoute = (props: StateRouteProps) => {
             typeof webMetrics.INP !== 'number' ? '- ms' : `${webMetrics.INP.toFixed(2)} ms`
           }
           score={['200 ms', '500 ms']}
-          overLimit={webMetrics.LCP > 700}
+          overLimit={webMetrics.INP > 700}
           label='Interaction to Next Paint'
           name='Interaction to Next Paint'
           description={`Assesses a page's overall responsiveness to user interactions by observing the latency of all click, tap, and keyboard interactions that occur throughout the lifespan of a user's visit to a page`}
