@@ -202,7 +202,7 @@ Reactime est un projet open source, et toute aide de vore part sera grandement a
 
 ## <b>En savoir plus</b>
 
-- [Cheers to Reactime, Version 22!](https://medium.com/@kelvinmirhan/reactime-real-time-debugging-timeless-results-3f163b721d01)
+- [Reactime: Real-time Debugging, Timeless Results](https://medium.com/@kelvinmirhan/reactime-real-time-debugging-timeless-results-3f163b721d01)
 
 ## <b>Auteurs</b>
 
