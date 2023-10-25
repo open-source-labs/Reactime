@@ -108,7 +108,7 @@ const customTabs = {
     sliderIndex: 0,
     viewIndex: -1,
   },
-}
+};
 
 const customInitialState = {
   main: {
@@ -127,29 +127,24 @@ const customStore = configureStore({
     main: mainSlice.reducer,
   },
   preloadedState: customInitialState, // Provide custom initial state
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });
 
-const render = component => rtlRender(
-  <Provider store={customStore}>
-    {component}
-  </Provider>
-);
+const render = (component) => rtlRender(<Provider store={customStore}>{component}</Provider>);
 
 jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'), // Use the actual react-redux module except for the functions you want to mock
   useDispatch: jest.fn(), // set up a mock function for useDispatch
 }));
 
-//these are needed for the Clicking pause-button toggles locked/unlocked test, as the onClick triggers the exportHandler, which uses the .creatObjectURL and .revokeObjectURL methods, so we declare them as jest functions here 
+//these are needed for the Clicking pause-button toggles locked/unlocked test, as the onClick triggers the exportHandler, which uses the .creatObjectURL and .revokeObjectURL methods, so we declare them as jest functions here
 global.URL.createObjectURL = jest.fn(() => 'https://pdf.com');
 global.URL.revokeObjectURL = jest.fn();
 
 describe('Unit testing for ButtonContainer', () => {
   const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 18
-  const dummyDispatch = jest.fn(); //separate mock function created because we need to explicitly define on line 30 what 
-  useDispatchMock.mockReturnValue(dummyDispatch);//exactly useDispatchMock returns (which is a jest.fn())
+  const dummyDispatch = jest.fn(); //separate mock function created because we need to explicitly define on line 30 what
+  useDispatchMock.mockReturnValue(dummyDispatch); //exactly useDispatchMock returns (which is a jest.fn())
   beforeEach;
 
   const currentTab = customInitialState.main.tabs[customInitialState.main.currentTab];
@@ -209,7 +204,6 @@ describe('Unit testing for ButtonContainer', () => {
       expect(dummyDispatch).toHaveBeenCalledWith(toggleMode('paused'));
     });
   });
-
 
   describe('Upload/Download', () => {
     test('Clicking upload and download buttons', async () => {

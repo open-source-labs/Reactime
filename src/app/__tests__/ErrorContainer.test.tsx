@@ -3,7 +3,7 @@ import { render as rtlRender, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import ErrorContainer from '../containers/ErrorContainer';
 import { configureStore } from '@reduxjs/toolkit';
-import { mainSlice } from '../slices/mainSlice'
+import { mainSlice } from '../slices/mainSlice';
 import { Provider } from 'react-redux';
 
 const customTabs = {
@@ -100,7 +100,7 @@ const customTabs = {
     sliderIndex: 0,
     viewIndex: -1,
   },
-}
+};
 
 const customInitialState = {
   main: {
@@ -115,19 +115,14 @@ const customInitialState = {
 };
 
 const customStore = configureStore({
-reducer: {
-main: mainSlice.reducer,
-},
-preloadedState: customInitialState, // Provide custom initial state
-middleware: (getDefaultMiddleware) =>
-getDefaultMiddleware({ serializableCheck: false }),
+  reducer: {
+    main: mainSlice.reducer,
+  },
+  preloadedState: customInitialState, // Provide custom initial state
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });
 
-const render = component => rtlRender(
-<Provider store={customStore}>
-{component}
-</Provider>
-);
+const render = (component) => rtlRender(<Provider store={customStore}>{component}</Provider>);
 
 // const state = {
 //   currentTab: null,

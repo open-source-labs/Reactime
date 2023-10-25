@@ -158,15 +158,17 @@ chrome.runtime.onConnect.addListener((port) => {
   
     Again, this port object is used for communication within your extension, not for communication with external ports or tabs in the Chrome browser. If you need to interact with specific tabs or external ports, you would use other APIs or methods, such as chrome.tabs or other Chrome Extension APIs.
   */
- 
+
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
 
   if (portsArr.length > 0) {
-    portsArr.forEach((bg) => {// go through each port object (each Reactime instance)
-      bg.postMessage({  // send passed in action object as a message to the current port
+    portsArr.forEach((bg) => {
+      // go through each port object (each Reactime instance)
+      bg.postMessage({
+        // send passed in action object as a message to the current port
         action: 'changeTab',
         payload: { tabId: activeTab.id, title: activeTab.title },
-      })
+      });
     });
   }
 
@@ -219,7 +221,8 @@ chrome.runtime.onConnect.addListener((port) => {
       case 'emptySnap':
         tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]]; // reset snapshots to page last state recorded
         tabsObj[tabId].hierarchy.children = []; // resets hierarchy
-        tabsObj[tabId].hierarchy.stateSnapshot = { // resets hierarchy to page last state recorded
+        tabsObj[tabId].hierarchy.stateSnapshot = {
+          // resets hierarchy to page last state recorded
           ...tabsObj[tabId].snapshots[0],
         };
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy; // resets currLocation to page last state recorded
@@ -227,7 +230,7 @@ chrome.runtime.onConnect.addListener((port) => {
         tabsObj[tabId].currParent = 0; // reset currParent
         tabsObj[tabId].currBranch = 1; // reset currBranch
         return true; // return true so that port remains open
-      
+
       case 'setPause': // Pause = lock on tab
         tabsObj[tabId].mode.paused = payload;
         return true; // return true so that port remains open
@@ -282,7 +285,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
   // everytime we get a new tabId, add it to the object
-  if (isReactTimeTravel && !(tabId in tabsObj)) { 
+  if (isReactTimeTravel && !(tabId in tabsObj)) {
     tabsObj[tabId] = createTabObj(tabTitle);
   }
 

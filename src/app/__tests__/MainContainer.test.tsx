@@ -14,7 +14,7 @@ const mockState = {
     tabs: {},
     currentTab: null,
   },
-};// End 
+}; // End
 
 const chrome = require('sinon-chrome');
 
@@ -53,7 +53,7 @@ const dispatch = jest.fn();
 jest.mock('../../../node_modules/intro.js/introjs.css', () => jest.fn());
 
 useDispatch.mockReturnValue(dispatch);
-useSelector.mockImplementation(callback => callback(mockState));
+useSelector.mockImplementation((callback) => callback(mockState));
 
 global.chrome = chrome;
 const port = {
