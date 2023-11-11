@@ -1,5 +1,4 @@
-    <h1 align="center">
-
+<h1 align="center">
   <br>
     <img src ="./assets/logos/chromeExtensionIcons/marqueePromoTitle.png"/>
     <br>
