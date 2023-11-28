@@ -56,6 +56,8 @@ _Before_ beginning development, especially on teams, make sure to configure your
 
 Here are some notes on the current state of Reactime and considerations for future development.
 
+There are current contributors working on Reactime ([ctstamper](https://github.com/ctstamper)), so if you are planning to contribute, feel free to reach out to them.
+
 ## Including Support for Hooks Beyond useState
 
 Reactime currently shows data stored via useState, but does not show data stored via other hooks such as useContext or useReducer. While showing this data would be simple, maintaining the time travel functionality of Reactime with these hooks would not. _Please see file demo-app/src/client/Components/ButtonsWithMoreHooks.jsx for more details._
