@@ -3,7 +3,7 @@
   overflow: hidden;
   display: grid;
   grid-template-columns: min-content 1fr;
-  // grid-template-rows: 90% 5% 5%; JR: this was causing buttons to get cut off when viewport is small
+  grid-template-rows: 1fr minmax(min-content, 5%) minmax(min-content, 5%);
   grid-template-areas:
     'actions states'
     'travel travel'
