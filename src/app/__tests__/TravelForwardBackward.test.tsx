@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { mainSlice } from '../slices/mainSlice';
 import { useDispatch } from 'react-redux';
-import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
+import '@testing-library/jest-dom'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 
 const customTabs = {
   87: {

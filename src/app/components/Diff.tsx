@@ -1,6 +1,6 @@
 import React from 'react';
 import { diff, formatters } from 'jsondiffpatch';
-import ReactHtmlParser from 'react-html-parser';
+import HtmlReactParser from 'html-react-parser';
 import { CurrentTab, DiffProps, MainState, RootState, StatelessCleaning } from '../FrontendTypes';
 import { useSelector } from 'react-redux';
 
@@ -100,7 +100,7 @@ function Diff(props: DiffProps): JSX.Element {
       </div>
     );
   }
-  return <div>{ReactHtmlParser(html)}</div>; // ReactHTMLParser from 'react-html-parser' package converts the HTML string into a react component.
+  return <div>{HtmlReactParser(html)}</div>; // ReactHTMLParser from 'html-react-parser' package converts the HTML string into a react component.
 }
 
 export default Diff;

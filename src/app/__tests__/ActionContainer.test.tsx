@@ -1,6 +1,6 @@
 import React from 'react';
 import { render as rtlRender, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import ActionContainer from '../containers/ActionContainer';
 import TravelContainer from '../containers/TravelContainer';
 import { Provider } from 'react-redux';

@@ -10,7 +10,7 @@
 
     // --------------------------MODULES----------------------------------------
     // Specifies the module format for the compiled TypeScript files
-    "module": "es6",
+    "module": "CommonJS",
     "downlevelIteration": true,
     // Specifies the folder where TypeScript should look for type definition files.
     "typeRoots": ["./node_modules/@types"],
@@ -75,7 +75,6 @@
   "exclude": [
     "./src/app/__tests__",
     "./src/backend/__tests__",
-    "./src/app/__tests__enzyme",
     "node_modules",
     "./src/extension/build/bundles"
   ],

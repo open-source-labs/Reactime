@@ -4,7 +4,7 @@ const path = require('path');
 /** ChromeExtensionReloader plugin is a tool for hot-reloading code in a Chrome extension during development.
  * It works by injecting a script into the extension that listens for file changes and automatically reloads the extension when a file is modified.
  */
-const ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
+
 
 // const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
 
@@ -32,8 +32,11 @@ const config = {
   },
 
   node: {
-    net: 'empty',
-    tls: 'empty',
+    // net: 'empty',
+    // tls: 'empty',
+    __dirname: false, // if you're using Node.js specific variables
+    __filename: false,
+    global: true,
   },
   module: {
     /** The order of rules array is bottom to top.
@@ -48,7 +51,7 @@ const config = {
        * => transpile them into code that is compatible with older browser using babel-loader
        */
       {
-        test: /\.jsx?/,
+        test: /\.(js|jsx)/,
         exclude: /(node_modules)/,
         resolve: {
           extensions: ['.js', '.jsx'],
@@ -101,6 +104,11 @@ const config = {
           'sass-loader',
         ],
       },
+      { 
+        test: /\.mjs$/, 
+        include: /node_modules/, 
+        type: 'javascript/auto' 
+      },
     ],
   },
   plugins: [
@@ -115,7 +123,7 @@ const config = {
 
   // Add `.ts` and `.tsx` as a resolvable extension.
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    extensions: ['.mjs', '.ts', '.tsx', '.js', '.jsx'],
   },
 };
 
@@ -134,14 +142,7 @@ module.exports = (env, argv) => {
      * https://webpack.js.org/configuration/devtool/#root
      */
     config.devtool = 'cheap-module-source-map';
-    config.plugins.push(
-      new ChromeExtensionReloader({
-        entries: {
-          contentScript: ['app', 'content'],
-          background: ['background'],
-        },
-      }),
-    );
+
   } else {
     config.mode = 'production';
   }
