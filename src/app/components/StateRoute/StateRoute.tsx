@@ -6,7 +6,7 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 import React from 'react';
-import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom';
+import { MemoryRouter as Router, Route, NavLink, Routes } from 'react-router-dom';
 import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap/ComponentMap';
@@ -226,37 +226,30 @@ const StateRoute = (props: StateRouteProps) => {
   return (
     <Router>
       <div className='navbar'>
-        <NavLink className='router-link map-tab' activeClassName='is-active' exact to='/'>
+        <NavLink className='router-link map-tab' end to='/'>
           Map
         </NavLink>
-        <NavLink
-          className='router-link performance-tab'
-          activeClassName='is-active'
-          to='/performance'
-        >
+        <NavLink className='router-link performance-tab' to='/performance'>
           Performance
         </NavLink>
-        <NavLink className='router-link history-tab' activeClassName='is-active' to='/history'>
+        <NavLink className='router-link history-tab' to='/history'>
           History
         </NavLink>
         <NavLink
-          className='router-link web-metrics-tab'
-          activeClassName='is-active'
-          to='/webMetrics'
-        >
+          className='router-link web-metrics-tab' to='/webMetrics'>
           Web Metrics
         </NavLink>
-        <NavLink className='router-link tree-tab' activeClassName='is-active' to='/tree'>
+        <NavLink className='router-link tree-tab' to='/tree'>
           Tree
         </NavLink>
       </div>
-      <Switch>
-        <Route path='/performance' render={renderPerfView} />
-        <Route path='/history' render={renderHistory} />
-        <Route path='/webMetrics' render={renderWebMetrics} />
-        <Route path='/tree' render={renderTree} />
-        <Route path='/' render={renderComponentMap} />
-      </Switch>
+      <Routes>
+        <Route exact path='/performance' render={renderPerfView} />
+        <Route exact path='/history' render={renderHistory} />
+        <Route exact path='/webMetrics' render={renderWebMetrics} />
+        <Route exact path='/tree' render={renderTree} />
+        <Route exact path='/' render={renderComponentMap} />
+      </Routes>
     </Router>
   );
 };

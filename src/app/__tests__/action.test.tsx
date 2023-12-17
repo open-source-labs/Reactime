@@ -1,7 +1,7 @@
 import React from 'react';
 import { render as rtlRender, screen, fireEvent } from '@testing-library/react';
 // import user from '@testing-library/user-event'; //might be unused
-import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
+import '@testing-library/jest-dom'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import Action from '../components/Action';
 import { changeView, changeSlider } from '../slices/mainSlice';
 import { Provider } from 'react-redux';

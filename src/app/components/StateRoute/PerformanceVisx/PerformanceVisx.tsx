@@ -3,7 +3,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable max-len */
 import React, { useState, useEffect } from 'react';
-import { MemoryRouter as Router, Route, NavLink, Switch, Redirect } from 'react-router-dom';
+import { MemoryRouter as Router, Route, NavLink, Routes, Navigate } from 'react-router-dom';
 import RenderingFrequency from './RenderingFrequency';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
@@ -297,28 +297,27 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
 
   const renderForTutorial = () => {
     // This will redirect to the proper tabs during the tutorial
-    if (currentTabInApp === 'performance') return <Redirect to='/' />;
-    if (currentTabInApp === 'performance-comparison') return <Redirect to='/comparison' />;
+    // Updated redirect to Navigate v23 redirect no longer supported in react router dom after v6
+    if (currentTabInApp === 'performance') return <Navigate to='/' />;
+    if (currentTabInApp === 'performance-comparison') return <Navigate to='/comparison' />;
     return null;
   };
 
   return (
     <Router>
       <div className='performance-nav-bar-container'>
-        <NavLink className='router-link-performance' activeClassName='is-active' exact to='/'>
+        <NavLink className='router-link-performance'  end to='/'>
           Snapshots View
         </NavLink>
         <NavLink
           className='router-link-performance'
           id='router-link-performance-comparison'
-          activeClassName='is-active'
           to='/comparison'
         >
           Comparison View
         </NavLink>
         <NavLink
           className='router-link-performance'
-          activeClassName='is-active'
           to='/componentdetails'
         >
           Component Details
@@ -327,11 +326,11 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
 
       {renderForTutorial()}
 
-      <Switch>
-        <Route path='/comparison' render={renderComparisonBargraph} />
-        <Route path='/componentdetails' render={renderComponentDetailsView} />
-        <Route path='/' render={renderBargraph} />
-      </Switch>
+      <Routes>
+        <Route exact path='/comparison' render={renderComparisonBargraph} />
+        <Route exact path='/componentdetails' render={renderComponentDetailsView} />
+        <Route exact path='/' render={renderBargraph} />
+      </Routes>
     </Router>
   );
 };
