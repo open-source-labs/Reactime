@@ -80,12 +80,15 @@ function Diff(props: DiffProps): JSX.Element {
     return newObj; // return the cleaned state snapshot(s)
   };
 
+  console.log('previousDisplay before stateless cleaning: ', previous);
   const previousDisplay: StatelessCleaning = statelessCleaning(previous); // displays stateful data from the first snapshot that was taken before our current snapshot.
-
+  console.log('previousDisplay after stateless cleaning: ', previousDisplay);
   const delta: StatelessCleaning = diff(previousDisplay, snapshot); // diff function from 'jsondiffpatch' returns the difference in state between 'previousDisplay' and 'snapshot'
-
+  console.log('delta: ', delta);
   const html: StatelessCleaning = formatters.html.format(delta, previousDisplay); // formatters function from 'jsondiffpatch' returns an html string that shows the difference between delta and the previousDisplay
+  console.log('html: ', html);
 
+  console.log(show);
   if (show)
     formatters.html.showUnchanged(); // shows unchanged values if we're on the '/diffRaw' path
   else formatters.html.hideUnchanged(); // hides unchanged values

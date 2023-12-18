@@ -205,6 +205,7 @@ chrome.runtime.onConnect.addListener((port) => {
     const { action, payload, tabId } = msg;
 
     switch (action) {
+      // import action comes through when the user uses the "upload" button on the front end to import an existing snapshot tree
       case 'import': // create a snapshot property on tabId and set equal to tabs object
         // may need do something like filter payload from stateless
         console.log('background import action tabsObj: ', tabsObj);
@@ -219,7 +220,9 @@ chrome.runtime.onConnect.addListener((port) => {
 
         return true; // return true so that port remains open
 
+      // emptySnap actions comes through when the user uses the 'clear' button on the front end to clear the snapshot history and move slider back to 0 position
       case 'emptySnap':
+        console.log('tabsObj on clear: ', tabsObj);
         tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]]; // reset snapshots to page last state recorded
         tabsObj[tabId].hierarchy.children = []; // resets hierarchy
         tabsObj[tabId].hierarchy.stateSnapshot = {

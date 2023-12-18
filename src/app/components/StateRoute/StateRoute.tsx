@@ -32,7 +32,9 @@ const StateRoute = (props: StateRouteProps) => {
     webMetrics, // from 'tabs[currentTab]' object in 'MainContainer'
     currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
-
+  console.log('snapshot from StateRoute props: ', snapshot);
+  console.log('snapshots from StateRoute props: ', snapshots);
+  console.log('currLocation from StateRoute props', currLocation);
   const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
 
@@ -55,7 +57,7 @@ const StateRoute = (props: StateRouteProps) => {
     return <div className='noState'>{NO_STATE_MSG}</div>; // otherwise, inform the user that there has been no state change in the target/hooked application.
   };
 
-  const renderHistory: JSX.Element = () => {
+  const renderHistory = () => {
     if (hierarchy) {
       // if hierarchy was initialized/created render the history
       return (

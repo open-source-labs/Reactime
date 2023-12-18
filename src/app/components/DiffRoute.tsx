@@ -19,7 +19,7 @@ const DiffRoute = (props: DiffRouteProps): JSX.Element => (
       </NavLink>
     </div>
     <Switch>
-      <Route path='/diffRaw' render={() => <Diff snapshot={props.snapshot} show />} />
+      <Route path='/diffRaw' render={() => <Diff snapshot={props.snapshot} />} />
       <Route path='/' render={() => <Diff snapshot={props.snapshot} show={false} />} />
     </Switch>
   </Router>
