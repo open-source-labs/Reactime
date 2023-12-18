@@ -40,6 +40,7 @@ linkFiber();
  * 3. If not navigate during jumping =>  invoke timeJump to update ReactFiber tree with cached data from the snapshot payload
  */
 window.addEventListener('message', async ({ data: { action, payload } }: MsgData) => {
+  console.log('index.ts window event listener data received: ', action, payload);
   switch (action) {
     case 'jumpToSnap':
       // Set mode to jumping to prevent snapShot being sent to frontEnd

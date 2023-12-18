@@ -15,6 +15,7 @@ window.addEventListener('message', (msg) => {
   // recorded on the test application from backend files (linkFiber.ts).
   // Background.js has a listener that includes switch cases, depending on
   // the name of the action (e.g. 'tabReload').
+  console.log('message sent to window event listener: ', msg.data);
   if (firstMessage) {
     // One-time request tells the background script that the tab has reloaded.
     chrome.runtime.sendMessage({ action: 'tabReload' });

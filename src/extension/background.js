@@ -185,6 +185,7 @@ chrome.runtime.onConnect.addListener((port) => {
       if (portsArr[i] === e) {
         portsArr.splice(i, 1);
         chrome.runtime.sendMessage('portDisconnect');
+        console.log(`port ${e} disconnected. Remaining portsArr: `, portsArr);
         break;
       }
     }
@@ -262,6 +263,7 @@ chrome.runtime.onConnect.addListener((port) => {
 
 // background.js listening for a message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log('background.js received message with action: ', request.action);
   // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
     return true;
@@ -291,6 +293,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // everytime we get a new tabId, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) {
     tabsObj[tabId] = createTabObj(tabTitle);
+    console.log('tabsObj after createTabObj function call: ', tabsObj);
   }
 
   switch (action) {
@@ -300,6 +303,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break;
     }
     case 'jumpToSnap': {
+      console.log(`background.js received jumpToSnap from UI at ${Date.now().toLocaleString()}`);
+      console.log('portsArr at time of jumpToSnap in backgroundjs: ', portsArr);
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
@@ -455,6 +460,7 @@ chrome.tabs.onActivated.addListener((info) => {
     // never set a reactime instance to the active tab
     if (!tab.pendingUrl?.match('^chrome-extension')) {
       activeTab = tab;
+      console.log('activeTab: ', activeTab);
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
           bg.postMessage({

@@ -41,7 +41,8 @@ export const mainSlice = createSlice({
       const { tabs, currentTab, port } = state;
 
       port.postMessage({ action: 'emptySnap', tabId: currentTab }); //communicate with background.js (service worker)
-
+      console.log('emptySnapshots tabs: ', tabs);
+      console.log('emptySnapshots currentTab: ', currentTab);
       // properties associated with timetravel + seek bar
       tabs[currentTab].sliderIndex = 0;
       tabs[currentTab].viewIndex = 0;

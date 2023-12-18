@@ -89,6 +89,7 @@ function Diff(props: DiffProps): JSX.Element {
   console.log('html: ', html);
 
   console.log(show);
+  console.log(formatters.html.showUnchanged());
   if (show)
     formatters.html.showUnchanged(); // shows unchanged values if we're on the '/diffRaw' path
   else formatters.html.hideUnchanged(); // hides unchanged values
