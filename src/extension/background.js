@@ -207,6 +207,7 @@ chrome.runtime.onConnect.addListener((port) => {
     switch (action) {
       case 'import': // create a snapshot property on tabId and set equal to tabs object
         // may need do something like filter payload from stateless
+        console.log('background import action tabsObj: ', tabsObj);
         tabsObj[tabId].snapshots = payload.snapshots; // reset snapshots to page last state recorded
         // tabsObj[tabId].hierarchy = savedSnapshot.hierarchy; // why don't we just use hierarchy? Because it breaks everything...
         tabsObj[tabId].hierarchy.children = payload.hierarchy.children; // resets hierarchy to last state recorded
