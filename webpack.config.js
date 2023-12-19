@@ -6,6 +6,7 @@ const path = require('path');
  */
 
 
+
 // const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
 
 const config = {
