@@ -1,6 +1,8 @@
 // Import snapshots from "../app/components/snapshots".
 // import 'core-js';
 
+import { invoke } from 'lodash';
+
 // Store ports in an array.
 const portsArr = [];
 const reloaded = {};
@@ -62,6 +64,7 @@ class Node {
     tabObj.index += 1;
     // continues the order of number of states changed from that parent
     tabObj.currParent += 1;
+    console.log('new Node tabObj: ', tabObj);
     this.name = tabObj.currParent;
     // marks from what branch this node is originated
     this.branch = tabObj.currBranch;
@@ -162,6 +165,7 @@ chrome.runtime.onConnect.addListener((port) => {
   console.log('tabsObj onConnect: ', tabsObj);
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
   console.log('portsArr onConnect: ', portsArr);
+
   // JR: CONSIDER DELETING
   if (portsArr.length > 0) {
     portsArr.forEach((bg) => {
@@ -491,14 +495,34 @@ chrome.runtime.onInstalled.addListener(() => {
 
 // when context menu is clicked, listen for the menuItemId,
 // if user clicked on reactime, open the devtools window
+
+// JR 12.19.23
+// As of V22, if multiple monitors are used, it would open the reactime panel on the other screen, which was inconvenient when opening repeatedly for debugging.
+// V23 fixes this by making use of chrome.windows.getCurrent to get the top and left of the screen which invoked the extension.
+// The reason you must use chrome.windows.getCurrent is that as of chrome manifest V3, background.js is a 'service worker', which does not have access to the DOM or to the native 'window' method.
+// chrome.windows.getCurrent allows us to still get the window from within a service worker. It returns a promise (asynchronous), so all resulting functionality must happen in the callback function,
+// or it will run before 'invokedScreen' variables have been captured.
 chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
-  const options = {
-    type: 'panel',
-    left: 0,
-    top: 0,
-    width: 1000,
-    height: 1000,
-    url: chrome.runtime.getURL('panel.html'),
-  };
-  if (menuItemId === 'reactime') chrome.windows.create(options);
+  console.log('background ext screenX', chrome.windows.getCurrent());
+
+  chrome.system.display.getInfo((displayUnitInfo) => {
+    console.log(displayUnitInfo);
+  });
+
+  let invokedScreenTop = 0;
+  let invokedScreenLeft = 0;
+  chrome.windows.getCurrent((window) => {
+    invokedScreenTop = window.top + 300 || 0;
+    console.log('invokedTop', invokedScreenTop);
+    invokedScreenLeft = window.left || 0;
+    const options = {
+      type: 'panel',
+      left: invokedScreenLeft,
+      top: invokedScreenTop,
+      width: 1000,
+      height: 1000,
+      url: chrome.runtime.getURL('panel.html'),
+    };
+    if (menuItemId === 'reactime') chrome.windows.create(options);
+  });
 });

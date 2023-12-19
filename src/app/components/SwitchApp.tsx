@@ -46,12 +46,8 @@ const SwitchAppDropdown = (): JSX.Element => {
       classNamePrefix='tab-select'
       value={currTab}
       styles={customStyles}
-      onInputChange={(inputValue, { action }): void => {
-        console.log('onInputChange action', action);
-        if (action === 'set-value') {
-          console.log('Option selected: ', inputValue);
-          // dispatch(setTab(parseInt(e.value, 10)));
-        }
+      onChange={(e): void => {
+        dispatch(setTab(parseInt(e.value, 10)));
       }}
       options={tabsArray}
     />

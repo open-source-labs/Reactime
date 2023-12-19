@@ -127,7 +127,7 @@ export const mainSlice = createSlice({
     setTab: (state, action) => {
       const { tabs, currentTab } = state;
       const { mode } = tabs[currentTab] || {};
-      console.log('mainSlice. mode: ', mode, 'payload: ', action.payload);
+      console.log('mainSlice setTab, mode: ', mode, 'payload: ', action.payload);
       if (!mode?.paused) {
         if (typeof action.payload === 'number') {
           state.currentTab = action.payload;
@@ -176,7 +176,19 @@ export const mainSlice = createSlice({
 
     changeView: (state, action) => {
       const { tabs, currentTab } = state;
+      console.log(
+        'changeView tabs: ',
+        tabs,
+        'currentTab: ',
+        currentTab,
+        'tabs[currentTab]: ',
+        tabs[currentTab],
+      );
+      console.log(tabs);
+      console.log('changeView state: ', state);
       const { viewIndex } = tabs[currentTab] || {};
+      console.log('changeView viewIndex: ', viewIndex);
+      console.log('changeView action.payload: ', action.payload);
       // unselect view if same index was selected
       tabs[currentTab].viewIndex = viewIndex === action.payload ? -1 : action.payload;
     },
