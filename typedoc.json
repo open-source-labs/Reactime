@@ -1,7 +1,10 @@
 {
   "mode": "modules",
-  "out": "docs",
-  "includes": ["./src/backend"],
-  "exclude": ["**/__tests__/**", "**/**/**/build/**", "**/types/**"],
+
+  "entryPoints": ["src/"],
+  "out": "docs/ src/app src/backend",
+  "readme": "README.md",
+  "exclude": ["**/*.spec.ts"],
+
   "name": "Reactime 23.0"
 }

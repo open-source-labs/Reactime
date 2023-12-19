@@ -503,24 +503,27 @@ chrome.runtime.onInstalled.addListener(() => {
 // chrome.windows.getCurrent allows us to still get the window from within a service worker. It returns a promise (asynchronous), so all resulting functionality must happen in the callback function,
 // or it will run before 'invokedScreen' variables have been captured.
 chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
-  console.log('background ext screenX', chrome.windows.getCurrent());
+  // console.log('background ext screenX', chrome.windows.getCurrent());
 
+  // // this was a test to see if I could dynamically set the left property to be the 0 origin of the invoked DISPLAY (as opposed to invoked window).
+  // // this would allow you to split your screen, keep the browser open on the right side, and reactime always opens at the top left corner.
+  // // currently, invokedScreenLeft is the left of the invoked window. To get around the issue of reactime covering the refresh button (currently needed for debugging as of 12.19.23), added a vertical offset, topOffset.
+  // // this just pushes the top down by a fixed amount that is enough to surpass most people's bookmarks bar.
   chrome.system.display.getInfo((displayUnitInfo) => {
     console.log(displayUnitInfo);
   });
 
-  let invokedScreenTop = 0;
-  let invokedScreenLeft = 0;
   chrome.windows.getCurrent((window) => {
-    invokedScreenTop = window.top + 300 || 0;
-    console.log('invokedTop', invokedScreenTop);
-    invokedScreenLeft = window.left || 0;
+    // const topOffset = 0; // use to push top down to approximately the start of the viewport (for easy access to refresh button)
+    const invokedScreenHeight = window.height || 1000;
+    const invokedScreenTop = window.top || 0;
+    const invokedScreenLeft = -400;
     const options = {
       type: 'panel',
       left: invokedScreenLeft,
-      top: invokedScreenTop,
+      top: invokedScreenTop, // + topOffset,
       width: 1000,
-      height: 1000,
+      height: invokedScreenHeight, //  - topOffset,
       url: chrome.runtime.getURL('panel.html'),
     };
     if (menuItemId === 'reactime') chrome.windows.create(options);
