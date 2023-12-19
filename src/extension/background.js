@@ -137,6 +137,7 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   This allows us to set up listener's for when we connect, message, and disconnect the script.
 */
 
+// FROM FRONTEND CONNECTION TO BACKGROUND
 // Establishing incoming connection with Reactime.
 chrome.runtime.onConnect.addListener((port) => {
   /*
@@ -158,9 +159,10 @@ chrome.runtime.onConnect.addListener((port) => {
   
     Again, this port object is used for communication within your extension, not for communication with external ports or tabs in the Chrome browser. If you need to interact with specific tabs or external ports, you would use other APIs or methods, such as chrome.tabs or other Chrome Extension APIs.
   */
-
+  console.log('tabsObj onConnect: ', tabsObj);
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
-
+  console.log('portsArr onConnect: ', portsArr);
+  // JR: CONSIDER DELETING
   if (portsArr.length > 0) {
     portsArr.forEach((bg) => {
       // go through each port object (each Reactime instance)
@@ -172,6 +174,7 @@ chrome.runtime.onConnect.addListener((port) => {
     });
   }
 
+  // JR: CONSIDER DELETING
   if (Object.keys(tabsObj).length > 0) {
     port.postMessage({
       action: 'initialConnectSnapshots',
@@ -191,6 +194,7 @@ chrome.runtime.onConnect.addListener((port) => {
     }
   });
 
+  // FROM FRONTEND TO BACKGROUND
   // listen for message containing a snapshot from devtools and send it to contentScript -
   // (i.e. they're all related to the button actions on Reactime)
   port.onMessage.addListener((msg) => {
@@ -261,9 +265,10 @@ chrome.runtime.onConnect.addListener((port) => {
   });
 });
 
+// FROM CONTENT SCRIPT TO BACKGROUND
 // background.js listening for a message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('background.js received message with action: ', request.action);
+  console.log('background.js received message with action: ', request.action, request);
   // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
     return true;
@@ -460,6 +465,7 @@ chrome.tabs.onActivated.addListener((info) => {
     // never set a reactime instance to the active tab
     if (!tab.pendingUrl?.match('^chrome-extension')) {
       activeTab = tab;
+      console.log('tabs.onActivated info: ', info);
       console.log('activeTab: ', activeTab);
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>

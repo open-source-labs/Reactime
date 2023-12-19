@@ -79,6 +79,7 @@ function MainContainer(): JSX.Element {
         break;
       }
       case 'changeTab': {
+        console.log('made it to the mainContainer dispatch');
         dispatch(setTab(payload));
         break;
       }
@@ -106,9 +107,12 @@ function MainContainer(): JSX.Element {
     // Connect ot port and assign evaluated result (obj) to currentPort
     const currentPort = chrome.runtime.connect();
 
+    // JR: why are we removing the listener just to readd it? logging here
+    console.log('messageListener before removing: ', messageListener);
     // If messageListener exists on currentPort, remove it
     while (currentPort.onMessage.hasListener(messageListener))
       currentPort.onMessage.removeListener(messageListener);
+    console.log('messageListener after removing: ', messageListener);
 
     // Add messageListener to the currentPort
     currentPort.onMessage.addListener(messageListener);

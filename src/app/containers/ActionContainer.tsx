@@ -187,7 +187,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
           </aside>
         </div>
         <a type='button' id='recordBtn' onClick={toggleRecord}>
-          <i />
+          <div style={{ display: 'flex', alignItems: 'center' }}>Toggle Record</div>
           {recordingActions ? <Switch defaultChecked /> : <Switch />}
         </a>
       </div>

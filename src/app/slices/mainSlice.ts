@@ -127,7 +127,7 @@ export const mainSlice = createSlice({
     setTab: (state, action) => {
       const { tabs, currentTab } = state;
       const { mode } = tabs[currentTab] || {};
-
+      console.log('mainSlice. mode: ', mode, 'payload: ', action.payload);
       if (!mode?.paused) {
         if (typeof action.payload === 'number') {
           state.currentTab = action.payload;
@@ -135,6 +135,7 @@ export const mainSlice = createSlice({
         } else if (typeof action.payload === 'object') {
           state.currentTab = action.payload.tabId;
           if (action.payload?.title) state.currentTitle = action.payload.title;
+          console.log('mainSlice setTab currentTitle: ', state.currentTitle);
           return;
         }
       }
