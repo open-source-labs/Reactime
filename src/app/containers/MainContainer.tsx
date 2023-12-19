@@ -37,6 +37,10 @@ function MainContainer(): JSX.Element {
     const toggleElem = document.querySelector('aside'); // aside is like an added text that appears "on the side" aside some text.
     toggleElem.classList.toggle('no-aside'); // toggles the addition or the removal of the 'no-aside' class
 
+    //JR: added for collapse label
+    const collapse = document.querySelector('.collapse');
+    collapse.classList.toggle('hidden');
+
     const recordBtn = document.getElementById('recordBtn');
 
     if (recordBtn.style.display === 'none') {

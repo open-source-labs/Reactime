@@ -304,6 +304,7 @@ aside {
   background: #242529;
   color: #fff;
   transition: width 1s;
+  width: 100%; //JR
 }
 
 .no-aside {
@@ -311,10 +312,23 @@ aside {
   // margin-right: 15px;
 }
 
+//JR added for collapse label
+.collapse {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: #242529;
+}
+
+.hidden {
+  display: none;
+}
+
 .toggle {
-  display: block;
-  position: relative;
-  margin-top: 1rem;
+  // display: block;
+  // position: relative;
+  // margin-top: 1rem;
+  height: 100%; //JR
 }
 
 /* toggle i handles arrow animation */
@@ -330,8 +344,8 @@ aside {
 }
 
 .toggle i {
-  top: 8px;
-  left: 9px;
+  top: 16px;
+  left: 10px;
   display: block;
   background: $blue-brand;
 }
@@ -365,7 +379,14 @@ aside {
 }
 
 #arrow {
-  margin-bottom: 40px;
+  // margin-bottom: 40px;
+  // display: flex;
+  // justify-content: flex-start;
+
+  //JR
+  height: 100%;
+  display: grid;
+  grid-template-columns: 45px 1fr;
 }
 
 /* ^ sidebar button open and closing functionality */

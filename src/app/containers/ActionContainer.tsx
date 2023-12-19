@@ -191,14 +191,17 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
               className='toggle'
             >
               {' '}
-              {/* JR: updating onClick to stop propgation so that it detects the click only on the arrow and not the parent*/}
+              {/* JR: updating onClick to stop propagation so that it detects the click only on the arrow and not the parent*/}
               <i />
             </a>
           </aside>
+          <div className='collapse'>Collapse</div>
         </div>
         <a type='button' id='recordBtn' onClick={toggleRecord}>
           <i />
-          <div style={{ display: 'flex', alignItems: 'center' }}>Toggle Record</div>
+          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'right' }}>
+            Toggle Record
+          </div>
           {recordingActions ? <Switch defaultChecked /> : <Switch />}
         </a>
       </div>
