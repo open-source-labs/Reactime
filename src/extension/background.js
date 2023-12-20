@@ -140,7 +140,7 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   This allows us to set up listener's for when we connect, message, and disconnect the script.
 */
 
-// FROM FRONTEND CONNECTION TO BACKGROUND
+// INCOMING CONNECTION FROM FRONTEND (MainContainer) TO BACKGROUND.JS
 // Establishing incoming connection with Reactime.
 chrome.runtime.onConnect.addListener((port) => {
   /*
@@ -167,16 +167,17 @@ chrome.runtime.onConnect.addListener((port) => {
   console.log('portsArr onConnect: ', portsArr);
 
   // JR: CONSIDER DELETING
-  if (portsArr.length > 0) {
-    portsArr.forEach((bg) => {
-      // go through each port object (each Reactime instance)
-      bg.postMessage({
-        // send passed in action object as a message to the current port
-        action: 'changeTab',
-        payload: { tabId: activeTab.id, title: activeTab.title },
-      });
-    });
-  }
+  // 12.20.23 commenting out, possible culprit of many in no target bug
+  // if (portsArr.length > 0) {
+  //   portsArr.forEach((bg) => {
+  //     // go through each port object (each Reactime instance)
+  //     bg.postMessage({
+  //       // send passed in action object as a message to the current port
+  //       action: 'changeTab',
+  //       payload: { tabId: activeTab.id, title: activeTab.title },
+  //     });
+  //   });
+  // }
 
   // JR: CONSIDER DELETING
   if (Object.keys(tabsObj).length > 0) {
@@ -198,7 +199,7 @@ chrome.runtime.onConnect.addListener((port) => {
     }
   });
 
-  // FROM FRONTEND TO BACKGROUND
+  // INCOMING MESSAGE FROM FRONTEND (MainContainer) TO BACKGROUND.js
   // listen for message containing a snapshot from devtools and send it to contentScript -
   // (i.e. they're all related to the button actions on Reactime)
   port.onMessage.addListener((msg) => {
@@ -269,7 +270,7 @@ chrome.runtime.onConnect.addListener((port) => {
   });
 });
 
-// FROM CONTENT SCRIPT TO BACKGROUND
+// INCOMING MESSAGE FROM CONTENT SCRIPT TO BACKGROUND.JS
 // background.js listening for a message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('background.js received message with action: ', request.action, request);
@@ -471,6 +472,7 @@ chrome.tabs.onActivated.addListener((info) => {
       activeTab = tab;
       console.log('tabs.onActivated info: ', info);
       console.log('activeTab: ', activeTab);
+      console.log('tabs.onActivated portsArr: ', portsArr);
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
           bg.postMessage({
@@ -509,21 +511,20 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
   // // this would allow you to split your screen, keep the browser open on the right side, and reactime always opens at the top left corner.
   // // currently, invokedScreenLeft is the left of the invoked window. To get around the issue of reactime covering the refresh button (currently needed for debugging as of 12.19.23), added a vertical offset, topOffset.
   // // this just pushes the top down by a fixed amount that is enough to surpass most people's bookmarks bar.
-  chrome.system.display.getInfo((displayUnitInfo) => {
-    console.log(displayUnitInfo);
-  });
+  // chrome.system.display.getInfo((displayUnitInfo) => {
+  //   console.log(displayUnitInfo);
+  // });
 
   chrome.windows.getCurrent((window) => {
-    // const topOffset = 0; // use to push top down to approximately the start of the viewport (for easy access to refresh button)
     const invokedScreenHeight = window.height || 1000;
     const invokedScreenTop = window.top || 0;
     const invokedScreenLeft = -400;
     const options = {
       type: 'panel',
       left: invokedScreenLeft,
-      top: invokedScreenTop, // + topOffset,
+      top: invokedScreenTop,
       width: 1000,
-      height: invokedScreenHeight, //  - topOffset,
+      height: invokedScreenHeight,
       url: chrome.runtime.getURL('panel.html'),
     };
     if (menuItemId === 'reactime') chrome.windows.create(options);

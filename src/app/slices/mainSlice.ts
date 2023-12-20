@@ -124,10 +124,18 @@ export const mainSlice = createSlice({
       state.port = action.payload;
     },
 
+    // JR: REFACTOR: 12.20.23 this code has if statement to catch diff shapes of payload ('number' vs 'object'). This should not be the case, the payload should always come in as expected.
+    // consider creating a custom typescript type for the action that setTab receives.
+
+    //JR: DOCS: 12.20.23 This code will update the currentTab being tracked in the Redux state. It depends, however, on the 'mode', which is an unfortunately named label for the "Locked" button status.
+    // The naming is unfortunate because the backend also has a mode variable that does a completely different thing, which creates confusion. Consider renaming this to 'locked' or somesuch.
+    // Mode is an object that expects to contain a single key, paused, with a boolean value.
+    // If true: Reactime is 'Locked', and navigating to another tab will not update the Redux state and trigger Reactime to take any actions.
+    // If false: Reactime is 'Unlocked', and navigating to another tab will update the Redux state's currentTab, which will trigger Reactime to try to run on that new tab.
     setTab: (state, action) => {
       const { tabs, currentTab } = state;
-      const { mode } = tabs[currentTab] || {};
-      console.log('mainSlice setTab, mode: ', mode, 'payload: ', action.payload);
+      const { mode } = tabs[currentTab] || { paused: true };
+      console.log('mainSlice setTab, mode: ', JSON.stringify(mode), 'payload: ', action.payload);
       if (!mode?.paused) {
         if (typeof action.payload === 'number') {
           state.currentTab = action.payload;
@@ -178,7 +186,7 @@ export const mainSlice = createSlice({
       const { tabs, currentTab } = state;
       console.log(
         'changeView tabs: ',
-        tabs,
+        JSON.stringify(tabs),
         'currentTab: ',
         currentTab,
         'tabs[currentTab]: ',
@@ -343,6 +351,7 @@ export const mainSlice = createSlice({
     toggleMode: (state, action) => {
       const { port, tabs, currentTab } = state;
       const { mode } = tabs[currentTab] || {};
+      console.log('toggleMode current mode destructured from tabs[currentTab]: ', mode);
       mode[action.payload] = !mode[action.payload];
       const newMode = mode[action.payload];
       let actionText;

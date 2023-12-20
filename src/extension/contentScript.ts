@@ -10,6 +10,7 @@ let firstMessage = true;
 // Listens for window messages (from the injected script on the DOM)
 let isRecording = true;
 
+// INCOMING MESSAGE FROM BACKEND (index.ts) TO CONTENT SCRIPT
 window.addEventListener('message', (msg) => {
   // Event listener runs constantly based on actions
   // recorded on the test application from backend files (linkFiber.ts).
@@ -38,6 +39,7 @@ window.addEventListener('message', (msg) => {
   }
 });
 
+// FROM BACKGROUND TO CONTENT SCRIPT
 // Listening for messages from the UI of the Reactime extension.
 chrome.runtime.onMessage.addListener((request) => {
   const { action }: { action: string } = request;
@@ -63,8 +65,15 @@ chrome.runtime.onMessage.addListener((request) => {
 // To learn more about Chrome web vitals, see https://web.dev/vitals/.
 const metrics = {};
 const gatherMetrics = ({ name, value }) => {
+  console.log(
+    'contentScript gatherMetrics: prior metrics Obj: ',
+    metrics,
+    'name: ',
+    name,
+    'value: ',
+    value,
+  );
   metrics[name] = value;
-
   chrome.runtime.sendMessage({
     type: 'performance:metric',
     name,

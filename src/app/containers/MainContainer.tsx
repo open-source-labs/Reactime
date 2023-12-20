@@ -83,7 +83,7 @@ function MainContainer(): JSX.Element {
         break;
       }
       case 'changeTab': {
-        console.log('made it to the mainContainer dispatch');
+        console.log('MainContainer changeTab payload: ', payload);
         dispatch(setTab(payload));
         break;
       }
