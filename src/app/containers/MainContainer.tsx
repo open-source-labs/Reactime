@@ -12,6 +12,7 @@ import {
   setTab,
   deleteTab,
   noDev,
+  aReactApp, // JR added 12.20.23 9.53pm
   setCurrentLocation,
   disconnected,
   endConnect,
@@ -27,7 +28,15 @@ function MainContainer(): JSX.Element {
   const dispatch = useDispatch();
 
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
-
+  console.log(
+    'MainContainer state at render: tabs: ',
+    JSON.stringify(tabs[currentTab]?.status),
+    // tabs[currentTab]?.status,
+    'port: ',
+    port?.name,
+    'time: ',
+    new Date().toLocaleString(),
+  );
   //JR: check connection status
   const { connectionStatus }: MainState = useSelector((state: RootState) => state.main);
   console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
@@ -72,6 +81,7 @@ function MainContainer(): JSX.Element {
       'MainContainer messageListener message. action: ',
       action,
       'payload: ',
+      JSON.stringify(payload.status),
       payload,
       'sourceTab: ',
       sourceTab,
@@ -91,6 +101,11 @@ function MainContainer(): JSX.Element {
       }
       case 'devTools': {
         dispatch(noDev(payload));
+        break;
+      }
+      // JR 12.20.23 9.53pm added a listener case for sending aReactApp to frontend
+      case 'aReactApp': {
+        dispatch(aReactApp(payload));
         break;
       }
       case 'changeTab': {
@@ -132,14 +147,9 @@ function MainContainer(): JSX.Element {
     // If messageListener exists on currentPort, remove it
     while (currentPort.onMessage.hasListener(messageListener))
       currentPort.onMessage.removeListener(messageListener);
-    console.log('messageListener after removing: ', messageListener);
 
     // Add messageListener to the currentPort
     currentPort.onMessage.addListener(messageListener);
-    console.log(
-      'currentPort hasListener? after re-adding: ',
-      currentPort.onMessage.hasListener(messageListener),
-    );
 
     // If handleDisconnect exists on chrome.runtime, remove it
     while (chrome.runtime.onMessage.hasListener(handleDisconnect))

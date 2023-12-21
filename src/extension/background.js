@@ -162,15 +162,15 @@ chrome.runtime.onConnect.addListener((port) => {
   
     Again, this port object is used for communication within your extension, not for communication with external ports or tabs in the Chrome browser. If you need to interact with specific tabs or external ports, you would use other APIs or methods, such as chrome.tabs or other Chrome Extension APIs.
   */
-  console.log('tabsObj onConnect: ', tabsObj);
+  console.log('tabsObj onConnect: ', JSON.stringify(tabsObj));
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
-  console.log('portsArr onConnect: ', portsArr);
+  console.log('portsArr onConnect: ', Object.keys(portsArr));
 
   // JR: CONSIDER DELETING
   // 12.20.23 commenting out, possible culprit of many in no target bug
   if (portsArr.length > 0) {
-    portsArr.forEach((bg) => {
-      console.log('background onConnect. Send changeTab for port ', bg);
+    portsArr.forEach((bg, index) => {
+      console.log('background onConnect. Send changeTab for port ', index);
       // go through each port object (each Reactime instance)
       bg.postMessage({
         // send passed in action object as a message to the current port
@@ -190,14 +190,14 @@ chrome.runtime.onConnect.addListener((port) => {
 
   // every time devtool is closed, remove the port from portsArr
   port.onDisconnect.addListener((e) => {
-    console.log('port onDisconnect triggered, portsArr: ', portsArr);
+    console.log('port onDisconnect triggered, portsArr: ', Object.keys(portsArr));
     for (let i = 0; i < portsArr.length; i += 1) {
       if (portsArr[i] === e) {
         // if (portsArr.length === 1) portsArr[i].sendMessage('portDisconnect'); // JR 12.20.23 try sending message to last remaining port directly prior to it being disconnected
         portsArr.splice(i, 1);
         chrome.runtime.sendMessage({ action: 'portDisconnect', port: e.name }); // JR 12.20.23 isn't this supposed to be a port.sendMessage? chrome.runtime sends messages between content script and background.js
         console.log('spliced portsArr', portsArr);
-        console.log(`port ${e.name} disconnected. Remaining portsArr: `, portsArr);
+        console.log(`port ${e.name} disconnected. Remaining portsArr: `, Object.keys(portsArr));
         break;
       }
     }
@@ -333,6 +333,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // Confirmed React Dev Tools installed, send this info to frontend
     case 'devToolsInstalled': {
       tabsObj[tabId].status.reactDevToolsInstalled = true;
+      console.log('devToolsInstalled action, update tabsObj status', tabsObj[tabId].status);
+
       portsArr.forEach((bg) =>
         bg.postMessage({
           action: 'devTools',
@@ -342,8 +344,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break;
     }
     // Confirmed target is a react app. No need to send to frontend
+    // JR: BUG: why wouldn't we need to send to frontend???
     case 'aReactApp': {
       tabsObj[tabId].status.targetPageisaReactApp = true;
+      console.log('aReactApp action, update tabsObj status', tabsObj[tabId].status);
+
+      // JR 12.20.23 9.53pm added a message action to send to frontend
+      portsArr.forEach((bg) =>
+        bg.postMessage({
+          action: 'aReactApp',
+          payload: tabsObj,
+        }),
+      );
       break;
     }
     // This injects a script into the app that you're testing Reactime on,

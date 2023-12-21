@@ -23,8 +23,8 @@ function ErrorContainer(): JSX.Element {
   const timeout = useRef(null);
 
   console.log(
-    'ErrorContainer state variables: tabs: ',
-    tabs,
+    'ErrorContainer state variables: tabs status: ',
+    JSON.stringify(tabs[currentTab]?.status),
     'currentTab: ',
     currentTab,
     'currentTitle: ',

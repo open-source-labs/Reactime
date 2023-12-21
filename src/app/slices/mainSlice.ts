@@ -160,7 +160,32 @@ export const mainSlice = createSlice({
 
       if (tabs[currentTab]) {
         const { reactDevToolsInstalled } = payload[currentTab].status;
-        tabs[currentTab].status.reactDevToolsInstalled = reactDevToolsInstalled;
+        console.log(reactDevToolsInstalled);
+        // JR 12.20. 9.47pm this was not applying to state before
+        state.tabs[currentTab].status.reactDevToolsInstalled = reactDevToolsInstalled;
+        console.log(
+          'devTools updated state: ',
+          JSON.stringify(state.tabs[currentTab].status),
+          'time: ',
+          new Date().toLocaleString(),
+        );
+      }
+    },
+
+    aReactApp: (state, action) => {
+      const { payload } = action;
+      const { tabs, currentTab } = state;
+
+      if (tabs[currentTab]) {
+        console.log(tabs[currentTab], payload[currentTab]);
+        // JR 12.20. 9.47pm this was not applying to state before
+        state.tabs[currentTab].status.targetPageisaReactApp = true;
+        console.log(
+          'aReactApp updated state: ',
+          JSON.stringify(state.tabs[currentTab].status),
+          'time: ',
+          new Date().toLocaleString(),
+        );
       }
     },
 
@@ -506,6 +531,7 @@ export const {
   setTab,
   deleteTab,
   noDev,
+  aReactApp,
   setCurrentLocation,
   changeView,
   changeSlider,
