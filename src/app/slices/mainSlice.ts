@@ -103,6 +103,7 @@ export const mainSlice = createSlice({
         tabs[currentTab] || {};
       const { payload } = action;
 
+      console.log('mainSlice initialConnect reducer fired, ', payload);
       Object.keys(payload).forEach((tab) => {
         // check if tab exists in memory
         // add new tab
@@ -134,7 +135,7 @@ export const mainSlice = createSlice({
     // If false: Reactime is 'Unlocked', and navigating to another tab will update the Redux state's currentTab, which will trigger Reactime to try to run on that new tab.
     setTab: (state, action) => {
       const { tabs, currentTab } = state;
-      const { mode } = tabs[currentTab] || { paused: true };
+      const { mode } = tabs[currentTab] || {};
       console.log('mainSlice setTab, mode: ', JSON.stringify(mode), 'payload: ', action.payload);
       if (!mode?.paused) {
         if (typeof action.payload === 'number') {
