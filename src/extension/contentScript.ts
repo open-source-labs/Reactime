@@ -1,7 +1,3 @@
-chrome.tabs.getCurrent((tab) => {
-  console.log('contentScript loaded on ', tab);
-});
-
 // Web vital metrics calculated by 'web-vitals' npm package to be displayed
 // in Web Metrics tab of Reactime app.
 import { onTTFB, onLCP, onFID, onFCP, onCLS, onINP } from 'web-vitals';

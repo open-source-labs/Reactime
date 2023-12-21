@@ -534,4 +534,14 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     };
     if (menuItemId === 'reactime') chrome.windows.create(options);
   });
+  //JR 12.20.23
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    console.log('onContext click tab info', tabs);
+    if (tabs.length) {
+      const invokedTab = tabs[0];
+      const invokedTabId = invokedTab.id;
+      const invokedTabTitle = invokedTabTitle;
+      tabsObj[invokedTabId] = createTabObj(invokedTabTitle);
+    }
+  });
 });
