@@ -28,6 +28,10 @@ function MainContainer(): JSX.Element {
 
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
 
+  //JR: check connection status
+  const { connectionStatus }: MainState = useSelector((state: RootState) => state.main);
+  console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
+
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
 
   // this function handles Time Jump sidebar view
@@ -64,7 +68,14 @@ function MainContainer(): JSX.Element {
   }) => {
     const { action, payload, sourceTab } = message;
     let maxTab: number;
-
+    console.log(
+      'MainContainer messageListener message. action: ',
+      action,
+      'payload: ',
+      payload,
+      'sourceTab: ',
+      sourceTab,
+    );
     if (!sourceTab && action !== 'keepAlive') {
       // if the sourceTab doesn't exist or is 0 and it is not a 'keepAlive' action
       const tabsArray: Array<string> = Object.keys(payload); // we create a tabsArray of strings composed of keys from our payload object
@@ -106,13 +117,18 @@ function MainContainer(): JSX.Element {
   };
 
   useEffect(() => {
+    console.log('MainContainer state view of port at start of useEffect: ', port);
     if (port) return; // only open port once so if it exists, do not run useEffect again
 
     // Connect ot port and assign evaluated result (obj) to currentPort
-    const currentPort = chrome.runtime.connect();
+    const currentPort = chrome.runtime.connect({ name: 'uiPort1' });
 
     // JR: why are we removing the listener just to readd it? logging here
     console.log('messageListener before removing: ', messageListener);
+    console.log(
+      'currentPort hasListener? before removing: ',
+      currentPort.onMessage.hasListener(messageListener),
+    );
     // If messageListener exists on currentPort, remove it
     while (currentPort.onMessage.hasListener(messageListener))
       currentPort.onMessage.removeListener(messageListener);
@@ -120,6 +136,10 @@ function MainContainer(): JSX.Element {
 
     // Add messageListener to the currentPort
     currentPort.onMessage.addListener(messageListener);
+    console.log(
+      'currentPort hasListener? after re-adding: ',
+      currentPort.onMessage.hasListener(messageListener),
+    );
 
     // If handleDisconnect exists on chrome.runtime, remove it
     while (chrome.runtime.onMessage.hasListener(handleDisconnect))

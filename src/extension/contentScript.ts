@@ -1,3 +1,7 @@
+chrome.tabs.getCurrent((tab) => {
+  console.log('contentScript loaded on ', tab);
+});
+
 // Web vital metrics calculated by 'web-vitals' npm package to be displayed
 // in Web Metrics tab of Reactime app.
 import { onTTFB, onLCP, onFID, onFCP, onCLS, onINP } from 'web-vitals';
@@ -42,7 +46,13 @@ window.addEventListener('message', (msg) => {
 // FROM BACKGROUND TO CONTENT SCRIPT
 // Listening for messages from the UI of the Reactime extension.
 chrome.runtime.onMessage.addListener((request) => {
-  const { action }: { action: string } = request;
+  console.log(
+    'contentScript received message from background.js. request.action: ',
+    request.action,
+    'request.port',
+    request.port,
+  );
+  const { action, port }: { action: string; port?: string } = request;
   if (action) {
     // Message being sent from background.js
     // This is toggling the record button on Reactime when clicked
@@ -52,6 +62,11 @@ chrome.runtime.onMessage.addListener((request) => {
     // this is only listening for Jump toSnap
     if (action === 'jumpToSnap') {
       chrome.runtime.sendMessage(request);
+    }
+
+    // JR: adding a response to a port disconnection message from background.js
+    if (action === 'portDisconnect') {
+      console.log(`Port ${port} disconnected!`);
     }
     // After the jumpToSnap action has been sent back to background js,
     // it will send the same action to backend files (index.ts) for it execute the jump feature

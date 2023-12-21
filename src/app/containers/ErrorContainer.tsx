@@ -22,6 +22,13 @@ function ErrorContainer(): JSX.Element {
   const titleTracker = useRef(currentTitle); // useRef returns an object with a property 'initialValue' and a value of whatever was passed in. This allows us to reference a value that's not needed for rendering
   const timeout = useRef(null);
 
+  console.log(
+    'ErrorContainer state variables: tabs: ',
+    tabs,
+    'currentTab: ',
+    currentTab,
+    'currentTitle: ',
+  );
   // function that launches the main app
   function launch(): void {
     dispatch(launchContentScript(tabs[currentTab]));

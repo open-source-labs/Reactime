@@ -168,16 +168,17 @@ chrome.runtime.onConnect.addListener((port) => {
 
   // JR: CONSIDER DELETING
   // 12.20.23 commenting out, possible culprit of many in no target bug
-  // if (portsArr.length > 0) {
-  //   portsArr.forEach((bg) => {
-  //     // go through each port object (each Reactime instance)
-  //     bg.postMessage({
-  //       // send passed in action object as a message to the current port
-  //       action: 'changeTab',
-  //       payload: { tabId: activeTab.id, title: activeTab.title },
-  //     });
-  //   });
-  // }
+  if (portsArr.length > 0) {
+    portsArr.forEach((bg) => {
+      console.log('background onConnect. Send changeTab for port ', bg);
+      // go through each port object (each Reactime instance)
+      bg.postMessage({
+        // send passed in action object as a message to the current port
+        action: 'changeTab',
+        payload: { tabId: activeTab.id, title: activeTab.title },
+      });
+    });
+  }
 
   // JR: CONSIDER DELETING
   if (Object.keys(tabsObj).length > 0) {
@@ -189,11 +190,14 @@ chrome.runtime.onConnect.addListener((port) => {
 
   // every time devtool is closed, remove the port from portsArr
   port.onDisconnect.addListener((e) => {
+    console.log('port onDisconnect triggered, portsArr: ', portsArr);
     for (let i = 0; i < portsArr.length; i += 1) {
       if (portsArr[i] === e) {
+        // if (portsArr.length === 1) portsArr[i].sendMessage('portDisconnect'); // JR 12.20.23 try sending message to last remaining port directly prior to it being disconnected
         portsArr.splice(i, 1);
-        chrome.runtime.sendMessage('portDisconnect');
-        console.log(`port ${e} disconnected. Remaining portsArr: `, portsArr);
+        chrome.runtime.sendMessage({ action: 'portDisconnect', port: e.name }); // JR 12.20.23 isn't this supposed to be a port.sendMessage? chrome.runtime sends messages between content script and background.js
+        console.log('spliced portsArr', portsArr);
+        console.log(`port ${e.name} disconnected. Remaining portsArr: `, portsArr);
         break;
       }
     }
@@ -516,6 +520,7 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
   // });
 
   chrome.windows.getCurrent((window) => {
+    console.log('onContext click window properties', window);
     const invokedScreenHeight = window.height || 1000;
     const invokedScreenTop = window.top || 0;
     const invokedScreenLeft = -400;

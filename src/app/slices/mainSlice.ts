@@ -143,7 +143,7 @@ export const mainSlice = createSlice({
         } else if (typeof action.payload === 'object') {
           state.currentTab = action.payload.tabId;
           if (action.payload?.title) state.currentTitle = action.payload.title;
-          console.log('mainSlice setTab currentTitle: ', state.currentTitle);
+          console.log('mainSlice setTab successful! currentTitle: ', state.currentTitle);
           return;
         }
       }
