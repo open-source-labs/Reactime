@@ -39,7 +39,9 @@ function MainContainer(): JSX.Element {
   );
   //JR: check connection status
   const { connectionStatus }: MainState = useSelector((state: RootState) => state.main);
-  console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
+
+  // JR 12.22.23: so far this log always returns true
+  //console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
 
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
 
@@ -70,18 +72,24 @@ function MainContainer(): JSX.Element {
   };
 
   // Function to listen for a message containing snapshots from the /extension/build/background.js service worker
-  const messageListener = (message: {
+  const messageListener = ({
+    action,
+    payload,
+    sourceTab,
+  }: {
     action: string;
     payload: Record<string, unknown>;
     sourceTab: number;
   }) => {
-    const { action, payload, sourceTab } = message;
+    // const { action, payload, sourceTab } = message;
     let maxTab: number;
+
     console.log(
-      'MainContainer messageListener message. action: ',
+      'MainContainer received message inside of the port messageListener. action: ',
       action,
       'payload: ',
-      JSON.stringify(payload.status),
+      // @ts-ignore
+      JSON.stringify(payload[Object.keys(payload)[0]]?.status),
       payload,
       'sourceTab: ',
       sourceTab,
@@ -109,7 +117,10 @@ function MainContainer(): JSX.Element {
         break;
       }
       case 'changeTab': {
-        console.log('MainContainer changeTab payload: ', payload);
+        console.log(
+          'MainContainer is dispatching this payload to the mainSlice setTab reducer: ',
+          payload,
+        );
         dispatch(setTab(payload));
         break;
       }
@@ -139,11 +150,11 @@ function MainContainer(): JSX.Element {
     const currentPort = chrome.runtime.connect({ name: 'uiPort1' });
 
     // JR: why are we removing the listener just to readd it? logging here
-    console.log('messageListener before removing: ', messageListener);
-    console.log(
-      'currentPort hasListener? before removing: ',
-      currentPort.onMessage.hasListener(messageListener),
-    );
+    // console.log('messageListener before removing: ', messageListener);
+    // console.log(
+    //   'currentPort hasListener? before removing: ',
+    //   currentPort.onMessage.hasListener(messageListener),
+    // );
     // If messageListener exists on currentPort, remove it
     while (currentPort.onMessage.hasListener(messageListener))
       currentPort.onMessage.removeListener(messageListener);

@@ -162,15 +162,23 @@ chrome.runtime.onConnect.addListener((port) => {
   
     Again, this port object is used for communication within your extension, not for communication with external ports or tabs in the Chrome browser. If you need to interact with specific tabs or external ports, you would use other APIs or methods, such as chrome.tabs or other Chrome Extension APIs.
   */
-  console.log('tabsObj onConnect: ', JSON.stringify(tabsObj));
+  console.log(
+    'tabsObj onConnect: ',
+    JSON.stringify(tabsObj[0]?.status),
+    'time: ',
+    new Date().toLocaleString(),
+  );
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
   console.log('portsArr onConnect: ', Object.keys(portsArr));
 
-  // JR: CONSIDER DELETING
+  // JR: CONSIDER DELETING?
   // 12.20.23 commenting out, possible culprit of many in no target bug
   if (portsArr.length > 0) {
     portsArr.forEach((bg, index) => {
-      console.log('background onConnect. Send changeTab for port ', index);
+      console.log(
+        'background onConnect is sending a changeTab message to frontend for port ',
+        index,
+      );
       // go through each port object (each Reactime instance)
       bg.postMessage({
         // send passed in action object as a message to the current port
@@ -180,12 +188,16 @@ chrome.runtime.onConnect.addListener((port) => {
     });
   }
 
-  // JR: CONSIDER DELETING
+  // JR: CONSIDER DELETING?
   if (Object.keys(tabsObj).length > 0) {
-    port.postMessage({
-      action: 'initialConnectSnapshots',
-      payload: tabsObj,
-    });
+    console.log(
+      'background onConnect is sending a initialConnectSnapshots message to frontend. Time: ',
+      new Date().toLocaleString(),
+    ),
+      port.postMessage({
+        action: 'initialConnectSnapshots',
+        payload: tabsObj,
+      });
   }
 
   // every time devtool is closed, remove the port from portsArr
@@ -277,7 +289,16 @@ chrome.runtime.onConnect.addListener((port) => {
 // INCOMING MESSAGE FROM CONTENT SCRIPT TO BACKGROUND.JS
 // background.js listening for a message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('background.js received message with action: ', request.action, request);
+  console.log(
+    'background.js received message from content script with type: ',
+    request.type,
+    'action: ',
+    request.action,
+    'request body: ',
+    request,
+    'time: ',
+    new Date().toLocaleString(),
+  );
   // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
     return true;
@@ -307,7 +328,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // everytime we get a new tabId, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) {
     tabsObj[tabId] = createTabObj(tabTitle);
-    console.log('tabsObj after createTabObj function call: ', tabsObj);
+
+    console.log(
+      'tabsObj after createTabObj function call: ',
+      JSON.stringify(tabsObj[0]?.status),
+      'time: ',
+      new Date().toLocaleString(),
+    );
   }
 
   switch (action) {
@@ -375,6 +402,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         function: injectScript,
         args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId],
       });
+
+      console.log(
+        'background injected the backend bundle into the webpage. Time: ',
+        new Date().toLocaleString(),
+      );
       break;
     }
     case 'recordSnap': {
@@ -486,9 +518,11 @@ chrome.tabs.onActivated.addListener((info) => {
     // never set a reactime instance to the active tab
     if (!tab.pendingUrl?.match('^chrome-extension')) {
       activeTab = tab;
-      console.log('tabs.onActivated info: ', info);
-      console.log('activeTab: ', activeTab);
-      console.log('tabs.onActivated portsArr: ', portsArr);
+      console.log('background tabs.onActivated has fired. activeTab: ', JSON.stringify(activeTab));
+      console.log(
+        'background tabs.onActivated will send changeTab message to frontend if portsArr is > 0: ',
+        Object.keys(portsArr),
+      );
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
           bg.postMessage({

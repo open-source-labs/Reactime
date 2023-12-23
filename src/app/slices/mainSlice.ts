@@ -103,7 +103,9 @@ export const mainSlice = createSlice({
         tabs[currentTab] || {};
       const { payload } = action;
 
-      console.log('mainSlice initialConnect reducer fired, ', payload);
+      console.log('mainSlice initialConnect reducer fired, ', payload),
+        'time: ',
+        new Date().toLocaleString();
       Object.keys(payload).forEach((tab) => {
         // check if tab exists in memory
         // add new tab
@@ -136,7 +138,18 @@ export const mainSlice = createSlice({
     setTab: (state, action) => {
       const { tabs, currentTab } = state;
       const { mode } = tabs[currentTab] || {};
-      console.log('mainSlice setTab, mode: ', JSON.stringify(mode), 'payload: ', action.payload);
+      // console.log(
+      //   'mode test. mode exists? ',
+      //   !!mode,
+      //   'optional chained mode return value: ',
+      //   mode?.paused,
+      // );
+      console.log(
+        'mainSlice setTab reducer received a payload. mode: ',
+        JSON.stringify(mode),
+        'payload: ',
+        action.payload,
+      );
       if (!mode?.paused) {
         if (typeof action.payload === 'number') {
           state.currentTab = action.payload;
@@ -144,7 +157,14 @@ export const mainSlice = createSlice({
         } else if (typeof action.payload === 'object') {
           state.currentTab = action.payload.tabId;
           if (action.payload?.title) state.currentTitle = action.payload.title;
-          console.log('mainSlice setTab successful! currentTitle: ', state.currentTitle);
+          console.log(
+            'mainSlice setTab successful! state.currentTab: ',
+            state.currentTab,
+            'state.currentTitle: ',
+            state.currentTitle,
+            'state.tabs[currentTab].status: ',
+            JSON.stringify(state.tabs[currentTab]?.status),
+          );
           return;
         }
       }

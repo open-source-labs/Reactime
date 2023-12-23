@@ -49,7 +49,8 @@ function ErrorContainer(): JSX.Element {
 
   // hook that sets timer while waiting for a snapshot from the background script, resets if the tab changes/reloads
   useEffect(() => {
-    if (tabs[currentTab]) console.log('ErrorContainer useEffect fired, ', tabs[currentTab].status);
+    if (tabs[currentTab])
+      console.log('ErrorContainer useEffect fired, ', JSON.stringify(tabs[currentTab]?.status));
     // We declare a function
     function setLoadingArray(i: number, value: boolean) {
       // 'setLoadingArray' checks an element in our 'loadingArray' local state and compares it with passed in boolean argument. If they don't match, we update our local state replacing the selected element with the boolean argument
