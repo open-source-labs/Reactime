@@ -1,5 +1,6 @@
 import React from 'react';
-import { diff, formatters } from 'jsondiffpatch';
+import { diff } from 'jsondiffpatch';
+import formatters from 'jsondiffpatch/build/formatters';
 import HtmlReactParser from 'html-react-parser';
 import { CurrentTab, DiffProps, MainState, RootState, StatelessCleaning } from '../FrontendTypes';
 import { useSelector } from 'react-redux';

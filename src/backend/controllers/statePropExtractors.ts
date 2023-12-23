@@ -1,6 +1,4 @@
-const acorn = require('acorn');
-const jsx = require('acorn-jsx');
-const JSXParser = acorn.Parser.extend(jsx());
+import parse from 'html-react-parser';
 import { HookStateItem, Fiber } from '../types/backendTypes';
 import { exclude } from '../models/filterConditions';
 
@@ -92,7 +90,7 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
   // Abstract Syntax Tree
   let AST: any;
   try {
-    AST = JSXParser.parse(elementType).body;
+    AST = parse(elementType).body;
     // Begin search for hook names, only if ast has a body property.
     // Statements get all the names of the hooks. For example: useCount, useWildcard, ...
     const statements: { hookName: string; varName: string }[] = [];
