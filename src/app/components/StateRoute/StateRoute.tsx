@@ -35,6 +35,8 @@ const StateRoute = (props: StateRouteProps) => {
 
   const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
   const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
+  // const hierarchy = propsHierarchy || tabsHierarchy; JR: RETURN TO THIS: alias to deconstruct from props and tab with the same name, aliases were deleted above
+  // const viewIndex = propsViewIndex || tabsViewIndex;
 
   const renderComponentMap = () => {
     if (hierarchy) {
@@ -235,8 +237,7 @@ const StateRoute = (props: StateRouteProps) => {
         <NavLink className='router-link history-tab' to='/history'>
           History
         </NavLink>
-        <NavLink
-          className='router-link web-metrics-tab' to='/webMetrics'>
+        <NavLink className='router-link web-metrics-tab' to='/webMetrics'>
           Web Metrics
         </NavLink>
         <NavLink className='router-link tree-tab' to='/tree'>
