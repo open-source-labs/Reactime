@@ -339,7 +339,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   switch (action) {
     case 'attemptReconnect': {
-      const success = portSuccessfullyConnected;
+      const success = 'portSuccessfullyConnected';
       sendResponse({ success });
       break;
     }
