@@ -20,37 +20,37 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
   } = props;
 
   return (
-    <Router>
-      <div className='state-container'>
-        <div className='main-navbar-container'>
-          <div className='main-navbar-text' />
-          <div className='main-navbar'>
-            <NavLink className='main-router-link' activeClassName='is-active' exact to='/'>
-              State
-            </NavLink>
-            <NavLink className='main-router-link' activeClassName='is-active' to='/diff'>
-              Diff
-            </NavLink>
+    // <Router>
+    <div className='state-container'>
+      {/* <div className='main-navbar-container'>
+            <div className='main-navbar-text' />
+            <div className='main-navbar'>
+              <NavLink className='main-router-link' activeClassName='is-active' exact to='/'>
+                State
+              </NavLink>
+              <NavLink className='main-router-link' activeClassName='is-active' to='/diff'>
+                Diff
+              </NavLink>
+            </div>
           </div>
-        </div>
-        <Switch>
-          <Route path='/diff' render={() => <DiffRoute snapshot={snapshot} />} />
-          <Route
-            path='/'
-            render={() => (
-              <StateRoute
-                webMetrics={webMetrics}
-                viewIndex={viewIndex}
-                snapshot={snapshot}
-                hierarchy={hierarchy}
-                snapshots={snapshots}
-                currLocation={currLocation}
-              />
-            )}
-          />
-        </Switch>
-      </div>
-    </Router>
+          <Switch>
+            <Route path='/diff' render={() => <DiffRoute snapshot={snapshot} />} />
+            <Route
+              path='/'
+              render={() => ( */}
+      <StateRoute
+        webMetrics={webMetrics}
+        viewIndex={viewIndex}
+        snapshot={snapshot}
+        hierarchy={hierarchy}
+        snapshots={snapshots}
+        currLocation={currLocation}
+      />
+      {/* )}
+           />
+         </Switch> */}
+    </div>
+    // </Router>
   );
 };
 
