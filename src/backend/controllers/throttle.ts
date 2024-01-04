@@ -5,7 +5,7 @@
  * @returns A function that limits input function, `callback`, from being called more than once every `MIN_TIME_BETWEEN_UPDATE` milliseconds
  *
  */
-export default function throttle<T extends (...args: any) => any>(
+export default function throttle<T extends (...args: any[]) => any>(
   callback: T,
   MIN_TIME_BETWEEN_UPDATE: number,
 ): (...arg: Parameters<T>) => ReturnType<T> {
