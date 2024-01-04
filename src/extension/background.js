@@ -291,7 +291,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   switch (action) {
     case 'attemptReconnect': {
-      const success = portSuccessfullyConnected;
+      const success = 'portSuccessfullyConnected';
       sendResponse({ success });
       break;
     }
@@ -337,7 +337,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
       chrome.scripting.executeScript({
         target: { tabId },
-        function: injectScript,
+        func: injectScript,
         args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId],
       });
       break;
