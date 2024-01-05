@@ -235,7 +235,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
                         // Cursor position in window updates position of the tool tip.
                         dispatch(onHover(data.componentData[bar.key].rtid));
                         if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                        const top;
+                        let top;
                         if (snapshot === 'All Snapshots') {
                           top = event.clientY - margin.top - bar.height;
                         } else {
