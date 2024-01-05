@@ -26,17 +26,17 @@ const NO_STATE_MSG = 'No state change detected. Trigger an event to change state
 const StateRoute = (props: StateRouteProps) => {
   const {
     snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
-    hierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
+    hierarchy: propsHierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
     snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
-    viewIndex, // from 'tabs[currentTab]' object in 'MainContainer'
+    viewIndex: propsViewIndex, // from 'tabs[currentTab]' object in 'MainContainer'
     webMetrics, // from 'tabs[currentTab]' object in 'MainContainer'
     currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
 
   const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
-  const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
-  // const hierarchy = propsHierarchy || tabsHierarchy; JR: RETURN TO THIS: alias to deconstruct from props and tab with the same name, aliases were deleted above
-  // const viewIndex = propsViewIndex || tabsViewIndex;
+  const { hierarchy: tabsHierarchy, sliderIndex, viewIndex: tabsViewIndex  } = tabs[currentTab];
+  const hierarchy = propsHierarchy || tabsHierarchy; //JR: RETURN TO THIS: alias to deconstruct from props and tab with the same name, aliases were deleted above
+  const viewIndex = propsViewIndex || tabsViewIndex;
 
   const renderComponentMap = () => {
     if (hierarchy) {
