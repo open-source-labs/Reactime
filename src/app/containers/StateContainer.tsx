@@ -33,7 +33,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
               </NavLink>
             </div>
           </div>
-          <Switch>
+          <Routes>
             <Route path='/diff' render={() => <DiffRoute snapshot={snapshot} />} />
             <Route
               path='/'
@@ -48,7 +48,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
       />
       {/* )}
            />
-         </Switch> */}
+         </Routes> */}
     </div>
     // </Router>
   );

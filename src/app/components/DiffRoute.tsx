@@ -18,10 +18,10 @@
 //         Raw
 //       </NavLink>
 //     </div>
-//     <Switch>
+//     <Routes>
 //       <Route path='/diffRaw' render={() => <Diff snapshot={props.snapshot} show />} />
 //       <Route path='/' render={() => <Diff snapshot={props.snapshot} show={false} />} />
-//     </Switch>
+//     </Routes>
 //   </Router>
 // );
 
