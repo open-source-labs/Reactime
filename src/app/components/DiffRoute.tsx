@@ -11,7 +11,7 @@
 // const DiffRoute = (props: DiffRouteProps): JSX.Element => (
 //   <Router>
 //     <div className='navbar'>
-//       <NavLink className='router-link' activeClassName='is-active' exact to='/'>
+//       <NavLink className='router-link' activeClassName='is-active' to='/'>
 //         Tree
 //       </NavLink>
 //       <NavLink className='router-link' activeClassName='is-active' to='/diffRaw'>

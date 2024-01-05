@@ -3,7 +3,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable max-len */
 import React, { useState, useEffect } from 'react';
-import { MemoryRouter as Router, Route, NavLink, Routes, Navigate } from 'react-router-dom';
+import { MemoryRouter, Router, Route, NavLink, Routes, Navigate } from 'react-router-dom';
 import RenderingFrequency from './RenderingFrequency';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
@@ -309,17 +309,10 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
         <NavLink className='router-link-performance'  end to='/'>
           Snapshots View
         </NavLink>
-        <NavLink
-          className='router-link-performance'
-          id='router-link-performance-comparison'
-          to='/comparison'
-        >
+        <NavLink className='router-link-performance' id='router-link-performance-comparison' to='/comparison'>
           Comparison View
         </NavLink>
-        <NavLink
-          className='router-link-performance'
-          to='/componentdetails'
-        >
+        <NavLink className='router-link-performance' to='/componentdetails'>
           Component Details
         </NavLink>
       </div>
@@ -327,9 +320,9 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
       {renderForTutorial()}
 
       <Routes>
-        <Route exact path='/comparison' render={renderComparisonBargraph} />
-        <Route exact path='/componentdetails' render={renderComponentDetailsView} />
-        <Route exact path='/' render={renderBargraph} />
+        <Route path='/comparison' render={renderComparisonBargraph} />
+        <Route path='/componentdetails' render={renderComponentDetailsView} />
+        <Route path='/' render={renderBargraph} />
       </Routes>
     </Router>
   );

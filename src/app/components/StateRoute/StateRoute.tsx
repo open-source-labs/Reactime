@@ -6,7 +6,7 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 import React from 'react';
-import { MemoryRouter as Router, Route, NavLink, Routes } from 'react-router-dom';
+import { MemoryRouter, Router, Route, NavLink, Routes } from 'react-router-dom';
 import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap/ComponentMap';
@@ -228,28 +228,28 @@ const StateRoute = (props: StateRouteProps) => {
   return (
     <Router>
       <div className='navbar'>
-        <NavLink className='router-link map-tab' end to='/'>
-          Map
-        </NavLink>
-        <NavLink className='router-link performance-tab' to='/performance'>
+        <NavLink to='/performance' className='router-link performance-tab'>
           Performance
         </NavLink>
-        <NavLink className='router-link history-tab' to='/history'>
+        <NavLink to='/history' className='router-link history-tab'>
           History
         </NavLink>
-        <NavLink className='router-link web-metrics-tab' to='/webMetrics'>
+        <NavLink to='/webMetrics' className='router-link web-metrics-tab'>
           Web Metrics
         </NavLink>
-        <NavLink className='router-link tree-tab' to='/tree'>
+        <NavLink to='/tree' className='router-link tree-tab'>
           Tree
+        </NavLink>
+        <NavLink to='/' className='router-link map-tab' end>
+          Map
         </NavLink>
       </div>
       <Routes>
-        <Route exact path='/performance' render={renderPerfView} />
-        <Route exact path='/history' render={renderHistory} />
-        <Route exact path='/webMetrics' render={renderWebMetrics} />
-        <Route exact path='/tree' render={renderTree} />
-        <Route exact path='/' render={renderComponentMap} />
+        <Route  to='/performance' render={renderPerfView} />
+        <Route  to='/history' render={renderHistory} />
+        <Route  to='/webMetrics' render={renderWebMetrics} />
+        <Route  to='/tree' render={renderTree} />
+        <Route  to='/' render={renderComponentMap} />
       </Routes>
     </Router>
   );

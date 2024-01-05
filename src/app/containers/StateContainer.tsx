@@ -25,7 +25,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
       {/* <div className='main-navbar-container'>
             <div className='main-navbar-text' />
             <div className='main-navbar'>
-              <NavLink className='main-router-link' activeClassName='is-active' exact to='/'>
+              <NavLink className='main-router-link' activeClassName='is-active' to='/'>
                 State
               </NavLink>
               <NavLink className='main-router-link' activeClassName='is-active' to='/diff'>
