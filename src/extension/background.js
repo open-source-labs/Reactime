@@ -55,7 +55,7 @@ function createTabObj(title) {
 // In practice, new Nodes are passed the following arguments:
 // 1. param 'obj' : arg request.payload, which is an object containing a tree from snapShot.ts and a route property
 // 2. param tabObj: arg tabsObj[tabId], which is an object that holds info about a specific tab. Should change the name of tabObj to tabCollection or something
-class Node {
+class HistoryNode {
   constructor(obj, tabObj) {
     // continues the order of number of total state changes
     this.index = tabObj.index;
@@ -291,7 +291,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   switch (action) {
     case 'attemptReconnect': {
-      const success = portSuccessfullyConnected;
+      const success = 'portSuccessfullyConnected';
       sendResponse({ success });
       break;
     }
@@ -337,7 +337,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
       chrome.scripting.executeScript({
         target: { tabId },
-        function: injectScript,
+        func: injectScript,
         args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId],
       });
       break;
@@ -350,7 +350,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         reloaded[tabId] = false;
         tabsObj[tabId].webMetrics = metrics;
         tabsObj[tabId].snapshots.push(request.payload);
-        sendToHierarchy(tabsObj[tabId], new Node(request.payload, tabsObj[tabId]));
+        sendToHierarchy(tabsObj[tabId], new HistoryNode(request.payload, tabsObj[tabId]));
         if (portsArr.length > 0) {
           portsArr.forEach((bg) =>
             bg.postMessage({
@@ -378,7 +378,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         tabsObj[tabId].snapshots.push(request.payload);
         // INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN
         if (!tabsObj[tabId][index]) {
-          sendToHierarchy(tabsObj[tabId], new Node(request.payload, tabsObj[tabId]));
+          sendToHierarchy(tabsObj[tabId], new HistoryNode(request.payload, tabsObj[tabId]));
         }
       }
       // sends new tabs obj to devtools
