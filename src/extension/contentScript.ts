@@ -10,11 +10,13 @@ let firstMessage = true;
 // Listens for window messages (from the injected script on the DOM)
 let isRecording = true;
 
+// INCOMING MESSAGE FROM BACKEND (index.ts) TO CONTENT SCRIPT
 window.addEventListener('message', (msg) => {
   // Event listener runs constantly based on actions
   // recorded on the test application from backend files (linkFiber.ts).
   // Background.js has a listener that includes switch cases, depending on
   // the name of the action (e.g. 'tabReload').
+  console.log('message sent to window event listener: ', msg.data);
   if (firstMessage) {
     // One-time request tells the background script that the tab has reloaded.
     chrome.runtime.sendMessage({ action: 'tabReload' });
@@ -37,9 +39,16 @@ window.addEventListener('message', (msg) => {
   }
 });
 
+// FROM BACKGROUND TO CONTENT SCRIPT
 // Listening for messages from the UI of the Reactime extension.
 chrome.runtime.onMessage.addListener((request) => {
-  const { action }: { action: string } = request;
+  console.log(
+    'contentScript received message from background.js. request.action: ',
+    request.action,
+    'request.port',
+    request.port,
+  );
+  const { action, port }: { action: string; port?: string } = request;
   if (action) {
     // Message being sent from background.js
     // This is toggling the record button on Reactime when clicked
@@ -49,11 +58,21 @@ chrome.runtime.onMessage.addListener((request) => {
     // this is only listening for Jump toSnap
     if (action === 'jumpToSnap') {
       chrome.runtime.sendMessage(request);
+      // After the jumpToSnap action has been sent back to background js,
+      // it will send the same action to backend files (index.ts) for it execute the jump feature
+      // '*' == target window origin required for event to be dispatched, '*' = no preference
+      window.postMessage(request, '*');
     }
-    // After the jumpToSnap action has been sent back to background js,
-    // it will send the same action to backend files (index.ts) for it execute the jump feature
-    // '*' == target window origin required for event to be dispatched, '*' = no preference
-    window.postMessage(request, '*');
+
+    // JR: adding a response to a port disconnection message from background.js
+    if (action === 'portDisconnect') {
+      console.log(`Port ${port} disconnected!`);
+    }
+
+    if (action === 'reinitialize') {
+      console.log('contentscript reinitialize received, forwarding to backend');
+      window.postMessage(request, '*');
+    }
   }
 });
 
@@ -62,8 +81,15 @@ chrome.runtime.onMessage.addListener((request) => {
 // To learn more about Chrome web vitals, see https://web.dev/vitals/.
 const metrics = {};
 const gatherMetrics = ({ name, value }) => {
+  console.log(
+    'contentScript gatherMetrics: prior metrics Obj: ',
+    metrics,
+    'name: ',
+    name,
+    'value: ',
+    value,
+  );
   metrics[name] = value;
-
   chrome.runtime.sendMessage({
     type: 'performance:metric',
     name,
@@ -81,4 +107,4 @@ onINP(gatherMetrics);
 
 // Send message to background.js for injecting the initial script
 // into the app's DOM.
-chrome.runtime.sendMessage({ action: 'injectScript' });
+// chrome.runtime.sendMessage({ action: 'injectScript' });

@@ -12,6 +12,7 @@ import {
   setTab,
   deleteTab,
   noDev,
+  aReactApp, // JR added 12.20.23 9.53pm
   setCurrentLocation,
   disconnected,
   endConnect,
@@ -27,6 +28,24 @@ function MainContainer(): JSX.Element {
   const dispatch = useDispatch();
 
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
+  console.log(
+    'Redux state at render: ',
+    useSelector((state: RootState) => state.main),
+  );
+  console.log(
+    'MainContainer state at render: tabs: ',
+    JSON.stringify(tabs[currentTab]?.status),
+    // tabs[currentTab]?.status,
+    'port: ',
+    port?.name,
+    'time: ',
+    new Date().toLocaleString(),
+  );
+  //JR: check connection status
+  const { connectionStatus }: MainState = useSelector((state: RootState) => state.main);
+
+  // JR 12.22.23: so far this log always returns true
+  //console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
 
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
 
@@ -36,6 +55,10 @@ function MainContainer(): JSX.Element {
 
     const toggleElem = document.querySelector('aside'); // aside is like an added text that appears "on the side" aside some text.
     toggleElem.classList.toggle('no-aside'); // toggles the addition or the removal of the 'no-aside' class
+
+    //JR: added for collapse label
+    const collapse = document.querySelector('.collapse');
+    collapse.classList.toggle('hidden');
 
     const recordBtn = document.getElementById('recordBtn');
 
@@ -53,14 +76,28 @@ function MainContainer(): JSX.Element {
   };
 
   // Function to listen for a message containing snapshots from the /extension/build/background.js service worker
-  const messageListener = (message: {
+  const messageListener = ({
+    action,
+    payload,
+    sourceTab,
+  }: {
     action: string;
     payload: Record<string, unknown>;
     sourceTab: number;
   }) => {
-    const { action, payload, sourceTab } = message;
+    // const { action, payload, sourceTab } = message;
     let maxTab: number;
 
+    console.log(
+      'MainContainer received message inside of the port messageListener. action: ',
+      action,
+      'payload: ',
+      // @ts-ignore
+      JSON.stringify(payload[Object.keys(payload)[0]]?.status),
+      payload,
+      'sourceTab: ',
+      sourceTab,
+    );
     if (!sourceTab && action !== 'keepAlive') {
       // if the sourceTab doesn't exist or is 0 and it is not a 'keepAlive' action
       const tabsArray: Array<string> = Object.keys(payload); // we create a tabsArray of strings composed of keys from our payload object
@@ -78,7 +115,16 @@ function MainContainer(): JSX.Element {
         dispatch(noDev(payload));
         break;
       }
+      // JR 12.20.23 9.53pm added a listener case for sending aReactApp to frontend
+      case 'aReactApp': {
+        dispatch(aReactApp(payload));
+        break;
+      }
       case 'changeTab': {
+        console.log(
+          'MainContainer is dispatching this payload to the mainSlice setTab reducer: ',
+          payload,
+        );
         dispatch(setTab(payload));
         break;
       }
@@ -101,11 +147,18 @@ function MainContainer(): JSX.Element {
   };
 
   useEffect(() => {
+    console.log('MainContainer state view of port at start of useEffect: ', port);
     if (port) return; // only open port once so if it exists, do not run useEffect again
 
     // Connect ot port and assign evaluated result (obj) to currentPort
-    const currentPort = chrome.runtime.connect();
+    const currentPort = chrome.runtime.connect({ name: 'uiPort1' });
 
+    // JR: why are we removing the listener just to readd it? logging here
+    // console.log('messageListener before removing: ', messageListener);
+    // console.log(
+    //   'currentPort hasListener? before removing: ',
+    //   currentPort.onMessage.hasListener(messageListener),
+    // );
     // If messageListener exists on currentPort, remove it
     while (currentPort.onMessage.hasListener(messageListener))
       currentPort.onMessage.removeListener(messageListener);
@@ -134,7 +187,8 @@ function MainContainer(): JSX.Element {
     //@ts-ignore
     !tabs[currentTab].status.targetPageisaReactApp
   ) {
-    return <ErrorContainer />;
+    // @ts-ignore
+    return <ErrorContainer port={port} />;
   }
 
   const { currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =

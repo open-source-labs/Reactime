@@ -42,7 +42,7 @@ function History(props: Record<string, unknown>): JSX.Element {
 
   const svgRef = React.useRef(null);
   const root = JSON.parse(JSON.stringify(hierarchy)); // why do we stringify and then parse our hierarchy back to JSON? (asked 7/31/23)
-
+  console.log('history root: ', root);
   // setting the margins for the Map to render in the tab window.
   const innerWidth: number = totalWidth - margin.left - margin.right;
   const innerHeight: number = totalHeight - margin.top - margin.bottom - 60;
@@ -171,7 +171,7 @@ function History(props: Record<string, unknown>): JSX.Element {
   const makeD3Tree = () => {
     const svg = d3.select(svgRef.current); // d3.select Selects the first element/node that matches svgRef.current. If no element/node match returns an empty selection. If multiple elements/nodes match the selector, only the first matching element/node (in document order) will be selected.
     svg.selectAll('*').remove(); // Selects all elements. The elements will be selected in document order (top-to-bottom). We then remove the selected elements/nodes from the DOM. This is important as to ensure that the SVG is empty before rendering the D3 based visualization to avoid interference/overlap with any previously rendered content.
-
+    console.log('makeD3Tree initial svgRef: ', svgRef);
     const tree = (data) => {
       // function that takes in data and turns it into a d3 tree.
       const treeRoot = d3.hierarchy(data); // 'd3.hierarchy' constructs a root node from the specified hierarchical data.
@@ -179,6 +179,7 @@ function History(props: Record<string, unknown>): JSX.Element {
     };
 
     const d3root = tree(root); // create a d3. tree from our root
+    console.log('d3root: ', d3root);
     const currNode = labelCurrentNode(d3root); // iterate through our nodes and apply a color property
 
     const g = svg //serves as a container for the nodes and links within the D3 Visualization of the tree
@@ -310,12 +311,13 @@ function History(props: Record<string, unknown>): JSX.Element {
   };
 
   useEffect(() => {
+    console.log('currLocation: ', currLocation);
     makeD3Tree();
-  }, [root, currLocation]); // if the 'root' or 'currLocation' changes, re-build the D3 Tree
+  }, [root /*, currLocation*/]); // if the 'root' or 'currLocation' changes, re-build the D3 Tree
 
-  useEffect(() => {
-    dispatch(setCurrentTabInApp('history')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.
-  }, []);
+  // useEffect(() => {
+  //   dispatch(setCurrentTabInApp('history')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.
+  // }, []);
 
   // then rendering each node in History tab to render using D3, which will share area with LegendKey
   return (

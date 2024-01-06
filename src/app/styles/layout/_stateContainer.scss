@@ -19,16 +19,6 @@
   box-shadow: none;
 }
 
-.state-container .navbar {
-  background-color: $background-color;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  height: 30px;
-  position: static;
-}
-
 .state-container .main-navbar {
   background-color: $background-color;
   display: flex;
@@ -56,15 +46,6 @@
   justify-content: space-between;
   align-items: center;
   height: 35px;
-}
-
-.navbar {
-  // prevent navbar from scrolling with state/tree display
-  position: sticky;
-  top: 40px; //JR 12.16.23 @12:15pm: this hardcoding is not best practice, should revisit to figure out a more dynamic way of sticking the navbar to the bottom of the main-navbar
-  left: 0px;
-  z-index: 1;
-  @extend %disable-highlight;
 }
 
 .no-data-message {
@@ -125,12 +106,17 @@
   }
 
   .navbar {
-    background-color: $navbar-color;
+    background-color: $background-color;
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
     height: 30px;
+    position: sticky;
+    top: 40px; //JR 12.16.23 @12:15pm: this hardcoding is not best practice, should revisit to figure out a more dynamic way of sticking the navbar to the bottom of the main-navbar
+    left: 0px;
+    z-index: 1;
+    @extend %disable-highlight;
   }
 
   .main-navbar {

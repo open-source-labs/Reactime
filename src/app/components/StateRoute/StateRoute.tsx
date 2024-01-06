@@ -32,7 +32,9 @@ const StateRoute = (props: StateRouteProps) => {
     webMetrics, // from 'tabs[currentTab]' object in 'MainContainer'
     currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
-
+  console.log('snapshot from StateRoute props: ', snapshot);
+  console.log('snapshots from StateRoute props: ', snapshots);
+  console.log('currLocation from StateRoute props', currLocation);
   const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
   const { hierarchy: tabsHierarchy, sliderIndex, viewIndex: tabsViewIndex  } = tabs[currentTab];
   const hierarchy = propsHierarchy || tabsHierarchy; //JR: RETURN TO THIS: alias to deconstruct from props and tab with the same name, aliases were deleted above

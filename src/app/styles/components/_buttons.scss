@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-
 .save-series-button {
   padding: 3px;
   outline: transparent;
@@ -305,17 +304,31 @@ aside {
   background: #242529;
   color: #fff;
   transition: width 1s;
+  width: 100%; //JR
 }
 
 .no-aside {
-  width: 30px;
-  margin-right: 15px;
+  width: 45px;
+  // margin-right: 15px;
+}
+
+//JR added for collapse label
+.collapse {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: #242529;
+}
+
+.hidden {
+  display: none;
 }
 
 .toggle {
-  display: block;
-  position: relative;
-  margin-top: 1rem;
+  // display: block;
+  // position: relative;
+  // margin-top: 1rem;
+  height: 100%; //JR
 }
 
 /* toggle i handles arrow animation */
@@ -331,8 +344,8 @@ aside {
 }
 
 .toggle i {
-  top: 8px;
-  left: 9px;
+  top: 16px;
+  left: 10px;
   display: block;
   background: $blue-brand;
 }
@@ -349,6 +362,7 @@ aside {
 .toggle i::before {
   content: '';
   display: block;
+  // top: -5px;
 }
 
 .toggle i::before {
@@ -365,14 +379,21 @@ aside {
 }
 
 #arrow {
-  margin-bottom: 40px;
+  // margin-bottom: 40px;
+  // display: flex;
+  // justify-content: flex-start;
+
+  //JR
+  height: 100%;
+  display: grid;
+  grid-template-columns: 45px 1fr;
 }
 
 /* ^ sidebar button open and closing functionality */
 .reconnect-button-pop-up {
   padding: 3px;
   outline: transparent;
-  background: $red-color-gradient; 
+  background: $red-color-gradient;
   color: $text-color !important;
   border: none;
   border-radius: 3px;
@@ -405,7 +426,7 @@ aside {
 .close-icon-pop-up {
   cursor: pointer;
   color: $text-color;
-  font-size: 20px; 
+  font-size: 20px;
   padding-right: 8px;
   color: black;
 }

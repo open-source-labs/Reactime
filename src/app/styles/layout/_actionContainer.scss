@@ -16,9 +16,14 @@
 }
 
 .actionToolContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  // display: flex;
+  // justify-content: space-between;
+  // align-items: center;
+
+  //JR
+  height: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 #recordBtn .fa-regular {

@@ -1,6 +1,8 @@
 // Import snapshots from "../app/components/snapshots".
 // import 'core-js';
 
+import { invoke } from 'lodash';
+
 // Store ports in an array.
 const portsArr = [];
 const reloaded = {};
@@ -62,6 +64,7 @@ class HistoryNode {
     tabObj.index += 1;
     // continues the order of number of states changed from that parent
     tabObj.currParent += 1;
+    console.log('new Node tabObj: ', tabObj);
     this.name = tabObj.currParent;
     // marks from what branch this node is originated
     this.branch = tabObj.currBranch;
@@ -137,6 +140,7 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   This allows us to set up listener's for when we connect, message, and disconnect the script.
 */
 
+// INCOMING CONNECTION FROM FRONTEND (MainContainer) TO BACKGROUND.JS
 // Establishing incoming connection with Reactime.
 chrome.runtime.onConnect.addListener((port) => {
   /*
@@ -158,11 +162,23 @@ chrome.runtime.onConnect.addListener((port) => {
   
     Again, this port object is used for communication within your extension, not for communication with external ports or tabs in the Chrome browser. If you need to interact with specific tabs or external ports, you would use other APIs or methods, such as chrome.tabs or other Chrome Extension APIs.
   */
-
+  console.log(
+    'tabsObj onConnect: ',
+    JSON.stringify(tabsObj[0]?.status),
+    'time: ',
+    new Date().toLocaleString(),
+  );
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
+  console.log('portsArr onConnect: ', Object.keys(portsArr));
 
+  // JR: CONSIDER DELETING?
+  // 12.20.23 commenting out, possible culprit of many in no target bug
   if (portsArr.length > 0) {
-    portsArr.forEach((bg) => {
+    portsArr.forEach((bg, index) => {
+      console.log(
+        'background onConnect is sending a changeTab message to frontend for port ',
+        index,
+      );
       // go through each port object (each Reactime instance)
       bg.postMessage({
         // send passed in action object as a message to the current port
@@ -172,24 +188,34 @@ chrome.runtime.onConnect.addListener((port) => {
     });
   }
 
+  // JR: CONSIDER DELETING?
   if (Object.keys(tabsObj).length > 0) {
-    port.postMessage({
-      action: 'initialConnectSnapshots',
-      payload: tabsObj,
-    });
+    console.log(
+      'background onConnect is sending a initialConnectSnapshots message to frontend. Time: ',
+      new Date().toLocaleString(),
+    ),
+      port.postMessage({
+        action: 'initialConnectSnapshots',
+        payload: tabsObj,
+      });
   }
 
   // every time devtool is closed, remove the port from portsArr
   port.onDisconnect.addListener((e) => {
+    console.log('port onDisconnect triggered, portsArr: ', Object.keys(portsArr));
     for (let i = 0; i < portsArr.length; i += 1) {
       if (portsArr[i] === e) {
+        // if (portsArr.length === 1) portsArr[i].sendMessage('portDisconnect'); // JR 12.20.23 try sending message to last remaining port directly prior to it being disconnected
         portsArr.splice(i, 1);
-        chrome.runtime.sendMessage('portDisconnect');
+        chrome.runtime.sendMessage({ action: 'portDisconnect', port: e.name }); // JR 12.20.23 isn't this supposed to be a port.sendMessage? chrome.runtime sends messages between content script and background.js
+        console.log('spliced portsArr', portsArr);
+        console.log(`port ${e.name} disconnected. Remaining portsArr: `, Object.keys(portsArr));
         break;
       }
     }
   });
 
+  // INCOMING MESSAGE FROM FRONTEND (MainContainer) TO BACKGROUND.js
   // listen for message containing a snapshot from devtools and send it to contentScript -
   // (i.e. they're all related to the button actions on Reactime)
   port.onMessage.addListener((msg) => {
@@ -205,8 +231,10 @@ chrome.runtime.onConnect.addListener((port) => {
     const { action, payload, tabId } = msg;
 
     switch (action) {
+      // import action comes through when the user uses the "upload" button on the front end to import an existing snapshot tree
       case 'import': // create a snapshot property on tabId and set equal to tabs object
         // may need do something like filter payload from stateless
+        console.log('background import action tabsObj: ', tabsObj);
         tabsObj[tabId].snapshots = payload.snapshots; // reset snapshots to page last state recorded
         // tabsObj[tabId].hierarchy = savedSnapshot.hierarchy; // why don't we just use hierarchy? Because it breaks everything...
         tabsObj[tabId].hierarchy.children = payload.hierarchy.children; // resets hierarchy to last state recorded
@@ -218,7 +246,9 @@ chrome.runtime.onConnect.addListener((port) => {
 
         return true; // return true so that port remains open
 
+      // emptySnap actions comes through when the user uses the 'clear' button on the front end to clear the snapshot history and move slider back to 0 position
       case 'emptySnap':
+        console.log('tabsObj on clear: ', tabsObj);
         tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]]; // reset snapshots to page last state recorded
         tabsObj[tabId].hierarchy.children = []; // resets hierarchy
         tabsObj[tabId].hierarchy.stateSnapshot = {
@@ -250,14 +280,33 @@ chrome.runtime.onConnect.addListener((port) => {
         chrome.tabs.sendMessage(tabId, msg);
         return true;
 
+      case 'reinitialize':
+        console.log(
+          'background reinitialize message received, forwarding to content script at tabId',
+          tabId,
+        );
+        chrome.tabs.sendMessage(tabId, msg);
+        return true;
+
       default:
         return true;
     }
   });
 });
 
+// INCOMING MESSAGE FROM CONTENT SCRIPT TO BACKGROUND.JS
 // background.js listening for a message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log(
+    'background.js received message from content script with type: ',
+    request.type,
+    'action: ',
+    request.action,
+    'request body: ',
+    request,
+    'time: ',
+    new Date().toLocaleString(),
+  );
   // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
     return true;
@@ -287,6 +336,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // everytime we get a new tabId, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) {
     tabsObj[tabId] = createTabObj(tabTitle);
+
+    console.log(
+      'tabsObj after createTabObj function call: ',
+      JSON.stringify(tabsObj[0]?.status),
+      'time: ',
+      new Date().toLocaleString(),
+    );
   }
 
   switch (action) {
@@ -296,6 +352,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break;
     }
     case 'jumpToSnap': {
+      console.log(`background.js received jumpToSnap from UI at ${Date.now().toLocaleString()}`);
+      console.log('portsArr at time of jumpToSnap in backgroundjs: ', portsArr);
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
@@ -310,6 +368,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // Confirmed React Dev Tools installed, send this info to frontend
     case 'devToolsInstalled': {
       tabsObj[tabId].status.reactDevToolsInstalled = true;
+      console.log('devToolsInstalled action, update tabsObj status', tabsObj[tabId].status);
+
       portsArr.forEach((bg) =>
         bg.postMessage({
           action: 'devTools',
@@ -319,8 +379,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break;
     }
     // Confirmed target is a react app. No need to send to frontend
+    // JR: BUG: why wouldn't we need to send to frontend???
     case 'aReactApp': {
       tabsObj[tabId].status.targetPageisaReactApp = true;
+      console.log('aReactApp action, update tabsObj status', tabsObj[tabId].status);
+
+      // JR 12.20.23 9.53pm added a message action to send to frontend
+      portsArr.forEach((bg) =>
+        bg.postMessage({
+          action: 'aReactApp',
+          payload: tabsObj,
+        }),
+      );
       break;
     }
     // This injects a script into the app that you're testing Reactime on,
@@ -340,6 +410,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         func: injectScript,
         args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId],
       });
+
+      console.log(
+        'background injected the backend bundle into the webpage. Time: ',
+        new Date().toLocaleString(),
+      );
       break;
     }
     case 'recordSnap': {
@@ -451,6 +526,11 @@ chrome.tabs.onActivated.addListener((info) => {
     // never set a reactime instance to the active tab
     if (!tab.pendingUrl?.match('^chrome-extension')) {
       activeTab = tab;
+      console.log('background tabs.onActivated has fired. activeTab: ', JSON.stringify(activeTab));
+      console.log(
+        'background tabs.onActivated will send changeTab message to frontend if portsArr is > 0: ',
+        Object.keys(portsArr),
+      );
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
           bg.postMessage({
@@ -475,14 +555,63 @@ chrome.runtime.onInstalled.addListener(() => {
 
 // when context menu is clicked, listen for the menuItemId,
 // if user clicked on reactime, open the devtools window
+
+// JR 12.19.23
+// As of V22, if multiple monitors are used, it would open the reactime panel on the other screen, which was inconvenient when opening repeatedly for debugging.
+// V23 fixes this by making use of chrome.windows.getCurrent to get the top and left of the screen which invoked the extension.
+// The reason you must use chrome.windows.getCurrent is that as of chrome manifest V3, background.js is a 'service worker', which does not have access to the DOM or to the native 'window' method.
+// chrome.windows.getCurrent allows us to still get the window from within a service worker. It returns a promise (asynchronous), so all resulting functionality must happen in the callback function,
+// or it will run before 'invokedScreen' variables have been captured.
 chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
-  const options = {
-    type: 'panel',
-    left: 0,
-    top: 0,
-    width: 1000,
-    height: 1000,
-    url: chrome.runtime.getURL('panel.html'),
-  };
-  if (menuItemId === 'reactime') chrome.windows.create(options);
+  // console.log('background ext screenX', chrome.windows.getCurrent());
+
+  // // this was a test to see if I could dynamically set the left property to be the 0 origin of the invoked DISPLAY (as opposed to invoked window).
+  // // this would allow you to split your screen, keep the browser open on the right side, and reactime always opens at the top left corner.
+  // chrome.system.display.getInfo((displayUnitInfo) => {
+  //   console.log(displayUnitInfo);
+  // });
+
+  chrome.windows.getCurrent((window) => {
+    console.log('onContext click window properties', window);
+    const invokedScreenHeight = window.height || 1000;
+    const invokedScreenTop = window.top || 0;
+    const invokedScreenLeft = window.left || 0;
+    const invokedScreenWidth = Math.max(Math.trunc(window.width / 2), 1000) || 1000; // set reactime window to half of chrome window, with a min of 1000px
+    const options = {
+      type: 'panel',
+      left: invokedScreenLeft,
+      top: invokedScreenTop,
+      width: invokedScreenWidth,
+      height: invokedScreenHeight,
+      url: chrome.runtime.getURL('panel.html'),
+    };
+    if (menuItemId === 'reactime') chrome.windows.create(options);
+  });
+  //JR 12.20.23
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    console.log('onContext click tab info', tabs, new Date().toLocaleString());
+    if (tabs.length) {
+      const invokedTab = tabs[0];
+      const invokedTabId = invokedTab.id;
+      const invokedTabTitle = invokedTabTitle;
+      tabsObj[invokedTabId] = createTabObj(invokedTabTitle);
+
+      // inject backend script
+      const injectScript = (file, tab) => {
+        const htmlBody = document.getElementsByTagName('body')[0];
+        const script = document.createElement('script');
+        script.setAttribute('type', 'text/javascript');
+        script.setAttribute('src', file);
+        // eslint-disable-next-line prefer-template
+        htmlBody.appendChild(script);
+      };
+
+      console.log(invokedTabId);
+      chrome.scripting.executeScript({
+        target: { tabId: invokedTabId },
+        function: injectScript,
+        args: [chrome.runtime.getURL('bundles/backend.bundle.js'), invokedTabId],
+      });
+    }
+  });
 });
