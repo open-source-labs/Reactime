@@ -127,12 +127,8 @@ export default function ComponentMap({
   };
 
   const formatRenderTime: string = (time: number): string => {
-<<<<<<< HEAD
-    const renderTime = parseFloat(time).toFixed(3);
-=======
     if (!time) return 'No time information';
     const renderTime = time.toFixed(3);
->>>>>>> errors
     return `${renderTime} ms `;
   };
 
