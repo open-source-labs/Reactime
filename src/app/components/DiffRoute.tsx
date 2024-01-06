@@ -19,8 +19,8 @@
 //       </NavLink>
 //     </div>
 //     <Routes>
-//       <Route path='/diffRaw' render={() => <Diff snapshot={props.snapshot} show />} />
-//       <Route path='/' render={() => <Diff snapshot={props.snapshot} show={false} />} />
+//       <Route path='/diffRaw' element={() => <Diff snapshot={props.snapshot} show />} />
+//       <Route path='/' element={() => <Diff snapshot={props.snapshot} show={false} />} />
 //     </Routes>
 //   </Router>
 // );

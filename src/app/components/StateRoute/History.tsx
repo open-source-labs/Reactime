@@ -6,9 +6,9 @@ import React, { useEffect } from 'react';
 import { diff } from 'jsondiffpatch';
 const jsondiffpatch = require('jsondiffpatch');
 // import * as jsondiffpatch from 'jsondiffpatch';
-import { diff } from 'jsondiffpatch';
+// import { diff } from 'jsondiffpatch';
 // import jsondiffpatch from 'jsondiffpatch/formatters';
-const jsondiffpatch = require('jsondiffpatch');
+// const jsondiffpatch = require('jsondiffpatch');
 import * as d3 from 'd3';
 import { DefaultMargin } from '../../FrontendTypes';
 import { useDispatch } from 'react-redux';
@@ -160,7 +160,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       statelessCleaning(snapshots[index]),
     );
     const changedState = findStateChangeObj(delta); // determines if delta had any stateful changes
-    const html = jsondiffpatch.formatters.format(changedState[0]); // formats the difference into html string
+    const html = jsondiffpatch.formatters(changedState[0]); // formats the difference into html string
     return html; // return html string
   }
 

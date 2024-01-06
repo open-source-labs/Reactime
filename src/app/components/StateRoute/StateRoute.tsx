@@ -57,29 +57,7 @@ const StateRoute = (props: StateRouteProps) => {
     return <div className='noState'>{NO_STATE_MSG}</div>; // otherwise, inform the user that there has been no state change in the target/hooked application.
   };
 
-  const renderHistory: JSX.Element = () => {
-    if (hierarchy) {
-      // if hierarchy was initialized/created render the history
-      return (
-        <ParentSize>
-          {({ width, height }) => (
-            <History
-              width={width}
-              height={height}
-              hierarchy={hierarchy}
-              // Commented out dispatch that was prop drilled as conversion to RTK might invalidate need for prop drilling to access dispatch
-              // dispatch={dispatch}
-              sliderIndex={sliderIndex}
-              viewIndex={viewIndex}
-              currLocation={currLocation}
-              snapshots={snapshots}
-            />
-          )}
-        </ParentSize>
-      );
-    }
-    return <div className='noState'>{NO_STATE_MSG}</div>; // otherwise, inform the user that there has been no state change in the target/hooked application.
-  };
+  
 
   const renderTree = () => {
     if (hierarchy) {
@@ -203,32 +181,10 @@ const StateRoute = (props: StateRouteProps) => {
     );
   };
 
-  const renderPerfView = () => {
-    if (hierarchy) {
-      // if hierarchy was initialized/created render the PerformanceVisx
-      return (
-        <ParentSize>
-          {({ width, height }) => (
-            <PerformanceVisx
-              width={width}
-              height={height}
-              snapshots={snapshots}
-              // note: is propdrilled within Performance Visx, but doesn't seem to be used
-              changeSlider={changeSlider}
-              changeView={changeView}
-              hierarchy={hierarchy}
-            />
-          )}
-        </ParentSize>
-      );
-    }
-    return <div className='noState'>{NO_STATE_MSG}</div>; // otherwise, inform the user that there has been no state change in the target/hooked application.
-  };
-
   return (
-    <Router>
+    <>
       <div className='navbar'>
-        <NavLink className='router-link map-tab' end to='/'>
+        <NavLink to='/' className='router-link map-tab' end>
           Map
         </NavLink>
         <NavLink className='router-link performance-tab' to='/performance'>
@@ -245,13 +201,41 @@ const StateRoute = (props: StateRouteProps) => {
         </NavLink>
       </div>
       <Routes>
-        <Route exact path='/performance' render={renderPerfView} />
-        <Route exact path='/history' render={renderHistory} />
-        <Route exact path='/webMetrics' render={renderWebMetrics} />
-        <Route exact path='/tree' render={renderTree} />
-        <Route exact path='/' render={renderComponentMap} />
+        <Route path='/performance' element={hierarchy ? 
+        <ParentSize>
+          {({ width, height }) => (
+            <PerformanceVisx
+              width={width}
+              height={height}
+              snapshots={snapshots}
+              // note: is propdrilled within Performance Visx, but doesn't seem to be used
+              changeSlider={changeSlider}
+              changeView={changeView}
+              hierarchy={hierarchy}
+            />
+          )}
+        </ParentSize> : <div className='noState'>{NO_STATE_MSG}</div>} />
+        <Route path='/history' element={ hierarchy ?
+          <ParentSize>
+            {({ width, height }) => (
+              <History
+                width={width}
+                height={height}
+                hierarchy={hierarchy}
+                // Commented out dispatch that was prop drilled as conversion to RTK might invalidate need for prop drilling to access dispatch
+                // dispatch={dispatch}
+                sliderIndex={sliderIndex}
+                viewIndex={viewIndex}
+                currLocation={currLocation}
+                snapshots={snapshots}
+              />
+            )}
+          </ParentSize> : <div className='noState'>{NO_STATE_MSG}</div>} />
+        <Route path='/webMetrics' component={renderWebMetrics} />
+        <Route path='/tree' component={renderTree} />
+        <Route path='/' component={renderComponentMap} />
       </Routes>
-    </Router>
+    </>
   );
 };
 
