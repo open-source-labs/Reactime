@@ -58,16 +58,21 @@ chrome.runtime.onMessage.addListener((request) => {
     // this is only listening for Jump toSnap
     if (action === 'jumpToSnap') {
       chrome.runtime.sendMessage(request);
+      // After the jumpToSnap action has been sent back to background js,
+      // it will send the same action to backend files (index.ts) for it execute the jump feature
+      // '*' == target window origin required for event to be dispatched, '*' = no preference
+      window.postMessage(request, '*');
     }
 
     // JR: adding a response to a port disconnection message from background.js
     if (action === 'portDisconnect') {
       console.log(`Port ${port} disconnected!`);
     }
-    // After the jumpToSnap action has been sent back to background js,
-    // it will send the same action to backend files (index.ts) for it execute the jump feature
-    // '*' == target window origin required for event to be dispatched, '*' = no preference
-    window.postMessage(request, '*');
+
+    if (action === 'reinitialize') {
+      console.log('contentscript reinitialize received, forwarding to backend');
+      window.postMessage(request, '*');
+    }
   }
 });
 
@@ -102,4 +107,4 @@ onINP(gatherMetrics);
 
 // Send message to background.js for injecting the initial script
 // into the app's DOM.
-chrome.runtime.sendMessage({ action: 'injectScript' });
+// chrome.runtime.sendMessage({ action: 'injectScript' });

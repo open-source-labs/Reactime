@@ -280,6 +280,14 @@ chrome.runtime.onConnect.addListener((port) => {
         chrome.tabs.sendMessage(tabId, msg);
         return true;
 
+      case 'reinitialize':
+        console.log(
+          'background reinitialize message received, forwarding to content script at tabId',
+          tabId,
+        );
+        chrome.tabs.sendMessage(tabId, msg);
+        return true;
+
       default:
         return true;
     }
@@ -559,8 +567,6 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
 
   // // this was a test to see if I could dynamically set the left property to be the 0 origin of the invoked DISPLAY (as opposed to invoked window).
   // // this would allow you to split your screen, keep the browser open on the right side, and reactime always opens at the top left corner.
-  // // currently, invokedScreenLeft is the left of the invoked window. To get around the issue of reactime covering the refresh button (currently needed for debugging as of 12.19.23), added a vertical offset, topOffset.
-  // // this just pushes the top down by a fixed amount that is enough to surpass most people's bookmarks bar.
   // chrome.system.display.getInfo((displayUnitInfo) => {
   //   console.log(displayUnitInfo);
   // });
@@ -569,12 +575,13 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     console.log('onContext click window properties', window);
     const invokedScreenHeight = window.height || 1000;
     const invokedScreenTop = window.top || 0;
-    const invokedScreenLeft = -400;
+    const invokedScreenLeft = window.left || 0;
+    const invokedScreenWidth = Math.max(Math.trunc(window.width / 2), 1000) || 1000; // set reactime window to half of chrome window, with a min of 1000px
     const options = {
       type: 'panel',
       left: invokedScreenLeft,
       top: invokedScreenTop,
-      width: 1000,
+      width: invokedScreenWidth,
       height: invokedScreenHeight,
       url: chrome.runtime.getURL('panel.html'),
     };
@@ -582,12 +589,29 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
   });
   //JR 12.20.23
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    console.log('onContext click tab info', tabs);
+    console.log('onContext click tab info', tabs, new Date().toLocaleString());
     if (tabs.length) {
       const invokedTab = tabs[0];
       const invokedTabId = invokedTab.id;
       const invokedTabTitle = invokedTabTitle;
       tabsObj[invokedTabId] = createTabObj(invokedTabTitle);
+
+      // inject backend script
+      const injectScript = (file, tab) => {
+        const htmlBody = document.getElementsByTagName('body')[0];
+        const script = document.createElement('script');
+        script.setAttribute('type', 'text/javascript');
+        script.setAttribute('src', file);
+        // eslint-disable-next-line prefer-template
+        htmlBody.appendChild(script);
+      };
+
+      console.log(invokedTabId);
+      chrome.scripting.executeScript({
+        target: { tabId: invokedTabId },
+        function: injectScript,
+        args: [chrome.runtime.getURL('bundles/backend.bundle.js'), invokedTabId],
+      });
     }
   });
 });

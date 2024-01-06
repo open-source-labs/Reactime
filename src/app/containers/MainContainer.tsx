@@ -29,6 +29,10 @@ function MainContainer(): JSX.Element {
 
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
   console.log(
+    'Redux state at render: ',
+    useSelector((state: RootState) => state.main),
+  );
+  console.log(
     'MainContainer state at render: tabs: ',
     JSON.stringify(tabs[currentTab]?.status),
     // tabs[currentTab]?.status,
@@ -183,7 +187,8 @@ function MainContainer(): JSX.Element {
     //@ts-ignore
     !tabs[currentTab].status.targetPageisaReactApp
   ) {
-    return <ErrorContainer />;
+    // @ts-ignore
+    return <ErrorContainer port={port} />;
   }
 
   const { currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =

@@ -58,6 +58,45 @@ window.addEventListener('message', async ({ data: { action, payload } }: MsgData
         await timeJump(payload); // * This sets state with given payload
       }
       break;
+    case 'reinitialize':
+      // console.log('backend reinitialize received, performing checks again');
+      // let devTools;
+      // while (!devTools) {
+      //   devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+      // }
+      // console.log('backend react devtools: ', devTools);
+      // // If React Devtools is not installed, object will be undefined.
+      // if (!devTools) return;
+      // // If React Devtools is installed, send a message to front end.
+
+      // console.log(
+      //   'backend react devtools check passed, sending devToolsInstalled to contentScript',
+      // );
+      // window.postMessage(
+      //   {
+      //     action: 'devToolsInstalled',
+      //     payload: 'devToolsInstalled',
+      //   },
+      //   '*',
+      // );
+
+      // const reactInstance = devTools.renderers.get(1);
+      // // If target application is not a React App, this will return undefined.
+      // if (!reactInstance) {
+      //   return;
+      // }
+      // console.log('backend react instance check passed, sending aReactApp to contentScript');
+      // // If target application is a React App, send a message to front end.
+      // window.postMessage(
+      //   {
+      //     action: 'aReactApp',
+      //     payload: 'aReactApp',
+      //   },
+      //   '*',
+      // );
+
+      linkFiberInit();
+      break;
     default:
       break;
   }

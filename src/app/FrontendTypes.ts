@@ -379,3 +379,7 @@ export interface Snapshots {
   component3: number;
   'all others': number;
 }
+
+export interface ErrorContainerProps {
+  port: chrome.runtime.Port | null;
+}
