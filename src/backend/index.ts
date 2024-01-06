@@ -12,6 +12,8 @@ import timeJumpInitialization from './controllers/timeJump';
 import { Snapshot, Status, MsgData } from './types/backendTypes';
 import routes from './models/routes';
 
+console.log('backend script successfully injected ', new Date().toLocaleString())
+
 // -------------------------INITIALIZE MODE--------------------------
 /** Indicate if mode is jumping/not jumping or navigating during jumping */
 const mode: Status = {

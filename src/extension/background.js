@@ -173,20 +173,20 @@ chrome.runtime.onConnect.addListener((port) => {
 
   // JR: CONSIDER DELETING?
   // 12.20.23 commenting out, possible culprit of many in no target bug
-  if (portsArr.length > 0) {
-    portsArr.forEach((bg, index) => {
-      console.log(
-        'background onConnect is sending a changeTab message to frontend for port ',
-        index,
-      );
-      // go through each port object (each Reactime instance)
-      bg.postMessage({
-        // send passed in action object as a message to the current port
-        action: 'changeTab',
-        payload: { tabId: activeTab.id, title: activeTab.title },
-      });
-    });
-  }
+  // if (portsArr.length > 0) {
+  //   portsArr.forEach((bg, index) => {
+  //     console.log(
+  //       'background onConnect is sending a changeTab message to frontend for port ',
+  //       index,
+  //     );
+  //     // go through each port object (each Reactime instance)
+  //     bg.postMessage({
+  //       // send passed in action object as a message to the current port
+  //       action: 'changeTab',
+  //       payload: { tabId: activeTab.id, title: activeTab.title },
+  //     });
+  //   });
+  // }
 
   // JR: CONSIDER DELETING?
   if (Object.keys(tabsObj).length > 0) {
@@ -395,28 +395,28 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     // This injects a script into the app that you're testing Reactime on,
     // so that Reactime's backend files can communicate with the app's DOM.
-    case 'injectScript': {
-      const injectScript = (file, tab) => {
-        const htmlBody = document.getElementsByTagName('body')[0];
-        const script = document.createElement('script');
-        script.setAttribute('type', 'text/javascript');
-        script.setAttribute('src', file);
-        // eslint-disable-next-line prefer-template
-        htmlBody.appendChild(script);
-      };
+    // case 'injectScript': {
+    //   const injectScript = (file, tab) => {
+    //     const htmlBody = document.getElementsByTagName('body')[0];
+    //     const script = document.createElement('script');
+    //     script.setAttribute('type', 'text/javascript');
+    //     script.setAttribute('src', file);
+    //     // eslint-disable-next-line prefer-template
+    //     htmlBody.appendChild(script);
+    //   };
 
-      chrome.scripting.executeScript({
-        target: { tabId },
-        func: injectScript,
-        args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId],
-      });
+    //   chrome.scripting.executeScript({
+    //     target: { tabId },
+    //     func: injectScript,
+    //     args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId],
+    //   });
 
-      console.log(
-        'background injected the backend bundle into the webpage. Time: ',
-        new Date().toLocaleString(),
-      );
-      break;
-    }
+    //   console.log(
+    //     'background injected the backend bundle into the webpage. Time: ',
+    //     new Date().toLocaleString(),
+    //   );
+    //   break;
+    // }
     case 'recordSnap': {
       const sourceTab = tabId;
       tabsObj[tabId].webMetrics = metrics;
@@ -520,28 +520,28 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 });
 
 // when tab view is changed, put the tabid as the current tab
-chrome.tabs.onActivated.addListener((info) => {
-  // get info about tab information from tabId
-  chrome.tabs.get(info.tabId, (tab) => {
-    // never set a reactime instance to the active tab
-    if (!tab.pendingUrl?.match('^chrome-extension')) {
-      activeTab = tab;
-      console.log('background tabs.onActivated has fired. activeTab: ', JSON.stringify(activeTab));
-      console.log(
-        'background tabs.onActivated will send changeTab message to frontend if portsArr is > 0: ',
-        Object.keys(portsArr),
-      );
-      if (portsArr.length > 0) {
-        portsArr.forEach((bg) =>
-          bg.postMessage({
-            action: 'changeTab',
-            payload: { tabId: tab.id, title: tab.title },
-          }),
-        );
-      }
-    }
-  });
-});
+// chrome.tabs.onActivated.addListener((info) => {
+//   // get info about tab information from tabId
+//   chrome.tabs.get(info.tabId, (tab) => {
+//     // never set a reactime instance to the active tab
+//     if (!tab.pendingUrl?.match('^chrome-extension')) {
+//       activeTab = tab;
+//       console.log('background tabs.onActivated has fired. activeTab: ', JSON.stringify(activeTab));
+//       console.log(
+//         'background tabs.onActivated will send changeTab message to frontend if portsArr is > 0: ',
+//         Object.keys(portsArr),
+//       );
+//       if (portsArr.length > 0) {
+//         portsArr.forEach((bg) =>
+//           bg.postMessage({
+//             action: 'changeTab',
+//             payload: { tabId: tab.id, title: tab.title },
+//           }),
+//         );
+//       }
+//     }
+//   });
+// });
 
 // when reactime is installed
 // create a context menu that will open our devtools in a new window
@@ -593,7 +593,7 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     if (tabs.length) {
       const invokedTab = tabs[0];
       const invokedTabId = invokedTab.id;
-      const invokedTabTitle = invokedTabTitle;
+      const invokedTabTitle = invokedTab.title;
       tabsObj[invokedTabId] = createTabObj(invokedTabTitle);
 
       // inject backend script
@@ -606,12 +606,24 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
         htmlBody.appendChild(script);
       };
 
-      console.log(invokedTabId);
+      console.log('background is injecting the backend script', new Date().toLocaleString());
       chrome.scripting.executeScript({
         target: { tabId: invokedTabId },
         function: injectScript,
         args: [chrome.runtime.getURL('bundles/backend.bundle.js'), invokedTabId],
       });
+
+      console.log('contextclick invokedTab url, ', invokedTab.url, 'portsArr: ', portsArr)
+      if (!invokedTab.url?.match('^chrome-extension')) {
+        if (portsArr.length > 0) {
+          portsArr.forEach((bg) =>
+            bg.postMessage({
+              action: 'changeTab',
+              payload: { tabId: invokedTabId, title: invokedTabTitle },
+            }),
+          );
+        }
+      }
     }
   });
 });

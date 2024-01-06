@@ -146,6 +146,12 @@ function MainContainer(): JSX.Element {
     }
   };
 
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     console.log('Waiting for backend checks to finish...')
+  //   }, 2000)
+  // }, [])
+
   useEffect(() => {
     console.log('MainContainer state view of port at start of useEffect: ', port);
     if (port) return; // only open port once so if it exists, do not run useEffect again
@@ -180,17 +186,21 @@ function MainContainer(): JSX.Element {
   });
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
-  if (
-    !tabs[currentTab] ||
-    //@ts-ignore
-    !tabs[currentTab].status.reactDevToolsInstalled ||
-    //@ts-ignore
-    !tabs[currentTab].status.targetPageisaReactApp
-  ) {
-    // @ts-ignore
-    return <ErrorContainer port={port} />;
-  }
+  // setTimeout(() => {
+      if (
+      !tabs[currentTab] ||
+      //@ts-ignore
+      !tabs[currentTab].status.reactDevToolsInstalled ||
+      //@ts-ignore
+      !tabs[currentTab].status.targetPageisaReactApp
+    ) {
+      // @ts-ignore
+      return <ErrorContainer port={port} />;
+    }
 
+
+  // }, 5000);
+  
   const { currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =
     tabs[currentTab]; // we destructure the currentTab object
   //@ts-ignore
