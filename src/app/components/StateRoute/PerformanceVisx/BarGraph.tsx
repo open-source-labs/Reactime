@@ -173,7 +173,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
         <form className='routesForm' id='routes-formcontrol'>
           <label id='routes-dropdown'>Select Snapshot: </label>
           <select
-            labelId='demo-simple-select-label'
+            labelId='demo-simple-select-label' //come back maybe
             id='snapshot-select'
             onChange={(e) => setSnapshot(e.target.value)}
           >
@@ -235,7 +235,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
                         // Cursor position in window updates position of the tool tip.
                         dispatch(onHover(data.componentData[bar.key].rtid));
                         if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                        const top;
+                        let top;
                         if (snapshot === 'All Snapshots') {
                           top = event.clientY - margin.top - bar.height;
                         } else {

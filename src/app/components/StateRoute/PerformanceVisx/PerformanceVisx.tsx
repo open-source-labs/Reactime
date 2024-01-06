@@ -199,33 +199,6 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
     dispatch(setCurrentTabInApp('performance')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance' to facilitate render.
   }, [dispatch]);
 
-  const renderComparisonBargraph = () => {
-    if (hierarchy && series !== false) {
-      return (
-        <BarGraphComparison
-          comparison={allStorage()}
-          data={data}
-          width={width}
-          height={height}
-          setSeries={setSeries}
-          series={series}
-          setAction={setAction}
-        />
-      );
-    }
-    return (
-      <BarGraphComparisonActions
-        comparison={allStorage()}
-        data={getActions()}
-        width={width}
-        height={height}
-        setSeries={setSeries}
-        action={action}
-        setAction={setAction}
-      />
-    );
-  };
-
   const allRoutes = []; // create allRoutes variable to hold urls
   const filteredSnapshots = [];
 
@@ -267,34 +240,6 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
     if (holdData) data.barStack = holdData; // assign holdData to data.barStack to be used later to create graph
   }
 
-  const renderBargraph = (): JSX.Element | null => {
-    if (hierarchy) {
-      return (
-        <div>
-          <BarGraph
-            data={data}
-            width={width}
-            height={height}
-            comparison={allStorage()}
-            setRoute={setRoute}
-            allRoutes={allRoutes}
-            filteredSnapshots={filteredSnapshots}
-            setSnapshot={setSnapshot}
-            snapshot={snapshot}
-          />
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const renderComponentDetailsView = () => {
-    if (hierarchy) {
-      return <RenderingFrequency data={data.componentData} />;
-    }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
-  };
-
   const renderForTutorial = () => {
     // This will redirect to the proper tabs during the tutorial
     // Updated redirect to Navigate v23 redirect no longer supported in react router dom after v6
@@ -304,7 +249,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
   };
 
   return (
-    <Router>
+    <>
       <div className='performance-nav-bar-container'>
         <NavLink className='router-link-performance'  end to='/'>
           Snapshots View
@@ -327,11 +272,39 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
       {renderForTutorial()}
 
       <Routes>
-        <Route exact path='/comparison' render={renderComparisonBargraph} />
-        <Route exact path='/componentdetails' render={renderComponentDetailsView} />
-        <Route exact path='/' render={renderBargraph} />
+        <Route path='/comparison' element={(hierarchy && series !== false) ? <BarGraphComparison
+          comparison={allStorage()}
+          data={data}
+          width={width}
+          height={height}
+          setSeries={setSeries}
+          series={series}
+          setAction={setAction}
+        /> : <BarGraphComparisonActions
+        comparison={allStorage()}
+        data={getActions()}
+        width={width}
+        height={height}
+        setSeries={setSeries}
+        action={action}
+        setAction={setAction}
+      />} />
+        <Route path='/componentdetails' element={hierarchy ? <RenderingFrequency data={data.componentData} /> : <div className='noState'>{NO_STATE_MSG}</div> } />
+        <Route path='/' element={hierarchy ? <div>
+          <BarGraph
+            data={data}
+            width={width}
+            height={height}
+            comparison={allStorage()}
+            setRoute={setRoute}
+            allRoutes={allRoutes}
+            filteredSnapshots={filteredSnapshots}
+            setSnapshot={setSnapshot}
+            snapshot={snapshot}
+          />
+        </div> : null } />
       </Routes>
-    </Router>
+    </>
   );
 };
 
