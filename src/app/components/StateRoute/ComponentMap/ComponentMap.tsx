@@ -29,6 +29,14 @@ const defaultMargin: DefaultMargin = {
   bottom: 70,
 };
 
+let stepHeight: number = 0;
+const nodeCoords: object = {};
+let count: number = 0;
+let aspect: number = 1;
+let nodeCoordTier = 0;
+let nodeOneLeft = 0;
+let nodeTwoLeft = 2;
+
 export default function ComponentMap({
   // imported props to be used to display the dendrogram
   width: totalWidth,
@@ -127,7 +135,7 @@ export default function ComponentMap({
   };
 
   const formatRenderTime: string = (time: number): string => {
-    const renderTime = time.toFixed(3);
+    const renderTime = parseFloat(time).toFixed(3);
     return `${renderTime} ms `;
   };
 
@@ -189,21 +197,25 @@ export default function ComponentMap({
         setSelectedNode={setSelectedNode}
       />
 
-      <svg ref={containerRef} width={totalWidth} height={totalHeight}>
+      <svg
+        ref={containerRef}
+        width={totalWidth / aspect}
+        height={(totalHeight + stepHeight) / aspect}
+      >
         <LinearGradient id='links-gradient' from='#e75e62' to='#f00008' />
         <rect
           onClick={() => {
             hideTooltip();
           }}
-          width={totalWidth}
-          height={totalHeight}
+          width={totalWidth / aspect}
+          height={(totalHeight + stepHeight) / aspect}
           rx={14}
           fill='#242529'
         />
-        <Group top={margin.top} left={margin.left}>
+        <Group transform={`scale(${aspect})`} top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(startNode, (d) => (d.isExpanded ? d.children : null))}
-            size={[sizeWidth, sizeHeight]}
+            size={[sizeWidth / aspect, (sizeHeight + stepHeight) / aspect]}
             separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
           >
             {(tree) => (
@@ -213,7 +225,7 @@ export default function ComponentMap({
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    stroke='#F00008'
+                    stroke='#FFFFFF'
                     strokeWidth='1'
                     fill='none'
                   />
@@ -245,19 +257,87 @@ export default function ComponentMap({
                     left = node.y;
                   }
 
-                  // mousing controls & Tooltip display logic
-                  const handleMouseAndClickOver: void = (event) => {
-                    const coords = localPoint(event.target.ownerSVGElement, event);
-                    const tooltipObj = { ...node.data };
+                  count < nodeList.length
+                    ? !nodeCoords[top]
+                      ? (nodeCoords[top] = [left - width / 2, left + width / 2])
+                      : nodeCoords[top].push(left - width / 2, left + width / 2)
+                    : null;
+                  count++;
 
-                    showTooltip({
-                      tooltipLeft: coords.x,
-                      tooltipTop: coords.y,
-                      tooltipData: tooltipObj,
-                      // this is where the data for state and render time is displayed
-                      // but does not show props functions and etc
-                    });
-                  };
+                  //check if the node coordinate object has been constructed
+                  if (count === nodeList.length) {
+                    //check if there is still a tier of the node tree to collision check
+                    while (Object.values(nodeCoords)[nodeCoordTier]) {
+                      //check if there are atleast two nodes on the current tier
+                      if (
+                        Object.values(nodeCoords)[nodeCoordTier][nodeOneLeft] &&
+                        Object.values(nodeCoords)[nodeCoordTier][nodeTwoLeft]
+                      ) {
+                        //check if the left side of the righthand node is to the right of the right side of the lefthand node (i.e. collision)
+                        if (
+                          Object.values(nodeCoords)[nodeCoordTier][nodeTwoLeft] <
+                          Object.values(nodeCoords)[nodeCoordTier][nodeOneLeft + 1]
+                        ) {
+                          //check if the visible percentage of the left hand node is less than the current lowest (this will be used to resize and rescale the map)
+                          if (
+                            Math.abs(
+                              Object.values(nodeCoords)[nodeCoordTier][nodeTwoLeft] -
+                                Object.values(nodeCoords)[nodeCoordTier][nodeOneLeft],
+                            ) /
+                              Math.abs(
+                                Object.values(nodeCoords)[nodeCoordTier][nodeOneLeft + 1] -
+                                  Object.values(nodeCoords)[nodeCoordTier][nodeOneLeft],
+                              ) <
+                            aspect
+                          ) {
+                            console.log(aspect);
+                            //assign a new lowest percentage if one is found
+                            aspect =
+                              Math.abs(
+                                Object.values(nodeCoords)[nodeCoordTier][nodeTwoLeft] -
+                                  Object.values(nodeCoords)[nodeCoordTier][nodeOneLeft],
+                              ) /
+                              Math.abs(
+                                Object.values(nodeCoords)[nodeCoordTier][nodeOneLeft + 1] -
+                                  Object.values(nodeCoords)[nodeCoordTier][nodeOneLeft],
+                              );
+                          }
+                          //move the node pointers down the list after checking the current overlap percentage
+                          else {
+                            nodeOneLeft += 2;
+                            nodeTwoLeft += 2;
+                          }
+                        }
+                        //move the node pointers if no collision is found
+                        else {
+                          nodeOneLeft += 2;
+                          nodeTwoLeft += 2;
+                        }
+                      }
+                      //move to the next tier of the node tree if done checking the current one
+                      else {
+                        nodeOneLeft = 0;
+                        nodeTwoLeft = 2;
+                        nodeCoordTier++;
+                      }
+                    }
+                  } else {
+                    null;
+                  }
+
+                  // mousing controls & Tooltip display logic
+                  // const handleMouseAndClickOver: void = (event) => {
+                  //   const coords = localPoint(event.target.ownerSVGElement, event);
+                  //   const tooltipObj = { ...node.data };
+
+                  //   showTooltip({
+                  //     tooltipLeft: coords.x,
+                  //     tooltipTop: coords.y,
+                  //     tooltipData: tooltipObj,
+                  //     // this is where the data for state and render time is displayed
+                  //     // but does not show props functions and etc
+                  //   });
+                  // };
 
                   return (
                     <Group top={top} left={left} key={key} className='rect'>
@@ -344,6 +424,7 @@ export default function ComponentMap({
                     </Group>
                   );
                 })}
+                {console.log(nodeCoords)}
               </Group>
             )}
           </Tree>
