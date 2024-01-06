@@ -1,0 +1,30 @@
+.compMapLink {
+  stroke: $map-link;
+}
+
+// .compMapParent {
+//   //fill: $map-parent-fill;
+//   //stroke: $map-parent-stroke;
+// }
+
+.compMapParentText {
+  fill: $map-parent-text
+}
+
+.compMapChild {
+  fill: $map-child-fill;
+  stroke: $map-child-stroke;
+}
+
+.compMapChildText {
+  fill: $map-child-text;
+}
+
+.compMapRoot {
+  //fill: $map-root-fill;
+  stroke: $map-root-stroke;
+}
+
+.compMapRootText {
+  fill: $map-root-text;
+}

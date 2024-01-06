@@ -1,7 +1,7 @@
 .state-container {
   font-size: 10px;
   overflow: auto;
-  background-color: $brand-color;
+  background-color: $state-background;
   // margin-left: 5px;
 }
 
@@ -20,7 +20,8 @@
 }
 
 .state-container .navbar {
-  background-color: $background-color;
+  //background-color: $state-background;
+  //color: #ff0000;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -30,7 +31,8 @@
 }
 
 .state-container .main-navbar {
-  background-color: $background-color;
+  background-color: $state-background;
+  color: #ff0000;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -41,6 +43,7 @@
 
 .state-container .componentMapContainer {
   height: 95% !important;
+  fill: $state-background;
 }
 
 .state-container .main-navbar-container {
@@ -48,8 +51,7 @@
   top: 0px;
   left: 0px;
   z-index: 1;
-  // background-color: $background-color;
-  background-color: #252525;
+  background-color: $state-background;
 
   display: flex;
   flex-direction: row;
@@ -59,6 +61,7 @@
 }
 
 .navbar {
+  color: #ff0000;
   // prevent navbar from scrolling with state/tree display
   position: sticky;
   top: 40px; //JR 12.16.23 @12:15pm: this hardcoding is not best practice, should revisit to figure out a more dynamic way of sticking the navbar to the bottom of the main-navbar
@@ -86,9 +89,9 @@
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    color: $text-color;
+    color: $header-button-inactive-text;
 
-    background: $brand-color;
+    background: $header-button-inactive;
     border-radius: 5px;
     border: 1px solid rgba(184, 196, 194, 0.25);
   }
@@ -98,8 +101,8 @@
   }
 
   .main-router-link.is-active {
-    background: $blue-brand;
-    color: $brand-color;
+    background: $header-button-active;
+    color: $header-button-active-text;
     margin: 3px;
     border-radius: 5px;
     border: 1px solid rgb(36, 37, 41);
@@ -113,19 +116,21 @@
     align-items: center;
     background-color: $medium-background-color;
     text-decoration: none;
-    color: $text-color;
+    color: $navbar-unselected-text;
   }
 
   .router-link:hover {
-    background-color: $light-grey-three;
+    background-color: $light-background-color;
   }
 
   .router-link.is-active {
-    background-color: $brand-color;
+    background-color: $navbar-selected;
+    color: $navbar-selected-text;
   }
 
   .navbar {
-    background-color: $navbar-color;
+    background-color: $navbar-background;
+    color: #ff0000;
     display: flex;
     flex-direction: row;
     justify-content: start;
@@ -147,7 +152,7 @@
     top: 0px;
     left: 0px;
     z-index: 1;
-    background-color: $background-color;
+    background-color: $header-background;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -174,7 +179,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $brand-color;
+  background-color: $state-background;
   text-decoration: none;
   color: $text-color;
 }

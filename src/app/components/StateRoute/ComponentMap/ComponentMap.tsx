@@ -22,6 +22,13 @@ import { toggleExpanded, setCurrentTabInApp } from '../../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 import { LinkTypesProps, DefaultMargin, ToolTipStyles } from '../../../FrontendTypes';
 
+const linkStroke = '#F00008'; //#F00008 original
+const rootStroke = '#F00008'; //#F00008 original
+const nodeParentFill = '#161521'; //#161521 original
+const nodeChildFill = '#62d6fb'; //#62d6fb original
+const nodeParentStroke = '#F00008'; //#F00008 original
+const nodeChildStroke = '#4D4D4D'; //#4D4D4D original
+
 const defaultMargin: DefaultMargin = {
   top: 30,
   left: 30,
@@ -190,15 +197,17 @@ export default function ComponentMap({
       />
 
       <svg ref={containerRef} width={totalWidth} height={totalHeight}>
-        <LinearGradient id='links-gradient' from='#e75e62' to='#f00008' />
+        {/* <LinearGradient id='root-gradient' from='#e75e62' to='#f00008' /> */}
+        <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
+        <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
         <rect
+          className='componentMapContainer'
           onClick={() => {
             hideTooltip();
           }}
           width={totalWidth}
           height={totalHeight}
           rx={14}
-          fill='#242529'
         />
         <Group top={margin.top} left={margin.left}>
           <Tree
@@ -210,10 +219,11 @@ export default function ComponentMap({
               <Group top={origin.y} left={origin.x}>
                 {tree.links().map((link, i) => (
                   <LinkComponent
+                    className='compMapLink'
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    stroke='#F00008'
+                    //stroke={linkStroke}
                     strokeWidth='1'
                     fill='none'
                   />
@@ -263,9 +273,10 @@ export default function ComponentMap({
                     <Group top={top} left={left} key={key} className='rect'>
                       {node.depth === 0 && (
                         <circle
+                          className='compMapRoot'
                           r={25} // increase from 12 to 25 to improve visibility
-                          fill="url('#links-gradient')"
-                          stroke='#F00008' // changing to red #F00008 to increase readability with sharper contrast
+                          fill="url('#root-gradient')"
+                          //stroke={rootStroke}
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
@@ -277,16 +288,19 @@ export default function ComponentMap({
                        and sets it relative position to other parent nodes of the same level. */}
                       {node.depth !== 0 && (
                         <rect
+                          className={node.children ? 'compMapParent' : 'compMapChild'}
                           height={height}
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          fill={node.children ? '#161521' : '#62d6fb'}
-                          stroke={
-                            node.data.isExpanded && node.data.children.length > 0
-                              ? '#F00008'
-                              : '#4D4D4D'
-                          }
+                          fill="url('#parent-gradient')"
+                          //color={'#ff0000'}
+                          //fill={node.children ? nodeParentFill : nodeChildFill}
+                          //stroke={
+                          //   node.data.isExpanded && node.data.children.length > 0
+                          //     ? nodeParentStroke
+                          //     : nodeChildStroke
+                          // }
                           strokeWidth={1.5}
                           strokeOpacity='1'
                           rx={node.children ? 4 : 10}
@@ -332,12 +346,19 @@ export default function ComponentMap({
 
                       {/* Display text inside of each component node */}
                       <text
+                        className={
+                          node.depth === 0
+                            ? 'compMapRootText'
+                            : node.children
+                            ? 'compMapParentText'
+                            : 'compMapChildText'
+                        }
                         dy='.33em'
-                        fontSize={10}
+                        fontSize='20px'
                         fontFamily='Roboto'
                         textAnchor='middle'
                         style={{ pointerEvents: 'none' }}
-                        fill={node.depth === 0 ? '#161521' : node.children ? 'white' : '#161521'}
+                        //fill={node.depth === 0 ? '#161521' : node.children ? 'white' : '#161521'}
                       >
                         {node.data.name}
                       </text>

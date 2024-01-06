@@ -155,6 +155,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
         <form className='routesForm' id='routes-formcontrol'>
           <label id='routes-dropdown'>Select Route: </label>
           <select
+            className='performance-dropdown'
             labelId='demo-simple-select-label'
             id='routes-select'
             onChange={(e) => {

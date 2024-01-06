@@ -1,21 +1,23 @@
 .action-container {
   // overflow: auto;
-  // background-color: $brand-color;
   overflow-x: hidden;
-  background-color: #282828;
+  background-color: $action-tab-background;
 }
 
 .actionname {
   background-color: inherit;
+  border: 1px solid $light-background-color;
   color: #ffffff;
 }
 
 #recordBtn {
+  color: #ffb3b3;
   height: 100%;
   display: flex;
 }
 
 .actionToolContainer {
+  color: #873b3b;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -27,7 +29,8 @@
 }
 
 .route {
-  background-color: #da262c;
+  background-color: $route-bar;
+  color: $route-bar-text;
   padding-left: 10px;
   padding-top: 5px;
   padding-bottom: 5px;

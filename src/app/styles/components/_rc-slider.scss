@@ -16,7 +16,7 @@
 .rc-slider-rail {
 	position: absolute;
 	width: 100%;
-	background-color: #ebf2fa;
+	background-color: $slider-rail-right;
 	height: 4px;
 	border-radius: 6px;
 }
@@ -25,7 +25,7 @@
 	left: 0;
 	height: 4px;
 	border-radius: 6px;
-	background-color: $fiery-rose;
+	background-color: $slider-rail-left;
 }
 .rc-slider-handle {
 	position: absolute;
@@ -37,7 +37,7 @@
 	cursor: -webkit-grab;
 	cursor: grab;
 	border-radius: 50%;
-	background: $red-color-gradient;
+	background: $slider-handle;
 	-ms-touch-action: pan-x;
 	touch-action: pan-x;
 }
@@ -52,7 +52,7 @@
 	border-color: $border-slider;
 }
 .rc-slider-handle:active {
-	background: #f00004;
+	//background: #f00004;
 	border-color: $border-slider;
 	cursor: -webkit-grabbing;
 	cursor: grabbing;

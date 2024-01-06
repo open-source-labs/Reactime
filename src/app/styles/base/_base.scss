@@ -25,19 +25,36 @@ body {
 }
 
 .buttons-container {
+  //color: #ff0000;
   grid-area: buttons;
-  border-color: rgba(41, 41, 41, 1);
+  //border-color: #ff0000;
 }
 
-.action-container,
-.state-container,
-.travel-container {
+.action-container {
   border-style: solid;
   border-color: $border-color;
-  border-width: 1px;
+  border-width: 0px;
+}
+
+.state-container {
+  border-style: solid;
+  border-color: $border-color;
+  border-width: 0px;
+}
+
+.travel-container {
+  border-style: solid;
+  border-color: $travel-top-border;
+  border-left: 0px;
+  border-right: 0px;
+  border-bottom: 0px;
 }
 
 .saveSeriesContainer {
   padding-bottom: 15px;
   padding-top: 10px;
+}
+
+.performance-dropdown {
+  background-color: #f5b9b9;
 }

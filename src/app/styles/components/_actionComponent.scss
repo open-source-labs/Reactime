@@ -1,14 +1,14 @@
 .action-component {
-  padding: 5px 10px;
+  padding: 3px 10px;
   display: grid;
   grid-template-columns: none;
   align-items: center;
-  height: 20px;
+  height: 24px;
   // background-color: $brand-color;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  background-color: none;
-  border-color: #292929;
+  // border-bottom-style: solid;
+  // border-bottom-width: 1px;
+  // background-color: none;
+  // border-color: #292929;
   // border-color: $border-color;
   cursor: pointer;
   overflow: hidden;
@@ -17,14 +17,17 @@
 
 .action-component-text {
   margin-bottom: 8px;
+  color: $indiv-action-custom-text
 }
 
 .action-component.selected {
-  font-size: 16px;
-  background-color: $light-grey-one;
+  //font-size: 16px;
+  background-color: $indiv-action-selected;
+  color: $indiv-action-selected-text
 }
 
 .action-component.exclude {
+  color: #ff0000;
   display: flex;
   justify-content: center;
   margin-top: 10px;
@@ -38,7 +41,7 @@
   display: grid;
   grid-template-columns: 4fr 1fr;
   align-items: center;
-  height: 20px;
+  //height: 20px;
   cursor: pointer;
   overflow: hidden;
   @extend %disable-highlight;

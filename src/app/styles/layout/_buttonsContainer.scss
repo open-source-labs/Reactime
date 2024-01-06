@@ -3,6 +3,7 @@
   font-family: 'Outfit', sans-serif;
 }
 .buttons-container {
+  color: #ff0000;
   margin: 0 1% 0 1%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -39,6 +40,7 @@
 
 @media (max-width: 500px) {
   .buttons-container {
+    //color: #ff0000;
     grid-template-columns: repeat(2, 1fr);
   }
 }

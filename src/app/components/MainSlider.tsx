@@ -12,6 +12,7 @@ const handle = (props: HandleProps): JSX.Element => {
 
   return (
     <Tooltip // Tooltip that pop's up when clicking/dragging the slider thumb/handle that displays the current snapshot index
+      className='travel-tooltip'
       prefixCls='rc-slider-tooltip'
       overlay={value} // the currentIndex
       visible={dragging} // tooltip only visible when slider thumb is click and/or dragged
@@ -45,6 +46,8 @@ function MainSlider(props: MainSliderProps): JSX.Element {
 
   return (
     <Slider
+      className='travel-slider'
+      color= '#0af548'
       min={0} // index of our first snapshot
       max={snapshotsLength - 1} // index of our last snapshot
       value={sliderIndex} // currently slider thumb position

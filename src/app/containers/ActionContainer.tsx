@@ -198,7 +198,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             <Button
               variant='contained'
               className='empty-button'
-              style={{ backgroundColor: '#ff6569' }}
+              //style={{ backgroundColor: '#ff6569' }}
               onClick={() => {
                 dispatch(emptySnapshots()); // set slider back to zero, visually
                 resetSlider();

@@ -1,11 +1,14 @@
 import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
+  // typography: {
+  //   fontSize: 2,
+  // },
   palette: {
     primary: {
-      main: '#8Fb5f9',
+      main: '#3c6e71',
     },
     secondary: {
-      main: '#BF6DD2',
+      main: '#3c6e71',
     },
   },
   components: {
@@ -16,7 +19,7 @@ const theme = createTheme({
         // Name of the slot
         root: {
           // Some CSS
-          fontSize: '0.8rem',
+          fontSize: '0.8rem', 
           letterSpacing: '0.1rem',
           lineHeight: '0.8rem',
         },
