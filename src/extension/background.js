@@ -395,28 +395,28 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     // This injects a script into the app that you're testing Reactime on,
     // so that Reactime's backend files can communicate with the app's DOM.
-    // case 'injectScript': {
-    //   const injectScript = (file, tab) => {
-    //     const htmlBody = document.getElementsByTagName('body')[0];
-    //     const script = document.createElement('script');
-    //     script.setAttribute('type', 'text/javascript');
-    //     script.setAttribute('src', file);
-    //     // eslint-disable-next-line prefer-template
-    //     htmlBody.appendChild(script);
-    //   };
+    case 'injectScript': {
+      const injectScript = (file, tab) => {
+        const htmlBody = document.getElementsByTagName('body')[0];
+        const script = document.createElement('script');
+        script.setAttribute('type', 'text/javascript');
+        script.setAttribute('src', file);
+        // eslint-disable-next-line prefer-template
+        htmlBody.appendChild(script);
+      };
 
-    //   chrome.scripting.executeScript({
-    //     target: { tabId },
-    //     func: injectScript,
-    //     args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId],
-    //   });
+      chrome.scripting.executeScript({
+        target: { tabId },
+        func: injectScript,
+        args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId],
+      });
 
-    //   console.log(
-    //     'background injected the backend bundle into the webpage. Time: ',
-    //     new Date().toLocaleString(),
-    //   );
-    //   break;
-    // }
+      console.log(
+        'background injected the backend bundle into the webpage. Time: ',
+        new Date().toLocaleString(),
+      );
+      break;
+    }
     case 'recordSnap': {
       const sourceTab = tabId;
       tabsObj[tabId].webMetrics = metrics;
@@ -600,6 +600,7 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
       const injectScript = (file, tab) => {
         const htmlBody = document.getElementsByTagName('body')[0];
         const script = document.createElement('script');
+        script.setAttribute('id', 'reactime-backend-script');
         script.setAttribute('type', 'text/javascript');
         script.setAttribute('src', file);
         // eslint-disable-next-line prefer-template
@@ -609,7 +610,7 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
       console.log('background is injecting the backend script', new Date().toLocaleString());
       chrome.scripting.executeScript({
         target: { tabId: invokedTabId },
-        function: injectScript,
+        func: injectScript,
         args: [chrome.runtime.getURL('bundles/backend.bundle.js'), invokedTabId],
       });
 

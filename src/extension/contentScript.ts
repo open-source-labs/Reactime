@@ -107,4 +107,6 @@ onINP(gatherMetrics);
 
 // Send message to background.js for injecting the initial script
 // into the app's DOM.
-// chrome.runtime.sendMessage({ action: 'injectScript' });
+// JR added 1.6.24: check if script injected, if not then inject.
+// const scriptInjected = document.querySelector('#reactime-backend-script') ? true : false
+// if (!scriptInjected) chrome.runtime.sendMessage({ action: 'injectScript' });

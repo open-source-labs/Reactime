@@ -251,7 +251,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
   return (
     <>
       <div className='performance-nav-bar-container'>
-        <NavLink className='router-link-performance'  end to='/'>
+        <NavLink className='router-link-performance' end to='/'>
           Snapshots View
         </NavLink>
         <NavLink
@@ -261,10 +261,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
         >
           Comparison View
         </NavLink>
-        <NavLink
-          className='router-link-performance'
-          to='/componentdetails'
-        >
+        <NavLink className='router-link-performance' to='/componentdetails'>
           Component Details
         </NavLink>
       </div>
@@ -272,37 +269,62 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
       {renderForTutorial()}
 
       <Routes>
-        <Route path='/comparison' element={(hierarchy && series !== false) ? <BarGraphComparison
-          comparison={allStorage()}
-          data={data}
-          width={width}
-          height={height}
-          setSeries={setSeries}
-          series={series}
-          setAction={setAction}
-        /> : <BarGraphComparisonActions
-        comparison={allStorage()}
-        data={getActions()}
-        width={width}
-        height={height}
-        setSeries={setSeries}
-        action={action}
-        setAction={setAction}
-      />} />
-        <Route path='/componentdetails' element={hierarchy ? <RenderingFrequency data={data.componentData} /> : <div className='noState'>{NO_STATE_MSG}</div> } />
-        <Route path='/' element={hierarchy ? <div>
-          <BarGraph
-            data={data}
-            width={width}
-            height={height}
-            comparison={allStorage()}
-            setRoute={setRoute}
-            allRoutes={allRoutes}
-            filteredSnapshots={filteredSnapshots}
-            setSnapshot={setSnapshot}
-            snapshot={snapshot}
-          />
-        </div> : null } />
+        <Route
+          path='comparison'
+          element={
+            hierarchy && series !== false ? (
+              <BarGraphComparison
+                comparison={allStorage()}
+                data={data}
+                width={width}
+                height={height}
+                setSeries={setSeries}
+                series={series}
+                setAction={setAction}
+              />
+            ) : (
+              <BarGraphComparisonActions
+                comparison={allStorage()}
+                data={getActions()}
+                width={width}
+                height={height}
+                setSeries={setSeries}
+                action={action}
+                setAction={setAction}
+              />
+            )
+          }
+        />
+        <Route
+          path='componentdetails'
+          element={
+            hierarchy ? (
+              <RenderingFrequency data={data.componentData} />
+            ) : (
+              <div className='noState'>{NO_STATE_MSG}</div>
+            )
+          }
+        />
+        <Route
+          path='/'
+          element={
+            hierarchy ? (
+              <div>
+                <BarGraph
+                  data={data}
+                  width={width}
+                  height={height}
+                  comparison={allStorage()}
+                  setRoute={setRoute}
+                  allRoutes={allRoutes}
+                  filteredSnapshots={filteredSnapshots}
+                  setSnapshot={setSnapshot}
+                  snapshot={snapshot}
+                />
+              </div>
+            ) : null
+          }
+        />
       </Routes>
     </>
   );
