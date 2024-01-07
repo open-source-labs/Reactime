@@ -113,7 +113,7 @@
     align-items: center;
     height: 30px;
     position: sticky;
-    top: 40px; //JR 12.16.23 @12:15pm: this hardcoding is not best practice, should revisit to figure out a more dynamic way of sticking the navbar to the bottom of the main-navbar
+    top: 0px; //JR 12.16.23 @12:15pm: this hardcoding is not best practice, should revisit to figure out a more dynamic way of sticking the navbar to the bottom of the main-navbar
     left: 0px;
     z-index: 1;
     @extend %disable-highlight;
@@ -248,4 +248,12 @@
 
 .tooltipData-JSONTree::-webkit-scrollbar-track {
   background: #51565e;
+}
+
+.app-body {
+  height: 100%;
+}
+
+.app-content {
+  height: 100%;
 }

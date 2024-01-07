@@ -195,9 +195,9 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
 
   getActions();
 
-  useEffect(() => {
-    dispatch(setCurrentTabInApp('performance')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance' to facilitate render.
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(setCurrentTabInApp('performance')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance' to facilitate render.
+  // }, [dispatch]);
 
   const allRoutes = []; // create allRoutes variable to hold urls
   const filteredSnapshots = [];
@@ -270,7 +270,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
 
       <Routes>
         <Route
-          path='comparison'
+          path='/comparison'
           element={
             hierarchy && series !== false ? (
               <BarGraphComparison

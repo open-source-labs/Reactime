@@ -22,7 +22,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
 
   return (
     <div className='state-container'>
-      <div className='main-navbar-container'>
+      {/* <div className='main-navbar-container'>
             <div className='main-navbar-text' />
             <div className='main-navbar'>
               <NavLink className='main-router-link' to='/'>
@@ -34,10 +34,15 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
             </div>
           </div>
           <Routes>
-            <Route path='/diff' element={<DiffRoute snapshot={snapshot} />} />
+            <Route path='/diff/*' element={
+            <div>
+              <DiffRoute snapshot={snapshot} />
+              <Outlet/>
+            </div>} />
             <Route
-              path='/'
-              element={
+              path='*'
+              element={ 
+              <div>*/}
               <StateRoute
                 webMetrics={webMetrics}
                 viewIndex={viewIndex}
@@ -46,9 +51,11 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
                 snapshots={snapshots}
                 currLocation={currLocation}
               />
-              }
+              <Outlet/>
+              {/*</div>
+               }
            />
-          </Routes>
+          </Routes> */}
     </div>
   );
 };
