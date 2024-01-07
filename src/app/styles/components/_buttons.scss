@@ -4,7 +4,7 @@
 .save-series-button {
   padding: 3px;
   outline: transparent;
-  color: white;
+  color: $performance-save-series-button-text;
   font-size: 16px;
   display: flex;
   justify-content: center;
@@ -16,7 +16,7 @@
   line-height: 1.5em;
   font: 400 16px 'Outfit', sans-serif;
   width: 120px;
-  background: $red-color-gradient;
+  background: $performance-save-series-button;
   height: 30px;
   position: absolute;
   right: 3rem;
@@ -64,6 +64,13 @@
   width: 120px;
   //background: #ff0000;
 }
+
+.clear-button {
+  background:#3256f1;
+  background-color: #050787;
+  color:#3256f1
+}
+
 
 .empty-button:hover {
   color: black;
@@ -176,10 +183,10 @@
   cursor: pointer;
 }
 
-.pause-button {
-  color: #ff0000;
-  background-color: #ff0000;
-}
+// .pause-button {
+//   color: #ff0000;
+//   background-color: #ff0000;
+// }
 
 .import-button:hover,
 .howToUse-button:hover,
@@ -371,8 +378,8 @@ aside {
 .reconnect-button-pop-up {
   padding: 3px;
   outline: transparent;
-  background: $red-color-gradient; 
-  color: $text-color !important;
+  background-color: #050787; 
+  color: $reconnect-button-text !important;
   border: none;
   border-radius: 3px;
   cursor: pointer;

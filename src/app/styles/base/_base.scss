@@ -20,6 +20,11 @@ body {
   grid-area: actions;
   transition: 0.5s;
 }
+
+.perf-rect {
+  fill: $perf-background;
+}
+
 .state-container-container {
   grid-area: states;
 }

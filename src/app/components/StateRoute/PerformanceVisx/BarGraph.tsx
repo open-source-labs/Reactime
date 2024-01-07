@@ -89,10 +89,12 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     nice: true,
   });
 
+  const LMcolorScale = ['#a0c1d6','#669bbc','#105377','#003049','#55a8ac','#3c6e71','#1c494b','#c1676d','#c1121f','#780000']
+
   const colorScale = scaleOrdinal<string>({
     // Gives each bar on the graph a color using schemeSet1 imported from D3
     domain: keys,
-    range: schemeSet1,
+    range: LMcolorScale,
   });
 
   // setting max dimensions and scale ranges
@@ -186,7 +188,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
         </form>
       </div>
       <svg ref={containerRef} width={width} height={height}>
-        <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
+        <rect className='perf-rect' x={0} y={0} width={width} height={height} rx={14} />
         <Grid
           top={margin.top}
           left={margin.left}

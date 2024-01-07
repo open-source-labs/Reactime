@@ -75,7 +75,7 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
       <Button
         className='play-button'
         variant='contained'
-        sx={{ height: 25, p: 0, mr: 1, ml: 1}}
+        sx={{ height: 25, p: 0, mr: 1, ml: 1 }}
         type='button'
         // data-testid, prop for testing in RTL
         data-testid='play-button-test'

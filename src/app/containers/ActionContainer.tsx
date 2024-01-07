@@ -196,8 +196,8 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
           <SwitchAppDropdown />
           <div className='action-component exclude'>
             <Button
+              className='clear-button'
               variant='contained'
-              className='empty-button'
               //style={{ backgroundColor: '#ff6569' }}
               onClick={() => {
                 dispatch(emptySnapshots()); // set slider back to zero, visually

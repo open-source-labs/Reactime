@@ -2,6 +2,16 @@
   stroke: $map-link;
 }
 
+.comp-map-options {
+  color: $map-options-label;
+}
+
+.comp-map-dropdown {
+  background-color: #ff0000;
+  color: #ff0000;
+  background: #ff0000;
+}
+
 // .compMapParent {
 //   //fill: $map-parent-fill;
 //   //stroke: $map-parent-stroke;

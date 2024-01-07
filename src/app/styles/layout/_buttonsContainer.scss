@@ -3,7 +3,7 @@
   font-family: 'Outfit', sans-serif;
 }
 .buttons-container {
-  color: #ff0000;
+  //color: #ff0000;
   margin: 0 1% 0 1%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -86,8 +86,8 @@
 }
 
 .dialog-pop-up-contents {
-  background-color: $brand-color;
-  color: $text-color; 
+  background-color: $pop-up-window-background;
+  color: $pop-up-window-text; 
   font-family: $text-font-stack;
   line-height: 1.4;  
   padding: 0px 15px 15px 15px !important;  
@@ -109,7 +109,7 @@
 }
 
 .warning-header-container {
-  background-color: $brand-color;
+  background-color: $pop-up-window-background;
   display: flex;
   align-items: center;
   height: 20%;

@@ -5,9 +5,9 @@
 }
 
 .actionname {
-  background-color: inherit;
+  background-color: $indiv-action-input-bg;
   border: 1px solid $light-background-color;
-  color: #ffffff;
+  color: $indiv-action-custom-text;
 }
 
 #recordBtn {

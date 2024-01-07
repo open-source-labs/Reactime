@@ -37,13 +37,19 @@ $tab-select-background: $primary-color;
 $tab-select-text: $light-text;
 $tab-dropdown-background: $background-color-weak;
 
-$launch-background: $background-color;
+$loader-background: $background-color;
+$loader-text: $dark-text;
+$loader-checks-border: $primary-color-strong;
+$launch-button: $primary-color-strong;
+$launch-button-hover: $primary-color;
+$launch-button-text: $light-text;
 
 $action-tab-background: $background-color;
-$action-clear-button: $primary-color;
-$action-clear-button-text: $background-color;
+//$action-clear-button: $primary-color; //currently being handled by mui theme.ts file
+//$action-clear-button-text: $background-color; //currently being handled by mui theme.ts file
 $route-bar: $primary-color-strong;
 $route-bar-text: $light-text;
+$indiv-action-input-bg: $background-color;
 $indiv-action-selected: $primary-color-strong;
 $indiv-action-selected-text: $light-text;
 $indiv-action-filler-text: $contrasting-color-weak;
@@ -53,7 +59,7 @@ $indiv-action-time-text: $light-text;
 $current: $contrasting-color-weak;
 $current-text: $light-text;
 $jump: $contrasting-color-weak;
-$jump-hover: $secondary-color;
+$jump-hover: $primary-color;
 $jump-text: $light-text;
 
 $header-background: $background-color;
@@ -70,7 +76,7 @@ $navbar-unselected-text: $dark-text;
 
 $state-background: $background-color-strong;
 
-$map-options-dropdown: $primary-color-strong;
+$map-options-dropdown: $primary-color;
 $map-options-label: $dark-text;
 $map-link: $contrasting-color;
 //root fill is currently a visx LinearGradient defined in ComponentMap.tsx
@@ -87,32 +93,41 @@ $map-child-text: $dark-text;
 
 $performance-options-dropdown: $primary-color-strong;
 $performance-options-label: $dark-text;
+$performance-save-series-button: $primary-color;
+$performance-save-series-button-text: $light-text;
+$perf-background: $background-color;
 
-$history-node: $primary-color;
-$history-text: $light-text;
+$history-node: $primary-color; //this is currently set in History.tsx line 291
+$history-link: $contrasting-color; // this is currently set in d3graph.css line 26
+//$history-text: $light-text;
 
+//web metrics colors are selected in WebMetrics.tsx (text color line 69)
 $web-circles: $contrasting-color;
 $web-text: $dark-text;
 
-$tree-key: $primary-color;
-$tree-expanded-key: $contrasting-color-weak;
-$tree-string: $primary-color-strong;
-$tree-boolean: $secondary-color;
-$tree-number: $secondary-color;
-$tree-other: $secondary-color;
+$tree-background: $background-color;
+//the following colors have not been adjusted 
+// $tree-key: $primary-color;
+// $tree-expanded-key: $contrasting-color-weak;
+// $tree-string: $primary-color-strong;
+// $tree-boolean: $secondary-color;
+// $tree-number: $secondary-color;
+// $tree-other: $secondary-color;
 
 $travel-background: $background-color;
 $travel-top-border: lighten($contrasting-color, 50%);
-$play-button: $primary-color;
-$play-button-text: $primary-strong-gradient;
+$play-button: $primary-strong-gradient;
+$play-button-text: $light-text;
 $slider-handle: $primary-strong-gradient;
 $slider-rail-left: $primary-color;
 $slider-rail-right: $background-color-weak;
 $scrub-button: $primary-strong-gradient;
 $scrub-icon: $light-text;
 $speed-dropdown: $primary-color-strong;
-$speed-dropdown-selected: $secondary-color;
 $speed-dropdown-text: $light-text;
+$speed-dropdown-expanded: lighten($primary-color-strong, 20%);
+$speed-dropdown-expanded-hover: $primary-color;
+$speed-dropdown-expanded-text: $light-text;
 
 $function-bar-background: $background-color;
 //outline color currently handled in mui theme.ts file
@@ -120,7 +135,14 @@ $function-bar-button-outlines: $primary-color;
 $function-bar-text: $primary-color-strong;
 $function-bar-text-hover: $primary-color;
 $function-bar-text-highlight: $primary-color-strong;
+//icons
 $function-bar-icons: $primary-color-strong;
+
+//colors for pop-up window that opens when clicking the reconnect button
+$pop-up-window-background: $background-color;
+$pop-up-window-text: $dark-text;
+$reconnect-button: $primary-color-strong;
+$reconnect-button-text: $light-text;
 
 /// @type Color
 /// fiery-rose changed from ff6569 to F00008 globally to improve contrast
@@ -234,10 +256,15 @@ $highlight-color: rgba(224, 224, 224, 0.5) !default;
 $button-text-size: 16px;
 
 //https://coolors.co/780000-c1121f-f6d5bf-fdf0d5-003049-669bbc-a0c1d6
+//colors used in the performance tab bar graphs
 /// @type Color
 $color1: #780000;
 $color2: #c1121f;
-$color3: #fdf0d5;
-$color4: #003049;
-$color5: #669bbc;
-$color6: #a0c1d6;
+$color3: #c1676d;
+$color4: #55a8ac;
+$color5: #3c6e71;
+$color6: #1c494b;
+$color7: #003049;
+$color8: #105377;
+$color9: #669bbc;
+$color10: #a0c1d6;
