@@ -29,7 +29,6 @@ const defaultMargin: DefaultMargin = {
   bottom: 70,
 };
 
-let stepHeight: number = 0;
 const nodeCoords: object = {};
 let count: number = 0;
 let aspect: number = 1;
@@ -197,25 +196,21 @@ export default function ComponentMap({
         setSelectedNode={setSelectedNode}
       />
 
-      <svg
-        ref={containerRef}
-        width={totalWidth / aspect}
-        height={(totalHeight + stepHeight) / aspect}
-      >
+      <svg ref={containerRef} width={totalWidth / aspect} height={totalHeight / aspect}>
         <LinearGradient id='links-gradient' from='#e75e62' to='#f00008' />
         <rect
           onClick={() => {
             hideTooltip();
           }}
-          width={totalWidth / aspect}
-          height={(totalHeight + stepHeight) / aspect}
+          width={sizeWidth / aspect}
+          height={sizeHeight / aspect}
           rx={14}
           fill='#242529'
         />
         <Group transform={`scale(${aspect})`} top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(startNode, (d) => (d.isExpanded ? d.children : null))}
-            size={[sizeWidth / aspect, (sizeHeight + stepHeight) / aspect]}
+            size={[sizeWidth / aspect, sizeHeight / aspect]}
             separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
           >
             {(tree) => (
@@ -256,7 +251,7 @@ export default function ComponentMap({
                     top = node.x;
                     left = node.y;
                   }
-
+                  //setup a nodeCoords Object that will have keys of unique y coordinates and value arrays of all the left and right x coordinates of the nodes on that level
                   count < nodeList.length
                     ? !nodeCoords[top]
                       ? (nodeCoords[top] = [left - width / 2, left + width / 2])
