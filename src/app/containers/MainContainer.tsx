@@ -147,17 +147,12 @@ function MainContainer(): JSX.Element {
   };
 
   // useEffect(() => {
-  //   setTimeout(() => {
-  //     console.log('Waiting for backend checks to finish...')
-  //   }, 2000)
-  // }, [])
-
-  useEffect(() => {
+  async function awaitPortConnection() {
     console.log('MainContainer state view of port at start of useEffect: ', port);
     if (port) return; // only open port once so if it exists, do not run useEffect again
 
     // Connect ot port and assign evaluated result (obj) to currentPort
-    const currentPort = chrome.runtime.connect({ name: 'uiPort1' });
+    const currentPort = await chrome.runtime.connect({ name: 'panel' });
 
     // JR: why are we removing the listener just to readd it? logging here
     // console.log('messageListener before removing: ', messageListener);
@@ -183,24 +178,25 @@ function MainContainer(): JSX.Element {
     dispatch(setPort(currentPort));
 
     dispatch(endConnect());
-  });
+  }
+  awaitPortConnection();
+  // });
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
   // setTimeout(() => {
-      if (
-      !tabs[currentTab] ||
-      //@ts-ignore
-      !tabs[currentTab].status.reactDevToolsInstalled ||
-      //@ts-ignore
-      !tabs[currentTab].status.targetPageisaReactApp
-    ) {
-      // @ts-ignore
-      return <ErrorContainer port={port} />;
-    }
-
+  if (
+    !tabs[currentTab] ||
+    //@ts-ignore
+    !tabs[currentTab].status.reactDevToolsInstalled ||
+    //@ts-ignore
+    !tabs[currentTab].status.targetPageisaReactApp
+  ) {
+    // @ts-ignore
+    return <ErrorContainer port={port} />;
+  }
 
   // }, 5000);
-  
+
   const { currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =
     tabs[currentTab]; // we destructure the currentTab object
   //@ts-ignore

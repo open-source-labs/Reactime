@@ -11,6 +11,7 @@ const props = {
     targetPageisaReactApp: true,
   },
   launchContent: null,
+  reinitialize: null,
 };
 
 describe('unit testing for ErrorContainer.tsx', () => {

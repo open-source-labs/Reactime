@@ -10,6 +10,8 @@ let firstMessage = true;
 // Listens for window messages (from the injected script on the DOM)
 let isRecording = true;
 
+let backgroundPort = chrome.runtime.connect({ name: 'content-script' });
+
 // INCOMING MESSAGE FROM BACKEND (index.ts) TO CONTENT SCRIPT
 window.addEventListener('message', (msg) => {
   // Event listener runs constantly based on actions
@@ -19,7 +21,7 @@ window.addEventListener('message', (msg) => {
   console.log('message sent to window event listener: ', msg.data);
   if (firstMessage) {
     // One-time request tells the background script that the tab has reloaded.
-    chrome.runtime.sendMessage({ action: 'tabReload' });
+    backgroundPort.postMessage({ action: 'tabReload' });
     firstMessage = false;
   }
 
@@ -28,85 +30,89 @@ window.addEventListener('message', (msg) => {
   const { action }: { action: string } = msg.data;
   if (action === 'recordSnap') {
     if (isRecording) {
-      chrome.runtime.sendMessage(msg.data);
+      backgroundPort.postMessage(msg.data);
     }
   }
   if (action === 'devToolsInstalled') {
-    chrome.runtime.sendMessage(msg.data);
+    backgroundPort.postMessage(msg.data);
   }
   if (action === 'aReactApp') {
-    chrome.runtime.sendMessage(msg.data);
+    backgroundPort.postMessage(msg.data);
   }
 });
 
-// FROM BACKGROUND TO CONTENT SCRIPT
-// Listening for messages from the UI of the Reactime extension.
-chrome.runtime.onMessage.addListener((request) => {
-  console.log(
-    'contentScript received message from background.js. request.action: ',
-    request.action,
-    'request.port',
-    request.port,
-  );
-  const { action, port }: { action: string; port?: string } = request;
-  if (action) {
-    // Message being sent from background.js
-    // This is toggling the record button on Reactime when clicked
-    if (action === 'toggleRecord') {
-      isRecording = !isRecording;
-    }
-    // this is only listening for Jump toSnap
-    if (action === 'jumpToSnap') {
-      chrome.runtime.sendMessage(request);
-      // After the jumpToSnap action has been sent back to background js,
-      // it will send the same action to backend files (index.ts) for it execute the jump feature
-      // '*' == target window origin required for event to be dispatched, '*' = no preference
-      window.postMessage(request, '*');
-    }
+chrome.runtime.onConnect.addListener((port) => {
+  if (port.name === 'content-script') {
+    // FROM BACKGROUND TO CONTENT SCRIPT
+    // Listening for messages from the UI of the Reactime extension.
+    port.onMessage.addListener((request) => {
+      console.log(
+        'contentScript received message from background.js. request.action: ',
+        request.action,
+        'request.port',
+        request.port,
+      );
+      const { action, port }: { action: string; port?: string } = request;
+      if (action) {
+        // Message being sent from background.js
+        // This is toggling the record button on Reactime when clicked
+        if (action === 'toggleRecord') {
+          isRecording = !isRecording;
+        }
+        // this is only listening for Jump toSnap
+        if (action === 'jumpToSnap') {
+          backgroundPort.postMessage(request);
+          // After the jumpToSnap action has been sent back to background js,
+          // it will send the same action to backend files (index.ts) for it execute the jump feature
+          // '*' == target window origin required for event to be dispatched, '*' = no preference
+          window.postMessage(request, '*');
+        }
 
-    // JR: adding a response to a port disconnection message from background.js
-    if (action === 'portDisconnect') {
-      console.log(`Port ${port} disconnected!`);
-    }
+        // JR: adding a response to a port disconnection message from background.js
+        if (action === 'portDisconnect') {
+          console.log(`Port ${port} disconnected!`);
+        }
 
-    if (action === 'reinitialize') {
-      console.log('contentscript reinitialize received, forwarding to backend');
-      window.postMessage(request, '*');
-    }
+        if (action === 'reinitialize') {
+          console.log('contentscript reinitialize received, forwarding to backend');
+          window.postMessage(request, '*');
+        }
+      }
+    });
+
+    // Performance metrics being calculated by the 'web-vitals' api and
+    // sent as an object to background.js.
+    // To learn more about Chrome web vitals, see https://web.dev/vitals/.
+    const metrics = {};
+    const gatherMetrics = ({ name, value }) => {
+      console.log(
+        'contentScript gatherMetrics: prior metrics Obj: ',
+        metrics,
+        'name: ',
+        name,
+        'value: ',
+        value,
+      );
+      metrics[name] = value;
+      backgroundPort.postMessage({
+        type: 'performance:metric',
+        name,
+        value,
+      });
+    };
+
+    // Functions that calculate web metric values.
+    onTTFB(gatherMetrics);
+    onLCP(gatherMetrics);
+    onFID(gatherMetrics);
+    onFCP(gatherMetrics);
+    onCLS(gatherMetrics);
+    onINP(gatherMetrics);
+
+    // Send message to background.js for injecting the initial script
+    // into the app's DOM.
+    // JR added 1.6.24: check if script injected, if not then inject.
+    const scriptInjected = document.querySelector('#reactime-backend-script') ? true : false;
+    if (!scriptInjected) chrome.runtime.sendMessage({ action: 'injectScript' });
   }
 });
-
-// Performance metrics being calculated by the 'web-vitals' api and
-// sent as an object to background.js.
-// To learn more about Chrome web vitals, see https://web.dev/vitals/.
-const metrics = {};
-const gatherMetrics = ({ name, value }) => {
-  console.log(
-    'contentScript gatherMetrics: prior metrics Obj: ',
-    metrics,
-    'name: ',
-    name,
-    'value: ',
-    value,
-  );
-  metrics[name] = value;
-  chrome.runtime.sendMessage({
-    type: 'performance:metric',
-    name,
-    value,
-  });
-};
-
-// Functions that calculate web metric values.
-onTTFB(gatherMetrics);
-onLCP(gatherMetrics);
-onFID(gatherMetrics);
-onFCP(gatherMetrics);
-onCLS(gatherMetrics);
-onINP(gatherMetrics);
-
-// Send message to background.js for injecting the initial script
-// into the app's DOM.
-// JR added 1.6.24: check if script injected, if not then inject.
-// const scriptInjected = document.querySelector('#reactime-backend-script') ? true : false
-// if (!scriptInjected) chrome.runtime.sendMessage({ action: 'injectScript' });

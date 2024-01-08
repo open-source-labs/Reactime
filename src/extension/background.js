@@ -164,31 +164,29 @@ chrome.runtime.onConnect.addListener((port) => {
   */
   console.log(
     'tabsObj onConnect: ',
-    JSON.stringify(tabsObj[0]?.status),
+    JSON.stringify(tabsObj[0] ? tabsObj[0] : null),
     'time: ',
     new Date().toLocaleString(),
   );
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
   console.log('portsArr onConnect: ', Object.keys(portsArr));
 
-  // JR: CONSIDER DELETING?
-  // 12.20.23 commenting out, possible culprit of many in no target bug
-  // if (portsArr.length > 0) {
-  //   portsArr.forEach((bg, index) => {
-  //     console.log(
-  //       'background onConnect is sending a changeTab message to frontend for port ',
-  //       index,
-  //     );
-  //     // go through each port object (each Reactime instance)
-  //     bg.postMessage({
-  //       // send passed in action object as a message to the current port
-  //       action: 'changeTab',
-  //       payload: { tabId: activeTab.id, title: activeTab.title },
-  //     });
-  //   });
-  // }
+  // sets the current Title of the Reactime panel
+  if (portsArr.length > 0 && Object.keys(tabsObj).length > 0) {
+    portsArr.forEach((bg, index) => {
+      console.log(
+        'background onConnect is sending a changeTab message to frontend for port ',
+        index,
+      );
+      // go through each port object (each Reactime instance)
+      bg.postMessage({
+        // send passed in action object as a message to the current port
+        action: 'changeTab',
+        payload: { tabId: activeTab.id, title: activeTab.title },
+      });
+    });
+  }
 
-  // JR: CONSIDER DELETING?
   if (Object.keys(tabsObj).length > 0) {
     console.log(
       'background onConnect is sending a initialConnectSnapshots message to frontend. Time: ',
@@ -563,8 +561,6 @@ chrome.runtime.onInstalled.addListener(() => {
 // chrome.windows.getCurrent allows us to still get the window from within a service worker. It returns a promise (asynchronous), so all resulting functionality must happen in the callback function,
 // or it will run before 'invokedScreen' variables have been captured.
 chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
-  // console.log('background ext screenX', chrome.windows.getCurrent());
-
   // // this was a test to see if I could dynamically set the left property to be the 0 origin of the invoked DISPLAY (as opposed to invoked window).
   // // this would allow you to split your screen, keep the browser open on the right side, and reactime always opens at the top left corner.
   // chrome.system.display.getInfo((displayUnitInfo) => {
@@ -595,6 +591,8 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
       const invokedTabId = invokedTab.id;
       const invokedTabTitle = invokedTab.title;
       tabsObj[invokedTabId] = createTabObj(invokedTabTitle);
+      console.log('onContextClick tabsObj created ', tabsObj);
+      activeTab = invokedTab;
 
       // inject backend script
       const injectScript = (file, tab) => {
@@ -614,15 +612,16 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
         args: [chrome.runtime.getURL('bundles/backend.bundle.js'), invokedTabId],
       });
 
-      console.log('contextclick invokedTab url, ', invokedTab.url, 'portsArr: ', portsArr)
+      console.log('contextclick invokedTab url, ', invokedTab.url, 'portsArr: ', portsArr);
       if (!invokedTab.url?.match('^chrome-extension')) {
         if (portsArr.length > 0) {
-          portsArr.forEach((bg) =>
+          portsArr.forEach((bg) => {
+            console.log('contextClick is sending change Tab message to ', bg);
             bg.postMessage({
               action: 'changeTab',
               payload: { tabId: invokedTabId, title: invokedTabTitle },
-            }),
-          );
+            });
+          });
         }
       }
     }

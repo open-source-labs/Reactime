@@ -33,11 +33,9 @@ const StateRoute = (props: StateRouteProps) => {
     webMetrics, // from 'tabs[currentTab]' object in 'MainContainer'
     currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
-  console.log('snapshot from StateRoute props: ', snapshot);
-  console.log('snapshots from StateRoute props: ', snapshots);
-  console.log('currLocation from StateRoute props', currLocation);
+
   const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
-  const { hierarchy: tabsHierarchy, sliderIndex, viewIndex: tabsViewIndex  } = tabs[currentTab];
+  const { hierarchy: tabsHierarchy, sliderIndex, viewIndex: tabsViewIndex } = tabs[currentTab];
   const hierarchy = propsHierarchy || tabsHierarchy; //JR: RETURN TO THIS: alias to deconstruct from props and tab with the same name, aliases were deleted above
   const viewIndex = propsViewIndex || tabsViewIndex;
 
@@ -62,58 +60,81 @@ const StateRoute = (props: StateRouteProps) => {
       </div>
       <div className='app-content'>
         <Routes>
-          
-          <Route path='/history' element={ hierarchy ?
-            <ParentSize>
-              {({ width, height }) => (
-                <History
-                  width={width}
-                  height={height}
-                  hierarchy={hierarchy}
-                  // Commented out dispatch that was prop drilled as conversion to RTK might invalidate need for prop drilling to access dispatch
-                  // dispatch={dispatch}
-                  sliderIndex={sliderIndex}
-                  viewIndex={viewIndex}
-                  currLocation={currLocation}
-                  snapshots={snapshots}
-                />
-              )}
-            </ParentSize> : <div className='noState'>{NO_STATE_MSG}</div>} />
-            <Route path='/performance/*' element={hierarchy ? 
-            <div style={{height: "100%"}}>
-              <ParentSize className='performanceContainer'>
-                {({ width, height }) => (
-                  <PerformanceVisx
-                    width={width}
-                    height={height}
-                    snapshots={snapshots}
-                    // note: is propdrilled within Performance Visx, but doesn't seem to be used
-                    changeSlider={changeSlider}
-                    changeView={changeView}
-                    hierarchy={hierarchy}
-                  />
-                )}
-              </ParentSize>
-              <Outlet/>
-            </div>
-            : <div className='noState'>{NO_STATE_MSG}</div>
-        } />
+          <Route
+            path='/history'
+            element={
+              hierarchy ? (
+                <ParentSize>
+                  {({ width, height }) => (
+                    <History
+                      width={width}
+                      height={height}
+                      hierarchy={hierarchy}
+                      // Commented out dispatch that was prop drilled as conversion to RTK might invalidate need for prop drilling to access dispatch
+                      // dispatch={dispatch}
+                      sliderIndex={sliderIndex}
+                      viewIndex={viewIndex}
+                      currLocation={currLocation}
+                      snapshots={snapshots}
+                    />
+                  )}
+                </ParentSize>
+              ) : (
+                <div className='noState'>{NO_STATE_MSG}</div>
+              )
+            }
+          />
+          <Route
+            path='/performance/*'
+            element={
+              hierarchy ? (
+                <div style={{ height: '100%' }}>
+                  <ParentSize className='performanceContainer'>
+                    {({ width, height }) => (
+                      <PerformanceVisx
+                        width={width}
+                        height={height}
+                        snapshots={snapshots}
+                        // note: is propdrilled within Performance Visx, but doesn't seem to be used
+                        changeSlider={changeSlider}
+                        changeView={changeView}
+                        hierarchy={hierarchy}
+                      />
+                    )}
+                  </ParentSize>
+                  <Outlet />
+                </div>
+              ) : (
+                <div className='noState'>{NO_STATE_MSG}</div>
+              )
+            }
+          />
           <Route path='/webMetrics' element={<WebMetricsContainer webMetrics={webMetrics} />} />
-          <Route path='/tree' element={<Tree snapshot={snapshot} snapshots={snapshots} currLocation={currLocation} />} />
-          <Route path='*' element={hierarchy ?
-            <ParentSize className='componentMapContainer'>
-              {({ width, height }) => {
-                // eslint-disable-next-line react/prop-types
-                const maxHeight: number = 1200;
-                const h = Math.min(height, maxHeight)
-                return (<ComponentMap
-                  currentSnapshot={currLocation.stateSnapshot}
-                  width={width}
-                  height={h}
-                />)
-                }}
-            </ParentSize>
-             : null} />
+          <Route
+            path='/tree'
+            element={<Tree snapshot={snapshot} snapshots={snapshots} currLocation={currLocation} />}
+          />
+          <Route
+            path='*'
+            element={
+              hierarchy ? (
+                <ParentSize className='componentMapContainer'>
+                  {({ width, height }) => {
+                    // eslint-disable-next-line react/prop-types
+                    const maxHeight: number = 1200;
+                    const h = Math.min(height, maxHeight);
+                    return (
+                      <ComponentMap
+                        currentSnapshot={currLocation.stateSnapshot}
+                        width={width}
+                        height={h}
+                      />
+                    );
+                  }}
+                </ParentSize>
+              ) : null
+            }
+          />
         </Routes>
       </div>
     </div>

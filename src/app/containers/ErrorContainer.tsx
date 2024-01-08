@@ -36,6 +36,13 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
     dispatch(launchContentScript(tabs[currentTab]));
   }
 
+  function reinitialize(): void {
+    port.postMessage({
+      action: 'reinitialize',
+      tabId: currentTab,
+    });
+  }
+
   let status = {
     // We create a status object that we may use later if tabs[currentTab] exists
     contentScriptLaunched: false,
@@ -107,7 +114,7 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
       // console.log('ErrorContainer react devtools check passed');
       // status.reactDevToolsInstalled = true;
 
-      // console.log('ErrorContainer attempting reinitalize');
+      // console.log('ErrorContainer attempting reinitialize');
       // port.postMessage({
       //   action: 'reinitialize',
       //   tabId: currentTab,
@@ -143,7 +150,12 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
 
       <br />
       <div className='errorMsg'>
-        <ErrorMsg loadingArray={loadingArray} status={status} launchContent={launch} />
+        <ErrorMsg
+          loadingArray={loadingArray}
+          status={status}
+          launchContent={launch}
+          reinitialize={reinitialize}
+        />
       </div>
       <br />
       <a

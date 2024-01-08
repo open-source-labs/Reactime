@@ -26,7 +26,7 @@ function parseError(loadingArray: [], status: Record<string, unknown>): string {
   return 'default';
 }
 
-function ErrorMsg({ loadingArray, status, launchContent }): JSX.Element {
+function ErrorMsg({ loadingArray, status, launchContent, reinitialize }): JSX.Element {
   switch (
     parseError(loadingArray, status) // parseError returns a string based on the loadingArray and status. The returned string is matched to a case so that an appropriate error message will be displayed to the user
   ) {
@@ -76,6 +76,10 @@ function ErrorMsg({ loadingArray, status, launchContent }): JSX.Element {
             NOTE: The React Developer Tools extension is required for Reactime to run, if you do not
             already have it installed on your browser.
           </a>
+          <button type='button' className='launchContentButton' onClick={reinitialize}>
+            {' '}
+            Reinitialize{' '}
+          </button>
         </div>
       );
     case 'Not React App':
