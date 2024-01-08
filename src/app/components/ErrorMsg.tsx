@@ -76,10 +76,6 @@ function ErrorMsg({ loadingArray, status, launchContent, reinitialize }): JSX.El
             NOTE: The React Developer Tools extension is required for Reactime to run, if you do not
             already have it installed on your browser.
           </a>
-          <button type='button' className='launchContentButton' onClick={reinitialize}>
-            {' '}
-            Reinitialize{' '}
-          </button>
         </div>
       );
     case 'Not React App':

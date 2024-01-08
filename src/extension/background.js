@@ -518,28 +518,28 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 });
 
 // when tab view is changed, put the tabid as the current tab
-// chrome.tabs.onActivated.addListener((info) => {
-//   // get info about tab information from tabId
-//   chrome.tabs.get(info.tabId, (tab) => {
-//     // never set a reactime instance to the active tab
-//     if (!tab.pendingUrl?.match('^chrome-extension')) {
-//       activeTab = tab;
-//       console.log('background tabs.onActivated has fired. activeTab: ', JSON.stringify(activeTab));
-//       console.log(
-//         'background tabs.onActivated will send changeTab message to frontend if portsArr is > 0: ',
-//         Object.keys(portsArr),
-//       );
-//       if (portsArr.length > 0) {
-//         portsArr.forEach((bg) =>
-//           bg.postMessage({
-//             action: 'changeTab',
-//             payload: { tabId: tab.id, title: tab.title },
-//           }),
-//         );
-//       }
-//     }
-//   });
-// });
+chrome.tabs.onActivated.addListener((info) => {
+  // get info about tab information from tabId
+  chrome.tabs.get(info.tabId, (tab) => {
+    // never set a reactime instance to the active tab
+    if (!tab.pendingUrl?.match('^chrome-extension')) {
+      activeTab = tab;
+      console.log('background tabs.onActivated has fired. activeTab: ', JSON.stringify(activeTab));
+      console.log(
+        'background tabs.onActivated will send changeTab message to frontend if portsArr is > 0: ',
+        Object.keys(portsArr),
+      );
+      if (portsArr.length > 0) {
+        portsArr.forEach((bg) =>
+          bg.postMessage({
+            action: 'changeTab',
+            payload: { tabId: tab.id, title: tab.title },
+          }),
+        );
+      }
+    }
+  });
+});
 
 // when reactime is installed
 // create a context menu that will open our devtools in a new window
@@ -584,46 +584,47 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     if (menuItemId === 'reactime') chrome.windows.create(options);
   });
   //JR 12.20.23
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    console.log('onContext click tab info', tabs, new Date().toLocaleString());
-    if (tabs.length) {
-      const invokedTab = tabs[0];
-      const invokedTabId = invokedTab.id;
-      const invokedTabTitle = invokedTab.title;
-      tabsObj[invokedTabId] = createTabObj(invokedTabTitle);
-      console.log('onContextClick tabsObj created ', tabsObj);
-      activeTab = invokedTab;
+  //JR 1.8.23: this code fixes the no target error (still gets stuck on reactdevtools installed check), but creates an error where the addNewSnapshots reducer has an error.
+  // chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  //   console.log('onContext click tab info', tabs, new Date().toLocaleString());
+  //   if (tabs.length) {
+  //     const invokedTab = tabs[0];
+  //     const invokedTabId = invokedTab.id;
+  //     const invokedTabTitle = invokedTab.title;
+  //     tabsObj[invokedTabId] = createTabObj(invokedTabTitle);
+  //     console.log('onContextClick tabsObj created ', tabsObj);
+  //     activeTab = invokedTab;
 
-      // inject backend script
-      const injectScript = (file, tab) => {
-        const htmlBody = document.getElementsByTagName('body')[0];
-        const script = document.createElement('script');
-        script.setAttribute('id', 'reactime-backend-script');
-        script.setAttribute('type', 'text/javascript');
-        script.setAttribute('src', file);
-        // eslint-disable-next-line prefer-template
-        htmlBody.appendChild(script);
-      };
+  // inject backend script
+  // const injectScript = (file, tab) => {
+  //   const htmlBody = document.getElementsByTagName('body')[0];
+  //   const script = document.createElement('script');
+  //   script.setAttribute('id', 'reactime-backend-script');
+  //   script.setAttribute('type', 'text/javascript');
+  //   script.setAttribute('src', file);
+  //   // eslint-disable-next-line prefer-template
+  //   htmlBody.appendChild(script);
+  // };
 
-      console.log('background is injecting the backend script', new Date().toLocaleString());
-      chrome.scripting.executeScript({
-        target: { tabId: invokedTabId },
-        func: injectScript,
-        args: [chrome.runtime.getURL('bundles/backend.bundle.js'), invokedTabId],
-      });
+  // console.log('background is injecting the backend script', new Date().toLocaleString());
+  // chrome.scripting.executeScript({
+  //   target: { tabId: invokedTabId },
+  //   func: injectScript,
+  //   args: [chrome.runtime.getURL('bundles/backend.bundle.js'), invokedTabId],
+  // });
 
-      console.log('contextclick invokedTab url, ', invokedTab.url, 'portsArr: ', portsArr);
-      if (!invokedTab.url?.match('^chrome-extension')) {
-        if (portsArr.length > 0) {
-          portsArr.forEach((bg) => {
-            console.log('contextClick is sending change Tab message to ', bg);
-            bg.postMessage({
-              action: 'changeTab',
-              payload: { tabId: invokedTabId, title: invokedTabTitle },
-            });
-          });
-        }
-      }
-    }
-  });
+  // console.log('contextclick invokedTab url, ', invokedTab.url, 'portsArr: ', portsArr);
+  // if (!invokedTab.url?.match('^chrome-extension')) {
+  //   if (portsArr.length > 0) {
+  //     portsArr.forEach((bg) => {
+  //       console.log('contextClick is sending change Tab message to ', bg);
+  //       bg.postMessage({
+  //         action: 'changeTab',
+  //         payload: { tabId: invokedTabId, title: invokedTabTitle },
+  //       });
+  //     });
+  //   }
+  // }
+  // }
+  // });
 });
