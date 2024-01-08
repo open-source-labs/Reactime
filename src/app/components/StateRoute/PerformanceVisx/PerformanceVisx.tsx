@@ -275,7 +275,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
 
       <Routes>
         <Route
-          path='/performance/comparison'
+          path='/comparison'
           element={
             hierarchy && series !== false ? (
               <BarGraphComparison
