@@ -12,8 +12,6 @@ import timeJumpInitialization from './controllers/timeJump';
 import { Snapshot, Status, MsgData } from './types/backendTypes';
 import routes from './models/routes';
 
-console.log('backend script successfully injected ', new Date().toLocaleString())
-
 // -------------------------INITIALIZE MODE--------------------------
 /** Indicate if mode is jumping/not jumping or navigating during jumping */
 const mode: Status = {
@@ -42,7 +40,6 @@ linkFiberInit();
  * 3. If not navigate during jumping =>  invoke timeJump to update ReactFiber tree with cached data from the snapshot payload
  */
 window.addEventListener('message', async ({ data: { action, payload } }: MsgData) => {
-  console.log('index.ts window event listener data received: ', action, payload);
   switch (action) {
     case 'jumpToSnap':
       // Set mode to jumping to prevent snapShot being sent to frontEnd
@@ -60,7 +57,7 @@ window.addEventListener('message', async ({ data: { action, payload } }: MsgData
         await timeJump(payload); // * This sets state with given payload
       }
       break;
-    case 'reinitialize':
+      // case 'reinitialize':
       // console.log('backend reinitialize received, performing checks again');
       // let devTools;
       // while (!devTools) {

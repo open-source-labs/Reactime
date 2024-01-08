@@ -16,7 +16,6 @@ window.addEventListener('message', (msg) => {
   // recorded on the test application from backend files (linkFiber.ts).
   // Background.js has a listener that includes switch cases, depending on
   // the name of the action (e.g. 'tabReload').
-  console.log('message sent to window event listener: ', msg.data);
   if (firstMessage) {
     // One-time request tells the background script that the tab has reloaded.
     chrome.runtime.sendMessage({ action: 'tabReload' });
@@ -42,12 +41,6 @@ window.addEventListener('message', (msg) => {
 // FROM BACKGROUND TO CONTENT SCRIPT
 // Listening for messages from the UI of the Reactime extension.
 chrome.runtime.onMessage.addListener((request) => {
-  console.log(
-    'contentScript received message from background.js. request.action: ',
-    request.action,
-    'request.port',
-    request.port,
-  );
   const { action, port }: { action: string; port?: string } = request;
   if (action) {
     // Message being sent from background.js
@@ -66,11 +59,9 @@ chrome.runtime.onMessage.addListener((request) => {
 
     // JR: adding a response to a port disconnection message from background.js
     if (action === 'portDisconnect') {
-      console.log(`Port ${port} disconnected!`);
     }
 
     if (action === 'reinitialize') {
-      console.log('contentscript reinitialize received, forwarding to backend');
       window.postMessage(request, '*');
     }
   }
@@ -81,14 +72,6 @@ chrome.runtime.onMessage.addListener((request) => {
 // To learn more about Chrome web vitals, see https://web.dev/vitals/.
 const metrics = {};
 const gatherMetrics = ({ name, value }) => {
-  console.log(
-    'contentScript gatherMetrics: prior metrics Obj: ',
-    metrics,
-    'name: ',
-    name,
-    'value: ',
-    value,
-  );
   metrics[name] = value;
   chrome.runtime.sendMessage({
     type: 'performance:metric',

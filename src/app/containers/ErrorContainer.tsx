@@ -23,14 +23,7 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
   const titleTracker = useRef(currentTitle); // useRef returns an object with a property 'initialValue' and a value of whatever was passed in. This allows us to reference a value that's not needed for rendering
   const timeout = useRef(null);
   const { port } = props;
-  console.log(
-    'ErrorContainer state variables: tabs status: ',
-    JSON.stringify(tabs[currentTab]?.status),
-    'currentTab: ',
-    currentTab,
-    'currentTitle: ',
-    currentTitle,
-  );
+
   // function that launches the main app
   function launch(): void {
     dispatch(launchContentScript(tabs[currentTab]));
@@ -58,17 +51,16 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
   // hook that sets timer while waiting for a snapshot from the background script, resets if the tab changes/reloads
   useEffect(() => {
     if (tabs[currentTab])
-      console.log('ErrorContainer useEffect fired, ', JSON.stringify(tabs[currentTab]?.status));
-    // We declare a function
-    function setLoadingArray(i: number, value: boolean) {
-      // 'setLoadingArray' checks an element in our 'loadingArray' local state and compares it with passed in boolean argument. If they don't match, we update our local state replacing the selected element with the boolean argument
-      if (loadingArray[i] !== value) {
-        // this conditional helps us avoid unecessary state changes if the element and the value are already the same
-        const loadingArrayClone = [...loadingArray];
-        loadingArrayClone[i] = value;
-        setLoading(loadingArrayClone);
+      // We declare a function
+      function setLoadingArray(i: number, value: boolean) {
+        // 'setLoadingArray' checks an element in our 'loadingArray' local state and compares it with passed in boolean argument. If they don't match, we update our local state replacing the selected element with the boolean argument
+        if (loadingArray[i] !== value) {
+          // this conditional helps us avoid unecessary state changes if the element and the value are already the same
+          const loadingArrayClone = [...loadingArray];
+          loadingArrayClone[i] = value;
+          setLoading(loadingArrayClone);
+        }
       }
-    }
 
     if (titleTracker.current !== currentTitle) {
       // if the current tab changes/reloads, we reset loadingArray to it's default [true, true, true]
@@ -102,23 +94,6 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
       timeout.current = setTimeout(() => {
         setLoadingArray(1, false);
       }, 3000); // increased from 1500
-      // let devTools;
-      // while (!devTools) {
-      //   devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-      // }
-      // console.log('ErrorContainer react devtools: ', devTools);
-      // // If React Devtools is not installed, object will be undefined.
-      // if (!devTools) return;
-      // // If React Devtools is installed, send a message to front end.
-
-      // console.log('ErrorContainer react devtools check passed');
-      // status.reactDevToolsInstalled = true;
-
-      // console.log('ErrorContainer attempting reinitialize');
-      // port.postMessage({
-      //   action: 'reinitialize',
-      //   tabId: currentTab,
-      // });
       setLoadingArray(1, false);
     }
     if (loadingArray[1] === false && status.reactDevToolsInstalled === true) {

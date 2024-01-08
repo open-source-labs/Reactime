@@ -18,7 +18,6 @@ const SwitchAppDropdown = (): JSX.Element => {
   const { currentTab, tabs }: MainState = useSelector((state: RootState) => state.main);
 
   const tabsArray: {}[] = []; // tabsArray is an empty array that will take objects as it's elements
-  console.log('switchAppDropdown; currentTab: ', currentTab, 'tabs: ', tabs);
   Object.keys(tabs).forEach((tab) => {
     // We populate our 'tabsArray' with objects derived from the 'tab' that is currently being iterated on.
     tabsArray.unshift({ value: tab, label: tabs[tab].title });

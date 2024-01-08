@@ -64,7 +64,6 @@ class HistoryNode {
     tabObj.index += 1;
     // continues the order of number of states changed from that parent
     tabObj.currParent += 1;
-    console.log('new Node tabObj: ', tabObj);
     this.name = tabObj.currParent;
     // marks from what branch this node is originated
     this.branch = tabObj.currBranch;
@@ -162,22 +161,11 @@ chrome.runtime.onConnect.addListener((port) => {
   
     Again, this port object is used for communication within your extension, not for communication with external ports or tabs in the Chrome browser. If you need to interact with specific tabs or external ports, you would use other APIs or methods, such as chrome.tabs or other Chrome Extension APIs.
   */
-  console.log(
-    'tabsObj onConnect: ',
-    JSON.stringify(tabsObj[0] ? tabsObj[0] : null),
-    'time: ',
-    new Date().toLocaleString(),
-  );
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
-  console.log('portsArr onConnect: ', Object.keys(portsArr));
 
   // sets the current Title of the Reactime panel
   if (portsArr.length > 0 && Object.keys(tabsObj).length > 0) {
     portsArr.forEach((bg, index) => {
-      console.log(
-        'background onConnect is sending a changeTab message to frontend for port ',
-        index,
-      );
       // go through each port object (each Reactime instance)
       bg.postMessage({
         // send passed in action object as a message to the current port
@@ -188,26 +176,18 @@ chrome.runtime.onConnect.addListener((port) => {
   }
 
   if (Object.keys(tabsObj).length > 0) {
-    console.log(
-      'background onConnect is sending a initialConnectSnapshots message to frontend. Time: ',
-      new Date().toLocaleString(),
-    ),
-      port.postMessage({
-        action: 'initialConnectSnapshots',
-        payload: tabsObj,
-      });
+    port.postMessage({
+      action: 'initialConnectSnapshots',
+      payload: tabsObj,
+    });
   }
 
   // every time devtool is closed, remove the port from portsArr
   port.onDisconnect.addListener((e) => {
-    console.log('port onDisconnect triggered, portsArr: ', Object.keys(portsArr));
     for (let i = 0; i < portsArr.length; i += 1) {
       if (portsArr[i] === e) {
-        // if (portsArr.length === 1) portsArr[i].sendMessage('portDisconnect'); // JR 12.20.23 try sending message to last remaining port directly prior to it being disconnected
         portsArr.splice(i, 1);
-        chrome.runtime.sendMessage({ action: 'portDisconnect', port: e.name }); // JR 12.20.23 isn't this supposed to be a port.sendMessage? chrome.runtime sends messages between content script and background.js
-        console.log('spliced portsArr', portsArr);
-        console.log(`port ${e.name} disconnected. Remaining portsArr: `, Object.keys(portsArr));
+        chrome.runtime.sendMessage({ action: 'portDisconnect', port: e.name });
         break;
       }
     }
@@ -232,7 +212,6 @@ chrome.runtime.onConnect.addListener((port) => {
       // import action comes through when the user uses the "upload" button on the front end to import an existing snapshot tree
       case 'import': // create a snapshot property on tabId and set equal to tabs object
         // may need do something like filter payload from stateless
-        console.log('background import action tabsObj: ', tabsObj);
         tabsObj[tabId].snapshots = payload.snapshots; // reset snapshots to page last state recorded
         // tabsObj[tabId].hierarchy = savedSnapshot.hierarchy; // why don't we just use hierarchy? Because it breaks everything...
         tabsObj[tabId].hierarchy.children = payload.hierarchy.children; // resets hierarchy to last state recorded
@@ -246,7 +225,6 @@ chrome.runtime.onConnect.addListener((port) => {
 
       // emptySnap actions comes through when the user uses the 'clear' button on the front end to clear the snapshot history and move slider back to 0 position
       case 'emptySnap':
-        console.log('tabsObj on clear: ', tabsObj);
         tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]]; // reset snapshots to page last state recorded
         tabsObj[tabId].hierarchy.children = []; // resets hierarchy
         tabsObj[tabId].hierarchy.stateSnapshot = {
@@ -279,10 +257,6 @@ chrome.runtime.onConnect.addListener((port) => {
         return true;
 
       case 'reinitialize':
-        console.log(
-          'background reinitialize message received, forwarding to content script at tabId',
-          tabId,
-        );
         chrome.tabs.sendMessage(tabId, msg);
         return true;
 
@@ -295,16 +269,6 @@ chrome.runtime.onConnect.addListener((port) => {
 // INCOMING MESSAGE FROM CONTENT SCRIPT TO BACKGROUND.JS
 // background.js listening for a message from contentScript.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log(
-    'background.js received message from content script with type: ',
-    request.type,
-    'action: ',
-    request.action,
-    'request body: ',
-    request,
-    'time: ',
-    new Date().toLocaleString(),
-  );
   // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
     return true;
@@ -334,13 +298,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // everytime we get a new tabId, add it to the object
   if (isReactTimeTravel && !(tabId in tabsObj)) {
     tabsObj[tabId] = createTabObj(tabTitle);
-
-    console.log(
-      'tabsObj after createTabObj function call: ',
-      JSON.stringify(tabsObj[0]?.status),
-      'time: ',
-      new Date().toLocaleString(),
-    );
   }
 
   switch (action) {
@@ -350,8 +307,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break;
     }
     case 'jumpToSnap': {
-      console.log(`background.js received jumpToSnap from UI at ${Date.now().toLocaleString()}`);
-      console.log('portsArr at time of jumpToSnap in backgroundjs: ', portsArr);
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
@@ -366,7 +321,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // Confirmed React Dev Tools installed, send this info to frontend
     case 'devToolsInstalled': {
       tabsObj[tabId].status.reactDevToolsInstalled = true;
-      console.log('devToolsInstalled action, update tabsObj status', tabsObj[tabId].status);
 
       portsArr.forEach((bg) =>
         bg.postMessage({
@@ -376,12 +330,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       );
       break;
     }
-    // Confirmed target is a react app. No need to send to frontend
-    // JR: BUG: why wouldn't we need to send to frontend???
+
     case 'aReactApp': {
       tabsObj[tabId].status.targetPageisaReactApp = true;
-      console.log('aReactApp action, update tabsObj status', tabsObj[tabId].status);
-
       // JR 12.20.23 9.53pm added a message action to send to frontend
       portsArr.forEach((bg) =>
         bg.postMessage({
@@ -408,11 +359,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         func: injectScript,
         args: [chrome.runtime.getURL('bundles/backend.bundle.js'), tabId],
       });
-
-      console.log(
-        'background injected the backend bundle into the webpage. Time: ',
-        new Date().toLocaleString(),
-      );
       break;
     }
     case 'recordSnap': {
@@ -524,11 +470,6 @@ chrome.tabs.onActivated.addListener((info) => {
     // never set a reactime instance to the active tab
     if (!tab.pendingUrl?.match('^chrome-extension')) {
       activeTab = tab;
-      console.log('background tabs.onActivated has fired. activeTab: ', JSON.stringify(activeTab));
-      console.log(
-        'background tabs.onActivated will send changeTab message to frontend if portsArr is > 0: ',
-        Object.keys(portsArr),
-      );
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
           bg.postMessage({
@@ -563,12 +504,12 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
   // // this was a test to see if I could dynamically set the left property to be the 0 origin of the invoked DISPLAY (as opposed to invoked window).
   // // this would allow you to split your screen, keep the browser open on the right side, and reactime always opens at the top left corner.
+  // // unfortunately it does not tell you which display is the one that invoked it, just the array of all available displays
   // chrome.system.display.getInfo((displayUnitInfo) => {
   //   console.log(displayUnitInfo);
   // });
 
   chrome.windows.getCurrent((window) => {
-    console.log('onContext click window properties', window);
     const invokedScreenHeight = window.height || 1000;
     const invokedScreenTop = window.top || 0;
     const invokedScreenLeft = window.left || 0;

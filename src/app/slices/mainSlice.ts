@@ -41,8 +41,6 @@ export const mainSlice = createSlice({
       const { tabs, currentTab, port } = state;
 
       port.postMessage({ action: 'emptySnap', tabId: currentTab }); //communicate with background.js (service worker)
-      console.log('emptySnapshots tabs: ', tabs);
-      console.log('emptySnapshots currentTab: ', currentTab);
       // properties associated with timetravel + seek bar
       tabs[currentTab].sliderIndex = 0;
       tabs[currentTab].viewIndex = 0;
@@ -103,9 +101,6 @@ export const mainSlice = createSlice({
         tabs[currentTab] || {};
       const { payload } = action;
 
-      console.log('mainSlice initialConnect reducer fired, ', payload),
-        'time: ',
-        new Date().toLocaleString();
       Object.keys(payload).forEach((tab) => {
         // check if tab exists in memory
         // add new tab
@@ -138,18 +133,6 @@ export const mainSlice = createSlice({
     setTab: (state, action) => {
       const { tabs, currentTab } = state;
       const { mode } = tabs[currentTab] || {};
-      // console.log(
-      //   'mode test. mode exists? ',
-      //   !!mode,
-      //   'optional chained mode return value: ',
-      //   mode?.paused,
-      // );
-      console.log(
-        'mainSlice setTab reducer received a payload. mode: ',
-        JSON.stringify(mode),
-        'payload: ',
-        action.payload,
-      );
       if (!mode?.paused) {
         if (typeof action.payload === 'number') {
           state.currentTab = action.payload;
@@ -157,14 +140,6 @@ export const mainSlice = createSlice({
         } else if (typeof action.payload === 'object') {
           state.currentTab = action.payload.tabId;
           if (action.payload?.title) state.currentTitle = action.payload.title;
-          console.log(
-            'mainSlice setTab successful! state.currentTab: ',
-            state.currentTab,
-            'state.currentTitle: ',
-            state.currentTitle,
-            'state.tabs[currentTab].status: ',
-            JSON.stringify(state.tabs[currentTab]?.status),
-          );
           return;
         }
       }
@@ -180,15 +155,8 @@ export const mainSlice = createSlice({
 
       if (tabs[currentTab]) {
         const { reactDevToolsInstalled } = payload[currentTab].status;
-        console.log(reactDevToolsInstalled);
         // JR 12.20. 9.47pm this was not applying to state before
         state.tabs[currentTab].status.reactDevToolsInstalled = reactDevToolsInstalled;
-        console.log(
-          'devTools updated state: ',
-          JSON.stringify(state.tabs[currentTab].status),
-          'time: ',
-          new Date().toLocaleString(),
-        );
       }
     },
 
@@ -197,15 +165,8 @@ export const mainSlice = createSlice({
       const { tabs, currentTab } = state;
 
       if (tabs[currentTab]) {
-        console.log(tabs[currentTab], payload[currentTab]);
         // JR 12.20. 9.47pm this was not applying to state before
         state.tabs[currentTab].status.targetPageisaReactApp = true;
-        console.log(
-          'aReactApp updated state: ',
-          JSON.stringify(state.tabs[currentTab].status),
-          'time: ',
-          new Date().toLocaleString(),
-        );
       }
     },
 
@@ -230,19 +191,8 @@ export const mainSlice = createSlice({
 
     changeView: (state, action) => {
       const { tabs, currentTab } = state;
-      console.log(
-        'changeView tabs: ',
-        JSON.stringify(tabs),
-        'currentTab: ',
-        currentTab,
-        'tabs[currentTab]: ',
-        tabs[currentTab],
-      );
-      console.log(tabs);
-      console.log('changeView state: ', state);
       const { viewIndex } = tabs[currentTab] || {};
-      console.log('changeView viewIndex: ', viewIndex);
-      console.log('changeView action.payload: ', action.payload);
+
       // unselect view if same index was selected
       tabs[currentTab].viewIndex = viewIndex === action.payload ? -1 : action.payload;
     },
@@ -268,7 +218,6 @@ export const mainSlice = createSlice({
 
     setCurrentTabInApp: (state, action) => {
       state.currentTabInApp = action.payload;
-      console.log('mainSlice currentTabInApp: ', state.currentTabInApp);
     },
 
     pause: (state) => {
@@ -398,7 +347,6 @@ export const mainSlice = createSlice({
     toggleMode: (state, action) => {
       const { port, tabs, currentTab } = state;
       const { mode } = tabs[currentTab] || {};
-      console.log('toggleMode current mode destructured from tabs[currentTab]: ', mode);
       mode[action.payload] = !mode[action.payload];
       const newMode = mode[action.payload];
       let actionText;

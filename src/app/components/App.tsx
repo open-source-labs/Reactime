@@ -1,5 +1,5 @@
 import React from 'react';
-import {  MemoryRouter as Router  } from 'react-router-dom';
+import { MemoryRouter as Router } from 'react-router-dom';
 import MainContainer from '../containers/MainContainer';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
@@ -15,7 +15,6 @@ function App(): JSX.Element {
     <ThemeProvider theme={theme}>
       <Router>
         {/* we wrap our application with the <Router> tag so that all components that are nested will have the react-router context */}
-        {console.log('App reloaded', new Date().toLocaleString())}
         <MainContainer />
       </Router>
     </ThemeProvider>

@@ -193,8 +193,6 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
   const [route, setRoute] = useState('All Routes');
   const [snapshot, setSnapshot] = useState('All Snapshots');
 
-  console.log('Performance tab has loaded!');
-
   getActions();
 
   useEffect(() => {
@@ -246,7 +244,6 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
   const renderForTutorial = () => {
     // This will redirect to the proper tabs during the tutorial
     // Updated redirect to Navigate v23 redirect no longer supported in react router dom after v6
-    console.log(currentTabInApp);
     if (currentTabInApp === 'performance') return <Navigate to='/performance/' />;
     if (currentTabInApp === '/performance-comparison')
       return <Navigate to='/performance/comparison' />;
