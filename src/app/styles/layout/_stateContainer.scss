@@ -7,8 +7,8 @@
 
 .toggleAC {
   // color: #00dffc;
-  color: $blue-brand;
-  background: $background-color;
+  //color: $blue-brand;
+  background: #ff0001;
   height: 50%;
   text-decoration: none;
   border: none;
@@ -71,7 +71,7 @@
 }
 
 .no-data-message {
-  color: $text-color;
+  color: #ff0001;
   font: normal 13px $text-font-stack;
   padding: 10px;
 }
@@ -97,7 +97,7 @@
   }
 
   .main-router-link:hover {
-    background: $light-background-color;
+    background: $header-button-hover;
   }
 
   .main-router-link.is-active {
@@ -114,13 +114,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $medium-background-color;
+    background-color: $navbar-unselected;
     text-decoration: none;
     color: $navbar-unselected-text;
   }
 
   .router-link:hover {
-    background-color: $light-background-color;
+    background-color: $navbar-hover;
   }
 
   .router-link.is-active {
@@ -130,7 +130,6 @@
 
   .navbar {
     background-color: $navbar-background;
-    color: #ff0000;
     display: flex;
     flex-direction: row;
     justify-content: start;
@@ -139,7 +138,7 @@
   }
 
   .main-navbar {
-    background-color: $background-color;
+    background-color: $header-background;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -162,14 +161,15 @@
 }
 
 .no-data-message {
-  color: $text-color;
+  color: #ff0001;
   font: normal 13px $text-font-stack;
   padding: 10px;
 }
 
 .performance-nav-bar-container {
-  background-color: $navbar-color;
+  background-color: #ff0002;
   display: flex;
+  border: $performance-subtab-border;
   height: 30px;
 }
 
@@ -181,11 +181,11 @@
   align-items: center;
   background-color: $state-background;
   text-decoration: none;
-  color: $text-color;
+  color: $performance-subtab-text;
 }
 
 .router-link-performance:hover {
-  background-color: $light-grey-four;
+  background-color: $performance-subtab-hover;
 }
 
 .router-link-performance.is-active {

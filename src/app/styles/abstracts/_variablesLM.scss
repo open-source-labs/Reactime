@@ -25,18 +25,21 @@ $background-color-weak: #d9d9d9;
 $contrasting-color: #161617;
 $contrasting-color-weak: #353536;
 
+/////////////////////////////////////////////////////////////////////
+// ALL OF THE FOLLOWING COLORS SHOULD REFERENCE A COLOR FROM ABOVE //
+/////////////////////////////////////////////////////////////////////
+
 /// @type Color
-/// all of these should point to one of the colors listed above
+ 
+//general text color theme
 $dark-text: $contrasting-color;
 $light-text: $background-color;
-
+//general icon color theme
 $icon-primary: $primary-color-strong;
 $icon-secondary: lighten($primary-color-strong, 50%);
 $icon-bg: $primary-color-weak;
-$tab-select-background: $primary-color;
-$tab-select-text: $light-text;
-$tab-dropdown-background: $background-color-weak;
 
+//the first window that pops up that checks for react devtools being installed
 $loader-background: $background-color;
 $loader-text: $dark-text;
 $loader-checks-border: $primary-color-strong;
@@ -44,53 +47,69 @@ $launch-button: $primary-color-strong;
 $launch-button-hover: $primary-color;
 $launch-button-text: $light-text;
 
+//drop-down menu for selecting which tab Reactime is observing
+$tab-select-background: $primary-color;
+$tab-select-background-2: $primary-color;
+$tab-select-text: $light-text;
+$tab-dropdown-background: $background-color-weak;
+
+//action tab (the main column on the left side)
 $action-tab-background: $background-color;
+$action-cont-border: $contrasting-color;
 //$action-clear-button: $primary-color; //currently being handled by mui theme.ts file
 //$action-clear-button-text: $background-color; //currently being handled by mui theme.ts file
 $route-bar: $primary-color-strong;
 $route-bar-text: $light-text;
-$indiv-action-input-bg: $background-color;
+$indiv-action-input-bg: $background-color-strong;
 $indiv-action-selected: $primary-color-strong;
 $indiv-action-selected-text: $light-text;
-$indiv-action-filler-text: $contrasting-color-weak;
+$indiv-action-filler-text: lighten($contrasting-color,60%);
 $indiv-action-custom-text: $dark-text;
+$indiv-action-border: $contrasting-color-weak;
 $indiv-action-time: $primary-color-weak;
 $indiv-action-time-text: $light-text;
+$time-button-height: 20px;
 $current: $contrasting-color-weak;
 $current-text: $light-text;
 $jump: $contrasting-color-weak;
 $jump-hover: $primary-color;
 $jump-text: $light-text;
 
+//the State + Diff toggle
 $header-background: $background-color;
 $header-button-active: $primary-color;
 $header-button-active-text: $light-text;
 $header-button-inactive: $primary-color-weak;
 $header-button-inactive-text: $dark-text;
+$header-button-hover: lighten($header-button-inactive, 20%);
 
+//the buttons/tabs controlling what is displayed in StateContainer (Map, Perfofrmance, History, Web Metrics, Tree)
 $navbar-background: $background-color; //this color only shows up in Diff mode when buttons don't fill the whole bar
 $navbar-selected: $primary-color-strong;
 $navbar-selected-text: $light-text;
 $navbar-unselected: $primary-color-weak;
 $navbar-unselected-text: $dark-text;
+$navbar-hover: darken($navbar-unselected,15%);
 
 $state-background: $background-color-strong;
+$state-cont-border: $contrasting-color;
 
 $map-options-dropdown: $primary-color;
 $map-options-label: $dark-text;
 $map-link: $contrasting-color;
-//root fill is currently a visx LinearGradient defined in ComponentMap.tsx
-$map-root-fill: $primary-color;
+// $map-root-fill: $primary-color; //root fill is currently a visx LinearGradient defined in ComponentMap.tsx
 $map-root-stroke: $primary-color;
 $map-root-text: $light-text;
-//parent fill is currently a visx LinearGradient defined in ComponentMap.tsx
-$map-parent-fill: $primary-color-strong;
+//$map-parent-fill: $primary-color-strong; //parent fill is currently a visx LinearGradient defined in ComponentMap.tsx
 $map-parent-stroke: darken($primary-color-strong, 20%);
 $map-parent-text: $light-text;
 $map-child-fill: $primary-color-weak;
 $map-child-stroke: lighten($primary-color, 50%);
 $map-child-text: $dark-text;
 
+$performance-subtab-border: 1px;
+$performance-subtab-text: $contrasting-color;
+$performance-subtab-hover: $background-color-weak;
 $performance-options-dropdown: $primary-color-strong;
 $performance-options-label: $dark-text;
 $performance-save-series-button: $primary-color;
@@ -114,6 +133,7 @@ $tree-background: $background-color;
 // $tree-number: $secondary-color;
 // $tree-other: $secondary-color;
 
+//control bar for time travel
 $travel-background: $background-color;
 $travel-top-border: lighten($contrasting-color, 50%);
 $play-button: $primary-strong-gradient;
@@ -129,13 +149,13 @@ $speed-dropdown-expanded: lighten($primary-color-strong, 20%);
 $speed-dropdown-expanded-hover: $primary-color;
 $speed-dropdown-expanded-text: $light-text;
 
+//the buttons at the very bottom of the screen (locked, download, upload, tutorial, reconnect)
 $function-bar-background: $background-color;
 //outline color currently handled in mui theme.ts file
 $function-bar-button-outlines: $primary-color;
 $function-bar-text: $primary-color-strong;
 $function-bar-text-hover: $primary-color;
 $function-bar-text-highlight: $primary-color-strong;
-//icons
 $function-bar-icons: $primary-color-strong;
 
 //colors for pop-up window that opens when clicking the reconnect button
@@ -144,42 +164,49 @@ $pop-up-window-text: $dark-text;
 $reconnect-button: $primary-color-strong;
 $reconnect-button-text: $light-text;
 
-/// @type Color
+
+/// @type Font Size
+$button-text-size: 16px;
+
+
+
+
+
+///// @type Color
 /// fiery-rose changed from ff6569 to F00008 globally to improve contrast
-$fiery-rose: #fd0011;
-$blue-brand: #00ffbf;
+// $fiery-rose: #fd0011;
+// $blue-brand: #00ffbf;
 
-/// @type Color
-$blue-color-gradient: linear-gradient(145deg, #69e5ff, #58c1e2);
-$red-color-gradient: linear-gradient(145deg, #f92f35, #f00008);
-$grey-color-gradient: linear-gradient(145deg, #5c6068, #4d5157);
+///// @type Color
+// $blue-color-gradient: linear-gradient(145deg, #69e5ff, #58c1e2);
+// $red-color-gradient: linear-gradient(145deg, #f92f35, #f00008);
+// $grey-color-gradient: linear-gradient(145deg, #5c6068, #4d5157);
 
-/// @type Color:
-$box-shadow-blue: inset 5px 5px 10px #53b6d5, inset -5px -5px 10px #71f6ff;
-$box-shadow-red: inset 5px 5px 10px #ff0004, inset -5px -5px 10px #f9393f;
+///// @type Color:
+// $box-shadow-blue: inset 5px 5px 10px #53b6d5, inset -5px -5px 10px #71f6ff;
+// $box-shadow-red: inset 5px 5px 10px #ff0004, inset -5px -5px 10px #f9393f;
 
-// /// @type Color
-// $text-color: #e7e7e7;
-/// @type Color
-$text-color: #5b004f;
+
+///// @type Color
+// $text-color: #5b004f;
 
 // /// @type Color
 // $brand-color: #29292e !default; //29292e
 // $brand-color-highlight: #303036 !default;
-/// @type Color
-$brand-color: #8f8fd3 !default; //29292e
-$brand-color-highlight: rgb(44, 44, 77) !default;
+///// @type Color
+// $brand-color: #8f8fd3 !default; //29292e
+// $brand-color-highlight: rgb(44, 44, 77) !default;
 
 // /// @type Color
 // $background-color: #333333 !default;
 // $dark-background-color: #191818 !default; // #191818
 // $medium-background-color: #51565e !default; //51565e
 // $light-background-color: #585d65 !default; //585d65
-/// @type Color
-$background-color: #0d0dea !default;
-$dark-background-color: #e7e7f0 !default; // #191818
-$medium-background-color: #d7d7e0 !default; //51565e
-$light-background-color: #c6c6cf !default; //585d65
+///// @type Color
+// $background-color: #0d0dea !default;
+// $dark-background-color: #e7e7f0 !default; // #191818
+// $medium-background-color: #d7d7e0 !default; //51565e
+// $light-background-color: #c6c6cf !default; //585d65
 
 // /// @type Color
 // $link-color: #fdf0d5 !default;
@@ -192,17 +219,17 @@ $light-background-color: #c6c6cf !default; //585d65
 // $root-fill: #fdf0d5;
 // $root-stroke: #1f2021;
 // $root-text: #fdf0d5;
-/// @type Color
-$link-color: #161719 !default;
-$child-fill: #a0c1d6;
-$child-stroke: #003049;
-$child-text: #1f2021;
-$parent-fill: #780000;
-$parent-stroke: #c1121f;
-$parent-text: #fdf0d5;
-$root-fill: #fdf0d5;
-$root-stroke: #1f2021;
-$root-text: #fdf0d5;
+///// @type Color
+// $link-color: #161719 !default;
+// $child-fill: #a0c1d6;
+// $child-stroke: #003049;
+// $child-text: #1f2021;
+// $parent-fill: #780000;
+// $parent-stroke: #c1121f;
+// $parent-text: #fdf0d5;
+// $root-fill: #fdf0d5;
+// $root-stroke: #1f2021;
+// $root-text: #fdf0d5;
 
 //HOW TO DEFINE GRADIENTS
 
@@ -224,36 +251,35 @@ $root-text: #fdf0d5;
 //   // Add any other styles you need
 // }
 
-/// Light grey
-/// @type Color
-$light-grey-one: #474c55 !default;
+//// Light grey
+// /// @type Color
+// $light-grey-one: #474c55 !default;
 
-/// @type Color
-$light-grey-two: #5f6369 !default;
-$light-grey-three: #65686e !default;
-$light-grey-four: #4c4c4d !default;
+// /// @type Color
+// $light-grey-two: #5f6369 !default;
+// $light-grey-three: #65686e !default;
+// $light-grey-four: #4c4c4d !default;
 
-/// @type Color
-$navbar-color: #44484e !default;
+// /// @type Color
+// $navbar-color: #44484e !default;
 
-/// @type Color
-$head-color: #242529 !default;
+// /// @type Color
+// $head-color: #242529 !default;
 
-/// @type Color
-$border-color: #292929 !default;
+// /// @type Color
+// $border-color: #292929 !default;
 
-/// @type Color
-$border-slider: #57c5f7 !default;
+// /// @type Color
+// $border-slider: #57c5f7 !default;
 
-/// @type Color
-$border-rc: #373737 !default;
-$background-rc-color: #e9e9e9 !default;
+// /// @type Color
+// $border-rc: #373737 !default;
+// $background-rc-color: #e9e9e9 !default;
 
-/// @type Color
-$highlight-color: rgba(224, 224, 224, 0.5) !default;
+// /// @type Color
+// $highlight-color: rgba(224, 224, 224, 0.5) !default;
 
-/// @type Font Size
-$button-text-size: 16px;
+
 
 //https://coolors.co/780000-c1121f-f6d5bf-fdf0d5-003049-669bbc-a0c1d6
 //colors used in the performance tab bar graphs

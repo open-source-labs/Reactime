@@ -6,8 +6,12 @@
 
 .actionname {
   background-color: $indiv-action-input-bg;
-  border: 1px solid $light-background-color;
+  border: 1px solid $indiv-action-border;
   color: $indiv-action-custom-text;
+}
+
+::placeholder {
+  color:$indiv-action-filler-text;
 }
 
 #recordBtn {

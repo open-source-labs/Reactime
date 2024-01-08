@@ -21,7 +21,7 @@
 }
 
 div .tab-select-container {
-  background-color: $background-color;
+  background-color: #ff0002;
   font-size: 14px;
   height: 40px;
   width: 100%;
@@ -29,13 +29,13 @@ div .tab-select-container {
 }
 
 .tab-select-container:focus {
-  background-color: $background-color;
+  background-color: #ff0006;
 
   outline: none;
 }
 
 .tab-select-container:active {
-  background-color: $background-color;
+  background-color: #ff0005;
 
   outline: none;
   border-color: transparent;
@@ -46,14 +46,14 @@ div .tab-select-container {
 // }
 
 .tab-select-container {
-  //background-color: #ff0000;
+  background-color: #ff0004;
   height: 70%;
 
   .tab-select__control:focus {
     outline: none;
   }
   div.tab-select-container.css-2b097c-container {
-    //background-color: #ff0000;
+    background-color: #ff0003;
     margin: 0;
   }
 
@@ -71,7 +71,7 @@ div .tab-select-container {
     color: $tab-select-text;
   }
   .tab-select__value-container {
-    background-color: $tab-select-background;
+    background-color: $tab-select-background-2;
     margin: 0;
     padding: 0px;
   }
@@ -80,7 +80,7 @@ div .tab-select-container {
   }
   .tab-select__option:hover {
     margin-top: 0;
-    background-color: $light-grey-three;
+    background-color: #ff0006;
     color: black;
   }
   .tab-select__option--is-selected,
@@ -109,7 +109,7 @@ div .tab-select-container {
   .css-1pahdxg-control {
     min-height: initial;
     height: 100%;
-    background-color: $background-color;
+    background-color: $tab-select-background;
     border: none;
     outline: none;
     margin-bottom: 0;

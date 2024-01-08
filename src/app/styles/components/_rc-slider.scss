@@ -42,18 +42,18 @@
 	touch-action: pan-x;
 }
 .rc-slider-handle:focus {
-	border-color: $border-slider;
+	border-color: #ff0001;
 	outline: none;
 }
 .rc-slider-handle-click-focused:focus {
-	border-color: #96dbfa;
+	border-color: #ff0001;
 }
 .rc-slider-handle:hover {
-	border-color: $border-slider;
+	border-color: #ff0001;
 }
 .rc-slider-handle:active {
 	//background: #f00004;
-	border-color: $border-slider;
+	border-color: #ff0001;
 	cursor: -webkit-grabbing;
 	cursor: grabbing;
 }
@@ -87,7 +87,7 @@
 	margin-left: -4px;
 	width: 8px;
 	height: 8px;
-	border: 2px solid $background-rc-color;
+	border: 2px solid #ff0001;
 	background-color: #fff;
 	cursor: pointer;
 	border-radius: 50%;
@@ -97,7 +97,7 @@
 	border-color: #96dbfa;
 }
 .rc-slider-disabled {
-	background-color: $background-rc-color;
+	background-color: #ff0001;
 }
 .rc-slider-disabled .rc-slider-track {
 	background-color: #ccc;

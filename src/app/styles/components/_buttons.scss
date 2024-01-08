@@ -74,7 +74,7 @@
 
 .empty-button:hover {
   color: black;
-  box-shadow: $box-shadow-red;
+  box-shadow: #ff0001;
 }
 
 .state-dropdown {
@@ -94,7 +94,7 @@
 
 .time-button {
   outline: none;
-  height: 24px;
+  height: $time-button-height;
   margin-bottom: 8px;
   width: 100px;
   border: none;
@@ -108,7 +108,7 @@
 
 .jump-button {
   outline: none;
-  height: 24px;
+  height: $time-button-height;
   margin-bottom: 8px;
   width: 100px;
   border: transparent;
@@ -134,7 +134,7 @@
 
 .current-location {
   outline: none;
-  height: 24px;
+  height: $time-button-height;
   margin-bottom: 8px;
   width: 100px;
   border: transparent;
@@ -143,7 +143,7 @@
 
 .empty-button:hover {
   color: white;
-  background-color: $highlight-color;
+  background-color: #ff0001;
 }
 
 .play-button {
@@ -200,7 +200,7 @@
 }
 
 .svg-inline--fa {
-  color: $blue-brand;
+  //color: $blue-brand;
   margin-right: 0.75em;
   display: inline-block;
   font-size: inherit;
@@ -220,7 +220,7 @@
   font: 300 16px 'Outfit', sans-serif;
   font-size: $button-text-size;
 
-  background: $brand-color;
+  background: #ff0001;
   border-radius: 5px;
   position: relative;
   border: 1px solid #b8c4c240;
@@ -318,6 +318,10 @@ aside {
   margin-right: 15px;
 }
 
+.toggle:hover {
+  cursor: pointer;
+}
+
 .toggle {
   display: block;
   position: relative;
@@ -388,7 +392,7 @@ aside {
   width: 120px;
   &:hover {
     color: black !important;
-    background-color: $highlight-color;
+    background-color: #ff0001;
   }
 }
 
@@ -403,14 +407,14 @@ aside {
   font: 500 $button-text-size $text-font-stack;
   width: 120px;
   &:hover {
-    color: $text-color;
-    background-color: $highlight-color;
+    color: $contrasting-color;
+    background-color: #ff0001;
   }
 }
 
 .close-icon-pop-up {
   cursor: pointer;
-  color: $text-color;
+  color: #ff0001;
   font-size: 20px; 
   padding-right: 8px;
   color: black;
@@ -424,11 +428,11 @@ aside {
   border-radius: 3px;
   line-height: 1.5em;
   outline: transparent;
-  background: $blue-color-gradient;
-  box-shadow: $box-shadow-blue;
+  //background: $blue-color-gradient;
+  //box-shadow: $box-shadow-blue;
   &:hover {
-    color: $text-color;
-    background-color: $highlight-color;
+    color: $contrasting-color;
+    background-color: #ff0001;
   }
 }
 
