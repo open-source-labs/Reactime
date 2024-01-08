@@ -214,7 +214,7 @@ export default function ComponentMap({
             separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
           >
             {(tree) => (
-              <Group top={origin.y} left={origin.x}>
+              <Group top={origin.y + 25} left={origin.x}>
                 {tree.links().map((link, i) => (
                   <LinkComponent
                     key={i}
