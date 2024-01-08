@@ -92,26 +92,26 @@ function ButtonsContainer(): JSX.Element {
   return (
     <div className='buttons-container'>
       <Button
-        variant='outlined'
         className='pause-button'
+        variant='outlined'
         type='button'
         onClick={() => dispatch(toggleMode('paused'))}
       >
-        {paused ? <LockIcon sx={{ pr: 1 }} /> : <LockOpenIcon sx={{ pr: 1 }} />}
+        {paused ? <LockIcon className="button-icon" sx={{ pr: 1 }} /> : <LockOpenIcon className="button-icon" sx={{ pr: 1 }} />}
         {paused ? 'Locked' : 'Unlocked'}
       </Button>
       <Button
-        variant='outlined'
         className='export-button'
+        variant='outlined'
         type='button'
         //@ts-ignore
         onClick={() => exportHandler(tabs[currentTab])}
       >
-        <FileDownloadIcon sx={{ pr: 1 }} />
+        <FileDownloadIcon className="button-icon" sx={{ pr: 1 }} />
         Download
       </Button>
       <Button variant='outlined' className='import-button' onClick={() => importHandler(dispatch)}>
-        <FileUploadIcon sx={{ pr: 1 }} />
+        <FileUploadIcon className="button-icon" sx={{ pr: 1 }} />
         Upload
       </Button>
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}
@@ -129,7 +129,7 @@ function ButtonsContainer(): JSX.Element {
           </span>
         }
       >
-        <LoopIcon sx={{ pr: 1 }} />
+        <LoopIcon className="button-icon" sx={{ pr: 1 }} />
         Reconnect
       </Button>
       <Dialog className='dialog-pop-up' open={reconnectDialogOpen} onClose={handleReconnectCancel}>

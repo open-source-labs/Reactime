@@ -1,4 +1,5 @@
 .travel-container {
+  background: $travel-background;
   // background: linear-gradient(
   // 	90deg,
   // 	rgba(41, 41, 41, 1) 0%,
@@ -15,7 +16,6 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  border: none;
 }
 
 .visx-group {
@@ -27,7 +27,7 @@
   min-width: 90px;
   margin: 8px;
   .react-select__control {
-    background-color: $light-grey-four;
+    background-color: $speed-dropdown;
     border-color: transparent;
     @extend %disable-highlight;
   }
@@ -35,14 +35,15 @@
     cursor: pointer;
   }
   .react-select__menu {
-    background-color: $light-grey-four;
+    background-color: $speed-dropdown-expanded;
+    color: $speed-dropdown-text;
     @extend %disable-highlight;
   }
   .react-select__single-value {
-    color: white;
+    color: $speed-dropdown-text;
   }
   .react-select__option:hover {
-    background-color: $fiery-rose;
+    background-color: $speed-dropdown-expanded-hover;
     cursor: pointer;
   }
   .react-select__option--is-selected,
@@ -55,4 +56,8 @@
   .css-w8afj7-Input {
     color: transparent;
   }
+}
+
+.button-icon {
+  color: $icon-primary;
 }

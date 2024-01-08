@@ -6,15 +6,15 @@
 }
 
 .MuiSwitch-colorPrimary.Mui-checked {
-  color: #62d6fb !important;
+  color: $icon-primary !important;
 }
 
 .MuiSwitch-switchBase {
-  color: #f00008 !important;
+  color: $icon-secondary !important;
 }
 
 .MuiSwitch-track {
-  background-color: #e7e7e7 !important;
+  background-color: $icon-bg !important;
 }
 
 .MuiTypography-body1 {
@@ -29,7 +29,7 @@
 }
 
 #routes-dropdown {
-  color: white !important;
+  color: $performance-options-label !important;
   font: 400 16px 'Outfit', sans-serif;
   text-align: left;
 }
@@ -37,7 +37,7 @@
 .saveSeriesContainer {
   #routes-select,
   #snapshot-select {
-    background-color: #f00008 !important;
+    background-color: $performance-options-dropdown !important;
   }
 }
 

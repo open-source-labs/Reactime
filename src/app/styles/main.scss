@@ -3,7 +3,7 @@
 
 * {
   font-family: 'Outfit', sans-serif;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 /* width */
@@ -29,7 +29,8 @@
 }
 
 // 1. Configuration and helpers
-@import 'abstracts/variables';
+@import 'abstracts/variablesLM';
+//@import 'abstracts/variables';
 
 // 3. Base stuff
 @import 'base/base', 'base/helpers', 'base/typography';
@@ -42,7 +43,7 @@
 // 5. Components
 @import 'components/buttons', 'components/actionComponent',
 'components/jsonTree', 'components/renderingFrequency',
-'components/performanceVisx';
+'components/performanceVisx', 'components/componentMap';
 
 // slider component
 @import './components/rc-slider', './components/sliderHandle';

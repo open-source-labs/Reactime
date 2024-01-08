@@ -195,6 +195,8 @@ function History(props: Record<string, unknown>): JSX.Element {
       .enter()
       .append('path')
       .attr('class', 'link')
+      .attr('stroke', '#161617')
+      .attr('fill', 'none')
       .attr(
         //defines the path attribute (d) for each link (edge) between nodes, using a Bézier curve (C) to connect the source node's coordinates (d.x, d.y) to the midpoint between the source and target nodes and then to the target node's coordinates (d.parent.x, d.parent.y)
         'd',
@@ -293,7 +295,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .append('circle')
       .attr('fill', (d) => {
         if (d.data.index === currLocation.index) {
-          return 'red';
+          return '#284b63';
         }
         return d.color ? d.color : '#555';
       })
@@ -303,6 +305,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .append('text')
       .attr('dy', '0.31em')
       .attr('text-anchor', 'middle')
+      .attr('fill', 'white')
       .text((d) => `${d.data.name}.${d.data.branch}`)
       .clone(true)
       .lower()

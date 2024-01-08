@@ -1,124 +1,123 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 * {
-	font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', sans-serif;
 }
 
 .head-container {
-	height: 5%;
-	background: linear-gradient(
-		90deg,
-		rgba(41, 41, 41, 1) 0%,
-		rgba(51, 51, 51, 1) 50%,
-		rgba(41, 41, 41, 1) 100%
-	);
+  height: 5%;
+  background: linear-gradient(
+    90deg,
+    rgba(41, 41, 41, 1) 0%,
+    rgba(51, 51, 51, 1) 50%,
+    rgba(41, 41, 41, 1) 100%
+  );
 }
 
 .head-container {
-	display: flex;
-	flex-direction: row-reverse;
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: center;
 }
 
 div .tab-select-container {
-	background-color: $background-color;
-	font-size: 14px;
-	height: 40px;
-	width: 100%;
-	margin-bottom: 0;
+  background-color: #ff0002;
+  font-size: 14px;
+  height: 40px;
+  width: 100%;
+  margin-bottom: 0;
 }
 
 .tab-select-container:focus {
-	background-color: $background-color;
+  background-color: #ff0006;
 
-	outline: none;
+  outline: none;
 }
 
 .tab-select-container:active {
-	background-color: $background-color;
+  background-color: #ff0005;
 
-	outline: none;
-	border-color: transparent;
+  outline: none;
+  border-color: transparent;
 }
 
-svg {
-	color: #58c1e2;
-}
+// svg {
+// 	color: #58c1e2;
+// }
 
 .tab-select-container {
-	background-color: $background-color;
-	height: 70%;
+  background-color: #ff0004;
+  height: 70%;
 
-	.tab-select__control:focus {
-		outline: none;
-	}
-	div.tab-select-container.css-2b097c-container {
-		background-color: $background-color;
-		margin: 0;
-	}
+  .tab-select__control:focus {
+    outline: none;
+  }
+  div.tab-select-container.css-2b097c-container {
+    background-color: #ff0003;
+    margin: 0;
+  }
 
-	.tab-select__control,
-	.tab-select__menu {
-		background-color: $background-color;
-		outline: none;
-		font-size: 14px;
-		border-style: none;
-		background-color: $brand-color;
-		z-index: 2;
-		margin-bottom: 0;
-		@extend %disable-highlight;
-	}
-	.tab-select__single-value {
-		color: white;
-	}
-	.tab-select__value-container {
-		background-color: $background-color;
-		margin: 0;
-		padding: 0px;
-	}
-	.tab-select__value-container:focus {
-		outline: none;
-	}
-	.tab-select__option:hover {
-		margin-top: 0;
-		background-color: $light-grey-three;
-		color: black;
-	}
-	.tab-select__option--is-selected,
-	.tab-select__option--is-focused {
-		background-color: transparent;
-		outline: transparent;
-	}
-	.tab-select__indicator {
-		padding: 0;
-	}
-	.tab-select__indicator-separator {
-		margin-top: 3px;
-		margin-bottom: 3px;
-	}
+  .tab-select__control,
+  .tab-select__menu {
+    outline: none;
+    font-size: 14px;
+    border-style: none;
+    background-color: $tab-dropdown-background;
+    z-index: 2;
+    margin-bottom: 0;
+    @extend %disable-highlight;
+  }
+  .tab-select__single-value {
+    color: $tab-select-text;
+  }
+  .tab-select__value-container {
+    background-color: $tab-select-background-2;
+    margin: 0;
+    padding: 0px;
+  }
+  .tab-select__value-container:focus {
+    outline: none;
+  }
+  .tab-select__option:hover {
+    margin-top: 0;
+    background-color: #ff0006;
+    color: black;
+  }
+  .tab-select__option--is-selected,
+  .tab-select__option--is-focused {
+    background-color: transparent;
+    outline: transparent;
+  }
+  .tab-select__indicator {
+    padding: 0;
+  }
+  .tab-select__indicator-separator {
+    margin-top: 3px;
+    margin-bottom: 3px;
+  }
 
-	.css-1uccc91-singleValue {
-		margin-left: 8px;
-	}
-	// removes the cursor from blinking
-	.css-w8afj7-Input {
-		color: transparent;
-	}
+  .css-1uccc91-singleValue {
+    margin-left: 8px;
+  }
+  // removes the cursor from blinking
+  .css-w8afj7-Input {
+    color: transparent;
+  }
 
-	// removes min-height of dropdown and change it to 100%
-	.css-yk16xz-control,
-	.css-1pahdxg-control {
-		min-height: initial;
-		height: 100%;
-		background-color: $background-color;
-		border: none;
-		outline: none;
-		margin-bottom: 0;
-		border-radius: 0;
-	}
-	.css-yk16xz-control:focus,
-	.css-1pahdxg-control:focus {
-		outline: none;
-		border-radius: 0;
-	}
+  // removes min-height of dropdown and change it to 100%
+  .css-yk16xz-control,
+  .css-1pahdxg-control {
+    min-height: initial;
+    height: 100%;
+    background-color: $tab-select-background;
+    border: none;
+    outline: none;
+    margin-bottom: 0;
+    border-radius: 0;
+  }
+  .css-yk16xz-control:focus,
+  .css-1pahdxg-control:focus {
+    outline: none;
+    border-radius: 0;
+  }
 }

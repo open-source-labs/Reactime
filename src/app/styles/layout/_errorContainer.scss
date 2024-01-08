@@ -5,7 +5,8 @@
 .error-container {
 	height: 100%;
 	margin: 0 auto;
-	background-color: $brand-color;
+	background-color: $loader-background;
+  color: $loader-text;
 	overflow: hidden;
 	font: 'Outfit', sans-serif;
 
@@ -13,7 +14,7 @@
 	flex-direction: column;
 	align-items: center;
 	a {
-		color: white;
+		color: rgb(91, 54, 54);
 		margin-top: 1%;
 		height: 3%;
 	}
@@ -31,7 +32,7 @@
 		padding: 1%;
 		border: 1px solid;
 		border-style: solid;
-		border-color: white;
+		border-color: loader-checks-border;
 		display: grid;
 		grid-template-columns: 4fr 1fr;
 		grid-template-rows: repeat(3, 1fr);
@@ -64,8 +65,8 @@
 	}
 
 	.launchContentButton {
-		background: $blue-brand;
-    color: $brand-color;
+		background: $launch-button;
+    color: $launch-button-text;
     margin: 3px;
 		padding: 5px 10px;
     border-radius: 5px;
@@ -73,7 +74,7 @@
 	}
 
 	.launchContentButton:hover {
-    background: $light-background-color;
+    background: $launch-button-hover;
   }
 
 	.launchContentButton:active {

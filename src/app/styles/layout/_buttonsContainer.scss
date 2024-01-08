@@ -3,6 +3,7 @@
   font-family: 'Outfit', sans-serif;
 }
 .buttons-container {
+  //color: #ff0000;
   margin: 0 1% 0 1%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -39,6 +40,7 @@
 
 @media (max-width: 500px) {
   .buttons-container {
+    //color: #ff0000;
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -71,21 +73,21 @@
 }
 
 .dialog-pop-up {
-  border: 1px solid $border-color;
+  border: 1px solid #ff0001;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
   padding: 13px;
 }
 
 .dialog-pop-up-header {
-  color: $text-color;
+  color: #ff0001;
   padding: 8px 16px;  
   font-size: 20px; 
   font-family: $text-font-stack;
 }
 
 .dialog-pop-up-contents {
-  background-color: $brand-color;
-  color: $text-color; 
+  background-color: $pop-up-window-background;
+  color: $pop-up-window-text; 
   font-family: $text-font-stack;
   line-height: 1.4;  
   padding: 0px 15px 15px 15px !important;  
@@ -93,21 +95,21 @@
 
 .dialog-pop-up-actions {
   padding: 15px;
-  background-color: $head-color; 
+  background-color: #ff0001; 
 }
 
 
 .close-icon-pop-up-div {
   height: 40px;
   width: 100%;
-  background-color: $light-background-color;
+  background-color: #ff0001;
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
 .warning-header-container {
-  background-color: $brand-color;
+  background-color: $pop-up-window-background;
   display: flex;
   align-items: center;
   height: 20%;

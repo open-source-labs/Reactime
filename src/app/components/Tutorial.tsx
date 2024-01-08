@@ -365,7 +365,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           type='button'
           onClick={() => startIntro()}
         >
-          <HelpOutlineIcon sx={{ pr: 1 }} /> Tutorial
+          <HelpOutlineIcon className="button-icon" sx={{ pr: 1 }} /> Tutorial
         </Button>
       </>
     );
