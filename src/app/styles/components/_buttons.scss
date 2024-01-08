@@ -65,11 +65,10 @@
 }
 
 .clear-button {
-  background:#3256f1;
+  background: #3256f1;
   background-color: #050787;
-  color:#3256f1
+  color: #3256f1;
 }
-
 
 .empty-button:hover {
   color: black;
@@ -403,13 +402,8 @@ aside {
 .reconnect-button-pop-up {
   padding: 3px;
   outline: transparent;
-<<<<<<< HEAD
-  background: $red-color-gradient;
-  color: $text-color !important;
-=======
-  background-color: #050787; 
+  background-color: #050787;
   color: $reconnect-button-text !important;
->>>>>>> origin/consolidated-colors
   border: none;
   border-radius: 3px;
   cursor: pointer;
@@ -440,13 +434,8 @@ aside {
 
 .close-icon-pop-up {
   cursor: pointer;
-<<<<<<< HEAD
-  color: $text-color;
-  font-size: 20px;
-=======
   color: #ff0001;
-  font-size: 20px; 
->>>>>>> origin/consolidated-colors
+  font-size: 20px;
   padding-right: 8px;
   color: black;
 }
