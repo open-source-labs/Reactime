@@ -115,7 +115,7 @@ const StateRoute = (props: StateRouteProps) => {
             element={<Tree snapshot={snapshot} snapshots={snapshots} currLocation={currLocation} />}
           />
           <Route
-            path='*'
+            path='/'
             element={
               hierarchy ? (
                 <ParentSize className='componentMapContainer'>

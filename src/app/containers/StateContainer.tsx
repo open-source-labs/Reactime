@@ -43,16 +43,16 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
               path='*'
               element={ 
               <div>*/}
-              <StateRoute
-                webMetrics={webMetrics}
-                viewIndex={viewIndex}
-                snapshot={snapshot}
-                hierarchy={hierarchy}
-                snapshots={snapshots}
-                currLocation={currLocation}
-              />
-              <Outlet/>
-              {/*</div>
+      <StateRoute
+        webMetrics={webMetrics}
+        viewIndex={viewIndex}
+        snapshot={snapshot}
+        hierarchy={hierarchy}
+        snapshots={snapshots}
+        currLocation={currLocation}
+      />
+      {/* <Outlet/> */}
+      {/*</div>
                }
            />
           </Routes> */}

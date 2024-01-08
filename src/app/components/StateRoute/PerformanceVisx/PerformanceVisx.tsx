@@ -193,11 +193,14 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
   const [route, setRoute] = useState('All Routes');
   const [snapshot, setSnapshot] = useState('All Snapshots');
 
+  console.log('Performance tab has loaded!');
+
   getActions();
 
-  // useEffect(() => {
-  //   dispatch(setCurrentTabInApp('performance')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance' to facilitate render.
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(setCurrentTabInApp('performance')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance' to facilitate render.
+    renderForTutorial();
+  }, []);
 
   const allRoutes = []; // create allRoutes variable to hold urls
   const filteredSnapshots = [];
@@ -243,34 +246,36 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
   const renderForTutorial = () => {
     // This will redirect to the proper tabs during the tutorial
     // Updated redirect to Navigate v23 redirect no longer supported in react router dom after v6
-    if (currentTabInApp === 'performance') return <Navigate to='/' />;
-    if (currentTabInApp === 'performance-comparison') return <Navigate to='/comparison' />;
+    console.log(currentTabInApp);
+    if (currentTabInApp === 'performance') return <Navigate to='/performance/' />;
+    if (currentTabInApp === '/performance-comparison')
+      return <Navigate to='/performance/comparison' />;
     return null;
   };
 
   return (
     <>
       <div className='performance-nav-bar-container'>
-        <NavLink className='router-link-performance' end to='/'>
+        <NavLink className='router-link-performance' end to='/performance/'>
           Snapshots View
         </NavLink>
         <NavLink
           className='router-link-performance'
           id='router-link-performance-comparison'
-          to='/comparison'
+          to='/performance/comparison'
         >
           Comparison View
         </NavLink>
-        <NavLink className='router-link-performance' to='/componentdetails'>
+        <NavLink className='router-link-performance' to='/performance/componentdetails'>
           Component Details
         </NavLink>
       </div>
 
-      {renderForTutorial()}
+      {/* {renderForTutorial()} */}
 
       <Routes>
         <Route
-          path='/comparison'
+          path='/performance/comparison'
           element={
             hierarchy && series !== false ? (
               <BarGraphComparison
@@ -296,7 +301,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
           }
         />
         <Route
-          path='componentdetails'
+          path='/componentdetails'
           element={
             hierarchy ? (
               <RenderingFrequency data={data.componentData} />

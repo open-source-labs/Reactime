@@ -268,6 +268,7 @@ export const mainSlice = createSlice({
 
     setCurrentTabInApp: (state, action) => {
       state.currentTabInApp = action.payload;
+      console.log('mainSlice currentTabInApp: ', state.currentTabInApp);
     },
 
     pause: (state) => {

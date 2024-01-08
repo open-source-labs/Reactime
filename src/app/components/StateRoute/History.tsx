@@ -318,9 +318,9 @@ function History(props: Record<string, unknown>): JSX.Element {
     makeD3Tree();
   }, [root /*, currLocation*/]); // if the 'root' or 'currLocation' changes, re-build the D3 Tree
 
-  // useEffect(() => {
-  //   dispatch(setCurrentTabInApp('history')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.
-  // }, []);
+  useEffect(() => {
+    dispatch(setCurrentTabInApp('history')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.
+  }, []);
 
   // then rendering each node in History tab to render using D3, which will share area with LegendKey
   return (
