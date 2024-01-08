@@ -33,7 +33,7 @@ const margin: Margin = {
   bottom: 0,
   left: 50,
 };
-const axisColor = '#62d6fb';
+const axisColor = '#ff0000'; //#62d6fb
 const background = '#242529';
 const tooltipStyles = {
   ...defaultStyles,

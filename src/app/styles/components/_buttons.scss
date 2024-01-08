@@ -306,7 +306,7 @@
 
 /* sidebar button open and closing functionality */
 aside {
-  background: #242529;
+  //background: #242529;
   color: #fff;
   transition: width 1s;
   width: 100%; //JR
@@ -319,10 +319,10 @@ aside {
 
 //JR added for collapse label
 .collapse {
+  color: $collapse-text;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  background: #242529;
 }
 
 .hidden {
@@ -360,7 +360,7 @@ aside {
 }
 
 .toggle i::before {
-  top: -5px;
+  top: -6px;
 }
 
 .toggle i::after {

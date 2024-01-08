@@ -47,6 +47,11 @@ $launch-button: $primary-color-strong;
 $launch-button-hover: $primary-color;
 $launch-button-text: $light-text;
 
+//Collapse and Toggle Record labels
+$collapse-text: $dark-text;
+$toggle-record-text: $dark-text;
+
+
 //drop-down menu for selecting which tab Reactime is observing
 $tab-select-background: $primary-color;
 $tab-select-background-2: $primary-color;
@@ -114,7 +119,8 @@ $performance-options-dropdown: $primary-color-strong;
 $performance-options-label: $dark-text;
 $performance-save-series-button: $primary-color;
 $performance-save-series-button-text: $light-text;
-$perf-background: $background-color;
+$perf-background: $background-color-strong;
+//axis tick colors and labels determined in BarGraph.tsx on line 29
 
 $history-node: $primary-color; //this is currently set in History.tsx line 291
 $history-link: $contrasting-color; // this is currently set in d3graph.css line 26

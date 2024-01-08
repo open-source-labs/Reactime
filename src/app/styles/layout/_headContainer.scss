@@ -21,7 +21,7 @@
 }
 
 div .tab-select-container {
-  background-color: #ff0002;
+  //background-color: #ff0002;
   font-size: 14px;
   height: 40px;
   width: 100%;
@@ -35,18 +35,12 @@ div .tab-select-container {
 }
 
 .tab-select-container:active {
-  background-color: #ff0005;
-
   outline: none;
   border-color: transparent;
 }
 
-// svg {
-// 	color: #58c1e2;
-// }
-
 .tab-select-container {
-  background-color: #ff0004;
+  //background-color: #ff0004;
   height: 70%;
 
   .tab-select__control:focus {

@@ -26,7 +26,9 @@ const margin = {
   bottom: 0,
   left: 50,
 };
-const axisColor = '#F00008';
+const axisColor = '#161617';
+const axisTickLabelColor = '#363638';
+const axisLabelColor = '#363638';
 const background = '#242529';
 const tooltipStyles = {
   ...defaultStyles,
@@ -260,6 +262,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           </BarStack>
         </Group>
         <AxisLeft
+          className="BarGraphAxis"
           top={margin.top}
           left={margin.left}
           scale={renderingScale}
@@ -267,13 +270,14 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           tickStroke={axisColor}
           strokeWidth={2}
           tickLabelProps={() => ({
-            fill: 'rgb(231, 231, 231)',
+            fill: axisTickLabelColor,
             fontSize: 11,
             verticalAnchor: 'middle',
             textAnchor: 'end',
           })}
         />
         <AxisBottom
+          className="BarGraphAxis"
           top={yMax + margin.top}
           left={margin.left}
           scale={snapshotIdScale}
@@ -281,21 +285,21 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           tickStroke={axisColor}
           strokeWidth={2}
           tickLabelProps={() => ({
-            fill: 'rgb(231, 231, 231)',
+            fill: axisTickLabelColor,
             fontSize: 11,
             textAnchor: 'middle',
           })}
         />
-        <Text x={-yMax / 2 - 75} y='15' transform='rotate(-90)' fontSize={16} fill='#FFFFFF'>
+        <Text x={-yMax / 2 - 75} y='15' transform='rotate(-90)' fontSize={16} fill={axisLabelColor}>
           Rendering Time (ms)
         </Text>
         <br />
         {snapshot === 'All Snapshots' ? (
-          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={16} fill='#FFFFFF'>
+          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={16} fill={axisLabelColor}>
             Snapshot ID
           </Text>
         ) : (
-          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={16} fill='#FFFFFF'>
+          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={16} fill={axisLabelColor}>
             Components
           </Text>
         )}
