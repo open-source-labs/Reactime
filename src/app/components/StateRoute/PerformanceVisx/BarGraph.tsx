@@ -29,12 +29,11 @@ const margin = {
 const axisColor = '#161617';
 const axisTickLabelColor = '#363638';
 const axisLabelColor = '#363638';
-const background = '#242529';
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
-  backgroundColor: 'rgba(0,0,0,0.9)',
-  color: 'white',
+  //backgroundColor: 'rgba(0,0,0,0.9)', //defaults to white
+  //color: 'white', //defaults to a gray
   fontSize: '16px',
   lineHeight: '18px',
   fontFamily: 'Roboto',

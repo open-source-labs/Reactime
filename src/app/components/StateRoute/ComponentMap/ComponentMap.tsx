@@ -221,7 +221,7 @@ export default function ComponentMap({
           <Tree
             root={hierarchy(startNode, (d) => (d.isExpanded ? d.children : null))}
             size={[sizeWidth / aspect, sizeHeight / aspect]}
-            separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
+            separation={(a, b) => (a.parent === b.parent ? 0.5 : 0.5) / a.depth}
           >
             {(tree) => (
               <Group top={origin.y + 25} left={origin.x}>
