@@ -33,11 +33,11 @@ function ErrorMsg({ loadingArray, status, launchContent, reinitialize }): JSX.El
     case 'Content Script Error':
       return (
         <div>
-          Could not connect to the Target App. Try closing Reactime and reloading the page.
+          Target App not yet found...
           <br />
+          If you encounter this error on the initial launch of Reactime, try refreshing the webpage
+          you are developing.
           <br />
-          If you encounter this error on the initial launch of Reactime, refresh the webpage you are
-          developing.
           <br />
           If Reactime is running as an iframe in your developer tools, right click on the Reactime
           application and click 'Reload Frame'
@@ -81,7 +81,7 @@ function ErrorMsg({ loadingArray, status, launchContent, reinitialize }): JSX.El
     case 'Not React App':
       return (
         <div>
-          The Target app is either not a React application or is not compatible with Reactime
+          The Target app is either not a React application or is not compatible with Reactime.
         </div>
       );
     default:
