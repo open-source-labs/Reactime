@@ -98,10 +98,6 @@ function MainContainer(): JSX.Element {
         break;
       }
       case 'changeTab': {
-        console.log(
-          'MainContainer is dispatching this payload to the mainSlice setTab reducer: ',
-          payload,
-        );
         dispatch(setTab(payload));
         break;
       }

@@ -296,7 +296,6 @@ export default function ComponentMap({
                               ) <
                             aspect
                           ) {
-                            console.log(aspect);
                             //assign a new lowest percentage if one is found
                             aspect =
                               Math.abs(
@@ -441,7 +440,6 @@ export default function ComponentMap({
                     </Group>
                   );
                 })}
-                {console.log(nodeCoords)}
               </Group>
             )}
           </Tree>
