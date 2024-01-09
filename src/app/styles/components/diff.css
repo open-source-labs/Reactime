@@ -33,12 +33,12 @@ ul.jsondiffpatch-delta {
 .jsondiffpatch-deleted pre,
 .jsondiffpatch-modified .jsondiffpatch-left-value pre,
 .jsondiffpatch-textdiff-deleted {
-  background: #7E5C69;
+  background: #fccdda;
   text-decoration: line-through;
 }
 .jsondiffpatch-unchanged,
 .jsondiffpatch-movedestination {
-  color: white;
+  color: #f7f2f2;
 }
 .jsondiffpatch-unchanged,
 .jsondiffpatch-movedestination > .jsondiffpatch-value {

@@ -26,7 +26,7 @@ function parseError(loadingArray: [], status: Record<string, unknown>): string {
   return 'default';
 }
 
-function ErrorMsg({ loadingArray, status, launchContent }): JSX.Element {
+function ErrorMsg({ loadingArray, status, launchContent, reinitialize }): JSX.Element {
   switch (
     parseError(loadingArray, status) // parseError returns a string based on the loadingArray and status. The returned string is matched to a case so that an appropriate error message will be displayed to the user
   ) {

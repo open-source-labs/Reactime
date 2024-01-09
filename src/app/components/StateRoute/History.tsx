@@ -3,7 +3,12 @@
 // @ts-nocheck
 import React, { useEffect } from 'react';
 // formatting findDiff return data to show the changes with colors, aligns with actions.tsx
-import { diff, formatters } from 'jsondiffpatch';
+import { diff } from 'jsondiffpatch';
+const jsondiffpatch = require('jsondiffpatch');
+// import * as jsondiffpatch from 'jsondiffpatch';
+// import { diff } from 'jsondiffpatch';
+// import jsondiffpatch from 'jsondiffpatch/formatters';
+// const jsondiffpatch = require('jsondiffpatch');
 import * as d3 from 'd3';
 import { DefaultMargin } from '../../FrontendTypes';
 import { useDispatch } from 'react-redux';
@@ -37,7 +42,6 @@ function History(props: Record<string, unknown>): JSX.Element {
 
   const svgRef = React.useRef(null);
   const root = JSON.parse(JSON.stringify(hierarchy)); // why do we stringify and then parse our hierarchy back to JSON? (asked 7/31/23)
-
   // setting the margins for the Map to render in the tab window.
   const innerWidth: number = totalWidth - margin.left - margin.right;
   const innerHeight: number = totalHeight - margin.top - margin.bottom - 60;
@@ -154,9 +158,8 @@ function History(props: Record<string, unknown>): JSX.Element {
       statelessCleaning(snapshots[index - 1]),
       statelessCleaning(snapshots[index]),
     );
-
     const changedState = findStateChangeObj(delta); // determines if delta had any stateful changes
-    const html = formatters.html.format(changedState[0]); // formats the difference into html string
+    const html = jsondiffpatch.formatters(changedState[0]); // formats the difference into html string
     return html; // return html string
   }
 
@@ -167,7 +170,6 @@ function History(props: Record<string, unknown>): JSX.Element {
   const makeD3Tree = () => {
     const svg = d3.select(svgRef.current); // d3.select Selects the first element/node that matches svgRef.current. If no element/node match returns an empty selection. If multiple elements/nodes match the selector, only the first matching element/node (in document order) will be selected.
     svg.selectAll('*').remove(); // Selects all elements. The elements will be selected in document order (top-to-bottom). We then remove the selected elements/nodes from the DOM. This is important as to ensure that the SVG is empty before rendering the D3 based visualization to avoid interference/overlap with any previously rendered content.
-
     const tree = (data) => {
       // function that takes in data and turns it into a d3 tree.
       const treeRoot = d3.hierarchy(data); // 'd3.hierarchy' constructs a root node from the specified hierarchical data.
@@ -190,6 +192,8 @@ function History(props: Record<string, unknown>): JSX.Element {
       .enter()
       .append('path')
       .attr('class', 'link')
+      .attr('stroke', '#161617')
+      .attr('fill', 'none')
       .attr(
         //defines the path attribute (d) for each link (edge) between nodes, using a Bézier curve (C) to connect the source node's coordinates (d.x, d.y) to the midpoint between the source and target nodes and then to the target node's coordinates (d.parent.x, d.parent.y)
         'd',
@@ -288,7 +292,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .append('circle')
       .attr('fill', (d) => {
         if (d.data.index === currLocation.index) {
-          return 'red';
+          return '#284b63';
         }
         return d.color ? d.color : '#555';
       })
@@ -298,6 +302,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .append('text')
       .attr('dy', '0.31em')
       .attr('text-anchor', 'middle')
+      .attr('fill', 'white')
       .text((d) => `${d.data.name}.${d.data.branch}`)
       .clone(true)
       .lower()
@@ -307,7 +312,7 @@ function History(props: Record<string, unknown>): JSX.Element {
 
   useEffect(() => {
     makeD3Tree();
-  }, [root, currLocation]); // if the 'root' or 'currLocation' changes, re-build the D3 Tree
+  }, [root /*, currLocation*/]); // if the 'root' or 'currLocation' changes, re-build the D3 Tree
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('history')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.

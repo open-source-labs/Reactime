@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
+import '@testing-library/jest-dom'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import ErrorMsg from '../components/ErrorMsg';
 
 const props = {
@@ -11,6 +11,7 @@ const props = {
     targetPageisaReactApp: true,
   },
   launchContent: null,
+  reinitialize: null,
 };
 
 describe('unit testing for ErrorContainer.tsx', () => {

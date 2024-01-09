@@ -1,5 +1,5 @@
 import React from 'react';
-import { MemoryRouter as Router, Route, NavLink, Switch } from 'react-router-dom';
+import { MemoryRouter as Router, Route, NavLink, Routes } from 'react-router-dom';
 import Diff from './Diff';
 import { DiffRouteProps } from '../FrontendTypes';
 
@@ -9,20 +9,20 @@ import { DiffRouteProps } from '../FrontendTypes';
 
 // 'DiffRoute' only passed in prop is 'snapshot' from 'tabs[currentTab]' object in 'MainContainer'
 const DiffRoute = (props: DiffRouteProps): JSX.Element => (
-  <Router>
+  <div className='diff-container'>
     <div className='navbar'>
-      <NavLink className='router-link' activeClassName='is-active' exact to='/'>
+      <NavLink className='router-link' to='/'>
         Tree
       </NavLink>
-      <NavLink className='router-link' activeClassName='is-active' to='/diffRaw'>
+      <NavLink className='router-link' to='/diffRaw'>
         Raw
       </NavLink>
     </div>
-    <Switch>
-      <Route path='/diffRaw' render={() => <Diff snapshot={props.snapshot} show />} />
-      <Route path='/' render={() => <Diff snapshot={props.snapshot} show={false} />} />
-    </Switch>
-  </Router>
+    <Routes>
+      <Route path='/diffRaw' element={<Diff snapshot={props.snapshot} show />} />
+      <Route path='/' element={<Diff snapshot={props.snapshot} show={false} />} />
+    </Routes>
+  </div>
 );
 
 export default DiffRoute;

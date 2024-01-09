@@ -16,7 +16,7 @@ const mockState = {
   },
 }; // End
 
-const chrome = require('sinon-chrome');
+// const chrome = require('sinon-chrome');
 
 const mockActionContainer = jest.fn();
 jest.mock('../containers/ActionContainer', () => (props) => {
@@ -55,17 +55,17 @@ jest.mock('../../../node_modules/intro.js/introjs.css', () => jest.fn());
 useDispatch.mockReturnValue(dispatch);
 useSelector.mockImplementation((callback) => callback(mockState));
 
-global.chrome = chrome;
-const port = {
-  onMessage: {
-    addListener: () => {},
-    hasListener: () => {},
-  },
-  onDisconnect: {
-    addListener: () => {},
-  },
-};
-chrome.runtime.connect.returns(port);
+// global.chrome = chrome;
+// const port = {
+//   onMessage: {
+//     addListener: () => {},
+//     hasListener: () => {},
+//   },
+//   onDisconnect: {
+//     addListener: () => {},
+//   },
+// };
+// chrome.runtime.connect.returns(port);
 
 describe('With no snapshots, should not render any containers', () => {
   test('With no snapshots, ErrorContainer should render', () => {

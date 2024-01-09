@@ -6,7 +6,7 @@
 // regenerator runtime supports async functionality : This package implements a fully-functional source transformation that takes the syntax for generators/yield from ECMAScript 2015 or ES2015 and Asynchronous Iteration proposal and spits out efficient JS-of-today (ES5) that behaves the same way.
 import 'regenerator-runtime/runtime';
 // linkFiberInitialization (actually uses the function linkFiber but is labeled here as linkFiberInitialization, returns a function). When this returned function is invoked, it checks if devTools is installed, checks if the website is a reactApp, adds event listeners for timetravel, and allows us to obtain the initial FiberRoot Node from react dev tool
-import linkFiberInitialization from './routers/linkFiber';
+import linkFiber from './routers/linkFiber';
 // timeJumpInitialization (actually uses the function timeJumpInitiation but is labeled here as linkFiberInitialization, returns a function) returns a function that sets jumping to false and handles timetravel feature
 import timeJumpInitialization from './controllers/timeJump';
 import { Snapshot, Status, MsgData } from './types/backendTypes';
@@ -20,7 +20,7 @@ const mode: Status = {
 
 // ---------------------INITIALIZE LINKFIBER & TIMEJUMP-------------------------
 // linkFiber is now assigned the default ASYNC function exported from the file linkFiber.ts
-const linkFiber = linkFiberInitialization(mode);
+const linkFiberInit = linkFiber(mode);
 // timeJump is now assigned the default ASYNC function exported from the file timeJump.ts
 const timeJump = timeJumpInitialization(mode);
 
@@ -30,7 +30,7 @@ const timeJump = timeJumpInitialization(mode);
  * 2. Obtain the initial ReactFiber Tree from target React App
  * 3. Send a snapshot of ReactFiber Tree to frontend/Chrome Extension
  */
-linkFiber();
+linkFiberInit();
 
 // --------------INITIALIZE EVENT LISTENER FOR TIME TRAVEL----------------------
 /**
@@ -56,6 +56,45 @@ window.addEventListener('message', async ({ data: { action, payload } }: MsgData
       else {
         await timeJump(payload); // * This sets state with given payload
       }
+      break;
+      // case 'reinitialize':
+      // console.log('backend reinitialize received, performing checks again');
+      // let devTools;
+      // while (!devTools) {
+      //   devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+      // }
+      // console.log('backend react devtools: ', devTools);
+      // // If React Devtools is not installed, object will be undefined.
+      // if (!devTools) return;
+      // // If React Devtools is installed, send a message to front end.
+
+      // console.log(
+      //   'backend react devtools check passed, sending devToolsInstalled to contentScript',
+      // );
+      // window.postMessage(
+      //   {
+      //     action: 'devToolsInstalled',
+      //     payload: 'devToolsInstalled',
+      //   },
+      //   '*',
+      // );
+
+      // const reactInstance = devTools.renderers.get(1);
+      // // If target application is not a React App, this will return undefined.
+      // if (!reactInstance) {
+      //   return;
+      // }
+      // console.log('backend react instance check passed, sending aReactApp to contentScript');
+      // // If target application is a React App, send a message to front end.
+      // window.postMessage(
+      //   {
+      //     action: 'aReactApp',
+      //     payload: 'aReactApp',
+      //   },
+      //   '*',
+      // );
+
+      linkFiberInit();
       break;
     default:
       break;

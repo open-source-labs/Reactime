@@ -1,6 +1,7 @@
 import React from 'react';
-import { diff, formatters } from 'jsondiffpatch';
-import ReactHtmlParser from 'react-html-parser';
+import { diff, formatters} from 'jsondiffpatch';
+const jsondiffpatch = require('jsondiffpatch');
+import ReactHtmlParser from 'html-react-parser';
 import { CurrentTab, DiffProps, MainState, RootState, StatelessCleaning } from '../FrontendTypes';
 import { useSelector } from 'react-redux';
 
@@ -29,7 +30,7 @@ function Diff(props: DiffProps): JSX.Element {
   }
 
   /*
-    State snapshot objects have the following structure: 
+    State snapshot objects have the following structure:
     {
       children: array of objects
       componentData: object
@@ -82,13 +83,13 @@ function Diff(props: DiffProps): JSX.Element {
 
   const previousDisplay: StatelessCleaning = statelessCleaning(previous); // displays stateful data from the first snapshot that was taken before our current snapshot.
 
-  const delta: StatelessCleaning = diff(previousDisplay, snapshot); // diff function from 'jsondiffpatch' returns the difference in state between 'previousDisplay' and 'snapshot'
+  const delta = diff(previousDisplay, snapshot); // diff function from 'jsondiffpatch' returns the difference in state between 'previousDisplay' and 'snapshot'
 
-  const html: StatelessCleaning = formatters.html.format(delta, previousDisplay); // formatters function from 'jsondiffpatch' returns an html string that shows the difference between delta and the previousDisplay
+  const html = jsondiffpatch.formatters.format(delta, previousDisplay); // formatters function from 'jsondiffpatch' returns an html string that shows the difference between delta and the previousDisplay
 
   if (show)
-    formatters.html.showUnchanged(); // shows unchanged values if we're on the '/diffRaw' path
-  else formatters.html.hideUnchanged(); // hides unchanged values
+    jsondiffpatch.formatters.showUnchanged(); // shows unchanged values if we're on the '/diffRaw' path
+  else jsondiffpatch.formatters.hideUnchanged(); // hides unchanged values
 
   if (previous === undefined || delta === undefined) {
     // if there has been no state changes on the target/hooked application, previous and delta would be undefined.

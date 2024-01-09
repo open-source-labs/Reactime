@@ -117,9 +117,9 @@ const Action = (props: ActionProps): JSX.Element => {
             >
               <div className='action-component-text'>
                 <input
+                  className='actionname'
                   key={`ActionInput${displayName}`}
                   type='text'
-                  className='actionname'
                   placeholder={`Snapshot: ${displayName}`}
                 />
               </div>

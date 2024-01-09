@@ -49,14 +49,14 @@
 	}
 
 	h4 {
-		color: $text-color;
+		color: #ff0001;
 		margin-bottom: 5px;
 		margin-top: 5px;
 		font-weight: 300;
 	}
 
 	p {
-		color: $brand-color;
+		color: #ff0001;
 		line-height: 20px;
 		text-align: center;
 		font-size: 18px;
@@ -75,7 +75,7 @@
 	font-family: 'Roboto', sans-serif;
 
 	h3 {
-		color: $text-color;
+		color: #ff0001;
 		margin-bottom: 5px;
 		margin-top: 5px;
 		text-transform: uppercase;
@@ -84,7 +84,7 @@
 	}
 
 	h4 {
-		color: $text-color;
+		color: #ff0001;
 		margin-bottom: 5px;
 		margin-top: 5px;
 		font-weight: 300;
@@ -103,7 +103,7 @@
 	cursor: pointer;
 	padding-right: 5px;
 	border-right: 5px;
-	background: $blue-color-gradient;
+	//background: $blue-color-gradient;
 	width: 50px;
 	padding: 0 0.5em;
 	right: 10%;

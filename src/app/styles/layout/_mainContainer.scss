@@ -1,11 +1,10 @@
 .main-container {
   height: 100%;
   margin: 0 auto;
-  background-color: $brand-color;
+  background-color: $function-bar-background;
   overflow: hidden;
 }
 
-.state-container-container{
+.state-container-container {
   display: contents;
 }
-

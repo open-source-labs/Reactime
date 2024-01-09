@@ -49,7 +49,7 @@ const radialGraph = (props) => {
             },
           },
           track: {
-            background: '#fff',
+            background: '#161617',
             strokeWidth: '3%',
             margin: 0, // margin is in pixels
             dropShadow: {
@@ -66,12 +66,12 @@ const radialGraph = (props) => {
             name: {
               offsetY: -10,
               show: true,
-              color: '#fff',
+              color: '#161617',
               fontSize: '24px',
             },
             value: {
               formatter: props.formatted,
-              color: '#fff',
+              color: '#3c6e71',
               fontSize: '16px',
               show: true,
             },

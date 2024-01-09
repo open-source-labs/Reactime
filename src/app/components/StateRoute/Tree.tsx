@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import JSONTree from 'react-json-tree'; // React JSON Viewer Component
+import { JSONTree } from 'react-json-tree'; // React JSON Viewer Component
 import { setCurrentTabInApp } from '../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 import { TreeProps } from '../../FrontendTypes';

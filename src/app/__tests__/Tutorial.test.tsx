@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { TextEncoder } from 'util';
 global.TextEncoder = TextEncoder;
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import Tutorial from '../components/Tutorial';
 
 const dispatch = jest.fn();

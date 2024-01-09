@@ -1,16 +1,18 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
+import '@testing-library/jest-dom'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 import Loader from '../components/Loader';
 
 describe('unit testing for Loader.tsx', () => {
   test('renders a loading icon', () => {
     const { container } = render(<Loader loading={true} result={false} />);
-    expect(container.firstChild).toHaveClass('css-1tm071a');
+    console.log('this is our container.firstChild: ', container.firstChild);
+    expect(container.firstChild).toHaveClass('docs-story css-kdwx3d');
   });
 
   test('renders a fail icon', () => {
     const { container } = render(<Loader loading={false} result={false} />);
+    console.log('this is a fail2: ', container.getElementsByClassName('fail')[0]);
     expect(container.getElementsByClassName('fail').length).toBe(1);
   });
 

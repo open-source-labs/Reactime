@@ -1,6 +1,6 @@
 import React from 'react';
 import { render as rtlRender, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import { TextEncoder } from 'util';
 global.TextEncoder = TextEncoder;
 import ButtonsContainer from '../containers/ButtonsContainer';

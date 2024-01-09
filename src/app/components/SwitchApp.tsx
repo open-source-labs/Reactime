@@ -4,6 +4,7 @@ import { setTab } from '../slices/mainSlice';
 //importing these methods for RTK
 import { useSelector, useDispatch } from 'react-redux';
 import { MainState, RootState } from '../FrontendTypes';
+import { current } from '@reduxjs/toolkit';
 
 /*
   This is the dropdown menu on the left column above the 'clear' button and the state snapshots list. It allows us to switch between which website/application we are currently working on.
@@ -17,7 +18,6 @@ const SwitchAppDropdown = (): JSX.Element => {
   const { currentTab, tabs }: MainState = useSelector((state: RootState) => state.main);
 
   const tabsArray: {}[] = []; // tabsArray is an empty array that will take objects as it's elements
-
   Object.keys(tabs).forEach((tab) => {
     // We populate our 'tabsArray' with objects derived from the 'tab' that is currently being iterated on.
     tabsArray.unshift({ value: tab, label: tabs[tab].title });
