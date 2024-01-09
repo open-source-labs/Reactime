@@ -16,3 +16,4 @@ sandboxes/manual-tests/NextJS/.next
 package-lock.json
 yarn.lock
 docs/**/*
+docs/*
