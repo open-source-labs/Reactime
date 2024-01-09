@@ -42,19 +42,47 @@ const StateRoute = (props: StateRouteProps) => {
   return (
     <div className='app-body'>
       <div className='navbar'>
-        <NavLink to='/' className='router-link map-tab' end>
+        <NavLink
+          to='/'
+          className={(navData) =>
+            navData.isActive ? 'is-active router-link map-tab' : 'router-link map-tab'
+          }
+          end
+        >
           Map
         </NavLink>
-        <Link className='router-link performance-tab' to='/performance'>
+        <NavLink
+          className={(navData) =>
+            navData.isActive ? 'is-active router-link map-tab' : 'router-link map-tab'
+          }
+          to='/performance'
+        >
           Performance
-        </Link>
-        <NavLink className='router-link history-tab' to='/history'>
+        </NavLink>
+        <NavLink
+          className={(navData) =>
+            navData.isActive ? 'is-active router-link history-tab' : 'router-link history-tab'
+          }
+          to='/history'
+        >
           History
         </NavLink>
-        <NavLink className='router-link web-metrics-tab' to='/webMetrics'>
+        <NavLink
+          className={(navData) =>
+            navData.isActive
+              ? 'is-active router-link web-metrics-tab'
+              : 'router-link web-metrics-tab'
+          }
+          to='/webMetrics'
+        >
           Web Metrics
         </NavLink>
-        <NavLink className='router-link tree-tab' to='/tree'>
+        <NavLink
+          className={(navData) =>
+            navData.isActive ? 'is-active router-link tree-tab' : 'router-link tree-tab'
+          }
+          to='/tree'
+        >
           Tree
         </NavLink>
       </div>
