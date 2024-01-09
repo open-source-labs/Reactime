@@ -1,4 +1,4 @@
-// Import snapshots from "../app/components/snapshots".
+// import snapshots from "../app/components/snapshots"
 // import 'core-js';
 
 import { invoke } from 'lodash';
@@ -271,6 +271,7 @@ chrome.runtime.onConnect.addListener((port) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
+    console.log('sign connected!!');
     return true;
   }
   const tabTitle = sender.tab.title;
@@ -279,6 +280,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   let isReactTimeTravel = false;
 
   if (name) {
+    //console.log(value);
     metrics[name] = value;
   }
 

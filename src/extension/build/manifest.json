@@ -14,8 +14,11 @@
   },
   "content_scripts": [
     {
-      "matches": ["http://localhost/*"],
-      "js": ["bundles/content.bundle.js"]
+      "matches": ["<all_urls>"],
+      "js": ["bundles/content.bundle.js"],
+      "run_at": "document_start",
+      "all_frames": false,
+      "isolated_world": true
     }
   ],
   "web_accessible_resources": [

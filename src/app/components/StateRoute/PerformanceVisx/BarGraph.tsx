@@ -178,7 +178,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
         <form className='routesForm' id='routes-formcontrol'>
           <label id='routes-dropdown'>Select Snapshot: </label>
           <select
-            labelId='demo-simple-select-label' //come back maybe
+            labelid='demo-simple-select-label'
             id='snapshot-select'
             onChange={(e) => setSnapshot(e.target.value)}
           >
