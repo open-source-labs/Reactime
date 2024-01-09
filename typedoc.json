@@ -1,8 +1,0 @@
-{
-  "entryPoints": ["src/"],
-  "out": "docs/ src/app src/backend",
-  "readme": "README.md",
-  "exclude": ["**/*.spec.ts"],
-
-  "name": "Reactime 23.0"
-}

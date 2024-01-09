@@ -49,14 +49,14 @@ export default function LinkControls({
   collectNodes(snapShots);
 
   return (
-    <div className="comp-map-options" style={controlStyles}>
+    <div className='comp-map-options' style={controlStyles}>
       {' '}
       {/* Controls for the layout selection */}
       <label>Layout:</label>
       &nbsp;{' '}
       {/* This is a non-breaking space - Prevents an automatic line break at this position */}
       <select
-        className="comp-map-dropdown"
+        className='comp-map-dropdown'
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => setLayout(e.target.value)}
         // value={layout}
