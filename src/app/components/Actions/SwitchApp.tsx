@@ -1,9 +1,9 @@
 import React from 'react';
 import Select from 'react-select';
-import { setTab } from '../slices/mainSlice';
+import { setTab } from '../../slices/mainSlice';
 //importing these methods for RTK
 import { useSelector, useDispatch } from 'react-redux';
-import { MainState, RootState } from '../FrontendTypes';
+import { MainState, RootState } from '../../FrontendTypes';
 import { current } from '@reduxjs/toolkit';
 
 /*

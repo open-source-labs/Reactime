@@ -2,7 +2,7 @@ import React from 'react';
 import { render as rtlRender, screen, fireEvent } from '@testing-library/react';
 // import user from '@testing-library/user-event'; //might be unused
 import '@testing-library/jest-dom'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
-import Action from '../components/Action';
+import Action from '../components/Actions/Action';
 import { changeView, changeSlider } from '../slices/mainSlice';
 import { Provider } from 'react-redux';
 import { store } from '../store'; //importing store for testing to give us access to Redux Store we configured

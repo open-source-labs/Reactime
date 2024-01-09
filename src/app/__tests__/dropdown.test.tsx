@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import Dropdown from '../components/Dropdown';
+import Dropdown from '../components/TimeTravel/Dropdown';
 import '@testing-library/jest-dom';
 
 describe('Dropdown component test', () => {

@@ -1,11 +1,4 @@
 {
-<<<<<<< HEAD
-  "entryPoints": ["src"],
-  "out": "docs/ src/app src/backend",
-  "readme": "README.md",
-  "exclude": ["**/*.spec.ts"],
-}
-=======
   "mode": "modules",
 
   "entryPoints": ["src/"],
@@ -15,4 +8,3 @@
 
   "name": "Reactime 23.0"
 }
->>>>>>> errors

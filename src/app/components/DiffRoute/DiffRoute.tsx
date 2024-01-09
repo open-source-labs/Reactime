@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter as Router, Route, NavLink, Routes } from 'react-router-dom';
 import Diff from './Diff';
-import { DiffRouteProps } from '../FrontendTypes';
+import { DiffRouteProps } from '../../FrontendTypes';
 
 /*
   Loads the appropriate DiffRoute view and renders the 'Tree' and 'Raw' navbar buttons after clicking on the 'Diff' button located near the top rightmost corner.

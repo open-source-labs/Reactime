@@ -4,8 +4,8 @@
 
 import React from 'react';
 import ReactHover, { Trigger, Hover } from 'react-hover';
-import { changeView, changeSlider } from '../slices/mainSlice';
-import { ActionProps, OptionsCursorTrueWithMargin } from '../FrontendTypes';
+import { changeView, changeSlider } from '../../slices/mainSlice';
+import { ActionProps, OptionsCursorTrueWithMargin } from '../../FrontendTypes';
 import { useDispatch } from 'react-redux';
 
 /*

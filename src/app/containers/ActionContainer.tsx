@@ -1,10 +1,10 @@
 /* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
-import Action from '../components/Action';
-import SwitchAppDropdown from '../components/SwitchApp';
+import Action from '../components/Actions/Action';
+import SwitchAppDropdown from '../components/Actions/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import RouteDescription from '../components/RouteDescription';
+import RouteDescription from '../components/Actions/RouteDescription';
 import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
 
@@ -199,7 +199,10 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
         </div>
         <a type='button' id='recordBtn' onClick={toggleRecord}>
           <i />
-          <div className="toggle-record" style={{ display: 'flex', alignItems: 'center', textAlign: 'right' }}>
+          <div
+            className='toggle-record'
+            style={{ display: 'flex', alignItems: 'center', textAlign: 'right' }}
+          >
             Toggle Record
           </div>
           {recordingActions ? <Switch defaultChecked /> : <Switch />}

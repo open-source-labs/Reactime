@@ -4,14 +4,14 @@ import { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
 //importing necesary material UI components for dialogue popup
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import Tutorial from '../components/Tutorial';
+import Tutorial from '../components/Buttons/Tutorial';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { toggleMode, importSnapshots, startReconnect } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import StatusDot from '../components/StatusDot';
+import StatusDot from '../components/Buttons/StatusDot';
 import LoopIcon from '@mui/icons-material/Loop';
 import CloseIcon from '@mui/icons-material/Close';
 import WarningIcon from '@mui/icons-material/Warning';
@@ -97,7 +97,11 @@ function ButtonsContainer(): JSX.Element {
         type='button'
         onClick={() => dispatch(toggleMode('paused'))}
       >
-        {paused ? <LockIcon className="button-icon" sx={{ pr: 1 }} /> : <LockOpenIcon className="button-icon" sx={{ pr: 1 }} />}
+        {paused ? (
+          <LockIcon className='button-icon' sx={{ pr: 1 }} />
+        ) : (
+          <LockOpenIcon className='button-icon' sx={{ pr: 1 }} />
+        )}
         {paused ? 'Locked' : 'Unlocked'}
       </Button>
       <Button
@@ -107,11 +111,11 @@ function ButtonsContainer(): JSX.Element {
         //@ts-ignore
         onClick={() => exportHandler(tabs[currentTab])}
       >
-        <FileDownloadIcon className="button-icon" sx={{ pr: 1 }} />
+        <FileDownloadIcon className='button-icon' sx={{ pr: 1 }} />
         Download
       </Button>
       <Button variant='outlined' className='import-button' onClick={() => importHandler(dispatch)}>
-        <FileUploadIcon className="button-icon" sx={{ pr: 1 }} />
+        <FileUploadIcon className='button-icon' sx={{ pr: 1 }} />
         Upload
       </Button>
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}
@@ -129,7 +133,7 @@ function ButtonsContainer(): JSX.Element {
           </span>
         }
       >
-        <LoopIcon className="button-icon" sx={{ pr: 1 }} />
+        <LoopIcon className='button-icon' sx={{ pr: 1 }} />
         Reconnect
       </Button>
       <Dialog className='dialog-pop-up' open={reconnectDialogOpen} onClose={handleReconnectCancel}>

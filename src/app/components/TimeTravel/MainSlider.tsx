@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Slider from 'rc-slider';
 import Tooltip from 'rc-tooltip';
-import { changeSlider, pause } from '../slices/mainSlice';
+import { changeSlider, pause } from '../../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { HandleProps, MainSliderProps, MainState, RootState } from '../FrontendTypes';
+import { HandleProps, MainSliderProps, MainState, RootState } from '../../FrontendTypes';
 
 const { Handle } = Slider; // component constructor of Slider that allows customization of the handle
 
@@ -47,7 +47,7 @@ function MainSlider(props: MainSliderProps): JSX.Element {
   return (
     <Slider
       className='travel-slider'
-      color= '#0af548'
+      color='#0af548'
       min={0} // index of our first snapshot
       max={snapshotsLength - 1} // index of our last snapshot
       value={sliderIndex} // currently slider thumb position
