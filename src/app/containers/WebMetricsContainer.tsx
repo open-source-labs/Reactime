@@ -1,5 +1,5 @@
 import React from 'react';
-import WebMetrics from './WebMetrics';
+import WebMetrics from '../components/WebMetrics';
 
 /*
   Used to render a container for all of the 'Web Metrics' tab
