@@ -1,4 +1,4 @@
-import { BoardText } from "../types/types";
+import { BoardText } from '../types/types';
 
 type BoxProps = {
   value: BoardText;
@@ -9,10 +9,7 @@ type BoxProps = {
 
 const Box = (props: BoxProps): JSX.Element => {
   return (
-    <button
-      className="box"
-      onClick={(e) => props.handleBoxClick(props.row, props.column)}
-    >
+    <button className='box' onClick={(e) => props.handleBoxClick(props.row, props.column)}>
       {props.value}
     </button>
   );

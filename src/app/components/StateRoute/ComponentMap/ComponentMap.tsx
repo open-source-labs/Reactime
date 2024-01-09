@@ -425,8 +425,8 @@ export default function ComponentMap({
                           node.depth === 0
                             ? 'compMapRootText'
                             : node.children
-                            ? 'compMapParentText'
-                            : 'compMapChildText'
+                              ? 'compMapParentText'
+                              : 'compMapChildText'
                         }
                         dy='.33em'
                         fontSize='20px'

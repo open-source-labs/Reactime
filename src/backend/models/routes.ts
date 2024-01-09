@@ -3,7 +3,10 @@
  */
 
 export class Route {
-  constructor(public url: string, public id: number) {
+  constructor(
+    public url: string,
+    public id: number,
+  ) {
     this.url = url;
     this.id = id;
   }

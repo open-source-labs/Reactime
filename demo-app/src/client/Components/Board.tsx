@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Row from './Row';
 import { BoardContent, Scoreboard, Player } from './../../types';
-//Took away BoardText from import 
+//Took away BoardText from import
 
 //thinking about changing this to an interface
 type BoardState = {

@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import Row from "./Row";
-import { BoardContent, Scoreboard, Player } from "../types/types";
+import React, { Component } from 'react';
+import Row from './Row';
+import { BoardContent, Scoreboard, Player } from '../types/types';
 
 type BoardState = {
   board: BoardContent;
@@ -15,9 +15,9 @@ class Board extends Component<{}, BoardState> {
     super(props);
     this.state = {
       board: this.newBoard(),
-      currentPlayer: "X",
+      currentPlayer: 'X',
       gameOver: false,
-      message: "",
+      message: '',
       scoreboard: { X: 0, O: 0 },
     };
 
@@ -25,7 +25,7 @@ class Board extends Component<{}, BoardState> {
     this.handleBoxClick = this.handleBoxClick.bind(this);
   }
 
-  componentDidUpdate():void {
+  componentDidUpdate(): void {
     this.checkForWinner();
   }
 
@@ -36,9 +36,9 @@ class Board extends Component<{}, BoardState> {
    */
   newBoard(): BoardContent {
     return [
-      ["-", "-", "-"],
-      ["-", "-", "-"],
-      ["-", "-", "-"],
+      ['-', '-', '-'],
+      ['-', '-', '-'],
+      ['-', '-', '-'],
     ];
   }
 
@@ -51,7 +51,7 @@ class Board extends Component<{}, BoardState> {
     this.setState({
       gameOver: false,
       board: this.newBoard(),
-      message: "",
+      message: '',
     });
   }
 
@@ -65,7 +65,7 @@ class Board extends Component<{}, BoardState> {
 
     const spacesLeft = (): boolean => {
       for (let i of board) {
-        if (i.includes("-")) return true;
+        if (i.includes('-')) return true;
       }
       return false;
     };
@@ -73,33 +73,17 @@ class Board extends Component<{}, BoardState> {
     if (!gameOver) {
       // win conditions: matching rows, columns, or diagonals, that are not empty('-')
       if (
-        (board[0][0] === board[0][1] &&
-          board[0][1] === board[0][2] &&
-          board[0][2] !== "-") ||
-        (board[1][0] === board[1][1] &&
-          board[1][1] === board[1][2] &&
-          board[1][2] !== "-") ||
-        (board[2][0] === board[2][1] &&
-          board[2][1] === board[2][2] &&
-          board[2][2] !== "-") ||
-        (board[0][0] === board[1][0] &&
-          board[1][0] === board[2][0] &&
-          board[2][0] !== "-") ||
-        (board[0][1] === board[1][1] &&
-          board[1][1] === board[2][1] &&
-          board[2][1] !== "-") ||
-        (board[0][2] === board[1][2] &&
-          board[1][2] === board[2][2] &&
-          board[2][2] !== "-") ||
-        (board[0][0] === board[1][1] &&
-          board[1][1] === board[2][2] &&
-          board[2][2] !== "-") ||
-        (board[2][0] === board[1][1] &&
-          board[1][1] === board[0][2] &&
-          board[0][2] !== "-")
+        (board[0][0] === board[0][1] && board[0][1] === board[0][2] && board[0][2] !== '-') ||
+        (board[1][0] === board[1][1] && board[1][1] === board[1][2] && board[1][2] !== '-') ||
+        (board[2][0] === board[2][1] && board[2][1] === board[2][2] && board[2][2] !== '-') ||
+        (board[0][0] === board[1][0] && board[1][0] === board[2][0] && board[2][0] !== '-') ||
+        (board[0][1] === board[1][1] && board[1][1] === board[2][1] && board[2][1] !== '-') ||
+        (board[0][2] === board[1][2] && board[1][2] === board[2][2] && board[2][2] !== '-') ||
+        (board[0][0] === board[1][1] && board[1][1] === board[2][2] && board[2][2] !== '-') ||
+        (board[2][0] === board[1][1] && board[1][1] === board[0][2] && board[0][2] !== '-')
       ) {
         // winner is the person who's turn was previous
-        const winner: Player = currentPlayer === "X" ? "O" : "X";
+        const winner: Player = currentPlayer === 'X' ? 'O' : 'X';
 
         this.setState({
           gameOver: true,
@@ -110,7 +94,7 @@ class Board extends Component<{}, BoardState> {
       } else if (!spacesLeft()) {
         this.setState({
           gameOver: true,
-          message: "Draw!",
+          message: 'Draw!',
         });
       }
     }
@@ -123,7 +107,7 @@ class Board extends Component<{}, BoardState> {
       [...this.state.board[2]],
     ];
     boardCopy[row][column] = this.state.currentPlayer;
-    const newPlayer: Player = this.state.currentPlayer === "X" ? "O" : "X";
+    const newPlayer: Player = this.state.currentPlayer === 'X' ? 'O' : 'X';
     this.setState({ board: boardCopy, currentPlayer: newPlayer });
   }
 
@@ -131,22 +115,17 @@ class Board extends Component<{}, BoardState> {
     const rows: Array<JSX.Element> = [];
     for (let i = 0; i < 3; i++) {
       rows.push(
-        <Row
-          key={i}
-          row={i}
-          handleBoxClick={this.handleBoxClick}
-          values={this.state.board[i]}
-        />
+        <Row key={i} row={i} handleBoxClick={this.handleBoxClick} values={this.state.board[i]} />,
       );
     }
     // const { X, O }: Scoreboard = this.state.scoreboard;
 
     return (
-      <div className="board">
+      <div className='board'>
         <h1>Tic Tac Toe</h1>
         {this.state.gameOver && <h4>{this.state.message}</h4>}
         {rows}
-        <button id="reset" onClick={this.resetBoard}>
+        <button id='reset' onClick={this.resetBoard}>
           Reset
         </button>
       </div>

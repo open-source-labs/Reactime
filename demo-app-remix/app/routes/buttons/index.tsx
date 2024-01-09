@@ -1,5 +1,5 @@
-import Button from "../../components/Buttons";
-import Navbar from "../../components/navbar";
+import Button from '../../components/Buttons';
+import Navbar from '../../components/navbar';
 
 export default function ButtonsPage() {
   return (
