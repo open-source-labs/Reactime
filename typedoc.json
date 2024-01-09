@@ -1,6 +1,4 @@
 {
-  "mode": "modules",
-
   "entryPoints": ["src/"],
   "out": "docs/ src/app src/backend",
   "readme": "README.md",

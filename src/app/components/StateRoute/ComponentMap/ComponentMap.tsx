@@ -331,18 +331,18 @@ export default function ComponentMap({
                   }
 
                   // mousing controls & Tooltip display logic
-                  // const handleMouseAndClickOver: void = (event) => {
-                  //   const coords = localPoint(event.target.ownerSVGElement, event);
-                  //   const tooltipObj = { ...node.data };
+                  const handleMouseAndClickOver: void = (event) => {
+                    const coords = localPoint(event.target.ownerSVGElement, event);
+                    const tooltipObj = { ...node.data };
 
-                  //   showTooltip({
-                  //     tooltipLeft: coords.x,
-                  //     tooltipTop: coords.y,
-                  //     tooltipData: tooltipObj,
-                  //     // this is where the data for state and render time is displayed
-                  //     // but does not show props functions and etc
-                  //   });
-                  // };
+                    showTooltip({
+                      tooltipLeft: coords.x,
+                      tooltipTop: coords.y,
+                      tooltipData: tooltipObj,
+                      // this is where the data for state and render time is displayed
+                      // but does not show props functions and etc
+                    });
+                  };
 
                   return (
                     <Group top={top} left={left} key={key} className='rect'>

@@ -36,7 +36,7 @@ const StateRoute = (props: StateRouteProps) => {
 
   const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
   const { hierarchy: tabsHierarchy, sliderIndex, viewIndex: tabsViewIndex } = tabs[currentTab];
-  const hierarchy = propsHierarchy || tabsHierarchy; //JR: RETURN TO THIS: alias to deconstruct from props and tab with the same name, aliases were deleted above
+  const hierarchy = propsHierarchy || tabsHierarchy;
   const viewIndex = propsViewIndex || tabsViewIndex;
 
   return (
