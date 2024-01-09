@@ -50,17 +50,16 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
 
   // hook that sets timer while waiting for a snapshot from the background script, resets if the tab changes/reloads
   useEffect(() => {
-    if (tabs[currentTab])
-      // We declare a function
-      function setLoadingArray(i: number, value: boolean) {
-        // 'setLoadingArray' checks an element in our 'loadingArray' local state and compares it with passed in boolean argument. If they don't match, we update our local state replacing the selected element with the boolean argument
-        if (loadingArray[i] !== value) {
-          // this conditional helps us avoid unecessary state changes if the element and the value are already the same
-          const loadingArrayClone = [...loadingArray];
-          loadingArrayClone[i] = value;
-          setLoading(loadingArrayClone);
-        }
+    // We declare a function
+    function setLoadingArray(i: number, value: boolean) {
+      // 'setLoadingArray' checks an element in our 'loadingArray' local state and compares it with passed in boolean argument. If they don't match, we update our local state replacing the selected element with the boolean argument
+      if (loadingArray[i] !== value) {
+        // this conditional helps us avoid unecessary state changes if the element and the value are already the same
+        const loadingArrayClone = [...loadingArray];
+        loadingArrayClone[i] = value;
+        setLoading(loadingArrayClone);
       }
+    }
 
     if (titleTracker.current !== currentTitle) {
       // if the current tab changes/reloads, we reset loadingArray to it's default [true, true, true]
