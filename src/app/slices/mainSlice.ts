@@ -125,8 +125,8 @@ export const mainSlice = createSlice({
     // JR: REFACTOR: 12.20.23 this code has if statement to catch diff shapes of payload ('number' vs 'object'). This should not be the case, the payload should always come in as expected.
     // consider creating a custom typescript type for the action that setTab receives.
 
-    //JR: DOCS: 12.20.23 This code will update the currentTab being tracked in the Redux state. It depends, however, on the 'mode', which is an unfortunately named label for the "Locked" button status.
-    // The naming is unfortunate because the backend also has a mode variable that does a completely different thing, which creates confusion. Consider renaming this to 'locked' or somesuch.
+    //JR: DOCS: 12.20.23 This code will update the currentTab being tracked in the Redux state. It depends, however, on the 'mode', which is a label for the "Locked" button status.
+    // The naming is unfortunate because the backend also has a mode variable that does a completely different thing (related to time travel navigation), which creates confusion. Consider renaming this to 'locked' or somesuch.
     // Mode is an object that expects to contain a single key, paused, with a boolean value.
     // If true: Reactime is 'Locked', and navigating to another tab will not update the Redux state and trigger Reactime to take any actions.
     // If false: Reactime is 'Unlocked', and navigating to another tab will update the Redux state's currentTab, which will trigger Reactime to try to run on that new tab.

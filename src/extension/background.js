@@ -505,16 +505,16 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
   // // this was a test to see if I could dynamically set the left property to be the 0 origin of the invoked DISPLAY (as opposed to invoked window).
   // // this would allow you to split your screen, keep the browser open on the right side, and reactime always opens at the top left corner.
-  // // unfortunately it does not tell you which display is the one that invoked it, just the array of all available displays
+  // // unfortunately it does not tell you which display is the one that invoked it, just the array of all available displays. Leaving for future iterators
   // chrome.system.display.getInfo((displayUnitInfo) => {
   //   console.log(displayUnitInfo);
   // });
 
   chrome.windows.getCurrent((window) => {
-    const invokedScreenHeight = window.height || 1000;
-    const invokedScreenTop = window.top || 0;
+    const invokedScreenTop = 75; // window.top || 0;
     const invokedScreenLeft = window.left || 0;
     const invokedScreenWidth = Math.max(Math.trunc(window.width / 2), 1000) || 1000; // set reactime window to half of chrome window, with a min of 1000px
+    const invokedScreenHeight = window.height - invokedScreenTop || 1000;
     const options = {
       type: 'panel',
       left: invokedScreenLeft,
