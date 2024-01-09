@@ -11,7 +11,7 @@
     "test-frontend": "jest --verbose --coverage src/app",
     "test-on": "./node_modules/.bin/jest $1",
     "docker-test-lint": "eslint --ext .js --ext .jsx src",
-    "docs": "npx typedoc --tsconfig tsconfig.json",
+    "docs": "typedoc",
     "format": "prettier --config .prettierrc './**/*.{ts,tsx,js,jsx}' --write"
   },
   "keywords": [
