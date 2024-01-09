@@ -1,5 +1,4 @@
-    <h1 align="center">
-
+<h1 align="center">
   <br>
     <img src ="./assets/logos/chromeExtensionIcons/marqueePromoTitle.png"/>
     <br>
@@ -177,7 +176,6 @@ Addressing the persistent disconnection/black screen issues that occasionally af
 In an effort to improve maintainability, scalability, and longevity, we updated and phased out certain dependencies. To name a few, we moved away from the Immer library and transitioned our state management to use Redux Toolkit, while upgrading the Web Vitals API from version 1.1.2 to 3.5.0, allowing us to harness a broader range of web metrics. As part of this transition, we also converted all of the existing tests to work with the updated state management system, while further expanding testing suites to increase overall testing coverage. Lastly, we achieved a notable increase in TypeScript coverage, strengthening code quality and early detection of potential development issues.
 
 For an improved user experience, we set our sights on several impactful enhancements. First on our list is the reconnection feature, designed as a protective measure for those unexpected moments when a user gets disconnected. In such events, an intuitive pop-up dialog will instantly emerge, offering users a seamless way to dive right back into their session, while also offering the option to download recorded snapshots of state as a JSON file. Complementing this, we've integrated a dynamic status indicator that transparently displays a user's current app status, highlighting whether they're online or offline. But that's not all. We've enriched the application with two vital web performance metrics: Cumulative Layout Shift (CLS) and Interaction to Next Paint (INP). These metrics are pivotal, providing developers with insights into layout stability and responsiveness, empowering them to optimize user interactions with precision.
-
 
 If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
 
