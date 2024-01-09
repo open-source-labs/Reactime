@@ -1,8 +1,8 @@
 import React from 'react';
 import { MemoryRouter as Router } from 'react-router-dom';
-import MainContainer from '../containers/MainContainer';
+import MainContainer from './containers/MainContainer';
 import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme';
+import theme from './styles/theme';
 
 /*
   'currentTab' is the current active tab within Google Chrome.

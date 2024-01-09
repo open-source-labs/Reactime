@@ -14,7 +14,7 @@ import { changeView, changeSlider } from '../../slices/mainSlice';
 import { useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 // import WebMetrics from '../WebMetrics';
-import WebMetricsContainer from '../WebMetricsContainer';
+import WebMetricsContainer from './WebMetrics/WebMetricsContainer';
 import { MainState, RootState, StateRouteProps } from '../../FrontendTypes';
 
 /*

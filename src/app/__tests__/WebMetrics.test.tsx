@@ -1,7 +1,7 @@
 import React from 'react';
 import { render as rtlRender } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import WebMetrics from '../components/WebMetrics';
+import WebMetrics from '../components/StateRoute/WebMetrics/WebMetrics';
 import { useDispatch, Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { mainSlice } from '../slices/mainSlice';

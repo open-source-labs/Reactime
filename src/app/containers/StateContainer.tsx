@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 */
 import { MemoryRouter as Router, Route, NavLink, Routes, Outlet } from 'react-router-dom';
 import StateRoute from '../components/StateRoute/StateRoute';
-import DiffRoute from '../components/DiffRoute';
+// import DiffRoute from '../components/DiffRoute/DiffRoute';
 import { StateContainerProps } from '../FrontendTypes';
 import { Outlet } from 'react-router';
 

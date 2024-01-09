@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import { TextEncoder } from 'util';
 global.TextEncoder = TextEncoder;
 import '@testing-library/jest-dom';
-import Tutorial from '../components/Tutorial';
+import Tutorial from '../components/Buttons/Tutorial';
 
 const dispatch = jest.fn();
 const props = {

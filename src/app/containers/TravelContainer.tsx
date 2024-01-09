@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import React, { useState } from 'react';
-import MainSlider from '../components/MainSlider';
-import Dropdown from '../components/Dropdown';
+import MainSlider from '../components/TimeTravel/MainSlider';
+import Dropdown from '../components/TimeTravel/Dropdown';
 import {
   playForward,
   pause,

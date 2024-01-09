@@ -4,9 +4,9 @@
   "scripts": {
     "build": "remix build",
     "dev": "npm-run-all build --parallel \"dev:*\"",
-    "dev:node": "cross-env NODE_ENV=development nodemon --require dotenv/config ./server.js --watch ./server.js",
+    "dev:node": "cross-env NODE_ENV=development nodemon --require dotenv/config ./server.ts --watch ./server.ts",
     "dev:remix": "remix watch",
-    "start": "cross-env NODE_ENV=production node ./server.js",
+    "start": "cross-env NODE_ENV=production node ./server.ts",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -19,7 +19,8 @@
     "isbot": "^3.6.5",
     "morgan": "^1.10.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.14.1",

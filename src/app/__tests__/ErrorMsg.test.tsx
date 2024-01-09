@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
-import ErrorMsg from '../components/ErrorMsg';
+import ErrorMsg from '../components/ErrorHandling/ErrorMsg';
 
 const props = {
   loadingArray: [false],

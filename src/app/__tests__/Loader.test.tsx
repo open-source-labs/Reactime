@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
-import Loader from '../components/Loader';
+import Loader from '../components/ErrorHandling/Loader';
 
 describe('unit testing for Loader.tsx', () => {
   test('renders a loading icon', () => {

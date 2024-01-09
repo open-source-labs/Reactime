@@ -1,4 +1,3 @@
-// import snapshots from "../app/components/snapshots"
 // import 'core-js';
 
 import { invoke } from 'lodash';
