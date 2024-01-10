@@ -204,7 +204,7 @@ export default function ComponentMap({
         setSelectedNode={setSelectedNode}
       />
 
-      <svg ref={containerRef} width={totalWidth} height={totalHeight}>
+      <svg ref={containerRef} width={totalWidth} height={totalHeight + 200}>
         {/* <LinearGradient id='root-gradient' from='#e75e62' to='#f00008' /> */}
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
@@ -214,17 +214,17 @@ export default function ComponentMap({
             hideTooltip();
           }}
           width={sizeWidth / aspect}
-          height={sizeHeight / aspect}
+          height={sizeHeight / aspect + 200}
           rx={14}
         />
         <Group transform={`scale(${aspect})`} top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(startNode, (d) => (d.isExpanded ? d.children : null))}
-            size={[sizeWidth / aspect, sizeHeight / aspect]}
+            size={[sizeWidth / aspect, sizeHeight / aspect + 50]}
             separation={(a, b) => (a.parent === b.parent ? 0.5 : 0.5) / a.depth}
           >
             {(tree) => (
-              <Group top={origin.y + 25} left={origin.x}>
+              <Group top={origin.y + 35} left={origin.x + 50 / aspect}>
                 {tree.links().map((link, i) => (
                   <LinkComponent
                     className='compMapLink'
@@ -327,7 +327,7 @@ export default function ComponentMap({
                       }
                     }
                   } else {
-                    null;
+                    aspect = Math.max(aspect, 0.2);
                   }
 
                   // mousing controls & Tooltip display logic
@@ -425,8 +425,8 @@ export default function ComponentMap({
                           node.depth === 0
                             ? 'compMapRootText'
                             : node.children
-                              ? 'compMapParentText'
-                              : 'compMapChildText'
+                            ? 'compMapParentText'
+                            : 'compMapChildText'
                         }
                         dy='.33em'
                         fontSize='20px'
@@ -440,6 +440,7 @@ export default function ComponentMap({
                     </Group>
                   );
                 })}
+                {console.log(aspect)}
               </Group>
             )}
           </Tree>
