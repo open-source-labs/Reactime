@@ -54,11 +54,9 @@ _Before_ beginning development, especially on teams, make sure to configure your
 
 Here are some notes on the current state of Reactime and considerations for future development.
 
-## Repair Jest Testing Library
+## Main Slice Modularity
 
-## Repair Diff Route
-
-##
+Currently, Reactime employs Redux Toolkit for state management. At present, all actions are housed within the mainSlice.ts file. As this file has expanded significantly, it would be beneficial to modularize it, creating separate slices for distinct components.
 
 ## Including Support for Hooks Beyond useState
 
@@ -77,8 +75,6 @@ Any changes to console.logs in Reactime can be seen by refreshing the browser th
 
 ## Replace Functionality for Outdated Packages
 
-Package dependencies need to be trimmed down, updated, and/or removed. Peer dependency errors are the reason npm install --force may be necessary when installing the dependencies of Reactime. While Reactime v22.0 has reduced package dependency errors for developers from multiple pages of errors down to ~15 errors, the goal is to decrease overall package/library dependency to a minimum to promote long-term maintainability
-
 Material-ui/core has been updated to use React 18. Future developers may choose to remove Material-ui/core from the application to ensure compatibility in the future or continue to build out the UI. The choice is yours!
 
 React Developer Tools has NOT deprecated \_\_REACT_DEVTOOLS_GLOBAL_HOOK\_\_. However, Reactime v21 has sleuthed and learned the following from the team at React:
@@ -88,19 +84,21 @@ Ruslan Lesiutin (https://github.com/hoxyq) from Meta/ Facebook responded on July
 We don't have plans on removing the global hook currently, this is still the primary way on how React and React DevTools interact, but it doesn't mean that any other extensions / applications should inject into this hook and use it. You should always take that into account that APIs inside this hook can have breaking changes.
 In a long term, there are plans to implement more reliable API contract of what DevTools can expose from React to other tools, but I don't have any timelines and details yet.”
 
+## Continue to investigate app behavior on load
+
+With Reactime V23, loading errors were eliminated by having the web app reload upon a Reactime panel being opened. While this provides a working, stable solution to what were persistent loading issues, the app's behavior on load should still be examined. There are odd interactions happening within the message passing framework of a chrome dev tool which may be a root cause. Please examine the interacion between background.js, contentscript, maincontainer, and redux toolkit.
+
 ## Redux
 
 Can Reactime functionality be extended so applications using Redux can track state in Reactime?
 
 Yes, but it would be very time-consuming and not the most feasible option while Redux devtools exists already. With how Redux devtools is currently set up, a developer is unable to use Redux devtools as a third-party user and integrate its functionality into their own application, as Redux devtools is meant to be used directly on an application using Redux for state-tracking purposes. Since the devtools do not appear to have a public API for integrated use in an application or it simply does not exist, Redux devtools would need to be rebuilt from the ground up and then integrated into Reactime, or built into Reactime directly still from scratch.
 
-## Main Slice Modularity
-
-Currently, Reactime employs Redux Toolkit for state management. At present, all actions are housed within the mainSlice.ts file. As this file has expanded significantly, it would be beneficial to modularize it, creating separate slices for distinct components.
-
 ## Testing
 
-While our current test coverage provides a sturdy base, the application can benefit from deeper exploration into critical user paths and broadening end-to-end testing scenarios. Embracing automation and periodic reviews can further ensure consistent quality and robustness in the face of evolving requirements.
+With Reactime V23, ALL outdated packages and peer dependencies were resolved--a huge feat. A side effect of this is that the Jest testing library has unresolved errors. This should be a pretty easy win for future iterators to bring the Jest library back up and running smoothly. The jest-environment-jsdom package has some deprecated sub-packages, so if there is an alternative that can be used, that would be best, so it does not introduce new deprecated packages.
+
+In addition, while our current test coverage provides a sturdy base, the application can benefit from deeper exploration into critical user paths and broadening end-to-end testing scenarios. Embracing automation and periodic reviews can further ensure consistent quality and robustness in the face of evolving requirements.
 
 # File Structure
 
