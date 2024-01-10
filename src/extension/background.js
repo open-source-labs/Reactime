@@ -507,7 +507,6 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
   //   console.log(displayUnitInfo);
   // });
   chrome.windows.getCurrent((window) => {
-    console.log(window);
     const invokedScreenTop = 75; // window.top || 0;
     const invokedScreenLeft = window.width < 1000 ? window.left + window.width - 1000 : window.left;
     const invokedScreenWidth = 1000;
@@ -520,7 +519,6 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
       height: invokedScreenHeight,
       url: chrome.runtime.getURL('panel.html'),
     };
-    console.log(options);
     if (menuItemId === 'reactime') chrome.windows.create(options);
   });
 

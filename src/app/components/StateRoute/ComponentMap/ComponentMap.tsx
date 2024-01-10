@@ -38,7 +38,7 @@ const defaultMargin: DefaultMargin = {
 
 const nodeCoords: object = {};
 let count: number = 0;
-let aspect: number = 1;
+let aspect: number = 1; // aspect resizes the component map container to accommodate large node trees on complex sites
 let nodeCoordTier = 0;
 let nodeOneLeft = 0;
 let nodeTwoLeft = 2;
@@ -204,7 +204,7 @@ export default function ComponentMap({
         setSelectedNode={setSelectedNode}
       />
 
-      <svg ref={containerRef} width={totalWidth} height={totalHeight + 200}>
+      <svg ref={containerRef} width={totalWidth} height={totalHeight + 0}>
         {/* <LinearGradient id='root-gradient' from='#e75e62' to='#f00008' /> */}
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
@@ -214,13 +214,13 @@ export default function ComponentMap({
             hideTooltip();
           }}
           width={sizeWidth / aspect}
-          height={sizeHeight / aspect + 200}
+          height={sizeHeight / aspect + 0}
           rx={14}
         />
         <Group transform={`scale(${aspect})`} top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(startNode, (d) => (d.isExpanded ? d.children : null))}
-            size={[sizeWidth / aspect, sizeHeight / aspect + 50]}
+            size={[sizeWidth / aspect, sizeHeight / aspect]}
             separation={(a, b) => (a.parent === b.parent ? 0.5 : 0.5) / a.depth}
           >
             {(tree) => (
