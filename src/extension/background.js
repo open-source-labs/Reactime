@@ -507,9 +507,10 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
   //   console.log(displayUnitInfo);
   // });
   chrome.windows.getCurrent((window) => {
+    console.log(window);
     const invokedScreenTop = 75; // window.top || 0;
-    const invokedScreenLeft = window.left || 0;
-    const invokedScreenWidth = Math.max(Math.trunc(window.width / 2), 1000) || 1000; // set reactime window to half of chrome window, with a min of 1000px
+    const invokedScreenLeft = window.width < 1000 ? window.left + window.width - 1000 : window.left;
+    const invokedScreenWidth = 1000; // set reactime window to half of chrome window, with a min of 1000px
     const invokedScreenHeight = window.height - invokedScreenTop || 1000;
     const options = {
       type: 'panel',
@@ -519,6 +520,7 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
       height: invokedScreenHeight,
       url: chrome.runtime.getURL('panel.html'),
     };
+    console.log(options);
     if (menuItemId === 'reactime') chrome.windows.create(options);
   });
 
