@@ -241,6 +241,7 @@ export default function ComponentMap({
                   const widthFunc: number = (name) => {
                     // function that takes in a node's name and returns a number that is related to the length of the name. Used for determining the node width.
                     const nodeLength = name.length;
+                    return nodeLength * 7 + 20;
                     if (nodeLength <= 5) return nodeLength + 80; // returns a number between 80-85
                     if (nodeLength <= 10) return nodeLength + 120; // returns a number between 125-130
                     return nodeLength + 140; // returns a number greater than 150
