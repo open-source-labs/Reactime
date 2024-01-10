@@ -8,14 +8,14 @@ const controlStyles: ControlStyles = {
 };
 
 const dropDownStyle: DropDownStyle = {
-  margin: '0.5em',
+  margin: '0.1em',
   //fontSize: '16px',
   fontFamily: 'Roboto, sans-serif',
   borderRadius: '4px',
   borderStyle: 'solid',
   borderWidth: '1px',
-  backgroundColor: '#242529',
-  color: 'white',
+  backgroundColor: '#d9d9d9',
+  color: '#161617',
   padding: '2px',
 };
 

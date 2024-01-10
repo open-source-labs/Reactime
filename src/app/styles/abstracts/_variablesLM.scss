@@ -103,8 +103,8 @@ $state-background: $background-color-strong;
 $state-cont-border: $contrasting-color;
 
 //MAP TAB
-$map-options-dropdown: $primary-color;
 $map-options-label: $dark-text;
+//the dropdown colors are determined in the dropDownStyle object in LinkControls.tsx
 $map-link: $contrasting-color;
 // $map-root-fill: $primary-color; //root fill is currently a visx LinearGradient defined in ComponentMap.tsx
 $map-root-stroke: $primary-color;
