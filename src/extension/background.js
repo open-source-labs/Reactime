@@ -510,7 +510,7 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     console.log(window);
     const invokedScreenTop = 75; // window.top || 0;
     const invokedScreenLeft = window.width < 1000 ? window.left + window.width - 1000 : window.left;
-    const invokedScreenWidth = 1000; // set reactime window to half of chrome window, with a min of 1000px
+    const invokedScreenWidth = 1000;
     const invokedScreenHeight = window.height - invokedScreenTop || 1000;
     const options = {
       type: 'panel',
