@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 */
 import { MemoryRouter as Router, Route, NavLink, Routes, Outlet } from 'react-router-dom';
 import StateRoute from '../components/StateRoute/StateRoute';
-// import DiffRoute from '../components/DiffRoute/DiffRoute';
+import DiffRoute from '../components/DiffRoute/DiffRoute';
 import { StateContainerProps } from '../FrontendTypes';
 import { Outlet } from 'react-router';
 
@@ -22,7 +22,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
 
   return (
     <div className='state-container'>
-      {/* <div className='main-navbar-container'>
+      <div className='main-navbar-container'>
             <div className='main-navbar-text' />
             <div className='main-navbar'>
               <NavLink className='main-router-link' to='/'>
@@ -37,25 +37,24 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
             <Route path='/diff/*' element={
             <div>
               <DiffRoute snapshot={snapshot} />
-              <Outlet/>
+              {/* <Outlet/> */}
             </div>} />
             <Route
-              path='*'
+              path='/*'
               element={ 
-              <div>*/}
-      <StateRoute
-        webMetrics={webMetrics}
-        viewIndex={viewIndex}
-        snapshot={snapshot}
-        hierarchy={hierarchy}
-        snapshots={snapshots}
-        currLocation={currLocation}
-      />
-      {/* <Outlet/> */}
-      {/*</div>
-               }
-           />
-          </Routes> */}
+              <div height="100%">
+                <StateRoute
+                  webMetrics={webMetrics}
+                  viewIndex={viewIndex}
+                  snapshot={snapshot}
+                  hierarchy={hierarchy}
+                  snapshots={snapshots}
+                  currLocation={currLocation}
+                />
+                {/* <Outlet/> */}
+              </div>} 
+             />
+          </Routes>
     </div>
   );
 };

@@ -19,6 +19,7 @@
     "copy-webpack-plugin": "^10.2.0",
     "css-loader": "^6.5.1",
     "html-webpack-plugin": "^5.5.0",
+    "node": "^16.0.0",
     "nodemon": "^2.0.15",
     "ts-loader": "^9.2.6",
     "typescript": "^4.5.4",
