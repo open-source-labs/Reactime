@@ -16,7 +16,6 @@
   <a href="https://github.com/oslabs-beta/reactime">
     <img src="https://img.shields.io/github/license/oslabs-beta/reactime" alt="GitHub">
   </a>
-    <img src="https://img.shields.io/badge/babel%20preset-airbnb-ff69b4" alt="BabelPresetPrefs">
     <img src="https://img.shields.io/badge/linted%20with-eslint-blueviolet" alt="LintPrefs">
 </p>
 
@@ -41,8 +40,9 @@
 
 You can view your application's file structure and click on a snapshot to view
 your app's state. State can be visualized in a Component Graph, JSON Tree, or
-Performance Graph. Snapshots can be compared with the previous snapshot, which can
-be viewed in Diff mode.
+Performance Graph. Snapshot history can be visualized in the History tab.
+The Web Metrics tab provides some useful metrics for site performance.
+Snapshots can be compared with the previous snapshot, which can be viewed in Diff mode.
 <br>
 <br>
 
@@ -167,15 +167,17 @@ of the structure and interfaces of the codebase.
 
 <h1>What's New!</h1>
 
-Reactime 22.0 heralds significant enhancements, addressing core performance issues and fortifying the overall application's stability and reliability. In our pursuit of consistent evolution, we've updated outdated packages and transitioned state management to Redux Toolkit. This strategic shift not only modernizes our tech stack but also ensures our application is positioned for easier maintenance and scalability in the future. Complementing these upgrades, this release also mends various bugs. The debut of features like the reconnection button, a status icon, and the integration of key web metrics – Cumulative Layout Shift (CLS) and Interaction To Next Paint (INP) – amplifies its functionality and offers users a more refined experience.
+Reactime 23.0 brings a new look to the UI, completely updates all outdated packages, and significantly improves stability by solving loading bugs.
 
 <i>Taking a deeper look</i>
 
 Addressing the persistent disconnection/black screen issues that occasionally affected users during regular application use, we made decisive improvements by removing the "keepAlive" function and implementing robust logic to fix the core issue. This enabled us to refine the communication protocol between our application and the Chrome extension API, delivering a more consistent and stable connection. To further enhance the user experience and foster resilience, we introduced a user-friendly reconnection feature. This not only offers users a swift recovery route but also acts as an added layer of protection against any unexpected disconnections in the future.
 
-In an effort to improve maintainability, scalability, and longevity, we updated and phased out certain dependencies. To name a few, we moved away from the Immer library and transitioned our state management to use Redux Toolkit, while upgrading the Web Vitals API from version 1.1.2 to 3.5.0, allowing us to harness a broader range of web metrics. As part of this transition, we also converted all of the existing tests to work with the updated state management system, while further expanding testing suites to increase overall testing coverage. Lastly, we achieved a notable increase in TypeScript coverage, strengthening code quality and early detection of potential development issues.
+UI
 
-For an improved user experience, we set our sights on several impactful enhancements. First on our list is the reconnection feature, designed as a protective measure for those unexpected moments when a user gets disconnected. In such events, an intuitive pop-up dialog will instantly emerge, offering users a seamless way to dive right back into their session, while also offering the option to download recorded snapshots of state as a JSON file. Complementing this, we've integrated a dynamic status indicator that transparently displays a user's current app status, highlighting whether they're online or offline. But that's not all. We've enriched the application with two vital web performance metrics: Cumulative Layout Shift (CLS) and Interaction to Next Paint (INP). These metrics are pivotal, providing developers with insights into layout stability and responsiveness, empowering them to optimize user interactions with precision.
+Dependencies
+
+Loading stability
 
 If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
 
@@ -211,14 +213,16 @@ locally.
 
 <i>Please refer to Developer Install for a detailed guide:</i>
 
-Refer [DEVELOPER README](src/README.md) for more info on the project, and
+Refer to the [DEVELOPER README](src/DEVELOPER_README.md) for more info on the project, and
 instructions on building from source.
 
 ### <b>How to Use</b>
 
 After installing the Chrome extension, just open up your project in the browser.
 
-Then open up your Chrome DevTools and navigate to the Reactime panel.
+Then right click on your application and choose the 'Reactime' context menu item to open up a Reactime panel.
+
+Alternatively, you can open up your Chrome DevTools and navigate to the Reactime panel.
 
 ## <b>Troubleshooting</b>
 
@@ -240,7 +244,7 @@ clicking the right mouse button “Reload frame”.
 ### ❓ <b>I found a bug in Reactime</b>
 
 Reactime is an open-source project, and we'd love to hear from you about
-improving the user experience. Please read [DEVELOPER README](src/README.md),
+improving the user experience. Please read [DEVELOPER README](src/DEVELOPER_README.md),
 and create a pull request (or issue) to propose and collaborate on changes to Reactime.
 
 ### ❓ <b>Node version compatibility</b>
@@ -351,6 +355,10 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 - **Jimmy Phy** - [@jimmally](https://github.com/jimmally)
 - **Andrew Byun** - [@AndrewByun](https://github.com/AndrewByun)
 - **Kelvin Mirhan** - [@kelvinmirhan](https://github.com/kelvinmirhan)
+- **Jesse Rosengrant** - [@jrosengrant](https://github.com/jrosengrant)
+- **Liam Donaher** - [@leebology](https://github.com/leebology)
+- **David Moore** - [@Solodt55](https://github.com/Solodt55)
+- **John Banks** - [@Jbanks123](https://github.com/Jbanks123)
 
 ## <b>License </b>
 

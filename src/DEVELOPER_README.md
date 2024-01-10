@@ -18,11 +18,9 @@ git clone https://github.com/open-source-labs/reactime.git
 
 ```
 cd reactime
-npm install --legacy-peer-deps
+npm install
 npm run dev
 ```
-
-If ‘npm install –legacy-peer-deps’ doesn’t work, install dependencies using ‘npm install --force’
 
 With release of Node v18.12.1 (LTS) on 11/4/22, the script has been updated to 'npm run dev' || 'npm run build' for backwards compatibility.<br/>
 For version Node v16.16.0, please use script 'npm run devlegacy' || 'npm run buildlegacy'
@@ -55,6 +53,12 @@ _Before_ beginning development, especially on teams, make sure to configure your
 # Possible Avenues for Future Iterators
 
 Here are some notes on the current state of Reactime and considerations for future development.
+
+## Repair Jest Testing Library
+
+## Repair Diff Route
+
+##
 
 ## Including Support for Hooks Beyond useState
 
@@ -90,7 +94,7 @@ Can Reactime functionality be extended so applications using Redux can track sta
 
 Yes, but it would be very time-consuming and not the most feasible option while Redux devtools exists already. With how Redux devtools is currently set up, a developer is unable to use Redux devtools as a third-party user and integrate its functionality into their own application, as Redux devtools is meant to be used directly on an application using Redux for state-tracking purposes. Since the devtools do not appear to have a public API for integrated use in an application or it simply does not exist, Redux devtools would need to be rebuilt from the ground up and then integrated into Reactime, or built into Reactime directly still from scratch.
 
-## Main Slice Modularity 
+## Main Slice Modularity
 
 Currently, Reactime employs Redux Toolkit for state management. At present, all actions are housed within the mainSlice.ts file. As this file has expanded significantly, it would be beneficial to modularize it, creating separate slices for distinct components.
 
@@ -106,12 +110,11 @@ In the _src_ folder, there are three directories we care about: _app_, _backend_
 src/
 ├── app/                          # Frontend code
 │   ├── __tests__/                # React Testing Library
-│   ├── actions/                  # Redux action creators
 │   ├── components/               # React components
-│   ├── constants/                #
 │   ├── containers/               # More React components
 │   ├── slices/                   # Redux Toolkit mechanism for updating state
 │   ├── styles/                   #
+|   ├── App.tsx
 │   ├── FrontendTypes.ts          # Library of typescript interfaces
 │   ├── index.tsx                 # Starting point for root App component
 │   ├── module.d.ts               #
@@ -179,7 +182,7 @@ The general flow of data is described in the following steps:
 
 1. When the background bundle is loaded by the browser, it executes a script injection into the dom. (see section on _backend_). This script uses a technique called [throttle](https://medium.com/@bitupon.211/debounce-and-throttle-160affa5457b) to send state data from the app to the content script every specified milliseconds (in our case, this interval is 70ms).
 
-2. The content script (now contentScript.ts) always listens for messages being passed from the extension's target application. Upon receiving data from the target app, the content script will immediately forward this data to the background script which then updates an object called `tabsObj`. Each time `tabsObj` is updated, its latest version will be passed to Reactime, where it is processed for displaying to the user by the _app_ folder scripts.
+2. The content script always listens for messages being passed from the extension's target application. Upon receiving data from the target app, the content script will immediately forward this data to the background script which then updates an object called `tabsObj`. Each time `tabsObj` is updated, its latest version will be passed to Reactime, where it is processed for displaying to the user by the _app_ folder scripts.
 
 3. Likewise, when Reactime emits an action due to user interaction -- a "jump" request for example -- a message will be passed from Reactime via the background script to the content script. Then, the content script will pass a message to the target application containing a payload that represents the state the user wants the DOM to reflect or "jump" to.
    - One important thing to note here is that this jump action must be dispatched in the target application (i.e. _backend_ land), because only there do we have direct access to the DOM.
@@ -262,8 +265,10 @@ Once you are ready for launch, follow these steps to simplify deployment to the 
 4.  Update the Store Listing and that’s it! Click “Submit for review” and wait for the Chrome store to process your request
 
 # Past Medium Articles for Reference
--[Reactime 22: Reactime: Real-time Debugging, Timless Results](https://medium.com/@kelvinmirhan/reactime-real-time-debugging-timeless-results-3f163b721d01)
 
+- [Reactime 23: ]()
+
+- [Reactime 22: Reactime: Real-time Debugging, Timless Results](https://medium.com/@kelvinmirhan/reactime-real-time-debugging-timeless-results-3f163b721d01)
 - [Reactime 21: Cheers to Reactime, Version 21!](https://medium.com/@brok3turtl3/cheers-to-reactime-version-21-fa4dafa4bc74)
 - [Reactime 20: Reactime just keeps getting better!](https://medium.com/@njhuemmer/reactime-just-keeps-getting-better-b37659ff8b71)
 - [Reactime 19: What time is it? It’s still Reactime!](https://medium.com/@minzo.kim/what-time-is-it-its-still-reactime-d496adfa908c)
