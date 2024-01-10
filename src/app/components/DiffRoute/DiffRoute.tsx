@@ -11,17 +11,25 @@ import { DiffRouteProps } from '../../FrontendTypes';
 const DiffRoute = (props: DiffRouteProps): JSX.Element => (
   <div className='diff-container'>
     <div className='navbar'>
-      <NavLink className='router-link' to='/diff'>
+      <NavLink
+        className={(navData) => (navData.isActive ? 'is-active router-link' : 'router-link')}
+        to='/diff/tree'
+      >
         Tree
       </NavLink>
-      <NavLink className='router-link' to='/diff/diffRaw'>
+      <NavLink
+        className={(navData) => (navData.isActive ? 'is-active router-link' : 'router-link')}
+        to='/diff/diffRaw'
+      >
         Raw
       </NavLink>
     </div>
-    <Routes>
-      <Route path='/diff/diffRaw' element={<Diff snapshot={props.snapshot} show />} />
-      <Route path='/diff' element={<Diff snapshot={props.snapshot} show={false} />} />
-    </Routes>
+    <div>
+      <Routes>
+        <Route path='/diffRaw' element={<Diff snapshot={props.snapshot} show />} />
+        <Route path='/tree' element={<Diff snapshot={props.snapshot} show={false} />} />
+      </Routes>
+    </div>
   </div>
 );
 

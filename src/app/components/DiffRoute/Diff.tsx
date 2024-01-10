@@ -1,7 +1,7 @@
 import React from 'react';
 import { diff, formatters } from 'jsondiffpatch';
 // const jsondiffpatch = require('jsondiffpatch');
-import ReactHtmlParser from 'html-react-parser';
+import Parse from 'html-react-parser';
 import {
   CurrentTab,
   DiffProps,
@@ -91,11 +91,12 @@ function Diff(props: DiffProps): JSX.Element {
 
   const delta = diff(previousDisplay, snapshot); // diff function from 'jsondiffpatch' returns the difference in state between 'previousDisplay' and 'snapshot'
 
-  const html = formatters.format(delta, previousDisplay); // formatters function from 'jsondiffpatch' returns an html string that shows the difference between delta and the previousDisplay
+  const html = formatters.html.format(delta, previousDisplay); // formatters function from 'jsondiffpatch' returns an html string that shows the difference between delta and the previousDisplay
+  console.log(html);
 
   if (show)
-    formatters.showUnchanged(); // shows unchanged values if we're on the '/diffRaw' path
-  else formatters.hideUnchanged(); // hides unchanged values
+    formatters.html.showUnchanged(); // shows unchanged values if we're on the '/diffRaw' path
+  else formatters.html.hideUnchanged(); // hides unchanged values
 
   if (previous === undefined || delta === undefined) {
     // if there has been no state changes on the target/hooked application, previous and delta would be undefined.
@@ -107,7 +108,7 @@ function Diff(props: DiffProps): JSX.Element {
       </div>
     );
   }
-  return <div>{ReactHtmlParser(html)}</div>; // ReactHTMLParser from 'react-html-parser' package converts the HTML string into a react component.
+  return <div>{Parse(html)}</div>; // HTMLReactParser from 'html-react-parser' package converts the HTML string into a react component.
 }
 
 export default Diff;

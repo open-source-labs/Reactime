@@ -27,7 +27,7 @@ ul.jsondiffpatch-delta {
 .jsondiffpatch-added .jsondiffpatch-value pre,
 .jsondiffpatch-modified .jsondiffpatch-right-value pre,
 .jsondiffpatch-textdiff-added {
-  background: #5A6C46;
+  background: #5a6c46;
 }
 .jsondiffpatch-deleted .jsondiffpatch-property-name,
 .jsondiffpatch-deleted pre,
@@ -38,7 +38,7 @@ ul.jsondiffpatch-delta {
 }
 .jsondiffpatch-unchanged,
 .jsondiffpatch-movedestination {
-  color: #f7f2f2;
+  color: #81929e;
 }
 .jsondiffpatch-unchanged,
 .jsondiffpatch-movedestination > .jsondiffpatch-value {

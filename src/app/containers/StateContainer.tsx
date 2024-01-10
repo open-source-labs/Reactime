@@ -23,38 +23,53 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
   return (
     <div className='state-container'>
       <div className='main-navbar-container'>
-            <div className='main-navbar-text' />
-            <div className='main-navbar'>
-              <NavLink className='main-router-link' to='/'>
-                State
-              </NavLink>
-              <NavLink className='main-router-link' to='/diff'>
-                Diff
-              </NavLink>
-            </div>
-          </div>
-          <Routes>
-            <Route path='/diff/*' element={
+        <div className='main-navbar-text' />
+        <div className='main-navbar'>
+          <NavLink
+            className={(navData) =>
+              navData.isActive ? 'is-active main-router-link' : 'main-router-link'
+            }
+            to='/'
+          >
+            State
+          </NavLink>
+          <NavLink
+            className={(navData) =>
+              navData.isActive ? 'is-active main-router-link' : 'main-router-link'
+            }
+            to='/diff'
+          >
+            Diff
+          </NavLink>
+        </div>
+      </div>
+      <Routes>
+        <Route
+          path='/diff/*'
+          element={
             <div>
               <DiffRoute snapshot={snapshot} />
               {/* <Outlet/> */}
-            </div>} />
-            <Route
-              path='/*'
-              element={ 
-              <div height="100%">
-                <StateRoute
-                  webMetrics={webMetrics}
-                  viewIndex={viewIndex}
-                  snapshot={snapshot}
-                  hierarchy={hierarchy}
-                  snapshots={snapshots}
-                  currLocation={currLocation}
-                />
-                {/* <Outlet/> */}
-              </div>} 
-             />
-          </Routes>
+            </div>
+          }
+        />
+        <Route
+          path='/*'
+          element={
+            <div style={{ height: '100%' }}>
+              <StateRoute
+                webMetrics={webMetrics}
+                viewIndex={viewIndex}
+                snapshot={snapshot}
+                hierarchy={hierarchy}
+                snapshots={snapshots}
+                currLocation={currLocation}
+              />
+              {/* <Outlet/> */}
+            </div>
+          }
+        />
+      </Routes>
     </div>
   );
 };
