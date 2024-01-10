@@ -68,13 +68,13 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background: #242529;
+  background: $background-color-strong;
   padding: 20px;
   margin: 20px 10px;
   font-family: 'Roboto', sans-serif;
 
   h3 {
-    color: #ff0001;
+    color: $primary-color;
     margin-bottom: 5px;
     margin-top: 5px;
     text-transform: uppercase;
@@ -83,14 +83,14 @@
   }
 
   h4 {
-    color: #ff0001;
+    color: $primary-color-strong;
     margin-bottom: 5px;
     margin-top: 5px;
     font-weight: 300;
   }
 
   p {
-    color: white;
+    color: $primary-color-strong;
     line-height: 20px;
     text-align: center;
     font-size: 18px;
