@@ -2,10 +2,10 @@
   "name": "reactime",
   "description": "build web extension bundle.js",
   "scripts": {
-    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode production",
+    "build": "webpack --mode production",
     "dev": "cross-env NODE_ENV=development webpack --mode development --watch",
-    "buildlegacy": "webpack --mode production",
-    "devlegacy": "webpack --mode development --watch",
+    "buildlegacy": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode production",
+    "devlegacy": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode development --watch",
     "test": "jest --verbose --coverage",
     "test-backend": "jest --verbose --coverage src/backend",
     "test-frontend": "jest --verbose --coverage src/app",
