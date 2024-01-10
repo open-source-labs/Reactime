@@ -270,7 +270,6 @@ chrome.runtime.onConnect.addListener((port) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
-    console.log('sign connected!!');
     return true;
   }
   const tabTitle = sender.tab.title;
@@ -362,7 +361,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break;
     }
     case 'recordSnap': {
-      console.log('recordSnap. current tabsobj', tabsObj)
       const sourceTab = tabId;
       tabsObj[tabId].webMetrics = metrics;
       if (!firstSnapshotReceived[tabId]) {
@@ -502,7 +500,6 @@ chrome.runtime.onInstalled.addListener(() => {
 // As of chrome manifest V3, background.js is a 'service worker', which does not have access to the DOM or to the native 'window' method, so we use chrome.windows.getCurrent(callback)
 // chrome.windows.getCurrent returns a promise (asynchronous), so all resulting functionality must happen in the callback function, or it will run before 'invokedScreen' variables have been captured.
 chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
-  
   // // this was a test to see if I could dynamically set the left property to be the 0 origin of the invoked DISPLAY (as opposed to invoked window).
   // // this would allow you to split your screen, keep the browser open on the right side, and reactime always opens at the top left corner.
   // // however it does not tell you which display is the one that invoked it, just gives the array of all available displays. Depending on your monitor setup, it may differ. Leaving for future iterators
@@ -528,12 +525,11 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
   // JR 1.9.23: this code fixes the no target error on load by triggering chrome tab reload before the panel spins up.
   // It does not solve the root issue, which was deeply researched during v23 but we ran out of time to solve. Please see the readme for more information.
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    console.log('onContext click tab info', tabs, new Date().toLocaleString());
     if (tabs.length) {
       const invokedTab = tabs[0];
       const invokedTabId = invokedTab.id;
       const invokedTabTitle = invokedTab.title;
-      chrome.tabs.reload(invokedTabId)
+      chrome.tabs.reload(invokedTabId);
     }
   });
 });
