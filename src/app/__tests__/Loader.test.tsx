@@ -6,13 +6,13 @@ import Loader from '../components/ErrorHandling/Loader';
 describe('unit testing for Loader.tsx', () => {
   test('renders a loading icon', () => {
     const { container } = render(<Loader loading={true} result={false} />);
-    console.log('this is our container.firstChild: ', container.firstChild);
+    // console.log('this is our container.firstChild: ', container.firstChild);
     expect(container.firstChild).toHaveClass('docs-story css-kdwx3d');
   });
 
   test('renders a fail icon', () => {
     const { container } = render(<Loader loading={false} result={false} />);
-    console.log('this is a fail2: ', container.getElementsByClassName('fail')[0]);
+    // console.log('this is a fail2: ', container.getElementsByClassName('fail')[0]);
     expect(container.getElementsByClassName('fail').length).toBe(1);
   });
 
