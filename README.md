@@ -27,7 +27,7 @@
 <br>
 
 <p align="center">
-<img src="./assets/gifs/GeneralDemoGif.gif" />
+<img src="./assets/gifs/GeneralDemoGif_V23.gif" />
 </p>
 
 <p align="center">
@@ -260,7 +260,7 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 
 ## <b>Read More</b>
 
-- [Reactime: Real-time Debugging, Timeless Results](https://medium.com/@kelvinmirhan/reactime-real-time-debugging-timeless-results-3f163b721d01)
+- [Reactime renovation: Updates Coming in Version 23.0!](https://medium.com/@liam.donaher/reactime-renovation-updates-coming-in-version-23-0-37b2ef2a2771)
 
 ## <b>Authors</b>
 

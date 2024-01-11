@@ -186,7 +186,7 @@ All the diagrams of data flows are available on [MIRO](https://miro.com/app/boar
 
 The general flow of data is described in the following steps:
 
-![GENERAL DATA FLOW](../assets/DataFlowDiagram.PNG)
+![GENERAL DATA FLOW](../assets/DataFlowDiagramV23.PNG)
 
 1. When the background bundle is loaded by the browser, it executes a script injection into the dom. (see section on _backend_). This script uses a technique called [throttle](https://medium.com/@bitupon.211/debounce-and-throttle-160affa5457b) to send state data from the app to the content script every specified milliseconds (in our case, this interval is 70ms).
 
@@ -274,7 +274,7 @@ Once you are ready for launch, follow these steps to simplify deployment to the 
 
 # Past Medium Articles for Reference
 
-- [Reactime 23: ]()
+- [Reactime renovation: Updates Coming in Version 23.0!](https://medium.com/@liam.donaher/reactime-renovation-updates-coming-in-version-23-0-37b2ef2a2771)
 
 - [Reactime 22: Reactime: Real-time Debugging, Timless Results](https://medium.com/@kelvinmirhan/reactime-real-time-debugging-timeless-results-3f163b721d01)
 - [Reactime 21: Cheers to Reactime, Version 21!](https://medium.com/@brok3turtl3/cheers-to-reactime-version-21-fa4dafa4bc74)
