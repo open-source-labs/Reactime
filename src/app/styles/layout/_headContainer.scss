@@ -65,7 +65,7 @@ div .tab-select-container {
     color: $tab-select-text;
   }
   .tab-select__value-container {
-    background-color: $tab-select-background-2;
+    background-color: $tab-select-background;
     margin: 0;
     padding: 0px;
   }
@@ -74,7 +74,7 @@ div .tab-select-container {
   }
   .tab-select__option:hover {
     margin-top: 0;
-    background-color: #ff0006;
+    background-color: $tab-dropdown-hover;
     color: black;
   }
   .tab-select__option--is-selected,
@@ -83,11 +83,13 @@ div .tab-select-container {
     outline: transparent;
   }
   .tab-select__indicator {
+    color:$tab-arrow-indicator;
     padding: 0;
   }
   .tab-select__indicator-separator {
     margin-top: 3px;
     margin-bottom: 3px;
+    background-color: $tab-vertical-line;
   }
 
   .css-1uccc91-singleValue {
@@ -103,7 +105,6 @@ div .tab-select-container {
   .css-1pahdxg-control {
     min-height: initial;
     height: 100%;
-    background-color: $tab-select-background;
     border: none;
     outline: none;
     margin-bottom: 0;

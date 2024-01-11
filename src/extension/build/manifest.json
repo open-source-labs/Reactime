@@ -14,11 +14,8 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["bundles/content.bundle.js"],
-      "run_at": "document_start",
-      "all_frames": false,
-      "isolated_world": true
+      "matches": ["http://localhost/*"],
+      "js": ["bundles/content.bundle.js"]
     }
   ],
   "web_accessible_resources": [

@@ -12,7 +12,6 @@ export default {
    */
   clear: (): void => {
     componentActionsRecord = [];
-    
   },
 
   /**

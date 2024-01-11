@@ -8,14 +8,14 @@ const controlStyles: ControlStyles = {
 };
 
 const dropDownStyle: DropDownStyle = {
-  margin: '0.5em',
+  margin: '0.1em',
   //fontSize: '16px',
   fontFamily: 'Roboto, sans-serif',
   borderRadius: '4px',
   borderStyle: 'solid',
   borderWidth: '1px',
-  backgroundColor: '#242529',
-  color: 'white',
+  backgroundColor: '#d9d9d9',
+  color: '#161617',
   padding: '2px',
 };
 
@@ -49,14 +49,14 @@ export default function LinkControls({
   collectNodes(snapShots);
 
   return (
-    <div className="comp-map-options" style={controlStyles}>
+    <div className='comp-map-options' style={controlStyles}>
       {' '}
       {/* Controls for the layout selection */}
       <label>Layout:</label>
       &nbsp;{' '}
       {/* This is a non-breaking space - Prevents an automatic line break at this position */}
       <select
-        className="comp-map-dropdown"
+        className='comp-map-dropdown'
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => setLayout(e.target.value)}
         // value={layout}

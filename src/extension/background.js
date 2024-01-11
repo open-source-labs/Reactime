@@ -270,7 +270,6 @@ chrome.runtime.onConnect.addListener((port) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
-    console.log('sign connected!!');
     return true;
   }
   const tabTitle = sender.tab.title;
@@ -279,7 +278,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   let isReactTimeTravel = false;
 
   if (name) {
-    //console.log(value);
     metrics[name] = value;
   }
 
@@ -499,22 +497,20 @@ chrome.runtime.onInstalled.addListener(() => {
 // JR 12.19.23
 // As of V22, if multiple monitors are used, it would open the reactime panel on the other screen, which was inconvenient when opening repeatedly for debugging.
 // V23 fixes this by making use of chrome.windows.getCurrent to get the top and left of the screen which invoked the extension.
-// The reason you must use chrome.windows.getCurrent is that as of chrome manifest V3, background.js is a 'service worker', which does not have access to the DOM or to the native 'window' method.
-// chrome.windows.getCurrent allows us to still get the window from within a service worker. It returns a promise (asynchronous), so all resulting functionality must happen in the callback function,
-// or it will run before 'invokedScreen' variables have been captured.
+// As of chrome manifest V3, background.js is a 'service worker', which does not have access to the DOM or to the native 'window' method, so we use chrome.windows.getCurrent(callback)
+// chrome.windows.getCurrent returns a promise (asynchronous), so all resulting functionality must happen in the callback function, or it will run before 'invokedScreen' variables have been captured.
 chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
   // // this was a test to see if I could dynamically set the left property to be the 0 origin of the invoked DISPLAY (as opposed to invoked window).
   // // this would allow you to split your screen, keep the browser open on the right side, and reactime always opens at the top left corner.
-  // // unfortunately it does not tell you which display is the one that invoked it, just the array of all available displays
+  // // however it does not tell you which display is the one that invoked it, just gives the array of all available displays. Depending on your monitor setup, it may differ. Leaving for future iterators
   // chrome.system.display.getInfo((displayUnitInfo) => {
   //   console.log(displayUnitInfo);
   // });
-
   chrome.windows.getCurrent((window) => {
-    const invokedScreenHeight = window.height || 1000;
-    const invokedScreenTop = window.top || 0;
-    const invokedScreenLeft = window.left || 0;
-    const invokedScreenWidth = Math.max(Math.trunc(window.width / 2), 1000) || 1000; // set reactime window to half of chrome window, with a min of 1000px
+    const invokedScreenTop = 75; // window.top || 0;
+    const invokedScreenLeft = window.width < 1000 ? window.left + window.width - 1000 : window.left;
+    const invokedScreenWidth = 1000;
+    const invokedScreenHeight = window.height - invokedScreenTop || 1000;
     const options = {
       type: 'panel',
       left: invokedScreenLeft,
@@ -525,48 +521,15 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     };
     if (menuItemId === 'reactime') chrome.windows.create(options);
   });
-  //JR 12.20.23
-  //JR 1.8.23: this code fixes the no target error (still gets stuck on reactdevtools installed check), but creates an error where the addNewSnapshots reducer has an error.
-  // chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-  //   console.log('onContext click tab info', tabs, new Date().toLocaleString());
-  //   if (tabs.length) {
-  //     const invokedTab = tabs[0];
-  //     const invokedTabId = invokedTab.id;
-  //     const invokedTabTitle = invokedTab.title;
-  //     tabsObj[invokedTabId] = createTabObj(invokedTabTitle);
-  //     console.log('onContextClick tabsObj created ', tabsObj);
-  //     activeTab = invokedTab;
 
-  // inject backend script
-  // const injectScript = (file, tab) => {
-  //   const htmlBody = document.getElementsByTagName('body')[0];
-  //   const script = document.createElement('script');
-  //   script.setAttribute('id', 'reactime-backend-script');
-  //   script.setAttribute('type', 'text/javascript');
-  //   script.setAttribute('src', file);
-  //   // eslint-disable-next-line prefer-template
-  //   htmlBody.appendChild(script);
-  // };
-
-  // console.log('background is injecting the backend script', new Date().toLocaleString());
-  // chrome.scripting.executeScript({
-  //   target: { tabId: invokedTabId },
-  //   func: injectScript,
-  //   args: [chrome.runtime.getURL('bundles/backend.bundle.js'), invokedTabId],
-  // });
-
-  // console.log('contextclick invokedTab url, ', invokedTab.url, 'portsArr: ', portsArr);
-  // if (!invokedTab.url?.match('^chrome-extension')) {
-  //   if (portsArr.length > 0) {
-  //     portsArr.forEach((bg) => {
-  //       console.log('contextClick is sending change Tab message to ', bg);
-  //       bg.postMessage({
-  //         action: 'changeTab',
-  //         payload: { tabId: invokedTabId, title: invokedTabTitle },
-  //       });
-  //     });
-  //   }
-  // }
-  // }
-  // });
+  // JR 1.9.23: this code fixes the no target error on load by triggering chrome tab reload before the panel spins up.
+  // It does not solve the root issue, which was deeply researched during v23 but we ran out of time to solve. Please see the readme for more information.
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length) {
+      const invokedTab = tabs[0];
+      const invokedTabId = invokedTab.id;
+      const invokedTabTitle = invokedTab.title;
+      chrome.tabs.reload(invokedTabId);
+    }
+  });
 });

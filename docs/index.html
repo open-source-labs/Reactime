@@ -1,0 +1,275 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>reactime</title><meta name="description" content="Documentation for reactime"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div><div class="field"><div id="tsd-toolbar-links"></div></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">reactime</a></div><div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="#icon-menu"></use></svg></a></div></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h2>reactime</h2></div><div class="tsd-panel tsd-typography"><h1 align="center">
+  <br>
+    <img src ="./assets/logos/chromeExtensionIcons/marqueePromoTitle.png"/>
+    <br>
+    <br>
+  React Performance Tool
+    <br>
+    <a href="https://osawards.com/react/"> Nominated for React Open Source Awards 2020 </a>
+  <br>
+</h1>
+
+<h4 align="center"> Reactime is an open-source Chrome developer tool for time travel debugging and performance monitoring in React applications. Reactime enables developers to record snapshots of application state, jump between and inspect state snapshots, and monitor performance metrics such as component render time and render frequency. </h4>
+
+<br>
+<p align="center">
+  <a href="https://github.com/oslabs-beta/reactime">
+    <img src="https://img.shields.io/github/license/oslabs-beta/reactime" alt="GitHub">
+  </a>
+    <img src="https://img.shields.io/badge/babel%20preset-airbnb-ff69b4" alt="BabelPresetPrefs">
+    <img src="https://img.shields.io/badge/linted%20with-eslint-blueviolet" alt="LintPrefs">
+</p>
+
+<h5 align="center">
+<br>
+  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href='./src/README.md'>DEVELOPER README</a>
+  <br>
+</h5>
+<br>
+
+<p align="center">
+<img src="./assets/gifs/GeneralDemoGif.gif" />
+</p>
+
+<p align="center">
+  <a href="https://www.reacti.me/">Website</a> 
+</p>
+
+<a id="md:features" class="tsd-anchor"></a><h2><a href="#md:features"><h1>Features</h1></a></h2><a id="md:🔹-viewing" class="tsd-anchor"></a><h3><a href="#md:🔹-viewing">🔹 Viewing</a></h3><p>You can view your application&#39;s file structure and click on a snapshot to view
+your app&#39;s state. State can be visualized in a Component Graph, JSON Tree, or
+Performance Graph. Snapshots can be compared with the previous snapshot, which can
+be viewed in Diff mode.
+<br>
+<br></p>
+<p align="center">
+<img src="./assets/gifs/TimeTravelGif.gif" />
+</p>
+<br>
+
+<a id="md:🔹-recording" class="tsd-anchor"></a><h3><a href="#md:🔹-recording">🔹 Recording</a></h3><p>Whenever the state is changed (whenever setState, useState is called), this
+extension will create a snapshot of the current state tree and record it. Each
+snapshot will be displayed in Chrome DevTools under the Reactime panel.
+<br>
+<br></p>
+<a id="md:🔹-snapshot-series-and-action-comparison" class="tsd-anchor"></a><h3><a href="#md:🔹-snapshot-series-and-action-comparison">🔹 Snapshot Series and Action Comparison</a></h3><p>You can save a series of state snapshots and use it to analyze changes in
+component render performance between the current and the previous series of snapshots.
+You can also name specific snapshots and compare all snapshots with the same
+name.
+<br>
+<br></p>
+<a id="md:🔹-components-comparison" class="tsd-anchor"></a><h3><a href="#md:🔹-components-comparison">🔹 Components Comparison</a></h3><p>When toggled to a specific snapshot, a visualization of the individual
+components of the snapshot will be displayed. This can be done under the same
+Performance tab where the snapshots are rendered. You will also find details of
+each component upon hovering.
+<br>
+<br></p>
+<a id="md:🔹-downloadupload-snapshots" class="tsd-anchor"></a><h3><a href="#md:🔹-downloadupload-snapshots">🔹 Download/Upload Snapshots</a></h3><p>Download the recorded snapshots as a JSON file and upload them to access state trees across different sessions.
+<br>
+<br></p>
+<p align="center">
+<img src="./assets/gifs/importExport_v22.gif" />
+</p>
+<br>
+
+<a id="md:🔹-reconnect-and-status" class="tsd-anchor"></a><h3><a href="#md:🔹-reconnect-and-status">🔹 Reconnect and Status</a></h3><p>If Reactime loses its connection to the tab you&#39;re monitoring, simply click the &quot;reconnect&quot; button to resume your work. You&#39;ll notice a circle located to the right of the button, which will appear as either red (indicating disconnection) or green (signifying a successful reconnection).
+<br>
+<br></p>
+<p align="center">
+<img src="./assets/gifs/ReconnectGif22.gif" />
+</p>
+<br>
+
+<a id="md:🔹-re-render-optimization" class="tsd-anchor"></a><h3><a href="#md:🔹-re-render-optimization">🔹 Re-render Optimization</a></h3><p>One of the most common issues that affects performance in React is unnecessary
+render cycles. This problem can be fixed by checking your renders in the
+Performance tab in Chrome DevTools under the Reactime panel.
+<br>
+<br></p>
+<a id="md:🔹-jumping" class="tsd-anchor"></a><h3><a href="#md:🔹-jumping">🔹 Jumping</a></h3><p>Using the actions sidebar, a user can jump to any previously recorded snapshots.
+Hitting the jump button on any snapshot will allow a user to view state data at
+any point in the history of the target application.
+<br>
+<br></p>
+<a id="md:🔹-gatsby" class="tsd-anchor"></a><h3><a href="#md:🔹-gatsby">🔹 Gatsby</a></h3><p>Reactime offers full support for Gatsby applications. You would be able to
+identify unnecessary renders, duration of each rendering, travel-debugging
+features and visual representation of the tree components.
+<br>
+<br></p>
+<a id="md:🔹-nextjs" class="tsd-anchor"></a><h3><a href="#md:🔹-nextjs">🔹 Next.js</a></h3><p>Reactime offers debugging and performance tools for Next.js apps: time-traveling
+debugging, preventing unnecessary component re-renders and making your
+application faster.
+<br>
+<br></p>
+<a id="md:🔹-remix" class="tsd-anchor"></a><h3><a href="#md:🔹-remix">🔹 Remix</a></h3><p>Reactime offers debugging and performance tools for Remix apps (in beta). Support still
+needs to be added for multi-route time traveling. Every other feature works.
+<br>
+<br></p>
+<a id="md:🔹-typescript-support" class="tsd-anchor"></a><h3><a href="#md:🔹-typescript-support">🔹 TypeScript Support</a></h3><p>Reactime offers support for TypeScript applications using stateful class
+components and functional components. Further testing and development is
+required for custom hooks and Concurrent Mode.
+<br>
+<br></p>
+<a id="md:🔹-documentation" class="tsd-anchor"></a><h3><a href="#md:🔹-documentation">🔹 Documentation</a></h3><p>After cloning this repository, developers can simply run <code>npm run docs</code> at the
+root level and serve the dynamically generated <code>/docs/index.html</code> file on a
+browser. Doing so will provide a readable, extensible, and interactive GUI view
+of the structure and interfaces of the codebase.
+<br>
+<br></p>
+<a id="md:additional-features" class="tsd-anchor"></a><h3><a href="#md:additional-features"><b>Additional Features</b></a></h3><ul>
+<li>In-app tab-specific tutorial walkthroughs</li>
+<li>Hover over a component to view tooltip details on state visualizations</li>
+<li>Double-click to collapse child components</li>
+<li>Click to focus on a portion of the component map</li>
+<li>A dropdown to support the development of projects on multiple tabs</li>
+<li>Intuitive navigation between state snapshots</li>
+<li>Locked/unlocked feature allowing temporary pause of state monitoring</li>
+</ul>
+<h1>What's New!</h1>
+
+<p>Reactime 22.0 heralds significant enhancements, addressing core performance issues and fortifying the overall application&#39;s stability and reliability. In our pursuit of consistent evolution, we&#39;ve updated outdated packages and transitioned state management to Redux Toolkit. This strategic shift not only modernizes our tech stack but also ensures our application is positioned for easier maintenance and scalability in the future. Complementing these upgrades, this release also mends various bugs. The debut of features like the reconnection button, a status icon, and the integration of key web metrics – Cumulative Layout Shift (CLS) and Interaction To Next Paint (INP) – amplifies its functionality and offers users a more refined experience.</p>
+<p><i>Taking a deeper look</i></p>
+<p>Addressing the persistent disconnection/black screen issues that occasionally affected users during regular application use, we made decisive improvements by removing the &quot;keepAlive&quot; function and implementing robust logic to fix the core issue. This enabled us to refine the communication protocol between our application and the Chrome extension API, delivering a more consistent and stable connection. To further enhance the user experience and foster resilience, we introduced a user-friendly reconnection feature. This not only offers users a swift recovery route but also acts as an added layer of protection against any unexpected disconnections in the future.</p>
+<p>In an effort to improve maintainability, scalability, and longevity, we updated and phased out certain dependencies. To name a few, we moved away from the Immer library and transitioned our state management to use Redux Toolkit, while upgrading the Web Vitals API from version 1.1.2 to 3.5.0, allowing us to harness a broader range of web metrics. As part of this transition, we also converted all of the existing tests to work with the updated state management system, while further expanding testing suites to increase overall testing coverage. Lastly, we achieved a notable increase in TypeScript coverage, strengthening code quality and early detection of potential development issues.</p>
+<p>For an improved user experience, we set our sights on several impactful enhancements. First on our list is the reconnection feature, designed as a protective measure for those unexpected moments when a user gets disconnected. In such events, an intuitive pop-up dialog will instantly emerge, offering users a seamless way to dive right back into their session, while also offering the option to download recorded snapshots of state as a JSON file. Complementing this, we&#39;ve integrated a dynamic status indicator that transparently displays a user&#39;s current app status, highlighting whether they&#39;re online or offline. But that&#39;s not all. We&#39;ve enriched the application with two vital web performance metrics: Cumulative Layout Shift (CLS) and Interaction to Next Paint (INP). These metrics are pivotal, providing developers with insights into layout stability and responsiveness, empowering them to optimize user interactions with precision.</p>
+<p>If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a></p>
+<p align="center">
+
+<h1>Installation</h1>
+
+<p>To get started, install the Reactime
+<a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">extension</a>
+from Chrome Web Store.</p>
+<p>After installing Reactime, you can test its functionalities with your React
+application in development mode.</p>
+<p>Please note, the time jumping feature will <b>ONLY</b> work when your
+application is running in <b>development mode</b>. In production mode, you are
+able to view your application’s component map but no additional features.</p>
+<p>NOTE: The React Developer Tools
+<a href="https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en">extension</a>
+is also required for Reactime to run, if you do not already have it installed on
+your browser.</p>
+<a id="md:manual-installation" class="tsd-anchor"></a><h3><a href="#md:manual-installation">Manual Installation</a></h3><p>Go to Chrome Extensions (make sure Chrome Extension is in Developer Mode) for
+manual installation in (<a href="https://developer.chrome.com/extensions/faq#faq-dev-01">https://developer.chrome.com/extensions/faq#faq-dev-01</a>)
+and click on Load Unpacked. Use <code>src/extension/build/</code> to load this extension.
+Turn on &#39;Allow access to file URLs&#39; in the extension details page if testing
+locally.</p>
+<a id="md:looking-to-contribute-to-reactime" class="tsd-anchor"></a><h3><a href="#md:looking-to-contribute-to-reactime">Looking to contribute to Reactime?</a></h3><p><i>Please refer to Developer Install for a detailed guide:</i></p>
+<p>Refer <a href="src/README.md">DEVELOPER README</a> for more info on the project, and
+instructions on building from source.</p>
+<a id="md:how-to-use" class="tsd-anchor"></a><h3><a href="#md:how-to-use"><b>How to Use</b></a></h3><p>After installing the Chrome extension, just open up your project in the browser.</p>
+<p>Then open up your Chrome DevTools and navigate to the Reactime panel.</p>
+<a id="md:troubleshooting" class="tsd-anchor"></a><h2><a href="#md:troubleshooting"><b>Troubleshooting</b></a></h2><a id="md:❓-why-is-reactime-telling-me-that-no-react-application-is-found" class="tsd-anchor"></a><h3><a href="#md:❓-why-is-reactime-telling-me-that-no-react-application-is-found">❓ <b>Why is Reactime telling me that no React application is found?</b></a></h3><p>Reactime initially runs using the dev tools global hook from the Chrome API. It
+takes time for Chrome to load this. Try refreshing your application a couple of
+times until you see Reactime running.</p>
+<a id="md:❓-why-do-i-need-to-have-react-dev-tools-enabled" class="tsd-anchor"></a><h3><a href="#md:❓-why-do-i-need-to-have-react-dev-tools-enabled">❓ <b>Why do I need to have React Dev Tools enabled?</b></a></h3><p>Reactime works in tandem with the React Developer Tools to access a React application&#39;s Fiber tree; under the hood, Reactime traverses the Fiber tree through the React Developer Tool&#39;s global hook, pulling all relevant information needed to display to the developer</p>
+<a id="md:❓-there-is-a-black-screen-instead-of-the-reactime-extension" class="tsd-anchor"></a><h3><a href="#md:❓-there-is-a-black-screen-instead-of-the-reactime-extension">❓ <b>There is a black screen instead of the Reactime extension</b></a></h3><p>Try refreshing the application you want to test and refresh the DevTools by
+clicking the right mouse button “Reload frame”.</p>
+<a id="md:❓-i-found-a-bug-in-reactime" class="tsd-anchor"></a><h3><a href="#md:❓-i-found-a-bug-in-reactime">❓ <b>I found a bug in Reactime</b></a></h3><p>Reactime is an open-source project, and we&#39;d love to hear from you about
+improving the user experience. Please read <a href="src/README.md">DEVELOPER README</a>,
+and create a pull request (or issue) to propose and collaborate on changes to Reactime.</p>
+<a id="md:❓-node-version-compatibility" class="tsd-anchor"></a><h3><a href="#md:❓-node-version-compatibility">❓ <b>Node version compatibility</b></a></h3><p>With the release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
+&#39;npm run dev&#39; | &#39;npm run build&#39; for backwards compatibility.<br/> For version
+Node v16.16.0, please use script &#39;npm run devlegacy&#39; | &#39;npm run buildlegacy&#39;</p>
+<a id="md:read-more" class="tsd-anchor"></a><h2><a href="#md:read-more"><b>Read More</b></a></h2><ul>
+<li><a href="https://medium.com/@kelvinmirhan/reactime-real-time-debugging-timeless-results-3f163b721d01">Reactime: Real-time Debugging, Timeless Results</a></li>
+</ul>
+<a id="md:authors" class="tsd-anchor"></a><h2><a href="#md:authors"><b>Authors</b></a></h2><ul>
+<li><strong>Ben Margolius</strong> - <a href="https://github.com/benmarg">@benmarg</a></li>
+<li><strong>Eric Yun</strong> - <a href="https://github.com/ericsngyun">@ericsngyun</a></li>
+<li><strong>James Nghiem</strong> - <a href="https://github.com/jemzir">@jemzir</a></li>
+<li><strong>Wilton Lee</strong> - <a href="https://github.com/wiltonlee948">@wiltonlee948</a></li>
+<li><strong>Louis Lam</strong> - <a href="https://github.com/llam722">@llam722</a></li>
+<li><strong>Samuel Tran</strong> - <a href="https://github.com/leumastr">@leumastr</a></li>
+<li><strong>Brian Yang</strong> - <a href="https://github.com/yangbrian310">@yangbrian310</a></li>
+<li><strong>Emin Tahirov</strong> - <a href="https://github.com/eminthrv">@eminthrv</a></li>
+<li><strong>Peng Dong</strong> - <a href="https://github.com/d28601581">@d28601581</a></li>
+<li><strong>Ozair Ghulam</strong> - <a href="https://github.com/ozairgh">@ozairgh</a></li>
+<li><strong>Christina Or</strong> - <a href="https://github.com/christinaor">@christinaor</a></li>
+<li><strong>Khanh Bui</strong> - <a href="https://github.com/AndyB909">@AndyB909</a></li>
+<li><strong>David Kim</strong> - <a href="https://github.com/codejunkie7">@codejunkie7</a></li>
+<li><strong>Robby Tipton</strong> - <a href="https://github.com/RobbyTipton">@RobbyTipton</a></li>
+<li><strong>Kevin HoEun Lee</strong> - <a href="https://github.com/khobread">@khobread</a></li>
+<li><strong>Christopher LeBrett</strong> - <a href="https://github.com/fscgolden">@fscgolden</a></li>
+<li><strong>Joseph Park</strong> - <a href="https://github.com/joeepark">@joeepark</a></li>
+<li><strong>Kris Sorensen</strong> - <a href="https://github.com/kris-sorensen">@kris-sorensen</a></li>
+<li><strong>Daljit Gill</strong> - <a href="https://github.com/dgill05">@dgill05</a></li>
+<li><strong>Ben Michareune</strong> - <a href="https://github.com/bmichare">@bmichare</a></li>
+<li><strong>Dane Corpion</strong> - <a href="https://github.com/danecorpion">@danecorpion</a></li>
+<li><strong>Harry Fox</strong> -
+<a href="https://github.com/StackOverFlowWhereArtThou">@StackOverFlowWhereArtThou</a></li>
+<li><strong>Nathan Richardson</strong> - <a href="https://github.com/BagelEnthusiast">@BagelEnthusiast</a></li>
+<li><strong>David Bernstein</strong> - <a href="https://github.com/dangitbobbeh">@dangitbobbeh</a></li>
+<li><strong>Joseph Stern</strong> - <a href="https://github.com/josephiswhere">@josephiswhere</a></li>
+<li><strong>Dennis Lopez</strong> - <a href="https://github.com/DennisLpz">@DennisLpz</a></li>
+<li><strong>Cole Styron</strong> - <a href="https://github.com/C-STYR">@colestyron</a></li>
+<li><strong>Ali Rahman</strong> - <a href="https://github.com/CourageWolf">@CourageWolf</a></li>
+<li><strong>Caner Demir</strong> - <a href="https://github.com/demircaner">@demircaner</a></li>
+<li><strong>Kevin Ngo</strong> - <a href="https://github.com/kev-ngo">@kev-ngo</a></li>
+<li><strong>Becca Viner</strong> - <a href="https://github.com/rtviner">@rtviner</a></li>
+<li><strong>Caitlin Chan</strong> - <a href="https://github.com/caitlinchan23">@caitlinchan23</a></li>
+<li><strong>Kim Mai Nguyen</strong> - <a href="https://github.com/Nkmai">@Nkmai</a></li>
+<li><strong>Tania Lind</strong> - <a href="https://github.com/lind-tania">@lind-tania</a></li>
+<li><strong>Alex Landeros</strong> - <a href="https://github.com/AlexanderLanderos">@AlexanderLanderos</a></li>
+<li><strong>Chris Guizzetti</strong> - <a href="https://github.com/guizzettic">@guizzettic</a></li>
+<li><strong>Jason Victor</strong> - <a href="https://github.com/Theqwertypusher">@theqwertypusher</a></li>
+<li><strong>Sanjay Lavingia</strong> - <a href="https://github.com/sanjaylavingia">@sanjaylavingia</a></li>
+<li><strong>Vincent Nguyen</strong> - <a href="https://github.com/VNguyenCode">@VNguyenCode</a></li>
+<li><strong>Haejin Jo</strong> - <a href="https://github.com/haejinjo">@haejinjo</a></li>
+<li><strong>Hien Nguyen</strong> - <a href="https://github.com/hienqn">@hienqn</a></li>
+<li><strong>Jack Crish</strong> - <a href="https://github.com/JackC27">@JackC27</a></li>
+<li><strong>Kevin Fey</strong> - <a href="https://github.com/kevinfey">@kevinfey</a></li>
+<li><strong>Carlos Perez</strong> - <a href="https://github.com/crperezt">@crperezt</a></li>
+<li><strong>Edwin Menendez</strong> - <a href="https://github.com/edwinjmenendez">@edwinjmenendez</a></li>
+<li><strong>Gabriela Jardim Aquino</strong> - <a href="https://github.com/aquinojardim">@aquinojardim</a></li>
+<li><strong>Greg Panciera</strong> - <a href="https://github.com/gpanciera">@gpanciera</a></li>
+<li><strong>Nathanael Wa Mwenze</strong> - <a href="https://github.com/nmwenz90">@nmwenz90</a></li>
+<li><strong>Ryan Dang</strong> - <a href="https://github.com/rydang">@rydang</a></li>
+<li><strong>Bryan Lee</strong> - <a href="https://github.com/mylee1995">@mylee1995</a></li>
+<li><strong>Josh Kim</strong> - <a href="https://github.com/joshua0308">@joshua0308</a></li>
+<li><strong>Sierra Swaby</strong> - <a href="https://github.com/starkspark">@starkspark</a></li>
+<li><strong>Ruth Anam</strong> - <a href="https://github.com/nusanam">@nusanam</a></li>
+<li><strong>David Chai</strong> - <a href="https://github.com/davidchai717">@davidchaidev</a></li>
+<li><strong>Yujin Kang</strong> - <a href="https://github.com/yujinkay">@yujinkay</a></li>
+<li><strong>Andy Wong</strong> - <a href="https://github.com/andynullwong">@andynullwong</a></li>
+<li><strong>Chris Flannery</strong> -
+<a href="https://github.com/chriswillsflannery">@chriswillsflannery</a></li>
+<li><strong>Rajeeb Banstola</strong> - <a href="https://github.com/rajeebthegreat">@rajeebthegreat</a></li>
+<li><strong>Prasanna Malla</strong> - <a href="https://github.com/prasmalla">@prasmalla</a></li>
+<li><strong>Rocky Lin</strong> - <a href="https://github.com/rocky9413">@rocky9413</a></li>
+<li><strong>Abaas Khorrami</strong> - <a href="https://github.com/dubalol">@dubalol</a></li>
+<li><strong>Ergi Shehu</strong> - <a href="https://github.com/ergi516">@Ergi516</a></li>
+<li><strong>Raymond Kwan</strong> - <a href="https://github.com/rkwn">@rkwn</a></li>
+<li><strong>Joshua Howard</strong> - <a href="https://github.com/joshua-howard">@Joshua-Howard</a></li>
+<li><strong>Lina Shin</strong> - <a href="https://github.com/rxlina">@rxlina</a></li>
+<li><strong>Andy Tsou</strong> - <a href="https://github.com/andytsou19">@andytsou19</a></li>
+<li><strong>Feiyi Wu</strong> - <a href="https://github.com/FreyaWu">@FreyaWu</a></li>
+<li><strong>Viet Nguyen</strong> - <a href="https://github.com/vnguyen95">@vnguyen95</a></li>
+<li><strong>Alex Gomez</strong> - <a href="https://github.com/alexgomez9">@alexgomez9</a></li>
+<li><strong>Edar Liu</strong> - <a href="https://github.com/liuedar">@liuedar</a></li>
+<li><strong>Kristina Wallen</strong> - <a href="https://github.com/kristinawallen">@kristinawallen</a></li>
+<li><strong>Quan Le</strong> - <a href="https://github.com/Blachfog">@blachfog</a></li>
+<li><strong>Robert Maeda</strong> - <a href="https://github.com/robmaeda">@robmaeda</a></li>
+<li><strong>Lance Ziegler</strong> - <a href="https://github.com/lanceziegler">@lanceziegler</a></li>
+<li><strong>Ngoc Zwolinski</strong> - <a href="https://github.com/ngoczwolinski">@ngoczwolinski</a></li>
+<li><strong>Peter Lam</strong> - <a href="https://github.com/dev-plam">@dev-plam</a></li>
+<li><strong>Zachary Freeman</strong> - <a href="https://github.com/zacharydfreeman/">@zacharydfreeman</a></li>
+<li><strong>Jackie Yuan</strong> - <a href="https://github.com/yuanjackie1">@yuanjackie1</a></li>
+<li><strong>Jasmine Noor</strong> - <a href="https://github.com/jasnoo">@jasnoo</a></li>
+<li><strong>Minzo Kim</strong> - <a href="https://github.com/minzo-kim">@minzo-kim</a></li>
+<li><strong>Mark Teets</strong> - <a href="https://github.com/MarkTeets">@MarkTeets</a></li>
+<li><strong>Nick Huemmer</strong> - <a href="https://github.com/ElDuke717">@NickHuemmer</a></li>
+<li><strong>James McCollough</strong> - <a href="https://github.com/j-mccoll">@j-mccoll</a></li>
+<li><strong>Mike Bednarz</strong> - <a href="https://github.com/mikebednarz">@mikebednarz</a></li>
+<li><strong>Sergei Liubchenko</strong> - <a href="https://github.com/sergeylvq">@sergeylvq</a></li>
+<li><strong>Yididia Ketema</strong> - <a href="https://github.com/yididiaketema">@yididiaketema</a></li>
+<li><strong>Morah Geist</strong> - <a href="https://github.com/morahgeist">@morahgeist</a></li>
+<li><strong>Eivind Del Fierro</strong> - <a href="https://github.com/EivindDelFierro">@EivindDelFierro</a></li>
+<li><strong>Kyle Bell</strong> - <a href="https://github.com/KyEBell">@KyEBell</a></li>
+<li><strong>Sean Kelly</strong> - <a href="https://github.com/brok3turtl3">@brok3turtl3</a></li>
+<li><strong>Christopher Stamper</strong> - <a href="https://github.com/ctstamper">@ctstamper</a></li>
+<li><strong>Jimmy Phy</strong> - <a href="https://github.com/jimmally">@jimmally</a></li>
+<li><strong>Andrew Byun</strong> - <a href="https://github.com/AndrewByun">@AndrewByun</a></li>
+<li><strong>Kelvin Mirhan</strong> - <a href="https://github.com/kelvinmirhan">@kelvinmirhan</a></li>
+</ul>
+<a id="md:license-" class="tsd-anchor"></a><h2><a href="#md:license-"><b>License </b></a></h2><p>This project is licensed under the MIT License - see the <a href="LICENSE">LICENSE</a> file
+for details.</p>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-index-accordion"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="#icon-chevronDown"></use></svg>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><h4 class="uppercase">Member Visibility</h4><form><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div><div class="tsd-theme-toggle"><h4 class="uppercase">Theme</h4><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-index-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="#icon-chevronDown"></use></svg>On This Page</h3></summary><div class="tsd-accordion-details"><ul><li><ul><li><a href="#md:features"><span>Features</span></a></li><li><ul><li><a href="#md:🔹-viewing"><span>🔹 <wbr/>Viewing</span></a></li><li><ul><li><a href="#md:🔹-recording"><span>🔹 <wbr/>Recording</span></a></li><li><a href="#md:🔹-snapshot-series-and-action-comparison"><span>🔹 <wbr/>Snapshot <wbr/>Series and <wbr/>Action <wbr/>Comparison</span></a></li><li><a href="#md:🔹-components-comparison"><span>🔹 <wbr/>Components <wbr/>Comparison</span></a></li><li><a href="#md:🔹-downloadupload-snapshots"><span>🔹 <wbr/>Download/<wbr/>Upload <wbr/>Snapshots</span></a></li><li><a href="#md:🔹-reconnect-and-status"><span>🔹 <wbr/>Reconnect and <wbr/>Status</span></a></li><li><a href="#md:🔹-re-render-optimization"><span>🔹 <wbr/>Re-<wbr/>render <wbr/>Optimization</span></a></li><li><a href="#md:🔹-jumping"><span>🔹 <wbr/>Jumping</span></a></li><li><a href="#md:🔹-gatsby"><span>🔹 <wbr/>Gatsby</span></a></li><li><a href="#md:🔹-nextjs"><span>🔹 <wbr/>Next.js</span></a></li><li><a href="#md:🔹-remix"><span>🔹 <wbr/>Remix</span></a></li><li><a href="#md:🔹-typescript-support"><span>🔹 <wbr/>Type<wbr/>Script <wbr/>Support</span></a></li><li><a href="#md:🔹-documentation"><span>🔹 <wbr/>Documentation</span></a></li><li><a href="#md:additional-features"><span>Additional <wbr/>Features</span></a></li><li><a href="#md:manual-installation"><span>Manual <wbr/>Installation</span></a></li><li><a href="#md:looking-to-contribute-to-reactime"><span>Looking to contribute to <wbr/>Reactime?</span></a></li><li><a href="#md:how-to-use"><span>How to <wbr/>Use</span></a></li></ul></li><li><a href="#md:troubleshooting"><span>Troubleshooting</span></a></li><li><ul><li><a href="#md:❓-why-is-reactime-telling-me-that-no-react-application-is-found"><span>❓ <wbr/>Why is <wbr/>Reactime telling me that no <wbr/>React application is found?</span></a></li><li><a href="#md:❓-why-do-i-need-to-have-react-dev-tools-enabled"><span>❓ <wbr/>Why do <wbr/>I need to have <wbr/>React <wbr/>Dev <wbr/>Tools enabled?</span></a></li><li><a href="#md:❓-there-is-a-black-screen-instead-of-the-reactime-extension"><span>❓ <wbr/>There is a black screen instead of the <wbr/>Reactime extension</span></a></li><li><a href="#md:❓-i-found-a-bug-in-reactime"><span>❓ <wbr/>I found a bug in <wbr/>Reactime</span></a></li><li><a href="#md:❓-node-version-compatibility"><span>❓ <wbr/>Node version compatibility</span></a></li></ul></li><li><a href="#md:read-more"><span>Read <wbr/>More</span></a></li><li><a href="#md:authors"><span>Authors</span></a></li><li><a href="#md:license-"><span>License </span></a></li></ul></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="index.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1"></use></svg><span>reactime</span></a><ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base="."><li><a href="modules/app.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>app</a></li><li><a href="modules/backend.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>backend</a></li><details class="tsd-index-accordion" data-key="extension"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="#icon-chevronDown"></use></svg><span>extension</span></summary><div class="tsd-accordion-details"><ul class="tsd-nested-navigation"><li><a href="modules/extension_background.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>background</a></li><li><a href="modules/extension_build_devtools.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>build/devtools</a></li><li><a href="modules/extension_contentScript.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>contentScript</a></li></ul></div></details></ul></nav></div></div></div><div class="tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><svg style="display: none"><g id="icon-1"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-module)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)"></path></g><g id="icon-2"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-module)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)"></path></g><g id="icon-4"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)"></path></g><g id="icon-8"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-enum)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.45 16V7.24H14.49V8.224H10.518V10.936H14.07V11.908H10.518V15.016H14.49V16H9.45Z" fill="var(--color-text)"></path></g><g id="icon-16"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)"></path></g><g id="icon-32"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-variable)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M11.106 16L8.85 7.24H9.966L11.454 13.192C11.558 13.608 11.646 13.996 11.718 14.356C11.79 14.708 11.842 14.976 11.874 15.16C11.906 14.976 11.954 14.708 12.018 14.356C12.09 13.996 12.178 13.608 12.282 13.192L13.758 7.24H14.85L12.582 16H11.106Z" fill="var(--color-text)"></path></g><g id="icon-64"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)"></path></g><g id="icon-128"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)"></path></g><g id="icon-256"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)"></path></g><g id="icon-512"><rect fill="var(--color-icon-background)" stroke="#4D7FFF" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)"></path></g><g id="icon-1024"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)"></path></g><g id="icon-2048"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)"></path></g><g id="icon-4096"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)"></path></g><g id="icon-8192"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)"></path></g><g id="icon-16384"><rect fill="var(--color-icon-background)" stroke="#4D7FFF" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)"></path></g><g id="icon-32768"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)"></path></g><g id="icon-65536"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-type-alias)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)"></path></g><g id="icon-131072"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-type-alias)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)"></path></g><g id="icon-262144"><rect fill="var(--color-icon-background)" stroke="#FF4D4D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M8.85 16L11.13 7.24H12.582L14.85 16H13.758L13.182 13.672H10.53L9.954 16H8.85ZM10.746 12.76H12.954L12.282 10.06C12.154 9.548 12.054 9.12 11.982 8.776C11.91 8.432 11.866 8.208 11.85 8.104C11.834 8.208 11.79 8.432 11.718 8.776C11.646 9.12 11.546 9.544 11.418 10.048L10.746 12.76Z" fill="var(--color-text)"></path></g><g id="icon-524288"><rect fill="var(--color-icon-background)" stroke="#FF4D4D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M8.85 16L11.13 7.24H12.582L14.85 16H13.758L13.182 13.672H10.53L9.954 16H8.85ZM10.746 12.76H12.954L12.282 10.06C12.154 9.548 12.054 9.12 11.982 8.776C11.91 8.432 11.866 8.208 11.85 8.104C11.834 8.208 11.79 8.432 11.718 8.776C11.646 9.12 11.546 9.544 11.418 10.048L10.746 12.76Z" fill="var(--color-text)"></path></g><g id="icon-1048576"><rect fill="var(--color-icon-background)" stroke="#FF4D4D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M8.85 16L11.13 7.24H12.582L14.85 16H13.758L13.182 13.672H10.53L9.954 16H8.85ZM10.746 12.76H12.954L12.282 10.06C12.154 9.548 12.054 9.12 11.982 8.776C11.91 8.432 11.866 8.208 11.85 8.104C11.834 8.208 11.79 8.432 11.718 8.776C11.646 9.12 11.546 9.544 11.418 10.048L10.746 12.76Z" fill="var(--color-text)"></path></g><g id="icon-2097152"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-type-alias)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)"></path></g><g id="icon-4194304"><rect fill="var(--color-icon-background)" stroke="#FF4D82" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M10.354 17V8.24H13.066C13.586 8.24 14.042 8.348 14.434 8.564C14.826 8.772 15.13 9.064 15.346 9.44C15.562 9.816 15.67 10.256 15.67 10.76C15.67 11.352 15.514 11.86 15.202 12.284C14.898 12.708 14.482 13 13.954 13.16L15.79 17H14.518L12.838 13.28H11.434V17H10.354ZM11.434 12.308H13.066C13.514 12.308 13.874 12.168 14.146 11.888C14.418 11.6 14.554 11.224 14.554 10.76C14.554 10.288 14.418 9.912 14.146 9.632C13.874 9.352 13.514 9.212 13.066 9.212H11.434V12.308Z" fill="var(--color-text)"></path></g><g id="icon-chevronDown"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></g><g id="icon-chevronSmall"><path d="M1.5 5.50969L8 11.6609L14.5 5.50969L12.5466 3.66086L8 7.96494L3.45341 3.66086L1.5 5.50969Z" fill="var(--color-text)"></path></g><g id="icon-menu"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></g><g id="icon-search"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></g><g id="icon-anchor"><g stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path></g></g></svg></body></html>

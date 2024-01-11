@@ -6,11 +6,12 @@
   color: $map-options-label;
 }
 
-.comp-map-dropdown {
-  background-color: #ff0000;
-  color: #ff0000;
-  background: #ff0000;
-}
+//this was supposed to control the dropDownStyle object in LinkControls.tsx (the dropdown menus in ComponentMap)
+// .comp-map-dropdown {
+//   backgroundColor: #ff0008;
+//   color: #ff0007;
+//   background: #ff0006;
+// }
 
 // .compMapParent {
 //   //fill: $map-parent-fill;

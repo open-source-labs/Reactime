@@ -29,12 +29,11 @@ const margin = {
 const axisColor = '#161617';
 const axisTickLabelColor = '#363638';
 const axisLabelColor = '#363638';
-const background = '#242529';
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
-  backgroundColor: 'rgba(0,0,0,0.9)',
-  color: 'white',
+  //backgroundColor: 'rgba(0,0,0,0.9)', //defaults to white
+  //color: 'white', //defaults to a gray
   fontSize: '16px',
   lineHeight: '18px',
   fontFamily: 'Roboto',
@@ -91,7 +90,18 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     nice: true,
   });
 
-  const LMcolorScale = ['#a0c1d6','#669bbc','#105377','#003049','#55a8ac','#3c6e71','#1c494b','#c1676d','#c1121f','#780000']
+  const LMcolorScale = [
+    '#a0c1d6',
+    '#669bbc',
+    '#105377',
+    '#003049',
+    '#55a8ac',
+    '#3c6e71',
+    '#1c494b',
+    '#c1676d',
+    '#c1121f',
+    '#780000',
+  ];
 
   const colorScale = scaleOrdinal<string>({
     // Gives each bar on the graph a color using schemeSet1 imported from D3
@@ -262,7 +272,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           </BarStack>
         </Group>
         <AxisLeft
-          className="BarGraphAxis"
+          className='BarGraphAxis'
           top={margin.top}
           left={margin.left}
           scale={renderingScale}
@@ -277,7 +287,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           })}
         />
         <AxisBottom
-          className="BarGraphAxis"
+          className='BarGraphAxis'
           top={yMax + margin.top}
           left={margin.left}
           scale={snapshotIdScale}

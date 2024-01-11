@@ -12,7 +12,6 @@ let isRecording = true;
 
 // INCOMING MESSAGE FROM BACKEND (index.ts) TO CONTENT SCRIPT
 window.addEventListener('message', (msg) => {
-  console.log('we made it to line 14');
   // Event listener runs constantly based on actions
   // recorded on the test application from backend files (linkFiber.ts).
   // Background.js has a listener that includes switch cases, depending on

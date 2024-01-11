@@ -38,7 +38,7 @@ const defaultMargin: DefaultMargin = {
 
 const nodeCoords: object = {};
 let count: number = 0;
-let aspect: number = 1;
+let aspect: number = 1; // aspect resizes the component map container to accommodate large node trees on complex sites
 let nodeCoordTier = 0;
 let nodeOneLeft = 0;
 let nodeTwoLeft = 2;
@@ -204,7 +204,7 @@ export default function ComponentMap({
         setSelectedNode={setSelectedNode}
       />
 
-      <svg ref={containerRef} width={totalWidth} height={totalHeight}>
+      <svg ref={containerRef} width={totalWidth} height={totalHeight + 0}>
         {/* <LinearGradient id='root-gradient' from='#e75e62' to='#f00008' /> */}
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
@@ -214,17 +214,17 @@ export default function ComponentMap({
             hideTooltip();
           }}
           width={sizeWidth / aspect}
-          height={sizeHeight / aspect}
+          height={sizeHeight / aspect + 0}
           rx={14}
         />
         <Group transform={`scale(${aspect})`} top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(startNode, (d) => (d.isExpanded ? d.children : null))}
             size={[sizeWidth / aspect, sizeHeight / aspect]}
-            separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
+            separation={(a, b) => (a.parent === b.parent ? 0.5 : 0.5) / a.depth}
           >
             {(tree) => (
-              <Group top={origin.y + 25} left={origin.x}>
+              <Group top={origin.y + 35} left={origin.x + 50 / aspect}>
                 {tree.links().map((link, i) => (
                   <LinkComponent
                     className='compMapLink'
@@ -239,11 +239,12 @@ export default function ComponentMap({
 
                 {tree.descendants().map((node, key) => {
                   const widthFunc: number = (name) => {
-                    // function that takes in a node's name and returns a number that is related to the length of the name. Used for determining the node width.
+                    //returns a number that is related to the length of the name. Used for determining the node width.
                     const nodeLength = name.length;
-                    if (nodeLength <= 5) return nodeLength + 80; // returns a number between 80-85
-                    if (nodeLength <= 10) return nodeLength + 120; // returns a number between 125-130
-                    return nodeLength + 140; // returns a number greater than 150
+                    //return nodeLength * 7 + 20; //uncomment this line if we want each node to be directly proportional to the name.length (instead of nodes of similar sizes to snap to the same width)
+                    if (nodeLength <= 5) return nodeLength + 50;
+                    if (nodeLength <= 10) return nodeLength + 120;
+                    return nodeLength + 140;
                   };
 
                   const width: number = widthFunc(node.data.name); // the width is determined by the length of the node.name
@@ -296,7 +297,6 @@ export default function ComponentMap({
                               ) <
                             aspect
                           ) {
-                            console.log(aspect);
                             //assign a new lowest percentage if one is found
                             aspect =
                               Math.abs(
@@ -328,22 +328,22 @@ export default function ComponentMap({
                       }
                     }
                   } else {
-                    null;
+                    aspect = Math.max(aspect, 0.2);
                   }
 
                   // mousing controls & Tooltip display logic
-                  // const handleMouseAndClickOver: void = (event) => {
-                  //   const coords = localPoint(event.target.ownerSVGElement, event);
-                  //   const tooltipObj = { ...node.data };
+                  const handleMouseAndClickOver: void = (event) => {
+                    const coords = localPoint(event.target.ownerSVGElement, event);
+                    const tooltipObj = { ...node.data };
 
-                  //   showTooltip({
-                  //     tooltipLeft: coords.x,
-                  //     tooltipTop: coords.y,
-                  //     tooltipData: tooltipObj,
-                  //     // this is where the data for state and render time is displayed
-                  //     // but does not show props functions and etc
-                  //   });
-                  // };
+                    showTooltip({
+                      tooltipLeft: coords.x,
+                      tooltipTop: coords.y,
+                      tooltipData: tooltipObj,
+                      // this is where the data for state and render time is displayed
+                      // but does not show props functions and etc
+                    });
+                  };
 
                   return (
                     <Group top={top} left={left} key={key} className='rect'>
@@ -426,8 +426,8 @@ export default function ComponentMap({
                           node.depth === 0
                             ? 'compMapRootText'
                             : node.children
-                            ? 'compMapParentText'
-                            : 'compMapChildText'
+                              ? 'compMapParentText'
+                              : 'compMapChildText'
                         }
                         dy='.33em'
                         fontSize='20px'
@@ -441,7 +441,6 @@ export default function ComponentMap({
                     </Group>
                   );
                 })}
-                {console.log(nodeCoords)}
               </Group>
             )}
           </Tree>

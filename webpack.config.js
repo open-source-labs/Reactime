@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 
@@ -6,12 +6,10 @@ const path = require('path');
  * It works by injecting a script into the extension that listens for file changes and automatically reloads the extension when a file is modified.
  */
 
-
-
 // const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
 
-module.exports  = {
-  mode: process.env.NODE_ENV || "production",
+module.exports = {
+  mode: process.env.NODE_ENV || 'production',
   // use a "multi-main entry" to inject multiple dependent files together
   // and graph their dependencies into one "chunk"
   entry: {
@@ -28,9 +26,9 @@ module.exports  = {
     path: path.resolve(__dirname, 'src/extension/build/bundles'),
     filename: '[name].bundle.js',
   },
-  devtool: "cheap-module-source-map",
+  devtool: 'cheap-module-source-map',
   module: {
-    rules: [ 
+    rules: [
       /**
        * For all files ending in .ts or .tsx, except those in node_modules
        * => transpile typescript files into javascript file.
@@ -58,11 +56,10 @@ module.exports  = {
           'sass-loader',
         ],
       },
-    ]
-  },  
+    ],
+  },
   // Add `.ts` and `.tsx` as a resolvable extension.
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
-
 };

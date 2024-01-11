@@ -33,13 +33,15 @@ const margin: Margin = {
   bottom: 0,
   left: 50,
 };
-const axisColor = '#ff0000'; //#62d6fb
-const background = '#242529';
+const axisColor = '#161617';
+const axisTickLabelColor = '#363638';
+const axisLabelColor = '#363638';
+const background = '#ffffff';
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
-  backgroundColor: 'rgba(0,0,0,0.9)',
-  color: 'white',
+  // backgroundColor: 'rgba(0,0,0,0.9)', //defaults to white
+  // color: 'white', //defaults to gray
   fontSize: '14px',
   lineHeight: '18px',
   fontFamily: 'Roboto',
@@ -125,10 +127,10 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
     nice: true,
   });
 
-  const duplicate = schemeTableau10.slice();
+  const LMcolorScale = ['#a0c1d6','#669bbc','#105377','#003049','#55a8ac','#3c6e71','#1c494b','#c1676d','#c1121f','#780000']
   const colorScale = scaleOrdinal<string, string>({
     domain: keys, // the domain array will assign each key a different color to make rectangle boxes
-    range: duplicate, // and use range to set the color scheme each bar
+    range: LMcolorScale, // and use range to set the color scheme each bar
   });
 
   // setting max dimensions and scale ranges
@@ -203,9 +205,9 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
         <div className='dropdown-and-delete-series-container'>
           {/*'Clear Series' MUI button that clears any saved series*/}
           <Button
+            //className='delete-button'
             variant='contained'
             sx={{ p: 2, color: 'white' }}
-            className='delete-button'
             onClick={() => {
               setButtonLoad(true);
               dispatch(deleteSeries());
@@ -225,9 +227,9 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           <FormControl sx={{ m: 1, minWidth: 180 }} size='small'>
             <InputLabel
               id='simple-select-outlined-label'
-              sx={{ color: 'white', lineHeight: 1, fontWeight: 400 }}
+              sx={{ color: '#161617', p: 2, fontSize: '16px' }}
             >
-              Compare Series
+              COMPARE SERIES
             </InputLabel>
             <Select
               variant='filled'
@@ -239,7 +241,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
               onOpen={handleOpen}
               onChange={handleSeriesChange}
               sx={{
-                backgroundColor: '#53b6d5',
+                backgroundColor: '#d9d9d9',
                 color: 'white',
                 height: 34,
                 fontWeight: 400,
@@ -430,7 +432,7 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           tickStroke={axisColor}
           strokeWidth={2}
           tickLabelProps={() => ({
-            fill: 'rgb(231, 231, 231)',
+            fill: axisTickLabelColor,
             fontSize: 11,
             verticalAnchor: 'middle',
             textAnchor: 'end',
@@ -444,15 +446,15 @@ const BarGraphComparison = (props: BarGraphComparisonProps): JSX.Element => {
           tickStroke={axisColor}
           strokeWidth={2}
           tickLabelProps={() => ({
-            fill: 'rgb(231, 231, 231)',
+            fill: axisTickLabelColor,
             fontSize: 11,
             textAnchor: 'middle',
           })}
         />
-        <Text x={-xMax / 2} y='15' transform='rotate(-90)' fontSize={12} fill='#FFFFFF'>
+        <Text x={-xMax / 2} y='15' transform='rotate(-90)' fontSize={12} fill={axisLabelColor}>
           Rendering Time (ms)
         </Text>
-        <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill='#FFFFFF'>
+        <Text x={xMax / 2} y={yMax + 65} fontSize={12} fill={axisLabelColor}>
           Series ID
         </Text>
       </svg>

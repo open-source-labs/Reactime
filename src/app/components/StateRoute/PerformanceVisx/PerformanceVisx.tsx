@@ -253,17 +253,30 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
   return (
     <>
       <div className='performance-nav-bar-container'>
-        <NavLink className='router-link-performance' end to='/performance/'>
+        <NavLink
+          className={(navData) =>
+            navData.isActive ? 'is-active router-link-performance' : 'router-link-performance'
+          }
+          end
+          to='/performance/'
+        >
           Snapshots View
         </NavLink>
         <NavLink
-          className='router-link-performance'
+          className={(navData) =>
+            navData.isActive ? 'is-active router-link-performance' : 'router-link-performance'
+          }
           id='router-link-performance-comparison'
           to='/performance/comparison'
         >
           Comparison View
         </NavLink>
-        <NavLink className='router-link-performance' to='/performance/componentdetails'>
+        <NavLink
+          className={(navData) =>
+            navData.isActive ? 'is-active router-link-performance' : 'router-link-performance'
+          }
+          to='/performance/componentdetails'
+        >
           Component Details
         </NavLink>
       </div>

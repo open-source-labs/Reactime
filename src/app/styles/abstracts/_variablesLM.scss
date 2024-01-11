@@ -5,20 +5,20 @@
 $text-font-stack: 'Outfit', sans-serif !default;
 
 /// @type Color
-/// primary and secondary colors
+/// LIGHT MODE (LM) THEME COLORS
 $primary-color: #284b63;
 $primary-color-weak: #81929e;
 $primary-color-strong: #3c6e71;
 $secondary-color: #df6f37;
 
-$primary-gradient: linear-gradient(145deg, lighten($primary-color, 30%), $primary-color);
+//gradient used for some buttons
 $primary-strong-gradient: linear-gradient(
   145deg,
   lighten($primary-color-strong, 20%),
   $primary-color-strong
 );
 
-/// grayscale colors
+/// GRAYSCALE THEME COLORS
 $background-color: #f0f0f0;
 $background-color-strong: #ffffff;
 $background-color-weak: #d9d9d9;
@@ -47,18 +47,21 @@ $launch-button: $primary-color-strong;
 $launch-button-hover: $primary-color;
 $launch-button-text: $light-text;
 
-//Collapse and Toggle Record labels
+//Collapse and Toggle Record labels in the top left of the screen
 $collapse-text: $dark-text;
 $toggle-record-text: $dark-text;
 
+//ACTION TAB COLORS (the main column on the left side)
 
 //drop-down menu for selecting which tab Reactime is observing
-$tab-select-background: $primary-color;
-$tab-select-background-2: $primary-color;
-$tab-select-text: $light-text;
+$tab-select-background: $background-color-weak;
+$tab-select-text: $dark-text;
 $tab-dropdown-background: $background-color-weak;
+$tab-dropdown-hover: darken($background-color-weak, 10%);
+$tab-vertical-line: lighten($contrasting-color, 30%);
+$tab-arrow-indicator: lighten($contrasting-color, 30%);
 
-//action tab (the main column on the left side)
+//SNAPSHOTS AND ROUTES LIST
 $action-tab-background: $background-color;
 $action-cont-border: $contrasting-color;
 //$action-clear-button: $primary-color; //currently being handled by mui theme.ts file
@@ -66,7 +69,7 @@ $action-cont-border: $contrasting-color;
 $route-bar: $primary-color-strong;
 $route-bar-text: $light-text;
 $indiv-action-input-bg: $background-color-strong;
-$indiv-action-selected: $primary-color-strong;
+$indiv-action-selected: darken($background-color, 15%);
 $indiv-action-selected-text: $light-text;
 $indiv-action-filler-text: lighten($contrasting-color,60%);
 $indiv-action-custom-text: $dark-text;
@@ -80,7 +83,7 @@ $jump: $contrasting-color-weak;
 $jump-hover: $primary-color;
 $jump-text: $light-text;
 
-//the State + Diff toggle
+//the State + Diff toggle // THIS FEATURE IS CURRENTLY COMMENTED OUT
 $header-background: $background-color;
 $header-button-active: $primary-color;
 $header-button-active-text: $light-text;
@@ -88,8 +91,8 @@ $header-button-inactive: $primary-color-weak;
 $header-button-inactive-text: $dark-text;
 $header-button-hover: lighten($header-button-inactive, 20%);
 
-//the buttons/tabs controlling what is displayed in StateContainer (Map, Perfofrmance, History, Web Metrics, Tree)
-$navbar-background: $background-color; //this color only shows up in Diff mode when buttons don't fill the whole bar
+//the buttons/tabs controlling what is displayed in STATECONTAINER (Map, Performance, History, Web Metrics, Tree)
+$navbar-background: $background-color; //this color only shows up in Diff mode when buttons don't fill the whole bar //DIFF FEATURE IS CURRENTLY COMMENTED OUT 
 $navbar-selected: $primary-color-strong;
 $navbar-selected-text: $light-text;
 $navbar-unselected: $primary-color-weak;
@@ -99,8 +102,9 @@ $navbar-hover: darken($navbar-unselected,15%);
 $state-background: $background-color-strong;
 $state-cont-border: $contrasting-color;
 
-$map-options-dropdown: $primary-color;
+//MAP TAB
 $map-options-label: $dark-text;
+//the dropdown colors are determined in the dropDownStyle object in LinkControls.tsx
 $map-link: $contrasting-color;
 // $map-root-fill: $primary-color; //root fill is currently a visx LinearGradient defined in ComponentMap.tsx
 $map-root-stroke: $primary-color;
@@ -112,6 +116,7 @@ $map-child-fill: $primary-color-weak;
 $map-child-stroke: lighten($primary-color, 50%);
 $map-child-text: $dark-text;
 
+//PERFORMANCE TAB
 $performance-subtab-border: 1px;
 $performance-subtab-text: $contrasting-color;
 $performance-subtab-hover: $background-color-weak;
@@ -120,26 +125,22 @@ $performance-options-label: $dark-text;
 $performance-save-series-button: $primary-color;
 $performance-save-series-button-text: $light-text;
 $perf-background: $background-color-strong;
-//axis tick colors and labels determined in BarGraph.tsx on line 29
+//axis tick colors and labels determined in BarGraph.tsx on line 29 and BarGraphComparison.tsx on line 39
+//on comparison view, button colors are in BarGraphComparison.tsx on line 220, 240
 
+//HISTORY TAB
 $history-node: $primary-color; //this is currently set in History.tsx line 291
 $history-link: $contrasting-color; // this is currently set in d3graph.css line 26
 //$history-text: $light-text;
 
+//WEB METRICS TAB
 //web metrics colors are selected in WebMetrics.tsx (text color line 69)
 $web-circles: $contrasting-color;
 $web-text: $dark-text;
 
 $tree-background: $background-color;
-//the following colors have not been adjusted 
-// $tree-key: $primary-color;
-// $tree-expanded-key: $contrasting-color-weak;
-// $tree-string: $primary-color-strong;
-// $tree-boolean: $secondary-color;
-// $tree-number: $secondary-color;
-// $tree-other: $secondary-color;
 
-//control bar for time travel
+//CONTORL BAR for time travel
 $travel-background: $background-color;
 $travel-top-border: lighten($contrasting-color, 50%);
 $play-button: $primary-strong-gradient;
@@ -170,133 +171,5 @@ $pop-up-window-text: $dark-text;
 $reconnect-button: $primary-color-strong;
 $reconnect-button-text: $light-text;
 
-
 /// @type Font Size
 $button-text-size: 16px;
-
-
-
-
-
-///// @type Color
-/// fiery-rose changed from ff6569 to F00008 globally to improve contrast
-// $fiery-rose: #fd0011;
-// $blue-brand: #00ffbf;
-
-///// @type Color
-// $blue-color-gradient: linear-gradient(145deg, #69e5ff, #58c1e2);
-// $red-color-gradient: linear-gradient(145deg, #f92f35, #f00008);
-// $grey-color-gradient: linear-gradient(145deg, #5c6068, #4d5157);
-
-///// @type Color:
-// $box-shadow-blue: inset 5px 5px 10px #53b6d5, inset -5px -5px 10px #71f6ff;
-// $box-shadow-red: inset 5px 5px 10px #ff0004, inset -5px -5px 10px #f9393f;
-
-
-///// @type Color
-// $text-color: #5b004f;
-
-// /// @type Color
-// $brand-color: #29292e !default; //29292e
-// $brand-color-highlight: #303036 !default;
-///// @type Color
-// $brand-color: #8f8fd3 !default; //29292e
-// $brand-color-highlight: rgb(44, 44, 77) !default;
-
-// /// @type Color
-// $background-color: #333333 !default;
-// $dark-background-color: #191818 !default; // #191818
-// $medium-background-color: #51565e !default; //51565e
-// $light-background-color: #585d65 !default; //585d65
-///// @type Color
-// $background-color: #0d0dea !default;
-// $dark-background-color: #e7e7f0 !default; // #191818
-// $medium-background-color: #d7d7e0 !default; //51565e
-// $light-background-color: #c6c6cf !default; //585d65
-
-// /// @type Color
-// $link-color: #fdf0d5 !default;
-// $child-fill: #a0c1d6;
-// $child-stroke: #003049;
-// $child-text: #1f2021;
-// $parent-fill: #780000;
-// $parent-stroke: #c1121f;
-// $parent-text: #fdf0d5;
-// $root-fill: #fdf0d5;
-// $root-stroke: #1f2021;
-// $root-text: #fdf0d5;
-///// @type Color
-// $link-color: #161719 !default;
-// $child-fill: #a0c1d6;
-// $child-stroke: #003049;
-// $child-text: #1f2021;
-// $parent-fill: #780000;
-// $parent-stroke: #c1121f;
-// $parent-text: #fdf0d5;
-// $root-fill: #fdf0d5;
-// $root-stroke: #1f2021;
-// $root-text: #fdf0d5;
-
-//HOW TO DEFINE GRADIENTS
-
-// // Define your colors
-// $color-start: #ff4500; // Starting color
-// $color-end: #4169e1;   // Ending color
-
-// // Create a gradient mixin
-// @mixin gradient-background($start-color, $end-color) {
-//   background: linear-gradient(to right, $start-color, $end-color);
-// }
-
-// // Use the mixin with your colors
-// .gradient-container {
-//   @include gradient-background($color-start, $color-end);
-//   // Additional styles for the container
-//   width: 100%;
-//   height: 200px;
-//   // Add any other styles you need
-// }
-
-//// Light grey
-// /// @type Color
-// $light-grey-one: #474c55 !default;
-
-// /// @type Color
-// $light-grey-two: #5f6369 !default;
-// $light-grey-three: #65686e !default;
-// $light-grey-four: #4c4c4d !default;
-
-// /// @type Color
-// $navbar-color: #44484e !default;
-
-// /// @type Color
-// $head-color: #242529 !default;
-
-// /// @type Color
-// $border-color: #292929 !default;
-
-// /// @type Color
-// $border-slider: #57c5f7 !default;
-
-// /// @type Color
-// $border-rc: #373737 !default;
-// $background-rc-color: #e9e9e9 !default;
-
-// /// @type Color
-// $highlight-color: rgba(224, 224, 224, 0.5) !default;
-
-
-
-//https://coolors.co/780000-c1121f-f6d5bf-fdf0d5-003049-669bbc-a0c1d6
-//colors used in the performance tab bar graphs
-/// @type Color
-$color1: #780000;
-$color2: #c1121f;
-$color3: #c1676d;
-$color4: #55a8ac;
-$color5: #3c6e71;
-$color6: #1c494b;
-$color7: #003049;
-$color8: #105377;
-$color9: #669bbc;
-$color10: #a0c1d6;

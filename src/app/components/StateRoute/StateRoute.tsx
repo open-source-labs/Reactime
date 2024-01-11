@@ -13,7 +13,6 @@ import ComponentMap from './ComponentMap/ComponentMap';
 import { changeView, changeSlider } from '../../slices/mainSlice';
 import { useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
-// import WebMetrics from '../WebMetrics';
 import WebMetricsContainer from './WebMetrics/WebMetricsContainer';
 import { MainState, RootState, StateRouteProps } from '../../FrontendTypes';
 
@@ -36,25 +35,53 @@ const StateRoute = (props: StateRouteProps) => {
 
   const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
   const { hierarchy: tabsHierarchy, sliderIndex, viewIndex: tabsViewIndex } = tabs[currentTab];
-  const hierarchy = propsHierarchy || tabsHierarchy; //JR: RETURN TO THIS: alias to deconstruct from props and tab with the same name, aliases were deleted above
+  const hierarchy = propsHierarchy || tabsHierarchy;
   const viewIndex = propsViewIndex || tabsViewIndex;
 
   return (
     <div className='app-body'>
       <div className='navbar'>
-        <NavLink to='/' className='router-link map-tab' end>
+        <NavLink
+          to='/'
+          className={(navData) =>
+            navData.isActive ? 'is-active router-link map-tab' : 'router-link map-tab'
+          }
+          end
+        >
           Map
         </NavLink>
-        <Link className='router-link performance-tab' to='/performance'>
+        <NavLink
+          className={(navData) =>
+            navData.isActive ? 'is-active router-link map-tab' : 'router-link map-tab'
+          }
+          to='/performance'
+        >
           Performance
-        </Link>
-        <NavLink className='router-link history-tab' to='/history'>
+        </NavLink>
+        <NavLink
+          className={(navData) =>
+            navData.isActive ? 'is-active router-link history-tab' : 'router-link history-tab'
+          }
+          to='/history'
+        >
           History
         </NavLink>
-        <NavLink className='router-link web-metrics-tab' to='/webMetrics'>
+        <NavLink
+          className={(navData) =>
+            navData.isActive
+              ? 'is-active router-link web-metrics-tab'
+              : 'router-link web-metrics-tab'
+          }
+          to='/webMetrics'
+        >
           Web Metrics
         </NavLink>
-        <NavLink className='router-link tree-tab' to='/tree'>
+        <NavLink
+          className={(navData) =>
+            navData.isActive ? 'is-active router-link tree-tab' : 'router-link tree-tab'
+          }
+          to='/tree'
+        >
           Tree
         </NavLink>
       </div>

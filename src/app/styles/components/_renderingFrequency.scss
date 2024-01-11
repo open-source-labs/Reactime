@@ -1,116 +1,115 @@
 .borderStyling {
-	border-radius: 5px;
-	border: 1px solid rgba(184, 196, 194, 0.25);
-	box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.2);
-	width: 53vw;
+  border-radius: 5px;
+  border: 1px solid rgba(184, 196, 194, 0.25);
+  box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.2);
+  width: 53vw;
 }
 
 .borderCheck {
-	border: 1px solid rgba(184, 196, 194, 0.25);
-	box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.2);
-	padding: 5px;
-	width: 10vw;
-	height: 25vw;
-	overflow-y: scroll;
-	overflow-wrap: break-word;
-    overscroll-behavior: contain;
+  border: 1px solid rgba(184, 196, 194, 0.25);
+  box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  width: 10vw;
+  height: 25vw;
+  overflow-y: scroll;
+  overflow-wrap: break-word;
+  overscroll-behavior: contain;
 }
 
 .DataComponent {
-	padding-left: 30px;
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	width: 50vw;
-	height: 40vw;
-	overflow-y: scroll;
-	overflow-wrap: break-word;
-	overscroll-behavior: contain;
+  padding-left: 30px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 50vw;
+  height: 40vw;
+  overflow-y: scroll;
+  overflow-wrap: break-word;
+  overscroll-behavior: contain;
 }
 
-
 .StyledGridElement {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	background: #242529;
-	padding: 20px;
-	height: 5vh;
-	margin: 20px 10px;
-	font-family: 'Roboto', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: $background-color-strong;
+  padding: 20px;
+  height: 5vh;
+  margin: 20px 10px;
+  font-family: 'Roboto', sans-serif;
 
-	h3 {
-		color: #FFFFFF;
-		margin-bottom: 5px;
-		margin-top: 5px;
-		text-transform: uppercase;
-		font-size: 16px;
-		font-weight: 500;
-	}
+  h3 {
+    color: $primary-color;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 500;
+  }
 
-	h4 {
-		color: #ff0001;
-		margin-bottom: 5px;
-		margin-top: 5px;
-		font-weight: 300;
-	}
+  h4 {
+    color: $primary-color-strong;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    font-weight: 300;
+  }
 
-	p {
-		color: #ff0001;
-		line-height: 20px;
-		text-align: center;
-		font-size: 18px;
-		line-height: 18px;
-	}
+  p {
+    color: $primary-color-strong;
+    line-height: 20px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 18px;
+  }
 }
 
 .ExpandStyledGridElement {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	background: #242529;
-	padding: 20px;
-	margin: 20px 10px;
-	font-family: 'Roboto', sans-serif;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: $background-color-strong;
+  padding: 20px;
+  margin: 20px 10px;
+  font-family: 'Roboto', sans-serif;
 
-	h3 {
-		color: #ff0001;
-		margin-bottom: 5px;
-		margin-top: 5px;
-		text-transform: uppercase;
-		font-size: 16px;
-		font-weight: 500;
-	}
+  h3 {
+    color: $primary-color;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 500;
+  }
 
-	h4 {
-		color: #ff0001;
-		margin-bottom: 5px;
-		margin-top: 5px;
-		font-weight: 300;
-	}
+  h4 {
+    color: $primary-color-strong;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    font-weight: 300;
+  }
 
-	p {
-		color: white;
-		line-height: 20px;
-		text-align: center;
-		font-size: 18px;
-		line-height: 18px;
-	}
+  p {
+    color: $primary-color-strong;
+    line-height: 20px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 18px;
+  }
 }
 
 .RenderRight {
-	cursor: pointer;
-	padding-right: 5px;
-	border-right: 5px;
-	//background: $blue-color-gradient;
-	width: 50px;
-	padding: 0 0.5em;
-	right: 10%;
-	opacity: 70%;
-	transition: 0.3s;
+  cursor: pointer;
+  padding-right: 5px;
+  border-right: 5px;
+  //background: $blue-color-gradient;
+  width: 50px;
+  padding: 0 0.5em;
+  right: 10%;
+  opacity: 70%;
+  transition: 0.3s;
 }
 
 .RenderRight:hover {
-	opacity: 100%;
+  opacity: 100%;
 }

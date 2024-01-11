@@ -41,7 +41,7 @@ const WebMetricsContainer = (props) => {
   if (webMetrics.INP > 500) INPColor = '#fc2000';
 
   return (
-    <div className='webMetrics'>
+    <div className='web-metrics-container'>
       <WebMetrics
         color={LCPColor}
         series={webMetrics.LCP ? [webMetrics.LCP / 70 < 100 ? webMetrics.LCP / 70 : 100] : 0}
