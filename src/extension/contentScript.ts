@@ -10,6 +10,7 @@ let firstMessage = true;
 // Listens for window messages (from the injected script on the DOM)
 let isRecording = true;
 
+// INCOMING MESSAGE FROM BACKEND (index.ts) TO CONTENT SCRIPT
 window.addEventListener('message', (msg) => {
   // Event listener runs constantly based on actions
   // recorded on the test application from backend files (linkFiber.ts).
@@ -37,9 +38,10 @@ window.addEventListener('message', (msg) => {
   }
 });
 
+// FROM BACKGROUND TO CONTENT SCRIPT
 // Listening for messages from the UI of the Reactime extension.
 chrome.runtime.onMessage.addListener((request) => {
-  const { action }: { action: string } = request;
+  const { action, port }: { action: string; port?: string } = request;
   if (action) {
     // Message being sent from background.js
     // This is toggling the record button on Reactime when clicked
@@ -49,11 +51,19 @@ chrome.runtime.onMessage.addListener((request) => {
     // this is only listening for Jump toSnap
     if (action === 'jumpToSnap') {
       chrome.runtime.sendMessage(request);
+      // After the jumpToSnap action has been sent back to background js,
+      // it will send the same action to backend files (index.ts) for it execute the jump feature
+      // '*' == target window origin required for event to be dispatched, '*' = no preference
+      window.postMessage(request, '*');
     }
-    // After the jumpToSnap action has been sent back to background js,
-    // it will send the same action to backend files (index.ts) for it execute the jump feature
-    // '*' == target window origin required for event to be dispatched, '*' = no preference
-    window.postMessage(request, '*');
+
+    // JR: adding a response to a port disconnection message from background.js
+    if (action === 'portDisconnect') {
+    }
+
+    if (action === 'reinitialize') {
+      window.postMessage(request, '*');
+    }
   }
 });
 
@@ -63,7 +73,6 @@ chrome.runtime.onMessage.addListener((request) => {
 const metrics = {};
 const gatherMetrics = ({ name, value }) => {
   metrics[name] = value;
-
   chrome.runtime.sendMessage({
     type: 'performance:metric',
     name,

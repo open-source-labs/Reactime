@@ -3,19 +3,19 @@ import React from 'react';
 import { LinkControlProps, ControlStyles, DropDownStyle, Node } from '../../../FrontendTypes';
 // Font size of the Controls label and Dropdowns
 const controlStyles: ControlStyles = {
-  fontSize: '16px',
+  //fontSize: '16px',
   padding: '10px',
 };
 
 const dropDownStyle: DropDownStyle = {
-  margin: '0.5em',
-  fontSize: '16px',
+  margin: '0.1em',
+  //fontSize: '16px',
   fontFamily: 'Roboto, sans-serif',
   borderRadius: '4px',
   borderStyle: 'solid',
   borderWidth: '1px',
-  backgroundColor: '#242529',
-  color: 'white',
+  backgroundColor: '#d9d9d9',
+  color: '#161617',
   padding: '2px',
 };
 
@@ -49,13 +49,14 @@ export default function LinkControls({
   collectNodes(snapShots);
 
   return (
-    <div style={controlStyles}>
+    <div className='comp-map-options' style={controlStyles}>
       {' '}
       {/* Controls for the layout selection */}
       <label>Layout:</label>
       &nbsp;{' '}
       {/* This is a non-breaking space - Prevents an automatic line break at this position */}
       <select
+        className='comp-map-dropdown'
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => setLayout(e.target.value)}
         // value={layout}

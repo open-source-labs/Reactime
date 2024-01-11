@@ -26,13 +26,14 @@ const margin = {
   bottom: 0,
   left: 50,
 };
-const axisColor = '#F00008';
-const background = '#242529';
+const axisColor = '#161617';
+const axisTickLabelColor = '#363638';
+const axisLabelColor = '#363638';
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
-  backgroundColor: 'rgba(0,0,0,0.9)',
-  color: 'white',
+  //backgroundColor: 'rgba(0,0,0,0.9)', //defaults to white
+  //color: 'white', //defaults to a gray
   fontSize: '16px',
   lineHeight: '18px',
   fontFamily: 'Roboto',
@@ -89,10 +90,23 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     nice: true,
   });
 
+  const LMcolorScale = [
+    '#a0c1d6',
+    '#669bbc',
+    '#105377',
+    '#003049',
+    '#55a8ac',
+    '#3c6e71',
+    '#1c494b',
+    '#c1676d',
+    '#c1121f',
+    '#780000',
+  ];
+
   const colorScale = scaleOrdinal<string>({
     // Gives each bar on the graph a color using schemeSet1 imported from D3
     domain: keys,
-    range: schemeSet1,
+    range: LMcolorScale,
   });
 
   // setting max dimensions and scale ranges
@@ -155,6 +169,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
         <form className='routesForm' id='routes-formcontrol'>
           <label id='routes-dropdown'>Select Route: </label>
           <select
+            className='performance-dropdown'
             labelId='demo-simple-select-label'
             id='routes-select'
             onChange={(e) => {
@@ -173,7 +188,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
         <form className='routesForm' id='routes-formcontrol'>
           <label id='routes-dropdown'>Select Snapshot: </label>
           <select
-            labelId='demo-simple-select-label'
+            labelid='demo-simple-select-label'
             id='snapshot-select'
             onChange={(e) => setSnapshot(e.target.value)}
           >
@@ -185,7 +200,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
         </form>
       </div>
       <svg ref={containerRef} width={width} height={height}>
-        <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
+        <rect className='perf-rect' x={0} y={0} width={width} height={height} rx={14} />
         <Grid
           top={margin.top}
           left={margin.left}
@@ -235,7 +250,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
                         // Cursor position in window updates position of the tool tip.
                         dispatch(onHover(data.componentData[bar.key].rtid));
                         if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                        const top;
+                        let top;
                         if (snapshot === 'All Snapshots') {
                           top = event.clientY - margin.top - bar.height;
                         } else {
@@ -257,6 +272,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           </BarStack>
         </Group>
         <AxisLeft
+          className='BarGraphAxis'
           top={margin.top}
           left={margin.left}
           scale={renderingScale}
@@ -264,13 +280,14 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           tickStroke={axisColor}
           strokeWidth={2}
           tickLabelProps={() => ({
-            fill: 'rgb(231, 231, 231)',
+            fill: axisTickLabelColor,
             fontSize: 11,
             verticalAnchor: 'middle',
             textAnchor: 'end',
           })}
         />
         <AxisBottom
+          className='BarGraphAxis'
           top={yMax + margin.top}
           left={margin.left}
           scale={snapshotIdScale}
@@ -278,21 +295,21 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           tickStroke={axisColor}
           strokeWidth={2}
           tickLabelProps={() => ({
-            fill: 'rgb(231, 231, 231)',
+            fill: axisTickLabelColor,
             fontSize: 11,
             textAnchor: 'middle',
           })}
         />
-        <Text x={-yMax / 2 - 75} y='15' transform='rotate(-90)' fontSize={16} fill='#FFFFFF'>
+        <Text x={-yMax / 2 - 75} y='15' transform='rotate(-90)' fontSize={16} fill={axisLabelColor}>
           Rendering Time (ms)
         </Text>
         <br />
         {snapshot === 'All Snapshots' ? (
-          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={16} fill='#FFFFFF'>
+          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={16} fill={axisLabelColor}>
             Snapshot ID
           </Text>
         ) : (
-          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={16} fill='#FFFFFF'>
+          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={16} fill={axisLabelColor}>
             Components
           </Text>
         )}

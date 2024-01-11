@@ -1,7 +1,0 @@
-{
-  "mode": "modules",
-  "out": "docs",
-  "includes": ["./src/backend"],
-  "exclude": ["**/__tests__/**", "**/**/**/build/**", "**/types/**"],
-  "name": "Reactime 21.0"
-}

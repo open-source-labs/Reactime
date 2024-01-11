@@ -25,7 +25,7 @@ const margin: Margin = {
   bottom: 0,
   left: 50,
 };
-const axisColor = '#62d6fb';
+const axisColor = '#ff0000'; //#62d6fb
 const background = '#242529';
 const tooltipStyles = {
   ...defaultStyles,
@@ -274,6 +274,7 @@ const BarGraphComparisonActions = (props: BarGraphComparisonAction) => {
           {/* Insert Action Comparison Barstack here */}
         </Group>
         <AxisLeft
+          //className="perf-axis"
           top={margin.top}
           left={margin.left}
           scale={renderingScale}

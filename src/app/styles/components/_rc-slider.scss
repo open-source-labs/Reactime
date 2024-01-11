@@ -16,7 +16,7 @@
 .rc-slider-rail {
 	position: absolute;
 	width: 100%;
-	background-color: #ebf2fa;
+	background-color: $slider-rail-right;
 	height: 4px;
 	border-radius: 6px;
 }
@@ -25,7 +25,7 @@
 	left: 0;
 	height: 4px;
 	border-radius: 6px;
-	background-color: $fiery-rose;
+	background-color: $slider-rail-left;
 }
 .rc-slider-handle {
 	position: absolute;
@@ -37,23 +37,23 @@
 	cursor: -webkit-grab;
 	cursor: grab;
 	border-radius: 50%;
-	background: $red-color-gradient;
+	background: $slider-handle;
 	-ms-touch-action: pan-x;
 	touch-action: pan-x;
 }
 .rc-slider-handle:focus {
-	border-color: $border-slider;
+	border-color: #ff0001;
 	outline: none;
 }
 .rc-slider-handle-click-focused:focus {
-	border-color: #96dbfa;
+	border-color: #ff0001;
 }
 .rc-slider-handle:hover {
-	border-color: $border-slider;
+	border-color: #ff0001;
 }
 .rc-slider-handle:active {
-	background: #f00004;
-	border-color: $border-slider;
+	//background: #f00004;
+	border-color: #ff0001;
 	cursor: -webkit-grabbing;
 	cursor: grabbing;
 }
@@ -87,7 +87,7 @@
 	margin-left: -4px;
 	width: 8px;
 	height: 8px;
-	border: 2px solid $background-rc-color;
+	border: 2px solid #ff0001;
 	background-color: #fff;
 	cursor: pointer;
 	border-radius: 50%;
@@ -97,7 +97,7 @@
 	border-color: #96dbfa;
 }
 .rc-slider-disabled {
-	background-color: $background-rc-color;
+	background-color: #ff0001;
 }
 .rc-slider-disabled .rc-slider-track {
 	background-color: #ccc;

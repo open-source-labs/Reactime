@@ -247,6 +247,7 @@ export interface HandleProps {
 }
 
 export interface MainSliderProps {
+  className: string;
   snapshotsLength: number;
 }
 
@@ -309,13 +310,12 @@ export interface LinkControlProps {
 }
 
 export interface ControlStyles {
-  fontSize: string;
+  //fontSize: string;
   padding: string;
 }
 
 export interface DropDownStyle {
   margin: string;
-  fontSize: string;
   fontFamily: string;
   borderRadius: string;
   borderStyle: string;
@@ -378,4 +378,8 @@ export interface Snapshots {
   component2: number;
   component3: number;
   'all others': number;
+}
+
+export interface ErrorContainerProps {
+  port: chrome.runtime.Port | null;
 }

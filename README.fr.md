@@ -36,7 +36,7 @@
 <br>
 
 <p align="center">
-<img src="./assets/gifs/GeneralDemoGif.gif" />
+<img src="./assets/gifs/GeneralDemoGif_v23.gif" />
 </p>
 
 <p align="center">

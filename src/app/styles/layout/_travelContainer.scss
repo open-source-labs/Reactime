@@ -1,61 +1,63 @@
 .travel-container {
-	// background: linear-gradient(
-	// 	90deg,
-	// 	rgba(41, 41, 41, 1) 0%,
-	// 	rgba(51, 51, 51, 1) 50%,
-	// 	rgba(41, 41, 41, 1) 100%
-	// );
-	// border-color: $border-color;
-	// display: flex;
-	// flex-direction: row;
-	// align-items: center;
-	// justify-content: space-around;
+  background: $travel-background;
+  // background: linear-gradient(
+  // 	90deg,
+  // 	rgba(41, 41, 41, 1) 0%,
+  // 	rgba(51, 51, 51, 1) 50%,
+  // 	rgba(41, 41, 41, 1) 100%
+  // );
+  // border-color: $border-color;
+  // display: flex;
+  // flex-direction: row;
+  // align-items: center;
+  // justify-content: space-around;
 
-	display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-    border: none;
-    margin-top: 18px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
 }
 
-.visx-group{
-	margin-top: 10px;
+.visx-group {
+  margin-top: 10px;
 }
-
 
 .react-select-container {
-	font-size: 16px;
-	min-width: 90px;
-	margin: 8px;
-	.react-select__control {
-		background-color: $light-grey-four;
-		border-color: transparent;
-		@extend %disable-highlight;
-	}
-	.react-select__control:hover {
-		cursor: pointer;
-	}
-	.react-select__menu {
-		background-color: $light-grey-four;
-		@extend %disable-highlight;
-	}
-	.react-select__single-value {
-		color: white;
-	}
-	.react-select__option:hover {
-		background-color: $fiery-rose;
-		cursor: pointer;
-	}
-	.react-select__option--is-selected,
-	.react-select__option--is-focused {
-		background-color: transparent;
-		cursor: pointer;
+  font-size: 16px;
+  min-width: 90px;
+  margin: 8px;
+  .react-select__control {
+    background-color: $speed-dropdown;
+    border-color: transparent;
+    @extend %disable-highlight;
+  }
+  .react-select__control:hover {
+    cursor: pointer;
+  }
+  .react-select__menu {
+    background-color: $speed-dropdown-expanded;
+    color: $speed-dropdown-text;
+    @extend %disable-highlight;
+  }
+  .react-select__single-value {
+    color: $speed-dropdown-text;
+  }
+  .react-select__option:hover {
+    background-color: $speed-dropdown-expanded-hover;
+    cursor: pointer;
+  }
+  .react-select__option--is-selected,
+  .react-select__option--is-focused {
+    background-color: transparent;
+    cursor: pointer;
+  }
 
-	}
+  // removes the cursor from blinking
+  .css-w8afj7-Input {
+    color: transparent;
+  }
+}
 
-	// removes the cursor from blinking
-	.css-w8afj7-Input {
-		color: transparent;
-	}
+.button-icon {
+  color: $icon-primary;
 }

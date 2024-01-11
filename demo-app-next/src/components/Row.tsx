@@ -1,5 +1,5 @@
-import Box from "./Box";
-import { BoardText } from "../types/types";
+import Box from './Box';
+import { BoardText } from '../types/types';
 
 type RowProps = {
   handleBoxClick: (row: number, column: number) => void;
@@ -17,11 +17,11 @@ const Row = (props: RowProps) => {
         column={i}
         handleBoxClick={props.handleBoxClick}
         value={props.values[i]}
-      ></Box>
+      ></Box>,
     );
   }
 
-  return <div className="row">{boxes}</div>;
+  return <div className='row'>{boxes}</div>;
 };
 
 export default Row;

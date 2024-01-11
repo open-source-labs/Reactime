@@ -1,10 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-
 .save-series-button {
   padding: 3px;
   outline: transparent;
-  color: white;
+  color: $performance-save-series-button-text;
   font-size: 16px;
   display: flex;
   justify-content: center;
@@ -16,7 +15,7 @@
   line-height: 1.5em;
   font: 400 16px 'Outfit', sans-serif;
   width: 120px;
-  background: $red-color-gradient;
+  background: $performance-save-series-button;
   height: 30px;
   position: absolute;
   right: 3rem;
@@ -62,12 +61,18 @@
   line-height: 1.5em;
   font: 500 16px 'Roboto', sans-serif;
   width: 120px;
-  background: #62d6fb;
+  //background: #ff0000;
+}
+
+.clear-button {
+  background: #3256f1;
+  background-color: #050787;
+  color: #3256f1;
 }
 
 .empty-button:hover {
   color: black;
-  box-shadow: $box-shadow-red;
+  box-shadow: #ff0001;
 }
 
 .state-dropdown {
@@ -87,13 +92,12 @@
 
 .time-button {
   outline: none;
-  height: 20px;
+  height: $time-button-height;
   margin-bottom: 8px;
   width: 100px;
   border: none;
-  background: linear-gradient(145deg, #5c6068, #4d5157);
-  font: normal 16px 'Outfit', sans-serif;
-  color: #ffffff;
+  background: $indiv-action-time;
+  color: $indiv-action-time-text;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -102,13 +106,12 @@
 
 .jump-button {
   outline: none;
-  height: 20px;
+  height: $time-button-height;
   margin-bottom: 8px;
   width: 100px;
   border: transparent;
   border-radius: 3px;
   background-color: #232529;
-  font: normal 16px 'Outfit', sans-serif;
   color: #ffffff;
   transform: rotateX(90deg);
   transition: opacity 300ms, transform 0.15s linear;
@@ -122,33 +125,32 @@
 
 .jump-button:hover {
   // remove the blue border when button is clicked
-  color: white;
-  background-color: $fiery-rose;
+  color: $jump-text;
+  background-color: $jump-hover;
   cursor: pointer;
 }
 
 .current-location {
   outline: none;
-  height: 20px;
+  height: $time-button-height;
   margin-bottom: 8px;
   width: 100px;
   border: transparent;
   border-radius: 3px;
-  font: normal 16px 'Outfit', sans-serif;
 }
 
 .empty-button:hover {
   color: white;
-  background-color: $highlight-color;
+  background-color: #ff0001;
 }
 
 .play-button {
   width: 100px;
   height: 25px;
   margin: 0 1% 0 2%;
-  color: $brand-color;
+  color: $play-button-text;
   border-color: transparent;
-  background: $blue-color-gradient;
+  background: $play-button;
   border-radius: 5px;
   font-weight: 500;
   font-size: 16px;
@@ -156,45 +158,47 @@
 }
 
 .play-button:hover {
-  background: $blue-color-gradient;
   transform: translate3d(0, -3px, 0);
   cursor: pointer;
 }
 
-.backward-button {
-  color: $brand-color;
+.backward-button,
+.forward-button {
+  color: $scrub-icon;
   border-color: transparent;
-  background: $blue-color-gradient;
+  background: $scrub-button;
   border-radius: 5px;
 }
 
-.forward-button {
-  color: $brand-color;
-  border-color: transparent;
-  background: $blue-color-gradient;
-  border-radius: 5px;
+.backward-button-icon,
+.forward-button-icon {
+  color: $scrub-icon;
 }
 
 .forward-button:hover,
 .backward-button:hover {
-  background: $blue-color-gradient;
   transform: translate3d(0, -3px, 0);
   cursor: pointer;
 }
+
+// .pause-button {
+//   color: #ff0000;
+//   background-color: #ff0000;
+// }
 
 .import-button:hover,
 .howToUse-button:hover,
 .export-button:hover,
 .pause-button:hover,
 .reconnect-button:hover {
-  @extend %button-shared;
-  color: #62d6fb;
+  //@extend %button-shared;
+  color: $function-bar-text-hover;
   box-shadow: 1px 1px 2px 1px rgba(30, 86, 171, 0.25);
   transform: translate3d(0, -3px, 0);
 }
 
 .svg-inline--fa {
-  color: $blue-brand;
+  //color: $blue-brand;
   margin-right: 0.75em;
   display: inline-block;
   font-size: inherit;
@@ -214,7 +218,7 @@
   font: 300 16px 'Outfit', sans-serif;
   font-size: $button-text-size;
 
-  background: $brand-color;
+  background: #ff0001;
   border-radius: 5px;
   position: relative;
   border: 1px solid #b8c4c240;
@@ -271,6 +275,7 @@
 }
 
 .dropdown-and-delete-series-container {
+
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -302,20 +307,38 @@
 
 /* sidebar button open and closing functionality */
 aside {
-  background: #242529;
+  //background: #242529;
   color: #fff;
   transition: width 1s;
+  width: 100%; //JR
 }
 
 .no-aside {
-  width: 30px;
-  margin-right: 15px;
+  width: 45px;
+  // margin-right: 15px;
+}
+
+//JR added for collapse label
+.collapse {
+  color: $collapse-text;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.hidden {
+  display: none;
+}
+
+.toggle:hover {
+  cursor: pointer;
 }
 
 .toggle {
-  display: block;
-  position: relative;
-  margin-top: 1rem;
+  // display: block;
+  // position: relative;
+  // margin-top: 1rem;
+  height: 100%; //JR
 }
 
 /* toggle i handles arrow animation */
@@ -327,18 +350,18 @@ aside {
   height: 4px;
   border-radius: 4px;
   transition: transform 0.15s;
-  background-color: $blue-brand;
+  background-color: $icon-primary;
 }
 
 .toggle i {
-  top: 8px;
-  left: 9px;
+  top: 16px;
+  left: 10px;
   display: block;
-  background: $blue-brand;
+  background: $icon-primary;
 }
 
 .toggle i::before {
-  top: -5px;
+  top: -6px;
 }
 
 .toggle i::after {
@@ -349,6 +372,7 @@ aside {
 .toggle i::before {
   content: '';
   display: block;
+  // top: -5px;
 }
 
 .toggle i::before {
@@ -365,15 +389,22 @@ aside {
 }
 
 #arrow {
-  margin-bottom: 40px;
+  // margin-bottom: 40px;
+  // display: flex;
+  // justify-content: flex-start;
+
+  //JR
+  height: 100%;
+  display: grid;
+  grid-template-columns: 45px 1fr;
 }
 
 /* ^ sidebar button open and closing functionality */
 .reconnect-button-pop-up {
   padding: 3px;
   outline: transparent;
-  background: $red-color-gradient; 
-  color: $text-color !important;
+  background-color: #050787;
+  color: $reconnect-button-text !important;
   border: none;
   border-radius: 3px;
   cursor: pointer;
@@ -382,7 +413,7 @@ aside {
   width: 120px;
   &:hover {
     color: black !important;
-    background-color: $highlight-color;
+    background-color: #ff0001;
   }
 }
 
@@ -397,15 +428,15 @@ aside {
   font: 500 $button-text-size $text-font-stack;
   width: 120px;
   &:hover {
-    color: $text-color;
-    background-color: $highlight-color;
+    color: $contrasting-color;
+    background-color: #ff0001;
   }
 }
 
 .close-icon-pop-up {
   cursor: pointer;
-  color: $text-color;
-  font-size: 20px; 
+  color: #ff0001;
+  font-size: 20px;
   padding-right: 8px;
   color: black;
 }
@@ -418,11 +449,11 @@ aside {
   border-radius: 3px;
   line-height: 1.5em;
   outline: transparent;
-  background: $blue-color-gradient;
-  box-shadow: $box-shadow-blue;
+  //background: $blue-color-gradient;
+  //box-shadow: $box-shadow-blue;
   &:hover {
-    color: $text-color;
-    background-color: $highlight-color;
+    color: $contrasting-color;
+    background-color: #ff0001;
   }
 }
 

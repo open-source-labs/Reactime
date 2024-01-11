@@ -3,7 +3,7 @@ import React from 'react';
 function Home(): JSX.Element {
   return (
     <div className='about'>
-      <h1>Lorem Ipsum</h1>
+      <h2>REACTIME - DEMO APP</h2>
       <p>
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
         ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco

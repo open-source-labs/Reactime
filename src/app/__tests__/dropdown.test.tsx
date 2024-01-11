@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import Dropdown from '../components/Dropdown';
-import '@testing-library/jest-dom/extend-expect';
+import Dropdown from '../components/TimeTravel/Dropdown';
+import '@testing-library/jest-dom';
 
 describe('Dropdown component test', () => {
   const speeds = [

@@ -12,6 +12,7 @@ import {
   setTab,
   deleteTab,
   noDev,
+  aReactApp, // JR added 12.20.23 9.53pm
   setCurrentLocation,
   disconnected,
   endConnect,
@@ -27,6 +28,11 @@ function MainContainer(): JSX.Element {
   const dispatch = useDispatch();
 
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
+  //JR: check connection status
+  const { connectionStatus }: MainState = useSelector((state: RootState) => state.main);
+
+  // JR 12.22.23: so far this log always returns true
+  //console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
 
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
 
@@ -36,6 +42,10 @@ function MainContainer(): JSX.Element {
 
     const toggleElem = document.querySelector('aside'); // aside is like an added text that appears "on the side" aside some text.
     toggleElem.classList.toggle('no-aside'); // toggles the addition or the removal of the 'no-aside' class
+
+    //JR: added for collapse label
+    const collapse = document.querySelector('.collapse');
+    collapse.classList.toggle('hidden');
 
     const recordBtn = document.getElementById('recordBtn');
 
@@ -53,12 +63,16 @@ function MainContainer(): JSX.Element {
   };
 
   // Function to listen for a message containing snapshots from the /extension/build/background.js service worker
-  const messageListener = (message: {
+  const messageListener = ({
+    action,
+    payload,
+    sourceTab,
+  }: {
     action: string;
     payload: Record<string, unknown>;
     sourceTab: number;
   }) => {
-    const { action, payload, sourceTab } = message;
+    // const { action, payload, sourceTab } = message;
     let maxTab: number;
 
     if (!sourceTab && action !== 'keepAlive') {
@@ -76,6 +90,11 @@ function MainContainer(): JSX.Element {
       }
       case 'devTools': {
         dispatch(noDev(payload));
+        break;
+      }
+      // JR 12.20.23 9.53pm added a listener case for sending aReactApp to frontend
+      case 'aReactApp': {
+        dispatch(aReactApp(payload));
         break;
       }
       case 'changeTab': {
@@ -100,11 +119,12 @@ function MainContainer(): JSX.Element {
     }
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+  async function awaitPortConnection() {
     if (port) return; // only open port once so if it exists, do not run useEffect again
 
     // Connect ot port and assign evaluated result (obj) to currentPort
-    const currentPort = chrome.runtime.connect();
+    const currentPort = await chrome.runtime.connect({ name: 'panel' });
 
     // If messageListener exists on currentPort, remove it
     while (currentPort.onMessage.hasListener(messageListener))
@@ -124,9 +144,12 @@ function MainContainer(): JSX.Element {
     dispatch(setPort(currentPort));
 
     dispatch(endConnect());
-  });
+  }
+  awaitPortConnection();
+  // });
 
   // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
+  // setTimeout(() => {
   if (
     !tabs[currentTab] ||
     //@ts-ignore
@@ -134,8 +157,11 @@ function MainContainer(): JSX.Element {
     //@ts-ignore
     !tabs[currentTab].status.targetPageisaReactApp
   ) {
-    return <ErrorContainer />;
+    // @ts-ignore
+    return <ErrorContainer port={port} />;
   }
+
+  // }, 5000);
 
   const { currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =
     tabs[currentTab]; // we destructure the currentTab object

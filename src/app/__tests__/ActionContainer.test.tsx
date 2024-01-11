@@ -1,6 +1,6 @@
 import React from 'react';
 import { render as rtlRender, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import ActionContainer from '../containers/ActionContainer';
 import TravelContainer from '../containers/TravelContainer';
 import { Provider } from 'react-redux';
@@ -132,7 +132,7 @@ const customStore = configureStore({
 const render = (component) => rtlRender(<Provider store={customStore}>{component}</Provider>);
 
 const MockRouteDescription = jest.fn();
-jest.mock('../components/RouteDescription', () => () => {
+jest.mock('../components/Actions/RouteDescription', () => () => {
   MockRouteDescription();
   return <div>MockRouteDescription</div>;
 });

@@ -3,7 +3,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable max-len */
 import React, { useState, useEffect } from 'react';
-import { MemoryRouter as Router, Route, NavLink, Switch, Redirect } from 'react-router-dom';
+import { MemoryRouter as Router, Route, NavLink, Routes, Navigate } from 'react-router-dom';
 import RenderingFrequency from './RenderingFrequency';
 import BarGraph from './BarGraph';
 import BarGraphComparison from './BarGraphComparison';
@@ -197,34 +197,8 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('performance')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'performance' to facilitate render.
-  }, [dispatch]);
-
-  const renderComparisonBargraph = () => {
-    if (hierarchy && series !== false) {
-      return (
-        <BarGraphComparison
-          comparison={allStorage()}
-          data={data}
-          width={width}
-          height={height}
-          setSeries={setSeries}
-          series={series}
-          setAction={setAction}
-        />
-      );
-    }
-    return (
-      <BarGraphComparisonActions
-        comparison={allStorage()}
-        data={getActions()}
-        width={width}
-        height={height}
-        setSeries={setSeries}
-        action={action}
-        setAction={setAction}
-      />
-    );
-  };
+    renderForTutorial();
+  }, []);
 
   const allRoutes = []; // create allRoutes variable to hold urls
   const filteredSnapshots = [];
@@ -267,72 +241,107 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
     if (holdData) data.barStack = holdData; // assign holdData to data.barStack to be used later to create graph
   }
 
-  const renderBargraph = (): JSX.Element | null => {
-    if (hierarchy) {
-      return (
-        <div>
-          <BarGraph
-            data={data}
-            width={width}
-            height={height}
-            comparison={allStorage()}
-            setRoute={setRoute}
-            allRoutes={allRoutes}
-            filteredSnapshots={filteredSnapshots}
-            setSnapshot={setSnapshot}
-            snapshot={snapshot}
-          />
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const renderComponentDetailsView = () => {
-    if (hierarchy) {
-      return <RenderingFrequency data={data.componentData} />;
-    }
-    return <div className='noState'>{NO_STATE_MSG}</div>;
-  };
-
   const renderForTutorial = () => {
     // This will redirect to the proper tabs during the tutorial
-    if (currentTabInApp === 'performance') return <Redirect to='/' />;
-    if (currentTabInApp === 'performance-comparison') return <Redirect to='/comparison' />;
+    // Updated redirect to Navigate v23 redirect no longer supported in react router dom after v6
+    if (currentTabInApp === 'performance') return <Navigate to='/performance/' />;
+    if (currentTabInApp === '/performance-comparison')
+      return <Navigate to='/performance/comparison' />;
     return null;
   };
 
   return (
-    <Router>
+    <>
       <div className='performance-nav-bar-container'>
-        <NavLink className='router-link-performance' activeClassName='is-active' exact to='/'>
+        <NavLink
+          className={(navData) =>
+            navData.isActive ? 'is-active router-link-performance' : 'router-link-performance'
+          }
+          end
+          to='/performance/'
+        >
           Snapshots View
         </NavLink>
         <NavLink
-          className='router-link-performance'
+          className={(navData) =>
+            navData.isActive ? 'is-active router-link-performance' : 'router-link-performance'
+          }
           id='router-link-performance-comparison'
-          activeClassName='is-active'
-          to='/comparison'
+          to='/performance/comparison'
         >
           Comparison View
         </NavLink>
         <NavLink
-          className='router-link-performance'
-          activeClassName='is-active'
-          to='/componentdetails'
+          className={(navData) =>
+            navData.isActive ? 'is-active router-link-performance' : 'router-link-performance'
+          }
+          to='/performance/componentdetails'
         >
           Component Details
         </NavLink>
       </div>
 
-      {renderForTutorial()}
+      {/* {renderForTutorial()} */}
 
-      <Switch>
-        <Route path='/comparison' render={renderComparisonBargraph} />
-        <Route path='/componentdetails' render={renderComponentDetailsView} />
-        <Route path='/' render={renderBargraph} />
-      </Switch>
-    </Router>
+      <Routes>
+        <Route
+          path='/comparison'
+          element={
+            hierarchy && series !== false ? (
+              <BarGraphComparison
+                comparison={allStorage()}
+                data={data}
+                width={width}
+                height={height}
+                setSeries={setSeries}
+                series={series}
+                setAction={setAction}
+              />
+            ) : (
+              <BarGraphComparisonActions
+                comparison={allStorage()}
+                data={getActions()}
+                width={width}
+                height={height}
+                setSeries={setSeries}
+                action={action}
+                setAction={setAction}
+              />
+            )
+          }
+        />
+        <Route
+          path='/componentdetails'
+          element={
+            hierarchy ? (
+              <RenderingFrequency data={data.componentData} />
+            ) : (
+              <div className='noState'>{NO_STATE_MSG}</div>
+            )
+          }
+        />
+        <Route
+          path='/'
+          element={
+            hierarchy ? (
+              <div>
+                <BarGraph
+                  data={data}
+                  width={width}
+                  height={height}
+                  comparison={allStorage()}
+                  setRoute={setRoute}
+                  allRoutes={allRoutes}
+                  filteredSnapshots={filteredSnapshots}
+                  setSnapshot={setSnapshot}
+                  snapshot={snapshot}
+                />
+              </div>
+            ) : null
+          }
+        />
+      </Routes>
+    </>
   );
 };
 

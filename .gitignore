@@ -13,6 +13,7 @@ src/extension/build.pem
 bower_components
 sandboxes/manual-tests/NextJS/.next
 .vscode
-src/app/components/Map.tsx
 package-lock.json
 yarn.lock
+docs/**/*
+docs/*

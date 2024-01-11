@@ -1,0 +1,41 @@
+.compMapLink {
+  stroke: $map-link;
+}
+
+.comp-map-options {
+  color: $map-options-label;
+}
+
+//this was supposed to control the dropDownStyle object in LinkControls.tsx (the dropdown menus in ComponentMap)
+// .comp-map-dropdown {
+//   backgroundColor: #ff0008;
+//   color: #ff0007;
+//   background: #ff0006;
+// }
+
+// .compMapParent {
+//   //fill: $map-parent-fill;
+//   //stroke: $map-parent-stroke;
+// }
+
+.compMapParentText {
+  fill: $map-parent-text
+}
+
+.compMapChild {
+  fill: $map-child-fill;
+  stroke: $map-child-stroke;
+}
+
+.compMapChildText {
+  fill: $map-child-text;
+}
+
+.compMapRoot {
+  //fill: $map-root-fill;
+  stroke: $map-root-stroke;
+}
+
+.compMapRootText {
+  fill: $map-root-text;
+}

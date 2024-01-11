@@ -1,10 +1,11 @@
 /* eslint-disable max-len */
 import React, { useState, useEffect, useRef } from 'react';
 import { launchContentScript } from '../slices/mainSlice';
-import Loader from '../components/Loader';
-import ErrorMsg from '../components/ErrorMsg';
+import Loader from '../components/ErrorHandling/Loader';
+import ErrorMsg from '../components/ErrorHandling/ErrorMsg';
 import { useDispatch, useSelector } from 'react-redux';
-import { MainState, RootState } from '../FrontendTypes';
+import { MainState, RootState, ErrorContainerProps } from '../FrontendTypes';
+import { current } from '@reduxjs/toolkit';
 /*
 This is the loading screen that a user may get when first initalizing the application. This page checks:
 
@@ -13,7 +14,7 @@ This is the loading screen that a user may get when first initalizing the applic
   3. if target tab contains a compatible React app
 */
 
-function ErrorContainer(): JSX.Element {
+function ErrorContainer(props: ErrorContainerProps): JSX.Element {
   const dispatch = useDispatch();
   const { tabs, currentTitle, currentTab }: MainState = useSelector(
     (state: RootState) => state.main,
@@ -21,13 +22,21 @@ function ErrorContainer(): JSX.Element {
   const [loadingArray, setLoading] = useState([true, true, true]); // We create a local state "loadingArray" and set it to an array with three true elements. These will be used as hooks for error checking against a 'status' object that is declared later in a few lines. 'loadingArray' is used later in the return statement to display a spinning loader icon if it's true. If it's false, either a checkmark icon or an exclamation icon will be displayed to the user.
   const titleTracker = useRef(currentTitle); // useRef returns an object with a property 'initialValue' and a value of whatever was passed in. This allows us to reference a value that's not needed for rendering
   const timeout = useRef(null);
+  const { port } = props;
 
   // function that launches the main app
   function launch(): void {
     dispatch(launchContentScript(tabs[currentTab]));
   }
 
-  const status = {
+  function reinitialize(): void {
+    port.postMessage({
+      action: 'reinitialize',
+      tabId: currentTab,
+    });
+  }
+
+  let status = {
     // We create a status object that we may use later if tabs[currentTab] exists
     contentScriptLaunched: false,
     reactDevToolsInstalled: false,
@@ -81,6 +90,9 @@ function ErrorContainer(): JSX.Element {
 
     // The next two if statements are written in a way to allow the checking of 'content script hook', 'reactDevTools check', and 'target page is a react app' to be run in chronological order.
     if (loadingArray[0] === false && status.contentScriptLaunched === true) {
+      timeout.current = setTimeout(() => {
+        setLoadingArray(1, false);
+      }, 3000); // increased from 1500
       setLoadingArray(1, false);
     }
     if (loadingArray[1] === false && status.reactDevToolsInstalled === true) {
@@ -112,7 +124,12 @@ function ErrorContainer(): JSX.Element {
 
       <br />
       <div className='errorMsg'>
-        <ErrorMsg loadingArray={loadingArray} status={status} launchContent={launch} />
+        <ErrorMsg
+          loadingArray={loadingArray}
+          status={status}
+          launchContent={launch}
+          reinitialize={reinitialize}
+        />
       </div>
       <br />
       <a

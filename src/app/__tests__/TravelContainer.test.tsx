@@ -6,8 +6,8 @@ import { configureStore } from '@reduxjs/toolkit';
 import { mainSlice } from '../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 import { ThemeProvider } from '@mui/material/styles';
-import theme from '../components/theme';
-import '@testing-library/jest-dom/extend-expect'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
+import theme from '../styles/theme';
+import '@testing-library/jest-dom'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
 
 const customTabs = {
   87: {
