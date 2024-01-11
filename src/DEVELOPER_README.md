@@ -64,13 +64,13 @@ Currently, Reactime employs Redux Toolkit for state management. At present, all 
 
 ## Testing
 
-With Reactime V23, ALL outdated packages and peer dependencies were resolved--a huge feat. A side effect of this is that the Jest testing library has unresolved errors. This should be a pretty easy win for future iterators to bring the Jest library back up and running smoothly. The jest-environment-jsdom package has some deprecated sub-packages, so if there is an alternative that can be used, that would be best, so it does not introduce new deprecated packages.
+With Reactime V23, as a result of updating all outdated packages and peer dependencies, the Jest testing framework has unresolved errors. This should be a pretty easy win for future iterators to bring the Jest library back up and running smoothly. The jest-environment-jsdom package has some deprecated sub-packages, so if there is an alternative that can be used, that would be best, so it does not introduce new deprecated packages.
 
 In addition, while our current test coverage provides a sturdy base, the application can benefit from deeper exploration into critical user paths and broadening end-to-end testing scenarios. Embracing automation and periodic reviews can further ensure consistent quality and robustness in the face of evolving requirements.
 
 ## Continue to investigate app behavior on load
 
-With Reactime V23, loading errors were eliminated by having the web app reload upon a Reactime panel being opened. While this provides a working, stable solution to what were persistent loading issues, the app's behavior on load should still be examined. There are odd interactions happening within the message passing framework of a chrome dev tool which may be a root cause. Please examine the interacion between background.js, contentscript, maincontainer, and redux toolkit.
+With Reactime V23, loading errors were eliminated by having the web app reload upon a Reactime panel being opened. While this provides a working solution to what were persistent loading issues, the app's behavior on load should still be examined. There are odd interactions happening within the message passing framework of chrome which may be a root cause. Please examine the interaction between background.js, contentscript, maincontainer, and redux toolkit.
 
 ## Including Support for Hooks Beyond useState
 
@@ -105,6 +105,10 @@ Yes, but it would be very time-consuming and not the most feasible option while 
 ## Newsletter functionality on the Reactime website
 
 As noted in the [Reactime Webite Github](https://github.com/reactimetravel/reactime-website), a newsletter functionality would be nice but has not been implemented yet.
+
+## Optimize webpack bundle size in production mode
+
+Currently, the webpack bundle size when running in production mode (through npm run build) is much larger than the recommended size. Implementing new rules, plugins, and/or uglification and minification strategies could help reduce the size.
 
 # File Structure
 

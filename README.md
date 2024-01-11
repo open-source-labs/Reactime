@@ -169,15 +169,20 @@ of the structure and interfaces of the codebase.
 
 Reactime 23.0 brings a new look to the UI, completely updates all outdated packages, and significantly improves stability by solving loading bugs.
 
-<i>Taking a deeper look</i>
-
-Addressing the persistent disconnection/black screen issues that occasionally affected users during regular application use, we made decisive improvements by removing the "keepAlive" function and implementing robust logic to fix the core issue. This enabled us to refine the communication protocol between our application and the Chrome extension API, delivering a more consistent and stable connection. To further enhance the user experience and foster resilience, we introduced a user-friendly reconnection feature. This not only offers users a swift recovery route but also acts as an added layer of protection against any unexpected disconnections in the future.
-
 UI
+
+V23 showcases a sharp new theme to our extension’s UI. We also opted to completely overhaul the styling architecture to make it easier for future developers to change it to their liking.
 
 Dependencies
 
+As of Reactime v22, installing node modules required the use of npm --force due to numerous lingering peer dependency issues. We have tackled this issue head-on in v23 of Reactime. We trimmed bulky packages that already served their purpose. We completely updated those that played a vital role in our extension’s current operation, and we fully resolved their conflicts with other dependencies. By downsizing from 124 to 70 packages, we have made Reactime much lighter and more future-proof.
+
+This effort serves to bolster Reactime in two ways: First, updating packages like react router and webpack gives Reactime’s users access to the performance upgrades that come with modern versions. Additionally, we have future-proofed Reactime by leaving our dependencies at their latest versions. This effort gives future developers of the extension a head start in adding new features and expanding the power of existing ones.
+
 Loading stability
+
+Reactime has experienced persistent issues with stably loading up. Our first step in tackling these loading inconsistencies was to thoroughly unpack Reactime’s inner workings. Tracking the flow of messages from our content script, our background service workers, the Redux state management and our extension’s backend allowed us to diagnose potential roadblocks as Reactime was spinning up. An exhaustive period of trial and error further deepened our understanding of the problem and ultimately led us towards our new and robustly stable launch experience.
+Beyond this, we have built out a road map of documentation with the goal of setting future Reactime developers on the fast track to further enhance the stability of Reactime’s launch and overall user experience.
 
 If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
 
