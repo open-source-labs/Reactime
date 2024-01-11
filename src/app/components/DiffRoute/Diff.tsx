@@ -92,7 +92,7 @@ function Diff(props: DiffProps): JSX.Element {
   const delta = diff(previousDisplay, snapshot); // diff function from 'jsondiffpatch' returns the difference in state between 'previousDisplay' and 'snapshot'
 
   const html = formatters.html.format(delta, previousDisplay); // formatters function from 'jsondiffpatch' returns an html string that shows the difference between delta and the previousDisplay
-  console.log(html);
+  // console.log(html);
 
   if (show)
     formatters.html.showUnchanged(); // shows unchanged values if we're on the '/diffRaw' path
