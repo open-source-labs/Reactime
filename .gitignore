@@ -12,8 +12,8 @@ src/extension/build.crx
 src/extension/build.pem
 bower_components
 sandboxes/manual-tests/NextJS/.next
-.vscode
 package-lock.json
 yarn.lock
 docs/**/*
 docs/*
+config.bat
