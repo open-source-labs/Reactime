@@ -133,23 +133,6 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   }
 }
 
-// get ax tree
-// function getAccessibilityTree(tabId) {
-//   chrome.debugger.attach({ tabId: tabId }, '1.3', function () {
-//     chrome.debugger.sendCommand({ tabId: tabId }, '1.3', 'Accessibility.enable', {}, function () {
-//       chrome.debugger.sendCommand(
-//         { tabId: tabId },
-//         '1.3',
-//         'Accessibility.getFullAxTree',
-//         {},
-//         function (response) {
-//           console.log(response);
-//         },
-//       );
-//     });
-//   });
-// }
-
 /*
   The 'chrome.runtime' API allows a connection to the background service worker (background.js).
   This allows us to set up listener's for when we connect, message, and disconnect the script.
@@ -265,6 +248,7 @@ chrome.runtime.onConnect.addListener((port) => {
         return true;
 
       case 'jumpToSnap':
+        // chrome.debugger.detach({ tabId: tabId });
         // console.log('background.js: jumpToSnap:', getAccessibilityTree(tabId));
         chrome.debugger.attach({ tabId: tabId }, '1.3', () => {
           chrome.debugger.sendCommand({ tabId: tabId }, 'Accessibility.enable', () => {
@@ -274,6 +258,7 @@ chrome.runtime.onConnect.addListener((port) => {
               {},
               (response) => {
                 console.log(response);
+                chrome.debugger.detach({ tabId: tabId });
               },
             );
           });
