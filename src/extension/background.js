@@ -345,7 +345,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             {},
             (response) => {
               // function pruning the ax tree
-              tabsObj[tabId].axSnapshots = pruneAxTree(response.nodes);
+              tabsObj[tabId].axSnapshots.push(pruneAxTree(response.nodes));
+
+              console.log(tabsObj[tabId].axSnapshots);
               chrome.debugger.detach({ tabId: tabId });
             },
           );
