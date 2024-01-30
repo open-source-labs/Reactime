@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetricsContainer from './WebMetrics/WebMetricsContainer';
 import { MainState, RootState, StateRouteProps } from '../../FrontendTypes';
+import AxTree from './Ax';
 
 /*
   Loads the appropriate StateRoute view and renders the Map, Performance, History, Webmetrics, and Tree navbar buttons after clicking on the 'State' button located near the top rightmost corner.
@@ -84,9 +85,22 @@ const StateRoute = (props: StateRouteProps) => {
         >
           Tree
         </NavLink>
+        <NavLink
+        className = {(navData) => 
+          navData.isActive ? 'is-active router-link accessibility-tab' : 'router-link accessibility-tab'
+        }
+        to = '/accessibility'
+        >
+          Accessibility
+        </NavLink>
       </div>
       <div className='app-content'>
         <Routes>
+          <Route
+            path = '/accessibility'
+            element = {<AxTree/>}
+          >
+          </Route>
           <Route
             path='/history'
             element={
