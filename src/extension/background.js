@@ -248,21 +248,6 @@ chrome.runtime.onConnect.addListener((port) => {
         return true;
 
       case 'jumpToSnap':
-        // chrome.debugger.detach({ tabId: tabId });
-        // console.log('background.js: jumpToSnap:', getAccessibilityTree(tabId));
-        chrome.debugger.attach({ tabId: tabId }, '1.3', () => {
-          chrome.debugger.sendCommand({ tabId: tabId }, 'Accessibility.enable', () => {
-            chrome.debugger.sendCommand(
-              { tabId: tabId },
-              'Accessibility.getFullAXTree',
-              {},
-              (response) => {
-                console.log(response);
-                chrome.debugger.detach({ tabId: tabId });
-              },
-            );
-          });
-        });
         chrome.tabs.sendMessage(tabId, msg);
         return true; // attempt to fix message port closing error, consider return Promise
 
@@ -303,7 +288,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     action === 'jumpToSnap' ||
     action === 'injectScript' ||
     action === 'devToolsInstalled' ||
-    action === 'aReactApp'
+    action === 'aReactApp' ||
+    action === 'recordAXSnap'
   ) {
     isReactTimeTravel = true;
   } else {
@@ -313,8 +299,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (isReactTimeTravel && !(tabId in tabsObj)) {
     tabsObj[tabId] = createTabObj(tabTitle);
   }
-
   switch (action) {
+    case 'recordAXSnap': {
+      chrome.debugger.attach({ tabId: tabId }, '1.3', () => {
+        chrome.debugger.sendCommand({ tabId: tabId }, 'Accessibility.enable', () => {
+          chrome.debugger.sendCommand(
+            { tabId: tabId },
+            'Accessibility.getFullAXTree',
+            {},
+            (response) => {
+              console.log(response);
+              chrome.debugger.detach({ tabId: tabId });
+            },
+          );
+        });
+      });
+    }
     case 'attemptReconnect': {
       const success = 'portSuccessfullyConnected';
       sendResponse({ success });

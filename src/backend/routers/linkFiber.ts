@@ -133,7 +133,17 @@ export default function linkFiber(mode: Status): () => Promise<void> {
         // Obtain the updated FiberRootNode, after the target React application re-renders
         const fiberRoot = args[1];
         // If the target React application is visible, send a request to update the snapShot tree displayed on Chrome Extension
-        if (isVisible) throttledUpdateSnapshot(fiberRoot, mode);
+        if (isVisible) {
+          throttledUpdateSnapshot(fiberRoot, mode);
+          // SEND COMMAND TO FRONT END TO GET NEW AX TREE
+          window.postMessage(
+            {
+              action: 'recordAXSnap',
+              payload: 'recordAXSnap',
+            },
+            '*',
+          );
+        }
         // After our added work is completed we invoke the original onComitFiberRoot function
         return onCommitFiberRoot(...args);
       };
