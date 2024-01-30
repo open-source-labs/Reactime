@@ -207,6 +207,8 @@ chrome.runtime.onConnect.addListener((port) => {
     // ---------------------------------------------------------------
     const { action, payload, tabId } = msg;
 
+    console.log('background.js: port listener');
+
     switch (action) {
       // import action comes through when the user uses the "upload" button on the front end to import an existing snapshot tree
       case 'import': // create a snapshot property on tabId and set equal to tabs object
@@ -250,19 +252,6 @@ chrome.runtime.onConnect.addListener((port) => {
       case 'jumpToSnap':
         // chrome.debugger.detach({ tabId: tabId });
         // console.log('background.js: jumpToSnap:', getAccessibilityTree(tabId));
-        chrome.debugger.attach({ tabId: tabId }, '1.3', () => {
-          chrome.debugger.sendCommand({ tabId: tabId }, 'Accessibility.enable', () => {
-            chrome.debugger.sendCommand(
-              { tabId: tabId },
-              'Accessibility.getFullAXTree',
-              {},
-              (response) => {
-                console.log(response);
-                chrome.debugger.detach({ tabId: tabId });
-              },
-            );
-          });
-        });
         chrome.tabs.sendMessage(tabId, msg);
         return true; // attempt to fix message port closing error, consider return Promise
 
@@ -303,7 +292,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     action === 'jumpToSnap' ||
     action === 'injectScript' ||
     action === 'devToolsInstalled' ||
-    action === 'aReactApp'
+    action === 'aReactApp' ||
+    action === 'recordAXSnap'
   ) {
     isReactTimeTravel = true;
   } else {
@@ -313,8 +303,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (isReactTimeTravel && !(tabId in tabsObj)) {
     tabsObj[tabId] = createTabObj(tabTitle);
   }
-
+  console.log('background.js: chrome.runtime event listener action:', action);
   switch (action) {
+    case 'recordAXSnap': {
+      console.log('background.js reached action case');
+      chrome.debugger.attach({ tabId: tabId }, '1.3', () => {
+        chrome.debugger.sendCommand({ tabId: tabId }, 'Accessibility.enable', () => {
+          chrome.debugger.sendCommand(
+            { tabId: tabId },
+            'Accessibility.getFullAXTree',
+            {},
+            (response) => {
+              console.log(response);
+              chrome.debugger.detach({ tabId: tabId });
+            },
+          );
+        });
+      });
+    }
     case 'attemptReconnect': {
       const success = 'portSuccessfullyConnected';
       sendResponse({ success });

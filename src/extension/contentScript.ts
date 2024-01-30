@@ -37,7 +37,9 @@ window.addEventListener('message', (msg) => {
     chrome.runtime.sendMessage(msg.data);
   }
   if (action === 'recordAXSnap') {
-    // chrome.runtime.sendMessage()
+    console.log('contentScript.ts: window received recordAXSnap');
+    // chrome.runtime.sendMessage({ action: 'recordAXSnap' });
+    chrome.runtime.sendMessage(msg.data);
   }
 });
 
