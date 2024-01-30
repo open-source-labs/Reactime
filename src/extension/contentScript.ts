@@ -36,6 +36,9 @@ window.addEventListener('message', (msg) => {
   if (action === 'aReactApp') {
     chrome.runtime.sendMessage(msg.data);
   }
+  if (action === 'recordAXSnap') {
+    // chrome.runtime.sendMessage()
+  }
 });
 
 // FROM BACKGROUND TO CONTENT SCRIPT
