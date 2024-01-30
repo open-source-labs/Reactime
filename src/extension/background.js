@@ -67,6 +67,7 @@ class HistoryNode {
     // marks from what branch this node is originated
     this.branch = tabObj.currBranch;
     this.stateSnapshot = obj;
+    this.axSnapshot;
     this.children = [];
   }
 }
@@ -248,7 +249,9 @@ chrome.runtime.onConnect.addListener((port) => {
         return true;
 
       case 'jumpToSnap':
+        console.log('background.js: tabsObj before jump:', tabsObj);
         chrome.tabs.sendMessage(tabId, msg);
+        console.log('background.js: tabsObj after jump:', tabsObj);
         return true; // attempt to fix message port closing error, consider return Promise
 
       case 'toggleRecord':
