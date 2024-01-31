@@ -98,7 +98,10 @@ const StateRoute = (props: StateRouteProps) => {
         <Routes>
           <Route
             path = '/accessibility'
-            element = {<AxTree/>}
+            element = {<AxTree
+              snapshot={snapshot} 
+              snapshots={snapshots} 
+              currLocation={currLocation}/>}
           >
           </Route>
           <Route
