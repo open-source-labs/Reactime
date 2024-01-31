@@ -448,7 +448,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           addAxSnap(response.nodes);
           await detachDebugger(tabId);
         } catch (error) {
-          console.error('Debugger command failed:', error);
+          console.error('axRecord debugger command failed:', error);
         }
       }
       const sourceTab = tabId;
