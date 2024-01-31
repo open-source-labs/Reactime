@@ -255,7 +255,7 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 
 ## <b>Read More</b>
 
-- [Reactime renovation: Updates Coming in Version 23.0!](https://medium.com/@liam.donaher/reactime-renovation-updates-coming-in-version-23-0-37b2ef2a2771)
+- [Reactime renovation: Updates Coming in Version 23.0!](https://medium.com/@liam.donaher/reactime-renovation-updates-coming-in-version-23-0-37b2ef2a2771).
 
 ## <b>Authors</b>
 
