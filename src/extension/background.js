@@ -415,6 +415,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }),
           );
         }
+        chrome.debugger.attach({ tabId: tabId }, '1.3', () => {
+          chrome.debugger.sendCommand({ tabId: tabId }, 'Accessibility.enable', () => {
+            chrome.debugger.sendCommand(
+              { tabId: tabId },
+              'Accessibility.getFullAXTree',
+              {},
+              (response) => {
+                console.log(response);
+                chrome.debugger.detach({ tabId: tabId });
+              },
+            );
+          });
+        });
         break;
       }
 
