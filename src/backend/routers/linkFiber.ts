@@ -100,13 +100,6 @@ export default function linkFiber(mode: Status): () => Promise<void> {
       },
       '*',
     );
-    window.postMessage(
-      {
-        action: 'recordAXSnap',
-        payload: 'recordAXSnap',
-      },
-      '*',
-    );
     // --------------INITIATE EVENT LISTENER FOR VISIBILITY CHANGE--------------
     /**
      * Initiate an event listener for when there is a change to the visibility of the react target application (the browser tab)
