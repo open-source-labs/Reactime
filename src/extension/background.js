@@ -304,19 +304,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   switch (action) {
     case 'recordAXSnap': {
-      chrome.debugger.attach({ tabId: tabId }, '1.3', () => {
-        chrome.debugger.sendCommand({ tabId: tabId }, 'Accessibility.enable', () => {
-          chrome.debugger.sendCommand(
-            { tabId: tabId },
-            'Accessibility.getFullAXTree',
-            {},
-            (response) => {
-              console.log(response);
-              chrome.debugger.detach({ tabId: tabId });
-            },
-          );
-        });
-      });
     }
     case 'attemptReconnect': {
       const success = 'portSuccessfullyConnected';
@@ -417,6 +404,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           sendToHierarchy(tabsObj[tabId], new HistoryNode(request.payload, tabsObj[tabId]));
         }
       }
+
+      chrome.debugger.attach({ tabId: tabId }, '1.3', () => {
+        chrome.debugger.sendCommand({ tabId: tabId }, 'Accessibility.enable', () => {
+          chrome.debugger.sendCommand(
+            { tabId: tabId },
+            'Accessibility.getFullAXTree',
+            {},
+            (response) => {
+              console.log(response);
+              chrome.debugger.detach({ tabId: tabId });
+            },
+          );
+        });
+      });
+
       // sends new tabs obj to devtools
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
