@@ -13,6 +13,39 @@ let activeTab;
 const tabsObj = {};
 // Will store Chrome web vital metrics and their corresponding values.
 const metrics = {};
+
+// function pruning the chrome ax tree and pulling the relevant properties
+const pruneAxTree = (axTree) => {
+  const axArr = [];
+  for (const node of axTree) {
+    const {
+      backendDOMNodeId,
+      childIds,
+      ignored,
+      name,
+      nodeId,
+      ignoredReasons,
+      parentId,
+      properties,
+    } = node;
+
+    const axNode = {
+      backendDOMNodeId: backendDOMNodeId,
+      childIds: childIds,
+      ignored: ignored,
+      name: name,
+      nodeId: nodeId,
+      ignoredReasons: ignoredReasons,
+      parentId: parentId,
+      properties: properties,
+    };
+
+    axArr.push(axNode);
+  }
+
+  return axArr;
+};
+
 // This function will create the first instance of the test app's tabs object
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
 function createTabObj(title) {
@@ -26,6 +59,9 @@ function createTabObj(title) {
     // snapshots is an array of ALL state snapshots for stateful and stateless
     // components the Reactime tab working on a specific user application
     snapshots: [],
+    // axSnapshots is an array of the chrome ax tree at different points for state and stateless applications
+    // functionality to add snapshots is done later
+    axSnapshots: [],
     // index here is the tab index that shows total amount of state changes
     index: 0,
     //* currLocation points to the current state the user is checking
