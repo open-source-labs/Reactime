@@ -327,8 +327,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     action === 'jumpToSnap' ||
     action === 'injectScript' ||
     action === 'devToolsInstalled' ||
-    action === 'aReactApp' ||
-    action === 'recordAXSnap'
+    action === 'aReactApp'
   ) {
     isReactTimeTravel = true;
   } else {
@@ -339,8 +338,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     tabsObj[tabId] = createTabObj(tabTitle);
   }
   switch (action) {
-    case 'recordAXSnap': {
-    }
     case 'attemptReconnect': {
       const success = 'portSuccessfullyConnected';
       sendResponse({ success });
