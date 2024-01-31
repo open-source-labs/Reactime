@@ -93,7 +93,7 @@ function createTabObj(title) {
 // 1. param 'obj' : arg request.payload, which is an object containing a tree from snapShot.ts and a route property
 // 2. param tabObj: arg tabsObj[tabId], which is an object that holds info about a specific tab. Should change the name of tabObj to tabCollection or something
 class HistoryNode {
-  constructor(obj, tabObj, axSnap) {
+  constructor(obj, tabObj) {
     // continues the order of number of total state changes
     this.index = tabObj.index;
     tabObj.index += 1;
