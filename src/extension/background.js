@@ -94,7 +94,6 @@ function createTabObj(title) {
 // 2. param tabObj: arg tabsObj[tabId], which is an object that holds info about a specific tab. Should change the name of tabObj to tabCollection or something
 class HistoryNode {
   constructor(obj, tabObj, axSnap) {
-    console.log('background.js: HistoryNode constructor: obj:\n', obj, '\n', 'tabObj:', tabObj);
     // continues the order of number of total state changes
     this.index = tabObj.index;
     tabObj.index += 1;
@@ -104,8 +103,7 @@ class HistoryNode {
     // marks from what branch this node is originated
     this.branch = tabObj.currBranch;
     this.stateSnapshot = obj;
-    this.axSnapshot = axSnap;
-    console.log('this.axSnapshot:', this.axSnapshot);
+    this.axSnapshot = tabObj.axSnapshots[tabObj.axSnapshots.length - 1];
     this.children = [];
   }
 }
@@ -288,9 +286,7 @@ chrome.runtime.onConnect.addListener((port) => {
         return true;
 
       case 'jumpToSnap':
-        // console.log('background.js: tabsObj before jump:', tabsObj);
         chrome.tabs.sendMessage(tabId, msg);
-        // console.log('background.js: tabsObj after jump:', tabsObj);
         return true; // attempt to fix message port closing error, consider return Promise
 
       case 'toggleRecord':
@@ -402,11 +398,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       break;
     }
     case 'recordSnap': {
+      console.log('background.js: recordSnap: tabsObj[tabId]:', tabsObj[tabId]);
       function addAxSnap(snap) {
         const pruned = pruneAxTree(snap);
         tabsObj[tabId].axSnapshots.push(pruned);
-        console.log('addAxSnap axSnapshot:', pruned);
-        // return new HistoryNode();
       }
 
       function attachDebugger(tabId, version) {
@@ -459,36 +454,13 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const sourceTab = tabId;
       tabsObj[tabId].webMetrics = metrics;
 
-      // console.log('after chrome.debugger axSnap:', axSnap);
       if (!firstSnapshotReceived[tabId]) {
-        console.log('!firstSnapshotReceived[tabId]:', true);
-        // chrome.debugger.attach({ tabId: tabId }, '1.3', () => {
-        //   chrome.debugger.sendCommand({ tabId: tabId }, 'Accessibility.enable', () => {
-        //     chrome.debugger.sendCommand(
-        //       { tabId: tabId },
-        //       'Accessibility.getFullAXTree',
-        //       {},
-        //       (response) => {
-        //         addAxSnap(response.nodes);
-        //         chrome.debugger.detach({ tabId: tabId });
-        //       },
-        //     );
-        //   });
-        // });
         await axRecord(tabId);
         firstSnapshotReceived[tabId] = true;
         reloaded[tabId] = false;
         tabsObj[tabId].webMetrics = metrics;
         tabsObj[tabId].snapshots.push(request.payload);
-        sendToHierarchy(
-          tabsObj[tabId],
-          new HistoryNode(
-            request.payload,
-            tabsObj[tabId],
-            tabsObj[tabId].axSnapshots[tabsObj[tabId].axSnapshots.length - 1],
-          ),
-        );
-        console.log('first snap tabsObj[tabId].axSnapshots', tabsObj[tabId].axSnapshots);
+        sendToHierarchy(tabsObj[tabId], new HistoryNode(request.payload, tabsObj[tabId]));
         if (portsArr.length > 0) {
           portsArr.forEach((bg) =>
             bg.postMessage({
@@ -515,48 +487,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         reloaded[tabId] = false;
       } else {
         tabsObj[tabId].snapshots.push(request.payload);
-        // console.log('push subsequent axSnap:', axSnap);
         // INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN
         if (!tabsObj[tabId][index]) {
-          console.log('!tabsObj[tabId][index]:', true);
-          // chrome.debugger.attach({ tabId: tabId }, '1.3', () => {
-          //   chrome.debugger.sendCommand({ tabId: tabId }, 'Accessibility.enable', () => {
-          //     chrome.debugger.sendCommand(
-          //       { tabId: tabId },
-          //       'Accessibility.getFullAXTree',
-          //       {},
-          //       (response) => {
-          //         addAxSnap(response.nodes);
-          //         chrome.debugger.detach({ tabId: tabId });
-          //       },
-          //     );
-          //   });
-          // });
           await axRecord(tabId);
-          sendToHierarchy(
-            tabsObj[tabId],
-            new HistoryNode(
-              request.payload,
-              tabsObj[tabId],
-              tabsObj[tabId].axSnapshots[tabsObj[tabId].axSnapshots.length - 1],
-            ),
-          );
+          sendToHierarchy(tabsObj[tabId], new HistoryNode(request.payload, tabsObj[tabId]));
         }
       }
-
-      // chrome.debugger.attach({ tabId: tabId }, '1.3', () => {
-      //   chrome.debugger.sendCommand({ tabId: tabId }, 'Accessibility.enable', () => {
-      //     chrome.debugger.sendCommand(
-      //       { tabId: tabId },
-      //       'Accessibility.getFullAXTree',
-      //       {},
-      //       (response) => {
-      //         console.log(response);
-      //         chrome.debugger.detach({ tabId: tabId });
-      //       },
-      //     );
-      //   });
-      // });
 
       // sends new tabs obj to devtools
       if (portsArr.length > 0) {
