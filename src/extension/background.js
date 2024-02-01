@@ -398,7 +398,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       break;
     }
     case 'recordSnap': {
-      console.log('background.js: recordSnap: tabsObj[tabId]:', tabsObj[tabId]);
+      console.log(
+        'background.js: top of recordSnap: tabsObj[tabId]:',
+        JSON.parse(JSON.stringify(tabsObj[tabId])),
+      );
       function addAxSnap(snap) {
         const pruned = pruneAxTree(snap);
         tabsObj[tabId].axSnapshots.push(pruned);
