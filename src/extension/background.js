@@ -93,7 +93,7 @@ function createTabObj(title) {
 // 1. param 'obj' : arg request.payload, which is an object containing a tree from snapShot.ts and a route property
 // 2. param tabObj: arg tabsObj[tabId], which is an object that holds info about a specific tab. Should change the name of tabObj to tabCollection or something
 class HistoryNode {
-  constructor(obj, tabObj) {
+  constructor(tabObj, newStateSnapshot, newAxSnapshot) {
     // continues the order of number of total state changes
     this.index = tabObj.index;
     tabObj.index += 1;
@@ -102,8 +102,8 @@ class HistoryNode {
     this.name = tabObj.currParent;
     // marks from what branch this node is originated
     this.branch = tabObj.currBranch;
-    this.stateSnapshot = obj;
-    this.axSnapshot = tabObj.axSnapshots[tabObj.axSnapshots.length - 1];
+    this.stateSnapshot = newStateSnapshot;
+    this.axSnapshot = newAxSnapshot;
     this.children = [];
   }
 }
@@ -250,9 +250,11 @@ chrome.runtime.onConnect.addListener((port) => {
       case 'import': // create a snapshot property on tabId and set equal to tabs object
         // may need do something like filter payload from stateless
         tabsObj[tabId].snapshots = payload.snapshots; // reset snapshots to page last state recorded
+        tabsObj[tabId].axSnapshots = payload.axSnapshots; // TRYING to import axsnapshots
         // tabsObj[tabId].hierarchy = savedSnapshot.hierarchy; // why don't we just use hierarchy? Because it breaks everything...
         tabsObj[tabId].hierarchy.children = payload.hierarchy.children; // resets hierarchy to last state recorded
         tabsObj[tabId].hierarchy.stateSnapshot = payload.hierarchy.stateSnapshot; // resets hierarchy to last state recorded
+        tabsObj[tabId].hierarchy.axSnapshot = payload.hierarchy.axSnapshot; // TRYING to import hierarchy axsnapshot
         tabsObj[tabId].currLocation = payload.currLocation; // resets currLocation to last state recorded
         tabsObj[tabId].index = payload.index; //reset index to last state recorded
         tabsObj[tabId].currParent = payload.currParent; // reset currParent to last state recorded
@@ -268,10 +270,17 @@ chrome.runtime.onConnect.addListener((port) => {
           // resets hierarchy to page last state recorded
           ...tabsObj[tabId].snapshots[0],
         };
+        tabsObj[tabId].axSnapshots =
+          tabsObj[tabId].axSnapshots[tabsObj[tabId].axSnapshots.length - 1];
+        tabsObj[tabId].hierarchy.axSnapshot = tabsObj[tabId].axSnapshots[0]; //what about other hierarchy properties? Shouldn't those be reset as well?
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy; // resets currLocation to page last state recorded
         tabsObj[tabId].index = 1; //reset index
         tabsObj[tabId].currParent = 0; // reset currParent
         tabsObj[tabId].currBranch = 1; // reset currBranch
+        console.log(
+          'background.js: bottom of emptySnap: tabsObj[tabId]:',
+          JSON.parse(JSON.stringify(tabsObj[tabId])),
+        );
         return true; // return true so that port remains open
 
       case 'setPause': // Pause = lock on tab
@@ -405,6 +414,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       function addAxSnap(snap) {
         const pruned = pruneAxTree(snap);
         tabsObj[tabId].axSnapshots.push(pruned);
+        return pruned;
       }
 
       function attachDebugger(tabId, version) {
@@ -448,8 +458,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           await attachDebugger(tabId, '1.3');
           await sendDebuggerCommand(tabId, 'Accessibility.enable');
           const response = await sendDebuggerCommand(tabId, 'Accessibility.getFullAXTree');
-          addAxSnap(response.nodes);
+          const addedAxSnap = addAxSnap(response.nodes);
           await detachDebugger(tabId);
+          return addedAxSnap;
         } catch (error) {
           console.error('axRecord debugger command failed:', error);
         }
@@ -458,12 +469,19 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       tabsObj[tabId].webMetrics = metrics;
 
       if (!firstSnapshotReceived[tabId]) {
-        await axRecord(tabId);
         firstSnapshotReceived[tabId] = true;
         reloaded[tabId] = false;
         tabsObj[tabId].webMetrics = metrics;
         tabsObj[tabId].snapshots.push(request.payload);
-        sendToHierarchy(tabsObj[tabId], new HistoryNode(request.payload, tabsObj[tabId]));
+        const addedAxSnap = await axRecord(tabId);
+        sendToHierarchy(
+          tabsObj[tabId],
+          new HistoryNode(tabsObj[tabId], request.payload, addedAxSnap),
+        );
+        console.log(
+          'background.js: bottom of recordSnap: tabsObj[tabId]:',
+          JSON.parse(JSON.stringify(tabsObj[tabId])),
+        );
         if (portsArr.length > 0) {
           portsArr.forEach((bg) =>
             bg.postMessage({
@@ -492,8 +510,15 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         tabsObj[tabId].snapshots.push(request.payload);
         // INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN
         if (!tabsObj[tabId][index]) {
-          await axRecord(tabId);
-          sendToHierarchy(tabsObj[tabId], new HistoryNode(request.payload, tabsObj[tabId]));
+          const addedAxSnap = await axRecord(tabId);
+          sendToHierarchy(
+            tabsObj[tabId],
+            new HistoryNode(tabsObj[tabId], request.payload, addedAxSnap),
+          );
+          console.log(
+            'background.js: bottom of recordSnap: tabsObj[tabId]:',
+            JSON.parse(JSON.stringify(tabsObj[tabId])),
+          );
         }
       }
 
