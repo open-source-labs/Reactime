@@ -273,6 +273,7 @@ chrome.runtime.onConnect.addListener((port) => {
         tabsObj[tabId].axSnapshots =
           tabsObj[tabId].axSnapshots[tabsObj[tabId].axSnapshots.length - 1];
         tabsObj[tabId].hierarchy.axSnapshot = tabsObj[tabId].axSnapshots[0]; //what about other hierarchy properties? Shouldn't those be reset as well?
+        // other hierarchy properties do not have to be set because you maintain the root history node
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy; // resets currLocation to page last state recorded
         tabsObj[tabId].index = 1; //reset index
         tabsObj[tabId].currParent = 0; // reset currParent
