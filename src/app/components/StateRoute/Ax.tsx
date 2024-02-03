@@ -27,6 +27,8 @@ const theme = {
 const AxTree = (props) => {
     const {
         snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
+        snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
+        currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
         axSnapshots,
       } = props;
 
