@@ -86,10 +86,12 @@ const StateRoute = (props: StateRouteProps) => {
           Tree
         </NavLink>
         <NavLink
-        className = {(navData) => 
-          navData.isActive ? 'is-active router-link accessibility-tab' : 'router-link accessibility-tab'
-        }
-        to = '/accessibility'
+          className={(navData) =>
+            navData.isActive
+              ? 'is-active router-link accessibility-tab'
+              : 'router-link accessibility-tab'
+          }
+          to='/accessibility'
         >
           Accessibility
         </NavLink>
@@ -97,13 +99,11 @@ const StateRoute = (props: StateRouteProps) => {
       <div className='app-content'>
         <Routes>
           <Route
-            path = '/accessibility'
-            element = {<AxTree
-              snapshot={snapshot} 
-              snapshots={snapshots} 
-              currLocation={currLocation}/>}
-          >
-          </Route>
+            path='/accessibility'
+            element={
+              <AxTree snapshot={snapshot} snapshots={snapshots} currLocation={currLocation} />
+            }
+          ></Route>
           <Route
             path='/history'
             element={
