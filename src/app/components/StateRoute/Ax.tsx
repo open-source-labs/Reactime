@@ -3,16 +3,6 @@ import { JSONTree } from 'react-json-tree'; // React JSON Viewer Component;
 import { setCurrentTabInApp } from '../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 
-// const getItemString = (
-//     type: any,
-//     data: { state?: object | string; name: string; children: [] },
-//   ) => {
-//     // function that allows the customization of how arrays, objects, and iterable nodes are displayed.
-//     if (data && data.name) {
-//       return <span>{data.name}</span>;
-//     }
-//     return <span />;
-//   };
 const theme = {
     scheme: 'monokai',
     author: 'wimer hazenberg (http://www.monokai.nl)',
@@ -39,6 +29,7 @@ const AxTree = (props) => {
         snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
         snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
         currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
+        axSnapshots,
       } = props;
 
       const dispatch = useDispatch();
@@ -46,20 +37,13 @@ const AxTree = (props) => {
       useEffect(() => {
         dispatch(setCurrentTabInApp('AxTree')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'tree' to facilitate render.
       }, []);
-    // const json = {
-    //     array: [1, 2, 3],
-    //     bool: true,
-    //     object: {
-    //     foo: 'bar',
-    //     },
-    // };
 
     //removing/adding snapshot at beginning of return statement didn't change anything
     return(
         <> {snapshot && (
             <JSONTree 
-            data={snapshots[currLocation.index] || snapshot} 
-            shouldExpandNodeInitially={() => true}
+            data={axSnapshots}
+            // shouldExpandNodeInitially={() => true}
             theme = {theme}
             />
                 )}

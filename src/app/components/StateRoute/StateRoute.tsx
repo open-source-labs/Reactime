@@ -26,6 +26,7 @@ const NO_STATE_MSG = 'No state change detected. Trigger an event to change state
 
 const StateRoute = (props: StateRouteProps) => {
   const {
+    axSnapshots, // from 'tabs[currentTab]' object in 'MainContainer'
     snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
     hierarchy: propsHierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
     snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
@@ -99,11 +100,22 @@ const StateRoute = (props: StateRouteProps) => {
       <div className='app-content'>
         <Routes>
           <Route
+<<<<<<< HEAD
             path='/accessibility'
             element={
               <AxTree snapshot={snapshot} snapshots={snapshots} currLocation={currLocation} />
             }
           ></Route>
+=======
+            path = '/accessibility'
+            element = {<AxTree
+              axSnapshots={axSnapshots}
+              snapshot={snapshot} 
+              snapshots={snapshots} 
+              currLocation={currLocation}/>}
+          >
+          </Route>
+>>>>>>> develop
           <Route
             path='/history'
             element={
