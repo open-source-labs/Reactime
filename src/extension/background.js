@@ -264,18 +264,21 @@ chrome.runtime.onConnect.addListener((port) => {
 
       // emptySnap actions comes through when the user uses the 'clear' button on the front end to clear the snapshot history and move slider back to 0 position
       case 'emptySnap':
-        tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]]; // reset snapshots to page last state recorded
+        // REFACTORED TO HAVE CLEAR BUTTON KEEP CURRENT STATE OF DEMO APP RATHER THAN JUST THE LAST STATE RECORDED
+        // PRIOR IMPLEMENTATION WAS FAILING TO RESET STATE OF DEMO APP UPON CLEAR
+        // IF CHANGING, CHANGE MAINSLICE.JS TOO
+        tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].currLocation.index]]; // reset snapshots to current page state
         tabsObj[tabId].hierarchy.children = []; // resets hierarchy
         tabsObj[tabId].hierarchy.stateSnapshot = {
-          // resets hierarchy to page last state recorded
+          // resets hierarchy to current page state
+          // not sure why they are doing a "shallow" deep copy
           ...tabsObj[tabId].snapshots[0],
         };
         tabsObj[tabId].axSnapshots = [
-          tabsObj[tabId].axSnapshots[tabsObj[tabId].axSnapshots.length - 1],
-        ]; // resets axSnapshots to page last recorded
-        tabsObj[tabId].hierarchy.axSnapshot = tabsObj[tabId].axSnapshots[0]; // resets hierarchy to page of last ax tree recorded
-        // SHOULDN'T HIERARCHY.AXSNAPSHOT AND HIERARCHY.SNAPSHOT BE RESET BASED ON CURRLOCATION, NOT LAST SNAP RECORDED BECAUSE WHAT IF JUMPING TO PREVIOUS SNAPSHOT AND THEN CLEAR. WOULDN'T THAT REQUIRE UPDATING THE DEMO APP TO THE LAST STATE RECORDED AS WELL?
-        tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy; // resets currLocation to page last state recorded
+          tabsObj[tabId].axSnapshots[tabsObj[tabId].currLocation.index],
+        ]; // resets axSnapshots to current page state
+        tabsObj[tabId].hierarchy.axSnapshot = tabsObj[tabId].axSnapshots[0]; // resets hierarchy to ax tree of current page state
+        // tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy; // resets currLocation to page last state recorded
         tabsObj[tabId].index = 1; //reset index
         tabsObj[tabId].currParent = 0; // reset currParent
         tabsObj[tabId].currBranch = 1; // reset currBranch
