@@ -47,10 +47,13 @@ export const mainSlice = createSlice({
       tabs[currentTab].playing = false;
 
       const lastSnapshot = tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1]; // the most recent snapshot
+      const lastAxSnapshot = tabs[currentTab].axSnapshots[tabs[currentTab].axSnapshots.length - 1]; // the most recent snapshot
 
       tabs[currentTab].hierarchy.stateSnapshot = { ...lastSnapshot }; // resets hierarchy to page last state recorded
+      tabs[currentTab].hierarchy.axSnapshot = lastAxSnapshot; // resets hierarchy to page last state recorded
       tabs[currentTab].hierarchy.children = []; // resets hierarchy
       tabs[currentTab].snapshots = [lastSnapshot]; // resets snapshots to page last state recorded
+      tabs[currentTab].axSnapshots = [lastAxSnapshot]; // resets snapshots to page last state recorded
 
       // resets currLocation to page last state recorded
       tabs[currentTab].currLocation = tabs[currentTab].hierarchy;

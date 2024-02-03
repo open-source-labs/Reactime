@@ -270,9 +270,11 @@ chrome.runtime.onConnect.addListener((port) => {
           // resets hierarchy to page last state recorded
           ...tabsObj[tabId].snapshots[0],
         };
-        tabsObj[tabId].axSnapshots = tabsObj[tabId].axSnapshots[0];
-        tabsObj[tabId].hierarchy.axSnapshot = tabsObj[tabId].axSnapshots[0]; //what about other hierarchy properties? Shouldn't those be reset as well?
-        // other hierarchy properties do not have to be set because you maintain the root history node
+        tabsObj[tabId].axSnapshots = [
+          tabsObj[tabId].axSnapshots[tabsObj[tabId].axSnapshots.length - 1],
+        ]; // resets axSnapshots to page last recorded
+        tabsObj[tabId].hierarchy.axSnapshot = tabsObj[tabId].axSnapshots[0]; // resets hierarchy to page of last ax tree recorded
+        // SHOULDN'T HIERARCHY.AXSNAPSHOT AND HIERARCHY.SNAPSHOT BE RESET BASED ON CURRLOCATION, NOT LAST SNAP RECORDED BECAUSE WHAT IF JUMPING TO PREVIOUS SNAPSHOT AND THEN CLEAR. WOULDN'T THAT REQUIRE UPDATING THE DEMO APP TO THE LAST STATE RECORDED AS WELL?
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy; // resets currLocation to page last state recorded
         tabsObj[tabId].index = 1; //reset index
         tabsObj[tabId].currParent = 0; // reset currParent
@@ -500,10 +502,14 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const previousSnap =
         tabsObj[tabId]?.currLocation?.stateSnapshot?.children[0]?.componentData?.actualDuration;
       const incomingSnap = request.payload.children[0].componentData.actualDuration;
-      if (previousSnap === incomingSnap) break;
+      if (previousSnap === incomingSnap) {
+        console.log('background.js: previousSnap===incomingSnap');
+        break;
+      }
 
       // Or if it is a snapShot after a jump, we don't record it.
       if (reloaded[tabId]) {
+        console.log('background.js: reloaded[tabId]');
         // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
         reloaded[tabId] = false;
       } else {
@@ -519,6 +525,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             'background.js: bottom of recordSnap: tabsObj[tabId]:',
             JSON.parse(JSON.stringify(tabsObj[tabId])),
           );
+        } else {
+          console.log('background.js: tabsObj[tabId][index]');
         }
       }
 
@@ -531,6 +539,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             sourceTab,
           }),
         );
+      } else {
+        console.log('background.js: portsArr.length < 0');
       }
       break;
     }
