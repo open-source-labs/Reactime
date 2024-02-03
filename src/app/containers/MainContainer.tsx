@@ -163,8 +163,10 @@ function MainContainer(): JSX.Element {
 
   // }, 5000);
 
-  const { currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =
-    tabs[currentTab]; // we destructure the currentTab object
+  console.log(tabs[currentTab]);
+
+  const { axSnapshots, currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =
+    tabs[currentTab]; // we destructure the currentTab object which is passed in from background.js
   //@ts-ignore
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex]; // if viewIndex is -1, then use the sliderIndex instead
 
@@ -227,6 +229,7 @@ function MainContainer(): JSX.Element {
               snapshots={snapshots}
               // @ts-ignore
               currLocation={currLocation}
+              axSnapshots={axSnapshots}
             />
           </div>
         ) : null}
