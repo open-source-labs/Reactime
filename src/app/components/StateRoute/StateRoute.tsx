@@ -100,22 +100,16 @@ const StateRoute = (props: StateRouteProps) => {
       <div className='app-content'>
         <Routes>
           <Route
-<<<<<<< HEAD
             path='/accessibility'
             element={
-              <AxTree snapshot={snapshot} snapshots={snapshots} currLocation={currLocation} />
+              <AxTree
+                axSnapshots={axSnapshots}
+                snapshot={snapshot}
+                snapshots={snapshots}
+                currLocation={currLocation}
+              />
             }
           ></Route>
-=======
-            path = '/accessibility'
-            element = {<AxTree
-              axSnapshots={axSnapshots}
-              snapshot={snapshot} 
-              snapshots={snapshots} 
-              currLocation={currLocation}/>}
-          >
-          </Route>
->>>>>>> develop
           <Route
             path='/history'
             element={

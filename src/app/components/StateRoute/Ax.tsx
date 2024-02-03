@@ -4,50 +4,52 @@ import { setCurrentTabInApp } from '../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 
 const theme = {
-    scheme: 'monokai',
-    author: 'wimer hazenberg (http://www.monokai.nl)',
-    base00: '#272822',
-    base01: '#383830',
-    base02: '#49483e',
-    base03: '#75715e',
-    base04: '#a59f85',
-    base05: '#f8f8f2',
-    base06: '#f5f4f1',
-    base07: '#f9f8f5',
-    base08: '#f92672',
-    base09: '#fd971f',
-    base0A: '#f4bf75',
-    base0B: '#a6e22e',
-    base0C: '#a1efe4',
-    base0D: '#66d9ef',
-    base0E: '#ae81ff',
-    base0F: '#cc6633',
-  };
+  scheme: 'monokai',
+  author: 'wimer hazenberg (http://www.monokai.nl)',
+  base00: '#272822',
+  base01: '#383830',
+  base02: '#49483e',
+  base03: '#75715e',
+  base04: '#a59f85',
+  base05: '#f8f8f2',
+  base06: '#f5f4f1',
+  base07: '#f9f8f5',
+  base08: '#f92672',
+  base09: '#fd971f',
+  base0A: '#f4bf75',
+  base0B: '#a6e22e',
+  base0C: '#a1efe4',
+  base0D: '#66d9ef',
+  base0E: '#ae81ff',
+  base0F: '#cc6633',
+};
 
 const AxTree = (props) => {
-    const {
-        snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
-        snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
-        currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
-        axSnapshots,
-      } = props;
+  const {
+    snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
+    snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
+    currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
+    axSnapshots,
+  } = props;
 
-      const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-      useEffect(() => {
-        dispatch(setCurrentTabInApp('AxTree')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'tree' to facilitate render.
-      }, []);
+  useEffect(() => {
+    dispatch(setCurrentTabInApp('AxTree')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'tree' to facilitate render.
+  }, []);
 
-    //removing/adding snapshot at beginning of return statement didn't change anything
-    return(
-        <> {snapshot && (
-            <JSONTree 
-            data={axSnapshots}
-            // shouldExpandNodeInitially={() => true}
-            theme = {theme}
-            />
-                )}
-        </>
-    )
-}
+  //removing/adding snapshot at beginning of return statement didn't change anything
+  return (
+    <>
+      {' '}
+      {snapshot && (
+        <JSONTree
+          data={axSnapshots[currLocation.index]}
+          shouldExpandNodeInitially={() => true}
+          theme={theme}
+        />
+      )}
+    </>
+  );
+};
 export default AxTree;
