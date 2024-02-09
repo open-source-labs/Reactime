@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { JSONTree } from 'react-json-tree'; // React JSON Viewer Component;
-import { setCurrentTabInApp } from '../../slices/mainSlice';
+import { setCurrentTabInApp, toggleAxTree } from '../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 
 const theme = {
@@ -34,22 +34,40 @@ const AxTree = (props) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(setCurrentTabInApp('AxTree')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'tree' to facilitate render.
-  }, []);
+  let AccessibilityHasBeenDisabled = true;
+  const enableAxTreeButton =  () => {
+    dispatch(toggleAxTree('toggleAxRecord'));
+    dispatch(setCurrentTabInApp('AxTree'));
+    AccessibilityHasBeenDisabled = false;
+  }
 
-  //removing/adding snapshot at beginning of return statement didn't change anything
+
   return (
-    <>
-      {' '}
-      {snapshot && (
+    <div>
+      {
+        AccessibilityHasBeenDisabled ? <button onClick={enableAxTreeButton}>Click Here to Enable Accessibility</button> : 
         <JSONTree
-          data={axSnapshots[currLocation.index]}
-          shouldExpandNodeInitially={() => true}
-          theme={theme}
-        />
-      )}
-    </>
-  );
+         data={axSnapshots[currLocation.index]}
+           // shouldExpandNodeInitially={() => false}
+           theme={theme}
+         /> 
+      }
+    </div>
+  )
+
+  // return (
+  //   <div>
+      
+  //     <p>A Note to Developers: Reactime is using the Chrome Debugging API in order to grab the Accessibility Tree. Enabling this option will allow you to record AxSnapshots, but will result in the Chrome browser notifying you that the Chrome Debugger has started.</p>
+  //     {<button onClick={enableAxTreeButton}>Click Here to Enable Accessibility</button>  
+  //       // <JSONTree
+  //       //   data={axSnapshots[currLocation.index]}
+  //       //   // shouldExpandNodeInitially={() => false}
+  //       //   theme={theme}
+  //       // /> : null
+  //     }
+
+  //   </div>
+  // );
 };
 export default AxTree;
