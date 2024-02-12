@@ -32,15 +32,14 @@ const pruneAxTree = (axTree) => {
       properties,
     } = node;
 
-    if(!name){
-      if(ignored){
-        name = {value: `ignored node: ${ignoredReasons[0].name}`};
-      }
-      else{
-        name = {value: 'visible node with no name'};
+    if (!name) {
+      if (ignored) {
+        name = { value: `ignored node: ${ignoredReasons[0].name}` };
+      } else {
+        name = { value: 'visible node with no name' };
       }
     }
-    if(!name.value){
+    if (!name.value) {
       name.value = 'visible node with no name';
     }
     const axNode = {
@@ -107,6 +106,24 @@ async function axRecord(tabId) {
   } catch (error) {
     console.error('axRecord debugger command failed:', error);
   }
+}
+
+async function replaceEmptySnap(tabsObj, tabId, toggleAxRecord) {
+  console.log(
+    'background.js: top of replaceEmptySnap: tabsObj[tabId]:',
+    JSON.parse(JSON.stringify(tabsObj[tabId])),
+  );
+  if (tabsObj[tabId].currLocation.axSnapshot === 'emptyAxSnap' && toggleAxRecord === true) {
+    // add new ax snapshot to currlocation
+    const addedAxSnap = await axRecord(tabId);
+    tabsObj[tabId].currLocation.axSnapshot = addedAxSnap;
+    // modify array to include the new recorded ax snapshot
+    tabsObj[tabId].axSnapshots[tabsObj[tabId].currLocation.index] = addedAxSnap;
+  }
+  console.log(
+    'background.js: bottom of replaceEmptySnap: tabsObj[tabId]:',
+    JSON.parse(JSON.stringify(tabsObj[tabId])),
+  );
 }
 
 // This function will create the first instance of the test app's tabs object
@@ -296,7 +313,7 @@ chrome.runtime.onConnect.addListener((port) => {
   // INCOMING MESSAGE FROM FRONTEND (MainContainer) TO BACKGROUND.js
   // listen for message containing a snapshot from devtools and send it to contentScript -
   // (i.e. they're all related to the button actions on Reactime)
-  port.onMessage.addListener((msg) => {
+  port.onMessage.addListener(async (msg) => {
     // msg is action denoting a time jump in devtools
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:
@@ -372,7 +389,22 @@ chrome.runtime.onConnect.addListener((port) => {
 
       case 'toggleAxRecord':
         toggleAxRecord = !toggleAxRecord;
-        return true;
+
+        await replaceEmptySnap(tabsObj, tabId, toggleAxRecord);
+
+        // sends new tabs obj to devtools
+        if (portsArr.length > 0) {
+          portsArr.forEach((bg) =>
+            bg.postMessage({
+              action: 'sendSnapshots',
+              payload: tabsObj,
+              tabId,
+            }),
+          );
+        } else {
+          console.log('background.js: portsArr.length < 0');
+        }
+        return true; // return true so that port remains open
 
       case 'reinitialize':
         chrome.tabs.sendMessage(tabId, msg);
@@ -424,16 +456,32 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       break;
     }
     case 'jumpToSnap': {
+      console.log(
+        'background.js: top of jumpToSnap: tabsObj[tabId]:',
+        JSON.parse(JSON.stringify(tabsObj[tabId])),
+      );
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
       // hack to test without message from mainSlice
-      toggleAxRecord = true;
+      // toggleAxRecord = true;
       // record ax tree snapshot of the state that has now been jumped to if user did not toggle button on
-      if (tabsObj[tabId].currLocation.axSnapshot === 'emptyAxSnap' && toggleAxRecord === true) {
-        // add new ax snapshot to currlocation
-        const addedAxSnap = await axRecord(tabId);
-        tabsObj[tabId].currLocation.axSnapshot = addedAxSnap;
-        // modify array to include the new recorded ax snapshot
-        tabsObj[tabId].axSnapshots[tabsObj[tabId].currLocation.index] = addedAxSnap;
+      await replaceEmptySnap(tabsObj, tabId, toggleAxRecord);
+
+      console.log(
+        'background.js: bottom of jumpToSnap: tabsObj[tabId]:',
+        JSON.parse(JSON.stringify(tabsObj[tabId])),
+      );
+
+      // sends new tabs obj to devtools
+      if (portsArr.length > 0) {
+        portsArr.forEach((bg) =>
+          bg.postMessage({
+            action: 'sendSnapshots',
+            payload: tabsObj,
+            tabId,
+          }),
+        );
+      } else {
+        console.log('background.js: portsArr.length < 0');
       }
 
       if (portsArr.length > 0) {
@@ -495,6 +543,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         'background.js: top of recordSnap: tabsObj[tabId]:',
         JSON.parse(JSON.stringify(tabsObj[tabId])),
       );
+
+      console.log('background.js: recordSnap case: toggleAxRecord:', toggleAxRecord);
 
       const sourceTab = tabId;
       tabsObj[tabId].webMetrics = metrics;
