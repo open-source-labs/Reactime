@@ -128,6 +128,8 @@ const dataArray = [
   }
 ]
 
+const startNode: TreeNode = dataArray[0];
+
 const defaultMargin = { 
   top: 30,
   left: 30,
@@ -148,17 +150,22 @@ export type LinkTypesProps = {
   margin?: { top: number; right: number; bottom: number; left: number };
 };
 
-export default function AxTree(props, {
-  width: totalWidth,
-  height: totalHeight,
-  margin = defaultMargin,
-}: LinkTypesProps) {
+export default function AxTree(props) {
+  const {
+    currLocation,
+    axSnapshots,
+    width,
+    height
+  } = props;
+
+  let margin = defaultMargin;
+  let totalWidth = width;
+  let totalHeight = height;
+
   const [layout, setLayout] = useState('cartesian');
   const [orientation, setOrientation] = useState('horizontal');
   const [linkType, setLinkType] = useState('diagonal');
   const [stepPercent, setStepPercent] = useState(0.5);
-
-  console.log('total height access: ', totalHeight);
 
   const innerWidth: number = totalWidth - margin.left - margin.right;
   const innerHeight: number = totalHeight - margin.top - margin.bottom - 60;
@@ -185,12 +192,9 @@ export default function AxTree(props, {
     }
   }
 
-  const LinkComponent = getLinkComponent({ layout, linkType, orientation });
+  console.log('size width height ax: ', sizeWidth, sizeHeight);
 
-  const {
-    currLocation,
-    axSnapshots
-  } = props;
+  const LinkComponent = getLinkComponent({ layout, linkType, orientation });
 
   const currAxSnapshot = JSON.parse(JSON.stringify(axSnapshots[currLocation.index]));
 
@@ -282,12 +286,20 @@ export default function AxTree(props, {
         setLinkType={setLinkType}
         setStepPercent={setStepPercent}
       />
+
+      {/* svg references purple background */}
       <svg width={totalWidth} height={totalHeight + 0}>
-        <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
-        <rect width={totalWidth} height={totalHeight} rx={14} fill="#272b4d" />
-        <Group top={margin.top} left={margin.left}>
+        <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
+        <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
+        <rect 
+          className='componentMapContainer'
+          width={sizeWidth / aspect}
+          height={sizeHeight / aspect + 0}
+          rx={14}
+         />
+        <Group transform={`scale(${aspect})`} top={margin.top} left={margin.left}>
           <Tree
-            root={hierarchy(data, (d) => (d.isExpanded ? null : d.children))}
+            root={hierarchy(startNode, (d) => (d.isExpanded ? null : d.children))}
             size={[sizeWidth / aspect, sizeHeight / aspect]}
             separation={(a, b) => (a.parent === b.parent ? 0.5 : 0.5) / a.depth}
           >
@@ -305,7 +317,6 @@ export default function AxTree(props, {
 
                 // code relating to each node in tree
                 {tree.descendants().map((node, key) => {
-                  console.log('node.data: ', node.data);
                   const widthFunc = (name): number => {
                     //returns a number that is related to the length of the name. Used for determining the node width.
                     const nodeLength = name.length;
@@ -322,6 +333,8 @@ export default function AxTree(props, {
 
                   if (layout === 'polar') {
                     const [radialX, radialY] = pointRadial(node.x, node.y);
+                    console.log('ax tree, radial x y', radialX, radialY);
+                    console.log('ax tree node.x, node.y:', node.x, node.y);
                     top = radialY;
                     left = radialX;
                   } else if (orientation === 'vertical') {
