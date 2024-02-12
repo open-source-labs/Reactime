@@ -18,7 +18,7 @@ const metrics = {};
 const pruneAxTree = (axTree) => {
   const axArr = [];
   for (const node of axTree) {
-    const {
+    let {
       backendDOMNodeId,
       childIds,
       ignored,
@@ -35,6 +35,17 @@ const pruneAxTree = (axTree) => {
     //   nameString = name.value;
     // }
 
+    if(!name){
+      if(ignored){
+        name = {value: `ignored node: ${ignoredReasons[0].name}`};
+      }
+      else{
+        name = {value: 'visible node with no name'};
+      }
+    }
+    if(!name.value){
+      name.value = 'visible node with no name';
+    }
     const axNode = {
       backendDOMNodeId: backendDOMNodeId,
       childIds: childIds,
@@ -272,16 +283,21 @@ chrome.runtime.onConnect.addListener((port) => {
 
       // emptySnap actions comes through when the user uses the 'clear' button on the front end to clear the snapshot history and move slider back to 0 position
       case 'emptySnap':
-        tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]]; // reset snapshots to page last state recorded
+        // REFACTORED TO HAVE CLEAR BUTTON KEEP CURRENT STATE OF DEMO APP RATHER THAN JUST THE LAST STATE RECORDED
+        // PRIOR IMPLEMENTATION WAS FAILING TO RESET STATE OF DEMO APP UPON CLEAR
+        // IF CHANGING, CHANGE MAINSLICE.JS TOO
+        tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].currLocation.index]]; // reset snapshots to current page state
         tabsObj[tabId].hierarchy.children = []; // resets hierarchy
         tabsObj[tabId].hierarchy.stateSnapshot = {
-          // resets hierarchy to page last state recorded
+          // resets hierarchy to current page state
+          // not sure why they are doing a "shallow" deep copy
           ...tabsObj[tabId].snapshots[0],
         };
-        tabsObj[tabId].axSnapshots =
-          tabsObj[tabId].axSnapshots[tabsObj[tabId].axSnapshots.length - 1];
-        tabsObj[tabId].hierarchy.axSnapshot = tabsObj[tabId].axSnapshots[0]; //what about other hierarchy properties? Shouldn't those be reset as well?
-        tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy; // resets currLocation to page last state recorded
+        tabsObj[tabId].axSnapshots = [
+          tabsObj[tabId].axSnapshots[tabsObj[tabId].currLocation.index],
+        ]; // resets axSnapshots to current page state
+        tabsObj[tabId].hierarchy.axSnapshot = tabsObj[tabId].axSnapshots[0]; // resets hierarchy to ax tree of current page state
+        // tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy; // resets currLocation to page last state recorded
         tabsObj[tabId].index = 1; //reset index
         tabsObj[tabId].currParent = 0; // reset currParent
         tabsObj[tabId].currBranch = 1; // reset currBranch
@@ -508,10 +524,14 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const previousSnap =
         tabsObj[tabId]?.currLocation?.stateSnapshot?.children[0]?.componentData?.actualDuration;
       const incomingSnap = request.payload.children[0].componentData.actualDuration;
-      if (previousSnap === incomingSnap) break;
+      if (previousSnap === incomingSnap) {
+        console.log('background.js: previousSnap===incomingSnap');
+        break;
+      }
 
       // Or if it is a snapShot after a jump, we don't record it.
       if (reloaded[tabId]) {
+        console.log('background.js: reloaded[tabId]');
         // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
         reloaded[tabId] = false;
       } else {
@@ -527,6 +547,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             'background.js: bottom of recordSnap: tabsObj[tabId]:',
             JSON.parse(JSON.stringify(tabsObj[tabId])),
           );
+        } else {
+          console.log('background.js: tabsObj[tabId][index]');
         }
       }
 
@@ -539,6 +561,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             sourceTab,
           }),
         );
+      } else {
+        console.log('background.js: portsArr.length < 0');
       }
       break;
     }
