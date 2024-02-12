@@ -57,6 +57,8 @@ export default function ComponentMap({
   const [selectedNode, setSelectedNode] = useState('root'); // We create a local state "selectedNode" and set it to a string 'root'.
   const dispatch = useDispatch();
 
+  console.log('totalHeight: ', totalHeight);
+
   const toolTipTimeoutID = useRef(null); //useRef stores stateful data that’s not needed for rendering.
 
   useEffect(() => {
@@ -181,6 +183,10 @@ export default function ComponentMap({
   };
 
   findSelectedNode(); // locates the rootNode... do we really need this? This function is only used once... it's here.
+
+  console.log('startNode:', startNode);
+  console.log('nodelist:', nodeList);
+  console.log('nodelist length:', nodeList.length);
 
   // controls for the map
   const LinkComponent: React.ComponentType<unknown> = getLinkComponent({
