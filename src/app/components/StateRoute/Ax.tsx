@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { JSONTree } from 'react-json-tree'; // React JSON Viewer Component;
 import { setCurrentTabInApp, toggleAxTree } from '../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
+import { display, style } from '@mui/system';
 
 const theme = {
   scheme: 'monokai',
@@ -33,20 +34,54 @@ const AxTree = (props) => {
   } = props;
 
   const dispatch = useDispatch();
+  const [hideButton, setHideButton] = useState(true);
+  const [showTree, setShowTree] = useState(false);
+  const [selectedValue, setSelectedValue] = useState('disable')
 
-  let AccessibilityHasBeenDisabled = true;
-  const enableAxTreeButton =  () => {
+  const enableAxTreeButton = () => {
     dispatch(toggleAxTree('toggleAxRecord'));
     dispatch(setCurrentTabInApp('AxTree'));
-    AccessibilityHasBeenDisabled = false;
+    setSelectedValue('enable')
+    setHideButton(false);
+    setShowTree(true);
   }
+
+  const disableAxTree = () => {
+    setSelectedValue('disable');
+    setShowTree(false);
+  }
+
+  // useEffect(() => {
+  //    // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'tree' to facilitate render.
+  // }, []);
 
 
   return (
     <div>
-      {
-        AccessibilityHasBeenDisabled ? <button onClick={enableAxTreeButton}>Click Here to Enable Accessibility</button> : 
-        <JSONTree
+      <p>A Note to Developers: Reactime is using the Chrome Debugging API in order to grab the Accessibility Tree. Enabling this option will allow you to record Accessibility Tree snapshots, but will result in the Chrome browser notifying you that the Chrome Debugger has started.</p>
+      {/* {<button onClick={enableAxTreeButton}>Click Here to Enable Accessibility</button>} */} 
+      <div>
+        {<input
+        type='radio'
+        value='enable'
+        checked={selectedValue === 'enable'}
+        onChange={() => {
+            enableAxTreeButton();
+        }}
+        />} 
+        <label htmlFor='enable'>Enable</label>
+        {<input
+        type='radio'
+        value='disable'
+        checked={selectedValue === 'disable'}
+        onChange={() => {
+          disableAxTree();
+        }}
+        />} 
+        <label htmlFor='disable'>Disable</label>
+      </div>
+      
+        {showTree && <JSONTree
          data={axSnapshots[currLocation.index]}
            // shouldExpandNodeInitially={() => false}
            theme={theme}
