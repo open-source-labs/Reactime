@@ -414,7 +414,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     }
     case 'jumpToSnap': {
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
+      // hack to test without message from mainSlice
       toggleAxRecord = true;
+      // record ax tree snapshot of the state that has now been jumped to if user did not toggle button on
       if (tabsObj[tabId].currLocation.axSnapshot === 'emptyAxSnap' && toggleAxRecord === true) {
         // add new ax snapshot to currlocation
         const addedAxSnap = await axRecord(tabId);
