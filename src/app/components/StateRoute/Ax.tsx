@@ -35,8 +35,8 @@ const AxTree = (props) => {
 
   const dispatch = useDispatch();
   const [showTree, setShowTree] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('disable')
-  const [showParagraph, setShowParagraph] = useState(true)
+  const [selectedValue, setSelectedValue] = useState('disable');
+  const [showParagraph, setShowParagraph] = useState(true);
 
   const enableAxTreeButton = () => {
     dispatch(toggleAxTree('toggleAxRecord'));
@@ -44,43 +44,51 @@ const AxTree = (props) => {
     setSelectedValue('enable');
     setShowParagraph(false);
     setShowTree(true);
-  }
+  };
 
   const disableAxTree = () => {
     dispatch(toggleAxTree('toggleAxRecord'));
     setSelectedValue('disable');
     setShowParagraph(true);
     setShowTree(false);
-  }
+  };
 
   return (
     <div>
-      {showParagraph && <p>A Note to Developers: Reactime is using the Chrome Debugging API in order to grab the Accessibility Tree. Enabling this option will allow you to record Accessibility Tree snapshots, but will result in the Chrome browser notifying you that the Chrome Debugger has started.</p>}
+      {showParagraph && (
+        <p>
+          A Note to Developers: Reactime is using the Chrome Debugger API in order to grab the
+          Accessibility Tree. Enabling this option will allow you to record Accessibility Tree
+          snapshots, but will result in the Chrome browser notifying you that the Chrome Debugger
+          has started.
+        </p>
+      )}
       <div>
-        {<input
-        type='radio'
-        value='enable'
-        checked={selectedValue === 'enable'}
-        onChange={() => {
-          enableAxTreeButton();
-        }}
-        />} 
+        {
+          <input
+            type='radio'
+            value='enable'
+            checked={selectedValue === 'enable'}
+            onChange={() => {
+              enableAxTreeButton();
+            }}
+          />
+        }
         <label htmlFor='enable'>Enable</label>
-        {<input
-        type='radio'
-        value='disable'
-        checked={selectedValue === 'disable'}
-        onChange={() => {
-          disableAxTree();
-        }}
-        />} 
+        {
+          <input
+            type='radio'
+            value='disable'
+            checked={selectedValue === 'disable'}
+            onChange={() => {
+              disableAxTree();
+            }}
+          />
+        }
         <label htmlFor='disable'>Disable</label>
       </div>
-        {showTree && <JSONTree
-        data={axSnapshots[currLocation.index]}
-        theme={theme}
-        />}
-      </div>
-  )
+      {showTree && <JSONTree data={axSnapshots[currLocation.index]} theme={theme} />}
+    </div>
+  );
 };
 export default AxTree;
