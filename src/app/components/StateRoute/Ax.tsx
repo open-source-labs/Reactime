@@ -47,6 +47,7 @@ const AxTree = (props) => {
   }
 
   const disableAxTree = () => {
+    dispatch(toggleAxTree('toggleAxRecord'));
     setSelectedValue('disable');
     setShowTree(false);
   }
