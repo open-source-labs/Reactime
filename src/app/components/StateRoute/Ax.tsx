@@ -51,15 +51,9 @@ const AxTree = (props) => {
     setShowTree(false);
   }
 
-  // useEffect(() => {
-  //    // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'tree' to facilitate render.
-  // }, []);
-
-
   return (
     <div>
       <p>A Note to Developers: Reactime is using the Chrome Debugging API in order to grab the Accessibility Tree. Enabling this option will allow you to record Accessibility Tree snapshots, but will result in the Chrome browser notifying you that the Chrome Debugger has started.</p>
-      {/* {<button onClick={enableAxTreeButton}>Click Here to Enable Accessibility</button>} */} 
       <div>
         {<input
         type='radio'
@@ -80,29 +74,11 @@ const AxTree = (props) => {
         />} 
         <label htmlFor='disable'>Disable</label>
       </div>
-      
         {showTree && <JSONTree
-         data={axSnapshots[currLocation.index]}
-           // shouldExpandNodeInitially={() => false}
-           theme={theme}
-         /> 
-      }
-    </div>
+        data={axSnapshots[currLocation.index]}
+        theme={theme}
+        />}
+      </div>
   )
-
-  // return (
-  //   <div>
-      
-  //     <p>A Note to Developers: Reactime is using the Chrome Debugging API in order to grab the Accessibility Tree. Enabling this option will allow you to record AxSnapshots, but will result in the Chrome browser notifying you that the Chrome Debugger has started.</p>
-  //     {<button onClick={enableAxTreeButton}>Click Here to Enable Accessibility</button>  
-  //       // <JSONTree
-  //       //   data={axSnapshots[currLocation.index]}
-  //       //   // shouldExpandNodeInitially={() => false}
-  //       //   theme={theme}
-  //       // /> : null
-  //     }
-
-  //   </div>
-  // );
 };
 export default AxTree;
