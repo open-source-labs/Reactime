@@ -34,27 +34,28 @@ const AxTree = (props) => {
   } = props;
 
   const dispatch = useDispatch();
-  const [hideButton, setHideButton] = useState(true);
   const [showTree, setShowTree] = useState(false);
   const [selectedValue, setSelectedValue] = useState('disable')
+  const [showParagraph, setShowParagraph] = useState(true)
 
   const enableAxTreeButton = () => {
     dispatch(toggleAxTree('toggleAxRecord'));
     dispatch(setCurrentTabInApp('AxTree'));
-    setSelectedValue('enable')
-    setHideButton(false);
+    setSelectedValue('enable');
+    setShowParagraph(false);
     setShowTree(true);
   }
 
   const disableAxTree = () => {
     dispatch(toggleAxTree('toggleAxRecord'));
     setSelectedValue('disable');
+    setShowParagraph(true);
     setShowTree(false);
   }
 
   return (
     <div>
-      <p>A Note to Developers: Reactime is using the Chrome Debugging API in order to grab the Accessibility Tree. Enabling this option will allow you to record Accessibility Tree snapshots, but will result in the Chrome browser notifying you that the Chrome Debugger has started.</p>
+      {showParagraph && <p>A Note to Developers: Reactime is using the Chrome Debugging API in order to grab the Accessibility Tree. Enabling this option will allow you to record Accessibility Tree snapshots, but will result in the Chrome browser notifying you that the Chrome Debugger has started.</p>}
       <div>
         {<input
         type='radio'
