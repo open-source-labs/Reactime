@@ -29,6 +29,12 @@ const pruneAxTree = (axTree) => {
       properties,
     } = node;
 
+    // const nameString = 'No name';
+
+    // if (name !== undefined) {
+    //   nameString = name.value;
+    // }
+
     const axNode = {
       backendDOMNodeId: backendDOMNodeId,
       childIds: childIds,
@@ -39,6 +45,8 @@ const pruneAxTree = (axTree) => {
       parentId: parentId,
       properties: properties,
     };
+
+    console.log('axNode: ', axNode);
 
     axArr.push(axNode);
   }
