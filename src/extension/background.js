@@ -18,7 +18,7 @@ const metrics = {};
 const pruneAxTree = (axTree) => {
   const axArr = [];
   for (const node of axTree) {
-    const {
+    let {
       backendDOMNodeId,
       childIds,
       ignored,
@@ -29,6 +29,17 @@ const pruneAxTree = (axTree) => {
       properties,
     } = node;
 
+    if(!name){
+      if(ignored){
+        name = {value: `ignored node: ${ignoredReasons[0].name}`};
+      }
+      else{
+        name = {value: 'visible node with no name'};
+      }
+    }
+    if(!name.value){
+      name.value = 'visible node with no name';
+    }
     const axNode = {
       backendDOMNodeId: backendDOMNodeId,
       childIds: childIds,
