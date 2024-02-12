@@ -61,7 +61,7 @@ const AxTree = (props) => {
         value='enable'
         checked={selectedValue === 'enable'}
         onChange={() => {
-            enableAxTreeButton();
+          enableAxTreeButton();
         }}
         />} 
         <label htmlFor='enable'>Enable</label>
