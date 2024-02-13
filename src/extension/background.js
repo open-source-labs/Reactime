@@ -29,12 +29,6 @@ const pruneAxTree = (axTree) => {
       properties,
     } = node;
 
-    // const nameString = 'No name';
-
-    // if (name !== undefined) {
-    //   nameString = name.value;
-    // }
-
     if(!name){
       if(ignored){
         name = {value: `ignored node: ${ignoredReasons[0].name}`};
