@@ -76,7 +76,7 @@ const data: TreeNode = {
     }],
 };
 
-const dataArray = [
+const nodeAxArr = [
   {
     name: {
       sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
@@ -127,8 +127,6 @@ const dataArray = [
     ignored: false,
   }
 ]
-
-const startNode: TreeNode = dataArray[0];
 
 const defaultMargin = { 
   top: 30,
@@ -223,22 +221,6 @@ export default function AxTree(props) {
 
   // organizeAxTree(nodeAxArr, currAxSnapshot);
 
-
-  // attempted refactored organizeAxTree
-  // const organizeAxTree2 = (currNode, currAxSnapshot) => {
-  //   console.log('currNode: ', currNode);
-  //   if (currNode.childIds.length > 0) {
-  //     currNode.children = []; 
-  //     for (let j = 0; j < currAxSnapshot.length; j++) {
-  //       if (currNode.childIds.includes(currAxSnapshot[j].nodeId)) {
-  //         currNode.children.push(currAxSnapshot[j]);
-  //         organizeAxTree2(currNode.children, currAxSnapshot);
-  //       }
-  //     }
-  //   }
-  // }
-  // organizeAxTree2(rootAxNode, currAxSnapshot);
-
   const organizeAxTree = (currNode, currAxSnapshot) => {
     if (currNode.childIds && currNode.childIds.length > 0) {
       currNode.children = [];  
@@ -252,11 +234,11 @@ export default function AxTree(props) {
   }
 
   organizeAxTree(rootAxNode, currAxSnapshot);
-  console.log('nestedAxTree: ', rootAxNode);
 
   // store each individual node, now with children property in nodeAxArr
   // need to consider order, iterate through the children property first?
   const populateNodeAxArr = (currNode) => {
+    nodeAxArr.splice(0, nodeAxArr.length);
     nodeAxArr.push(currNode);
     for (let i = 0; i < nodeAxArr.length; i += 1) {
       // iterate through the nodeList that contains our snapshot
@@ -273,6 +255,7 @@ export default function AxTree(props) {
 
   populateNodeAxArr(rootAxNode);
   console.log('nodeAxArr: ', nodeAxArr);
+  console.log('rootAxNode: ', rootAxNode);
 
   return totalWidth < 10 ? null : (
     <div>
@@ -299,7 +282,7 @@ export default function AxTree(props) {
          />
         <Group transform={`scale(${aspect})`} top={margin.top} left={margin.left}>
           <Tree
-            root={hierarchy(startNode, (d) => (d.isExpanded ? null : d.children))}
+            root={hierarchy(nodeAxArr[1], (d) => (d.isExpanded ? null : d.children))}
             size={[sizeWidth / aspect, sizeHeight / aspect]}
             separation={(a, b) => (a.parent === b.parent ? 0.5 : 0.5) / a.depth}
           >
@@ -333,8 +316,6 @@ export default function AxTree(props) {
 
                   if (layout === 'polar') {
                     const [radialX, radialY] = pointRadial(node.x, node.y);
-                    console.log('ax tree, radial x y', radialX, radialY);
-                    console.log('ax tree node.x, node.y:', node.x, node.y);
                     top = radialY;
                     left = radialX;
                   } else if (orientation === 'vertical') {
@@ -346,14 +327,14 @@ export default function AxTree(props) {
                   }
 
                   //setup a nodeCoords Object that will have keys of unique y coordinates and value arrays of all the left and right x coordinates of the nodes on that level
-                  count < dataArray.length
+                  count < nodeAxArr.length
                     ? !nodeCoords[top]
                       ? (nodeCoords[top] = [left - width / 2, left + width / 2])
                       : nodeCoords[top].push(left - width / 2, left + width / 2)
                     : null;
                   count++;
 
-                  if (count === dataArray.length) {
+                  if (count === nodeAxArr.length) {
                     //check if there is still a tier of the node tree to collision check
                     while (Object.values(nodeCoords)[nodeCoordTier]) {
                       //check if there are atleast two nodes on the current tier
@@ -415,10 +396,16 @@ export default function AxTree(props) {
                   return (
                     <Group top={top} left={left} key={key} className='rect'>
                       {node.depth === 0 && (
-                        <circle
-                          className='compMapRoot'
-                          r={25}
-                          fill="url('#root-gradient')"
+                        <rect
+                          className={node.children ? 'compMapParent' : 'compMapChild'}
+                          height={height}
+                          width={width}
+                          y={-height / 2}
+                          x={-width / 2}
+                          fill="url('#parent-gradient')"
+                          strokeWidth={1.5}
+                          strokeOpacity='1'
+                          rx={node.children ? 4 : 10}
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
                           }}
