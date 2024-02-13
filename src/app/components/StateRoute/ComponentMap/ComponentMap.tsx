@@ -168,6 +168,10 @@ export default function ComponentMap({
   };
 
   collectNodes(currentSnapshot);
+
+  console.log('nodelist: ', nodeList);
+  console.log('currentSnapshot component map: ', currentSnapshot);
+
   // @ts
   // find the node that has been selected and use it as the root
   let startNode = null;
@@ -183,8 +187,6 @@ export default function ComponentMap({
   };
 
   findSelectedNode(); // locates the rootNode... do we really need this? This function is only used once... it's here.
-
-  console.log('startNode: ', startNode);
 
   // controls for the map
   const LinkComponent: React.ComponentType<unknown> = getLinkComponent({
@@ -258,8 +260,6 @@ export default function ComponentMap({
 
                   if (layout === 'polar') {
                     const [radialX, radialY] = pointRadial(node.x, node.y);
-                    console.log('component map, radial x y', radialX, radialY);
-                    console.log('component map node.x, node.y:', node.x, node.y);
                     top = radialY;
                     left = radialX;
                   } else if (orientation === 'vertical') {
