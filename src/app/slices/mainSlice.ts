@@ -506,6 +506,15 @@ export const mainSlice = createSlice({
       state.connectRequested = false;
       state.connectionStatus = true;
     },
+
+    toggleAxTree: (state, action) => {
+      const { port, payload, tabs, currentTab} = state;
+      port.postMessage({
+        action: 'toggleAxRecord',
+        payload: action.payload,
+        tabId: currentTab,
+      })
+    }
   },
 });
 
@@ -540,4 +549,5 @@ export const {
   disconnected,
   startReconnect,
   endConnect,
+  toggleAxTree,
 } = mainSlice.actions;
