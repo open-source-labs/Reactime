@@ -27,6 +27,7 @@ const pruneAxTree = (axTree) => {
       ignoredReasons,
       parentId,
       properties,
+      role
     } = node;
 
     if(!name){
@@ -40,20 +41,23 @@ const pruneAxTree = (axTree) => {
     if(!name.value){
       name.value = 'visible node with no name';
     }
-    const axNode = {
-      backendDOMNodeId: backendDOMNodeId,
-      childIds: childIds,
-      ignored: ignored,
-      name: name,
-      nodeId: nodeId,
-      ignoredReasons: ignoredReasons,
-      parentId: parentId,
-      properties: properties,
-    };
 
-    axArr.push(axNode);
+    if (role.type === 'role') {
+      const axNode = {
+        backendDOMNodeId: backendDOMNodeId,
+        childIds: childIds,
+        ignored: ignored,
+        name: name,
+        nodeId: nodeId,
+        ignoredReasons: ignoredReasons,
+        parentId: parentId,
+        properties: properties,
+      };
+  
+      axArr.push(axNode);
+    }
   }
-
+  console.log('axArr: ', axArr);
   return axArr;
 };
 
@@ -474,6 +478,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           await attachDebugger(tabId, '1.3');
           await sendDebuggerCommand(tabId, 'Accessibility.enable');
           const response = await sendDebuggerCommand(tabId, 'Accessibility.getFullAXTree');
+          console.log('response: ', response);
           const addedAxSnap = addAxSnap(response.nodes);
           await detachDebugger(tabId);
           return addedAxSnap;

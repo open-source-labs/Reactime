@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetricsContainer from './WebMetrics/WebMetricsContainer';
 import { MainState, RootState, StateRouteProps } from '../../FrontendTypes';
-import AxTree from './Ax';
+import AxTree from './AxMap/Ax';
 
 /*
   Loads the appropriate StateRoute view and renders the Map, Performance, History, Webmetrics, and Tree navbar buttons after clicking on the 'State' button located near the top rightmost corner.
@@ -102,12 +102,26 @@ const StateRoute = (props: StateRouteProps) => {
           <Route
             path='/accessibility'
             element={
-              <AxTree
-                axSnapshots={axSnapshots}
-                snapshot={snapshot}
-                snapshots={snapshots}
-                currLocation={currLocation}
-              />
+              hierarchy ? (
+                <ParentSize className='componentMapContainer'>
+                  {({ width, height }) => {
+                    // eslint-disable-next-line react/prop-types
+                    const maxHeight: number = 1200;
+                    const h = Math.min(height, maxHeight);
+                    console.log('h: ', h);
+                    return (
+                      <AxTree
+                        axSnapshots={axSnapshots}
+                        snapshot={snapshot}
+                        snapshots={snapshots}
+                        currLocation={currLocation}
+                        width={width}
+                        height={h}
+                      />
+                    );
+                  }}
+                </ParentSize>
+              ) : null
             }
           ></Route>
           <Route
@@ -173,6 +187,7 @@ const StateRoute = (props: StateRouteProps) => {
                     // eslint-disable-next-line react/prop-types
                     const maxHeight: number = 1200;
                     const h = Math.min(height, maxHeight);
+                    console.log('h component map: ', h);
                     return (
                       <ComponentMap
                         currentSnapshot={currLocation.stateSnapshot}

@@ -166,6 +166,7 @@ export default function ComponentMap({
   };
 
   collectNodes(currentSnapshot);
+
   // @ts
   // find the node that has been selected and use it as the root
   let startNode = null;
