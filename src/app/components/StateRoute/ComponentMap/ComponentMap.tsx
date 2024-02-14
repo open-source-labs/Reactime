@@ -100,8 +100,6 @@ export default function ComponentMap({
     }
   }
 
-  console.log('size width height component map: ', sizeWidth, sizeHeight);
-
   const {
     tooltipData, // value/data that tooltip may need to render
     tooltipLeft, // number used for tooltip positioning
@@ -168,9 +166,6 @@ export default function ComponentMap({
   };
 
   collectNodes(currentSnapshot);
-
-  console.log('nodelist: ', nodeList);
-  console.log('currentSnapshot component map: ', currentSnapshot);
 
   // @ts
   // find the node that has been selected and use it as the root
