@@ -195,6 +195,7 @@ export default function AxTree(props) {
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
 
   const currAxSnapshot = JSON.parse(JSON.stringify(axSnapshots[currLocation.index]));
+  console.log('currAxSnapshot: ', currAxSnapshot);
 
   // root node of currAxSnapshot
   const rootAxNode = JSON.parse(JSON.stringify(currAxSnapshot[0]));
@@ -202,38 +203,91 @@ export default function AxTree(props) {
   // // array that holds the ax tree as a nested object and the root node initially
   const nodeAxArr = [];
 
+  // code handling the initial root case / if there is only 1 child
+  // condition checking if the last node added has childIds length > 0
+
+  // function to handle nesting past the root node
   // const organizeAxTree = (currNode, currAxSnapshot) => {
   //   for (let i = 0; i < currNode.length; i++) {
-  //     if (currNode.childIds.length > 0) {
-  //       currNode.children = []; 
+  //     if (currNode[i].childIds.length > 0) {
+  //       currNode[i].children = []; 
         
   //       for (let j = 0; j < currAxSnapshot.length; j++) {
           
-  //         if (currNode.childIds.includes(currAxSnapshot[j].nodeId)) {
-  //           currNode.children.push(currAxSnapshot[j]);
+  //         if (currNode[i].childIds.includes(currAxSnapshot[j].nodeId)) {
+  //           currNode[i].children.push(currAxSnapshot[j]);
             
-  //           organizeAxTree(currNode.children, currAxSnapshot);
+  //           organizeAxTree(currNode[i].children, currAxSnapshot);
   //         }
   //       }
   //     }
   //   }
   // }
-
   // organizeAxTree(nodeAxArr, currAxSnapshot);
 
+  // const organizeAxTree = (currNodeArr, currAxSnapshot, i = 0) => {
+  //   console.log('currNode: ', currNodeArr);
+  //   // handles each child node within the children property
+  //   while (currNodeArr[i]) {
+  //     if (currNodeArr[i].childIds) {
+  //       currNodeArr[i].children = [];
+  //       // iterate through every snapshot in currAxSnapshot
+  //       for (let j = 0; j < currAxSnapshot.length; j++) {
+  //         // includes does not have good time complexity, can convert to nested for or for of loop
+  //         for (const childEle of currNodeArr[i].childIds) {
+  //           if (childEle === currAxSnapshot[j].nodeId) {
+  //             currNodeArr[i].children.push(currAxSnapshot[j]);
+  //           }
+  //         }
+  //       }
+  //     }
+  //     i++;
+  //   }
+  //   i = 0; 
+  //   organizeAxTree(currNodeArr[i].children, currAxSnapshot);
+  // }
+
+// if (currNode.childIds) {
+  //     currNode.children = [];
+  //     // checks if there is more than 1 child
+  //     if (currNode.childIds.length > 1) {
+  //       for (let m = 0; m < currNode.childIds.length; m++) {  
+  //         for (let j = 0; j < currAxSnapshot.length; j++) {
+  //           if (currNode.childIds.includes(currAxSnapshot[j].nodeId)) {
+  //             currNode.children.push(currAxSnapshot[j]);
+  //           }
+  //         }
+  //       }
+  //     } else if (currNode.childIds.length === 1) {
+  //       for (let j = 0; j < currAxSnapshot.length; j++) {
+  //         if (currNode.childIds.includes(currAxSnapshot[j].nodeId)) {
+  //           currNode.children.push(currAxSnapshot[j]);
+  //         }
+  //       }
+  //       organizeAxTree(currNode.children[0], currAxSnapshot);
+  //     }
+  //     organizeAxTree(currNode.children, currAxSnapshot);
+  //   }
+
+  // organizeAxTree([rootAxNode], currAxSnapshot);
   const organizeAxTree = (currNode, currAxSnapshot) => {
     if (currNode.childIds && currNode.childIds.length > 0) {
       currNode.children = [];  
       for (let j = 0; j < currAxSnapshot.length; j++) {
-        if (currNode.childIds.includes(currAxSnapshot[j].nodeId)) {
-          currNode.children.push(currAxSnapshot[j]);
-          organizeAxTree(currAxSnapshot[j], currAxSnapshot);
+        for (const childEle of currNode.childIds) {
+          if (childEle === currAxSnapshot[j].nodeId) {
+            currNode.children.push(currAxSnapshot[j]);
+            organizeAxTree(currAxSnapshot[j], currAxSnapshot);
+          }
         }
+
       }
     }
   }
 
   organizeAxTree(rootAxNode, currAxSnapshot);
+  
+  console.log('rootAxNode: ', rootAxNode);
 
   // store each individual node, now with children property in nodeAxArr
   // need to consider order, iterate through the children property first?
@@ -255,7 +309,6 @@ export default function AxTree(props) {
 
   populateNodeAxArr(rootAxNode);
   console.log('nodeAxArr: ', nodeAxArr);
-  console.log('rootAxNode: ', rootAxNode);
 
   return totalWidth < 10 ? null : (
     <div>
@@ -282,7 +335,7 @@ export default function AxTree(props) {
          />
         <Group transform={`scale(${aspect})`} top={margin.top} left={margin.left}>
           <Tree
-            root={hierarchy(nodeAxArr[1], (d) => (d.isExpanded ? null : d.children))}
+            root={hierarchy(nodeAxArr[0], (d) => (d.isExpanded ? null : d.children))}
             size={[sizeWidth / aspect, sizeHeight / aspect]}
             separation={(a, b) => (a.parent === b.parent ? 0.5 : 0.5) / a.depth}
           >
@@ -306,7 +359,7 @@ export default function AxTree(props) {
                     //return nodeLength * 7 + 20; //uncomment this line if we want each node to be directly proportional to the name.length (instead of nodes of similar sizes to snap to the same width)
                     if (nodeLength <= 5) return nodeLength + 50;
                     if (nodeLength <= 10) return nodeLength + 120;
-                    return nodeLength + 140;
+                    return nodeLength + 180;
                   };
 
                   const width: number = widthFunc(node.data.name.value); // the width is determined by the length of the node.name
