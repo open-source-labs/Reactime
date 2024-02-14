@@ -3,6 +3,7 @@ import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
 import { pointRadial } from 'd3-shape';
+import { useTooltipInPortal } from '@visx/tooltip';
 import LinkControls from './axLinkControls';
 import getLinkComponent from './getAxLinkComponents';
 
@@ -203,51 +204,6 @@ export default function AxTree(props) {
   // // array that holds the ax tree as a nested object and the root node initially
   const nodeAxArr = [];
 
-  // code handling the initial root case / if there is only 1 child
-  // condition checking if the last node added has childIds length > 0
-
-  // function to handle nesting past the root node
-  // const organizeAxTree = (currNode, currAxSnapshot) => {
-  //   for (let i = 0; i < currNode.length; i++) {
-  //     if (currNode[i].childIds.length > 0) {
-  //       currNode[i].children = []; 
-        
-  //       for (let j = 0; j < currAxSnapshot.length; j++) {
-          
-  //         if (currNode[i].childIds.includes(currAxSnapshot[j].nodeId)) {
-  //           currNode[i].children.push(currAxSnapshot[j]);
-            
-  //           organizeAxTree(currNode[i].children, currAxSnapshot);
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-  // organizeAxTree(nodeAxArr, currAxSnapshot);
-
-  // const organizeAxTree = (currNodeArr, currAxSnapshot, i = 0) => {
-  //   console.log('currNode: ', currNodeArr);
-  //   // handles each child node within the children property
-  //   while (currNodeArr[i]) {
-  //     if (currNodeArr[i].childIds) {
-  //       currNodeArr[i].children = [];
-  //       // iterate through every snapshot in currAxSnapshot
-  //       for (let j = 0; j < currAxSnapshot.length; j++) {
-  //         // includes does not have good time complexity, can convert to nested for or for of loop
-  //         for (const childEle of currNodeArr[i].childIds) {
-  //           if (childEle === currAxSnapshot[j].nodeId) {
-  //             currNodeArr[i].children.push(currAxSnapshot[j]);
-  //           }
-  //         }
-  //       }
-  //     }
-  //     i++;
-  //   }
-  //   i = 0; 
-  //   organizeAxTree(currNodeArr[i].children, currAxSnapshot);
-  // }
-
-// if (currNode.childIds) {
   //     currNode.children = [];
   //     // checks if there is more than 1 child
   //     if (currNode.childIds.length > 1) {
@@ -310,6 +266,14 @@ export default function AxTree(props) {
   populateNodeAxArr(rootAxNode);
   console.log('nodeAxArr: ', nodeAxArr);
 
+  const {
+    containerRef // Access to the container's bounding box. This will be empty on first render.
+  } = useTooltipInPortal({
+    // Visx hook
+    detectBounds: true, // use TooltipWithBounds
+    scroll: true, // when tooltip containers are scrolled, this will correctly update the Tooltip position
+  });
+
   return totalWidth < 10 ? null : (
     <div>
       <LinkControls
@@ -324,7 +288,7 @@ export default function AxTree(props) {
       />
 
       {/* svg references purple background */}
-      <svg width={totalWidth} height={totalHeight + 0}>
+      <svg ref={containerRef} width={totalWidth} height={totalHeight + 0}>
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
         <rect 
@@ -346,6 +310,7 @@ export default function AxTree(props) {
                     key={i}
                     data={link}
                     percent={stepPercent}
+                    stroke="rgb(254,110,158,0.6)"
                     strokeWidth="1"
                     fill="none"
                   />
@@ -357,9 +322,9 @@ export default function AxTree(props) {
                     //returns a number that is related to the length of the name. Used for determining the node width.
                     const nodeLength = name.length;
                     //return nodeLength * 7 + 20; //uncomment this line if we want each node to be directly proportional to the name.length (instead of nodes of similar sizes to snap to the same width)
-                    if (nodeLength <= 5) return nodeLength + 50;
-                    if (nodeLength <= 10) return nodeLength + 120;
-                    return nodeLength + 180;
+                    if (nodeLength <= 5) return nodeLength + 60;
+                    if (nodeLength <= 10) return nodeLength + 130;
+                    return nodeLength + 160;
                   };
 
                   const width: number = widthFunc(node.data.name.value); // the width is determined by the length of the node.name
