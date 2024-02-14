@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
@@ -6,6 +7,9 @@ import { pointRadial } from 'd3-shape';
 import { useTooltipInPortal } from '@visx/tooltip';
 import LinkControls from './axLinkControls';
 import getLinkComponent from './getAxLinkComponents';
+import AxLegend from './axLegend';
+import { renderAxLegend } from '../../../slices/AxSlices/axLegendSlice';
+import type { RootState } from '../../../store';
 
 const theme = {
   scheme: 'monokai',
@@ -274,6 +278,10 @@ export default function AxTree(props) {
     scroll: true, // when tooltip containers are scrolled, this will correctly update the Tooltip position
   });
 
+  // ax Legend
+  const { axLegendButtonClicked } = useSelector((state: RootState) => state.axLegend);
+  const dispatch = useDispatch();
+
   return totalWidth < 10 ? null : (
     <div>
       <LinkControls
@@ -477,6 +485,16 @@ export default function AxTree(props) {
           </Tree>
         </Group>
       </svg>
+      
+      {/* ax Legend */}
+      <div>
+        <button id='axLegendButton' style={{position: 'absolute'}} onClick={() => dispatch(renderAxLegend())}></button>
+
+        { axLegendButtonClicked ? 
+          <AxLegend /> : ''
+        }
+      </div>
+      
     </div>
   );
 }
