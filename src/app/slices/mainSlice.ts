@@ -551,5 +551,4 @@ export const {
   startReconnect,
   endConnect,
   toggleAxTree,
-  toggleAxTree,
 } = mainSlice.actions;

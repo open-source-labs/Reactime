@@ -125,21 +125,27 @@ const StateRoute = (props: StateRouteProps) => {
             path='/accessibility'
             element={
               showTree ? (
-                <ParentSize className='componentMapContainer'>
+                 <ParentSize className='componentMapContainer'>
                   {({ width, height }) => {
                     // eslint-disable-next-line react/prop-types
                     const maxHeight: number = 1200;
                     const h = Math.min(height, maxHeight);
                     console.log('h: ', h);
                     return (
-                      <AxTree
-                        axSnapshots={axSnapshots}
-                        snapshot={snapshot}
-                        snapshots={snapshots}
-                        currLocation={currLocation}
-                        width={width}
-                        height={h}
-                      />
+                      <div>
+                        <input type="radio" value='enable' checked={selectedValue === 'enable'} /> <label htmlFor='enable'>Enable</label>
+                        <input type="radio" value='disable' checked={selectedValue === 'disable'} onChange={() => {
+                      disableAxTree(); }}/>
+                      <label htmlFor='disable'>Disable</label>
+                        <AxTree
+                          axSnapshots={axSnapshots}
+                          snapshot={snapshot}
+                          snapshots={snapshots}
+                          currLocation={currLocation}
+                          width={width}
+                          height={h}
+                        /> 
+                      </div>
                     );
                   }}
                 </ParentSize>
