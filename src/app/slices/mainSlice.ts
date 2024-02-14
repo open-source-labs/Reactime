@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { InitialState } from '../FrontendTypes';
 import _ from 'lodash';
+import Action from '../components/Actions/Action';
 
 const initialState: InitialState = {
   // we initialize what our initialState is here
@@ -549,5 +550,6 @@ export const {
   disconnected,
   startReconnect,
   endConnect,
+  toggleAxTree,
   toggleAxTree,
 } = mainSlice.actions;

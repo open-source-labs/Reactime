@@ -7,6 +7,9 @@ const portsArr = [];
 const reloaded = {};
 const firstSnapshotReceived = {};
 
+// Toggle for recording accessibility snapshots
+let toggleAxRecord = false;
+
 // There will be the same number of objects in here as there are
 // Reactime tabs open for each user application being worked on.
 let activeTab;
@@ -30,15 +33,14 @@ const pruneAxTree = (axTree) => {
       role
     } = node;
 
-    if(!name){
-      if(ignored){
-        name = {value: `ignored node: ${ignoredReasons[0].name}`};
-      }
-      else{
-        name = {value: 'visible node with no name'};
+    if (!name) {
+      if (ignored) {
+        name = { value: `ignored node: ${ignoredReasons[0].name}` };
+      } else {
+        name = { value: 'visible node with no name' };
       }
     }
-    if(!name.value){
+    if (!name.value) {
       name.value = 'visible node with no name';
     }
 
@@ -60,6 +62,73 @@ const pruneAxTree = (axTree) => {
   console.log('axArr: ', axArr);
   return axArr;
 };
+
+function attachDebugger(tabId, version) {
+  return new Promise((resolve, reject) => {
+    chrome.debugger.attach({ tabId: tabId }, version, () => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+function sendDebuggerCommand(tabId, command, params = {}) {
+  return new Promise((resolve, reject) => {
+    chrome.debugger.sendCommand({ tabId: tabId }, command, params, (response) => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve(response);
+      }
+    });
+  });
+}
+
+function detachDebugger(tabId) {
+  return new Promise((resolve, reject) => {
+    chrome.debugger.detach({ tabId: tabId }, () => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+async function axRecord(tabId) {
+  try {
+    await attachDebugger(tabId, '1.3');
+    await sendDebuggerCommand(tabId, 'Accessibility.enable');
+    const response = await sendDebuggerCommand(tabId, 'Accessibility.getFullAXTree');
+    const pruned = pruneAxTree(response.nodes);
+    await detachDebugger(tabId);
+    return pruned;
+  } catch (error) {
+    console.error('axRecord debugger command failed:', error);
+  }
+}
+
+async function replaceEmptySnap(tabsObj, tabId, toggleAxRecord) {
+  console.log(
+    'background.js: top of replaceEmptySnap: tabsObj[tabId]:',
+    JSON.parse(JSON.stringify(tabsObj[tabId])),
+  );
+  if (tabsObj[tabId].currLocation.axSnapshot === 'emptyAxSnap' && toggleAxRecord === true) {
+    // add new ax snapshot to currlocation
+    const addedAxSnap = await axRecord(tabId);
+    tabsObj[tabId].currLocation.axSnapshot = addedAxSnap;
+    // modify array to include the new recorded ax snapshot
+    tabsObj[tabId].axSnapshots[tabsObj[tabId].currLocation.index] = addedAxSnap;
+  }
+  console.log(
+    'background.js: bottom of replaceEmptySnap: tabsObj[tabId]:',
+    JSON.parse(JSON.stringify(tabsObj[tabId])),
+  );
+}
 
 // This function will create the first instance of the test app's tabs object
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
@@ -248,7 +317,7 @@ chrome.runtime.onConnect.addListener((port) => {
   // INCOMING MESSAGE FROM FRONTEND (MainContainer) TO BACKGROUND.js
   // listen for message containing a snapshot from devtools and send it to contentScript -
   // (i.e. they're all related to the button actions on Reactime)
-  port.onMessage.addListener((msg) => {
+  port.onMessage.addListener(async (msg) => {
     // msg is action denoting a time jump in devtools
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:
@@ -322,6 +391,25 @@ chrome.runtime.onConnect.addListener((port) => {
         chrome.tabs.sendMessage(tabId, msg);
         return true;
 
+      case 'toggleAxRecord':
+        toggleAxRecord = !toggleAxRecord;
+
+        await replaceEmptySnap(tabsObj, tabId, toggleAxRecord);
+
+        // sends new tabs obj to devtools
+        if (portsArr.length > 0) {
+          portsArr.forEach((bg) =>
+            bg.postMessage({
+              action: 'sendSnapshots',
+              payload: tabsObj,
+              tabId,
+            }),
+          );
+        } else {
+          console.log('background.js: portsArr.length < 0');
+        }
+        return true; // return true so that port remains open
+
       case 'reinitialize':
         chrome.tabs.sendMessage(tabId, msg);
         return true;
@@ -372,7 +460,34 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       break;
     }
     case 'jumpToSnap': {
+      console.log(
+        'background.js: top of jumpToSnap: tabsObj[tabId]:',
+        JSON.parse(JSON.stringify(tabsObj[tabId])),
+      );
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
+      // hack to test without message from mainSlice
+      // toggleAxRecord = true;
+      // record ax tree snapshot of the state that has now been jumped to if user did not toggle button on
+      await replaceEmptySnap(tabsObj, tabId, toggleAxRecord);
+
+      console.log(
+        'background.js: bottom of jumpToSnap: tabsObj[tabId]:',
+        JSON.parse(JSON.stringify(tabsObj[tabId])),
+      );
+
+      // sends new tabs obj to devtools
+      if (portsArr.length > 0) {
+        portsArr.forEach((bg) =>
+          bg.postMessage({
+            action: 'sendSnapshots',
+            payload: tabsObj,
+            tabId,
+          }),
+        );
+      } else {
+        console.log('background.js: portsArr.length < 0');
+      }
+
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
           bg.postMessage({
@@ -383,6 +498,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       }
       break;
     }
+
     // Confirmed React Dev Tools installed, send this info to frontend
     case 'devToolsInstalled': {
       tabsObj[tabId].status.reactDevToolsInstalled = true;
@@ -431,61 +547,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         'background.js: top of recordSnap: tabsObj[tabId]:',
         JSON.parse(JSON.stringify(tabsObj[tabId])),
       );
-      function addAxSnap(snap) {
-        const pruned = pruneAxTree(snap);
-        tabsObj[tabId].axSnapshots.push(pruned);
-        return pruned;
-      }
 
-      function attachDebugger(tabId, version) {
-        return new Promise((resolve, reject) => {
-          chrome.debugger.attach({ tabId: tabId }, version, () => {
-            if (chrome.runtime.lastError) {
-              reject(chrome.runtime.lastError);
-            } else {
-              resolve();
-            }
-          });
-        });
-      }
+      console.log('background.js: recordSnap case: toggleAxRecord:', toggleAxRecord);
 
-      function sendDebuggerCommand(tabId, command, params = {}) {
-        return new Promise((resolve, reject) => {
-          chrome.debugger.sendCommand({ tabId: tabId }, command, params, (response) => {
-            if (chrome.runtime.lastError) {
-              reject(chrome.runtime.lastError);
-            } else {
-              resolve(response);
-            }
-          });
-        });
-      }
-
-      function detachDebugger(tabId) {
-        return new Promise((resolve, reject) => {
-          chrome.debugger.detach({ tabId: tabId }, () => {
-            if (chrome.runtime.lastError) {
-              reject(chrome.runtime.lastError);
-            } else {
-              resolve();
-            }
-          });
-        });
-      }
-
-      async function axRecord(tabId) {
-        try {
-          await attachDebugger(tabId, '1.3');
-          await sendDebuggerCommand(tabId, 'Accessibility.enable');
-          const response = await sendDebuggerCommand(tabId, 'Accessibility.getFullAXTree');
-          console.log('response: ', response);
-          const addedAxSnap = addAxSnap(response.nodes);
-          await detachDebugger(tabId);
-          return addedAxSnap;
-        } catch (error) {
-          console.error('axRecord debugger command failed:', error);
-        }
-      }
       const sourceTab = tabId;
       tabsObj[tabId].webMetrics = metrics;
 
@@ -494,7 +558,16 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         reloaded[tabId] = false;
         tabsObj[tabId].webMetrics = metrics;
         tabsObj[tabId].snapshots.push(request.payload);
-        const addedAxSnap = await axRecord(tabId);
+
+        // check if accessibility recording has been toggled on
+        let addedAxSnap;
+        if (toggleAxRecord === true) {
+          addedAxSnap = await axRecord(tabId);
+          tabsObj[tabId].axSnapshots.push(addedAxSnap);
+        } else {
+          addedAxSnap = 'emptyAxSnap';
+          tabsObj[tabId].axSnapshots.push(addedAxSnap);
+        }
         sendToHierarchy(
           tabsObj[tabId],
           new HistoryNode(tabsObj[tabId], request.payload, addedAxSnap),
@@ -535,7 +608,16 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         tabsObj[tabId].snapshots.push(request.payload);
         // INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN
         if (!tabsObj[tabId][index]) {
-          const addedAxSnap = await axRecord(tabId);
+          // check if accessibility recording has been toggled on
+          let addedAxSnap;
+          if (toggleAxRecord === true) {
+            addedAxSnap = await axRecord(tabId);
+            tabsObj[tabId].axSnapshots.push(addedAxSnap);
+          } else {
+            addedAxSnap = 'emptyAxSnap';
+            tabsObj[tabId].axSnapshots.push(addedAxSnap);
+          }
+
           sendToHierarchy(
             tabsObj[tabId],
             new HistoryNode(tabsObj[tabId], request.payload, addedAxSnap),
