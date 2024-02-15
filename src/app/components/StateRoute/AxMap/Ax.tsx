@@ -3,11 +3,10 @@ import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
 import { pointRadial } from 'd3-shape';
-import { useTooltipInPortal } from '@visx/tooltip';
 import LinkControls from './axLinkControls';
 import getLinkComponent from './getAxLinkComponents';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
-import ToolTipDataDisplay from '../ComponentMap/ToolTipDataDisplay';
+import ToolTipDataDisplay from './ToolTipDataDisplay';
 import { ToolTipStyles } from '../../../FrontendTypes';
 import { localPoint } from '@visx/event';
 
@@ -202,11 +201,11 @@ export default function AxTree(props) {
     pointerEvents: 'all !important',
   };
 
-  const formatRenderTime = (time: number): string => {
-    if (!time) return 'No time information';
-    const renderTime = time.toFixed(3);
-    return `${renderTime} ms `;
-  };
+  // const formatRenderTime = (time: number): string => {
+  //   if (!time) return 'No time information';
+  //   const renderTime = time.toFixed(3);
+  //   return `${renderTime} ms `;
+  // };
 
 
 
@@ -314,14 +313,6 @@ export default function AxTree(props) {
 
   populateNodeAxArr(rootAxNode);
   console.log('nodeAxArr: ', nodeAxArr);
-
-  const {
-    containerRef // Access to the container's bounding box. This will be empty on first render.
-  } = useTooltipInPortal({
-    // Visx hook
-    detectBounds: true, // use TooltipWithBounds
-    scroll: true, // when tooltip containers are scrolled, this will correctly update the Tooltip position
-  });
 
   return totalWidth < 10 ? null : (
     <div>
@@ -601,13 +592,8 @@ export default function AxTree(props) {
                 <strong>{JSON.stringify(tooltipData['name'].value)}</strong>
               </div>
             <div>
-              <ToolTipDataDisplay containerName='Props' dataObj={tooltipData} />
-              <ToolTipDataDisplay
-                containerName='State'
-                dataObj={
-                  tooltipData
-                }
-              />
+              <ToolTipDataDisplay containerName='Ax State' dataObj={tooltipData} />
+              {/* <ToolTipDataDisplay containerName='State'dataObj={tooltipData}/> */}
             </div>
           </div>
         </TooltipInPortal>

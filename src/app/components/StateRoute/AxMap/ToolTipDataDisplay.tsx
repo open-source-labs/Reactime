@@ -40,15 +40,25 @@ const ToolTipDataDisplay = ({ containerName, dataObj }) => {
       JSON objects can't contain circular ref's, so the backend filters out problematic values by stringifying the values of object properties and ignoring any values that fail the conversion due to a circular ref. The following logic converts these values back to JS so they display clearly and are collapsible.
     */
     const data = {};
+    //ignored false vs true
+    //ignored reasons here
+    //&& key = name? / order?
     for (const key in dataObj) {
-      if (typeof dataObj[key] === 'string') {
-        try {
-          data[key] = JSON.parse(dataObj[key]);
-        } catch {
+      console.log('keys in dataObj in tooltiptotalDisplay: ', key);
+      if(key === 'properties' || key === 'ignored' || key === 'ignoredReasons'){// loop through properties, adding them to the data object
+
+        if (typeof dataObj[key] === 'string') {
+          //if 'key' is ignored, put the ignored key and its value on the data object
+          //if ignoredReasons has length it should loop through adding the reasons names to the data object
+          //actually might only need to give it the properties and ignored and ignored reasons and it'll take care of the rest
+          try {
+            data[key] = JSON.parse(dataObj[key]);
+          } catch {
+            data[key] = dataObj[key];
+          }
+        } else {
           data[key] = dataObj[key];
         }
-      } else {
-        data[key] = dataObj[key];
       }
     }
     /*
