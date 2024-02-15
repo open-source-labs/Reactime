@@ -295,6 +295,10 @@ export default function AxTree(props) {
         setStepPercent={setStepPercent}
       />
 
+        <button id='axLegendButton' onClick={() => dispatch(renderAxLegend())}>
+          Generate Ax Tree Legend
+        </button>
+
       {/* svg references purple background */}
       <svg ref={containerRef} width={totalWidth} height={totalHeight + 0}>
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
@@ -491,10 +495,6 @@ export default function AxTree(props) {
         { axLegendButtonClicked ? 
           <AxLegend /> : ''
         }
-
-        <button id='axLegendButton' onClick={() => dispatch(renderAxLegend())}>
-          Generate Ax Tree Legend
-        </button>
       </div>
       
     </div>
