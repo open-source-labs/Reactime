@@ -32,7 +32,7 @@ function MainContainer(): JSX.Element {
   const { connectionStatus }: MainState = useSelector((state: RootState) => state.main);
 
   // JR 12.22.23: so far this log always returns true
-  //console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
+  // console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
 
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
 
@@ -162,8 +162,6 @@ function MainContainer(): JSX.Element {
   }
 
   // }, 5000);
-
-  console.log(tabs[currentTab]);
 
   const { axSnapshots, currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =
     tabs[currentTab]; // we destructure the currentTab object which is passed in from background.js

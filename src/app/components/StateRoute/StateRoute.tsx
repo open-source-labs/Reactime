@@ -130,10 +130,10 @@ const StateRoute = (props: StateRouteProps) => {
                     // eslint-disable-next-line react/prop-types
                     const maxHeight: number = 1200;
                     const h = Math.min(height, maxHeight);
-                    console.log('h: ', h);
                     return (
                       <div>
-                        <input type="radio" value='enable' checked={selectedValue === 'enable'} /> <label htmlFor='enable'>Enable</label>
+                        <input type="radio" value='enable' checked={selectedValue === 'enable'} onChange={() => {
+                          enableAxTreeButton(); }} /> <label htmlFor='enable'>Enable</label>
                         <input type="radio" value='disable' checked={selectedValue === 'disable'} onChange={() => {
                       disableAxTree(); }}/>
                       <label htmlFor='disable'>Disable</label>
@@ -248,7 +248,6 @@ const StateRoute = (props: StateRouteProps) => {
                     // eslint-disable-next-line react/prop-types
                     const maxHeight: number = 1200;
                     const h = Math.min(height, maxHeight);
-                    console.log('h component map: ', h);
                     return (
                       <ComponentMap
                         currentSnapshot={currLocation.stateSnapshot}

@@ -35,7 +35,13 @@ const pruneAxTree = (axTree) => {
 
     if (!name) {
       if (ignored) {
-        name = { value: `ignored node: ${ignoredReasons[0].name}` };
+        // name = { value: 'ignored node'};
+        if (ignoredReasons.length) {
+          name = { value: `ignored node: ${ignoredReasons[0].name}` };
+        } 
+        else {
+          name = { value: 'ignored node'};
+        }
       } else {
         name = { value: 'visible node with no name' };
       }
@@ -59,7 +65,6 @@ const pruneAxTree = (axTree) => {
       axArr.push(axNode);
     }
   }
-  console.log('axArr: ', axArr);
   return axArr;
 };
 
@@ -113,10 +118,6 @@ async function axRecord(tabId) {
 }
 
 async function replaceEmptySnap(tabsObj, tabId, toggleAxRecord) {
-  console.log(
-    'background.js: top of replaceEmptySnap: tabsObj[tabId]:',
-    JSON.parse(JSON.stringify(tabsObj[tabId])),
-  );
   if (tabsObj[tabId].currLocation.axSnapshot === 'emptyAxSnap' && toggleAxRecord === true) {
     // add new ax snapshot to currlocation
     const addedAxSnap = await axRecord(tabId);
@@ -124,10 +125,6 @@ async function replaceEmptySnap(tabsObj, tabId, toggleAxRecord) {
     // modify array to include the new recorded ax snapshot
     tabsObj[tabId].axSnapshots[tabsObj[tabId].currLocation.index] = addedAxSnap;
   }
-  console.log(
-    'background.js: bottom of replaceEmptySnap: tabsObj[tabId]:',
-    JSON.parse(JSON.stringify(tabsObj[tabId])),
-  );
 }
 
 // This function will create the first instance of the test app's tabs object
@@ -366,10 +363,7 @@ chrome.runtime.onConnect.addListener((port) => {
         tabsObj[tabId].index = 1; //reset index
         tabsObj[tabId].currParent = 0; // reset currParent
         tabsObj[tabId].currBranch = 1; // reset currBranch
-        console.log(
-          'background.js: bottom of emptySnap: tabsObj[tabId]:',
-          JSON.parse(JSON.stringify(tabsObj[tabId])),
-        );
+
         return true; // return true so that port remains open
 
       case 'setPause': // Pause = lock on tab
@@ -405,8 +399,6 @@ chrome.runtime.onConnect.addListener((port) => {
               tabId,
             }),
           );
-        } else {
-          console.log('background.js: portsArr.length < 0');
         }
         return true; // return true so that port remains open
 
@@ -460,20 +452,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       break;
     }
     case 'jumpToSnap': {
-      console.log(
-        'background.js: top of jumpToSnap: tabsObj[tabId]:',
-        JSON.parse(JSON.stringify(tabsObj[tabId])),
-      );
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
       // hack to test without message from mainSlice
       // toggleAxRecord = true;
       // record ax tree snapshot of the state that has now been jumped to if user did not toggle button on
       await replaceEmptySnap(tabsObj, tabId, toggleAxRecord);
-
-      console.log(
-        'background.js: bottom of jumpToSnap: tabsObj[tabId]:',
-        JSON.parse(JSON.stringify(tabsObj[tabId])),
-      );
 
       // sends new tabs obj to devtools
       if (portsArr.length > 0) {
@@ -484,9 +467,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             tabId,
           }),
         );
-      } else {
-        console.log('background.js: portsArr.length < 0');
-      }
+      } 
 
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
@@ -543,13 +524,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       break;
     }
     case 'recordSnap': {
-      console.log(
-        'background.js: top of recordSnap: tabsObj[tabId]:',
-        JSON.parse(JSON.stringify(tabsObj[tabId])),
-      );
-
-      console.log('background.js: recordSnap case: toggleAxRecord:', toggleAxRecord);
-
       const sourceTab = tabId;
       tabsObj[tabId].webMetrics = metrics;
 
@@ -572,10 +546,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           tabsObj[tabId],
           new HistoryNode(tabsObj[tabId], request.payload, addedAxSnap),
         );
-        console.log(
-          'background.js: bottom of recordSnap: tabsObj[tabId]:',
-          JSON.parse(JSON.stringify(tabsObj[tabId])),
-        );
+
         if (portsArr.length > 0) {
           portsArr.forEach((bg) =>
             bg.postMessage({
@@ -595,13 +566,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         tabsObj[tabId]?.currLocation?.stateSnapshot?.children[0]?.componentData?.actualDuration;
       const incomingSnap = request.payload.children[0].componentData.actualDuration;
       if (previousSnap === incomingSnap) {
-        console.log('background.js: previousSnap===incomingSnap');
         break;
       }
 
       // Or if it is a snapShot after a jump, we don't record it.
       if (reloaded[tabId]) {
-        console.log('background.js: reloaded[tabId]');
         // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
         reloaded[tabId] = false;
       } else {
@@ -622,12 +591,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             tabsObj[tabId],
             new HistoryNode(tabsObj[tabId], request.payload, addedAxSnap),
           );
-          console.log(
-            'background.js: bottom of recordSnap: tabsObj[tabId]:',
-            JSON.parse(JSON.stringify(tabsObj[tabId])),
-          );
-        } else {
-          console.log('background.js: tabsObj[tabId][index]');
         }
       }
 
@@ -640,8 +603,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             sourceTab,
           }),
         );
-      } else {
-        console.log('background.js: portsArr.length < 0');
       }
       break;
     }
