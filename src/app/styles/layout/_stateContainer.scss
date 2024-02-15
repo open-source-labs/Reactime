@@ -19,16 +19,15 @@
   box-shadow: none;
 }
 
-.state-container .navbar {
-  //background-color: $state-background;
-  //color: #ff0000;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  height: 30px;
-  position: static;
-}
+// .state-container .navbar {
+//   //background-color: $state-background;
+//   //color: #ff0000;
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: flex-start;
+//   align-items: center;
+//   height: 30px;
+// }
 
 .state-container .main-navbar {
   background-color: $state-background;
@@ -60,13 +59,14 @@
   height: 35px;
 }
 
-.navbar {
-  color: #ff0000;
-  // prevent navbar from scrolling with state/tree display
-  left: 0px;
-  z-index: 1;
-  @extend %disable-highlight;
-}
+// .navbar {
+//   color: #ff0000;
+//   // prevent navbar from scrolling with state/tree display
+//   position: sticky;
+//   left: 0;
+//   top: 0;
+//   @extend %disable-highlight;
+// }
 
 .no-data-message {
   color: #ff0001;
