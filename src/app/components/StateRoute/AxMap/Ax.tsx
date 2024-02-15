@@ -318,14 +318,6 @@ export default function AxTree(props) {
   populateNodeAxArr(rootAxNode);
   console.log('nodeAxArr: ', nodeAxArr);
 
-  const {
-    containerRef // Access to the container's bounding box. This will be empty on first render.
-  } = useTooltipInPortal({
-    // Visx hook
-    detectBounds: true, // use TooltipWithBounds
-    scroll: true, // when tooltip containers are scrolled, this will correctly update the Tooltip position
-  });
-
   // ax Legend
   const { axLegendButtonClicked } = useSelector((state: RootState) => state.axLegend);
   const dispatch = useDispatch();
@@ -614,7 +606,7 @@ export default function AxTree(props) {
                 <strong>{JSON.stringify(tooltipData['name'].value)}</strong>
               </div>
             <div>
-              <ToolTipDataDisplay containerName='Ax State' dataObj={tooltipData} />
+              <ToolTipDataDisplay containerName='Ax Node Info' dataObj={tooltipData} />
               {/* <ToolTipDataDisplay containerName='State'dataObj={tooltipData}/> */}
             </div>
           </div>
