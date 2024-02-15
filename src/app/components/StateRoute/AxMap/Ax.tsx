@@ -488,11 +488,13 @@ export default function AxTree(props) {
       
       {/* ax Legend */}
       <div>
-        <button id='axLegendButton' style={{position: 'absolute'}} onClick={() => dispatch(renderAxLegend())}></button>
-
         { axLegendButtonClicked ? 
           <AxLegend /> : ''
         }
+
+        <button id='axLegendButton' onClick={() => dispatch(renderAxLegend())}>
+          Generate Ax Tree Legend
+        </button>
       </div>
       
     </div>
