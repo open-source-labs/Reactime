@@ -284,31 +284,27 @@ export default function AxTree(props) {
 
   return totalWidth < 10 ? null : (
     <div>
-      <LinkControls
-        layout={layout}
-        orientation={orientation}
-        linkType={linkType}
-        stepPercent={stepPercent}
-        setLayout={setLayout}
-        setOrientation={setOrientation}
-        setLinkType={setLinkType}
-        setStepPercent={setStepPercent}
-      />
+      <div id='axControls'>
+        <LinkControls
+          layout={layout}
+          orientation={orientation}
+          linkType={linkType}
+          stepPercent={stepPercent}
+          setLayout={setLayout}
+          setOrientation={setOrientation}
+          setLinkType={setLinkType}
+          setStepPercent={setStepPercent}
+        />
 
         <button id='axLegendButton' onClick={() => dispatch(renderAxLegend())}>
           Generate Ax Tree Legend
         </button>
+      </div>
 
       {/* svg references purple background */}
-      <svg ref={containerRef} width={totalWidth} height={totalHeight + 0}>
+      <svg ref={containerRef} width={totalWidth + 0.2*totalWidth} height={totalHeight}>
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
-        <rect 
-          className='componentMapContainer'
-          width={sizeWidth / aspect}
-          height={sizeHeight / aspect + 0}
-          rx={14}
-         />
         <Group transform={`scale(${aspect})`} top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(nodeAxArr[0], (d) => (d.isExpanded ? null : d.children))}
@@ -316,7 +312,7 @@ export default function AxTree(props) {
             separation={(a, b) => (a.parent === b.parent ? 0.5 : 0.5) / a.depth}
           >
             {(tree) => (
-              <Group top={origin.y + 35} left={origin.x + 50 / aspect}>
+              <Group top={origin.y + 35} left={origin.x + 110}>
                 {tree.links().map((link, i) => (
                   <LinkComponent
                     key={i}
