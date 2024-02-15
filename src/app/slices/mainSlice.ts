@@ -119,6 +119,8 @@ export const mainSlice = createSlice({
         tabs[currentTab] || {};
       const { payload } = action;
 
+      // console.log('mainSlice.ts: axSnapshots:', tabs[currentTab].axSnapshots);
+
       Object.keys(payload).forEach((tab) => {
         // check if tab exists in memory
         // add new tab
@@ -509,13 +511,13 @@ export const mainSlice = createSlice({
     },
 
     toggleAxTree: (state, action) => {
-      const { port, payload, tabs, currentTab} = state;
+      const { port, payload, tabs, currentTab } = state;
       port.postMessage({
         action: 'toggleAxRecord',
         payload: action.payload,
         tabId: currentTab,
-      })
-    }
+      });
+    },
   },
 });
 

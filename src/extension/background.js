@@ -30,7 +30,7 @@ const pruneAxTree = (axTree) => {
       ignoredReasons,
       parentId,
       properties,
-      role
+      role,
     } = node;
 
     if (!name) {
@@ -38,9 +38,8 @@ const pruneAxTree = (axTree) => {
         // name = { value: 'ignored node'};
         if (ignoredReasons.length) {
           name = { value: `ignored node: ${ignoredReasons[0].name}` };
-        } 
-        else {
-          name = { value: 'ignored node'};
+        } else {
+          name = { value: 'ignored node' };
         }
       } else {
         name = { value: 'visible node with no name' };
@@ -61,7 +60,7 @@ const pruneAxTree = (axTree) => {
         parentId: parentId,
         properties: properties,
       };
-  
+
       axArr.push(axNode);
     }
   }
@@ -387,6 +386,7 @@ chrome.runtime.onConnect.addListener((port) => {
 
       case 'toggleAxRecord':
         toggleAxRecord = !toggleAxRecord;
+        console.log('background.js: toggleAxRecord:', toggleAxRecord);
 
         await replaceEmptySnap(tabsObj, tabId, toggleAxRecord);
 
@@ -467,7 +467,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             tabId,
           }),
         );
-      } 
+      }
 
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>

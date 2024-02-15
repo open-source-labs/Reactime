@@ -35,7 +35,6 @@ const StateRoute = (props: StateRouteProps) => {
     currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
 
-
   const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
   const { hierarchy: tabsHierarchy, sliderIndex, viewIndex: tabsViewIndex } = tabs[currentTab];
   const hierarchy = propsHierarchy || tabsHierarchy;
@@ -60,7 +59,6 @@ const StateRoute = (props: StateRouteProps) => {
     setShowParagraph(true);
     setShowTree(false);
   };
-
 
   return (
     <div className='app-body'>
@@ -125,18 +123,31 @@ const StateRoute = (props: StateRouteProps) => {
             path='/accessibility'
             element={
               showTree ? (
-                 <ParentSize className='componentMapContainer'>
+                <ParentSize className='componentMapContainer'>
                   {({ width, height }) => {
                     // eslint-disable-next-line react/prop-types
                     const maxHeight: number = 1200;
                     const h = Math.min(height, maxHeight);
                     return (
                       <div>
-                        <input type="radio" value='enable' checked={selectedValue === 'enable'} onChange={() => {
-                          enableAxTreeButton(); }} /> <label htmlFor='enable'>Enable</label>
-                        <input type="radio" value='disable' checked={selectedValue === 'disable'} onChange={() => {
-                      disableAxTree(); }}/>
-                      <label htmlFor='disable'>Disable</label>
+                        <input
+                          type='radio'
+                          value='enable'
+                          checked={selectedValue === 'enable'}
+                          onChange={() => {
+                            enableAxTreeButton();
+                          }}
+                        />{' '}
+                        <label htmlFor='enable'>Enable</label>
+                        <input
+                          type='radio'
+                          value='disable'
+                          checked={selectedValue === 'disable'}
+                          onChange={() => {
+                            disableAxTree();
+                          }}
+                        />
+                        <label htmlFor='disable'>Disable</label>
                         <AxTree
                           axSnapshots={axSnapshots}
                           snapshot={snapshot}
@@ -144,45 +155,47 @@ const StateRoute = (props: StateRouteProps) => {
                           currLocation={currLocation}
                           width={width}
                           height={h}
-                        /> 
+                        />
                       </div>
                     );
                   }}
                 </ParentSize>
-              ) : <div>
-              {showParagraph && (
-                <p>
-                  A Note to Developers: Reactime is using the Chrome Debugger API in order to grab the
-                  Accessibility Tree. Enabling this option will allow you to record Accessibility Tree
-                  snapshots, but will result in the Chrome browser notifying you that the Chrome Debugger
-                  has started.
-                </p>
-              )}
-              <div>
-                {
-                  <input
-                    type='radio'
-                    value='enable'
-                    checked={selectedValue === 'enable'}
-                    onChange={() => {
-                      enableAxTreeButton();
-                    }}
-                  />
-                }
-                <label htmlFor='enable'>Enable</label>
-                {
-                  <input
-                    type='radio'
-                    value='disable'
-                    checked={selectedValue === 'disable'}
-                    onChange={() => {
-                      disableAxTree();
-                    }}
-                  />
-                }
-                <label htmlFor='disable'>Disable</label>
-              </div>
-            </div>
+              ) : (
+                <div>
+                  {showParagraph && (
+                    <p>
+                      A Note to Developers: Reactime is using the Chrome Debugger API in order to
+                      grab the Accessibility Tree. Enabling this option will allow you to record
+                      Accessibility Tree snapshots, but will result in the Chrome browser notifying
+                      you that the Chrome Debugger has started.
+                    </p>
+                  )}
+                  <div>
+                    {
+                      <input
+                        type='radio'
+                        value='enable'
+                        checked={selectedValue === 'enable'}
+                        onChange={() => {
+                          enableAxTreeButton();
+                        }}
+                      />
+                    }
+                    <label htmlFor='enable'>Enable</label>
+                    {
+                      <input
+                        type='radio'
+                        value='disable'
+                        checked={selectedValue === 'disable'}
+                        onChange={() => {
+                          disableAxTree();
+                        }}
+                      />
+                    }
+                    <label htmlFor='disable'>Disable</label>
+                  </div>
+                </div>
+              )
             }
           ></Route>
           <Route
