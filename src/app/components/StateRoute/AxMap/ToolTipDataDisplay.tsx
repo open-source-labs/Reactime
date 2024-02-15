@@ -40,17 +40,12 @@ const ToolTipDataDisplay = ({ containerName, dataObj }) => {
       JSON objects can't contain circular ref's, so the backend filters out problematic values by stringifying the values of object properties and ignoring any values that fail the conversion due to a circular ref. The following logic converts these values back to JS so they display clearly and are collapsible.
     */
     const data = {};
-    //ignored false vs true
-    //ignored reasons here
-    //&& key = name? / order?
+
     for (const key in dataObj) {
-      console.log('keys in dataObj in tooltiptotalDisplay: ', key);
-      if(key === 'properties' || key === 'ignored' || key === 'ignoredReasons'){// loop through properties, adding them to the data object
+
+      if(key === 'properties' || key === 'ignored' || key === 'ignoredReasons'){// loop through keys, adding only properties, ignored and ignored reasons to the data object
 
         if (typeof dataObj[key] === 'string') {
-          //if 'key' is ignored, put the ignored key and its value on the data object
-          //if ignoredReasons has length it should loop through adding the reasons names to the data object
-          //actually might only need to give it the properties and ignored and ignored reasons and it'll take care of the rest
           try {
             data[key] = JSON.parse(dataObj[key]);
           } catch {
@@ -62,7 +57,7 @@ const ToolTipDataDisplay = ({ containerName, dataObj }) => {
       }
     }
     /*
-      Adds container name (State, Props, future different names for hooks) at top of object so everything nested in it will collapse when you click on it.
+      Adds container name 'Ax State' at top of object so everything nested in it will collapse when you click on it.
     */
     printableObject[containerName] = data;
   }
@@ -72,7 +67,7 @@ const ToolTipDataDisplay = ({ containerName, dataObj }) => {
       <JSONTree
         data={printableObject} // data to be rendered, a snapshot object
         theme={{ extend: colors, tree: () => ({ className: `tooltipData-JSONTree` }) }} // theme set to a base16 theme that has been extended to include  "className: 'json-tree'"
-        shouldExpandNodeInitially={() => true} // determines if node should be expanded when it first renders (root is expanded by default)
+        shouldExpandNodeInitially={() => false} // determines if node should be expanded when it first renders (root is expanded by default)
         hideRoot={true} // hides the root node
       />
     </div>

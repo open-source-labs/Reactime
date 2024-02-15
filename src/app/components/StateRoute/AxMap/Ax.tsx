@@ -593,7 +593,6 @@ export default function AxTree(props) {
               </div>
             <div>
               <ToolTipDataDisplay containerName='Ax State' dataObj={tooltipData} />
-              {/* <ToolTipDataDisplay containerName='State'dataObj={tooltipData}/> */}
             </div>
           </div>
         </TooltipInPortal>
