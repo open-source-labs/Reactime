@@ -14,9 +14,10 @@ const AxLegend = () => {
                 </li>
             </ul>
 
-            <div className='axLegendInfo' id='roleNodes'>
-                <h4>All of the nodes here have the role 'role' </h4>
-            </div>
+            <p> Each node is given a property labeled <strong>ignored</strong>. </p>
+            <p> Nodes read by the screen reader have their ignored property evaluate to <strong>false</strong>. 
+            Nodes not read by the screen reader evaluate to <strong>true</strong>.</p>
+            <p> Nodes labeled <strong>"visible node with no name"</strong> have the ignored property set to false, but are not given a name</p>
         </div>
     );
 }
