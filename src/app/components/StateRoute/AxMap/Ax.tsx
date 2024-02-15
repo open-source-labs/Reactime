@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
@@ -9,6 +10,9 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import ToolTipDataDisplay from './ToolTipDataDisplay';
 import { ToolTipStyles } from '../../../FrontendTypes';
 import { localPoint } from '@visx/event';
+import AxLegend from './axLegend';
+import { renderAxLegend } from '../../../slices/AxSlices/axLegendSlice';
+import type { RootState } from '../../../store';
 
 //still using below themes?
 const theme = {
@@ -314,21 +318,39 @@ export default function AxTree(props) {
   populateNodeAxArr(rootAxNode);
   console.log('nodeAxArr: ', nodeAxArr);
 
+  const {
+    containerRef // Access to the container's bounding box. This will be empty on first render.
+  } = useTooltipInPortal({
+    // Visx hook
+    detectBounds: true, // use TooltipWithBounds
+    scroll: true, // when tooltip containers are scrolled, this will correctly update the Tooltip position
+  });
+
+  // ax Legend
+  const { axLegendButtonClicked } = useSelector((state: RootState) => state.axLegend);
+  const dispatch = useDispatch();
+
   return totalWidth < 10 ? null : (
     <div>
-      <LinkControls
-        layout={layout}
-        orientation={orientation}
-        linkType={linkType}
-        stepPercent={stepPercent}
-        setLayout={setLayout}
-        setOrientation={setOrientation}
-        setLinkType={setLinkType}
-        setStepPercent={setStepPercent}
-      />
+      <div id='axControls'>
+        <LinkControls
+          layout={layout}
+          orientation={orientation}
+          linkType={linkType}
+          stepPercent={stepPercent}
+          setLayout={setLayout}
+          setOrientation={setOrientation}
+          setLinkType={setLinkType}
+          setStepPercent={setStepPercent}
+        />
+
+        <button id='axLegendButton' onClick={() => dispatch(renderAxLegend())}>
+          Generate Ax Tree Legend
+        </button>
+      </div>
 
       {/* svg references purple background */}
-      <svg ref={containerRef} width={totalWidth} height={totalHeight + 0}>
+      <svg ref={containerRef} width={totalWidth + 0.2*totalWidth} height={totalHeight}>
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
         <rect 
@@ -346,7 +368,7 @@ export default function AxTree(props) {
             separation={(a, b) => (a.parent === b.parent ? 0.5 : 0.5) / a.depth}
           >
             {(tree) => (
-              <Group top={origin.y + 35} left={origin.x + 50 / aspect}>
+              <Group top={origin.y + 35} left={origin.x + 110}>
                 {tree.links().map((link, i) => (
                   <LinkComponent
                     key={i}
@@ -598,6 +620,14 @@ export default function AxTree(props) {
           </div>
         </TooltipInPortal>
       )}
+      
+      {/* ax Legend */}
+      <div>
+        { axLegendButtonClicked ? 
+          <AxLegend /> : ''
+        }
+      </div>
+      
     </div>
   );
 }
