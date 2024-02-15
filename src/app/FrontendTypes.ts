@@ -54,6 +54,7 @@ export interface TooltipData {
   x: number;
   y: number;
   color: string;
+  name?: string;
 }
 
 export interface snapshot {

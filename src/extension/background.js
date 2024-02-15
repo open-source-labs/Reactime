@@ -20,7 +20,10 @@ const metrics = {};
 // function pruning the chrome ax tree and pulling the relevant properties
 const pruneAxTree = (axTree) => {
   const axArr = [];
+  let orderCounter = 0
+  
   for (const node of axTree) {
+
     let {
       backendDOMNodeId,
       childIds,
@@ -33,37 +36,61 @@ const pruneAxTree = (axTree) => {
       role,
     } = node;
 
-    if (!name) {
-      if (ignored) {
-        // name = { value: 'ignored node'};
-        if (ignoredReasons.length) {
-          name = { value: `ignored node: ${ignoredReasons[0].name}` };
-        } else {
-          name = { value: 'ignored node' };
-        }
-      } else {
-        name = { value: 'visible node with no name' };
+    // let order;
+ 
+    if(!name){
+      if(ignored){
+        name = {value: 'ignored node'};
+      }
+      else{
+        name = {value: 'no name'};
       }
     }
-    if (!name.value) {
-      name.value = 'visible node with no name';
+    if(!name.value){
+      name.value = 'no name';
     }
-
+    //if the node is ignored, it should be given an order number as it won't be read at all
+    // if(ignored){
+    //   order = null;
+    // }
+    // else{
+    //   order = orderCounter++;
+    // }
     if (role.type === 'role') {
       const axNode = {
         backendDOMNodeId: backendDOMNodeId,
         childIds: childIds,
         ignored: ignored,
+        ignoredReasons: ignoredReasons,
         name: name,
         nodeId: nodeId,
         ignoredReasons: ignoredReasons,
         parentId: parentId,
         properties: properties,
+        // order: order,
       };
-
       axArr.push(axNode);
     }
   }
+  
+  // Sort nodes by backendDOMNodeId in ascending order
+  //try with deep copy
+  // //aria properties
+  // console.log('axArr before : ', axArr);
+  // axArr.sort((a, b) => b.backendDOMNodeId - a.backendDOMNodeId);
+  
+  // Assign order based on sorted position
+  for (const axNode of axArr) {
+    // console.log('current axnode order number: ', axNode.order)
+    // console.log('this iterations node', axNode);
+    if (!axNode.ignored) { // Assuming you only want to assign order to non-ignored nodes
+      axNode.order = orderCounter++;
+    } else {
+      axNode.order = null; // Or keep it undefined, based on your requirement
+    }
+    // console.log('current axnode order number: ', axNode.order)
+  }
+  // console.log('axArr after: ', axArr);
   return axArr;
 };
 
