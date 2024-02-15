@@ -2,14 +2,15 @@ import React from 'react';
 
 const AxLegend = () => {
     return (
-        <div>
+        <div style={{borderStyle: 'solid'}}>
             Nodes from the accessibility tree have either a role <strong>role</strong> or <strong>internalRole</strong>
             <ul>
                 <li>
-                    Role refers to <strong> ARIA </strong> roles, which indicate the purpose of the element to assistive technologies, like screen readers
+                    <i><b>Role</b></i> refers to <strong> ARIA </strong> roles, which indicate the purpose of the element to assistive technologies, like screen readers.
+                    All of the nodes rendered in this tree have a role of 'role'
                 </li>
                 <li>
-                    internalRole refers to browser-specific roles <strong> Chrome </strong> for its accessibility processing
+                    <i><b>internalRole</b></i> refers to browser-specific roles <strong> Chrome </strong> for its own accessibility processing
                 </li>
             </ul>
 
