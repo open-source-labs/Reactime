@@ -7,7 +7,8 @@ export const axLegendSlice = createSlice({
     },
     reducers: {
         renderAxLegend: (state) => {
-            state.axLegendButtonClicked = true;
+            if (!state.axLegendButtonClicked) state.axLegendButtonClicked = true;
+            else state.axLegendButtonClicked = false;
         }
     }
 })
