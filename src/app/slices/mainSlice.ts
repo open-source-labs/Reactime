@@ -119,8 +119,6 @@ export const mainSlice = createSlice({
         tabs[currentTab] || {};
       const { payload } = action;
 
-      // console.log('mainSlice.ts: axSnapshots:', tabs[currentTab].axSnapshots);
-
       Object.keys(payload).forEach((tab) => {
         // check if tab exists in memory
         // add new tab

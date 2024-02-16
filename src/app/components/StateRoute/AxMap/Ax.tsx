@@ -166,11 +166,13 @@ export type LinkTypesProps = {
 export default function AxTree(props) {
   const { currLocation, axSnapshots, width, height } = props;
 
+
+
   let margin = defaultMargin;
   let totalWidth = width;
   let totalHeight = height;
 
-
+  if (axSnapshots[currLocation.index] === 'emptyAxSnap') return;
 
   const toolTipTimeoutID = useRef(null); //useRef stores stateful data that’s not needed for rendering.
   const {
@@ -181,7 +183,7 @@ export default function AxTree(props) {
     showTooltip, // function to set tooltip state
     hideTooltip, // function to close a tooltip
   } = useTooltip(); // returns an object with several properties that you can use to manage the tooltip state of your component
-  console.log('tool tip data: ', tooltipData);
+  
   // let nameVal = JSON.stringify(tooltipData)
   // console.log('nameVal', nameVal);
   const {
@@ -244,12 +246,9 @@ export default function AxTree(props) {
     }
   }
 
-  console.log('size width height ax: ', sizeWidth, sizeHeight);
-
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
 
   const currAxSnapshot = JSON.parse(JSON.stringify(axSnapshots[currLocation.index]));
-  console.log('currAxSnapshot: ', currAxSnapshot);
 
   // root node of currAxSnapshot
   const rootAxNode = JSON.parse(JSON.stringify(currAxSnapshot[0]));
@@ -295,8 +294,6 @@ export default function AxTree(props) {
 
   organizeAxTree(rootAxNode, currAxSnapshot);
 
-  console.log('rootAxNode: ', rootAxNode);
-
   // store each individual node, now with children property in nodeAxArr
   // need to consider order, iterate through the children property first?
   const populateNodeAxArr = (currNode) => {
@@ -316,7 +313,6 @@ export default function AxTree(props) {
   };
 
   populateNodeAxArr(rootAxNode);
-  console.log('nodeAxArr: ', nodeAxArr);
 
   // ax Legend
   const { axLegendButtonClicked } = useSelector((state: RootState) => state.axLegend);
@@ -468,7 +464,6 @@ export default function AxTree(props) {
                   const handleMouseAndClickOver = (event): void => {
                     const coords = localPoint(event.target.ownerSVGElement, event);
                     const tooltipObj = { ...node.data };
-                    console.log("tooltipobj: ", tooltipObj);
 
                     showTooltip({
                       tooltipLeft: coords.x,

@@ -620,7 +620,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           );
         }
       }
-
+      console.log('postMessage sending snapshots from background js:', {
+        action: 'sendSnapshots',
+        payload: tabsObj,
+        sourceTab,
+      })
       // sends new tabs obj to devtools
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>

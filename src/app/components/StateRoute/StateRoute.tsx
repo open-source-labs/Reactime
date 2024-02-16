@@ -16,6 +16,8 @@ import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetricsContainer from './WebMetrics/WebMetricsContainer';
 import { MainState, RootState, StateRouteProps } from '../../FrontendTypes';
 import AxTree from './AxMap/Ax';
+import AxContainer from './AxContainer';
+import { divide } from 'lodash';
 
 /*
   Loads the appropriate StateRoute view and renders the Map, Performance, History, Webmetrics, and Tree navbar buttons after clicking on the 'State' button located near the top rightmost corner.
@@ -123,21 +125,15 @@ const StateRoute = (props: StateRouteProps) => {
             path='/accessibility'
             element={
               showTree ? (
-                <ParentSize className='componentMapContainer'>
-                  {({ width, height }) => {
-                    // eslint-disable-next-line react/prop-types
-                    const maxHeight: number = 1200;
-                    const h = Math.min(height, maxHeight);
-                    return (
-                      <div>
-                        <input
+                <div>
+                     <input
                           type='radio'
                           value='enable'
                           checked={selectedValue === 'enable'}
                           onChange={() => {
                             enableAxTreeButton();
                           }}
-                        />{' '}
+                        />
                         <label htmlFor='enable'>Enable</label>
                         <input
                           type='radio'
@@ -148,18 +144,10 @@ const StateRoute = (props: StateRouteProps) => {
                           }}
                         />
                         <label htmlFor='disable'>Disable</label>
-                        <AxTree
-                          axSnapshots={axSnapshots}
-                          snapshot={snapshot}
-                          snapshots={snapshots}
-                          currLocation={currLocation}
-                          width={width}
-                          height={h}
-                        />
-                      </div>
-                    );
-                  }}
-                </ParentSize>
+                    {showTree && <AxContainer
+                      axSnapshots={axSnapshots}
+                      currLocation={currLocation}/>} 
+                </div>
               ) : (
                 <div>
                   {showParagraph && (

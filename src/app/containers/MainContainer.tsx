@@ -102,7 +102,7 @@ function MainContainer(): JSX.Element {
         break;
       }
       case 'sendSnapshots': {
-        dispatch(setTab(sourceTab));
+        dispatch(setTab(payload));
         // set state with the information received from the background script
         dispatch(addNewSnapshots(payload));
         break;
@@ -167,7 +167,6 @@ function MainContainer(): JSX.Element {
     tabs[currentTab]; // we destructure the currentTab object which is passed in from background.js
   //@ts-ignore
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex]; // if viewIndex is -1, then use the sliderIndex instead
-
   // cleaning hierarchy and snapshotView from stateless data
   const statelessCleaning = (obj: {
     name?: string;
