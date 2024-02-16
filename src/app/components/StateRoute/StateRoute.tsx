@@ -17,7 +17,6 @@ import WebMetricsContainer from './WebMetrics/WebMetricsContainer';
 import { MainState, RootState, StateRouteProps } from '../../FrontendTypes';
 import AxContainer from './AxMap/AxMap';
 
-
 /*
   Loads the appropriate StateRoute view and renders the Map, Performance, History, Webmetrics, and Tree navbar buttons after clicking on the 'State' button located near the top rightmost corner.
 */
@@ -145,7 +144,10 @@ const StateRoute = (props: StateRouteProps) => {
                         <label htmlFor='disable'>Disable</label>
                     {showTree && <AxContainer
                       axSnapshots={axSnapshots}
-                      currLocation={currLocation}/>} 
+                      snapshot={snapshot}
+                      snapshots={snapshots}
+                      currLocation={currLocation}
+                      />} 
                 </div>
               ) : (
                 <div>

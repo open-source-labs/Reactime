@@ -14,12 +14,14 @@ const AxContainer = (props: AxContainer) => {
       } = props;
       
     return (
-    <div>
+    <div style={{height: '90vh'}}>
       <ParentSize className='componentMapContainer'>
         {({ width, height }) => {
           // eslint-disable-next-line react/prop-types
           const maxHeight: number = 1200;
           const h = Math.min(height, maxHeight);
+          console.log('h: ', h);
+          console.log('width', width)
           return (
               <AxTree
                 axSnapshots={axSnapshots}
