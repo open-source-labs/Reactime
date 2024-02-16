@@ -1,8 +1,11 @@
 import React from "react";
 import { ParentSize } from '@visx/responsive';
-import AxTree from "./AxMap/Ax";
+import AxTree from "./Ax";
+import { AxContainer } from "../../../FrontendTypes";
 
-const AxContainer = (props) => {
+// Container to hold AxTree. AxTree is conditionally rendered based on the state of the setter function "showTree" in StateRoute
+
+const AxContainer = (props: AxContainer) => {
     const {
         axSnapshots, // from 'tabs[currentTab]' object in 'MainContainer'
         snapshot, // from 'tabs[currentTab]' object in 'MainContainer'

@@ -15,9 +15,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetricsContainer from './WebMetrics/WebMetricsContainer';
 import { MainState, RootState, StateRouteProps } from '../../FrontendTypes';
-import AxTree from './AxMap/Ax';
-import AxContainer from './AxContainer';
-import { divide } from 'lodash';
+import AxContainer from './AxMap/AxMap';
+
 
 /*
   Loads the appropriate StateRoute view and renders the Map, Performance, History, Webmetrics, and Tree navbar buttons after clicking on the 'State' button located near the top rightmost corner.
