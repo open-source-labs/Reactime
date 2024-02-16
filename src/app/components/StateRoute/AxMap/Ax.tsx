@@ -57,69 +57,75 @@ interface TreeNode {
 
 const data: TreeNode = {
   name: {
-    sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-    type: "computedString",
-    value: "Reactime MVP"
+    sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+    type: 'computedString',
+    value: 'Reactime MVP',
   },
   backendDOMNodeId: 1,
   childIds: ['46'],
   ignored: false,
-  children: [{
+  children: [
+    {
       name: {
-        sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-        type: "computedString",
-        value: ""
+        sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+        type: 'computedString',
+        value: '',
       },
       backendDOMNodeId: 7,
       childIds: ['47'],
       ignored: true,
-    }, {
+    },
+    {
       name: {
-        sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-        type: "computedString",
-        value: "Tic-Tac-Toe"
+        sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+        type: 'computedString',
+        value: 'Tic-Tac-Toe',
       },
       backendDOMNodeId: 8,
       childIds: ['48'],
       ignored: false,
-    }],
+    },
+  ],
 };
 
 const nodeAxArr = [
   {
     name: {
-      sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-      type: "computedString",
-      value: "Reactime MVP"
+      sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+      type: 'computedString',
+      value: 'Reactime MVP',
     },
     backendDOMNodeId: 1,
     childIds: ['46'],
     ignored: false,
-    children: [{
+    children: [
+      {
         name: {
-          sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-          type: "computedString",
-          value: ""
+          sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+          type: 'computedString',
+          value: '',
         },
         backendDOMNodeId: 7,
         childIds: ['47'],
         ignored: true,
-      }, {
+      },
+      {
         name: {
-          sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-          type: "computedString",
-          value: "Tic-Tac-Toe"
+          sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+          type: 'computedString',
+          value: 'Tic-Tac-Toe',
         },
         backendDOMNodeId: 8,
         childIds: ['48'],
         ignored: false,
-      }],
+      },
+    ],
   },
   {
     name: {
-      sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-      type: "computedString",
-      value: ""
+      sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+      type: 'computedString',
+      value: '',
     },
     backendDOMNodeId: 7,
     childIds: ['47'],
@@ -127,21 +133,21 @@ const nodeAxArr = [
   },
   {
     name: {
-      sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-      type: "computedString",
-      value: "Tic-Tac-Toe"
+      sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+      type: 'computedString',
+      value: 'Tic-Tac-Toe',
     },
     backendDOMNodeId: 8,
     childIds: ['48'],
     ignored: false,
-  }
-]
+  },
+];
 
-const defaultMargin = { 
+const defaultMargin = {
   top: 30,
   left: 30,
   right: 55,
-  bottom: 70, 
+  bottom: 70,
 };
 
 const nodeCoords: object = {};
@@ -158,18 +164,15 @@ export type LinkTypesProps = {
 };
 
 export default function AxTree(props) {
-  const {
-    currLocation,
-    axSnapshots,
-    width,
-    height
-  } = props;
+  const { currLocation, axSnapshots, width, height } = props;
+
+
 
   let margin = defaultMargin;
   let totalWidth = width;
   let totalHeight = height;
 
-
+  if (axSnapshots[currLocation.index] === 'emptyAxSnap') return;
 
   const toolTipTimeoutID = useRef(null); //useRef stores stateful data that’s not needed for rendering.
   const {
@@ -180,7 +183,7 @@ export default function AxTree(props) {
     showTooltip, // function to set tooltip state
     hideTooltip, // function to close a tooltip
   } = useTooltip(); // returns an object with several properties that you can use to manage the tooltip state of your component
-  console.log('tool tip data: ', tooltipData);
+  
   // let nameVal = JSON.stringify(tooltipData)
   // console.log('nameVal', nameVal);
   const {
@@ -243,12 +246,9 @@ export default function AxTree(props) {
     }
   }
 
-  console.log('size width height ax: ', sizeWidth, sizeHeight);
-
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
 
   const currAxSnapshot = JSON.parse(JSON.stringify(axSnapshots[currLocation.index]));
-  console.log('currAxSnapshot: ', currAxSnapshot);
 
   // root node of currAxSnapshot
   const rootAxNode = JSON.parse(JSON.stringify(currAxSnapshot[0]));
@@ -259,7 +259,7 @@ export default function AxTree(props) {
   //     currNode.children = [];
   //     // checks if there is more than 1 child
   //     if (currNode.childIds.length > 1) {
-  //       for (let m = 0; m < currNode.childIds.length; m++) {  
+  //       for (let m = 0; m < currNode.childIds.length; m++) {
   //         for (let j = 0; j < currAxSnapshot.length; j++) {
   //           if (currNode.childIds.includes(currAxSnapshot[j].nodeId)) {
   //             currNode.children.push(currAxSnapshot[j]);
@@ -280,7 +280,7 @@ export default function AxTree(props) {
   // organizeAxTree([rootAxNode], currAxSnapshot);
   const organizeAxTree = (currNode, currAxSnapshot) => {
     if (currNode.childIds && currNode.childIds.length > 0) {
-      currNode.children = [];  
+      currNode.children = [];
       for (let j = 0; j < currAxSnapshot.length; j++) {
         for (const childEle of currNode.childIds) {
           if (childEle === currAxSnapshot[j].nodeId) {
@@ -288,14 +288,11 @@ export default function AxTree(props) {
             organizeAxTree(currAxSnapshot[j], currAxSnapshot);
           }
         }
-
       }
     }
-  }
+  };
 
   organizeAxTree(rootAxNode, currAxSnapshot);
-  
-  console.log('rootAxNode: ', rootAxNode);
 
   // store each individual node, now with children property in nodeAxArr
   // need to consider order, iterate through the children property first?
@@ -316,7 +313,6 @@ export default function AxTree(props) {
   };
 
   populateNodeAxArr(rootAxNode);
-  console.log('nodeAxArr: ', nodeAxArr);
 
   // ax Legend
   const { axLegendButtonClicked } = useSelector((state: RootState) => state.axLegend);
@@ -345,7 +341,7 @@ export default function AxTree(props) {
       <svg ref={containerRef} width={totalWidth + 0.2*totalWidth} height={totalHeight}>
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
-        <rect 
+        <rect
           className='componentMapContainer'
           width={sizeWidth / aspect}
           height={sizeHeight / aspect + 0}
@@ -366,12 +362,11 @@ export default function AxTree(props) {
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    stroke="rgb(254,110,158,0.6)"
-                    strokeWidth="1"
-                    fill="none"
+                    stroke='rgb(254,110,158,0.6)'
+                    strokeWidth='1'
+                    fill='none'
                   />
                 ))}
-
                 // code relating to each node in tree
                 {tree.descendants().map((node, key) => {
                   const widthFunc = (name): number => {
@@ -469,7 +464,6 @@ export default function AxTree(props) {
                   const handleMouseAndClickOver = (event): void => {
                     const coords = localPoint(event.target.ownerSVGElement, event);
                     const tooltipObj = { ...node.data };
-                    console.log("tooltipobj: ", tooltipObj);
 
                     showTooltip({
                       tooltipLeft: coords.x,
@@ -623,4 +617,3 @@ export default function AxTree(props) {
     </div>
   );
 }
-

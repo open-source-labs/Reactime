@@ -5,17 +5,17 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-import React from 'react';
+import React, { useState } from 'react';
 import { MemoryRouter as Router, Route, NavLink, Routes, Outlet, Link } from 'react-router-dom';
 import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap/ComponentMap';
-import { changeView, changeSlider } from '../../slices/mainSlice';
-import { useSelector } from 'react-redux';
+import { changeView, changeSlider, toggleAxTree, setCurrentTabInApp } from '../../slices/mainSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetricsContainer from './WebMetrics/WebMetricsContainer';
 import { MainState, RootState, StateRouteProps } from '../../FrontendTypes';
-import AxTree from './AxMap/Ax';
+import AxContainer from './AxMap/AxMap';
 
 /*
   Loads the appropriate StateRoute view and renders the Map, Performance, History, Webmetrics, and Tree navbar buttons after clicking on the 'State' button located near the top rightmost corner.
@@ -39,6 +39,26 @@ const StateRoute = (props: StateRouteProps) => {
   const { hierarchy: tabsHierarchy, sliderIndex, viewIndex: tabsViewIndex } = tabs[currentTab];
   const hierarchy = propsHierarchy || tabsHierarchy;
   const viewIndex = propsViewIndex || tabsViewIndex;
+
+  const dispatch = useDispatch();
+  const [showTree, setShowTree] = useState(false);
+  const [selectedValue, setSelectedValue] = useState('disable');
+  const [showParagraph, setShowParagraph] = useState(true);
+
+  const enableAxTreeButton = () => {
+    dispatch(toggleAxTree('toggleAxRecord'));
+    dispatch(setCurrentTabInApp('AxTree'));
+    setSelectedValue('enable');
+    setShowParagraph(false);
+    setShowTree(true);
+  };
+
+  const disableAxTree = () => {
+    dispatch(toggleAxTree('toggleAxRecord'));
+    setSelectedValue('disable');
+    setShowParagraph(true);
+    setShowTree(false);
+  };
 
   return (
     <div className='app-body'>
@@ -102,26 +122,69 @@ const StateRoute = (props: StateRouteProps) => {
           <Route
             path='/accessibility'
             element={
-              hierarchy ? (
-                <ParentSize className='componentMapContainer'>
-                  {({ width, height }) => {
-                    // eslint-disable-next-line react/prop-types
-                    const maxHeight: number = 1200;
-                    const h = Math.min(height, maxHeight);
-                    console.log('h: ', h);
-                    return (
-                      <AxTree
-                        axSnapshots={axSnapshots}
-                        snapshot={snapshot}
-                        snapshots={snapshots}
-                        currLocation={currLocation}
-                        width={width}
-                        height={h}
+              showTree ? (
+                <div>
+                     <input
+                          type='radio'
+                          value='enable'
+                          checked={selectedValue === 'enable'}
+                          onChange={() => {
+                            enableAxTreeButton();
+                          }}
+                        />
+                        <label htmlFor='enable'>Enable</label>
+                        <input
+                          type='radio'
+                          value='disable'
+                          checked={selectedValue === 'disable'}
+                          onChange={() => {
+                            disableAxTree();
+                          }}
+                        />
+                        <label htmlFor='disable'>Disable</label>
+                    {showTree && <AxContainer
+                      axSnapshots={axSnapshots}
+                      snapshot={snapshot}
+                      snapshots={snapshots}
+                      currLocation={currLocation}
+                      />} 
+                </div>
+              ) : (
+                <div>
+                  {showParagraph && (
+                    <p>
+                      A Note to Developers: Reactime is using the Chrome Debugger API in order to
+                      grab the Accessibility Tree. Enabling this option will allow you to record
+                      Accessibility Tree snapshots, but will result in the Chrome browser notifying
+                      you that the Chrome Debugger has started.
+                    </p>
+                  )}
+                  <div>
+                    {
+                      <input
+                        type='radio'
+                        value='enable'
+                        checked={selectedValue === 'enable'}
+                        onChange={() => {
+                          enableAxTreeButton();
+                        }}
                       />
-                    );
-                  }}
-                </ParentSize>
-              ) : null
+                    }
+                    <label htmlFor='enable'>Enable</label>
+                    {
+                      <input
+                        type='radio'
+                        value='disable'
+                        checked={selectedValue === 'disable'}
+                        onChange={() => {
+                          disableAxTree();
+                        }}
+                      />
+                    }
+                    <label htmlFor='disable'>Disable</label>
+                  </div>
+                </div>
+              )
             }
           ></Route>
           <Route
@@ -187,7 +250,6 @@ const StateRoute = (props: StateRouteProps) => {
                     // eslint-disable-next-line react/prop-types
                     const maxHeight: number = 1200;
                     const h = Math.min(height, maxHeight);
-                    console.log('h component map: ', h);
                     return (
                       <ComponentMap
                         currentSnapshot={currLocation.stateSnapshot}
