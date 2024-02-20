@@ -14,135 +14,6 @@ import AxLegend from './axLegend';
 import { renderAxLegend } from '../../../slices/AxSlices/axLegendSlice';
 import type { RootState } from '../../../store';
 
-//still using below themes?
-const theme = {
-  scheme: 'monokai',
-  author: 'wimer hazenberg (http://www.monokai.nl)',
-  base00: '#272822',
-  base01: '#383830',
-  base02: '#49483e',
-  base03: '#75715e',
-  base04: '#a59f85',
-  base05: '#f8f8f2',
-  base06: '#f5f4f1',
-  base07: '#f9f8f5',
-  base08: '#f92672',
-  base09: '#fd971f',
-  base0A: '#f4bf75',
-  base0B: '#a6e22e',
-  base0C: '#a1efe4',
-  base0D: '#66d9ef',
-  base0E: '#ae81ff',
-  base0F: '#cc6633',
-};
-
-interface TreeNode {
-  name?: {
-    sources?: any[];
-    type?: string;
-    value?: string;
-  };
-  isExpanded?: boolean;
-  children?: TreeNode[];
-  backendDOMNodeId?: number;
-  childIds?: string[];
-  ignored?: boolean;
-  nodeId?: string;
-  ignoredReasons?: any[];
-}
-
-// example data from visx
-
-// pulling name property value to name the node, need to adjust data pull from ax tree to reassign name if the node is ignored
-
-const data: TreeNode = {
-  name: {
-    sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-    type: 'computedString',
-    value: 'Reactime MVP',
-  },
-  backendDOMNodeId: 1,
-  childIds: ['46'],
-  ignored: false,
-  children: [
-    {
-      name: {
-        sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-        type: 'computedString',
-        value: '',
-      },
-      backendDOMNodeId: 7,
-      childIds: ['47'],
-      ignored: true,
-    },
-    {
-      name: {
-        sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-        type: 'computedString',
-        value: 'Tic-Tac-Toe',
-      },
-      backendDOMNodeId: 8,
-      childIds: ['48'],
-      ignored: false,
-    },
-  ],
-};
-
-const nodeAxArr = [
-  {
-    name: {
-      sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-      type: 'computedString',
-      value: 'Reactime MVP',
-    },
-    backendDOMNodeId: 1,
-    childIds: ['46'],
-    ignored: false,
-    children: [
-      {
-        name: {
-          sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-          type: 'computedString',
-          value: '',
-        },
-        backendDOMNodeId: 7,
-        childIds: ['47'],
-        ignored: true,
-      },
-      {
-        name: {
-          sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-          type: 'computedString',
-          value: 'Tic-Tac-Toe',
-        },
-        backendDOMNodeId: 8,
-        childIds: ['48'],
-        ignored: false,
-      },
-    ],
-  },
-  {
-    name: {
-      sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-      type: 'computedString',
-      value: '',
-    },
-    backendDOMNodeId: 7,
-    childIds: ['47'],
-    ignored: true,
-  },
-  {
-    name: {
-      sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-      type: 'computedString',
-      value: 'Tic-Tac-Toe',
-    },
-    backendDOMNodeId: 8,
-    childIds: ['48'],
-    ignored: false,
-  },
-];
-
 const defaultMargin = {
   top: 30,
   left: 30,
@@ -166,8 +37,6 @@ export type LinkTypesProps = {
 export default function AxTree(props) {
   const { currLocation, axSnapshots, width, height } = props;
 
-
-
   let margin = defaultMargin;
   let totalWidth = width;
   let totalHeight = height;
@@ -184,8 +53,6 @@ export default function AxTree(props) {
     hideTooltip, // function to close a tooltip
   } = useTooltip(); // returns an object with several properties that you can use to manage the tooltip state of your component
   
-  // let nameVal = JSON.stringify(tooltipData)
-  // console.log('nameVal', nameVal);
   const {
     containerRef, // Access to the container's bounding box. This will be empty on first render.
     TooltipInPortal, // TooltipWithBounds in a Portal, outside of your component DOM tree
@@ -207,14 +74,6 @@ export default function AxTree(props) {
     zIndex: 100,
     pointerEvents: 'all !important',
   };
-
-  // const formatRenderTime = (time: number): string => {
-  //   if (!time) return 'No time information';
-  //   const renderTime = time.toFixed(3);
-  //   return `${renderTime} ms `;
-  // };
-
-
 
   const [layout, setLayout] = useState('cartesian');
   const [orientation, setOrientation] = useState('horizontal');
@@ -273,7 +132,6 @@ export default function AxTree(props) {
   organizeAxTree(rootAxNode, currAxSnapshot);
 
   // store each individual node, now with children property in nodeAxArr
-  // need to consider order, iterate through the children property first?
   const populateNodeAxArr = (currNode) => {
     nodeAxArr.splice(0, nodeAxArr.length);
     nodeAxArr.push(currNode);
@@ -541,7 +399,6 @@ export default function AxTree(props) {
                         fontFamily='Roboto'
                         textAnchor='middle'
                         style={{ pointerEvents: 'none' }}
-                        //fill={node.depth === 0 ? '#161521' : node.children ? 'white' : '#161521'}
                       >
                         {node.data.name.value}
                       </text>
@@ -579,7 +436,6 @@ export default function AxTree(props) {
               </div>
             <div>
               <ToolTipDataDisplay containerName='Ax Node Info' dataObj={tooltipData} />
-              {/* <ToolTipDataDisplay containerName='State'dataObj={tooltipData}/> */}
             </div>
           </div>
         </TooltipInPortal>
