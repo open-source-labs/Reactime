@@ -1,17 +1,153 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
 import { pointRadial } from 'd3-shape';
-import { useTooltipInPortal } from '@visx/tooltip';
 import LinkControls from './axLinkControls';
 import getLinkComponent from './getAxLinkComponents';
+import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
+import ToolTipDataDisplay from './ToolTipDataDisplay';
+import { ToolTipStyles } from '../../../FrontendTypes';
+import { localPoint } from '@visx/event';
+import AxLegend from './axLegend';
+import { renderAxLegend } from '../../../slices/AxSlices/axLegendSlice';
+import type { RootState } from '../../../store';
 
-const defaultMargin = { 
+//still using below themes?
+const theme = {
+  scheme: 'monokai',
+  author: 'wimer hazenberg (http://www.monokai.nl)',
+  base00: '#272822',
+  base01: '#383830',
+  base02: '#49483e',
+  base03: '#75715e',
+  base04: '#a59f85',
+  base05: '#f8f8f2',
+  base06: '#f5f4f1',
+  base07: '#f9f8f5',
+  base08: '#f92672',
+  base09: '#fd971f',
+  base0A: '#f4bf75',
+  base0B: '#a6e22e',
+  base0C: '#a1efe4',
+  base0D: '#66d9ef',
+  base0E: '#ae81ff',
+  base0F: '#cc6633',
+};
+
+interface TreeNode {
+  name?: {
+    sources?: any[];
+    type?: string;
+    value?: string;
+  };
+  isExpanded?: boolean;
+  children?: TreeNode[];
+  backendDOMNodeId?: number;
+  childIds?: string[];
+  ignored?: boolean;
+  nodeId?: string;
+  ignoredReasons?: any[];
+}
+
+// example data from visx
+
+// pulling name property value to name the node, need to adjust data pull from ax tree to reassign name if the node is ignored
+
+const data: TreeNode = {
+  name: {
+    sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+    type: 'computedString',
+    value: 'Reactime MVP',
+  },
+  backendDOMNodeId: 1,
+  childIds: ['46'],
+  ignored: false,
+  children: [
+    {
+      name: {
+        sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+        type: 'computedString',
+        value: '',
+      },
+      backendDOMNodeId: 7,
+      childIds: ['47'],
+      ignored: true,
+    },
+    {
+      name: {
+        sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+        type: 'computedString',
+        value: 'Tic-Tac-Toe',
+      },
+      backendDOMNodeId: 8,
+      childIds: ['48'],
+      ignored: false,
+    },
+  ],
+};
+
+const nodeAxArr = [
+  {
+    name: {
+      sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+      type: 'computedString',
+      value: 'Reactime MVP',
+    },
+    backendDOMNodeId: 1,
+    childIds: ['46'],
+    ignored: false,
+    children: [
+      {
+        name: {
+          sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+          type: 'computedString',
+          value: '',
+        },
+        backendDOMNodeId: 7,
+        childIds: ['47'],
+        ignored: true,
+      },
+      {
+        name: {
+          sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+          type: 'computedString',
+          value: 'Tic-Tac-Toe',
+        },
+        backendDOMNodeId: 8,
+        childIds: ['48'],
+        ignored: false,
+      },
+    ],
+  },
+  {
+    name: {
+      sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+      type: 'computedString',
+      value: '',
+    },
+    backendDOMNodeId: 7,
+    childIds: ['47'],
+    ignored: true,
+  },
+  {
+    name: {
+      sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
+      type: 'computedString',
+      value: 'Tic-Tac-Toe',
+    },
+    backendDOMNodeId: 8,
+    childIds: ['48'],
+    ignored: false,
+  },
+];
+
+const defaultMargin = {
   top: 30,
   left: 30,
   right: 55,
-  bottom: 70, 
+  bottom: 70,
 };
 
 const nodeCoords: object = {};
@@ -28,16 +164,57 @@ export type LinkTypesProps = {
 };
 
 export default function AxTree(props) {
-  const {
-    currLocation,
-    axSnapshots,
-    width,
-    height
-  } = props;
+  const { currLocation, axSnapshots, width, height } = props;
+
+
 
   let margin = defaultMargin;
   let totalWidth = width;
   let totalHeight = height;
+
+  if (axSnapshots[currLocation.index] === 'emptyAxSnap') return;
+
+  const toolTipTimeoutID = useRef(null); //useRef stores stateful data that’s not needed for rendering.
+  const {
+    tooltipData, // value/data that tooltip may need to render
+    tooltipLeft, // number used for tooltip positioning
+    tooltipTop, // number used for tooltip positioning
+    tooltipOpen, // boolean whether the tooltip state is open or closed
+    showTooltip, // function to set tooltip state
+    hideTooltip, // function to close a tooltip
+  } = useTooltip(); // returns an object with several properties that you can use to manage the tooltip state of your component
+  
+  // let nameVal = JSON.stringify(tooltipData)
+  // console.log('nameVal', nameVal);
+  const {
+    containerRef, // Access to the container's bounding box. This will be empty on first render.
+    TooltipInPortal, // TooltipWithBounds in a Portal, outside of your component DOM tree
+  } = useTooltipInPortal({
+    // Visx hook
+    detectBounds: true, // use TooltipWithBounds
+    scroll: true, // when tooltip containers are scrolled, this will correctly update the Tooltip position
+  });
+
+  const tooltipStyles: ToolTipStyles = {
+    ...defaultStyles,
+    minWidth: 60,
+    maxWidth: 300,
+    backgroundColor: 'rgb(15,15,15)',
+    color: 'white',
+    fontSize: '16px',
+    lineHeight: '18px',
+    fontFamily: 'Roboto',
+    zIndex: 100,
+    pointerEvents: 'all !important',
+  };
+
+  // const formatRenderTime = (time: number): string => {
+  //   if (!time) return 'No time information';
+  //   const renderTime = time.toFixed(3);
+  //   return `${renderTime} ms `;
+  // };
+
+
 
   const [layout, setLayout] = useState('cartesian');
   const [orientation, setOrientation] = useState('horizontal');
@@ -81,7 +258,7 @@ export default function AxTree(props) {
 
   const organizeAxTree = (currNode, currAxSnapshot) => {
     if (currNode.childIds && currNode.childIds.length > 0) {
-      currNode.children = [];  
+      currNode.children = [];
       for (let j = 0; j < currAxSnapshot.length; j++) {
         for (const childEle of currNode.childIds) {
           if (childEle === currAxSnapshot[j].nodeId) {
@@ -89,14 +266,11 @@ export default function AxTree(props) {
             organizeAxTree(currAxSnapshot[j], currAxSnapshot);
           }
         }
-
       }
     }
-  }
+  };
 
   organizeAxTree(rootAxNode, currAxSnapshot);
-  
-  console.log('rootAxNode: ', rootAxNode);
 
   // store each individual node, now with children property in nodeAxArr
   // need to consider order, iterate through the children property first?
@@ -117,39 +291,42 @@ export default function AxTree(props) {
   };
 
   populateNodeAxArr(rootAxNode);
-  console.log('nodeAxArr: ', nodeAxArr);
 
-  const {
-    containerRef // Access to the container's bounding box. This will be empty on first render.
-  } = useTooltipInPortal({
-    // Visx hook
-    detectBounds: true, // use TooltipWithBounds
-    scroll: true, // when tooltip containers are scrolled, this will correctly update the Tooltip position
-  });
+  // ax Legend
+  const { axLegendButtonClicked } = useSelector((state: RootState) => state.axLegend);
+  const dispatch = useDispatch();
 
   return totalWidth < 10 ? null : (
     <div>
-      <LinkControls
-        layout={layout}
-        orientation={orientation}
-        linkType={linkType}
-        stepPercent={stepPercent}
-        setLayout={setLayout}
-        setOrientation={setOrientation}
-        setLinkType={setLinkType}
-        setStepPercent={setStepPercent}
-      />
+      <div id='axControls'>
+        <LinkControls
+          layout={layout}
+          orientation={orientation}
+          linkType={linkType}
+          stepPercent={stepPercent}
+          setLayout={setLayout}
+          setOrientation={setOrientation}
+          setLinkType={setLinkType}
+          setStepPercent={setStepPercent}
+        />
+
+        <button id='axLegendButton' onClick={() => dispatch(renderAxLegend())}>
+          Generate Ax Tree Legend
+        </button>
+      </div>
 
       {/* svg references purple background */}
-      <svg ref={containerRef} width={totalWidth} height={totalHeight + 0}>
+      <svg ref={containerRef} width={totalWidth + 0.2*totalWidth} height={totalHeight}>
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
-        <rect 
+        <rect
           className='componentMapContainer'
           width={sizeWidth / aspect}
           height={sizeHeight / aspect + 0}
           rx={14}
-         />
+         onClick={() => {
+            hideTooltip();
+          }}/>
         <Group transform={`scale(${aspect})`} top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(nodeAxArr[0], (d) => (d.isExpanded ? null : d.children))}
@@ -157,18 +334,17 @@ export default function AxTree(props) {
             separation={(a, b) => (a.parent === b.parent ? 0.5 : 0.5) / a.depth}
           >
             {(tree) => (
-              <Group top={origin.y + 35} left={origin.x + 50 / aspect}>
+              <Group top={origin.y + 35} left={origin.x + 110}>
                 {tree.links().map((link, i) => (
                   <LinkComponent
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    stroke="rgb(254,110,158,0.6)"
-                    strokeWidth="1"
-                    fill="none"
+                    stroke='rgb(254,110,158,0.6)'
+                    strokeWidth='1'
+                    fill='none'
                   />
                 ))}
-
                 // code relating to each node in tree
                 {tree.descendants().map((node, key) => {
                   const widthFunc = (name): number => {
@@ -263,6 +439,18 @@ export default function AxTree(props) {
                   } else {
                     aspect = Math.max(aspect, 0.2);
                   }
+                  const handleMouseAndClickOver = (event): void => {
+                    const coords = localPoint(event.target.ownerSVGElement, event);
+                    const tooltipObj = { ...node.data };
+
+                    showTooltip({
+                      tooltipLeft: coords.x,
+                      tooltipTop: coords.y,
+                      tooltipData: tooltipObj,
+                      // this is where the data for state and render time is displayed
+                      // but does not show props functions and etc
+                    });
+                  };
 
                   return (
                     <Group top={top} left={left} key={key} className='rect'>
@@ -279,6 +467,7 @@ export default function AxTree(props) {
                           rx={node.children ? 4 : 10}
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
+                            hideTooltip();
                           }}
                         />
                       )}
@@ -302,6 +491,40 @@ export default function AxTree(props) {
                           rx={node.children ? 4 : 10}
                           onClick={() => {
                             node.data.isExpanded = !node.data.isExpanded;
+                            hideTooltip();
+                          }}
+                          // Mouse Enter Rect (Component Node) -----------------------------------------------------------------------
+                          /** This onMouseEnter event fires when the mouse first moves/hovers over a component node.
+                           * The supplied event listener callback produces a Tooltip element for the current node. */
+
+                          onMouseEnter={(event) => {
+                            /** This 'if' statement block checks to see if you've just left another component node
+                             * by seeing if there's a current setTimeout waiting to close that component node's
+                             * tooltip (see onMouseLeave immediately below). If so it clears the tooltip generated
+                             * from that component node so a new tooltip for the node you've just entered can render. */
+                            if (toolTipTimeoutID.current !== null) {
+                              clearTimeout(toolTipTimeoutID.current);
+                              hideTooltip();
+                            }
+                            // Removes the previous timeoutID to avoid errors
+                            toolTipTimeoutID.current = null;
+                            //This generates a tooltip for the component node the mouse has entered.
+                            handleMouseAndClickOver(event);
+                          }}
+                          // Mouse Leave Rect (Component Node) --------------------------------------------------------------------------
+                          /** This onMouseLeave event fires when the mouse leaves a component node.
+                           * The supplied event listener callback generates a setTimeout call which gives the
+                           * mouse a certain amount of time between leaving the current component node and
+                           * closing the tooltip for that node.
+                           * If the mouse enters the tooltip before the timeout delay has passed, the
+                           * setTimeout event will be canceled. */
+                          onMouseLeave={() => {
+                            // Store setTimeout ID so timeout can be cleared if necessary
+                            toolTipTimeoutID.current = setTimeout(() => {
+                              // hideTooltip unmounts the tooltip
+                              hideTooltip();
+                              toolTipTimeoutID.current = null;
+                            }, 300);
                           }}
                         />
                       )}
@@ -330,7 +553,45 @@ export default function AxTree(props) {
           </Tree>
         </Group>
       </svg>
+      {tooltipOpen && tooltipData && (
+        <TooltipInPortal
+          // set this to random so it correctly updates with parent bounds
+          key={Math.random()}
+          top={tooltipTop}
+          left={tooltipLeft}
+          style={tooltipStyles}
+          //------------- Mouse Over TooltipInPortal--------------------------------------------------------------------
+          /** After the mouse enters the tooltip, it's able to persist by clearing the setTimeout
+           *  that would've unmounted it */
+          onMouseEnter={() => {
+            clearTimeout(toolTipTimeoutID.current);
+            toolTipTimeoutID.current = null;
+          }}
+          //------------- Mouse Leave TooltipInPortal -----------------------------------------------------------------
+          /** When the mouse leaves the tooltip, the tooltip unmounts */
+          onMouseLeave={() => {
+            hideTooltip();
+          }}
+        >
+          <div>
+            <div>
+                <strong>{JSON.stringify(tooltipData['name'].value)}</strong>
+              </div>
+            <div>
+              <ToolTipDataDisplay containerName='Ax Node Info' dataObj={tooltipData} />
+              {/* <ToolTipDataDisplay containerName='State'dataObj={tooltipData}/> */}
+            </div>
+          </div>
+        </TooltipInPortal>
+      )}
+      
+      {/* ax Legend */}
+      <div>
+        { axLegendButtonClicked ? 
+          <AxLegend /> : ''
+        }
+      </div>
+      
     </div>
   );
 }
-

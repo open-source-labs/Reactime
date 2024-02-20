@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { InitialState } from '../FrontendTypes';
 import _ from 'lodash';
+import Action from '../components/Actions/Action';
 
 const initialState: InitialState = {
   // we initialize what our initialState is here
@@ -506,6 +507,15 @@ export const mainSlice = createSlice({
       state.connectRequested = false;
       state.connectionStatus = true;
     },
+
+    toggleAxTree: (state, action) => {
+      const { port, payload, tabs, currentTab } = state;
+      port.postMessage({
+        action: 'toggleAxRecord',
+        payload: action.payload,
+        tabId: currentTab,
+      });
+    },
   },
 });
 
@@ -540,4 +550,5 @@ export const {
   disconnected,
   startReconnect,
   endConnect,
+  toggleAxTree,
 } = mainSlice.actions;
