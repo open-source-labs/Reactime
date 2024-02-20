@@ -7,128 +7,6 @@ import { useTooltipInPortal } from '@visx/tooltip';
 import LinkControls from './axLinkControls';
 import getLinkComponent from './getAxLinkComponents';
 
-const theme = {
-  scheme: 'monokai',
-  author: 'wimer hazenberg (http://www.monokai.nl)',
-  base00: '#272822',
-  base01: '#383830',
-  base02: '#49483e',
-  base03: '#75715e',
-  base04: '#a59f85',
-  base05: '#f8f8f2',
-  base06: '#f5f4f1',
-  base07: '#f9f8f5',
-  base08: '#f92672',
-  base09: '#fd971f',
-  base0A: '#f4bf75',
-  base0B: '#a6e22e',
-  base0C: '#a1efe4',
-  base0D: '#66d9ef',
-  base0E: '#ae81ff',
-  base0F: '#cc6633',
-};
-
-interface TreeNode {
-  name?: {
-    sources?: any[];
-    type?: string;
-    value?: string;
-  };
-  isExpanded?: boolean;
-  children?: TreeNode[];
-  backendDOMNodeId?: number;
-  childIds?: string[];
-  ignored?: boolean;
-  nodeId?: string;
-  ignoredReasons?: any[];
-}
-
-// example data from visx
-
-// pulling name property value to name the node, need to adjust data pull from ax tree to reassign name if the node is ignored
-
-const data: TreeNode = {
-  name: {
-    sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-    type: "computedString",
-    value: "Reactime MVP"
-  },
-  backendDOMNodeId: 1,
-  childIds: ['46'],
-  ignored: false,
-  children: [{
-      name: {
-        sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-        type: "computedString",
-        value: ""
-      },
-      backendDOMNodeId: 7,
-      childIds: ['47'],
-      ignored: true,
-    }, {
-      name: {
-        sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-        type: "computedString",
-        value: "Tic-Tac-Toe"
-      },
-      backendDOMNodeId: 8,
-      childIds: ['48'],
-      ignored: false,
-    }],
-};
-
-const nodeAxArr = [
-  {
-    name: {
-      sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-      type: "computedString",
-      value: "Reactime MVP"
-    },
-    backendDOMNodeId: 1,
-    childIds: ['46'],
-    ignored: false,
-    children: [{
-        name: {
-          sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-          type: "computedString",
-          value: ""
-        },
-        backendDOMNodeId: 7,
-        childIds: ['47'],
-        ignored: true,
-      }, {
-        name: {
-          sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-          type: "computedString",
-          value: "Tic-Tac-Toe"
-        },
-        backendDOMNodeId: 8,
-        childIds: ['48'],
-        ignored: false,
-      }],
-  },
-  {
-    name: {
-      sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-      type: "computedString",
-      value: ""
-    },
-    backendDOMNodeId: 7,
-    childIds: ['47'],
-    ignored: true,
-  },
-  {
-    name: {
-      sources: [{attribute: 'aria-labelledby', type: 'relatedElement'}],
-      type: "computedString",
-      value: "Tic-Tac-Toe"
-    },
-    backendDOMNodeId: 8,
-    childIds: ['48'],
-    ignored: false,
-  }
-]
-
 const defaultMargin = { 
   top: 30,
   left: 30,
@@ -191,41 +69,16 @@ export default function AxTree(props) {
     }
   }
 
-  console.log('size width height ax: ', sizeWidth, sizeHeight);
-
   const LinkComponent = getLinkComponent({ layout, linkType, orientation });
 
   const currAxSnapshot = JSON.parse(JSON.stringify(axSnapshots[currLocation.index]));
-  console.log('currAxSnapshot: ', currAxSnapshot);
 
   // root node of currAxSnapshot
   const rootAxNode = JSON.parse(JSON.stringify(currAxSnapshot[0]));
 
-  // // array that holds the ax tree as a nested object and the root node initially
+  // array that holds the ax tree as a nested object and the root node initially
   const nodeAxArr = [];
 
-  //     currNode.children = [];
-  //     // checks if there is more than 1 child
-  //     if (currNode.childIds.length > 1) {
-  //       for (let m = 0; m < currNode.childIds.length; m++) {  
-  //         for (let j = 0; j < currAxSnapshot.length; j++) {
-  //           if (currNode.childIds.includes(currAxSnapshot[j].nodeId)) {
-  //             currNode.children.push(currAxSnapshot[j]);
-  //           }
-  //         }
-  //       }
-  //     } else if (currNode.childIds.length === 1) {
-  //       for (let j = 0; j < currAxSnapshot.length; j++) {
-  //         if (currNode.childIds.includes(currAxSnapshot[j].nodeId)) {
-  //           currNode.children.push(currAxSnapshot[j]);
-  //         }
-  //       }
-  //       organizeAxTree(currNode.children[0], currAxSnapshot);
-  //     }
-  //     organizeAxTree(currNode.children, currAxSnapshot);
-  //   }
-
-  // organizeAxTree([rootAxNode], currAxSnapshot);
   const organizeAxTree = (currNode, currAxSnapshot) => {
     if (currNode.childIds && currNode.childIds.length > 0) {
       currNode.children = [];  
