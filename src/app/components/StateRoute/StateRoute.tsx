@@ -40,6 +40,8 @@ const StateRoute = (props: StateRouteProps) => {
   const hierarchy = propsHierarchy || tabsHierarchy;
   const viewIndex = propsViewIndex || tabsViewIndex;
 
+
+  // lines 45 - 63 contains functionality to disable the accessibility features in Reactime.
   const dispatch = useDispatch();
   const [showTree, setShowTree] = useState(false);
   const [selectedValue, setSelectedValue] = useState('disable');
@@ -122,6 +124,8 @@ const StateRoute = (props: StateRouteProps) => {
           <Route
             path='/accessibility'
             element={
+              // showTree is initially set to a falsely value, therefore, lines 155 - 189 is executed first. Once showTree is set to truthy by clicking the enable button, lines 129 - 154 is executed
+              // state is a key component here in order to update the accessibility tree 
               showTree ? (
                 <div>
                      <input
@@ -269,3 +273,4 @@ const StateRoute = (props: StateRouteProps) => {
 };
 
 export default StateRoute;
+
