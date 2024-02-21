@@ -65,6 +65,7 @@ const StateRoute = (props: StateRouteProps) => {
   return (
     <div className='app-body'>
       <div className='navbar'>
+        {/* all classnames below are functionally defined for styling purposes */}
         <NavLink
           to='/'
           className={(navData) =>

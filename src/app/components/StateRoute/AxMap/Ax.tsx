@@ -429,15 +429,17 @@ export default function AxTree(props) {
         >
           <div>
             <div>
+              {/*tooltipData['name'].value cannot be referred to using dot notation so using brackets here overrides typescript's strict data typing which was interfering with accessiccing this property */}
                 <strong>{JSON.stringify(tooltipData['name'].value)}</strong>
               </div>
             <div>
+              {/* Ax Node Info below names the tooltip title because of how its passed to the ToolTipDataDisplay container*/}
               <ToolTipDataDisplay containerName='Ax Node Info' dataObj={tooltipData} />
             </div>
           </div>
         </TooltipInPortal>
       )}
-      
+
       <div>
         { axLegendButtonClicked ? 
           <AxLegend /> : ''
