@@ -14,135 +14,6 @@ import AxLegend from './axLegend';
 import { renderAxLegend } from '../../../slices/AxSlices/axLegendSlice';
 import type { RootState } from '../../../store';
 
-//still using below themes?
-const theme = {
-  scheme: 'monokai',
-  author: 'wimer hazenberg (http://www.monokai.nl)',
-  base00: '#272822',
-  base01: '#383830',
-  base02: '#49483e',
-  base03: '#75715e',
-  base04: '#a59f85',
-  base05: '#f8f8f2',
-  base06: '#f5f4f1',
-  base07: '#f9f8f5',
-  base08: '#f92672',
-  base09: '#fd971f',
-  base0A: '#f4bf75',
-  base0B: '#a6e22e',
-  base0C: '#a1efe4',
-  base0D: '#66d9ef',
-  base0E: '#ae81ff',
-  base0F: '#cc6633',
-};
-
-interface TreeNode {
-  name?: {
-    sources?: any[];
-    type?: string;
-    value?: string;
-  };
-  isExpanded?: boolean;
-  children?: TreeNode[];
-  backendDOMNodeId?: number;
-  childIds?: string[];
-  ignored?: boolean;
-  nodeId?: string;
-  ignoredReasons?: any[];
-}
-
-// example data from visx
-
-// pulling name property value to name the node, need to adjust data pull from ax tree to reassign name if the node is ignored
-
-const data: TreeNode = {
-  name: {
-    sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-    type: 'computedString',
-    value: 'Reactime MVP',
-  },
-  backendDOMNodeId: 1,
-  childIds: ['46'],
-  ignored: false,
-  children: [
-    {
-      name: {
-        sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-        type: 'computedString',
-        value: '',
-      },
-      backendDOMNodeId: 7,
-      childIds: ['47'],
-      ignored: true,
-    },
-    {
-      name: {
-        sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-        type: 'computedString',
-        value: 'Tic-Tac-Toe',
-      },
-      backendDOMNodeId: 8,
-      childIds: ['48'],
-      ignored: false,
-    },
-  ],
-};
-
-const nodeAxArr = [
-  {
-    name: {
-      sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-      type: 'computedString',
-      value: 'Reactime MVP',
-    },
-    backendDOMNodeId: 1,
-    childIds: ['46'],
-    ignored: false,
-    children: [
-      {
-        name: {
-          sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-          type: 'computedString',
-          value: '',
-        },
-        backendDOMNodeId: 7,
-        childIds: ['47'],
-        ignored: true,
-      },
-      {
-        name: {
-          sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-          type: 'computedString',
-          value: 'Tic-Tac-Toe',
-        },
-        backendDOMNodeId: 8,
-        childIds: ['48'],
-        ignored: false,
-      },
-    ],
-  },
-  {
-    name: {
-      sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-      type: 'computedString',
-      value: '',
-    },
-    backendDOMNodeId: 7,
-    childIds: ['47'],
-    ignored: true,
-  },
-  {
-    name: {
-      sources: [{ attribute: 'aria-labelledby', type: 'relatedElement' }],
-      type: 'computedString',
-      value: 'Tic-Tac-Toe',
-    },
-    backendDOMNodeId: 8,
-    childIds: ['48'],
-    ignored: false,
-  },
-];
-
 const defaultMargin = {
   top: 30,
   left: 30,
@@ -166,8 +37,6 @@ export type LinkTypesProps = {
 export default function AxTree(props) {
   const { currLocation, axSnapshots, width, height } = props;
 
-
-
   let margin = defaultMargin;
   let totalWidth = width;
   let totalHeight = height;
@@ -184,8 +53,6 @@ export default function AxTree(props) {
     hideTooltip, // function to close a tooltip
   } = useTooltip(); // returns an object with several properties that you can use to manage the tooltip state of your component
   
-  // let nameVal = JSON.stringify(tooltipData)
-  // console.log('nameVal', nameVal);
   const {
     containerRef, // Access to the container's bounding box. This will be empty on first render.
     TooltipInPortal, // TooltipWithBounds in a Portal, outside of your component DOM tree
@@ -207,14 +74,6 @@ export default function AxTree(props) {
     zIndex: 100,
     pointerEvents: 'all !important',
   };
-
-  // const formatRenderTime = (time: number): string => {
-  //   if (!time) return 'No time information';
-  //   const renderTime = time.toFixed(3);
-  //   return `${renderTime} ms `;
-  // };
-
-
 
   const [layout, setLayout] = useState('cartesian');
   const [orientation, setOrientation] = useState('horizontal');
@@ -253,38 +112,22 @@ export default function AxTree(props) {
   // root node of currAxSnapshot
   const rootAxNode = JSON.parse(JSON.stringify(currAxSnapshot[0]));
 
-  // // array that holds the ax tree as a nested object and the root node initially
+  // array that holds each ax tree node with children property 
   const nodeAxArr = [];
 
-  //     currNode.children = [];
-  //     // checks if there is more than 1 child
-  //     if (currNode.childIds.length > 1) {
-  //       for (let m = 0; m < currNode.childIds.length; m++) {
-  //         for (let j = 0; j < currAxSnapshot.length; j++) {
-  //           if (currNode.childIds.includes(currAxSnapshot[j].nodeId)) {
-  //             currNode.children.push(currAxSnapshot[j]);
-  //           }
-  //         }
-  //       }
-  //     } else if (currNode.childIds.length === 1) {
-  //       for (let j = 0; j < currAxSnapshot.length; j++) {
-  //         if (currNode.childIds.includes(currAxSnapshot[j].nodeId)) {
-  //           currNode.children.push(currAxSnapshot[j]);
-  //         }
-  //       }
-  //       organizeAxTree(currNode.children[0], currAxSnapshot);
-  //     }
-  //     organizeAxTree(currNode.children, currAxSnapshot);
-  //   }
-
-  // organizeAxTree([rootAxNode], currAxSnapshot);
+  // populates ax nodes with children property; visx recognizes 'children' in order to properly render a nested tree
   const organizeAxTree = (currNode, currAxSnapshot) => {
+    // checks if current ax node has children nodes through childId
     if (currNode.childIds && currNode.childIds.length > 0) {
+      // if yes, add children property to current ax node
       currNode.children = [];
       for (let j = 0; j < currAxSnapshot.length; j++) {
+        // locate ax node associated with childId
         for (const childEle of currNode.childIds) {
           if (childEle === currAxSnapshot[j].nodeId) {
+            // store ax node in children array
             currNode.children.push(currAxSnapshot[j]);
+            // recursively call organizeAxTree with child ax node passed in to check for further nested children nodes
             organizeAxTree(currAxSnapshot[j], currAxSnapshot);
           }
         }
@@ -294,19 +137,18 @@ export default function AxTree(props) {
 
   organizeAxTree(rootAxNode, currAxSnapshot);
 
-  // store each individual node, now with children property in nodeAxArr
-  // need to consider order, iterate through the children property first?
+  // stores each individual ax node with populated children property in array
   const populateNodeAxArr = (currNode) => {
     nodeAxArr.splice(0, nodeAxArr.length);
     nodeAxArr.push(currNode);
     for (let i = 0; i < nodeAxArr.length; i += 1) {
-      // iterate through the nodeList that contains our snapshot
+      // iterate through the nodeAxArr that contains the root ax node
       const cur = nodeAxArr[i];
       if (cur.children && cur.children.length > 0) {
-        // if the currently itereated snapshot has non-zero children...
+        // if the current ax node evaluated has non-zero children...
         for (const child of cur.children) {
-          // iterate through each child in the children array
-          nodeAxArr.push(child); // add the child to the nodeList
+          // iterate through each child ax node in the children array
+          nodeAxArr.push(child); // add the child to the nodeAxArr
         }
       }
     }
@@ -314,7 +156,7 @@ export default function AxTree(props) {
 
   populateNodeAxArr(rootAxNode);
 
-  // ax Legend
+  // Conditionally render ax legend component (RTK)
   const { axLegendButtonClicked } = useSelector((state: RootState) => state.axLegend);
   const dispatch = useDispatch();
 
@@ -337,7 +179,6 @@ export default function AxTree(props) {
         </button>
       </div>
 
-      {/* svg references purple background */}
       <svg ref={containerRef} width={totalWidth + 0.2*totalWidth} height={totalHeight}>
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
@@ -370,9 +211,8 @@ export default function AxTree(props) {
                 // code relating to each node in tree
                 {tree.descendants().map((node, key) => {
                   const widthFunc = (name): number => {
-                    //returns a number that is related to the length of the name. Used for determining the node width.
+                    // returns a number that is related to the length of the name. Used for determining the node width.
                     const nodeLength = name.length;
-                    //return nodeLength * 7 + 20; //uncomment this line if we want each node to be directly proportional to the name.length (instead of nodes of similar sizes to snap to the same width)
                     if (nodeLength <= 5) return nodeLength + 60;
                     if (nodeLength <= 10) return nodeLength + 130;
                     return nodeLength + 160;
@@ -501,13 +341,6 @@ export default function AxTree(props) {
                           y={-height / 2}
                           x={-width / 2}
                           fill="url('#parent-gradient')"
-                          //color={'#ff0000'}
-                          //fill={node.children ? nodeParentFill : nodeChildFill}
-                          //stroke={
-                          //   node.data.isExpanded && node.data.children.length > 0
-                          //     ? nodeParentStroke
-                          //     : nodeChildStroke
-                          // }
                           strokeWidth={1.5}
                           strokeOpacity='1'
                           rx={node.children ? 4 : 10}
@@ -563,7 +396,6 @@ export default function AxTree(props) {
                         fontFamily='Roboto'
                         textAnchor='middle'
                         style={{ pointerEvents: 'none' }}
-                        //fill={node.depth === 0 ? '#161521' : node.children ? 'white' : '#161521'}
                       >
                         {node.data.name.value}
                       </text>
@@ -601,13 +433,11 @@ export default function AxTree(props) {
               </div>
             <div>
               <ToolTipDataDisplay containerName='Ax Node Info' dataObj={tooltipData} />
-              {/* <ToolTipDataDisplay containerName='State'dataObj={tooltipData}/> */}
             </div>
           </div>
         </TooltipInPortal>
       )}
       
-      {/* ax Legend */}
       <div>
         { axLegendButtonClicked ? 
           <AxLegend /> : ''
