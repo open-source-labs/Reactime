@@ -32,7 +32,7 @@ function MainContainer(): JSX.Element {
   const { connectionStatus }: MainState = useSelector((state: RootState) => state.main);
 
   // JR 12.22.23: so far this log always returns true
-  //console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
+  // console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
 
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
 
@@ -102,7 +102,7 @@ function MainContainer(): JSX.Element {
         break;
       }
       case 'sendSnapshots': {
-        dispatch(setTab(sourceTab));
+        dispatch(setTab(payload));
         // set state with the information received from the background script
         dispatch(addNewSnapshots(payload));
         break;
@@ -163,11 +163,10 @@ function MainContainer(): JSX.Element {
 
   // }, 5000);
 
-  const { currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =
-    tabs[currentTab]; // we destructure the currentTab object
+  const { axSnapshots, currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =
+    tabs[currentTab]; // we destructure the currentTab object which is passed in from background.js
   //@ts-ignore
   const snapshotView = viewIndex === -1 ? snapshots[sliderIndex] : snapshots[viewIndex]; // if viewIndex is -1, then use the sliderIndex instead
-
   // cleaning hierarchy and snapshotView from stateless data
   const statelessCleaning = (obj: {
     name?: string;
@@ -227,6 +226,7 @@ function MainContainer(): JSX.Element {
               snapshots={snapshots}
               // @ts-ignore
               currLocation={currLocation}
+              axSnapshots={axSnapshots}
             />
           </div>
         ) : null}

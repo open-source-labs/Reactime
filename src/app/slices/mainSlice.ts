@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { InitialState } from '../FrontendTypes';
 import _ from 'lodash';
+import Action from '../components/Actions/Action';
 
 const initialState: InitialState = {
   // we initialize what our initialState is here
@@ -46,14 +47,31 @@ export const mainSlice = createSlice({
       tabs[currentTab].viewIndex = 0;
       tabs[currentTab].playing = false;
 
-      const lastSnapshot = tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1]; // the most recent snapshot
+      // REFACTORED TO HAVE CLEAR BUTTON KEEP CURRENT STATE OF DEMO APP RATHER THAN JUST THE LAST STATE RECORDED
+      // PRIOR IMPLEMENTATION WAS FAILING TO RESET STATE OF DEMO APP UPON CLEAR
+      // IF CHANGING, CHANGE BACKGROUND.JS TOO
 
-      tabs[currentTab].hierarchy.stateSnapshot = { ...lastSnapshot }; // resets hierarchy to page last state recorded
+      // const lastSnapshot = tabs[currentTab].snapshots[tabs[currentTab].snapshots.length - 1]; // the most recent snapshot
+      // const lastAxSnapshot = tabs[currentTab].axSnapshots[tabs[currentTab].axSnapshots.length - 1]; // the most recent snapshot
+      const currSnapshot = tabs[currentTab].snapshots[tabs[currentTab].currLocation.index]; // the most recent snapshot
+      const currAxSnapshot = tabs[currentTab].axSnapshots[tabs[currentTab].currLocation.index]; // the most recent snapshot
+
+      // tabs[currentTab].hierarchy.stateSnapshot = { ...lastSnapshot }; // resets hierarchy to page last state recorded
+      // // not sure why shallow deep copy
+      // tabs[currentTab].hierarchy.axSnapshot = lastAxSnapshot; // resets hierarchy to page last state recorded
+      // tabs[currentTab].hierarchy.children = []; // resets hierarchy
+      // tabs[currentTab].snapshots = [lastSnapshot]; // resets snapshots to page last state recorded
+      // tabs[currentTab].axSnapshots = [lastAxSnapshot]; // resets snapshots to page last state recorded
+
+      tabs[currentTab].hierarchy.stateSnapshot = { ...currSnapshot }; // resets hierarchy to page last state recorded
+      // not sure why shallow deep copy
+      tabs[currentTab].hierarchy.axSnapshot = currAxSnapshot; // resets hierarchy to page last state recorded
       tabs[currentTab].hierarchy.children = []; // resets hierarchy
-      tabs[currentTab].snapshots = [lastSnapshot]; // resets snapshots to page last state recorded
+      tabs[currentTab].snapshots = [currSnapshot]; // resets snapshots to page last state recorded
+      tabs[currentTab].axSnapshots = [currAxSnapshot]; // resets snapshots to page last state recorded
 
       // resets currLocation to page last state recorded
-      tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+      // tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
       tabs[currentTab].index = 1;
       tabs[currentTab].currParent = 0;
       tabs[currentTab].currBranch = 1;
@@ -489,6 +507,15 @@ export const mainSlice = createSlice({
       state.connectRequested = false;
       state.connectionStatus = true;
     },
+
+    toggleAxTree: (state, action) => {
+      const { port, payload, tabs, currentTab } = state;
+      port.postMessage({
+        action: 'toggleAxRecord',
+        payload: action.payload,
+        tabId: currentTab,
+      });
+    },
   },
 });
 
@@ -523,4 +550,5 @@ export const {
   disconnected,
   startReconnect,
   endConnect,
+  toggleAxTree,
 } = mainSlice.actions;

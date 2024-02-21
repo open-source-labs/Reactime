@@ -18,6 +18,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
     viewIndex, // from 'tabs[currentTab]' object in 'MainContainer'
     webMetrics, // from 'tabs[currentTab]' object in 'MainContainer'
     currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
+    axSnapshots,// from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
 
   return (
@@ -58,6 +59,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
           element={
             <div style={{ height: '100%' }}>
               <StateRoute
+                axSnapshots={axSnapshots}
                 webMetrics={webMetrics}
                 viewIndex={viewIndex}
                 snapshot={snapshot}

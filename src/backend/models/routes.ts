@@ -103,7 +103,7 @@ export class Routes {
     );
     // If the target route is not found, throw an error
     if (targetIndex === -1) {
-      throw new Error('Error at Routes.navigage: targetIndex is undefined');
+      throw new Error('Error at Routes.navigate: targetIndex is undefined');
     }
     // Calculate the difference in index between the current route and the target route
     const delta: number = targetIndex - this.current;

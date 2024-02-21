@@ -5,16 +5,17 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-import React from 'react';
+import React, { useState } from 'react';
 import { MemoryRouter as Router, Route, NavLink, Routes, Outlet, Link } from 'react-router-dom';
 import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap/ComponentMap';
-import { changeView, changeSlider } from '../../slices/mainSlice';
-import { useSelector } from 'react-redux';
+import { changeView, changeSlider, toggleAxTree, setCurrentTabInApp } from '../../slices/mainSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetricsContainer from './WebMetrics/WebMetricsContainer';
 import { MainState, RootState, StateRouteProps } from '../../FrontendTypes';
+import AxContainer from './AxMap/AxMap';
 
 /*
   Loads the appropriate StateRoute view and renders the Map, Performance, History, Webmetrics, and Tree navbar buttons after clicking on the 'State' button located near the top rightmost corner.
@@ -25,6 +26,7 @@ const NO_STATE_MSG = 'No state change detected. Trigger an event to change state
 
 const StateRoute = (props: StateRouteProps) => {
   const {
+    axSnapshots, // from 'tabs[currentTab]' object in 'MainContainer'
     snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
     hierarchy: propsHierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
     snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
@@ -38,9 +40,32 @@ const StateRoute = (props: StateRouteProps) => {
   const hierarchy = propsHierarchy || tabsHierarchy;
   const viewIndex = propsViewIndex || tabsViewIndex;
 
+
+  // lines 45 - 63 contains functionality to disable the accessibility features in Reactime.
+  const dispatch = useDispatch();
+  const [showTree, setShowTree] = useState(false);
+  const [selectedValue, setSelectedValue] = useState('disable');
+  const [showParagraph, setShowParagraph] = useState(true);
+
+  const enableAxTreeButton = () => {
+    dispatch(toggleAxTree('toggleAxRecord'));
+    dispatch(setCurrentTabInApp('AxTree'));
+    setSelectedValue('enable');
+    setShowParagraph(false);
+    setShowTree(true);
+  };
+
+  const disableAxTree = () => {
+    dispatch(toggleAxTree('toggleAxRecord'));
+    setSelectedValue('disable');
+    setShowParagraph(true);
+    setShowTree(false);
+  };
+
   return (
     <div className='app-body'>
       <div className='navbar'>
+        {/* all classnames below are functionally defined for styling purposes */}
         <NavLink
           to='/'
           className={(navData) =>
@@ -84,9 +109,89 @@ const StateRoute = (props: StateRouteProps) => {
         >
           Tree
         </NavLink>
+        <NavLink
+          className={(navData) =>
+            navData.isActive
+              ? 'is-active router-link accessibility-tab'
+              : 'router-link accessibility-tab'
+          }
+          to='/accessibility'
+        >
+          Accessibility
+        </NavLink>
       </div>
       <div className='app-content'>
         <Routes>
+          <Route
+            path='/accessibility'
+            element={
+              // showTree is initially set to a falsely value, therefore, lines 155 - 189 is executed first. Once showTree is set to truthy by clicking the enable button, lines 129 - 154 is executed
+              // state is a key component here in order to update the accessibility tree 
+              showTree ? (
+                <div>
+                     <input
+                          type='radio'
+                          value='enable'
+                          checked={selectedValue === 'enable'}
+                          onChange={() => {
+                            enableAxTreeButton();
+                          }}
+                        />
+                        <label htmlFor='enable'>Enable</label>
+                        <input
+                          type='radio'
+                          value='disable'
+                          checked={selectedValue === 'disable'}
+                          onChange={() => {
+                            disableAxTree();
+                          }}
+                        />
+                        <label htmlFor='disable'>Disable</label>
+                    {showTree && <AxContainer
+                      axSnapshots={axSnapshots}
+                      snapshot={snapshot}
+                      snapshots={snapshots}
+                      currLocation={currLocation}
+                      />} 
+                </div>
+              ) : (
+                <div>
+                  {showParagraph && (
+                    <p>
+                      A Note to Developers: Reactime is using the Chrome Debugger API in order to
+                      grab the Accessibility Tree. Enabling this option will allow you to record
+                      Accessibility Tree snapshots, but will result in the Chrome browser notifying
+                      you that the Chrome Debugger has started.
+                    </p>
+                  )}
+                  <div>
+                    {
+                      <input
+                        type='radio'
+                        value='enable'
+                        checked={selectedValue === 'enable'}
+                        onChange={() => {
+                          enableAxTreeButton();
+                        }}
+                      />
+                    }
+                    <label htmlFor='enable'>Enable</label>
+                    {
+                      <input
+                        type='radio'
+                        value='disable'
+                        checked={selectedValue === 'disable'}
+                        onChange={() => {
+                          disableAxTree();
+                        }}
+                      />
+                    }
+                    <label htmlFor='disable'>Disable</label>
+                  </div>
+                </div>
+              )
+            }
+          ></Route>
           <Route
             path='/history'
             element={
@@ -169,3 +274,4 @@ const StateRoute = (props: StateRouteProps) => {
 };
 
 export default StateRoute;
+

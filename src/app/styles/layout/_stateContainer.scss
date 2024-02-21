@@ -2,12 +2,9 @@
   font-size: 10px;
   overflow: auto;
   background-color: $state-background;
-  // margin-left: 5px;
 }
 
 .toggleAC {
-  // color: #00dffc;
-  //color: $blue-brand;
   background: #ff0001;
   height: 50%;
   text-decoration: none;
@@ -17,17 +14,6 @@
 .toggleAC:focus {
   outline: none;
   box-shadow: none;
-}
-
-.state-container .navbar {
-  //background-color: $state-background;
-  //color: #ff0000;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  height: 30px;
-  position: static;
 }
 
 .state-container .main-navbar {
@@ -58,14 +44,6 @@
   justify-content: space-between;
   align-items: center;
   height: 35px;
-}
-
-.navbar {
-  color: #ff0000;
-  // prevent navbar from scrolling with state/tree display
-  left: 0px;
-  z-index: 1;
-  @extend %disable-highlight;
 }
 
 .no-data-message {
