@@ -112,17 +112,22 @@ export default function AxTree(props) {
   // root node of currAxSnapshot
   const rootAxNode = JSON.parse(JSON.stringify(currAxSnapshot[0]));
 
-  // array that holds the ax tree as a nested object and the root node initially
+  // array that holds each ax tree node with children property 
   const nodeAxArr = [];
 
   // populates ax nodes with children property; visx recognizes 'children' in order to properly render a nested tree
   const organizeAxTree = (currNode, currAxSnapshot) => {
+    // checks if current ax node has children nodes through childId
     if (currNode.childIds && currNode.childIds.length > 0) {
+      // if yes, add children property to current ax node
       currNode.children = [];
       for (let j = 0; j < currAxSnapshot.length; j++) {
+        // locate ax node associated with childId
         for (const childEle of currNode.childIds) {
           if (childEle === currAxSnapshot[j].nodeId) {
+            // store ax node in children array
             currNode.children.push(currAxSnapshot[j]);
+            // recursively call organizeAxTree with child ax node passed in to check for further nested children nodes
             organizeAxTree(currAxSnapshot[j], currAxSnapshot);
           }
         }
@@ -132,18 +137,18 @@ export default function AxTree(props) {
 
   organizeAxTree(rootAxNode, currAxSnapshot);
 
-  // stores each individual ax node with populated children property
+  // stores each individual ax node with populated children property in array
   const populateNodeAxArr = (currNode) => {
     nodeAxArr.splice(0, nodeAxArr.length);
     nodeAxArr.push(currNode);
     for (let i = 0; i < nodeAxArr.length; i += 1) {
-      // iterate through the nodeList that contains our snapshot
+      // iterate through the nodeAxArr that contains the root ax node
       const cur = nodeAxArr[i];
       if (cur.children && cur.children.length > 0) {
-        // if the currently itereated snapshot has non-zero children...
+        // if the current ax node evaluated has non-zero children...
         for (const child of cur.children) {
-          // iterate through each child in the children array
-          nodeAxArr.push(child); // add the child to the nodeList
+          // iterate through each child ax node in the children array
+          nodeAxArr.push(child); // add the child to the nodeAxArr
         }
       }
     }
