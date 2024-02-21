@@ -115,6 +115,7 @@ export default function AxTree(props) {
   // array that holds the ax tree as a nested object and the root node initially
   const nodeAxArr = [];
 
+  // populates ax nodes with children property; visx recognizes 'children' in order to properly render a nested tree
   const organizeAxTree = (currNode, currAxSnapshot) => {
     if (currNode.childIds && currNode.childIds.length > 0) {
       currNode.children = [];
@@ -131,7 +132,7 @@ export default function AxTree(props) {
 
   organizeAxTree(rootAxNode, currAxSnapshot);
 
-  // store each individual node, now with children property in nodeAxArr
+  // stores each individual ax node with populated children property
   const populateNodeAxArr = (currNode) => {
     nodeAxArr.splice(0, nodeAxArr.length);
     nodeAxArr.push(currNode);
@@ -150,7 +151,7 @@ export default function AxTree(props) {
 
   populateNodeAxArr(rootAxNode);
 
-  // ax Legend
+  // Conditionally render ax legend component (RTK)
   const { axLegendButtonClicked } = useSelector((state: RootState) => state.axLegend);
   const dispatch = useDispatch();
 
@@ -173,7 +174,6 @@ export default function AxTree(props) {
         </button>
       </div>
 
-      {/* svg references purple background */}
       <svg ref={containerRef} width={totalWidth + 0.2*totalWidth} height={totalHeight}>
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
@@ -206,9 +206,8 @@ export default function AxTree(props) {
                 // code relating to each node in tree
                 {tree.descendants().map((node, key) => {
                   const widthFunc = (name): number => {
-                    //returns a number that is related to the length of the name. Used for determining the node width.
+                    // returns a number that is related to the length of the name. Used for determining the node width.
                     const nodeLength = name.length;
-                    //return nodeLength * 7 + 20; //uncomment this line if we want each node to be directly proportional to the name.length (instead of nodes of similar sizes to snap to the same width)
                     if (nodeLength <= 5) return nodeLength + 60;
                     if (nodeLength <= 10) return nodeLength + 130;
                     return nodeLength + 160;
@@ -337,13 +336,6 @@ export default function AxTree(props) {
                           y={-height / 2}
                           x={-width / 2}
                           fill="url('#parent-gradient')"
-                          //color={'#ff0000'}
-                          //fill={node.children ? nodeParentFill : nodeChildFill}
-                          //stroke={
-                          //   node.data.isExpanded && node.data.children.length > 0
-                          //     ? nodeParentStroke
-                          //     : nodeChildStroke
-                          // }
                           strokeWidth={1.5}
                           strokeOpacity='1'
                           rx={node.children ? 4 : 10}
@@ -441,7 +433,6 @@ export default function AxTree(props) {
         </TooltipInPortal>
       )}
       
-      {/* ax Legend */}
       <div>
         { axLegendButtonClicked ? 
           <AxLegend /> : ''
