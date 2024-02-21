@@ -7,12 +7,140 @@ const portsArr = [];
 const reloaded = {};
 const firstSnapshotReceived = {};
 
+// Toggle for recording accessibility snapshots
+let toggleAxRecord = false;
+
 // There will be the same number of objects in here as there are
 // Reactime tabs open for each user application being worked on.
 let activeTab;
 const tabsObj = {};
 // Will store Chrome web vital metrics and their corresponding values.
 const metrics = {};
+
+// function pruning the chrome ax tree and pulling the relevant properties
+const pruneAxTree = (axTree) => {
+  const axArr = [];
+  let orderCounter = 0;
+
+  for (const node of axTree) {
+    let {
+      backendDOMNodeId,
+      childIds,
+      ignored,
+      name,
+      nodeId,
+      ignoredReasons,
+      parentId,
+      properties,
+      role,
+    } = node;
+
+    if (!name) {
+      if (ignored) {
+        name = { value: 'ignored node' };
+      } else {
+        name = { value: 'no name' };
+      }
+    }
+    if (!name.value) {
+      name.value = 'no name';
+    }
+    //if the node is ignored, it should be given an order number as it won't be read at all
+    if (role.type === 'role') {
+      const axNode = {
+        backendDOMNodeId: backendDOMNodeId,
+        childIds: childIds,
+        ignored: ignored,
+        ignoredReasons: ignoredReasons,
+        name: name,
+        nodeId: nodeId,
+        ignoredReasons: ignoredReasons,
+        parentId: parentId,
+        properties: properties,
+      };
+      axArr.push(axNode);
+    }
+  }
+
+  // Sort nodes by backendDOMNodeId in ascending order
+
+  // Assign order based on sorted position
+  for (const axNode of axArr) {
+    if (!axNode.ignored) {
+      // Assuming you only want to assign order to non-ignored nodes
+      axNode.order = orderCounter++;
+    } else {
+      axNode.order = null; // Or keep it undefined, based on your requirement
+    }
+  }
+  return axArr;
+};
+
+// attaches Chrome Debugger API to tab for running future commands
+function attachDebugger(tabId, version) {
+  return new Promise((resolve, reject) => {
+    chrome.debugger.attach({ tabId: tabId }, version, () => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+// sends commands with Chrome Debugger API
+function sendDebuggerCommand(tabId, command, params = {}) {
+  return new Promise((resolve, reject) => {
+    chrome.debugger.sendCommand({ tabId: tabId }, command, params, (response) => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve(response);
+      }
+    });
+  });
+}
+
+// detaches Chrome Debugger API from tab
+function detachDebugger(tabId) {
+  return new Promise((resolve, reject) => {
+    chrome.debugger.detach({ tabId: tabId }, () => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+// returns a pruned accessibility tree obtained using the Chrome Debugger API
+async function axRecord(tabId) {
+  try {
+    await attachDebugger(tabId, '1.3');
+    await sendDebuggerCommand(tabId, 'Accessibility.enable');
+    const response = await sendDebuggerCommand(tabId, 'Accessibility.getFullAXTree');
+    const pruned = pruneAxTree(response.nodes);
+    await detachDebugger(tabId);
+    return pruned;
+  } catch (error) {
+    console.error('axRecord debugger command failed:', error);
+  }
+}
+
+// Chrome Debugger API is unused unless accessibility features are toggled on with UI.
+// This function will replace the current empty snapshot if accessibility features are toggled on and the current location's accessibility snapshot has not yet been recorded.
+async function replaceEmptySnap(tabsObj, tabId, toggleAxRecord) {
+  if (tabsObj[tabId].currLocation.axSnapshot === 'emptyAxSnap' && toggleAxRecord === true) {
+    // add new ax snapshot to currlocation
+    const addedAxSnap = await axRecord(tabId);
+    tabsObj[tabId].currLocation.axSnapshot = addedAxSnap;
+    // modify array to include the new recorded ax snapshot
+    tabsObj[tabId].axSnapshots[tabsObj[tabId].currLocation.index] = addedAxSnap;
+  }
+}
+
 // This function will create the first instance of the test app's tabs object
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
 function createTabObj(title) {
@@ -26,6 +154,8 @@ function createTabObj(title) {
     // snapshots is an array of ALL state snapshots for stateful and stateless
     // components the Reactime tab working on a specific user application
     snapshots: [],
+    // axSnapshots is an array of the chrome accessibility tree at different points for state and stateless applications
+    axSnapshots: [],
     // index here is the tab index that shows total amount of state changes
     index: 0,
     //* currLocation points to the current state the user is checking
@@ -57,7 +187,7 @@ function createTabObj(title) {
 // 1. param 'obj' : arg request.payload, which is an object containing a tree from snapShot.ts and a route property
 // 2. param tabObj: arg tabsObj[tabId], which is an object that holds info about a specific tab. Should change the name of tabObj to tabCollection or something
 class HistoryNode {
-  constructor(obj, tabObj) {
+  constructor(tabObj, newStateSnapshot, newAxSnapshot) {
     // continues the order of number of total state changes
     this.index = tabObj.index;
     tabObj.index += 1;
@@ -66,7 +196,8 @@ class HistoryNode {
     this.name = tabObj.currParent;
     // marks from what branch this node is originated
     this.branch = tabObj.currBranch;
-    this.stateSnapshot = obj;
+    this.stateSnapshot = newStateSnapshot;
+    this.axSnapshot = newAxSnapshot;
     this.children = [];
   }
 }
@@ -91,6 +222,7 @@ function countCurrName(rootNode, name) {
 // 1. param tabObj : arg tabObj[tabId]
 // 2. param newNode : arg an instance of the Node class
 function sendToHierarchy(tabObj, newNode) {
+  // newNode.axSnapshot = tabObj.axSnapshots[tabObj.axSnapshots.length - 1];
   if (!tabObj.currLocation) {
     tabObj.currLocation = newNode;
     tabObj.hierarchy = newNode;
@@ -195,7 +327,7 @@ chrome.runtime.onConnect.addListener((port) => {
   // INCOMING MESSAGE FROM FRONTEND (MainContainer) TO BACKGROUND.js
   // listen for message containing a snapshot from devtools and send it to contentScript -
   // (i.e. they're all related to the button actions on Reactime)
-  port.onMessage.addListener((msg) => {
+  port.onMessage.addListener(async (msg) => {
     // msg is action denoting a time jump in devtools
     // ---------------------------------------------------------------
     // message incoming from devTools should look like this:
@@ -212,9 +344,11 @@ chrome.runtime.onConnect.addListener((port) => {
       case 'import': // create a snapshot property on tabId and set equal to tabs object
         // may need do something like filter payload from stateless
         tabsObj[tabId].snapshots = payload.snapshots; // reset snapshots to page last state recorded
+        tabsObj[tabId].axSnapshots = payload.axSnapshots; // TRYING to import axsnapshots
         // tabsObj[tabId].hierarchy = savedSnapshot.hierarchy; // why don't we just use hierarchy? Because it breaks everything...
         tabsObj[tabId].hierarchy.children = payload.hierarchy.children; // resets hierarchy to last state recorded
         tabsObj[tabId].hierarchy.stateSnapshot = payload.hierarchy.stateSnapshot; // resets hierarchy to last state recorded
+        tabsObj[tabId].hierarchy.axSnapshot = payload.hierarchy.axSnapshot; // TRYING to import hierarchy axsnapshot
         tabsObj[tabId].currLocation = payload.currLocation; // resets currLocation to last state recorded
         tabsObj[tabId].index = payload.index; //reset index to last state recorded
         tabsObj[tabId].currParent = payload.currParent; // reset currParent to last state recorded
@@ -224,16 +358,25 @@ chrome.runtime.onConnect.addListener((port) => {
 
       // emptySnap actions comes through when the user uses the 'clear' button on the front end to clear the snapshot history and move slider back to 0 position
       case 'emptySnap':
-        tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].snapshots.length - 1]]; // reset snapshots to page last state recorded
+        // REFACTORED TO HAVE CLEAR BUTTON KEEP CURRENT STATE OF DEMO APP RATHER THAN JUST THE LAST STATE RECORDED
+        // PRIOR IMPLEMENTATION WAS FAILING TO RESET STATE OF DEMO APP UPON CLEAR
+        // IF CHANGING, CHANGE MAINSLICE.JS TOO
+        tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].currLocation.index]]; // reset snapshots to current page state
         tabsObj[tabId].hierarchy.children = []; // resets hierarchy
         tabsObj[tabId].hierarchy.stateSnapshot = {
-          // resets hierarchy to page last state recorded
+          // resets hierarchy to current page state
+          // not sure why they are doing a "shallow" deep copy
           ...tabsObj[tabId].snapshots[0],
         };
-        tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy; // resets currLocation to page last state recorded
+        tabsObj[tabId].axSnapshots = [
+          tabsObj[tabId].axSnapshots[tabsObj[tabId].currLocation.index],
+        ]; // resets axSnapshots to current page state
+        tabsObj[tabId].hierarchy.axSnapshot = tabsObj[tabId].axSnapshots[0]; // resets hierarchy to ax tree of current page state
+        // tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy; // resets currLocation to page last state recorded
         tabsObj[tabId].index = 1; //reset index
         tabsObj[tabId].currParent = 0; // reset currParent
         tabsObj[tabId].currBranch = 1; // reset currBranch
+
         return true; // return true so that port remains open
 
       case 'setPause': // Pause = lock on tab
@@ -255,6 +398,23 @@ chrome.runtime.onConnect.addListener((port) => {
         chrome.tabs.sendMessage(tabId, msg);
         return true;
 
+      case 'toggleAxRecord':
+        toggleAxRecord = !toggleAxRecord;
+
+        await replaceEmptySnap(tabsObj, tabId, toggleAxRecord);
+
+        // sends new tabs obj to devtools
+        if (portsArr.length > 0) {
+          portsArr.forEach((bg) =>
+            bg.postMessage({
+              action: 'sendSnapshots',
+              payload: tabsObj,
+              tabId,
+            }),
+          );
+        }
+        return true; // return true so that port remains open
+
       case 'reinitialize':
         chrome.tabs.sendMessage(tabId, msg);
         return true;
@@ -267,7 +427,7 @@ chrome.runtime.onConnect.addListener((port) => {
 
 // INCOMING MESSAGE FROM CONTENT SCRIPT TO BACKGROUND.JS
 // background.js listening for a message from contentScript.js
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // AUTOMATIC MESSAGE SENT BY CHROME WHEN CONTENT SCRIPT IS FIRST LOADED: set Content
   if (request.type === 'SIGN_CONNECT') {
     return true;
@@ -298,7 +458,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (isReactTimeTravel && !(tabId in tabsObj)) {
     tabsObj[tabId] = createTabObj(tabTitle);
   }
-
   switch (action) {
     case 'attemptReconnect': {
       const success = 'portSuccessfullyConnected';
@@ -307,6 +466,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     case 'jumpToSnap': {
       changeCurrLocation(tabsObj[tabId], tabsObj[tabId].hierarchy, index, name);
+      // hack to test without message from mainSlice
+      // toggleAxRecord = true;
+      // record ax tree snapshot of the state that has now been jumped to if user did not toggle button on
+      await replaceEmptySnap(tabsObj, tabId, toggleAxRecord);
+
+      // sends new tabs obj to devtools
+      if (portsArr.length > 0) {
+        portsArr.forEach((bg) =>
+          bg.postMessage({
+            action: 'sendSnapshots',
+            payload: tabsObj,
+            tabId,
+          }),
+        );
+      }
+
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
           bg.postMessage({
@@ -317,6 +492,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
       break;
     }
+
     // Confirmed React Dev Tools installed, send this info to frontend
     case 'devToolsInstalled': {
       tabsObj[tabId].status.reactDevToolsInstalled = true;
@@ -363,12 +539,27 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case 'recordSnap': {
       const sourceTab = tabId;
       tabsObj[tabId].webMetrics = metrics;
+
       if (!firstSnapshotReceived[tabId]) {
         firstSnapshotReceived[tabId] = true;
         reloaded[tabId] = false;
         tabsObj[tabId].webMetrics = metrics;
         tabsObj[tabId].snapshots.push(request.payload);
-        sendToHierarchy(tabsObj[tabId], new HistoryNode(request.payload, tabsObj[tabId]));
+
+        // check if accessibility recording has been toggled on
+        let addedAxSnap;
+        if (toggleAxRecord === true) {
+          addedAxSnap = await axRecord(tabId);
+          tabsObj[tabId].axSnapshots.push(addedAxSnap);
+        } else {
+          addedAxSnap = 'emptyAxSnap';
+          tabsObj[tabId].axSnapshots.push(addedAxSnap);
+        }
+        sendToHierarchy(
+          tabsObj[tabId],
+          new HistoryNode(tabsObj[tabId], request.payload, addedAxSnap),
+        );
+
         if (portsArr.length > 0) {
           portsArr.forEach((bg) =>
             bg.postMessage({
@@ -377,6 +568,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }),
           );
         }
+
         break;
       }
 
@@ -386,7 +578,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       const previousSnap =
         tabsObj[tabId]?.currLocation?.stateSnapshot?.children[0]?.componentData?.actualDuration;
       const incomingSnap = request.payload.children[0].componentData.actualDuration;
-      if (previousSnap === incomingSnap) break;
+      if (previousSnap === incomingSnap) {
+        break;
+      }
 
       // Or if it is a snapShot after a jump, we don't record it.
       if (reloaded[tabId]) {
@@ -396,9 +590,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         tabsObj[tabId].snapshots.push(request.payload);
         // INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN
         if (!tabsObj[tabId][index]) {
-          sendToHierarchy(tabsObj[tabId], new HistoryNode(request.payload, tabsObj[tabId]));
+          // check if accessibility recording has been toggled on
+          let addedAxSnap;
+          if (toggleAxRecord === true) {
+            addedAxSnap = await axRecord(tabId);
+            tabsObj[tabId].axSnapshots.push(addedAxSnap);
+          } else {
+            addedAxSnap = 'emptyAxSnap';
+            tabsObj[tabId].axSnapshots.push(addedAxSnap);
+          }
+
+          sendToHierarchy(
+            tabsObj[tabId],
+            new HistoryNode(tabsObj[tabId], request.payload, addedAxSnap),
+          );
         }
       }
+
       // sends new tabs obj to devtools
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>

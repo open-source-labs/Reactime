@@ -11,6 +11,7 @@ export default {
    * @function clear - Clears componentActionsRecord
    */
   clear: (): void => {
+    // console.log(componentActionsRecord);
     componentActionsRecord = [];
   },
 

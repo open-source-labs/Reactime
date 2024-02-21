@@ -54,6 +54,7 @@ export interface TooltipData {
   x: number;
   y: number;
   color: string;
+  name?: string;
 }
 
 export interface snapshot {
@@ -382,4 +383,17 @@ export interface Snapshots {
 
 export interface ErrorContainerProps {
   port: chrome.runtime.Port | null;
+}
+
+export interface AxContainer {
+  axSnapshots: [];
+  snapshot: {
+    name?: string;
+    componentData?: object;
+    state?: string | object;
+    stateSnaphot?: object;
+    children?: any[];
+  };
+  snapshots: [];
+  currLocation: object;
 }
