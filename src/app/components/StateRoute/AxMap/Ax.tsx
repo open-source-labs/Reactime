@@ -184,8 +184,6 @@ export default function AxTree(props) {
     hideTooltip, // function to close a tooltip
   } = useTooltip(); // returns an object with several properties that you can use to manage the tooltip state of your component
   
-  // let nameVal = JSON.stringify(tooltipData)
-  // console.log('nameVal', nameVal);
   const {
     containerRef, // Access to the container's bounding box. This will be empty on first render.
     TooltipInPortal, // TooltipWithBounds in a Portal, outside of your component DOM tree
@@ -207,14 +205,6 @@ export default function AxTree(props) {
     zIndex: 100,
     pointerEvents: 'all !important',
   };
-
-  // const formatRenderTime = (time: number): string => {
-  //   if (!time) return 'No time information';
-  //   const renderTime = time.toFixed(3);
-  //   return `${renderTime} ms `;
-  // };
-
-
 
   const [layout, setLayout] = useState('cartesian');
   const [orientation, setOrientation] = useState('horizontal');
@@ -256,28 +246,6 @@ export default function AxTree(props) {
   // // array that holds the ax tree as a nested object and the root node initially
   const nodeAxArr = [];
 
-  //     currNode.children = [];
-  //     // checks if there is more than 1 child
-  //     if (currNode.childIds.length > 1) {
-  //       for (let m = 0; m < currNode.childIds.length; m++) {
-  //         for (let j = 0; j < currAxSnapshot.length; j++) {
-  //           if (currNode.childIds.includes(currAxSnapshot[j].nodeId)) {
-  //             currNode.children.push(currAxSnapshot[j]);
-  //           }
-  //         }
-  //       }
-  //     } else if (currNode.childIds.length === 1) {
-  //       for (let j = 0; j < currAxSnapshot.length; j++) {
-  //         if (currNode.childIds.includes(currAxSnapshot[j].nodeId)) {
-  //           currNode.children.push(currAxSnapshot[j]);
-  //         }
-  //       }
-  //       organizeAxTree(currNode.children[0], currAxSnapshot);
-  //     }
-  //     organizeAxTree(currNode.children, currAxSnapshot);
-  //   }
-
-  // organizeAxTree([rootAxNode], currAxSnapshot);
   const organizeAxTree = (currNode, currAxSnapshot) => {
     if (currNode.childIds && currNode.childIds.length > 0) {
       currNode.children = [];
@@ -501,13 +469,6 @@ export default function AxTree(props) {
                           y={-height / 2}
                           x={-width / 2}
                           fill="url('#parent-gradient')"
-                          //color={'#ff0000'}
-                          //fill={node.children ? nodeParentFill : nodeChildFill}
-                          //stroke={
-                          //   node.data.isExpanded && node.data.children.length > 0
-                          //     ? nodeParentStroke
-                          //     : nodeChildStroke
-                          // }
                           strokeWidth={1.5}
                           strokeOpacity='1'
                           rx={node.children ? 4 : 10}
@@ -597,17 +558,16 @@ export default function AxTree(props) {
         >
           <div>
             <div>
+              {/*tooltipData['name'].value cannot be referred to using dot notation so using brackets here overrides typescript's strict data typing which was interfering with accessiccing this property */}
                 <strong>{JSON.stringify(tooltipData['name'].value)}</strong>
               </div>
             <div>
+              {/* Ax Node Info below names the tooltip title because of how its passed to the ToolTipDataDisplay container*/}
               <ToolTipDataDisplay containerName='Ax Node Info' dataObj={tooltipData} />
-              {/* <ToolTipDataDisplay containerName='State'dataObj={tooltipData}/> */}
             </div>
           </div>
         </TooltipInPortal>
       )}
-      
-      {/* ax Legend */}
       <div>
         { axLegendButtonClicked ? 
           <AxLegend /> : ''
