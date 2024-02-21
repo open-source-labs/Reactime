@@ -20,10 +20,9 @@ const metrics = {};
 // function pruning the chrome ax tree and pulling the relevant properties
 const pruneAxTree = (axTree) => {
   const axArr = [];
-  let orderCounter = 0
-  
-  for (const node of axTree) {
+  let orderCounter = 0;
 
+  for (const node of axTree) {
     let {
       backendDOMNodeId,
       childIds,
@@ -36,26 +35,17 @@ const pruneAxTree = (axTree) => {
       role,
     } = node;
 
-    // let order;
- 
-    if(!name){
-      if(ignored){
-        name = {value: 'ignored node'};
-      }
-      else{
-        name = {value: 'no name'};
+    if (!name) {
+      if (ignored) {
+        name = { value: 'ignored node' };
+      } else {
+        name = { value: 'no name' };
       }
     }
-    if(!name.value){
+    if (!name.value) {
       name.value = 'no name';
     }
     //if the node is ignored, it should be given an order number as it won't be read at all
-    // if(ignored){
-    //   order = null;
-    // }
-    // else{
-    //   order = orderCounter++;
-    // }
     if (role.type === 'role') {
       const axNode = {
         backendDOMNodeId: backendDOMNodeId,
@@ -67,33 +57,26 @@ const pruneAxTree = (axTree) => {
         ignoredReasons: ignoredReasons,
         parentId: parentId,
         properties: properties,
-        // order: order,
       };
       axArr.push(axNode);
     }
   }
-  
+
   // Sort nodes by backendDOMNodeId in ascending order
-  //try with deep copy
-  // //aria properties
-  // console.log('axArr before : ', axArr);
-  // axArr.sort((a, b) => b.backendDOMNodeId - a.backendDOMNodeId);
-  
+
   // Assign order based on sorted position
   for (const axNode of axArr) {
-    // console.log('current axnode order number: ', axNode.order)
-    // console.log('this iterations node', axNode);
-    if (!axNode.ignored) { // Assuming you only want to assign order to non-ignored nodes
+    if (!axNode.ignored) {
+      // Assuming you only want to assign order to non-ignored nodes
       axNode.order = orderCounter++;
     } else {
       axNode.order = null; // Or keep it undefined, based on your requirement
     }
-    // console.log('current axnode order number: ', axNode.order)
   }
-  // console.log('axArr after: ', axArr);
   return axArr;
 };
 
+// attaches Chrome Debugger API to tab for running future commands
 function attachDebugger(tabId, version) {
   return new Promise((resolve, reject) => {
     chrome.debugger.attach({ tabId: tabId }, version, () => {
@@ -106,6 +89,7 @@ function attachDebugger(tabId, version) {
   });
 }
 
+// sends commands with Chrome Debugger API
 function sendDebuggerCommand(tabId, command, params = {}) {
   return new Promise((resolve, reject) => {
     chrome.debugger.sendCommand({ tabId: tabId }, command, params, (response) => {
@@ -118,6 +102,7 @@ function sendDebuggerCommand(tabId, command, params = {}) {
   });
 }
 
+// detaches Chrome Debugger API from tab
 function detachDebugger(tabId) {
   return new Promise((resolve, reject) => {
     chrome.debugger.detach({ tabId: tabId }, () => {
@@ -130,6 +115,7 @@ function detachDebugger(tabId) {
   });
 }
 
+// returns a pruned accessibility tree obtained using the Chrome Debugger API
 async function axRecord(tabId) {
   try {
     await attachDebugger(tabId, '1.3');
@@ -143,6 +129,8 @@ async function axRecord(tabId) {
   }
 }
 
+// Chrome Debugger API is unused unless accessibility features are toggled on with UI.
+// This function will replace the current empty snapshot if accessibility features are toggled on and the current location's accessibility snapshot has not yet been recorded.
 async function replaceEmptySnap(tabsObj, tabId, toggleAxRecord) {
   if (tabsObj[tabId].currLocation.axSnapshot === 'emptyAxSnap' && toggleAxRecord === true) {
     // add new ax snapshot to currlocation
@@ -166,8 +154,7 @@ function createTabObj(title) {
     // snapshots is an array of ALL state snapshots for stateful and stateless
     // components the Reactime tab working on a specific user application
     snapshots: [],
-    // axSnapshots is an array of the chrome ax tree at different points for state and stateless applications
-    // functionality to add snapshots is done later
+    // axSnapshots is an array of the chrome accessibility tree at different points for state and stateless applications
     axSnapshots: [],
     // index here is the tab index that shows total amount of state changes
     index: 0,
@@ -413,7 +400,6 @@ chrome.runtime.onConnect.addListener((port) => {
 
       case 'toggleAxRecord':
         toggleAxRecord = !toggleAxRecord;
-        console.log('background.js: toggleAxRecord:', toggleAxRecord);
 
         await replaceEmptySnap(tabsObj, tabId, toggleAxRecord);
 
@@ -620,11 +606,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           );
         }
       }
-      console.log('postMessage sending snapshots from background js:', {
-        action: 'sendSnapshots',
-        payload: tabsObj,
-        sourceTab,
-      })
+
       // sends new tabs obj to devtools
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
