@@ -48,7 +48,7 @@ export const mainSlice = createSlice({
       tabs[currentTab].playing = false;
 
       const currSnapshot = tabs[currentTab].snapshots[tabs[currentTab].currLocation.index]; // current snapshot
-      const currAxSnapshot = tabs[currentTab].axSnapshots[tabs[currentTab].currLocation.index]; // current snapshot
+      const currAxSnapshot = tabs[currentTab].axSnapshots[tabs[currentTab].currLocation.index]; // current accessibility tree snapshot
 
       tabs[currentTab].hierarchy.stateSnapshot = { ...currSnapshot }; // resets hierarchy to page current snapshot
       tabs[currentTab].hierarchy.axSnapshot = { ...currAxSnapshot }; // resets hierarchy to current accessibility tree snapshot
@@ -60,7 +60,7 @@ export const mainSlice = createSlice({
       tabs[currentTab].index = 1;
       tabs[currentTab].currParent = 0;
       tabs[currentTab].currBranch = 1;
-      tabs[currentTab].currLocation = tabs[currentTab].hierarchy;
+      tabs[currentTab].currLocation = tabs[currentTab].hierarchy; // reset currLocation
       tabs[currentTab].seriesSavedStatus = false;
     },
 

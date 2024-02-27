@@ -358,10 +358,6 @@ chrome.runtime.onConnect.addListener((port) => {
 
       // emptySnap actions comes through when the user uses the 'clear' button on the front end to clear the snapshot history and move slider back to 0 position
       case 'emptySnap':
-        console.log(
-          'background.js: top of emptySnap tabsObj[tabId]:',
-          JSON.parse(JSON.stringify(tabsObj[tabId])),
-        );
         tabsObj[tabId].snapshots = [tabsObj[tabId].snapshots[tabsObj[tabId].currLocation.index]]; // reset snapshots to current page state
         tabsObj[tabId].hierarchy.children = []; // resets hierarchy
         tabsObj[tabId].hierarchy.stateSnapshot = {
@@ -372,21 +368,13 @@ chrome.runtime.onConnect.addListener((port) => {
         tabsObj[tabId].axSnapshots = [
           JSON.parse(JSON.stringify(tabsObj[tabId].axSnapshots[tabsObj[tabId].currLocation.index])),
         ]; // resets axSnapshots to current page state
-        console.log(
-          'background.js: tabsObj[tabId].axSnapshots:',
-          JSON.parse(JSON.stringify(tabsObj[tabId].axSnapshots)),
-        );
         tabsObj[tabId].hierarchy.axSnapshot = JSON.parse(
           JSON.stringify(tabsObj[tabId].axSnapshots[0]),
         ); // resets hierarchy to ax tree of current page state
         tabsObj[tabId].index = 1; //reset index
         tabsObj[tabId].currParent = 0; // reset currParent
         tabsObj[tabId].currBranch = 1; // reset currBranch
-        tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy;
-        console.log(
-          'background.js: bottom of emptySnap tabsObj[tabId]:',
-          JSON.parse(JSON.stringify(tabsObj[tabId])),
-        );
+        tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy; // reset currLocation
 
         return true; // return true so that port remains open
 
