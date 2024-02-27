@@ -17,3 +17,4 @@ package-lock.json
 yarn.lock
 docs/**/*
 docs/*
+config.bat
