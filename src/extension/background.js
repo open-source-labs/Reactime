@@ -366,11 +366,9 @@ chrome.runtime.onConnect.addListener((port) => {
           ...tabsObj[tabId].snapshots[0],
         };
         tabsObj[tabId].axSnapshots = [
-          JSON.parse(JSON.stringify(tabsObj[tabId].axSnapshots[tabsObj[tabId].currLocation.index])),
+          tabsObj[tabId].axSnapshots[tabsObj[tabId].currLocation.index],
         ]; // resets axSnapshots to current page state
-        tabsObj[tabId].hierarchy.axSnapshot = JSON.parse(
-          JSON.stringify(tabsObj[tabId].axSnapshots[0]),
-        ); // resets hierarchy to ax tree of current page state
+        tabsObj[tabId].hierarchy.axSnapshot = tabsObj[tabId].axSnapshots[0]; // resets hierarchy to ax tree of current page state
         tabsObj[tabId].index = 1; //reset index
         tabsObj[tabId].currParent = 0; // reset currParent
         tabsObj[tabId].currBranch = 1; // reset currBranch
