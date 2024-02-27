@@ -14,9 +14,10 @@ const AxLegend = () => {
                 </li>
             </ul>
 
-            <p> Each node is given a property labeled <strong>ignored</strong>. </p>
-            <p> Nodes read by the screen reader have their ignored property evaluate to <strong>false</strong>. 
+            <p> Each node is given a property labeled <strong>ignored</strong>. Nodes read by the screen reader have their ignored property evaluate to <strong>false</strong>. 
             Nodes not read by the screen reader evaluate to <strong>true</strong>.</p>
+
+            <p> Nodes labeled as <strong>no name</strong> are visible to a screen reader, but were not given a name label.</p>
         </div>
     );
 }
