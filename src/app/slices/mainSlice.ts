@@ -50,7 +50,7 @@ export const mainSlice = createSlice({
       const currSnapshot = tabs[currentTab].snapshots[tabs[currentTab].currLocation.index]; // current snapshot
       const currAxSnapshot = tabs[currentTab].axSnapshots[tabs[currentTab].currLocation.index]; // current accessibility tree snapshot
 
-      tabs[currentTab].hierarchy.stateSnapshot = { ...currSnapshot }; // resets hierarchy to page current snapshot
+      tabs[currentTab].hierarchy.stateSnapshot = { ...currSnapshot }; // resets hierarchy to current snapshot
       tabs[currentTab].hierarchy.axSnapshot = { ...currAxSnapshot }; // resets hierarchy to current accessibility tree snapshot
       tabs[currentTab].hierarchy.children = []; // resets hierarchy
       tabs[currentTab].snapshots = [currSnapshot]; // resets snapshots to current snapshot
