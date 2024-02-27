@@ -49,12 +49,6 @@ async function updateReactFiberTree(
   targetSnapshot,
   circularComponentTable: Set<any> = new Set(),
 ): Promise<void> {
-  console.log(
-    'updateReactFiberTree: targetSnapshot:',
-    targetSnapshot,
-    'circularComponentTable:',
-    circularComponentTable,
-  );
   if (!targetSnapshot) return;
   // Base Case: if has visited, return
   if (circularComponentTable.has(targetSnapshot)) {

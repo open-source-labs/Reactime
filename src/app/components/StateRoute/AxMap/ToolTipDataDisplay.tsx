@@ -44,8 +44,8 @@ const ToolTipDataDisplay = ({ containerName, dataObj }) => {
     //ignored reasons here
     //&& key = name? / order?
     for (const key in dataObj) {
-      console.log('keys in dataObj in tooltiptotalDisplay: ', key);
-      if(key === 'properties' || key === 'ignored' || key === 'ignoredReasons'){// loop through properties, adding them to the data object
+      if (key === 'properties' || key === 'ignored' || key === 'ignoredReasons') {
+        // loop through properties, adding them to the data object
 
         if (typeof dataObj[key] === 'string') {
           //if 'key' is ignored, put the ignored key and its value on the data object
