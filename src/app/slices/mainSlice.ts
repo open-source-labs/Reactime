@@ -48,11 +48,10 @@ export const mainSlice = createSlice({
       tabs[currentTab].playing = false;
 
       const currSnapshot = tabs[currentTab].snapshots[tabs[currentTab].currLocation.index]; // current snapshot
-      const currAxSnapshot = tabs[currentTab].axSnapshots[tabs[currentTab].currLocation.index]; // current snapshot
+      const currAxSnapshot = tabs[currentTab].axSnapshots[tabs[currentTab].currLocation.index]; // current accessibility tree snapshot
 
-      tabs[currentTab].hierarchy.stateSnapshot = { ...currSnapshot }; // resets hierarchy to page current snapshot
-      // not sure why shallow deep copy
-      tabs[currentTab].hierarchy.axSnapshot = currAxSnapshot; // resets hierarchy to current snapshot
+      tabs[currentTab].hierarchy.stateSnapshot = { ...currSnapshot }; // resets hierarchy to current snapshot
+      tabs[currentTab].hierarchy.axSnapshot = { ...currAxSnapshot }; // resets hierarchy to current accessibility tree snapshot
       tabs[currentTab].hierarchy.children = []; // resets hierarchy
       tabs[currentTab].snapshots = [currSnapshot]; // resets snapshots to current snapshot
       tabs[currentTab].axSnapshots = [currAxSnapshot]; // resets snapshots to current snapshot
@@ -61,6 +60,7 @@ export const mainSlice = createSlice({
       tabs[currentTab].index = 1;
       tabs[currentTab].currParent = 0;
       tabs[currentTab].currBranch = 1;
+      tabs[currentTab].currLocation = tabs[currentTab].hierarchy; // reset currLocation
       tabs[currentTab].seriesSavedStatus = false;
     },
 

@@ -368,10 +368,11 @@ chrome.runtime.onConnect.addListener((port) => {
         tabsObj[tabId].axSnapshots = [
           tabsObj[tabId].axSnapshots[tabsObj[tabId].currLocation.index],
         ]; // resets axSnapshots to current page state
-        tabsObj[tabId].hierarchy.axSnapshot = tabsObj[tabId].axSnapshots[0]; // resets hierarchy to ax tree of current page state
+        tabsObj[tabId].hierarchy.axSnapshot = tabsObj[tabId].axSnapshots[0]; // resets hierarchy to accessibility tree of current page state
         tabsObj[tabId].index = 1; //reset index
         tabsObj[tabId].currParent = 0; // reset currParent
         tabsObj[tabId].currBranch = 1; // reset currBranch
+        tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy; // reset currLocation
 
         return true; // return true so that port remains open
 
