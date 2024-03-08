@@ -255,10 +255,14 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 
 ## <b>Read More</b>
 
-- [Reactime renovation: Updates Coming in Version 23.0!](https://medium.com/@liam.donaher/reactime-renovation-updates-coming-in-version-23-0-37b2ef2a2771)
+- [Relaunching Reactime: Updates and a New Accessibility Feature!](https://medium.com/@evaury/relaunching-reactime-updates-and-a-new-accessibility-feature-1f0fd3a5bd8c)
 
 ## <b>Authors</b>
 
+- **Amy Yang** - [@ay7991](https://github.com/ay7991)
+- **Eva Ury** - [@evaSUry](https://github.com/evaSUry)
+- **Oliver Cho** - [@Oliver-Cho](https://github.com/Oliver-Cho)
+- **Jesse Guerrero** - [@jguerrero35](https://github.com/jguerrero35)
 - **Ben Margolius** - [@benmarg](https://github.com/benmarg)
 - **Eric Yun** - [@ericsngyun](https://github.com/ericsngyun)
 - **James Nghiem** - [@jemzir](https://github.com/jemzir)
