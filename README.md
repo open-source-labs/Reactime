@@ -41,7 +41,8 @@
 You can view your application's file structure and click on a snapshot to view
 your app's state. State can be visualized in a Component Graph, JSON Tree, or
 Performance Graph. Snapshot history can be visualized in the History tab.
-The Web Metrics tab provides some useful metrics for site performance.
+The Web Metrics tab provides some useful metrics for site performance. The accessibility tab 
+visualizes an app's accessibility tree per state change.
 Snapshots can be compared with the previous snapshot, which can be viewed in Diff mode.
 <br>
 <br>
@@ -162,22 +163,15 @@ of the structure and interfaces of the codebase.
 
 <h1>What's New!</h1>
 
-Reactime 23.0 brings a new look to the UI, completely updates all outdated packages, and significantly improves stability by solving loading bugs.
+Reactime 24.0 includes a new accessibility debugging feature for developers!
 
-UI
+"No ARIA is better than bad ARIA"
 
-V23 showcases a sharp new theme to our extension’s UI. We also opted to completely overhaul the styling architecture to make it easier for future developers to change it to their liking.
+This version of Reactime remedies this phrase by implementing a feature that allows developers to track the accessibility tree of their application based on state change.
 
-Dependencies
+Similar to the component map feature, developers can time travel to different states of their app's accessibility tree and hover over specific nodes to learn more about their individual accessibility-related information.
 
-As of Reactime v22, installing node modules required the use of npm --force due to numerous lingering peer dependency issues. We have tackled this issue head-on in v23 of Reactime. We trimmed bulky packages that already served their purpose. We completely updated those that played a vital role in our extension’s current operation, and we fully resolved their conflicts with other dependencies. By downsizing from 124 to 70 packages, we have made Reactime much lighter and more future-proof.
-
-This effort serves to bolster Reactime in two ways: First, updating packages like react router and webpack gives Reactime’s users access to the performance upgrades that come with modern versions. Additionally, we have future-proofed Reactime by leaving our dependencies at their latest versions. This effort gives future developers of the extension a head start in adding new features and expanding the power of existing ones.
-
-Loading stability
-
-Reactime has experienced persistent issues with stably loading up. Our first step in tackling these loading inconsistencies was to thoroughly unpack Reactime’s inner workings. Tracking the flow of messages from our content script, our background service workers, the Redux state management and our extension’s backend allowed us to diagnose potential roadblocks as Reactime was spinning up. An exhaustive period of trial and error further deepened our understanding of the problem and ultimately led us towards our new and robustly stable launch experience.
-Beyond this, we have built out a road map of documentation with the goal of setting future Reactime developers on the fast track to further enhance the stability of Reactime’s launch and overall user experience.
+We've also developed an enable/disable button that determines when the Chrome Debugger API grabs the app's accessibility tree and a legend component that describes the tree in greater detail. 
 
 If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
 
@@ -261,8 +255,8 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 
 - **Amy Yang** - [@ay7991](https://github.com/ay7991)
 - **Eva Ury** - [@evaSUry](https://github.com/evaSUry)
-- **Oliver Cho** - [@Oliver-Cho](https://github.com/Oliver-Cho)
 - **Jesse Guerrero** - [@jguerrero35](https://github.com/jguerrero35)
+- **Oliver Cho** - [@Oliver-Cho](https://github.com/Oliver-Cho)
 - **Ben Margolius** - [@benmarg](https://github.com/benmarg)
 - **Eric Yun** - [@ericsngyun](https://github.com/ericsngyun)
 - **James Nghiem** - [@jemzir](https://github.com/jemzir)
