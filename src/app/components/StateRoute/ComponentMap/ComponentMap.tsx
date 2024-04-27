@@ -28,6 +28,8 @@ const nodeParentFill = '#161521'; //#161521 original
 const nodeChildFill = '#62d6fb'; //#62d6fb original
 const nodeParentStroke = '#F00008'; //#F00008 original
 const nodeChildStroke = '#4D4D4D'; //#4D4D4D original
+let stroke = ''; 
+
 
 const defaultMargin: DefaultMargin = {
   top: 30,
@@ -189,7 +191,7 @@ export default function ComponentMap({
     linkType,
     orientation,
   });
-  return totalWidth < 10 ? null : (
+  return totalWidth < 10 ? null : ( 
     <div>
       <LinkControls
         layout={layout}
@@ -224,19 +226,65 @@ export default function ComponentMap({
             size={[sizeWidth / aspect, sizeHeight / aspect]}
             separation={(a, b) => (a.parent === b.parent ? 0.5 : 0.5) / a.depth}
           >
+
             {(tree) => (
               <Group top={origin.y + 35} left={origin.x + 50 / aspect}>
-                {tree.links().map((link, i) => (
+                {tree.links().map((link, i) => {
+                  const linkName = link.source.data.name; 
+                  const propsObj = link.source.data.componentData.props;
+                  const childPropsObj = link.target.data.componentData.props;
+                  let propsLength;
+                  let childPropsLength;
+                  console.log(`------------------------------${i}:`);
+
+
+                  console.log(`LINK: ${linkName}`, link);
+                  console.log('>PROPS: ', propsObj);
+                  if (propsObj) {
+                    propsLength = Object.keys(propsObj).length;
+                    console.log('>> props_length: ', propsLength);
+                  }
+                  if (childPropsObj) {
+                    childPropsLength = Object.keys(childPropsObj).length;
+                    console.log('>> child_props_length: ', childPropsLength);
+                  }
+                  // function Sigmoid (x) {
+                  //   // alter the shape by changing x0, L and k (see wikipedia)
+                  //   const x0 = 5;
+                  //   const L = 25;
+                  //   const k = .4;
+                  //   // some costumization for case x <= 0
+                  //   if (x <= 0) result = 1
+                  //   else {
+                  //     let result = -3 + L / (1 + Math.exp(-k * (x - x0)));
+                  //   }
+                  //   return result;
+                  // }
+                  // const strokeWidthIndex = Sigmoid(childPropsLength);
+                  const strokeWidthIndex = childPropsLength * 2.5 + 1;
+                  console.log('strokeWidthIndex: ', strokeWidthIndex);
+                  
+                  
+                  if (strokeWidthIndex <= 1) {
+                    // strokeWidthIndex = 1;
+                    stroke = '#000000';
+                  } else {
+                    stroke = '#df6f37'
+                  }
+
+                  return (
                   <LinkComponent
                     className='compMapLink'
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    //stroke={linkStroke}
-                    strokeWidth='1'
+                    stroke={stroke} // color of the link --not used--
+                    strokeWidth= {strokeWidthIndex} /* strokeWidth */ // width of the link
                     fill='none'
                   />
-                ))}
+                  )
+                })
+                }
 
                 {tree.descendants().map((node, key) => {
                   const widthFunc: number = (name) => {

@@ -1,6 +1,10 @@
-.compMapLink {
-  stroke: $map-link;
-}
+// .compMapLink {
+//   // stroke: $map-link;
+//   stroke: $secondary-color;
+// }
+.compMapLink:hover {
+  box-shadow: 10px 10px rgb(163, 205, 24);
+};
 
 .comp-map-options {
   color: $map-options-label;
@@ -39,3 +43,5 @@
 .compMapRootText {
   fill: $map-root-text;
 }
+
+
