@@ -248,22 +248,15 @@ export default function ComponentMap({
                     childPropsLength = Object.keys(childPropsObj).length;
                     console.log('>> child_props_length: ', childPropsLength);
                   }
-                  // function Sigmoid (x) {
-                  //   // alter the shape by changing x0, L and k (see wikipedia)
-                  //   const x0 = 5;
-                  //   const L = 25;
-                  //   const k = .4;
-                  //   // some costumization for case x <= 0
-                  //   if (x <= 0) result = 1
-                  //   else {
-                  //     let result = -3 + L / (1 + Math.exp(-k * (x - x0)));
-                  //   }
-                  //   return result;
-                  // }
-                  // const strokeWidthIndex = Sigmoid(childPropsLength);
-                  const strokeWidthIndex = childPropsLength * 2.5 + 1;
+                  // go to https://en.wikipedia.org/wiki/Logistic_function 
+                  // for an explanation of Logistic functions and parameters used
+                  const yshift = -3;
+                  const x0 = 5;
+                  const L = 25;
+                  const k = .4;
+                  const strokeWidthIndex = yshift + L / (1 + Math.exp(-k * (childPropsLength - x0)));
+                  // const strokeWidthIndex = childPropsLength * 2.5 + 1;
                   console.log('strokeWidthIndex: ', strokeWidthIndex);
-                  
                   
                   if (strokeWidthIndex <= 1) {
                     // strokeWidthIndex = 1;
