@@ -93,6 +93,9 @@
     background-color: $navbar-unselected;
     text-decoration: none;
     color: $navbar-unselected-text;
+
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
   }
 
   .router-link:hover {
