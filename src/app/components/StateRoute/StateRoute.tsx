@@ -69,7 +69,7 @@ const StateRoute = (props: StateRouteProps) => {
         <NavLink
           to='/'
           className={(navData) =>
-            navData.isActive ? 'is-active router-link map-tab' : 'router-link map-tab'
+            navData.isActive ? 'is-active router-link map-tab map-tab1' : 'router-link map-tab'
           }
           end
         >
