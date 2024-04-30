@@ -255,11 +255,11 @@ export default function ComponentMap({
                   }
                   // go to https://en.wikipedia.org/wiki/Logistic_function 
                   // for an explanation of Logistic functions and parameters used
-                  const yshift = -3;
+                  const y0 = -3;
                   const x0 = 5;
                   const L = 25;
                   const k = .4;
-                  const strokeWidthIndex = yshift + L / (1 + Math.exp(-k * (childPropsLength - x0)));
+                  const strokeWidthIndex = y0 + L / (1 + Math.exp(-k * (childPropsLength - x0)));
                   // const strokeWidthIndex = childPropsLength * 2.5 + 1;
                   console.log('strokeWidthIndex: ', strokeWidthIndex);
                   
@@ -271,7 +271,7 @@ export default function ComponentMap({
                   }
 
                   //testing hover functionality
-                  const [isHovered, setIsHovered] = React.useState(false);
+                  // const [isHovered, setIsHovered] = React.useState(false);
 
                   //hover state
                   const [isHovered, setIsHovered] = useState(false);
