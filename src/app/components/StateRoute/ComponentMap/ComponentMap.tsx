@@ -29,6 +29,10 @@ const nodeChildFill = '#62d6fb'; //#62d6fb original
 const nodeParentStroke = '#F00008'; //#F00008 original
 const nodeChildStroke = '#4D4D4D'; //#4D4D4D original
 let stroke = ''; 
+//css class for hovered stroke change
+const hoverClass = {
+  stroke: '#ab269b' //pinkish
+}
 
 
 const defaultMargin: DefaultMargin = {
@@ -233,6 +237,7 @@ export default function ComponentMap({
                   const linkName = link.source.data.name; 
                   const propsObj = link.source.data.componentData.props;
                   const childPropsObj = link.target.data.componentData.props;
+                  //consolelog const above
                   let propsLength;
                   let childPropsLength;
                   console.log(`------------------------------${i}:`);
@@ -265,15 +270,31 @@ export default function ComponentMap({
                     stroke = '#df6f37'
                   }
 
+                  //testing hover functionality
+                  const [isHovered, setIsHovered] = React.useState(false);
+
+                  //hover state
+                  const [isHovered, setIsHovered] = useState(false);
+                  const handleMouseEnter = () => {
+                    setIsHovered(true);
+                  };
+                  const handleMouseLeave = () => {
+                    setIsHovered(false);
+                  };
+                  const strokeColor = isHovered ? hoverClass.stroke : stroke;
+
                   return (
                   <LinkComponent
                     className='compMapLink'
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    stroke={stroke} // color of the link --not used--
+                    stroke={strokeColor} // changint this color on hover
                     strokeWidth= {strokeWidthIndex} /* strokeWidth */ // width of the link
                     fill='none'
+                    //testing hover functionality
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
                   />
                   )
                 })
