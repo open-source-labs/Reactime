@@ -30,6 +30,11 @@ const nodeParentStroke = '#F00008'; //#F00008 original
 const nodeChildStroke = '#4D4D4D'; //#4D4D4D original
 let stroke = ''; 
 
+/* Heat Map Colors (for links) */
+const lightOrange = '#F1B476';
+const darkOrange = '#E4765B';
+const red = '#C64442';
+const plum = '#8C2743';
 
 const defaultMargin: DefaultMargin = {
   top: 30,
@@ -257,12 +262,20 @@ export default function ComponentMap({
                   const strokeWidthIndex = yshift + L / (1 + Math.exp(-k * (childPropsLength - x0)));
                   // const strokeWidthIndex = childPropsLength * 2.5 + 1;
                   console.log('strokeWidthIndex: ', strokeWidthIndex);
-                  
+
                   if (strokeWidthIndex <= 1) {
-                    // strokeWidthIndex = 1;
-                    stroke = '#000000';
+                    stroke = '#808080';
                   } else {
-                    stroke = '#df6f37'
+                    if (childPropsLength <= 1) {
+                      stroke = lightOrange;
+                    } else if (childPropsLength <= 2) {
+                      stroke = darkOrange;
+                    } else if (childPropsLength <= 3) {
+                      stroke = red;
+                    } else {
+                      stroke = plum;
+                    }
+                    // stroke = '#df6f37'
                   }
 
                   return (
