@@ -22,7 +22,8 @@ jest.mock('react-redux', () => ({
 const render = (component) => rtlRender(<Provider store={store}>{component}</Provider>);
 
 describe('Unit testing for Action.tsx', () => {
-  const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 18
+  const useDispatchMock = (useDispatch as unknown) as jest.Mock;  // attempt to make the test run
+  // const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 18
   const dummyDispatch = jest.fn(); //separate mock function created because we need to explicitly define on line 30 what
   useDispatchMock.mockReturnValue(dummyDispatch); //exactly useDispatchMock returns (which is a jest.fn())
   const props = {

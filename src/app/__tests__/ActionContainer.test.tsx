@@ -138,7 +138,7 @@ jest.mock('../components/Actions/RouteDescription', () => () => {
 });
 
 const MockSwitchApp = jest.fn();
-jest.mock('../components/SwitchApp', () => () => {
+jest.mock('../components/Actions/SwitchApp', () => () => {
   MockSwitchApp();
   return <div>MockSwitchApp</div>;
 });
@@ -156,7 +156,8 @@ jest.mock('react-redux', () => ({
 // const dispatch = jest.fn();
 
 describe('unit testing for ActionContainer', () => {
-  const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 18
+  const useDispatchMock = (useDispatch as unknown) as jest.Mock; // make the test run
+  // const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 18
   const dummyDispatch = jest.fn(); //separate mock function created because we need to explicitly define on line 30 what
   useDispatchMock.mockReturnValue(dummyDispatch); //exactly useDispatchMock returns (which is a jest.fn())
   beforeEach(() => {

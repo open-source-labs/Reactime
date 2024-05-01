@@ -136,7 +136,8 @@ jest.mock('react-redux', () => ({
 //needed to isolate the testing of the forward and backward buttons as behavior was affected when within the travelContainer file
 
 describe('Testing backward and forward button', () => {
-  const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 154
+  const useDispatchMock = (useDispatch as unknown) as jest.Mock; // make the test run
+  // const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 154
   const dummyDispatch = jest.fn();
   useDispatchMock.mockReturnValue(dummyDispatch);
   beforeEach(() => {
