@@ -283,9 +283,6 @@ export default function ComponentMap({
                     // stroke = '#df6f37'
                   }
 
-                  //testing hover functionality
-                  // const [isHovered, setIsHovered] = React.useState(false);
-
                   //hover state
                   const [isHovered, setIsHovered] = useState(false);
                   const handleMouseEnter = () => {
