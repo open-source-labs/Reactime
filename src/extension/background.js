@@ -293,9 +293,13 @@ chrome.runtime.onConnect.addListener((port) => {
     Again, this port object is used for communication within your extension, not for communication with external ports or tabs in the Chrome browser. If you need to interact with specific tabs or external ports, you would use other APIs or methods, such as chrome.tabs or other Chrome Extension APIs.
   */
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
-
+  console.log('in background.js on line 296');
   // sets the current Title of the Reactime panel
   if (portsArr.length > 0 && Object.keys(tabsObj).length > 0) {
+    console.log(JSON.stringify('portsArr'));
+    console.log(portsArr);
+    console.log('activeTab'); 
+    console.log(activeTab);
     portsArr.forEach((bg, index) => {
       // go through each port object (each Reactime instance)
       bg.postMessage({
@@ -381,6 +385,7 @@ chrome.runtime.onConnect.addListener((port) => {
         return true; // return true so that port remains open
 
       case 'launchContentScript':
+        if (tab.url?.startsWith("chrome://")) return undefined;
         chrome.scripting.executeScript({
           target: { tabId },
           files: ['bundles/content.bundle.js'],
@@ -526,6 +531,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         htmlBody.appendChild(script);
       };
 
+      if (tab.url?.startsWith("chrome://")) return undefined;
       chrome.scripting.executeScript({
         target: { tabId },
         func: injectScript,
