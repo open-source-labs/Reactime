@@ -87,7 +87,7 @@
   .router-link {
     height: 100%;
     // width: 34%;
-    width: 8%;
+    width: 10%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -95,8 +95,10 @@
     text-decoration: none;
     color: $navbar-unselected-text;
 
+    font-size: 75%;
     // border-top-right-radius: 10px;
     // border-top-left-radius: 10px;
+    overflow: hidden;
   }
 
   .map-tab1 {
