@@ -195,7 +195,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
               <i />
             </a>
           </aside>
-          <div className='collapse'>Collapse</div>
+          <div className='collapse'>Hide</div>
         </div>
         <a type='button' id='recordBtn' onClick={toggleRecord}>
           <i />
@@ -203,7 +203,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             className='toggle-record'
             style={{ display: 'flex', alignItems: 'center', textAlign: 'right' }}
           >
-            Toggle Record
+            Record
           </div>
           {recordingActions ? <Switch defaultChecked /> : <Switch />}
         </a>

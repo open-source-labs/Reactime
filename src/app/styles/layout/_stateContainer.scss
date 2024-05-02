@@ -282,3 +282,11 @@
 .app-content {
   height: 100%;
 }
+
+.heat-map-legend-container {
+  display: flex;
+  height: 3px;
+  width: 200px;
+  background-image: linear-gradient(to right, $heat-level-1, $heat-level-2, $heat-level-3, $heat-level-4);
+}
+
