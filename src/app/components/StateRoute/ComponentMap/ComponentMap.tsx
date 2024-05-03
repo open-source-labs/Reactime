@@ -21,6 +21,7 @@ import ToolTipDataDisplay from './ToolTipDataDisplay';
 import { toggleExpanded, setCurrentTabInApp } from '../../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 import { LinkTypesProps, DefaultMargin, ToolTipStyles } from '../../../FrontendTypes';
+import { store } from '../../../store';
 
 const linkStroke = '#F00008'; //#F00008 original
 const rootStroke = '#F00008'; //#F00008 original
@@ -30,9 +31,7 @@ const nodeParentStroke = '#F00008'; //#F00008 original
 const nodeChildStroke = '#4D4D4D'; //#4D4D4D original
 let stroke = ''; 
 //css class for hovered stroke change
-const hoverClass = {
-  stroke: '#ab269b' //pinkish
-}
+const hoverClass = '#ab269b' //pinkish
 
 /* Heat Map Colors (for links) */
 const lightOrange = '#F1B476';
@@ -239,6 +238,7 @@ export default function ComponentMap({
             {(tree) => (
               <Group top={origin.y + 35} left={origin.x + 50 / aspect}>
                 {tree.links().map((link, i) => {
+
                   const linkName = link.source.data.name; 
                   const propsObj = link.source.data.componentData.props;
                   const childPropsObj = link.target.data.componentData.props;
@@ -246,7 +246,6 @@ export default function ComponentMap({
                   let propsLength;
                   let childPropsLength;
                   console.log(`------------------------------${i}:`);
-
 
                   console.log(`LINK: ${linkName}`, link);
                   console.log('>PROPS: ', propsObj);
@@ -284,14 +283,37 @@ export default function ComponentMap({
                   }
 
                   //hover state
+                  // const [hoverStroke, setHoverStroke] = useState('');
+                  const [strokeColor, setStrokeColor] = useState(stroke);
                   const [isHovered, setIsHovered] = useState(false);
                   const handleMouseEnter = () => {
                     setIsHovered(true);
+                    setStrokeColor(hoverClass);
                   };
                   const handleMouseLeave = () => {
                     setIsHovered(false);
+                    setStrokeColor(stroke);
                   };
-                  const strokeColor = isHovered ? hoverClass.stroke : stroke;
+
+/*                   // let strokeColor: string;
+                  // if (isHovered) {
+                  //   strokeColor = hoverClass.stroke
+                  // } else {
+                  //   strokeColor = stroke;
+                  // };
+                  // let strokeColor: string;
+                  // function linkHover() {
+                  //   if (isHovered) {
+                  //     strokeColor = hoverClass
+                  //   } else {
+                  //     strokeColor = stroke;
+                  //   };
+                  //   // return strokeColor;
+                  // }
+                  // strokeColor = linkHover();
+
+                  // // const strokeColor = isHovered ? hoverClass.stroke : stroke;
+                  // isHovered ? stroke="ab269b" : stroke; */
 
                   return (
                   <LinkComponent
@@ -299,7 +321,7 @@ export default function ComponentMap({
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    stroke={strokeColor} // changint this color on hover
+                    stroke={strokeColor} // changing this color on hover
                     strokeWidth= {strokeWidthIndex} /* strokeWidth */ // width of the link
                     fill='none'
                     //testing hover functionality
