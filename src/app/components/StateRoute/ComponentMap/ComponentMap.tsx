@@ -289,6 +289,7 @@ export default function ComponentMap({
                   const handleMouseEnter = () => {
                     setIsHovered(true);
                     setStrokeColor(hoverClass);
+                    // make box
                   };
                   const handleMouseLeave = () => {
                     setIsHovered(false);
@@ -316,18 +317,23 @@ export default function ComponentMap({
                   // isHovered ? stroke="ab269b" : stroke; */
 
                   return (
-                  <LinkComponent
-                    className='compMapLink'
-                    key={i}
-                    data={link}
-                    percent={stepPercent}
-                    stroke={strokeColor} // changing this color on hover
-                    strokeWidth= {strokeWidthIndex} /* strokeWidth */ // width of the link
-                    fill='none'
-                    //testing hover functionality
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                  />
+                  <>
+                    <LinkComponent
+                      className='compMapLink'
+                      key={i}
+                      data={link}
+                      percent={stepPercent}
+                      stroke={strokeColor} // changing this color on hover
+                      strokeWidth= {strokeWidthIndex} /* strokeWidth */ // width of the link
+                      fill='none'
+                      //testing hover functionality
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                    />
+                    <div className='linkHoverInfo'>
+                      <h2>Props: </h2>
+                    </div>
+                  </>
                   )
                 })
                 }
@@ -541,7 +547,7 @@ export default function ComponentMap({
           </Tree>
         </Group>
       </svg>
-      {tooltipOpen && tooltipData && (
+      {tooltipOpen && tooltipData && (  // if the tooltip is open and there is data to display...
         <TooltipInPortal
           // set this to random so it correctly updates with parent bounds
           key={Math.random()}
@@ -584,6 +590,7 @@ export default function ComponentMap({
           </div>
         </TooltipInPortal>
       )}
+
     </div>
   );
 }

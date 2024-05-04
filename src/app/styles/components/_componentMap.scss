@@ -5,6 +5,9 @@
 // .compMapLink:hover {
 //   box-shadow: 10px 10px rgb(163, 205, 24);
 // };
+* {
+  border: 1px solid red;
+}
 
 .comp-map-options {
   color: $map-options-label;
@@ -50,3 +53,9 @@
 }
 
 
+.linkHoverInfo {
+  height: 100px;
+  width: 100px;
+  background-color: #f1f1f1;
+  z-index: 100;
+}
