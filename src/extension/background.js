@@ -7,6 +7,9 @@ const portsArr = [];
 const reloaded = {};
 const firstSnapshotReceived = {};
 
+console.log('in background.js')
+console.log(portsArr);
+
 // Toggle for recording accessibility snapshots
 let toggleAxRecord = false;
 
