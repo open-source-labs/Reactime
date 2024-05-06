@@ -30,7 +30,7 @@ class Board extends Component<{}, BoardState> {
 
   //added void
   componentDidUpdate(): void {
-    this.checkForWinner();
+    this.checkForWinner()
   }
 
   /**
@@ -116,8 +116,8 @@ class Board extends Component<{}, BoardState> {
   }
 
   //added type for render
-  render(): JSX.Element {
-    const rows: Array<JSX.Element> = [];
+  render(): JSX.Element { 
+    const rows: Array<JSX.Element> = [];  
     for (let i = 0; i < 3; i++) {
       rows.push(
         <Row key={i} row={i} handleBoxClick={this.handleBoxClick} values={this.state.board[i]} />,
