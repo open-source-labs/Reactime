@@ -31,7 +31,10 @@ const nodeParentStroke = '#F00008'; //#F00008 original
 const nodeChildStroke = '#4D4D4D'; //#4D4D4D original
 let stroke = ''; 
 //css class for hovered stroke change
-const hoverClass = '#ab269b' //pinkish
+// const hoverClass = {
+//   stroke: "#ab269b"//pinkish
+// }
+const hoverClass = '#ab269b'; //pinkish
 
 /* Heat Map Colors (for links) */
 const lightOrange = '#F1B476';
@@ -267,51 +270,95 @@ export default function ComponentMap({
                   // const strokeWidthIndex = childPropsLength * 2.5 + 1;
                   console.log('strokeWidthIndex: ', strokeWidthIndex);
 
-                  if (strokeWidthIndex <= 1) {
-                    stroke = '#808080';
-                  } else {
-                    if (childPropsLength <= 1) {
-                      stroke = lightOrange;
-                    } else if (childPropsLength <= 2) {
-                      stroke = darkOrange;
-                    } else if (childPropsLength <= 3) {
-                      stroke = red;
+                  // function findStrokeColor() {
+                    if (strokeWidthIndex <= 1) {
+                      stroke = '#808080';
                     } else {
-                      stroke = plum;
+                      if (childPropsLength <= 1) {
+                        stroke = lightOrange;
+                      } else if (childPropsLength <= 2) {
+                        stroke = darkOrange;
+                      } else if (childPropsLength <= 3) {
+                        stroke = red;
+                      } else {
+                        stroke = plum;
+                      }
                     }
-                    // stroke = '#df6f37'
-                  }
-
-                  //hover state
-                  // const [hoverStroke, setHoverStroke] = useState('');
-                  const [strokeColor, setStrokeColor] = useState(stroke);
+                  // }
+                  // findStrokeColor();
+                  
+                 
                   const [isHovered, setIsHovered] = useState(false);
                   const handleMouseEnter = () => {
                     setIsHovered(true);
-                    setStrokeColor(hoverClass);
+                  };
+                  const handleMouseLeave = () => {
+                    setIsHovered(false)
+                  }
+                  
+                  let strokeColor; //isHovered ? hoverClass : stroke;
+                  let chooseCursor; 
+
+                  if (isHovered){
+                    strokeColor = hoverClass;
+                  }
+                  else { 
+                    strokeColor = stroke
+                  }
+                   
+                  
+                  
+                  
+                  
+
+/*      CODE GRAVEYARD
+             //hover state
+                  // const [hoverStroke, setHoverStroke] = useState('');
+                  // const [strokeColor, setStrokeColor] = useState(stroke);
+                  const [isHovered, setIsHovered] = useState(false);
+                  const handleMouseEnter = () => {
+                    setIsHovered(true);
+                    // stroke = hoverClass;
+                    // setStrokeColor(hoverClass);
+                    stroke = strokeColor;
                     // make box
                   };
                   const handleMouseLeave = () => {
                     setIsHovered(false);
-                    setStrokeColor(stroke);
-                  };
-
-/*                   // let strokeColor: string;
-                  // if (isHovered) {
-                  //   strokeColor = hoverClass.stroke
-                  // } else {
-                  //   strokeColor = stroke;
+                    // if (strokeWidthIndex <= 1) {
+                    //   setStrokeColor = '#808080';
+                    // } else {
+                    //   if (childPropsLength <= 1) {
+                    //     setStrokeColor = lightOrange;
+                    //   } else if (childPropsLength <= 2) {
+                    //     setStrokeColor = darkOrange;
+                    //   } else if (childPropsLength <= 3) {
+                    //     setStrokeColor = red;
+                    //   } else {
+                    //     setStrokeColor = plum;
+                    //   }
+                    // }
+                    stroke = hoverClass;
+                    
                   // };
+
+                  let strokeColor: string;
+                  if (isHovered) {
+                    strokeColor = hoverClass
+                    // strokeColor =
+                  } else {
+                    strokeColor = stroke;
+                  };
                   // let strokeColor: string;
-                  // function linkHover() {
-                  //   if (isHovered) {
-                  //     strokeColor = hoverClass
-                  //   } else {
-                  //     strokeColor = stroke;
-                  //   };
-                  //   // return strokeColor;
-                  // }
-                  // strokeColor = linkHover();
+                  function linkHover() {
+                    if (isHovered) {
+                      strokeColor = hoverClass
+                    } else {
+                      strokeColor = stroke;
+                    };
+                    // return strokeColor;
+                  }
+                  strokeColor = linkHover();
 
                   // // const strokeColor = isHovered ? hoverClass.stroke : stroke;
                   // isHovered ? stroke="ab269b" : stroke; */
@@ -330,8 +377,8 @@ export default function ComponentMap({
                       onMouseEnter={handleMouseEnter}
                       onMouseLeave={handleMouseLeave}
                     />
-                    <div className='linkHoverInfo'>
-                      <h2>Props: </h2>
+                    <div className="linkHoverInfo">
+                      <h1>Props</h1>
                     </div>
                   </>
                   )
@@ -590,6 +637,10 @@ export default function ComponentMap({
           </div>
         </TooltipInPortal>
       )}
+      <div className="linkHover-Info">
+        <p><strong>Props </strong>():</p>
+        <div></div>
+      </div>
 
     </div>
   );
