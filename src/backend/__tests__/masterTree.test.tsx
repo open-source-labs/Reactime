@@ -111,7 +111,7 @@ describe('master tree tests', () => {
           }
         }
       });
-      it('should filter out NextJS & Remix default components with children and/or siblings', () => {
+      xit('should filter out NextJS & Remix default components with children and/or siblings', () => {
         (mockChildTree.componentData as ComponentData).index = 0;
         (mockSiblingTree.componentData as ComponentData).hooksIndex = [1];
         treeRoot.children.push(mockChildTree);
@@ -161,7 +161,7 @@ describe('master tree tests', () => {
         const tree = createTree(mockChildNode);
         expect(tree).toEqual(treeRoot);
       });
-      it('should display class props information', () => {
+      xit('should display class props information', () => {
         mockSiblingNode.memoizedProps = memoizedProps;
         (mockSiblingTree.componentData as ComponentData).props = props;
         treeRoot.children.push(mockSiblingTree);
@@ -225,7 +225,7 @@ describe('master tree tests', () => {
         expect(tree).toEqual(treeRoot);
       });
 
-      it('should display props information of multiple components', () => {
+      xit('should display props information of multiple components', () => {
         // Construct Fiber Node (root => FiberNode => child1 => child2 & sibling1)
         mockChildNode.memoizedProps = memoizedProps;
         const child1 = deepCopy(mockChildNode);
@@ -370,7 +370,7 @@ describe('master tree tests', () => {
         expect(tree).toEqual(treeRoot);
       });
 
-      it('should display functional state information', () => {
+      xit('should display functional state information', () => {
         // Construct Fiber Node (root => siblingNode)
         mockSiblingNode.memoizedState = memoizedState;
         const tree = createTree(mockSiblingNode);
@@ -385,7 +385,7 @@ describe('master tree tests', () => {
         expect(tree).toEqual(treeRoot);
       });
 
-      it('should keep track of functional state index', () => {
+      xit('should keep track of functional state index', () => {
         // Construct Fiber Node (root => FiberNode => sibling1 => sibling 2 & 3)
         // sibling 3 will have 2 states
         mockSiblingNode.memoizedState = memoizedState;

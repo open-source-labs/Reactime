@@ -10,7 +10,8 @@ jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'), // Use the actual react-redux module except for the functions you want to mock
   useDispatch: jest.fn(), // set up a mock function for useDispatch
 }));
-const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 18
+const useDispatchMock = (useDispatch as unknown) as jest.Mock; // make the test run
+// const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 18
 const dummyDispatch = jest.fn(); //separate mock function created because we need to explicitly define on line 30 what
 useDispatchMock.mockReturnValue(dummyDispatch); //exactly useDispatchMock returns (which is a jest.fn())
 const customTabs = {

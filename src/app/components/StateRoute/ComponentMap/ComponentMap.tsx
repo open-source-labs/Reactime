@@ -240,18 +240,13 @@ export default function ComponentMap({
                   const childPropsObj = link.target.data.componentData.props;
                   let propsLength;
                   let childPropsLength;
-                  console.log(`------------------------------${i}:`);
 
-
-                  console.log(`LINK: ${linkName}`, link);
-                  console.log('>PROPS: ', propsObj);
                   if (propsObj) {
                     propsLength = Object.keys(propsObj).length;
-                    console.log('>> props_length: ', propsLength);
                   }
                   if (childPropsObj) {
                     childPropsLength = Object.keys(childPropsObj).length;
-                    console.log('>> child_props_length: ', childPropsLength);
+
                   }
                   // go to https://en.wikipedia.org/wiki/Logistic_function 
                   // for an explanation of Logistic functions and parameters used
@@ -260,8 +255,6 @@ export default function ComponentMap({
                   const L = 25;
                   const k = .4;
                   const strokeWidthIndex = yshift + L / (1 + Math.exp(-k * (childPropsLength - x0)));
-                  // const strokeWidthIndex = childPropsLength * 2.5 + 1;
-                  console.log('strokeWidthIndex: ', strokeWidthIndex);
 
                   if (strokeWidthIndex <= 1) {
                     stroke = '#808080';
