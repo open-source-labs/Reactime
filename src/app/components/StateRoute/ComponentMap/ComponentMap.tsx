@@ -29,12 +29,10 @@ const nodeParentFill = '#161521'; //#161521 original
 const nodeChildFill = '#62d6fb'; //#62d6fb original
 const nodeParentStroke = '#F00008'; //#F00008 original
 const nodeChildStroke = '#4D4D4D'; //#4D4D4D original
-let stroke = ''; 
-//css class for hovered stroke change
-// const hoverClass = {
-//   stroke: "#ab269b"//pinkish
-// }
 const hoverClass = '#ab269b'; //pinkish
+
+let stroke = ''; 
+
 
 /* Heat Map Colors (for links) */
 const lightOrange = '#F1B476';
@@ -264,22 +262,19 @@ export default function ComponentMap({
                   const k = .4;
                   const strokeWidthIndex = yshift + L / (1 + Math.exp(-k * (childPropsLength - x0)));
 
-                  // function findStrokeColor() {
-                    if (strokeWidthIndex <= 1) {
-                      stroke = '#808080';
+                  if (strokeWidthIndex <= 1) {
+                    stroke = '#808080';
+                  } else {
+                    if (childPropsLength <= 1) {
+                      stroke = lightOrange;
+                    } else if (childPropsLength <= 2) {
+                      stroke = darkOrange;
+                    } else if (childPropsLength <= 3) {
+                      stroke = red;
                     } else {
-                      if (childPropsLength <= 1) {
-                        stroke = lightOrange;
-                      } else if (childPropsLength <= 2) {
-                        stroke = darkOrange;
-                      } else if (childPropsLength <= 3) {
-                        stroke = red;
-                      } else {
-                        stroke = plum;
-                      }
+                      stroke = plum;
                     }
-                  // }
-                  // findStrokeColor();
+                  }
                   
                  
                   const [isHovered, setIsHovered] = useState(false);
@@ -300,62 +295,6 @@ export default function ComponentMap({
                     strokeColor = stroke
                   }
                    
-                  
-                  
-                  
-                  
-
-/*      CODE GRAVEYARD
-             //hover state
-                  // const [hoverStroke, setHoverStroke] = useState('');
-                  // const [strokeColor, setStrokeColor] = useState(stroke);
-                  const [isHovered, setIsHovered] = useState(false);
-                  const handleMouseEnter = () => {
-                    setIsHovered(true);
-                    // stroke = hoverClass;
-                    // setStrokeColor(hoverClass);
-                    stroke = strokeColor;
-                    // make box
-                  };
-                  const handleMouseLeave = () => {
-                    setIsHovered(false);
-                    // if (strokeWidthIndex <= 1) {
-                    //   setStrokeColor = '#808080';
-                    // } else {
-                    //   if (childPropsLength <= 1) {
-                    //     setStrokeColor = lightOrange;
-                    //   } else if (childPropsLength <= 2) {
-                    //     setStrokeColor = darkOrange;
-                    //   } else if (childPropsLength <= 3) {
-                    //     setStrokeColor = red;
-                    //   } else {
-                    //     setStrokeColor = plum;
-                    //   }
-                    // }
-                    stroke = hoverClass;
-                    
-                  // };
-
-                  let strokeColor: string;
-                  if (isHovered) {
-                    strokeColor = hoverClass
-                    // strokeColor =
-                  } else {
-                    strokeColor = stroke;
-                  };
-                  // let strokeColor: string;
-                  function linkHover() {
-                    if (isHovered) {
-                      strokeColor = hoverClass
-                    } else {
-                      strokeColor = stroke;
-                    };
-                    // return strokeColor;
-                  }
-                  strokeColor = linkHover();
-
-                  // // const strokeColor = isHovered ? hoverClass.stroke : stroke;
-                  // isHovered ? stroke="ab269b" : stroke; */
 
                   return (
                   <>
