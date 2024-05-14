@@ -86,7 +86,8 @@
 
   .router-link {
     height: 100%;
-    width: 34%;
+    // width: 34%;
+    width: 10%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -94,8 +95,20 @@
     text-decoration: none;
     color: $navbar-unselected-text;
 
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
+    font-size: 75%;
+    // border-top-right-radius: 10px;
+    // border-top-left-radius: 10px;
+    overflow: hidden;
+  }
+
+  .map-tab1 {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  .accessibility-tab {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
   }
 
   .router-link:hover {
@@ -108,16 +121,20 @@
   }
 
   .navbar {
-    background-color: $navbar-background;
+    // background-color: $navbar-background;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     height: 30px;
-    position: sticky;
-    top: 40px; //should revisit to figure out a more dynamic way of sticking the navbar to the bottom of the main-navbar
-    left: 0px;
+    position: fixed;
+    top: 4px; //should revisit to figure out a more dynamic way of sticking the navbar to the bottom of the main-navbar // <- tried placing the main nav on the same line to save space but ran into problems with the svg div of the tree + animation. Will need closer inspection
+    left: 50%;
+    transform: translateX(-50%);
+    width: 65vw;
     z-index: 1;
+
+
     @extend %disable-highlight;
   }
 
@@ -225,9 +242,10 @@
   z-index: 2;
 }
 
-.state-container .router-link {
-  border: 0.5px solid black;
-}
+// .state-container .router-link {
+//   border: 0.5px solid rgba(0, 0, 0, 0.5);
+//   border-bottom: none;
+// }
 
 .tooltipData {
   background-color: #373737;
@@ -264,3 +282,11 @@
 .app-content {
   height: 100%;
 }
+
+.heat-map-legend-container {
+  display: flex;
+  height: 3px;
+  width: 200px;
+  background-image: linear-gradient(to right, $heat-level-1, $heat-level-2, $heat-level-3, $heat-level-4);
+}
+

@@ -8,6 +8,7 @@ import StateRoute from '../components/StateRoute/StateRoute';
 import DiffRoute from '../components/DiffRoute/DiffRoute';
 import { StateContainerProps } from '../FrontendTypes';
 import { Outlet } from 'react-router';
+import HeatMapLegend from '../components/StateRoute/ComponentMap/heatMapLegend';
 
 // eslint-disable-next-line react/prop-types
 const StateContainer = (props: StateContainerProps): JSX.Element => {
@@ -22,6 +23,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
   } = props;
 
   return (
+    <>
     <div className='state-container'>
       <div className='main-navbar-container'>
         <div className='main-navbar-text' />
@@ -44,6 +46,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
           </NavLink>
         </div>
       </div>
+      <HeatMapLegend />
       <Routes>
         <Route
           path='/diff/*'
@@ -68,11 +71,13 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
                 currLocation={currLocation}
               />
               {/* <Outlet/> */}
+              {/* <HeatMapLegend /> */}
             </div>
           }
         />
       </Routes>
     </div>
+    </>
   );
 };
 
