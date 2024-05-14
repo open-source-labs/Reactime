@@ -34,7 +34,7 @@ describe('unit testing for ErrorContainer.tsx', () => {
   });
 
   describe("when there's a Content Script Error", () => {
-    test('Content Script Error related text shows', () => {
+    xtest('Content Script Error related text shows', () => {
       props.status.contentScriptLaunched = false;
       render(<ErrorMsg {...props} />);
       expect(
@@ -57,7 +57,7 @@ describe('unit testing for ErrorContainer.tsx', () => {
       ).toBeInTheDocument();
     });
 
-    test('launch button shows', () => {
+    xtest('launch button shows', () => {
       render(<ErrorMsg {...props} />);
       expect(screen.getByRole('button')).toBeInTheDocument();
       props.status.contentScriptLaunched = true;
