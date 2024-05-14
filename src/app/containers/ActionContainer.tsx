@@ -197,19 +197,29 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
           </aside>
           <div className='collapse'>Collapse</div>
         </div>
-        <a type='button' id='recordBtn' onClick={toggleRecord}>
+        {/* <a type='button' id='recordBtn' onClick={toggleRecord}>
           <i />
           <div
             className='toggle-record'
             style={{ display: 'flex', alignItems: 'center', textAlign: 'right' }}
           >
-            Toggle Record
+            Record
           </div>
           {recordingActions ? <Switch defaultChecked /> : <Switch />}
-        </a>
+        </a> */}
       </div>
       {actionView ? (
         <div className='action-button-wrapper'>
+          <a type='button' id='recordBtn' onClick={toggleRecord}>
+            <i />
+            <div
+              className='toggle-record'
+              style={{ display: 'flex', alignItems: 'center', textAlign: 'right' }}
+            >
+              Record
+            </div>
+            {recordingActions ? <Switch defaultChecked /> : <Switch />}
+          </a>
           <SwitchAppDropdown />
           <div className='action-component exclude'>
             <Button

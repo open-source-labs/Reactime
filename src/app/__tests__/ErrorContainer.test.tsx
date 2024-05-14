@@ -131,7 +131,7 @@ const render = (component) => rtlRender(<Provider store={customStore}>{component
 // };
 
 const MockErrorMsg = jest.fn();
-jest.mock('../components/ErrorMsg', () => () => {
+jest.mock('../components/ErrorHandling/ErrorMsg', () => () => {
   MockErrorMsg();
   return <div>MockErrorMsg</div>;
 });
@@ -142,51 +142,56 @@ jest.mock('../components/ErrorMsg', () => () => {
 // const dispatch = jest.fn();
 // mockeduseStoreContext.mockImplementation(() => [state, dispatch]);
 
+// added to fix broken tests
+const props = {
+  port: null, 
+};
+
 describe('unit testing for ErrorContainer.tsx', () => {
   test('logo image renders as expected', () => {
-    render(<ErrorContainer />);
+    render(<ErrorContainer {...props} />); // added {...props} to fix broken test
     expect(screen.getByAltText('Reactime Logo')).toBeInTheDocument();
   });
 
   test('ErrorMsg component renders as expected', () => {
-    render(<ErrorContainer />);
+    render(<ErrorContainer {...props} />); // added {...props} to fix broken test
     expect(screen.getByText('MockErrorMsg')).toBeInTheDocument();
   });
 
   test('Reactime website shows as expected', () => {
-    render(<ErrorContainer />);
+    render(<ErrorContainer {...props} />); // added {...props} to fix broken test
     expect(screen.getByText('Please visit the Reactime Github for more info.')).toBeInTheDocument();
   });
 
   describe('Loading Checks show up as expected', () => {
     test('Content script launching check shows', () => {
-      render(<ErrorContainer />);
+      render(<ErrorContainer {...props} />); // added {...props} to fix broken test
       expect(
         screen.getByText(`Checking if content script has been launched on current tab`),
       ).toBeInTheDocument();
     });
     test('React Dev Tool Install check shows', () => {
-      render(<ErrorContainer />);
+      render(<ErrorContainer {...props} />); // added {...props} to fix broken test
       expect(
         screen.getByText(`Checking if React Dev Tools has been installed`),
       ).toBeInTheDocument();
     });
     test('Compatible app check shows', () => {
-      render(<ErrorContainer />);
+      render(<ErrorContainer {...props} />); // added {...props} to fix broken test
       expect(screen.getByText(`Checking if target is a compatible React app`)).toBeInTheDocument();
     });
   });
 
   describe('Launching header shows correct tab info', () => {
     test('When currentTitle has no target', () => {
-      render(<ErrorContainer />);
+          render(<ErrorContainer {...props} />); // added {...props} to fix broken test
       expect(screen.getByText(`Launching Reactime on tab: No Target`)).toBeInTheDocument();
       expect(screen.queryByText(`Launching Reactime on tab: Test Page`)).not.toBeInTheDocument();
     });
 
     test('When currentTitle has a target title', () => {
       customInitialState.main.currentTitle = 'Test Page';
-      render(<ErrorContainer />);
+          render(<ErrorContainer {...props} />); // added {...props} to fix broken test
       expect(screen.getByText(`Launching Reactime on tab: Test Page`)).toBeInTheDocument();
       expect(screen.queryByText(`Launching Reactime on tab: No Target`)).not.toBeInTheDocument();
     });
