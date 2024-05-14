@@ -1,10 +1,5 @@
-// .compMapLink {
-//   // stroke: $map-link;
-//   stroke: $secondary-color;
-// }
-.compMapLink:hover {
-  box-shadow: 10px 10px rgb(163, 205, 24);
-};
+
+
 
 .comp-map-options {
   color: $map-options-label;
@@ -21,6 +16,8 @@
 //   //fill: $map-parent-fill;
 //   //stroke: $map-parent-stroke;
 // }
+
+
 
 .compMapParentText {
   fill: $map-parent-text
@@ -44,3 +41,19 @@
   fill: $map-root-text;
 }
 
+<<<<<<< HEAD
+
+.linkHover-Info {
+  height: 100px;
+  width: 100px;
+  // border: 1px solid red;
+  z-index: 100;
+  overflow: visible;
+  // position: absolute;
+  offset-position: 100px;
+  border-radius: 5px;
+  background-color: rgba(255, 0, 0, 0.067);
+  // margin-bottom: 10px;
+}
+=======
+>>>>>>> dev
