@@ -265,6 +265,18 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
   }
 }
 
+async function getActiveTab() {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+      if (tabs.length > 0) {
+        resolve(tabs[0].id);
+      } else {
+        reject(new Error('No active tab'))
+      }
+    });
+  })
+}
+
 /*
   The 'chrome.runtime' API allows a connection to the background service worker (background.js).
   This allows us to set up listener's for when we connect, message, and disconnect the script.
@@ -272,7 +284,7 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
 
 // INCOMING CONNECTION FROM FRONTEND (MainContainer) TO BACKGROUND.JS
 // Establishing incoming connection with Reactime.
-chrome.runtime.onConnect.addListener((port) => {
+chrome.runtime.onConnect.addListener(async (port) => {
   /*
     On initial connection, there is an onConnect event emitted. The 'addlistener' method provides a communication channel object ('port') when we connect to the service worker ('background.js') and applies it as the argument to it's 1st callback parameter.
 
@@ -293,17 +305,33 @@ chrome.runtime.onConnect.addListener((port) => {
     Again, this port object is used for communication within your extension, not for communication with external ports or tabs in the Chrome browser. If you need to interact with specific tabs or external ports, you would use other APIs or methods, such as chrome.tabs or other Chrome Extension APIs.
   */
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
-
   // sets the current Title of the Reactime panel
-  if (portsArr.length > 0 && Object.keys(tabsObj).length > 0) {
+
+/**
+ * Sends messages to ports in the portsArr array, triggering a tab change action.
+ */
+  function sendMessagesToPorts() {
     portsArr.forEach((bg, index) => {
-      // go through each port object (each Reactime instance)
-      bg.postMessage({
-        // send passed in action object as a message to the current port
-        action: 'changeTab',
-        payload: { tabId: activeTab.id, title: activeTab.title },
-      });
+        bg.postMessage({
+            action: 'changeTab',
+            payload: { tabId: activeTab.id, title: activeTab.title },
+        });
     });
+}
+
+  
+  if (portsArr.length > 0 && Object.keys(tabsObj).length > 0) {
+    //if the activeTab is not set during the onActivate API, run a query to get the tabId and set activeTab
+    if (!activeTab) {
+      const tabId = await getActiveTab();
+      chrome.tabs.get(tabId, (tab) => {
+        // never set a reactime instance to the active tab
+        if (!tab.pendingUrl?.match('^chrome-extension')) {
+          activeTab = tab;
+          sendMessagesToPorts();
+        }
+        });
+    };
   }
 
   if (Object.keys(tabsObj).length > 0) {
@@ -381,6 +409,7 @@ chrome.runtime.onConnect.addListener((port) => {
         return true; // return true so that port remains open
 
       case 'launchContentScript':
+        //if (tab.url?.startsWith("chrome://")) return undefined;
         chrome.scripting.executeScript({
           target: { tabId },
           files: ['bundles/content.bundle.js'],
@@ -526,6 +555,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         htmlBody.appendChild(script);
       };
 
+      //if (tab.url?.startsWith("chrome://")) return undefined;
       chrome.scripting.executeScript({
         target: { tabId },
         func: injectScript,
@@ -674,6 +704,14 @@ chrome.tabs.onActivated.addListener((info) => {
     // never set a reactime instance to the active tab
     if (!tab.pendingUrl?.match('^chrome-extension')) {
       activeTab = tab;
+
+      /**this setInterval is here to make sure that the app does not stop working even
+       * if chrome pauses to save energy. There is probably a better solution, but v25 did
+       * not have time to complete.
+      */
+      setInterval(() => {
+        console.log(activeTab)
+      }, 10000);
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
           bg.postMessage({

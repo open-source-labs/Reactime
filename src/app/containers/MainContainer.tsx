@@ -19,6 +19,7 @@ import {
 } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainState, RootState } from '../FrontendTypes';
+import HeatMapLegend from '../components/StateRoute/ComponentMap/heatMapLegend';
 
 /*
   This is the main container where everything in our application is rendered
