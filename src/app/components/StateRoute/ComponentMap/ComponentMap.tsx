@@ -21,7 +21,6 @@ import ToolTipDataDisplay from './ToolTipDataDisplay';
 import { toggleExpanded, setCurrentTabInApp } from '../../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 import { LinkTypesProps, DefaultMargin, ToolTipStyles } from '../../../FrontendTypes';
-import { store } from '../../../store';
 
 const linkStroke = '#F00008'; //#F00008 original
 const rootStroke = '#F00008'; //#F00008 original
@@ -29,10 +28,7 @@ const nodeParentFill = '#161521'; //#161521 original
 const nodeChildFill = '#62d6fb'; //#62d6fb original
 const nodeParentStroke = '#F00008'; //#F00008 original
 const nodeChildStroke = '#4D4D4D'; //#4D4D4D original
-const hoverClass = '#ab269b'; //pinkish
-
 let stroke = ''; 
-
 
 /* Heat Map Colors (for links) */
 const lightOrange = '#F1B476';
@@ -239,11 +235,9 @@ export default function ComponentMap({
             {(tree) => (
               <Group top={origin.y + 35} left={origin.x + 50 / aspect}>
                 {tree.links().map((link, i) => {
-
                   const linkName = link.source.data.name; 
                   const propsObj = link.source.data.componentData.props;
                   const childPropsObj = link.target.data.componentData.props;
-                  //consolelog const above
                   let propsLength;
                   let childPropsLength;
 
@@ -256,7 +250,7 @@ export default function ComponentMap({
                   }
                   // go to https://en.wikipedia.org/wiki/Logistic_function 
                   // for an explanation of Logistic functions and parameters used
-                  const y0 = -3;
+                  const yshift = -3;
                   const x0 = 5;
                   const L = 25;
                   const k = .4;
@@ -274,46 +268,19 @@ export default function ComponentMap({
                     } else {
                       stroke = plum;
                     }
+                    // stroke = '#df6f37'
                   }
-                  
-                 
-                  const [isHovered, setIsHovered] = useState(false);
-                  const handleMouseEnter = () => {
-                    setIsHovered(true);
-                  };
-                  const handleMouseLeave = () => {
-                    setIsHovered(false)
-                  }
-                  
-                  let strokeColor; //isHovered ? hoverClass : stroke;
-                  let chooseCursor; 
-
-                  if (isHovered){
-                    strokeColor = hoverClass;
-                  }
-                  else { 
-                    strokeColor = stroke
-                  }
-                   
 
                   return (
-                  <>
-                    <LinkComponent
-                      className='compMapLink'
-                      key={i}
-                      data={link}
-                      percent={stepPercent}
-                      stroke={strokeColor} // changing this color on hover
-                      strokeWidth= {strokeWidthIndex} /* strokeWidth */ // width of the link
-                      fill='none'
-                      //testing hover functionality
-                      onMouseEnter={handleMouseEnter}
-                      onMouseLeave={handleMouseLeave}
-                    />
-                    <div className="linkHoverInfo">
-                      <h1>Props</h1>
-                    </div>
-                  </>
+                  <LinkComponent
+                    className='compMapLink'
+                    key={i}
+                    data={link}
+                    percent={stepPercent}
+                    stroke={stroke} // color of the link --not used--
+                    strokeWidth= {strokeWidthIndex} /* strokeWidth */ // width of the link
+                    fill='none'
+                  />
                   )
                 })
                 }
@@ -527,7 +494,7 @@ export default function ComponentMap({
           </Tree>
         </Group>
       </svg>
-      {tooltipOpen && tooltipData && (  // if the tooltip is open and there is data to display...
+      {tooltipOpen && tooltipData && (
         <TooltipInPortal
           // set this to random so it correctly updates with parent bounds
           key={Math.random()}
@@ -570,11 +537,6 @@ export default function ComponentMap({
           </div>
         </TooltipInPortal>
       )}
-      <div className="linkHover-Info">
-        <p><strong>Props </strong>():</p>
-        <div></div>
-      </div>
-
     </div>
   );
 }
