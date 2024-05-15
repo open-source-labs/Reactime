@@ -161,15 +161,15 @@ of the structure and interfaces of the codebase.
 - Intuitive navigation between state snapshots
 - Locked/unlocked feature allowing temporary pause of state monitoring
 - Prop visualization both in color and tickness of the branches of connecting the components
-- Heat bar underneath the top menu
+- Heatmap bar underneath the top menu
 
 <h1>What's New!</h1>
 
-Reactime 25.0 includes a new prop visualization feature and heat bar for developers!
+Reactime 25.0 includes a new prop visualization feature and heatmap bar for developers!
 
-We also addressed the previously reported freezing issues on start and brought up the Jest Library in much better condition as it was before with most of the test now working correctly.
+We also addressed the previously reported freezing issues on start and brought up the Jest Library in much better condition as it was before; from 20% of the tests working to more than 85% now working correctly.
 
-Some of the UI was rearanged to be more aesthetically pleasing and render the main window bigger for the diplay of the component tree in the process.
+Some of the UI was rearranged to be more aesthetically pleasing and render the main window bigger for the diplay of the component tree in the process.
 
 If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
 
