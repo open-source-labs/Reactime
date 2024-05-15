@@ -64,9 +64,9 @@ Currently, Reactime employs Redux Toolkit for state management. At present, all 
 
 ## Testing
 
-With Reactime V23, as a result of updating all outdated packages and peer dependencies, the Jest testing framework has unresolved errors. This should be a pretty easy win for future iterators to bring the Jest library back up and running smoothly. The jest-environment-jsdom package has some deprecated sub-packages, so if there is an alternative that can be used, that would be best, so it does not introduce new deprecated packages.
+With reactime V25, an significant effort was made to update and address the various Jest testing issues. We managed to go from about 20% test passing to more than 85% of test passing but more work remains to be done. Future itterators are invited to are invited to have a closer look and continue to update and improve the library to (hopefully) a 100% passing state.
 
-In addition, while our current test coverage provides a sturdy base, the application can benefit from deeper exploration into critical user paths and broadening end-to-end testing scenarios. Embracing automation and periodic reviews can further ensure consistent quality and robustness in the face of evolving requirements.
+In addition, while our current test coverage provides a sturdy base, the application can benefit from deeper exploration into critical user paths and broadening end-to-end testing scenarios. Embracing automation and periodic reviews can further ensure consistent quality and robustness in the face of evolving requirements. -->
 
 ## Continue to investigate app behavior on load
 
