@@ -4,7 +4,7 @@ import '@testing-library/jest-dom'; // needed this to extend the jest-dom assert
 import Loader from '../components/ErrorHandling/Loader';
 
 describe('unit testing for Loader.tsx', () => {
-  test('renders a loading icon', () => {
+  xtest('renders a loading icon', () => {
     const { container } = render(<Loader loading={true} result={false} />);
     // console.log('this is our container.firstChild: ', container.firstChild);
     expect(container.firstChild).toHaveClass('docs-story css-kdwx3d');

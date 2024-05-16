@@ -135,13 +135,13 @@ const renderWithTheme = (component) => {
 };
 
 const mockSlider = jest.fn();
-jest.mock('../components/MainSlider', () => (props) => {
+jest.mock('../components/TimeTravel/MainSlider', () => (props) => {
   mockSlider(props);
   return <div>MockSlider</div>;
 });
 
 const mockDropDown = jest.fn();
-jest.mock('../components/Dropdown', () => (props) => {
+jest.mock('../components/TimeTravel/Dropdown', () => (props) => {
   mockDropDown(props);
   return <div>mockDropDown</div>;
 });
@@ -182,7 +182,8 @@ describe('All elements appear in the TravelContainer module', () => {
 });
 
 describe('Testing play/pause button', () => {
-  const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 154
+  const useDispatchMock = (useDispatch as unknown) as jest.Mock; // make the test run
+  // const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 154
   const dummyDispatch = jest.fn();
   useDispatchMock.mockReturnValue(dummyDispatch);
   beforeEach(() => {

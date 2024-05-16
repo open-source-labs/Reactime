@@ -28,6 +28,13 @@ const nodeParentFill = '#161521'; //#161521 original
 const nodeChildFill = '#62d6fb'; //#62d6fb original
 const nodeParentStroke = '#F00008'; //#F00008 original
 const nodeChildStroke = '#4D4D4D'; //#4D4D4D original
+let stroke = ''; 
+
+/* Heat Map Colors (for links) */
+const lightOrange = '#F1B476';
+const darkOrange = '#E4765B';
+const red = '#C64442';
+const plum = '#8C2743';
 
 const defaultMargin: DefaultMargin = {
   top: 30,
@@ -189,7 +196,7 @@ export default function ComponentMap({
     linkType,
     orientation,
   });
-  return totalWidth < 10 ? null : (
+  return totalWidth < 10 ? null : ( 
     <div>
       <LinkControls
         layout={layout}
@@ -224,19 +231,59 @@ export default function ComponentMap({
             size={[sizeWidth / aspect, sizeHeight / aspect]}
             separation={(a, b) => (a.parent === b.parent ? 0.5 : 0.5) / a.depth}
           >
+
             {(tree) => (
               <Group top={origin.y + 35} left={origin.x + 50 / aspect}>
-                {tree.links().map((link, i) => (
+                {tree.links().map((link, i) => {
+                  const linkName = link.source.data.name; 
+                  const propsObj = link.source.data.componentData.props;
+                  const childPropsObj = link.target.data.componentData.props;
+                  let propsLength;
+                  let childPropsLength;
+
+                  if (propsObj) {
+                    propsLength = Object.keys(propsObj).length;
+                  }
+                  if (childPropsObj) {
+                    childPropsLength = Object.keys(childPropsObj).length;
+
+                  }
+                  // go to https://en.wikipedia.org/wiki/Logistic_function 
+                  // for an explanation of Logistic functions and parameters used
+                  const yshift = -3;
+                  const x0 = 5;
+                  const L = 25;
+                  const k = .4;
+                  const strokeWidthIndex = yshift + L / (1 + Math.exp(-k * (childPropsLength - x0)));
+
+                  if (strokeWidthIndex <= 1) {
+                    stroke = '#808080';
+                  } else {
+                    if (childPropsLength <= 1) {
+                      stroke = lightOrange;
+                    } else if (childPropsLength <= 2) {
+                      stroke = darkOrange;
+                    } else if (childPropsLength <= 3) {
+                      stroke = red;
+                    } else {
+                      stroke = plum;
+                    }
+                    // stroke = '#df6f37'
+                  }
+
+                  return (
                   <LinkComponent
                     className='compMapLink'
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    //stroke={linkStroke}
-                    strokeWidth='1'
+                    stroke={stroke} // color of the link --not used--
+                    strokeWidth= {strokeWidthIndex} /* strokeWidth */ // width of the link
                     fill='none'
                   />
-                ))}
+                  )
+                })
+                }
 
                 {tree.descendants().map((node, key) => {
                   const widthFunc: number = (name) => {
