@@ -147,10 +147,16 @@ Après avoir cloné ce référentiel, les développeurs peuvent simplement exéc
 - A dropdown to support the development of projects on multiple tabs
 - Une liste déroulante pour accompagner le développement de projets sur plusieurs onglets
 - Fonctionnalité verrouillée/déverrouillée permettant une pause temporaire de la surveillance de l'état
+- Visualisation des propriétés à la fois en couleur et en épaisseur des branches reliant les composants
+- Barre de chaleur sous le menu supérieur
 
 <h1>Quoi de Neuf!</h1>
 
-Reactime v22.0.0 a apporté des améliorations significatives, résolvant les problèmes de performances et renforçant la stabilité et la fiabilité globales de l'application. Pour que Reactime soit le meilleur possible, nous avons mis à jour les packages obsolètes et transféré la gestion des états vers Redux Toolkit. Ce changement stratégique modernise notre pile technologique et augmente la maintenabilité et l’évolutivité. Outre ces mises à niveau, cette version corrige également divers bugs. Le lancement de fonctionnalités telles que le bouton de reconnexion, une icône d'état et l'intégration de métriques Web clés – « Cumulative Layout Shift » (CLS) et « Interaction To Next Paint »(INP) – amplifie ses fonctionnalités et offre aux utilisateurs une expérience plus raffinée.
+Reactime 25.0 comprend une nouvelle fonctionnalité de visualisation des propriétés et une barre de chaleur pour les développeurs !
+
+Nous avons également résolu les problèmes de gel signalés précédemment au démarrage et avons amélioré la bibliothèque Jest, qui est maintenant en bien meilleur état qu'avant, avec la plupart des tests fonctionnant correctement.
+
+Une partie de l'interface utilisateur a été réorganisée pour être plus esthétiquement agréable et pour rendre la fenêtre principale plus grande pour l'affichage de l'arbre des composants dans le processus.
 
 <i>Regarder Plus Profondément</i>
 
@@ -206,6 +212,14 @@ Reactime est un projet open source, et toute aide de vore part sera grandement a
 
 ## <b>Auteurs</b>
 
+- **Haider Ali** - [@hali03](https://github.com/hali03)
+- **Jose Luis Sanchez** - [@JoseSanchez1996](https://github.com/JoseSanchez1996)
+- **Logan Nelsen** - [@ljn16](https://github.com/ljn16)
+- **Mel Koppens** - [@MelKoppens](https://github.com/MelKoppens)
+- **Amy Yang** - [@ay7991](https://github.com/ay7991)
+- **Eva Ury** - [@evaSUry](https://github.com/evaSUry)
+- **Jesse Guerrero** - [@jguerrero35](https://github.com/jguerrero35)
+- **Oliver Cho** - [@Oliver-Cho](https://github.com/Oliver-Cho)
 - **Ben Margolius** - [@benmarg](https://github.com/benmarg)
 - **Eric Yun** - [@ericsngyun](https://github.com/ericsngyun)
 - **James Nghiem** - [@jemzir](https://github.com/jemzir)

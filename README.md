@@ -160,18 +160,16 @@ of the structure and interfaces of the codebase.
 - A dropdown to support the development of projects on multiple tabs
 - Intuitive navigation between state snapshots
 - Locked/unlocked feature allowing temporary pause of state monitoring
+- Prop visualization both in color and tickness of the branches of connecting the components
+- Heatmap bar underneath the top menu
 
 <h1>What's New!</h1>
 
-Reactime 24.0 includes a new accessibility debugging feature for developers!
+Reactime 25.0 includes a new prop visualization feature and heatmap bar for developers!
 
-"No ARIA is better than bad ARIA"
+We also addressed the previously reported freezing issues on start and brought up the Jest Library in much better condition as it was before; from 20% of the tests working to more than 85% now working correctly.
 
-This version of Reactime remedies this phrase by implementing a feature that allows developers to track the accessibility tree of their application based on state change.
-
-Similar to the component map feature, developers can time travel to different states of their app's accessibility tree and hover over specific nodes to learn more about their individual accessibility-related information.
-
-We've also developed an enable/disable button that determines when the Chrome Debugger API grabs the app's accessibility tree and a legend component that describes the tree in greater detail. 
+Some of the UI was rearranged to be more aesthetically pleasing and render the main window bigger for the diplay of the component tree in the process.
 
 If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
 
@@ -253,6 +251,10 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 
 ## <b>Authors</b>
 
+- **Haider Ali** - [@hali03](https://github.com/hali03)
+- **Jose Luis Sanchez** - [@JoseSanchez1996](https://github.com/JoseSanchez1996)
+- **Logan Nelsen** - [@ljn16](https://github.com/ljn16)
+- **Mel Koppens** - [@MelKoppens](https://github.com/MelKoppens)
 - **Amy Yang** - [@ay7991](https://github.com/ay7991)
 - **Eva Ury** - [@evaSUry](https://github.com/evaSUry)
 - **Jesse Guerrero** - [@jguerrero35](https://github.com/jguerrero35)
