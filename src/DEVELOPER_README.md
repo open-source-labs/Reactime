@@ -273,7 +273,11 @@ Once you are ready for launch, follow these steps to simplify deployment to the 
 4.  Update the Store Listing and that’s it! Click “Submit for review” and wait for the Chrome store to process your request
 
 # Past Medium Articles for Reference
-<!-- add v24 and v25 articles -->
+
+- [Reactime v25: The Time to React is Now!](https://medium.com/@loganjnelsen/reactime-v25-the-time-to-react-is-now-ace90e45a9c7)
+
+- [Relaunching Reactime: Updates and a New Accessibility Feature!](https://medium.com/@evaury/relaunching-reactime-updates-and-a-new-accessibility-feature-1f0fd3a5bd8c)
+
 - [Reactime renovation: Updates Coming in Version 23.0!](https://medium.com/@liam.donaher/reactime-renovation-updates-coming-in-version-23-0-37b2ef2a2771)
 
 - [Reactime 22: Reactime: Real-time Debugging, Timless Results](https://medium.com/@kelvinmirhan/reactime-real-time-debugging-timeless-results-3f163b721d01)
