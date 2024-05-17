@@ -64,9 +64,9 @@ Currently, Reactime employs Redux Toolkit for state management. At present, all 
 
 ## Testing
 
-With Reactime V23, as a result of updating all outdated packages and peer dependencies, the Jest testing framework has unresolved errors. This should be a pretty easy win for future iterators to bring the Jest library back up and running smoothly. The jest-environment-jsdom package has some deprecated sub-packages, so if there is an alternative that can be used, that would be best, so it does not introduce new deprecated packages.
+With reactime V25, a significant effort was made to update and address the various Jest testing issues. We managed to go from about 20% tests passing to more than 85% passing but more work remains to be done. Future itterators are invited to have a closer look and continue to update and improve the library to (hopefully) a 100% passing state.
 
-In addition, while our current test coverage provides a sturdy base, the application can benefit from deeper exploration into critical user paths and broadening end-to-end testing scenarios. Embracing automation and periodic reviews can further ensure consistent quality and robustness in the face of evolving requirements.
+In addition, while our current test coverage provides a sturdy base, the application can benefit from deeper exploration into critical user paths and broadening end-to-end testing scenarios. Embracing automation and periodic reviews can further ensure consistent quality and robustness in the face of evolving requirements. -->
 
 ## Continue to investigate app behavior on load
 
@@ -273,6 +273,10 @@ Once you are ready for launch, follow these steps to simplify deployment to the 
 4.  Update the Store Listing and that’s it! Click “Submit for review” and wait for the Chrome store to process your request
 
 # Past Medium Articles for Reference
+
+- [Reactime v25: The Time to React is Now!](https://medium.com/@loganjnelsen/reactime-v25-the-time-to-react-is-now-ace90e45a9c7)
+
+- [Relaunching Reactime: Updates and a New Accessibility Feature!](https://medium.com/@evaury/relaunching-reactime-updates-and-a-new-accessibility-feature-1f0fd3a5bd8c)
 
 - [Reactime renovation: Updates Coming in Version 23.0!](https://medium.com/@liam.donaher/reactime-renovation-updates-coming-in-version-23-0-37b2ef2a2771)
 

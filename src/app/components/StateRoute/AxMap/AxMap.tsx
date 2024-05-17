@@ -1,7 +1,7 @@
 import React from 'react';
 import { ParentSize } from '@visx/responsive';
 import AxTree from './Ax';
-import { AxContainer } from '../../../FrontendTypes';
+import type { AxContainer } from '../../../FrontendTypes';
 
 // Container to hold AxTree. AxTree is conditionally rendered based on the state of the setter function "showTree" in StateRoute
 
@@ -37,3 +37,5 @@ const AxContainer = (props: AxContainer) => {
 };
 
 export default AxContainer;
+
+

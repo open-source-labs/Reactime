@@ -37,6 +37,7 @@ const render = (component) => rtlRender(<Provider store={customStore}>{component
 describe('Unit testing for MainSlider.jsx', () => {
   const props = {
     snapshotsLength: 1,
+    className: 'String' // added to fix the test
   };
 
   describe('When user only has one snapshot to view', () => {
@@ -51,6 +52,7 @@ describe('Unit testing for MainSlider.jsx', () => {
   describe('When there are multiple snapshots and we are looking in between', () => {
     const props = {
       snapshotsLength: 3,
+      className: 'String' // added to fix the test
     };
 
     test('Component should have min, max, value with correct values to indicate slider position when there are multiple snapshots', () => {
