@@ -6,6 +6,7 @@ import Nav from './Components/Nav';
 import Board from './Components/Board';
 import Home from './Components/Home';
 import Buttons from './Components/Buttons';
+import ReducerCounter from './Components/ReducerCounter';
 // import ButtonsWithMoreHooks from './Components/ButtonsWithMoreHooks';
 
 const domNode = document.getElementById('root');
@@ -21,6 +22,7 @@ root.render(
           the public facing Buttons page and the fiber node hooks research page "ButtonsWithMoreHooks" */}
       <Route path='/buttons' element={<Buttons key='Buttons' />} />
       {/* <Route path='/buttons' element={<ButtonsWithMoreHooks key='ButtonsWithMoreHooks'/>} /> */}
+      <Route path='/reducer' element={<ReducerCounter key='ReducerCounter' />} />
     </Routes>
   </BrowserRouter>,
 

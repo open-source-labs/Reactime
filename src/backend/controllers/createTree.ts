@@ -217,13 +217,21 @@ export default function createTree(currentFiberNode: Fiber): Tree {
         tag === ContextProvider) &&
       memoizedState
     ) {
+      if (memoizedState) {
+        console.log('memoizedState structure:', {
+          queue: memoizedState.queue,
+          state: memoizedState.memoizedState,
+          next: memoizedState.next,
+        });
+      }
       if (memoizedState.queue) {
         try {
           // Obtain all hooksStates & the corresponding udpate method from memoizedState
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
           // Obtain variable names by parsing the function definition stored in elementType.
+          console.log('Component definition:', elementType.toString());
           const hooksNames = getHooksNames(elementType.toString());
-
+          console.log('Extracted hook names:', hooksNames);
           // Intialize state & index:
           componentData.hooksState = {};
           componentData.hooksIndex = [];
@@ -237,12 +245,11 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           // Pass to front end
           newState = componentData.hooksState;
         } catch (err) {
-          // COMMENT OUT TO AVOID PRINTING ON THE CONSOLE OF USER - KEEP IT FOR DEBUGGING PURPOSE
-          // console.log({
-          //   Message: 'Error in createTree during obtaining state from functionalComponent',
-          //   componentName,
-          //   err,
-          // });
+          console.log('Error extracting functional component state:', {
+            componentName,
+            memoizedState,
+            error: err,
+          });
         }
       }
     }

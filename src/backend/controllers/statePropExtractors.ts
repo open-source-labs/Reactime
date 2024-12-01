@@ -1,4 +1,5 @@
-import parse from 'html-react-parser';
+import { parse } from '@babel/parser';
+import { Node, CallExpression, MemberExpression, Identifier } from '@babel/types';
 import { HookStateItem, Fiber } from '../types/backendTypes';
 import { exclude } from '../models/filterConditions';
 
@@ -86,62 +87,83 @@ export function getHooksStateAndUpdateMethod(
  * @returns - An array of objects with key: hookName (the name of setState method) | value: varName (the state variable name)
  */
 export function getHooksNames(elementType: string): { hookName: string; varName: string }[] {
-  // Initialize empty object to store the setters and getter
-  // Abstract Syntax Tree
-  let AST: any;
   try {
-    AST = parse(elementType).body;
-    // Begin search for hook names, only if ast has a body property.
-    // Statements get all the names of the hooks. For example: useCount, useWildcard, ...
-    const statements: { hookName: string; varName: string }[] = [];
-    /** All module exports always start off as a single 'FunctionDeclaration' type
-     * Other types: "BlockStatement" / "ExpressionStatement" / "ReturnStatement"
-     * Iterate through AST of every functional component declaration
-     * Check within each functional component declaration if there are hook declarations & variable name declaration */
-    AST.forEach((functionDec: any) => {
-      let declarationBody: any;
-      if (functionDec.expression?.body) declarationBody = functionDec.expression.body.body;
-      // check if functionDec.expression.body exists, then set declarationBody to functionDec's body
-      else declarationBody = functionDec.body?.body ?? [];
-      // Traverse through the function's funcDecs and Expression Statements
-      declarationBody.forEach((elem: any) => {
-        // Hooks will always be contained in a variable declaration
-        if (elem.type === 'VariableDeclaration') {
-          // Obtain the declarations array from elem.
-          const { declarations } = elem;
-          // Obtain the reactHook:
-          // Due to difference in babel transpilation in browser vs for jest test, expression is stored in differen location
-          const expression =
-            declarations[0]?.init?.callee?.expressions || //work for browser
-            declarations[0]?.init?.arguments?.[0]?.callee?.expressions; //work for jest test;
+    const AST = parse(elementType, {
+      sourceType: 'module',
+      plugins: ['jsx', 'typescript'],
+    });
 
-          //For a functional definition that isn't a hook, it won't have the callee being searched for above. This line will cause this forEach execution to stop here in this case.
-          if (expression === undefined) return;
-          let reactHook: string;
-          reactHook = expression[1].property?.name;
-          if (reactHook === 'useState') {
-            // Obtain the variable being set:
-            let varName: string =
-              // Points to second to last element of declarations because webpack adds an extra variable when converting files that use ES6
-              declarations[declarations.length - 2]?.id?.name || // work react application;
-              (Array.isArray(declarations[0]?.id?.elements)
-                ? declarations[0]?.id?.elements[0]?.name
-                : undefined); //work for nextJS application
-            // Obtain the setState method:
-            let hookName: string =
-              //Points to last element of declarations because webpack adds an extra variable when converting files that use ES6
-              declarations[declarations.length - 1]?.id?.name || // work react application;
-              (Array.isArray(declarations[0]?.id?.elements)
-                ? declarations[0]?.id?.elements[0]?.name
-                : undefined); //work for nextJS & Remix
-            // Push reactHook & varName to statements array
-            statements.push({ hookName, varName });
+    const statements: { hookName: string; varName: string }[] = [];
+
+    const isIdentifierWithName = (node: any, name: string): boolean => {
+      return node?.type === 'Identifier' && node.name === name;
+    };
+
+    const processArrayPattern = (pattern: any): { setter: string; getter: string } | null => {
+      if (pattern.type === 'ArrayPattern' && pattern.elements.length === 2) {
+        const result = {
+          getter: pattern.elements[0].name,
+          setter: pattern.elements[1].name,
+        };
+        return result;
+      }
+      return null;
+    };
+
+    function traverse(node: Node) {
+      if (!node) return;
+
+      if (node.type === 'VariableDeclaration') {
+        node.declarations.forEach((declaration) => {
+          if (declaration.init?.type === 'CallExpression') {
+            // Check for Webpack transformed pattern: (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)(0)
+            const isWebpackPattern =
+              declaration.init.callee?.type === 'SequenceExpression' &&
+              declaration.init.callee.expressions?.length === 2 &&
+              declaration.init.callee.expressions[1]?.type === 'MemberExpression' &&
+              declaration.init.callee.expressions[1].property &&
+              isIdentifierWithName(declaration.init.callee.expressions[1].property, 'useState');
+
+            // Check for direct useState pattern: useState("test")
+            const isDirectPattern =
+              declaration.init.callee?.type === 'Identifier' &&
+              declaration.init.callee.name === 'useState';
+
+            // Check for namespaced useState pattern: React.useState("test")
+            const isNamespacedPattern =
+              declaration.init.callee?.type === 'MemberExpression' &&
+              declaration.init.callee.property &&
+              isIdentifierWithName(declaration.init.callee.property, 'useState');
+
+            if (isWebpackPattern || isDirectPattern || isNamespacedPattern) {
+              const arrayPattern = processArrayPattern(declaration.id);
+              if (arrayPattern) {
+                statements.push({
+                  hookName: arrayPattern.setter,
+                  varName: arrayPattern.getter,
+                });
+              }
+            }
+          }
+        });
+      }
+
+      // Recursively traverse
+      for (const key in node) {
+        if (node[key] && typeof node[key] === 'object') {
+          if (Array.isArray(node[key])) {
+            node[key].forEach((child: Node) => traverse(child));
+          } else {
+            traverse(node[key] as Node);
           }
         }
-      });
-    });
+      }
+    }
+
+    traverse(AST);
     return statements;
   } catch (err) {
-    throw new Error('getHooksNameError' + err.message);
+    console.error('AST Parsing Error:', err);
+    throw new Error('getHooksNameError: ' + err.message);
   }
 }
