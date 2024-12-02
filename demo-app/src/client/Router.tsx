@@ -7,10 +7,18 @@ import Board from './Components/Board';
 import Home from './Components/Home';
 import Buttons from './Components/Buttons';
 import ReducerCounter from './Components/ReducerCounter';
+import FunctionalReducerCounter from './Components/FunctionalReducerCounter';
 // import ButtonsWithMoreHooks from './Components/ButtonsWithMoreHooks';
 
 const domNode = document.getElementById('root');
 const root = createRoot(domNode);
+
+const CounterPage = () => (
+  <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap' }}>
+    <ReducerCounter key='ReducerCounter' />
+    <FunctionalReducerCounter key='FunctionalReducerCounter' />
+  </div>
+);
 
 root.render(
   <BrowserRouter key='BrowserRouter'>
@@ -22,7 +30,7 @@ root.render(
           the public facing Buttons page and the fiber node hooks research page "ButtonsWithMoreHooks" */}
       <Route path='/buttons' element={<Buttons key='Buttons' />} />
       {/* <Route path='/buttons' element={<ButtonsWithMoreHooks key='ButtonsWithMoreHooks'/>} /> */}
-      <Route path='/reducer' element={<ReducerCounter key='ReducerCounter' />} />
+      <Route path='/reducer' element={<CounterPage key='CounterPage' />} />
     </Routes>
   </BrowserRouter>,
 
