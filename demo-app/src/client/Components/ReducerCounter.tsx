@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
 
+type CounterProps = {
+  initialCount?: number;
+  step?: number;
+  title?: string;
+  theme?: {
+    backgroundColor?: string;
+    textColor?: string;
+  };
+};
+
 type CounterState = {
   count: number;
   history: number[];
@@ -13,30 +23,39 @@ type CounterAction =
   | { type: 'RESET' }
   | { type: 'ADD'; payload: number };
 
-// Static reducer function to handle state updates
-class ReducerCounter extends Component<{}, CounterState> {
-  // Initial state definition
-  static initialState: CounterState = {
-    count: 0,
-    history: [],
-    lastAction: 'none',
+class ReducerCounter extends Component<CounterProps, CounterState> {
+  static defaultProps = {
+    initialCount: 0,
+    step: 1,
+    title: 'Class-based Reducer Counter',
+    theme: {
+      backgroundColor: '#ffffff',
+      textColor: '#330002',
+    },
   };
 
-  // Static reducer method to handle state updates
-  static reducer(state: CounterState, action: CounterAction): CounterState {
+  static initialState(initialCount: number): CounterState {
+    return {
+      count: initialCount,
+      history: [],
+      lastAction: 'none',
+    };
+  }
+
+  static reducer(state: CounterState, action: CounterAction, step: number): CounterState {
     switch (action.type) {
       case 'INCREMENT':
         return {
           ...state,
-          count: state.count + 1,
-          history: [...state.history, state.count + 1],
+          count: state.count + step,
+          history: [...state.history, state.count + step],
           lastAction: 'INCREMENT',
         };
       case 'DECREMENT':
         return {
           ...state,
-          count: state.count - 1,
-          history: [...state.history, state.count - 1],
+          count: state.count - step,
+          history: [...state.history, state.count - step],
           lastAction: 'DECREMENT',
         };
       case 'DOUBLE':
@@ -48,7 +67,7 @@ class ReducerCounter extends Component<{}, CounterState> {
         };
       case 'RESET':
         return {
-          ...ReducerCounter.initialState,
+          ...ReducerCounter.initialState(0),
           lastAction: 'RESET',
         };
       case 'ADD':
@@ -63,30 +82,41 @@ class ReducerCounter extends Component<{}, CounterState> {
     }
   }
 
-  constructor(props: {}) {
+  constructor(props: CounterProps) {
     super(props);
-    this.state = ReducerCounter.initialState;
-
-    // Bind dispatch method
+    this.state = ReducerCounter.initialState(props.initialCount || 0);
     this.dispatch = this.dispatch.bind(this);
   }
 
-  // Method to handle state updates using the reducer
   dispatch(action: CounterAction): void {
-    this.setState((currentState) => ReducerCounter.reducer(currentState, action));
+    this.setState((currentState) =>
+      ReducerCounter.reducer(currentState, action, this.props.step || 1),
+    );
   }
 
   render(): JSX.Element {
+    const { title, theme } = this.props;
+
     return (
-      <div className='reducer-counter'>
-        <h2>Class-based Reducer Counter</h2>
+      <div
+        className='reducer-counter'
+        style={{
+          backgroundColor: theme?.backgroundColor,
+          color: theme?.textColor,
+        }}
+      >
+        <h2>{title}</h2>
         <div className='counter-value'>
           <h3>Current Count: {this.state.count}</h3>
         </div>
 
         <div className='counter-buttons'>
-          <button onClick={() => this.dispatch({ type: 'INCREMENT' })}>Increment (+1)</button>
-          <button onClick={() => this.dispatch({ type: 'DECREMENT' })}>Decrement (-1)</button>
+          <button onClick={() => this.dispatch({ type: 'INCREMENT' })}>
+            Increment (+{this.props.step})
+          </button>
+          <button onClick={() => this.dispatch({ type: 'DECREMENT' })}>
+            Decrement (-{this.props.step})
+          </button>
           <button onClick={() => this.dispatch({ type: 'DOUBLE' })}>Double Value</button>
           <button onClick={() => this.dispatch({ type: 'ADD', payload: 5 })}>Add 5</button>
           <button onClick={() => this.dispatch({ type: 'RESET' })}>Reset</button>

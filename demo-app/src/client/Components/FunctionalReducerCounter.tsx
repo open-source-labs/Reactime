@@ -1,5 +1,15 @@
 import React, { useReducer } from 'react';
 
+type CounterProps = {
+  initialCount?: number;
+  step?: number;
+  title?: string;
+  theme?: {
+    backgroundColor?: string;
+    textColor?: string;
+  };
+};
+
 type CounterState = {
   count: number;
   history: number[];
@@ -13,26 +23,20 @@ type CounterAction =
   | { type: 'RESET' }
   | { type: 'ADD'; payload: number };
 
-const initialState: CounterState = {
-  count: 0,
-  history: [],
-  lastAction: 'none',
-};
-
-function counterReducer(state: CounterState, action: CounterAction): CounterState {
+function counterReducer(state: CounterState, action: CounterAction, step: number): CounterState {
   switch (action.type) {
     case 'INCREMENT':
       return {
         ...state,
-        count: state.count + 1,
-        history: [...state.history, state.count + 1],
+        count: state.count + step,
+        history: [...state.history, state.count + step],
         lastAction: 'INCREMENT',
       };
     case 'DECREMENT':
       return {
         ...state,
-        count: state.count - 1,
-        history: [...state.history, state.count - 1],
+        count: state.count - step,
+        history: [...state.history, state.count - step],
         lastAction: 'DECREMENT',
       };
     case 'DOUBLE':
@@ -44,7 +48,8 @@ function counterReducer(state: CounterState, action: CounterAction): CounterStat
       };
     case 'RESET':
       return {
-        ...initialState,
+        count: 0,
+        history: [],
         lastAction: 'RESET',
       };
     case 'ADD':
@@ -59,19 +64,40 @@ function counterReducer(state: CounterState, action: CounterAction): CounterStat
   }
 }
 
-function FunctionalReducerCounter(): JSX.Element {
-  const [state, dispatch] = useReducer(counterReducer, initialState);
+function FunctionalReducerCounter({
+  initialCount = 0,
+  step = 1,
+  title = 'Function-based Reducer Counter',
+  theme = {
+    backgroundColor: '#ffffff',
+    textColor: '#330002',
+  },
+}: CounterProps): JSX.Element {
+  const [state, dispatch] = useReducer(
+    (state: CounterState, action: CounterAction) => counterReducer(state, action, step),
+    {
+      count: initialCount,
+      history: [],
+      lastAction: 'none',
+    },
+  );
 
   return (
-    <div className='reducer-counter'>
-      <h2>Function-based Reducer Counter</h2>
+    <div
+      className='reducer-counter'
+      style={{
+        backgroundColor: theme.backgroundColor,
+        color: theme.textColor,
+      }}
+    >
+      <h2>{title}</h2>
       <div className='counter-value'>
         <h3>Current Count: {state.count}</h3>
       </div>
 
       <div className='counter-buttons'>
-        <button onClick={() => dispatch({ type: 'INCREMENT' })}>Increment (+1)</button>
-        <button onClick={() => dispatch({ type: 'DECREMENT' })}>Decrement (-1)</button>
+        <button onClick={() => dispatch({ type: 'INCREMENT' })}>Increment (+{step})</button>
+        <button onClick={() => dispatch({ type: 'DECREMENT' })}>Decrement (-{step})</button>
         <button onClick={() => dispatch({ type: 'DOUBLE' })}>Double Value</button>
         <button onClick={() => dispatch({ type: 'ADD', payload: 5 })}>Add 5</button>
         <button onClick={() => dispatch({ type: 'RESET' })}>Reset</button>
@@ -92,5 +118,4 @@ function FunctionalReducerCounter(): JSX.Element {
     </div>
   );
 }
-
 export default FunctionalReducerCounter;

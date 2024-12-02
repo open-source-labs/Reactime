@@ -1,14 +1,19 @@
 import React, { Component, useState } from 'react';
 
-// Type for IncrementClass state
+type ButtonProps = {
+  id: string;
+  label: string;
+  color?: string;
+  initialCount?: number;
+};
+
 type IncrementClassState = {
   count: number;
 };
 
-// Class-based Increment Component
-class IncrementClass extends Component<{}, IncrementClassState> {
+class IncrementClass extends Component<ButtonProps, IncrementClassState> {
   state = {
-    count: 0,
+    count: this.props.initialCount || 0,
   };
 
   handleClick = (): void => {
@@ -20,17 +25,21 @@ class IncrementClass extends Component<{}, IncrementClassState> {
   render(): JSX.Element {
     return (
       <div>
-        <button className='increment' onClick={this.handleClick}>
-          You clicked me {this.state.count} times.
+        <button
+          id={this.props.id}
+          className='increment'
+          onClick={this.handleClick}
+          style={{ backgroundColor: this.props.color }}
+        >
+          {this.props.label} {this.state.count} times.
         </button>
       </div>
     );
   }
 }
 
-// Function-based Increment Component
-const IncrementFunction = (): JSX.Element => {
-  const [count, setCount] = useState(0);
+const IncrementFunction = (props: ButtonProps): JSX.Element => {
+  const [count, setCount] = useState(props.initialCount || 0);
 
   const handleClick = (): void => {
     setCount((prev) => prev + 1);
@@ -38,24 +47,33 @@ const IncrementFunction = (): JSX.Element => {
 
   return (
     <div>
-      <button className='increment' onClick={handleClick}>
-        You clicked me {count} times.
+      <button
+        id={props.id}
+        className='increment'
+        onClick={handleClick}
+        style={{ backgroundColor: props.color }}
+      >
+        {props.label} {count} times.
       </button>
     </div>
   );
 };
 
-// Main Buttons Component
 class Buttons extends Component {
   render(): JSX.Element {
     return (
       <div className='buttons'>
         <h1>Mixed State Counter</h1>
         <h4>First two buttons use class components, last two use function components.</h4>
-        <IncrementClass />
-        <IncrementClass />
-        <IncrementFunction />
-        <IncrementFunction />
+        <IncrementClass id='class1' label='Class Button 1:' color='#f00008' initialCount={5} />
+        <IncrementClass id='class2' label='Class Button 2:' color='#62d6fb' />
+        <IncrementFunction
+          id='func1'
+          label='Function Button 1:'
+          color='#6288fb'
+          initialCount={10}
+        />
+        <IncrementFunction id='func2' label='Function Button 2:' color='#ff6569' />
       </div>
     );
   }

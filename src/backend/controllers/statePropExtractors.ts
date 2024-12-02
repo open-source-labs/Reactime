@@ -73,7 +73,7 @@ export function getHooksStateAndUpdateMethod(
     if (
       memoizedState.queue &&
       memoizedState.memoizedState &&
-      typeof memoizedState.queue.dispatch === 'function'
+      memoizedState.queue.lastRenderedReducer.name !== 'basicStateReducer' // only present in useState
     ) {
       hooksStates.push({
         component: memoizedState.queue,
