@@ -67,6 +67,7 @@ export interface ComponentData {
   index: number | null;
   /** {functional component only} - An object contains all states of the current functional component */
   hooksState: {} | null;
+  reducerState?: {} | null;
   /** {functional component only} - An array of index of the bound dispatch method stored in `componentActionsRecord` */
   hooksIndex: number[] | null;
   /** An object contains all props of the current component */
@@ -88,6 +89,7 @@ export interface HookStateItem {
   state: any;
   /** an object contains bound dispatch method to update state of the current functional component */
   component: any;
+  isReducer?: boolean;
 }
 
 export type WorkTag =

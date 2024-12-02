@@ -69,7 +69,20 @@ export function getHooksStateAndUpdateMethod(
 ): Array<HookStateItem> {
   const hooksStates: Array<HookStateItem> = [];
   while (memoizedState) {
-    if (memoizedState.queue) {
+    // Check for useReducer hook
+    if (
+      memoizedState.queue &&
+      memoizedState.memoizedState &&
+      typeof memoizedState.queue.dispatch === 'function'
+    ) {
+      hooksStates.push({
+        component: memoizedState.queue,
+        state: memoizedState.memoizedState,
+        isReducer: true,
+      });
+    }
+    // Existing useState check
+    else if (memoizedState.queue) {
       hooksStates.push({
         component: memoizedState.queue,
         state: memoizedState.memoizedState,
