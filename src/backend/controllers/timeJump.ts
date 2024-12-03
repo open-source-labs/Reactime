@@ -24,6 +24,7 @@ export default function timeJumpInitiation(mode: Status) {
    * @param targetSnapshot - The target snapshot to re-render. The payload from index.ts is assigned to targetSnapshot
    */
   return async function timeJump(targetSnapshot: Tree): Promise<void> {
+    console.log('Time jump initiated with targetSnapshot:', targetSnapshot); // logging to see if the re-rendering bug lives here
     mode.jumping = true;
     // Reset mode.navigating
     delete mode.navigating;

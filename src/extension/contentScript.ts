@@ -26,7 +26,12 @@ window.addEventListener('message', (msg) => {
   // will send snapshots of the test app's link fiber tree.
   const { action }: { action: string } = msg.data;
   if (action === 'recordSnap') {
+    // if (isRecording) { //ellie commented out
+    //   chrome.runtime.sendMessage(msg.data);
+    // }
     if (isRecording) {
+      // ellie added, add timestamp to payload
+      msg.data.payload.children[0].componentData.timestamp = Date.now();
       chrome.runtime.sendMessage(msg.data);
     }
   }
