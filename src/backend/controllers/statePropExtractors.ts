@@ -69,22 +69,30 @@ export function getHooksStateAndUpdateMethod(
 ): Array<HookStateItem> {
   const hooksStates: Array<HookStateItem> = [];
   while (memoizedState) {
-    // Check for useReducer hook
-    if (
-      memoizedState.queue &&
-      memoizedState.memoizedState &&
-      memoizedState.queue.lastRenderedReducer.name !== 'basicStateReducer' // only present in useState
-    ) {
-      hooksStates.push({
-        component: memoizedState.queue,
-        state: memoizedState.memoizedState,
-        isReducer: true,
-      });
-    } else if (memoizedState.queue) {
-      hooksStates.push({
-        component: memoizedState.queue,
-        state: memoizedState.memoizedState,
-      });
+    if (memoizedState.queue) {
+      // Check if this is a reducer hook by looking at the lastRenderedReducer
+      const isReducer = memoizedState.queue.lastRenderedReducer?.name !== 'basicStateReducer';
+
+      if (isReducer) {
+        // For useReducer hooks, we want to store:
+        // 1. The current state
+        // 2. The last action that was dispatched (if available)
+        // 3. The reducer function itself
+        hooksStates.push({
+          component: memoizedState.queue,
+          state: memoizedState.memoizedState,
+          isReducer: true,
+          lastAction: memoizedState.queue.lastRenderedAction || null,
+          reducer: memoizedState.queue.lastRenderedReducer || null,
+        });
+      } else {
+        // Regular useState hook
+        hooksStates.push({
+          component: memoizedState.queue,
+          state: memoizedState.memoizedState,
+          isReducer: false,
+        });
+      }
     }
     memoizedState = memoizedState.next;
   }
