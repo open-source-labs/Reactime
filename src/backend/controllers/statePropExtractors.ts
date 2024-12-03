@@ -129,38 +129,80 @@ export function getHooksNames(elementType: string): { hookName: string; varName:
       return null;
     };
 
+    const extractReducerName = (node: any): string | null => {
+      if (node.type === 'Identifier') {
+        return node.name;
+      }
+
+      if (node.type === 'ArrowFunctionExpression' && node.body.type === 'CallExpression') {
+        if (node.body.callee.type === 'Identifier') {
+          return node.body.callee.name;
+        }
+      }
+
+      return null;
+    };
+
     function traverse(node: Node) {
       if (!node) return;
 
       if (node.type === 'VariableDeclaration') {
         node.declarations.forEach((declaration) => {
           if (declaration.init?.type === 'CallExpression') {
-            // Check for Webpack transformed pattern: (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)(0)
+            // Check for Webpack transformed pattern
             const isWebpackPattern =
               declaration.init.callee?.type === 'SequenceExpression' &&
-              declaration.init.callee.expressions?.length === 2 &&
-              declaration.init.callee.expressions[1]?.type === 'MemberExpression' &&
-              declaration.init.callee.expressions[1].property &&
-              isIdentifierWithName(declaration.init.callee.expressions[1].property, 'useState');
+              declaration.init.callee.expressions?.[1]?.type === 'MemberExpression';
 
-            // Check for direct useState pattern: useState("test")
+            // Get the hook name for Webpack pattern
+            let webpackHookName: string | null = null;
+            if (isWebpackPattern && declaration.init.callee?.type === 'SequenceExpression') {
+              const memberExpr = declaration.init.callee.expressions[1] as any;
+              if (memberExpr?.property?.type === 'Identifier') {
+                webpackHookName = memberExpr.property.name;
+              }
+            }
+
+            // Check for direct pattern
+            const directCallee = declaration.init.callee as any;
             const isDirectPattern =
-              declaration.init.callee?.type === 'Identifier' &&
-              declaration.init.callee.name === 'useState';
+              directCallee?.type === 'Identifier' &&
+              (directCallee.name === 'useState' || directCallee.name === 'useReducer');
 
-            // Check for namespaced useState pattern: React.useState("test")
+            // Check for namespaced pattern
             const isNamespacedPattern =
               declaration.init.callee?.type === 'MemberExpression' &&
-              declaration.init.callee.property &&
-              isIdentifierWithName(declaration.init.callee.property, 'useState');
+              (declaration.init.callee as any).property?.type === 'Identifier' &&
+              ((declaration.init.callee as any).property.name === 'useState' ||
+                (declaration.init.callee as any).property.name === 'useReducer');
 
             if (isWebpackPattern || isDirectPattern || isNamespacedPattern) {
               const arrayPattern = processArrayPattern(declaration.id);
               if (arrayPattern) {
-                statements.push({
-                  hookName: arrayPattern.setter,
-                  varName: arrayPattern.getter,
-                });
+                const isReducer =
+                  webpackHookName === 'useReducer' ||
+                  (isDirectPattern && directCallee?.name === 'useReducer') ||
+                  (isNamespacedPattern &&
+                    (declaration.init.callee as any).property?.name === 'useReducer');
+
+                if (isReducer) {
+                  // Handle useReducer
+                  if (declaration.init.arguments?.length > 0) {
+                    const reducerName = extractReducerName(declaration.init.arguments[0]);
+                    if (reducerName) {
+                      statements.push({
+                        hookName: reducerName,
+                        varName: arrayPattern.getter,
+                      });
+                    }
+                  }
+                } else {
+                  // Handle useState
+                  statements.push({
+                    hookName: arrayPattern.setter,
+                    varName: arrayPattern.getter,
+                  });
+                }
               }
             }
           }

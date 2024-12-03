@@ -1,10 +1,6 @@
 import React from 'react';
 import { JSONTree } from 'react-json-tree';
 
-/*
-  Code that show's the tooltip of our JSON tree
-*/
-
 const colors = {
   scheme: 'paraiso',
   author: 'jan t. sott',
@@ -17,8 +13,7 @@ const colors = {
   base06: '#b9b6b0',
   base07: '#e7e9db',
   base08: '#ef6155',
-  base09: '#824508', //base09 is orange for booleans and numbers. This base in particular fails to match the entered color.
-  // base09: '#592bad', // alternative purple
+  base09: '#824508',
   base0A: '#fec418',
   base0B: '#48b685',
   base0C: '#5bc4bf',
@@ -28,32 +23,48 @@ const colors = {
 };
 
 const ToolTipDataDisplay = ({ containerName, dataObj }) => {
+  // If there's no data to display, don't render anything
+  if (
+    !dataObj ||
+    (Array.isArray(dataObj) && dataObj.length === 0) ||
+    Object.keys(dataObj).length === 0
+  ) {
+    return null;
+  }
+
+  const formatReducerData = (reducerStates) => {
+    // Transform the array of reducers into an object with hook names as keys
+    return reducerStates.reduce((acc, reducer) => {
+      acc[reducer.hookName || 'Reducer'] = {
+        state: reducer.state,
+        lastAction: reducer.lastAction,
+      };
+      return acc;
+    }, {});
+  };
+
   const printableObject = {};
 
-  if (!dataObj) {
-    printableObject[containerName] = dataObj;
-  } else {
-    const data = {};
-
-    // Handle reducer state if present
-    if (containerName === 'State' && dataObj.reducerState) {
-      printableObject[containerName] = dataObj.reducerState;
+  if (containerName === 'Reducers') {
+    if (!dataObj || dataObj.length === 0) {
+      return null;
     }
-    // Otherwise handle normal state/props
-    else {
-      for (const key in dataObj) {
-        if (typeof dataObj[key] === 'string') {
-          try {
-            data[key] = JSON.parse(dataObj[key]);
-          } catch {
-            data[key] = dataObj[key];
-          }
-        } else {
+    printableObject[containerName] = formatReducerData(dataObj);
+  } else {
+    // Handle normal state/props
+    const data = {};
+    for (const key in dataObj) {
+      if (typeof dataObj[key] === 'string') {
+        try {
+          data[key] = JSON.parse(dataObj[key]);
+        } catch {
           data[key] = dataObj[key];
         }
+      } else {
+        data[key] = dataObj[key];
       }
-      printableObject[containerName] = data;
     }
+    printableObject[containerName] = data;
   }
 
   return (

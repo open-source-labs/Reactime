@@ -94,6 +94,10 @@ async function updateReactFiberTree(
       for (let i = 0; i < stateEntries.length; i++) {
         const [key, value] = stateEntries[i];
         if (functionalComponent[i]?.dispatch) {
+          console.log('Dispatching state update:', {
+            key,
+            value,
+          });
           await functionalComponent[i].dispatch(value);
         } else {
           console.warn(`No dispatch found for hook ${i}:`, {
@@ -112,6 +116,7 @@ async function updateReactFiberTree(
       for (const reducerState of reducerStates) {
         const { state, reducerIndex } = reducerState;
         const reducer = functionalComponent[reducerIndex];
+        console.log('reducer', reducer);
 
         if (reducer?.dispatch) {
           console.log('Dispatching reducer update:', {
