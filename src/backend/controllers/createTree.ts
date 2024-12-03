@@ -223,7 +223,6 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
           // Obtain variable names by parsing the function definition stored in elementType.
           const hooksNames = getHooksNames(elementType.toString());
-
           // Intialize state & index:
           componentData.hooksState = {};
           componentData.hooksIndex = [];

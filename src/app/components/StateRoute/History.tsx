@@ -101,7 +101,7 @@ function History(props: Record<string, unknown>): JSX.Element {
         delete newObj.state; // delete the state property
       }
       if (newObj.stateSnaphot) {
-        // if our new object has a stateSnaphot property
+        // if our new object has a stateSnaphot propertys
         newObj.stateSnaphot = statelessCleaning(obj.stateSnaphot); // run statelessCleaning on the stateSnapshot
       }
 

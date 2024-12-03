@@ -41,7 +41,7 @@
 You can view your application's file structure and click on a snapshot to view
 your app's state. State can be visualized in a Component Graph, JSON Tree, or
 Performance Graph. Snapshot history can be visualized in the History tab.
-The Web Metrics tab provides some useful metrics for site performance. The accessibility tab 
+The Web Metrics tab provides some useful metrics for site performance. The accessibility tab
 visualizes an app's accessibility tree per state change.
 Snapshots can be compared with the previous snapshot, which can be viewed in Diff mode.
 <br>
@@ -89,7 +89,7 @@ Download the recorded snapshots as a JSON file and upload them to access state t
 </p>
 <br>
 
-### 🔹 Reconnect and Status
+### 🔹 and Status
 
 If Reactime loses its connection to the tab you're monitoring, simply click the "reconnect" button to resume your work. You'll notice a circle located to the right of the button, which will appear as either red (indicating disconnection) or green (signifying a successful reconnection).
 <br>

@@ -27,6 +27,8 @@ window.addEventListener('message', (msg) => {
   const { action }: { action: string } = msg.data;
   if (action === 'recordSnap') {
     if (isRecording) {
+      // add timestamp to payload for the purposes of duplicate screenshot check in backgroundscript -ellie
+      msg.data.payload.children[0].componentData.timestamp = Date.now();
       chrome.runtime.sendMessage(msg.data);
     }
   }
