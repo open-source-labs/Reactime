@@ -210,8 +210,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           console.log('hook states', hooksStates);
           // Get the hooks names by parsing the elementType
           const hooksNames = getHooksNames(elementType.toString());
-          console.log('hook names', hooksNames);
-
+          // Intialize state & index:
           componentData.hooksState = {};
           componentData.reducerState = null;
           componentData.hooksIndex = [];
