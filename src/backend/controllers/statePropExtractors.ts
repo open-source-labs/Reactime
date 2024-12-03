@@ -82,7 +82,7 @@ export function getHooksStateAndUpdateMethod(
       });
     }
     // Existing useState check
-    else if (memoizedState.queue) {
+    if (memoizedState.queue) {
       hooksStates.push({
         component: memoizedState.queue,
         state: memoizedState.memoizedState,

@@ -147,7 +147,6 @@ export default function createTree(currentFiberNode: Fiber): Tree {
         // Else filter & format props data to ensure they are JSON stringify-able, before sending to front end
         default: {
           componentData.props = filterAndFormatData(memoizedProps);
-          console.log('Default case props for', componentName, ':', componentData.props);
         }
       }
     }
@@ -210,7 +209,6 @@ export default function createTree(currentFiberNode: Fiber): Tree {
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
           console.log('hook states', hooksStates);
           // Get the hooks names by parsing the elementType
-          console.log('element type', elementType.toString());
           const hooksNames = getHooksNames(elementType.toString());
           console.log('hook names', hooksNames);
 

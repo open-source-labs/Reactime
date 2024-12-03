@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useState, useReducer } from 'react';
 
 type CounterProps = {
   initialCount?: number;
@@ -73,6 +73,9 @@ function FunctionalReducerCounter({
     textColor: '#330002',
   },
 }: CounterProps): JSX.Element {
+  const [clickCount, setClickCount] = useState(0);
+  const [lastClickTime, setLastClickTime] = useState<Date | null>(null);
+  const [averageTimeBetweenClicks, setAverageTimeBetweenClicks] = useState<number>(0);
   const [state, dispatch] = useReducer(
     (state: CounterState, action: CounterAction) => counterReducer(state, action, step),
     {
