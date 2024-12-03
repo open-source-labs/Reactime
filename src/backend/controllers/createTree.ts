@@ -193,11 +193,8 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     // If user use setState to define/manage state, the state object will be stored in stateNode.state => grab the state object stored in the stateNode.state
     // Example: for tic-tac-toe demo-app: Board is a stateful component that use setState to store state data.
     if ((tag === ClassComponent || tag === IndeterminateComponent) && stateNode?.state) {
-      // Save component's state and setState() function to our record for future time-travel state changing. Add record index to snapshot so we can retrieve.
       componentData.index = componentActionsRecord.saveNew(stateNode);
-      // Save state information in componentData.
       componentData.state = stateNode.state;
-      // Pass to front end
       newState = componentData.state;
     }
 
@@ -205,43 +202,39 @@ export default function createTree(currentFiberNode: Fiber): Tree {
     // Check if currentFiberNode is a stateful functional component when user use useState hook.
     // If user use useState to define/manage state, the state object will be stored in memoizedState => grab the state object & its update method (dispatch) from memoizedState
     // Example: for Stateful buttons demo-app: Increment is a stateful component that use useState hook to store state data.
-    if (
-      (tag === FunctionComponent ||
-        tag === IndeterminateComponent ||
-        //TODO: Need reasoning for why we evaluate context provider
-        /**
-         * So far I haven't seen a case where hook data is stored for ContextProviders in memoized state. So far
-         * I've seen some data a non-null memoize state on browser router, but queue is null. Routes has some good info on memoized props,
-         * but that's not being addressed here. useContext providers also have null for memoized state.
-         */
-        tag === ContextProvider) &&
-      memoizedState
-    ) {
+    // Inside the _createTree function where we handle functional components
+    if ((tag === FunctionComponent || tag === IndeterminateComponent) && memoizedState) {
       if (memoizedState.queue) {
         try {
-          // Obtain all hooksStates & the corresponding udpate method from memoizedState
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
-          // Obtain variable names by parsing the function definition stored in elementType.
+          console.log('hook states', hooksStates);
+          // Get the hooks names by parsing the elementType
           const hooksNames = getHooksNames(elementType.toString());
           // Intialize state & index:
           componentData.hooksState = {};
+          componentData.reducerState = null;
           componentData.hooksIndex = [];
 
-          hooksStates.forEach(({ state, component }, i) => {
-            // Save component's state and dispatch() function to our record for future time-travel state changing. Add record index to snapshot so we can retrieve.
+          hooksStates.forEach(({ state, component, isReducer }, i) => {
             componentData.hooksIndex.push(componentActionsRecord.saveNew(component));
-            // Save state information in componentData.
-            componentData.hooksState[hooksNames[i].varName] = state;
+
+            if (isReducer) {
+              // If it's a reducer, store its state
+              componentData.reducerState = state;
+            }
+            // Otherwise treat as useState
+            componentData.hooksState[hooksNames[i]?.varName || `Reducer: ${i}`] = state;
           });
+
           // Pass to front end
           newState = componentData.hooksState;
+          console.log('new state', newState);
         } catch (err) {
-          // COMMENT OUT TO AVOID PRINTING ON THE CONSOLE OF USER - KEEP IT FOR DEBUGGING PURPOSE
-          // console.log({
-          //   Message: 'Error in createTree during obtaining state from functionalComponent',
-          //   componentName,
-          //   err,
-          // });
+          console.log('Error extracting functional component state:', {
+            componentName,
+            memoizedState,
+            error: err,
+          });
         }
       }
     }
