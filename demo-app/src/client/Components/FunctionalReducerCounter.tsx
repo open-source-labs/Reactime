@@ -23,6 +23,19 @@ type CounterAction =
   | { type: 'RESET' }
   | { type: 'ADD'; payload: number };
 
+// New secondary reducer state and action types
+type SecondaryCounterState = {
+  count: number;
+  multiplier: number;
+  lastOperation: string;
+};
+
+type SecondaryCounterAction =
+  | { type: 'MULTIPLY' }
+  | { type: 'DIVIDE' }
+  | { type: 'SET_MULTIPLIER'; payload: number }
+  | { type: 'RESET' };
+
 function counterReducer(state: CounterState, action: CounterAction, step: number): CounterState {
   switch (action.type) {
     case 'INCREMENT':
@@ -64,6 +77,41 @@ function counterReducer(state: CounterState, action: CounterAction, step: number
   }
 }
 
+// New secondary reducer function
+function secondaryCounterReducer(
+  state: SecondaryCounterState,
+  action: SecondaryCounterAction,
+): SecondaryCounterState {
+  switch (action.type) {
+    case 'MULTIPLY':
+      return {
+        ...state,
+        count: state.count * state.multiplier,
+        lastOperation: `Multiplied by ${state.multiplier}`,
+      };
+    case 'DIVIDE':
+      return {
+        ...state,
+        count: state.count / state.multiplier,
+        lastOperation: `Divided by ${state.multiplier}`,
+      };
+    case 'SET_MULTIPLIER':
+      return {
+        ...state,
+        multiplier: action.payload,
+        lastOperation: `Set multiplier to ${action.payload}`,
+      };
+    case 'RESET':
+      return {
+        count: 0,
+        multiplier: 2,
+        lastOperation: 'Reset',
+      };
+    default:
+      return state;
+  }
+}
+
 function FunctionalReducerCounter({
   initialCount = 0,
   step = 1,
@@ -76,6 +124,8 @@ function FunctionalReducerCounter({
   const [clickCount, setClickCount] = useState(0);
   const [lastClickTime, setLastClickTime] = useState<Date | null>(null);
   const [averageTimeBetweenClicks, setAverageTimeBetweenClicks] = useState<number>(0);
+
+  // First reducer
   const [state, dispatch] = useReducer(
     (state: CounterState, action: CounterAction) => counterReducer(state, action, step),
     {
@@ -84,6 +134,13 @@ function FunctionalReducerCounter({
       lastAction: 'none',
     },
   );
+
+  // Second reducer
+  const [secondaryState, secondaryDispatch] = useReducer(secondaryCounterReducer, {
+    count: initialCount,
+    multiplier: 2,
+    lastOperation: 'none',
+  });
 
   return (
     <div
@@ -94,8 +151,10 @@ function FunctionalReducerCounter({
       }}
     >
       <h2>{title}</h2>
+
+      {/* Primary Counter Section */}
       <div className='counter-value'>
-        <h3>Current Count: {state.count}</h3>
+        <h3>Primary Counter: {state.count}</h3>
       </div>
 
       <div className='counter-buttons'>
@@ -118,7 +177,36 @@ function FunctionalReducerCounter({
           ))}
         </div>
       </div>
+
+      {/* Secondary Counter Section */}
+      <div
+        className='secondary-counter'
+        style={{ marginTop: '2rem', borderTop: '1px solid #ccc', paddingTop: '1rem' }}
+      >
+        <h3>Secondary Counter: {secondaryState.count}</h3>
+        <div className='counter-buttons'>
+          <button onClick={() => secondaryDispatch({ type: 'MULTIPLY' })}>
+            Multiply by {secondaryState.multiplier}
+          </button>
+          <button onClick={() => secondaryDispatch({ type: 'DIVIDE' })}>
+            Divide by {secondaryState.multiplier}
+          </button>
+          <button
+            onClick={() =>
+              secondaryDispatch({ type: 'SET_MULTIPLIER', payload: secondaryState.multiplier + 1 })
+            }
+          >
+            Increase Multiplier
+          </button>
+          <button onClick={() => secondaryDispatch({ type: 'RESET' })}>Reset</button>
+        </div>
+        <div className='counter-info'>
+          <h4>Last Operation: {secondaryState.lastOperation}</h4>
+          <h4>Current Multiplier: {secondaryState.multiplier}</h4>
+        </div>
+      </div>
     </div>
   );
 }
+
 export default FunctionalReducerCounter;
