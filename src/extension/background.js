@@ -340,18 +340,9 @@ chrome.runtime.onConnect.addListener(async (port) => {
     });
   }
 
-  // every time devtool is closed, remove the port from portsArr
-  // port.onDisconnect.addListener((e) => {
-  //   for (let i = 0; i < portsArr.length; i += 1) {
-  //     if (portsArr[i] === e) {
-  //       portsArr.splice(i, 1);
-  //       chrome.runtime.sendMessage({ action: 'portDisconnect', port: e.name });
-  //       break;
-  //     }
-  //   }
-  // }); //ellie commented out
+  // Handles port disconnection by removing the disconnected port and attempting reconnection after 1s delay
+  // This prevents permanent connection loss during idle periods or temporary disconnects -ellie
   port.onDisconnect.addListener((e) => {
-    //ellie added reconnection attempt
     for (let i = 0; i < portsArr.length; i += 1) {
       if (portsArr[i] === e) {
         portsArr.splice(i, 1);
@@ -448,10 +439,8 @@ chrome.runtime.onConnect.addListener(async (port) => {
         toggleAxRecord = !toggleAxRecord;
 
         await replaceEmptySnap(tabsObj, tabId, toggleAxRecord);
-
         // sends new tabs obj to devtools
         if (portsArr.length > 0) {
-          console.log('Sending snapshots to frontend:', tabsObj[tabId].snapshots); //ellie
           portsArr.forEach((bg) =>
             bg.postMessage({
               action: 'sendSnapshots',
@@ -459,7 +448,6 @@ chrome.runtime.onConnect.addListener(async (port) => {
               tabId,
             }),
           );
-          console.log('Current tabsObj:', tabsObj); //ellie
         }
         return true; // return true so that port remains open
 
@@ -621,16 +609,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         break;
       }
 
-      // DUPLICATE SNAPSHOT CHECK
-      // This may be where the bug is coming from that when Reactime fails to collect
-      // state. If they happen to take the same actual duration, it won't record the snapshot.
-      // const previousSnap = //ellie commented out
-      //   tabsObj[tabId]?.currLocation?.stateSnapshot?.children[0]?.componentData?.actualDuration;
-      // const incomingSnap = request.payload.children[0].componentData.actualDuration;
-      // if (previousSnap === incomingSnap) {
-      //   break;
-      // }
-      // ellie added new duplicate snapshot check
+      // DUPLICATE SNAPSHOT CHECK -ellie
       const isDuplicateSnapshot = (previous, incoming) => {
         if (!previous || !incoming) return false;
         const prevData = previous?.componentData;
@@ -658,7 +637,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
         reloaded[tabId] = false;
       } else {
-        console.log('Adding new snapshot to snapshots array.'); //ellie
         tabsObj[tabId].snapshots.push(request.payload);
         // INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN
         if (!tabsObj[tabId][index]) {
@@ -671,12 +649,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             addedAxSnap = 'emptyAxSnap';
             tabsObj[tabId].axSnapshots.push(addedAxSnap);
           }
-          console.log('Updating hierarchy with new snapshot.'); //ellie
           sendToHierarchy(
             tabsObj[tabId],
             new HistoryNode(tabsObj[tabId], request.payload, addedAxSnap),
           );
-          console.log('Updated hierarchy:', tabsObj[tabId].hierarchy); //ellie
         }
       }
 
@@ -751,15 +727,10 @@ chrome.tabs.onActivated.addListener((info) => {
     if (!tab.pendingUrl?.match('^chrome-extension')) {
       activeTab = tab;
 
-      /**this setInterval is here to make sure that the app does not stop working even
-       * if chrome pauses to save energy. There is probably a better solution, but v25 did
-       * not have time to complete.
+      /**this setKeepAlive is here to make sure that the app does not stop working even
+       * if chrome pauses to save energy.
        */
-      // setInterval(() => {
-      //   console.log(activeTab);
-      // }, 10000); //ellie commented out
       chrome.runtime.onStartup.addListener(() => {
-        //ellie replaced with this
         chrome.runtime.setKeepAlive(true);
       });
       if (portsArr.length > 0) {
