@@ -520,12 +520,12 @@ export default function ComponentMap({
                 }
               />
               {/* Add this new container for reducer state */}
-              {tooltipData.componentData.reducerState && (
+              {/* {tooltipData.componentData.reducerState && (
                 <ToolTipDataDisplay
                   containerName='Reducer State'
                   dataObj={tooltipData.componentData.reducerState}
                 />
-              )}
+              )} */}
             </div>
           </div>
         </TooltipInPortal>

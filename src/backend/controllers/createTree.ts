@@ -222,14 +222,14 @@ export default function createTree(currentFiberNode: Fiber): Tree {
             if (isReducer) {
               // If it's a reducer, store its state
               componentData.reducerState = state;
-            } else {
-              // Otherwise treat as useState
-              componentData.hooksState[hooksNames[i]?.varName || `state${i}`] = state;
             }
+            // Otherwise treat as useState
+            componentData.hooksState[hooksNames[i]?.varName || `Reducer: ${i}`] = state;
           });
 
           // Pass to front end
-          newState = componentData.reducerState || componentData.hooksState;
+          newState = componentData.hooksState;
+          console.log('new state', newState);
         } catch (err) {
           console.log('Error extracting functional component state:', {
             componentName,

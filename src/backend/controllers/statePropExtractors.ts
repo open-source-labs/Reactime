@@ -80,9 +80,7 @@ export function getHooksStateAndUpdateMethod(
         state: memoizedState.memoizedState,
         isReducer: true,
       });
-    }
-    // Existing useState check
-    if (memoizedState.queue) {
+    } else if (memoizedState.queue) {
       hooksStates.push({
         component: memoizedState.queue,
         state: memoizedState.memoizedState,
