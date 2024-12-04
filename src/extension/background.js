@@ -267,14 +267,14 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
 
 async function getActiveTab() {
   return new Promise((resolve, reject) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       if (tabs.length > 0) {
         resolve(tabs[0].id);
       } else {
-        reject(new Error('No active tab'))
+        reject(new Error('No active tab'));
       }
     });
-  })
+  });
 }
 
 /*
@@ -307,19 +307,18 @@ chrome.runtime.onConnect.addListener(async (port) => {
   portsArr.push(port); // push each Reactime communication channel object to the portsArr
   // sets the current Title of the Reactime panel
 
-/**
- * Sends messages to ports in the portsArr array, triggering a tab change action.
- */
+  /**
+   * Sends messages to ports in the portsArr array, triggering a tab change action.
+   */
   function sendMessagesToPorts() {
     portsArr.forEach((bg, index) => {
-        bg.postMessage({
-            action: 'changeTab',
-            payload: { tabId: activeTab.id, title: activeTab.title },
-        });
+      bg.postMessage({
+        action: 'changeTab',
+        payload: { tabId: activeTab.id, title: activeTab.title },
+      });
     });
-}
+  }
 
-  
   if (portsArr.length > 0 && Object.keys(tabsObj).length > 0) {
     //if the activeTab is not set during the onActivate API, run a query to get the tabId and set activeTab
     if (!activeTab) {
@@ -330,8 +329,8 @@ chrome.runtime.onConnect.addListener(async (port) => {
           activeTab = tab;
           sendMessagesToPorts();
         }
-        });
-    };
+      });
+    }
   }
 
   if (Object.keys(tabsObj).length > 0) {
@@ -341,12 +340,24 @@ chrome.runtime.onConnect.addListener(async (port) => {
     });
   }
 
-  // every time devtool is closed, remove the port from portsArr
+  // Handles port disconnection by removing the disconnected port and attempting reconnection after 1s delay
+  // This prevents permanent connection loss during idle periods or temporary disconnects -ellie
   port.onDisconnect.addListener((e) => {
     for (let i = 0; i < portsArr.length; i += 1) {
       if (portsArr[i] === e) {
         portsArr.splice(i, 1);
-        chrome.runtime.sendMessage({ action: 'portDisconnect', port: e.name });
+        setTimeout(async () => {
+          try {
+            const response = await chrome.runtime.sendMessage({
+              action: 'attemptReconnect',
+            });
+            if (response && response.success) {
+              console.log('Port successfully reconnected');
+            }
+          } catch (error) {
+            console.warn('Port reconnection failed:', error);
+          }
+        }, 1000);
         break;
       }
     }
@@ -428,7 +439,6 @@ chrome.runtime.onConnect.addListener(async (port) => {
         toggleAxRecord = !toggleAxRecord;
 
         await replaceEmptySnap(tabsObj, tabId, toggleAxRecord);
-
         // sends new tabs obj to devtools
         if (portsArr.length > 0) {
           portsArr.forEach((bg) =>
@@ -599,13 +609,26 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         break;
       }
 
-      // DUPLICATE SNAPSHOT CHECK
-      // This may be where the bug is coming from that when Reactime fails to collect
-      // state. If they happen to take the same actual duration, it won't record the snapshot.
-      const previousSnap =
-        tabsObj[tabId]?.currLocation?.stateSnapshot?.children[0]?.componentData?.actualDuration;
-      const incomingSnap = request.payload.children[0].componentData.actualDuration;
-      if (previousSnap === incomingSnap) {
+      // DUPLICATE SNAPSHOT CHECK -ellie
+      const isDuplicateSnapshot = (previous, incoming) => {
+        if (!previous || !incoming) return false;
+        const prevData = previous?.componentData;
+        const incomingData = incoming?.componentData;
+
+        // Check if both snapshots have required data
+        if (!prevData || !incomingData) return false;
+
+        const timeDiff = Math.abs(
+          (incomingData.timestamp || Date.now()) - (prevData.timestamp || Date.now()),
+        );
+        return prevData.actualDuration === incomingData.actualDuration && timeDiff < 1000;
+      };
+
+      const previousSnap = tabsObj[tabId]?.currLocation?.stateSnapshot?.children[0];
+      const incomingSnap = request.payload.children[0];
+
+      if (isDuplicateSnapshot(previousSnap, incomingSnap)) {
+        console.warn('Duplicate snapshot detected, skipping');
         break;
       }
 
@@ -626,7 +649,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             addedAxSnap = 'emptyAxSnap';
             tabsObj[tabId].axSnapshots.push(addedAxSnap);
           }
-
           sendToHierarchy(
             tabsObj[tabId],
             new HistoryNode(tabsObj[tabId], request.payload, addedAxSnap),
@@ -705,13 +727,12 @@ chrome.tabs.onActivated.addListener((info) => {
     if (!tab.pendingUrl?.match('^chrome-extension')) {
       activeTab = tab;
 
-      /**this setInterval is here to make sure that the app does not stop working even
-       * if chrome pauses to save energy. There is probably a better solution, but v25 did
-       * not have time to complete.
-      */
-      setInterval(() => {
-        console.log(activeTab)
-      }, 10000);
+      /**this setKeepAlive is here to make sure that the app does not stop working even
+       * if chrome pauses to save energy.
+       */
+      chrome.runtime.onStartup.addListener(() => {
+        chrome.runtime.setKeepAlive(true);
+      });
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
           bg.postMessage({

@@ -24,6 +24,7 @@ export default function timeJumpInitiation(mode: Status) {
    * @param targetSnapshot - The target snapshot to re-render. The payload from index.ts is assigned to targetSnapshot
    */
   return async function timeJump(targetSnapshot: Tree): Promise<void> {
+    console.log('Time jump initiated with targetSnapshot:', targetSnapshot); // logging to see if the re-rendering bug lives here
     mode.jumping = true;
     // Reset mode.navigating
     delete mode.navigating;
@@ -45,7 +46,6 @@ export default function timeJumpInitiation(mode: Status) {
  *
  */
 async function updateReactFiberTree(
-  //TypeScript Note: Adding a tree type to targetSnapshot throws errors for destructuring componentData below. Not sure how precisely to fix
   targetSnapshot,
   circularComponentTable: Set<any> = new Set(),
 ): Promise<void> {
@@ -57,47 +57,43 @@ async function updateReactFiberTree(
     circularComponentTable.add(targetSnapshot);
   }
   // ------------------------STATELESS/ROOT COMPONENT-------------------------
-  // Since stateless component has no data to update, continue to traverse its child nodes:
   if (targetSnapshot.state === 'stateless' || targetSnapshot.state === 'root') {
     targetSnapshot.children.forEach((child) => updateReactFiberTree(child, circularComponentTable));
     return;
   }
 
-  // Destructure component data:
-  const { index, state, hooksIndex, hooksState } = targetSnapshot.componentData;
+  const { index, state, hooksIndex, hooksState, reducerState } = targetSnapshot.componentData;
+
   // ------------------------STATEFUL CLASS COMPONENT-------------------------
-  // Check if it is a stateful class component
-  // Index can be zero => falsy value => DO NOT REMOVE NULL
   if (index !== null) {
-    // Obtain the BOUND update method at the given index
     const classComponent = componentActionsRecord.getComponentByIndex(index);
-    // This conditional avoids the error that occurs when classComponent is undefined
     if (classComponent !== undefined) {
-      // Update component state
-      await classComponent.setState(
-        // prevState contains the states of the snapshots we are jumping FROM, not jumping TO
-        (prevState) => state,
-      );
+      await classComponent.setState(() => state);
     }
-    // Iterate through new children after state has been set
     targetSnapshot.children.forEach((child) => updateReactFiberTree(child, circularComponentTable));
     return;
   }
 
   // ----------------------STATEFUL FUNCTIONAL COMPONENT----------------------
-  // Check if it is a stateful functional component
-  // if yes, grab all relevant components for this snapshot by its index
-  // call dispatch on each component passing in the corresponding currState value
-  //index can be zero => falsy value => DO NOT REMOVE NULL
   if (hooksIndex !== null) {
-    // Obtain the array of BOUND update methods at the given indexes.
-    // NOTE: each useState will be a separate update method. So if a component have 3 useState, we will obtain an array of 3 update methods.
     const functionalComponent = componentActionsRecord.getComponentByIndexHooks(hooksIndex);
-    // Update component state
-    for (let i in functionalComponent) {
-      await functionalComponent[i].dispatch(Object.values(hooksState)[i]);
+
+    // Handle reducer state if present
+    if (reducerState) {
+      try {
+        // For reducer components, update using the first dispatch function
+        await functionalComponent[0]?.dispatch(reducerState);
+      } catch (err) {
+        console.error('Error updating reducer state:', err);
+      }
+    } else {
+      // Handle normal useState components
+      for (let i in functionalComponent) {
+        if (functionalComponent[i]?.dispatch) {
+          await functionalComponent[i].dispatch(Object.values(hooksState)[i]);
+        }
+      }
     }
-    // Iterate through new children after state has been set
     targetSnapshot.children.forEach((child) => updateReactFiberTree(child));
     return;
   }

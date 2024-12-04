@@ -11,7 +11,10 @@ function Nav(): JSX.Element {
         Tic-Tac-Toe
       </Link>
       <Link className='link' to='/buttons'>
-        Counter
+        State Counter
+      </Link>
+      <Link className='link' to='/reducer'>
+        Reducer Counter
       </Link>
     </div>
   );

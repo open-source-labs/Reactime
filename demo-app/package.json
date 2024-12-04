@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.25.9",
     "@babel/preset-env": "^7.16.7",
     "@babel/preset-react": "^7.16.7",
     "@types/express": "^4.17.13",
@@ -17,6 +18,7 @@
     "@types/react-dom": "^17.0.19",
     "babel-loader": "^8.2.3",
     "copy-webpack-plugin": "^10.2.0",
+    "core-js": "^3.39.0",
     "css-loader": "^6.5.1",
     "html-webpack-plugin": "^5.5.0",
     "node": "^16.0.0",

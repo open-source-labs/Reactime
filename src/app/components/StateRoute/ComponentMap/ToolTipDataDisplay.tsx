@@ -28,42 +28,41 @@ const colors = {
 };
 
 const ToolTipDataDisplay = ({ containerName, dataObj }) => {
-  const printableObject = {}; // The key:value properties of printableObject will be rendered in the JSON Tree
+  const printableObject = {};
 
   if (!dataObj) {
-    // If state is null rather than an object, print "State: null" in tooltip
     printableObject[containerName] = dataObj;
   } else {
-    /*
-      Props often contain circular references. 
-      Messages from the backend must be sent as JSON objects (strings). 
-      JSON objects can't contain circular ref's, so the backend filters out problematic values by stringifying the values of object properties and ignoring any values that fail the conversion due to a circular ref. The following logic converts these values back to JS so they display clearly and are collapsible.
-    */
     const data = {};
-    for (const key in dataObj) {
-      if (typeof dataObj[key] === 'string') {
-        try {
-          data[key] = JSON.parse(dataObj[key]);
-        } catch {
+
+    // Handle reducer state if present
+    if (containerName === 'State' && dataObj.reducerState) {
+      printableObject[containerName] = dataObj.reducerState;
+    }
+    // Otherwise handle normal state/props
+    else {
+      for (const key in dataObj) {
+        if (typeof dataObj[key] === 'string') {
+          try {
+            data[key] = JSON.parse(dataObj[key]);
+          } catch {
+            data[key] = dataObj[key];
+          }
+        } else {
           data[key] = dataObj[key];
         }
-      } else {
-        data[key] = dataObj[key];
       }
+      printableObject[containerName] = data;
     }
-    /*
-      Adds container name (State, Props, future different names for hooks) at top of object so everything nested in it will collapse when you click on it.
-    */
-    printableObject[containerName] = data;
   }
 
   return (
     <div className='tooltipData' key={`${containerName}-data-container`}>
       <JSONTree
-        data={printableObject} // data to be rendered, a snapshot object
-        theme={{ extend: colors, tree: () => ({ className: `tooltipData-JSONTree` }) }} // theme set to a base16 theme that has been extended to include  "className: 'json-tree'"
-        shouldExpandNodeInitially={() => true} // determines if node should be expanded when it first renders (root is expanded by default)
-        hideRoot={true} // hides the root node
+        data={printableObject}
+        theme={{ extend: colors, tree: () => ({ className: `tooltipData-JSONTree` }) }}
+        shouldExpandNodeInitially={() => true}
+        hideRoot={true}
       />
     </div>
   );
