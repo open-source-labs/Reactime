@@ -171,36 +171,13 @@
 //   });
 // })();
 
-
 (function () {
   console.log('[Reactime Debug] Initial override script loaded');
 
-  // Retry constants
-  const MAX_ATTEMPTS = 50;
-  let attempts = 0;
-
-  // Verify React hooks via registered renderers
-  function verifyReactHooks() {
-    try {
-      const renderers = Array.from(
-        window.__REACT_DEVTOOLS_GLOBAL_HOOK__.renderers.values()
-      );
-      return renderers.some((renderer) => renderer?.currentDispatcher?.useReducer);
-    } catch (err) {
-      console.error('[Reactime Debug] Error verifying React hooks:', err);
-      return false;
-    }
-  }
-
-  // Set up the useReducer override
-  function setupOverride() {
+  function setupOverride(renderer) {
     console.log('[Reactime Debug] Setting up useReducer override');
 
     try {
-      const renderers = Array.from(
-        window.__REACT_DEVTOOLS_GLOBAL_HOOK__.renderers.values()
-      );
-      const renderer = renderers[0]; // Assume first renderer for simplicity
       const originalUseReducer = renderer?.currentDispatcher?.useReducer;
 
       if (!originalUseReducer) {
@@ -224,34 +201,57 @@
     }
   }
 
-  // Attempt to detect React and set up override
-  function checkReact() {
-    attempts++;
-    console.log(`[Reactime Debug] Checking for React (attempt ${attempts}/${MAX_ATTEMPTS})`);
+  function findValidRenderer() {
+    const renderers = Array.from(window.__REACT_DEVTOOLS_GLOBAL_HOOK__.renderers.values());
 
-    if (verifyReactHooks()) {
-      console.log('[Reactime Debug] React hooks found. Setting up overrides.');
-      setupOverride();
-    } else if (attempts < MAX_ATTEMPTS) {
-      setTimeout(checkReact, Math.min(100 * attempts, 2000));
+    console.log('[Reactime Debug] Found renderers:', renderers);
+
+    const validRenderer = renderers.find((renderer) => renderer?.currentDispatcher?.useReducer);
+
+    if (validRenderer) {
+      console.log('[Reactime Debug] Valid renderer with useReducer found.');
+      return validRenderer;
+    }
+
+    console.warn('[Reactime Debug] No valid renderer with useReducer found.');
+    return null;
+  }
+
+  function waitForHooks(renderer, maxAttempts = 50, interval = 100) {
+    let attempts = 0;
+
+    const intervalId = setInterval(() => {
+      attempts++;
+
+      if (renderer?.currentDispatcher?.useReducer) {
+        console.log('[Reactime Debug] useReducer found during render cycle.');
+        setupOverride(renderer); // Set up hook overrides
+        clearInterval(intervalId); // Stop polling
+      } else if (attempts >= maxAttempts) {
+        console.warn('[Reactime Debug] Max attempts reached. useReducer not found.');
+        clearInterval(intervalId);
+      }
+    }, interval);
+  }
+
+  function initialize() {
+    if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
+      const renderer = findValidRenderer();
+
+      if (renderer) {
+        if (renderer.currentDispatcher?.useReducer) {
+          // If hooks are immediately available, override them
+          setupOverride(renderer);
+        } else {
+          // If not, wait for hooks to become available
+          waitForHooks(renderer);
+        }
+      }
     } else {
-      console.log('[Reactime Debug] Max attempts reached. React hooks not found.');
+      console.error('[Reactime Debug] React DevTools hook not found.');
     }
   }
 
-  // Hook into the inject method of React DevTools
-  if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
-    const originalInject = window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject;
-
-    window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = function (renderer) {
-      console.log('[Reactime Debug] React renderer registered.');
-      setupOverride(); // React is registered, so immediately set up overrides
-      return originalInject.apply(this, arguments);
-    };
-
-    console.log('[Reactime Debug] React DevTools hook overridden.');
-  } else {
-    console.log('[Reactime Debug] React DevTools hook not found. Starting manual checks.');
-    checkReact(); // Start retries if no DevTools hook
-  }
+  // Start initialization
+  initialize();
 })();
