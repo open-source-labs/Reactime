@@ -9,7 +9,7 @@ import { ActionProps, OptionsCursorTrueWithMargin } from '../../FrontendTypes';
 import { useDispatch } from 'react-redux';
 
 /*
-  This render's the individual snapshot components on the left side column
+  This renders the individual snapshot components on the left side column
 */
 
 /**

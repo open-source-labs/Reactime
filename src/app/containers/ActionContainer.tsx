@@ -2,9 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import Action from '../components/Actions/Action';
 import SwitchAppDropdown from '../components/Actions/SwitchApp';
+// Import new dropdown
 import { emptySnapshots, changeView, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import RouteDescription from '../components/Actions/RouteDescription';
+import DropDown from '../components/Actions/DropDown';
 import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
 
@@ -221,6 +223,8 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             {recordingActions ? <Switch defaultChecked /> : <Switch />}
           </a>
           <SwitchAppDropdown />
+          {/* add new component here for dropdown menu for useStae/ useReducer- ragad */}
+         <DropDown />
           <div className='action-component exclude'>
             <Button
               className='clear-button'
