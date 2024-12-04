@@ -2,11 +2,11 @@ import Select from 'react-select';
 import React, { useEffect, useState } from 'react';
 
 const DropDown = (): JSX.Element => {
-    const [hook, setHook] = useState('useState');
+    // const [hook, setHook] = useState('useState');
 
-    const handleChange = (selectedHook: {hooks:string}) => {
-        setHook(selectedHook);
-    }
+    // const handleChange = (options: {value:string}) => {
+    //     setHook(options.value);
+    // }
 
 const options = [
     {value: 'useState', label: 'useState'},
@@ -15,11 +15,15 @@ const options = [
 ];
 
     return (
-        <Select 
+        <div>
+             <Select 
         placeholder = 'Select Hook'
-        onChange={handleChange}
+        // onChange={handleChange}
         options = {options}
         /> 
+        {/* <p>Selected Hook: {hook}</p> */}
+        </div>
+       
     )
 }
 export default DropDown;
