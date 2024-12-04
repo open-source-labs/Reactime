@@ -207,9 +207,7 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       if (memoizedState.queue) {
         try {
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
-          console.log(hooksStates);
           const hooksNames = getHooksNames(elementType.toString());
-          console.log(hooksNames);
 
           componentData.hooksState = {};
           componentData.reducerStates = []; // New array to store reducer states
@@ -235,7 +233,6 @@ export default function createTree(currentFiberNode: Fiber): Tree {
             ...componentData.hooksState,
             reducers: componentData.reducerStates,
           };
-          console.log('new state', newState);
         } catch (err) {
           console.log('Error extracting component state:', {
             componentName,

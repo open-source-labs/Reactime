@@ -60,13 +60,6 @@ async function updateReactFiberTree(
 
   const { index, state, hooksIndex, hooksState, reducerStates } = targetSnapshot.componentData;
 
-  console.log('Processing snapshot in timeJump:', {
-    componentName: targetSnapshot.name,
-    hasHooksIndex: !!hooksIndex,
-    hooksState,
-    reducerStates,
-  });
-
   // Handle class components
   if (index !== null) {
     const classComponent = componentActionsRecord.getComponentByIndex(index);
@@ -81,51 +74,86 @@ async function updateReactFiberTree(
   if (hooksIndex !== null) {
     const functionalComponent = componentActionsRecord.getComponentByIndexHooks(hooksIndex);
 
-    console.log('Retrieved functional component:', {
-      hasComponent: !!functionalComponent,
-      hooksIndexLength: hooksIndex.length,
-      componentLength: functionalComponent?.length,
-    });
-
     // Handle regular useState hooks
     if (hooksState) {
       const stateEntries = Object.entries(hooksState);
-
       for (let i = 0; i < stateEntries.length; i++) {
         const [key, value] = stateEntries[i];
         if (functionalComponent[i]?.dispatch) {
-          console.log('Dispatching state update:', {
-            key,
-            value,
-          });
           await functionalComponent[i].dispatch(value);
-        } else {
-          console.warn(`No dispatch found for hook ${i}:`, {
-            key,
-            value,
-            hasDispatch: !!functionalComponent[i]?.dispatch,
-          });
         }
       }
     }
 
     // Handle reducer hooks
     if (reducerStates && reducerStates.length > 0) {
-      console.log('Processing reducer states:', reducerStates);
-
       for (const reducerState of reducerStates) {
-        const { state, reducerIndex } = reducerState;
+        const { state: targetState, reducerIndex, hookName } = reducerState;
         const reducer = functionalComponent[reducerIndex];
-        console.log('reducer', reducer);
 
         if (reducer?.dispatch) {
-          console.log('Dispatching reducer update:', {
-            reducerIndex,
-            state,
+          console.log('Current reducer state:', {
+            hookName,
+            currentState: reducer.lastRenderedState,
+            targetState,
           });
-          await reducer.dispatch(state);
+
+          // Store original values
+          const originalReducer = reducer.lastRenderedReducer;
+          const originalState = reducer.lastRenderedState;
+
+          try {
+            // Set the new state directly
+            reducer.lastRenderedState = targetState;
+
+            // Override the reducer temporarily
+            reducer.lastRenderedReducer = (state: any, action: any) => {
+              if (action.type === '@@REACTIME/FORCE_STATE_UPDATE') {
+                return action.payload;
+              }
+              return originalReducer ? originalReducer(state, action) : state;
+            };
+
+            // Dispatch the force update action
+            const forceUpdateAction = {
+              type: '@@REACTIME/FORCE_STATE_UPDATE',
+              payload: targetState,
+            };
+
+            await reducer.dispatch(forceUpdateAction);
+
+            console.log('Post-dispatch state:', {
+              hookName,
+              newState: reducer.lastRenderedState,
+              success: JSON.stringify(reducer.lastRenderedState) === JSON.stringify(targetState),
+            });
+          } catch (error) {
+            console.error('Error updating reducer state:', {
+              hookName,
+              error,
+              componentName: targetSnapshot.name,
+            });
+            // Restore original state on error
+            reducer.lastRenderedState = originalState;
+          } finally {
+            // Restore original reducer
+            reducer.lastRenderedReducer = originalReducer;
+
+            console.log('Final reducer state check:', {
+              hookName,
+              originalState,
+              targetState,
+              finalState: reducer.lastRenderedState,
+              stateMatchesTarget:
+                JSON.stringify(reducer.lastRenderedState) === JSON.stringify(targetState),
+            });
+          }
         } else {
-          console.warn('No dispatch found for reducer:', reducerIndex);
+          console.warn('No dispatch found for reducer:', {
+            hookName,
+            reducerIndex,
+            componentName: targetSnapshot.name,
+          });
         }
       }
     }
