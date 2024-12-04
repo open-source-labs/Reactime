@@ -28,6 +28,7 @@ const SwitchAppDropdown = (): JSX.Element => {
     value: currentTab,
     label: tabs[currentTab].title,
   };
+  console.log('tabs', tabs)
 
   const customStyles: {} = {
     menu: (provided, state): {} => {
@@ -37,6 +38,11 @@ const SwitchAppDropdown = (): JSX.Element => {
 
       return { ...provided, outline, margin }; // we return an object that adds the ouline and margin to the provided object
     },
+  };
+
+  const customComponents = {
+    DropdownIndicator: () => null,
+    IndicatorSeparator: () => null, // Removes the separator line
   };
 
   return (
@@ -49,6 +55,9 @@ const SwitchAppDropdown = (): JSX.Element => {
         dispatch(setTab(parseInt(e.value, 10)));
       }}
       options={tabsArray}
+      isSearchable={false} // Disable search functionality
+      menuIsOpen={false} // Prevent dropdown from opening
+      components={customComponents}
     />
   );
 };
