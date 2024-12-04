@@ -24,7 +24,6 @@ export default function timeJumpInitiation(mode: Status) {
    * @param targetSnapshot - The target snapshot to re-render. The payload from index.ts is assigned to targetSnapshot
    */
   return async function timeJump(targetSnapshot: Tree): Promise<void> {
-    console.log('Time jump initiated with targetSnapshot:', targetSnapshot); // logging to see if the re-rendering bug lives here
     mode.jumping = true;
     // Reset mode.navigating
     delete mode.navigating;
@@ -50,21 +49,18 @@ async function updateReactFiberTree(
   circularComponentTable: Set<any> = new Set(),
 ): Promise<void> {
   if (!targetSnapshot) return;
-  // Base Case: if has visited, return
-  if (circularComponentTable.has(targetSnapshot)) {
-    return;
-  } else {
-    circularComponentTable.add(targetSnapshot);
-  }
-  // ------------------------STATELESS/ROOT COMPONENT-------------------------
+  if (circularComponentTable.has(targetSnapshot)) return;
+
+  circularComponentTable.add(targetSnapshot);
+
   if (targetSnapshot.state === 'stateless' || targetSnapshot.state === 'root') {
     targetSnapshot.children.forEach((child) => updateReactFiberTree(child, circularComponentTable));
     return;
   }
 
-  const { index, state, hooksIndex, hooksState, reducerState } = targetSnapshot.componentData;
+  const { index, state, hooksIndex, hooksState, reducerStates } = targetSnapshot.componentData;
 
-  // ------------------------STATEFUL CLASS COMPONENT-------------------------
+  // Handle class components
   if (index !== null) {
     const classComponent = componentActionsRecord.getComponentByIndex(index);
     if (classComponent !== undefined) {
@@ -74,27 +70,95 @@ async function updateReactFiberTree(
     return;
   }
 
-  // ----------------------STATEFUL FUNCTIONAL COMPONENT----------------------
+  // Handle hooks
   if (hooksIndex !== null) {
     const functionalComponent = componentActionsRecord.getComponentByIndexHooks(hooksIndex);
 
-    // Handle reducer state if present
-    if (reducerState) {
-      try {
-        // For reducer components, update using the first dispatch function
-        await functionalComponent[0]?.dispatch(reducerState);
-      } catch (err) {
-        console.error('Error updating reducer state:', err);
-      }
-    } else {
-      // Handle normal useState components
-      for (let i in functionalComponent) {
+    // Handle regular useState hooks
+    if (hooksState) {
+      const stateEntries = Object.entries(hooksState);
+      for (let i = 0; i < stateEntries.length; i++) {
+        const [key, value] = stateEntries[i];
         if (functionalComponent[i]?.dispatch) {
-          await functionalComponent[i].dispatch(Object.values(hooksState)[i]);
+          await functionalComponent[i].dispatch(value);
         }
       }
     }
-    targetSnapshot.children.forEach((child) => updateReactFiberTree(child));
+
+    // Handle reducer hooks
+    if (reducerStates && reducerStates.length > 0) {
+      for (const reducerState of reducerStates) {
+        const { state: targetState, reducerIndex, hookName } = reducerState;
+        const reducer = functionalComponent[reducerIndex];
+
+        if (reducer?.dispatch) {
+          console.log('Current reducer state:', {
+            hookName,
+            currentState: reducer.lastRenderedState,
+            targetState,
+          });
+
+          // Store original values
+          const originalReducer = reducer.lastRenderedReducer;
+          const originalState = reducer.lastRenderedState;
+
+          try {
+            // Set the new state directly
+            reducer.lastRenderedState = targetState;
+
+            // Override the reducer temporarily
+            reducer.lastRenderedReducer = (state: any, action: any) => {
+              if (action.type === '@@REACTIME/FORCE_STATE_UPDATE') {
+                return action.payload;
+              }
+              return originalReducer ? originalReducer(state, action) : state;
+            };
+
+            // Dispatch the force update action
+            const forceUpdateAction = {
+              type: '@@REACTIME/FORCE_STATE_UPDATE',
+              payload: targetState,
+            };
+
+            await reducer.dispatch(forceUpdateAction);
+
+            console.log('Post-dispatch state:', {
+              hookName,
+              newState: reducer.lastRenderedState,
+              success: JSON.stringify(reducer.lastRenderedState) === JSON.stringify(targetState),
+            });
+          } catch (error) {
+            console.error('Error updating reducer state:', {
+              hookName,
+              error,
+              componentName: targetSnapshot.name,
+            });
+            // Restore original state on error
+            reducer.lastRenderedState = originalState;
+          } finally {
+            // Restore original reducer
+            reducer.lastRenderedReducer = originalReducer;
+
+            console.log('Final reducer state check:', {
+              hookName,
+              originalState,
+              targetState,
+              finalState: reducer.lastRenderedState,
+              stateMatchesTarget:
+                JSON.stringify(reducer.lastRenderedState) === JSON.stringify(targetState),
+            });
+          }
+        } else {
+          console.warn('No dispatch found for reducer:', {
+            hookName,
+            reducerIndex,
+            componentName: targetSnapshot.name,
+          });
+        }
+      }
+    }
+
+    targetSnapshot.children.forEach((child) => updateReactFiberTree(child, circularComponentTable));
     return;
   }
 }
