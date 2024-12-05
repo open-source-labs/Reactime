@@ -5,6 +5,8 @@ import TravelContainer from './TravelContainer';
 import ButtonsContainer from './ButtonsContainer';
 import ErrorContainer from './ErrorContainer';
 import StateContainer from './StateContainer';
+import ReduceContainer from './ReduceContainer'
+import DropDown from '../components/Actions/DropDown';
 import {
   addNewSnapshots,
   initialConnect,
@@ -37,6 +39,7 @@ function MainContainer(): JSX.Element {
 
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
 
+  const [hook, setHook] = useState('useState');
   // this function handles Time Jump sidebar view
   const toggleActionContainer = () => {
     setActionView(!actionView); // sets actionView to the opposite boolean value
@@ -208,6 +211,7 @@ function MainContainer(): JSX.Element {
   return (
     <div className='main-container'>
       <div id='bodyContainer' className='body-container'>
+        <DropDown onChange={(value) => setHook(value)}/>
         <ActionContainer
           actionView={actionView}
           setActionView={setActionView}
@@ -229,6 +233,12 @@ function MainContainer(): JSX.Element {
               currLocation={currLocation}
               axSnapshots={axSnapshots}
             />
+            {hook === 'useReducer' && (
+          <div className="state-container-container">
+            <ReduceContainer />
+          </div>
+        )}
+            
           </div>
         ) : null}
         {/* @ts-ignore */}

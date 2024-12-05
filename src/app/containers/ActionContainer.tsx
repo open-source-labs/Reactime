@@ -224,7 +224,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
           </a>
           <SwitchAppDropdown />
           {/* add new component here for dropdown menu for useStae/ useReducer- ragad */}
-         <DropDown />
+          <DropDown onChange={useState} />
           <div className='action-component exclude'>
             <Button
               className='clear-button'
