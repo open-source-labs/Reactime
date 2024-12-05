@@ -9,7 +9,7 @@ import RouteDescription from '../components/Actions/RouteDescription';
 import DropDown from '../components/Actions/DropDown';
 import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
-
+import ClickableLink from '../components/Actions/ClickableLink';
 /*
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
 */
@@ -224,7 +224,9 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
           </a>
           <SwitchAppDropdown />
           {/* add new component here for dropdown menu for useStae/ useReducer- ragad */}
+          
          <DropDown />
+          <ClickableLink /> 
           <div className='action-component exclude'>
             <Button
               className='clear-button'
