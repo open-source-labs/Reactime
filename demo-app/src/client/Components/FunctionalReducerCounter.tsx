@@ -21,20 +21,22 @@ type CounterAction =
   | { type: 'DECREMENT' }
   | { type: 'DOUBLE' }
   | { type: 'RESET' }
-  | { type: 'ADD'; payload: number };
+  | { type: 'ADD'; payload: number }
+  | { type: 'SET_STATE'; payload: CounterState };
 
-// New secondary reducer state and action types
 type SecondaryCounterState = {
   count: number;
   multiplier: number;
   lastOperation: string;
+  history: number[];
 };
 
 type SecondaryCounterAction =
   | { type: 'MULTIPLY' }
   | { type: 'DIVIDE' }
   | { type: 'SET_MULTIPLIER'; payload: number }
-  | { type: 'RESET' };
+  | { type: 'RESET' }
+  | { type: 'SET_STATE'; payload: SecondaryCounterState };
 
 function counterReducer(state: CounterState, action: CounterAction, step: number): CounterState {
   switch (action.type) {
@@ -72,12 +74,16 @@ function counterReducer(state: CounterState, action: CounterAction, step: number
         history: [...state.history, state.count + action.payload],
         lastAction: `ADD ${action.payload}`,
       };
+    case 'SET_STATE':
+      return {
+        ...action.payload,
+        lastAction: 'SET_STATE',
+      };
     default:
       return state;
   }
 }
 
-// New secondary reducer function
 function secondaryCounterReducer(
   state: SecondaryCounterState,
   action: SecondaryCounterAction,
@@ -87,25 +93,34 @@ function secondaryCounterReducer(
       return {
         ...state,
         count: state.count * state.multiplier,
+        history: [...state.history, state.count * state.multiplier],
         lastOperation: `Multiplied by ${state.multiplier}`,
       };
     case 'DIVIDE':
       return {
         ...state,
         count: state.count / state.multiplier,
+        history: [...state.history, state.count / state.multiplier],
         lastOperation: `Divided by ${state.multiplier}`,
       };
     case 'SET_MULTIPLIER':
       return {
         ...state,
         multiplier: action.payload,
+        history: [...state.history],
         lastOperation: `Set multiplier to ${action.payload}`,
       };
     case 'RESET':
       return {
         count: 0,
         multiplier: 2,
+        history: [],
         lastOperation: 'Reset',
+      };
+    case 'SET_STATE':
+      return {
+        ...action.payload,
+        lastOperation: 'SET_STATE',
       };
     default:
       return state;
@@ -125,7 +140,6 @@ function FunctionalReducerCounter({
   const [lastClickTime, setLastClickTime] = useState<Date | null>(null);
   const [averageTimeBetweenClicks, setAverageTimeBetweenClicks] = useState<number>(0);
 
-  // First reducer
   const [state, dispatch] = useReducer(
     (state: CounterState, action: CounterAction) => counterReducer(state, action, step),
     {
@@ -135,10 +149,10 @@ function FunctionalReducerCounter({
     },
   );
 
-  // Second reducer
   const [secondaryState, secondaryDispatch] = useReducer(secondaryCounterReducer, {
     count: initialCount,
     multiplier: 2,
+    history: [],
     lastOperation: 'none',
   });
 
@@ -152,7 +166,6 @@ function FunctionalReducerCounter({
     >
       <h2>{title}</h2>
 
-      {/* Primary Counter Section */}
       <div className='counter-value'>
         <h3>Primary Counter: {state.count}</h3>
       </div>
@@ -166,7 +179,6 @@ function FunctionalReducerCounter({
       </div>
 
       <div className='counter-info'>
-        <h4>Last Action: {state.lastAction}</h4>
         <h4>History:</h4>
         <div className='history-list'>
           {state.history.map((value, index) => (
@@ -178,7 +190,6 @@ function FunctionalReducerCounter({
         </div>
       </div>
 
-      {/* Secondary Counter Section */}
       <div
         className='secondary-counter'
         style={{ marginTop: '2rem', borderTop: '1px solid #ccc', paddingTop: '1rem' }}
@@ -201,8 +212,16 @@ function FunctionalReducerCounter({
           <button onClick={() => secondaryDispatch({ type: 'RESET' })}>Reset</button>
         </div>
         <div className='counter-info'>
-          <h4>Last Operation: {secondaryState.lastOperation}</h4>
           <h4>Current Multiplier: {secondaryState.multiplier}</h4>
+          <h4>History:</h4>
+          <div className='history-list'>
+            {secondaryState.history.map((value, index) => (
+              <span key={index}>
+                {value}
+                {index < secondaryState.history.length - 1 ? ' → ' : ''}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </div>

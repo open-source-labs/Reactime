@@ -123,7 +123,6 @@ class ReducerCounter extends Component<CounterProps, CounterState> {
         </div>
 
         <div className='counter-info'>
-          <h4>Last Action: {this.state.lastAction}</h4>
           <h4>History:</h4>
           <div className='history-list'>
             {this.state.history.map((value, index) => (
