@@ -37,7 +37,6 @@ const ToolTipDataDisplay = ({ containerName, dataObj }) => {
     return reducerStates.reduce((acc, reducer) => {
       acc[reducer.hookName || 'Reducer'] = {
         state: reducer.state,
-        lastAction: reducer.lastAction,
       };
       return acc;
     }, {});

@@ -243,6 +243,20 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       }
     }
 
+    if (tag === ContextProvider) {
+      // Extract context information
+      console.log('ele', elementType);
+      console.log('memo', memoizedState);
+      const contextData = {
+        displayName: elementType._context?.displayName || 'Anonymous Context',
+        currentValue: memoizedState?.deps?.[0]?._currentValue || memoizedProps?.value,
+        defaultValue: elementType._context?._defaultValue,
+        consumers: [], // how do we track consumers?
+      };
+
+      componentData.context = contextData;
+    }
+
     // -----------------ADD COMPONENT DATA TO THE OUTPUT TREE-------------------
 
     /**
