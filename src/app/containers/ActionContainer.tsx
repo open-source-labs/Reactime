@@ -7,6 +7,7 @@ import { emptySnapshots, changeView, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import RouteDescription from '../components/Actions/RouteDescription';
 import DropDown from '../components/Actions/DropDown';
+import ProvConContainer from './ProvConContainer';
 import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
 import ClickableLink from '../components/Actions/ClickableLink';
@@ -25,6 +26,9 @@ const resetSlider = () => {
 };
 
 function ActionContainer(props: ActionContainerProps): JSX.Element {
+
+  const [dropdownSelection, setDropdownSelection] = useState('TimeJump');
+
   const dispatch = useDispatch();
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
 
@@ -225,7 +229,10 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
           <SwitchAppDropdown />
           {/* add new component here for dropdown menu for useStae/ useReducer- ragad */}
           
-         <DropDown />
+         <DropDown
+         dropdownSelection = {dropdownSelection}
+         setDropdownSelection={setDropdownSelection}
+         />
           <ClickableLink /> 
           <div className='action-component exclude'>
             <Button
@@ -241,10 +248,12 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
               Clear
             </Button>
           </div>
-          {/* Rendering of route description components */}
-          {Object.keys(routes).map((route, i) => (
-            <RouteDescription key={`route${i}`} actions={routes[route]} />
-          ))}
+         {dropdownSelection === 'Provider/Consumer' && <ProvConContainer/>}
+          {dropdownSelection === 'TimeJump' && 
+            Object.keys(routes).map((route, i) => (
+              <RouteDescription key={`route${i}`} actions={routes[route]} />
+            ))
+          }
         </div>
       ) : null}
     </div>

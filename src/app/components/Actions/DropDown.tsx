@@ -1,29 +1,24 @@
 import Select from 'react-select';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-const DropDown = (): JSX.Element => {
-    // const [hook, setHook] = useState('useState');
+const DropDown = ({ dropdownSelection, setDropdownSelection }: { dropdownSelection: string; setDropdownSelection: (value: string) => void }): JSX.Element => {
+  const handleChange = (selected: { value: string; label: string }) => {
+    setDropdownSelection(selected.value); 
+  };
 
-    // const handleChange = (options: {value:string}) => {
-    //     setHook(options.value);
-    // }
+  const options = [
+    { value: 'TimeJump', label: 'TimeJump' },
+    { value: 'Provider/Consumer', label: 'Provider/Consumer' },
+  ];
 
-const options = [
-    {value: 'useState', label: 'useState'},
-    {value: 'useReducer', label: 'useReducer'}, 
-    {value: 'useContext', label: 'useContext'}
-];
+  return (
+    <Select
+      placeholder="Select Hook"
+      onChange={handleChange}
+      options={options}
+      value={options.find((option) => option.value === dropdownSelection)}
+    />
+  );
+};
 
-    return (
-        <div>
-             <Select 
-        placeholder = 'Select Hook'
-        // onChange={handleChange}
-        options = {options}
-        /> 
-        {/* <p>Selected Hook: {hook}</p> */}
-        </div>
-       
-    )
-}
 export default DropDown;
