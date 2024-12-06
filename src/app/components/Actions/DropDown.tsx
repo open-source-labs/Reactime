@@ -3,7 +3,7 @@ import React from 'react';
 
 const DropDown = ({ dropdownSelection, setDropdownSelection }: { dropdownSelection: string; setDropdownSelection: (value: string) => void }): JSX.Element => {
   const handleChange = (selected: { value: string; label: string }) => {
-    setDropdownSelection(selected.value); // Update parent state
+    setDropdownSelection(selected.value); 
   };
 
   const options = [

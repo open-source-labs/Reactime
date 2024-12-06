@@ -247,12 +247,6 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
               Clear
             </Button>
           </div>
-          {/* Rendering of route description components */}
-          {/* {Object.keys(routes).map((route, i) => (
-            <RouteDescription key={`route${i}`} actions={routes[route]} />
-          ))} */}
-          {/* <ProvConContainer/> */}
-
          {dropdownSelection === 'Provider/Consumer' && <ProvConContainer/>}
           {dropdownSelection === 'TimeJump' && 
             Object.keys(routes).map((route, i) => (
