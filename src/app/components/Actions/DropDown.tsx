@@ -1,29 +1,24 @@
 import Select from 'react-select';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-interface DropDownProps {
-    onChange: (selectedHook: string) => void;
-}
+const DropDown = ({ dropdownSelection, setDropdownSelection }: { dropdownSelection: string; setDropdownSelection: (value: string) => void }): JSX.Element => {
+  const handleChange = (selected: { value: string; label: string }) => {
+    setDropdownSelection(selected.value); // Update parent state
+  };
 
-const DropDown = ({onChange}: DropDownProps): JSX.Element => {
-    
-    const options = [
-    {value: 'useState', label: 'useState'},
-    {value: 'useReducer', label: 'useReducer'}, 
-    {value: 'useContext', label: 'useContext'}
-];
-    const handleChange = (selectedHook: {value:string; label: string} | null) => {
-        onChange(selectedHook.value);
-    }
+  const options = [
+    { value: 'TimeJump', label: 'TimeJump' },
+    { value: 'Provider/Consumer', label: 'Provider/Consumer' },
+  ];
 
+  return (
+    <Select
+      placeholder="Select Hook"
+      onChange={handleChange}
+      options={options}
+      value={options.find((option) => option.value === dropdownSelection)}
+    />
+  );
+};
 
-
-    return (
-        <Select 
-        placeholder = 'Select Hook'
-        onChange={handleChange}
-        options = {options}
-        /> 
-    )
-}
 export default DropDown;
