@@ -250,7 +250,7 @@ export default function ComponentMap({
   const contextProvidersOnly = keepContextAndProviderNodes(currentSnapshot);
   console.log('context only', contextProvidersOnly);
 
-  collectNodes(filtered);
+  collectNodes(contextProvidersOnly);
 
   // @ts
   // find the node that has been selected and use it as the root
