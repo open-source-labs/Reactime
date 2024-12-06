@@ -250,6 +250,7 @@ export interface HandleProps {
 export interface MainSliderProps {
   className: string;
   snapshotsLength: number;
+  snapshots: any[];
 }
 
 export interface DefaultMargin {

@@ -85,7 +85,7 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
       >
         {playing ? 'Pause' : 'Play'}
       </Button>
-      <MainSlider className='main-slider' snapshotsLength={snapshotsLength} />
+      {/* <MainSlider className='main-slider' snapshotsLength={snapshotsLength} /> */}
       <Button
         variant='contained'
         className='backward-button'

@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import Action from '../components/Actions/Action';
 import SwitchAppDropdown from '../components/Actions/SwitchApp';
-// Import new dropdown
 import { emptySnapshots, changeView, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import RouteDescription from '../components/Actions/RouteDescription';
-import DropDown from '../components/Actions/DropDown';
 import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
+import Slider from 'rc-slider';
+import VerticalSlider from '../components/TimeTravel/VerticalSlider';
 
 /*
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
@@ -223,8 +223,6 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             {recordingActions ? <Switch defaultChecked /> : <Switch />}
           </a>
           <SwitchAppDropdown />
-          {/* add new component here for dropdown menu for useStae/ useReducer- ragad */}
-         <DropDown />
           <div className='action-component exclude'>
             <Button
               className='clear-button'
@@ -239,10 +237,31 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
               Clear
             </Button>
           </div>
-          {/* Rendering of route description components */}
-          {Object.keys(routes).map((route, i) => (
-            <RouteDescription key={`route${i}`} actions={routes[route]} />
-          ))}
+          <div className='MapRouteAndSlider' style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+          }}>
+             {/* <div className='slider' style={{
+              // height: '65vh',
+            }}>
+              <VerticalSlider className='main-slider' snapshotsLength={Object.keys(routes).length} />
+            </div> */}
+            <div className='snapshots'>
+              {/* Rendering of route description components */}
+              {Object.keys(routes).map((route, i) => (
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  height: `${routes[route].length * 4.5}vh`,
+                  marginBottom: '30px'
+                  }}>
+                <VerticalSlider className='main-slider' snapshotsLength={routes[route].length} snapshots={routes[route]}/>
+                <RouteDescription key={`route${i}`} actions={routes[route]} />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       ) : null}
     </div>
