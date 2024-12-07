@@ -5,8 +5,11 @@ import SwitchAppDropdown from '../components/Actions/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import RouteDescription from '../components/Actions/RouteDescription';
+import DropDown from '../components/Actions/DropDown';
+import ProvConContainer from './ProvConContainer';
 import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
+
 import Slider from 'rc-slider';
 import VerticalSlider from '../components/TimeTravel/VerticalSlider';
 
@@ -26,6 +29,9 @@ const resetSlider = () => {
 };
 
 function ActionContainer(props: ActionContainerProps): JSX.Element {
+
+  const [dropdownSelection, setDropdownSelection] = useState('TimeJump');
+
   const dispatch = useDispatch();
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
 
@@ -227,6 +233,11 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             {recordingActions ? <Switch defaultChecked /> : <Switch />}
           </a>
           <SwitchAppDropdown />
+          {/* add new component here for dropdown menu for useStae/ useReducer- ragad */}
+         <DropDown
+         dropdownSelection = {dropdownSelection}
+         setDropdownSelection={setDropdownSelection}
+         />
           <div className='action-component exclude'>
             <Button
               className='clear-button'
@@ -247,9 +258,10 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             alignItems: 'flex-start',
           }}>
             <div className='snapshots'>
-              {/* Rendering of route description components */}
-              {Object.keys(routes).map((route, i) => (
-                <div style={{
+             {dropdownSelection === 'Provider/Consumer' && <ProvConContainer/>}
+              {dropdownSelection === 'TimeJump' && 
+            Object.keys(routes).map((route, i) => (
+                  <div style={{
                   display: 'flex',
                   flexDirection: 'row',
                   height: `${routes[route].length * 4.5}vh`,
@@ -257,8 +269,9 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
                   }}>
                 <VerticalSlider className='main-slider' snapshots={routes[route]}/>
                 <RouteDescription key={`route${i}`} actions={routes[route]} />
-                </div>
-              ))}
+                  </div>
+              ))
+          }
             </div>
           </div>
         </div>
