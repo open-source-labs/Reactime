@@ -14,6 +14,7 @@ import VerticalSlider from '../components/TimeTravel/VerticalSlider';
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
 */
 
+
 // resetSlider locates the rc-slider elements on the document and resets it's style attributes
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
@@ -54,6 +55,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
     children?: [];
     }
   */
+ 
 
   const displayArray = (obj: Obj): void => {
     if (
@@ -82,6 +84,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
     if (obj.children) {
       // if argument has a 'children' array, we iterate through it and run 'displayArray' on each element
       obj.children.forEach((element): void => {
+        //recursive call
         displayArray(element);
       });
     }
@@ -129,6 +132,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
       const selected = index === viewIndex; // boolean on whether the current index is the same as the viewIndex
       const last = viewIndex === -1 && index === hierarchyArr.length - 1; // boolean on whether the view index is less than 0 and if the index is the same as the last snapshot's index value in hierarchyArr
       const isCurrIndex = index === currLocation.index;
+
       return (
         <Action
           key={`action${index}`}
@@ -242,11 +246,6 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             flexDirection: 'row',
             alignItems: 'flex-start',
           }}>
-             {/* <div className='slider' style={{
-              // height: '65vh',
-            }}>
-              <VerticalSlider className='main-slider' snapshotsLength={Object.keys(routes).length} />
-            </div> */}
             <div className='snapshots'>
               {/* Rendering of route description components */}
               {Object.keys(routes).map((route, i) => (
@@ -256,7 +255,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
                   height: `${routes[route].length * 4.5}vh`,
                   marginBottom: '30px'
                   }}>
-                <VerticalSlider className='main-slider' snapshotsLength={routes[route].length} snapshots={routes[route]}/>
+                <VerticalSlider className='main-slider' snapshots={routes[route]}/>
                 <RouteDescription key={`route${i}`} actions={routes[route]} />
                 </div>
               ))}
