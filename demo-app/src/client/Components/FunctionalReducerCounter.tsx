@@ -21,7 +21,22 @@ type CounterAction =
   | { type: 'DECREMENT' }
   | { type: 'DOUBLE' }
   | { type: 'RESET' }
-  | { type: 'ADD'; payload: number };
+  | { type: 'ADD'; payload: number }
+  | { type: 'SET_STATE'; payload: CounterState };
+
+type SecondaryCounterState = {
+  count: number;
+  multiplier: number;
+  lastOperation: string;
+  history: number[];
+};
+
+type SecondaryCounterAction =
+  | { type: 'MULTIPLY' }
+  | { type: 'DIVIDE' }
+  | { type: 'SET_MULTIPLIER'; payload: number }
+  | { type: 'RESET' }
+  | { type: 'SET_STATE'; payload: SecondaryCounterState };
 
 function counterReducer(state: CounterState, action: CounterAction, step: number): CounterState {
   switch (action.type) {
@@ -59,6 +74,54 @@ function counterReducer(state: CounterState, action: CounterAction, step: number
         history: [...state.history, state.count + action.payload],
         lastAction: `ADD ${action.payload}`,
       };
+    case 'SET_STATE':
+      return {
+        ...action.payload,
+        lastAction: 'SET_STATE',
+      };
+    default:
+      return state;
+  }
+}
+
+function secondaryCounterReducer(
+  state: SecondaryCounterState,
+  action: SecondaryCounterAction,
+): SecondaryCounterState {
+  switch (action.type) {
+    case 'MULTIPLY':
+      return {
+        ...state,
+        count: state.count * state.multiplier,
+        history: [...state.history, state.count * state.multiplier],
+        lastOperation: `Multiplied by ${state.multiplier}`,
+      };
+    case 'DIVIDE':
+      return {
+        ...state,
+        count: state.count / state.multiplier,
+        history: [...state.history, state.count / state.multiplier],
+        lastOperation: `Divided by ${state.multiplier}`,
+      };
+    case 'SET_MULTIPLIER':
+      return {
+        ...state,
+        multiplier: action.payload,
+        history: [...state.history],
+        lastOperation: `Set multiplier to ${action.payload}`,
+      };
+    case 'RESET':
+      return {
+        count: 0,
+        multiplier: 2,
+        history: [],
+        lastOperation: 'Reset',
+      };
+    case 'SET_STATE':
+      return {
+        ...action.payload,
+        lastOperation: 'SET_STATE',
+      };
     default:
       return state;
   }
@@ -76,6 +139,7 @@ function FunctionalReducerCounter({
   const [clickCount, setClickCount] = useState(0);
   const [lastClickTime, setLastClickTime] = useState<Date | null>(null);
   const [averageTimeBetweenClicks, setAverageTimeBetweenClicks] = useState<number>(0);
+
   const [state, dispatch] = useReducer(
     (state: CounterState, action: CounterAction) => counterReducer(state, action, step),
     {
@@ -84,6 +148,13 @@ function FunctionalReducerCounter({
       lastAction: 'none',
     },
   );
+
+  const [secondaryState, secondaryDispatch] = useReducer(secondaryCounterReducer, {
+    count: initialCount,
+    multiplier: 2,
+    history: [],
+    lastOperation: 'none',
+  });
 
   return (
     <div
@@ -94,8 +165,9 @@ function FunctionalReducerCounter({
       }}
     >
       <h2>{title}</h2>
+
       <div className='counter-value'>
-        <h3>Current Count: {state.count}</h3>
+        <h3>Primary Counter: {state.count}</h3>
       </div>
 
       <div className='counter-buttons'>
@@ -107,7 +179,6 @@ function FunctionalReducerCounter({
       </div>
 
       <div className='counter-info'>
-        <h4>Last Action: {state.lastAction}</h4>
         <h4>History:</h4>
         <div className='history-list'>
           {state.history.map((value, index) => (
@@ -118,7 +189,43 @@ function FunctionalReducerCounter({
           ))}
         </div>
       </div>
+
+      <div
+        className='secondary-counter'
+        style={{ marginTop: '2rem', borderTop: '1px solid #ccc', paddingTop: '1rem' }}
+      >
+        <h3>Secondary Counter: {secondaryState.count}</h3>
+        <div className='counter-buttons'>
+          <button onClick={() => secondaryDispatch({ type: 'MULTIPLY' })}>
+            Multiply by {secondaryState.multiplier}
+          </button>
+          <button onClick={() => secondaryDispatch({ type: 'DIVIDE' })}>
+            Divide by {secondaryState.multiplier}
+          </button>
+          <button
+            onClick={() =>
+              secondaryDispatch({ type: 'SET_MULTIPLIER', payload: secondaryState.multiplier + 1 })
+            }
+          >
+            Increase Multiplier
+          </button>
+          <button onClick={() => secondaryDispatch({ type: 'RESET' })}>Reset</button>
+        </div>
+        <div className='counter-info'>
+          <h4>Current Multiplier: {secondaryState.multiplier}</h4>
+          <h4>History:</h4>
+          <div className='history-list'>
+            {secondaryState.history.map((value, index) => (
+              <span key={index}>
+                {value}
+                {index < secondaryState.history.length - 1 ? ' → ' : ''}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
+
 export default FunctionalReducerCounter;

@@ -1,17 +1,21 @@
+// src/client/Router.tsx
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from '../contexts/ThemeContext';
+import { AuthProvider } from '../contexts/AuthContext';
 import Nav from './Components/Nav';
 import Board from './Components/Board';
 import Home from './Components/Home';
 import Buttons from './Components/Buttons';
 import ReducerCounter from './Components/ReducerCounter';
 import FunctionalReducerCounter from './Components/FunctionalReducerCounter';
-// import ButtonsWithMoreHooks from './Components/ButtonsWithMoreHooks';
 import FunctionalStateCounter from './Components/FunctionalStateCounter';
+import ThemeToggle from './Components/ThemeToggle';
 
 const domNode = document.getElementById('root');
+if (!domNode) throw new Error('Root element not found');
 const root = createRoot(domNode);
 
 const CounterPage = () => (
@@ -41,21 +45,18 @@ const CounterPage = () => (
 );
 
 root.render(
-  <BrowserRouter key='BrowserRouter'>
-    <Nav key='Nav' />
-    <Routes key='Routes'>
-      <Route path='/' element={<Home key='Home' />} />
-      <Route path='/tictactoe' element={<Board key='Board' />} />
-      {/* Switch between the two "buttons" paths below via commenting/uncommenting to alternate between
-          the public facing Buttons page and the fiber node hooks research page "ButtonsWithMoreHooks" */}
-      <Route path='/buttons' element={<Buttons key='Buttons' />} />
-      {/* <Route path='/buttons' element={<ButtonsWithMoreHooks key='ButtonsWithMoreHooks'/>} /> */}
-      <Route path='/reducer' element={<CounterPage key='CounterPage' />} />
-    </Routes>
-  </BrowserRouter>,
-
-  /** Comment out everything above this and uncomment the line below as ButtonsWithMoreHooks import statement to skip all of the
-   *  router components and make fiber node hooks research easier */
-
-  // <ButtonsWithMoreHooks/>
+  <AuthProvider>
+    <ThemeProvider>
+      <BrowserRouter>
+        <ThemeToggle />
+        <Nav />
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/tictactoe' element={<Board />} />
+          <Route path='/buttons' element={<Buttons />} />
+          <Route path='/reducer' element={<CounterPage />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
+  </AuthProvider>,
 );
