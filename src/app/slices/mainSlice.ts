@@ -201,13 +201,15 @@ export const mainSlice = createSlice({
       tabs[currentTab].viewIndex = viewIndex === action.payload ? -1 : action.payload;
     },
 
-    changeSlider: (state, action) => {
+    changeSlider: (state, action) => { //should really be called jump to snapshot
       const { port, currentTab, tabs } = state;
       const { hierarchy, snapshots } = tabs[currentTab] || {};
 
       // finds the name by the action.payload parsing through the hierarchy to send to background.js the current name in the jump action
       const nameFromIndex = findName(action.payload, hierarchy);
       // nameFromIndex is a number based on which jump button is pushed
+
+      console.log("changeSlider to ", action.payload);
 
       port.postMessage({
         action: 'jumpToSnap',
