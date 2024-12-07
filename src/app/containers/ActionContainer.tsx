@@ -36,7 +36,8 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   const {
     toggleActionContainer, // function that handles Time Jump Sidebar view from MainContainer
     actionView, // local state declared in MainContainer
-    setActionView, // function to update actionView state declared in MainContainer
+    setActionView, // function to update actionView state declared in MainContainer,
+    snapshots,
   } = props;
   const [recordingActions, setRecordingActions] = useState(true); // We create a local state 'recordingActions' and set it to true
   let actionsArr: JSX.Element[] = []; // we create an array 'actionsArr' that will hold elements we create later on
@@ -248,7 +249,8 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
               Clear
             </Button>
           </div>
-         {dropdownSelection === 'Provider/Consumer' && <ProvConContainer/>}
+         {dropdownSelection === 'Provider/Consumer' && <ProvConContainer currentSnapshot={currLocation.stateSnapshot}
+         />}
           {dropdownSelection === 'TimeJump' && 
             Object.keys(routes).map((route, i) => (
               <RouteDescription key={`route${i}`} actions={routes[route]} />
