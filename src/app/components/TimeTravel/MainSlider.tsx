@@ -29,7 +29,7 @@ const handle = (props: HandleProps): JSX.Element => {
 
 function MainSlider(props: MainSliderProps): JSX.Element {
   const dispatch = useDispatch();
-  const { snapshotsLength } = props; // destructure props to get our total number of snapshots
+  const { snapshots } = props; // destructure props to get our total number of snapshots
   const [sliderIndex, setSliderIndex] = useState(0); // create a local state 'sliderIndex' and set it to 0.
   const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
   const { currLocation } = tabs[currentTab]; // we destructure the currentTab object
@@ -49,7 +49,7 @@ function MainSlider(props: MainSliderProps): JSX.Element {
       className='travel-slider'
       color='#0af548'
       min={0} // index of our first snapshot
-      max={snapshotsLength - 1} // index of our last snapshot
+      max={snapshots.length - 1} // index of our last snapshot
       value={sliderIndex} // currently slider thumb position
       onChange={(index: any) => {
         // when the slider position changes
