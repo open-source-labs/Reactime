@@ -80,7 +80,6 @@ function FunctionalStateCounter({
       </div>
 
       <div className='counter-info'>
-        <h4>Last Action: {lastAction}</h4>
         <h4>History:</h4>
         <div className='history-list'>
           {history.map((value, index) => (
