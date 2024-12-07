@@ -6,7 +6,6 @@ import { ProvConContainerProps} from '../FrontendTypes';
 const ProvConContainer = (props: ProvConContainerProps): JSX.Element  => {
 
     const { currentSnapshot } = props
-  
     console.log('currentSnapshot', currentSnapshot)
 
     const keepContextAndProviderNodes = (node) => {
