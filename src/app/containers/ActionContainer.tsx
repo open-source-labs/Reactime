@@ -69,7 +69,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
         //This utility can be used to map the properties of a type to another type) and populate it's properties with
         //relevant values from our argument 'obj'.
         index: obj.index,
-        displayName: `${obj.name}.${obj.branch}`,
+        displayName: `${obj.index + 1}`,
         state: obj.stateSnapshot.children[0].state,
         componentName: obj.stateSnapshot.children[0].name,
         routePath: obj.stateSnapshot.route.url,
