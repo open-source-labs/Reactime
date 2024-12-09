@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 import React, { useState } from 'react';
-import MainSlider from '../components/TimeTravel/MainSlider';
 import Dropdown from '../components/TimeTravel/Dropdown';
 import {
   playForward,
@@ -85,7 +84,6 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
       >
         {playing ? 'Pause' : 'Play'}
       </Button>
-      <MainSlider className='main-slider' snapshotsLength={snapshotsLength} />
       <Button
         variant='contained'
         className='backward-button'

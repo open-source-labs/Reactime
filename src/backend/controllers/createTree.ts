@@ -242,6 +242,15 @@ export default function createTree(currentFiberNode: Fiber): Tree {
         }
       }
     }
+    if (tag === ContextProvider && !elementType._context.displayName) {
+      let stateData = memoizedProps.value;
+      console.log(stateData);
+      if (stateData === null || typeof stateData !== 'object') {
+        stateData = { CONTEXT: stateData };
+      }
+      componentData.context = filterAndFormatData(stateData);
+      componentName = 'Context';
+    }
 
     // -----------------ADD COMPONENT DATA TO THE OUTPUT TREE-------------------
 

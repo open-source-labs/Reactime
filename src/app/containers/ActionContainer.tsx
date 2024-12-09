@@ -5,12 +5,15 @@ import SwitchAppDropdown from '../components/Actions/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import RouteDescription from '../components/Actions/RouteDescription';
+import DropDown from '../components/Actions/DropDown';
+import ProvConContainer from './ProvConContainer';
 import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
 
 /*
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
 */
+
 
 // resetSlider locates the rc-slider elements on the document and resets it's style attributes
 const resetSlider = () => {
@@ -23,6 +26,9 @@ const resetSlider = () => {
 };
 
 function ActionContainer(props: ActionContainerProps): JSX.Element {
+
+  const [dropdownSelection, setDropdownSelection] = useState('TimeJump');
+
   const dispatch = useDispatch();
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
 
@@ -52,6 +58,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
     children?: [];
     }
   */
+ 
 
   const displayArray = (obj: Obj): void => {
     if (
@@ -80,6 +87,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
     if (obj.children) {
       // if argument has a 'children' array, we iterate through it and run 'displayArray' on each element
       obj.children.forEach((element): void => {
+        //recursive call
         displayArray(element);
       });
     }
@@ -127,6 +135,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
       const selected = index === viewIndex; // boolean on whether the current index is the same as the viewIndex
       const last = viewIndex === -1 && index === hierarchyArr.length - 1; // boolean on whether the view index is less than 0 and if the index is the same as the last snapshot's index value in hierarchyArr
       const isCurrIndex = index === currLocation.index;
+
       return (
         <Action
           key={`action${index}`}
@@ -221,6 +230,11 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             {recordingActions ? <Switch defaultChecked /> : <Switch />}
           </a>
           <SwitchAppDropdown />
+          {/* add new component here for dropdown menu for useStae/ useReducer- ragad */}
+         <DropDown
+         dropdownSelection = {dropdownSelection}
+         setDropdownSelection={setDropdownSelection}
+         />
           <div className='action-component exclude'>
             <Button
               className='clear-button'
@@ -235,10 +249,14 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
               Clear
             </Button>
           </div>
-          {/* Rendering of route description components */}
-          {Object.keys(routes).map((route, i) => (
-            <RouteDescription key={`route${i}`} actions={routes[route]} />
-          ))}
+          <div className='snapshots'>
+            {dropdownSelection === 'Provider/Consumer' && <ProvConContainer/>}
+            {dropdownSelection === 'TimeJump' && 
+              Object.keys(routes).map((route, i) => (
+                <RouteDescription key={`route${i}`} actions={routes[route]} />
+              ))
+            }
+          </div>
         </div>
       ) : null}
     </div>
