@@ -10,9 +10,6 @@ import ProvConContainer from './ProvConContainer';
 import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
 
-import Slider from 'rc-slider';
-import VerticalSlider from '../components/TimeTravel/VerticalSlider';
-
 /*
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
 */
@@ -252,27 +249,13 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
               Clear
             </Button>
           </div>
-          <div className='MapRouteAndSlider' style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'flex-start',
-          }}>
-            <div className='snapshots'>
-             {dropdownSelection === 'Provider/Consumer' && <ProvConContainer/>}
-              {dropdownSelection === 'TimeJump' && 
-            Object.keys(routes).map((route, i) => (
-                  <div style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  height: `${routes[route].length * 4.5}vh`,
-                  marginBottom: '30px'
-                  }}>
-                <VerticalSlider className='main-slider' snapshots={routes[route]}/>
+          <div className='snapshots'>
+            {dropdownSelection === 'Provider/Consumer' && <ProvConContainer/>}
+            {dropdownSelection === 'TimeJump' && 
+              Object.keys(routes).map((route, i) => (
                 <RouteDescription key={`route${i}`} actions={routes[route]} />
-                  </div>
               ))
-          }
-            </div>
+            }
           </div>
         </div>
       ) : null}
