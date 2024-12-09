@@ -36,10 +36,8 @@ const collectNodes = (node: Node): void => {
 };
 
 export default function LinkControls({
-  layout, // from the layout local state (initially 'cartesian') in 'ComponentMap'
   linkType, // from linkType local state (initially 'vertical') in 'ComponentMap'
   stepPercent, // from stepPercent local state (initially '0.5') in 'ComponentMap'
-  setLayout, // from the layout local state in 'ComponentMap'
   setOrientation, // from the orientation local state in 'ComponentMap'
   setLinkType, // from the linkType local state in 'ComponentMap'
   setStepPercent, // from the stepPercent local state in 'ComponentMap'
@@ -51,29 +49,15 @@ export default function LinkControls({
   return (
     <div className='comp-map-options' style={controlStyles}>
       {' '}
-      {/* Controls for the layout selection */}
-      <label>Layout:</label>
-      &nbsp;{' '}
       {/* This is a non-breaking space - Prevents an automatic line break at this position */}
-      <select
-        className='comp-map-dropdown'
-        onClick={(e) => e.stopPropagation()}
-        onChange={(e) => setLayout(e.target.value)}
-        // value={layout}
-        style={dropDownStyle}
-      >
-        <option value='cartesian'>Cartesian</option>
-        <option value='polar'>Polar</option>
-      </select>
       &nbsp;&nbsp;
       <label>Orientation:</label>{' '}
       {/* Toggle record button to pause state changes on target application */}
-      {/* Controls for the Orientation selection, this dropdown will be disabled when the polar layout is selected as it is not needed */}
+      {/* Controls for the Orientation selection */}
       &nbsp;
       <select
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => setOrientation(e.target.value)}
-        disabled={layout === 'polar'}
         style={dropDownStyle}
       >
         <option value='vertical'>Vertical</option>
@@ -109,7 +93,7 @@ export default function LinkControls({
         )}
       </select>
       {/* This is the slider control for the step option */}
-      {linkType === 'step' && layout !== 'polar' && (
+      {linkType === 'step' && (
         <>
           &nbsp;&nbsp;
           <label>Step:</label>
@@ -122,7 +106,7 @@ export default function LinkControls({
             step={0.1}
             onChange={(e) => setStepPercent(Number(e.target.value))}
             value={stepPercent}
-            disabled={linkType !== 'step' || layout === 'polar'}
+            disabled={linkType !== 'step'}
           />
         </>
       )}
