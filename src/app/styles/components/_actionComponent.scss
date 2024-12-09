@@ -15,20 +15,15 @@
   @extend %disable-highlight;
 }
 
-.clear-button {
-  background-color:#187924;
-  color:#187924;
-}
-
 .action-component-text {
   margin-bottom: 8px;
-  color: $indiv-action-custom-text
+  color: $indiv-action-custom-text;
 }
 
 .action-component.selected {
   //font-size: 16px;
   background-color: $indiv-action-selected;
-  color: $indiv-action-selected-text
+  color: $indiv-action-selected-text;
 }
 
 .action-component.exclude {

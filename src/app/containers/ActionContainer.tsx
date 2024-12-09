@@ -11,7 +11,6 @@ import ProvConContainer from './ProvConContainer';
 import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
 
-
 /*
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
 */
@@ -27,7 +26,6 @@ const resetSlider = () => {
 };
 
 function ActionContainer(props: ActionContainerProps): JSX.Element {
-
   const [dropdownSelection, setDropdownSelection] = useState('TimeJump');
 
   const dispatch = useDispatch();
@@ -229,15 +227,14 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
           </a>
           <SwitchAppDropdown />
           {/* add new component here for dropdown menu for useStae/ useReducer- ragad */}
-         <DropDown
-         dropdownSelection = {dropdownSelection}
-         setDropdownSelection={setDropdownSelection}
-         />
+          <DropDown
+            dropdownSelection={dropdownSelection}
+            setDropdownSelection={setDropdownSelection}
+          />
           <div className='action-component exclude'>
             <Button
               className='clear-button'
-              variant='contained'
-              //style={{ backgroundColor: '#ff6569' }}
+              variant='text'
               onClick={() => {
                 dispatch(emptySnapshots()); // set slider back to zero, visually
                 resetSlider();
@@ -247,12 +244,11 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
               Clear
             </Button>
           </div>
-         {dropdownSelection === 'Provider/Consumer' && <ProvConContainer/>}
-          {dropdownSelection === 'TimeJump' && 
+          {dropdownSelection === 'Provider/Consumer' && <ProvConContainer />}
+          {dropdownSelection === 'TimeJump' &&
             Object.keys(routes).map((route, i) => (
               <RouteDescription key={`route${i}`} actions={routes[route]} />
-            ))
-          }
+            ))}
         </div>
       ) : null}
     </div>

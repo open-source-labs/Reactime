@@ -215,8 +215,7 @@ export default function ComponentMap({
   };
 
   let filtered = processTreeData(currentSnapshot);
-  console.log('filtered', filtered);
-  collectNodes(filtered);
+  collectNodes(currentSnapshot);
 
   const keepContextAndProviderNodes = (node) => {
     if (!node) return null;
@@ -248,7 +247,6 @@ export default function ComponentMap({
   };
 
   const contextProvidersOnly = keepContextAndProviderNodes(currentSnapshot);
-  console.log('context only', contextProvidersOnly);
 
   // @ts
   // find the node that has been selected and use it as the root

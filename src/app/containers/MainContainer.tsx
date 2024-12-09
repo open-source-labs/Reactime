@@ -33,7 +33,7 @@ function MainContainer(): JSX.Element {
   const { connectionStatus }: MainState = useSelector((state: RootState) => state.main);
 
   // JR 12.22.23: so far this log always returns true
-  // console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
+  console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
 
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
 
