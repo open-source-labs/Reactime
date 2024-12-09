@@ -25,7 +25,9 @@ const RouteDescription = (props: RouteProps): JSX.Element => {
               height: `${actions.length * 30}px`,
               marginBottom: '50px'
           }}>
-            <VerticalSlider className='main-slider' snapshots={actions} />
+            <div style={{maxWidth: '50px'}}>
+              <VerticalSlider className='main-slider' snapshots={actions} />
+            </div>
             <div style={{marginTop: '10px'}}> 
               {/* actual snapshots per route */}
               {actions}
