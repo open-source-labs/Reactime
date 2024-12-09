@@ -1,7 +1,9 @@
 .action-container {
   // overflow: auto;
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  transition: width 0.3s ease;
   overflow-x: hidden;
-  background-color: $action-tab-background;
 }
 
 .actionname {
@@ -34,14 +36,10 @@
   width: 28px;
 }
 
-.route {
-  background-color: $route-bar;
-  color: $route-bar-text;
-  padding-left: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-
 .toggle-record {
   color: $toggle-record-text;
+}
+
+.clear-button-container {
+  padding: 16px;
 }

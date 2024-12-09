@@ -26,13 +26,6 @@
   color: $indiv-action-selected-text;
 }
 
-.action-component.exclude {
-  color: #ff0000;
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-}
-
 .action-component:focus {
   outline: none;
 }
@@ -45,4 +38,21 @@
   cursor: pointer;
   overflow: hidden;
   @extend %disable-highlight;
+}
+
+.route-container {
+  width: 100%;
+}
+
+.route-header {
+  background-color: #1f2937;
+  color: #ffffff;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.route-content {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 50px;
 }

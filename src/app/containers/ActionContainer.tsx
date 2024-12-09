@@ -14,7 +14,6 @@ import { Button, Switch } from '@mui/material';
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
 */
 
-
 // resetSlider locates the rc-slider elements on the document and resets it's style attributes
 const resetSlider = () => {
   const slider = document.querySelector('.rc-slider-handle');
@@ -57,7 +56,6 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
     children?: [];
     }
   */
- 
 
   const displayArray = (obj: Obj): void => {
     if (
@@ -234,9 +232,9 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             dropdownSelection={dropdownSelection}
             setDropdownSelection={setDropdownSelection}
           />
-          <div className='action-component exclude'>
+          <div className='clear-button-container'>
             <Button
-              className='clear-button'
+              className='clear-button-modern'
               variant='text'
               onClick={() => {
                 dispatch(emptySnapshots()); // set slider back to zero, visually
@@ -248,12 +246,11 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             </Button>
           </div>
           <div className='snapshots'>
-            {dropdownSelection === 'Provider/Consumer' && <ProvConContainer/>}
-            {dropdownSelection === 'TimeJump' && 
+            {dropdownSelection === 'Provider/Consumer' && <ProvConContainer />}
+            {dropdownSelection === 'TimeJump' &&
               Object.keys(routes).map((route, i) => (
                 <RouteDescription key={`route${i}`} actions={routes[route]} />
-              ))
-            }
+              ))}
           </div>
         </div>
       ) : null}

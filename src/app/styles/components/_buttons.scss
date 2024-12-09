@@ -471,3 +471,19 @@ aside {
   margin-left: 5px;
   margin-right: -22px;
 }
+
+.clear-button-modern {
+  width: 100% !important;
+  background-color: #f3f4f6 !important;
+  color: #374151 !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  padding: 0.375rem 1rem !important;
+  border-radius: 0.375rem !important;
+  transition: background-color 200ms ease-in-out !important;
+}
+
+.clear-button-modern:hover {
+  background-color: #e5e7eb !important;
+}
