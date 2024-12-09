@@ -249,19 +249,13 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
               Clear
             </Button>
           </div>
-          <div className='MapRouteAndSlider' style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'flex-start',
-          }}>
-            <div className='snapshots'>
-             {dropdownSelection === 'Provider/Consumer' && <ProvConContainer/>}
-              {dropdownSelection === 'TimeJump' && 
-            Object.keys(routes).map((route, i) => (
-              <RouteDescription key={`route${i}`} actions={routes[route]} />
-            ))
-          }
-            </div>
+          <div className='snapshots'>
+            {dropdownSelection === 'Provider/Consumer' && <ProvConContainer/>}
+            {dropdownSelection === 'TimeJump' && 
+              Object.keys(routes).map((route, i) => (
+                <RouteDescription key={`route${i}`} actions={routes[route]} />
+              ))
+            }
           </div>
         </div>
       ) : null}
