@@ -16,16 +16,24 @@ const RouteDescription = (props: RouteProps): JSX.Element => {
   const url: URL = new URL(actions[0].props.routePath); // Use new URL to use the url.pathname method.
 
   return (
-    <div className='route-container'>
-      <div className='route-header'>Route: {url.pathname}</div>
-      <div className='route-content' style={{ height: `${actions.length * 30}px` }}>
-        <VerticalSlider className='main-slider' snapshots={actions} />
-        <div className='actions-container'>
-          {/* actual snapshots per route */}
-          {actions}
-        </div>
+      <div className='routedescription' >
+        <h3 className='route'>Route: {url.pathname}</h3>
+          <div style={{
+            // div that contains slider and snapshots
+              display: 'flex',
+              flexDirection: 'row',
+              height: `${actions.length * 30}px`,
+              marginBottom: '50px'
+          }}>
+            <div style={{maxWidth: '50px'}}>
+              <VerticalSlider className='main-slider' snapshots={actions} />
+            </div>
+            <div style={{marginTop: '10px'}}> 
+              {/* actual snapshots per route */}
+              {actions}
+            </div>
+          </div>
       </div>
-    </div>
   );
 };
 
