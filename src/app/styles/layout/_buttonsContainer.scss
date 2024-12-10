@@ -3,12 +3,12 @@
   font-family: 'Outfit', sans-serif;
 }
 .buttons-container {
-  //color: #ff0000;
-  margin: 0 1% 0 1%;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-gap: 1%;
-  padding: 1% 0 1% 0;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  padding: 12px;
+  gap: 8px;
 }
 
 .introjs-tooltip {
@@ -20,29 +20,9 @@
   padding-left: 2px;
 }
 
-// .introjs-helperLayer{
-//   // border: 2px solid yellow
-// }
-
-.tools-container {
-  display: flex;
-  justify-content: space-between;
-  border: 0.5px solid grey;
-  background-color: #35383e;
-  padding: 3px;
-  margin-bottom: 1rem;
-}
-
 #seriesname {
   background-color: #333;
   color: white;
-}
-
-@media (max-width: 500px) {
-  .buttons-container {
-    //color: #ff0000;
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 .introjs-nextbutton {
@@ -74,30 +54,29 @@
 
 .dialog-pop-up {
   border: 1px solid #ff0001;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   padding: 13px;
 }
 
 .dialog-pop-up-header {
   color: #ff0001;
-  padding: 8px 16px;  
-  font-size: 20px; 
+  padding: 8px 16px;
+  font-size: 20px;
   font-family: $text-font-stack;
 }
 
 .dialog-pop-up-contents {
   background-color: $pop-up-window-background;
-  color: $pop-up-window-text; 
+  color: $pop-up-window-text;
   font-family: $text-font-stack;
-  line-height: 1.4;  
-  padding: 0px 15px 15px 15px !important;  
+  line-height: 1.4;
+  padding: 0px 15px 15px 15px !important;
 }
 
 .dialog-pop-up-actions {
   padding: 15px;
-  background-color: #ff0001; 
+  background-color: #ff0001;
 }
-
 
 .close-icon-pop-up-div {
   height: 40px;
@@ -115,3 +94,50 @@
   height: 20%;
 }
 
+.buttons-container button {
+  display: flex;
+  align-items: center;
+  color: #6b7280;
+  font-size: 1rem;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  border-radius: 0.375rem;
+  transition: all 200ms ease;
+  gap: 8px;
+}
+
+.buttons-container button:hover {
+  background-color: #f3f4f6;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.status-dot.active {
+  background-color: #14b8a6;
+  animation: pulse 2s infinite;
+}
+
+.status-dot.inactive {
+  background-color: #9ca3af;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

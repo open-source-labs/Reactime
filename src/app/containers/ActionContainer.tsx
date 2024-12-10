@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
 import Action from '../components/Actions/Action';
-import SwitchAppDropdown from '../components/Actions/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import RouteDescription from '../components/Actions/RouteDescription';
@@ -9,6 +8,7 @@ import DropDown from '../components/Actions/DropDown';
 import ProvConContainer from './ProvConContainer';
 import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
+import RecordButton from '../components/Actions/RecordButton';
 
 /*
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
@@ -193,18 +193,13 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
       </div>
       {actionView ? (
         <div className='action-button-wrapper'>
-          <a type='button' id='recordBtn' onClick={toggleRecord}>
-            <i />
-            <div
-              className='toggle-record'
-              style={{ display: 'flex', alignItems: 'center', textAlign: 'right' }}
-            >
-              Record
-            </div>
-            {recordingActions ? <Switch defaultChecked /> : <Switch />}
-          </a>
-          <SwitchAppDropdown />
-          {/* add new component here for dropdown menu for useStae/ useReducer- ragad */}
+          <RecordButton
+            isRecording={recordingActions}
+            onToggle={() => {
+              toggleRecord();
+              setRecordingActions(!recordingActions);
+            }}
+          />
           <DropDown
             dropdownSelection={dropdownSelection}
             setDropdownSelection={setDropdownSelection}
