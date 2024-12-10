@@ -52,7 +52,7 @@ export default function AxTree(props) {
     showTooltip, // function to set tooltip state
     hideTooltip, // function to close a tooltip
   } = useTooltip(); // returns an object with several properties that you can use to manage the tooltip state of your component
-  
+
   const {
     containerRef, // Access to the container's bounding box. This will be empty on first render.
     TooltipInPortal, // TooltipWithBounds in a Portal, outside of your component DOM tree
@@ -75,7 +75,6 @@ export default function AxTree(props) {
     pointerEvents: 'all !important',
   };
 
-  const [layout, setLayout] = useState('cartesian');
   const [orientation, setOrientation] = useState('horizontal');
   const [linkType, setLinkType] = useState('diagonal');
   const [stepPercent, setStepPercent] = useState(0.5);
@@ -87,32 +86,23 @@ export default function AxTree(props) {
   let sizeWidth: number;
   let sizeHeight: number;
 
-  if (layout === 'polar') {
-    origin = {
-      x: innerWidth / 2,
-      y: innerHeight / 2,
-    };
-    sizeWidth = 2 * Math.PI;
-    sizeHeight = Math.min(innerWidth, innerHeight) / 2;
+  origin = { x: 0, y: 0 };
+  if (orientation === 'vertical') {
+    sizeWidth = innerWidth;
+    sizeHeight = innerHeight;
   } else {
-    origin = { x: 0, y: 0 };
-    if (orientation === 'vertical') {
-      sizeWidth = innerWidth;
-      sizeHeight = innerHeight;
-    } else {
-      sizeWidth = innerHeight;
-      sizeHeight = innerWidth;
-    }
+    sizeWidth = innerHeight;
+    sizeHeight = innerWidth;
   }
 
-  const LinkComponent = getLinkComponent({ layout, linkType, orientation });
+  const LinkComponent = getLinkComponent({ linkType, orientation });
 
   const currAxSnapshot = JSON.parse(JSON.stringify(axSnapshots[currLocation.index]));
 
   // root node of currAxSnapshot
   const rootAxNode = JSON.parse(JSON.stringify(currAxSnapshot[0]));
 
-  // array that holds each ax tree node with children property 
+  // array that holds each ax tree node with children property
   const nodeAxArr = [];
 
   // populates ax nodes with children property; visx recognizes 'children' in order to properly render a nested tree
@@ -164,11 +154,9 @@ export default function AxTree(props) {
     <div>
       <div id='axControls'>
         <LinkControls
-          layout={layout}
           orientation={orientation}
           linkType={linkType}
           stepPercent={stepPercent}
-          setLayout={setLayout}
           setOrientation={setOrientation}
           setLinkType={setLinkType}
           setStepPercent={setStepPercent}
@@ -179,7 +167,7 @@ export default function AxTree(props) {
         </button>
       </div>
 
-      <svg ref={containerRef} width={totalWidth + 0.2*totalWidth} height={totalHeight}>
+      <svg ref={containerRef} width={totalWidth + 0.2 * totalWidth} height={totalHeight}>
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
         <rect
@@ -187,9 +175,10 @@ export default function AxTree(props) {
           width={sizeWidth / aspect}
           height={sizeHeight / aspect + 0}
           rx={14}
-         onClick={() => {
+          onClick={() => {
             hideTooltip();
-          }}/>
+          }}
+        />
         <Group transform={`scale(${aspect})`} top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(nodeAxArr[0], (d) => (d.isExpanded ? null : d.children))}
@@ -223,11 +212,7 @@ export default function AxTree(props) {
                   let top: number;
                   let left: number;
 
-                  if (layout === 'polar') {
-                    const [radialX, radialY] = pointRadial(node.x, node.y);
-                    top = radialY;
-                    left = radialX;
-                  } else if (orientation === 'vertical') {
+                  if (orientation === 'vertical') {
                     top = node.y;
                     left = node.x;
                   } else {
@@ -430,8 +415,8 @@ export default function AxTree(props) {
           <div>
             <div>
               {/*tooltipData['name'].value cannot be referred to using dot notation so using brackets here overrides typescript's strict data typing which was interfering with accessiccing this property */}
-                <strong>{JSON.stringify(tooltipData['name'].value)}</strong>
-              </div>
+              <strong>{JSON.stringify(tooltipData['name'].value)}</strong>
+            </div>
             <div>
               {/* Ax Node Info below names the tooltip title because of how its passed to the ToolTipDataDisplay container*/}
               <ToolTipDataDisplay containerName='Ax Node Info' dataObj={tooltipData} />
@@ -440,12 +425,7 @@ export default function AxTree(props) {
         </TooltipInPortal>
       )}
 
-      <div>
-        { axLegendButtonClicked ? 
-          <AxLegend /> : ''
-        }
-      </div>
-      
+      <div>{axLegendButtonClicked ? <AxLegend /> : ''}</div>
     </div>
   );
 }
