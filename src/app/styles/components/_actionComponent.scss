@@ -71,14 +71,17 @@
 .jump-button,
 .current-location {
   min-width: 90px;
-  padding: 4px 8px;
+  height: 28px; /* Fixed height for better vertical centering */
+  padding: 0 8px; /* Reduced vertical padding */
   border-radius: 6px;
   font-size: 0.9375rem;
   font-weight: 500;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   transition: all 200ms ease;
-  margin-top: 6px;
+  margin: 0; /* Removed top margin */
 }
 
 .time-button {

@@ -18,7 +18,7 @@ const RouteDescription = (props: RouteProps): JSX.Element => {
   return (
     <div className='route-container'>
       <div className='route-header'>Route: {url.pathname}</div>
-      <div className='route-content' style={{ height: `${actions.length * 42}px` }}>
+      <div className='route-content' style={{ height: `${actions.length * 40.5}px` }}>
         <div>
           <VerticalSlider className='main-slider' snapshots={actions} />
         </div>
