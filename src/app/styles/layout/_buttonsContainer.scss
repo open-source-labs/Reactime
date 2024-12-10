@@ -20,15 +20,6 @@
   padding-left: 2px;
 }
 
-.tools-container {
-  display: flex;
-  justify-content: space-between;
-  border: 0.5px solid grey;
-  background-color: #35383e;
-  padding: 3px;
-  margin-bottom: 1rem;
-}
-
 #seriesname {
   background-color: #333;
   color: white;
@@ -118,4 +109,35 @@
 
 .buttons-container button:hover {
   background-color: #f3f4f6;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.status-dot.active {
+  background-color: #14b8a6;
+  animation: pulse 2s infinite;
+}
+
+.status-dot.inactive {
+  background-color: #9ca3af;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
