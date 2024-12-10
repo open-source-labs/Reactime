@@ -313,8 +313,7 @@
 /* Container for arrow and collapse text */
 #arrow {
   height: 44px;
-  display: grid;
-  grid-template-columns: 45px 1fr;
+  display: flex;
   align-items: center;
   border-bottom: 1px solid #e5e7eb;
   background-color: white;
@@ -366,7 +365,6 @@
   color: #6b7280;
   font-size: 1.1rem;
   font-weight: 500;
-  padding-left: 0.5rem;
   font-family: 'Outfit', sans-serif;
   transition: color 0.2s ease;
 }

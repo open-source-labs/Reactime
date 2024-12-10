@@ -16,13 +16,9 @@
 }
 
 .actionToolContainer {
-  color: #374151;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  height: 44px;
   border-bottom: 1px solid #e5e7eb;
-  padding: 0 8px;
 }
 
 .toggle-record {
@@ -31,4 +27,22 @@
 
 .clear-button-container {
   padding: 16px;
+}
+
+.dropdown-container {
+  padding: 4px 16px;
+}
+
+.react-select__control {
+  background-color: #f3f4f6 !important;
+  border: none !important;
+  border-radius: 0.375rem !important;
+  min-height: 30px !important;
+  box-shadow: none !important;
+}
+
+.react-select__single-value {
+  color: #374151 !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
 }
