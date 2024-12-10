@@ -67,7 +67,6 @@
     500 16px 'Roboto',
     sans-serif;
   width: 120px;
-  //background: #ff0000;
 }
 
 .empty-button:hover {
@@ -127,13 +126,6 @@
   padding-bottom: 5px;
 }
 
-.jump-button:hover {
-  // remove the blue border when button is clicked
-  color: $jump-text;
-  background-color: $jump-hover;
-  cursor: pointer;
-}
-
 .current-location {
   outline: none;
   height: $time-button-height;
@@ -190,7 +182,6 @@
 .export-button:hover,
 .pause-button:hover,
 .reconnect-button:hover {
-  //@extend %button-shared;
   color: $function-bar-text-hover;
   box-shadow: 1px 1px 2px 1px rgba(30, 86, 171, 0.25);
   transform: translate3d(0, -3px, 0);

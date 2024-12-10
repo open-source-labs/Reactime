@@ -91,12 +91,7 @@ function ButtonsContainer(): JSX.Element {
 
   return (
     <div className='buttons-container'>
-      <Button
-        className='pause-button'
-        variant='outlined'
-        type='button'
-        onClick={() => dispatch(toggleMode('paused'))}
-      >
+      <Button className='pause-button' type='button' onClick={() => dispatch(toggleMode('paused'))}>
         {paused ? (
           <LockIcon className='button-icon' sx={{ pr: 1 }} />
         ) : (
@@ -106,7 +101,6 @@ function ButtonsContainer(): JSX.Element {
       </Button>
       <Button
         className='export-button'
-        variant='outlined'
         type='button'
         //@ts-ignore
         onClick={() => exportHandler(tabs[currentTab])}
@@ -114,7 +108,7 @@ function ButtonsContainer(): JSX.Element {
         <FileDownloadIcon className='button-icon' sx={{ pr: 1 }} />
         Download
       </Button>
-      <Button variant='outlined' className='import-button' onClick={() => importHandler(dispatch)}>
+      <Button className='import-button' onClick={() => importHandler(dispatch)}>
         <FileUploadIcon className='button-icon' sx={{ pr: 1 }} />
         Upload
       </Button>
@@ -122,7 +116,6 @@ function ButtonsContainer(): JSX.Element {
       <Tutorial dispatch={dispatch} currentTabInApp={currentTabInApp} />
       {/* adding a button for reconnection functionality 10/5/2023 */}
       <Button
-        variant='outlined'
         className='reconnect-button'
         type='button'
         //update onClick functionality to include a popup that contains....

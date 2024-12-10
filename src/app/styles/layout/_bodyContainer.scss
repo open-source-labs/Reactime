@@ -2,12 +2,11 @@
   height: 100%;
   overflow: hidden;
   display: grid;
-  grid-template-columns: min-content 1fr;
-  grid-template-rows: 1fr minmax(min-content, 5%) minmax(min-content, 5%);
+  grid-template-columns: 280px 1fr; /* Set action container width to 320px */
+  grid-template-rows: 1fr auto; /* Change to auto for the bottom row */
   grid-template-areas:
     'actions states'
-    'travel travel'
-    'buttons buttons';
+    'bottom bottom'; /* New bottom area that spans full width */
 }
 
 /* if extension width is less than 500px, stack the body containers */
@@ -21,4 +20,12 @@
       'travel'
       'buttons';
   }
+}
+
+.bottom-controls {
+  grid-area: bottom;
+  display: flex;
+  width: 100%;
+  border-top: 1px solid #e5e7eb;
+  background: white;
 }

@@ -13,9 +13,6 @@ body {
   height: 100%;
 }
 
-.travel-container {
-  grid-area: travel;
-}
 .action-container {
   grid-area: actions;
   transition: 0.5s;
@@ -29,28 +26,11 @@ body {
   grid-area: states;
 }
 
-.buttons-container {
-  grid-area: buttons;
-}
-
-.action-container {
-  border-style: solid;
-  border-color: $action-cont-border;
-  border-width: 0px;
-}
 
 .state-container {
   border-style: solid;
   border-color: $state-cont-border;
   border-width: 0px;
-}
-
-.travel-container {
-  border-style: solid;
-  border-color: $travel-top-border;
-  border-left: 0px;
-  border-right: 0px;
-  border-bottom: 0px;
 }
 
 .saveSeriesContainer {

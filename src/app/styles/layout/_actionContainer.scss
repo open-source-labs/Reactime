@@ -3,6 +3,8 @@
   border-right: 1px solid #e5e7eb;
   transition: width 0.3s ease;
   overflow-x: hidden;
+  overflow-y: auto;
+  height: 100%;
 }
 
 .actionname {

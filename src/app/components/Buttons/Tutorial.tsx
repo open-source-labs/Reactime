@@ -359,12 +359,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           onBeforeChange={(currentStepIndex) => onChangeHandler(currentStepIndex)} // Callback called before changing the current step.
           ref={(steps) => (this.steps = steps)} // ref allows access to intro.js API
         />
-        <Button
-          variant='outlined'
-          className='howToUse-button'
-          type='button'
-          onClick={() => startIntro()}
-        >
+        <Button className='howToUse-button' type='button' onClick={() => startIntro()}>
           <HelpOutlineIcon className='button-icon' sx={{ pr: 1 }} /> Tutorial
         </Button>
       </>

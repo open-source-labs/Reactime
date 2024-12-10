@@ -231,9 +231,11 @@ function MainContainer(): JSX.Element {
             />
           </div>
         ) : null}
-        {/* @ts-ignore */}
-        <TravelContainer snapshotsLength={snapshots.length} />
-        <ButtonsContainer />
+        <div className='bottom-controls'>
+          {/* @ts-ignore */}
+          <TravelContainer snapshotsLength={snapshots.length} />
+          <ButtonsContainer />
+        </div>
       </div>
     </div>
   );
