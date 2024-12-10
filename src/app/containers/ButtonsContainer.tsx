@@ -5,17 +5,13 @@ import { Button } from '@mui/material';
 //importing necesary material UI components for dialogue popup
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import Tutorial from '../components/Buttons/Tutorial';
-import LockIcon from '@mui/icons-material/Lock';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { toggleMode, importSnapshots, startReconnect } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import StatusDot from '../components/Buttons/StatusDot';
-import LoopIcon from '@mui/icons-material/Loop';
 import CloseIcon from '@mui/icons-material/Close';
 import WarningIcon from '@mui/icons-material/Warning';
 import { MainState, RootState } from '../FrontendTypes';
+import { Lock, Unlock, Download, Upload, RefreshCw, X, AlertTriangle } from 'lucide-react';
 
 function exportHandler(snapshots: []): void {
   // function that takes in our tabs[currentTab] object to be exported as a JSON file. NOTE: TypeScript needs to be updated
@@ -93,9 +89,9 @@ function ButtonsContainer(): JSX.Element {
     <div className='buttons-container'>
       <Button className='pause-button' type='button' onClick={() => dispatch(toggleMode('paused'))}>
         {paused ? (
-          <LockIcon className='button-icon' sx={{ pr: 1 }} />
+          <Lock className='button-icon' size={18} />
         ) : (
-          <LockOpenIcon className='button-icon' sx={{ pr: 1 }} />
+          <Unlock className='button-icon' size={18} />
         )}
         {paused ? 'Locked' : 'Unlocked'}
       </Button>
@@ -105,11 +101,11 @@ function ButtonsContainer(): JSX.Element {
         //@ts-ignore
         onClick={() => exportHandler(tabs[currentTab])}
       >
-        <FileDownloadIcon className='button-icon' sx={{ pr: 1 }} />
+        <Download className='button-icon' size={18} />
         Download
       </Button>
       <Button className='import-button' onClick={() => importHandler(dispatch)}>
-        <FileUploadIcon className='button-icon' sx={{ pr: 1 }} />
+        <Upload className='button-icon' size={18} />
         Upload
       </Button>
       {/* The component below renders a button for the tutorial walkthrough of Reactime */}
@@ -126,7 +122,7 @@ function ButtonsContainer(): JSX.Element {
           </span>
         }
       >
-        <LoopIcon className='button-icon' sx={{ pr: 1 }} />
+        <RefreshCw className='button-icon' size={18} />
         Reconnect
       </Button>
       <Dialog className='dialog-pop-up' open={reconnectDialogOpen} onClose={handleReconnectCancel}>
