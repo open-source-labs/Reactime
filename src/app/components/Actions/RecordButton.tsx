@@ -12,11 +12,17 @@ const RecordButton = ({ isRecording, onToggle }) => {
         checked={isRecording}
         onChange={onToggle}
         sx={{
+          '& .MuiSwitch-switchBase': {
+            color: '#6b7280', // Medium gray for unchecked thumb - better contrast against white background
+          },
+          '& .MuiSwitch-track': {
+            backgroundColor: '#e5e7eb', // Light gray for unchecked track
+          },
           '& .MuiSwitch-switchBase.Mui-checked': {
-            color: '#38bdf8',
+            color: '#374151', // Same dark gray for checked thumb
           },
           '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-            backgroundColor: '#0284c7',
+            backgroundColor: '#0284c7', // Blue for checked track
           },
         }}
       />

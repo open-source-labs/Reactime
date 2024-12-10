@@ -5,32 +5,20 @@
   justify-content: center;
 }
 
-.MuiSwitch-colorPrimary.Mui-checked {
-  color: $icon-primary !important;
-}
-
-.MuiSwitch-switchBase {
-  color: $icon-secondary !important;
-}
-
-.MuiSwitch-track {
-  background-color: $icon-bg !important;
-}
-
-.MuiTypography-body1 {
-  font-size: 2em !important;
-}
-
 #routes-formcontrol {
   padding: 3px;
   margin-left: 50px;
-  font: 400 16px 'Outfit', sans-serif;
+  font:
+    400 16px 'Outfit',
+    sans-serif;
   text-align: left;
 }
 
 #routes-dropdown {
   color: $performance-options-label !important;
-  font: 400 16px 'Outfit', sans-serif;
+  font:
+    400 16px 'Outfit',
+    sans-serif;
   text-align: left;
 }
 
@@ -53,7 +41,9 @@
 #routes-select,
 #snapshot-select {
   color: white !important;
-  font: 400 16px 'Outfit', sans-serif;
+  font:
+    400 16px 'Outfit',
+    sans-serif;
   text-align: left;
   width: 120px;
   height: 30px;

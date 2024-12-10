@@ -15,13 +15,6 @@
   color: $indiv-action-filler-text;
 }
 
-#recordBtn {
-  color: #ffb3b3;
-  height: 100%;
-  display: flex;
-  margin-left: 10px;
-}
-
 .actionToolContainer {
   color: #374151;
   display: flex;
@@ -30,11 +23,6 @@
   height: 44px;
   border-bottom: 1px solid #e5e7eb;
   padding: 0 8px;
-}
-
-#recordBtn .fa-regular {
-  height: 100%;
-  width: 28px;
 }
 
 .toggle-record {
