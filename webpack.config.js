@@ -17,7 +17,6 @@ module.exports = {
     background: './src/extension/background.js',
     content: './src/extension/contentScript.ts',
     backend: './src/backend/index.ts',
-    overrideReducer: './src/extension/overrideReducer.js',
   },
   watchOptions: {
     aggregateTimeout: 1000,

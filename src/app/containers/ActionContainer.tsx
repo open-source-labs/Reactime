@@ -14,19 +14,9 @@ import { Button, Switch } from '@mui/material';
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
 */
 
-
 // resetSlider locates the rc-slider elements on the document and resets it's style attributes
-const resetSlider = () => {
-  const slider = document.querySelector('.rc-slider-handle');
-  const sliderTrack = document.querySelector('.rc-slider-track');
-  if (slider && sliderTrack) {
-    slider.setAttribute('style', 'left: 0');
-    sliderTrack.setAttribute('style', 'width: 0');
-  }
-};
 
 function ActionContainer(props: ActionContainerProps): JSX.Element {
-
   const [dropdownSelection, setDropdownSelection] = useState('TimeJump');
 
   const dispatch = useDispatch();
@@ -43,23 +33,6 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   // we create an array 'hierarchyArr' that will hold objects and numbers
   const hierarchyArr: (number | {})[] = [];
 
-  /* 
-  function to traverse state from hierarchy and also getting information on display name and component name
-  
-  the obj parameter is an object with the following structure:
-    {
-      stateSnapshot: {
-        route: any;
-        children: any[];
-      };
-    name: number;
-    branch: number;
-    index: number;
-    children?: [];
-    }
-  */
- 
-
   const displayArray = (obj: Obj): void => {
     if (
       obj.stateSnapshot.children.length > 0 && // if the 'stateSnapshot' has a non-empty 'children' array
@@ -72,7 +45,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
         //This utility can be used to map the properties of a type to another type) and populate it's properties with
         //relevant values from our argument 'obj'.
         index: obj.index,
-        displayName: `${obj.name}.${obj.branch}`,
+        displayName: `${obj.index + 1}`,
         state: obj.stateSnapshot.children[0].state,
         componentName: obj.stateSnapshot.children[0].name,
         routePath: obj.stateSnapshot.route.url,
@@ -231,18 +204,17 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
           </a>
           <SwitchAppDropdown />
           {/* add new component here for dropdown menu for useStae/ useReducer- ragad */}
-         <DropDown
-         dropdownSelection = {dropdownSelection}
-         setDropdownSelection={setDropdownSelection}
-         />
-          <div className='action-component exclude'>
+          <DropDown
+            dropdownSelection={dropdownSelection}
+            setDropdownSelection={setDropdownSelection}
+          />
+          <div className='clear-button-container'>
             <Button
-              className='clear-button'
-              variant='contained'
-              //style={{ backgroundColor: '#ff6569' }}
+              className='clear-button-modern'
+              variant='text'
               onClick={() => {
                 dispatch(emptySnapshots()); // set slider back to zero, visually
-                resetSlider();
+                dispatch(changeSlider(0));
               }}
               type='button'
             >
@@ -250,12 +222,11 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             </Button>
           </div>
           <div className='snapshots'>
-            {dropdownSelection === 'Provider/Consumer' && <ProvConContainer/>}
-            {dropdownSelection === 'TimeJump' && 
+            {dropdownSelection === 'Provider/Consumer' && <ProvConContainer />}
+            {dropdownSelection === 'TimeJump' &&
               Object.keys(routes).map((route, i) => (
                 <RouteDescription key={`route${i}`} actions={routes[route]} />
-              ))
-            }
+              ))}
           </div>
         </div>
       ) : null}

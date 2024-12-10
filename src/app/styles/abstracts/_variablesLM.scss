@@ -26,17 +26,17 @@ $contrasting-color: #161617;
 $contrasting-color-weak: #353536;
 
 /// HEATMAP COLORS
-$heat-level-1: #F1B476;
-$heat-level-2: #E4765B;
-$heat-level-3: #C64442;
-$heat-level-4: #8C2743;
+$heat-level-1: #f1b476;
+$heat-level-2: #e4765b;
+$heat-level-3: #c64442;
+$heat-level-4: #8c2743;
 
 /////////////////////////////////////////////////////////////////////
 // ALL OF THE FOLLOWING COLORS SHOULD REFERENCE A COLOR FROM ABOVE //
 /////////////////////////////////////////////////////////////////////
 
 /// @type Color
- 
+
 //general text color theme
 $dark-text: $contrasting-color;
 $light-text: $background-color;
@@ -70,14 +70,10 @@ $tab-arrow-indicator: lighten($contrasting-color, 30%);
 //SNAPSHOTS AND ROUTES LIST
 $action-tab-background: $background-color;
 $action-cont-border: $contrasting-color;
-//$action-clear-button: $primary-color; //currently being handled by mui theme.ts file
-//$action-clear-button-text: $background-color; //currently being handled by mui theme.ts file
-$route-bar: $primary-color-strong;
-$route-bar-text: $light-text;
 $indiv-action-input-bg: $background-color-strong;
 $indiv-action-selected: darken($background-color, 15%);
 $indiv-action-selected-text: $light-text;
-$indiv-action-filler-text: lighten($contrasting-color,60%);
+$indiv-action-filler-text: lighten($contrasting-color, 60%);
 $indiv-action-custom-text: $dark-text;
 $indiv-action-border: $contrasting-color-weak;
 $indiv-action-time: $primary-color-weak;
@@ -98,12 +94,12 @@ $header-button-inactive-text: $dark-text;
 $header-button-hover: lighten($header-button-inactive, 20%);
 
 //the buttons/tabs controlling what is displayed in STATECONTAINER (Map, Performance, History, Web Metrics, Tree)
-$navbar-background: $background-color; //this color only shows up in Diff mode when buttons don't fill the whole bar //DIFF FEATURE IS CURRENTLY COMMENTED OUT 
+$navbar-background: $background-color; //this color only shows up in Diff mode when buttons don't fill the whole bar //DIFF FEATURE IS CURRENTLY COMMENTED OUT
 $navbar-selected: $primary-color-strong;
 $navbar-selected-text: $light-text;
 $navbar-unselected: $primary-color-weak;
 $navbar-unselected-text: $dark-text;
-$navbar-hover: darken($navbar-unselected,15%);
+$navbar-hover: darken($navbar-unselected, 15%);
 
 $state-background: $background-color-strong;
 $state-cont-border: $contrasting-color;
