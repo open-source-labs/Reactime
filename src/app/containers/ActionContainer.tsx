@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
 import Action from '../components/Actions/Action';
-import SwitchAppDropdown from '../components/Actions/SwitchApp';
 import { emptySnapshots, changeView, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import RouteDescription from '../components/Actions/RouteDescription';
@@ -202,8 +201,6 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             </div>
             {recordingActions ? <Switch defaultChecked /> : <Switch />}
           </a>
-          <SwitchAppDropdown />
-          {/* add new component here for dropdown menu for useStae/ useReducer- ragad */}
           <DropDown
             dropdownSelection={dropdownSelection}
             setDropdownSelection={setDropdownSelection}
