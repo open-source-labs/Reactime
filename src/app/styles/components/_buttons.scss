@@ -185,11 +185,6 @@
   cursor: pointer;
 }
 
-// .pause-button {
-//   color: #ff0000;
-//   background-color: #ff0000;
-// }
-
 .import-button:hover,
 .howToUse-button:hover,
 .export-button:hover,
@@ -315,97 +310,85 @@
 }
 
 /* sidebar button open and closing functionality */
+/* Container for arrow and collapse text */
+#arrow {
+  height: 44px;
+  display: grid;
+  grid-template-columns: 45px 1fr;
+  align-items: center;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: white;
+}
+
+/* Base toggle styling */
+.toggle {
+  height: 100%;
+  width: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+
+/* Modern chevron using border technique - default facing left */
+.toggle i {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid #6b7280;
+  border-bottom: 2px solid #6b7280;
+  transform: rotate(135deg); /* Changed to 135deg to face left by default */
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+/* Clean up unused pseudo-elements */
+.toggle i::before,
+.toggle i::after {
+  display: none;
+}
+
+/* Rotation for collapsed state - rotate to face right */
+.no-aside .toggle i {
+  transform: rotate(-45deg); /* Changed to -45deg to face right when collapsed */
+}
+
+/* Hover state matching modern UI */
+.toggle:hover i {
+  border-color: #374151;
+}
+
+/* Modern collapse text styling */
+.collapse {
+  display: flex;
+  align-items: center;
+  color: #6b7280;
+  font-size: 1rem;
+  font-weight: 500;
+  padding-left: 0.5rem;
+  font-family: 'Outfit', sans-serif;
+  transition: color 0.2s ease;
+}
+
+/* Hover state for the entire action area */
+#arrow:hover .collapse {
+  color: #374151;
+}
+
+/* Smooth transition for sidebar */
 aside {
-  //background: #242529;
-  color: #fff;
-  transition: width 1s;
-  width: 100%; //JR
+  background-color: white;
+  transition: width 0.3s ease;
 }
 
 .no-aside {
   width: 45px;
-  // margin-right: 15px;
 }
 
-//JR added for collapse label
-.collapse {
-  color: $collapse-text;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
+/* Hide collapse text when sidebar is collapsed */
 .hidden {
   display: none;
-}
-
-.toggle:hover {
-  cursor: pointer;
-}
-
-.toggle {
-  // display: block;
-  // position: relative;
-  // margin-top: 1rem;
-  height: 100%; //JR
-}
-
-/* toggle i handles arrow animation */
-.toggle i,
-.toggle i::after,
-.toggle i::before {
-  position: absolute;
-  width: 27px;
-  height: 4px;
-  border-radius: 4px;
-  transition: transform 0.15s;
-  background-color: $icon-primary;
-}
-
-.toggle i {
-  top: 16px;
-  left: 10px;
-  display: block;
-  background: $icon-primary;
-}
-
-.toggle i::before {
-  top: -6px;
-}
-
-.toggle i::after {
-  bottom: -6px;
-}
-
-.toggle i::after,
-.toggle i::before {
-  content: '';
-  display: block;
-  // top: -5px;
-}
-
-.toggle i::before {
-  transform: translate3d(-8px, 0, 0) rotate(-45deg) scale(0.7, 1);
-}
-
-.toggle i::after {
-  transform: translate3d(-8px, 0, 0) rotate(45deg) scale(0.7, 1);
-}
-
-.no-aside .toggle i::before,
-.no-aside .toggle i::after {
-  transform: none;
-}
-
-#arrow {
-  // margin-bottom: 40px;
-  // display: flex;
-  // justify-content: flex-start;
-
-  //JR
-  height: 100%;
-  display: grid;
-  grid-template-columns: 45px 1fr;
 }
 
 /* ^ sidebar button open and closing functionality */
