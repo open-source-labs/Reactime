@@ -8,6 +8,7 @@ import DropDown from '../components/Actions/DropDown';
 import ProvConContainer from './ProvConContainer';
 import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
 import { Button, Switch } from '@mui/material';
+import RecordButton from '../components/Actions/RecordButton';
 
 /*
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
@@ -191,16 +192,13 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
       </div>
       {actionView ? (
         <div className='action-button-wrapper'>
-          <a type='button' id='recordBtn' onClick={toggleRecord}>
-            <i />
-            <div
-              className='toggle-record'
-              style={{ display: 'flex', alignItems: 'center', textAlign: 'right' }}
-            >
-              Record
-            </div>
-            {recordingActions ? <Switch defaultChecked /> : <Switch />}
-          </a>
+          <RecordButton
+            isRecording={recordingActions}
+            onToggle={() => {
+              toggleRecord();
+              setRecordingActions(!recordingActions);
+            }}
+          />
           <DropDown
             dropdownSelection={dropdownSelection}
             setDropdownSelection={setDropdownSelection}
