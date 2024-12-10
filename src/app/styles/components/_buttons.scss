@@ -177,16 +177,6 @@
   cursor: pointer;
 }
 
-.import-button:hover,
-.howToUse-button:hover,
-.export-button:hover,
-.pause-button:hover,
-.reconnect-button:hover {
-  color: $function-bar-text-hover;
-  box-shadow: 1px 1px 2px 1px rgba(30, 86, 171, 0.25);
-  transform: translate3d(0, -3px, 0);
-}
-
 .svg-inline--fa {
   //color: $blue-brand;
   margin-right: 0.75em;
