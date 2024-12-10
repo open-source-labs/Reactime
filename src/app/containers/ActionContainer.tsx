@@ -15,14 +15,6 @@ import { Button, Switch } from '@mui/material';
 */
 
 // resetSlider locates the rc-slider elements on the document and resets it's style attributes
-const resetSlider = () => {
-  const slider = document.querySelector('.rc-slider-handle');
-  const sliderTrack = document.querySelector('.rc-slider-track');
-  if (slider && sliderTrack) {
-    slider.setAttribute('style', 'left: 0');
-    sliderTrack.setAttribute('style', 'width: 0');
-  }
-};
 
 function ActionContainer(props: ActionContainerProps): JSX.Element {
   const [dropdownSelection, setDropdownSelection] = useState('TimeJump');
@@ -40,22 +32,6 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   let actionsArr: JSX.Element[] = []; // we create an array 'actionsArr' that will hold elements we create later on
   // we create an array 'hierarchyArr' that will hold objects and numbers
   const hierarchyArr: (number | {})[] = [];
-
-  /* 
-  function to traverse state from hierarchy and also getting information on display name and component name
-  
-  the obj parameter is an object with the following structure:
-    {
-      stateSnapshot: {
-        route: any;
-        children: any[];
-      };
-    name: number;
-    branch: number;
-    index: number;
-    children?: [];
-    }
-  */
 
   const displayArray = (obj: Obj): void => {
     if (
@@ -238,7 +214,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
               variant='text'
               onClick={() => {
                 dispatch(emptySnapshots()); // set slider back to zero, visually
-                resetSlider();
+                dispatch(changeSlider(0));
               }}
               type='button'
             >
