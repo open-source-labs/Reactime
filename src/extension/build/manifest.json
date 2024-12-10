@@ -14,20 +14,13 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["bundles/overrideReducer.bundle.js"],
-      "run_at": "document_start",
-      "all_frames": true,
-      "world": "MAIN"
-    },
-    {
       "matches": ["http://localhost/*"],
       "js": ["bundles/content.bundle.js"]
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["bundles/backend.bundle.js", "bundles/overrideReducer.bundle.js"],
+      "resources": ["bundles/backend.bundle.js"],
       "matches": ["<all_urls>"]
     }
   ],

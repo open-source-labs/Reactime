@@ -1,7 +1,8 @@
 .action-container {
-  // overflow: auto;
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  transition: width 0.3s ease;
   overflow-x: hidden;
-  background-color: $action-tab-background;
 }
 
 .actionname {
@@ -22,11 +23,13 @@
 }
 
 .actionToolContainer {
-  color: #873b3b;
+  color: #374151;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 35px;
+  height: 44px;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0 8px;
 }
 
 #recordBtn .fa-regular {
@@ -34,14 +37,10 @@
   width: 28px;
 }
 
-.route {
-  background-color: $route-bar;
-  color: $route-bar-text;
-  padding-left: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-
 .toggle-record {
   color: $toggle-record-text;
+}
+
+.clear-button-container {
+  padding: 16px;
 }

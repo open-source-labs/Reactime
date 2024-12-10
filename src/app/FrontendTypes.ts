@@ -255,7 +255,7 @@ export interface HandleProps {
 
 export interface MainSliderProps {
   className: string;
-  snapshotsLength: number;
+  snapshots: any[];
 }
 
 export interface DefaultMargin {
@@ -303,12 +303,10 @@ export interface StepsObj {
 }
 
 export interface LinkControlProps {
-  layout: string;
   orientation: string;
   linkType: string;
   stepPercent: number;
   selectedNode: string;
-  setLayout: (layout: string) => void;
   setOrientation: (orientation: string) => void;
   setLinkType: (linkType: string) => void;
   setStepPercent: (percent: number) => void;
@@ -339,7 +337,6 @@ export interface Node {
 }
 
 export interface LinkComponent {
-  layout: string;
   linkType: string;
   orientation: string;
 }

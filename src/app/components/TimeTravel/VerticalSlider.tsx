@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { HandleProps, MainSliderProps, MainState, RootState } from '../../FrontendTypes';
 
 const { Handle } = Slider; // component constructor of Slider that allows customization of the handle
-
+//takes in snapshot length
 const handle = (props: HandleProps): JSX.Element => {
   const { value, dragging, index, ...restProps } = props;
 
@@ -27,9 +27,9 @@ const handle = (props: HandleProps): JSX.Element => {
   );
 };
 
-function MainSlider(props: MainSliderProps): JSX.Element {
+function VerticalSlider(props: MainSliderProps): JSX.Element {
   const dispatch = useDispatch();
-  const { snapshotsLength } = props; // destructure props to get our total number of snapshots
+  const { snapshots } = props; // destructure props to get our total number of snapshots
   const [sliderIndex, setSliderIndex] = useState(0); // create a local state 'sliderIndex' and set it to 0.
   const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
   const { currLocation } = tabs[currentTab]; // we destructure the currentTab object
@@ -37,8 +37,15 @@ function MainSlider(props: MainSliderProps): JSX.Element {
   useEffect(() => {
     if (currLocation) {
       // if we have a 'currLocation'
-      //@ts-ignore
-      setSliderIndex(currLocation.index); // set our slider thumb position to the 'currLocation.index'
+      let correctedSliderIndex;
+
+      for (let i = 0; i < snapshots.length; i++) {
+        //@ts-ignore -- ignores the errors on the next line
+        if (snapshots[i].props.index === currLocation.index) {
+          correctedSliderIndex = i;
+        }
+      }
+      setSliderIndex(correctedSliderIndex);
     } else {
       setSliderIndex(0); // just set the thumb position to the beginning
     }
@@ -48,21 +55,20 @@ function MainSlider(props: MainSliderProps): JSX.Element {
     <Slider
       className='travel-slider'
       color='#0af548'
+      vertical='true'
+      reverse='true'
+      height='100%'
       min={0} // index of our first snapshot
-      max={snapshotsLength - 1} // index of our last snapshot
+      max={snapshots.length - 1} // index of our last snapshot
       value={sliderIndex} // currently slider thumb position
       onChange={(index: any) => {
         // when the slider position changes
         setSliderIndex(index); // update the sliderIndex
-      }}
-      onAfterChange={() => {
-        // after updating the sliderIndex
-        dispatch(changeSlider(sliderIndex)); // updates currentTab's 'sliderIndex' and replaces our snapshot with the appropriate snapshot[sliderIndex]
-        dispatch(pause()); // pauses playing and sets currentTab object'a intervalId to null
+        dispatch(changeSlider(snapshots[index].props.index));
       }}
       handle={handle}
     />
   );
 }
 
-export default MainSlider;
+export default VerticalSlider;

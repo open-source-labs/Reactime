@@ -57,7 +57,6 @@ export default function ComponentMap({
   margin = defaultMargin,
   currentSnapshot, // from 'tabs[currentTab].stateSnapshot object in 'MainContainer'
 }: LinkTypesProps): JSX.Element {
-  const [layout, setLayout] = useState('cartesian'); // We create a local state "layout" and set it to a string 'cartesian'
   const [orientation, setOrientation] = useState('vertical'); // We create a local state "orientation" and set it to a string 'vertical'.
   const [linkType, setLinkType] = useState('diagonal'); // We create a local state "linkType" and set it to a string 'diagonal'.
   const [stepPercent, setStepPercent] = useState(0.5); // We create a local state "stepPercent" and set it to a number '0.5'. This will be used to scale the Map component's link: Step to 50%
@@ -80,33 +79,20 @@ export default function ComponentMap({
 
   /*
     We begin setting the starting position for the root node on the maps display. 
-    The 'polar layout' sets the root node to the relative center of the display box based on the size of the browser window. 
-    The 'cartesian layout' (else conditional) sets the root nodes location either in the left middle *or top middle of the browser window relative to the size of the browser.
+    The default view sets the root nodes location either in the left middle *or top middle of the browser window relative to the size of the browser.
   */
 
-  if (layout === 'polar') {
-    // 'polar layout' option
-    origin = {
-      x: innerWidth / 2,
-      y: innerHeight / 2,
-    };
 
-    // set the sizeWidth and sizeHeight
-    sizeWidth = 2 * Math.PI;
-    sizeHeight = Math.min(innerWidth, innerHeight) / 2;
+  origin = { x: 0, y: 0 };
+  if (orientation === 'vertical') {
+    sizeWidth = innerWidth;
+    sizeHeight = innerHeight;
   } else {
-    // 'cartesian layout' option
-    origin = { x: 0, y: 0 };
-    if (orientation === 'vertical') {
-      sizeWidth = innerWidth;
-      sizeHeight = innerHeight;
-    } else {
-      // if the orientation isn't vertical, swap the width and the height
-      sizeWidth = innerHeight;
-      sizeHeight = innerWidth;
-    }
+    // if the orientation isn't vertical, swap the width and the height
+    sizeWidth = innerHeight;
+    sizeHeight = innerWidth;
   }
-
+//}
   const {
     tooltipData, // value/data that tooltip may need to render
     tooltipLeft, // number used for tooltip positioning
@@ -215,8 +201,7 @@ export default function ComponentMap({
   };
 
   let filtered = processTreeData(currentSnapshot);
-  console.log('filtered', filtered);
-  collectNodes(filtered);
+  collectNodes(currentSnapshot);
 
   const keepContextAndProviderNodes = (node) => {
     if (!node) return null;
@@ -248,7 +233,6 @@ export default function ComponentMap({
   };
 
   const contextProvidersOnly = keepContextAndProviderNodes(currentSnapshot);
-  console.log('context only', contextProvidersOnly);
 
   // @ts
   // find the node that has been selected and use it as the root
@@ -268,20 +252,17 @@ export default function ComponentMap({
 
   // controls for the map
   const LinkComponent: React.ComponentType<unknown> = getLinkComponent({
-    layout,
     linkType,
     orientation,
   });
   return totalWidth < 10 ? null : (
     <div>
       <LinkControls
-        layout={layout}
         orientation={orientation}
         linkType={linkType}
         stepPercent={stepPercent}
         snapShots={currentSnapshot}
         selectedNode={selectedNode}
-        setLayout={setLayout}
         setOrientation={setOrientation}
         setLinkType={setLinkType}
         setStepPercent={setStepPercent}
@@ -374,11 +355,7 @@ export default function ComponentMap({
                   let top: number;
                   let left: number;
 
-                  if (layout === 'polar') {
-                    const [radialX, radialY] = pointRadial(node.x, node.y);
-                    top = radialY;
-                    left = radialX;
-                  } else if (orientation === 'vertical') {
+                  if (orientation === 'vertical') {
                     top = node.y;
                     left = node.x;
                   } else {
