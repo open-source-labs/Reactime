@@ -108,6 +108,12 @@ export interface ActionContainerProps {
   actionView: boolean;
   setActionView: React.Dispatch<React.SetStateAction<boolean>>;
   toggleActionContainer: () => void;
+  snapshots: any
+  currLocation: any
+}
+
+export interface ProvConContainerProps {
+currentSnapshot: any; 
 }
 
 export interface StateContainerProps {
