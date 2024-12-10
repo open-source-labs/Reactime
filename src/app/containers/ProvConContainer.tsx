@@ -1,4 +1,4 @@
-import { width } from '@mui/system';
+import { color, width } from '@mui/system';
 import React, {useState} from 'react';
 import { ProvConContainerProps} from '../FrontendTypes';
 
@@ -118,7 +118,7 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element  => {
                         cursor: "pointer",
                         fontWeight: "bold",
                         textDecoration: "underline",
-                        color: isExpanded ? "green" : "blue",
+                        color: isExpanded ? "#1f2937" : "#059669",
                     }}
                 >
                     {node.name}
@@ -126,9 +126,12 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element  => {
     
                 {/* Render HookState if it exists */}
                 {isExpanded && node.componentData?.hooksState && (
+                    <div>
+                    {/* <h1 style={{fontWeight: "bold"}}>State:</h1> */}
                     <p style={{ whiteSpace: "normal" , overflowWrap: "break-word", padding: "20px"}}>
                          State: {JSON.stringify(node.componentData.hooksState)}
                     </p>
+                    </div>
                 )}
     
                 {/* Render Context Property if it exists */}
@@ -155,7 +158,7 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element  => {
     
 
     return (
-        <div style={{ width: "300px" }}>
+        <div style={{ width: "260px"}}>
             {renderNestedObject(contextProvidersOnly)}
         </div>
     );
