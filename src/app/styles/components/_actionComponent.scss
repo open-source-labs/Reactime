@@ -1,45 +1,3 @@
-.action-component {
-  padding: 3px 10px;
-  display: grid;
-  grid-template-columns: none;
-  align-items: center;
-  height: 24px;
-  // background-color: $brand-color;
-  // border-bottom-style: solid;
-  // border-bottom-width: 1px;
-  // background-color: none;
-  // border-color: #292929;
-  // border-color: $border-color;
-  cursor: pointer;
-  overflow: hidden;
-  @extend %disable-highlight;
-}
-
-.action-component-text {
-  margin-bottom: 8px;
-  color: $indiv-action-custom-text;
-}
-
-.action-component.selected {
-  //font-size: 16px;
-  background-color: $indiv-action-selected;
-  color: $indiv-action-selected-text;
-}
-
-.action-component:focus {
-  outline: none;
-}
-
-.action-component-trigger {
-  display: grid;
-  grid-template-columns: 4fr 1fr;
-  align-items: center;
-  //height: 20px;
-  cursor: pointer;
-  overflow: hidden;
-  @extend %disable-highlight;
-}
-
 .route-container {
   width: 100%;
 }
@@ -55,4 +13,114 @@
   display: flex;
   flex-direction: row;
   margin-bottom: 50px;
+}
+
+/* Container for individual action */
+.individual-action {
+  margin: 0;
+  padding: 0;
+}
+
+.action-component {
+  display: flex;
+  padding: 6px 16px;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 200ms ease;
+}
+
+.action-component:hover {
+  background-color: #f9fafb;
+}
+
+.action-component.selected {
+  background-color: #f3f4f6;
+}
+
+.action-component-trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.action-component-text {
+  flex: 1;
+}
+
+/* Input styling */
+.actionname {
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  color: #374151;
+  width: 100%;
+  padding: 2px 0;
+}
+
+.actionname::placeholder {
+  color: #6b7280;
+}
+
+.actionname:focus {
+  outline: none;
+}
+
+/* Button styling */
+.time-button,
+.jump-button,
+.current-location {
+  min-width: 90px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-align: center;
+  border: none;
+  transition: all 200ms ease;
+  margin-top: 6px;
+}
+
+.time-button {
+  color: #6b7280;
+  background: transparent;
+}
+
+.jump-button {
+  color: white;
+  background: #111827;
+}
+
+.jump-button:hover {
+  background: #374151;
+}
+
+.current-location {
+  color: #059669;
+  background: #ecfdf5;
+}
+
+/* Hide/show button transitions */
+.action-component:hover .time-button {
+  display: none;
+}
+
+.action-component:hover .jump-button {
+  display: block;
+}
+
+.jump-button {
+  display: none;
+}
+
+.current-snap {
+  min-width: 90px;
+  font-weight: bold;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  color: #374151;
+  width: 100%;
+  padding: 2px 0;
+  text-align: center;
 }
