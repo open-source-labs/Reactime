@@ -252,23 +252,3 @@ export type Fiber = {
 export type FiberRoot = {
   current: Fiber;
 };
-
-export interface Window {
-  __REACTIME_TIME_TRAVEL__: {
-    getReducerState: (reducerId: symbol) => any;
-    travelToState: (reducerId: symbol, targetState: any) => void;
-  };
-  __REACTIME_REDUCER_MAP__: Map<
-    symbol,
-    {
-      actionHistory: any[];
-      dispatch: (action: any) => void;
-      initialState: any;
-      currentState: any;
-      reducer: (state: any, action: any) => any;
-    }
-  >;
-  __REACTIME_DEBUG__?: {
-    checkOverride: () => void;
-  };
-}
