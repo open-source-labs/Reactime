@@ -211,6 +211,8 @@ function MainContainer(): JSX.Element {
           actionView={actionView}
           setActionView={setActionView}
           toggleActionContainer={toggleActionContainer}
+          snapshots={snapshots} 
+          currLocation={currLocation}
         />
         {/* @ts-ignore */}
         {snapshots.length ? (
