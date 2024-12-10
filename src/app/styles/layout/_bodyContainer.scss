@@ -6,7 +6,7 @@
   grid-template-rows: 1fr auto; /* Change to auto for the bottom row */
   grid-template-areas:
     'actions states'
-    'bottom bottom'; /* New bottom area that spans full width */
+    'bottom bottom';
 }
 
 /* if extension width is less than 500px, stack the body containers */
