@@ -86,7 +86,6 @@
 
   .router-link {
     height: 100%;
-    // width: 34%;
     width: 10%;
     display: flex;
     justify-content: center;
@@ -94,10 +93,7 @@
     background-color: $navbar-unselected;
     text-decoration: none;
     color: $navbar-unselected-text;
-
     font-size: 75%;
-    // border-top-right-radius: 10px;
-    // border-top-left-radius: 10px;
     overflow: hidden;
   }
 
@@ -121,7 +117,6 @@
   }
 
   .navbar {
-    // background-color: $navbar-background;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -133,7 +128,6 @@
     transform: translateX(-50%);
     width: 65vw;
     z-index: 1;
-
 
     @extend %disable-highlight;
   }
@@ -287,6 +281,11 @@
   display: flex;
   height: 3px;
   width: 200px;
-  background-image: linear-gradient(to right, $heat-level-1, $heat-level-2, $heat-level-3, $heat-level-4);
+  background-image: linear-gradient(
+    to right,
+    $heat-level-1,
+    $heat-level-2,
+    $heat-level-3,
+    $heat-level-4
+  );
 }
-

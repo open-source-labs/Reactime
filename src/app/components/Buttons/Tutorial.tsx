@@ -11,6 +11,8 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 const { Steps } = require('intro.js-react'); //Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly. The package 'intro.js-react' is small React wrapper around Intro.js. The wrapper provides support for both steps and hints. https://introjs.com/docs/
 import { setCurrentTabInApp, tutorialSaveSeriesToggle } from '../../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { HelpCircle } from 'lucide-react';
+
 /*
   This is the tutorial displayed when the "How to use" button is clicked
   This needs to be a class component to be compatible with updateStepElement from intro.js
@@ -359,13 +361,8 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           onBeforeChange={(currentStepIndex) => onChangeHandler(currentStepIndex)} // Callback called before changing the current step.
           ref={(steps) => (this.steps = steps)} // ref allows access to intro.js API
         />
-        <Button
-          variant='outlined'
-          className='howToUse-button'
-          type='button'
-          onClick={() => startIntro()}
-        >
-          <HelpOutlineIcon className='button-icon' sx={{ pr: 1 }} /> Tutorial
+        <Button className='howToUse-button' type='button' onClick={() => startIntro()}>
+          <HelpCircle className='button-icon' size={18} /> Tutorial
         </Button>
       </>
     );
