@@ -71,8 +71,8 @@ export default function LinkControls({
         onChange={(e) => setLinkType(e.target.value)}
         style={dropDownStyle}
       >
-        <option value='diagonal'>Diagonal</option>
         <option value='step'>Step</option>
+        <option value='diagonal'>Diagonal</option>
         <option value='line'>Line</option>
       </select>
       <label> Select:</label> {/* Controls for the select selections. */}
