@@ -7,12 +7,6 @@
   fill: $state-background;
 }
 
-.no-data-message {
-  color: #ff0001;
-  font: normal 13px $text-font-stack;
-  padding: 10px;
-}
-
 .state-container {
   .main-router-link {
     //diff button
@@ -100,12 +94,6 @@
     justify-content: space-between;
     align-items: center;
   }
-}
-
-.no-data-message {
-  color: #ff0001;
-  font: normal 13px $text-font-stack;
-  padding: 10px;
 }
 
 .performance-nav-bar-container {
