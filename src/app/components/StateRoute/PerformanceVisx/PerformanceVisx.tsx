@@ -4,10 +4,7 @@
 /* eslint-disable max-len */
 import React, { useState, useEffect } from 'react';
 import { MemoryRouter as Router, Route, NavLink, Routes, Navigate } from 'react-router-dom';
-import RenderingFrequency from './RenderingFrequency';
 import BarGraph from './BarGraph';
-import BarGraphComparison from './BarGraphComparison';
-import BarGraphComparisonActions from './BarGraphComparisonActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentTabInApp } from '../../../slices/mainSlice';
 import {
@@ -186,10 +183,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
   } = props;
   const dispatch = useDispatch();
   const { currentTabInApp }: MainState = useSelector((state: RootState) => state.main);
-  const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
   const data = getPerfMetrics(snapshots, getSnapshotIds(hierarchy));
-  const [series, setSeries] = useState(true);
-  const [action, setAction] = useState(false);
   const [route, setRoute] = useState('All Routes');
   const [snapshot, setSnapshot] = useState('All Snapshots');
 
@@ -252,74 +246,7 @@ const PerformanceVisx = (props: PerformanceVisxProps): JSX.Element => {
 
   return (
     <>
-      <div className='performance-nav-bar-container'>
-        <NavLink
-          className={(navData) =>
-            navData.isActive ? 'is-active router-link-performance' : 'router-link-performance'
-          }
-          end
-          to='/performance/'
-        >
-          Snapshots View
-        </NavLink>
-        <NavLink
-          className={(navData) =>
-            navData.isActive ? 'is-active router-link-performance' : 'router-link-performance'
-          }
-          id='router-link-performance-comparison'
-          to='/performance/comparison'
-        >
-          Comparison View
-        </NavLink>
-        <NavLink
-          className={(navData) =>
-            navData.isActive ? 'is-active router-link-performance' : 'router-link-performance'
-          }
-          to='/performance/componentdetails'
-        >
-          Component Details
-        </NavLink>
-      </div>
-
-      {/* {renderForTutorial()} */}
-
       <Routes>
-        <Route
-          path='/comparison'
-          element={
-            hierarchy && series !== false ? (
-              <BarGraphComparison
-                comparison={allStorage()}
-                data={data}
-                width={width}
-                height={height}
-                setSeries={setSeries}
-                series={series}
-                setAction={setAction}
-              />
-            ) : (
-              <BarGraphComparisonActions
-                comparison={allStorage()}
-                data={getActions()}
-                width={width}
-                height={height}
-                setSeries={setSeries}
-                action={action}
-                setAction={setAction}
-              />
-            )
-          }
-        />
-        <Route
-          path='/componentdetails'
-          element={
-            hierarchy ? (
-              <RenderingFrequency data={data.componentData} />
-            ) : (
-              <div className='noState'>{NO_STATE_MSG}</div>
-            )
-          }
-        />
         <Route
           path='/'
           element={

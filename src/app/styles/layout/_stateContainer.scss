@@ -32,6 +32,7 @@
       border-color 200ms ease;
     margin: 0;
     position: relative;
+    white-space: nowrap;
 
     &:hover {
       color: #1f2937;
@@ -61,30 +62,6 @@
   }
 }
 
-.performance-nav-bar-container {
-  display: flex;
-  border: $performance-subtab-border;
-  height: 30px;
-}
-
-.router-link-performance {
-  height: 100%;
-  width: 34%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: $state-background;
-  text-decoration: none;
-  color: $performance-subtab-text;
-}
-
-.router-link-performance:hover {
-  background-color: $performance-subtab-hover;
-}
-
-.router-link-performance.is-active {
-  font-weight: 600;
-}
 
 // Web Metrics Container
 .web-metrics-container {
