@@ -36,7 +36,7 @@
 // 4. Layout-related sections
 @import 'layout/mainContainer', 'layout/bodyContainer', 'layout/actionContainer',
   'layout/errorContainer', 'layout/stateContainer', 'layout/travelContainer',
-  'layout/buttonsContainer', 'layout/headContainer.scss';
+  'layout/buttonsContainer';
 
 // 5. Components
 @import 'components/buttons', 'components/actionComponent', 'components/jsonTree',

@@ -217,7 +217,7 @@ const StateRoute = (props: StateRouteProps) => {
             element={
               hierarchy ? (
                 <div style={{ height: '100%' }}>
-                  <ParentSize className='performanceContainer'>
+                  <ParentSize>
                     {({ width, height }) => (
                       <PerformanceVisx
                         width={width}
