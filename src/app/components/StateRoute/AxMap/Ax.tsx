@@ -77,7 +77,7 @@ export default function AxTree(props) {
 
   const [orientation, setOrientation] = useState('horizontal');
   const [linkType, setLinkType] = useState('diagonal');
-  const [stepPercent, setStepPercent] = useState(0.5);
+  const [stepPercent, setStepPercent] = useState(0.0);
 
   const innerWidth: number = totalWidth - margin.left - margin.right;
   const innerHeight: number = totalHeight - margin.top - margin.bottom - 60;
