@@ -2,23 +2,15 @@
   height: 100%;
   overflow: hidden;
   display: grid;
-  grid-template-columns: 280px 1fr; /* Set action container width to 320px */
-  grid-template-rows: 1fr auto; /* Change to auto for the bottom row */
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: 1fr auto;
   grid-template-areas:
     'actions states'
     'bottom bottom';
-}
+  transition: grid-template-columns 0.3s ease;
 
-/* if extension width is less than 500px, stack the body containers */
-@media (max-width: 500px) {
-  .body-container {
-    grid-template-rows: 3fr 5fr 1fr;
-    grid-template-columns: auto;
-    grid-template-areas:
-      'actions'
-      'states'
-      'travel'
-      'buttons';
+  &.collapsed {
+    grid-template-columns: 45px 1fr;
   }
 }
 
