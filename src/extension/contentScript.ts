@@ -3,7 +3,7 @@
 import { onTTFB, onLCP, onFID, onFCP, onCLS, onINP } from 'web-vitals';
 
 function establishConnection() {
-  const port = chrome.runtime.connect({ name: 'content-script' }); // Reconnect
+  const port = chrome.runtime.connect({ name: 'keepAlivePort' }); // Reconnect if we lose connection to the port at any time
   port.onMessage.addListener((msg) => {
     console.log('Received message from background:', msg);
   });
