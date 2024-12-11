@@ -24,9 +24,7 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
   return (
     <>
       <div className='state-container'>
-        <div className='main-navbar-container'>
-          <div className='main-navbar'></div>
-        </div>
+        <div className='main-navbar-container main-navbar-container--structural'></div>
         <Routes>
           <Route
             path='/*'

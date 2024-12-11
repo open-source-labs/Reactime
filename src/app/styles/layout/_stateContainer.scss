@@ -7,34 +7,16 @@
   fill: $state-background;
 }
 
+.main-navbar-container--structural {
+  height: 0;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .state-container {
-  .main-router-link {
-    //diff button
-    font-size: 14px;
-    height: 75%;
-    width: 75px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    color: $header-button-inactive-text;
-    background: $header-button-inactive;
-    border-radius: 5px;
-    border: 1px solid rgba(184, 196, 194, 0.25);
-  }
-
-  .main-router-link:hover {
-    background: $header-button-hover;
-  }
-
-  .main-router-link.is-active {
-    background: $header-button-active;
-    color: $header-button-active-text;
-    margin: 3px;
-    border-radius: 5px;
-    border: 1px solid rgb(36, 37, 41);
-  }
-
   .router-link {
     padding: 8px 16px;
     font-size: 14px;
@@ -63,36 +45,19 @@
     }
   }
 
-  .navbar {
-    display: flex;
-    background-color: white;
-    border-bottom: 1px solid #e5e7eb;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    height: 30px;
-    position: fixed;
-    top: 4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 65vw;
-    z-index: 1;
-  }
-
   .main-navbar {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    height: 35px;
-    margin: 6px;
-  }
-
-  .main-navbar-container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .main-navbar-container {
+    border-bottom: 1px solid #e5e7eb;
+    background: white;
+    padding: 0px 24px 4px;
   }
 }
 
