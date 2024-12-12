@@ -1,12 +1,13 @@
-import { color, width } from '@mui/system';
 import React, {useState} from 'react';
 import { ProvConContainerProps} from '../FrontendTypes';
 
 
 const ProvConContainer = (props: ProvConContainerProps): JSX.Element  => {
 
+    //deconstruct props
     const { currentSnapshot } = props;
 
+    //parse through node
     const keepContextAndProviderNodes = (node) => {
       if (!node) return null;
   
@@ -51,61 +52,6 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element  => {
         }));
     };
 
-    // // Recursive function to render nested objects
-    // const renderNestedObject = (node, depth = 0) => {
-    //     const isExpanded = expandedNodes[node.name];
-
-    //     return (
-    //         <div key={node.name} style={{ marginLeft: `${depth * 20}px` }}>
-    //             <p
-    //                 onClick={() => toggleExpand(node.name)}
-    //                 style={{
-    //                     cursor: "pointer",
-    //                     fontWeight: "bold",
-    //                     textDecoration: "underline",
-    //                     color: isExpanded ? "green" : "blue",
-    //                 }}
-    //             >
-    //                 {node.name}
-    //             </p>
-
-    //             {isExpanded &&
-    //                 node?.children?.[0]?.componentData?.context &&
-    //                 node?.children?.[0]?.componentData?.props?.value && (
-    //                     <div>
-    //                         <p>
-    //                             Context Property:{" "}
-    //                             {JSON.stringify(
-    //                                 node.children[0].componentData.context
-    //                             )}
-    //                         </p>
-    //                         <p>
-    //                             Context Value:{" "}
-    //                             {JSON.stringify(
-    //                                 node.children[0].componentData.props.value
-    //                             )}
-    //                         </p>
-    //                     </div>
-    //                 )}
-
-    //             {/* Recursively render children */}
-    //             {isExpanded &&
-    //                 node.children &&
-    //                 node.children.map((child) =>
-    //                     renderNestedObject(child, depth + 1)
-    //                 )}
-    //         </div>
-    //     );
-    // };
-    const style = {
-        whiteSpace: "normal", // Allow text to wrap
-        overflowWrap: "break-word", // Break long words
-        width: "300px", // Limit container width
-        border: "1px solid black", // Optional: Visualize container
-        padding: "10px", // Optional: Add padding
-      };
-    
-
     const renderNestedObject = (node, depth = 0) => {
         const isExpanded = expandedNodes[node.name];
     
@@ -123,29 +69,96 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element  => {
                 >
                     {node.name}
                 </p>
-    
                 {/* Render HookState if it exists */}
                 {isExpanded && node.componentData?.hooksState && (
                     <div>
-                    {/* <h1 style={{fontWeight: "bold"}}>State:</h1> */}
-                    <p style={{ whiteSpace: "normal" , overflowWrap: "break-word", padding: "20px"}}>
-                         State: {JSON.stringify(node.componentData.hooksState)}
-                    </p>
+                        <h1 style={{fontWeight: "bold"}}>State: {'{}'}</h1>
+                        <ul>
+                                {Object.entries(node.componentData.hooksState).map(([key, value]) => (
+                                    <li style={{ whiteSpace: "normal" , overflowWrap: "break-word", listStyleType: "none" }}>
+                                        <strong>{key}:</strong> {typeof value === 'object'? JSON.stringify(value, null,2): value.toString()}
+                                    </li>
+                                ))}
+                        </ul>
                     </div>
                 )}
     
                 {/* Render Context Property if it exists */}
                 {isExpanded && node.componentData?.context &&  Object.keys(node.componentData?.context).length !== 0 && (
-                    <p style={{ whiteSpace: "normal", overflowWrap: "break-word", padding: "20px"}}>
-                        Context Property: {JSON.stringify(node.componentData.context)}
-                    </p>
+                    <div>
+                        <h1 style={{fontWeight: "bold"}}>Context Property: {'{}'} </h1>   
+                        <ul>
+                            {Object.entries(node.componentData.context).map(([key, value]) => {
+                                // Parse if the value is a JSON string
+                                let parsedValue = value;
+                                if (typeof value === "string") {
+                                    try {
+                                        parsedValue = JSON.parse(value);
+                                    } catch {
+                                        parsedValue = value; // Keep the original value if parsing fails
+                                    }
+                                }
+                                return (
+                                    <li key={key} style={{ whiteSpace: "normal", overflowWrap: "break-word", listStyleType: "none" }}>
+                                        <strong>{key}:</strong>{" "}
+                                        {typeof parsedValue === "object" && parsedValue !== null ? (
+                                            <ul style={{ listStyleType: "none", paddingLeft: "1rem" }}>
+                                                {Object.entries(parsedValue).map(([nestedKey, nestedValue]) => (
+                                                    <li key={nestedKey}>
+                                                        <strong>{nestedKey}:</strong> {nestedValue === null ? "null" : nestedValue.toString()}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            parsedValue === null ? "null" : parsedValue.toString()
+                                        )}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                  
                 )}
     
                 {/* Render Context Value if it exists */}
                 {isExpanded && node.componentData?.props?.value && (
-                    <p style={{ whiteSpace: "normal" , overflowWrap: "break-word", padding: "10px"}}>
-                        Context Value: {JSON.stringify(node.componentData.props.value)}
-                    </p>
+                    <div>
+                        <h1 style={{fontWeight: "bold"}}>Context Value: {'{}'}</h1>
+                            <ul>
+                                    {(() => {
+                                        try {
+                                            const parsedValue = JSON.parse(node.componentData.props.value); // Parse the JSON string
+                                            return Object.entries(parsedValue).map(([key, value]) => (
+                                                <li key={key} style={{ whiteSpace: "normal", overflowWrap: "break-word", listStyleType: "none" }}>
+                                                    {/* <strong>{key}:</strong> {typeof value === 'object' ? JSON.stringify(value, null, 2) : value?.toString()} */}
+
+                                                    <strong>{key}:</strong>{" "}
+                                                    {value === null ? (
+                                                        "null"
+                                                    ) : typeof value === "object" ? (
+                                                        <ul style={{ listStyleType: "none", paddingLeft: "1rem" }}>
+                                                            {Object.entries(value).map(([nestedKey, nestedValue]) => (
+                                                                <li key={nestedKey}>
+                                                                    <strong>{nestedKey}:</strong> {nestedValue === null ? "null" : nestedValue?.toString()}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    ) : (
+                                                        value?.toString()
+                                                    )}
+                                                </li>
+                                            ));
+                                        } catch (error) {
+                                            return (
+                                                <li style={{ color: "red" }}>
+                                                    Error parsing value: {error.message}
+                                                </li>
+                                            );
+                                        }
+                                    })()}
+                                </ul>
+                    </div>
+            
                 )}
     
                 {/* Recursively Render Children */}
@@ -158,7 +171,7 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element  => {
     
 
     return (
-        <div style={{ width: "260px"}}>
+        <div style={{ width: "260px", marginLeft: "25px"}}>
             {renderNestedObject(contextProvidersOnly)}
         </div>
     );
