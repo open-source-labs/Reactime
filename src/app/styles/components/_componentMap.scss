@@ -1,26 +1,58 @@
-.compMapLink:hover {
-  box-shadow: 10px 10px rgb(163, 205, 24);
+/* Component Map Container */
+.componentMapContainer {
+  fill: white;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
-.compMapParentText {
-  fill: $map-parent-text;
+/* Base Node Styling - Shared properties */
+.compMapParent,
+.compMapChild,
+.compMapRoot {
+  fill: #3c6e71;
+  stroke: #2c5152;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: all 0.2s ease;
+}
+
+/* Individual Node Variations */
+.compMapParent {
+  opacity: 0.95;
 }
 
 .compMapChild {
-  fill: $map-child-fill;
-  stroke: $map-child-stroke;
-}
-
-.compMapChildText {
-  fill: $map-child-text;
+  opacity: 0.9;
 }
 
 .compMapRoot {
-  stroke: $map-root-stroke;
+  opacity: 1;
 }
 
-.compMapRootText {
-  fill: $map-root-text;
+/* Hover Effects - Shared across all nodes */
+.compMapParent:hover,
+.compMapChild:hover,
+.compMapRoot:hover {
+  fill: #14b8a6;
+  stroke: #0d9488;
+  cursor: pointer;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+  transform: scale(1.02);
+}
+
+/* Text Styling */
+.compMapRootText,
+.compMapParentText,
+.compMapChildText {
+  fill: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  user-select: none;
+}
+
+/* Link Styling */
+.compMapLink {
+  stroke-linecap: round;
+  transition: all 0.3s ease;
 }
 
 .link-controls {
