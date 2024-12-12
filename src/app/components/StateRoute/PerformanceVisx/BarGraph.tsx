@@ -121,51 +121,9 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     data,
   };
 
-  useEffect(() => {
-    // Animates the save series button.
-    const saveButtons = document.getElementsByClassName('save-series-button'); // finds the buttom in the DOM
-    for (let i = 0; i < saveButtons.length; i++) {
-      if (tabs[currentTab].seriesSavedStatus === 'saved') {
-        saveButtons[i].classList.add('animate');
-        saveButtons[i].innerHTML = 'Saved!';
-      } else {
-        saveButtons[i].innerHTML = 'Save Series';
-        saveButtons[i].classList.remove('animate');
-      }
-    }
-  });
-
-  const saveSeriesClickHandler = () => {
-    // function to save the currently selected series
-    if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
-      const actionNames = document.getElementsByClassName('actionname');
-      for (let i = 0; i < actionNames.length; i += 1) {
-        toStorage.data.barStack[i].name = actionNames[i].value;
-      }
-      dispatch(save({ newSeries: toStorage, newSeriesName: seriesNameInput })); // saves the series under seriesName
-      setSeriesNameInput(`Series ${comparison.length}`); // sends a reducer that saves the series/toStorage object the user wants to chrome local storage
-      return;
-    }
-    //if for some reason, code doesn't hit in first conditional, we have error handling below to account it
-    dispatch(save({ newSeries: toStorage, newSeriesName: '' })); // or use a default value for newSeriesName
-  };
-
-  const textbox = // Need to change so textbox isn't empty before saving
-    tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? (
-      <input
-        type='text'
-        id='seriesname'
-        placeholder='Enter Series Name'
-        onChange={(e) => setSeriesNameInput(e.target.value)}
-      />
-    ) : null;
   return (
     <div className='bargraph-position'>
       <div className='saveSeriesContainer'>
-        {textbox}
-        <button type='button' className='save-series-button' onClick={saveSeriesClickHandler}>
-          Save Series
-        </button>
         <form className='routesForm' id='routes-formcontrol'>
           <label id='routes-dropdown'>Select Route: </label>
           <select

@@ -81,7 +81,7 @@
   justify-content: center;
   border: none;
   transition: all 200ms ease;
-  margin: 0; /* Removed top margin */
+  margin: 0;
 }
 
 .time-button {
@@ -117,13 +117,11 @@
 }
 
 .current-snap {
-  min-width: 90px;
   font-weight: bold;
   border: none;
   background: transparent;
   font-size: 1rem;
   color: #374151;
   width: 100%;
-  padding: 2px 0;
-  text-align: center;
+  padding: 2px 32px 2px 0px;
 }

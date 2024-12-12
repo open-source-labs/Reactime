@@ -58,8 +58,8 @@ export default function ComponentMap({
   currentSnapshot, // from 'tabs[currentTab].stateSnapshot object in 'MainContainer'
 }: LinkTypesProps): JSX.Element {
   const [orientation, setOrientation] = useState('vertical'); // We create a local state "orientation" and set it to a string 'vertical'.
-  const [linkType, setLinkType] = useState('diagonal'); // We create a local state "linkType" and set it to a string 'diagonal'.
-  const [stepPercent, setStepPercent] = useState(0.5); // We create a local state "stepPercent" and set it to a number '0.5'. This will be used to scale the Map component's link: Step to 50%
+  const [linkType, setLinkType] = useState('step'); // We create a local state "linkType" and set it to a string 'step'.
+  const [stepPercent, setStepPercent] = useState(0.0); // We create a local state "stepPercent" and set it to a number '0.0'. This will be used to scale the Map component's link: Step to 0%
   const [selectedNode, setSelectedNode] = useState('root'); // We create a local state "selectedNode" and set it to a string 'root'.
   const dispatch = useDispatch();
 
@@ -82,7 +82,6 @@ export default function ComponentMap({
     The default view sets the root nodes location either in the left middle *or top middle of the browser window relative to the size of the browser.
   */
 
-
   origin = { x: 0, y: 0 };
   if (orientation === 'vertical') {
     sizeWidth = innerWidth;
@@ -92,7 +91,7 @@ export default function ComponentMap({
     sizeWidth = innerHeight;
     sizeHeight = innerWidth;
   }
-//}
+  //}
   const {
     tooltipData, // value/data that tooltip may need to render
     tooltipLeft, // number used for tooltip positioning

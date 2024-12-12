@@ -130,11 +130,6 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
     },
   );
 
-  // JR: this is questionable, why would you always set it to true?
-  // useEffect(() => {
-  //   setActionView(true);
-  // }, [setActionView]);
-
   // Function sends message to background.js which sends message to the content script
   const toggleRecord = (): void => {
     port.postMessage({
@@ -174,22 +169,11 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
               className='toggle'
             >
               {' '}
-              {/* JR: updating onClick to stop propagation so that it detects the click only on the arrow and not the parent*/}
               <i />
             </a>
           </aside>
           <div className='collapse'>Collapse</div>
         </div>
-        {/* <a type='button' id='recordBtn' onClick={toggleRecord}>
-          <i />
-          <div
-            className='toggle-record'
-            style={{ display: 'flex', alignItems: 'center', textAlign: 'right' }}
-          >
-            Record
-          </div>
-          {recordingActions ? <Switch defaultChecked /> : <Switch />}
-        </a> */}
       </div>
       {actionView ? (
         <div className='action-button-wrapper'>
@@ -218,8 +202,9 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             </Button>
           </div>
           <div className='snapshots'>
-            {dropdownSelection === 'Provider/Consumer' && <ProvConContainer  currentSnapshot={currLocation.stateSnapshot}
-         />}
+            {dropdownSelection === 'Provider/Consumer' && (
+              <ProvConContainer currentSnapshot={currLocation.stateSnapshot} />
+            )}
             {dropdownSelection === 'TimeJump' &&
               Object.keys(routes).map((route, i) => (
                 <RouteDescription key={`route${i}`} actions={routes[route]} />

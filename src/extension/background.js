@@ -348,14 +348,18 @@ chrome.runtime.onConnect.addListener(async (port) => {
         portsArr.splice(i, 1);
         setTimeout(async () => {
           try {
-            const response = await chrome.runtime.sendMessage({
-              action: 'attemptReconnect',
-            });
-            if (response && response.success) {
+            const newPort = chrome.runtime.connect({ name: 'reconnected' }); // Attempt to reconnect
+            if (newPort) {
+              portsArr.push(newPort); // Add the new port to the array
+              newPort.onMessage.addListener((msg) => {
+                console.log('Message received on reconnected port:', msg);
+              });
               console.log('Port successfully reconnected');
+            } else {
+              console.warn('Failed to reconnect port');
             }
           } catch (error) {
-            console.warn('Port reconnection failed:', error);
+            console.warn('Port reconnection attempt failed:', error);
           }
         }, 1000);
         break;
