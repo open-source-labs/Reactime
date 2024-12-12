@@ -1,15 +1,14 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 import { LinkControlProps, ControlStyles, DropDownStyle, Node } from '../../../FrontendTypes';
+
 // Font size of the Controls label and Dropdowns
 const controlStyles: ControlStyles = {
-  //fontSize: '16px',
   padding: '10px',
 };
 
 const dropDownStyle: DropDownStyle = {
   margin: '0.1em',
-  //fontSize: '16px',
   fontFamily: 'Roboto, sans-serif',
   borderRadius: '4px',
   borderStyle: 'solid',

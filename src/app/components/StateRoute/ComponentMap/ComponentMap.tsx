@@ -198,40 +198,9 @@ export default function ComponentMap({
 
     return newNode;
   };
-
+  // filter out Conext Providers
   let filtered = processTreeData(currentSnapshot);
-  collectNodes(currentSnapshot);
-
-  const keepContextAndProviderNodes = (node) => {
-    if (!node) return null;
-
-    // Check if this node should be kept
-    const hasContext =
-      node?.componentData?.context && Object.keys(node.componentData.context).length > 0;
-    const isProvider = node?.name && node.name.endsWith('Provider');
-    const shouldKeepNode = hasContext || isProvider;
-
-    // Process children first
-    let processedChildren = [];
-    if (node.children) {
-      processedChildren = node.children
-        .map((child) => keepContextAndProviderNodes(child))
-        .filter(Boolean); // Remove null results
-    }
-
-    // If this node should be kept or has kept children, return it
-    if (shouldKeepNode || processedChildren.length > 0) {
-      return {
-        ...node,
-        children: processedChildren,
-      };
-    }
-
-    // If neither the node should be kept nor it has kept children, filter it out
-    return null;
-  };
-
-  const contextProvidersOnly = keepContextAndProviderNodes(currentSnapshot);
+  collectNodes(filtered);
 
   // @ts
   // find the node that has been selected and use it as the root
@@ -247,7 +216,7 @@ export default function ComponentMap({
     if (startNode === null) startNode = rootNode;
   };
 
-  findSelectedNode(); // locates the rootNode... do we really need this? This function is only used once... it's here.
+  findSelectedNode(); // locates the rootNode
 
   // controls for the map
   const LinkComponent: React.ComponentType<unknown> = getLinkComponent({
@@ -323,7 +292,6 @@ export default function ComponentMap({
                     } else {
                       stroke = plum;
                     }
-                    // stroke = '#df6f37'
                   }
 
                   return (
@@ -448,9 +416,8 @@ export default function ComponentMap({
                       {node.depth === 0 && (
                         <circle
                           className='compMapRoot'
-                          r={25} // increase from 12 to 25 to improve visibility
+                          r={25}
                           fill="url('#root-gradient')"
-                          //stroke={rootStroke}
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
@@ -468,13 +435,6 @@ export default function ComponentMap({
                           y={-height / 2}
                           x={-width / 2}
                           fill="url('#parent-gradient')"
-                          //color={'#ff0000'}
-                          //fill={node.children ? nodeParentFill : nodeChildFill}
-                          //stroke={
-                          //   node.data.isExpanded && node.data.children.length > 0
-                          //     ? nodeParentStroke
-                          //     : nodeChildStroke
-                          // }
                           strokeWidth={1.5}
                           strokeOpacity='1'
                           rx={node.children ? 4 : 10}
