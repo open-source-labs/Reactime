@@ -435,9 +435,6 @@ export default function ComponentMap({
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          fill="url('#parent-gradient')"
-                          strokeWidth={1.5}
-                          strokeOpacity='1'
                           rx={node.children ? 4 : 10}
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
@@ -489,8 +486,6 @@ export default function ComponentMap({
                               : 'compMapChildText'
                         }
                         dy='.33em'
-                        fontSize='20px'
-                        fontFamily='Roboto'
                         textAnchor='middle'
                         style={{ pointerEvents: 'none' }}
                       >

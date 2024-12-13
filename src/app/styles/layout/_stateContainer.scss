@@ -2,6 +2,14 @@
   overflow: auto;
 }
 
+.app-body {
+  height: 100%;
+}
+
+.app-content {
+  height: 100%;
+}
+
 .main-navbar-container--structural {
   height: 0;
   padding: 0;
@@ -91,53 +99,88 @@
 }
 
 // tool tip styles
+.tooltip-container {
+  width: 300px;
+  background-color: #1f2937;
+  border-radius: 8px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  font-family: 'Outfit', sans-serif;
+  color: #f9fafb;
+  overflow: hidden;
+  margin: 4px 0;
+}
 
-.visx-tooltip {
+.tooltip-header {
+  padding: 12px 16px;
+  background-color: #111827;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.tooltip-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #f9fafb;
+}
+
+.tooltip-content {
+  max-height: 400px;
   overflow-y: auto;
-  overflow-wrap: break-word;
-  pointer-events: all !important;
 }
 
-.tooltipKey {
-  margin-bottom: -1px;
+/* Reducer specific styling */
+.tooltip-reducer-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
 }
 
-.historyToolTip {
-  z-index: 2;
+.tooltip-reducer-item:last-child {
+  border-bottom: none;
 }
 
-.tooltipData {
-  background-color: #373737;
-  margin-top: 4px;
-  margin-bottom: 4px;
-  padding: 2px;
-  max-height: 30vh;
+.tooltip-reducer-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #14b8a6;
+  margin-bottom: 8px;
 }
 
-.tooltipData-JSONTree {
-  list-style: none;
-  margin-top: 1px;
-  margin-bottom: 1px;
-  margin-left: 2px;
-  margin-right: 2px;
-  padding: 0px;
-  overflow-y: auto;
-  max-height: 30vh;
-  scrollbar-color: #919499 #51565e;
+.tooltip-reducer-state {
+  padding-left: 12px;
+  border-left: 2px solid rgba(20, 184, 166, 0.4);
 }
 
-.tooltipData-JSONTree::-webkit-scrollbar-thumb {
-  background: #919499;
+/* Scrollbar styling */
+.tooltip-content::-webkit-scrollbar {
+  width: 4px;
 }
 
-.tooltipData-JSONTree::-webkit-scrollbar-track {
-  background: #51565e;
+.tooltip-content::-webkit-scrollbar-track {
+  background: rgba(107, 114, 128, 0.1);
 }
 
-.app-body {
-  height: 100%;
+.tooltip-content::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 2px;
 }
 
-.app-content {
-  height: 100%;
+/* JSON Tree overrides */
+.json-tree {
+  background-color: transparent !important;
+  margin: 0 !important;
+  padding: 4px 0 !important;
+}
+
+.json-tree ul {
+  background-color: transparent !important;
+  margin: 0 !important;
+  padding-left: 16px !important;
+}
+
+.tooltip-value {
+  font-size: 14px;
+  color: #e5e7eb;
+  word-break: break-word;
 }
