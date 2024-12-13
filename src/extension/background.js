@@ -16,6 +16,28 @@ let activeTab;
 const tabsObj = {};
 // Will store Chrome web vital metrics and their corresponding values.
 const metrics = {};
+function setupKeepAlive() {
+  //ellie
+  // Create an alarm that triggers every 4.9 minutes (under the 5-minute limit)
+  chrome.alarms.create('keepAlive', { periodInMinutes: 4.9 });
+
+  chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === 'keepAlive') {
+      console.log('Keep-alive alarm triggered.');
+      pingServiceWorker();
+    }
+  });
+}
+// Ping the service worker to keep it alive
+function pingServiceWorker() {
+  chrome.runtime.getBackgroundPage((bgPage) => {
+    if (bgPage) {
+      console.log('Service worker is alive');
+    } else {
+      console.warn('Failed to ping the service worker.');
+    }
+  });
+}
 
 // function pruning the chrome ax tree and pulling the relevant properties
 const pruneAxTree = (axTree) => {
@@ -318,7 +340,18 @@ chrome.runtime.onConnect.addListener(async (port) => {
       });
     });
   }
+  if (port.name === 'keepAlivePort') {
+    console.log('Keep-alive port connected:', port);
 
+    // Keep the port open by responding to any message
+    port.onMessage.addListener((msg) => {
+      console.log('Received message from content script:', msg);
+    });
+
+    port.onDisconnect.addListener(() => {
+      console.warn('Keep-alive port disconnected.');
+    });
+  }
   if (portsArr.length > 0 && Object.keys(tabsObj).length > 0) {
     //if the activeTab is not set during the onActivate API, run a query to get the tabId and set activeTab
     if (!activeTab) {
@@ -723,20 +756,15 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   }
 });
 
-// when tab view is changed, put the tabid as the current tab
+// When tab view is changed, put the tabId as the current tab
 chrome.tabs.onActivated.addListener((info) => {
-  // get info about tab information from tabId
+  // Get info about the tab information from tabId
   chrome.tabs.get(info.tabId, (tab) => {
-    // never set a reactime instance to the active tab
+    // Never set a reactime instance to the active tab
     if (!tab.pendingUrl?.match('^chrome-extension')) {
       activeTab = tab;
 
-      /**this setKeepAlive is here to make sure that the app does not stop working even
-       * if chrome pauses to save energy.
-       */
-      chrome.runtime.onStartup.addListener(() => {
-        chrome.runtime.setKeepAlive(true);
-      });
+      // Send messages to active ports about the tab change
       if (portsArr.length > 0) {
         portsArr.forEach((bg) =>
           bg.postMessage({
@@ -757,8 +785,12 @@ chrome.runtime.onInstalled.addListener(() => {
     title: 'Reactime',
     contexts: ['page', 'selection', 'image', 'link'],
   });
+  setupKeepAlive();
 });
 
+chrome.runtime.onStartup.addListener(() => {
+  setupKeepAlive();
+});
 // when context menu is clicked, listen for the menuItemId,
 // if user clicked on reactime, open the devtools window
 
