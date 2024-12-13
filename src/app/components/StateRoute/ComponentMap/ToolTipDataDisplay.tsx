@@ -30,7 +30,7 @@ const ToolTipDataDisplay = ({ containerName, dataObj }) => {
             base0B: '#14b8a6', // Teal for strings
             base0D: '#60a5fa', // Blue for keys
             base09: '#f59e0b', // Orange for numbers
-            base0C: '#06b6d4', // Cyan for nulls
+            base0C: '#EF4444', // red for nulls
           }}
           hideRoot
           shouldExpandNode={() => true}
