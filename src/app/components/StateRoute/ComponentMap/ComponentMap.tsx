@@ -22,19 +22,12 @@ import { toggleExpanded, setCurrentTabInApp } from '../../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 import { LinkTypesProps, DefaultMargin, ToolTipStyles } from '../../../FrontendTypes';
 
-const linkStroke = '#F00008'; //#F00008 original
-const rootStroke = '#F00008'; //#F00008 original
-const nodeParentFill = '#161521'; //#161521 original
-const nodeChildFill = '#62d6fb'; //#62d6fb original
-const nodeParentStroke = '#F00008'; //#F00008 original
-const nodeChildStroke = '#4D4D4D'; //#4D4D4D original
 let stroke = '';
 
-/* Heat Map Colors (for links) */
-const lightOrange = '#F1B476';
-const darkOrange = '#E4765B';
-const red = '#C64442';
-const plum = '#8C2743';
+const lightWeight = '#94a3b8'; // Lightest gray for minimal props
+const mediumWeight = '#64748b'; // Medium gray for light prop load
+const heavyWeight = '#475569'; // Darker gray for medium load
+const veryHeavy = '#14b8a6'; // Teal for heavy prop load
 
 const defaultMargin: DefaultMargin = {
   top: 30,
@@ -284,13 +277,13 @@ export default function ComponentMap({
                     stroke = '#808080';
                   } else {
                     if (childPropsLength <= 1) {
-                      stroke = lightOrange;
+                      stroke = lightWeight;
                     } else if (childPropsLength <= 2) {
-                      stroke = darkOrange;
+                      stroke = mediumWeight;
                     } else if (childPropsLength <= 3) {
-                      stroke = red;
+                      stroke = heavyWeight;
                     } else {
-                      stroke = plum;
+                      stroke = veryHeavy;
                     }
                   }
 
