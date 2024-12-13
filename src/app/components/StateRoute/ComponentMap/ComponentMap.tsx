@@ -26,13 +26,13 @@ let stroke = '';
 
 const lightWeight = '#94a3b8'; // Lightest gray for minimal props
 const mediumWeight = '#64748b'; // Medium gray for light prop load
-const heavyWeight = '#475569'; // Darker gray for medium load
-const veryHeavy = '#14b8a6'; // Teal for heavy prop load
+const heavyWeight = '#556579';
+const veryHeavy = '#475569'; // Darker gray for medium load
 
 const defaultMargin: DefaultMargin = {
   top: 30,
-  left: 30,
-  right: 55,
+  left: 20,
+  right: 20,
   bottom: 70,
 };
 
