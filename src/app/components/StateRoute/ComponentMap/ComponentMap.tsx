@@ -38,7 +38,7 @@ const defaultMargin: DefaultMargin = {
 
 const nodeCoords: object = {};
 let count: number = 0;
-let aspect: number = 1; // aspect resizes the component map container to accommodate large node trees on complex sites
+let aspect: number = 1;
 let nodeCoordTier = 0;
 let nodeOneLeft = 0;
 let nodeTwoLeft = 2;
@@ -54,6 +54,8 @@ export default function ComponentMap({
   const [linkType, setLinkType] = useState('step'); // We create a local state "linkType" and set it to a string 'step'.
   const [stepPercent, setStepPercent] = useState(0.0); // We create a local state "stepPercent" and set it to a number '0.0'. This will be used to scale the Map component's link: Step to 0%
   const [selectedNode, setSelectedNode] = useState('root'); // We create a local state "selectedNode" and set it to a string 'root'.
+  const [forceUpdate, setForceUpdate] = useState(false);
+
   const dispatch = useDispatch();
 
   const toolTipTimeoutID = useRef(null); //useRef stores stateful data that’s not needed for rendering.
@@ -61,6 +63,14 @@ export default function ComponentMap({
   useEffect(() => {
     dispatch(setCurrentTabInApp('map')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'map' to facilitate render.
   }, [dispatch]);
+
+  // force app to re-render to accurately calculate aspect ratio upon initial load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setForceUpdate((prev) => !prev);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // setting the margins for the Map to render in the tab window.
   const innerWidth: number = totalWidth - margin.left - margin.right;
@@ -231,7 +241,6 @@ export default function ComponentMap({
       />
 
       <svg ref={containerRef} width={totalWidth} height={totalHeight + 0}>
-        {/* <LinearGradient id='root-gradient' from='#e75e62' to='#f00008' /> */}
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
         <rect
@@ -387,7 +396,7 @@ export default function ComponentMap({
                       }
                     }
                   } else {
-                    aspect = Math.max(aspect, 0.2);
+                    aspect = Math.max(aspect, 1);
                   }
 
                   // mousing controls & Tooltip display logic
