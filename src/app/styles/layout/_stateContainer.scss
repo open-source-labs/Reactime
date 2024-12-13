@@ -1,30 +1,5 @@
 .state-container {
-  font-size: 10px;
   overflow: auto;
-  background-color: $state-background;
-}
-
-.toggleAC {
-  background: #ff0001;
-  height: 50%;
-  text-decoration: none;
-  border: none;
-}
-
-.toggleAC:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-.state-container .main-navbar {
-  background-color: $state-background;
-  color: #ff0000;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  height: 35px;
-  margin: 6px;
 }
 
 .state-container .componentMapContainer {
@@ -32,159 +7,59 @@
   fill: $state-background;
 }
 
-.state-container .main-navbar-container {
-  position: sticky;
-  top: 0px;
-  left: 0px;
-  z-index: 1;
-  background-color: $state-background;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  height: 35px;
-}
-
-.no-data-message {
-  color: #ff0001;
-  font: normal 13px $text-font-stack;
-  padding: 10px;
+.main-navbar-container--structural {
+  height: 0;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .state-container {
-  .main-navbar-text {
-    margin: 6px;
-  }
-
-  .main-router-link {
-    font-size: 14px;
-    height: 75%;
-    width: 75px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    color: $header-button-inactive-text;
-
-    background: $header-button-inactive;
-    border-radius: 5px;
-    border: 1px solid rgba(184, 196, 194, 0.25);
-  }
-
-  .main-router-link:hover {
-    background: $header-button-hover;
-  }
-
-  .main-router-link.is-active {
-    background: $header-button-active;
-    color: $header-button-active-text;
-    margin: 3px;
-    border-radius: 5px;
-    border: 1px solid rgb(36, 37, 41);
-  }
-
   .router-link {
-    height: 100%;
-    width: 10%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: $navbar-unselected;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #4b5563;
     text-decoration: none;
-    color: $navbar-unselected-text;
-    font-size: 75%;
-    overflow: hidden;
-  }
+    background-color: transparent;
+    cursor: pointer;
+    transition:
+      color 200ms ease,
+      border-color 200ms ease;
+    margin: 0;
+    position: relative;
+    white-space: nowrap;
 
-  .map-tab1 {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-  }
+    &:hover {
+      color: #1f2937;
+      background-color: transparent;
+    }
 
-  .accessibility-tab {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-  }
-
-  .router-link:hover {
-    background-color: $navbar-hover;
-  }
-
-  .router-link.is-active {
-    background-color: $navbar-selected;
-    color: $navbar-selected-text;
-  }
-
-  .navbar {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    height: 30px;
-    position: fixed;
-    top: 4px; //should revisit to figure out a more dynamic way of sticking the navbar to the bottom of the main-navbar // <- tried placing the main nav on the same line to save space but ran into problems with the svg div of the tree + animation. Will need closer inspection
-    left: 50%;
-    transform: translateX(-50%);
-    width: 65vw;
-    z-index: 1;
-
-    @extend %disable-highlight;
+    &.is-active {
+      border-bottom: 2px solid #0d9488;
+      color: #0d9488;
+      background-color: transparent;
+    }
   }
 
   .main-navbar {
-    background-color: $header-background;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    height: 35px;
-    margin: 6px;
-  }
-
-  .main-navbar-container {
-    top: 0px;
-    left: 0px;
-    z-index: 1;
-    background-color: $header-background;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    height: 40px;
+    gap: 8px;
+    width: 100%;
   }
-}
 
-.no-data-message {
-  color: #ff0001;
-  font: normal 13px $text-font-stack;
-  padding: 10px;
-}
-
-.performance-nav-bar-container {
-  background-color: #ff0002;
-  display: flex;
-  border: $performance-subtab-border;
-  height: 30px;
-}
-
-.router-link-performance {
-  height: 100%;
-  width: 34%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: $state-background;
-  text-decoration: none;
-  color: $performance-subtab-text;
-}
-
-.router-link-performance:hover {
-  background-color: $performance-subtab-hover;
-}
-
-.router-link-performance.is-active {
-  font-weight: 600;
+  .main-navbar-container {
+    border-bottom: 1px solid #e5e7eb;
+    background: white;
+    padding: 5px 24px;
+  }
 }
 
 // Web Metrics Container
@@ -236,11 +111,6 @@
   z-index: 2;
 }
 
-// .state-container .router-link {
-//   border: 0.5px solid rgba(0, 0, 0, 0.5);
-//   border-bottom: none;
-// }
-
 .tooltipData {
   background-color: #373737;
   margin-top: 4px;
@@ -275,17 +145,4 @@
 
 .app-content {
   height: 100%;
-}
-
-.heat-map-legend-container {
-  display: flex;
-  height: 3px;
-  width: 200px;
-  background-image: linear-gradient(
-    to right,
-    $heat-level-1,
-    $heat-level-2,
-    $heat-level-3,
-    $heat-level-4
-  );
 }

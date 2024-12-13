@@ -40,6 +40,9 @@ function MainContainer(): JSX.Element {
   const toggleActionContainer = () => {
     setActionView(!actionView); // sets actionView to the opposite boolean value
 
+    const bodyContainer = document.getElementById('bodyContainer');
+    bodyContainer.classList.toggle('collapsed');
+
     const toggleElem = document.querySelector('aside'); // aside is like an added text that appears "on the side" aside some text.
     toggleElem.classList.toggle('no-aside'); // toggles the addition or the removal of the 'no-aside' class
 
@@ -211,7 +214,7 @@ function MainContainer(): JSX.Element {
           actionView={actionView}
           setActionView={setActionView}
           toggleActionContainer={toggleActionContainer}
-          snapshots={snapshots} 
+          snapshots={snapshots}
           currLocation={currLocation}
         />
         {/* @ts-ignore */}

@@ -26,7 +26,6 @@ body {
   grid-area: states;
 }
 
-
 .state-container {
   border-style: solid;
   border-color: $state-cont-border;
@@ -36,8 +35,4 @@ body {
 .saveSeriesContainer {
   padding-bottom: 15px;
   padding-top: 10px;
-}
-
-.performance-dropdown {
-  background-color: #f5b9b9;
 }

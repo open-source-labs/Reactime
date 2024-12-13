@@ -5,8 +5,22 @@
   overflow-x: hidden;
   overflow-y: auto;
   height: 100%;
+
+  .action-button-wrapper {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.2s ease,
+      visibility 0.2s ease;
+  }
 }
 
+.collapsed .action-container {
+  .action-button-wrapper {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
 .actionname {
   background-color: $indiv-action-input-bg;
   border: 1px solid $indiv-action-border;

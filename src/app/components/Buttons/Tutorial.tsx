@@ -197,12 +197,6 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           },
           {
             title: 'Saving Series & Actions',
-            element: '.save-series-button',
-            intro: '<ul><li>Click here to save your current series data</li></ul>',
-            position: 'top',
-          },
-          {
-            title: 'Saving Series & Actions',
             element: '#seriesname',
             intro: '<ul><li>We can now give our series a name or leave it at the default</li></ul>',
             position: 'top',
@@ -214,13 +208,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
               '<ul><li>If we wish to save a specific action to compare later, give it a name here</li></ul>',
             position: 'top',
           },
-          {
-            title: 'Saving Series & Actions',
-            element: '.save-series-button',
-            intro:
-              '<ul><li>Press save series again.</li> <li>Your series and actions are now saved!</li></ul>',
-            position: 'top',
-          },
+
           {
             title: 'Comparison Tab',
             element: '#router-link-performance-comparison',
