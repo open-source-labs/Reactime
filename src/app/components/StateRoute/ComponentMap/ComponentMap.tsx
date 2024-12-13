@@ -410,7 +410,6 @@ export default function ComponentMap({
                         <circle
                           className='compMapRoot'
                           r={25}
-                          fill="url('#root-gradient')"
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
