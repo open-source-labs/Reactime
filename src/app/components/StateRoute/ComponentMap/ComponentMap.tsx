@@ -311,14 +311,14 @@ export default function ComponentMap({
                   const widthFunc: number = (name) => {
                     //returns a number that is related to the length of the name. Used for determining the node width.
                     const nodeLength = name.length;
-                    //return nodeLength * 7 + 20; //uncomment this line if we want each node to be directly proportional to the name.length (instead of nodes of similar sizes to snap to the same width)
+                    // return nodeLength * 7 + 20; //uncomment this line if we want each node to be directly proportional to the name.length (instead of nodes of similar sizes to snap to the same width)
                     if (nodeLength <= 5) return nodeLength + 50;
                     if (nodeLength <= 10) return nodeLength + 120;
                     return nodeLength + 140;
                   };
 
                   const width: number = widthFunc(node.data.name); // the width is determined by the length of the node.name
-                  const height: number = 25;
+                  const height: number = 35;
                   let top: number;
                   let left: number;
 
@@ -492,7 +492,6 @@ export default function ComponentMap({
                         fontFamily='Roboto'
                         textAnchor='middle'
                         style={{ pointerEvents: 'none' }}
-                        //fill={node.depth === 0 ? '#161521' : node.children ? 'white' : '#161521'}
                       >
                         {node.data.name}
                       </text>
