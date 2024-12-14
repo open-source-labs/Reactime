@@ -263,11 +263,11 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
         </Text>
         <br />
         {snapshot === 'All Snapshots' ? (
-          <Text x={xMax / 2 + 15} y={yMax + 65} fontSize={16} fill={axisLabelColor}>
+          <Text x={xMax / 2 + 15} y={yMax + 62} fontSize={16} fill={axisLabelColor}>
             Snapshot ID
           </Text>
         ) : (
-          <Text x={xMax / 2 + 15} y={yMax + 65} fontSize={16} fill={axisLabelColor}>
+          <Text x={xMax / 2 + 15} y={yMax + 62} fontSize={16} fill={axisLabelColor}>
             Components
           </Text>
         )}
