@@ -1,54 +1,44 @@
 import React from 'react';
 import { JSONTree } from 'react-json-tree';
 
-const ToolTipDataDisplay = ({ containerName, dataObj }) => {
-  if (
-    !dataObj ||
-    (Array.isArray(dataObj) && dataObj.length === 0) ||
-    Object.keys(dataObj).length === 0
-  ) {
-    return null;
-  }
+const ToolTipDataDisplay = ({ data }) => {
+  if (!data) return null;
+
+  const jsonTheme = {
+    scheme: 'custom',
+    base00: 'transparent',
+    base0B: '#14b8a6', // Teal for strings
+    base0D: '#60a5fa', // Blue for keys
+    base09: '#f59e0b', // Orange for numbers
+    base0C: '#EF4444', // red for nulls
+  };
 
   const formatReducerData = (reducerStates) => {
-    // Transform the array of reducers into an object with hook names as keys
     return reducerStates.reduce((acc, reducer) => {
-      // Use the hookName as the key and only include the state
       acc[reducer.hookName || 'Reducer'] = reducer.state;
       return acc;
     }, {});
   };
 
-  const renderValue = (value) => {
-    if (typeof value === 'object' && value !== null) {
-      return (
-        <JSONTree
-          data={value}
-          theme={{
-            scheme: 'custom',
-            base00: 'transparent',
-            base0B: '#14b8a6', // Teal for strings
-            base0D: '#60a5fa', // Blue for keys
-            base09: '#f59e0b', // Orange for numbers
-            base0C: '#EF4444', // red for nulls
-          }}
-          hideRoot
-          shouldExpandNode={() => true}
-        />
-      );
+  const renderSection = (title, content, isReducer = false) => {
+    if (
+      !content ||
+      (Array.isArray(content) && content.length === 0) ||
+      Object.keys(content).length === 0
+    ) {
+      return null;
     }
-    return <span className='tooltip-value'>{String(value)}</span>;
-  };
 
-  const renderContent = () => {
-    if (containerName === 'Reducers') {
-      const formattedData = formatReducerData(dataObj);
+    if (isReducer) {
+      const formattedData = formatReducerData(content);
       return (
-        <div className='tooltip-content'>
+        <div className='tooltip-section'>
           {Object.entries(formattedData).map(([hookName, state]) => (
-            <div key={hookName} className='tooltip-reducer-item'>
-              <div className='tooltip-reducer-name'>{hookName}</div>
-              <div className='tooltip-reducer-state'>{renderValue(state)}</div>
+            <div key={hookName}>
+              <div className='tooltip-section-title'>{hookName}</div>
+              <div className='tooltip-data'>
+                <JSONTree data={state} theme={jsonTheme} hideRoot shouldExpandNode={() => true} />
+              </div>
             </div>
           ))}
         </div>
@@ -56,25 +46,20 @@ const ToolTipDataDisplay = ({ containerName, dataObj }) => {
     }
 
     return (
-      <div className='tooltip-content'>
-        {Object.entries(dataObj).map(([key, value]) => (
-          <div key={key} className='tooltip-item'>
-            <div className='tooltip-data'>
-              <span className='tooltip-key'>{key}</span>
-              {renderValue(value)}
-            </div>
-          </div>
-        ))}
+      <div className='tooltip-section'>
+        <div className='tooltip-section-title'>{title}</div>
+        <div className='tooltip-data'>
+          <JSONTree data={content} theme={jsonTheme} hideRoot shouldExpandNode={() => true} />
+        </div>
       </div>
     );
   };
 
   return (
     <div className='tooltip-container'>
-      <div className='tooltip-header'>
-        <h3 className='tooltip-title'>{containerName}</h3>
-      </div>
-      {renderContent()}
+      {renderSection('Props', data.componentData.props)}
+      {renderSection('State', data.componentData.state || data.componentData.hooksState)}
+      {renderSection(null, data.componentData.reducerStates, true)}
     </div>
   );
 };

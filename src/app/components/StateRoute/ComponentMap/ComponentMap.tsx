@@ -514,25 +514,11 @@ export default function ComponentMap({
           }}
         >
           <div>
-            <div>
-              <strong>{tooltipData.name}</strong>
+            <div className='tooltip-header'>
+              <h3 className='tooltip-title'>{tooltipData.name}</h3>
             </div>
             <div>
-              <ToolTipDataDisplay containerName='Props' dataObj={tooltipData.componentData.props} />
-              <ToolTipDataDisplay
-                containerName='State'
-                dataObj={
-                  tooltipData.componentData.state || // for class components
-                  tooltipData.componentData.hooksState // for functional components
-                }
-              />
-              {/* Add this new container for reducer state */}
-              {tooltipData.componentData.reducerStates && (
-                <ToolTipDataDisplay
-                  containerName='Reducers'
-                  dataObj={tooltipData.componentData.reducerStates}
-                />
-              )}
+              <ToolTipDataDisplay data={tooltipData} />
             </div>
           </div>
         </TooltipInPortal>

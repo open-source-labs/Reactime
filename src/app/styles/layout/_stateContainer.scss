@@ -101,7 +101,7 @@
 // tool tip styles
 .tooltip-container {
   width: 300px;
-  background-color: #1f2937;
+  background-color: #111827;
   border-radius: 8px;
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
@@ -112,17 +112,20 @@
   margin: 4px 0;
 }
 
-.tooltip-header {
+.tooltip-section {
   padding: 12px 16px;
-  background-color: #111827;
   border-bottom: 1px solid rgba(107, 114, 128, 0.2);
 }
 
-.tooltip-title {
-  margin: 0;
-  font-size: 16px;
+.tooltip-section:last-child {
+  border-bottom: none;
+}
+
+.tooltip-section-title {
+  font-size: 14px;
   font-weight: 500;
-  color: #f9fafb;
+  color: #14b8a6;
+  margin-bottom: 8px;
 }
 
 .tooltip-content {
@@ -130,29 +133,20 @@
   overflow-y: auto;
 }
 
-/* Reducer specific styling */
-.tooltip-reducer-item {
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+.tooltip-item {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.1);
 }
 
-.tooltip-reducer-item:last-child {
+.tooltip-item:last-child {
   border-bottom: none;
 }
 
-.tooltip-reducer-name {
-  font-size: 14px;
-  font-weight: 500;
-  color: #14b8a6;
-  margin-bottom: 8px;
-}
-
-.tooltip-reducer-state {
+.tooltip-data {
   padding-left: 12px;
   border-left: 2px solid rgba(20, 184, 166, 0.4);
 }
 
-/* Scrollbar styling */
 .tooltip-content::-webkit-scrollbar {
   width: 4px;
 }
@@ -177,10 +171,4 @@
   background-color: transparent !important;
   margin: 0 !important;
   padding-left: 16px !important;
-}
-
-.tooltip-value {
-  font-size: 14px;
-  color: #e5e7eb;
-  word-break: break-word;
 }
