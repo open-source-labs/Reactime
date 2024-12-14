@@ -5,7 +5,6 @@
   align-items: center;
   padding: 12px 16px;
   background-color: white;
-  border-bottom: 1px solid #e5e7eb;
   max-width: 1200px;
   justify-content: space-around;
 }
@@ -65,4 +64,8 @@
 .control-select option {
   padding: 0.5rem;
   color: #1e293b;
+}
+
+.perf-rect {
+  fill: $perf-background;
 }

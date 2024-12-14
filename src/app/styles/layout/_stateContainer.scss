@@ -179,17 +179,10 @@
   background: #94a3b8;
 }
 
-/* JSON Tree overrides */
+/* JSON Tree styling */
 .json-tree {
-  background-color: transparent !important;
-  margin: 0 !important;
-  padding: 4px 0 !important;
-}
-
-.json-tree ul {
-  background-color: transparent !important;
-  margin: 0 !important;
-  padding-left: 16px !important;
+  overflow: auto;
+  list-style: none;
 }
 
 /* Animation for Tooltip Appearance */

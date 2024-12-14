@@ -6,6 +6,18 @@
   font-size: 14px;
 }
 
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 5px;
@@ -31,7 +43,7 @@
 @import 'abstracts/variablesLM';
 
 // 3. Base stuff
-@import 'base/base', 'base/helpers';
+@import 'base/helpers';
 
 // 4. Layout-related sections
 @import 'layout/mainContainer', 'layout/bodyContainer', 'layout/actionContainer',
@@ -39,14 +51,14 @@
   'layout/buttonsContainer';
 
 // 5. Components
-@import 'components/buttons', 'components/actionComponent', 'components/jsonTree',
-  'components/performanceVisx', 'components/componentMap', 'components/ax';
+@import 'components/buttons', 'components/actionComponent', 'components/performanceVisx',
+  'components/componentMap', 'components/ax';
 
 // slider component
 @import './components/rc-slider';
 
 // d3 chart component
-@import './components/d3graph.css';
+@import './components/d3graph';
 
 // diff component
 @import './components/diff';
