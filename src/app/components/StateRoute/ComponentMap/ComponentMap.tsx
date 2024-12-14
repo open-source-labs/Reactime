@@ -160,6 +160,24 @@ export default function ComponentMap({
     }
   };
 
+  const hasDisplayableData = (nodeData) => {
+    // Check if the node has props
+    const hasProps =
+      nodeData.componentData?.props && Object.keys(nodeData.componentData.props).length > 0;
+
+    // Check if the node has state
+    const hasState =
+      (nodeData.componentData?.state && Object.keys(nodeData.componentData.state).length > 0) ||
+      (nodeData.componentData?.hooksState &&
+        Object.keys(nodeData.componentData.hooksState).length > 0);
+
+    // Check if the node has reducer states
+    const hasReducers =
+      nodeData.componentData?.reducerStates && nodeData.componentData.reducerStates.length > 0;
+
+    return hasProps || hasState || hasReducers;
+  };
+
   const shouldIncludeNode = (node) => {
     // Return false if node has any context properties
     if (node?.componentData?.context && Object.keys(node.componentData.context).length > 0) {
@@ -400,17 +418,18 @@ export default function ComponentMap({
                   }
 
                   // mousing controls & Tooltip display logic
-                  const handleMouseAndClickOver: void = (event) => {
-                    const coords = localPoint(event.target.ownerSVGElement, event);
-                    const tooltipObj = { ...node.data };
+                  const handleMouseAndClickOver = (event, nodeData) => {
+                    // Only show tooltip if the node has data to display
+                    if (hasDisplayableData(nodeData)) {
+                      const coords = localPoint(event.target.ownerSVGElement, event);
+                      const tooltipObj = { ...nodeData };
 
-                    showTooltip({
-                      tooltipLeft: coords.x,
-                      tooltipTop: coords.y,
-                      tooltipData: tooltipObj,
-                      // this is where the data for state and render time is displayed
-                      // but does not show props functions and etc
-                    });
+                      showTooltip({
+                        tooltipLeft: coords.x,
+                        tooltipTop: coords.y,
+                        tooltipData: tooltipObj,
+                      });
+                    }
                   };
 
                   return (
@@ -440,38 +459,23 @@ export default function ComponentMap({
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
                           }}
-                          // Mouse Enter Rect (Component Node) -----------------------------------------------------------------------
-                          /** This onMouseEnter event fires when the mouse first moves/hovers over a component node.
-                           * The supplied event listener callback produces a Tooltip element for the current node. */
-
                           onMouseEnter={(event) => {
-                            /** This 'if' statement block checks to see if you've just left another component node
-                             * by seeing if there's a current setTimeout waiting to close that component node's
-                             * tooltip (see onMouseLeave immediately below). If so it clears the tooltip generated
-                             * from that component node so a new tooltip for the node you've just entered can render. */
-                            if (toolTipTimeoutID.current !== null) {
-                              clearTimeout(toolTipTimeoutID.current);
-                              hideTooltip();
-                            }
-                            // Removes the previous timeoutID to avoid errors
-                            toolTipTimeoutID.current = null;
-                            //This generates a tooltip for the component node the mouse has entered.
-                            handleMouseAndClickOver(event);
-                          }}
-                          // Mouse Leave Rect (Component Node) --------------------------------------------------------------------------
-                          /** This onMouseLeave event fires when the mouse leaves a component node.
-                           * The supplied event listener callback generates a setTimeout call which gives the
-                           * mouse a certain amount of time between leaving the current component node and
-                           * closing the tooltip for that node.
-                           * If the mouse enters the tooltip before the timeout delay has passed, the
-                           * setTimeout event will be canceled. */
-                          onMouseLeave={() => {
-                            // Store setTimeout ID so timeout can be cleared if necessary
-                            toolTipTimeoutID.current = setTimeout(() => {
-                              // hideTooltip unmounts the tooltip
-                              hideTooltip();
+                            if (hasDisplayableData(node.data)) {
+                              if (toolTipTimeoutID.current !== null) {
+                                clearTimeout(toolTipTimeoutID.current);
+                                hideTooltip();
+                              }
                               toolTipTimeoutID.current = null;
-                            }, 300);
+                              handleMouseAndClickOver(event, node.data);
+                            }
+                          }}
+                          onMouseLeave={() => {
+                            if (hasDisplayableData(node.data)) {
+                              toolTipTimeoutID.current = setTimeout(() => {
+                                hideTooltip();
+                                toolTipTimeoutID.current = null;
+                              }, 300);
+                            }
                           }}
                         />
                       )}
