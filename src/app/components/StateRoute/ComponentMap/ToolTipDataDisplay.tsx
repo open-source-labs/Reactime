@@ -1,79 +1,65 @@
 import React from 'react';
 import { JSONTree } from 'react-json-tree';
 
-const colors = {
-  scheme: 'paraiso',
-  author: 'jan t. sott',
-  base00: '#2f1e2e',
-  base01: '#41323f',
-  base02: '#4f424c',
-  base03: '#776e71',
-  base04: '#8d8687',
-  base05: '#a39e9b',
-  base06: '#b9b6b0',
-  base07: '#e7e9db',
-  base08: '#ef6155',
-  base09: '#824508',
-  base0A: '#fec418',
-  base0B: '#48b685',
-  base0C: '#5bc4bf',
-  base0D: '#06b6ef',
-  base0E: '#815ba4',
-  base0F: '#e96ba8',
-};
+const ToolTipDataDisplay = ({ data }) => {
+  if (!data) return null;
 
-const ToolTipDataDisplay = ({ containerName, dataObj }) => {
-  // If there's no data to display, don't render anything
-  if (
-    !dataObj ||
-    (Array.isArray(dataObj) && dataObj.length === 0) ||
-    Object.keys(dataObj).length === 0
-  ) {
-    return null;
-  }
+  const jsonTheme = {
+    scheme: 'custom',
+    base00: 'transparent',
+    base0B: '#1f2937', // dark navy for strings
+    base0D: '#60a5fa', // Blue for keys
+    base09: '#f59e0b', // Orange for numbers
+    base0C: '#EF4444', // red for nulls
+  };
 
   const formatReducerData = (reducerStates) => {
-    // Transform the array of reducers into an object with hook names as keys
     return reducerStates.reduce((acc, reducer) => {
-      acc[reducer.hookName || 'Reducer'] = {
-        state: reducer.state,
-      };
+      acc[reducer.hookName || 'Reducer'] = reducer.state;
       return acc;
     }, {});
   };
 
-  const printableObject = {};
-
-  if (containerName === 'Reducers') {
-    if (!dataObj || dataObj.length === 0) {
+  const renderSection = (title, content, isReducer = false) => {
+    if (
+      !content ||
+      (Array.isArray(content) && content.length === 0) ||
+      Object.keys(content).length === 0
+    ) {
       return null;
     }
-    printableObject[containerName] = formatReducerData(dataObj);
-  } else {
-    // Handle normal state/props
-    const data = {};
-    for (const key in dataObj) {
-      if (typeof dataObj[key] === 'string') {
-        try {
-          data[key] = JSON.parse(dataObj[key]);
-        } catch {
-          data[key] = dataObj[key];
-        }
-      } else {
-        data[key] = dataObj[key];
-      }
+
+    if (isReducer) {
+      const formattedData = formatReducerData(content);
+      return (
+        <div className='tooltip-section'>
+          {Object.entries(formattedData).map(([hookName, state]) => (
+            <div key={hookName}>
+              <div className='tooltip-section-title'>{hookName}</div>
+              <div className='tooltip-data'>
+                <JSONTree data={state} theme={jsonTheme} hideRoot shouldExpandNode={() => true} />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
     }
-    printableObject[containerName] = data;
-  }
+
+    return (
+      <div className='tooltip-section'>
+        <div className='tooltip-section-title'>{title}</div>
+        <div className='tooltip-data'>
+          <JSONTree data={content} theme={jsonTheme} hideRoot shouldExpandNode={() => true} />
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className='tooltipData' key={`${containerName}-data-container`}>
-      <JSONTree
-        data={printableObject}
-        theme={{ extend: colors, tree: () => ({ className: `tooltipData-JSONTree` }) }}
-        shouldExpandNodeInitially={() => true}
-        hideRoot={true}
-      />
+    <div className='tooltip-container'>
+      {renderSection('Props', data.componentData.props)}
+      {renderSection('State', data.componentData.state || data.componentData.hooksState)}
+      {renderSection(null, data.componentData.reducerStates, true)}
     </div>
   );
 };

@@ -22,30 +22,23 @@ import { toggleExpanded, setCurrentTabInApp } from '../../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 import { LinkTypesProps, DefaultMargin, ToolTipStyles } from '../../../FrontendTypes';
 
-const linkStroke = '#F00008'; //#F00008 original
-const rootStroke = '#F00008'; //#F00008 original
-const nodeParentFill = '#161521'; //#161521 original
-const nodeChildFill = '#62d6fb'; //#62d6fb original
-const nodeParentStroke = '#F00008'; //#F00008 original
-const nodeChildStroke = '#4D4D4D'; //#4D4D4D original
 let stroke = '';
 
-/* Heat Map Colors (for links) */
-const lightOrange = '#F1B476';
-const darkOrange = '#E4765B';
-const red = '#C64442';
-const plum = '#8C2743';
+const lightWeight = '#94a3b8'; // Lightest gray for minimal props
+const mediumWeight = '#64748b'; // Medium gray for light prop load
+const heavyWeight = '#556579';
+const veryHeavy = '#475569'; // Darker gray for medium load
 
 const defaultMargin: DefaultMargin = {
   top: 30,
-  left: 30,
-  right: 55,
+  left: 20,
+  right: 20,
   bottom: 70,
 };
 
 const nodeCoords: object = {};
 let count: number = 0;
-let aspect: number = 1; // aspect resizes the component map container to accommodate large node trees on complex sites
+let aspect: number = 1;
 let nodeCoordTier = 0;
 let nodeOneLeft = 0;
 let nodeTwoLeft = 2;
@@ -61,6 +54,8 @@ export default function ComponentMap({
   const [linkType, setLinkType] = useState('step'); // We create a local state "linkType" and set it to a string 'step'.
   const [stepPercent, setStepPercent] = useState(0.0); // We create a local state "stepPercent" and set it to a number '0.0'. This will be used to scale the Map component's link: Step to 0%
   const [selectedNode, setSelectedNode] = useState('root'); // We create a local state "selectedNode" and set it to a string 'root'.
+  const [forceUpdate, setForceUpdate] = useState(false);
+
   const dispatch = useDispatch();
 
   const toolTipTimeoutID = useRef(null); //useRef stores stateful data that’s not needed for rendering.
@@ -68,6 +63,14 @@ export default function ComponentMap({
   useEffect(() => {
     dispatch(setCurrentTabInApp('map')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'map' to facilitate render.
   }, [dispatch]);
+
+  // force app to re-render to accurately calculate aspect ratio upon initial load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setForceUpdate((prev) => !prev);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // setting the margins for the Map to render in the tab window.
   const innerWidth: number = totalWidth - margin.left - margin.right;
@@ -114,11 +117,7 @@ export default function ComponentMap({
     ...defaultStyles,
     minWidth: 60,
     maxWidth: 300,
-    backgroundColor: 'rgb(15,15,15)',
-    color: 'white',
-    fontSize: '16px',
     lineHeight: '18px',
-    fontFamily: 'Roboto',
     zIndex: 100,
     pointerEvents: 'all !important',
   };
@@ -155,6 +154,25 @@ export default function ComponentMap({
         }
       }
     }
+  };
+
+  // check if any data should be displayed in tool tip display
+  const hasDisplayableData = (nodeData) => {
+    // Check if the node has props
+    const hasProps =
+      nodeData.componentData?.props && Object.keys(nodeData.componentData.props).length > 0;
+
+    // Check if the node has state
+    const hasState =
+      (nodeData.componentData?.state && Object.keys(nodeData.componentData.state).length > 0) ||
+      (nodeData.componentData?.hooksState &&
+        Object.keys(nodeData.componentData.hooksState).length > 0);
+
+    // Check if the node has reducer states
+    const hasReducers =
+      nodeData.componentData?.reducerStates && nodeData.componentData.reducerStates.length > 0;
+
+    return hasProps || hasState || hasReducers;
   };
 
   const shouldIncludeNode = (node) => {
@@ -198,40 +216,9 @@ export default function ComponentMap({
 
     return newNode;
   };
-
+  // filter out Conext Providers
   let filtered = processTreeData(currentSnapshot);
-  collectNodes(currentSnapshot);
-
-  const keepContextAndProviderNodes = (node) => {
-    if (!node) return null;
-
-    // Check if this node should be kept
-    const hasContext =
-      node?.componentData?.context && Object.keys(node.componentData.context).length > 0;
-    const isProvider = node?.name && node.name.endsWith('Provider');
-    const shouldKeepNode = hasContext || isProvider;
-
-    // Process children first
-    let processedChildren = [];
-    if (node.children) {
-      processedChildren = node.children
-        .map((child) => keepContextAndProviderNodes(child))
-        .filter(Boolean); // Remove null results
-    }
-
-    // If this node should be kept or has kept children, return it
-    if (shouldKeepNode || processedChildren.length > 0) {
-      return {
-        ...node,
-        children: processedChildren,
-      };
-    }
-
-    // If neither the node should be kept nor it has kept children, filter it out
-    return null;
-  };
-
-  const contextProvidersOnly = keepContextAndProviderNodes(currentSnapshot);
+  collectNodes(filtered);
 
   // @ts
   // find the node that has been selected and use it as the root
@@ -247,7 +234,7 @@ export default function ComponentMap({
     if (startNode === null) startNode = rootNode;
   };
 
-  findSelectedNode(); // locates the rootNode... do we really need this? This function is only used once... it's here.
+  findSelectedNode(); // locates the rootNode
 
   // controls for the map
   const LinkComponent: React.ComponentType<unknown> = getLinkComponent({
@@ -269,7 +256,6 @@ export default function ComponentMap({
       />
 
       <svg ref={containerRef} width={totalWidth} height={totalHeight + 0}>
-        {/* <LinearGradient id='root-gradient' from='#e75e62' to='#f00008' /> */}
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
         <rect
@@ -315,15 +301,14 @@ export default function ComponentMap({
                     stroke = '#808080';
                   } else {
                     if (childPropsLength <= 1) {
-                      stroke = lightOrange;
+                      stroke = lightWeight;
                     } else if (childPropsLength <= 2) {
-                      stroke = darkOrange;
+                      stroke = mediumWeight;
                     } else if (childPropsLength <= 3) {
-                      stroke = red;
+                      stroke = heavyWeight;
                     } else {
-                      stroke = plum;
+                      stroke = veryHeavy;
                     }
-                    // stroke = '#df6f37'
                   }
 
                   return (
@@ -343,14 +328,14 @@ export default function ComponentMap({
                   const widthFunc: number = (name) => {
                     //returns a number that is related to the length of the name. Used for determining the node width.
                     const nodeLength = name.length;
-                    //return nodeLength * 7 + 20; //uncomment this line if we want each node to be directly proportional to the name.length (instead of nodes of similar sizes to snap to the same width)
+                    // return nodeLength * 7 + 20; //uncomment this line if we want each node to be directly proportional to the name.length (instead of nodes of similar sizes to snap to the same width)
                     if (nodeLength <= 5) return nodeLength + 50;
                     if (nodeLength <= 10) return nodeLength + 120;
                     return nodeLength + 140;
                   };
 
                   const width: number = widthFunc(node.data.name); // the width is determined by the length of the node.name
-                  const height: number = 25;
+                  const height: number = 35;
                   let top: number;
                   let left: number;
 
@@ -426,21 +411,22 @@ export default function ComponentMap({
                       }
                     }
                   } else {
-                    aspect = Math.max(aspect, 0.2);
+                    aspect = Math.max(aspect, 1);
                   }
 
                   // mousing controls & Tooltip display logic
-                  const handleMouseAndClickOver: void = (event) => {
-                    const coords = localPoint(event.target.ownerSVGElement, event);
-                    const tooltipObj = { ...node.data };
+                  const handleMouseAndClickOver = (event, nodeData) => {
+                    // Only show tooltip if the node has data to display
+                    if (hasDisplayableData(nodeData)) {
+                      const coords = localPoint(event.target.ownerSVGElement, event);
+                      const tooltipObj = { ...nodeData };
 
-                    showTooltip({
-                      tooltipLeft: coords.x,
-                      tooltipTop: coords.y,
-                      tooltipData: tooltipObj,
-                      // this is where the data for state and render time is displayed
-                      // but does not show props functions and etc
-                    });
+                      showTooltip({
+                        tooltipLeft: coords.x,
+                        tooltipTop: coords.y,
+                        tooltipData: tooltipObj,
+                      });
+                    }
                   };
 
                   return (
@@ -448,9 +434,7 @@ export default function ComponentMap({
                       {node.depth === 0 && (
                         <circle
                           className='compMapRoot'
-                          r={25} // increase from 12 to 25 to improve visibility
-                          fill="url('#root-gradient')"
-                          //stroke={rootStroke}
+                          r={25}
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
@@ -467,53 +451,28 @@ export default function ComponentMap({
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          fill="url('#parent-gradient')"
-                          //color={'#ff0000'}
-                          //fill={node.children ? nodeParentFill : nodeChildFill}
-                          //stroke={
-                          //   node.data.isExpanded && node.data.children.length > 0
-                          //     ? nodeParentStroke
-                          //     : nodeChildStroke
-                          // }
-                          strokeWidth={1.5}
-                          strokeOpacity='1'
                           rx={node.children ? 4 : 10}
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
                           }}
-                          // Mouse Enter Rect (Component Node) -----------------------------------------------------------------------
-                          /** This onMouseEnter event fires when the mouse first moves/hovers over a component node.
-                           * The supplied event listener callback produces a Tooltip element for the current node. */
-
                           onMouseEnter={(event) => {
-                            /** This 'if' statement block checks to see if you've just left another component node
-                             * by seeing if there's a current setTimeout waiting to close that component node's
-                             * tooltip (see onMouseLeave immediately below). If so it clears the tooltip generated
-                             * from that component node so a new tooltip for the node you've just entered can render. */
-                            if (toolTipTimeoutID.current !== null) {
-                              clearTimeout(toolTipTimeoutID.current);
-                              hideTooltip();
-                            }
-                            // Removes the previous timeoutID to avoid errors
-                            toolTipTimeoutID.current = null;
-                            //This generates a tooltip for the component node the mouse has entered.
-                            handleMouseAndClickOver(event);
-                          }}
-                          // Mouse Leave Rect (Component Node) --------------------------------------------------------------------------
-                          /** This onMouseLeave event fires when the mouse leaves a component node.
-                           * The supplied event listener callback generates a setTimeout call which gives the
-                           * mouse a certain amount of time between leaving the current component node and
-                           * closing the tooltip for that node.
-                           * If the mouse enters the tooltip before the timeout delay has passed, the
-                           * setTimeout event will be canceled. */
-                          onMouseLeave={() => {
-                            // Store setTimeout ID so timeout can be cleared if necessary
-                            toolTipTimeoutID.current = setTimeout(() => {
-                              // hideTooltip unmounts the tooltip
-                              hideTooltip();
+                            if (hasDisplayableData(node.data)) {
+                              if (toolTipTimeoutID.current !== null) {
+                                clearTimeout(toolTipTimeoutID.current);
+                                hideTooltip();
+                              }
                               toolTipTimeoutID.current = null;
-                            }, 300);
+                              handleMouseAndClickOver(event, node.data);
+                            }
+                          }}
+                          onMouseLeave={() => {
+                            if (hasDisplayableData(node.data)) {
+                              toolTipTimeoutID.current = setTimeout(() => {
+                                hideTooltip();
+                                toolTipTimeoutID.current = null;
+                              }, 300);
+                            }
                           }}
                         />
                       )}
@@ -528,11 +487,8 @@ export default function ComponentMap({
                               : 'compMapChildText'
                         }
                         dy='.33em'
-                        fontSize='20px'
-                        fontFamily='Roboto'
                         textAnchor='middle'
                         style={{ pointerEvents: 'none' }}
-                        //fill={node.depth === 0 ? '#161521' : node.children ? 'white' : '#161521'}
                       >
                         {node.data.name}
                       </text>
@@ -559,25 +515,11 @@ export default function ComponentMap({
           }}
         >
           <div>
-            <div>
-              <strong>{tooltipData.name}</strong>
+            <div className='tooltip-header'>
+              <h3 className='tooltip-title'>{tooltipData.name}</h3>
             </div>
             <div>
-              <ToolTipDataDisplay containerName='Props' dataObj={tooltipData.componentData.props} />
-              <ToolTipDataDisplay
-                containerName='State'
-                dataObj={
-                  tooltipData.componentData.state || // for class components
-                  tooltipData.componentData.hooksState // for functional components
-                }
-              />
-              {/* Add this new container for reducer state */}
-              {tooltipData.componentData.reducerStates && (
-                <ToolTipDataDisplay
-                  containerName='Reducers'
-                  dataObj={tooltipData.componentData.reducerStates}
-                />
-              )}
+              <ToolTipDataDisplay data={tooltipData} />
             </div>
           </div>
         </TooltipInPortal>

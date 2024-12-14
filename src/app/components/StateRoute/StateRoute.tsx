@@ -76,7 +76,7 @@ const StateRoute = (props: StateRouteProps) => {
           </NavLink>
           <NavLink
             className={(navData) =>
-              navData.isActive ? 'is-active router-link map-tab' : 'router-link map-tab'
+              navData.isActive ? 'is-active router-link performance' : 'router-link performance-tab'
             }
             to='/performance'
           >

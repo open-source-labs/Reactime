@@ -1,103 +1,76 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import { LinkControlProps, ControlStyles, DropDownStyle, Node } from '../../../FrontendTypes';
-// Font size of the Controls label and Dropdowns
-const controlStyles: ControlStyles = {
-  //fontSize: '16px',
-  padding: '10px',
-};
 
-const dropDownStyle: DropDownStyle = {
-  margin: '0.1em',
-  //fontSize: '16px',
-  fontFamily: 'Roboto, sans-serif',
-  borderRadius: '4px',
-  borderStyle: 'solid',
-  borderWidth: '1px',
-  backgroundColor: '#d9d9d9',
-  color: '#161617',
-  padding: '2px',
-};
-
-// use BFS to put all the nodes under snapShots(which is the tree node) into an array
-const nodeList: Node[] = [];
-
-const collectNodes = (node: Node): void => {
-  nodeList.splice(0, nodeList.length);
-  /* We used the .splice method here to ensure that nodeList
-  did not accumulate with page refreshes */
-  nodeList.push(node);
-  for (let i = 0; i < nodeList.length; i += 1) {
-    const cur = nodeList[i];
-    if (cur.children?.length > 0) {
-      cur.children.forEach((child) => nodeList.push(child));
-    }
-  }
-};
-
-export default function LinkControls({
-  linkType, // from linkType local state (initially 'vertical') in 'ComponentMap'
-  stepPercent, // from stepPercent local state (initially '0.5') in 'ComponentMap'
-  setOrientation, // from the orientation local state in 'ComponentMap'
-  setLinkType, // from the linkType local state in 'ComponentMap'
-  setStepPercent, // from the stepPercent local state in 'ComponentMap'
-  setSelectedNode, // from the selectedNode local state in 'ComponentMap'
+const LinkControls = ({
+  linkType,
+  stepPercent,
+  setOrientation,
+  setLinkType,
+  setStepPercent,
+  setSelectedNode,
   snapShots,
-}: LinkControlProps): JSX.Element {
-  collectNodes(snapShots);
+}) => {
+  const collectNodes = (node) => {
+    const nodeList = [];
+    nodeList.push(node);
+    for (let i = 0; i < nodeList.length; i += 1) {
+      const cur = nodeList[i];
+      if (cur.children?.length > 0) {
+        cur.children.forEach((child) => nodeList.push(child));
+      }
+    }
+    return nodeList;
+  };
+
+  const nodeList = collectNodes(snapShots);
 
   return (
-    <div className='comp-map-options' style={controlStyles}>
-      {' '}
-      {/* This is a non-breaking space - Prevents an automatic line break at this position */}
-      &nbsp;&nbsp;
-      <label>Orientation:</label>{' '}
-      {/* Toggle record button to pause state changes on target application */}
-      {/* Controls for the Orientation selection */}
-      &nbsp;
-      <select
-        onClick={(e) => e.stopPropagation()}
-        onChange={(e) => setOrientation(e.target.value)}
-        style={dropDownStyle}
-      >
-        <option value='vertical'>Vertical</option>
-        <option value='horizontal'>Horizontal</option>
-      </select>
-      &nbsp;&nbsp;
-      <label>Link:</label> {/* Controls for the link selections. */}
-      &nbsp;
-      <select
-        onClick={(e) => e.stopPropagation()}
-        onChange={(e) => setLinkType(e.target.value)}
-        style={dropDownStyle}
-      >
-        <option value='step'>Step</option>
-        <option value='diagonal'>Diagonal</option>
-        <option value='line'>Line</option>
-      </select>
-      <label> Select:</label> {/* Controls for the select selections. */}
-      &nbsp;
-      <select
-        id='selectInput'
-        name='nodeOptions'
-        onChange={(e) => setSelectedNode(e.target.value)}
-        style={dropDownStyle}
-      >
-        {nodeList.map(
-          (node) =>
-            node.children.length > 0 && (
+    <div className='link-controls'>
+      <div className='control-group'>
+        <label className='control-label'>Orientation:</label>
+        <select
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => setOrientation(e.target.value)}
+          className='control-select'
+        >
+          <option value='vertical'>Vertical</option>
+          <option value='horizontal'>Horizontal</option>
+        </select>
+      </div>
+
+      <div className='control-group'>
+        <label className='control-label'>Link:</label>
+        <select
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => setLinkType(e.target.value)}
+          className='control-select'
+        >
+          <option value='step'>Step</option>
+          <option value='diagonal'>Diagonal</option>
+          <option value='line'>Line</option>
+        </select>
+      </div>
+
+      <div className='control-group'>
+        <label className='control-label'>Select:</label>
+        <select
+          id='selectInput'
+          name='nodeOptions'
+          onChange={(e) => setSelectedNode(e.target.value)}
+          className='control-select'
+        >
+          {nodeList.map((node) =>
+            node.children.length > 0 ? (
               <option key={node.name} value={node.name}>
                 {node.name}
               </option>
-            ),
-        )}
-      </select>
-      {/* This is the slider control for the step option */}
+            ) : null,
+          )}
+        </select>
+      </div>
+
       {linkType === 'step' && (
-        <>
-          &nbsp;&nbsp;
-          <label>Step:</label>
-          &nbsp;
+        <div className='control-group'>
+          <label className='control-label'>Step:</label>
           <input
             onClick={(e) => e.stopPropagation()}
             type='range'
@@ -107,9 +80,12 @@ export default function LinkControls({
             onChange={(e) => setStepPercent(Number(e.target.value))}
             value={stepPercent}
             disabled={linkType !== 'step'}
+            className='control-range'
           />
-        </>
+        </div>
       )}
     </div>
   );
-}
+};
+
+export default LinkControls;

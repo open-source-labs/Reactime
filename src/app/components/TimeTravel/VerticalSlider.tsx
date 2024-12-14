@@ -54,7 +54,6 @@ function VerticalSlider(props: MainSliderProps): JSX.Element {
   return (
     <Slider
       className='travel-slider'
-      color='#0af548'
       vertical='true'
       reverse='true'
       height='100%'
