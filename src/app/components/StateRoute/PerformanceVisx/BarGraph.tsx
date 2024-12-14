@@ -24,7 +24,7 @@ const margin = {
   top: 30,
   right: 30,
   bottom: 0,
-  left: 50,
+  left: 70,
 };
 const axisColor = '#161617';
 const axisTickLabelColor = '#363638';
@@ -32,11 +32,10 @@ const axisLabelColor = '#363638';
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
-  //backgroundColor: 'rgba(0,0,0,0.9)', //defaults to white
-  //color: 'white', //defaults to a gray
-  fontSize: '16px',
   lineHeight: '18px',
-  fontFamily: 'Roboto',
+  zIndex: 100,
+  pointerEvents: 'all !important',
+  padding: '12px',
 };
 
 const BarGraph = (props: BarGraphProps): JSX.Element => {
@@ -75,7 +74,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
 
   const keys = Object.keys(data.componentData);
   const getSnapshotId = (d: snapshot) => d.snapshotId; // data accessor (used to generate scales) and formatter (add units for on hover box). d comes from data.barstack post filtered data
-  const formatSnapshotId = (id) => `Snapshot ID: ${id}`; // returns snapshot id when invoked in tooltip section
+  const formatSnapshotId = (id) => `ID: ${id}`; // returns snapshot id when invoked in tooltip section
   const formatRenderTime = (time) => `${time} ms `; // returns render time when invoked in tooltip section
 
   const snapshotIdScale = scaleBand<string>({
@@ -91,16 +90,16 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
   });
 
   const LMcolorScale = [
-    '#a0c1d6',
-    '#669bbc',
-    '#105377',
-    '#003049',
-    '#55a8ac',
-    '#3c6e71',
-    '#1c494b',
-    '#c1676d',
-    '#c1121f',
-    '#780000',
+    '#14b8a6', // Teal (matching existing accent)
+    '#0d9488', // Darker teal (matching existing accent)
+    '#3c6e71', // Primary strong teal
+    '#284b63', // Primary blue
+    '#2c5282', // Deeper blue
+    '#1a365d', // Navy
+    '#2d3748', // Blue gray
+    '#4a5568', // Darker blue gray
+    '#718096', // Medium blue gray
+    '#a0aec0', // Light blue gray
   ];
 
   const colorScale = scaleOrdinal<string>({
@@ -257,17 +256,18 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
             fontSize: 11,
             textAnchor: 'middle',
           })}
+          tickFormat={() => ''} // Add this line to hide tick labels
         />
-        <Text x={-yMax / 2 - 75} y='15' transform='rotate(-90)' fontSize={16} fill={axisLabelColor}>
+        <Text x={-yMax / 2 - 75} y='30' transform='rotate(-90)' fontSize={16} fill={axisLabelColor}>
           Rendering Time (ms)
         </Text>
         <br />
         {snapshot === 'All Snapshots' ? (
-          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={16} fill={axisLabelColor}>
+          <Text x={xMax / 2 + 15} y={yMax + 65} fontSize={16} fill={axisLabelColor}>
             Snapshot ID
           </Text>
         ) : (
-          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={16} fill={axisLabelColor}>
+          <Text x={xMax / 2 + 15} y={yMax + 65} fontSize={16} fill={axisLabelColor}>
             Components
           </Text>
         )}
@@ -282,11 +282,15 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
             left={tooltipLeft}
             style={tooltipStyles}
           >
-            <div style={{ color: colorScale(tooltipData.key) }}>
+            <div
+              style={{
+                color: colorScale(tooltipData.key),
+                paddingBottom: '8px',
+              }}
+            >
               {' '}
               <strong>{tooltipData.key}</strong>{' '}
             </div>
-            <div>{'State: ' + data.componentData[tooltipData.key].stateType}</div>
             <div> {'Render time: ' + formatRenderTime(tooltipData.bar.data[tooltipData.key])} </div>
             <div>
               {' '}
