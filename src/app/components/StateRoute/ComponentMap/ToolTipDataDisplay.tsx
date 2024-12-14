@@ -7,7 +7,7 @@ const ToolTipDataDisplay = ({ data }) => {
   const jsonTheme = {
     scheme: 'custom',
     base00: 'transparent',
-    base0B: '#14b8a6', // Teal for strings
+    base0B: '#ffff', // white for strings
     base0D: '#60a5fa', // Blue for keys
     base09: '#f59e0b', // Orange for numbers
     base0C: '#EF4444', // red for nulls

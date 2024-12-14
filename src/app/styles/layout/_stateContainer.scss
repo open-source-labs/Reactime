@@ -99,6 +99,19 @@
 }
 
 // tool tip styles
+.tooltip-header {
+  padding: 12px;
+  background-color: #1f2937;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.tooltip-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #f9fafb;
+}
+
 .tooltip-container {
   width: 300px;
   background-color: #111827;
@@ -109,11 +122,10 @@
   font-family: 'Outfit', sans-serif;
   color: #f9fafb;
   overflow: hidden;
-  margin: 4px 0;
 }
 
 .tooltip-section {
-  padding: 12px 16px;
+  padding: 12px;
   border-bottom: 1px solid rgba(107, 114, 128, 0.2);
 }
 
@@ -125,7 +137,6 @@
   font-size: 14px;
   font-weight: 500;
   color: #14b8a6;
-  margin-bottom: 8px;
 }
 
 .tooltip-content {
@@ -143,7 +154,6 @@
 }
 
 .tooltip-data {
-  padding-left: 12px;
   border-left: 2px solid rgba(20, 184, 166, 0.4);
 }
 
