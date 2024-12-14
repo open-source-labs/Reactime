@@ -117,8 +117,6 @@ export default function ComponentMap({
     ...defaultStyles,
     minWidth: 60,
     maxWidth: 300,
-    backgroundColor: 'rgb(15,15,15)',
-    fontSize: '16px',
     lineHeight: '18px',
     zIndex: 100,
     pointerEvents: 'all !important',

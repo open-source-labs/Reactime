@@ -101,9 +101,9 @@
 // tool tip styles
 .tooltip-header {
   padding: 12px;
-  background-color: #1f2937;
+  background-color: #14b8a6;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .tooltip-title {
@@ -115,16 +115,15 @@
 
 .tooltip-container {
   width: 300px;
-  background-color: #111827;
+  background-color: #ffffff;
   border-radius: 8px;
   font-family: 'Outfit', sans-serif;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tooltip-section {
   padding: 12px;
-  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+  border-bottom: 1px solid #e5e7eb;
   transition: background-color 150ms ease;
 }
 
@@ -141,6 +140,8 @@
 .tooltip-content {
   max-height: 400px;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
 }
 
 .tooltip-item {
@@ -153,7 +154,11 @@
 }
 
 .tooltip-data {
-  border-left: 2px solid rgba(20, 184, 166, 0.4);
+  border-left: 2px solid #0d9488; /* Teal border */
+}
+
+.tooltip-content::-webkit-scrollbar {
+  width: 4px;
 }
 
 .tooltip-content::-webkit-scrollbar {
@@ -161,12 +166,16 @@
 }
 
 .tooltip-content::-webkit-scrollbar-track {
-  background: rgba(107, 114, 128, 0.1);
+  background: #f1f5f9;
 }
 
 .tooltip-content::-webkit-scrollbar-thumb {
-  background: #4b5563;
-  border-radius: 2px;
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.tooltip-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 /* JSON Tree overrides */
