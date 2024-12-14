@@ -102,14 +102,15 @@
 .tooltip-header {
   padding: 12px;
   background-color: #1f2937;
-  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tooltip-title {
   margin: 0;
   font-size: 16px;
   font-weight: 500;
-  color: #f9fafb;
+  color: #f3f4f6;
 }
 
 .tooltip-container {
@@ -117,13 +118,14 @@
   background-color: #111827;
   border-radius: 8px;
   font-family: 'Outfit', sans-serif;
-  color: #f9fafb;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tooltip-section {
   padding: 12px;
   border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+  transition: background-color 150ms ease;
 }
 
 .tooltip-section:last-child {
@@ -178,4 +180,20 @@
   background-color: transparent !important;
   margin: 0 !important;
   padding-left: 16px !important;
+}
+
+/* Animation for Tooltip Appearance */
+@keyframes tooltipFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tooltip-container {
+  animation: tooltipFade 150ms ease-out;
 }

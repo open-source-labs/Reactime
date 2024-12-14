@@ -118,10 +118,8 @@ export default function ComponentMap({
     minWidth: 60,
     maxWidth: 300,
     backgroundColor: 'rgb(15,15,15)',
-    color: 'white',
     fontSize: '16px',
     lineHeight: '18px',
-    fontFamily: 'Roboto',
     zIndex: 100,
     pointerEvents: 'all !important',
   };
@@ -160,6 +158,7 @@ export default function ComponentMap({
     }
   };
 
+  // check if any data should be displayed in tool tip display
   const hasDisplayableData = (nodeData) => {
     // Check if the node has props
     const hasProps =
