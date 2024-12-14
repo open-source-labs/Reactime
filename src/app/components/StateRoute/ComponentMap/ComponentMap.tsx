@@ -116,7 +116,7 @@ export default function ComponentMap({
   const tooltipStyles: ToolTipStyles = {
     ...defaultStyles,
     minWidth: 60,
-    maxWidth: 300,
+    maxWidth: 250,
     lineHeight: '18px',
     zIndex: 100,
     pointerEvents: 'all !important',
@@ -124,7 +124,7 @@ export default function ComponentMap({
 
   const scrollStyle: {} = {
     minWidth: '60',
-    maxWidth: '300',
+    maxWidth: '250',
     minHeight: '20px',
     maxHeight: '200px',
     overflowY: 'scroll',
