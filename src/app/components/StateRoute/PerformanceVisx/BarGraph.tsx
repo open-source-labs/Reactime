@@ -125,7 +125,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     <div className='bargraph-position'>
       <div className='saveSeriesContainer'>
         <form className='routesForm' id='routes-formcontrol'>
-          <label id='routes-dropdown'>Select Route: </label>
+          <label id='routes-dropdown'>Route: </label>
           <select
             className='performance-dropdown'
             labelId='demo-simple-select-label'
@@ -144,7 +144,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           </select>
         </form>
         <form className='routesForm' id='routes-formcontrol'>
-          <label id='routes-dropdown'>Select Snapshot: </label>
+          <label id='routes-dropdown'>Snapshot: </label>
           <select
             labelid='demo-simple-select-label'
             id='snapshot-select'
