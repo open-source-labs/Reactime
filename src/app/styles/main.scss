@@ -18,27 +18,6 @@ body {
   height: 100%;
 }
 
-/* width */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: none;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: rgb(67, 67, 71);
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: rgb(97, 97, 97);
-}
-
 // 1. Configuration and helpers
 @import 'abstracts/variablesLM';
 
