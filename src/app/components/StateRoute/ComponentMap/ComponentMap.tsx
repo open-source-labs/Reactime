@@ -118,8 +118,10 @@ export default function ComponentMap({
     minWidth: 60,
     maxWidth: 250,
     lineHeight: '18px',
-    zIndex: 100,
     pointerEvents: 'all !important',
+    margin: 0,
+    padding: 0,
+    borderRadius: '8px',
   };
 
   const scrollStyle: {} = {

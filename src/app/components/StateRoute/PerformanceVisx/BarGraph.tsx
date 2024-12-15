@@ -33,9 +33,9 @@ const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
   lineHeight: '18px',
-  zIndex: 100,
   pointerEvents: 'all !important',
-  padding: '12px',
+  padding: '8px',
+  borderRadius: '8px',
 };
 
 const BarGraph = (props: BarGraphProps): JSX.Element => {

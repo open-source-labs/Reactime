@@ -19,7 +19,7 @@ const metrics = {};
 function setupKeepAlive() {
   //ellie
   // Create an alarm that triggers every 4.9 minutes (under the 5-minute limit)
-  chrome.alarms.create('keepAlive', { periodInMinutes: 4.9 });
+  chrome.alarms.create('keepAlive', { periodInMinutes: 1 });
 
   chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === 'keepAlive') {
@@ -30,12 +30,9 @@ function setupKeepAlive() {
 }
 // Ping the service worker to keep it alive
 function pingServiceWorker() {
-  chrome.runtime.getBackgroundPage((bgPage) => {
-    if (bgPage) {
-      console.log('Service worker is alive');
-    } else {
-      console.warn('Failed to ping the service worker.');
-    }
+  // Use a lightweight API call to keep the service worker active
+  chrome.runtime.getPlatformInfo(() => {
+    console.log('Service worker pinged successfully');
   });
 }
 

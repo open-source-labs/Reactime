@@ -61,21 +61,21 @@
   .main-navbar-container {
     border-bottom: 1px solid #e5e7eb;
     background: white;
-    padding: 5px 24px;
+    padding: 4.5px 24px;
   }
 }
 
 // tool tip styles
 .tooltip-header {
-  padding: 12px;
+  padding: 8px 8px 8px 12px;
   background-color: #14b8a6;
+  border: 1px solid #0d9488;
   border-radius: 8px;
-  border-bottom: 1px solid #e5e7eb;
 }
 
 .tooltip-title {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   color: #f3f4f6;
 }
@@ -89,7 +89,7 @@
 }
 
 .tooltip-section {
-  padding: 12px;
+  padding: 8px 12px;
   border-bottom: 1px solid #e5e7eb;
   transition: background-color 150ms ease;
 }
@@ -152,29 +152,20 @@
 // Web Metrics Container
 .web-metrics-container {
   display: grid;
-  grid-template-columns: auto auto;
-  justify-content: center;
+  grid-template-columns: repeat(3, 1fr);
 }
 
-//container for metrics
 .metric {
-  min-height: 200px;
-  min-width: 200px;
-}
-
-.bargraph {
-  position: relative;
-  margin-top: 1rem;
-}
-
-.bar-graph-axis {
-  stroke: cornflowerblue;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #hover-box {
-  max-width: 230px;
+  max-width: 250px;
   background-color: #51565e;
-  border-radius: 5px;
+  border-radius: 8px;
   color: white;
 }
 

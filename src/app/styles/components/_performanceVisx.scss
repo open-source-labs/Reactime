@@ -7,6 +7,7 @@
   background-color: white;
   max-width: 1200px;
   justify-content: space-around;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .routesForm {
@@ -68,5 +69,9 @@
 
 // bar graph background
 .perf-rect {
-  fill: white;
+  fill: #f9fafb;
+}
+
+.bargraph-position {
+  background-color: #f9fafb;
 }
