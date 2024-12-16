@@ -20,6 +20,10 @@ const defaultMargin: DefaultMargin = {
   bottom: 70,
 };
 
+// Fixed node separation distances
+const FIXED_NODE_HEIGHT = 100; // Vertical distance between nodes
+const FIXED_NODE_WIDTH = 180; // Horizontal distance between nodes
+
 // main function exported to StateRoute
 // below we destructure the props
 function History(props: Record<string, unknown>): JSX.Element {
@@ -163,23 +167,43 @@ function History(props: Record<string, unknown>): JSX.Element {
    */
 
   const makeD3Tree = () => {
-    const svg = d3.select(svgRef.current); // d3.select Selects the first element/node that matches svgRef.current. If no element/node match returns an empty selection. If multiple elements/nodes match the selector, only the first matching element/node (in document order) will be selected.
-    svg.selectAll('*').remove(); // Selects all elements. The elements will be selected in document order (top-to-bottom). We then remove the selected elements/nodes from the DOM. This is important as to ensure that the SVG is empty before rendering the D3 based visualization to avoid interference/overlap with any previously rendered content.
-    const tree = (data) => {
-      // function that takes in data and turns it into a d3 tree.
-      const treeRoot = d3.hierarchy(data); // 'd3.hierarchy' constructs a root node from the specified hierarchical data.
-      return d3.tree().size([innerWidth, innerHeight])(treeRoot); // d3.tree creates a new tree layout with a size option of innerWidth (~line 41) and innerHeight (~line 42). We specify our new tree layout's root as 'treeRoot' which assigns an x and y property to each node to represent an [x, y] coordinate system.
-    };
+    const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove();
 
-    const d3root = tree(root); // create a d3. tree from our root
-    const currNode = labelCurrentNode(d3root); // iterate through our nodes and apply a color property
+    // Create tree layout with fixed node separation
+    const treeLayout = d3.tree().nodeSize([FIXED_NODE_WIDTH, FIXED_NODE_HEIGHT]); // Set fixed sizes between nodes
 
-    const g = svg //serves as a container for the nodes and links within the D3 Visualization of the tree
-      .append('g') // create an element 'g' on svg
-      .attr(
-        'transform',
-        `translate(${margin.left},${d3root.height === 0 ? totalHeight / 2 : margin.top})`, //Set the position of the group 'g' by translating it horizontally by 'margin.left' pixels and vertically based on the conditional expression.
-      );
+    // Calculate the tree structure
+    const d3root = treeLayout(d3.hierarchy(root));
+
+    // Calculate total required height and width
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+
+    d3root.each((d) => {
+      minX = Math.min(minX, d.x);
+      maxX = Math.max(maxX, d.x);
+      minY = Math.min(minY, d.y);
+      maxY = Math.max(maxY, d.y);
+    });
+
+    const actualWidth = maxX - minX + FIXED_NODE_WIDTH;
+    const actualHeight = maxY - minY + FIXED_NODE_HEIGHT;
+
+    // Set SVG size to accommodate the entire tree
+    svg
+      .attr('width', Math.max(actualWidth + margin.left + margin.right, totalWidth))
+      .attr('height', Math.max(actualHeight + margin.top + margin.bottom, totalHeight));
+
+    // Center the root node horizontally
+    const centerOffset = totalWidth / 2 - (maxX - minX) / 2;
+
+    const g = svg.append('g').attr('transform', `translate(${centerOffset},${margin.top})`);
+
+    // Label current node
+    const currNode = labelCurrentNode(d3root);
 
     const link = g
       .selectAll('.link')
@@ -241,6 +265,7 @@ function History(props: Record<string, unknown>): JSX.Element {
         }
       })
       .on('mouseenter', function (event, d) {
+        d3.selectAll('.tooltip').remove();
         const [x, y] = d3.pointer(event);
         if (d3.selectAll('.tooltip')._groups['0'].length === 0) {
           const div = d3
@@ -248,11 +273,13 @@ function History(props: Record<string, unknown>): JSX.Element {
             .append('div')
             .attr('class', `tooltip`)
             .attr('id', `tt-${d.data.index}`)
-            .style('left', `${event.clientX + 0}px`)
-            .style('top', `${event.clientY + 0}px`)
+            .style('left', `${event.clientX + 30}px`)
+            .style('top', `${event.clientY - 75}px`)
             .style('max-height', `25%`)
             .style('overflow', `auto`)
-            .on('mouseenter', function (event, d) {})
+            .on('mouseenter', function (event, d) {
+              d3.select(this).interrupt(); // Interrupt any ongoing transitions
+            })
             .on('mouseleave', function (event, d) {
               d3.selectAll('.tooltip').remove().style('display', 'hidden');
             });
@@ -262,7 +289,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       })
       .on('mouseleave', function (event, d) {
         if (event.relatedTarget.id !== `tt-${d.data.index}`) {
-          d3.selectAll('.tooltip').transition().delay(100).remove();
+          d3.selectAll('.tooltip').transition().delay(0).remove();
         }
       });
 
@@ -275,7 +302,7 @@ function History(props: Record<string, unknown>): JSX.Element {
         d3.selectAll('.tooltip').remove();
       });
 
-    node.append('circle').attr('r', 18);
+    node.append('circle').attr('r', 20);
 
     node
       .append('text')

@@ -90,6 +90,8 @@ div.tooltip {
 }
 
 /* Container styling */
-.history-d3-container svg {
+.display {
   background-color: #f9fafb;
+  height: 100%;
+  overflow: auto;
 }
