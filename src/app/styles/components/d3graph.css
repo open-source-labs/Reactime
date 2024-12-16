@@ -73,7 +73,7 @@
 /* Tooltip styling */
 div.tooltip {
   position: absolute;
-  padding: 12px 16px;
+  padding: 12px;
   color: #374151;
   z-index: 100;
   font-family: 'Outfit', sans-serif;
@@ -85,13 +85,10 @@ div.tooltip {
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   border-radius: 8px;
-  max-width: 300px;
-  transition: all 200ms ease;
+  max-width: 250px;
 }
 
 /* Container styling */
 .display {
   background-color: #f9fafb;
-  height: 100%;
-  overflow: auto;
 }

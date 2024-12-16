@@ -265,6 +265,7 @@ function History(props: Record<string, unknown>): JSX.Element {
         }
       })
       .on('mouseenter', function (event, d) {
+        if (d.data.index === 0) return;
         d3.selectAll('.tooltip').remove();
         const [x, y] = d3.pointer(event);
         if (d3.selectAll('.tooltip')._groups['0'].length === 0) {
