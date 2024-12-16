@@ -116,15 +116,17 @@ export default function ComponentMap({
   const tooltipStyles: ToolTipStyles = {
     ...defaultStyles,
     minWidth: 60,
-    maxWidth: 300,
+    maxWidth: 250,
     lineHeight: '18px',
-    zIndex: 100,
     pointerEvents: 'all !important',
+    margin: 0,
+    padding: 0,
+    borderRadius: '8px',
   };
 
   const scrollStyle: {} = {
     minWidth: '60',
-    maxWidth: '300',
+    maxWidth: '250',
     minHeight: '20px',
     maxHeight: '200px',
     overflowY: 'scroll',
@@ -325,16 +327,60 @@ export default function ComponentMap({
                 })}
 
                 {tree.descendants().map((node, key) => {
-                  const widthFunc: number = (name) => {
-                    //returns a number that is related to the length of the name. Used for determining the node width.
-                    const nodeLength = name.length;
-                    // return nodeLength * 7 + 20; //uncomment this line if we want each node to be directly proportional to the name.length (instead of nodes of similar sizes to snap to the same width)
+                  const calculateNodeWidth = (text: string): number => {
+                    const nodeLength = text.length;
                     if (nodeLength <= 5) return nodeLength + 50;
                     if (nodeLength <= 10) return nodeLength + 120;
                     return nodeLength + 140;
                   };
 
-                  const width: number = widthFunc(node.data.name); // the width is determined by the length of the node.name
+                  // Find the maximum width for any node
+                  const findMaxNodeWidth = (nodeData: any): number => {
+                    // If no children, return current node width
+                    if (!nodeData.children) {
+                      return calculateNodeWidth(nodeData.name);
+                    }
+
+                    // Get width of current node
+                    const currentWidth = calculateNodeWidth(nodeData.name);
+
+                    // Get max width from children
+                    const childrenWidths = nodeData.children.map((child) =>
+                      findMaxNodeWidth(child),
+                    );
+
+                    // Return the maximum width found
+                    return Math.max(currentWidth, ...childrenWidths);
+                  };
+
+                  // Truncate text for nodes that exceed a certain length
+                  const truncateText = (text: string, width: number, maxWidth: number): string => {
+                    // Calculate approximate text width
+                    const estimatedTextWidth = text.length * 8;
+
+                    // If this node's width is close to the max width (within 10%), truncate it
+                    if (width >= maxWidth * 0.9) {
+                      const maxChars = Math.floor((width - 30) / 8); // -30 for padding + ellipsis
+                      return `${text.slice(0, maxChars)}...`;
+                    }
+
+                    return text;
+                  };
+
+                  const getNodeDimensions = (
+                    name: string,
+                    rootNode: any,
+                  ): { width: number; displayText: string } => {
+                    const width = calculateNodeWidth(name);
+                    const maxWidth = findMaxNodeWidth(rootNode);
+                    const displayText = truncateText(name, width, maxWidth);
+
+                    return { width, displayText };
+                  };
+
+                  // Usage in your render function:
+                  const { width, displayText } = getNodeDimensions(node.data.name, startNode);
+
                   const height: number = 35;
                   let top: number;
                   let left: number;
@@ -432,9 +478,13 @@ export default function ComponentMap({
                   return (
                     <Group top={top} left={left} key={key} className='rect'>
                       {node.depth === 0 && (
-                        <circle
+                        <rect
                           className='compMapRoot'
-                          r={25}
+                          height={height}
+                          width={width}
+                          y={-height / 2}
+                          x={-width / 2}
+                          rx={10}
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
@@ -451,7 +501,7 @@ export default function ComponentMap({
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          rx={node.children ? 4 : 10}
+                          rx={10}
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
@@ -490,7 +540,7 @@ export default function ComponentMap({
                         textAnchor='middle'
                         style={{ pointerEvents: 'none' }}
                       >
-                        {node.data.name}
+                        {displayText}
                       </text>
                     </Group>
                   );

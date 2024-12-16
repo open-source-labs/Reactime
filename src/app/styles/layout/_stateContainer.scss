@@ -61,60 +61,27 @@
   .main-navbar-container {
     border-bottom: 1px solid #e5e7eb;
     background: white;
-    padding: 5px 24px;
+    padding: 4.5px 24px;
   }
-}
-
-// Web Metrics Container
-.web-metrics-container {
-  display: grid;
-  grid-template-columns: auto auto;
-  justify-content: center;
-}
-
-//container for metrics
-.metric {
-  min-height: 200px;
-  min-width: 200px;
-}
-
-.bargraph {
-  position: relative;
-  margin-top: 1rem;
-}
-
-.bar-graph-axis {
-  stroke: cornflowerblue;
-}
-
-#hover-box {
-  max-width: 230px;
-  background-color: #51565e;
-  border-radius: 5px;
-  color: white;
-}
-
-.bargraph-position {
-  position: relative;
 }
 
 // tool tip styles
 .tooltip-header {
-  padding: 12px;
+  padding: 8px 8px 8px 12px;
   background-color: #14b8a6;
+  border: 1px solid #0d9488;
   border-radius: 8px;
-  border-bottom: 1px solid #e5e7eb;
 }
 
 .tooltip-title {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   color: #f3f4f6;
 }
 
 .tooltip-container {
-  width: 300px;
+  width: 250px;
   background-color: #ffffff;
   border-radius: 8px;
   font-family: 'Outfit', sans-serif;
@@ -122,7 +89,7 @@
 }
 
 .tooltip-section {
-  padding: 12px;
+  padding: 8px 12px;
   border-bottom: 1px solid #e5e7eb;
   transition: background-color 150ms ease;
 }
@@ -154,55 +121,35 @@
 }
 
 .tooltip-data {
-  border-left: 2px solid #0d9488; /* Teal border */
-}
-
-.tooltip-content::-webkit-scrollbar {
-  width: 4px;
-}
-
-.tooltip-content::-webkit-scrollbar {
-  width: 4px;
-}
-
-.tooltip-content::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-
-.tooltip-content::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
-}
-
-.tooltip-content::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* JSON Tree overrides */
-.json-tree {
-  background-color: transparent !important;
-  margin: 0 !important;
-  padding: 4px 0 !important;
-}
-
-.json-tree ul {
-  background-color: transparent !important;
-  margin: 0 !important;
-  padding-left: 16px !important;
-}
-
-/* Animation for Tooltip Appearance */
-@keyframes tooltipFade {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  border-left: 2px solid #0d9488;
 }
 
 .tooltip-container {
   animation: tooltipFade 150ms ease-out;
+}
+
+// Web Metrics Container
+.web-metrics-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.metric {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#hover-box {
+  max-width: 250px;
+  background-color: #51565e;
+  border-radius: 8px;
+  color: white;
+}
+
+/* Tree styling */
+.json-tree {
+  overflow: auto;
+  list-style: none;
 }

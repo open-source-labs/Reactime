@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Action from '../components/Actions/Action';
 import { emptySnapshots, changeView, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,6 +18,7 @@ import RecordButton from '../components/Actions/RecordButton';
 
 function ActionContainer(props: ActionContainerProps): JSX.Element {
   const [dropdownSelection, setDropdownSelection] = useState('TimeJump');
+  const actionsEndRef = useRef(null as unknown as HTMLDivElement);
 
   const dispatch = useDispatch();
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
@@ -33,6 +34,13 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   let actionsArr: JSX.Element[] = []; // we create an array 'actionsArr' that will hold elements we create later on
   // we create an array 'hierarchyArr' that will hold objects and numbers
   const hierarchyArr: (number | {})[] = [];
+
+  // Auto scroll when snapshots change
+  useEffect(() => {
+    if (actionsEndRef.current) {
+      actionsEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [snapshots]); // Dependency on snapshots array
 
   const displayArray = (obj: Obj): void => {
     if (
@@ -209,6 +217,8 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
               Object.keys(routes).map((route, i) => (
                 <RouteDescription key={`route${i}`} actions={routes[route]} />
               ))}
+            {/* Add ref for scrolling */}
+            <div ref={actionsEndRef} />
           </div>
         </div>
       ) : null}

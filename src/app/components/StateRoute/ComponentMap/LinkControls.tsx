@@ -21,7 +21,49 @@ const LinkControls = ({
     return nodeList;
   };
 
-  const nodeList = collectNodes(snapShots);
+  const shouldIncludeNode = (node) => {
+    // Return false if node has any context properties
+    if (node?.componentData?.context && Object.keys(node.componentData.context).length > 0) {
+      return false;
+    }
+    // Return false if node name ends with 'Provider'
+    if (node?.name && node.name.endsWith('Provider')) {
+      return false;
+    }
+    return true;
+  };
+
+  const processTreeData = (node) => {
+    if (!node) return null;
+
+    // Create a new node
+    const newNode = { ...node };
+
+    if (node.children) {
+      // Process all children first
+      const processedChildren = node.children
+        .map((child) => processTreeData(child))
+        .filter(Boolean); // Remove null results
+
+      // For each child that shouldn't be included, replace it with its children
+      newNode.children = processedChildren.reduce((acc, child) => {
+        if (shouldIncludeNode(child)) {
+          // If child should be included, add it directly
+          acc.push(child);
+        } else {
+          // If child should be filtered out, add its children instead
+          if (child.children) {
+            acc.push(...child.children);
+          }
+        }
+        return acc;
+      }, []);
+    }
+
+    return newNode;
+  };
+  const filtered = processTreeData(snapShots);
+  const nodeList = collectNodes(filtered);
 
   return (
     <div className='link-controls'>
