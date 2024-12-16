@@ -181,45 +181,41 @@ function History(props: Record<string, unknown>): JSX.Element {
         `translate(${margin.left},${d3root.height === 0 ? totalHeight / 2 : margin.top})`, //Set the position of the group 'g' by translating it horizontally by 'margin.left' pixels and vertically based on the conditional expression.
       );
 
-    const link = g //responsible for rendering the links or connectors between the nodes in the d3 Tree
-      .selectAll('.link') // select all elements that contain the string '.link' and return a selection
+    const link = g
+      .selectAll('.link')
       .data(d3root.descendants().slice(1))
       .enter()
       .append('path')
-      .attr('class', 'link')
-      .attr('stroke', '#161617')
-      .attr('fill', 'none')
+      .attr('class', (d) => {
+        return d.data.index === currLocation.index ? 'link current-link' : 'link';
+      })
       .attr(
-        //defines the path attribute (d) for each link (edge) between nodes, using a Bézier curve (C) to connect the source node's coordinates (d.x, d.y) to the midpoint between the source and target nodes and then to the target node's coordinates (d.parent.x, d.parent.y)
         'd',
         (d) =>
           `M${d.x},${d.y}C${d.x},${(d.y + d.parent.y) / 2} ${d.parent.x},${
             (d.y + d.parent.y) / 2
           } ${d.parent.x},${d.parent.y}`,
-      )
-      .attr('class', (d) => {
-        // Adding a class based on the current node's data
-        if (d.data.index === currLocation.index) {
-          return 'link current-link'; // Apply both 'link' and 'current-link' classes
-        }
-        return 'link'; // Apply only the 'link' class
-      });
+      );
 
-    const node = g //responsible for rendering nodes in d3 visualization tree
+    const node = g
       .selectAll('.node')
       .data(d3root.descendants())
       .enter()
       .append('g')
-      .style('cursor', 'pointer')
-      .attr('class', `snapshotNode`)
+      .attr('class', (d) => {
+        const baseClass = 'node';
+        const internalClass = d.children ? ' node--internal' : '';
+        const activeClass = d.data.index === currLocation.index ? ' active' : '';
+        return baseClass + internalClass + activeClass;
+      })
+      .attr('transform', (d) => `translate(${d.x},${d.y})`);
+
+    // Add click handler for nodes
+    node
       .on('click', (event, d) => {
         dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
-        /*
-          created popup div and appended it to display div(returned in this function) 
 
-          D3 doesn't utilize z-index for priority, rather decides on placement by order of rendering needed to define the return div with a className to have a target to append to with the correct level of priority
-        */
         function renderToolTip() {
           const [x, y] = d3.pointer(event);
           const div = d3
@@ -268,10 +264,6 @@ function History(props: Record<string, unknown>): JSX.Element {
         if (event.relatedTarget.id !== `tt-${d.data.index}`) {
           d3.selectAll('.tooltip').transition().delay(100).remove();
         }
-      })
-
-      .attr('transform', function (d) {
-        return `translate(${d.x},${d.y})`;
       });
 
     const tooltip = d3
@@ -283,25 +275,14 @@ function History(props: Record<string, unknown>): JSX.Element {
         d3.selectAll('.tooltip').remove();
       });
 
-    node
-      .append('circle')
-      .attr('fill', (d) => {
-        if (d.data.index === currLocation.index) {
-          return '#284b63';
-        }
-        return d.color ? d.color : '#555';
-      })
-      .attr('r', 18);
+    node.append('circle').attr('r', 18);
 
     node
       .append('text')
       .attr('dy', '0.31em')
       .attr('text-anchor', 'middle')
-      .attr('fill', 'white')
-      .text((d) => `${d.data.name}.${d.data.branch}`)
-      .clone(true)
-      .lower()
-      .attr('stroke', 'white');
+      .text((d) => `${d.data.name}.${d.data.branch}`);
+
     return svg.node();
   };
 
