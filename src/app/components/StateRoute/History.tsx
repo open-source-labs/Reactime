@@ -114,6 +114,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       if (!delta) return 'No state changes';
 
       const changedState = findStateChangeObj(delta);
+      console.log('changed state', formatters.html.format(changedState[0]));
       return changedState.length > 0 ? formatters.html.format(changedState[0]) : 'No state changes';
     } catch (error) {
       console.error('Error in findDiff:', error);
@@ -129,9 +130,20 @@ function History(props: Record<string, unknown>): JSX.Element {
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();
 
-    const treeLayout = d3.tree().nodeSize([FIXED_NODE_WIDTH, FIXED_NODE_HEIGHT]);
-    const d3root = treeLayout(d3.hierarchy(root));
+    // Create tree layout with fixed node size
+    const treeLayout = d3
+      .tree()
+      .nodeSize([FIXED_NODE_WIDTH, FIXED_NODE_HEIGHT])
+      .separation((a, b) => {
+        // Increase separation between unrelated subtrees
+        return a.parent === b.parent ? 1.2 : 2;
+      });
 
+    // Create hierarchy and compute initial layout
+    const d3root = d3.hierarchy(root);
+    treeLayout(d3root);
+
+    // Calculate the bounds of the tree
     let minX = Infinity;
     let maxX = -Infinity;
     let minY = Infinity;
@@ -144,15 +156,24 @@ function History(props: Record<string, unknown>): JSX.Element {
       maxY = Math.max(maxY, d.y);
     });
 
+    // Calculate the actual dimensions needed
     const actualWidth = maxX - minX + FIXED_NODE_WIDTH;
     const actualHeight = maxY - minY + FIXED_NODE_HEIGHT;
 
+    // Set SVG dimensions to accommodate the tree
+    const svgWidth = Math.max(actualWidth + margin.left + margin.right, totalWidth);
     svg
-      .attr('width', Math.max(actualWidth + margin.left + margin.right, totalWidth))
+      .attr('width', svgWidth)
       .attr('height', Math.max(actualHeight + margin.top + margin.bottom, totalHeight));
 
-    const centerOffset = totalWidth / 2 - (maxX - minX) / 2;
-    const g = svg.append('g').attr('transform', `translate(${centerOffset},${margin.top})`);
+    // Calculate center offset to keep root centered
+    const rootOffset = -d3root.x;
+    const horizontalCenter = svgWidth / 2;
+
+    // Create container group and apply transforms
+    const g = svg
+      .append('g')
+      .attr('transform', `translate(${horizontalCenter + rootOffset},${margin.top})`);
 
     // Draw links
     const link = g
@@ -163,13 +184,12 @@ function History(props: Record<string, unknown>): JSX.Element {
       .attr('class', (d) => {
         return d.data.index === currLocation.index ? 'link current-link' : 'link';
       })
-      .attr(
-        'd',
-        (d) =>
-          `M${d.x},${d.y}C${d.x},${(d.y + d.parent.y) / 2} ${d.parent.x},${
-            (d.y + d.parent.y) / 2
-          } ${d.parent.x},${d.parent.y}`,
-      );
+      .attr('d', (d) => {
+        return `M${d.x},${d.y}
+                C${d.x},${(d.y + d.parent.y) / 2}
+                  ${d.parent.x},${(d.y + d.parent.y) / 2}
+                  ${d.parent.x},${d.parent.y}`;
+      });
 
     // Create node groups
     const node = g
@@ -189,7 +209,7 @@ function History(props: Record<string, unknown>): JSX.Element {
         dispatch(changeSlider(d.data.index));
       });
 
-    // Add rectangles for nodes
+    // Add rectangles for nodes with consistent size
     node
       .append('rect')
       .attr('width', 180)
@@ -199,7 +219,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .attr('rx', 8)
       .attr('ry', 8);
 
-    // Add snapshot title
+    // Add snapshot titles
     node
       .append('text')
       .attr('dy', '-25')
@@ -216,7 +236,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       .attr('height', 65)
       .append('xhtml:div')
       .style('font-size', '12px')
-      .style('overflow', 'hidden')
+      .style('overflow-y', 'auto')
       .style('text-align', 'center')
       .html((d) => findDiff(d.data.index));
 

@@ -15,8 +15,7 @@
 }
 
 .node:hover rect {
-  fill: #14b8a6;
-  stroke: #0d9488;
+  stroke: #14b8a6;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
@@ -35,8 +34,7 @@
 }
 
 .node--internal:hover rect {
-  fill: #14b8a6;
-  stroke: #0d9488;
+  stroke: #14b8a6;
 }
 .node--internal text {
   font-family: 'Outfit', sans-serif;
@@ -46,9 +44,8 @@
 }
 
 /* Current/active node styling */
-.node.active circle {
-  fill: #14b8a6;
-  stroke: #0d9488;
+.node.active rect {
+  stroke: #14b8a6;
 }
 
 /* Link styling */
@@ -90,4 +87,8 @@ div.tooltip {
 /* Container styling */
 .display {
   background-color: #f9fafb;
+  height: 100%;
+  width: 100%;
+  overflow: auto; /* Enable scrolling */
+  position: relative; /* Create new stacking context */
 }
