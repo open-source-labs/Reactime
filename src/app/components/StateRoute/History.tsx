@@ -21,7 +21,7 @@ const defaultMargin: DefaultMargin = {
 };
 
 // Fixed node separation distances
-const FIXED_NODE_HEIGHT = 120; // Vertical distance between nodes
+const FIXED_NODE_HEIGHT = 200; // Vertical distance between nodes
 const FIXED_NODE_WIDTH = 220; // Horizontal distance between nodes
 
 // main function exported to StateRoute
@@ -212,8 +212,8 @@ function History(props: Record<string, unknown>): JSX.Element {
     // Add rectangles for nodes with consistent size
     node
       .append('rect')
-      .attr('width', 180)
-      .attr('height', 80)
+      .attr('width', 250)
+      .attr('height', 120)
       .attr('x', -90)
       .attr('y', -40)
       .attr('rx', 8)
@@ -232,12 +232,11 @@ function History(props: Record<string, unknown>): JSX.Element {
       .append('foreignObject')
       .attr('x', -85)
       .attr('y', -15)
-      .attr('width', 170)
-      .attr('height', 65)
+      .attr('width', 250)
+      .attr('height', 200)
       .append('xhtml:div')
       .style('font-size', '12px')
-      .style('overflow-y', 'auto')
-      .style('text-align', 'center')
+      .style('text-align', 'left')
       .html((d) => findDiff(d.data.index));
 
     return svg.node();

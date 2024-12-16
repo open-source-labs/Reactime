@@ -10,12 +10,13 @@
 .node rect {
   fill: #ffffff;
   stroke: #e5e7eb;
-  stroke-width: 2px;
+  stroke-width: 1px;
   transition: all 200ms ease;
 }
 
 .node:hover rect {
   stroke: #14b8a6;
+  stroke-width: 2px;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
@@ -35,6 +36,7 @@
 
 .node--internal:hover rect {
   stroke: #14b8a6;
+  stroke-width: 2px;
 }
 .node--internal text {
   font-family: 'Outfit', sans-serif;
@@ -46,6 +48,7 @@
 /* Current/active node styling */
 .node.active rect {
   stroke: #14b8a6;
+  stroke-width: 2px;
 }
 
 /* Link styling */
