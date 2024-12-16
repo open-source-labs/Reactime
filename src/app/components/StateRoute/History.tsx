@@ -46,87 +46,79 @@ function History(props: Record<string, unknown>): JSX.Element {
   const innerHeight: number = totalHeight - margin.top - margin.bottom - 60;
 
   function findDiff(index) {
-    // determines the difference between our current index and the index-1 snapshot and produces an html string
     const statelessCleaning = (obj: {
-      //'statelessCleaning' functions in the same way as the 'statelessCleaning' function in Diff.tsx
       name?: string;
       componentData?: object;
       state?: string | any;
       stateSnaphot?: object;
       children?: any[];
     }) => {
-      const newObj = { ...obj }; // duplicate our input object into a new object
+      if (!obj) return {}; // Add null check
 
-      if (newObj.name === 'nameless') {
-        // if our new object's name is nameless
-        delete newObj.name; // delete the name property
-      }
-      if (newObj.componentData) {
-        // if our new object has a componentData property
-        delete newObj.componentData; // delete the componentData property
-      }
-      if (newObj.state === 'stateless') {
-        // if if our new object's state is stateless
-        delete newObj.state; // delete the state property
-      }
+      const newObj = { ...obj };
+      if (newObj.name === 'nameless') delete newObj.name;
+      if (newObj.componentData) delete newObj.componentData;
+      if (newObj.state === 'stateless') delete newObj.state;
       if (newObj.stateSnaphot) {
-        // if our new object has a stateSnaphot propertys
-        newObj.stateSnaphot = statelessCleaning(obj.stateSnaphot); // run statelessCleaning on the stateSnapshot
+        newObj.stateSnaphot = statelessCleaning(obj.stateSnaphot);
       }
-
       if (newObj.children) {
-        // if our new object has a children property
         newObj.children = [];
-        if (obj.children.length > 0) {
-          // and if our input object's children property is non-empty, go through each children object from our input object and determine, if the object being iterated on either has a stateless state or has a children array with a non-zero amount of objects. Objects that fulfill the above that need to be cleaned through statelessCleaning. Those that are cleaned through this process are then pushed to the new object's children array.
+        // Add null check for children array
+        if (Array.isArray(obj.children) && obj.children.length > 0) {
           obj.children.forEach((element: { state?: object | string; children?: [] }) => {
-            if (element.state !== 'stateless' || element.children.length > 0) {
+            // Add null check for element
+            if (
+              element &&
+              ((element.state && element.state !== 'stateless') ||
+                (element.children && element.children.length > 0))
+            ) {
               const clean = statelessCleaning(element);
               newObj.children.push(clean);
             }
           });
         }
       }
-      return newObj; // return the cleaned state snapshot(s)
+      return newObj;
     };
 
     function findStateChangeObj(delta, changedState = []) {
-      // function determines whether delta has resulted in a changedState. Function would return an empty array if there were no changes to state and an array of objects that changed state.
-      if (!delta.children && !delta.state) {
-        // if delta doesn't have a children property or a state property
-        return changedState; // returns an empty array
-      }
-
+      if (!delta) return changedState; // Add null check
+      if (!delta.children && !delta.state) return changedState;
       if (delta.state && delta.state[0] !== 'stateless') {
-        // ignore stateless delta objects
-        changedState.push(delta.state); // and push stateful delta objects to changedState
+        changedState.push(delta.state);
       }
-
-      if (!delta.children) {
-        // if the delta doesn't have any children
-        return changedState; // return the changedState array with any and all stateful delta objects.
-      }
-
+      if (!delta.children) return changedState;
       Object.keys(delta.children).forEach((child) => {
-        // but if the delta object did have children, we iterate through each child object
-        // if (isNaN(child) === false) {
-        changedState.push(...findStateChangeObj(delta.children[child])); // recursively call this function on each child object. Push every 'stateful' child into the changedState array.
-        // }
+        if (delta.children[child]) {
+          // Add null check
+          changedState.push(...findStateChangeObj(delta.children[child]));
+        }
       });
-
-      return changedState; // return the changedState array with any and all stateful delta objects.
+      return changedState;
     }
 
-    if (index === 0) return ''; // Return empty string for initial state
+    if (index === 0) return 'Initial State';
 
-    const delta = diff(
-      // 'diff' function from 'jsondiffpatch' returns the difference in state between the (snapshot that occurred before the indexed snapshot) and the (indexed snapshot).
-      statelessCleaning(snapshots[index - 1]),
-      statelessCleaning(snapshots[index]),
-    );
-    const changedState = findStateChangeObj(delta); // determines if delta had any stateful changes
-    const html = formatters.html.format(changedState[0]); // formats the difference into html string
-    return html; // return html string
+    // Add null checks for snapshots
+    if (!snapshots || !snapshots[index] || !snapshots[index - 1]) {
+      return 'No state changes';
+    }
+
+    try {
+      const delta = diff(
+        statelessCleaning(snapshots[index - 1]),
+        statelessCleaning(snapshots[index]),
+      );
+
+      if (!delta) return 'No state changes';
+
+      const changedState = findStateChangeObj(delta);
+      return changedState.length > 0 ? formatters.html.format(changedState[0]) : 'No state changes';
+    } catch (error) {
+      console.error('Error in findDiff:', error);
+      return 'Error comparing states';
+    }
   }
 
   /**
