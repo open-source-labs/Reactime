@@ -14,15 +14,15 @@ import { changeView, changeSlider, setCurrentTabInApp } from '../../slices/mainS
 */
 
 const defaultMargin: DefaultMargin = {
-  top: 30,
+  top: 60,
   left: 30,
   right: 55,
   bottom: 70,
 };
 
 // Fixed node separation distances
-const FIXED_NODE_HEIGHT = 100; // Vertical distance between nodes
-const FIXED_NODE_WIDTH = 180; // Horizontal distance between nodes
+const FIXED_NODE_HEIGHT = 120; // Vertical distance between nodes
+const FIXED_NODE_WIDTH = 220; // Horizontal distance between nodes
 
 // main function exported to StateRoute
 // below we destructure the props
@@ -117,6 +117,8 @@ function History(props: Record<string, unknown>): JSX.Element {
       return changedState; // return the changedState array with any and all stateful delta objects.
     }
 
+    if (index === 0) return ''; // Return empty string for initial state
+
     const delta = diff(
       // 'diff' function from 'jsondiffpatch' returns the difference in state between the (snapshot that occurred before the indexed snapshot) and the (indexed snapshot).
       statelessCleaning(snapshots[index - 1]),
@@ -135,13 +137,9 @@ function History(props: Record<string, unknown>): JSX.Element {
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();
 
-    // Create tree layout with fixed node separation
-    const treeLayout = d3.tree().nodeSize([FIXED_NODE_WIDTH, FIXED_NODE_HEIGHT]); // Set fixed sizes between nodes
-
-    // Calculate the tree structure
+    const treeLayout = d3.tree().nodeSize([FIXED_NODE_WIDTH, FIXED_NODE_HEIGHT]);
     const d3root = treeLayout(d3.hierarchy(root));
 
-    // Calculate total required height and width
     let minX = Infinity;
     let maxX = -Infinity;
     let minY = Infinity;
@@ -157,16 +155,14 @@ function History(props: Record<string, unknown>): JSX.Element {
     const actualWidth = maxX - minX + FIXED_NODE_WIDTH;
     const actualHeight = maxY - minY + FIXED_NODE_HEIGHT;
 
-    // Set SVG size to accommodate the entire tree
     svg
       .attr('width', Math.max(actualWidth + margin.left + margin.right, totalWidth))
       .attr('height', Math.max(actualHeight + margin.top + margin.bottom, totalHeight));
 
-    // Center the root node horizontally
     const centerOffset = totalWidth / 2 - (maxX - minX) / 2;
-
     const g = svg.append('g').attr('transform', `translate(${centerOffset},${margin.top})`);
 
+    // Draw links
     const link = g
       .selectAll('.link')
       .data(d3root.descendants().slice(1))
@@ -183,6 +179,7 @@ function History(props: Record<string, unknown>): JSX.Element {
           } ${d.parent.x},${d.parent.y}`,
       );
 
+    // Create node groups
     const node = g
       .selectAll('.node')
       .data(d3root.descendants())
@@ -194,92 +191,42 @@ function History(props: Record<string, unknown>): JSX.Element {
         const activeClass = d.data.index === currLocation.index ? ' active' : '';
         return baseClass + internalClass + activeClass;
       })
-      .attr('transform', (d) => `translate(${d.x},${d.y})`);
-
-    node
-      .append('rect')
-      .attr('width', 100) // Width of rectangle
-      .attr('height', 40) // Height of rectangle
-      .attr('x', -50) // Center the rectangle horizontally
-      .attr('y', -20) // Center the rectangle vertically
-      .attr('rx', 8) // Rounded corners
-      .attr('ry', 8); // Rounded corners
-
-    // Add text with "Snapshot" prefix
-    node
-      .append('text')
-      .attr('dy', '0.31em')
-      .attr('text-anchor', 'middle')
-      .text((d) => `Snapshot ${d.data.index + 1}`);
-
-    // Add click handler for nodes
-    node
+      .attr('transform', (d) => `translate(${d.x},${d.y})`)
       .on('click', (event, d) => {
         dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
-
-        function renderToolTip() {
-          const [x, y] = d3.pointer(event);
-          const div = d3
-            .select('.display:first-child')
-            .append('div')
-            .attr('class', `tooltip`)
-            .attr('id', `tt-${d.data.index}`)
-            .style('left', `${event.clientX - 10}px`)
-            .style('top', `${event.clientY - 10}px`)
-            .style('max-height', `25%`)
-            .style('overflow', `scroll`);
-          d3.selectAll('.tooltip').html(findDiff(d.data.index));
-        }
-
-        if (d3.selectAll('.tooltip')._groups['0'].length === 0) {
-          renderToolTip(); //if there are no tooltips left in the doc, we call the function to create a new tooltip
-        } else {
-          if (d3.selectAll(`#tt-${d.data.index}`)._groups['0'].length === 0) {
-            // if there is no tooltip with the specific id
-            d3.selectAll('.tooltip').remove(); //remove any existing tooltips
-            renderToolTip(); //call the function again to create a new tooltip
-          }
-        }
-      })
-      .on('mouseenter', function (event, d) {
-        if (d.data.index === 0) return;
-        d3.selectAll('.tooltip').remove();
-        const [x, y] = d3.pointer(event);
-        if (d3.selectAll('.tooltip')._groups['0'].length === 0) {
-          const div = d3
-            .select('.display:first-child')
-            .append('div')
-            .attr('class', `tooltip`)
-            .attr('id', `tt-${d.data.index}`)
-            .style('left', `${event.clientX + 30}px`)
-            .style('top', `${event.clientY - 75}px`)
-            .style('max-height', `25%`)
-            .style('overflow', `auto`)
-            .on('mouseenter', function (event, d) {
-              d3.select(this).interrupt(); // Interrupt any ongoing transitions
-            })
-            .on('mouseleave', function (event, d) {
-              d3.selectAll('.tooltip').remove().style('display', 'hidden');
-            });
-
-          d3.selectAll('.tooltip').html(findDiff(d.data.index));
-        }
-      })
-      .on('mouseleave', function (event, d) {
-        if (event.relatedTarget.id !== `tt-${d.data.index}`) {
-          d3.selectAll('.tooltip').transition().delay(0).remove();
-        }
       });
 
-    const tooltip = d3
-      .select('.tooltip')
-      .on('mousemove', function (event, d) {
-        d3.select('.tooltip').style('opacity', '1');
-      })
-      .on('mouseleave', function (event, d) {
-        d3.selectAll('.tooltip').remove();
-      });
+    // Add rectangles for nodes
+    node
+      .append('rect')
+      .attr('width', 180)
+      .attr('height', 80)
+      .attr('x', -90)
+      .attr('y', -40)
+      .attr('rx', 8)
+      .attr('ry', 8);
+
+    // Add snapshot title
+    node
+      .append('text')
+      .attr('dy', '-25')
+      .attr('text-anchor', 'middle')
+      .attr('class', 'snapshot-title')
+      .text((d) => `Snapshot ${d.data.index + 1}`);
+
+    // Add state changes text
+    node
+      .append('foreignObject')
+      .attr('x', -85)
+      .attr('y', -15)
+      .attr('width', 170)
+      .attr('height', 65)
+      .append('xhtml:div')
+      .style('font-size', '12px')
+      .style('overflow', 'hidden')
+      .style('text-align', 'center')
+      .html((d) => findDiff(d.data.index));
 
     return svg.node();
   };
