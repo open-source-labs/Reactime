@@ -40,45 +40,10 @@ function History(props: Record<string, unknown>): JSX.Element {
   const dispatch = useDispatch();
 
   const svgRef = React.useRef(null);
-  const root = JSON.parse(JSON.stringify(hierarchy)); // why do we stringify and then parse our hierarchy back to JSON? (asked 7/31/23)
+  const root = JSON.parse(JSON.stringify(hierarchy));
   // setting the margins for the Map to render in the tab window.
   const innerWidth: number = totalWidth - margin.left - margin.right;
   const innerHeight: number = totalHeight - margin.top - margin.bottom - 60;
-
-  function labelCurrentNode(d3root) {
-    // iterates through the parents of a node and applies a color property
-    if (d3root.data.index === currLocation.index) {
-      // node.data aka d3root.data allows us to access associated node data. So if node.index === currLocation.index...
-
-      let currNode = d3root; // make our input the currNode
-
-      while (currNode.parent) {
-        // while there are parent nodes
-        currNode.color = '#999'; // change or give the node a color property
-        currNode = currNode.parent; // change currNode to the parent
-      }
-
-      currNode.color = '#999'; // when there are no more parent nodes, change or give the last node a color property
-
-      return d3root; // return the modified d3root
-    }
-
-    let found;
-
-    if (!d3root.children) {
-      // if root has no children array
-      return found; // return undefined
-    }
-
-    d3root.children.forEach((child) => {
-      // for each child node within the children array
-      if (!found) {
-        // if found is undefined
-        found = labelCurrentNode(child); //
-      }
-    });
-    return found; // return's the found child node
-  }
 
   function findDiff(index) {
     // determines the difference between our current index and the index-1 snapshot and produces an html string
@@ -202,9 +167,6 @@ function History(props: Record<string, unknown>): JSX.Element {
 
     const g = svg.append('g').attr('transform', `translate(${centerOffset},${margin.top})`);
 
-    // Label current node
-    const currNode = labelCurrentNode(d3root);
-
     const link = g
       .selectAll('.link')
       .data(d3root.descendants().slice(1))
@@ -233,6 +195,22 @@ function History(props: Record<string, unknown>): JSX.Element {
         return baseClass + internalClass + activeClass;
       })
       .attr('transform', (d) => `translate(${d.x},${d.y})`);
+
+    node
+      .append('rect')
+      .attr('width', 100) // Width of rectangle
+      .attr('height', 40) // Height of rectangle
+      .attr('x', -50) // Center the rectangle horizontally
+      .attr('y', -20) // Center the rectangle vertically
+      .attr('rx', 8) // Rounded corners
+      .attr('ry', 8); // Rounded corners
+
+    // Add text with "Snapshot" prefix
+    node
+      .append('text')
+      .attr('dy', '0.31em')
+      .attr('text-anchor', 'middle')
+      .text((d) => `Snapshot ${d.data.index + 1}`);
 
     // Add click handler for nodes
     node
@@ -302,14 +280,6 @@ function History(props: Record<string, unknown>): JSX.Element {
       .on('mouseleave', function (event, d) {
         d3.selectAll('.tooltip').remove();
       });
-
-    node.append('circle').attr('r', 20);
-
-    node
-      .append('text')
-      .attr('dy', '0.31em')
-      .attr('text-anchor', 'middle')
-      .text((d) => `${d.data.name}.${d.data.branch}`);
 
     return svg.node();
   };

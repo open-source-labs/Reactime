@@ -6,15 +6,15 @@
   transition: all 200ms ease;
 }
 
-/* Node circle styling */
-.node circle {
+/* Node rectangle styling */
+.node rect {
   fill: #ffffff;
   stroke: #e5e7eb;
   stroke-width: 2px;
   transition: all 200ms ease;
 }
 
-.node:hover circle {
+.node:hover rect {
   fill: #14b8a6;
   stroke: #0d9488;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
@@ -29,16 +29,15 @@
 }
 
 /* Parent node specific styling */
-.node--internal circle {
+.node--internal rect {
   fill: #ffffff;
   stroke: #e5e7eb;
 }
 
-.node--internal:hover circle {
+.node--internal:hover rect {
   fill: #14b8a6;
   stroke: #0d9488;
 }
-
 .node--internal text {
   font-family: 'Outfit', sans-serif;
   font-size: 14px;
