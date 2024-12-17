@@ -260,15 +260,6 @@ export default function ComponentMap({
       <svg ref={containerRef} width={totalWidth} height={totalHeight + 0}>
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
-        <rect
-          className='componentMapContainer'
-          onClick={() => {
-            hideTooltip();
-          }}
-          width={sizeWidth / aspect}
-          height={sizeHeight / aspect + 0}
-          rx={14}
-        />
         <Group transform={`scale(${aspect})`} top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(startNode, (d) => (d.isExpanded ? d.children : null))}

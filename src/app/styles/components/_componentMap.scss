@@ -2,6 +2,7 @@
 .componentMapContainer {
   fill: #f9fafb;
   transition: all 0.3s ease;
+  overflow: auto;
 }
 .componentMapContainer svg {
   background-color: #f9fafb;
