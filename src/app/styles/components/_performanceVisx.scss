@@ -1,65 +1,77 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-#RenderContainer {
+.saveSeriesContainer {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: white;
+  max-width: 1200px;
+  justify-content: space-around;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-#routes-formcontrol {
-  padding: 3px;
-  margin-left: 50px;
-  font:
-    400 16px 'Outfit',
-    sans-serif;
-  text-align: left;
+.routesForm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 #routes-dropdown {
-  color: $performance-options-label !important;
-  font:
-    400 16px 'Outfit',
-    sans-serif;
-  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563;
+  user-select: none;
+  white-space: nowrap;
 }
 
-.saveSeriesContainer {
-  #routes-select,
-  #snapshot-select {
-    background-color: $performance-options-dropdown !important;
-  }
-}
-
-.saveSeriesContainer {
-  #routes-select,
-  #snapshot-select {
-    &:hover {
-      cursor: pointer;
-    }
-  }
-}
-
+.performance-dropdown,
 #routes-select,
-#snapshot-select {
-  color: white !important;
-  font:
-    400 16px 'Outfit',
-    sans-serif;
-  text-align: left;
-  width: 120px;
-  height: 30px;
-  border-radius: 5px;
-  text-align: center;
+#snapshot-select,
+.control-select {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  min-width: 140px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
 }
 
-#seriesname {
-  float: right;
-  width: 220px;
-  margin-right: 165px;
-  height: 24px;
+.performance-dropdown:hover,
+#routes-select:hover,
+#snapshot-select:hover,
+.control-select:hover {
+  border-color: #d1d5db;
+  background-color: #f3f4f6;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
+.performance-dropdown:focus,
+#routes-select:focus,
+#snapshot-select:focus,
+.control-select:focus {
   outline: none;
+  border-color: #14b8a6;
+  box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.1);
+}
+
+.routes,
+.control-select option {
+  padding: 0.5rem;
+  color: #1e293b;
+}
+
+// bar graph background
+.perf-rect {
+  fill: #f9fafb;
+}
+
+.bargraph-position {
+  background-color: #f9fafb;
 }

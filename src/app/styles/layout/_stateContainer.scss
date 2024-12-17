@@ -2,9 +2,12 @@
   overflow: auto;
 }
 
-.state-container .componentMapContainer {
-  height: 95% !important;
-  fill: $state-background;
+.app-body {
+  height: 100%;
+}
+
+.app-content {
+  height: 100%;
 }
 
 .main-navbar-container--structural {
@@ -58,91 +61,95 @@
   .main-navbar-container {
     border-bottom: 1px solid #e5e7eb;
     background: white;
-    padding: 5px 24px;
+    padding: 4.5px 24px;
   }
+}
+
+// tool tip styles
+.tooltip-header {
+  padding: 8px 8px 8px 12px;
+  background-color: #14b8a6;
+  border: 1px solid #0d9488;
+  border-radius: 8px;
+}
+
+.tooltip-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #f3f4f6;
+}
+
+.tooltip-container {
+  width: 250px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  overflow: hidden;
+}
+
+.tooltip-section {
+  padding: 8px 12px;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 150ms ease;
+}
+
+.tooltip-section:last-child {
+  border-bottom: none;
+}
+
+.tooltip-section-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #14b8a6;
+}
+
+.tooltip-content {
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.tooltip-item {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.1);
+}
+
+.tooltip-item:last-child {
+  border-bottom: none;
+}
+
+.tooltip-data {
+  border-left: 2px solid #0d9488;
+}
+
+.tooltip-container {
+  animation: tooltipFade 150ms ease-out;
 }
 
 // Web Metrics Container
 .web-metrics-container {
   display: grid;
-  grid-template-columns: auto auto;
-  justify-content: center;
+  grid-template-columns: repeat(3, 1fr);
 }
 
-//container for metrics
 .metric {
-  min-height: 200px;
-  min-width: 200px;
-}
-
-.bargraph {
-  position: relative;
-  margin-top: 1rem;
-}
-
-.bar-graph-axis {
-  stroke: cornflowerblue;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #hover-box {
-  max-width: 230px;
+  max-width: 250px;
   background-color: #51565e;
-  border-radius: 5px;
+  border-radius: 8px;
   color: white;
 }
 
-.bargraph-position {
-  position: relative;
-}
-
-// tool tip styles
-
-.visx-tooltip {
-  overflow-y: auto;
-  overflow-wrap: break-word;
-  pointer-events: all !important;
-}
-
-.tooltipKey {
-  margin-bottom: -1px;
-}
-
-.historyToolTip {
-  z-index: 2;
-}
-
-.tooltipData {
-  background-color: #373737;
-  margin-top: 4px;
-  margin-bottom: 4px;
-  padding: 2px;
-  max-height: 30vh;
-}
-
-.tooltipData-JSONTree {
+/* Tree styling */
+.json-tree {
+  overflow: auto;
   list-style: none;
-  margin-top: 1px;
-  margin-bottom: 1px;
-  margin-left: 2px;
-  margin-right: 2px;
-  padding: 0px;
-  overflow-y: auto;
-  max-height: 30vh;
-  scrollbar-color: #919499 #51565e;
-}
-
-.tooltipData-JSONTree::-webkit-scrollbar-thumb {
-  background: #919499;
-}
-
-.tooltipData-JSONTree::-webkit-scrollbar-track {
-  background: #51565e;
-}
-
-.app-body {
-  height: 100%;
-}
-
-.app-content {
-  height: 100%;
 }

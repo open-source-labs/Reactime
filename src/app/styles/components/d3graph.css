@@ -1,105 +1,94 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
-body {
-	background-color: black;
-}
-
+/* Base node styling */
 .node {
-	cursor: pointer;
-	fill-opacity: 0.8;
+  cursor: pointer;
+  fill-opacity: 1;
+  transition: all 200ms ease;
 }
 
-/*   this represents leaf nodes aka nodes with no children */
+/* Node circle styling */
+.node circle {
+  fill: #ffffff;
+  stroke: #e5e7eb;
+  stroke-width: 2px;
+  transition: all 200ms ease;
+}
+
+.node:hover circle {
+  fill: #14b8a6;
+  stroke: #0d9488;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+/* Node text styling */
 .node text {
-	fill: #fae6e4;
-	background-color: red;
-	font-size: 10px;
-	font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  fill: #374151;
 }
 
-/*   modifies text of parent nodes (has children) */
+/* Parent node specific styling */
+.node--internal circle {
+  fill: #ffffff;
+  stroke: #e5e7eb;
+}
+
+.node--internal:hover circle {
+  fill: #14b8a6;
+  stroke: #0d9488;
+}
+
 .node--internal text {
-	fill: white;
-	font-size: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  fill: #374151;
 }
+
+/* Current/active node styling */
+.node.active circle {
+  fill: #14b8a6;
+  stroke: #0d9488;
+}
+
+/* Link styling */
 .link {
-	fill: none;
-	stroke: #161617;
-	stroke-opacity: 0.4;
-	stroke-width: 3px;
+  fill: none;
+  stroke: #e5e7eb;
+  stroke-width: 2px;
+  transition: stroke 200ms ease;
 }
 
+.link:hover {
+  stroke: #d1d5db;
+}
+
+/* Current path highlight */
+.link.current-link {
+  stroke: #14b8a6;
+  stroke-opacity: 0.6;
+}
+
+/* Tooltip styling */
 div.tooltip {
-	position: absolute;
-	padding: 0.5rem 1rem;
-	color: white;
-	z-index: 100;
-	font-size: 14px;
-	font-family: 'Outfit', sans-serif;
-	background: rgb(17, 17, 17, 0.9);
-	box-shadow: rgb(33 33 33 / 20%) 0px 1px 2px;
-	border-radius: 5px;
-	max-width: 300px;
+  position: absolute;
+  padding: 12px;
+  color: #374151;
+  z-index: 100;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  max-width: 250px;
 }
 
-.d3-tip {
-	line-height: 1;
-	padding: 6px;
-	background: #679dca;
-	color: #2b2f39;
-	border-radius: 4px;
-	font-size: 13px;
-	max-width: 400px;
-	overflow-wrap: break-word;
-	font-family: 'Overpass Mono', monospace;
+/* Container styling */
+.display {
+  background-color: #f9fafb;
 }
-
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-	box-sizing: border-box;
-	display: inline;
-	font-size: 15px;
-	line-height: 1;
-	color: #679dca;
-	content: '\25BC';
-	position: absolute;
-	text-align: center;
-}
-
-/* Style northward tooltips specifically */
-.d3-tip.n:after {
-	margin: -2px 0 0 0;
-	top: 100%;
-	left: 0;
-}
-
-.history-d3-container {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	height: calc(100% - 70px);
-}
-
-.perf-d3-container {
-	height: calc(100% - 70px);
-}
-
-.perf-d3-svg {
-	display: block;
-}
-
-.perf-chart-labels {
-	font: 1.3em sans-serif;
-	fill: #2a2f3a;
-	pointer-events: none;
-	text-anchor: middle;
-}
-
-/* .link {
-	stroke: #ccc;
-	stroke-width: 1.5;
-} */
-  
-/* .current-link {
-	stroke: red; 
-	stroke-width: 2.5; /* Adjust the width as needed */
-/* } */ 
