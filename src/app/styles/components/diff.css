@@ -15,12 +15,12 @@
 }
 ul.jsondiffpatch-delta {
   list-style-type: none;
-  padding: 0 0 0 12px;
+  padding: 0;
   margin: 0;
 }
 .jsondiffpatch-delta ul {
   list-style-type: none;
-  padding: 0 0 0 12px;
+  padding: 0;
   margin: 0;
 }
 

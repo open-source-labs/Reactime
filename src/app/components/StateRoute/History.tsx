@@ -212,7 +212,7 @@ function History(props: Record<string, unknown>): JSX.Element {
     // Add rectangles for nodes with consistent size
     node
       .append('rect')
-      .attr('width', 250)
+      .attr('width', 200)
       .attr('height', 120)
       .attr('x', -90)
       .attr('y', -40)
@@ -222,7 +222,7 @@ function History(props: Record<string, unknown>): JSX.Element {
     // Add snapshot titles
     node
       .append('text')
-      .attr('dy', '-25')
+      .attr('dy', '-20')
       .attr('text-anchor', 'middle')
       .attr('class', 'snapshot-title')
       .text((d) => `Snapshot ${d.data.index + 1}`);
@@ -232,11 +232,12 @@ function History(props: Record<string, unknown>): JSX.Element {
       .append('foreignObject')
       .attr('x', -85)
       .attr('y', -15)
-      .attr('width', 250)
-      .attr('height', 200)
+      .attr('width', 170)
+      .attr('height', 90)
       .append('xhtml:div')
       .style('font-size', '12px')
       .style('text-align', 'left')
+      .style('padding-left', '12px')
       .html((d) => findDiff(d.data.index));
 
     return svg.node();

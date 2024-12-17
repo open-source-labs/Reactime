@@ -38,6 +38,7 @@
   stroke: #14b8a6;
   stroke-width: 2px;
 }
+
 .node--internal text {
   font-family: 'Outfit', sans-serif;
   font-size: 14px;
@@ -94,4 +95,33 @@ div.tooltip {
   width: 100%;
   overflow: auto; /* Enable scrolling */
   position: relative; /* Create new stacking context */
+}
+
+/* State changes text container styling */
+.node foreignObject div {
+  max-height: 100%; /* Fixed height for scroll container */
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  padding-right: 6px;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+/* Custom scrollbar styling for Webkit browsers */
+.node foreignObject div::-webkit-scrollbar {
+  width: 6px;
+}
+
+.node foreignObject div::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.node foreignObject div::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.node foreignObject div::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
