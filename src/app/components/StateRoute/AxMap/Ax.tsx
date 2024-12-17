@@ -3,16 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
-import { pointRadial } from 'd3-shape';
 import LinkControls from './axLinkControls';
 import getLinkComponent from './getAxLinkComponents';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import ToolTipDataDisplay from './ToolTipDataDisplay';
 import { ToolTipStyles } from '../../../FrontendTypes';
 import { localPoint } from '@visx/event';
-import AxLegend from './axLegend';
-import { renderAxLegend } from '../../../slices/AxSlices/axLegendSlice';
-import type { RootState } from '../../../store';
 
 const defaultMargin = {
   top: 30,
@@ -76,7 +72,7 @@ export default function AxTree(props) {
   };
 
   const [orientation, setOrientation] = useState('horizontal');
-  const [linkType, setLinkType] = useState('diagonal');
+  const [linkType, setLinkType] = useState('step');
   const [stepPercent, setStepPercent] = useState(0.0);
 
   const innerWidth: number = totalWidth - margin.left - margin.right;
@@ -147,7 +143,6 @@ export default function AxTree(props) {
   populateNodeAxArr(rootAxNode);
 
   // Conditionally render ax legend component (RTK)
-  const { axLegendButtonClicked } = useSelector((state: RootState) => state.axLegend);
   const dispatch = useDispatch();
 
   return totalWidth < 10 ? null : (
@@ -161,10 +156,6 @@ export default function AxTree(props) {
           setLinkType={setLinkType}
           setStepPercent={setStepPercent}
         />
-
-        <button id='axLegendButton' onClick={() => dispatch(renderAxLegend())}>
-          Generate Ax Tree Legend
-        </button>
       </div>
 
       <svg ref={containerRef} width={totalWidth + 0.2 * totalWidth} height={totalHeight}>
@@ -197,7 +188,6 @@ export default function AxTree(props) {
                     fill='none'
                   />
                 ))}
-                // code relating to each node in tree
                 {tree.descendants().map((node, key) => {
                   const widthFunc = (name): number => {
                     // returns a number that is related to the length of the name. Used for determining the node width.
@@ -424,8 +414,6 @@ export default function AxTree(props) {
           </div>
         </TooltipInPortal>
       )}
-
-      <div>{axLegendButtonClicked ? <AxLegend /> : ''}</div>
     </div>
   );
 }
