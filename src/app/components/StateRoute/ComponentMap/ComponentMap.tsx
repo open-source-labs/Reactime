@@ -126,12 +126,6 @@ export default function ComponentMap({
     overflowY: 'auto',
   };
 
-  const formatRenderTime: string = (time: number): string => {
-    if (!time) return 'No time information';
-    const renderTime = time.toFixed(3);
-    return `${renderTime} ms `;
-  };
-
   const nodeList: [] = []; // create a nodeList array to store our nodes as a flat array
 
   const collectNodes: void = (node) => {
@@ -450,7 +444,7 @@ export default function ComponentMap({
                       }
                     }
                   } else {
-                    aspect = Math.max(aspect, 1);
+                    aspect = Math.max(aspect, 0.8);
                   }
 
                   // mousing controls & Tooltip display logic
