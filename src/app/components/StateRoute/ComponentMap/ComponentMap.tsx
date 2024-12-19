@@ -117,20 +117,13 @@ export default function ComponentMap({
     ...defaultStyles,
     minWidth: 60,
     maxWidth: 250,
+    maxHeight: '300px',
     lineHeight: '18px',
     pointerEvents: 'all !important',
     margin: 0,
     padding: 0,
     borderRadius: '8px',
-  };
-
-  const scrollStyle: {} = {
-    minWidth: '60',
-    maxWidth: '250',
-    minHeight: '20px',
-    maxHeight: '200px',
-    overflowY: 'scroll',
-    overflowWrap: 'break-word',
+    overflowY: 'auto',
   };
 
   const formatRenderTime: string = (time: number): string => {
