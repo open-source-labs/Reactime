@@ -18,7 +18,6 @@ const colors = {
   base07: '#e7e9db',
   base08: '#ef6155',
   base09: '#824508', //base09 is orange for booleans and numbers. This base in particular fails to match the entered color.
-  // base09: '#592bad', // alternative purple
   base0A: '#fec418',
   base0B: '#48b685',
   base0C: '#5bc4bf',

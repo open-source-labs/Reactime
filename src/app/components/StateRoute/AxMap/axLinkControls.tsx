@@ -1,52 +1,46 @@
 import React from 'react';
 
-const controlStyles = { fontSize: 10 };
-
-type Props = {
-  orientation: string;
-  linkType: string;
-  stepPercent: number;
-  setOrientation: (orientation: string) => void;
-  setLinkType: (linkType: string) => void;
-  setStepPercent: (percent: number) => void;
-};
-
-export default function LinkControls({
+const AxLinkControls = ({
   orientation,
   linkType,
   stepPercent,
   setOrientation,
   setLinkType,
   setStepPercent,
-}: Props) {
+}) => {
   return (
-    <div style={controlStyles}>
-      &nbsp;&nbsp;
-      <label>orientation:</label>&nbsp;
-      <select
-        onClick={(e) => e.stopPropagation()}
-        onChange={(e) => setOrientation(e.target.value)}
-        value={orientation}
-      >
-        <option value='vertical'>vertical</option>
-        <option value='horizontal'>horizontal</option>
-      </select>
-      &nbsp;&nbsp;
-      <label>link:</label>&nbsp;
-      <select
-        onClick={(e) => e.stopPropagation()}
-        onChange={(e) => setLinkType(e.target.value)}
-        value={linkType}
-      >
-        <option value='diagonal'>diagonal</option>
-        <option value='step'>step</option>
-        <option value='curve'>curve</option>
-        <option value='line'>line</option>
-      </select>
+    <div className='link-controls'>
+      <div className='control-group'>
+        <label className='control-label'>Orientation:</label>
+        <select
+          className='control-select'
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => setOrientation(e.target.value)}
+          value={orientation}
+        >
+          <option value='vertical'>vertical</option>
+          <option value='horizontal'>horizontal</option>
+        </select>
+      </div>
+
+      <div className='control-group'>
+        <label className='control-label'>Link:</label>
+        <select
+          className='control-select'
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => setLinkType(e.target.value)}
+          value={linkType}
+        >
+          <option value='diagonal'>diagonal</option>
+          <option value='step'>step</option>
+          <option value='curve'>curve</option>
+          <option value='line'>line</option>
+        </select>
+      </div>
+
       {linkType === 'step' && (
-        <>
-          &nbsp;&nbsp;
-          <label>step:</label>&nbsp;
+        <div className='control-group'>
+          <label className='control-label'>step:</label>
           <input
             onClick={(e) => e.stopPropagation()}
             type='range'
@@ -56,9 +50,12 @@ export default function LinkControls({
             onChange={(e) => setStepPercent(Number(e.target.value))}
             value={stepPercent}
             disabled={linkType !== 'step'}
+            className='control-range'
           />
-        </>
+        </div>
       )}
     </div>
   );
-}
+};
+
+export default AxLinkControls;

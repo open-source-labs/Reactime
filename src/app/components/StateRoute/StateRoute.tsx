@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetricsContainer from './WebMetrics/WebMetricsContainer';
 import { MainState, RootState, StateRouteProps } from '../../FrontendTypes';
-import  AxContainer  from './AxMap/AxContainer';
+import AxContainer from './AxMap/AxContainer';
 
 /*
   Loads the appropriate StateRoute view and renders the Map, Performance, History, Webmetrics, and Tree navbar buttons after clicking on the 'State' button located near the top rightmost corner.
@@ -128,25 +128,31 @@ const StateRoute = (props: StateRouteProps) => {
             element={
               showTree ? (
                 <div>
-                  <input
-                    type='radio'
-                    value='enable'
-                    checked={selectedValue === 'enable'}
-                    onChange={() => {
-                      enableAxTreeButton();
-                    }}
-                  />
-                  <label htmlFor='enable'>Enable</label>
-                  <input
-                    type='radio'
-                    value='disable'
-                    checked={selectedValue === 'disable'}
-                    onChange={() => {
-                      disableAxTree();
-                    }}
-                  />
-                  <label htmlFor='disable'>Disable</label>
-                  {/* @ts-ignore */}
+                  <div className='accessibility-controls'>
+                    <input
+                      type='radio'
+                      id='enable'
+                      name='accessibility'
+                      value='enable'
+                      checked={selectedValue === 'enable'}
+                      onChange={() => {
+                        enableAxTreeButton();
+                      }}
+                    />
+                    <label htmlFor='enable'>Enable</label>
+
+                    <input
+                      type='radio'
+                      id='disable'
+                      name='accessibility'
+                      value='disable'
+                      checked={selectedValue === 'disable'}
+                      onChange={() => {
+                        disableAxTree();
+                      }}
+                    />
+                    <label htmlFor='disable'>Disable</label>
+                  </div>
                   {showTree && (
                     <AxContainer
                       axSnapshots={axSnapshots}
@@ -159,16 +165,20 @@ const StateRoute = (props: StateRouteProps) => {
               ) : (
                 <div>
                   {showParagraph && (
-                    <p>
-                      A Note to Developers: Reactime is using the Chrome Debugger API in order to
-                      grab the Accessibility Tree. Enabling this option will allow you to record
-                      Accessibility Tree snapshots, but will result in the Chrome browser notifying
-                      you that the Chrome Debugger has started.
-                    </p>
+                    <div className='accessibility-text'>
+                      <p>
+                        A Note to Developers: Reactime is using the Chrome Debugger API in order to
+                        grab the Accessibility Tree. Enabling this option will allow you to record
+                        Accessibility Tree snapshots, but will result in the Chrome browser
+                        notifying you that the Chrome Debugger has started.
+                      </p>
+                    </div>
                   )}
-                  <div>
+                  <div className='accessibility-controls'>
                     <input
                       type='radio'
+                      id='enable'
+                      name='accessibility'
                       value='enable'
                       checked={selectedValue === 'enable'}
                       onChange={() => {
@@ -176,8 +186,11 @@ const StateRoute = (props: StateRouteProps) => {
                       }}
                     />
                     <label htmlFor='enable'>Enable</label>
+
                     <input
                       type='radio'
+                      id='disable'
+                      name='accessibility'
                       value='disable'
                       checked={selectedValue === 'disable'}
                       onChange={() => {

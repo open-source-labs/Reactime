@@ -1,13 +1,14 @@
 .state-container {
   overflow: auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
+.app-content,
 .app-body {
   height: 100%;
-}
-
-.app-content {
-  height: 100%;
+  overflow: hidden;
 }
 
 .main-navbar-container--structural {
@@ -152,4 +153,11 @@
 .json-tree {
   overflow: auto;
   list-style: none;
+  padding: 16px;
+  margin: 0 0 50px;
+}
+
+.tree-component {
+  height: 100%;
+  overflow: auto;
 }

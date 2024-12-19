@@ -2,6 +2,7 @@
 .componentMapContainer {
   fill: #f9fafb;
   transition: all 0.3s ease;
+  overflow: auto;
 }
 .componentMapContainer svg {
   background-color: #f9fafb;
@@ -130,4 +131,20 @@
   outline: none;
   margin: 0;
   cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #14b8a6;
+    cursor: pointer;
+    transition: all 200ms ease;
+    border: none;
+
+    &:hover {
+      background: #0d9488;
+      transform: scale(1.1);
+    }
+  }
 }

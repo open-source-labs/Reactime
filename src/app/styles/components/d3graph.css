@@ -6,17 +6,17 @@
   transition: all 200ms ease;
 }
 
-/* Node circle styling */
-.node circle {
+/* Node rectangle styling */
+.node rect {
   fill: #ffffff;
   stroke: #e5e7eb;
-  stroke-width: 2px;
+  stroke-width: 1px;
   transition: all 200ms ease;
 }
 
-.node:hover circle {
-  fill: #14b8a6;
-  stroke: #0d9488;
+.node:hover rect {
+  stroke: #14b8a6;
+  stroke-width: 2px;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
@@ -29,14 +29,14 @@
 }
 
 /* Parent node specific styling */
-.node--internal circle {
+.node--internal rect {
   fill: #ffffff;
   stroke: #e5e7eb;
 }
 
-.node--internal:hover circle {
-  fill: #14b8a6;
-  stroke: #0d9488;
+.node--internal:hover rect {
+  stroke: #14b8a6;
+  stroke-width: 2px;
 }
 
 .node--internal text {
@@ -47,9 +47,9 @@
 }
 
 /* Current/active node styling */
-.node.active circle {
-  fill: #14b8a6;
-  stroke: #0d9488;
+.node.active rect {
+  stroke: #14b8a6;
+  stroke-width: 2px;
 }
 
 /* Link styling */
@@ -91,4 +91,37 @@ div.tooltip {
 /* Container styling */
 .display {
   background-color: #f9fafb;
+  height: 100%;
+  width: 100%;
+  overflow: auto; /* Enable scrolling */
+  position: relative; /* Create new stacking context */
+}
+
+/* State changes text container styling */
+.node foreignObject div {
+  max-height: 100%; /* Fixed height for scroll container */
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  padding-right: 6px;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+/* Custom scrollbar styling for Webkit browsers */
+.node foreignObject div::-webkit-scrollbar {
+  width: 6px;
+}
+
+.node foreignObject div::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.node foreignObject div::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.node foreignObject div::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

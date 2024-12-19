@@ -3,16 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
-import { pointRadial } from 'd3-shape';
 import LinkControls from './axLinkControls';
 import getLinkComponent from './getAxLinkComponents';
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import ToolTipDataDisplay from './ToolTipDataDisplay';
 import { ToolTipStyles } from '../../../FrontendTypes';
 import { localPoint } from '@visx/event';
-import AxLegend from './axLegend';
-import { renderAxLegend } from '../../../slices/AxSlices/axLegendSlice';
-import type { RootState } from '../../../store';
+import { toggleExpanded, setCurrentTabInApp } from '../../../slices/mainSlice';
 
 const defaultMargin = {
   top: 30,
@@ -76,7 +73,7 @@ export default function AxTree(props) {
   };
 
   const [orientation, setOrientation] = useState('horizontal');
-  const [linkType, setLinkType] = useState('diagonal');
+  const [linkType, setLinkType] = useState('step');
   const [stepPercent, setStepPercent] = useState(0.0);
 
   const innerWidth: number = totalWidth - margin.left - margin.right;
@@ -147,7 +144,6 @@ export default function AxTree(props) {
   populateNodeAxArr(rootAxNode);
 
   // Conditionally render ax legend component (RTK)
-  const { axLegendButtonClicked } = useSelector((state: RootState) => state.axLegend);
   const dispatch = useDispatch();
 
   return totalWidth < 10 ? null : (
@@ -161,10 +157,6 @@ export default function AxTree(props) {
           setLinkType={setLinkType}
           setStepPercent={setStepPercent}
         />
-
-        <button id='axLegendButton' onClick={() => dispatch(renderAxLegend())}>
-          Generate Ax Tree Legend
-        </button>
       </div>
 
       <svg ref={containerRef} width={totalWidth + 0.2 * totalWidth} height={totalHeight}>
@@ -197,7 +189,6 @@ export default function AxTree(props) {
                     fill='none'
                   />
                 ))}
-                // code relating to each node in tree
                 {tree.descendants().map((node, key) => {
                   const widthFunc = (name): number => {
                     // returns a number that is related to the length of the name. Used for determining the node width.
@@ -284,7 +275,7 @@ export default function AxTree(props) {
                       }
                     }
                   } else {
-                    aspect = Math.max(aspect, 0.2);
+                    aspect = Math.max(aspect, 0.5);
                   }
                   const handleMouseAndClickOver = (event): void => {
                     const coords = localPoint(event.target.ownerSVGElement, event);
@@ -303,17 +294,16 @@ export default function AxTree(props) {
                     <Group top={top} left={left} key={key} className='rect'>
                       {node.depth === 0 && (
                         <rect
-                          className={node.children ? 'compMapParent' : 'compMapChild'}
+                          className={'compMapRoot'}
                           height={height}
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          fill="url('#parent-gradient')"
                           strokeWidth={1.5}
                           strokeOpacity='1'
-                          rx={node.children ? 4 : 10}
+                          rx={8}
                           onClick={() => {
-                            node.data.isExpanded = !node.data.isExpanded;
+                            dispatch(toggleExpanded(node.data));
                             hideTooltip();
                           }}
                         />
@@ -325,12 +315,11 @@ export default function AxTree(props) {
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          fill="url('#parent-gradient')"
                           strokeWidth={1.5}
                           strokeOpacity='1'
-                          rx={node.children ? 4 : 10}
+                          rx={8}
                           onClick={() => {
-                            node.data.isExpanded = !node.data.isExpanded;
+                            dispatch(toggleExpanded(node.data));
                             hideTooltip();
                           }}
                           // Mouse Enter Rect (Component Node) -----------------------------------------------------------------------
@@ -424,8 +413,6 @@ export default function AxTree(props) {
           </div>
         </TooltipInPortal>
       )}
-
-      <div>{axLegendButtonClicked ? <AxLegend /> : ''}</div>
     </div>
   );
 }
