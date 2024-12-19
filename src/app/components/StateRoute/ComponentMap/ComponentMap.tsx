@@ -457,7 +457,7 @@ export default function ComponentMap({
                       }
                     }
                   } else {
-                    aspect = Math.max(aspect, 0.8);
+                    aspect = Math.max(aspect, 1);
                   }
 
                   // mousing controls & Tooltip display logic

@@ -275,7 +275,7 @@ export default function AxTree(props) {
                       }
                     }
                   } else {
-                    aspect = Math.max(aspect, 0.2);
+                    aspect = Math.max(aspect, 0.5);
                   }
                   const handleMouseAndClickOver = (event): void => {
                     const coords = localPoint(event.target.ownerSVGElement, event);
