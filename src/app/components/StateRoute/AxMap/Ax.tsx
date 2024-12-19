@@ -301,7 +301,7 @@ export default function AxTree(props) {
                           x={-width / 2}
                           strokeWidth={1.5}
                           strokeOpacity='1'
-                          rx={10}
+                          rx={8}
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
@@ -317,7 +317,7 @@ export default function AxTree(props) {
                           x={-width / 2}
                           strokeWidth={1.5}
                           strokeOpacity='1'
-                          rx={10}
+                          rx={8}
                           onClick={() => {
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
