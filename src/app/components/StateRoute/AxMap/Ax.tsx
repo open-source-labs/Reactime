@@ -9,6 +9,7 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import ToolTipDataDisplay from './ToolTipDataDisplay';
 import { ToolTipStyles } from '../../../FrontendTypes';
 import { localPoint } from '@visx/event';
+import { toggleExpanded, setCurrentTabInApp } from '../../../slices/mainSlice';
 
 const defaultMargin = {
   top: 30,
@@ -293,17 +294,16 @@ export default function AxTree(props) {
                     <Group top={top} left={left} key={key} className='rect'>
                       {node.depth === 0 && (
                         <rect
-                          className={node.children ? 'compMapParent' : 'compMapChild'}
+                          className={'compMapRoot'}
                           height={height}
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          fill="url('#parent-gradient')"
                           strokeWidth={1.5}
                           strokeOpacity='1'
-                          rx={node.children ? 4 : 10}
+                          rx={10}
                           onClick={() => {
-                            node.data.isExpanded = !node.data.isExpanded;
+                            dispatch(toggleExpanded(node.data));
                             hideTooltip();
                           }}
                         />
@@ -315,12 +315,11 @@ export default function AxTree(props) {
                           width={width}
                           y={-height / 2}
                           x={-width / 2}
-                          fill="url('#parent-gradient')"
                           strokeWidth={1.5}
                           strokeOpacity='1'
-                          rx={node.children ? 4 : 10}
+                          rx={10}
                           onClick={() => {
-                            node.data.isExpanded = !node.data.isExpanded;
+                            dispatch(toggleExpanded(node.data));
                             hideTooltip();
                           }}
                           // Mouse Enter Rect (Component Node) -----------------------------------------------------------------------

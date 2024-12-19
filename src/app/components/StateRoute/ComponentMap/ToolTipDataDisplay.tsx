@@ -38,12 +38,15 @@ const ToolTipDataDisplay = ({ data }) => {
   };
 
   const formatReducerData = (reducerStates) => {
-    // Check if reducerStates exists and is an array
-    if (!Array.isArray(reducerStates)) {
+    // Check if reducerStates exists and is an object
+    if (!reducerStates || typeof reducerStates !== 'object') {
       return {};
     }
 
-    return reducerStates.reduce((acc, reducer) => {
+    // Handle both array and object formats
+    const statesArray = Array.isArray(reducerStates) ? reducerStates : Object.values(reducerStates);
+
+    return statesArray.reduce((acc, reducer) => {
       // Add additional type checking for reducer object
       if (reducer && typeof reducer === 'object') {
         acc[reducer.hookName || 'Reducer'] = reducer.state;
@@ -67,9 +70,11 @@ const ToolTipDataDisplay = ({ data }) => {
     if (isReducer && parsedContent) {
       // Only try to format if we have valid content
       const formattedData = formatReducerData(parsedContent);
+      console.log('formatted data', formattedData);
 
       // Check if we have any formatted data to display
       if (Object.keys(formattedData).length === 0) {
+        console.log('formatted data length', Object.keys(formattedData).length);
         return null;
       }
 

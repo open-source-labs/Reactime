@@ -260,6 +260,15 @@ export default function ComponentMap({
       <svg ref={containerRef} width={totalWidth} height={totalHeight + 0}>
         <LinearGradient id='root-gradient' from='#488689' to='#3c6e71' />
         <LinearGradient id='parent-gradient' from='#488689' to='#3c6e71' />
+        <rect
+          className='componentMapContainer'
+          onClick={() => {
+            hideTooltip();
+          }}
+          width={sizeWidth / aspect}
+          height={sizeHeight / aspect + 0}
+          rx={14}
+        />
         <Group transform={`scale(${aspect})`} top={margin.top} left={margin.left}>
           <Tree
             root={hierarchy(startNode, (d) => (d.isExpanded ? d.children : null))}
@@ -267,7 +276,7 @@ export default function ComponentMap({
             separation={(a, b) => (a.parent === b.parent ? 0.5 : 0.5) / a.depth}
           >
             {(tree) => (
-              <Group top={origin.y + 35} left={origin.x + 50 / aspect}>
+              <Group top={origin.y + 35} left={origin.x + 50}>
                 {tree.links().map((link, i) => {
                   const linkName = link.source.data.name;
                   const propsObj = link.source.data.componentData.props;
@@ -448,7 +457,7 @@ export default function ComponentMap({
                       }
                     }
                   } else {
-                    aspect = Math.max(aspect, 1);
+                    aspect = Math.max(aspect, 0.8);
                   }
 
                   // mousing controls & Tooltip display logic
