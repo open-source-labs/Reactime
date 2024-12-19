@@ -477,6 +477,7 @@ export default function ComponentMap({
 
                   return (
                     <Group top={top} left={left} key={key} className='rect'>
+                      // Replace the root node rect rendering block with this:
                       {node.depth === 0 && (
                         <rect
                           className='compMapRoot'
@@ -489,9 +490,26 @@ export default function ComponentMap({
                             dispatch(toggleExpanded(node.data));
                             hideTooltip();
                           }}
+                          onMouseEnter={(event) => {
+                            if (hasDisplayableData(node.data)) {
+                              if (toolTipTimeoutID.current !== null) {
+                                clearTimeout(toolTipTimeoutID.current);
+                                hideTooltip();
+                              }
+                              toolTipTimeoutID.current = null;
+                              handleMouseAndClickOver(event, node.data);
+                            }
+                          }}
+                          onMouseLeave={() => {
+                            if (hasDisplayableData(node.data)) {
+                              toolTipTimeoutID.current = setTimeout(() => {
+                                hideTooltip();
+                                toolTipTimeoutID.current = null;
+                              }, 300);
+                            }
+                          }}
                         />
                       )}
-
                       {/* This creates the rectangle boxes for each component
                        and sets it relative position to other parent nodes of the same level. */}
                       {node.depth !== 0 && (
@@ -526,7 +544,6 @@ export default function ComponentMap({
                           }}
                         />
                       )}
-
                       {/* Display text inside of each component node */}
                       <text
                         className={
