@@ -70,11 +70,9 @@ const ToolTipDataDisplay = ({ data }) => {
     if (isReducer && parsedContent) {
       // Only try to format if we have valid content
       const formattedData = formatReducerData(parsedContent);
-      console.log('formatted data', formattedData);
 
       // Check if we have any formatted data to display
       if (Object.keys(formattedData).length === 0) {
-        console.log('formatted data length', Object.keys(formattedData).length);
         return null;
       }
 

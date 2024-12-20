@@ -1,182 +1,200 @@
-import React, {useState} from 'react';
-import { ProvConContainerProps} from '../FrontendTypes';
+import React, { useState } from 'react';
+import { ProvConContainerProps, FilteredNode } from '../FrontendTypes';
+import { JSONTree } from 'react-json-tree';
 
+const ProvConContainer = (props: ProvConContainerProps): JSX.Element => {
+  const jsonTheme = {
+    scheme: 'custom',
+    base00: 'transparent',
+    base0B: '#1f2937', // dark navy for strings
+    base0D: '#60a5fa', // Keys
+    base09: '#f59e0b', // Numbers
+    base0C: '#EF4444', // Null values
+  };
 
-const ProvConContainer = (props: ProvConContainerProps): JSX.Element  => {
+  //deconstruct props
+  const { currentSnapshot } = props;
 
-    //deconstruct props
-    const { currentSnapshot } = props;
+  //parse through node
+  const keepContextAndProviderNodes = (node) => {
+    if (!node) return null;
 
-    //parse through node
-    const keepContextAndProviderNodes = (node) => {
-      if (!node) return null;
-  
-      // Check if this node should be kept
-      const hasContext =
-        node?.componentData?.context && Object.keys(node.componentData.context).length > 0;
-      const isProvider = node?.name && node.name.endsWith('Provider');
-      const shouldKeepNode = hasContext || isProvider;
-  
-      // Process children first
-      let processedChildren = [];
-      if (node.children) {
-        processedChildren = node.children
-          .map((child) => keepContextAndProviderNodes(child))
-          .filter(Boolean); // Remove null results
+    // Check if this node should be kept
+    const hasContext =
+      node?.componentData?.context && Object.keys(node.componentData.context).length > 0;
+    const isProvider = node?.name && node.name.endsWith('Provider');
+    const shouldKeepNode = hasContext || isProvider;
+
+    // Process children first
+    let processedChildren = [];
+    if (node.children) {
+      processedChildren = node.children
+        .map((child) => keepContextAndProviderNodes(child))
+        .filter(Boolean); // Remove null results
+    }
+
+    // If this node should be kept or has kept children, return it
+    if (shouldKeepNode || processedChildren.length > 0) {
+      return {
+        ...node,
+        children: processedChildren,
+      };
+    }
+
+    // If neither the node should be kept nor it has kept children, filter it out
+    return null;
+  };
+  const contextProvidersOnly = keepContextAndProviderNodes(currentSnapshot);
+
+  const filterComponentProperties = (node: any): FilteredNode | null => {
+    if (!node) return null;
+
+    // Helper function to check if an object is empty (including nested objects)
+    const isEmptyObject = (obj: any): boolean => {
+      if (!obj) return true;
+      if (Array.isArray(obj)) return obj.length === 0;
+      if (typeof obj !== 'object') return false;
+
+      // Check each property recursively
+      for (const key in obj) {
+        const value = obj[key];
+        if (typeof value === 'object') {
+          if (!isEmptyObject(value)) return false;
+        } else if (value !== undefined && value !== null) {
+          return false;
+        }
       }
-  
-      // If this node should be kept or has kept children, return it
-      if (shouldKeepNode || processedChildren.length > 0) {
-        return {
-          ...node,
-          children: processedChildren,
-        };
+      return true;
+    };
+
+    // Create a new object for the filtered node
+    const filteredNode: FilteredNode = {};
+
+    // Flatten root level props if they exist
+    if (node.props && !isEmptyObject(node.props)) {
+      Object.entries(node.props).forEach(([key, value]) => {
+        if (!isEmptyObject(value)) {
+          filteredNode[`prop_${key}`] = value;
+        }
+      });
+    }
+
+    // Flatten componentData properties into root level if they exist
+    if (node.componentData.context && !isEmptyObject(node.componentData.context)) {
+      // Add context directly if it exists
+      Object.entries(node.componentData.context).forEach(([key, value]) => {
+        if (!isEmptyObject(value)) {
+          filteredNode[`${key}`] = value;
+        }
+      });
+
+      // Flatten componentData.props if they exist
+      if (node.componentData.props && !isEmptyObject(node.componentData.props)) {
+        Object.entries(node.componentData.props).forEach(([key, value]) => {
+          if (!isEmptyObject(value)) {
+            filteredNode[`${key}`] = value;
+          }
+        });
       }
-  
-      // If neither the node should be kept nor it has kept children, filter it out
+
+      // Flatten componentData.hooksState if it exists
+      if (node.componentData.hooksState && !isEmptyObject(node.componentData.hooksState)) {
+        Object.entries(node.componentData.hooksState).forEach(([key, value]) => {
+          if (!isEmptyObject(value)) {
+            filteredNode[`${key}`] = value;
+          }
+        });
+      }
+    }
+
+    // Flatten root level hooksState if it exists
+    if (node.hooksState && !isEmptyObject(node.hooksState)) {
+      Object.entries(node.hooksState).forEach(([key, value]) => {
+        if (!isEmptyObject(value)) {
+          filteredNode[`hook_${key}`] = value;
+        }
+      });
+    }
+
+    // Process children and add them using the node's name as the key
+    if (node.hasOwnProperty('children') && Array.isArray(node.children)) {
+      for (const child of node.children) {
+        const filteredChild = filterComponentProperties(child);
+        if (filteredChild && !isEmptyObject(filteredChild) && child.name) {
+          filteredNode[child.name] = filteredChild;
+        }
+      }
+    }
+
+    // Only return the node if it has at least one non-empty property
+    return isEmptyObject(filteredNode) ? null : filteredNode;
+  };
+  const filteredProviders = filterComponentProperties(contextProvidersOnly);
+  console.log('filtered', filteredProviders);
+
+  const parseStringifiedValues = (obj) => {
+    if (!obj || typeof obj !== 'object') return obj;
+
+    const parsed = { ...obj };
+    for (const key in parsed) {
+      if (typeof parsed[key] === 'string') {
+        try {
+          // Check if the string looks like JSON
+          if (parsed[key].startsWith('{') || parsed[key].startsWith('[')) {
+            const parsedValue = JSON.parse(parsed[key]);
+            parsed[key] = parsedValue;
+          }
+        } catch (e) {
+          // If parsing fails, keep original value
+          continue;
+        }
+      } else if (typeof parsed[key] === 'object') {
+        parsed[key] = parseStringifiedValues(parsed[key]);
+      }
+    }
+    return parsed;
+  };
+
+  const renderSection = (title, content, isReducer = false) => {
+    if (
+      !content ||
+      (Array.isArray(content) && content.length === 0) ||
+      Object.keys(content).length === 0
+    ) {
       return null;
-    };
-    const contextProvidersOnly = keepContextAndProviderNodes(currentSnapshot);
-    console.log('context only', contextProvidersOnly)
+    }
 
-
-
-    // State for managing expansion of nodes
-    const [expandedNodes, setExpandedNodes] = useState({});
-
-    // Toggle function to expand/collapse a node
-    const toggleExpand = (nodeName) => {
-        setExpandedNodes((prev) => ({
-            ...prev,
-            [nodeName]: !prev[nodeName],
-        }));
-    };
-
-    const renderNestedObject = (node, depth = 0) => {
-        const isExpanded = expandedNodes[node.name];
-    
-        return (
-            <div key={node.name}>
-                {/* Render Node Name */}
-                <p
-                    onClick={() => toggleExpand(node.name)}
-                    style={{
-                        cursor: "pointer",
-                        fontWeight: "bold",
-                        textDecoration: "underline",
-                        color: isExpanded ? "#1f2937" : "#059669",
-                    }}
-                >
-                    {node.name}
-                </p>
-                {/* Render HookState if it exists */}
-                {isExpanded && node.componentData?.hooksState && (
-                    <div>
-                        <h1 style={{fontWeight: "bold"}}>State: {'{}'}</h1>
-                        <ul>
-                                {Object.entries(node.componentData.hooksState).map(([key, value]) => (
-                                    <li style={{ whiteSpace: "normal" , overflowWrap: "break-word", listStyleType: "none" }}>
-                                        <strong>{key}:</strong> {typeof value === 'object'? JSON.stringify(value, null,2): value.toString()}
-                                    </li>
-                                ))}
-                        </ul>
-                    </div>
-                )}
-    
-                {/* Render Context Property if it exists */}
-                {isExpanded && node.componentData?.context &&  Object.keys(node.componentData?.context).length !== 0 && (
-                    <div>
-                        <h1 style={{fontWeight: "bold"}}>Context Property: {'{}'} </h1>   
-                        <ul>
-                            {Object.entries(node.componentData.context).map(([key, value]) => {
-                                // Parse if the value is a JSON string
-                                let parsedValue = value;
-                                if (typeof value === "string") {
-                                    try {
-                                        parsedValue = JSON.parse(value);
-                                    } catch {
-                                        parsedValue = value; // Keep the original value if parsing fails
-                                    }
-                                }
-                                return (
-                                    <li key={key} style={{ whiteSpace: "normal", overflowWrap: "break-word", listStyleType: "none" }}>
-                                        <strong>{key}:</strong>{" "}
-                                        {typeof parsedValue === "object" && parsedValue !== null ? (
-                                            <ul style={{ listStyleType: "none", paddingLeft: "1rem" }}>
-                                                {Object.entries(parsedValue).map(([nestedKey, nestedValue]) => (
-                                                    <li key={nestedKey}>
-                                                        <strong>{nestedKey}:</strong> {nestedValue === null ? "null" : nestedValue.toString()}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        ) : (
-                                            parsedValue === null ? "null" : parsedValue.toString()
-                                        )}
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </div>
-                  
-                )}
-    
-                {/* Render Context Value if it exists */}
-                {isExpanded && node.componentData?.props?.value && (
-                    <div>
-                        <h1 style={{fontWeight: "bold"}}>Context Value: {'{}'}</h1>
-                            <ul>
-                                    {(() => {
-                                        try {
-                                            const parsedValue = JSON.parse(node.componentData.props.value); // Parse the JSON string
-                                            return Object.entries(parsedValue).map(([key, value]) => (
-                                                <li key={key} style={{ whiteSpace: "normal", overflowWrap: "break-word", listStyleType: "none" }}>
-                                                    {/* <strong>{key}:</strong> {typeof value === 'object' ? JSON.stringify(value, null, 2) : value?.toString()} */}
-
-                                                    <strong>{key}:</strong>{" "}
-                                                    {value === null ? (
-                                                        "null"
-                                                    ) : typeof value === "object" ? (
-                                                        <ul style={{ listStyleType: "none", paddingLeft: "1rem" }}>
-                                                            {Object.entries(value).map(([nestedKey, nestedValue]) => (
-                                                                <li key={nestedKey}>
-                                                                    <strong>{nestedKey}:</strong> {nestedValue === null ? "null" : nestedValue?.toString()}
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    ) : (
-                                                        value?.toString()
-                                                    )}
-                                                </li>
-                                            ));
-                                        } catch (error) {
-                                            return (
-                                                <li style={{ color: "red" }}>
-                                                    Error parsing value: {error.message}
-                                                </li>
-                                            );
-                                        }
-                                    })()}
-                                </ul>
-                    </div>
-            
-                )}
-    
-                {/* Recursively Render Children */}
-                {isExpanded &&
-                    node.children &&
-                    node.children.map((child) => renderNestedObject(child, depth + 1))}
-            </div>
-        );
-    };
-    
+    // Parse any stringified JSON before displaying
+    const parsedContent = parseStringifiedValues(content);
 
     return (
-        <div style={{ width: "260px", marginLeft: "25px"}}>
-            {renderNestedObject(contextProvidersOnly)}
+      <div className='tooltip-section'>
+        <div className='tooltip-section-title'>{title}</div>
+        <div className='tooltip-data'>
+          <JSONTree
+            data={parsedContent}
+            theme={jsonTheme}
+            hideRoot
+            shouldExpandNode={() => true}
+            shouldExpandNodeInitially={() => true}
+          />
         </div>
+      </div>
     );
+  };
 
+  return (
+    <div>
+      <div className='route-header'>Providers / Consumers</div>
+      {filteredProviders ? (
+        <div>{renderSection(null, filteredProviders)}</div>
+      ) : (
+        <div className='accessibility-text '>
+          <p>No providers or consumers found in the current component tree.</p>
+        </div>
+      )}
+    </div>
+  );
 };
-
 
 export default ProvConContainer;

@@ -13,8 +13,8 @@ const DropDown = ({
   };
 
   const options = [
-    { value: 'TimeJump', label: 'TimeJump' },
-    { value: 'Provider/Consumer', label: 'Provider/Consumer' },
+    { value: 'Time Jump', label: 'Time Jump' },
+    { value: 'Providers / Consumers', label: 'Providers / Consumers' },
   ];
 
   return (

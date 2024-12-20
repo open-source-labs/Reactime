@@ -40,7 +40,7 @@ const AxLinkControls = ({
 
       {linkType === 'step' && (
         <div className='control-group'>
-          <label className='control-label'>step:</label>
+          <label className='control-label'>Step:</label>
           <input
             onClick={(e) => e.stopPropagation()}
             type='range'

@@ -37,5 +37,3 @@ const AxContainer = (props: AxContainer) => {
 };
 
 export default AxContainer;
-
-

@@ -17,22 +17,18 @@ import WebMetricsContainer from './WebMetrics/WebMetricsContainer';
 import { MainState, RootState, StateRouteProps } from '../../FrontendTypes';
 import AxContainer from './AxMap/AxContainer';
 
-/*
-  Loads the appropriate StateRoute view and renders the Map, Performance, History, Webmetrics, and Tree navbar buttons after clicking on the 'State' button located near the top rightmost corner.
-*/
-
 const History = require('./History').default;
-const NO_STATE_MSG = 'No state change detected. Trigger an event to change state'; // message to be returned if there has been no state change detected in our hooked/target app
+const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
 
 const StateRoute = (props: StateRouteProps) => {
   const {
-    axSnapshots, // from 'tabs[currentTab]' object in 'MainContainer'
-    snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
-    hierarchy: propsHierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
-    snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
-    viewIndex: propsViewIndex, // from 'tabs[currentTab]' object in 'MainContainer'
-    webMetrics, // from 'tabs[currentTab]' object in 'MainContainer'
-    currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
+    axSnapshots,
+    snapshot,
+    hierarchy: propsHierarchy,
+    snapshots,
+    viewIndex: propsViewIndex,
+    webMetrics,
+    currLocation,
   } = props;
 
   const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
@@ -40,25 +36,15 @@ const StateRoute = (props: StateRouteProps) => {
   const hierarchy = propsHierarchy || tabsHierarchy;
   const viewIndex = propsViewIndex || tabsViewIndex;
 
-  // lines 45 - 63 contains functionality to disable the accessibility features in Reactime.
   const dispatch = useDispatch();
   const [showTree, setShowTree] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('disable');
   const [showParagraph, setShowParagraph] = useState(true);
 
   const enableAxTreeButton = () => {
     dispatch(toggleAxTree('toggleAxRecord'));
     dispatch(setCurrentTabInApp('AxTree'));
-    setSelectedValue('enable');
     setShowParagraph(false);
     setShowTree(true);
-  };
-
-  const disableAxTree = () => {
-    dispatch(toggleAxTree('toggleAxRecord'));
-    setSelectedValue('disable');
-    setShowParagraph(true);
-    setShowTree(false);
   };
 
   return (
@@ -128,39 +114,12 @@ const StateRoute = (props: StateRouteProps) => {
             element={
               showTree ? (
                 <div>
-                  <div className='accessibility-controls'>
-                    <input
-                      type='radio'
-                      id='enable'
-                      name='accessibility'
-                      value='enable'
-                      checked={selectedValue === 'enable'}
-                      onChange={() => {
-                        enableAxTreeButton();
-                      }}
-                    />
-                    <label htmlFor='enable'>Enable</label>
-
-                    <input
-                      type='radio'
-                      id='disable'
-                      name='accessibility'
-                      value='disable'
-                      checked={selectedValue === 'disable'}
-                      onChange={() => {
-                        disableAxTree();
-                      }}
-                    />
-                    <label htmlFor='disable'>Disable</label>
-                  </div>
-                  {showTree && (
-                    <AxContainer
-                      axSnapshots={axSnapshots}
-                      snapshot={snapshot}
-                      snapshots={snapshots}
-                      currLocation={currLocation}
-                    />
-                  )}
+                  <AxContainer
+                    axSnapshots={axSnapshots}
+                    snapshot={snapshot}
+                    snapshots={snapshots}
+                    currLocation={currLocation}
+                  />
                 </div>
               ) : (
                 <div>
@@ -180,24 +139,9 @@ const StateRoute = (props: StateRouteProps) => {
                       id='enable'
                       name='accessibility'
                       value='enable'
-                      checked={selectedValue === 'enable'}
-                      onChange={() => {
-                        enableAxTreeButton();
-                      }}
+                      onChange={enableAxTreeButton}
                     />
                     <label htmlFor='enable'>Enable</label>
-
-                    <input
-                      type='radio'
-                      id='disable'
-                      name='accessibility'
-                      value='disable'
-                      checked={selectedValue === 'disable'}
-                      onChange={() => {
-                        disableAxTree();
-                      }}
-                    />
-                    <label htmlFor='disable'>Disable</label>
                   </div>
                 </div>
               )

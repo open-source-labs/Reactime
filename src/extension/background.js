@@ -19,7 +19,7 @@ const metrics = {};
 function setupKeepAlive() {
   //ellie
   // Create an alarm that triggers every 4.9 minutes (under the 5-minute limit)
-  chrome.alarms.create('keepAlive', { periodInMinutes: 1 });
+  chrome.alarms.create('keepAlive', { periodInMinutes: 0.5 });
 
   chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === 'keepAlive') {

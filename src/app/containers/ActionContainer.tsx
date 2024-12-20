@@ -17,7 +17,7 @@ import RecordButton from '../components/Actions/RecordButton';
 // resetSlider locates the rc-slider elements on the document and resets it's style attributes
 
 function ActionContainer(props: ActionContainerProps): JSX.Element {
-  const [dropdownSelection, setDropdownSelection] = useState('TimeJump');
+  const [dropdownSelection, setDropdownSelection] = useState('Time Jump');
   const actionsEndRef = useRef(null as unknown as HTMLDivElement);
 
   const dispatch = useDispatch();
@@ -210,10 +210,10 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             </Button>
           </div>
           <div className='snapshots'>
-            {dropdownSelection === 'Provider/Consumer' && (
+            {dropdownSelection === 'Providers / Consumers' && (
               <ProvConContainer currentSnapshot={currLocation.stateSnapshot} />
             )}
-            {dropdownSelection === 'TimeJump' &&
+            {dropdownSelection === 'Time Jump' &&
               Object.keys(routes).map((route, i) => (
                 <RouteDescription key={`route${i}`} actions={routes[route]} />
               ))}

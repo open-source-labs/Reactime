@@ -108,12 +108,12 @@ export interface ActionContainerProps {
   actionView: boolean;
   setActionView: React.Dispatch<React.SetStateAction<boolean>>;
   toggleActionContainer: () => void;
-  snapshots: any
-  currLocation: any
+  snapshots: any;
+  currLocation: any;
 }
 
 export interface ProvConContainerProps {
-currentSnapshot: any; 
+  currentSnapshot: any;
 }
 
 export interface StateContainerProps {
@@ -399,4 +399,22 @@ export interface AxContainer {
   };
   snapshots: [];
   currLocation: object;
+}
+
+export interface FilteredNode {
+  name?: string;
+  state?: any;
+  hooksState?: any;
+  props?: any;
+  componentData?: {
+    context?: any;
+    hooksState?: any;
+    props?: any;
+  };
+  children?: FilteredNode[];
+  context?: any;
+}
+
+export interface FilteredNodeChildren {
+  [key: string]: FilteredNode;
 }
