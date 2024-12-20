@@ -175,18 +175,6 @@ function ButtonsContainer(): JSX.Element {
             >
               Cancel
             </Button>
-            {!connectionStatus && (
-              <Button
-                // @ts-ignore
-                onClick={() => exportHandler(tabs[currentTab])}
-                type='button'
-                className='download-button-pop-up'
-                variant='contained'
-                color='primary'
-              >
-                Download
-              </Button>
-            )}
             <Button
               onClick={() => handleReconnectConfirm()}
               type='button'

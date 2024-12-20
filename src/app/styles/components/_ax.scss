@@ -34,6 +34,10 @@
   transition: all 200ms ease;
   user-select: none;
 }
+.accessibility-controls label:hover {
+  background-color: #0d9488;
+  transform: translateY(-1px);
+}
 
 .accessibility-text {
   padding: 12px 24px;
