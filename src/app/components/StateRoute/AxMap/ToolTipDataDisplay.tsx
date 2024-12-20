@@ -67,7 +67,7 @@ const ToolTipDataDisplay = ({ containerName, dataObj }) => {
   }
 
   return (
-    <div className='tooltipData' key={`${containerName}-data-container`}>
+    <div key={`${containerName}-data-container`}>
       <JSONTree
         data={printableObject} // data to be rendered, a snapshot object
         theme={{ extend: colors, tree: () => ({ className: `tooltipData-JSONTree` }) }} // theme set to a base16 theme that has been extended to include  "className: 'json-tree'"

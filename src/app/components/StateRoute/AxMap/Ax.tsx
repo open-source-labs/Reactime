@@ -62,14 +62,15 @@ export default function AxTree(props) {
   const tooltipStyles: ToolTipStyles = {
     ...defaultStyles,
     minWidth: 60,
-    maxWidth: 300,
-    backgroundColor: 'rgb(15,15,15)',
-    color: 'white',
-    fontSize: '16px',
+    maxWidth: 250,
+    maxHeight: '300px',
     lineHeight: '18px',
-    fontFamily: 'Roboto',
-    zIndex: 100,
     pointerEvents: 'all !important',
+    margin: 0,
+    padding: 0,
+    borderRadius: '8px',
+    overflowY: 'auto',
+    overflowX: 'auto',
   };
 
   const [orientation, setOrientation] = useState('horizontal');
@@ -402,9 +403,8 @@ export default function AxTree(props) {
           }}
         >
           <div>
-            <div>
-              {/*tooltipData['name'].value cannot be referred to using dot notation so using brackets here overrides typescript's strict data typing which was interfering with accessiccing this property */}
-              <strong>{JSON.stringify(tooltipData['name'].value)}</strong>
+            <div className='tooltip-header'>
+              <h3 className='tooltip-title'>{tooltipData['name'].value}</h3>
             </div>
             <div>
               {/* Ax Node Info below names the tooltip title because of how its passed to the ToolTipDataDisplay container*/}
