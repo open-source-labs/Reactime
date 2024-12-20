@@ -399,6 +399,8 @@ export interface AxContainer {
   };
   snapshots: [];
   currLocation: object;
+  setShowTree: any;
+  setShowParagraph: any;
 }
 
 export interface FilteredNode {

@@ -32,7 +32,7 @@ export type LinkTypesProps = {
 };
 
 export default function AxTree(props) {
-  const { currLocation, axSnapshots, width, height } = props;
+  const { currLocation, axSnapshots, width, height, setShowTree, setShowParagraph } = props;
 
   let margin = defaultMargin;
   let totalWidth = width;
@@ -157,6 +157,8 @@ export default function AxTree(props) {
           setOrientation={setOrientation}
           setLinkType={setLinkType}
           setStepPercent={setStepPercent}
+          setShowTree={setShowTree}
+          setShowParagraph={setShowParagraph}
         />
       </div>
 
