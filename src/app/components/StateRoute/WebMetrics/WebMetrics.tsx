@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 
 const radialGraph = (props) => {
   const dispatch = useDispatch();
+  console.log('props', props);
   const state = {
     series: [props.series], // series appears to be the scale at which data is displayed based on the type of webMetrics measured.
     options: {
@@ -100,15 +101,9 @@ const radialGraph = (props) => {
     dispatch(setCurrentTabInApp('webmetrics')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.
   }, []);
 
-  const optionsCursorTrueWithMargin: OptionsCursorTrueWithMargin = {
-    followCursor: true,
-    shiftX: 20,
-    shiftY: 0,
-  };
-
   return (
     <div className='metric'>
-      <ReactHover options={optionsCursorTrueWithMargin}>
+      <ReactHover>
         <Trigger type='trigger'>
           <div id='chart' className='chart-container'>
             <Charts
@@ -121,7 +116,7 @@ const radialGraph = (props) => {
           </div>
         </Trigger>
         <Hover type='hover'>
-          <div className='metric-tooltip' id='hover-box'>
+          <div className='hover-box'>
             <p>
               <strong>{props.name}</strong>
             </p>
