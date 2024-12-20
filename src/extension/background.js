@@ -727,29 +727,13 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 });
 
 // when a new url is loaded on the same tab,
-// this remove the tabid from the tabsObj, recreate the tab and inject the script
-chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-  // check if the tab title changed to see if tab need to restart
-  if (changeInfo && tabsObj[tabId]) {
-    if (changeInfo.title && changeInfo.title !== tabsObj[tabId].title) {
-      // tell devtools which tab to delete
-      if (portsArr.length > 0) {
-        portsArr.forEach((bg) =>
-          bg.postMessage({
-            action: 'deleteTab',
-            payload: tabId,
-          }),
-        );
-      }
-
-      // delete the tab from the tabsObj
-      delete tabsObj[tabId];
-      delete reloaded[tabId];
-      delete firstSnapshotReceived[tabId];
-
-      // recreate the tab on the tabsObj
-      tabsObj[tabId] = createTabObj(changeInfo.title);
-    }
+//ellie
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete' && tab.url) {
+    chrome.scripting.executeScript({
+      target: { tabId },
+      files: ['content.bundle.js'],
+    });
   }
 });
 
@@ -775,14 +759,16 @@ chrome.tabs.onActivated.addListener((info) => {
 });
 
 // when reactime is installed
-// create a context menu that will open our devtools in a new window
+//ellie
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: 'reactime',
-    title: 'Reactime',
-    contexts: ['page', 'selection', 'image', 'link'],
+  chrome.tabs.query({}, (tabs) => {
+    tabs.forEach((tab) => {
+      chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ['content.bundle.js'],
+      });
+    });
   });
-  setupKeepAlive();
 });
 
 chrome.runtime.onStartup.addListener(() => {

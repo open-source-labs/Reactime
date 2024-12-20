@@ -12,18 +12,21 @@
     "48": "assets/whiteBlackSquareIcon48.png",
     "128": "assets/whiteBlackSquareIcon128.png"
   },
+
   "content_scripts": [
     {
       "matches": ["http://localhost/*"],
       "js": ["bundles/content.bundle.js"]
     }
   ],
+
   "web_accessible_resources": [
     {
-      "resources": ["bundles/backend.bundle.js"],
+      "resources": ["bundles/backend.bundle.js", "bundles/content.bundle.js"],
       "matches": ["<all_urls>"]
     }
   ],
+
   "permissions": [
     "contextMenus",
     "tabs",
@@ -33,5 +36,6 @@
     "debugger",
     "alarms"
   ],
+
   "host_permissions": ["<all_urls>"]
 }

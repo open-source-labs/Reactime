@@ -2,6 +2,9 @@
 // in Web Metrics tab of Reactime app.
 import { onTTFB, onLCP, onFID, onFCP, onCLS, onINP } from 'web-vitals';
 
+chrome.runtime.sendMessage({ type: 'SIGN_CONNECT' });
+console.log('Content script loaded.');
+
 function establishConnection() {
   const port = chrome.runtime.connect({ name: 'keepAlivePort' }); // Reconnect if we lose connection to the port at any time
   port.onMessage.addListener((msg) => {
