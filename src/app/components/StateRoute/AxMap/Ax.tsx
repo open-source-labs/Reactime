@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
@@ -9,7 +9,7 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import ToolTipDataDisplay from './ToolTipDataDisplay';
 import { ToolTipStyles } from '../../../FrontendTypes';
 import { localPoint } from '@visx/event';
-import { toggleExpanded, setCurrentTabInApp } from '../../../slices/mainSlice';
+import { toggleExpanded } from '../../../slices/mainSlice';
 
 const defaultMargin = {
   top: 30,
@@ -74,7 +74,7 @@ export default function AxTree(props) {
   };
 
   const [orientation, setOrientation] = useState('horizontal');
-  const [linkType, setLinkType] = useState('step');
+  const [linkType, setLinkType] = useState('diagonal');
   const [stepPercent, setStepPercent] = useState(0.0);
 
   const innerWidth: number = totalWidth - margin.left - margin.right;
@@ -408,7 +408,7 @@ export default function AxTree(props) {
             </div>
             <div>
               {/* Ax Node Info below names the tooltip title because of how its passed to the ToolTipDataDisplay container*/}
-              <ToolTipDataDisplay containerName='Ax Node Info' dataObj={tooltipData} />
+              <ToolTipDataDisplay containerName='Accessbility' dataObj={tooltipData} />
             </div>
           </div>
         </TooltipInPortal>

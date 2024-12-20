@@ -11,7 +11,6 @@ import MainContainer from './containers/MainContainer';
 function App(): JSX.Element {
   return (
     <Router>
-      {/* we wrap our application with the <Router> tag so that all components that are nested will have the react-router context */}
       <MainContainer />
     </Router>
   );

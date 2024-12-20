@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ProvConContainerProps, FilteredNode } from '../FrontendTypes';
 import { JSONTree } from 'react-json-tree';
 

@@ -210,8 +210,6 @@ export const mainSlice = createSlice({
       const nameFromIndex = findName(action.payload, hierarchy);
       // nameFromIndex is a number based on which jump button is pushed
 
-      console.log('changeSlider to ', action.payload);
-
       port.postMessage({
         action: 'jumpToSnap',
         payload: snapshots[action.payload],
@@ -429,27 +427,6 @@ export const mainSlice = createSlice({
       });
     },
 
-    save: (state, action) => {
-      const { currentTab, tabs } = state;
-
-      const { newSeries, newSeriesName } = action.payload;
-      if (!tabs[currentTab].seriesSavedStatus) {
-        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
-        return;
-      }
-      // Runs if series name input box is active.
-      // Updates chrome local storage with the newly saved series. Console logging the seriesArray grabbed from local storage may be helpful.
-      if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
-        let seriesArray: any = localStorage.getItem('project');
-        seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
-        newSeries.name = newSeriesName;
-        seriesArray.push(newSeries);
-        localStorage.setItem('project', JSON.stringify(seriesArray));
-        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
-        return;
-      }
-    },
-
     toggleExpanded: (state, action) => {
       const { tabs, currentTab } = state;
       const snapshot = tabs[currentTab].currLocation.stateSnapshot;
@@ -471,24 +448,6 @@ export const mainSlice = createSlice({
         }
       };
       checkChildren(snapshot);
-    },
-
-    deleteSeries: (state) => {
-      const { tabs, currentTab } = state;
-      const allStorage = () => {
-        const keys = Object.keys(localStorage);
-        let i = keys.length;
-        while (i--) {
-          localStorage.removeItem(keys[i]);
-        }
-      };
-      allStorage();
-      Object.keys(tabs).forEach((tab) => {
-        tabs[tab] = {
-          ...tabs[tab],
-        };
-      });
-      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: false };
     },
 
     disconnected: (state) => {
@@ -541,9 +500,7 @@ export const {
   tutorialSaveSeriesToggle,
   onHover,
   onHoverExit,
-  save,
   toggleExpanded,
-  deleteSeries,
   disconnected,
   startReconnect,
   endConnect,
