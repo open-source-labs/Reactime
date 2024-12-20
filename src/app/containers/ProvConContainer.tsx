@@ -80,17 +80,19 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element => {
     }
 
     // Flatten componentData properties into root level if they exist
-    if (node.componentData) {
+    if (node.componentData.context && !isEmptyObject(node.componentData.context)) {
       // Add context directly if it exists
-      if (node.componentData.context && !isEmptyObject(node.componentData.context)) {
-        filteredNode.context = node.componentData.context;
-      }
+      Object.entries(node.componentData.context).forEach(([key, value]) => {
+        if (!isEmptyObject(value)) {
+          filteredNode[`${key}`] = value;
+        }
+      });
 
       // Flatten componentData.props if they exist
       if (node.componentData.props && !isEmptyObject(node.componentData.props)) {
         Object.entries(node.componentData.props).forEach(([key, value]) => {
           if (!isEmptyObject(value)) {
-            filteredNode[`prop_${key}`] = value;
+            filteredNode[`${key}`] = value;
           }
         });
       }
@@ -99,7 +101,7 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element => {
       if (node.componentData.hooksState && !isEmptyObject(node.componentData.hooksState)) {
         Object.entries(node.componentData.hooksState).forEach(([key, value]) => {
           if (!isEmptyObject(value)) {
-            filteredNode[`hook_${key}`] = value;
+            filteredNode[`${key}`] = value;
           }
         });
       }
