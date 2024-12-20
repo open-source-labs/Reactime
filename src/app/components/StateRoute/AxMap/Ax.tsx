@@ -149,7 +149,7 @@ export default function AxTree(props) {
 
   return totalWidth < 10 ? null : (
     <div>
-      <div id='axControls'>
+      <div className='axControls'>
         <LinkControls
           orientation={orientation}
           linkType={linkType}

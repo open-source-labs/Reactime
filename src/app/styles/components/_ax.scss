@@ -1,8 +1,7 @@
 // Ax.tsx
-#axControls {
-  display: inline-flex;
-  position: sticky;
-  left: 0;
+.axControls {
+  display: flex;
+  justify-content: space-evenly;
 }
 
 /* Container for the radio controls */
@@ -10,7 +9,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 12px 16px;
+  padding: 12px 24px;
 }
 
 /* Hide the default radio inputs */
@@ -23,32 +22,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 50px;
+  min-width: 60px;
   padding: 6px 12px;
   font-family: 'Outfit', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #374151;
-  background-color: #f3f4f6;
+  color: white;
+  background-color: #14b8a6;
   border-radius: 6px;
   cursor: pointer;
   transition: all 200ms ease;
   user-select: none;
 }
 
-/* Hover state */
-.accessibility-controls label:hover {
-  background-color: #e5e7eb;
-}
-
-/* Active/selected state */
-.accessibility-controls input[type='radio']:checked + label {
-  background-color: #14b8a6;
-  color: white;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-/* Add consistent spacing around the warning text */
 .accessibility-text {
   padding: 12px 24px;
   max-width: 800px;
