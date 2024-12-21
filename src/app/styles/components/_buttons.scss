@@ -1,110 +1,67 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-.state-dropdown {
-  width: 240px;
-  margin-left: 20px;
-}
-
-.action-component:hover .time-button {
-  display: none;
-}
-
-.action-component:hover .jump-button {
-  opacity: 1;
-  transform: rotateX(0deg);
-  transition:
-    opacity 300ms,
-    transform 0.15s linear;
-}
-
-.time-button {
-  outline: none;
-  height: $time-button-height;
-  margin-bottom: 8px;
-  width: 100px;
-  border: none;
-  background: $indiv-action-time;
-  color: $indiv-action-time-text;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px;
-}
-
-.jump-button {
-  outline: none;
-  height: $time-button-height;
-  margin-bottom: 8px;
-  width: 100px;
-  border: transparent;
-  border-radius: 3px;
-  background-color: #232529;
-  color: #ffffff;
-  transform: rotateX(90deg);
-  transition:
-    opacity 300ms,
-    transform 0.15s linear;
-  opacity: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px;
-  padding-bottom: 5px;
-}
-
-.current-location {
-  outline: none;
-  height: $time-button-height;
-  margin-bottom: 8px;
-  width: 100px;
-  border: transparent;
-  border-radius: 3px;
-}
-
 .play-button {
-  width: 100px;
-  height: 25px;
-  margin: 0 1% 0 2%;
-  color: $play-button-text;
-  border-color: transparent;
-  background: $play-button;
-  border-radius: 5px;
-  font-weight: 500;
-  font-size: 16px;
+  display: flex;
+  align-items: center;
   justify-content: center;
-}
-
-.play-button:hover {
-  transform: translate3d(0, -3px, 0);
+  width: 100px;
+  height: 40px;
+  padding: 8px 12x;
+  border-radius: 8px;
+  border: none;
+  background-color: #1f2937;
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-}
+  transition: all 200ms ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
 
-.backward-button,
-.forward-button {
-  color: $scrub-icon;
-  border-color: transparent;
-  background: $scrub-button;
-  border-radius: 5px;
-}
+  &:hover {
+    background-color: #374151;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  }
 
-// .backward-button-icon,
-// .forward-button-icon {
-//   color: $scrub-icon;
-// }
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
 
-.forward-button:hover,
-.backward-button:hover {
-  transform: translate3d(0, -3px, 0);
-  cursor: pointer;
-}
+  &:focus {
+    outline: none;
+    box-shadow:
+      0 0 0 2px white,
+      0 0 0 4px #1f2937;
+  }
 
-.svg-inline--fa {
-  margin-right: 0.75em;
-  display: inline-block;
-  font-size: inherit;
-  height: 0.75em;
-  overflow: visible;
-  vertical-align: -0.125em;
+  &-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 1;
+    border-radius: 50%;
+    transform: scale(1);
+    animation: ripple 600ms linear;
+    display: none;
+  }
+
+  &:active::after {
+    display: block;
+  }
 }
 
 /* sidebar button open and closing functionality */
@@ -267,20 +224,6 @@ aside {
   font-size: 20px;
   padding-right: 8px;
   color: black;
-}
-
-.download-button-pop-up {
-  cursor: pointer;
-  border: none;
-  font: 500 $button-text-size $text-font-stack;
-  width: 120px;
-  border-radius: 3px;
-  line-height: 1.5em;
-  outline: transparent;
-  &:hover {
-    color: $contrasting-color;
-    background-color: #ff0001;
-  }
 }
 
 .warning-icon-pop-up {

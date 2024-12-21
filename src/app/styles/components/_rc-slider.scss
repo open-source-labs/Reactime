@@ -16,16 +16,17 @@
 .rc-slider-rail {
   position: absolute;
   width: 100%;
-  background-color: $slider-rail-right;
+  background-color: #d9d9d9;
   height: 4px;
   border-radius: 6px;
 }
+
 .rc-slider-track {
   position: absolute;
   left: 0;
   height: 4px;
   border-radius: 6px;
-  background-color: $slider-rail-left;
+  background-color: #284b63;
 }
 .rc-slider-handle {
   position: absolute;

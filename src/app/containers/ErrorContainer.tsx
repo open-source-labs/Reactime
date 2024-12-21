@@ -31,9 +31,9 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
           </div>
 
           <p className='error-description'>
-            To ensure Reactime works correctly with your React application, please refresh your
-            development page. This allows Reactime to properly connect with your app and start
-            monitoring state changes.
+            To ensure Reactime works correctly with your React application, please either refresh
+            your development page or click the launch button below. This allows Reactime to properly
+            connect with your app and start monitoring state changes.
           </p>
           <p className='error-description'>
             Important: Reactime requires React Developer Tools to be installed. If you haven't
@@ -51,11 +51,12 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
         </div>
 
         <p className='error-note'>
-          Note: By default, Reactime only launches on URLs starting with localhost.
+          Note: Reactime only works with React applications and by default only launches on URLs
+          starting with localhost.
         </p>
 
         <button type='button' className='launch-button' onClick={launch}>
-          <PlayCircle size={18} />
+          <PlayCircle size={20} />
           Launch Reactime
         </button>
 

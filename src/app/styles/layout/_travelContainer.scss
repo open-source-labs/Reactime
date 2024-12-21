@@ -4,6 +4,8 @@
   flex-direction: row;
   align-items: center;
   border-top: 1px solid #e5e7eb;
+  padding-left: 16px;
+  gap: 12px;
 }
 
 .react-select-container {
@@ -24,4 +26,3 @@
   font-size: 0.875rem !important;
   font-weight: 500 !important;
 }
-
