@@ -7,7 +7,7 @@ import { Component } from 'react';
 import 'intro.js/introjs.css';
 import { TutorialProps, TutorialState, StepsObj } from '../../FrontendTypes';
 import { Button } from '@mui/material';
-const { Steps } = require('intro.js-react'); //Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly. The package 'intro.js-react' is small React wrapper around Intro.js. The wrapper provides support for both steps and hints. https://introjs.com/docs/
+const { Steps } = require('intro.js-react');
 import { setCurrentTabInApp, tutorialSaveSeriesToggle } from '../../slices/mainSlice';
 import { HelpCircle } from 'lucide-react';
 

@@ -1,4 +1,6 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { toggleAxTree, setCurrentTabInApp } from '../../../slices/mainSlice';
 
 const AxLinkControls = ({
   orientation,
@@ -7,9 +9,30 @@ const AxLinkControls = ({
   setOrientation,
   setLinkType,
   setStepPercent,
+  setShowTree,
+  setShowParagraph,
 }) => {
+  const dispatch = useDispatch();
+  const disableAxTree = () => {
+    dispatch(toggleAxTree('toggleAxRecord'));
+    dispatch(setCurrentTabInApp('AxTree'));
+    setShowTree(false);
+    setShowParagraph(true);
+  };
+
   return (
     <div className='link-controls'>
+      <div className='accessibility-disable'>
+        <input
+          type='radio'
+          id='disable'
+          name='accessibility'
+          value='disable'
+          onChange={disableAxTree}
+        />
+        <label htmlFor='disable'>Disable</label>
+      </div>
+
       <div className='control-group'>
         <label className='control-label'>Orientation:</label>
         <select

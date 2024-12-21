@@ -142,11 +142,13 @@
   align-items: center;
 }
 
-#hover-box {
+.hover-box {
   max-width: 250px;
   background-color: #51565e;
   border-radius: 8px;
   color: white;
+  padding: 2px 8px;
+  line-height: 16px;
 }
 
 /* Tree styling */

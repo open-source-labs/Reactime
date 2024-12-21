@@ -34,8 +34,37 @@
   transition: all 200ms ease;
   user-select: none;
 }
+
 .accessibility-controls label:hover {
   background-color: #0d9488;
+  transform: translateY(-1px);
+}
+
+.accessibility-disable input[type='radio'] {
+  display: none;
+}
+
+.accessibility-disable label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  padding: 6px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  user-select: none;
+}
+
+.accessibility-disable label:hover {
+  border-color: #d1d5db;
+  background-color: #f3f4f6;
   transform: translateY(-1px);
 }
 

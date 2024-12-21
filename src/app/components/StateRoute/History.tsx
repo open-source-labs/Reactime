@@ -114,7 +114,6 @@ function History(props: Record<string, unknown>): JSX.Element {
       if (!delta) return 'No state changes';
 
       const changedState = findStateChangeObj(delta);
-      console.log('changed state', formatters.html.format(changedState[0]));
       return changedState.length > 0 ? formatters.html.format(changedState[0]) : 'No state changes';
     } catch (error) {
       console.error('Error in findDiff:', error);

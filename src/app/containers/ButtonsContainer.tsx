@@ -11,7 +11,7 @@ import StatusDot from '../components/Buttons/StatusDot';
 import CloseIcon from '@mui/icons-material/Close';
 import WarningIcon from '@mui/icons-material/Warning';
 import { MainState, RootState } from '../FrontendTypes';
-import { Lock, Unlock, Download, Upload, RefreshCw, X, AlertTriangle } from 'lucide-react';
+import { Lock, Unlock, Download, Upload, RefreshCw } from 'lucide-react';
 
 function exportHandler(snapshots: []): void {
   // function that takes in our tabs[currentTab] object to be exported as a JSON file. NOTE: TypeScript needs to be updated

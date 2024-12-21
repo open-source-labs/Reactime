@@ -119,6 +119,8 @@ const StateRoute = (props: StateRouteProps) => {
                     snapshot={snapshot}
                     snapshots={snapshots}
                     currLocation={currLocation}
+                    setShowTree={setShowTree}
+                    setShowParagraph={setShowParagraph}
                   />
                 </div>
               ) : (

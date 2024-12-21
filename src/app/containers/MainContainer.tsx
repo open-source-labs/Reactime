@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ActionContainer from './ActionContainer';
 import TravelContainer from './TravelContainer';
 import ButtonsContainer from './ButtonsContainer';
@@ -31,7 +31,6 @@ function MainContainer(): JSX.Element {
   //JR: check connection status
   const { connectionStatus }: MainState = useSelector((state: RootState) => state.main);
 
-  // JR 12.22.23: so far this log always returns true
   console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
 
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ProvConContainerProps, FilteredNode } from '../FrontendTypes';
 import { JSONTree } from 'react-json-tree';
 
@@ -129,8 +129,8 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element => {
     // Only return the node if it has at least one non-empty property
     return isEmptyObject(filteredNode) ? null : filteredNode;
   };
+
   const filteredProviders = filterComponentProperties(contextProvidersOnly);
-  console.log('filtered', filteredProviders);
 
   const parseStringifiedValues = (obj) => {
     if (!obj || typeof obj !== 'object') return obj;
