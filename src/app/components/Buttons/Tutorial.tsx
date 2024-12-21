@@ -109,6 +109,12 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
             position: 'right',
           },
           {
+            title: 'Dropdown Menu',
+            element: '.css-13cymwt-control',
+            intro: '<ul><li>Dropdown Menu for picking between Timejump and UseContext</li></ul>',
+            position: 'right',
+          },
+          {
             element: '.individual-action',
             title: 'Snapshot',
             intro:
@@ -174,6 +180,13 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
             element: '.tree-tab',
             intro:
               '<ul><li>This tab visually displays a JSON Tree containing the different components and states</li></ul>',
+            position: 'bottom',
+          },
+          {
+            title: 'Accessibility Tree',
+            element: '.accessibility-tab',
+            intro:
+              '<ul><li>This tab visually displays a Accessibility Tree</li></ul>',
             position: 'bottom',
           },
           {

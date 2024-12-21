@@ -1267,6 +1267,7 @@ img {
     border: 0.25rem solid var(--color-icon-background);
 }
 
+
 /* mobile */
 @media (max-width: 769px) {
     .tsd-widget.options,

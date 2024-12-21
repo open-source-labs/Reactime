@@ -13,8 +13,6 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { MainState, RootState, TravelContainerProps } from '../FrontendTypes';
 import { Button } from '@mui/material';
-import FastRewindIcon from '@mui/icons-material/FastRewind';
-import FastForwardIcon from '@mui/icons-material/FastForward';
 
 /*
   This container renders the time-travel play button, seek bar, playback controls, and the playback speed dropdown, located towards the bottom of the application, above the locked, download, upload, and tutorial buttons
@@ -85,28 +83,9 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
       >
         {playing ? 'Pause' : 'Play'}
       </Button>
-      <MainSlider className='main-slider' snapshotsLength={snapshotsLength} />
-      <Button
-        variant='contained'
-        className='backward-button'
-        onClick={() => dispatch(moveBackward(false))}
-        type='button'
-        sx={{ height: 25, minWidth: 30, p: 0, mr: 1 }}
-        aria-label='Backward'
-      >
-        <FastRewindIcon className='backward-button-icon' />
-      </Button>
-      <Button
-        variant='contained'
-        className='forward-button'
-        onClick={() => dispatch(moveForward(false))}
-        type='button'
-        sx={{ height: 25, minWidth: 30, p: 0 }}
-        aria-label='Forward'
-      >
-        <FastForwardIcon className='forward-button-icon' />
-      </Button>
+
       <Dropdown speeds={speeds} selectedSpeed={selectedSpeed} setSpeed={setSpeed} />
+
     </div>
   );
 }

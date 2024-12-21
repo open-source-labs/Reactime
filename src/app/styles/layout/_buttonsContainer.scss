@@ -3,75 +3,93 @@
   font-family: 'Outfit', sans-serif;
 }
 .buttons-container {
-  //color: #ff0000;
-  margin: 0 1% 0 1%;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-gap: 1%;
-  padding: 1% 0 1% 0;
-}
-
-.introjs-tooltip {
-  color: black;
-  background-color: white;
-  min-width: 20rem;
-}
-.introjs-tooltiptext ul {
-  padding-left: 2px;
-}
-
-// .introjs-helperLayer{
-//   // border: 2px solid yellow
-// }
-
-.tools-container {
   display: flex;
+  align-items: center;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  width: 100%;
+}
+
+.buttons-wrapper {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  border: 0.5px solid grey;
-  background-color: #35383e;
-  padding: 3px;
-  margin-bottom: 1rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  gap: 16px;
+}
+
+.introjs-button {
+  background-color: #f0f0f0;
+  color: #000;
+  //border: 1px solid #ccc;
+  //border-radius: 20px;
+  outline: none;
+  padding: 8px 20px;
+  font-size: 14px;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.introjs-button:hover {
+  background-color: #6cff87;
+  color: #000 !important;
+  border: 1px solid #6cff87;
+}
+
+.introjs-skipbutton {
+  height: 16px;
+  width: auto;
+  background-color: #f0f0f0;
+  color: #000;
+  //border: 1px solid #ccc;
+  //border-radius: 10px;
+  padding: 8px 8px;
+  font-size: 12px;
+  text-align: center;
+  line-height: normal;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.introjs-skipbutton:hover {
+  background-color: #ff4d4d;
+  color: #fff;
+  border: 1px solid #ff4d4d;
+}
+
+.introjs-tooltip-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #000;
+}
+
+.introjs-tooltiptext {
+  font-size: 14px;
+  // color: #333;
+}
+
+.introjs-progressbar {
+  background-color: #6cff87;
+}
+
+.introjs-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.introjs-helperLayer {
+  box-shadow: 0 0 10px 3px rgba(108, 255, 135, 0.7);
+  border-radius: 8px;
 }
 
 #seriesname {
   background-color: #333;
   color: white;
 }
-
-@media (max-width: 500px) {
-  .buttons-container {
-    //color: #ff0000;
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.introjs-nextbutton {
-  background-color: none;
-  color: #3256f1;
-  border: 1px solid;
-  outline: none;
-}
-
-.introjs-prevbutton {
-  background-color: none;
-  color: #3256f1;
-  border: 1px solid;
-  outline: none;
-}
-
-.introjs-skipbutton {
-  color: #d72828;
-  border: 1px solid;
-  margin-top: 2px;
-  font-size: 16px;
-  outline: none;
-}
-
-.introjs-button {
-  background: none;
-  outline: none;
-}
-
 .dialog-pop-up {
   border: 1px solid #ff0001;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
