@@ -88,9 +88,12 @@ const Action = (props: ActionProps): JSX.Element => {
                 />
               </div>
               {isCurrIndex ? (
-                <button className='current-snap' type='button'>
-                  {`Snapshot: ${displayName}`}
-                </button>
+                <input
+                  className='current-snap'
+                  key={`ActionInput${displayName}`}
+                  type='text'
+                  placeholder={`Snapshot: ${displayName}`}
+                />
               ) : (
                 <button className='time-button' type='button'>
                   {displayTime}

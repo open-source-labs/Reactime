@@ -4,6 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   width: 100px;
   height: 40px;
   padding: 8px 12x;
@@ -22,13 +23,6 @@
 
   &:hover {
     background-color: #374151;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-  }
-
-  &:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   &:focus {
@@ -182,54 +176,6 @@ aside {
 /* Hide collapse text when sidebar is collapsed */
 .hidden {
   display: none;
-}
-
-/* ^ sidebar button open and closing functionality */
-.reconnect-button-pop-up {
-  padding: 3px;
-  outline: transparent;
-  background-color: #050787;
-  color: $reconnect-button-text !important;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  line-height: 1.5em;
-  font: 500 $button-text-size $text-font-stack;
-  width: 120px;
-  &:hover {
-    color: black !important;
-    background-color: #ff0001;
-  }
-}
-
-.cancel-button-pop-up {
-  padding: 3px;
-  outline: transparent;
-  color: black;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  line-height: 1.5em;
-  font: 500 $button-text-size $text-font-stack;
-  width: 120px;
-  &:hover {
-    color: $contrasting-color;
-    background-color: #ff0001;
-  }
-}
-
-.close-icon-pop-up {
-  cursor: pointer;
-  color: #ff0001;
-  font-size: 20px;
-  padding-right: 8px;
-  color: black;
-}
-
-.warning-icon-pop-up {
-  color: #d72828;
-  margin-left: 5px;
-  margin-right: -22px;
 }
 
 .clear-button-modern {

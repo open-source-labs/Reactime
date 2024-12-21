@@ -64,7 +64,6 @@
 
 .introjs-tooltiptext {
   font-size: 14px;
-  // color: #333;
 }
 
 .introjs-progressbar {
@@ -78,17 +77,6 @@
 .introjs-helperLayer {
   box-shadow: 0 0 10px 3px rgba(108, 255, 135, 0.7);
   border-radius: 8px;
-}
-
-.buttons-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 24px;
-  gap: 16px;
 }
 
 .introjs-tooltip {
@@ -130,48 +118,6 @@
 .introjs-button {
   background: none;
   outline: none;
-}
-
-.dialog-pop-up {
-  border: 1px solid #ff0001;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  padding: 13px;
-}
-
-.dialog-pop-up-header {
-  color: #ff0001;
-  padding: 8px 16px;
-  font-size: 20px;
-  font-family: $text-font-stack;
-}
-
-.dialog-pop-up-contents {
-  background-color: $pop-up-window-background;
-  color: $pop-up-window-text;
-  font-family: $text-font-stack;
-  line-height: 1.4;
-  padding: 0px 15px 15px 15px !important;
-}
-
-.dialog-pop-up-actions {
-  padding: 15px;
-  background-color: #ff0001;
-}
-
-.close-icon-pop-up-div {
-  height: 40px;
-  width: 100%;
-  background-color: #ff0001;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.warning-header-container {
-  background-color: $pop-up-window-background;
-  display: flex;
-  align-items: center;
-  height: 20%;
 }
 
 .buttons-container button {
