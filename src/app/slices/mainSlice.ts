@@ -88,7 +88,9 @@ export const mainSlice = createSlice({
           const { snapshots: newSnaps } = payload[tab];
           tabs[tab] = {
             ...payload[tab],
-            sliderIndex: newSnaps.length - 1,
+            intervalId: tabs[tab].intervalId,
+            playing: tabs[tab].playing,
+            sliderIndex: tabs[tab].sliderIndex,
             seriesSavedStatus: false,
           };
         }

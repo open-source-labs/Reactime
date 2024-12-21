@@ -8,6 +8,7 @@ import {
   moveForward,
   moveBackward,
   resetSlider,
+  changeSlider,
 } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainState, RootState, TravelContainerProps } from '../FrontendTypes';
@@ -40,6 +41,7 @@ function play( // function that will start/pause slider movement
   if (playing) {
     // if already playing, clicking the button will pause the slider
     dispatch(pause());
+
   } else {
     let currentIndex = sliderIndex; // the 'currentIndex' will be wherever the 'sliderIndex' is
     if (currentIndex === snapshotsLength - 1) {
@@ -53,6 +55,7 @@ function play( // function that will start/pause slider movement
         // as long as we're not the last snapshot, increment slider up through our dispatch and increment index
         dispatch(playForward(true));
         currentIndex += 1;
+        dispatch(changeSlider(currentIndex));
       } else {
         dispatch(pause()); // pause the slider when we reach the end
       }
