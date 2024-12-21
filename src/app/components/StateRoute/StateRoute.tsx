@@ -42,7 +42,6 @@ const StateRoute = (props: StateRouteProps) => {
 
   const enableAxTreeButton = () => {
     dispatch(toggleAxTree('toggleAxRecord'));
-    dispatch(setCurrentTabInApp('AxTree'));
     setShowParagraph(false);
     setShowTree(true);
   };
