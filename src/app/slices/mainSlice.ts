@@ -90,7 +90,6 @@ export const mainSlice = createSlice({
             ...payload[tab],
             intervalId: tabs[tab].intervalId,
             playing: tabs[tab].playing,
-            //sliderIndex: newSnaps.length - 1,
             sliderIndex: tabs[tab].sliderIndex,
             seriesSavedStatus: false,
           };
