@@ -192,7 +192,7 @@ describe('unit testing for ActionContainer', () => {
 });
 
 describe('Integration testing for ActionContainer.tsx', () => {
-  xtest('renders the ActionContainer component', () => {
+  test('renders the ActionContainer component', () => {
     //tests that the clearButton is rendered by testing if we can get "Clear"
     //need to set actionView to true to correctly render clearbutton
     render(

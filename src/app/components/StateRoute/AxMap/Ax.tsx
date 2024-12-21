@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Group } from '@visx/group';
 import { hierarchy, Tree } from '@visx/hierarchy';
@@ -9,7 +9,7 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import ToolTipDataDisplay from './ToolTipDataDisplay';
 import { ToolTipStyles } from '../../../FrontendTypes';
 import { localPoint } from '@visx/event';
-import { toggleExpanded } from '../../../slices/mainSlice';
+import { toggleExpanded, setCurrentTabInApp } from '../../../slices/mainSlice';
 
 const defaultMargin = {
   top: 30,
@@ -93,6 +93,7 @@ export default function AxTree(props) {
     sizeHeight = innerWidth;
   }
 
+
   const LinkComponent = getLinkComponent({ linkType, orientation });
 
   const currAxSnapshot = JSON.parse(JSON.stringify(axSnapshots[currLocation.index]));
@@ -146,6 +147,10 @@ export default function AxTree(props) {
 
   // Conditionally render ax legend component (RTK)
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setCurrentTabInApp('Axtree')); // dispatch sent at initial page load allowing changing
+  }, [dispatch]);
 
   return totalWidth < 10 ? null : (
     <div>
