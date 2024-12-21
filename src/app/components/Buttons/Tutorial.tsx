@@ -7,10 +7,10 @@ import { Component } from 'react';
 import 'intro.js/introjs.css';
 import { TutorialProps, TutorialState, StepsObj } from '../../FrontendTypes';
 import { Button } from '@mui/material';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-const { Steps } = require('intro.js-react'); //Must be required in. This enables compatibility with TS. If imported in, throws ts error of not rendering steps as a class component correctly. The package 'intro.js-react' is small React wrapper around Intro.js. The wrapper provides support for both steps and hints. https://introjs.com/docs/
+const { Steps } = require('intro.js-react');
 import { setCurrentTabInApp, tutorialSaveSeriesToggle } from '../../slices/mainSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { HelpCircle } from 'lucide-react';
+
 /*
   This is the tutorial displayed when the "How to use" button is clicked
   This needs to be a class component to be compatible with updateStepElement from intro.js
@@ -103,7 +103,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           },
           {
             title: 'Toggle Record Button',
-            element: '#recordBtn',
+            element: '.record-button-container',
             intro:
               '<ul><li>Toggle record button to pause state changes on target application</li></ul>',
             position: 'right',
@@ -361,13 +361,8 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           onBeforeChange={(currentStepIndex) => onChangeHandler(currentStepIndex)} // Callback called before changing the current step.
           ref={(steps) => (this.steps = steps)} // ref allows access to intro.js API
         />
-        <Button
-          variant='outlined'
-          className='howToUse-button'
-          type='button'
-          onClick={() => startIntro()}
-        >
-          <HelpOutlineIcon className='button-icon' sx={{ pr: 1 }} /> Tutorial
+        <Button className='howToUse-button' type='button' onClick={() => startIntro()}>
+          <HelpCircle className='button-icon' size={18} /> Tutorial
         </Button>
       </>
     );

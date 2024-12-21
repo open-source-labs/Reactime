@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 import React, { useState } from 'react';
-import MainSlider from '../components/TimeTravel/MainSlider';
 import Dropdown from '../components/TimeTravel/Dropdown';
 import {
   playForward,
@@ -9,6 +8,7 @@ import {
   moveForward,
   moveBackward,
   resetSlider,
+  changeSlider,
 } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainState, RootState, TravelContainerProps } from '../FrontendTypes';
@@ -39,6 +39,7 @@ function play( // function that will start/pause slider movement
   if (playing) {
     // if already playing, clicking the button will pause the slider
     dispatch(pause());
+
   } else {
     let currentIndex = sliderIndex; // the 'currentIndex' will be wherever the 'sliderIndex' is
     if (currentIndex === snapshotsLength - 1) {
@@ -52,6 +53,7 @@ function play( // function that will start/pause slider movement
         // as long as we're not the last snapshot, increment slider up through our dispatch and increment index
         dispatch(playForward(true));
         currentIndex += 1;
+        dispatch(changeSlider(currentIndex));
       } else {
         dispatch(pause()); // pause the slider when we reach the end
       }
@@ -82,6 +84,26 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
         onClick={() => play(selectedSpeed.value, playing, dispatch, snapshotsLength, sliderIndex)}
       >
         {playing ? 'Pause' : 'Play'}
+      </Button>
+      <Button
+        variant='contained'
+        className='backward-button'
+        onClick={() => dispatch(moveBackward(false))}
+        type='button'
+        sx={{ height: 25, minWidth: 30, p: 0, mr: 1 }}
+        aria-label='Backward'
+      >
+        <FastRewindIcon className='backward-button-icon' />
+      </Button>
+      <Button
+        variant='contained'
+        className='forward-button'
+        onClick={() => dispatch(moveForward(false))}
+        type='button'
+        sx={{ height: 25, minWidth: 30, p: 0 }}
+        aria-label='Forward'
+      >
+        <FastForwardIcon className='forward-button-icon' />
       </Button>
 
       <Dropdown speeds={speeds} selectedSpeed={selectedSpeed} setSpeed={setSpeed} />

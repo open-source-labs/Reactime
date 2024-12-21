@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 
 const radialGraph = (props) => {
   const dispatch = useDispatch();
+  console.log('props', props);
   const state = {
     series: [props.series], // series appears to be the scale at which data is displayed based on the type of webMetrics measured.
     options: {
@@ -30,7 +31,6 @@ const radialGraph = (props) => {
             margin: 0,
             size: '75%',
             background: 'transparent',
-            // background: '#242529',
             image: props.overLimit
               ? 'https://static.vecteezy.com/system/resources/thumbnails/012/042/301/small/warning-sign-icon-transparent-background-free-png.png'
               : undefined,
@@ -51,7 +51,7 @@ const radialGraph = (props) => {
           track: {
             background: '#161617',
             strokeWidth: '3%',
-            margin: 0, // margin is in pixels
+            margin: 0,
             dropShadow: {
               enabled: true,
               top: -3,
@@ -101,28 +101,22 @@ const radialGraph = (props) => {
     dispatch(setCurrentTabInApp('webmetrics')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.
   }, []);
 
-  const optionsCursorTrueWithMargin: OptionsCursorTrueWithMargin = {
-    followCursor: true,
-    shiftX: 20,
-    shiftY: 0,
-  };
-
   return (
     <div className='metric'>
-      <ReactHover options={optionsCursorTrueWithMargin}>
+      <ReactHover>
         <Trigger type='trigger'>
-          <div id='chart'>
+          <div id='chart' className='chart-container'>
             <Charts
               options={state.options}
               series={state.series}
               type='radialBar'
-              height={350}
-              width={350}
+              height={250}
+              width={250}
             />
           </div>
         </Trigger>
         <Hover type='hover'>
-          <div style={{ zIndex: 1, position: 'relative', padding: '0.5rem 1rem' }} id='hover-box'>
+          <div className='hover-box'>
             <p>
               <strong>{props.name}</strong>
             </p>

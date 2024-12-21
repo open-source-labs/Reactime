@@ -88,7 +88,9 @@ export const mainSlice = createSlice({
           const { snapshots: newSnaps } = payload[tab];
           tabs[tab] = {
             ...payload[tab],
-            sliderIndex: newSnaps.length - 1,
+            intervalId: tabs[tab].intervalId,
+            playing: tabs[tab].playing,
+            sliderIndex: tabs[tab].sliderIndex,
             seriesSavedStatus: false,
           };
         }
@@ -202,6 +204,7 @@ export const mainSlice = createSlice({
     },
 
     changeSlider: (state, action) => {
+      //should really be called jump to snapshot
       const { port, currentTab, tabs } = state;
       const { hierarchy, snapshots } = tabs[currentTab] || {};
 
@@ -426,30 +429,17 @@ export const mainSlice = createSlice({
       });
     },
 
-    save: (state, action) => {
-      const { currentTab, tabs } = state;
-
-      const { newSeries, newSeriesName } = action.payload;
-      if (!tabs[currentTab].seriesSavedStatus) {
-        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
-        return;
-      }
-      // Runs if series name input box is active.
-      // Updates chrome local storage with the newly saved series. Console logging the seriesArray grabbed from local storage may be helpful.
-      if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
-        let seriesArray: any = localStorage.getItem('project');
-        seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
-        newSeries.name = newSeriesName;
-        seriesArray.push(newSeries);
-        localStorage.setItem('project', JSON.stringify(seriesArray));
-        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
-        return;
-      }
-    },
-
     toggleExpanded: (state, action) => {
       const { tabs, currentTab } = state;
-      // find correct node from currLocation and toggle isExpanded
+      const snapshot = tabs[currentTab].currLocation.stateSnapshot;
+
+      // Special case for root node
+      if (action.payload.name === 'root' && snapshot.name === 'root') {
+        snapshot.isExpanded = !snapshot.isExpanded;
+        return;
+      }
+
+      // Regular case for other nodes
       const checkChildren = (node) => {
         if (_.isEqual(node, action.payload)) {
           node.isExpanded = !node.isExpanded;
@@ -459,25 +449,7 @@ export const mainSlice = createSlice({
           });
         }
       };
-      checkChildren(tabs[currentTab].currLocation.stateSnapshot);
-    },
-
-    deleteSeries: (state) => {
-      const { tabs, currentTab } = state;
-      const allStorage = () => {
-        const keys = Object.keys(localStorage);
-        let i = keys.length;
-        while (i--) {
-          localStorage.removeItem(keys[i]);
-        }
-      };
-      allStorage();
-      Object.keys(tabs).forEach((tab) => {
-        tabs[tab] = {
-          ...tabs[tab],
-        };
-      });
-      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: false };
+      checkChildren(snapshot);
     },
 
     disconnected: (state) => {
@@ -530,9 +502,7 @@ export const {
   tutorialSaveSeriesToggle,
   onHover,
   onHoverExit,
-  save,
   toggleExpanded,
-  deleteSeries,
   disconnected,
   startReconnect,
   endConnect,

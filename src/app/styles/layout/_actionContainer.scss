@@ -1,9 +1,26 @@
 .action-container {
-  // overflow: auto;
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  transition: width 0.3s ease;
   overflow-x: hidden;
-  background-color: $action-tab-background;
+  overflow-y: auto;
+  height: 100%;
+
+  .action-button-wrapper {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.2s ease,
+      visibility 0.2s ease;
+  }
 }
 
+.collapsed .action-container {
+  .action-button-wrapper {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
 .actionname {
   background-color: $indiv-action-input-bg;
   border: 1px solid $indiv-action-border;
@@ -14,34 +31,22 @@
   color: $indiv-action-filler-text;
 }
 
-#recordBtn {
-  color: #ffb3b3;
-  height: 100%;
-  display: flex;
-  margin-left: 10px;
-}
-
 .actionToolContainer {
-  color: #873b3b;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  height: 35px;
-}
-
-#recordBtn .fa-regular {
-  height: 100%;
-  width: 28px;
-}
-
-.route {
-  background-color: $route-bar;
-  color: $route-bar-text;
-  padding-left: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .toggle-record {
   color: $toggle-record-text;
 }
+
+.clear-button-container {
+  padding: 16px;
+}
+
+.dropdown-container {
+  padding: 4px 16px;
+}
+
+

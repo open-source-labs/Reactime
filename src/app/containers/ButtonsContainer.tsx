@@ -5,17 +5,13 @@ import { Button } from '@mui/material';
 //importing necesary material UI components for dialogue popup
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import Tutorial from '../components/Buttons/Tutorial';
-import LockIcon from '@mui/icons-material/Lock';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { toggleMode, importSnapshots, startReconnect } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import StatusDot from '../components/Buttons/StatusDot';
-import LoopIcon from '@mui/icons-material/Loop';
 import CloseIcon from '@mui/icons-material/Close';
 import WarningIcon from '@mui/icons-material/Warning';
 import { MainState, RootState } from '../FrontendTypes';
+import { Lock, Unlock, Download, Upload, RefreshCw } from 'lucide-react';
 
 function exportHandler(snapshots: []): void {
   // function that takes in our tabs[currentTab] object to be exported as a JSON file. NOTE: TypeScript needs to be updated
@@ -91,115 +87,106 @@ function ButtonsContainer(): JSX.Element {
 
   return (
     <div className='buttons-container'>
-      <Button
-        className='pause-button'
-        variant='outlined'
-        type='button'
-        onClick={() => dispatch(toggleMode('paused'))}
-      >
-        {paused ? (
-          <LockIcon className='button-icon' sx={{ pr: 1 }} />
-        ) : (
-          <LockOpenIcon className='button-icon' sx={{ pr: 1 }} />
-        )}
-        {paused ? 'Locked' : 'Unlocked'}
-      </Button>
-      <Button
-        className='export-button'
-        variant='outlined'
-        type='button'
-        //@ts-ignore
-        onClick={() => exportHandler(tabs[currentTab])}
-      >
-        <FileDownloadIcon className='button-icon' sx={{ pr: 1 }} />
-        Download
-      </Button>
-      <Button variant='outlined' className='import-button' onClick={() => importHandler(dispatch)}>
-        <FileUploadIcon className='button-icon' sx={{ pr: 1 }} />
-        Upload
-      </Button>
-      {/* The component below renders a button for the tutorial walkthrough of Reactime */}
-      <Tutorial dispatch={dispatch} currentTabInApp={currentTabInApp} />
-      {/* adding a button for reconnection functionality 10/5/2023 */}
-      <Button
-        variant='outlined'
-        className='reconnect-button'
-        type='button'
-        //update onClick functionality to include a popup that contains....
-        onClick={handleReconnectClick}
-        endIcon={
-          <span style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <StatusDot status={connectionStatus ? 'active' : 'inactive'} />
-          </span>
-        }
-      >
-        <LoopIcon className='button-icon' sx={{ pr: 1 }} />
-        Reconnect
-      </Button>
-      <Dialog className='dialog-pop-up' open={reconnectDialogOpen} onClose={handleReconnectCancel}>
-        <div className='close-icon-pop-up-div'>
-          <CloseIcon
-            type='button'
-            onClick={() => handleReconnectCancel()}
-            className='close-icon-pop-up'
-          />
-        </div>
-        <div className='warning-header-container'>
-          <WarningIcon className='warning-icon-pop-up' />
-          <DialogTitle className='dialog-pop-up-header'>WARNING</DialogTitle>
-        </div>
-        <DialogContent className='dialog-pop-up-contents'>
-          <h3>Status: {connectionStatus ? 'Connected' : 'Disconnected'}</h3>
-          {connectionStatus ? (
-            <>
-              Reconnecting while Reactime is still connected to the application may cause unforeseen
-              issues. Are you sure you want to proceed with the reconnection?
-            </>
+      <div className='buttons-wrapper'>
+        <Button
+          className='pause-button'
+          type='button'
+          onClick={() => dispatch(toggleMode('paused'))}
+        >
+          {paused ? (
+            <Lock className='button-icon' size={18} />
           ) : (
-            <>
-              Reactime has unexpectedly disconnected from your application. To continue using
-              Reactime, please reconnect.
-              <br />
-              <br />
-              WARNING: Reconnecting can sometimes cause unforeseen issues, consider downloading the
-              data before proceeding with the reconnection, if needed.
-            </>
+            <Unlock className='button-icon' size={18} />
           )}
-        </DialogContent>
-
-        <DialogActions className='dialog-pop-up-actions'>
-          <Button
-            onClick={() => handleReconnectCancel()}
-            className='cancel-button-pop-up'
-            type='button'
-            variant='contained'
-            style={{ backgroundColor: '#474c55' }}
-          >
-            Cancel
-          </Button>
-          {!connectionStatus && (
-            <Button
-              // @ts-ignore
-              onClick={() => exportHandler(tabs[currentTab])}
+          {paused ? 'Locked' : 'Unlocked'}
+        </Button>
+        <Button
+          className='export-button'
+          type='button'
+          //@ts-ignore
+          onClick={() => exportHandler(tabs[currentTab])}
+        >
+          <Download className='button-icon' size={18} />
+          Download
+        </Button>
+        <Button className='import-button' onClick={() => importHandler(dispatch)}>
+          <Upload className='button-icon' size={18} />
+          Upload
+        </Button>
+        {/* The component below renders a button for the tutorial walkthrough of Reactime */}
+        <Tutorial dispatch={dispatch} currentTabInApp={currentTabInApp} />
+        {/* adding a button for reconnection functionality 10/5/2023 */}
+        <Button
+          className='reconnect-button'
+          type='button'
+          //update onClick functionality to include a popup that contains....
+          onClick={handleReconnectClick}
+          endIcon={
+            <span style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <StatusDot status={connectionStatus ? 'active' : 'inactive'} />
+            </span>
+          }
+        >
+          <RefreshCw className='button-icon' size={18} />
+          Reconnect
+        </Button>
+        <Dialog
+          className='dialog-pop-up'
+          open={reconnectDialogOpen}
+          onClose={handleReconnectCancel}
+        >
+          <div className='close-icon-pop-up-div'>
+            <CloseIcon
               type='button'
-              className='download-button-pop-up'
+              onClick={() => handleReconnectCancel()}
+              className='close-icon-pop-up'
+            />
+          </div>
+          <div className='warning-header-container'>
+            <WarningIcon className='warning-icon-pop-up' />
+            <DialogTitle className='dialog-pop-up-header'>WARNING</DialogTitle>
+          </div>
+          <DialogContent className='dialog-pop-up-contents'>
+            <h3>Status: {connectionStatus ? 'Connected' : 'Disconnected'}</h3>
+            {connectionStatus ? (
+              <>
+                Reconnecting while Reactime is still connected to the application may cause
+                unforeseen issues. Are you sure you want to proceed with the reconnection?
+              </>
+            ) : (
+              <>
+                Reactime has unexpectedly disconnected from your application. To continue using
+                Reactime, please reconnect.
+                <br />
+                <br />
+                WARNING: Reconnecting can sometimes cause unforeseen issues, consider downloading
+                the data before proceeding with the reconnection, if needed.
+              </>
+            )}
+          </DialogContent>
+
+          <DialogActions className='dialog-pop-up-actions'>
+            <Button
+              onClick={() => handleReconnectCancel()}
+              className='cancel-button-pop-up'
+              type='button'
               variant='contained'
-              color='primary'
+              style={{ backgroundColor: '#474c55' }}
             >
-              Download
+              Cancel
             </Button>
-          )}
-          <Button
-            onClick={() => handleReconnectConfirm()}
-            type='button'
-            className='reconnect-button-pop-up'
-            variant='contained'
-            style={{ backgroundColor: '#F00008' }}
-          >
-            Reconnect
-          </Button>
-        </DialogActions>
-      </Dialog>
+            <Button
+              onClick={() => handleReconnectConfirm()}
+              type='button'
+              className='reconnect-button-pop-up'
+              variant='contained'
+              style={{ backgroundColor: '#F00008' }}
+            >
+              Reconnect
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </div>
   );
 }

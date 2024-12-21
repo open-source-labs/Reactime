@@ -6,50 +6,38 @@
   font-size: 14px;
 }
 
-/* width */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 8px;
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-  // background: rgb(20, 20, 20);
-  background: none;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: rgb(67, 67, 71);
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: rgb(97, 97, 97);
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
 // 1. Configuration and helpers
 @import 'abstracts/variablesLM';
-//@import 'abstracts/variables';
 
-// 3. Base stuff
-@import 'base/base', 'base/helpers', 'base/typography';
+// 3. Base
+@import 'base/helpers';
 
 // 4. Layout-related sections
 @import 'layout/mainContainer', 'layout/bodyContainer', 'layout/actionContainer',
-'layout/errorContainer', 'layout/stateContainer', 'layout/travelContainer',
-'layout/buttonsContainer', 'layout/headContainer.scss';
+  'layout/errorContainer', 'layout/stateContainer', 'layout/travelContainer',
+  'layout/buttonsContainer';
 
 // 5. Components
-@import 'components/buttons', 'components/actionComponent',
-'components/jsonTree', 'components/renderingFrequency',
-'components/performanceVisx', 'components/componentMap', 'components/ax';
+@import 'components/buttons', 'components/actionComponent', 'components/performanceVisx',
+  'components/componentMap', 'components/ax';
 
 // slider component
-@import './components/rc-slider', './components/sliderHandle';
+@import './components/rc-slider';
 
 // d3 chart component
-@import './components/d3graph.css';
+@import './components/d3graph';
 
 // diff component
 @import './components/diff';

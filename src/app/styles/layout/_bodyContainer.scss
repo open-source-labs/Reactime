@@ -2,23 +2,22 @@
   height: 100%;
   overflow: hidden;
   display: grid;
-  grid-template-columns: min-content 1fr;
-  grid-template-rows: 1fr minmax(min-content, 5%) minmax(min-content, 5%);
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: 1fr auto;
   grid-template-areas:
     'actions states'
-    'travel travel'
-    'buttons buttons';
+    'bottom bottom';
+  transition: grid-template-columns 0.3s ease;
+
+  &.collapsed {
+    grid-template-columns: 45px 1fr;
+  }
 }
 
-/* if extension width is less than 500px, stack the body containers */
-@media (max-width: 500px) {
-  .body-container {
-    grid-template-rows: 3fr 5fr 1fr;
-    grid-template-columns: auto;
-    grid-template-areas:
-      'actions'
-      'states'
-      'travel'
-      'buttons';
-  }
+.bottom-controls {
+  grid-area: bottom;
+  display: flex;
+  width: 100%;
+  border-top: 1px solid #e5e7eb;
+  background: white;
 }

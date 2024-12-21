@@ -15,24 +15,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
 import WebMetricsContainer from './WebMetrics/WebMetricsContainer';
 import { MainState, RootState, StateRouteProps } from '../../FrontendTypes';
-import type AxContainer from './AxMap/AxMap';
-
-/*
-  Loads the appropriate StateRoute view and renders the Map, Performance, History, Webmetrics, and Tree navbar buttons after clicking on the 'State' button located near the top rightmost corner.
-*/
+import AxContainer from './AxMap/AxContainer';
 
 const History = require('./History').default;
-const NO_STATE_MSG = 'No state change detected. Trigger an event to change state'; // message to be returned if there has been no state change detected in our hooked/target app
+const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
 
 const StateRoute = (props: StateRouteProps) => {
   const {
-    axSnapshots, // from 'tabs[currentTab]' object in 'MainContainer'
-    snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
-    hierarchy: propsHierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
-    snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
-    viewIndex: propsViewIndex, // from 'tabs[currentTab]' object in 'MainContainer'
-    webMetrics, // from 'tabs[currentTab]' object in 'MainContainer'
-    currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
+    axSnapshots,
+    snapshot,
+    hierarchy: propsHierarchy,
+    snapshots,
+    viewIndex: propsViewIndex,
+    webMetrics,
+    currLocation,
   } = props;
 
   const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
@@ -40,158 +36,119 @@ const StateRoute = (props: StateRouteProps) => {
   const hierarchy = propsHierarchy || tabsHierarchy;
   const viewIndex = propsViewIndex || tabsViewIndex;
 
-
-  // lines 45 - 63 contains functionality to disable the accessibility features in Reactime.
   const dispatch = useDispatch();
   const [showTree, setShowTree] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('disable');
   const [showParagraph, setShowParagraph] = useState(true);
 
   const enableAxTreeButton = () => {
     dispatch(toggleAxTree('toggleAxRecord'));
     dispatch(setCurrentTabInApp('AxTree'));
-    setSelectedValue('enable');
     setShowParagraph(false);
     setShowTree(true);
   };
 
-  const disableAxTree = () => {
-    dispatch(toggleAxTree('toggleAxRecord'));
-    setSelectedValue('disable');
-    setShowParagraph(true);
-    setShowTree(false);
-  };
-
   return (
     <div className='app-body'>
-      <div className='navbar'>
-        {/* all classnames below are functionally defined for styling purposes */}
-        <NavLink
-          to='/'
-          className={(navData) =>
-            navData.isActive ? 'is-active router-link map-tab map-tab1' : 'router-link map-tab map-tab1'
-          }
-          end
-        >
-          Map
-        </NavLink>
-        <NavLink
-          className={(navData) =>
-            navData.isActive ? 'is-active router-link map-tab' : 'router-link map-tab'
-          }
-          to='/performance'
-        >
-          Performance
-        </NavLink>
-        <NavLink
-          className={(navData) =>
-            navData.isActive ? 'is-active router-link history-tab' : 'router-link history-tab'
-          }
-          to='/history'
-        >
-          History
-        </NavLink>
-        <NavLink
-          className={(navData) =>
-            navData.isActive
-              ? 'is-active router-link web-metrics-tab'
-              : 'router-link web-metrics-tab'
-          }
-          to='/webMetrics'
-        >
-          Web Metrics
-        </NavLink>
-        <NavLink
-          className={(navData) =>
-            navData.isActive ? 'is-active router-link tree-tab' : 'router-link tree-tab'
-          }
-          to='/tree'
-        >
-          Tree
-        </NavLink>
-        <NavLink
-          className={(navData) =>
-            navData.isActive
-              ? 'is-active router-link accessibility-tab'
-              : 'router-link accessibility-tab'
-          }
-          to='/accessibility'
-        >
-          Accessibility
-        </NavLink>
+      <div className='main-navbar-container'>
+        <div className='main-navbar'>
+          <NavLink
+            to='/'
+            className={(navData) =>
+              navData.isActive ? 'is-active router-link map-tab' : 'router-link map-tab'
+            }
+            end
+          >
+            Map
+          </NavLink>
+          <NavLink
+            className={(navData) =>
+              navData.isActive ? 'is-active router-link performance' : 'router-link performance-tab'
+            }
+            to='/performance'
+          >
+            Performance
+          </NavLink>
+          <NavLink
+            className={(navData) =>
+              navData.isActive ? 'is-active router-link history-tab' : 'router-link history-tab'
+            }
+            to='/history'
+          >
+            History
+          </NavLink>
+          <NavLink
+            className={(navData) =>
+              navData.isActive
+                ? 'is-active router-link web-metrics-tab'
+                : 'router-link web-metrics-tab'
+            }
+            to='/webMetrics'
+          >
+            Web Metrics
+          </NavLink>
+          <NavLink
+            className={(navData) =>
+              navData.isActive ? 'is-active router-link tree-tab' : 'router-link tree-tab'
+            }
+            to='/tree'
+          >
+            Tree
+          </NavLink>
+          <NavLink
+            className={(navData) =>
+              navData.isActive
+                ? 'is-active router-link accessibility-tab'
+                : 'router-link accessibility-tab'
+            }
+            to='/accessibility'
+          >
+            Accessibility
+          </NavLink>
+        </div>
       </div>
+
       <div className='app-content'>
         <Routes>
           <Route
             path='/accessibility'
             element={
-              // showTree is initially set to a falsely value, therefore, lines 155 - 189 is executed first. Once showTree is set to truthy by clicking the enable button, lines 129 - 154 is executed
-              // state is a key component here in order to update the accessibility tree 
               showTree ? (
                 <div>
-                     <input
-                          type='radio'
-                          value='enable'
-                          checked={selectedValue === 'enable'}
-                          onChange={() => {
-                            enableAxTreeButton();
-                          }}
-                        />
-                        <label htmlFor='enable'>Enable</label>
-                        <input
-                          type='radio'
-                          value='disable'
-                          checked={selectedValue === 'disable'}
-                          onChange={() => {
-                            disableAxTree();
-                          }}
-                        />
-                        <label htmlFor='disable'>Disable</label>
-                    {showTree && <AxContainer
-                      axSnapshots={axSnapshots}
-                      snapshot={snapshot}
-                      snapshots={snapshots}
-                      currLocation={currLocation}
-                      />} 
+                  <AxContainer
+                    axSnapshots={axSnapshots}
+                    snapshot={snapshot}
+                    snapshots={snapshots}
+                    currLocation={currLocation}
+                    setShowTree={setShowTree}
+                    setShowParagraph={setShowParagraph}
+                  />
                 </div>
               ) : (
                 <div>
                   {showParagraph && (
-                    <p>
-                      A Note to Developers: Reactime is using the Chrome Debugger API in order to
-                      grab the Accessibility Tree. Enabling this option will allow you to record
-                      Accessibility Tree snapshots, but will result in the Chrome browser notifying
-                      you that the Chrome Debugger has started.
-                    </p>
+                    <div className='accessibility-text'>
+                      <p>
+                        A Note to Developers: Reactime is using the Chrome Debugger API in order to
+                        grab the Accessibility Tree. Enabling this option will allow you to record
+                        Accessibility Tree snapshots, but will result in the Chrome browser
+                        notifying you that the Chrome Debugger has started.
+                      </p>
+                    </div>
                   )}
-                  <div>
-                    {
-                      <input
-                        type='radio'
-                        value='enable'
-                        checked={selectedValue === 'enable'}
-                        onChange={() => {
-                          enableAxTreeButton();
-                        }}
-                      />
-                    }
+                  <div className='accessibility-controls'>
+                    <input
+                      type='radio'
+                      id='enable'
+                      name='accessibility'
+                      value='enable'
+                      onChange={enableAxTreeButton}
+                    />
                     <label htmlFor='enable'>Enable</label>
-                    {
-                      <input
-                        type='radio'
-                        value='disable'
-                        checked={selectedValue === 'disable'}
-                        onChange={() => {
-                          disableAxTree();
-                        }}
-                      />
-                    }
-                    <label htmlFor='disable'>Disable</label>
                   </div>
                 </div>
               )
             }
-          ></Route>
+          />
           <Route
             path='/history'
             element={
@@ -202,8 +159,6 @@ const StateRoute = (props: StateRouteProps) => {
                       width={width}
                       height={height}
                       hierarchy={hierarchy}
-                      // Commented out dispatch that was prop drilled as conversion to RTK might invalidate need for prop drilling to access dispatch
-                      // dispatch={dispatch}
                       sliderIndex={sliderIndex}
                       viewIndex={viewIndex}
                       currLocation={currLocation}
@@ -221,13 +176,12 @@ const StateRoute = (props: StateRouteProps) => {
             element={
               hierarchy ? (
                 <div style={{ height: '100%' }}>
-                  <ParentSize className='performanceContainer'>
+                  <ParentSize>
                     {({ width, height }) => (
                       <PerformanceVisx
                         width={width}
                         height={height}
                         snapshots={snapshots}
-                        // note: is propdrilled within Performance Visx, but doesn't seem to be used
                         changeSlider={changeSlider}
                         changeView={changeView}
                         hierarchy={hierarchy}
@@ -252,8 +206,7 @@ const StateRoute = (props: StateRouteProps) => {
               hierarchy ? (
                 <ParentSize className='componentMapContainer'>
                   {({ width, height }) => {
-                    // eslint-disable-next-line react/prop-types
-                    const maxHeight: number = 1200;
+                    const maxHeight = 1200;
                     const h = Math.min(height, maxHeight);
                     return (
                       <ComponentMap
@@ -274,4 +227,3 @@ const StateRoute = (props: StateRouteProps) => {
 };
 
 export default StateRoute;
-

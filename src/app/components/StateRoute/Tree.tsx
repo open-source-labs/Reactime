@@ -55,20 +55,22 @@ const Tree = (props: TreeProps) => {
 
   return (
     <>
-      {snapshot && (
-        // @ts-ignore
-        <JSONTree
+      <div className='tree-component'>
+        {snapshot && (
           // @ts-ignore
-          data={snapshots[currLocation.index] || snapshot} // data to be rendered, a snapshot object
-          theme={{ extend: colors, tree: () => ({ className: 'json-tree' }) }} // theme set to a base16 theme that has been extended to include  "className: 'json-tree'"
-          shouldExpandNodeInitially={() => true} // determines if node should be expanded when it first renders (root is expanded by default)
-          getItemString={getItemString} // allows the customization of how arrays, objects, and iterable nodes are displayed.
-          labelRenderer={(raw: any[]) => {
-            //  renders a label if the first element of raw is a number.
-            return typeof raw[0] !== 'number' ? <span>{raw[0]}</span> : null;
-          }}
-        />
-      )}
+          <JSONTree
+            // @ts-ignore
+            data={snapshots[currLocation.index] || snapshot} // data to be rendered, a snapshot object
+            theme={{ extend: colors, tree: () => ({ className: 'json-tree' }) }} // theme set to a base16 theme that has been extended to include  "className: 'json-tree'"
+            shouldExpandNodeInitially={() => true} // determines if node should be expanded when it first renders (root is expanded by default)
+            getItemString={getItemString} // allows the customization of how arrays, objects, and iterable nodes are displayed.
+            labelRenderer={(raw: any[]) => {
+              //  renders a label if the first element of raw is a number.
+              return typeof raw[0] !== 'number' ? <span>{raw[0]}</span> : null;
+            }}
+          />
+        )}
+      </div>
     </>
   );
 };

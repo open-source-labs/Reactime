@@ -11,6 +11,8 @@ const AxContainer = (props: AxContainer) => {
     snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
     snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
     currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
+    setShowTree,
+    setShowParagraph,
   } = props;
 
   return (
@@ -28,6 +30,8 @@ const AxContainer = (props: AxContainer) => {
               currLocation={currLocation}
               width={width}
               height={h}
+              setShowTree={setShowTree}
+              setShowParagraph={setShowParagraph}
             />
           );
         }}
@@ -37,5 +41,3 @@ const AxContainer = (props: AxContainer) => {
 };
 
 export default AxContainer;
-
-

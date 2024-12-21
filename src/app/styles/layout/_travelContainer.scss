@@ -1,63 +1,27 @@
 .travel-container {
-  background: $travel-background;
-  // background: linear-gradient(
-  // 	90deg,
-  // 	rgba(41, 41, 41, 1) 0%,
-  // 	rgba(51, 51, 51, 1) 50%,
-  // 	rgba(41, 41, 41, 1) 100%
-  // );
-  // border-color: $border-color;
-  // display: flex;
-  // flex-direction: row;
-  // align-items: center;
-  // justify-content: space-around;
-
+  background: white;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-around;
-}
-
-.visx-group {
-  margin-top: 10px;
+  border-top: 1px solid #e5e7eb;
 }
 
 .react-select-container {
   font-size: 16px;
   min-width: 90px;
   margin: 8px;
-  .react-select__control {
-    background-color: $speed-dropdown;
-    border-color: transparent;
-    @extend %disable-highlight;
-  }
-  .react-select__control:hover {
-    cursor: pointer;
-  }
-  .react-select__menu {
-    background-color: $speed-dropdown-expanded;
-    color: $speed-dropdown-text;
-    @extend %disable-highlight;
-  }
-  .react-select__single-value {
-    color: $speed-dropdown-text;
-  }
-  .react-select__option:hover {
-    background-color: $speed-dropdown-expanded-hover;
-    cursor: pointer;
-  }
-  .react-select__option--is-selected,
-  .react-select__option--is-focused {
-    background-color: transparent;
-    cursor: pointer;
-  }
-
-  // removes the cursor from blinking
-  .css-w8afj7-Input {
-    color: transparent;
-  }
 }
 
-.button-icon {
-  color: $icon-primary;
+.react-select__control {
+  background-color: #f3f4f6 !important;
+  border: none !important;
+  border-radius: 0.375rem !important;
+  min-height: 30px !important;
+  box-shadow: none !important;
+}
+
+.react-select__single-value {
+  color: #374151 !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
 }

@@ -188,6 +188,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "jsondiffpatch": "^0.5.0",
     "lodash": "^4.17.21",
+    "lucide-react": "^0.468.0",
     "node": "^18.12.1",
     "prettier": "^3.1.1",
     "rc-slider": "^10.5.0",

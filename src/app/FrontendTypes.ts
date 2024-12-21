@@ -108,6 +108,12 @@ export interface ActionContainerProps {
   actionView: boolean;
   setActionView: React.Dispatch<React.SetStateAction<boolean>>;
   toggleActionContainer: () => void;
+  snapshots: any;
+  currLocation: any;
+}
+
+export interface ProvConContainerProps {
+  currentSnapshot: any;
 }
 
 export interface StateContainerProps {
@@ -249,7 +255,7 @@ export interface HandleProps {
 
 export interface MainSliderProps {
   className: string;
-  snapshotsLength: number;
+  snapshots: any[];
 }
 
 export interface DefaultMargin {
@@ -297,12 +303,10 @@ export interface StepsObj {
 }
 
 export interface LinkControlProps {
-  layout: string;
   orientation: string;
   linkType: string;
   stepPercent: number;
   selectedNode: string;
-  setLayout: (layout: string) => void;
   setOrientation: (orientation: string) => void;
   setLinkType: (linkType: string) => void;
   setStepPercent: (percent: number) => void;
@@ -333,7 +337,6 @@ export interface Node {
 }
 
 export interface LinkComponent {
-  layout: string;
   linkType: string;
   orientation: string;
 }
@@ -396,4 +399,24 @@ export interface AxContainer {
   };
   snapshots: [];
   currLocation: object;
+  setShowTree: any;
+  setShowParagraph: any;
+}
+
+export interface FilteredNode {
+  name?: string;
+  state?: any;
+  hooksState?: any;
+  props?: any;
+  componentData?: {
+    context?: any;
+    hooksState?: any;
+    props?: any;
+  };
+  children?: FilteredNode[];
+  context?: any;
+}
+
+export interface FilteredNodeChildren {
+  [key: string]: FilteredNode;
 }

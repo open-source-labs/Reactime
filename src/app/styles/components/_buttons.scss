@@ -1,80 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-.save-series-button {
-  padding: 3px;
-  outline: transparent;
-  color: $performance-save-series-button-text;
-  font-size: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-style: solid;
-  border-color: transparent;
-  border-radius: 5px;
-  cursor: pointer;
-  line-height: 1.5em;
-  font: 400 16px 'Outfit', sans-serif;
-  width: 120px;
-  background: $performance-save-series-button;
-  height: 30px;
-  position: absolute;
-  right: 3rem;
-
-  &.animate {
-    background: rgb(41, 164, 41);
-  }
-}
-
-.delete-button {
-  padding: 3px;
-  outline: transparent;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-style: solid;
-  border-color: transparent;
-  border-radius: 3px;
-  cursor: pointer;
-  line-height: 1.5em;
-  font: 300 16px 'Outfit', sans-serif;
-  font-size: $button-text-size;
-  width: 120px;
-  height: 30px;
-
-  &.animate {
-    background-color: rgb(41, 164, 41);
-  }
-}
-
-.empty-button {
-  padding: 3px;
-  outline: transparent;
-  color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-style: solid;
-  border-color: transparent;
-  border-radius: 3px;
-  cursor: pointer;
-  line-height: 1.5em;
-  font: 500 16px 'Roboto', sans-serif;
-  width: 120px;
-  //background: #ff0000;
-}
-
-.clear-button {
-  background: #3256f1;
-  background-color: #050787;
-  color: #3256f1;
-}
-
-.empty-button:hover {
-  color: black;
-  box-shadow: #ff0001;
-}
-
 .state-dropdown {
   width: 240px;
   margin-left: 20px;
@@ -87,7 +12,9 @@
 .action-component:hover .jump-button {
   opacity: 1;
   transform: rotateX(0deg);
-  transition: opacity 300ms, transform 0.15s linear;
+  transition:
+    opacity 300ms,
+    transform 0.15s linear;
 }
 
 .time-button {
@@ -114,20 +41,15 @@
   background-color: #232529;
   color: #ffffff;
   transform: rotateX(90deg);
-  transition: opacity 300ms, transform 0.15s linear;
+  transition:
+    opacity 300ms,
+    transform 0.15s linear;
   opacity: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2px;
   padding-bottom: 5px;
-}
-
-.jump-button:hover {
-  // remove the blue border when button is clicked
-  color: $jump-text;
-  background-color: $jump-hover;
-  cursor: pointer;
 }
 
 .current-location {
@@ -137,11 +59,6 @@
   width: 100px;
   border: transparent;
   border-radius: 3px;
-}
-
-.empty-button:hover {
-  color: white;
-  background-color: #ff0001;
 }
 
 .play-button {
@@ -181,24 +98,7 @@
   cursor: pointer;
 }
 
-// .pause-button {
-//   color: #ff0000;
-//   background-color: #ff0000;
-// }
-
-.import-button:hover,
-.howToUse-button:hover,
-.export-button:hover,
-.pause-button:hover,
-.reconnect-button:hover {
-  //@extend %button-shared;
-  color: $function-bar-text-hover;
-  box-shadow: 1px 1px 2px 1px rgba(30, 86, 171, 0.25);
-  transform: translate3d(0, -3px, 0);
-}
-
 .svg-inline--fa {
-  //color: $blue-brand;
   margin-right: 0.75em;
   display: inline-block;
   font-size: inherit;
@@ -207,196 +107,124 @@
   vertical-align: -0.125em;
 }
 
-%button-shared {
-  padding: 5px;
-  outline: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  line-height: 1.5em;
-  font: 300 16px 'Outfit', sans-serif;
-  font-size: $button-text-size;
-
-  background: #ff0001;
-  border-radius: 5px;
-  position: relative;
-  border: 1px solid #b8c4c240;
-
-  @extend %disable-highlight;
-}
-
-// Save button
-.dropdown-dark {
-  background: #444;
-  border-color: #111111 #0a0a0a black;
-  background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
-  background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
-  background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
-  background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
-  -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
-}
-
-.dropdown-dark:before {
-  border-bottom-color: #aaa;
-}
-
-.dropdown-dark:after {
-  border-top-color: #aaa;
-}
-
-.dropdown-dark .dropdown-select {
-  color: #aaa;
-  text-shadow: 0 1px black;
-  background: #444;
-  /* Fallback for IE 8 */
-}
-
-.dropdown-dark .dropdown-select:focus {
-  color: #ccc;
-}
-
-.dropdown-dark .dropdown-select > option {
-  background: #444;
-  text-shadow: 0 1px rgba(0, 0, 0, 0.4);
-}
-
-.MuiSelect-icon {
-  color: lightgrey !important;
-}
-
-.series-options-container {
-  margin: 0 1rem;
-}
-
-.snapshotId-header {
-  font-size: 1rem;
-}
-
-.dropdown-and-delete-series-container {
-
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  margin: 16px 0 24px 0;
-}
-
-.close-button-container {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.closebtn {
-  font-size: 20px;
-  color: #818181;
-  background-color: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-.closebtn:hover {
-  color: #f1f1f1;
-}
-
-.side-bar-button {
-  width: 80px;
-  height: 30px;
-  padding: 0 2rem;
-}
-
 /* sidebar button open and closing functionality */
+/* Container for arrow and collapse text */
+#arrow {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  background-color: white;
+}
+
+/* Base toggle styling */
+.toggle {
+  height: 100%;
+  width: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+
+/* Modern chevron using border technique - default facing left */
+.toggle i {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid #6b7280;
+  border-bottom: 2px solid #6b7280;
+  transform: rotate(135deg); /* Changed to 135deg to face left by default */
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+/* Clean up unused pseudo-elements */
+.toggle i::before,
+.toggle i::after {
+  display: none;
+}
+
+/* Rotation for collapsed state - rotate to face right */
+.no-aside .toggle i {
+  transform: rotate(-45deg); /* Changed to -45deg to face right when collapsed */
+}
+
+/* Hover state matching modern UI */
+.toggle:hover i {
+  border-color: #374151;
+}
+
+/* Modern collapse text styling */
+.collapse {
+  display: flex;
+  align-items: center;
+  color: #6b7280;
+  font-size: 1.1rem;
+  font-weight: 500;
+  font-family: 'Outfit', sans-serif;
+  transition: color 0.2s ease;
+}
+
+.record-button-container {
+  display: flex;
+  align-items: center;
+  padding: 4px 16px;
+  background: transparent;
+  gap: 8px;
+}
+
+.record-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.record-icon {
+  width: 10px;
+  height: 10px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  transition: opacity 0.3s ease;
+}
+
+.record-icon.recording {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Hover state for the entire action area */
+#arrow:hover .collapse {
+  color: #374151;
+}
+
+/* Smooth transition for sidebar */
 aside {
-  //background: #242529;
-  color: #fff;
-  transition: width 1s;
-  width: 100%; //JR
+  background-color: white;
+  transition: width 0.3s ease;
 }
 
 .no-aside {
   width: 45px;
-  // margin-right: 15px;
 }
 
-//JR added for collapse label
-.collapse {
-  color: $collapse-text;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
+/* Hide collapse text when sidebar is collapsed */
 .hidden {
   display: none;
-}
-
-.toggle:hover {
-  cursor: pointer;
-}
-
-.toggle {
-  // display: block;
-  // position: relative;
-  // margin-top: 1rem;
-  height: 100%; //JR
-}
-
-/* toggle i handles arrow animation */
-.toggle i,
-.toggle i::after,
-.toggle i::before {
-  position: absolute;
-  width: 27px;
-  height: 4px;
-  border-radius: 4px;
-  transition: transform 0.15s;
-  background-color: $icon-primary;
-}
-
-.toggle i {
-  top: 16px;
-  left: 10px;
-  display: block;
-  background: $icon-primary;
-}
-
-.toggle i::before {
-  top: -6px;
-}
-
-.toggle i::after {
-  bottom: -6px;
-}
-
-.toggle i::after,
-.toggle i::before {
-  content: '';
-  display: block;
-  // top: -5px;
-}
-
-.toggle i::before {
-  transform: translate3d(-8px, 0, 0) rotate(-45deg) scale(0.7, 1);
-}
-
-.toggle i::after {
-  transform: translate3d(-8px, 0, 0) rotate(45deg) scale(0.7, 1);
-}
-
-.no-aside .toggle i::before,
-.no-aside .toggle i::after {
-  transform: none;
-}
-
-#arrow {
-  // margin-bottom: 40px;
-  // display: flex;
-  // justify-content: flex-start;
-
-  //JR
-  height: 100%;
-  display: grid;
-  grid-template-columns: 45px 1fr;
 }
 
 /* ^ sidebar button open and closing functionality */
@@ -449,8 +277,6 @@ aside {
   border-radius: 3px;
   line-height: 1.5em;
   outline: transparent;
-  //background: $blue-color-gradient;
-  //box-shadow: $box-shadow-blue;
   &:hover {
     color: $contrasting-color;
     background-color: #ff0001;
@@ -461,4 +287,20 @@ aside {
   color: #d72828;
   margin-left: 5px;
   margin-right: -22px;
+}
+
+.clear-button-modern {
+  width: 100% !important;
+  background-color: #f3f4f6 !important;
+  color: #374151 !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  padding: 0.375rem 1rem !important;
+  border-radius: 0.375rem !important;
+  transition: background-color 200ms ease-in-out !important;
+}
+
+.clear-button-modern:hover {
+  background-color: #e5e7eb !important;
 }

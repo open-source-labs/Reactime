@@ -207,36 +207,48 @@ export default function createTree(currentFiberNode: Fiber): Tree {
       if (memoizedState.queue) {
         try {
           const hooksStates = getHooksStateAndUpdateMethod(memoizedState);
-          console.log('hook states', hooksStates);
-          // Get the hooks names by parsing the elementType
           const hooksNames = getHooksNames(elementType.toString());
-          // Intialize state & index:
+
           componentData.hooksState = {};
-          componentData.reducerState = null;
+          componentData.reducerStates = []; // New array to store reducer states
           componentData.hooksIndex = [];
 
-          hooksStates.forEach(({ state, component, isReducer }, i) => {
+          hooksStates.forEach(({ state, component, isReducer, lastAction, reducer }, i) => {
             componentData.hooksIndex.push(componentActionsRecord.saveNew(component));
 
             if (isReducer) {
-              // If it's a reducer, store its state
-              componentData.reducerState = state;
+              // Store reducer-specific information
+              componentData.reducerStates.push({
+                state,
+                lastAction,
+                reducerIndex: i,
+                hookName: hooksNames[i]?.hookName || `Reducer ${i}`,
+              });
+            } else {
+              // Regular useState hook
+              componentData.hooksState[hooksNames[i]?.varName || `State: ${i}`] = state;
             }
-            // Otherwise treat as useState
-            componentData.hooksState[hooksNames[i]?.varName || `Reducer: ${i}`] = state;
           });
-
-          // Pass to front end
-          newState = componentData.hooksState;
-          console.log('new state', newState);
+          newState = {
+            ...componentData.hooksState,
+            reducers: componentData.reducerStates,
+          };
         } catch (err) {
-          console.log('Error extracting functional component state:', {
+          console.log('Error extracting component state:', {
             componentName,
             memoizedState,
             error: err,
           });
         }
       }
+    }
+    if (tag === ContextProvider && !elementType._context.displayName) {
+      let stateData = memoizedProps.value;
+      if (stateData === null || typeof stateData !== 'object') {
+        stateData = { CONTEXT: stateData };
+      }
+      componentData.context = filterAndFormatData(stateData);
+      componentName = 'Context';
     }
 
     // -----------------ADD COMPONENT DATA TO THE OUTPUT TREE-------------------

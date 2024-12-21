@@ -1,53 +1,127 @@
+.route-container {
+  width: 100%;
+}
+
+.route-header {
+  background-color: #1f2937;
+  color: #ffffff;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.route-content {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 50px;
+}
+
+/* Container for individual action */
+.individual-action {
+  margin: 0;
+  padding: 0;
+}
+
 .action-component {
-  padding: 3px 10px;
-  display: grid;
-  grid-template-columns: none;
-  align-items: center;
-  height: 24px;
-  // background-color: $brand-color;
-  // border-bottom-style: solid;
-  // border-bottom-width: 1px;
-  // background-color: none;
-  // border-color: #292929;
-  // border-color: $border-color;
-  cursor: pointer;
-  overflow: hidden;
-  @extend %disable-highlight;
+  display: flex;
+  padding: 6px 16px;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 200ms ease;
 }
 
-.clear-button {
-  background-color:#187924;
-  color:#187924;
-}
-
-.action-component-text {
-  margin-bottom: 8px;
-  color: $indiv-action-custom-text
+.action-component:hover {
+  background-color: #f9fafb;
 }
 
 .action-component.selected {
-  //font-size: 16px;
-  background-color: $indiv-action-selected;
-  color: $indiv-action-selected-text
-}
-
-.action-component.exclude {
-  color: #ff0000;
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-.action-component:focus {
-  outline: none;
+  background-color: #f3f4f6;
 }
 
 .action-component-trigger {
-  display: grid;
-  grid-template-columns: 4fr 1fr;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  //height: 20px;
-  cursor: pointer;
-  overflow: hidden;
-  @extend %disable-highlight;
+}
+
+.action-component-text {
+  flex: 1;
+}
+
+/* Input styling */
+.actionname {
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  color: #374151;
+  width: 100%;
+  padding: 2px 0;
+}
+
+.actionname::placeholder {
+  color: #6b7280;
+}
+
+.actionname:focus {
+  outline: none;
+}
+
+/* Button styling */
+.time-button,
+.jump-button,
+.current-location {
+  min-width: 90px;
+  height: 28px; /* Fixed height for better vertical centering */
+  padding: 0 8px; /* Reduced vertical padding */
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: all 200ms ease;
+  margin: 0;
+}
+
+.time-button {
+  color: #6b7280;
+  background: transparent;
+}
+
+.jump-button {
+  color: white;
+  background: #111827;
+}
+
+.jump-button:hover {
+  background: #374151;
+}
+
+.current-location {
+  color: #059669;
+  background: #ecfdf5;
+}
+
+/* Hide/show button transitions */
+.action-component:hover .time-button {
+  display: none;
+}
+
+.action-component:hover .jump-button {
+  display: block;
+}
+
+.jump-button {
+  display: none;
+}
+
+.current-snap {
+  font-weight: bold;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  color: #374151;
+  width: 100%;
+  padding: 2px 24px 2px 0px;
 }
