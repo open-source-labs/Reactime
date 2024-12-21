@@ -1,6 +1,7 @@
 import React from 'react';
 import { MemoryRouter as Router } from 'react-router-dom';
 import MainContainer from './containers/MainContainer';
+import { Toaster } from 'react-hot-toast';
 
 /*
   'currentTab' is the current active tab within Google Chrome.
@@ -11,6 +12,7 @@ import MainContainer from './containers/MainContainer';
 function App(): JSX.Element {
   return (
     <Router>
+      <Toaster />
       <MainContainer />
     </Router>
   );
