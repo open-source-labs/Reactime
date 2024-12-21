@@ -5,7 +5,7 @@ import Loader from '../components/ErrorHandling/Loader';
 import ErrorMsg from '../components/ErrorHandling/ErrorMsg';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainState, RootState, ErrorContainerProps } from '../FrontendTypes';
-import { current } from '@reduxjs/toolkit';
+
 /*
 This is the loading screen that a user may get when first initalizing the application. This page checks:
 
