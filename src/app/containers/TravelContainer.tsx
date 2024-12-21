@@ -85,27 +85,6 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
       >
         {playing ? 'Pause' : 'Play'}
       </Button>
-      <Button
-        variant='contained'
-        className='backward-button'
-        onClick={() => dispatch(moveBackward(false))}
-        type='button'
-        sx={{ height: 25, minWidth: 30, p: 0, mr: 1 }}
-        aria-label='Backward'
-      >
-        <FastRewindIcon className='backward-button-icon' />
-      </Button>
-      <Button
-        variant='contained'
-        className='forward-button'
-        onClick={() => dispatch(moveForward(false))}
-        type='button'
-        sx={{ height: 25, minWidth: 30, p: 0 }}
-        aria-label='Forward'
-      >
-        <FastForwardIcon className='forward-button-icon' />
-      </Button>
-
       <Dropdown speeds={speeds} selectedSpeed={selectedSpeed} setSpeed={setSpeed} />
 
     </div>

@@ -15,7 +15,6 @@ const AxLinkControls = ({
   const dispatch = useDispatch();
   const disableAxTree = () => {
     dispatch(toggleAxTree('toggleAxRecord'));
-    dispatch(setCurrentTabInApp('AxTree'));
     setShowTree(false);
     setShowParagraph(true);
   };

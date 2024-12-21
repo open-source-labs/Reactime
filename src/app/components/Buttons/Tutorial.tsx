@@ -207,72 +207,56 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           },
         ];
         break;
-        //       <div>
-        //     Nodes from the accessibility tree have either a role <strong>role</strong> or <strong>internalRole</strong>
-        //     <ul>
-        //       <li>
-        //         <i><b>Role</b></i> refers to <strong> ARIA </strong> roles, which indicate the purpose of the element to assistive technologies, like screen readers.
-        //         All of the nodes rendered in this tree have a role of 'role'
-        //       </li>
-        //       <li>
-        //         <i><b>internalRole</b></i> refers to browser-specific roles <strong> Chrome </strong> for its own accessibility processing
-        //       </li>
-        //     </ul>
-        //     <p> Each node is given a property labeled <strong>ignored</strong>. Nodes read by the screen reader have their ignored property evaluate to <strong>false</strong>.
-        //     Nodes not read by the screen reader evaluate to <strong>true</strong>.</p>
-        //     <p> Nodes labeled as <strong>no name</strong> are visible to a screen reader, but were not given a name label.</p>
-        //   </div>
-        // );
-        case 'accessibility':
-          steps = [
-            {
-              title: 'Accessibility Tree',
-              element: '.display',
-              intro:
-                '<ul><li>Nodes from the accessibility tree have either a role or internalRole</li></ul>',
-              position: 'top',
-            },
-          ];
-          break;
+      case 'AxTree':
+        steps = [
+          {
+            title: 'Accessibility Tree',
+            element: '.display',
+            intro:
+              '<ul><li>Nodes from the accessibility tree have either a role <strong>role</strong> or <strong>internalRole</strong><i><b>Role</b></i> refers to ARIA roles, which indicate the purpose of the element to assistive technologies, like screen readers.All of the nodes rendered in this tree have a role of Role.<i><b>internalRole</b></i> refers to browser-specific roles <strong> Chrome </strong> for its own accessibility processing.<p> Each node is given a property labeled <strong>ignored</strong>. Nodes read by the screen reader have their ignored property evaluate to <strong>false</strong>.Nodes not read by the screen reader evaluate to <strong>true</strong>.</p><p> Nodes labeled as <strong>no name</strong> are visible to a screen reader, but were not given a name label.</p></li></ul>',
+            position: 'top',
+          },
+        ];
+        break;
       case 'webmetrics':
         steps = [
           {
             title: 'Webmetrics Tab',
             element: '.web-metrics-container',
-            intro: 'This section will show 4 webmetrics for your page when it loads.',
+            intro: 'Additional info can be found be hovering over desired metrics',
             position: 'top',
           },
-          {
-            title: 'LCP',
-            element: document.querySelectorAll('.metric')[0],
-            intro:
-              '<strong>Largest Contentful Paint</strong><br/>The amount of time it takes for the largest image, video or text block within the viewport to be fully rendered and interactive.',
-            position: 'top',
-          },
+          // {
+          //   title: 'LCP',
+          //   element: document.querySelectorAll('.metric')[0],
+          //   intro:
+          //     '<strong>Largest Contentful Paint</strong><br/>The amount of time it takes for the largest image, video or text block within the viewport to be fully rendered and interactive.',
+          //   position: 'top',
+          // },
 
-          {
-            title: 'FID',
-            element: document.querySelectorAll('.metric')[1],
-            intro:
-              '<strong>First Input Delay</strong><br/>A measurement of load responsiveness, the time from the first user interaction (for example, a click) to the browser responding to that interaction.',
-            position: 'top',
-          },
+          // {
+          //   title: 'FID',
+          //   element: document.querySelectorAll('.metric')[1],
+          //   intro:
+          //     '<strong>First Input Delay</strong><br/>A measurement of load responsiveness, the time from the first user interaction (for example, a click) to the browser responding to that interaction.',
+          //   position: 'top',
+          // },
 
-          {
-            title: 'FCP',
-            element: document.querySelectorAll('.metric')[2],
-            intro:
-              '<strong>First Contentful Paint</strong><br/>The amount of time it takes to render the first DOM element of any variety',
-            position: 'top',
-          },
+          // {
+          //   title: 'FCP',
+          //   element: document.querySelectorAll('.metric')[2],
+          //   intro:
+          //     '<strong>First Contentful Paint</strong><br/>The amount of time it takes to render the first DOM element of any variety',
+          //   position: 'top',
+          // },
 
-          {
-            title: 'TTFB',
-            element: document.querySelectorAll('.metric')[3],
-            intro:
-              "<strong>Time To First Byte</strong><br/>The amount of time it takes for a user's browser to receive the first byte of page content from the server.",
-            position: 'top',
-          },
+          // {
+          //   title: 'TTFB',
+          //   element: document.querySelectorAll('.metric')[3],
+          //   intro:
+          //     "<strong>Time To First Byte</strong><br/>The amount of time it takes for a user's browser to receive the first byte of page content from the server.",
+          //   position: 'top',
+          // },
         ];
         break;
       case 'history':
@@ -286,7 +270,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           },
           {
             title: 'Viewing History Snapshot',
-            element: document.querySelectorAll('.snapshotNode')[0],
+            element: '.node active',//document.querySelectorAll('.snapshotNode')[0]
             intro:
               'Each node will represent a snapshot in the page. <ul><li>A single snapshot will show as a node while multiple snapshots will be represented as a timeline.</li><li>Highlighting over one will show any state changes compared to the previous snapshot. </li><li>Clicking a node will set the snapshot as the current one.</li></ul>',
             position: 'top',
