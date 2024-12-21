@@ -121,7 +121,6 @@ function MainContainer(): JSX.Element {
     }
   };
 
-  // useEffect(() => {
   async function awaitPortConnection() {
     if (port) return; // only open port once so if it exists, do not run useEffect again
 
@@ -148,10 +147,7 @@ function MainContainer(): JSX.Element {
     dispatch(endConnect());
   }
   awaitPortConnection();
-  // });
 
-  // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
-  // setTimeout(() => {
   if (
     !tabs[currentTab] ||
     //@ts-ignore
@@ -162,8 +158,6 @@ function MainContainer(): JSX.Element {
     // @ts-ignore
     return <ErrorContainer port={port} />;
   }
-
-  // }, 5000);
 
   const { axSnapshots, currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =
     tabs[currentTab]; // we destructure the currentTab object which is passed in from background.js
