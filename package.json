@@ -149,7 +149,8 @@
     "jsdom": "^23.0.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.1",
-    "sass-loader": "^13.3.2",
+    "sass": "^1.83.0",
+    "sass-loader": "^16.0.4",
     "style-loader": "^3.3.3",
     "ts-jest": "^29.1.2",
     "ts-loader": "^9.5.1",
@@ -203,7 +204,6 @@
     "react-spinners": "^0.13.8",
     "redux": "^5.0.0",
     "regenerator-runtime": "^0.14.1",
-    "sass": "^1.69.5",
     "styled-components": "^6.1.2",
     "web-vitals": "^3.5.0"
   }
