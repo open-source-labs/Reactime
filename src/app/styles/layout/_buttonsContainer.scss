@@ -20,104 +20,45 @@
 }
 
 .introjs-button {
-  background-color: #f0f0f0;
-  color: #000;
-  outline: none;
-  padding: 8px 20px;
+  padding: 8px 16px;
   font-size: 14px;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-}
-
-.introjs-button:hover {
-  background-color: #6cff87;
-  color: #000 !important;
-  border: 1px solid #6cff87;
-}
-
-.introjs-skipbutton {
-  height: 16px;
-  width: auto;
-  background-color: #f0f0f0;
-  color: #000;
-  padding: 8px 8px;
-  font-size: 12px;
-  text-align: center;
-  line-height: normal;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-}
-
-.introjs-skipbutton:hover {
-  background-color: #ff4d4d;
-  color: #fff;
-  border: 1px solid #ff4d4d;
+  border-radius: 8px;
 }
 
 .introjs-tooltip-title {
   font-size: 18px;
   font-weight: bold;
-  color: #000;
-}
-
-.introjs-tooltiptext {
-  font-size: 14px;
+  color: #1f2937;
 }
 
 .introjs-progressbar {
-  background-color: #6cff87;
-}
-
-.introjs-overlay {
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-.introjs-helperLayer {
-  box-shadow: 0 0 10px 3px rgba(108, 255, 135, 0.7);
-  border-radius: 8px;
+  background-color: #14b8a6;
 }
 
 .introjs-tooltip {
-  color: black;
+  color: #1f2937;
   background-color: white;
   min-width: 20rem;
 }
-.introjs-tooltiptext ul {
-  padding-left: 2px;
-}
 
-#seriesname {
-  background-color: #333;
-  color: white;
+.introjs-tooltiptext ul {
+  padding-left: 20px;
 }
 
 .introjs-nextbutton {
-  background-color: none;
-  color: #3256f1;
-  border: 1px solid;
-  outline: none;
+  background-color: #14b8a6;
+  color: white;
 }
 
 .introjs-prevbutton {
-  background-color: none;
-  color: #3256f1;
-  border: 1px solid;
-  outline: none;
+  background-color: #f9fafb;
+  color: #374151;
 }
 
 .introjs-skipbutton {
   color: #d72828;
-  border: 1px solid;
-  margin-top: 2px;
-  font-size: 16px;
-  outline: none;
-}
-
-.introjs-button {
-  background: none;
-  outline: none;
+  margin-right: 8px;
+  font-size: 14px;
 }
 
 .buttons-container button {
@@ -131,10 +72,6 @@
   border-radius: 0.375rem;
   transition: all 200ms ease;
   gap: 8px;
-}
-
-.buttons-container button:hover {
-  background-color: #f3f4f6;
 }
 
 .status-dot {
