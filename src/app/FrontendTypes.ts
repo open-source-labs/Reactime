@@ -223,7 +223,6 @@ export interface ActionProps {
   last: boolean;
   index: number;
   sliderIndex: number;
-  // dispatch: (a: { type: string; payload: unknown }) => void;
   displayName: string;
   componentName: string;
   componentData: { actualDuration: number } | undefined;
@@ -231,7 +230,6 @@ export interface ActionProps {
   state?: Record<string, unknown>;
   viewIndex: number | undefined;
   isCurrIndex: boolean;
-  handleOnkeyDown: (e: KeyboardEvent, i: number) => void;
 }
 
 export interface DiffRouteProps {

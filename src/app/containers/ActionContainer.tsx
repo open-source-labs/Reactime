@@ -78,28 +78,6 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   // the hierarchy gets set on the first click in the page
   if (hierarchy) displayArray(hierarchy); // when page is refreshed we may not have a hierarchy so we need to check if hierarchy was initialized. If it was initialized, invoke displayArray to display the hierarchy
 
-  // This function allows us to use our arrow keys to jump between snapshots. It passes an event and the index of each action-component. Using the arrow keys allows us to highligh snapshots and the enter key jumps to the selected snapshot
-  function handleOnKeyDown(e: Partial<KeyboardEvent>, i: number): void {
-    let currIndex = i;
-
-    if (e.key === 'ArrowUp') {
-      // up arrow key pressed
-      currIndex--;
-      if (currIndex < 0) return;
-      dispatch(changeView(currIndex));
-    } else if (e.key === 'ArrowDown') {
-      // down arrow key pressed
-      currIndex++;
-      if (currIndex > hierarchyArr.length - 1) return;
-      dispatch(changeView(currIndex));
-    } else if (e.key === 'Enter') {
-      // enter key pressed
-      e.stopPropagation(); // prevents further propagation of the current event in the capturing and bubbling phases
-      e.preventDefault(); // needed or will trigger onClick right after
-      dispatch(changeSlider(currIndex));
-    }
-  }
-
   // Sort hierarchyArr by index property of each object. This will be useful when later when we build our components so that our components will be displayed in index/chronological order
   hierarchyArr.sort((a: Obj, b: Obj): number => a.index - b.index);
 
@@ -129,7 +107,6 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
           selected={selected}
           last={last}
           sliderIndex={sliderIndex}
-          handleOnkeyDown={handleOnKeyDown}
           viewIndex={viewIndex}
           isCurrIndex={isCurrIndex}
           routePath={snapshot.routePath}
