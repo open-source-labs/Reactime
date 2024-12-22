@@ -56,64 +56,6 @@
 }
 
 /* sidebar button open and closing functionality */
-/* Container for arrow and collapse text */
-#arrow {
-  height: 44px;
-  display: flex;
-  align-items: center;
-  background-color: white;
-}
-
-/* Base toggle styling */
-.toggle {
-  height: 100%;
-  width: 45px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  cursor: pointer;
-}
-
-/* Modern chevron using border technique - default facing left */
-.toggle i {
-  position: relative;
-  width: 6px;
-  height: 6px;
-  border-right: 2px solid #6b7280;
-  border-bottom: 2px solid #6b7280;
-  transform: rotate(135deg); /* Changed to 135deg to face left by default */
-  transition: transform 0.3s ease;
-  display: block;
-}
-
-/* Clean up unused pseudo-elements */
-.toggle i::before,
-.toggle i::after {
-  display: none;
-}
-
-/* Rotation for collapsed state - rotate to face right */
-.no-aside .toggle i {
-  transform: rotate(-45deg); /* Changed to -45deg to face right when collapsed */
-}
-
-/* Hover state matching modern UI */
-.toggle:hover i {
-  border-color: #374151;
-}
-
-/* Modern collapse text styling */
-.collapse {
-  display: flex;
-  align-items: center;
-  color: #6b7280;
-  font-size: 1.1rem;
-  font-weight: 500;
-  font-family: 'Outfit', sans-serif;
-  transition: color 0.2s ease;
-}
-
 .record-button-container {
   display: flex;
   align-items: center;
@@ -153,26 +95,6 @@
   100% {
     opacity: 1;
   }
-}
-
-/* Hover state for the entire action area */
-#arrow:hover .collapse {
-  color: #374151;
-}
-
-/* Smooth transition for sidebar */
-aside {
-  background-color: white;
-  transition: width 0.3s ease;
-}
-
-.no-aside {
-  width: 45px;
-}
-
-/* Hide collapse text when sidebar is collapsed */
-.hidden {
-  display: none;
 }
 
 .clear-button-modern {

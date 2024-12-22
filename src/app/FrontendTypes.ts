@@ -105,9 +105,6 @@ export interface BarGraphComparisonAction {
 }
 
 export interface ActionContainerProps {
-  actionView: boolean;
-  setActionView: React.Dispatch<React.SetStateAction<boolean>>;
-  toggleActionContainer: () => void;
   snapshots: any;
   currLocation: any;
 }
