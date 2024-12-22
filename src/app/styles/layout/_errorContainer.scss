@@ -1,8 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
-* {
-  font-family: 'Outfit', sans-serif;
-}
-
 .error-container {
   height: 100%;
   background-color: #f9fafb;
@@ -10,7 +5,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: 'Outfit', sans-serif;
 }
 
 .error-logo {

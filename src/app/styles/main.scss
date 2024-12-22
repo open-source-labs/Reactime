@@ -1,4 +1,23 @@
-@charset 'UTF-8';
+@use 'base/helpers';
+
+@use 'layout/mainContainer';
+@use 'layout/bodyContainer';
+@use 'layout/actionContainer';
+@use 'layout/errorContainer';
+@use 'layout/stateContainer';
+@use 'layout/travelContainer';
+@use 'layout/buttonsContainer';
+
+@use 'components/buttons';
+@use 'components/actionComponent';
+@use 'components/performanceVisx';
+@use 'components/componentMap';
+@use 'components/ax';
+
+@use './components/rc-slider';
+@use './components/d3graph';
+@use './components/diff';
+
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 * {
@@ -17,18 +36,3 @@ body {
   padding: 0;
   height: 100%;
 }
-
-@import 'base/helpers';
-
-@import 'layout/mainContainer', 'layout/bodyContainer', 'layout/actionContainer',
-  'layout/errorContainer', 'layout/stateContainer', 'layout/travelContainer',
-  'layout/buttonsContainer';
-
-@import 'components/buttons', 'components/actionComponent', 'components/performanceVisx',
-  'components/componentMap', 'components/ax';
-
-@import './components/rc-slider';
-
-@import './components/d3graph';
-
-@import './components/diff';
