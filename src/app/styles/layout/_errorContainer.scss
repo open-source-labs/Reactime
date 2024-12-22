@@ -1,84 +1,102 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
-* {
-  font-family: 'Outfit', sans-serif;
-}
 .error-container {
   height: 100%;
-  margin: 0 auto;
-  background-color: $loader-background;
-  color: $loader-text;
-  overflow: hidden;
-  font: 'Outfit', sans-serif;
-
+  background-color: #f9fafb;
   display: flex;
   flex-direction: column;
   align-items: center;
-  a {
-    color: rgb(91, 54, 54);
-    margin-top: 1%;
-    height: 3%;
-  }
-  img {
-    text-align: center;
-    padding-top: 5%;
-    padding-bottom: 1.5%;
-  }
-  p {
-    padding: 0;
-    text-align: center;
-    margin: 2% 0;
-  }
-  .loaderChecks {
-    padding: 1%;
-    border: 1px solid;
-    border-style: solid;
-    border-color: loader-checks-border;
-    display: grid;
-    grid-template-columns: 4fr 1fr;
-    grid-template-rows: repeat(3, 1fr);
-    grid-column-gap: 0.5%;
-    grid-row-gap: 0.5%;
-    justify-content: center;
-    align-items: center;
-  }
-  .loaderChecks span {
-    margin: 0 auto;
-    display: inline;
-  }
-  h2 {
-    padding-left: 2%;
-    padding-right: 2%;
-  }
-  .check,
-  .fail {
-    font-size: 3em;
-    color: green;
-    margin: 0;
-    align-self: center;
-    justify-self: center;
-  }
-  .fail {
-    color: red;
-  }
-  .errorMsg {
-    text-align: center;
-    font-weight: bold;
-  }
+  justify-content: center;
+}
 
-  .launchContentButton {
-    background: $launch-button;
-    color: $launch-button-text;
-    margin: 3px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: 1px solid rgb(36, 37, 41);
-  }
+.error-logo {
+  height: 50px;
+  margin-bottom: 2rem;
+}
 
-  .launchContentButton:hover {
-    background: $launch-button-hover;
-  }
+.error-content {
+  max-width: 600px;
+  width: 100%;
+}
 
-  .launchContentButton:active {
-    box-shadow: 1px 1px 10px black;
-  }
+.error-alert {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.error-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.error-description {
+  color: #4b5563;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.error-note {
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.launch-button {
+  background-color: #1f2937;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1.125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.launch-button:hover {
+  background-color: #374151;
+}
+
+.launch-button:active {
+  background-color: #111827;
+}
+
+.github-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  color: #0d9488;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.github-link:hover {
+  color: #0f766e;
+  text-decoration: underline;
+}
+
+.devtools-link {
+  color: #0d9488;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.devtools-link:hover {
+  color: #0f766e;
+  text-decoration: underline;
 }

@@ -71,8 +71,8 @@
 .jump-button,
 .current-location {
   min-width: 90px;
-  height: 28px; /* Fixed height for better vertical centering */
-  padding: 0 8px; /* Reduced vertical padding */
+  height: 28px;
+  padding: 0 8px;
   border-radius: 6px;
   font-size: 0.9375rem;
   font-weight: 500;
@@ -99,8 +99,8 @@
 }
 
 .current-location {
-  color: #059669;
-  background: #ecfdf5;
+  color: #14b8a6;
+  background: #f0fdfa;
 }
 
 /* Hide/show button transitions */
@@ -117,11 +117,11 @@
 }
 
 .current-snap {
-  font-weight: bold;
+  font-weight: 800;
   border: none;
   background: transparent;
   font-size: 1rem;
   color: #374151;
   width: 100%;
-  padding: 2px 24px 2px 0px;
+  padding: 2px 0px;
 }

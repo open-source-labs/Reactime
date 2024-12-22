@@ -12,7 +12,7 @@ import {
   setTab,
   deleteTab,
   noDev,
-  aReactApp, // JR added 12.20.23 9.53pm
+  aReactApp,
   setCurrentLocation,
   disconnected,
   endConnect,
@@ -28,10 +28,6 @@ function MainContainer(): JSX.Element {
   const dispatch = useDispatch();
 
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
-  //JR: check connection status
-  const { connectionStatus }: MainState = useSelector((state: RootState) => state.main);
-
-  console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
 
   const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
 
@@ -45,7 +41,6 @@ function MainContainer(): JSX.Element {
     const toggleElem = document.querySelector('aside'); // aside is like an added text that appears "on the side" aside some text.
     toggleElem.classList.toggle('no-aside'); // toggles the addition or the removal of the 'no-aside' class
 
-    //JR: added for collapse label
     const collapse = document.querySelector('.collapse');
     collapse.classList.toggle('hidden');
 
@@ -121,7 +116,6 @@ function MainContainer(): JSX.Element {
     }
   };
 
-  // useEffect(() => {
   async function awaitPortConnection() {
     if (port) return; // only open port once so if it exists, do not run useEffect again
 
@@ -148,10 +142,7 @@ function MainContainer(): JSX.Element {
     dispatch(endConnect());
   }
   awaitPortConnection();
-  // });
 
-  // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
-  // setTimeout(() => {
   if (
     !tabs[currentTab] ||
     //@ts-ignore
@@ -162,8 +153,6 @@ function MainContainer(): JSX.Element {
     // @ts-ignore
     return <ErrorContainer port={port} />;
   }
-
-  // }, 5000);
 
   const { axSnapshots, currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =
     tabs[currentTab]; // we destructure the currentTab object which is passed in from background.js

@@ -91,7 +91,8 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
         steps = [
           {
             title: 'Reactime Tutorial',
-            intro: 'A performance and state management tool for React apps.',
+            intro:
+              'A tool for time travel debugging and performance monitoring in React applications.',
             position: 'top',
           },
           {
@@ -226,37 +227,6 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
             intro: 'Additional info can be found be hovering over desired metrics',
             position: 'top',
           },
-          // {
-          //   title: 'LCP',
-          //   element: document.querySelectorAll('.metric')[0],
-          //   intro:
-          //     '<strong>Largest Contentful Paint</strong><br/>The amount of time it takes for the largest image, video or text block within the viewport to be fully rendered and interactive.',
-          //   position: 'top',
-          // },
-
-          // {
-          //   title: 'FID',
-          //   element: document.querySelectorAll('.metric')[1],
-          //   intro:
-          //     '<strong>First Input Delay</strong><br/>A measurement of load responsiveness, the time from the first user interaction (for example, a click) to the browser responding to that interaction.',
-          //   position: 'top',
-          // },
-
-          // {
-          //   title: 'FCP',
-          //   element: document.querySelectorAll('.metric')[2],
-          //   intro:
-          //     '<strong>First Contentful Paint</strong><br/>The amount of time it takes to render the first DOM element of any variety',
-          //   position: 'top',
-          // },
-
-          // {
-          //   title: 'TTFB',
-          //   element: document.querySelectorAll('.metric')[3],
-          //   intro:
-          //     "<strong>Time To First Byte</strong><br/>The amount of time it takes for a user's browser to receive the first byte of page content from the server.",
-          //   position: 'top',
-          // },
         ];
         break;
       case 'history':
@@ -270,7 +240,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           },
           {
             title: 'Viewing History Snapshot',
-            element: '.node active',//document.querySelectorAll('.snapshotNode')[0]
+            element: '.node active', //document.querySelectorAll('.snapshotNode')[0]
             intro:
               'Each node will represent a snapshot in the page. <ul><li>A single snapshot will show as a node while multiple snapshots will be represented as a timeline.</li><li>Highlighting over one will show any state changes compared to the previous snapshot. </li><li>Clicking a node will set the snapshot as the current one.</li></ul>',
             position: 'top',

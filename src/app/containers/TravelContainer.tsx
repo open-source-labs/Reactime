@@ -1,18 +1,10 @@
 /* eslint-disable max-len */
 import React, { useState } from 'react';
 import Dropdown from '../components/TimeTravel/Dropdown';
-import {
-  playForward,
-  pause,
-  startPlaying,
-  moveForward,
-  moveBackward,
-  resetSlider,
-  changeSlider,
-} from '../slices/mainSlice';
+import { playForward, pause, startPlaying, resetSlider, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainState, RootState, TravelContainerProps } from '../FrontendTypes';
-import { Button } from '@mui/material';
+import { Play, Pause } from 'lucide-react';
 
 /*
   This container renders the time-travel play button, seek bar, playback controls, and the playback speed dropdown, located towards the bottom of the application, above the locked, download, upload, and tutorial buttons
@@ -39,7 +31,6 @@ function play( // function that will start/pause slider movement
   if (playing) {
     // if already playing, clicking the button will pause the slider
     dispatch(pause());
-
   } else {
     let currentIndex = sliderIndex; // the 'currentIndex' will be wherever the 'sliderIndex' is
     if (currentIndex === snapshotsLength - 1) {
@@ -72,21 +63,17 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
 
   return (
     <div className='travel-container'>
-      <Button
+      <button
         className='play-button'
-        variant='contained'
-        sx={{ height: 25, p: 0, mr: 1, ml: 1 }}
-        type='button'
-        // data-testid, prop for testing in RTL
-        data-testid='play-button-test'
-        //REMOVED DISPATCH FROM PLAY
         // @ts-ignore
         onClick={() => play(selectedSpeed.value, playing, dispatch, snapshotsLength, sliderIndex)}
       >
-        {playing ? 'Pause' : 'Play'}
-      </Button>
+        <div className='play-button-content'>
+          {playing ? <Pause size={18} /> : <Play size={18} />}
+          <span>{playing ? 'Pause' : 'Play'}</span>
+        </div>
+      </button>
       <Dropdown speeds={speeds} selectedSpeed={selectedSpeed} setSpeed={setSpeed} />
-
     </div>
   );
 }

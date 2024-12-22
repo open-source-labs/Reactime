@@ -10,7 +10,6 @@ import { useDispatch } from 'react-redux';
 
 const radialGraph = (props) => {
   const dispatch = useDispatch();
-  console.log('props', props);
   const state = {
     series: [props.series], // series appears to be the scale at which data is displayed based on the type of webMetrics measured.
     options: {

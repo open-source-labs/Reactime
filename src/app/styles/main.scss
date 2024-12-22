@@ -1,4 +1,23 @@
-@charset 'UTF-8';
+@use 'base/helpers';
+
+@use 'layout/mainContainer';
+@use 'layout/bodyContainer';
+@use 'layout/actionContainer';
+@use 'layout/errorContainer';
+@use 'layout/stateContainer';
+@use 'layout/travelContainer';
+@use 'layout/buttonsContainer';
+
+@use 'components/buttons';
+@use 'components/actionComponent';
+@use 'components/performanceVisx';
+@use 'components/componentMap';
+@use 'components/ax';
+
+@use './components/rc-slider';
+@use './components/d3graph';
+@use './components/diff';
+
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 * {
@@ -17,27 +36,3 @@ body {
   padding: 0;
   height: 100%;
 }
-
-// 1. Configuration and helpers
-@import 'abstracts/variablesLM';
-
-// 3. Base
-@import 'base/helpers';
-
-// 4. Layout-related sections
-@import 'layout/mainContainer', 'layout/bodyContainer', 'layout/actionContainer',
-  'layout/errorContainer', 'layout/stateContainer', 'layout/travelContainer',
-  'layout/buttonsContainer';
-
-// 5. Components
-@import 'components/buttons', 'components/actionComponent', 'components/performanceVisx',
-  'components/componentMap', 'components/ax';
-
-// slider component
-@import './components/rc-slider';
-
-// d3 chart component
-@import './components/d3graph';
-
-// diff component
-@import './components/diff';

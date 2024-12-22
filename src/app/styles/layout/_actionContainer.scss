@@ -21,24 +21,11 @@
     visibility: hidden;
   }
 }
-.actionname {
-  background-color: $indiv-action-input-bg;
-  border: 1px solid $indiv-action-border;
-  color: $indiv-action-custom-text;
-}
-
-::placeholder {
-  color: $indiv-action-filler-text;
-}
 
 .actionToolContainer {
   display: flex;
   align-items: center;
   border-bottom: 1px solid #e5e7eb;
-}
-
-.toggle-record {
-  color: $toggle-record-text;
 }
 
 .clear-button-container {
@@ -48,5 +35,3 @@
 .dropdown-container {
   padding: 4px 16px;
 }
-
-
