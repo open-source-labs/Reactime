@@ -1,5 +1,6 @@
 import React from 'react';
 import { Switch } from '@mui/material';
+import ThemeToggle from './ThemeToggle';
 
 const RecordButton = ({ isRecording, onToggle }) => {
   return (
@@ -32,6 +33,7 @@ const RecordButton = ({ isRecording, onToggle }) => {
           },
         }}
       />
+      <ThemeToggle />
     </div>
   );
 };

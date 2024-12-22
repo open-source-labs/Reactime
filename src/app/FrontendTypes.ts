@@ -44,7 +44,6 @@ export interface BarStackProp {
   currentTab?: string;
 }
 
-// On-hover data for BarGraph/BarGraphComparison.tsx
 export interface TooltipData {
   bar: SeriesPoint<snapshot>;
   key: string;
@@ -310,7 +309,6 @@ export interface LinkControlProps {
 }
 
 export interface ControlStyles {
-  //fontSize: string;
   padding: string;
 }
 
@@ -328,7 +326,6 @@ export interface DropDownStyle {
 export interface Node {
   children?: Node[];
   name?: string;
-  // other properties here
 }
 
 export interface LinkComponent {
