@@ -4,16 +4,13 @@ import ReactHover, { Trigger, Hover } from 'react-hover';
 import { OptionsCursorTrueWithMargin } from '../../../FrontendTypes';
 import { setCurrentTabInApp } from '../../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
-/*
-  Used to render a single radial graph on the 'Web Metrics' tab
-*/
 
 const radialGraph = (props) => {
   const dispatch = useDispatch();
   const state = {
-    series: [props.series], // series appears to be the scale at which data is displayed based on the type of webMetrics measured.
+    series: [props.series],
     options: {
-      colors: [props.color], // color of the webmetrics performance bar from 'StateRoute'
+      colors: [props.color],
       chart: {
         height: 100,
         width: 100,
@@ -21,6 +18,7 @@ const radialGraph = (props) => {
         toolbar: {
           show: false,
         },
+        foreColor: 'var(--text-primary)',
       },
       plotOptions: {
         radialBar: {
@@ -48,29 +46,21 @@ const radialGraph = (props) => {
             },
           },
           track: {
-            background: '#161617',
-            strokeWidth: '3%',
+            background: 'var(--border-color-dark)',
+            strokeWidth: '10%',
             margin: 0,
-            dropShadow: {
-              enabled: true,
-              top: -3,
-              left: 0,
-              blur: 4,
-              opacity: 0.35,
-            },
           },
-
           dataLabels: {
             show: true,
             name: {
               offsetY: -10,
               show: true,
-              color: '#161617',
+              color: 'var(--text-primary)',
               fontSize: '24px',
             },
             value: {
               formatter: props.formatted,
-              color: '#3c6e71',
+              color: 'var(--color-primary)',
               fontSize: '16px',
               show: true,
             },
@@ -97,8 +87,21 @@ const radialGraph = (props) => {
   };
 
   useEffect(() => {
-    dispatch(setCurrentTabInApp('webmetrics')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.
+    dispatch(setCurrentTabInApp('webmetrics'));
   }, []);
+
+  const getThresholdColor = (type) => {
+    switch (type) {
+      case 'good':
+        return '#0bce6b';
+      case 'improvement':
+        return '#fc5a03';
+      case 'poor':
+        return '#fc2000';
+      default:
+        return 'var(--text-primary)';
+    }
+  };
 
   return (
     <div className='metric'>
@@ -121,15 +124,15 @@ const radialGraph = (props) => {
             </p>
             <p>{props.description}</p>
             <p>
-              <span style={{ color: '#0bce6b' }}>Good: </span>
+              <span style={{ color: getThresholdColor('good') }}>Good: </span>
               {`< ${props.score[0]}`}
             </p>
             <p>
-              <span style={{ color: '#fc5a03' }}>Needs Improvement: </span>
+              <span style={{ color: getThresholdColor('improvement') }}>Needs Improvement: </span>
               {`< ${props.score[1]}`}
             </p>
             <p>
-              <span style={{ color: '#fc2000' }}>Poor: </span>
+              <span style={{ color: getThresholdColor('poor') }}>Poor: </span>
               {`> ${props.score[1]}`}
             </p>
           </div>
