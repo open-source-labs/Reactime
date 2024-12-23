@@ -92,6 +92,14 @@
 .jump-button {
   color: var(--button-primary-text);
   background: var(--button-primary-bg);
+  display: none;
+  transition: all 200ms ease;
+}
+
+.jump-button:hover {
+  background: var(--text-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 .current-location {
@@ -107,10 +115,6 @@
 
 .action-component:hover .jump-button {
   display: block;
-}
-
-.jump-button {
-  display: none;
 }
 
 .current-snap {
