@@ -26,9 +26,9 @@ const margin = {
   bottom: 0,
   left: 70,
 };
-const axisColor = '#161617';
-const axisTickLabelColor = '#363638';
-const axisLabelColor = '#363638';
+const axisColor = 'var(--text-primary)';
+const axisTickLabelColor = 'var(--text-secondary)';
+const axisLabelColor = 'var(--text-primary)';
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
