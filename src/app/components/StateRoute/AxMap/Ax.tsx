@@ -13,9 +13,9 @@ import { toggleExpanded, setCurrentTabInApp } from '../../../slices/mainSlice';
 
 const defaultMargin = {
   top: 30,
-  left: 30,
-  right: 55,
-  bottom: 70,
+  left: 20,
+  right: 50,
+  bottom: 20,
 };
 
 const nodeCoords: object = {};

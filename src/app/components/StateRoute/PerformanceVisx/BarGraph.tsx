@@ -111,7 +111,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
   // setting max dimensions and scale ranges
   const xMax = width - margin.left - margin.right;
   snapshotIdScale.rangeRound([0, xMax]);
-  const yMax = height - margin.top - 150;
+  const yMax = height - margin.top - 100;
   renderingScale.range([yMax, 0]);
 
   const toStorage = {
