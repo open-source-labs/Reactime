@@ -57,12 +57,12 @@ function ButtonsContainer(): JSX.Element {
       duration: 2000,
       position: 'top-right',
       style: {
-        background: '#1f2937',
-        color: '#fff',
+        background: 'var(--bg-primary)',
+        color: 'var(--text-primary)',
       },
       iconTheme: {
-        primary: '#14b8a6',
-        secondary: '#fff',
+        primary: 'var(--color-primary)',
+        secondary: 'var(--text-primary)',
       },
     });
   };

@@ -98,7 +98,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       return changedState;
     }
 
-    if (index === 0) return 'Initial State';
+    if (index === 0) return '<span class="initial-state">Initial State</span>';
 
     // Add null checks for snapshots
     if (!snapshots || !snapshots[index] || !snapshots[index - 1]) {
@@ -111,7 +111,7 @@ function History(props: Record<string, unknown>): JSX.Element {
         statelessCleaning(snapshots[index]),
       );
 
-      if (!delta) return 'No state changes';
+      if (!delta) return '<span class="no-changes">No State Changes</span>';
 
       const changedState = findStateChangeObj(delta);
       return changedState.length > 0 ? formatters.html.format(changedState[0]) : 'No state changes';

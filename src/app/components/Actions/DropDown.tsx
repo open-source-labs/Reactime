@@ -21,6 +21,7 @@ const DropDown = ({
     <div className='dropdown-container'>
       <Select
         placeholder='Select Hook'
+        classNamePrefix='react-select'
         onChange={handleChange}
         options={options}
         value={options.find((option) => option.value === dropdownSelection)}

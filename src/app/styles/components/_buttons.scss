@@ -8,8 +8,8 @@
   padding: 8px 12x;
   border-radius: 8px;
   border: none;
-  background-color: #1f2937;
-  color: white;
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -19,7 +19,7 @@
   overflow: hidden;
 
   &:hover {
-    background-color: #374151;
+    background-color: var(--text-primary);
   }
 
   &:focus {
@@ -56,77 +56,24 @@
 }
 
 /* sidebar button open and closing functionality */
-/* Container for arrow and collapse text */
-#arrow {
-  height: 44px;
-  display: flex;
-  align-items: center;
-  background-color: white;
-}
-
-/* Base toggle styling */
-.toggle {
-  height: 100%;
-  width: 45px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  cursor: pointer;
-}
-
-/* Modern chevron using border technique - default facing left */
-.toggle i {
-  position: relative;
-  width: 6px;
-  height: 6px;
-  border-right: 2px solid #6b7280;
-  border-bottom: 2px solid #6b7280;
-  transform: rotate(135deg); /* Changed to 135deg to face left by default */
-  transition: transform 0.3s ease;
-  display: block;
-}
-
-/* Clean up unused pseudo-elements */
-.toggle i::before,
-.toggle i::after {
-  display: none;
-}
-
-/* Rotation for collapsed state - rotate to face right */
-.no-aside .toggle i {
-  transform: rotate(-45deg); /* Changed to -45deg to face right when collapsed */
-}
-
-/* Hover state matching modern UI */
-.toggle:hover i {
-  border-color: #374151;
-}
-
-/* Modern collapse text styling */
-.collapse {
-  display: flex;
-  align-items: center;
-  color: #6b7280;
-  font-size: 1.1rem;
-  font-weight: 500;
-  font-family: 'Outfit', sans-serif;
-  transition: color 0.2s ease;
-}
-
 .record-button-container {
   display: flex;
   align-items: center;
   padding: 4px 16px;
   background: transparent;
-  gap: 8px;
+  justify-content: space-between;
+}
+
+.record-controls {
+  display: flex;
+  align-items: center;
 }
 
 .record-label {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #374151;
+  color: var(--text-primary);
   font-size: 14px;
   font-weight: 500;
 }
@@ -155,30 +102,10 @@
   }
 }
 
-/* Hover state for the entire action area */
-#arrow:hover .collapse {
-  color: #374151;
-}
-
-/* Smooth transition for sidebar */
-aside {
-  background-color: white;
-  transition: width 0.3s ease;
-}
-
-.no-aside {
-  width: 45px;
-}
-
-/* Hide collapse text when sidebar is collapsed */
-.hidden {
-  display: none;
-}
-
 .clear-button-modern {
   width: 100% !important;
-  background-color: #f3f4f6 !important;
-  color: #374151 !important;
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
   font-size: 0.875rem !important;
   font-weight: 500 !important;
   text-transform: uppercase !important;
@@ -188,5 +115,69 @@ aside {
 }
 
 .clear-button-modern:hover {
-  background-color: #e5e7eb !important;
+  background-color: var(--border-color) !important;
+}
+
+/* Theme toggle button styling */
+.theme-toggle {
+  position: relative;
+  width: 64px;
+  height: 32px;
+  border-radius: 16px;
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-tertiary);
+  cursor: pointer;
+  transition: all 300ms ease;
+  padding: 2px;
+}
+
+.theme-toggle.dark {
+  background-color: var(--bg-primary);
+  border-color: var(--border-color-dark);
+}
+
+.theme-toggle-slider {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--bg-primary);
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle.dark .theme-toggle-slider {
+  transform: translateX(32px);
+  background-color: var(--color-primary);
+}
+
+.theme-toggle-icons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  pointer-events: none;
+}
+
+.theme-toggle-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--text-secondary);
+  transition: color 300ms ease;
+}
+
+.theme-toggle.dark .theme-toggle-icon.moon {
+  color: var(--color-primary);
+}
+
+.theme-toggle.dark .theme-toggle-icon.sun {
+  color: var(--text-secondary);
 }

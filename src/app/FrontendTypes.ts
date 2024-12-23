@@ -44,7 +44,6 @@ export interface BarStackProp {
   currentTab?: string;
 }
 
-// On-hover data for BarGraph/BarGraphComparison.tsx
 export interface TooltipData {
   bar: SeriesPoint<snapshot>;
   key: string;
@@ -105,9 +104,6 @@ export interface BarGraphComparisonAction {
 }
 
 export interface ActionContainerProps {
-  actionView: boolean;
-  setActionView: React.Dispatch<React.SetStateAction<boolean>>;
-  toggleActionContainer: () => void;
   snapshots: any;
   currLocation: any;
 }
@@ -223,7 +219,6 @@ export interface ActionProps {
   last: boolean;
   index: number;
   sliderIndex: number;
-  // dispatch: (a: { type: string; payload: unknown }) => void;
   displayName: string;
   componentName: string;
   componentData: { actualDuration: number } | undefined;
@@ -231,7 +226,6 @@ export interface ActionProps {
   state?: Record<string, unknown>;
   viewIndex: number | undefined;
   isCurrIndex: boolean;
-  handleOnkeyDown: (e: KeyboardEvent, i: number) => void;
 }
 
 export interface DiffRouteProps {
@@ -315,7 +309,6 @@ export interface LinkControlProps {
 }
 
 export interface ControlStyles {
-  //fontSize: string;
   padding: string;
 }
 
@@ -333,7 +326,6 @@ export interface DropDownStyle {
 export interface Node {
   children?: Node[];
   name?: string;
-  // other properties here
 }
 
 export interface LinkComponent {

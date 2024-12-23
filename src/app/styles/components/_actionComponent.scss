@@ -3,8 +3,8 @@
 }
 
 .route-header {
-  background-color: #1f2937;
-  color: #ffffff;
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
   padding: 10px;
   font-size: 14px;
 }
@@ -24,17 +24,17 @@
 .action-component {
   display: flex;
   padding: 6px 16px;
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
   transition: background-color 200ms ease;
 }
 
 .action-component:hover {
-  background-color: #f9fafb;
+  background-color: var(--hover-bg);
 }
 
 .action-component.selected {
-  background-color: #f3f4f6;
+  background-color: var(--selected-bg);
 }
 
 .action-component-trigger {
@@ -53,13 +53,13 @@
   border: none;
   background: transparent;
   font-size: 1rem;
-  color: #374151;
+  color: var(--text-primary);
   width: 100%;
   padding: 2px 0;
 }
 
 .actionname::placeholder {
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .actionname:focus {
@@ -85,21 +85,17 @@
 }
 
 .time-button {
-  color: #6b7280;
+  color: var(--text-secondary);
   background: transparent;
 }
 
 .jump-button {
-  color: white;
-  background: #111827;
-}
-
-.jump-button:hover {
-  background: #374151;
+  color: var(--button-primary-text);
+  background: var(--button-primary-bg);
 }
 
 .current-location {
-  color: #14b8a6;
+  color: var(--color-primary);
   background: #f0fdfa;
 }
 
@@ -117,11 +113,11 @@
 }
 
 .current-snap {
-  font-weight: 800;
+  font-weight: 700;
   border: none;
   background: transparent;
   font-size: 1rem;
-  color: #374151;
+  color: var(--text-primary);
   width: 100%;
   padding: 2px 0px;
 }

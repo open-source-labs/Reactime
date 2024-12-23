@@ -1,6 +1,6 @@
 .action-container {
-  background: white;
-  border-right: 1px solid #e5e7eb;
+  background: var(--bg-primary);
+  border-right: 1px solid var(--border-color);
   transition: width 0.3s ease;
   overflow-x: hidden;
   overflow-y: auto;
@@ -13,19 +13,6 @@
       opacity 0.2s ease,
       visibility 0.2s ease;
   }
-}
-
-.collapsed .action-container {
-  .action-button-wrapper {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
-.actionToolContainer {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #e5e7eb;
 }
 
 .clear-button-container {
