@@ -6,7 +6,7 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element => {
   const jsonTheme = {
     scheme: 'custom',
     base00: 'transparent',
-    base0B: '#1f2937', // dark navy for strings
+    base0B: '#14b8a6', // dark navy for strings
     base0D: '#60a5fa', // Keys
     base09: '#f59e0b', // Numbers
     base0C: '#EF4444', // Null values
