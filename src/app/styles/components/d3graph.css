@@ -87,10 +87,9 @@ div.tooltip {
 /* Container styling */
 .display {
   background-color: var(--bg-secondary);
-  height: 100%;
-  width: 100%;
+  flex: 1;
+  min-height: 0;
   overflow: auto;
-  position: relative;
 }
 
 /* State changes text container styling */

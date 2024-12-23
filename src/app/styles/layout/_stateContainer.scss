@@ -5,10 +5,16 @@
   flex-direction: column;
 }
 
-.app-content,
 .app-body {
   height: 100%;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+  min-height: 0;
+  position: relative;
 }
 
 .main-navbar-container--structural {

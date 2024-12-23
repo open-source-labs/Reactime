@@ -33,7 +33,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
     if (actionsEndRef.current) {
       actionsEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [snapshots]); // Dependency on snapshots array
+  }, [snapshots]);
 
   const displayArray = (obj: Obj): void => {
     if (
