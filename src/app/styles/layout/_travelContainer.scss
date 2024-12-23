@@ -1,9 +1,9 @@
 .travel-container {
-  background: white;
+  background: var(--bg-primary);
   display: flex;
   flex-direction: row;
   align-items: center;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border-color);
   padding-left: 16px;
   gap: 8px;
 }

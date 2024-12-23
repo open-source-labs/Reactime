@@ -46,7 +46,6 @@
 /* Text Styling */
 .compMapRootText {
   fill: var(--bg-primary);
-  font-family: 'Outfit', sans-serif;
   font-weight: 500;
   user-select: none;
 }
@@ -54,7 +53,6 @@
 .compMapParentText,
 .compMapChildText {
   fill: var(--text-primary);
-  font-family: 'Outfit', sans-serif;
   font-weight: 500;
   user-select: none;
 }
@@ -75,8 +73,8 @@
   align-items: center;
   gap: 16px;
   padding: 12px 16px;
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
   justify-content: space-between;
   max-width: 1200px;
 }
@@ -90,14 +88,14 @@
 .control-label {
   font-size: 14px;
   font-weight: 500;
-  color: #4b5563;
+  color: var(--text-secondary);
   user-select: none;
 }
 
 .control-select {
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  color: #374151;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   font-size: 14px;
   padding: 6px 12px;
   border-radius: 6px;
@@ -112,13 +110,13 @@
 }
 
 .control-select:hover {
-  border-color: #d1d5db;
-  background-color: #f3f4f6;
+  border-color: var(--border-color-dark);
+  background-color: var(--bg-tertiary);
 }
 
 .control-select:focus {
   outline: none;
-  border-color: #14b8a6;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.1);
 }
 
@@ -127,7 +125,7 @@
   width: 120px;
   height: 4px;
   border-radius: 2px;
-  background: #e5e7eb;
+  background: var(--border-color);
   outline: none;
   margin: 0;
   cursor: pointer;
@@ -137,13 +135,13 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: #14b8a6;
+    background: var(--color-primary);
     cursor: pointer;
     transition: all 200ms ease;
     border: none;
 
     &:hover {
-      background: #0d9488;
+      background: var(--color-primary-dark);
       transform: scale(1.1);
     }
   }

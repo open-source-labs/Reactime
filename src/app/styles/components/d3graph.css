@@ -21,7 +21,6 @@
 
 /* Node text styling */
 .node text {
-  font-family: 'Outfit', sans-serif;
   font-size: 14px;
   font-weight: 500;
   fill: var(--text-primary);
@@ -74,7 +73,6 @@ div.tooltip {
   padding: 12px;
   color: #374151;
   z-index: 100;
-  font-family: 'Outfit', sans-serif;
   font-size: 14px;
   font-weight: 500;
   background: #ffffff;
