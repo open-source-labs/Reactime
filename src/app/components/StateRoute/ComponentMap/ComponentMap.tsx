@@ -124,6 +124,7 @@ export default function ComponentMap({
     padding: 0,
     borderRadius: '8px',
     overflowY: 'auto',
+    backgroundColor: 'transparent',
   };
 
   const nodeList: [] = []; // create a nodeList array to store our nodes as a flat array
