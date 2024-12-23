@@ -71,6 +71,7 @@ export default function AxTree(props) {
     borderRadius: '8px',
     overflowY: 'auto',
     overflowX: 'auto',
+    backgroundColor: 'transparent',
   };
 
   const [orientation, setOrientation] = useState('horizontal');
@@ -92,7 +93,6 @@ export default function AxTree(props) {
     sizeWidth = innerHeight;
     sizeHeight = innerWidth;
   }
-
 
   const LinkComponent = getLinkComponent({ linkType, orientation });
 
