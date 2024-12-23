@@ -391,6 +391,10 @@ chrome.runtime.onConnect.addListener(async (port) => {
   // (i.e. they're all related to the button actions on Reactime)
   port.onMessage.addListener(async (msg) => {
     const { action, payload, tabId } = msg;
+    console.log(`Received message - Action: ${action}, Payload:`, payload);
+    if (!payload && ['import', 'setPause', 'jumpToSnap'].includes(action)) {
+      console.error(`Invalid payload received for action: ${action}`, new Error().stack);
+    }
 
     switch (action) {
       // import action comes through when the user uses the "upload" button on the front end to import an existing snapshot tree
@@ -708,7 +712,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
               payload: tabsObj,
               sourceTab,
             });
-            console.log(`Sent snapshots to port at index ${index}`);
           } catch (error) {
             console.warn(`Failed to send snapshots to port at index ${index}:`, error);
           }

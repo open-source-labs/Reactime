@@ -12,10 +12,31 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
 
   // function that launches the main app and refreshes the page
   function launch(): void {
-    dispatch(launchContentScript(tabs[currentTab]));
+    // Add validation to ensure we have valid data
+    if (!currentTab) {
+      console.warn('No current tab available');
+      return;
+    }
+
+    if (!tabs || !tabs[currentTab]) {
+      // If no tab data exists, create a minimal valid payload
+      const defaultPayload = {
+        status: {
+          contentScriptLaunched: false,
+          reactDevToolsInstalled: false,
+          targetPageisaReactApp: false,
+        },
+      };
+      dispatch(launchContentScript(defaultPayload));
+    } else {
+      dispatch(launchContentScript(tabs[currentTab]));
+    }
+
     // Allow the dispatch to complete before refreshing
     setTimeout(() => {
-      chrome.tabs.reload(currentTab);
+      if (currentTab) {
+        chrome.tabs.reload(currentTab);
+      }
     }, 100);
   }
 
