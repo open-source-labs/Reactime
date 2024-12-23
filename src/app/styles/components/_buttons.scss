@@ -124,16 +124,16 @@
   width: 64px;
   height: 32px;
   border-radius: 16px;
-  border: 2px solid #e5e7eb;
-  background-color: #f3f4f6;
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-tertiary);
   cursor: pointer;
   transition: all 300ms ease;
   padding: 2px;
 }
 
 .theme-toggle.dark {
-  background-color: #1f2937;
-  border-color: #374151;
+  background-color: var(--bg-primary);
+  border-color: var(--border-color-dark);
 }
 
 .theme-toggle-slider {
@@ -141,7 +141,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: white;
+  background-color: var(--bg-primary);
   transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
@@ -151,7 +151,7 @@
 
 .theme-toggle.dark .theme-toggle-slider {
   transform: translateX(32px);
-  background-color: #14b8a6;
+  background-color: var(--color-primary);
 }
 
 .theme-toggle-icons {
@@ -170,14 +170,14 @@
 .theme-toggle-icon {
   width: 16px;
   height: 16px;
-  color: #6b7280;
+  color: var(--text-secondary);
   transition: color 300ms ease;
 }
 
 .theme-toggle.dark .theme-toggle-icon.moon {
-  color: #14b8a6;
+  color: var(--color-primary);
 }
 
 .theme-toggle.dark .theme-toggle-icon.sun {
-  color: #6b7280;
+  color: var(--text-secondary);
 }

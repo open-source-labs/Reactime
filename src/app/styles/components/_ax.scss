@@ -20,8 +20,8 @@
   padding: 6px 12px;
   font-size: 14px;
   font-weight: 500;
-  color: white;
-  background-color: #14b8a6;
+  color: var(--button-primary-text);
+  background-color: var(--color-primary);
   border-radius: 6px;
   cursor: pointer;
   transition: all 200ms ease;
@@ -29,7 +29,7 @@
 }
 
 .accessibility-controls label:hover {
-  background-color: #0d9488;
+  background-color: var(--color-primary-dark);
 }
 
 .accessibility-disable input[type='radio'] {
@@ -44,9 +44,9 @@
   padding: 6px 12px;
   font-size: 14px;
   font-weight: 500;
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  color: #374151;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   border-radius: 6px;
   cursor: pointer;
   transition: all 200ms ease;
@@ -54,8 +54,8 @@
 }
 
 .accessibility-disable label:hover {
-  border-color: #d1d5db;
-  background-color: #f3f4f6;
+  border-color: var(--border-color-dark);
+  background-color: var(--bg-tertiary);
 }
 
 .accessibility-text {
@@ -66,7 +66,7 @@
 
 .accessibility-text p {
   margin: 0;
-  color: #374151;
+  color: var(--text-primary);
   font-size: 16px;
 }
 
@@ -75,6 +75,6 @@
   margin: 0;
   padding: 0;
   padding: 8px 12px;
-  border-bottom: 1px solid #e5e7eb;
-  transition: background-color 150ms ease;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
 }
