@@ -11,7 +11,11 @@ const ThemeToggle = () => {
       onClick={toggleTheme}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
     >
-      {isDark ? <Sun className='theme-toggle-icon' /> : <Moon className='theme-toggle-icon' />}
+      <div className='theme-toggle-icons'>
+        <Moon className='theme-toggle-icon moon' />
+        <Sun className='theme-toggle-icon sun' />
+      </div>
+      <div className='theme-toggle-slider' />
     </button>
   );
 };
