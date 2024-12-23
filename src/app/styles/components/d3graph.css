@@ -7,14 +7,14 @@
 
 /* Node rectangle styling */
 .node rect {
-  fill: #ffffff;
-  stroke: #e5e7eb;
+  fill: var(--bg-primary);
+  stroke: var(--border-color);
   stroke-width: 1px;
   transition: all 200ms ease;
 }
 
 .node:hover rect {
-  stroke: #14b8a6;
+  stroke: var(--color-primary);
   stroke-width: 2px;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
 }
@@ -24,47 +24,47 @@
   font-family: 'Outfit', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  fill: #374151;
+  fill: var(--text-primary);
 }
 
 /* Parent node specific styling */
 .node--internal rect {
-  fill: #ffffff;
-  stroke: #e5e7eb;
+  fill: var(--bg-primary);
+  stroke: var(--border-color);
 }
 
 .node--internal:hover rect {
-  stroke: #14b8a6;
+  stroke: var(--color-primary);
   stroke-width: 2px;
 }
 
 .node--internal text {
   font-size: 14px;
   font-weight: 500;
-  fill: #374151;
+  fill: var(--text-primary);
 }
 
 /* Current/active node styling */
 .node.active rect {
-  stroke: #14b8a6;
+  stroke: var(--color-primary);
   stroke-width: 2px;
 }
 
 /* Link styling */
 .link {
   fill: none;
-  stroke: #e5e7eb;
+  stroke: var(--border-color);
   stroke-width: 2px;
   transition: stroke 200ms ease;
 }
 
 .link:hover {
-  stroke: #d1d5db;
+  stroke: var(--border-color-dark);
 }
 
 /* Current path highlight */
 .link.current-link {
-  stroke: #14b8a6;
+  stroke: var(--color-primary);
   stroke-opacity: 0.6;
 }
 

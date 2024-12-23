@@ -1,6 +1,6 @@
 .action-container {
   background: var(--bg-primary);
-  border-right: 1px solid #e5e7eb;
+  border-right: 1px solid var(--border-color);
   transition: width 0.3s ease;
   overflow-x: hidden;
   overflow-y: auto;

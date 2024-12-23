@@ -8,8 +8,8 @@
   padding: 8px 12x;
   border-radius: 8px;
   border: none;
-  background-color: #1f2937;
-  color: white;
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -19,7 +19,7 @@
   overflow: hidden;
 
   &:hover {
-    background-color: #374151;
+    background-color: var(--text-primary);
   }
 
   &:focus {
@@ -73,7 +73,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #374151;
+  color: var(--text-primary);
   font-size: 14px;
   font-weight: 500;
 }
@@ -104,8 +104,8 @@
 
 .clear-button-modern {
   width: 100% !important;
-  background-color: #f3f4f6 !important;
-  color: #374151 !important;
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
   font-size: 0.875rem !important;
   font-weight: 500 !important;
   text-transform: uppercase !important;
@@ -115,7 +115,7 @@
 }
 
 .clear-button-modern:hover {
-  background-color: #e5e7eb !important;
+  background-color: var(--border-color) !important;
 }
 
 /* Theme toggle button styling */

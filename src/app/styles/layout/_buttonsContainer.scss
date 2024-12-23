@@ -1,8 +1,8 @@
 .buttons-container {
   display: flex;
   align-items: center;
-  background: white;
-  border-top: 1px solid #e5e7eb;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
   width: 100%;
 }
 
@@ -80,12 +80,12 @@
 }
 
 .status-dot.active {
-  background-color: #14b8a6;
+  background-color: var(--color-primary);
   animation: pulse 2s infinite;
 }
 
 .status-dot.inactive {
-  background-color: #9ca3af;
+  background-color: var(--text-tertiary);
 }
 
 @keyframes pulse {

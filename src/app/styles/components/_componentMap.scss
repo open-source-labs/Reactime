@@ -1,11 +1,11 @@
 /* Component Map Container */
 .componentMapContainer {
-  fill: #f9fafb;
+  fill: var(--bg-secondary);
   transition: all 0.3s ease;
   overflow: auto;
 }
 .componentMapContainer svg {
-  background-color: #f9fafb;
+  background-color: var(--bg-secondary);
 }
 
 #root {
@@ -15,15 +15,15 @@
 /* Node Styling */
 .compMapParent,
 .compMapChild {
-  fill: #ffffff;
-  stroke: #e5e7eb;
+  fill: var(--bg-primary);
+  stroke: var(--border-color);
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.05));
   transition: all 0.2s ease;
 }
 
 .compMapParent:hover,
 .compMapChild:hover {
-  stroke: #14b8a6;
+  stroke: var(--color-primary);
   stroke-width: 2px;
   cursor: pointer;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
@@ -31,8 +31,8 @@
 
 /* Root Node Styling */
 .compMapRoot {
-  fill: #14b8a6;
-  stroke: #0d9488;
+  fill: var(--color-primary);
+  stroke: var(--color-primary-dark);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   transition: all 0.2s ease;
 }
@@ -45,7 +45,7 @@
 
 /* Text Styling */
 .compMapRootText {
-  fill: #ffffff;
+  fill: var(--bg-primary);
   font-family: 'Outfit', sans-serif;
   font-weight: 500;
   user-select: none;
@@ -53,7 +53,7 @@
 
 .compMapParentText,
 .compMapChildText {
-  fill: #374151;
+  fill: var(--text-primary);
   font-family: 'Outfit', sans-serif;
   font-weight: 500;
   user-select: none;

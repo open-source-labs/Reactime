@@ -1,6 +1,6 @@
 .error-container {
   height: 100%;
-  background-color: #f9fafb;
+  background-color: var(--bg-secondary);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,8 +18,8 @@
 }
 
 .error-alert {
-  background-color: white;
-  border: 1px solid #e5e7eb;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 1.5rem;
   margin-bottom: 2rem;
@@ -29,7 +29,7 @@
 .error-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 0.75rem;
   display: flex;
   align-items: center;
@@ -37,21 +37,21 @@
 }
 
 .error-description {
-  color: #4b5563;
+  color: var(--text-secondary);
   line-height: 1.5;
   margin-bottom: 1rem;
 }
 
 .error-note {
   text-align: center;
-  color: #6b7280;
+  color: var(--text-tertiary);
   font-size: 0.875rem;
   margin-bottom: 1rem;
 }
 
 .launch-button {
-  background-color: #1f2937;
-  color: white;
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
   border: none;
   padding: 12px 24px;
   border-radius: 8px;
@@ -67,11 +67,11 @@
 }
 
 .launch-button:hover {
-  background-color: #374151;
+  background-color: var(--text-primary);
 }
 
 .launch-button:active {
-  background-color: #111827;
+  background-color: var(--button-primary-bg);
 }
 
 .github-link {
@@ -80,23 +80,23 @@
   justify-content: center;
   gap: 0.5rem;
   margin-top: 2rem;
-  color: #0d9488;
+  color: var(--color-primary);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .github-link:hover {
-  color: #0f766e;
+  color: var(--color-primary-dark);
   text-decoration: underline;
 }
 
 .devtools-link {
-  color: #0d9488;
+  color: var(--color-primary);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .devtools-link:hover {
-  color: #0f766e;
+  color: var(--color-primary-dark);
   text-decoration: underline;
 }

@@ -14,6 +14,5 @@
   grid-area: bottom;
   display: flex;
   width: 100%;
-  border-top: 1px solid #e5e7eb;
-  background: white;
+  border-top: 1px solid var(--border-color);
 }
