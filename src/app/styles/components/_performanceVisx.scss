@@ -2,10 +2,10 @@
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  background-color: white;
+  background-color: var(--bg-primary);
   max-width: 1200px;
   justify-content: space-around;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .routesForm {
@@ -17,7 +17,7 @@
 #routes-dropdown {
   font-size: 14px;
   font-weight: 500;
-  color: #4b5563;
+  color: var(--text-secondary);
   user-select: none;
   white-space: nowrap;
 }
@@ -67,9 +67,9 @@
 
 // bar graph background
 .perf-rect {
-  fill: #f9fafb;
+  fill: var(--bg-secondary);
 }
 
 .bargraph-position {
-  background-color: #f9fafb;
+  background-color: var(--bg-secondary);
 }

@@ -40,8 +40,8 @@ const AxLinkControls = ({
           onChange={(e) => setOrientation(e.target.value)}
           value={orientation}
         >
-          <option value='vertical'>vertical</option>
-          <option value='horizontal'>horizontal</option>
+          <option value='vertical'>Vertical</option>
+          <option value='horizontal'>Horizontal</option>
         </select>
       </div>
 
@@ -53,10 +53,10 @@ const AxLinkControls = ({
           onChange={(e) => setLinkType(e.target.value)}
           value={linkType}
         >
-          <option value='diagonal'>diagonal</option>
-          <option value='step'>step</option>
-          <option value='curve'>curve</option>
-          <option value='line'>line</option>
+          <option value='diagonal'>Diagonal</option>
+          <option value='step'>Step</option>
+          <option value='curve'>Curve</option>
+          <option value='line'>Line</option>
         </select>
       </div>
 
