@@ -5,10 +5,15 @@
   flex-direction: column;
 }
 
-.app-content,
 .app-body {
   height: 100%;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  height: 100%;
+  min-height: 0;
 }
 
 .main-navbar-container--structural {
@@ -155,7 +160,7 @@
   overflow: auto;
   list-style: none;
   padding: 16px;
-  margin: 0 0 50px;
+  margin: 0;
 }
 
 .tree-component {

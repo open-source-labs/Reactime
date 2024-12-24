@@ -45,6 +45,7 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element => {
     return null;
   };
   const contextProvidersOnly = keepContextAndProviderNodes(currentSnapshot);
+  console.log('before', contextProvidersOnly);
 
   const filterComponentProperties = (node: any): FilteredNode | null => {
     if (!node) return null;
@@ -74,7 +75,7 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element => {
     if (node.props && !isEmptyObject(node.props)) {
       Object.entries(node.props).forEach(([key, value]) => {
         if (!isEmptyObject(value)) {
-          filteredNode[`prop_${key}`] = value;
+          filteredNode[`${key}`] = value;
         }
       });
     }
@@ -108,12 +109,8 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element => {
     }
 
     // Flatten root level hooksState if it exists
-    if (node.hooksState && !isEmptyObject(node.hooksState)) {
-      Object.entries(node.hooksState).forEach(([key, value]) => {
-        if (!isEmptyObject(value)) {
-          filteredNode[`hook_${key}`] = value;
-        }
-      });
+    if (node.componentData.hooksState && !isEmptyObject(node.componentData.hooksState)) {
+      filteredNode['State'] = node.componentData.hooksState;
     }
 
     // Process children and add them using the node's name as the key

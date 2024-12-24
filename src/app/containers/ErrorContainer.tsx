@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { launchContentScript } from '../slices/mainSlice';
+import { launchContentScript, setTab } from '../slices/mainSlice';
 import { MainState, RootState, ErrorContainerProps } from '../FrontendTypes';
 import { RefreshCw, Github, PlayCircle } from 'lucide-react';
 
@@ -10,12 +10,72 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
     (state: RootState) => state.main,
   );
 
+  // Add effect to initialize currentTab if not set
+  useEffect(() => {
+    const initializeCurrentTab = async () => {
+      if (!currentTab) {
+        try {
+          // Query for the active tab
+          const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+          if (activeTab?.id) {
+            dispatch(setTab(activeTab.id));
+          }
+        } catch (error) {
+          console.error('Error getting active tab:', error);
+        }
+      }
+    };
+
+    initializeCurrentTab();
+  }, [currentTab, dispatch]);
+
   // function that launches the main app and refreshes the page
   function launch(): void {
-    dispatch(launchContentScript(tabs[currentTab]));
+    // Add validation to ensure we have valid data
+    if (!currentTab) {
+      console.warn('No current tab available - attempting to get active tab');
+      // Try to get the active tab when launching
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs[0]?.id) {
+          const activeTabId = tabs[0].id;
+          dispatch(setTab(activeTabId));
+          // Create default payload and launch
+          const defaultPayload = {
+            status: {
+              contentScriptLaunched: false,
+              reactDevToolsInstalled: false,
+              targetPageisaReactApp: false,
+            },
+          };
+          dispatch(launchContentScript(defaultPayload));
+          // Allow the dispatch to complete before refreshing
+          setTimeout(() => {
+            chrome.tabs.reload(activeTabId);
+          }, 100);
+        }
+      });
+      return;
+    }
+
+    if (!tabs || !tabs[currentTab]) {
+      // If no tab data exists, create a minimal valid payload
+      const defaultPayload = {
+        status: {
+          contentScriptLaunched: false,
+          reactDevToolsInstalled: false,
+          targetPageisaReactApp: false,
+        },
+      };
+      dispatch(launchContentScript(defaultPayload));
+    } else {
+      dispatch(launchContentScript(tabs[currentTab]));
+    }
+
     // Allow the dispatch to complete before refreshing
     setTimeout(() => {
-      chrome.tabs.reload(currentTab);
+      if (currentTab) {
+        chrome.tabs.reload(currentTab);
+      }
     }, 100);
   }
 

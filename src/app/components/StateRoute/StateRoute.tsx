@@ -61,20 +61,21 @@ const StateRoute = (props: StateRouteProps) => {
           </NavLink>
           <NavLink
             className={(navData) =>
-              navData.isActive ? 'is-active router-link performance' : 'router-link performance-tab'
-            }
-            to='/performance'
-          >
-            Performance
-          </NavLink>
-          <NavLink
-            className={(navData) =>
               navData.isActive ? 'is-active router-link history-tab' : 'router-link history-tab'
             }
             to='/history'
           >
             History
           </NavLink>
+          <NavLink
+            className={(navData) =>
+              navData.isActive ? 'is-active router-link performance' : 'router-link performance-tab'
+            }
+            to='/performance'
+          >
+            Performance
+          </NavLink>
+
           <NavLink
             className={(navData) =>
               navData.isActive

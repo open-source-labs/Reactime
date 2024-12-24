@@ -170,7 +170,6 @@
 .theme-toggle-icon {
   width: 16px;
   height: 16px;
-  color: var(--text-secondary);
   transition: color 300ms ease;
 }
 
@@ -178,6 +177,6 @@
   color: var(--color-primary);
 }
 
-.theme-toggle.dark .theme-toggle-icon.sun {
-  color: var(--text-secondary);
+.theme-toggle .theme-toggle-icon.sun {
+  color: var(--color-primary);
 }

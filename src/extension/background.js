@@ -360,13 +360,10 @@ chrome.runtime.onConnect.addListener(async (port) => {
   }
 
   if (Object.keys(tabsObj).length > 0) {
-    console.log('Sending initial snapshots to devtools:', tabsObj);
     port.postMessage({
       action: 'initialConnectSnapshots',
       payload: tabsObj,
     });
-  } else {
-    console.log('No snapshots to send to devtools on reconnect.');
   }
 
   // Handles port disconnection by removing the disconnected port  -ellie
@@ -375,6 +372,17 @@ chrome.runtime.onConnect.addListener(async (port) => {
     if (index !== -1) {
       console.warn(`Port at index ${index} disconnected. Removing it.`);
       portsArr.splice(index, 1);
+
+      // Notify remaining ports about the disconnection
+      portsArr.forEach((remainingPort) => {
+        try {
+          remainingPort.postMessage({
+            action: 'portDisconnect',
+          });
+        } catch (error) {
+          console.warn('Failed to notify port of disconnection:', error);
+        }
+      });
     }
   });
 
@@ -383,6 +391,10 @@ chrome.runtime.onConnect.addListener(async (port) => {
   // (i.e. they're all related to the button actions on Reactime)
   port.onMessage.addListener(async (msg) => {
     const { action, payload, tabId } = msg;
+    console.log(`Received message - Action: ${action}, Payload:`, payload);
+    if (!payload && ['import', 'setPause', 'jumpToSnap'].includes(action)) {
+      console.error(`Invalid payload received for action: ${action}`, new Error().stack);
+    }
 
     switch (action) {
       // import action comes through when the user uses the "upload" button on the front end to import an existing snapshot tree
@@ -425,13 +437,42 @@ chrome.runtime.onConnect.addListener(async (port) => {
         tabsObj[tabId].mode.paused = payload;
         return true; // return true so that port remains open
 
-      case 'launchContentScript':
-        //if (tab.url?.startsWith("chrome://")) return undefined;
-        chrome.scripting.executeScript({
-          target: { tabId },
-          files: ['bundles/content.bundle.js'],
-        });
+      // Handling the launchContentScript case with proper validation
+      case 'launchContentScript': {
+        if (!tabId) {
+          console.error('No tabId provided for content script injection');
+          return false;
+        }
+
+        try {
+          // Validate the tab exists before injecting
+          chrome.tabs.get(tabId, async (tab) => {
+            if (chrome.runtime.lastError) {
+              console.error('Error getting tab:', chrome.runtime.lastError);
+              return;
+            }
+
+            // Skip injection for chrome:// URLs
+            if (tab.url?.startsWith('chrome://')) {
+              console.warn('Cannot inject scripts into chrome:// URLs');
+              return;
+            }
+
+            try {
+              await chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                files: ['bundles/content.bundle.js'],
+              });
+              console.log('Content script injected successfully');
+            } catch (err) {
+              console.error('Error injecting content script:', err);
+            }
+          });
+        } catch (err) {
+          console.error('Error in launchContentScript:', err);
+        }
         return true;
+      }
 
       case 'jumpToSnap':
         chrome.tabs.sendMessage(tabId, msg);
@@ -671,7 +712,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
               payload: tabsObj,
               sourceTab,
             });
-            console.log(`Sent snapshots to port at index ${index}`);
           } catch (error) {
             console.warn(`Failed to send snapshots to port at index ${index}:`, error);
           }

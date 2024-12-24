@@ -32,8 +32,8 @@ const veryHeavy = '#475569'; // Darker gray for medium load
 const defaultMargin: DefaultMargin = {
   top: 30,
   left: 20,
-  right: 20,
-  bottom: 70,
+  right: 50,
+  bottom: 20,
 };
 
 const nodeCoords: object = {};
@@ -124,6 +124,7 @@ export default function ComponentMap({
     padding: 0,
     borderRadius: '8px',
     overflowY: 'auto',
+    backgroundColor: 'transparent',
   };
 
   const nodeList: [] = []; // create a nodeList array to store our nodes as a flat array
