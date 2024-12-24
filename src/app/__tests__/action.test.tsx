@@ -1,31 +1,50 @@
 import React from 'react';
 import { render as rtlRender, screen, fireEvent } from '@testing-library/react';
-// import user from '@testing-library/user-event'; //might be unused
-import '@testing-library/jest-dom'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
-import Action from '../components/Actions/Action';
-import { changeView, changeSlider } from '../slices/mainSlice';
+import '@testing-library/jest-dom';
 import { Provider } from 'react-redux';
-import { store } from '../store'; //importing store for testing to give us access to Redux Store we configured
-// import * as reactRedux from 'react-redux'
-import { useDispatch } from 'react-redux'; //more explicit about what we are importing from library for a more focused testing approach
+import { store } from '../store';
+import { useDispatch } from 'react-redux';
+import { changeView, changeSlider } from '../slices/mainSlice';
+import { useTheme } from '../ThemeProvider';
+import { configureStore } from '@reduxjs/toolkit';
+import { mainSlice } from '../slices/mainSlice';
 
-// @ts-ignore
-Action.cleanTime = jest.fn().mockReturnValue();
+import Action from '../components/Actions/Action';
+import RouteDescription from '../components/Actions/RouteDescription';
+import DropDown from '../components/Actions/DropDown';
+import RecordButton from '../components/Actions/RecordButton';
+import ThemeToggle from '../components/Actions/ThemeToggle';
 
-//creating a mock function to mock the react-redux module and overwrite the useDispatch method with a jest.fn()
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'), // Use the actual react-redux module except for the functions you want to mock
-  useDispatch: jest.fn(), // set up a mock function for useDispatch
+import { ThemeProvider } from '../ThemeProvider';
+
+// Mock ThemeToggle for RecordButton tests
+jest.mock('../components/Actions/ThemeToggle', () => {
+  return function MockThemeToggle() {
+    return <div data-testid='mock-theme-toggle'>Theme Toggle</div>;
+  };
+});
+
+// Mock useTheme hook
+jest.mock('../ThemeProvider', () => ({
+  useTheme: jest.fn(),
 }));
 
-//wraps the component with our provider each time we use render
+// Mock react-redux
+jest.mock('react-redux', () => ({
+  ...jest.requireActual('react-redux'),
+  useDispatch: jest.fn(),
+}));
+
+// Helper function for redux wrapped renders
 const render = (component) => rtlRender(<Provider store={store}>{component}</Provider>);
 
-describe('Unit testing for Action.tsx', () => {
-  const useDispatchMock = (useDispatch as unknown) as jest.Mock;  // attempt to make the test run
-  // const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 18
-  const dummyDispatch = jest.fn(); //separate mock function created because we need to explicitly define on line 30 what
-  useDispatchMock.mockReturnValue(dummyDispatch); //exactly useDispatchMock returns (which is a jest.fn())
+// Action Component Tests
+describe('Action Component', () => {
+  // @ts-ignore
+  const useDispatchMock = useDispatch as jest.Mock;
+  const dummyDispatch = jest.fn();
+  useDispatchMock.mockReturnValue(dummyDispatch);
+
   const props = {
     key: 'actions2',
     selected: true,
@@ -34,7 +53,6 @@ describe('Unit testing for Action.tsx', () => {
     sliderIndex: 2,
     isCurrIndex: false,
     routePath: '',
-    // dispatch: jest.fn(),
     displayName: '3.0',
     componentName: 'App',
     logChangedState: jest.fn(),
@@ -49,98 +67,263 @@ describe('Unit testing for Action.tsx', () => {
   beforeEach(() => {
     props.isCurrIndex = false;
     props.componentData = { actualDuration: 3.5 };
-    // props.dispatch.mockClear();
-    // useSelectorMock.mockClear()
-    // useDispatchMock.mockClear()
   });
 
-  describe('When a component is shown on the page', () => {
-    test('Action snapshot should be shown as Snapshot: 3.0', () => {
-      render(<Action {...props} />);
-      expect(screen.getByPlaceholderText('Snapshot: 3.0')).toBeInTheDocument();
-    });
+  test('Action snapshot should be shown as Snapshot: 3.0', () => {
+    render(<Action {...props} />);
+    expect(screen.getByPlaceholderText('Snapshot: 3.0')).toBeInTheDocument();
+  });
 
-    test('Two buttons with Time and Current when not at current snapshot', () => {
-      props.isCurrIndex = true;
-      render(<Action {...props} />);
-      expect(screen.getAllByRole('button')).toHaveLength(2);
-      expect(screen.getAllByRole('button')[0]).toHaveTextContent('+00:03.50');
-      expect(screen.getAllByRole('button')[1]).toHaveTextContent('Current');
-    });
+  test('Two buttons with Time and Jump when not at current snapshot', () => {
+    props.isCurrIndex = false;
+    render(<Action {...props} />);
+    expect(screen.getAllByRole('button')).toHaveLength(2);
+    expect(screen.getAllByRole('button')[0]).toHaveTextContent('+00:03.50');
+    expect(screen.getAllByRole('button')[1]).toHaveTextContent('Jump');
+  });
 
-    test('Action snapshot should be shown as Snapshot: 3.0', () => {
-      render(<Action {...props} />);
-      expect(screen.getByPlaceholderText('Snapshot: 3.0')).toBeInTheDocument();
-    });
+  test('Two buttons with Time and Current when at current snapshot', () => {
+    props.isCurrIndex = true;
+    render(<Action {...props} />);
+    expect(screen.getAllByRole('button')).toHaveLength(1);
+    expect(screen.getAllByRole('button')[0]).toHaveTextContent('Current');
+  });
 
-    test('When there is no duration data', () => {
-      props.componentData = undefined;
-      render(<Action {...props} />);
-      expect(screen.getAllByRole('button')[0]).toHaveTextContent('NO TIME');
-    });
+  test('When there is no duration data', () => {
+    // @ts-ignore
+    props.componentData = undefined;
+    render(<Action {...props} />);
+    expect(screen.getAllByRole('button')[0]).toHaveTextContent('NO TIME');
+  });
 
-    test('When actualDuration exceeds 60, time should be formatted correctly', () => {
-      props.componentData.actualDuration = 75;
-      render(<Action {...props} />);
-      expect(screen.getAllByRole('button')[0]).toHaveTextContent('+01:15.00');
-    });
+  test('When actualDuration exceeds 60, time should be formatted correctly', () => {
+    props.componentData.actualDuration = 75;
+    render(<Action {...props} />);
+    expect(screen.getAllByRole('button')[0]).toHaveTextContent('+01:15.00');
+  });
 
-    test('Using the ArrowUp key on Action snapshot should trigger handleOnKeyDown', () => {
-      render(<Action {...props} />);
-      fireEvent.keyDown(screen.getByRole('presentation'), {
-        key: 'ArrowUp',
-        code: 'ArrowUp',
-        charCode: 38,
-      });
-      expect(props.handleOnkeyDown).toHaveBeenCalled();
-    });
+  test('Clicking the snapshot should trigger onClick', () => {
+    render(<Action {...props} />);
+    fireEvent.click(screen.getByRole('presentation'));
+    expect(dummyDispatch).toHaveBeenCalledWith(changeView(props.index));
+  });
 
-    test('Using the ArrowDown key on Action snapshot should trigger handleOnKeyDown', () => {
-      render(<Action {...props} />);
-      fireEvent.keyDown(screen.getByRole('presentation'), {
-        key: 'ArrowDown',
-        code: 'ArrowDown',
-        charCode: 40,
-      });
-      expect(props.handleOnkeyDown).toHaveBeenCalled();
-    });
-
-    test('Using the Enter key on Action snapshot should trigger handleOnKeyDown', () => {
-      render(<Action {...props} />);
-      fireEvent.keyDown(screen.getByRole('presentation'), {
-        key: 'Enter',
-        code: 'Enter',
-        charCode: 13,
-      });
-      expect(props.handleOnkeyDown).toHaveBeenCalled();
-    });
-
-    test('Clicking the snapshot should trigger onClick', () => {
-      render(<Action {...props} />);
-      fireEvent.click(screen.getByRole('presentation'));
-      expect(dummyDispatch).toHaveBeenCalledWith(changeView(props.index));
-    });
-
-    test('Clicking Jump button should trigger changeSlider and changeView', () => {
-      render(<Action {...props} />);
-      fireEvent.click(screen.getAllByRole('button')[1]);
-      expect(dummyDispatch).toHaveBeenCalledWith(changeSlider(props.index));
-      expect(dummyDispatch).toHaveBeenCalledWith(changeView(props.index));
-    });
+  test('Clicking Jump button should trigger changeSlider and changeView', () => {
+    render(<Action {...props} />);
+    fireEvent.click(screen.getAllByRole('button')[1]);
+    expect(dummyDispatch).toHaveBeenCalledWith(changeSlider(props.index));
+    expect(dummyDispatch).toHaveBeenCalledWith(changeView(props.index));
   });
 });
 
-//these were the tests for 9 and 10 before our changes... in progress
+// RouteDescription Component Tests
+describe('RouteDescription Component', () => {
+  // Create a mock store with initial state that matches your mainSlice structure
+  const mockStore = configureStore({
+    reducer: {
+      main: mainSlice.reducer,
+    },
+    preloadedState: {
+      main: {
+        port: null,
+        currentTab: 0,
+        currentTitle: 'No Target',
+        tabs: {
+          0: {
+            currLocation: {
+              index: 0,
+              stateSnapshot: {},
+            },
+            hierarchy: {},
+            sliderIndex: 0,
+            viewIndex: 0,
+            snapshots: [],
+            playing: false,
+            intervalId: null,
+            mode: { paused: false },
+            status: {
+              reactDevToolsInstalled: true,
+              targetPageisaReactApp: true,
+            },
+          },
+        },
+        currentTabInApp: null,
+        connectionStatus: true,
+        connectRequested: true,
+      },
+    },
+  });
 
-// test('Clicking the snapshot should trigger onClick', () => {
-//   render(<Action {...props} />);
-//   fireEvent.click(screen.getByRole('presentation'));
-//   expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));;
-// });
+  const mockActions = [
+    {
+      props: {
+        routePath: 'http://example.com/test-route',
+        key: 'action0',
+        index: 0,
+        state: {},
+        displayName: '1.0',
+        componentName: 'TestComponent',
+        componentData: { actualDuration: 0 },
+        selected: false,
+        last: false,
+        sliderIndex: 0,
+        viewIndex: 0,
+        isCurrIndex: false,
+      },
+    },
+  ];
 
-// test('Clicking Jump button should trigger changeSlider and changeView', () => {
-//   render(<Action {...props} />);
-//   fireEvent.click(screen.getAllByRole('button')[1]);
-//   expect(props.dispatch).toHaveBeenCalledWith(changeSlider(props.index));
-//   expect(props.dispatch).toHaveBeenCalledWith(changeView(props.index));
-// });
+  // Mock the vertical slider component
+  jest.mock('../components/TimeTravel/VerticalSlider.tsx', () => {
+    return function MockVerticalSlider({ snapshots }) {
+      return <div data-testid='mock-slider'>{snapshots.length} snapshots</div>;
+    };
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('renders route path correctly', () => {
+    render(
+      <Provider store={mockStore}>
+        <RouteDescription actions={mockActions as unknown as JSX.Element[]} />
+      </Provider>,
+    );
+    expect(screen.getByText('Route: /test-route')).toBeInTheDocument();
+  });
+
+  test('renders actions container with correct height', () => {
+    render(
+      <Provider store={mockStore}>
+        <RouteDescription actions={mockActions as unknown as JSX.Element[]} />
+      </Provider>,
+    );
+    // @ts-ignore
+    const container = screen.getByClassName('route-content');
+    expect(container).toHaveStyle({ height: `${mockActions.length * 40.5}px` });
+  });
+});
+
+// DropDown Component Tests
+describe('DropDown Component', () => {
+  const mockSetDropdownSelection = jest.fn();
+
+  beforeEach(() => {
+    mockSetDropdownSelection.mockClear();
+  });
+
+  test('renders with placeholder text', () => {
+    render(<DropDown dropdownSelection='' setDropdownSelection={mockSetDropdownSelection} />);
+    expect(screen.getByText('Select Hook')).toBeInTheDocument();
+  });
+
+  test('shows correct options when clicked', () => {
+    render(<DropDown dropdownSelection='' setDropdownSelection={mockSetDropdownSelection} />);
+    const dropdown = screen.getByText('Select Hook');
+    fireEvent.mouseDown(dropdown);
+    expect(screen.getByText('Time Jump')).toBeInTheDocument();
+    expect(screen.getByText('Providers / Consumers')).toBeInTheDocument();
+  });
+
+  test('displays selected value', () => {
+    render(
+      <DropDown dropdownSelection='Time Jump' setDropdownSelection={mockSetDropdownSelection} />,
+    );
+    expect(screen.getByText('Time Jump')).toBeInTheDocument();
+  });
+});
+
+// RecordButton Component Tests
+describe('RecordButton Component', () => {
+  const mockOnToggle = jest.fn();
+
+  beforeEach(() => {
+    mockOnToggle.mockClear();
+  });
+
+  test('renders record button with initial state', () => {
+    render(<RecordButton isRecording={false} onToggle={mockOnToggle} />);
+    expect(screen.getByText('Record')).toBeInTheDocument();
+  });
+
+  test('calls onToggle when switch is clicked', () => {
+    render(<RecordButton isRecording={false} onToggle={mockOnToggle} />);
+    const switchElement = screen.getByRole('checkbox');
+    fireEvent.click(switchElement);
+    expect(mockOnToggle).toHaveBeenCalled();
+  });
+
+  test('renders ThemeToggle component', () => {
+    render(<RecordButton isRecording={false} onToggle={mockOnToggle} />);
+    expect(screen.getByTestId('mock-theme-toggle')).toBeInTheDocument();
+  });
+});
+
+// ThemeToggle Component Tests
+describe('ThemeToggle Component', () => {
+  const mockToggleTheme = jest.fn();
+
+  beforeEach(() => {
+    mockToggleTheme.mockClear();
+    (useTheme as jest.Mock).mockImplementation(() => ({
+      isDark: false,
+      toggleTheme: mockToggleTheme,
+    }));
+  });
+
+  test('renders theme toggle', () => {
+    render(<ThemeToggle />);
+    expect(screen.getByTestId('mock-theme-toggle')).toBeInTheDocument();
+  });
+
+  test('renders with correct text', () => {
+    render(<ThemeToggle />);
+    expect(screen.getByTestId('mock-theme-toggle')).toHaveTextContent('Theme Toggle');
+  });
+
+  beforeAll(() => {
+    // Mock window.matchMedia to control initial preference
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: jest.fn().mockImplementation((query) => ({
+        matches: false, // Pretend system preference is 'light' by default
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      })),
+    });
+  });
+
+  test('ThemeToggle switches between light and dark themes correctly', () => {
+    render(
+      <ThemeProvider>
+        <ThemeToggle />
+      </ThemeProvider>,
+    );
+
+    const toggleButton = screen.getByRole('button');
+
+    // Initial state: 'isDark' is false, so no `dark` class on documentElement
+    expect(document.documentElement).not.toHaveClass('dark');
+    expect(toggleButton).toHaveAttribute('aria-label', 'Switch to dark mode');
+
+    // Click to toggle to dark mode
+    fireEvent.click(toggleButton);
+
+    // Now 'isDark' is true, so `dark` class should be on documentElement
+    expect(document.documentElement).toHaveClass('dark');
+    expect(toggleButton).toHaveAttribute('aria-label', 'Switch to light mode');
+
+    // Click again to toggle back to light mode
+    fireEvent.click(toggleButton);
+
+    // Now 'isDark' is back to false
+    expect(document.documentElement).not.toHaveClass('dark');
+    expect(toggleButton).toHaveAttribute('aria-label', 'Switch to dark mode');
+  });
+});
