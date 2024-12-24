@@ -103,9 +103,15 @@ const radialGraph = (props) => {
     }
   };
 
+  const hoverOptions = {
+    followCursor: false,
+    shiftX: 20,
+    shiftY: 0,
+  };
+
   return (
     <div className='metric'>
-      <ReactHover>
+      <ReactHover options={hoverOptions}>
         <Trigger type='trigger'>
           <div id='chart' className='chart-container'>
             <Charts
