@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import Charts from 'react-apexcharts';
 import ReactHover, { Trigger, Hover } from 'react-hover';
-import { OptionsCursorTrueWithMargin } from '../../../FrontendTypes';
 import { setCurrentTabInApp } from '../../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
 
-const radialGraph = (props) => {
+const WebMetrics = (props) => {
   const dispatch = useDispatch();
+
   const state = {
-    series: [props.series],
+    series: props.series,
     options: {
       colors: [props.color],
       chart: {
@@ -90,7 +90,7 @@ const radialGraph = (props) => {
     dispatch(setCurrentTabInApp('webmetrics'));
   }, []);
 
-  const getThresholdColor = (type) => {
+  const getThresholdColor = (type: string): string => {
     switch (type) {
       case 'good':
         return '#0bce6b';
@@ -148,4 +148,4 @@ const radialGraph = (props) => {
   );
 };
 
-export default radialGraph;
+export default WebMetrics;
