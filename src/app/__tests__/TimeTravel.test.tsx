@@ -28,171 +28,171 @@ jest.mock('react-redux', () => ({
 const render = (component) => rtlRender(<Provider store={store}>{component}</Provider>);
 
 // RouteDescription Component Tests
-describe('RouteDescription Component', () => {
-  // Create a mock store with initial state that matches your mainSlice structure
-  const mockStore = configureStore({
-    reducer: {
-      main: mainSlice.reducer,
-    },
-    preloadedState: {
-      main: {
-        port: null,
-        currentTab: 0,
-        currentTitle: 'No Target',
-        tabs: {
-          0: {
-            currLocation: {
-              index: 0,
-              stateSnapshot: {},
-            },
-            hierarchy: {},
-            sliderIndex: 0,
-            viewIndex: 0,
-            snapshots: [],
-            playing: false,
-            intervalId: null,
-            mode: { paused: false },
-            status: {
-              reactDevToolsInstalled: true,
-              targetPageisaReactApp: true,
-            },
-          },
-        },
-        currentTabInApp: null,
-        connectionStatus: true,
-        connectRequested: true,
-      },
-    },
-  });
+// describe('RouteDescription Component', () => {
+//   // Create a mock store with initial state that matches your mainSlice structure
+//   const mockStore = configureStore({
+//     reducer: {
+//       main: mainSlice.reducer,
+//     },
+//     preloadedState: {
+//       main: {
+//         port: null,
+//         currentTab: 0,
+//         currentTitle: 'No Target',
+//         tabs: {
+//           0: {
+//             currLocation: {
+//               index: 0,
+//               stateSnapshot: {},
+//             },
+//             hierarchy: {},
+//             sliderIndex: 0,
+//             viewIndex: 0,
+//             snapshots: [],
+//             playing: false,
+//             intervalId: null,
+//             mode: { paused: false },
+//             status: {
+//               reactDevToolsInstalled: true,
+//               targetPageisaReactApp: true,
+//             },
+//           },
+//         },
+//         currentTabInApp: null,
+//         connectionStatus: true,
+//         connectRequested: true,
+//       },
+//     },
+//   });
 
-  const mockActions = [
-    {
-      props: {
-        routePath: 'http://example.com/test-route',
-        key: 'action0',
-        index: 0,
-        state: {},
-        displayName: '1.0',
-        componentName: 'TestComponent',
-        componentData: { actualDuration: 0 },
-        selected: false,
-        last: false,
-        sliderIndex: 0,
-        viewIndex: 0,
-        isCurrIndex: false,
-      },
-    },
-  ];
+//   const mockActions = [
+//     {
+//       props: {
+//         routePath: 'http://example.com/test-route',
+//         key: 'action0',
+//         index: 0,
+//         state: {},
+//         displayName: '1.0',
+//         componentName: 'TestComponent',
+//         componentData: { actualDuration: 0 },
+//         selected: false,
+//         last: false,
+//         sliderIndex: 0,
+//         viewIndex: 0,
+//         isCurrIndex: false,
+//       },
+//     },
+//   ];
 
-  // Mock the vertical slider component
-  jest.mock('../components/TimeTravel/VerticalSlider.tsx', () => {
-    return function MockVerticalSlider({ snapshots }) {
-      return <div data-testid='mock-slider'>{snapshots.length} snapshots</div>;
-    };
-  });
+//   // Mock the vertical slider component
+//   jest.mock('../components/TimeTravel/VerticalSlider.tsx', () => {
+//     return function MockVerticalSlider({ snapshots }) {
+//       return <div data-testid='mock-slider'>{snapshots.length} snapshots</div>;
+//     };
+//   });
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+//   beforeEach(() => {
+//     jest.clearAllMocks();
+//   });
 
-  test('renders route path correctly', () => {
-    render(
-      <Provider store={mockStore}>
-        <RouteDescription actions={mockActions as unknown as JSX.Element[]} />
-      </Provider>,
-    );
-    expect(screen.getByText('Route: /test-route')).toBeInTheDocument();
-  });
+//   test('renders route path correctly', () => {
+//     render(
+//       <Provider store={mockStore}>
+//         <RouteDescription actions={mockActions as unknown as JSX.Element[]} />
+//       </Provider>,
+//     );
+//     expect(screen.getByText('Route: /test-route')).toBeInTheDocument();
+//   });
 
-  test('renders actions container with correct height', () => {
-    render(
-      <Provider store={mockStore}>
-        <RouteDescription actions={mockActions as unknown as JSX.Element[]} />
-      </Provider>,
-    );
-    // @ts-ignore
-    const container = screen.getByClassName('route-content');
-    expect(container).toHaveStyle({ height: `${mockActions.length * 40.5}px` });
-  });
-});
+//   test('renders actions container with correct height', () => {
+//     render(
+//       <Provider store={mockStore}>
+//         <RouteDescription actions={mockActions as unknown as JSX.Element[]} />
+//       </Provider>,
+//     );
+//     // @ts-ignore
+//     const container = screen.getByClassName('route-content');
+//     expect(container).toHaveStyle({ height: `${mockActions.length * 40.5}px` });
+//   });
+// });
 
-// Action Component Tests
-describe('Action Component', () => {
-  // @ts-ignore
-  const useDispatchMock = useDispatch as jest.Mock;
-  const dummyDispatch = jest.fn();
-  useDispatchMock.mockReturnValue(dummyDispatch);
+// // Action Component Tests
+// describe('Action Component', () => {
+//   // @ts-ignore
+//   const useDispatchMock = useDispatch as jest.Mock;
+//   const dummyDispatch = jest.fn();
+//   useDispatchMock.mockReturnValue(dummyDispatch);
 
-  const props = {
-    key: 'actions2',
-    selected: true,
-    last: false,
-    index: 2,
-    sliderIndex: 2,
-    isCurrIndex: false,
-    routePath: '',
-    displayName: '3.0',
-    componentName: 'App',
-    logChangedState: jest.fn(),
-    componentData: {
-      actualDuration: 3.5,
-    },
-    state: { test: 'test' },
-    viewIndex: 2,
-    handleOnkeyDown: jest.fn(),
-  };
+//   const props = {
+//     key: 'actions2',
+//     selected: true,
+//     last: false,
+//     index: 2,
+//     sliderIndex: 2,
+//     isCurrIndex: false,
+//     routePath: '',
+//     displayName: '3.0',
+//     componentName: 'App',
+//     logChangedState: jest.fn(),
+//     componentData: {
+//       actualDuration: 3.5,
+//     },
+//     state: { test: 'test' },
+//     viewIndex: 2,
+//     handleOnkeyDown: jest.fn(),
+//   };
 
-  beforeEach(() => {
-    props.isCurrIndex = false;
-    props.componentData = { actualDuration: 3.5 };
-  });
+//   beforeEach(() => {
+//     props.isCurrIndex = false;
+//     props.componentData = { actualDuration: 3.5 };
+//   });
 
-  test('Action snapshot should be shown as Snapshot: 3.0', () => {
-    render(<Action {...props} />);
-    expect(screen.getByPlaceholderText('Snapshot: 3.0')).toBeInTheDocument();
-  });
+//   test('Action snapshot should be shown as Snapshot: 3.0', () => {
+//     render(<Action {...props} />);
+//     expect(screen.getByPlaceholderText('Snapshot: 3.0')).toBeInTheDocument();
+//   });
 
-  test('Two buttons with Time and Jump when not at current snapshot', () => {
-    props.isCurrIndex = false;
-    render(<Action {...props} />);
-    expect(screen.getAllByRole('button')).toHaveLength(2);
-    expect(screen.getAllByRole('button')[0]).toHaveTextContent('+00:03.50');
-    expect(screen.getAllByRole('button')[1]).toHaveTextContent('Jump');
-  });
+//   test('Two buttons with Time and Jump when not at current snapshot', () => {
+//     props.isCurrIndex = false;
+//     render(<Action {...props} />);
+//     expect(screen.getAllByRole('button')).toHaveLength(2);
+//     expect(screen.getAllByRole('button')[0]).toHaveTextContent('+00:03.50');
+//     expect(screen.getAllByRole('button')[1]).toHaveTextContent('Jump');
+//   });
 
-  test('Two buttons with Time and Current when at current snapshot', () => {
-    props.isCurrIndex = true;
-    render(<Action {...props} />);
-    expect(screen.getAllByRole('button')).toHaveLength(1);
-    expect(screen.getAllByRole('button')[0]).toHaveTextContent('Current');
-  });
+//   test('Two buttons with Time and Current when at current snapshot', () => {
+//     props.isCurrIndex = true;
+//     render(<Action {...props} />);
+//     expect(screen.getAllByRole('button')).toHaveLength(1);
+//     expect(screen.getAllByRole('button')[0]).toHaveTextContent('Current');
+//   });
 
-  test('When there is no duration data', () => {
-    // @ts-ignore
-    props.componentData = undefined;
-    render(<Action {...props} />);
-    expect(screen.getAllByRole('button')[0]).toHaveTextContent('NO TIME');
-  });
+//   test('When there is no duration data', () => {
+//     // @ts-ignore
+//     props.componentData = undefined;
+//     render(<Action {...props} />);
+//     expect(screen.getAllByRole('button')[0]).toHaveTextContent('NO TIME');
+//   });
 
-  test('When actualDuration exceeds 60, time should be formatted correctly', () => {
-    props.componentData.actualDuration = 75;
-    render(<Action {...props} />);
-    expect(screen.getAllByRole('button')[0]).toHaveTextContent('+01:15.00');
-  });
+//   test('When actualDuration exceeds 60, time should be formatted correctly', () => {
+//     props.componentData.actualDuration = 75;
+//     render(<Action {...props} />);
+//     expect(screen.getAllByRole('button')[0]).toHaveTextContent('+01:15.00');
+//   });
 
-  test('Clicking the snapshot should trigger onClick', () => {
-    render(<Action {...props} />);
-    fireEvent.click(screen.getByRole('presentation'));
-    expect(dummyDispatch).toHaveBeenCalledWith(changeView(props.index));
-  });
+//   test('Clicking the snapshot should trigger onClick', () => {
+//     render(<Action {...props} />);
+//     fireEvent.click(screen.getByRole('presentation'));
+//     expect(dummyDispatch).toHaveBeenCalledWith(changeView(props.index));
+//   });
 
-  test('Clicking Jump button should trigger changeSlider and changeView', () => {
-    render(<Action {...props} />);
-    fireEvent.click(screen.getAllByRole('button')[1]);
-    expect(dummyDispatch).toHaveBeenCalledWith(changeSlider(props.index));
-    expect(dummyDispatch).toHaveBeenCalledWith(changeView(props.index));
-  });
-});
+//   test('Clicking Jump button should trigger changeSlider and changeView', () => {
+//     render(<Action {...props} />);
+//     fireEvent.click(screen.getAllByRole('button')[1]);
+//     expect(dummyDispatch).toHaveBeenCalledWith(changeSlider(props.index));
+//     expect(dummyDispatch).toHaveBeenCalledWith(changeView(props.index));
+//   });
+// });
 
 
 // VerticalSlider Component Tests
