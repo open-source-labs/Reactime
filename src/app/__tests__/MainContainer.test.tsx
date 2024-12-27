@@ -1,131 +1,227 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import { MemoryRouter } from 'react-router-dom';
+import '@testing-library/jest-dom';
+
 import MainContainer from '../containers/MainContainer';
-import { useDispatch, useSelector } from 'react-redux';
+import { mainSlice } from '../slices/mainSlice';
 
-jest.mock('react-redux', () => ({
-  useDispatch: jest.fn(),
-  useSelector: jest.fn(),
-}));
+// Mock ResizeObserver
+class ResizeObserverMock {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
 
-const mockState = {
-  main: {
-    tabs: {},
-    currentTab: null,
-  },
-}; // End
+global.ResizeObserver = ResizeObserverMock;
 
-const mockActionContainer = jest.fn();
-jest.mock('../containers/ActionContainer', () => (props) => {
-  mockActionContainer(props);
-  return <div>mockActionContainer</div>;
+// Mock components that use visx/tooltips
+jest.mock('../components/StateRoute/ComponentMap/ComponentMap', () => {
+  return function MockComponentMap() {
+    return <div data-testid='mock-component-map' />;
+  };
 });
 
-const mockStateContainer = jest.fn();
-jest.mock('../containers/StateContainer', () => (props) => {
-  mockStateContainer(props);
-  return <div>mockStateContainer</div>;
+jest.mock('../containers/ActionContainer', () => {
+  return function MockActionContainer({ snapshots, currLocation }) {
+    return <div data-testid='mock-action-container' />;
+  };
 });
 
-const mockTravelContainer = jest.fn();
-jest.mock('../containers/TravelContainer', () => (props) => {
-  mockTravelContainer(props);
-  return <div>mockTravelContainer</div>;
+jest.mock('../components/StateRoute/StateRoute', () => {
+  return function MockStateRoute() {
+    return <div data-testid='mock-state-route' />;
+  };
 });
 
-const mockButtonsContainer = jest.fn();
-jest.mock('../containers/ButtonsContainer', () => (props) => {
-  mockButtonsContainer(props);
-  return <div>mockButtonsContainer</div>;
-});
-
-const mockErrorContainer = jest.fn();
-jest.mock('../containers/ErrorContainer', () => (props) => {
-  mockErrorContainer(props);
-  return <div>mockErrorContainer</div>;
-});
-
-const dispatch = jest.fn();
-
-jest.mock('../../../node_modules/intro.js/introjs.css', () => jest.fn());
-
-useDispatch.mockReturnValue(dispatch);
-useSelector.mockImplementation((callback) => callback(mockState));
-
-global.chrome = chrome;
-const port = {
-  onMessage: {
-    addListener: () => {},
-    hasListener: () => {},
-  },
-  onDisconnect: {
-    addListener: () => {},
+// Mock chrome API
+const mockChrome = {
+  runtime: {
+    connect: jest.fn(() => ({
+      onMessage: {
+        addListener: jest.fn(),
+        hasListener: jest.fn(() => false),
+        removeListener: jest.fn(),
+      },
+      postMessage: jest.fn(),
+    })),
+    onMessage: {
+      addListener: jest.fn(),
+      hasListener: jest.fn(() => false),
+      removeListener: jest.fn(),
+    },
   },
 };
-chrome.runtime.connect.returns(port);
 
-describe('With no snapshots, should not render any containers', () => {
-  test('With no snapshots, ErrorContainer should render', () => {
-    render(<MainContainer />);
-    expect(screen.getByText('mockErrorContainer')).toBeInTheDocument();
-    expect(mockErrorContainer).toBeCalledTimes(1);
-    const error = screen.queryByText('mockErrorContainer');
-    expect(error).not.toBeNull();
-  });
-  test('With no snapshots, ActionContainer should not render', () => {
-    render(<MainContainer />);
-    const ActionContainer = screen.queryByText('mockActionContainer');
-    expect(ActionContainer).not.toBeInTheDocument();
-  });
-  test('With no snapshots, StateContainer should not render', () => {
-    render(<MainContainer />);
-    const StateContainer = screen.queryByText('mockStateContainer');
-    expect(StateContainer).toBeNull();
-  });
-  test('With no snapshots, TravelContainer should not render', () => {
-    render(<MainContainer />);
-    const TravelContainer = screen.queryByText('mockTravelContainer');
-    expect(TravelContainer).toBeNull();
-  });
-  test('With no snapshots, ButtonsContainer should not render', () => {
-    render(<MainContainer />);
-    const ButtonsContainer = screen.queryByText('mockButtonsContainer');
-    expect(ButtonsContainer).toBeNull();
-  });
-});
+global.chrome = mockChrome as any;
 
-describe('With snapshots, should render all containers', () => {
-  beforeEach(() => {
-    render(<MainContainer />);
-    dispatch.mockClear();
-    mockErrorContainer.mockClear();
-    // @ts-ignore
-    mockState.main.currentTab = 87;
-    mockState.main.tabs[87] = {
-      snapshots: [{}],
-      status: {
-        contentScriptLaunched: true,
-        reactDevToolsInstalled: true,
-        targetPageisaReactApp: true,
+// Mock proper state hierarchy structure
+const mockStateTree = {
+  index: 0,
+  stateSnapshot: {
+    name: 'Root',
+    children: [
+      {
+        name: 'TestComponent',
+        state: { testData: 'value' },
+        componentData: {
+          props: {},
+          state: null,
+        },
+        children: [],
       },
-      viewIndex: -1,
-      sliderIndex: 0,
-      mode: {},
-    };
+    ],
+    route: {
+      url: '/test',
+    },
+  },
+  children: [],
+};
+
+const mockSnapshots = [
+  {
+    index: 0,
+    stateSnapshot: {
+      name: 'Root',
+      children: [
+        {
+          name: 'TestComponent',
+          state: { testData: 'value' },
+          componentData: {},
+          children: [],
+        },
+      ],
+      route: {
+        url: '/test',
+      },
+    },
+  },
+];
+
+// Create a mock store with complete structure
+const createMockStore = (initialState = {}) => {
+  return configureStore({
+    reducer: {
+      // @ts-ignore
+      main: mainSlice.reducer,
+    },
+    preloadedState: {
+      main: {
+        currentTab: 1,
+        port: null,
+        connectionStatus: true,
+        currentTitle: 'Test Tab',
+        tabs: {
+          1: {
+            status: {
+              reactDevToolsInstalled: true,
+              targetPageisaReactApp: true,
+            },
+            axSnapshots: [],
+            currLocation: {
+              index: 0,
+              stateSnapshot: mockStateTree.stateSnapshot,
+            },
+            viewIndex: -1,
+            sliderIndex: 0,
+            snapshots: mockSnapshots,
+            hierarchy: mockStateTree,
+            webMetrics: {},
+            mode: {
+              paused: false,
+            },
+            snapshotDisplay: mockSnapshots,
+            playing: false,
+            intervalId: null,
+          },
+        },
+        ...initialState,
+      },
+    },
   });
-  test('With snapshots, ErrorContainer should not render', () => {
-    expect(mockErrorContainer).toBeCalledTimes(0);
+};
+
+// Helper function to render with store and router
+const renderWithProvider = (ui: JSX.Element, store = createMockStore()) => {
+  return render(
+    <MemoryRouter>
+      <Provider store={store}>{ui}</Provider>
+    </MemoryRouter>,
+  );
+};
+
+describe('MainContainer', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
-  test('With snapshots, ActionContainer should not render', () => {
-    expect(screen.getByText('mockActionContainer')).toBeInTheDocument();
+
+  it('renders without crashing', () => {
+    const { container } = renderWithProvider(<MainContainer />);
+    expect(container.querySelector('.main-container')).toBeInTheDocument();
   });
-  test('With snapshots, StateContainer should render', () => {
-    expect(screen.getByText('mockStateContainer')).toBeInTheDocument();
+
+  it('establishes connection with chrome runtime on mount', () => {
+    renderWithProvider(<MainContainer />);
+    expect(chrome.runtime.connect).toHaveBeenCalledWith({ name: 'panel' });
   });
-  test('With snapshots, TravelContainer should render', () => {
-    expect(screen.getByText('mockTravelContainer')).toBeInTheDocument();
+
+  it('renders ErrorContainer when React DevTools are not installed', () => {
+    const store = createMockStore({
+      tabs: {
+        1: {
+          status: {
+            reactDevToolsInstalled: false,
+            targetPageisaReactApp: true,
+          },
+        },
+      },
+    });
+
+    renderWithProvider(<MainContainer />, store);
+    expect(screen.getByText(/Welcome to Reactime/i)).toBeInTheDocument();
   });
-  test('With snapshots, ButtonsContainer should render', () => {
-    expect(screen.getByText('mockButtonsContainer')).toBeInTheDocument();
+
+  it('renders ErrorContainer when page is not a React app', () => {
+    const store = createMockStore({
+      tabs: {
+        1: {
+          status: {
+            reactDevToolsInstalled: true,
+            targetPageisaReactApp: false,
+          },
+        },
+      },
+    });
+
+    renderWithProvider(<MainContainer />, store);
+    expect(screen.getByText(/Welcome to Reactime/i)).toBeInTheDocument();
+  });
+
+  it('renders main content when all conditions are met', () => {
+    const { container } = renderWithProvider(<MainContainer />);
+    expect(container.querySelector('.main-container')).toBeInTheDocument();
+    expect(container.querySelector('.bottom-controls')).toBeInTheDocument();
+  });
+
+  it('handles port disconnection', () => {
+    const store = createMockStore();
+    renderWithProvider(<MainContainer />, store);
+
+    // Verify that onMessage.addListener was called
+    expect(chrome.runtime.onMessage.addListener).toHaveBeenCalled();
+
+    // Get the last registered listener
+    const lastCall = (chrome.runtime.onMessage.addListener as jest.Mock).mock.calls.length - 1;
+    const handleDisconnect = (chrome.runtime.onMessage.addListener as jest.Mock).mock.calls[
+      lastCall
+    ][0];
+
+    // Call the disconnect handler directly
+    handleDisconnect('portDisconnect');
+
+    // Check if store was updated correctly
+    expect(store.getState().main.connectionStatus).toBeFalsy();
   });
 });
