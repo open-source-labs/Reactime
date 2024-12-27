@@ -203,6 +203,7 @@
     "react-select": "^5.8.0",
     "react-spinners": "^0.13.8",
     "redux": "^5.0.0",
+    "redux-mock-store": "^1.5.5",
     "regenerator-runtime": "^0.14.1",
     "styled-components": "^6.1.2",
     "web-vitals": "^3.5.0"

@@ -9,11 +9,6 @@ import { toggleMode, mainSlice } from '../slices/mainSlice';
 import { useDispatch, Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 
-// const { Steps } = require('intro.js-react');
-// jest.mock('../store');
-// const mockedUsedStoreContext = jest.mocked(useStoreContext);
-// useStoreContext as jest.Mock<useStoreContext>.mockImplementaton(() => [state, dispatch])
-
 const customTabs = {
   87: {
     snapshots: [1, 2, 3, 4],
@@ -143,24 +138,14 @@ global.URL.revokeObjectURL = jest.fn();
 
 describe('Unit testing for ButtonContainer', () => {
   const useDispatchMock = (useDispatch as unknown) as jest.Mock; // make the test run
-  // const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 18
   const dummyDispatch = jest.fn(); //separate mock function created because we need to explicitly define on line 30 what
   useDispatchMock.mockReturnValue(dummyDispatch); //exactly useDispatchMock returns (which is a jest.fn())
   beforeEach;
 
   const currentTab = customInitialState.main.tabs[customInitialState.main.currentTab];
 
-  // const dispatch = jest.fn();
-  // const exportHandler = jest.fn().mockImplementation(() => 'clicked');
-  // const importHandler = jest.fn();
-  // const fileDownload = jest.fn();
-
-  // mockedUsedStoreContext.mockImplementation(() => [state, dispatch]);
-  // useStoreContext.mockImplementation(() => [state, dispatch]);
-
   beforeEach(() => {
-    // dispatch.mockClear();
-    // mockedUsedStoreContext.mockClear();
+
     currentTab.mode = {
       paused: true,
     };

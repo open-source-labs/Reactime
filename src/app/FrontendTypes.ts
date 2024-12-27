@@ -22,7 +22,7 @@ export interface PerfData {
 export interface PerformanceVisxProps {
   width: number;
   height: number;
-  snapshots: [];
+  snapshots: any[];
   hierarchy: any;
 }
 
@@ -104,8 +104,8 @@ export interface BarGraphComparisonAction {
 }
 
 export interface ActionContainerProps {
-  snapshots: any;
-  currLocation: any;
+  snapshots?: any;
+  currLocation?: any;
 }
 
 export interface ProvConContainerProps {
@@ -248,8 +248,8 @@ export interface HandleProps {
 }
 
 export interface MainSliderProps {
-  className: string;
-  snapshots: any[];
+  className?: string;
+  snapshots?: any[];
 }
 
 export interface DefaultMargin {

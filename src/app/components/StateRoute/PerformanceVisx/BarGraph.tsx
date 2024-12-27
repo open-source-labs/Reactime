@@ -124,7 +124,9 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     <div className='bargraph-position'>
       <div className='saveSeriesContainer'>
         <form className='routesForm' id='routes-formcontrol'>
-          <label id='routes-dropdown'>Route: </label>
+          <label id='routes-dropdown' htmlFor='routes-select'>
+            Route:{' '}
+          </label>
           <select
             className='performance-dropdown'
             labelid='demo-simple-select-label'
@@ -145,11 +147,17 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           </select>
         </form>
         <form className='routesForm' id='routes-formcontrol'>
-          <label id='routes-dropdown'>Snapshot: </label>
+          <label id='routes-dropdown' htmlFor='snapshot-select'>
+            Snapshot:{' '}
+          </label>
           <select
             labelid='demo-simple-select-label'
             id='snapshot-select'
-            onChange={(e) => setSnapshot(e.target.value)}
+            value={snapshot}
+            onChange={(e) => {
+              e.preventDefault();
+              setSnapshot(e.target.value);
+            }}
           >
             <option value='All Snapshots'>All Snapshots</option>
             {filteredSnapshots.map((route) => (

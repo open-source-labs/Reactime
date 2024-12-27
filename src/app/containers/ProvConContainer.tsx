@@ -45,7 +45,6 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element => {
     return null;
   };
   const contextProvidersOnly = keepContextAndProviderNodes(currentSnapshot);
-  console.log('before', contextProvidersOnly);
 
   const filterComponentProperties = (node: any): FilteredNode | null => {
     if (!node) return null;
