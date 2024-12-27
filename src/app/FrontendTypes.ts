@@ -22,7 +22,7 @@ export interface PerfData {
 export interface PerformanceVisxProps {
   width: number;
   height: number;
-  snapshots: [];
+  snapshots: any[];
   hierarchy: any;
 }
 
