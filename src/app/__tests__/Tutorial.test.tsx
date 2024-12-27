@@ -20,7 +20,7 @@ describe('Before Tutorial is entered', () => {
     expect(screen.getByText('Tutorial')).toBeInTheDocument();
   });
 
-  xtest('User clicking tutorial button while on map tab starts map tutorial ', () => {
+  test('User clicking tutorial button while on map tab starts map tutorial ', () => {
     props.currentTabInApp = 'map';
     render(<Tutorial {...props} />);
     fireEvent.click(screen.getByRole('button'));
@@ -29,28 +29,28 @@ describe('Before Tutorial is entered', () => {
     ).toBeInTheDocument();
   });
 
-  xtest('User clicking tutorial button while on performance tab starts performance tutorial ', () => {
+  test('User clicking tutorial button while on performance tab starts performance tutorial ', () => {
     props.currentTabInApp = 'performance';
     render(<Tutorial {...props} />);
     fireEvent.click(screen.getByRole('button'));
     expect(screen.getByText('Performance Tab')).toBeInTheDocument();
   });
 
-  xtest('User clicking tutorial button while on history tab starts history tutorial ', () => {
+  test('User clicking tutorial button while on history tab starts history tutorial ', () => {
     props.currentTabInApp = 'history';
     render(<Tutorial {...props} />);
     fireEvent.click(screen.getByRole('button'));
     expect(screen.getByText('History Tab')).toBeInTheDocument();
   });
 
-  xtest('User clicking tutorial button while on web metrics tab starts web metrics tutorial ', () => {
+  test('User clicking tutorial button while on web metrics tab starts web metrics tutorial ', () => {
     props.currentTabInApp = 'webmetrics';
     render(<Tutorial {...props} />);
     fireEvent.click(screen.getByRole('button'));
     expect(screen.getByText('Webmetrics Tab')).toBeInTheDocument();
   });
 
-  xtest('User clicking tutorial button while on tree tab starts tree tutorial ', () => {
+  test('User clicking tutorial button while on tree tab starts tree tutorial ', () => {
     props.currentTabInApp = 'tree';
     render(<Tutorial {...props} />);
     fireEvent.click(screen.getByRole('button'));
