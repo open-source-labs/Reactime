@@ -9,11 +9,6 @@ import { toggleMode, mainSlice } from '../slices/mainSlice';
 import { useDispatch, Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 
-// const { Steps } = require('intro.js-react');
-// jest.mock('../store');
-// const mockedUsedStoreContext = jest.mocked(useStoreContext);
-// useStoreContext as jest.Mock<useStoreContext>.mockImplementaton(() => [state, dispatch])
-
 const customTabs = {
   87: {
     snapshots: [1, 2, 3, 4],

@@ -104,8 +104,8 @@ export interface BarGraphComparisonAction {
 }
 
 export interface ActionContainerProps {
-  snapshots: any;
-  currLocation: any;
+  snapshots?: any;
+  currLocation?: any;
 }
 
 export interface ProvConContainerProps {
