@@ -121,7 +121,18 @@ const mockBarGraphProps = {
   comparison: [],
   setRoute: jest.fn(),
   allRoutes: ['/home', '/about'],
-  filteredSnapshots: [],
+  filteredSnapshots: [
+    {
+      snapshotId: 'snapshot1',
+      'Component-1': 100,
+      'Component-2': 150,
+    },
+    {
+      snapshotId: 'snapshot2',
+      'Component-1': 120,
+      'Component-2': 140,
+    },
+  ],
   setSnapshot: jest.fn(),
   snapshot: 'All Snapshots',
 };
@@ -172,6 +183,9 @@ describe('Performance Components', () => {
     store = mockStore(mockReduxState);
     Storage.prototype.getItem = jest.fn(() => null);
     Storage.prototype.setItem = jest.fn();
+    // Clear mock calls before each test
+    mockBarGraphProps.setSnapshot.mockClear();
+    mockBarGraphProps.setRoute.mockClear();
   });
 
   describe('BarGraph Component', () => {
@@ -209,6 +223,7 @@ describe('Performance Components', () => {
       const snapshotSelect = screen.getByLabelText('Snapshot:');
       fireEvent.change(snapshotSelect, { target: { value: 'snapshot1' } });
       expect(mockBarGraphProps.setSnapshot).toHaveBeenCalledWith('snapshot1');
+      expect(mockBarGraphProps.setSnapshot).toHaveBeenCalledTimes(1);
     });
 
     it('renders correct number of bars', () => {
