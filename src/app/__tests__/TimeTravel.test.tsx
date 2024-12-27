@@ -5,18 +5,13 @@ import { Provider } from 'react-redux';
 import { store } from '../store';
 import { useDispatch } from 'react-redux';
 import { changeView, changeSlider } from '../slices/mainSlice';
-import { useTheme } from '../ThemeProvider';
 import { configureStore } from '@reduxjs/toolkit';
 import { mainSlice } from '../slices/mainSlice';
 
 import Action from '../components/Actions/Action';
 import RouteDescription from '../components/Actions/RouteDescription';
-import DropDown from '../components/Actions/DropDown';
-import RecordButton from '../components/Actions/RecordButton';
-import ThemeToggle from '../components/Actions/ThemeToggle';
 import VerticalSlider from '../components/TimeTravel/VerticalSlider';
-import ProvConContainer from '../containers/ProvConContainer';
-import ActionContainer from '../containers/ActionContainer';
+
 
 // Mock react-redux
 jest.mock('react-redux', () => ({
@@ -29,61 +24,6 @@ const render = (component) => rtlRender(<Provider store={store}>{component}</Pro
 
 // RouteDescription Component Tests
 describe('RouteDescription Component', () => {
-  // Create a mock store with initial state that matches your mainSlice structure
-  const mockStore = configureStore({
-    reducer: {
-      main: mainSlice.reducer,
-    },
-    preloadedState: {
-      main: {
-        port: null,
-        currentTab: 0,
-        currentTitle: 'No Target',
-        tabs: {
-          0: {
-            currLocation: {
-              index: 0,
-              stateSnapshot: {},
-            },
-            hierarchy: {},
-            sliderIndex: 0,
-            viewIndex: 0,
-            snapshots: [],
-            playing: false,
-            intervalId: null,
-            mode: { paused: false },
-            status: {
-              reactDevToolsInstalled: true,
-              targetPageisaReactApp: true,
-            },
-          },
-        },
-        currentTabInApp: null,
-        connectionStatus: true,
-        connectRequested: true,
-      },
-    },
-  });
-
-  const mockActions = [
-    {
-      props: {
-        routePath: 'http://example.com/test-route',
-        key: 'action0',
-        index: 0,
-        state: {},
-        displayName: '1.0',
-        componentName: 'TestComponent',
-        componentData: { actualDuration: 0 },
-        selected: false,
-        last: false,
-        sliderIndex: 0,
-        viewIndex: 0,
-        isCurrIndex: false,
-      },
-    },
-  ];
-
   // Mock the vertical slider component
   jest.mock('../components/TimeTravel/VerticalSlider.tsx', () => {
     return function MockVerticalSlider({ snapshots }) {
@@ -96,221 +36,347 @@ describe('RouteDescription Component', () => {
   });
 
   test('renders route path correctly', () => {
+    const mockActions = [
+      <Action
+        key='action0'
+        index={0}
+        state={{}}
+        displayName='1.0'
+        componentName='TestComponent'
+        componentData={{ actualDuration: 0 }}
+        selected={false}
+        last={false}
+        sliderIndex={0}
+        viewIndex={0}
+        isCurrIndex={false}
+        routePath='http://example.com/test-route'
+      />,
+    ];
+
+    // Create store with initial state
+    const mockStore = configureStore({
+      reducer: {
+        main: mainSlice.reducer,
+      },
+      preloadedState: {
+        main: {
+          port: null,
+          currentTab: 0,
+          currentTitle: 'No Target',
+          tabs: {
+            0: {
+              currLocation: {
+                index: 0,
+                stateSnapshot: {},
+              },
+              hierarchy: {},
+              sliderIndex: 0,
+              viewIndex: 0,
+              snapshots: [],
+              playing: false,
+              intervalId: null,
+              mode: { paused: false },
+              status: {
+                reactDevToolsInstalled: true,
+                targetPageisaReactApp: true,
+              },
+            },
+          },
+          currentTabInApp: null,
+          connectionStatus: true,
+          connectRequested: true,
+        },
+      },
+    });
+
     render(
       <Provider store={mockStore}>
-        <RouteDescription actions={mockActions as unknown as JSX.Element[]} />
+        <RouteDescription actions={mockActions} />
       </Provider>,
     );
+
+    // Check if the route path is displayed correctly
     expect(screen.getByText('Route: /test-route')).toBeInTheDocument();
   });
 
   test('renders actions container with correct height', () => {
+    // Create multiple actions to test height calculation
+    const mockActions = [
+      <Action
+        key='action0'
+        index={0}
+        state={{}}
+        displayName='1.0'
+        componentName='TestComponent'
+        componentData={{ actualDuration: 0 }}
+        selected={false}
+        last={false}
+        sliderIndex={0}
+        viewIndex={0}
+        isCurrIndex={false}
+        routePath='http://example.com/test-route'
+      />,
+      <Action
+        key='action1'
+        index={1}
+        state={{}}
+        displayName='2.0'
+        componentName='TestComponent'
+        componentData={{ actualDuration: 0 }}
+        selected={false}
+        last={false}
+        sliderIndex={0}
+        viewIndex={0}
+        isCurrIndex={false}
+        routePath='http://example.com/test-route'
+      />,
+    ];
+
+    // Create store with initial state
+    const mockStore = configureStore({
+      reducer: {
+        main: mainSlice.reducer,
+      },
+      preloadedState: {
+        main: {
+          port: null,
+          currentTab: 0,
+          currentTitle: 'No Target',
+          tabs: {
+            0: {
+              currLocation: {
+                index: 0,
+                stateSnapshot: {},
+              },
+              hierarchy: {},
+              sliderIndex: 0,
+              viewIndex: 0,
+              snapshots: [],
+              playing: false,
+              intervalId: null,
+              mode: { paused: false },
+              status: {
+                reactDevToolsInstalled: true,
+                targetPageisaReactApp: true,
+              },
+            },
+          },
+          currentTabInApp: null,
+          connectionStatus: true,
+          connectRequested: true,
+        },
+      },
+    });
+
     render(
       <Provider store={mockStore}>
-        <RouteDescription actions={mockActions as unknown as JSX.Element[]} />
+        <RouteDescription actions={mockActions} />
       </Provider>,
     );
-    // @ts-ignore
-    const container = screen.getByClassName('route-content');
-    expect(container).toHaveStyle({ height: `${mockActions.length * 40.5}px` });
+
+    // Get the route content container
+    const routeContent = document.querySelector('.route-content');
+
+    // Check if height is calculated correctly (40.5px * number of actions)
+    expect(routeContent).toHaveStyle({ height: '81px' }); // 40.5 * 2 = 81
   });
 });
 
 // Action Component Tests
-// describe('Action Component', () => {
-//   // @ts-ignore
-//   const useDispatchMock = useDispatch as jest.Mock;
-//   const dummyDispatch = jest.fn();
-//   useDispatchMock.mockReturnValue(dummyDispatch);
+describe('Action Component', () => {
+  // @ts-ignore
+  const useDispatchMock = useDispatch as jest.Mock;
+  const dummyDispatch = jest.fn();
+  useDispatchMock.mockReturnValue(dummyDispatch);
 
-//   const props = {
-//     key: 'actions2',
-//     selected: true,
-//     last: false,
-//     index: 2,
-//     sliderIndex: 2,
-//     isCurrIndex: false,
-//     routePath: '',
-//     displayName: '3.0',
-//     componentName: 'App',
-//     logChangedState: jest.fn(),
-//     componentData: {
-//       actualDuration: 3.5,
-//     },
-//     state: { test: 'test' },
-//     viewIndex: 2,
-//     handleOnkeyDown: jest.fn(),
-//   };
+  const props = {
+    key: 'actions2',
+    selected: true,
+    last: false,
+    index: 2,
+    sliderIndex: 2,
+    isCurrIndex: false,
+    routePath: '',
+    displayName: '3.0',
+    componentName: 'App',
+    logChangedState: jest.fn(),
+    componentData: {
+      actualDuration: 3.5,
+    },
+    state: { test: 'test' },
+    viewIndex: 2,
+    handleOnkeyDown: jest.fn(),
+  };
 
-//   beforeEach(() => {
-//     props.isCurrIndex = false;
-//     props.componentData = { actualDuration: 3.5 };
-//   });
+  beforeEach(() => {
+    props.isCurrIndex = false;
+    props.componentData = { actualDuration: 3.5 };
+  });
 
-//   test('Action snapshot should be shown as Snapshot: 3.0', () => {
-//     render(<Action {...props} />);
-//     expect(screen.getByPlaceholderText('Snapshot: 3.0')).toBeInTheDocument();
-//   });
+  test('Action snapshot should be shown as Snapshot: 3.0', () => {
+    render(<Action {...props} />);
+    expect(screen.getByPlaceholderText('Snapshot: 3.0')).toBeInTheDocument();
+  });
 
-//   test('Two buttons with Time and Jump when not at current snapshot', () => {
-//     props.isCurrIndex = false;
-//     render(<Action {...props} />);
-//     expect(screen.getAllByRole('button')).toHaveLength(2);
-//     expect(screen.getAllByRole('button')[0]).toHaveTextContent('+00:03.50');
-//     expect(screen.getAllByRole('button')[1]).toHaveTextContent('Jump');
-//   });
+  test('Two buttons with Time and Jump when not at current snapshot', () => {
+    props.isCurrIndex = false;
+    render(<Action {...props} />);
+    expect(screen.getAllByRole('button')).toHaveLength(2);
+    expect(screen.getAllByRole('button')[0]).toHaveTextContent('+00:03.50');
+    expect(screen.getAllByRole('button')[1]).toHaveTextContent('Jump');
+  });
 
-//   test('Two buttons with Time and Current when at current snapshot', () => {
-//     props.isCurrIndex = true;
-//     render(<Action {...props} />);
-//     expect(screen.getAllByRole('button')).toHaveLength(1);
-//     expect(screen.getAllByRole('button')[0]).toHaveTextContent('Current');
-//   });
+  test('Two buttons with Time and Current when at current snapshot', () => {
+    props.isCurrIndex = true;
+    render(<Action {...props} />);
+    expect(screen.getAllByRole('button')).toHaveLength(1);
+    expect(screen.getAllByRole('button')[0]).toHaveTextContent('Current');
+  });
 
-//   test('When there is no duration data', () => {
-//     // @ts-ignore
-//     props.componentData = undefined;
-//     render(<Action {...props} />);
-//     expect(screen.getAllByRole('button')[0]).toHaveTextContent('NO TIME');
-//   });
+  test('When there is no duration data', () => {
+    // @ts-ignore
+    props.componentData = undefined;
+    render(<Action {...props} />);
+    expect(screen.getAllByRole('button')[0]).toHaveTextContent('NO TIME');
+  });
 
-//   test('When actualDuration exceeds 60, time should be formatted correctly', () => {
-//     props.componentData.actualDuration = 75;
-//     render(<Action {...props} />);
-//     expect(screen.getAllByRole('button')[0]).toHaveTextContent('+01:15.00');
-//   });
+  test('When actualDuration exceeds 60, time should be formatted correctly', () => {
+    props.componentData.actualDuration = 75;
+    render(<Action {...props} />);
+    expect(screen.getAllByRole('button')[0]).toHaveTextContent('+01:15.00');
+  });
 
-//   test('Clicking the snapshot should trigger onClick', () => {
-//     render(<Action {...props} />);
-//     fireEvent.click(screen.getByRole('presentation'));
-//     expect(dummyDispatch).toHaveBeenCalledWith(changeView(props.index));
-//   });
+  test('Clicking the snapshot should trigger onClick', () => {
+    render(<Action {...props} />);
+    fireEvent.click(screen.getByRole('presentation'));
+    expect(dummyDispatch).toHaveBeenCalledWith(changeView(props.index));
+  });
 
-//   test('Clicking Jump button should trigger changeSlider and changeView', () => {
-//     render(<Action {...props} />);
-//     fireEvent.click(screen.getAllByRole('button')[1]);
-//     expect(dummyDispatch).toHaveBeenCalledWith(changeSlider(props.index));
-//     expect(dummyDispatch).toHaveBeenCalledWith(changeView(props.index));
-//   });
-// });
+  test('Clicking Jump button should trigger changeSlider and changeView', () => {
+    render(<Action {...props} />);
+    fireEvent.click(screen.getAllByRole('button')[1]);
+    expect(dummyDispatch).toHaveBeenCalledWith(changeSlider(props.index));
+    expect(dummyDispatch).toHaveBeenCalledWith(changeView(props.index));
+  });
+});
 
-// // VerticalSlider Component Tests
-// describe('VerticalSlider Component', () => {
-//   const useDispatchMock = jest.fn();
-//   const dummyDispatch = jest.fn();
+// VerticalSlider Component Tests
+describe('VerticalSlider Component', () => {
+  const useDispatchMock = jest.fn();
+  const dummyDispatch = jest.fn();
 
-//   // Define the mock state
-//   const mockState = {
-//     main: {
-//       tabs: {
-//         0: {
-//           currLocation: { index: 1 },
-//         },
-//       },
-//       currentTab: 0,
-//     },
-//   };
+  // Define the mock state
+  const mockState = {
+    main: {
+      tabs: {
+        0: {
+          currLocation: { index: 1 },
+        },
+      },
+      currentTab: 0,
+    },
+  };
 
-//   const mockStore = configureStore({
-//     reducer: {
-//       // @ts-ignore
-//       main: mainSlice.reducer,
-//     },
-//     preloadedState: mockState,
-//   });
+  const mockStore = configureStore({
+    reducer: {
+      // @ts-ignore
+      main: mainSlice.reducer,
+    },
+    preloadedState: mockState,
+  });
 
-//   // Helper function to create store with custom state
-//   const createMockStore = (state: any) =>
-//     configureStore({
-//       reducer: {
-//         // @ts-ignore
-//         main: mainSlice.reducer,
-//       },
-//       preloadedState: state,
-//     });
+  // Helper function to create store with custom state
+  const createMockStore = (state: any) =>
+    configureStore({
+      reducer: {
+        // @ts-ignore
+        main: mainSlice.reducer,
+      },
+      preloadedState: state,
+    });
 
-//   const mockSnapshots = [{ props: { index: 0 } }, { props: { index: 1 } }, { props: { index: 2 } }];
+  const mockSnapshots = [{ props: { index: 0 } }, { props: { index: 1 } }, { props: { index: 2 } }];
 
-//   beforeEach(() => {
-//     useDispatchMock.mockClear();
-//     useDispatchMock.mockReturnValue(dummyDispatch);
-//   });
+  beforeEach(() => {
+    useDispatchMock.mockClear();
+    useDispatchMock.mockReturnValue(dummyDispatch);
+  });
 
-//   test('renders slider with correct min and max values', () => {
-//     render(
-//       <Provider store={mockStore}>
-//         <VerticalSlider snapshots={mockSnapshots} />
-//       </Provider>,
-//     );
+  test('renders slider with correct min and max values', () => {
+    render(
+      <Provider store={mockStore}>
+        <VerticalSlider snapshots={mockSnapshots} />
+      </Provider>,
+    );
 
-//     const slider = screen.getByRole('slider');
-//     expect(slider).toHaveAttribute('aria-valuemin', '0');
-//     expect(slider).toHaveAttribute('aria-valuemax', '2');
-//   });
+    const slider = screen.getByRole('slider');
+    expect(slider).toHaveAttribute('aria-valuemin', '0');
+    expect(slider).toHaveAttribute('aria-valuemax', '2');
+  });
 
-//   test('updates slider index when currLocation changes', () => {
-//     const { rerender } = render(
-//       <Provider store={mockStore}>
-//         <VerticalSlider snapshots={mockSnapshots} />
-//       </Provider>,
-//     );
+  test('updates slider index when currLocation changes', () => {
+    const { rerender } = render(
+      <Provider store={mockStore}>
+        <VerticalSlider snapshots={mockSnapshots} />
+      </Provider>,
+    );
 
-//     const updatedState = {
-//       ...mockState,
-//       main: {
-//         ...mockState.main,
-//         tabs: {
-//           0: {
-//             currLocation: { index: 2 },
-//           },
-//         },
-//       },
-//     };
+    const updatedState = {
+      ...mockState,
+      main: {
+        ...mockState.main,
+        tabs: {
+          0: {
+            currLocation: { index: 2 },
+          },
+        },
+      },
+    };
 
-//     rerender(
-//       <Provider store={createMockStore(updatedState)}>
-//         <VerticalSlider snapshots={mockSnapshots} />
-//       </Provider>,
-//     );
+    rerender(
+      <Provider store={createMockStore(updatedState)}>
+        <VerticalSlider snapshots={mockSnapshots} />
+      </Provider>,
+    );
 
-//     const slider = screen.getByRole('slider');
-//     expect(slider).toHaveAttribute('aria-valuenow', '2');
-//   });
+    const slider = screen.getByRole('slider');
+    expect(slider).toHaveAttribute('aria-valuenow', '2');
+  });
 
-//   test('handles empty snapshots array', () => {
-//     render(
-//       <Provider store={mockStore}>
-//         <VerticalSlider snapshots={[]} />
-//       </Provider>,
-//     );
+  test('handles empty snapshots array', () => {
+    render(
+      <Provider store={mockStore}>
+        <VerticalSlider snapshots={[]} />
+      </Provider>,
+    );
 
-//     const slider = screen.getByRole('slider');
-//     expect(slider).toHaveAttribute('aria-valuemin', '0');
-//     expect(slider).toHaveAttribute('aria-valuemax', '-1');
-//     expect(slider).not.toHaveAttribute('aria-valuenow');
-//   });
+    const slider = screen.getByRole('slider');
+    expect(slider).toHaveAttribute('aria-valuemin', '0');
+    expect(slider).toHaveAttribute('aria-valuemax', '-1');
+    expect(slider).not.toHaveAttribute('aria-valuenow');
+  });
 
-//   test('maintains slider position within bounds', () => {
-//     const outOfBoundsState = {
-//       ...mockState,
-//       main: {
-//         ...mockState.main,
-//         tabs: {
-//           0: {
-//             currLocation: { index: 999 }, // intentionally out of bounds
-//           },
-//         },
-//       },
-//     };
+  test('maintains slider position within bounds', () => {
+    const outOfBoundsState = {
+      ...mockState,
+      main: {
+        ...mockState.main,
+        tabs: {
+          0: {
+            currLocation: { index: 999 }, // intentionally out of bounds
+          },
+        },
+      },
+    };
 
-//     render(
-//       <Provider store={createMockStore(outOfBoundsState)}>
-//         <VerticalSlider snapshots={mockSnapshots} />
-//       </Provider>,
-//     );
+    render(
+      <Provider store={createMockStore(outOfBoundsState)}>
+        <VerticalSlider snapshots={mockSnapshots} />
+      </Provider>,
+    );
 
-//     const slider = screen.getByRole('slider');
-//     // It seems the component defaults to 0 for out-of-bounds values
-//     expect(slider).toHaveAttribute('aria-valuenow', '0');
-//   });
-// });
+    const slider = screen.getByRole('slider');
+    // It seems the component defaults to 0 for out-of-bounds values
+    expect(slider).toHaveAttribute('aria-valuenow', '0');
+  });
+});
