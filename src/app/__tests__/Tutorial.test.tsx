@@ -1,59 +1,175 @@
-import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { TextEncoder } from 'util';
-global.TextEncoder = TextEncoder;
-import '@testing-library/jest-dom';
+import * as React from 'react';
+
 import Tutorial from '../components/Buttons/Tutorial';
+import { setCurrentTabInApp, tutorialSaveSeriesToggle } from '../slices/mainSlice';
 
-const dispatch = jest.fn();
-const props = {
-  currentTabInApp: 'map',
-  dispatch,
-};
+// Create a mock for updateStepElement
+const mockUpdateStepElement = jest.fn();
 
-let currentStepIndex = 5;
+// Keep track of the latest Steps instance
+let currentStepsInstance: any = null;
 
-describe('Before Tutorial is entered', () => {
-  test('Tutorial button exists', () => {
-    render(<Tutorial {...props} />);
-    expect(screen.getByText('Tutorial')).toBeInTheDocument();
+// Mock the intro.js-react package
+jest.mock('intro.js-react', () => {
+  return {
+    Steps: class MockSteps extends React.Component<any> {
+      constructor(props: any) {
+        super(props);
+        // @ts-ignore
+        this.updateStepElement = mockUpdateStepElement;
+        // Store the instance so we can access it in tests
+        currentStepsInstance = this;
+        // Call the ref with this instance if provided
+        if (props.ref) {
+          props.ref(this);
+        }
+      }
+
+      render() {
+        const { enabled, steps, onExit, onBeforeChange } = this.props;
+        return enabled ? (
+          <div data-testid='mock-steps'>
+            {steps.map((step: any, index: number) => (
+              <div key={index} data-testid={`step-${index}`}>
+                <h3>{step.title}</h3>
+                <div>{step.intro}</div>
+              </div>
+            ))}
+            <button onClick={() => onExit()}>Exit</button>
+            <button onClick={() => onBeforeChange && onBeforeChange(1)}>Next</button>
+          </div>
+        ) : null;
+      }
+    },
+  };
+});
+
+// Mock the dispatch function
+const mockDispatch = jest.fn();
+
+describe('Tutorial Component', () => {
+  const defaultProps = {
+    currentTabInApp: 'map',
+    dispatch: mockDispatch,
+  };
+
+  beforeEach(() => {
+    // Clear mock function calls before each test
+    jest.clearAllMocks();
+    currentStepsInstance = null;
   });
 
-  test('User clicking tutorial button while on map tab starts map tutorial ', () => {
-    props.currentTabInApp = 'map';
-    render(<Tutorial {...props} />);
-    fireEvent.click(screen.getByRole('button'));
-    expect(
-      screen.getByText('A performance and state management tool for React apps.'),
-    ).toBeInTheDocument();
+  it('renders without crashing', () => {
+    render(<Tutorial {...defaultProps} />);
+    expect(screen.getByRole('button', { name: /tutorial/i })).toBeInTheDocument();
   });
 
-  test('User clicking tutorial button while on performance tab starts performance tutorial ', () => {
-    props.currentTabInApp = 'performance';
-    render(<Tutorial {...props} />);
-    fireEvent.click(screen.getByRole('button'));
-    expect(screen.getByText('Performance Tab')).toBeInTheDocument();
+  it('starts tutorial when Tutorial button is clicked', () => {
+    render(<Tutorial {...defaultProps} />);
+    const tutorialButton = screen.getByRole('button', { name: /tutorial/i });
+
+    fireEvent.click(tutorialButton);
+
+    expect(screen.getByTestId('mock-steps')).toBeInTheDocument();
   });
 
-  test('User clicking tutorial button while on history tab starts history tutorial ', () => {
-    props.currentTabInApp = 'history';
-    render(<Tutorial {...props} />);
-    fireEvent.click(screen.getByRole('button'));
-    expect(screen.getByText('History Tab')).toBeInTheDocument();
+  it('navigates to performance tab before starting tutorial when in performance views', () => {
+    const performanceProps = {
+      ...defaultProps,
+      currentTabInApp: 'performance-comparison',
+    };
+
+    render(<Tutorial {...performanceProps} />);
+    const tutorialButton = screen.getByRole('button', { name: /tutorial/i });
+
+    fireEvent.click(tutorialButton);
+
+    expect(mockDispatch).toHaveBeenCalledWith(setCurrentTabInApp('performance'));
   });
 
-  test('User clicking tutorial button while on web metrics tab starts web metrics tutorial ', () => {
-    props.currentTabInApp = 'webmetrics';
-    render(<Tutorial {...props} />);
-    fireEvent.click(screen.getByRole('button'));
-    expect(screen.getByText('Webmetrics Tab')).toBeInTheDocument();
+  describe('Step Navigation', () => {
+    it('handles performance tab tutorial steps correctly', () => {
+      const performanceProps = {
+        ...defaultProps,
+        currentTabInApp: 'performance',
+      };
+
+      render(<Tutorial {...performanceProps} />);
+      const tutorialButton = screen.getByRole('button', { name: /tutorial/i });
+
+      // Start the tutorial
+      fireEvent.click(tutorialButton);
+
+      // Simulate step change by clicking the Next button
+      const nextButton = screen.getByText('Next');
+      fireEvent.click(nextButton);
+
+      // Verify the dispatch was called
+      expect(mockDispatch).toHaveBeenCalledWith(tutorialSaveSeriesToggle('inputBoxOpen'));
+
+      // Verify updateStepElement was called
+      expect(mockUpdateStepElement).toHaveBeenCalledWith(1);
+    });
   });
 
-  test('User clicking tutorial button while on tree tab starts tree tutorial ', () => {
-    props.currentTabInApp = 'tree';
-    render(<Tutorial {...props} />);
-    fireEvent.click(screen.getByRole('button'));
-    expect(screen.getByText('Tree Tab')).toBeInTheDocument();
+  describe('Tutorial Steps Content', () => {
+    it('loads correct steps for map tab', () => {
+      render(<Tutorial {...defaultProps} />);
+      const tutorialButton = screen.getByRole('button', { name: /tutorial/i });
+
+      fireEvent.click(tutorialButton);
+
+      const firstStep = screen.getByTestId('step-0');
+      expect(firstStep).toHaveTextContent('Reactime Tutorial');
+    });
+
+    it('loads correct steps for performance tab', () => {
+      const performanceProps = {
+        ...defaultProps,
+        currentTabInApp: 'performance',
+      };
+
+      render(<Tutorial {...performanceProps} />);
+      const tutorialButton = screen.getByRole('button', { name: /tutorial/i });
+
+      fireEvent.click(tutorialButton);
+
+      const firstStep = screen.getByTestId('step-0');
+      expect(firstStep).toHaveTextContent('Performance Tab');
+    });
+
+    it('shows default message for undefined tabs', () => {
+      const undefinedTabProps = {
+        ...defaultProps,
+        currentTabInApp: 'undefined-tab',
+      };
+
+      render(<Tutorial {...undefinedTabProps} />);
+      const tutorialButton = screen.getByRole('button', { name: /tutorial/i });
+
+      fireEvent.click(tutorialButton);
+
+      const firstStep = screen.getByTestId('step-0');
+      expect(firstStep).toHaveTextContent('No Tutorial For This Tab');
+    });
+  });
+
+  describe('Tutorial Exit', () => {
+    it('handles tutorial exit correctly', () => {
+      render(<Tutorial {...defaultProps} />);
+      const tutorialButton = screen.getByRole('button', { name: /tutorial/i });
+
+      // Start tutorial
+      fireEvent.click(tutorialButton);
+
+      // Find and click the exit button
+      const exitButton = screen.getByText('Exit');
+      fireEvent.click(exitButton);
+
+      // Check that the steps are no longer visible
+      expect(screen.queryByTestId('mock-steps')).not.toBeInTheDocument();
+    });
   });
 });
