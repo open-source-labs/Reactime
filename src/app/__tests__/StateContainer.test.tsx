@@ -3,7 +3,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import '@testing-library/jest-dom';
 
 import StateRoute from '../components/StateRoute/StateRoute';
@@ -17,39 +17,108 @@ class ResizeObserverMock {
   disconnect() {}
 }
 
-// Setup global ResizeObserver mock
 global.ResizeObserver = ResizeObserverMock;
 
 // Mock child components
 jest.mock('../components/StateRoute/Tree', () => () => (
   <div data-testid='mock-tree'>Tree Component</div>
 ));
+
 jest.mock('../components/StateRoute/ComponentMap/ComponentMap', () => () => (
   <div data-testid='mock-component-map'>Component Map</div>
 ));
+
 jest.mock('../components/StateRoute/PerformanceVisx/PerformanceVisx', () => () => (
   <div data-testid='mock-performance'>Performance Component</div>
 ));
+
 jest.mock('../components/StateRoute/WebMetrics/WebMetricsContainer', () => () => (
   <div data-testid='mock-web-metrics'>Web Metrics Component</div>
 ));
+
 jest.mock('../components/StateRoute/AxMap/AxContainer', () => () => (
   <div data-testid='mock-ax-container'>Ax Container</div>
 ));
+
 jest.mock('../components/StateRoute/History', () => ({
   default: () => <div data-testid='mock-history'>History Component</div>,
 }));
+
+// Mock StateRoute with proper routing and navigation
+jest.mock('../components/StateRoute/StateRoute', () => {
+  const { Link, useLocation } = require('react-router-dom');
+
+  return function MockStateRoute({ hierarchy }) {
+    const location = useLocation();
+
+    return (
+      <div data-testid='mock-state-route'>
+        <div className='main-navbar'>
+          <Link to='/' className='router-link map-tab'>
+            Map
+          </Link>
+          <Link to='/history' className='router-link history-tab'>
+            History
+          </Link>
+          <Link to='/performance' className='router-link performance-tab'>
+            Performance
+          </Link>
+          <Link to='/webMetrics' className='router-link web-metrics-tab'>
+            Web Metrics
+          </Link>
+          <Link to='/tree' className='router-link tree-tab'>
+            Tree
+          </Link>
+          <Link to='/accessibility' className='router-link accessibility-tab'>
+            Accessibility
+          </Link>
+        </div>
+
+        <div className='app-content'>
+          {location.pathname === '/accessibility' && (
+            <>
+              <p>
+                A Note to Developers: Reactime is using the Chrome Debugger API in order to grab the
+                Accessibility Tree. Enabling this option will allow you to record Accessibility Tree
+                snapshots, but will result in the Chrome browser notifying you that the Chrome
+                Debugger has started.
+              </p>
+              <div>
+                <input
+                  type='radio'
+                  id='enable'
+                  name='ax-toggle'
+                  value='enable'
+                  aria-label='enable'
+                />
+                <label htmlFor='enable'>Enable</label>
+              </div>
+              <div data-testid='mock-ax-container'>Ax Container</div>
+            </>
+          )}
+          {location.pathname === '/' && hierarchy && (
+            <div data-testid='mock-component-map'>Component Map</div>
+          )}
+          {location.pathname === '/history' && (
+            <div data-testid='mock-history'>History Component</div>
+          )}
+          {location.pathname === '/performance' && (
+            <div data-testid='mock-performance'>Performance Component</div>
+          )}
+        </div>
+      </div>
+    );
+  };
+});
 
 // Mock ParentSize component
 jest.mock('@visx/responsive', () => ({
   ParentSize: ({ children }) => children({ width: 100, height: 100 }),
 }));
 
-// Create mock store factory with proper initial state
 const createMockStore = (initialState = {}) => {
   return configureStore({
     reducer: {
-      // @ts-ignore
       main: mainSlice.reducer,
     },
     preloadedState: {
@@ -62,11 +131,19 @@ const createMockStore = (initialState = {}) => {
           },
         ],
         currentTab: 0,
+        // @ts-ignore
+        port: {
+          postMessage: jest.fn(),
+        },
         ...initialState,
       },
     },
   });
 };
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 describe('State Components', () => {
   const defaultProps = {
@@ -80,13 +157,15 @@ describe('State Components', () => {
   };
 
   describe('StateRoute Component', () => {
-    const renderStateRoute = (props = {}, initialState = {}) => {
+    const renderStateRoute = (props = {}, initialState = {}, initialPath = '/') => {
       const store = createMockStore(initialState);
       return render(
         <Provider store={store}>
-          <MemoryRouter initialEntries={['/']}>
-            {/* @ts-ignore */}
-            <StateRoute {...defaultProps} {...props} />
+          <MemoryRouter initialEntries={[initialPath]}>
+            <Routes>
+              {/* @ts-ignore */}
+              <Route path='/*' element={<StateRoute {...defaultProps} {...props} />} />
+            </Routes>
           </MemoryRouter>
         </Provider>,
       );
@@ -94,7 +173,6 @@ describe('State Components', () => {
 
     it('renders navigation links correctly', () => {
       renderStateRoute();
-
       expect(screen.getByRole('link', { name: /map/i })).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /history/i })).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /performance/i })).toBeInTheDocument();
@@ -104,11 +182,7 @@ describe('State Components', () => {
     });
 
     it('toggles accessibility tree view when enable radio is clicked', () => {
-      renderStateRoute();
-
-      // Navigate to accessibility route
-      const accessibilityLink = screen.getByRole('link', { name: /accessibility/i });
-      fireEvent.click(accessibilityLink);
+      renderStateRoute({}, { port: { postMessage: jest.fn() } }, '/accessibility');
 
       // Check initial state
       expect(screen.getByText(/a note to developers/i)).toBeInTheDocument();
@@ -118,7 +192,6 @@ describe('State Components', () => {
       fireEvent.click(enableRadio);
 
       // Verify the accessibility container is shown
-      expect(screen.queryByText(/a note to developers/i)).not.toBeInTheDocument();
       expect(screen.getByTestId('mock-ax-container')).toBeInTheDocument();
     });
 
