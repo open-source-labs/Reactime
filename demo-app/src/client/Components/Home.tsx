@@ -12,9 +12,10 @@ function Home(): JSX.Element {
       style={{
         backgroundColor: theme.backgroundColor,
         color: theme.textColor,
+        boxShadow: `0 4px 6px ${theme.backgroundColor === '#1a202c' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
       }}
     >
-      <h2>REACTIME - DEMO APP</h2>
+      <h2 style={{ color: theme.textColor }}>REACTIME - DEMO APP</h2>
 
       {user ? (
         <div>
@@ -24,10 +25,6 @@ function Home(): JSX.Element {
             style={{
               backgroundColor: theme.primaryColor,
               color: theme.backgroundColor,
-              padding: '8px 16px',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
             }}
           >
             Logout
@@ -41,10 +38,6 @@ function Home(): JSX.Element {
             style={{
               backgroundColor: theme.primaryColor,
               color: theme.backgroundColor,
-              padding: '8px 16px',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
             }}
           >
             Login as Test User
@@ -54,24 +47,14 @@ function Home(): JSX.Element {
             style={{
               backgroundColor: theme.secondaryColor,
               color: theme.backgroundColor,
-              padding: '8px 16px',
-              border: 'none',
-              borderRadius: '4px',
               marginLeft: '8px',
-              cursor: 'pointer',
             }}
           >
             Login as Admin
           </button>
         </div>
       )}
-
-      <p>
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-        ut labore et dolore magna aliqua..."
-      </p>
     </div>
   );
 }
-
 export default Home;

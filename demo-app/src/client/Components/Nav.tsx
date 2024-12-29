@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import ThemeToggle from './ThemeToggle';
 
 function Nav(): JSX.Element {
   return (
@@ -16,6 +17,7 @@ function Nav(): JSX.Element {
       <Link className='link' to='/reducer'>
         Reducer Counter
       </Link>
+      <ThemeToggle />
     </div>
   );
 }
