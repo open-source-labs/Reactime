@@ -1,6 +1,5 @@
 // src/client/Router.tsx
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '../contexts/ThemeContext';
@@ -12,7 +11,6 @@ import Buttons from './Components/Buttons';
 import ReducerCounter from './Components/ReducerCounter';
 import FunctionalReducerCounter from './Components/FunctionalReducerCounter';
 import FunctionalStateCounter from './Components/FunctionalStateCounter';
-import ThemeToggle from './Components/ThemeToggle';
 
 const domNode = document.getElementById('root');
 if (!domNode) throw new Error('Root element not found');
@@ -48,7 +46,6 @@ root.render(
   <AuthProvider>
     <ThemeProvider>
       <BrowserRouter>
-        <ThemeToggle />
         <Nav />
         <Routes>
           <Route path='/' element={<Home />} />
