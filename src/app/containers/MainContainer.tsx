@@ -46,17 +46,12 @@ function MainContainer(): JSX.Element {
   }) => {
     let maxTab: number;
 
-    // Add validation check
     if (!sourceTab && action !== 'keepAlive') {
-      // Ensure payload exists and is an object
-      if (payload && typeof payload === 'object') {
-        const tabsArray = Object.keys(payload);
-        const numTabsArray = tabsArray.map((tab) => Number(tab));
-        maxTab = numTabsArray.length > 0 ? Math.max(...numTabsArray) : 0;
-      } else {
-        console.warn('Invalid payload received:', payload);
-        maxTab = 0;
-      }
+      // if the sourceTab doesn't exist or is 0 and it is not a 'keepAlive' action
+      const tabsArray: Array<string> = Object.keys(payload); // we create a tabsArray of strings composed of keys from our payload object
+      const numTabsArray: number[] = tabsArray.map((tab) => Number(tab)); // we then map out our tabsArray where we convert each string into a number
+
+      maxTab = Math.max(...numTabsArray); // we then get the largest tab number value
     }
 
     switch (action) {
@@ -78,6 +73,7 @@ function MainContainer(): JSX.Element {
       }
       case 'sendSnapshots': {
         dispatch(setTab(payload));
+        // set state with the information received from the background script
         dispatch(addNewSnapshots(payload));
         break;
       }
