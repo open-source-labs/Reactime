@@ -241,7 +241,6 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           {
             title: 'Viewing History Snapshot',
             element: '.display',//document.querySelectorAll('.snapshotNode')[0]
-            element: '.node active', //document.querySelectorAll('.snapshotNode')[0]
             intro:
               'Each node will represent a snapshot in the page. <ul><li>A single snapshot will show as a node while multiple snapshots will be represented as a timeline.</li><li>Highlighting over one will show any state changes compared to the previous snapshot. </li><li>Clicking a node will set the snapshot as the current one.</li></ul>',
             position: 'top',
