@@ -39,11 +39,22 @@
 ### 🔹 Viewing
 
 You can view your application's file structure and click on a snapshot to view
-your app's state. State can be visualized in a Component Graph, JSON Tree, or
-Performance Graph. Snapshot history can be visualized in the History tab.
+your app's state. State can be visualized in a Component Graph, JSON Tree, 
+Performance Graph, or the Accessibility Tree. Snapshot history can be visualized in the History tab.
 The Web Metrics tab provides some useful metrics for site performance. The accessibility tab
 visualizes an app's accessibility tree per state change.
 Snapshots can be compared with the previous snapshot, which can be viewed in Diff mode.
+
+<p>On the main page, there are two main selections from the dropdown panel:</p>
+<ul>
+  <li>
+    <strong>Timejump Tab</strong>: View and navigate through the snapshot history of your application's state. You can jump to any point in time to see how the state evolves across changes.
+  </li>
+  <li>
+    <strong>Provider/Consumer Tab</strong>: Understand your application's context dependencies and their interactions better through visualizing its provider and consumer relationships.
+  </li>
+</ul>
+
 <br>
 <br>
 
@@ -103,11 +114,18 @@ Performance tab in Chrome DevTools under the Reactime panel.
 <br>
 <br>
 
-### 🔹 Jumping
+### 🔹 Jump through your snapshots
 
-Using the actions sidebar, a user can jump to any previously recorded snapshots.
+Each recorded snapshot comes with its own corresponding vertical slider. 
+By adjusting the slider a user can jump to any previously recorded snapshots.
 Hitting the jump button on any snapshot will allow a user to view state data at
 any point in the history of the target application.
+<br>
+<br>
+
+### 🔹 Play through your snapshots
+
+Users can play through recorded snapshots using the Play/Pause button below the snapshots panel and adjust the playback speed to suit their needs.
 <br>
 <br>
 
@@ -250,7 +268,11 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 - [Relaunching Reactime: Updates and a New Accessibility Feature!](https://medium.com/@evaury/relaunching-reactime-updates-and-a-new-accessibility-feature-1f0fd3a5bd8c)
 
 ## <b>Authors</b>
-
+- **Garrett Chow** - [@garrettlchow](https://github.com/garrettlchow)
+- **Ellie Simens** - [@elliesimens](https://github.com/elliesimens)
+- **Ragad Mohammed** - [@ragad-mohammed](https://github.com/ragad-mohammed)
+- **Daniel Ryczek** - [@dryczek14](https://github.com/dryczek01)
+- **Patrice Pinardo** - [@pinardo88](https://github.com/pinardo88)
 - **Haider Ali** - [@hali03](https://github.com/hali03)
 - **Jose Luis Sanchez** - [@JoseSanchez1996](https://github.com/JoseSanchez1996)
 - **Logan Nelsen** - [@ljn16](https://github.com/ljn16)
