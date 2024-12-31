@@ -14,7 +14,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["http://localhost/*", "<all_urls>"],
+      "matches": ["http://localhost/*"],
       "js": ["bundles/content.bundle.js"]
     }
   ],
