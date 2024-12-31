@@ -1,6 +1,6 @@
 .action-container {
-  background: white;
-  border-right: 1px solid #e5e7eb;
+  background: var(--bg-primary);
+  border-right: 1px solid var(--border-color);
   transition: width 0.3s ease;
   overflow-x: hidden;
   overflow-y: auto;
@@ -15,32 +15,6 @@
   }
 }
 
-.collapsed .action-container {
-  .action-button-wrapper {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-.actionname {
-  background-color: $indiv-action-input-bg;
-  border: 1px solid $indiv-action-border;
-  color: $indiv-action-custom-text;
-}
-
-::placeholder {
-  color: $indiv-action-filler-text;
-}
-
-.actionToolContainer {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.toggle-record {
-  color: $toggle-record-text;
-}
-
 .clear-button-container {
   padding: 16px;
 }
@@ -48,5 +22,3 @@
 .dropdown-container {
   padding: 4px 16px;
 }
-
-

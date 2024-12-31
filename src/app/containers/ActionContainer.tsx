@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import React, { useEffect, useState, useRef } from 'react';
 import Action from '../components/Actions/Action';
-import { emptySnapshots, changeView, changeSlider } from '../slices/mainSlice';
+import { emptySnapshots, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import RouteDescription from '../components/Actions/RouteDescription';
 import DropDown from '../components/Actions/DropDown';
@@ -14,8 +14,6 @@ import RecordButton from '../components/Actions/RecordButton';
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
 */
 
-// resetSlider locates the rc-slider elements on the document and resets it's style attributes
-
 function ActionContainer(props: ActionContainerProps): JSX.Element {
   const [dropdownSelection, setDropdownSelection] = useState('Time Jump');
   const actionsEndRef = useRef(null as unknown as HTMLDivElement);
@@ -24,12 +22,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
 
   const { currLocation, hierarchy, sliderIndex, viewIndex }: Partial<CurrentTab> = tabs[currentTab]; // we destructure the currentTab object
-  const {
-    toggleActionContainer, // function that handles Time Jump Sidebar view from MainContainer
-    actionView, // local state declared in MainContainer
-    setActionView, // function to update actionView state declared in MainContainer,
-    snapshots,
-  } = props;
+  const { snapshots } = props;
   const [recordingActions, setRecordingActions] = useState(true); // We create a local state 'recordingActions' and set it to true
   let actionsArr: JSX.Element[] = []; // we create an array 'actionsArr' that will hold elements we create later on
   // we create an array 'hierarchyArr' that will hold objects and numbers
@@ -40,7 +33,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
     if (actionsEndRef.current) {
       actionsEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [snapshots]); // Dependency on snapshots array
+  }, [snapshots]);
 
   const displayArray = (obj: Obj): void => {
     if (
@@ -78,28 +71,6 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   // the hierarchy gets set on the first click in the page
   if (hierarchy) displayArray(hierarchy); // when page is refreshed we may not have a hierarchy so we need to check if hierarchy was initialized. If it was initialized, invoke displayArray to display the hierarchy
 
-  // This function allows us to use our arrow keys to jump between snapshots. It passes an event and the index of each action-component. Using the arrow keys allows us to highligh snapshots and the enter key jumps to the selected snapshot
-  function handleOnKeyDown(e: Partial<KeyboardEvent>, i: number): void {
-    let currIndex = i;
-
-    if (e.key === 'ArrowUp') {
-      // up arrow key pressed
-      currIndex--;
-      if (currIndex < 0) return;
-      dispatch(changeView(currIndex));
-    } else if (e.key === 'ArrowDown') {
-      // down arrow key pressed
-      currIndex++;
-      if (currIndex > hierarchyArr.length - 1) return;
-      dispatch(changeView(currIndex));
-    } else if (e.key === 'Enter') {
-      // enter key pressed
-      e.stopPropagation(); // prevents further propagation of the current event in the capturing and bubbling phases
-      e.preventDefault(); // needed or will trigger onClick right after
-      dispatch(changeSlider(currIndex));
-    }
-  }
-
   // Sort hierarchyArr by index property of each object. This will be useful when later when we build our components so that our components will be displayed in index/chronological order
   hierarchyArr.sort((a: Obj, b: Obj): number => a.index - b.index);
 
@@ -129,7 +100,6 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
           selected={selected}
           last={last}
           sliderIndex={sliderIndex}
-          handleOnkeyDown={handleOnKeyDown}
           viewIndex={viewIndex}
           isCurrIndex={isCurrIndex}
           routePath={snapshot.routePath}
@@ -166,62 +136,43 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   // UNLESS actionView={true} is passed into <ActionContainer /> in the beforeEach() call in ActionContainer.test.tsx
   return (
     <div id='action-id' className='action-container'>
-      <div className='actionToolContainer'>
-        <div id='arrow'>
-          <aside className='aside'>
-            <a
-              onClick={(e) => {
-                e.stopPropagation;
-                toggleActionContainer();
-              }}
-              className='toggle'
-            >
-              {' '}
-              <i />
-            </a>
-          </aside>
-          <div className='collapse'>Collapse</div>
+      <div className='action-button-wrapper'>
+        <RecordButton
+          isRecording={recordingActions}
+          onToggle={() => {
+            toggleRecord();
+            setRecordingActions(!recordingActions);
+          }}
+        />
+        <DropDown
+          dropdownSelection={dropdownSelection}
+          setDropdownSelection={setDropdownSelection}
+        />
+        <div className='clear-button-container'>
+          <Button
+            className='clear-button-modern'
+            variant='text'
+            onClick={() => {
+              dispatch(emptySnapshots()); // set slider back to zero, visually
+              dispatch(changeSlider(0));
+            }}
+            type='button'
+          >
+            Clear
+          </Button>
+        </div>
+        <div className='snapshots'>
+          {dropdownSelection === 'Providers / Consumers' && (
+            <ProvConContainer currentSnapshot={currLocation.stateSnapshot} />
+          )}
+          {dropdownSelection === 'Time Jump' &&
+            Object.keys(routes).map((route, i) => (
+              <RouteDescription key={`route${i}`} actions={routes[route]} />
+            ))}
+          {/* Add ref for scrolling */}
+          <div ref={actionsEndRef} />
         </div>
       </div>
-      {actionView ? (
-        <div className='action-button-wrapper'>
-          <RecordButton
-            isRecording={recordingActions}
-            onToggle={() => {
-              toggleRecord();
-              setRecordingActions(!recordingActions);
-            }}
-          />
-          <DropDown
-            dropdownSelection={dropdownSelection}
-            setDropdownSelection={setDropdownSelection}
-          />
-          <div className='clear-button-container'>
-            <Button
-              className='clear-button-modern'
-              variant='text'
-              onClick={() => {
-                dispatch(emptySnapshots()); // set slider back to zero, visually
-                dispatch(changeSlider(0));
-              }}
-              type='button'
-            >
-              Clear
-            </Button>
-          </div>
-          <div className='snapshots'>
-            {dropdownSelection === 'Providers / Consumers' && (
-              <ProvConContainer currentSnapshot={currLocation.stateSnapshot} />
-            )}
-            {dropdownSelection === 'Time Jump' &&
-              Object.keys(routes).map((route, i) => (
-                <RouteDescription key={`route${i}`} actions={routes[route]} />
-              ))}
-            {/* Add ref for scrolling */}
-            <div ref={actionsEndRef} />
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 }

@@ -12,7 +12,7 @@ import {
   setTab,
   deleteTab,
   noDev,
-  aReactApp, // JR added 12.20.23 9.53pm
+  aReactApp,
   setCurrentLocation,
   disconnected,
   endConnect,
@@ -28,36 +28,6 @@ function MainContainer(): JSX.Element {
   const dispatch = useDispatch();
 
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
-  //JR: check connection status
-  const { connectionStatus }: MainState = useSelector((state: RootState) => state.main);
-
-  console.log('MainContainer connectionStatus at initialization: ', connectionStatus);
-
-  const [actionView, setActionView] = useState(true); // We create a local state 'actionView' and set it to true
-
-  // this function handles Time Jump sidebar view
-  const toggleActionContainer = () => {
-    setActionView(!actionView); // sets actionView to the opposite boolean value
-
-    const bodyContainer = document.getElementById('bodyContainer');
-    bodyContainer.classList.toggle('collapsed');
-
-    const toggleElem = document.querySelector('aside'); // aside is like an added text that appears "on the side" aside some text.
-    toggleElem.classList.toggle('no-aside'); // toggles the addition or the removal of the 'no-aside' class
-
-    //JR: added for collapse label
-    const collapse = document.querySelector('.collapse');
-    collapse.classList.toggle('hidden');
-
-    const recordBtn = document.getElementById('recordBtn');
-
-    if (recordBtn.style.display === 'none') {
-      // switches whether to display the record toggle button by changing the display property between none and flex
-      recordBtn.style.display = 'flex';
-    } else {
-      recordBtn.style.display = 'none';
-    }
-  };
 
   // Function handles when Reactime unexpectedly disconnects
   const handleDisconnect = (msg): void => {
@@ -74,7 +44,6 @@ function MainContainer(): JSX.Element {
     payload: Record<string, unknown>;
     sourceTab: number;
   }) => {
-    // const { action, payload, sourceTab } = message;
     let maxTab: number;
 
     if (!sourceTab && action !== 'keepAlive') {
@@ -94,7 +63,6 @@ function MainContainer(): JSX.Element {
         dispatch(noDev(payload));
         break;
       }
-      // JR 12.20.23 9.53pm added a listener case for sending aReactApp to frontend
       case 'aReactApp': {
         dispatch(aReactApp(payload));
         break;
@@ -121,7 +89,6 @@ function MainContainer(): JSX.Element {
     }
   };
 
-  // useEffect(() => {
   async function awaitPortConnection() {
     if (port) return; // only open port once so if it exists, do not run useEffect again
 
@@ -148,10 +115,7 @@ function MainContainer(): JSX.Element {
     dispatch(endConnect());
   }
   awaitPortConnection();
-  // });
 
-  // Error Page launch IF(Content script not launched OR RDT not installed OR Target not React app)
-  // setTimeout(() => {
   if (
     !tabs[currentTab] ||
     //@ts-ignore
@@ -162,8 +126,6 @@ function MainContainer(): JSX.Element {
     // @ts-ignore
     return <ErrorContainer port={port} />;
   }
-
-  // }, 5000);
 
   const { axSnapshots, currLocation, viewIndex, sliderIndex, snapshots, hierarchy, webMetrics } =
     tabs[currentTab]; // we destructure the currentTab object which is passed in from background.js
@@ -209,13 +171,7 @@ function MainContainer(): JSX.Element {
   return (
     <div className='main-container'>
       <div id='bodyContainer' className='body-container'>
-        <ActionContainer
-          actionView={actionView}
-          setActionView={setActionView}
-          toggleActionContainer={toggleActionContainer}
-          snapshots={snapshots}
-          currLocation={currLocation}
-        />
+        <ActionContainer snapshots={snapshots} currLocation={currLocation} />
         {/* @ts-ignore */}
         {snapshots.length ? (
           <div className='state-container-container'>

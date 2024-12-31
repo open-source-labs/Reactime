@@ -3,23 +3,19 @@ import { useTheme } from '../../contexts/ThemeContext';
 
 const ThemeToggle = (): JSX.Element => {
   const { theme, toggleTheme } = useTheme();
+  const isDark = theme.backgroundColor === '#1a202c';
 
   return (
     <button
       onClick={toggleTheme}
+      className='theme-toggle'
       style={{
-        backgroundColor: theme.primaryColor,
-        color: theme.backgroundColor,
-        padding: '8px 16px',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        position: 'fixed',
-        top: '10px',
-        right: '10px',
+        backgroundColor: theme.backgroundColor,
+        color: theme.textColor,
+        border: `2px solid ${theme.primaryColor}`,
       }}
     >
-      Toggle Theme
+      {isDark ? '☀️ Light Mode' : '🌙 Dark Mode'}
     </button>
   );
 };

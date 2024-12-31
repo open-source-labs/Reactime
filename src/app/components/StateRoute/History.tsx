@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable */
 // @ts-nocheck
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 // formatting findDiff return data to show the changes with colors, aligns with actions.tsx
 import { diff, formatters } from 'jsondiffpatch';
 import * as d3 from 'd3';
@@ -41,6 +41,8 @@ function History(props: Record<string, unknown>): JSX.Element {
 
   const svgRef = React.useRef(null);
   const root = JSON.parse(JSON.stringify(hierarchy));
+  const historyEndRef = useRef<HTMLDivElement>(null);
+
   // setting the margins for the Map to render in the tab window.
   const innerWidth: number = totalWidth - margin.left - margin.right;
   const innerHeight: number = totalHeight - margin.top - margin.bottom - 60;
@@ -98,7 +100,7 @@ function History(props: Record<string, unknown>): JSX.Element {
       return changedState;
     }
 
-    if (index === 0) return 'Initial State';
+    if (index === 0) return '<span class="initial-state">Initial State</span>';
 
     // Add null checks for snapshots
     if (!snapshots || !snapshots[index] || !snapshots[index - 1]) {
@@ -111,7 +113,7 @@ function History(props: Record<string, unknown>): JSX.Element {
         statelessCleaning(snapshots[index]),
       );
 
-      if (!delta) return 'No state changes';
+      if (!delta) return '<span class="no-changes">No State Changes</span>';
 
       const changedState = findStateChangeObj(delta);
       return changedState.length > 0 ? formatters.html.format(changedState[0]) : 'No state changes';
@@ -239,21 +241,26 @@ function History(props: Record<string, unknown>): JSX.Element {
       .style('padding-left', '8px')
       .html((d) => findDiff(d.data.index));
 
+    if (historyEndRef.current) {
+      historyEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
     return svg.node();
   };
 
   useEffect(() => {
     makeD3Tree();
-  }, [root /*, currLocation*/]); // if the 'root' or 'currLocation' changes, re-build the D3 Tree
+  }, [root, currLocation]);
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('history')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.
   }, []);
 
-  // then rendering each node in History tab to render using D3, which will share area with LegendKey
   return (
-    <div className='display'>
-      <svg ref={svgRef} width={totalWidth} height={totalHeight} />
+    <div className='history-view'>
+      <div className='display'>
+        <svg ref={svgRef} width={totalWidth} height={totalHeight} />
+        <div ref={historyEndRef} className='history-end-anchor' />
+      </div>
     </div>
   );
 }

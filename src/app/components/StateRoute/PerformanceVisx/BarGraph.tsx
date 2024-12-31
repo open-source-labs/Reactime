@@ -26,9 +26,9 @@ const margin = {
   bottom: 0,
   left: 70,
 };
-const axisColor = '#161617';
-const axisTickLabelColor = '#363638';
-const axisLabelColor = '#363638';
+const axisColor = 'var(--text-primary)';
+const axisTickLabelColor = 'var(--text-secondary)';
+const axisLabelColor = 'var(--text-primary)';
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
@@ -111,7 +111,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
   // setting max dimensions and scale ranges
   const xMax = width - margin.left - margin.right;
   snapshotIdScale.rangeRound([0, xMax]);
-  const yMax = height - margin.top - 150;
+  const yMax = height - margin.top - 100;
   renderingScale.range([yMax, 0]);
 
   const toStorage = {
@@ -124,10 +124,12 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     <div className='bargraph-position'>
       <div className='saveSeriesContainer'>
         <form className='routesForm' id='routes-formcontrol'>
-          <label id='routes-dropdown'>Route: </label>
+          <label id='routes-dropdown' htmlFor='routes-select'>
+            Route:{' '}
+          </label>
           <select
             className='performance-dropdown'
-            labelId='demo-simple-select-label'
+            labelid='demo-simple-select-label'
             id='routes-select'
             onChange={(e) => {
               setRoute(e.target.value);
@@ -145,11 +147,17 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           </select>
         </form>
         <form className='routesForm' id='routes-formcontrol'>
-          <label id='routes-dropdown'>Snapshot: </label>
+          <label id='routes-dropdown' htmlFor='snapshot-select'>
+            Snapshot:{' '}
+          </label>
           <select
-            labelId='demo-simple-select-label'
+            labelid='demo-simple-select-label'
             id='snapshot-select'
-            onChange={(e) => setSnapshot(e.target.value)}
+            value={snapshot}
+            onChange={(e) => {
+              e.preventDefault();
+              setSnapshot(e.target.value);
+            }}
           >
             <option value='All Snapshots'>All Snapshots</option>
             {filteredSnapshots.map((route) => (

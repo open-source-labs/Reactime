@@ -8,16 +8,11 @@
     'actions states'
     'bottom bottom';
   transition: grid-template-columns 0.3s ease;
-
-  &.collapsed {
-    grid-template-columns: 45px 1fr;
-  }
 }
 
 .bottom-controls {
   grid-area: bottom;
   display: flex;
   width: 100%;
-  border-top: 1px solid #e5e7eb;
-  background: white;
+  border-top: 1px solid var(--border-color);
 }

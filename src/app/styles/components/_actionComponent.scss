@@ -3,8 +3,8 @@
 }
 
 .route-header {
-  background-color: #1f2937;
-  color: #ffffff;
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
   padding: 10px;
   font-size: 14px;
 }
@@ -24,17 +24,17 @@
 .action-component {
   display: flex;
   padding: 6px 16px;
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
   transition: background-color 200ms ease;
 }
 
 .action-component:hover {
-  background-color: #f9fafb;
+  background-color: var(--hover-bg);
 }
 
 .action-component.selected {
-  background-color: #f3f4f6;
+  background-color: var(--selected-bg);
 }
 
 .action-component-trigger {
@@ -53,13 +53,13 @@
   border: none;
   background: transparent;
   font-size: 1rem;
-  color: #374151;
+  color: var(--text-primary);
   width: 100%;
   padding: 2px 0;
 }
 
 .actionname::placeholder {
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .actionname:focus {
@@ -71,8 +71,8 @@
 .jump-button,
 .current-location {
   min-width: 90px;
-  height: 28px; /* Fixed height for better vertical centering */
-  padding: 0 8px; /* Reduced vertical padding */
+  height: 28px;
+  padding: 0 8px;
   border-radius: 6px;
   font-size: 0.9375rem;
   font-weight: 500;
@@ -85,22 +85,27 @@
 }
 
 .time-button {
-  color: #6b7280;
+  color: var(--text-secondary);
   background: transparent;
 }
 
 .jump-button {
-  color: white;
-  background: #111827;
+  color: var(--button-primary-text);
+  background: var(--button-primary-bg);
+  display: none;
+  transition: all 200ms ease;
 }
 
 .jump-button:hover {
-  background: #374151;
+  background: var(--text-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 .current-location {
-  color: #059669;
-  background: #ecfdf5;
+  color: var(--color-primary);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--color-primary);
 }
 
 /* Hide/show button transitions */
@@ -112,16 +117,12 @@
   display: block;
 }
 
-.jump-button {
-  display: none;
-}
-
 .current-snap {
-  font-weight: bold;
+  font-weight: 700;
   border: none;
   background: transparent;
   font-size: 1rem;
-  color: #374151;
+  color: var(--text-primary);
   width: 100%;
-  padding: 2px 24px 2px 0px;
+  padding: 2px 0px;
 }
