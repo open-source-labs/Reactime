@@ -6,6 +6,8 @@ import ErrorMsg from '../components/ErrorHandling/ErrorMsg';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainState, RootState, ErrorContainerProps } from '../FrontendTypes';
 import { current } from '@reduxjs/toolkit';
+import { RefreshCw, Github, PlayCircle } from 'lucide-react';
+
 /*
 This is the loading screen that a user may get when first initalizing the application. This page checks:
 
@@ -107,38 +109,61 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
 
   return (
     <div className='error-container'>
-      <img src='../assets/whiteBlackSquareLogo.png' alt='Reactime Logo' height='50px' />
+      <img src='../assets/whiteBlackSquareLogo.png' alt='Reactime Logo' className='error-logo' />
 
-      <h2>Launching Reactime on tab: {currentTitle}</h2>
+      <div className='error-content'>
+        <div className='error-alert'>
+          <div className='error-title'>
+            <RefreshCw size={20} />
+            Welcome to Reactime
+          </div>
 
-      <div className='loaderChecks'>
-        <p>Checking if content script has been launched on current tab</p>
-        <Loader loading={loadingArray[0]} result={status.contentScriptLaunched} />
+          <div className='loaderChecks'>
+            <p>Checking if content script has been launched on current tab</p>
+            <Loader loading={loadingArray[0]} result={status.contentScriptLaunched} />
 
-        <p>Checking if React Dev Tools has been installed</p>
-        <Loader loading={loadingArray[1]} result={status.reactDevToolsInstalled} />
+            <p>Checking if React Dev Tools has been installed</p>
+            <Loader loading={loadingArray[1]} result={status.reactDevToolsInstalled} />
 
-        <p>Checking if target is a compatible React app</p>
-        <Loader loading={loadingArray[2]} result={status.targetPageisaReactApp} />
+            <p>Checking if target is a compatible React app</p>
+            <Loader loading={loadingArray[2]} result={status.targetPageisaReactApp} />
+          </div>
+
+          <p className='error-description'>
+            To ensure Reactime works correctly with your React application, please refresh your
+            development page. This allows Reactime to properly connect with your app and start
+            monitoring state changes.
+          </p>
+          <p className='error-description'>
+            Important: Reactime requires React Developer Tools to be installed. If you haven't
+            already, please{' '}
+            <a
+              href='https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='devtools-link'
+            >
+              install React Developer Tools
+            </a>{' '}
+            first.
+          </p>
+        </div>
+
+        <p className='error-note'>
+          Note: Reactime only works with React applications and by default only launches on URLs
+          starting with localhost.
+        </p>
+
+        <a
+          href='https://github.com/open-source-labs/reactime'
+          target='_blank'
+          rel='noopener noreferrer'
+          className='github-link'
+        >
+          <Github size={18} />
+          Visit Reactime Github for more information
+        </a>
       </div>
-
-      <br />
-      <div className='errorMsg'>
-        <ErrorMsg
-          loadingArray={loadingArray}
-          status={status}
-          launchContent={launch}
-          reinitialize={reinitialize}
-        />
-      </div>
-      <br />
-      <a
-        href='https://github.com/open-source-labs/reactime'
-        target='_blank'
-        rel='noopener noreferrer'
-      >
-        Please visit the Reactime Github for more info.
-      </a>
     </div>
   );
 }
