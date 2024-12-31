@@ -1,3 +1,7 @@
+// import 'core-js';
+
+import { invoke } from 'lodash';
+
 // Store ports in an array.
 const portsArr = [];
 const reloaded = {};
@@ -360,21 +364,37 @@ chrome.runtime.onConnect.addListener(async (port) => {
   }
 
   if (Object.keys(tabsObj).length > 0) {
-    console.log('Sending initial snapshots to devtools:', tabsObj);
     port.postMessage({
       action: 'initialConnectSnapshots',
       payload: tabsObj,
     });
-  } else {
-    console.log('No snapshots to send to devtools on reconnect.');
   }
 
-  // Handles port disconnection by removing the disconnected port  -ellie
-  port.onDisconnect.addListener(() => {
-    const index = portsArr.indexOf(port);
-    if (index !== -1) {
-      console.warn(`Port at index ${index} disconnected. Removing it.`);
-      portsArr.splice(index, 1);
+  // Handles port disconnection by removing the disconnected port and attempting reconnection after 1s delay
+  // This prevents permanent connection loss during idle periods or temporary disconnects -ellie
+  port.onDisconnect.addListener((e) => {
+    for (let i = 0; i < portsArr.length; i += 1) {
+      if (portsArr[i] === e) {
+        portsArr.splice(i, 1);
+        // chrome.runtime.sendMessage({ action: 'portDisconnect', port: e.name });
+        setTimeout(async () => {
+          try {
+            const newPort = chrome.runtime.connect({ name: 'reconnected' }); // Attempt to reconnect
+            if (newPort) {
+              portsArr.push(newPort); // Add the new port to the array
+              newPort.onMessage.addListener((msg) => {
+                console.log('Message received on reconnected port:', msg);
+              });
+              console.log('Port successfully reconnected');
+            } else {
+              console.warn('Failed to reconnect port');
+            }
+          } catch (error) {
+            console.warn('Port reconnection attempt failed:', error);
+          }
+        }, 1000);
+        break;
+      }
     }
   });
 
@@ -382,6 +402,15 @@ chrome.runtime.onConnect.addListener(async (port) => {
   // listen for message containing a snapshot from devtools and send it to contentScript -
   // (i.e. they're all related to the button actions on Reactime)
   port.onMessage.addListener(async (msg) => {
+    // msg is action denoting a time jump in devtools
+    // ---------------------------------------------------------------
+    // message incoming from devTools should look like this:
+    // {
+    //   action: 'emptySnap',
+    //   payload: tabsObj,
+    //   tabId: 101
+    // }
+    // ---------------------------------------------------------------
     const { action, payload, tabId } = msg;
 
     switch (action) {
@@ -664,21 +693,15 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
       // sends new tabs obj to devtools
       if (portsArr.length > 0) {
-        portsArr.forEach((bg, index) => {
-          try {
-            bg.postMessage({
-              action: 'sendSnapshots',
-              payload: tabsObj,
-              sourceTab,
-            });
-            console.log(`Sent snapshots to port at index ${index}`);
-          } catch (error) {
-            console.warn(`Failed to send snapshots to port at index ${index}:`, error);
-          }
-        });
-      } else {
-        console.warn('No active ports to send snapshots to.');
+        portsArr.forEach((bg) =>
+          bg.postMessage({
+            action: 'sendSnapshots',
+            payload: tabsObj,
+            sourceTab,
+          }),
+        );
       }
+      break;
     }
     default:
       break;
@@ -752,6 +775,59 @@ chrome.tabs.onActivated.addListener((info) => {
   });
 });
 
+// when reactime is installed
+// create a context menu that will open our devtools in a new window
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: 'reactime',
+    title: 'Reactime',
+    contexts: ['page', 'selection', 'image', 'link'],
+  });
+  setupKeepAlive();
+});
+
 chrome.runtime.onStartup.addListener(() => {
   setupKeepAlive();
+});
+// when context menu is clicked, listen for the menuItemId,
+// if user clicked on reactime, open the devtools window
+
+// JR 12.19.23
+// As of V22, if multiple monitors are used, it would open the reactime panel on the other screen, which was inconvenient when opening repeatedly for debugging.
+// V23 fixes this by making use of chrome.windows.getCurrent to get the top and left of the screen which invoked the extension.
+// As of chrome manifest V3, background.js is a 'service worker', which does not have access to the DOM or to the native 'window' method, so we use chrome.windows.getCurrent(callback)
+// chrome.windows.getCurrent returns a promise (asynchronous), so all resulting functionality must happen in the callback function, or it will run before 'invokedScreen' variables have been captured.
+chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
+  // // this was a test to see if I could dynamically set the left property to be the 0 origin of the invoked DISPLAY (as opposed to invoked window).
+  // // this would allow you to split your screen, keep the browser open on the right side, and reactime always opens at the top left corner.
+  // // however it does not tell you which display is the one that invoked it, just gives the array of all available displays. Depending on your monitor setup, it may differ. Leaving for future iterators
+  // chrome.system.display.getInfo((displayUnitInfo) => {
+  //   console.log(displayUnitInfo);
+  // });
+  chrome.windows.getCurrent((window) => {
+    const invokedScreenTop = 75; // window.top || 0;
+    const invokedScreenLeft = window.width < 1000 ? window.left + window.width - 1000 : window.left;
+    const invokedScreenWidth = 1000;
+    const invokedScreenHeight = window.height - invokedScreenTop || 1000;
+    const options = {
+      type: 'panel',
+      left: invokedScreenLeft,
+      top: invokedScreenTop,
+      width: invokedScreenWidth,
+      height: invokedScreenHeight,
+      url: chrome.runtime.getURL('panel.html'),
+    };
+    if (menuItemId === 'reactime') chrome.windows.create(options);
+  });
+
+  // JR 1.9.23: this code fixes the no target error on load by triggering chrome tab reload before the panel spins up.
+  // It does not solve the root issue, which was deeply researched during v23 but we ran out of time to solve. Please see the readme for more information.
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length) {
+      const invokedTab = tabs[0];
+      const invokedTabId = invokedTab.id;
+      const invokedTabTitle = invokedTab.title;
+      chrome.tabs.reload(invokedTabId);
+    }
+  });
 });

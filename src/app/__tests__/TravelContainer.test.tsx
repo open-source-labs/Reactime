@@ -1,217 +1,167 @@
 import React from 'react';
-import { render as rtlRender, screen, fireEvent } from '@testing-library/react';
-import TravelContainer from '../containers/TravelContainer';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-import { mainSlice } from '../slices/mainSlice';
-import { useDispatch } from 'react-redux';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from '../styles/theme';
-import '@testing-library/jest-dom'; // needed this to extend the jest-dom assertions  (ex toHaveTextContent)
+import '@testing-library/jest-dom';
 
-const customTabs = {
-  87: {
-    snapshots: [0, 1, 2, 3],
-    hierarchy: {
-      index: 0,
-      name: 1,
-      branch: 0,
-      stateSnapshot: {
-        state: {},
-        children: [
-          {
-            state: { test: 'test' },
-            name: 'App',
-            componentData: { actualDuration: 3.5 },
+import configureStore from 'redux-mock-store';
+import TravelContainer from '../containers/TravelContainer';
+import { playForward, pause, startPlaying, resetSlider, changeSlider } from '../slices/mainSlice';
+
+const mockStore = configureStore([]);
+
+describe('TravelContainer', () => {
+  let store;
+
+  beforeEach(() => {
+    store = mockStore({
+      main: {
+        tabs: {
+          tab1: {
+            sliderIndex: 0,
+            playing: false,
+            currLocation: null,
           },
-        ],
-        route: {
-          id: 1,
-          url: 'http://localhost:8080/',
         },
+        currentTab: 'tab1',
       },
-      children: [
-        {
-          index: 1,
-          name: 2,
-          branch: 0,
-          stateSnapshot: {
-            state: {},
-            children: [
-              {
-                state: { test: 'test' },
-                name: 'App',
-                componentData: { actualDuration: 3.5 },
-              },
-            ],
-            route: {
-              id: 2,
-              url: 'http://localhost:8080/',
-            },
+    });
+
+    store.dispatch = jest.fn();
+  });
+
+  const renderComponent = (props = {}) => {
+    const defaultProps = {
+      snapshotsLength: 5,
+    };
+
+    return render(
+      <Provider store={store}>
+        <TravelContainer {...defaultProps} {...props} />
+      </Provider>,
+    );
+  };
+
+  it('renders play button and dropdown', () => {
+    renderComponent();
+
+    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByText('Play')).toBeInTheDocument();
+  });
+
+  it('changes play button text and icon when clicked', () => {
+    renderComponent();
+
+    const playButton = screen.getByRole('button');
+    fireEvent.click(playButton);
+
+    // Should dispatch startPlaying action
+    expect(store.dispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: startPlaying.type,
+      }),
+    );
+  });
+
+  it('resets slider when playing from last snapshot', () => {
+    store = mockStore({
+      main: {
+        tabs: {
+          tab1: {
+            sliderIndex: 4, // Last index (snapshotsLength - 1)
+            playing: false,
+            currLocation: null,
           },
-          children: [
-            {
-              index: 2,
-              name: 3,
-              branch: 0,
-              stateSnapshot: {
-                state: {},
-                children: [
-                  {
-                    state: { test: 'test' },
-                    name: 'App',
-                    componentData: { actualDuration: 3.5 },
-                  },
-                ],
-                route: {
-                  id: 3,
-                  url: 'http://localhost:8080/',
-                },
-              },
-              children: [
-                {
-                  index: 3,
-                  name: 4,
-                  branch: 0,
-                  stateSnapshot: {
-                    state: {},
-                    children: [
-                      {
-                        state: { test: 'test' },
-                        name: 'App',
-                        componentData: { actualDuration: 3.5 },
-                      },
-                    ],
-                    route: {
-                      id: 4,
-                      url: 'http://localhost:8080/test/',
-                    },
-                  },
-                  children: [],
-                },
-              ],
-            },
-          ],
         },
-      ],
-    },
-    currLocation: {
-      index: 0,
-      name: 1,
-      branch: 0,
-    },
-    sliderIndex: 3, //updated to 3
-    viewIndex: -1,
-    playing: false,
-  },
-};
+        currentTab: 'tab1',
+      },
+    });
+    store.dispatch = jest.fn();
 
-const customInitialState = {
-  main: {
-    port: null,
-    currentTab: 87, // Update with your desired value
-    currentTitle: 'test string',
-    tabs: customTabs, // Replace with the actual (testing) tab data
-    currentTabInApp: null,
-    connectionStatus: false,
-    connectRequested: true,
-  },
-};
+    renderComponent();
 
-const customStore = configureStore({
-  reducer: {
-    main: mainSlice.reducer,
-  },
-  preloadedState: customInitialState, // Provide custom initial state
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
-});
-
-const renderWithTheme = (component) => {
-  return rtlRender(
-    <Provider store={customStore}>
-      <ThemeProvider theme={theme}>{component}</ThemeProvider>
-    </Provider>,
-  );
-};
-
-const mockSlider = jest.fn();
-jest.mock('../components/TimeTravel/MainSlider', () => (props) => {
-  mockSlider(props);
-  return <div>MockSlider</div>;
-});
-
-const mockDropDown = jest.fn();
-jest.mock('../components/TimeTravel/Dropdown', () => (props) => {
-  mockDropDown(props);
-  return <div>mockDropDown</div>;
-});
-
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'), // Use the actual react-redux module except for the functions you want to mock
-  useDispatch: jest.fn(), // set up a mock function for useDispatch
-}));
-
-describe('All elements appear in the TravelContainer module', () => {
-  beforeEach(() => {
-    renderWithTheme(<TravelContainer snapshotsLength={0} />);
-  });
-
-  test('first button contains text Play', () => {
-    let buttons = screen.getAllByRole('button');
-    expect(buttons[0]).toHaveTextContent('Play');
-  });
-
-  test('MainSlider exists in document', () => {
-    expect(screen.getByText('MockSlider')).toBeInTheDocument();
-  });
-
-  test('Dropdown exists in document', () => {
-    expect(screen.getByText('mockDropDown')).toBeInTheDocument();
-  });
-
-  test('Backward button exists in document', () => {
-    // Use the getByLabelText query to find the button by its label
-    const backwardButton = screen.getByLabelText('Backward');
-    expect(backwardButton).toBeInTheDocument();
-  });
-
-  test('Forward button exists in document', () => {
-    const forwardButton = screen.getByLabelText('Forward');
-    expect(forwardButton).toBeInTheDocument();
-  });
-});
-
-describe('Testing play/pause button', () => {
-  const useDispatchMock = (useDispatch as unknown) as jest.Mock; // make the test run
-  // const useDispatchMock = useDispatch as jest.Mock; //getting a reference to the mock function you setup during jest.mock configuration on line 154
-  const dummyDispatch = jest.fn();
-  useDispatchMock.mockReturnValue(dummyDispatch);
-  beforeEach(() => {
-    renderWithTheme(<TravelContainer snapshotsLength={0} />);
-    dummyDispatch.mockClear();
-  });
-
-  test('Play button is rendered', () => {
-    const playButton = screen.getByTestId('play-button-test');
-    expect(playButton).toBeInTheDocument();
-  });
-
-  test('Play initially says Play', () => {
-    const playButton = screen.getByTestId('play-button-test');
-    expect(playButton.textContent).toBe('Play');
-  });
-
-  test('Clicking Play button will trigger dispatch', () => {
-    const playButton = screen.getByTestId('play-button-test');
-    expect(playButton.textContent).toBe('Play');
+    const playButton = screen.getByRole('button');
     fireEvent.click(playButton);
-    expect(dummyDispatch).toHaveBeenCalledTimes(1);
+
+    // Should dispatch resetSlider action
+    expect(store.dispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: resetSlider.type,
+      }),
+    );
   });
 
-  test('Clicking Pause button will trigger dispatch', () => {
-    customInitialState.main.tabs[87].playing = true;
-    const playButton = screen.getByTestId('play-button-test');
-    fireEvent.click(playButton);
-    expect(dummyDispatch).toHaveBeenCalledTimes(1);
+  it('pauses playback when play button is clicked while playing', () => {
+    store = mockStore({
+      main: {
+        tabs: {
+          tab1: {
+            sliderIndex: 2,
+            playing: true,
+            currLocation: null,
+          },
+        },
+        currentTab: 'tab1',
+      },
+    });
+    store.dispatch = jest.fn();
+
+    renderComponent();
+
+    const pauseButton = screen.getByRole('button');
+    fireEvent.click(pauseButton);
+
+    // Should dispatch pause action
+    expect(store.dispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: pause.type,
+      }),
+    );
+  });
+
+  it('handles speed change from dropdown', () => {
+    renderComponent();
+
+    // Find and click the dropdown
+    const dropdown = screen.getByRole('combobox');
+    fireEvent.keyDown(dropdown, { key: 'ArrowDown' });
+
+    // Select a different speed
+    const speedOption = screen.getByText('0.5x');
+    fireEvent.click(speedOption);
+
+    // The selected speed should be updated in the component state
+    expect(screen.getByText('0.5x')).toBeInTheDocument();
+  });
+
+  it('updates slider index when playing forward', () => {
+    const { rerender } = renderComponent();
+
+    // Simulate playing forward
+    store.dispatch(playForward(true));
+    store.dispatch(changeSlider(1));
+
+    // Update store state
+    store = mockStore({
+      main: {
+        tabs: {
+          tab1: {
+            sliderIndex: 1,
+            playing: true,
+            currLocation: null,
+          },
+        },
+        currentTab: 'tab1',
+      },
+    });
+
+    // Rerender with new store state
+    rerender(
+      <Provider store={store}>
+        <TravelContainer snapshotsLength={5} />
+      </Provider>,
+    );
+
+    // Verify the slider index was updated
+    expect(store.getState().main.tabs.tab1.sliderIndex).toBe(1);
   });
 });

@@ -2,10 +2,10 @@
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  background-color: white;
+  background-color: var(--bg-primary);
   max-width: 1200px;
   justify-content: space-around;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .routesForm {
@@ -17,7 +17,7 @@
 #routes-dropdown {
   font-size: 14px;
   font-weight: 500;
-  color: #4b5563;
+  color: var(--text-secondary);
   user-select: none;
   white-space: nowrap;
 }
@@ -26,9 +26,9 @@
 #routes-select,
 #snapshot-select,
 .control-select {
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  color: #374151;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   font-size: 14px;
   padding: 6px 12px;
   border-radius: 6px;
@@ -46,8 +46,8 @@
 #routes-select:hover,
 #snapshot-select:hover,
 .control-select:hover {
-  border-color: #d1d5db;
-  background-color: #f3f4f6;
+  border-color: var(--border-color-dark);
+  background-color: var(--bg-tertiary);
 }
 
 .performance-dropdown:focus,
@@ -55,21 +55,21 @@
 #snapshot-select:focus,
 .control-select:focus {
   outline: none;
-  border-color: #14b8a6;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.1);
 }
 
 .routes,
 .control-select option {
   padding: 0.5rem;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 // bar graph background
 .perf-rect {
-  fill: #f9fafb;
+  fill: var(--bg-secondary);
 }
 
 .bargraph-position {
-  background-color: #f9fafb;
+  background-color: var(--bg-secondary);
 }

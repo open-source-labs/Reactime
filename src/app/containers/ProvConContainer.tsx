@@ -6,7 +6,7 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element => {
   const jsonTheme = {
     scheme: 'custom',
     base00: 'transparent',
-    base0B: '#1f2937', // dark navy for strings
+    base0B: '#14b8a6', // dark navy for strings
     base0D: '#60a5fa', // Keys
     base09: '#f59e0b', // Numbers
     base0C: '#EF4444', // Null values
@@ -74,7 +74,7 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element => {
     if (node.props && !isEmptyObject(node.props)) {
       Object.entries(node.props).forEach(([key, value]) => {
         if (!isEmptyObject(value)) {
-          filteredNode[`prop_${key}`] = value;
+          filteredNode[`${key}`] = value;
         }
       });
     }
@@ -108,12 +108,8 @@ const ProvConContainer = (props: ProvConContainerProps): JSX.Element => {
     }
 
     // Flatten root level hooksState if it exists
-    if (node.hooksState && !isEmptyObject(node.hooksState)) {
-      Object.entries(node.hooksState).forEach(([key, value]) => {
-        if (!isEmptyObject(value)) {
-          filteredNode[`hook_${key}`] = value;
-        }
-      });
+    if (node.componentData.hooksState && !isEmptyObject(node.componentData.hooksState)) {
+      filteredNode['State'] = node.componentData.hooksState;
     }
 
     // Process children and add them using the node's name as the key

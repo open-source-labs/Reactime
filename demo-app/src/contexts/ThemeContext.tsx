@@ -14,16 +14,16 @@ type ThemeContextType = {
 
 const defaultTheme: Theme = {
   backgroundColor: '#ffffff',
-  textColor: '#330002',
-  primaryColor: '#f00008',
-  secondaryColor: '#62d6fb',
+  textColor: '#1a202c',
+  primaryColor: '#3182ce',
+  secondaryColor: '#805ad5',
 };
 
 const darkTheme: Theme = {
-  backgroundColor: '#222222',
-  textColor: '#ffffff',
-  primaryColor: '#ff6569',
-  secondaryColor: '#6288fb',
+  backgroundColor: '#1a202c',
+  textColor: '#f7fafc',
+  primaryColor: '#63b3ed',
+  secondaryColor: '#b794f4',
 };
 
 export const ThemeContext = createContext<ThemeContextType>({
@@ -36,7 +36,13 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const toggleTheme = () => {
     setIsDark(!isDark);
+    document.body.setAttribute('data-theme', !isDark ? 'dark' : 'light');
   };
+
+  // Set initial theme
+  React.useEffect(() => {
+    document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  }, []);
 
   const value = {
     theme: isDark ? darkTheme : defaultTheme,

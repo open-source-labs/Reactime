@@ -7,64 +7,63 @@
 
 /* Node rectangle styling */
 .node rect {
-  fill: #ffffff;
-  stroke: #e5e7eb;
+  fill: var(--bg-primary);
+  stroke: var(--border-color);
   stroke-width: 1px;
   transition: all 200ms ease;
 }
 
 .node:hover rect {
-  stroke: #14b8a6;
+  stroke: var(--color-primary);
   stroke-width: 2px;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
 /* Node text styling */
 .node text {
-  font-family: 'Outfit', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  fill: #374151;
+  fill: var(--text-primary);
 }
 
 /* Parent node specific styling */
 .node--internal rect {
-  fill: #ffffff;
-  stroke: #e5e7eb;
+  fill: var(--bg-primary);
+  stroke: var(--border-color);
 }
 
 .node--internal:hover rect {
-  stroke: #14b8a6;
+  stroke: var(--color-primary);
   stroke-width: 2px;
 }
 
 .node--internal text {
   font-size: 14px;
   font-weight: 500;
-  fill: #374151;
+  fill: var(--text-primary);
 }
 
 /* Current/active node styling */
 .node.active rect {
-  stroke: #14b8a6;
+  stroke: var(--color-primary);
   stroke-width: 2px;
 }
 
 /* Link styling */
 .link {
   fill: none;
-  stroke: #e5e7eb;
+  stroke: var(--border-color);
   stroke-width: 2px;
   transition: stroke 200ms ease;
 }
 
 .link:hover {
-  stroke: #d1d5db;
+  stroke: var(--border-color-dark);
 }
 
 /* Current path highlight */
 .link.current-link {
-  stroke: #14b8a6;
+  stroke: var(--color-primary);
   stroke-opacity: 0.6;
 }
 
@@ -72,13 +71,12 @@
 div.tooltip {
   position: absolute;
   padding: 12px;
-  color: #374151;
+  color: var(--text-primary);
   z-index: 100;
-  font-family: 'Outfit', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -88,11 +86,10 @@ div.tooltip {
 
 /* Container styling */
 .display {
-  background-color: #f9fafb;
-  height: 100%;
-  width: 100%;
-  overflow: auto; /* Enable scrolling */
-  position: relative; /* Create new stacking context */
+  background-color: var(--bg-secondary);
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
 }
 
 /* State changes text container styling */
@@ -102,7 +99,7 @@ div.tooltip {
   overflow-x: hidden;
   scrollbar-width: thin;
   padding-right: 6px;
-  scrollbar-color: #cbd5e1 #f1f5f9;
+  scrollbar-color: var(--border-color-dark) var(--bg-secondary);
 }
 
 /* Custom scrollbar styling for Webkit browsers */
@@ -111,15 +108,15 @@ div.tooltip {
 }
 
 .node foreignObject div::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--bg-secondary);
   border-radius: 3px;
 }
 
 .node foreignObject div::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--border-color-dark);
   border-radius: 3px;
 }
 
 .node foreignObject div::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--text-tertiary);
 }

@@ -7,17 +7,8 @@ import { useDispatch } from 'react-redux';
 const Action = (props: ActionProps): JSX.Element => {
   const dispatch = useDispatch();
 
-  const {
-    selected,
-    last,
-    index,
-    sliderIndex,
-    displayName,
-    componentData,
-    viewIndex,
-    isCurrIndex,
-    handleOnkeyDown,
-  } = props;
+  const { selected, last, index, sliderIndex, displayName, componentData, viewIndex, isCurrIndex } =
+    props;
 
   const cleanTime = (): string => {
     if (!componentData || !componentData.actualDuration) {
@@ -64,7 +55,6 @@ const Action = (props: ActionProps): JSX.Element => {
     <div className='individual-action'>
       <div
         // @ts-ignore
-        onKeyDown={(e): void => handleOnkeyDown(e, viewIndex)}
         className={selected || last ? 'action-component selected' : 'action-component'}
         onClick={() => {
           dispatch(changeView(index));

@@ -1,8 +1,8 @@
 .buttons-container {
   display: flex;
   align-items: center;
-  background: white;
-  border-top: 1px solid #e5e7eb;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
   width: 100%;
 }
 
@@ -26,16 +26,16 @@
 .introjs-tooltip-title {
   font-size: 18px;
   font-weight: bold;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
 .introjs-progressbar {
-  background-color: #14b8a6;
+  background-color: var(--color-primary);
 }
 
 .introjs-tooltip {
-  color: #1f2937;
-  background-color: white;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
   min-width: 20rem;
 }
 
@@ -44,13 +44,13 @@
 }
 
 .introjs-nextbutton {
-  background-color: #14b8a6;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--button-primary-text);
 }
 
 .introjs-prevbutton {
-  background-color: #f9fafb;
-  color: #374151;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 .introjs-skipbutton {
@@ -62,7 +62,7 @@
 .buttons-container button {
   display: flex;
   align-items: center;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 1rem;
   font-weight: 500;
   background: transparent;
@@ -80,12 +80,12 @@
 }
 
 .status-dot.active {
-  background-color: #14b8a6;
+  background-color: var(--color-primary);
   animation: pulse 2s infinite;
 }
 
 .status-dot.inactive {
-  background-color: #9ca3af;
+  background-color: var(--text-tertiary);
 }
 
 @keyframes pulse {

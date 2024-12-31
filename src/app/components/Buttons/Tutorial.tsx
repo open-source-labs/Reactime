@@ -185,8 +185,8 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           },
           {
             title: 'Accessibility Tree',
-            element: '.accessibility-tab',
-            intro: '<ul><li>This tab visually displays a Accessibility Tree</li></ul>',
+            element: '.accessibility-tab',//'<ul><li>This tab visually displays a Accessibility Tree</li></ul>'
+            intro:'<ul><li>Nodes from the accessibility tree have either a role or a internal role refers to ARIA roles, which indicate the purpose of the element to assistive technologies, like screen readers.All of the nodes rendered in this tree have a role of Role.InternalRole refers to browser-specific roles <strong> Chrome </strong> for its own accessibility processing.<p> Each node is given a property labeled <strong>ignored</strong>. Nodes read by the screen reader have their ignored property evaluate to <strong>false</strong>.Nodes not read by the screen reader evaluate to <strong>true</strong>.</p><p> Nodes labeled as <strong>no name</strong> are visible to a screen reader, but were not given a name label.</p></li></ul>',
             position: 'bottom',
           },
           {
@@ -208,7 +208,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           },
         ];
         break;
-      case 'AxTree':
+      case 'accessibility'://'AxTree'
         steps = [
           {
             title: 'Accessibility Tree',
@@ -240,7 +240,7 @@ export default class Tutorial extends Component<TutorialProps, TutorialState> {
           },
           {
             title: 'Viewing History Snapshot',
-            element: '.node active', //document.querySelectorAll('.snapshotNode')[0]
+            element: '.display',//document.querySelectorAll('.snapshotNode')[0]
             intro:
               'Each node will represent a snapshot in the page. <ul><li>A single snapshot will show as a node while multiple snapshots will be represented as a timeline.</li><li>Highlighting over one will show any state changes compared to the previous snapshot. </li><li>Clicking a node will set the snapshot as the current one.</li></ul>',
             position: 'top',
