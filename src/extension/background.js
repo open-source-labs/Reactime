@@ -12,11 +12,39 @@ let activeTab;
 const tabsObj = {};
 // Will store Chrome web vital metrics and their corresponding values.
 const metrics = {};
+
+// Helper function to check if a URL is localhost
+function isLocalhost(url) {
+  return url?.startsWith('http://localhost:') || url?.startsWith('https://localhost:');
+}
+
+// Helper function to find localhost tab
+async function findLocalhostTab() {
+  const tabs = await chrome.tabs.query({ currentWindow: true });
+  return tabs.find((tab) => tab.url && isLocalhost(tab.url));
+}
+
+//keep alive functionality to address port disconnection issues
 function setupKeepAlive() {
-  //ellie
-  // Create an alarm that triggers every 4.9 minutes (under the 5-minute limit)
+  // Clear any existing keep-alive alarms to prevent duplicates
+  chrome.alarms.clear('keepAlive', (wasCleared) => {
+    if (wasCleared) {
+      console.log('Cleared existing keep-alive alarm.');
+    }
+  });
+
+  // Create a new keep-alive alarm, we found .5 min to resolve the idle time port disconnection
   chrome.alarms.create('keepAlive', { periodInMinutes: 0.5 });
 
+  // Log active alarms for debugging
+  chrome.alarms.getAll((alarms) => {
+    console.log(
+      'Active alarms:',
+      alarms.map((alarm) => alarm.name),
+    );
+  });
+
+  // Listen for the keep-alive alarm
   chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === 'keepAlive') {
       console.log('Keep-alive alarm triggered.');
@@ -24,12 +52,25 @@ function setupKeepAlive() {
     }
   });
 }
+
 // Ping the service worker to keep it alive
 function pingServiceWorker() {
-  // Use a lightweight API call to keep the service worker active
-  chrome.runtime.getPlatformInfo(() => {
-    console.log('Service worker pinged successfully');
-  });
+  try {
+    chrome.runtime.getPlatformInfo(() => {
+      console.log('Service worker pinged successfully.');
+    });
+  } catch (error) {
+    console.error('Failed to ping service worker:', error);
+
+    // Fallback: Trigger an empty event to wake up the service worker
+    chrome.runtime.sendMessage({ type: 'ping' }, (response) => {
+      if (chrome.runtime.lastError) {
+        console.error('Fallback message failed:', chrome.runtime.lastError.message);
+      } else {
+        console.log('Fallback message sent successfully:', response);
+      }
+    });
+  }
 }
 
 // function pruning the chrome ax tree and pulling the relevant properties
@@ -281,15 +322,24 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
 }
 
 async function getActiveTab() {
-  return new Promise((resolve, reject) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      if (tabs.length > 0) {
-        resolve(tabs[0].id);
-      } else {
-        reject(new Error('No active tab'));
-      }
-    });
-  });
+  try {
+    // First try to find a localhost tab
+    const localhostTab = await findLocalhostTab();
+    if (localhostTab) {
+      return localhostTab.id;
+    }
+
+    // Fallback to current active tab
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tabs.length > 0) {
+      return tabs[0].id;
+    }
+
+    throw new Error('No active tab');
+  } catch (error) {
+    console.error('Error in getActiveTab:', error);
+    throw error;
+  }
 }
 
 /*
@@ -366,7 +416,7 @@ chrome.runtime.onConnect.addListener(async (port) => {
     });
   }
 
-  // Handles port disconnection by removing the disconnected port  -ellie
+  // Handles port disconnection by removing the disconnected port
   port.onDisconnect.addListener(() => {
     const index = portsArr.indexOf(port);
     if (index !== -1) {
@@ -656,7 +706,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         break;
       }
 
-      // DUPLICATE SNAPSHOT CHECK -ellie
+      // DUPLICATE SNAPSHOT CHECK
       const isDuplicateSnapshot = (previous, incoming) => {
         if (!previous || !incoming) return false;
         const prevData = previous?.componentData;
@@ -772,26 +822,62 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 });
 
 // When tab view is changed, put the tabId as the current tab
-chrome.tabs.onActivated.addListener((info) => {
+chrome.tabs.onActivated.addListener(async (info) => {
   // Get info about the tab information from tabId
-  chrome.tabs.get(info.tabId, (tab) => {
-    // Never set a reactime instance to the active tab
-    if (!tab.pendingUrl?.match('^chrome-extension')) {
-      activeTab = tab;
+  try {
+    const tab = await chrome.tabs.get(info.tabId);
 
-      // Send messages to active ports about the tab change
-      if (portsArr.length > 0) {
-        portsArr.forEach((bg) =>
-          bg.postMessage({
-            action: 'changeTab',
-            payload: { tabId: tab.id, title: tab.title },
-          }),
-        );
+    // Only update activeTab if:
+    // 1. It's not a Reactime extension tab
+    // 2. We don't already have a localhost tab being tracked
+    // 3. Or if it is a localhost tab (prioritize localhost)
+    if (!tab.url?.match('^chrome-extension')) {
+      if (isLocalhost(tab.url)) {
+        // Always prioritize localhost tabs
+        activeTab = tab;
+        if (portsArr.length > 0) {
+          portsArr.forEach((bg) =>
+            bg.postMessage({
+              action: 'changeTab',
+              payload: { tabId: tab.id, title: tab.title },
+            }),
+          );
+        }
+      } else if (!activeTab || !isLocalhost(activeTab.url)) {
+        // Only set non-localhost tab as active if we don't have a localhost tab
+        activeTab = tab;
+        if (portsArr.length > 0) {
+          portsArr.forEach((bg) =>
+            bg.postMessage({
+              action: 'changeTab',
+              payload: { tabId: tab.id, title: tab.title },
+            }),
+          );
+        }
       }
     }
-  });
+  } catch (error) {
+    console.error('Error in tab activation handler:', error);
+  }
 });
 
-chrome.runtime.onStartup.addListener(() => {
+// Ensure keep-alive is set up when the extension is installed
+chrome.runtime.onInstalled.addListener(() => {
+  console.log('Extension installed. Setting up keep-alive...');
   setupKeepAlive();
+});
+
+// Ensure keep-alive is set up when the browser starts
+chrome.runtime.onStartup.addListener(() => {
+  console.log('Browser started. Setting up keep-alive...');
+  setupKeepAlive();
+});
+
+// Optional: Reset keep-alive when a message is received (to cover edge cases)
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message === 'resetKeepAlive') {
+    console.log('Resetting keep-alive as requested.');
+    setupKeepAlive();
+    sendResponse({ success: true });
+  }
 });
