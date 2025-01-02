@@ -13,6 +13,17 @@ const tabsObj = {};
 // Will store Chrome web vital metrics and their corresponding values.
 const metrics = {};
 
+// Helper function to check if a URL is localhost
+function isLocalhost(url) {
+  return url?.startsWith('http://localhost:') || url?.startsWith('https://localhost:');
+}
+
+// Helper function to find localhost tab
+async function findLocalhostTab() {
+  const tabs = await chrome.tabs.query({ currentWindow: true });
+  return tabs.find((tab) => tab.url && isLocalhost(tab.url));
+}
+
 //keep alive functionality to address port disconnection issues
 function setupKeepAlive() {
   // Clear any existing keep-alive alarms to prevent duplicates
@@ -311,15 +322,24 @@ function changeCurrLocation(tabObj, rootNode, index, name) {
 }
 
 async function getActiveTab() {
-  return new Promise((resolve, reject) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      if (tabs.length > 0) {
-        resolve(tabs[0].id);
-      } else {
-        reject(new Error('No active tab'));
-      }
-    });
-  });
+  try {
+    // First try to find a localhost tab
+    const localhostTab = await findLocalhostTab();
+    if (localhostTab) {
+      return localhostTab.id;
+    }
+
+    // Fallback to current active tab
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tabs.length > 0) {
+      return tabs[0].id;
+    }
+
+    throw new Error('No active tab');
+  } catch (error) {
+    console.error('Error in getActiveTab:', error);
+    throw error;
+  }
 }
 
 /*
@@ -802,24 +822,43 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 });
 
 // When tab view is changed, put the tabId as the current tab
-chrome.tabs.onActivated.addListener((info) => {
+chrome.tabs.onActivated.addListener(async (info) => {
   // Get info about the tab information from tabId
-  chrome.tabs.get(info.tabId, (tab) => {
-    // Never set a reactime instance to the active tab
-    if (!tab.pendingUrl?.match('^chrome-extension')) {
-      activeTab = tab;
+  try {
+    const tab = await chrome.tabs.get(info.tabId);
 
-      // Send messages to active ports about the tab change
-      if (portsArr.length > 0) {
-        portsArr.forEach((bg) =>
-          bg.postMessage({
-            action: 'changeTab',
-            payload: { tabId: tab.id, title: tab.title },
-          }),
-        );
+    // Only update activeTab if:
+    // 1. It's not a Reactime extension tab
+    // 2. We don't already have a localhost tab being tracked
+    // 3. Or if it is a localhost tab (prioritize localhost)
+    if (!tab.url?.match('^chrome-extension')) {
+      if (isLocalhost(tab.url)) {
+        // Always prioritize localhost tabs
+        activeTab = tab;
+        if (portsArr.length > 0) {
+          portsArr.forEach((bg) =>
+            bg.postMessage({
+              action: 'changeTab',
+              payload: { tabId: tab.id, title: tab.title },
+            }),
+          );
+        }
+      } else if (!activeTab || !isLocalhost(activeTab.url)) {
+        // Only set non-localhost tab as active if we don't have a localhost tab
+        activeTab = tab;
+        if (portsArr.length > 0) {
+          portsArr.forEach((bg) =>
+            bg.postMessage({
+              action: 'changeTab',
+              payload: { tabId: tab.id, title: tab.title },
+            }),
+          );
+        }
       }
     }
-  });
+  } catch (error) {
+    console.error('Error in tab activation handler:', error);
+  }
 });
 
 // Ensure keep-alive is set up when the extension is installed

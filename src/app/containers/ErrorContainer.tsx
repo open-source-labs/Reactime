@@ -10,18 +10,31 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
     (state: RootState) => state.main,
   );
 
+  // Helper function to check if a URL is localhost
+  const isLocalhost = (url: string): boolean => {
+    return url.startsWith('http://localhost:') || url.startsWith('https://localhost:');
+  };
+
   // Add effect to initialize currentTab if not set
   useEffect(() => {
     const initializeCurrentTab = async () => {
       if (!currentTab) {
         try {
-          // Query for the active tab
-          const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
-          if (activeTab?.id) {
-            dispatch(setTab(activeTab.id));
+          // Query specifically for localhost tabs first
+          const tabs = await chrome.tabs.query({ currentWindow: true });
+          const localhostTab = tabs.find(tab => tab.url && isLocalhost(tab.url));
+          
+          if (localhostTab?.id) {
+            dispatch(setTab(localhostTab.id));
+          } else {
+            // Fallback to active tab if no localhost found
+            const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+            if (activeTab?.id) {
+              dispatch(setTab(activeTab.id));
+            }
           }
         } catch (error) {
-          console.error('Error getting active tab:', error);
+          console.error('Error getting tab:', error);
         }
       }
     };
@@ -30,52 +43,58 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
   }, [currentTab, dispatch]);
 
   // function that launches the main app and refreshes the page
-  function launch(): void {
-    // Add validation to ensure we have valid data
-    if (!currentTab) {
-      console.warn('No current tab available - attempting to get active tab');
-      // Try to get the active tab when launching
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs[0]?.id) {
-          const activeTabId = tabs[0].id;
-          dispatch(setTab(activeTabId));
-          // Create default payload and launch
-          const defaultPayload = {
-            status: {
-              contentScriptLaunched: false,
-              reactDevToolsInstalled: false,
-              targetPageisaReactApp: false,
-            },
-          };
-          dispatch(launchContentScript(defaultPayload));
-          // Allow the dispatch to complete before refreshing
-          setTimeout(() => {
-            chrome.tabs.reload(activeTabId);
-          }, 100);
+  async function launch(): Promise<void> {
+    try {
+      // If no current tab, try to find localhost tab first
+      if (!currentTab) {
+        const tabs = await chrome.tabs.query({ currentWindow: true });
+        const localhostTab = tabs.find(tab => tab.url && isLocalhost(tab.url));
+        
+        if (localhostTab?.id) {
+          dispatch(setTab(localhostTab.id));
+          await initializeLaunch(localhostTab.id);
+        } else {
+          console.warn('No localhost tab found');
         }
-      });
-      return;
-    }
+        return;
+      }
 
-    if (!tabs || !tabs[currentTab]) {
-      // If no tab data exists, create a minimal valid payload
-      const defaultPayload = {
-        status: {
-          contentScriptLaunched: false,
-          reactDevToolsInstalled: false,
-          targetPageisaReactApp: false,
-        },
-      };
-      dispatch(launchContentScript(defaultPayload));
-    } else {
-      dispatch(launchContentScript(tabs[currentTab]));
-    }
+      // Verify current tab is still localhost
+      const tab = await chrome.tabs.get(currentTab);
+      if (!tab.url || !isLocalhost(tab.url)) {
+        // Try to find a localhost tab
+        const tabs = await chrome.tabs.query({ currentWindow: true });
+        const localhostTab = tabs.find(tab => tab.url && isLocalhost(tab.url));
+        
+        if (localhostTab?.id) {
+          dispatch(setTab(localhostTab.id));
+          await initializeLaunch(localhostTab.id);
+        } else {
+          console.warn('No localhost tab found');
+        }
+        return;
+      }
 
+      await initializeLaunch(currentTab);
+    } catch (error) {
+      console.error('Error during launch:', error);
+    }
+  }
+
+  async function initializeLaunch(tabId: number): Promise<void> {
+    const defaultPayload = {
+      status: {
+        contentScriptLaunched: false,
+        reactDevToolsInstalled: false,
+        targetPageisaReactApp: false,
+      },
+    };
+
+    dispatch(launchContentScript(defaultPayload));
+    
     // Allow the dispatch to complete before refreshing
     setTimeout(() => {
-      if (currentTab) {
-        chrome.tabs.reload(currentTab);
-      }
+      chrome.tabs.reload(tabId);
     }, 100);
   }
 
@@ -96,8 +115,8 @@ function ErrorContainer(props: ErrorContainerProps): JSX.Element {
             connect with your app and start monitoring state changes.
           </p>
           <p className='error-description'>
-            Important: Reactime requires React Developer Tools to be installed. If you haven't
-            already, please{' '}
+            Important: Reactime requires React Developer Tools to be installed and will only track state 
+            changes on localhost development servers. If you haven't already, please{' '}
             <a
               href='https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en'
               target='_blank'
