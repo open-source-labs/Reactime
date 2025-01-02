@@ -73,9 +73,17 @@ chrome.runtime.onMessage.addListener((request) => {
       // '*' == target window origin required for event to be dispatched, '*' = no preference
       window.postMessage(request, '*');
     }
-
-    // JR: adding a response to a port disconnection message from background.js
     if (action === 'portDisconnect') {
+      // When we receive a port disconnection message, relay it to the window
+      window.postMessage(
+        {
+          action: 'portDisconnect',
+        },
+        '*',
+      );
+
+      // Attempt to re-establish connection
+      establishConnection();
     }
 
     if (action === 'reinitialize') {
