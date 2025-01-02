@@ -1,20 +1,104 @@
 // Web vital metrics calculated by 'web-vitals' npm package to be displayed
 // in Web Metrics tab of Reactime app.
+import { current } from '@reduxjs/toolkit';
 import { onTTFB, onLCP, onFID, onFCP, onCLS, onINP } from 'web-vitals';
 
-function establishConnection() {
-  const port = chrome.runtime.connect({ name: 'keepAlivePort' }); // Reconnect if we lose connection to the port at any time
-  port.onMessage.addListener((msg) => {
-    console.log('Received message from background:', msg);
-  });
+const MAX_RECONNECT_ATTEMPTS = 5;
+const INITIAL_RECONNECT_DELAY = 1000;
+const MAX_RECONNECT_DELAY = 16000;
 
-  port.onDisconnect.addListener(() => {
-    console.warn('Port disconnected, attempting to reconnect...');
-    setTimeout(establishConnection, 1000); // Retry after 1 second
-  });
+let currentPort = null;
+let isAttemptingReconnect = false;
+
+function establishConnection(attemptNumber = 1) {
+  console.log(`Establishing connection, attempt ${attemptNumber}`);
+
+  try {
+    currentPort = chrome.runtime.connect({ name: 'keepAlivePort' });
+
+    console.log('Port created, setting up listeners');
+
+    currentPort.onMessage.addListener((msg) => {
+      console.log('Port received message:', msg);
+    });
+
+    currentPort.onDisconnect.addListener(() => {
+      const error = chrome.runtime.lastError;
+      console.log('Port disconnect triggered', error);
+
+      // Clear current port
+      currentPort = null;
+
+      // Prevent multiple simultaneous reconnection attempts
+      if (isAttemptingReconnect) {
+        console.log('Already attempting to reconnect, skipping');
+        return;
+      }
+
+      isAttemptingReconnect = true;
+
+      // Calculate delay with exponential backoff
+      const delay = Math.min(
+        INITIAL_RECONNECT_DELAY * Math.pow(2, attemptNumber - 1),
+        MAX_RECONNECT_DELAY,
+      );
+
+      if (attemptNumber <= MAX_RECONNECT_ATTEMPTS) {
+        console.log(
+          `Will attempt reconnection ${attemptNumber}/${MAX_RECONNECT_ATTEMPTS} in ${delay}ms`,
+        );
+
+        window.postMessage(
+          {
+            action: 'portDisconnect',
+            payload: {
+              attemptNumber,
+              maxAttempts: MAX_RECONNECT_ATTEMPTS,
+              nextRetryDelay: delay,
+            },
+          },
+          '*',
+        );
+
+        setTimeout(() => {
+          isAttemptingReconnect = false;
+          establishConnection(attemptNumber + 1);
+        }, delay);
+      } else {
+        console.log('Max reconnection attempts reached');
+        isAttemptingReconnect = false;
+
+        window.postMessage(
+          {
+            action: 'portDisconnect',
+            payload: {
+              autoReconnectFailed: true,
+              message: 'Automatic reconnection failed. Please use the reconnect button.',
+            },
+          },
+          '*',
+        );
+      }
+    });
+
+    // Send initial test message
+    currentPort.postMessage({ type: 'connectionTest' });
+    console.log('Test message sent');
+  } catch (error) {
+    console.error('Error establishing connection:', error);
+    isAttemptingReconnect = false;
+
+    // If immediate connection fails, try again
+    if (attemptNumber <= MAX_RECONNECT_ATTEMPTS) {
+      const delay = INITIAL_RECONNECT_DELAY;
+      console.log(`Connection failed immediately, retrying in ${delay}ms`);
+      setTimeout(() => establishConnection(attemptNumber + 1), delay);
+    }
+  }
 }
 
-// Initially establish connection
+// Initial connection
+console.log('Starting initial connection');
 establishConnection();
 
 // Reactime application starts off with this file, and will send
@@ -73,14 +157,24 @@ chrome.runtime.onMessage.addListener((request) => {
       // '*' == target window origin required for event to be dispatched, '*' = no preference
       window.postMessage(request, '*');
     }
+    if (action === 'portDisconnect' && !currentPort && !isAttemptingReconnect) {
+      console.log('Received disconnect message, initiating reconnection');
+      // When we receive a port disconnection message, relay it to the window
+      window.postMessage(
+        {
+          action: 'portDisconnect',
+        },
+        '*',
+      );
 
-    // JR: adding a response to a port disconnection message from background.js
-    if (action === 'portDisconnect') {
+      // Attempt to re-establish connection
+      establishConnection();
     }
 
     if (action === 'reinitialize') {
       window.postMessage(request, '*');
     }
+    return true;
   }
 });
 
