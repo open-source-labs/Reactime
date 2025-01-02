@@ -12,11 +12,28 @@ let activeTab;
 const tabsObj = {};
 // Will store Chrome web vital metrics and their corresponding values.
 const metrics = {};
+
+//keep alive functionality to address port disconnection issues
 function setupKeepAlive() {
-  //ellie
-  // Create an alarm that triggers every 4.9 minutes (under the 5-minute limit)
+  // Clear any existing keep-alive alarms to prevent duplicates
+  chrome.alarms.clear('keepAlive', (wasCleared) => {
+    if (wasCleared) {
+      console.log('Cleared existing keep-alive alarm.');
+    }
+  });
+
+  // Create a new keep-alive alarm, we found .5 min to resolve the idle time port disconnection
   chrome.alarms.create('keepAlive', { periodInMinutes: 0.5 });
 
+  // Log active alarms for debugging
+  chrome.alarms.getAll((alarms) => {
+    console.log(
+      'Active alarms:',
+      alarms.map((alarm) => alarm.name),
+    );
+  });
+
+  // Listen for the keep-alive alarm
   chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === 'keepAlive') {
       console.log('Keep-alive alarm triggered.');
@@ -24,12 +41,25 @@ function setupKeepAlive() {
     }
   });
 }
+
 // Ping the service worker to keep it alive
 function pingServiceWorker() {
-  // Use a lightweight API call to keep the service worker active
-  chrome.runtime.getPlatformInfo(() => {
-    console.log('Service worker pinged successfully');
-  });
+  try {
+    chrome.runtime.getPlatformInfo(() => {
+      console.log('Service worker pinged successfully.');
+    });
+  } catch (error) {
+    console.error('Failed to ping service worker:', error);
+
+    // Fallback: Trigger an empty event to wake up the service worker
+    chrome.runtime.sendMessage({ type: 'ping' }, (response) => {
+      if (chrome.runtime.lastError) {
+        console.error('Fallback message failed:', chrome.runtime.lastError.message);
+      } else {
+        console.log('Fallback message sent successfully:', response);
+      }
+    });
+  }
 }
 
 // function pruning the chrome ax tree and pulling the relevant properties
@@ -366,7 +396,7 @@ chrome.runtime.onConnect.addListener(async (port) => {
     });
   }
 
-  // Handles port disconnection by removing the disconnected port  -ellie
+  // Handles port disconnection by removing the disconnected port
   port.onDisconnect.addListener(() => {
     const index = portsArr.indexOf(port);
     if (index !== -1) {
@@ -656,7 +686,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         break;
       }
 
-      // DUPLICATE SNAPSHOT CHECK -ellie
+      // DUPLICATE SNAPSHOT CHECK
       const isDuplicateSnapshot = (previous, incoming) => {
         if (!previous || !incoming) return false;
         const prevData = previous?.componentData;
@@ -792,6 +822,23 @@ chrome.tabs.onActivated.addListener((info) => {
   });
 });
 
-chrome.runtime.onStartup.addListener(() => {
+// Ensure keep-alive is set up when the extension is installed
+chrome.runtime.onInstalled.addListener(() => {
+  console.log('Extension installed. Setting up keep-alive...');
   setupKeepAlive();
+});
+
+// Ensure keep-alive is set up when the browser starts
+chrome.runtime.onStartup.addListener(() => {
+  console.log('Browser started. Setting up keep-alive...');
+  setupKeepAlive();
+});
+
+// Optional: Reset keep-alive when a message is received (to cover edge cases)
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message === 'resetKeepAlive') {
+    console.log('Resetting keep-alive as requested.');
+    setupKeepAlive();
+    sendResponse({ success: true });
+  }
 });
