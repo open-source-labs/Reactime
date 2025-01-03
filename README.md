@@ -36,77 +36,42 @@
 
 ### 🔍 State Visualization
 
-<ul>
-  <li>
-    <strong>Multiple Views</strong>: Visualize your application state through Component Graphs, JSON Trees, Performance Graphs, and Accessibility Trees
-  </li>
-    <li>
-    <strong>History Timeline</strong>: Track state changes over time with an intuitive history visualization
-  </li>
-    <li>
-    <strong>Web Metrics</strong>: Monitor critical performance metrics in real-time
-  </li>
-      <li>
-    <strong>Accessibility Insights</strong>: Analyze your app's accessibility tree for each state change
-  </li>
-  </ul>
+- **SMultiple Views**: Visualize your application state through Component Graphs, JSON Trees, Performance Graphs, and Accessibility Trees
+- **SHistory Timeline**: Track state changes over time with an intuitive history visualization
+- **SWeb Metrics**: Monitor critical performance metrics in real-time
+- **SAccessibility Insights**: Analyze your app's accessibility tree for each state change
   <br>
 
 <p>On the main page, there are two main selections from the dropdown panel:</p>
-<ul>
-  <li>
-    <strong>Timejump</strong>: View and navigate through the snapshot history of your application's state. You can jump to any point in time to see how the state evolves across changes. You can also use the play button to replay each state change automatically.
-  </li>
-  <li>
-    <strong>Providers / Consumers</strong>: Understand your application's context dependencies and their interactions better through visualizing its provider and consumer relationships.
-  </li>
-</ul>
-<br>
 
-  <p align="center">
+- **STimejump**: View and navigate through the snapshot history of your application's state. You can jump to any point in time to see how the state evolves across changes. You can also use the play button to replay each state change automatically.
+- **SProviders / Consumers**: Understand your application's context dependencies and their interactions better through visualizing its provider and consumer relationships.
+  <br>
+
+<p align="center">
 <img src="./assets/gifs/ProviderConsumer_V26.gif" />
 </p>
 <br>
 
 ### ⏱️ Time-Travel Debugging
 
-<ul>
-  <li>
-    <strong>State Snapshots</strong>: Capture and navigate through your application's state history
-  </li>
-    <li>
-    <strong>Playback Controls</strong>: Automatically replay state changes with adjustable speed
-  </li>
-    <li>
-    <strong>Jump Points</strong>: Instantly navigate to any previous state
-  </li>
-      <li>
-    <strong>Diff Comparisons</strong>: Compare states between snapshots
-  </li>
-  </ul>
+- **State Snapshots**: Capture and navigate through your application's state history
+- **Playback Controls**: Automatically replay state changes with adjustable speed
+- **Jump Points**: Instantly navigate to any previous state
+- **Diff Comparisons**: Compare states between snapshots
   <br>
 
-  <p align="center">
+<p align="center">
 <img src="./assets/gifs/TimeTravelGif_V26.gif" />
 </p>
 <br>
 
 ### 📊 Performance Analysis
 
-<ul>
-  <li>
-    <strong>Component Metrics</strong>: Track render times and performance bottlenecks
-  </li>
-    <li>
-    <strong>Series Comparison</strong>: Compare performance across different sets of state changes
-  </li>
-    <li>
-    <strong>Re-render Detection</strong>: Identify and fix unnecessary render cycles
-  </li>
-      <li>
-    <strong>Web Vitals</strong>: Monitor Core Web Vitals and other performance metrics
-  </li>
-  </ul>
+- **Component Metrics**: Track render times and performance bottlenecks
+- **Series Comparison**: Compare performance across different sets of state changes
+- **Re-render Detection**: Identify and fix unnecessary render cycles
+- **Web Vitals**: Monitor Core Web Vitals and other performance metrics
   <br>
 
 ### 🔄 Modern Framework Support
@@ -131,6 +96,7 @@ Reactime makes it easy to save and share your application's state history:
 - **Export State History**: Save your recorded snapshots as a JSON file for later analysis or sharing
 - **Import Previous Sessions**: Upload previously saved snapshots to compare state changes across different sessions
 - **Cross-Session Analysis**: Compare performance and state changes between different development sessions
+  <br>
 
 <p align="center">
 <img src="./assets/gifs/ImportExportGif_V26.gif" />
@@ -158,52 +124,69 @@ API references and examples
   </li>
   </ul>
   <br>
-<p align="center">
-  <em>Our documentation provides a clear and intuitive view of Reactime's architecture and APIs</em>
-</p>
-<br>
 
-### <b>Additional Features</b>
+<h1>🎉 What's New!</h1>
 
-UPDATE THIS...
+Reactime 26.0 brings a complete overhaul to the React debugging experience, featuring:
 
-- In-app tab-specific tutorial walkthroughs
-- Hover over a component to view tooltip details on state visualizations
-- Click to collapse child components
-- Intuitive navigation between state snapshots
-- Locked/unlocked feature allowing temporary pause of state monitoring
-- Prop visualization both in color and tickness of the branches of connecting the components
+- **New Context Data Display**
 
-<h1>What's New!</h1>
+  - First-ever visualization of useContext hook state changes
+  - Clear mapping of provider-consumer relationships
+  - Real-time context state value monitoring
+  - Detailed provider data visualization
 
-Reactime 26.0 includes....
+- **Enhanced Time Travel Debugging**
+
+  - Redesigned slider interface positioned alongside snapshots
+  - Variable playback speed controls
+  - More intuitive state navigation
+  - Improved snapshot visualization
+
+- **Modern UI Overhaul**
+
+  - Sleek, contemporary design with rounded components
+  - Intuitive layout improvements
+  - New dark mode support
+  - Enhanced visual hierarchy
+
+- **Major Technical Improvements**
+  - Fixed connection persistence during idle time and tab switches
+  - Restored accessibility tree visualization
+  - Resolved state capture issues for function-based useState hooks
+  - Improved overall extension reliability and performance
+
+These updates make Reactime more powerful, reliable, and user-friendly than ever before, setting a new standard for React debugging tools.
 
 If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
 
-<p align="center">
-
 <h1>🚀 Getting Started</h1>
 
-To get started, install the Reactime
-[extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga)
-from Chrome Web Store.
+### Installation
 
-After installing Reactime, you can test its functionalities with your React application in development mode.
+1. Install the [Reactime extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) from the Chrome Web Store
+2. Install the required [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en) extension if you haven't already
 
-Please note, Reactime will <b>ONLY</b> work when your application is running in <b>development mode</b>.
+### Prerequisites
 
-NOTE: The React Developer Tools
-[extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
-is also required for Reactime to run, if you do not already have it installed on
-your browser.
+- Your React application must be running in **development mode**
+- React Developer Tools extension must be installed
+- Chrome browser (version 80 or higher recommended)
 
-### <b>How to Use</b>
+### Launch Reactime
 
-After installing the Chrome extension, just open up your project in the browser.
+There are two ways to open the Reactime panel:
 
-Then right click on your application and choose the 'Reactime' context menu item to open up a Reactime panel.
+1. **Context Menu**
 
-Alternatively, you can open up your Chrome DevTools and navigate to the Reactime panel.
+   - Right-click anywhere on your React application
+   - Select "Reactime" from the context menu
+
+2. **DevTools**
+   - Open Chrome DevTools (F12 or ⌘+⌥+I)
+   - Navigate to the "Reactime" tab
+
+Once launched, Reactime will automatically begin monitoring your application's state changes and performance metrics.
 
 ### Looking to contribute to Reactime?
 
@@ -216,7 +199,7 @@ instructions on building from source.
 
 ### ❓ <b>Why is Reactime not recording new state changes?</b>
 
-If Reactime loses its connection to the tab you're monitoring, simply click the "reconnect" button to resume your work.
+Reactime lost its connection to the tab you're monitoring, simply click the "reconnect" button to resume your work.
 
 ### ❓ <b>Why is Reactime telling me that no React application is found?</b>
 
