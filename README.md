@@ -1,6 +1,5 @@
 <h1 align="center">
     <img src ="./assets/logos/marqueePromoTitle.png"/>
-    <br>
   React Performance Tool
     <br>
     <a href="https://osawards.com/react/">🏆 Nominated for React Open Source Awards 2020</a>
@@ -10,9 +9,17 @@
 <h4 align="center">A powerful Chrome extension that enhances React development with time-travel debugging and advanced performance monitoring</h4>
 <br>
 
-<a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">
-    <img src="https://img.shields.io/chrome-web-store/v/cgibknllccemdnfhfpmjhffpjfeidjga" alt="Chrome Web Store">
+<p align="center">
+  <a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">
+    <img src="https://img.shields.io/chrome-web-store/v/cgibknllccemdnfhfpmjhffpjfeidjga" alt="Chrome Web Store" />
   </a>
+  <a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">
+    <img src="https://img.shields.io/chrome-web-store/users/cgibknllccemdnfhfpmjhffpjfeidjga" alt="Chrome Web Store Users" />
+  </a>
+  <a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">
+    <img src="https://img.shields.io/chrome-web-store/rating/cgibknllccemdnfhfpmjhffpjfeidjga" alt="Chrome Web Store Rating" />
+  </a>
+</p>
 
 <h5 align="center">
 <br>
@@ -117,32 +124,48 @@ Support for React Hooks and Context API
   </ul>
   <br>
 
-### 🔹 Download/Upload Snapshots
+### 💾 State Persistence & Sharing
 
-Download the recorded snapshots as a JSON file and upload them to access state trees across different sessions.
-<br>
-<br>
+Reactime makes it easy to save and share your application's state history:
+
+- **Export State History**: Save your recorded snapshots as a JSON file for later analysis or sharing
+- **Import Previous Sessions**: Upload previously saved snapshots to compare state changes across different sessions
+- **Cross-Session Analysis**: Compare performance and state changes between different development sessions
 
 <p align="center">
 <img src="./assets/gifs/ImportExportGif_V26.gif" />
 </p>
-
-### 🔹 Connection Status
-
-If Reactime loses its connection to the tab you're monitoring, simply click the "reconnect" button to resume your work.
-<br>
 <br>
 
-### 🔹 Documentation
+### 📚 Interactive Documentation
 
+Reactime provides comprehensive documentation to help developers understand its architecture and APIs:
 After cloning this repository, developers can simply run `npm run docs` at the
-root level and serve the dynamically generated `/docs/index.html` file on a
-browser. Doing so will provide a readable, extensible, and interactive GUI view
-of the structure and interfaces of the codebase.
-<br>
+root level and serve the dynamically generated `/docs/index.html` provding:
+
+<ul>
+  <li>
+  Interactive component diagrams
+  </li>
+    <li>
+Type definitions and interfaces
+  </li>
+    <li>
+Codebase architecture overview
+  </li>
+      <li>
+API references and examples
+  </li>
+  </ul>
+  <br>
+<p align="center">
+  <em>Our documentation provides a clear and intuitive view of Reactime's architecture and APIs</em>
+</p>
 <br>
 
 ### <b>Additional Features</b>
+
+UPDATE THIS...
 
 - In-app tab-specific tutorial walkthroughs
 - Hover over a component to view tooltip details on state visualizations
@@ -186,10 +209,14 @@ Alternatively, you can open up your Chrome DevTools and navigate to the Reactime
 
 <i>Please refer to Developer Install for a detailed guide:</i>
 
-Refer to the [👩‍💻 Developer README](src/DEVELOPER_README.md) for more info on the project, and
+Refer to the <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a> for more info on the project, and
 instructions on building from source.
 
 ## <b>Troubleshooting</b>
+
+### ❓ <b>Why is Reactime not recording new state changes?</b>
+
+If Reactime loses its connection to the tab you're monitoring, simply click the "reconnect" button to resume your work.
 
 ### ❓ <b>Why is Reactime telling me that no React application is found?</b>
 
@@ -204,7 +231,7 @@ Reactime works in tandem with the React Developer Tools to access a React applic
 ### ❓ <b>I found a bug in Reactime</b>
 
 Reactime is an open-source project, and we'd love to hear from you about
-improving the user experience. Please read [DEVELOPER README](src/DEVELOPER_README.md),
+improving the user experience. Please read <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a>,
 and create a pull request (or issue) to propose and collaborate on changes to Reactime.
 
 ### ❓ <b>Node version compatibility</b>
