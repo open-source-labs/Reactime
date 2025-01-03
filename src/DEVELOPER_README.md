@@ -58,57 +58,65 @@ Here are some notes on the current state of Reactime and considerations for futu
 
 There are a variety of open issues on the [OSLabs Reactime Github](https://github.com/open-source-labs/reactime) that remain to be addressed.
 
-## Main Slice Modularity
+## Support for useReducer Time Travel
 
-Currently, Reactime employs Redux Toolkit for state management. At present, all actions are housed within the mainSlice.ts file. As this file has expanded significantly, it would be beneficial to modularize it, creating separate slices for distinct components.
+Reactime currently shows data stored via useState, but has limited support for other hooks such as useReducer. While Reactime can now display state data from useReducer hooks in its component view, maintaining full time travel functionality for reducer states presents significant challenges.
 
-## Testing
+Current Implementation
 
-With reactime V25, a significant effort was made to update and address the various Jest testing issues. We managed to go from about 20% tests passing to more than 85% passing but more work remains to be done. Future itterators are invited to have a closer look and continue to update and improve the library to (hopefully) a 100% passing state.
+Reactime successfully captures and displays the current state of useReducer hooks in components
+The state data and last dispatched action for reducers are captured in the component snapshot
+This data is accessible in the component tooltips when hovering over nodes in the component map
+Reducer states are stored separately from useState data in the componentData structure
 
-In addition, while our current test coverage provides a sturdy base, the application can benefit from deeper exploration into critical user paths and broadening end-to-end testing scenarios. Embracing automation and periodic reviews can further ensure consistent quality and robustness in the face of evolving requirements. -->
+Challenges with Time Travel
 
-## Continue to investigate app behavior on load
+Unlike useState which has a simple state setter function, useReducer state changes must go through the reducer function
+The reducer function defines the valid state transitions through actions
+Simply setting a new state value would bypass the reducer's action-based state management
+Maintaining the correct action history and ensuring state validity through time travel becomes complex
+The current implementation can show reducer states at different points in time but cannot reliably replay state transitions
 
-With Reactime V23, loading errors were eliminated by having the web app reload upon a Reactime panel being opened. While this provides a working solution to what were persistent loading issues, the app's behavior on load should still be examined. There are odd interactions happening within the message passing framework of chrome which may be a root cause. Please examine the interaction between background.js, contentscript, maincontainer, and redux toolkit.
+Future Considerations
+Teams working on expanding reducer support should consider:
 
-## Including Support for Hooks Beyond useState
+How to capture and replay sequences of reducer actions
+Ways to maintain reducer state validity during time travel
+Potential approaches for reconstructing reducer state history
+Methods to handle complex reducer patterns like middleware or side effects
+Trade-offs between full reducer state management and simplified state snapshots
 
-Reactime currently shows data stored via useState, but does not show data stored via other hooks such as useContext or useReducer. While showing this data would be simple, maintaining the time travel functionality of Reactime with these hooks would not. _Please see file demo-app/src/client/Components/ButtonsWithMoreHooks.jsx for more details._
+## Expanding Support for Custom Hooks
 
-To see how hook data is stored on the fiber tree:
+Reactime currently has a robust system for detecting and handling built-in React hooks, but custom hooks present unique opportunities and challenges for state tracking and visualization.
 
-1. Change demo-app/src/client/Router.tsx to use utilize the ButtonsWithMoreHooks component
-2. Have the “Load Unpacked” version of Reactime in your chrome extension.
-3. Add console.logs in src/backend/routers/linkFiber.ts to log the fiber tree captured for a running app. In this case it'll be the demo-app
-4. Run Reactime on your computer via "npm run dev", which links your local Reactime to the “Load Unpacked” chrome extension.
-5. Run the demo-app from a separate terminal that's currently in the demo-app directory via "npm run dev"
-6. Navigate through the fiber tree in the console until you find the tree node for demo-app/src/client/Components/IncrementWithMoreHooks.jsx to see hook data.
+Current Implementation
 
-Any changes to console.logs in Reactime can be seen by refreshing the browser the app is running in.
+Reactime uses AST parsing via @babel/parser to analyze hook usage in components
+The system identifies hook patterns through memoizedState examination in the Fiber tree
+Hook names and state variables are extracted and matched with their corresponding state values
+This works well for direct useState and useReducer calls but may miss custom hook implementations
 
-## React DevTools Global Hook
+Challenges
 
-React Developer Tools has NOT deprecated \_\_REACT_DEVTOOLS_GLOBAL_HOOK\_\_. However, Reactime v21 has sleuthed and learned the following from the team at React:
+Custom hooks can contain multiple internal state management hooks
+The relationship between custom hook state and component state is not always clear in the Fiber tree
+Hook naming patterns may vary across different custom hook implementations
+State updates in custom hooks might use complex patterns or composition
+The current AST parsing system is optimized for standard hook patterns
 
-Ruslan Lesiutin (https://github.com/hoxyq) from Meta/ Facebook responded on July 28, 2023
-“Hey @morahgeist,
-We don't have plans on removing the global hook currently, this is still the primary way on how React and React DevTools interact, but it doesn't mean that any other extensions / applications should inject into this hook and use it. You should always take that into account that APIs inside this hook can have breaking changes.
-In a long term, there are plans to implement more reliable API contract of what DevTools can expose from React to other tools, but I don't have any timelines and details yet.”
+Future Considerations
+Teams looking to expand custom hook support should consider:
 
-## Redux
-
-Can Reactime functionality be extended so applications using Redux can track state in Reactime?
-
-Yes, but it would be very time-consuming and not the most feasible option while Redux devtools exists already. With how Redux devtools is currently set up, a developer is unable to use Redux devtools as a third-party user and integrate its functionality into their own application, as Redux devtools is meant to be used directly on an application using Redux for state-tracking purposes. Since the devtools do not appear to have a public API for integrated use in an application or it simply does not exist, Redux devtools would need to be rebuilt from the ground up and then integrated into Reactime, or built into Reactime directly still from scratch.
+How to identify and group state belonging to the same custom hook
+Ways to visualize the relationship between custom hook state and component state
+Methods to track state flow through custom hook composition
+Approaches for handling custom hooks that combine multiple state management methods
+Strategies for maintaining time travel functionality with custom hook state
 
 ## Newsletter functionality on the Reactime website
 
 As noted in the [Reactime Webite Github](https://github.com/reactimetravel/reactime-website), a newsletter functionality would be nice but has not been implemented yet.
-
-## Optimize webpack bundle size in production mode
-
-Currently, the webpack bundle size when running in production mode (through npm run build) is much larger than the recommended size. Implementing new rules, plugins, and/or uglification and minification strategies could help reduce the size.
 
 # File Structure
 
@@ -274,12 +282,10 @@ Once you are ready for launch, follow these steps to simplify deployment to the 
 
 # Past Medium Articles for Reference
 
+- [Reactime Reimagined: A Major Leap Forward in React Debugging](https://medium.com/@elliesimens/reactime-reimagined-a-major-leap-forward-in-react-debugging-7b76a0a66f42)
 - [Reactime v25: The Time to React is Now!](https://medium.com/@loganjnelsen/reactime-v25-the-time-to-react-is-now-ace90e45a9c7)
-
 - [Relaunching Reactime: Updates and a New Accessibility Feature!](https://medium.com/@evaury/relaunching-reactime-updates-and-a-new-accessibility-feature-1f0fd3a5bd8c)
-
 - [Reactime renovation: Updates Coming in Version 23.0!](https://medium.com/@liam.donaher/reactime-renovation-updates-coming-in-version-23-0-37b2ef2a2771)
-
 - [Reactime 22: Reactime: Real-time Debugging, Timless Results](https://medium.com/@kelvinmirhan/reactime-real-time-debugging-timeless-results-3f163b721d01)
 - [Reactime 21: Cheers to Reactime, Version 21!](https://medium.com/@brok3turtl3/cheers-to-reactime-version-21-fa4dafa4bc74)
 - [Reactime 20: Reactime just keeps getting better!](https://medium.com/@njhuemmer/reactime-just-keeps-getting-better-b37659ff8b71)
