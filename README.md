@@ -10,6 +10,10 @@
 <br>
 
 <p align="center">
+  **[Read our Medium Article](https://medium.com/@elliesimens/reactime-reimagined-a-major-leap-forward-in-react-debugging-7b76a0a66f42) to learn more about Reactime’s behind-the-scenes and development process!**
+</p>
+
+<p align="center">
   <a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">
     <img src="https://img.shields.io/chrome-web-store/v/cgibknllccemdnfhfpmjhffpjfeidjga" alt="Chrome Web Store" />
   </a>
@@ -158,8 +162,6 @@ Reactime 26.0 brings a complete overhaul to the React debugging experience, feat
   - Improved overall extension reliability and performance
 
 These updates make Reactime more powerful, reliable, and user-friendly than ever before, setting a new standard for React debugging tools.
-
-If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
 <br>
 <br>
 
