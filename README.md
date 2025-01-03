@@ -209,7 +209,7 @@ We welcome contributions from developers of all skill levels! Here's how you can
    - Test your changes thoroughly
    - Submit a pull request
 
-Join our growing community of contributors and help shape the future of React debugging tools! For detailed contribution guidelines and project architecture information, please refer to our <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer Documentation</a>.
+Join our growing community of contributors and help shape the future of React debugging tools! For detailed contribution guidelines and project architecture information, please refer to our <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a>.
 <br>
 <br>
 
@@ -232,7 +232,7 @@ Reactime works in tandem with the React Developer Tools to access a React applic
 ### ❓ <b>I found a bug in Reactime</b>
 
 Reactime is an open-source project, and we'd love to hear from you about
-improving the user experience. Please read <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a>,
+improving the user experience. Please read the <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a>,
 and create a pull request (or issue) to propose and collaborate on changes to Reactime.
 
 ### ❓ <b>Node version compatibility</b>
@@ -240,6 +240,8 @@ and create a pull request (or issue) to propose and collaborate on changes to Re
 With the release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
 'npm run dev' | 'npm run build' for backwards compatibility.<br/> For version
 Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
+<br>
+<br>
 
 <h1>✍️ Authors</h1>
 
@@ -356,6 +358,7 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 - **Liam Donaher** - [@leebology](https://github.com/leebology)
 - **David Moore** - [@Solodt55](https://github.com/Solodt55)
 - **John Banks** - [@Jbanks123](https://github.com/Jbanks123)
+  <br>
 
 <h1>⚖️ License </h1>
 

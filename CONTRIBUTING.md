@@ -67,6 +67,6 @@ When you're finished with the changes, create a pull request, also known as a PR
 
 ### Your PR is merged!
 
-Congratulations :tada::tada: The Reactime team thanks you! :sparkles:.
+Congratulations :tada::tada: The Reactime team thank you! :sparkles:.
 
 Once your PR is merged, your contributions will be publicly visible on [Reactime](https://github.com/open-source-labs/reactime)!
