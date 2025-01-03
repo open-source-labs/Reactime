@@ -24,7 +24,7 @@
 
 <h5 align="center">
 <br>
-  <a href="./README.md">🇺🇸  &nbsp; ENGLISH VERSION </a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href='./src/DEVELOPER_README.md'>👩‍💻 README Développeur</a>
+  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.md">🇺🇸  &nbsp; ENGLISH VERSION </a> &nbsp; • &nbsp; <a href='./src/DEVELOPER_README.md'>👩‍💻 README Développeur</a>
   <br>
 </h5>
 <br>
@@ -217,7 +217,23 @@ Rejoignez notre communauté grandissante de contributeurs et participez à faço
 
 ### ❓ <b>Pourquoi Reactime n’enregistre-t-il pas les nouveaux changements d’état ?</b>
 
-Reactime a perdu sa connexion avec l’onglet que vous surveillez ; il vous suffit de cliquer sur le bouton "reconnecter" pour reprendre votre travail.
+Reactime a perdu sa connexion avec l’onglet que vous surveillez ; il vous suffit de cliquer sur le bouton "reconnecter"
+pour reprendre votre travail.
+
+### ❓ <b>Pourquoi Reactime ne trouve-t-il pas mes hooks ?</b>
+
+Reactime détecte et surveille les hooks en parcourant le code React non minifié de votre application en mode développement. Si votre processus de build minifie ou "uglifie" votre code — même pour les builds de développement — Reactime risque de ne pas pouvoir localiser et suivre correctement vos hooks. Pour résoudre ce problème :
+
+1. **Assurez-vous d’une vraie build de développement** : Vérifiez la configuration de votre bundler ou outil de build (par ex. Webpack, Babel, Vite, etc.) pour vous assurer que votre application n’est pas minimisée ou "uglifiée" en mode développement.
+
+   - Par exemple, avec Webpack, assurez-vous d’exécuter le mode : 'development', ce qui devrait désactiver la minification par défaut.
+   - Dans un projet Create React App, il suffit d’exécuter `npm start` ou `yarn start` pour configurer automatiquement une build de développement non minifiée.
+
+2. **Vérifiez les surcharges** : Assurez-vous qu’aucun plugin Babel ou Webpack personnalisé ne minifie votre code, surtout si vous utilisez des frameworks comme Next.js ou Gatsby. Parfois, des plugins ou scripts supplémentaires peuvent s’exécuter en arrière-plan.
+
+3. **Redémarrez & recompilez** : Après avoir modifié toute configuration de build, recompilez ou redémarrez votre serveur de développement pour vous assurer que la nouvelle configuration est prise en compte. Ensuite, rafraîchissez l’onglet de votre navigateur afin que Reactime puisse détecter vos hooks non minifiés.
+
+Après avoir modifié toute configuration de build, recompilez ou redémarrez votre serveur de développement pour vous assurer que la nouvelle configuration est prise en compte. Ensuite, rafraîchissez l’onglet de votre navigateur afin que Reactime puisse détecter vos hooks non minifiés.
 
 ### ❓ <b>Pourquoi Reactime m’indique qu’aucune application React n’a été trouvée ?</b>
 

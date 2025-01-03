@@ -219,6 +219,21 @@ Join our growing community of contributors and help shape the future of React de
 
 Reactime lost its connection to the tab you're monitoring, simply click the "reconnect" button to resume your work.
 
+### ❓ <b>Why isn’t Reactime finding my hooks?</b>
+
+Reactime detects and monitors hooks by traversing your application’s unminified React code in development mode. If your build process is minifying or uglifying your code—even for development builds—Reactime may not be able to properly locate and track your hooks. To fix this:
+
+1. **Ensure a true development build**: Double-check your bundler or build tool configuration (e.g., Webpack, Babel, Vite, etc.) to make sure that your application is not minimized or uglified in development mode.
+
+   - For example, with Webpack, make sure you’re running in mode: 'development', which should disable default minification.
+   - In a Create React App project, simply running npm start or yarn start will automatically configure a non-minified development build.
+
+2. **Check for overrides**: Ensure there are no custom Babel or Webpack plugins that minify your code, especially if you’re using frameworks like Next.js or Gatsby. Sometimes additional plugins or scripts might be running under the hood.
+
+3. **Restart & rebuild**: After changing any build configuration, rebuild or restart your development server to ensure the new configuration is applied. Then refresh your browser tab so Reactime can detect your unminified hooks.
+
+After changing any build configuration, rebuild or restart your development server to ensure the new configuration is applied. Then refresh your browser tab so Reactime can detect your unminified hooks.
+
 ### ❓ <b>Why is Reactime telling me that no React application is found?</b>
 
 Reactime initially runs using the dev tools global hook from the Chrome API. It
