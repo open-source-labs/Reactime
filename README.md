@@ -1,11 +1,9 @@
 <h1 align="center">
-  <br>
     <img src ="./assets/logos/marqueePromoTitle.png"/>
-    <br>
     <br>
   React Performance Tool
     <br>
-    <a href="https://osawards.com/react/">🏆 Nominated for React Open Source Awards 2020 </a>
+    <a href="https://osawards.com/react/">🏆 Nominated for React Open Source Awards 2020</a>
   <br>
 </h1>
 
@@ -31,17 +29,52 @@
 
 ### 🔍 State Visualization
 
-You can view your application's file structure and click on a snapshot to view
-your app's state. State can be visualized in a Component Graph, JSON Tree,
-Performance Graph, or the Accessibility Tree. Snapshot history can be visualized in the History tab.
-The Web Metrics tab provides some useful metrics for site performance. The accessibility tab
-visualizes an app's accessibility tree per state change.
-Snapshots can be compared with the previous snapshot, which can be viewed in Diff mode.
+<ul>
+  <li>
+    <strong>Multiple Views</strong>: Visualize your application state through Component Graphs, JSON Trees, Performance Graphs, and Accessibility Trees
+  </li>
+    <li>
+    <strong>History Timeline</strong>: Track state changes over time with an intuitive history visualization
+  </li>
+    <li>
+    <strong>Web Metrics</strong>: Monitor critical performance metrics in real-time
+  </li>
+      <li>
+    <strong>Accessibility Insights</strong>: Analyze your app's accessibility tree for each state change
+  </li>
+  </ul>
+  <br>
 
 <p>On the main page, there are two main selections from the dropdown panel:</p>
 <ul>
   <li>
-    <strong>Timejump Tab</strong>: View and navigate through the snapshot history of your application's state. You can jump to any point in time to see how the state evolves across changes. You can also use the play button to replay each state change automatically.
+    <strong>Timejump</strong>: View and navigate through the snapshot history of your application's state. You can jump to any point in time to see how the state evolves across changes. You can also use the play button to replay each state change automatically.
+  </li>
+  <li>
+    <strong>Providers / Consumers</strong>: Understand your application's context dependencies and their interactions better through visualizing its provider and consumer relationships.
+  </li>
+</ul>
+<br>
+
+  <p align="center">
+<img src="./assets/gifs/ProviderConsumer_V26.gif" />
+</p>
+<br>
+
+### ⏱️ Time-Travel Debugging
+
+<ul>
+  <li>
+    <strong>State Snapshots</strong>: Capture and navigate through your application's state history
+  </li>
+    <li>
+    <strong>Playback Controls</strong>: Automatically replay state changes with adjustable speed
+  </li>
+    <li>
+    <strong>Jump Points</strong>: Instantly navigate to any previous state
+  </li>
+      <li>
+    <strong>Diff Comparisons</strong>: Compare states between snapshots
   </li>
   </ul>
   <br>
@@ -51,35 +84,38 @@ Snapshots can be compared with the previous snapshot, which can be viewed in Dif
 </p>
 <br>
 
+### 📊 Performance Analysis
+
 <ul>
   <li>
-    <strong>Provider/Consumer Tab</strong>: Understand your application's context dependencies and their interactions better through visualizing its provider and consumer relationships.
+    <strong>Component Metrics</strong>: Track render times and performance bottlenecks
   </li>
-</ul>
+    <li>
+    <strong>Series Comparison</strong>: Compare performance across different sets of state changes
+  </li>
+    <li>
+    <strong>Re-render Detection</strong>: Identify and fix unnecessary render cycles
+  </li>
+      <li>
+    <strong>Web Vitals</strong>: Monitor Core Web Vitals and other performance metrics
+  </li>
+  </ul>
+  <br>
 
-  <p align="center">
-<img src="./assets/gifs/ProviderConsumer_V26.gif" />
-</p>
+### 🔄 Modern Framework Support
 
-<br>
-<br>
-
-### 🔹 Recording
-
-Whenever the state is changed (whenever setState, useState is called), this
-extension will create a snapshot of the current state tree and record it. Each
-snapshot will be displayed in Chrome DevTools under the Reactime panel.
-<br>
-<br>
-
-### 🔹 Components Comparison
-
-When toggled to a specific snapshot, a visualization of the individual
-components of the snapshot will be displayed. This can be done under the same
-Performance tab where the snapshots are rendered. You will also find details of
-each component upon hovering.
-<br>
-<br>
+<ul>
+  <li>
+    Full compatibility with <strong>Gatsby, Next.js, and Remix</strong>
+  </li>
+    <li>
+TypeScript support for class and functional components
+  </li>
+    <li>
+Support for React Hooks and Context API
+  </li>
+  </ul>
+  <br>
 
 ### 🔹 Download/Upload Snapshots
 
@@ -94,45 +130,6 @@ Download the recorded snapshots as a JSON file and upload them to access state t
 ### 🔹 Connection Status
 
 If Reactime loses its connection to the tab you're monitoring, simply click the "reconnect" button to resume your work.
-<br>
-<br>
-
-### 🔹 Re-render Optimization
-
-One of the most common issues that affects performance in React is unnecessary
-render cycles. This problem can be fixed by checking your renders in the
-Performance tab in Chrome DevTools under the Reactime panel.
-<br>
-<br>
-
-### 🔹 Jump through your snapshots
-
-Each recorded snapshot comes with its own corresponding vertical slider.
-By adjusting the slider a user can jump to any previously recorded snapshots.
-Hitting the jump button on any snapshot will allow a user to view state data at
-any point in the history of the target application.
-<br>
-<br>
-
-### 🔹 Play through your snapshots
-
-Users can play through recorded snapshots using the Play/Pause button below the snapshots panel and adjust the playback speed to suit their needs.
-<br>
-<br>
-
-### 🔹 Gatsby, Next.js, Remix
-
-Reactime offers full support for Gatsby, Next.js, and Remix applications. You would be able to
-identify unnecessary renders, duration of each rendering, travel-debugging
-features and visual representation of the tree components.
-<br>
-<br>
-
-### 🔹 TypeScript Support
-
-Reactime offers support for TypeScript applications using stateful class
-components and functional components. Further testing and development is
-required for custom hooks and Concurrent Mode.
 <br>
 <br>
 
@@ -162,29 +159,20 @@ If you would like to read more about previous releases, click <a href="https://g
 
 <p align="center">
 
-<h1>Installation</h1>
+<h1>🚀 Getting Started</h1>
 
 To get started, install the Reactime
 [extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga)
 from Chrome Web Store.
 
-After installing Reactime, you can test its functionalities with your React
-application in development mode.
+After installing Reactime, you can test its functionalities with your React application in development mode.
 
-Please note, the time jumping feature will <b>ONLY</b> work when your
-application is running in <b>development mode</b>.
+Please note, Reactime will <b>ONLY</b> work when your application is running in <b>development mode</b>.
 
 NOTE: The React Developer Tools
 [extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
 is also required for Reactime to run, if you do not already have it installed on
 your browser.
-
-### Looking to contribute to Reactime?
-
-<i>Please refer to Developer Install for a detailed guide:</i>
-
-Refer to the [DEVELOPER README](src/DEVELOPER_README.md) for more info on the project, and
-instructions on building from source.
 
 ### <b>How to Use</b>
 
@@ -193,6 +181,13 @@ After installing the Chrome extension, just open up your project in the browser.
 Then right click on your application and choose the 'Reactime' context menu item to open up a Reactime panel.
 
 Alternatively, you can open up your Chrome DevTools and navigate to the Reactime panel.
+
+### Looking to contribute to Reactime?
+
+<i>Please refer to Developer Install for a detailed guide:</i>
+
+Refer to the [👩‍💻 Developer README](src/DEVELOPER_README.md) for more info on the project, and
+instructions on building from source.
 
 ## <b>Troubleshooting</b>
 
