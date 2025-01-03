@@ -9,7 +9,7 @@
 <h4 align="center">A powerful Chrome extension that enhances React development with time-travel debugging and advanced performance monitoring</h4>
 <br>
 
-**[Read our Medium Article](https://medium.com/@elliesimens/reactime-reimagined-a-major-leap-forward-in-react-debugging-7b76a0a66f42) to learn more about Reactime’s behind-the-scenes and development process!**
+<h4 align="center"><a href="https://medium.com/@elliesimens/reactime-reimagined-a-major-leap-forward-in-react-debugging-7b76a0a66f42">Read our Medium Article</a> to learn more about Reactime’s behind-the-scenes and development process!</h4>
 <br>
 
 <p align="center">
