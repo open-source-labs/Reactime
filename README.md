@@ -9,7 +9,7 @@
   <br>
 </h1>
 
-<h4 align="center"> Reactime is an open-source Chrome developer tool for time travel debugging and performance monitoring in React applications. Reactime enables developers to record snapshots of application state, jump between and inspect state snapshots, and monitor performance metrics such as component render time and render frequency. </h4>
+<h4 align="center"> Reactime is an open-source Chrome extension that provides time-travel debugging and performance tracking for React applications. It allows developers to capture snapshots of application state, revisit and examine them, and monitor key web metrics. </h4>
 
 <br>
 <p align="center">
@@ -44,8 +44,9 @@ Snapshots can be compared with the previous snapshot, which can be viewed in Dif
 <p>On the main page, there are two main selections from the dropdown panel:</p>
 <ul>
   <li>
-    <strong>Timejump Tab</strong>: View and navigate through the snapshot history of your application's state. You can jump to any point in time to see how the state evolves across changes.
+    <strong>Timejump Tab</strong>: View and navigate through the snapshot history of your application's state. You can jump to any point in time to see how the state evolves across changes. You can also use the play button to replay each state change automatically.
   </li>
+  <br>
   <li>
     <strong>Provider/Consumer Tab</strong>: Understand your application's context dependencies and their interactions better through visualizing its provider and consumer relationships.
   </li>
@@ -94,7 +95,6 @@ Download the recorded snapshots as a JSON file and upload them to access state t
 <p align="center">
 <img src="./assets/gifs/ImportExportGif_v23.gif" />
 </p>
-<br>
 
 ### 🔹 Connection Status
 
@@ -125,26 +125,11 @@ Users can play through recorded snapshots using the Play/Pause button below the 
 <br>
 <br>
 
-### 🔹 Gatsby
+### 🔹 Gatsby, Next.js, Remix
 
-Reactime offers full support for Gatsby applications. You would be able to
+Reactime offers full support for Gatsby, Next.js, and Remix applications. You would be able to
 identify unnecessary renders, duration of each rendering, travel-debugging
 features and visual representation of the tree components.
-<br>
-<br>
-
-### 🔹 Next.js
-
-Reactime offers debugging and performance tools for Next.js apps: time-traveling
-debugging, preventing unnecessary component re-renders and making your
-application faster.
-<br>
-<br>
-
-### 🔹 Remix
-
-Reactime offers debugging and performance tools for Remix apps (in beta). Support still
-needs to be added for multi-route time traveling. Every other feature works.
 <br>
 <br>
 
@@ -169,21 +154,14 @@ of the structure and interfaces of the codebase.
 
 - In-app tab-specific tutorial walkthroughs
 - Hover over a component to view tooltip details on state visualizations
-- Double-click to collapse child components
-- Click to focus on a portion of the component map
-- A dropdown to support the development of projects on multiple tabs
+- Click to collapse child components
 - Intuitive navigation between state snapshots
 - Locked/unlocked feature allowing temporary pause of state monitoring
 - Prop visualization both in color and tickness of the branches of connecting the components
-- Heatmap bar underneath the top menu
 
 <h1>What's New!</h1>
 
-Reactime 25.0 includes a new prop visualization feature and heatmap bar for developers!
-
-We also addressed the previously reported freezing issues on start and brought up the Jest Library in much better condition as it was before; from 20% of the tests working to more than 85% now working correctly.
-
-Some of the UI was rearranged to be more aesthetically pleasing and render the main window bigger for the diplay of the component tree in the process.
+Reactime 26.0 includes....
 
 If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
 
@@ -199,21 +177,12 @@ After installing Reactime, you can test its functionalities with your React
 application in development mode.
 
 Please note, the time jumping feature will <b>ONLY</b> work when your
-application is running in <b>development mode</b>. In production mode, you are
-able to view your application’s component map but no additional features.
+application is running in <b>development mode</b>.
 
 NOTE: The React Developer Tools
 [extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
 is also required for Reactime to run, if you do not already have it installed on
 your browser.
-
-### Manual Installation
-
-Go to Chrome Extensions (make sure Chrome Extension is in Developer Mode) for
-manual installation in (https://developer.chrome.com/extensions/faq#faq-dev-01)
-and click on Load Unpacked. Use `src/extension/build/` to load this extension.
-Turn on 'Allow access to file URLs' in the extension details page if testing
-locally.
 
 ### Looking to contribute to Reactime?
 
@@ -242,11 +211,6 @@ times until you see Reactime running.
 
 Reactime works in tandem with the React Developer Tools to access a React application's Fiber tree; under the hood, Reactime traverses the Fiber tree through the React Developer Tool's global hook, pulling all relevant information needed to display to the developer
 
-### ❓ <b>There is a black screen instead of the Reactime extension</b>
-
-Try refreshing the application you want to test and refresh the DevTools by
-clicking the right mouse button “Reload frame”.
-
 ### ❓ <b>I found a bug in Reactime</b>
 
 Reactime is an open-source project, and we'd love to hear from you about
@@ -258,10 +222,6 @@ and create a pull request (or issue) to propose and collaborate on changes to Re
 With the release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
 'npm run dev' | 'npm run build' for backwards compatibility.<br/> For version
 Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
-
-## <b>Read More</b>
-
-- [Relaunching Reactime: Updates and a New Accessibility Feature!](https://medium.com/@evaury/relaunching-reactime-updates-and-a-new-accessibility-feature-1f0fd3a5bd8c)
 
 ## <b>Authors</b>
 
