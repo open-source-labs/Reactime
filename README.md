@@ -1,38 +1,35 @@
 <h1 align="center">
   <br>
-    <img src ="./assets/logos/chromeExtensionIcons/marqueePromoTitle.png"/>
+    <img src ="./assets/logos/marqueePromoTitle.png"/>
     <br>
     <br>
   React Performance Tool
     <br>
-    <a href="https://osawards.com/react/"> Nominated for React Open Source Awards 2020 </a>
+    <a href="https://osawards.com/react/">🏆 Nominated for React Open Source Awards 2020 </a>
   <br>
 </h1>
 
-<h4 align="center"> Reactime is an open-source Chrome extension that provides time-travel debugging and performance tracking for React applications. It allows developers to capture snapshots of application state, revisit and examine them, and monitor key web metrics. </h4>
-
+<h4 align="center">A powerful Chrome extension that enhances React development with time-travel debugging and advanced performance monitoring</h4>
 <br>
-<p align="center">
-  <a href="https://github.com/oslabs-beta/reactime">
-    <img src="https://img.shields.io/github/license/oslabs-beta/reactime" alt="GitHub">
+
+<a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">
+    <img src="https://img.shields.io/chrome-web-store/v/cgibknllccemdnfhfpmjhffpjfeidjga" alt="Chrome Web Store">
   </a>
-    <img src="https://img.shields.io/badge/linted%20with-eslint-blueviolet" alt="LintPrefs">
-</p>
 
 <h5 align="center">
 <br>
-  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href='./src/DEVELOPER_README.md'>DEVELOPER README</a>
+  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a>
   <br>
 </h5>
 <br>
 
 <p align="center">
-<img src="./assets/gifs/GeneralDemoGif_V23.gif" />
+<img src="./assets/gifs/GeneralDemoGif_V26.gif" />
 </p>
 
-## <h1>Features</h1>
+## <h1>✨ Key Features</h1>
 
-### 🔹 Viewing
+### 🔍 State Visualization
 
 You can view your application's file structure and click on a snapshot to view
 your app's state. State can be visualized in a Component Graph, JSON Tree,
@@ -46,18 +43,25 @@ Snapshots can be compared with the previous snapshot, which can be viewed in Dif
   <li>
     <strong>Timejump Tab</strong>: View and navigate through the snapshot history of your application's state. You can jump to any point in time to see how the state evolves across changes. You can also use the play button to replay each state change automatically.
   </li>
+  </ul>
   <br>
+
+  <p align="center">
+<img src="./assets/gifs/TimeTravelGif_V26.gif" />
+</p>
+<br>
+
+<ul>
   <li>
     <strong>Provider/Consumer Tab</strong>: Understand your application's context dependencies and their interactions better through visualizing its provider and consumer relationships.
   </li>
 </ul>
 
-<br>
-<br>
-
-<p align="center">
-<img src="./assets/gifs/TimeTravelGif_V23.gif" />
+  <p align="center">
+<img src="./assets/gifs/ProviderConsumer_V26.gif" />
 </p>
+
+<br>
 <br>
 
 ### 🔹 Recording
@@ -65,15 +69,6 @@ Snapshots can be compared with the previous snapshot, which can be viewed in Dif
 Whenever the state is changed (whenever setState, useState is called), this
 extension will create a snapshot of the current state tree and record it. Each
 snapshot will be displayed in Chrome DevTools under the Reactime panel.
-<br>
-<br>
-
-### 🔹 Snapshot Series and Action Comparison
-
-You can save a series of state snapshots and use it to analyze changes in
-component render performance between the current and the previous series of snapshots.
-You can also name specific snapshots and compare all snapshots with the same
-name.
 <br>
 <br>
 
@@ -93,12 +88,12 @@ Download the recorded snapshots as a JSON file and upload them to access state t
 <br>
 
 <p align="center">
-<img src="./assets/gifs/ImportExportGif_v23.gif" />
+<img src="./assets/gifs/ImportExportGif_V26.gif" />
 </p>
 
 ### 🔹 Connection Status
 
-If Reactime loses its connection to the tab you're monitoring, simply click the "reconnect" button to resume your work. You'll notice a circle located to the right of the button, which will appear as either red (indicating disconnection) or green (signifying a successful reconnection).
+If Reactime loses its connection to the tab you're monitoring, simply click the "reconnect" button to resume your work.
 <br>
 <br>
 
