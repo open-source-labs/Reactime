@@ -21,7 +21,7 @@
 
 <h5 align="center">
 <br>
-  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href='./src/README.md'>DEVELOPER README</a>
+  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href='./src/DEVELOPER_README.md'>DEVELOPER README</a>
   <br>
 </h5>
 <br>
@@ -30,16 +30,12 @@
 <img src="./assets/gifs/GeneralDemoGif_V23.gif" />
 </p>
 
-<p align="center">
-  <a href="https://www.reacti.me/">Website</a> 
-</p>
-
 ## <h1>Features</h1>
 
 ### 🔹 Viewing
 
 You can view your application's file structure and click on a snapshot to view
-your app's state. State can be visualized in a Component Graph, JSON Tree, 
+your app's state. State can be visualized in a Component Graph, JSON Tree,
 Performance Graph, or the Accessibility Tree. Snapshot history can be visualized in the History tab.
 The Web Metrics tab provides some useful metrics for site performance. The accessibility tab
 visualizes an app's accessibility tree per state change.
@@ -100,7 +96,7 @@ Download the recorded snapshots as a JSON file and upload them to access state t
 </p>
 <br>
 
-### 🔹 and Status
+### 🔹 Connection Status
 
 If Reactime loses its connection to the tab you're monitoring, simply click the "reconnect" button to resume your work. You'll notice a circle located to the right of the button, which will appear as either red (indicating disconnection) or green (signifying a successful reconnection).
 <br>
@@ -116,7 +112,7 @@ Performance tab in Chrome DevTools under the Reactime panel.
 
 ### 🔹 Jump through your snapshots
 
-Each recorded snapshot comes with its own corresponding vertical slider. 
+Each recorded snapshot comes with its own corresponding vertical slider.
 By adjusting the slider a user can jump to any previously recorded snapshots.
 Hitting the jump button on any snapshot will allow a user to view state data at
 any point in the history of the target application.
@@ -268,6 +264,7 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 - [Relaunching Reactime: Updates and a New Accessibility Feature!](https://medium.com/@evaury/relaunching-reactime-updates-and-a-new-accessibility-feature-1f0fd3a5bd8c)
 
 ## <b>Authors</b>
+
 - **Garrett Chow** - [@garrettlchow](https://github.com/garrettlchow)
 - **Ellie Simens** - [@elliesimens](https://github.com/elliesimens)
 - **Ragad Mohammed** - [@ragad-mohammed](https://github.com/ragad-mohammed)
