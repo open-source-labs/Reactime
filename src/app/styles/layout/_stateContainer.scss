@@ -43,15 +43,35 @@
     position: relative;
     white-space: nowrap;
 
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background-color: var(--color-primary);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
     &:hover {
       color: var(--text-primary);
       background-color: transparent;
+
+      &::after {
+        width: 100%;
+      }
     }
 
     &.is-active {
-      border-bottom: 2px solid var(--color-primary);
       color: var(--color-primary);
       background-color: transparent;
+
+      &::after {
+        width: 100%;
+        background-color: var(--color-primary);
+      }
     }
   }
 
