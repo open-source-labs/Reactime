@@ -36,16 +36,16 @@
 
 ### 🔍 State Visualization
 
-- **SMultiple Views**: Visualize your application state through Component Graphs, JSON Trees, Performance Graphs, and Accessibility Trees
-- **SHistory Timeline**: Track state changes over time with an intuitive history visualization
-- **SWeb Metrics**: Monitor critical performance metrics in real-time
-- **SAccessibility Insights**: Analyze your app's accessibility tree for each state change
+- **Multiple Views**: Visualize your application state through Component Graphs, JSON Trees, Performance Graphs, and Accessibility Trees
+- **History Timeline**: Track state changes over time with an intuitive history visualization
+- **Web Metrics**: Monitor critical performance metrics in real-time
+- **Accessibility Insights**: Analyze your app's accessibility tree for each state change
   <br>
 
 <p>On the main page, there are two main selections from the dropdown panel:</p>
 
-- **STimejump**: View and navigate through the snapshot history of your application's state. You can jump to any point in time to see how the state evolves across changes. You can also use the play button to replay each state change automatically.
-- **SProviders / Consumers**: Understand your application's context dependencies and their interactions better through visualizing its provider and consumer relationships.
+- **Timejump**: View and navigate through the snapshot history of your application's state. You can jump to any point in time to see how the state evolves across changes. You can also use the play button to replay each state change automatically.
+- **Providers / Consumers**: Understand your application's context dependencies and their interactions better through visualizing its provider and consumer relationships.
   <br>
 
 <p align="center">
@@ -72,6 +72,7 @@
 - **Series Comparison**: Compare performance across different sets of state changes
 - **Re-render Detection**: Identify and fix unnecessary render cycles
 - **Web Vitals**: Monitor Core Web Vitals and other performance metrics
+  <br>
   <br>
 
 ### 🔄 Modern Framework Support
@@ -159,6 +160,7 @@ Reactime 26.0 brings a complete overhaul to the React debugging experience, feat
 These updates make Reactime more powerful, reliable, and user-friendly than ever before, setting a new standard for React debugging tools.
 
 If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
+<br>
 
 <h1>🚀 Getting Started</h1>
 
@@ -187,15 +189,28 @@ There are two ways to open the Reactime panel:
    - Navigate to the "Reactime" tab
 
 Once launched, Reactime will automatically begin monitoring your application's state changes and performance metrics.
+<br>
 
-### Looking to contribute to Reactime?
+<h1>🤝 Contributing to Reactime</h1>
 
-<i>Please refer to Developer Install for a detailed guide:</i>
+We welcome contributions from developers of all skill levels! Here's how you can help make Reactime even better:
 
-Refer to the <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a> for more info on the project, and
-instructions on building from source.
+1. **Get Started**
 
-## <b>Troubleshooting</b>
+   - Fork the repository
+   - Review our comprehensive <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a>
+   - Set up your local development environment
+
+2. **Build Process**
+
+   - Follow our build instructions in the <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a>
+   - Test your changes thoroughly
+   - Submit a pull request
+
+Join our growing community of contributors and help shape the future of React debugging tools! For detailed contribution guidelines and project architecture information, please refer to our <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer Documentation</a>.
+<br>
+
+<h1>🛠️ Troubleshooting</h1>
 
 ### ❓ <b>Why is Reactime not recording new state changes?</b>
 
