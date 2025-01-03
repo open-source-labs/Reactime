@@ -161,6 +161,7 @@ These updates make Reactime more powerful, reliable, and user-friendly than ever
 
 If you would like to read more about previous releases, click <a href="https://github.com/open-source-labs/reactime/releases">here!</a>
 <br>
+<br>
 
 <h1>🚀 Getting Started</h1>
 
@@ -190,6 +191,7 @@ There are two ways to open the Reactime panel:
 
 Once launched, Reactime will automatically begin monitoring your application's state changes and performance metrics.
 <br>
+<br>
 
 <h1>🤝 Contributing to Reactime</h1>
 
@@ -198,16 +200,17 @@ We welcome contributions from developers of all skill levels! Here's how you can
 1. **Get Started**
 
    - Fork the repository
-   - Review our comprehensive <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a>
+   - Review our comprehensive Developer README
    - Set up your local development environment
 
 2. **Build Process**
 
-   - Follow our build instructions in the <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a>
+   - Follow our build instructions in the Developer README
    - Test your changes thoroughly
    - Submit a pull request
 
 Join our growing community of contributors and help shape the future of React debugging tools! For detailed contribution guidelines and project architecture information, please refer to our <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer Documentation</a>.
+<br>
 <br>
 
 <h1>🛠️ Troubleshooting</h1>
@@ -238,7 +241,7 @@ With the release of Node v18.12.1(LTS) on 11/4/22, the script has been updated t
 'npm run dev' | 'npm run build' for backwards compatibility.<br/> For version
 Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 
-## <b>Authors</b>
+<h1>✍️ Authors</h1>
 
 - **Garrett Chow** - [@garrettlchow](https://github.com/garrettlchow)
 - **Ellie Simens** - [@elliesimens](https://github.com/elliesimens)
@@ -354,7 +357,6 @@ Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
 - **David Moore** - [@Solodt55](https://github.com/Solodt55)
 - **John Banks** - [@Jbanks123](https://github.com/Jbanks123)
 
-## <b>License </b>
+<h1>⚖️ License </h1>
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
-for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
