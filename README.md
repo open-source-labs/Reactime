@@ -7,7 +7,6 @@
 </h1>
 
 <h4 align="center">A powerful Chrome extension that enhances React development with time-travel debugging and advanced performance monitoring</h4>
-<br>
 
 <h4 align="center"><a href="https://medium.com/@elliesimens/reactime-reimagined-a-major-leap-forward-in-react-debugging-7b76a0a66f42">Read our Medium Article</a> to learn more about Reactime’s behind-the-scenes and development process!</h4>
 <br>
@@ -82,7 +81,7 @@
 
 <ul>
   <li>
-    Full compatibility with <strong>Gatsby, Next.js, and Remix</strong>
+    Full compatibility with <strong>Next.js, Remix, Recoil, and Gatsby</strong>
   </li>
     <li>
 TypeScript support for class and functional components
@@ -196,7 +195,8 @@ Once launched, Reactime will automatically begin monitoring your application's s
 
 <h1>🤝 Contributing to Reactime</h1>
 
-We welcome contributions from developers of all skill levels! Here's how you can help make Reactime even better:
+We welcome contributions from developers of all skill levels! For detailed guidelines on how to contribute, please check out our
+<a href='./CONTRIBUTING.md'>🙋 Contributing README</
 
 1. **Get Started**
 
