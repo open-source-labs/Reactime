@@ -195,7 +195,7 @@ Une fois lancé, Reactime commencera automatiquement à surveiller les changemen
 
 <h1>🤝 Contribuer à Reactime</h1>
 
-Nous accueillons avec joie les contributions de développeurs de tous niveaux ! Voici comment vous pouvez aider à améliorer Reactime: <a href='./CONTRIBUTING.md'>🙋 Contributing README</
+Nous accueillons avec joie les contributions de développeurs de tous niveaux ! Voici comment vous pouvez aider à améliorer Reactime: <a href='./CONTRIBUTING.md'>🙋 Contributing README</a>
 
 1. **Commencer**
 

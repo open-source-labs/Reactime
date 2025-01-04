@@ -196,7 +196,7 @@ Once launched, Reactime will automatically begin monitoring your application's s
 <h1>🤝 Contributing to Reactime</h1>
 
 We welcome contributions from developers of all skill levels! For detailed guidelines on how to contribute, please check out our
-<a href='./CONTRIBUTING.md'>🙋 Contributing README</
+<a href='./CONTRIBUTING.md'>🙋 Contributing README</a>
 
 1. **Get Started**
 
