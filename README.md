@@ -195,8 +195,7 @@ Once launched, Reactime will automatically begin monitoring your application's s
 
 <h1>🤝 Contributing to Reactime</h1>
 
-We welcome contributions from developers of all skill levels! For detailed guidelines on how to contribute, please check out our
-<a href='./CONTRIBUTING.md'>🙋 Contributing README</a>
+We welcome contributions from developers of all skill levels! For detailed guidelines on how to contribute:
 
 1. **Get Started**
 
@@ -210,7 +209,7 @@ We welcome contributions from developers of all skill levels! For detailed guide
    - Test your changes thoroughly
    - Submit a pull request
 
-Join our growing community of contributors and help shape the future of React debugging tools! For detailed contribution guidelines and project architecture information, please refer to our <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a>.
+Join our growing community of contributors and help shape the future of React debugging tools! For detailed contribution guidelines and project architecture information, please refer to our <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a> and <a href='./CONTRIBUTING.md'>🙋 Contributing README</a>
 <br>
 <br>
 
