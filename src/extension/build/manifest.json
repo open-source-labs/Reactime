@@ -24,6 +24,6 @@
       "matches": ["<all_urls>"]
     }
   ],
-  "permissions": ["contextMenus", "tabs", "activeTab", "scripting", "debugger", "alarms"],
+  "permissions": ["tabs", "activeTab", "scripting", "debugger", "alarms"],
   "host_permissions": ["<all_urls>"]
 }

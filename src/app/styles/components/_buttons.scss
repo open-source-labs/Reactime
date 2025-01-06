@@ -55,7 +55,6 @@
   }
 }
 
-/* sidebar button open and closing functionality */
 .record-button-container {
   display: flex;
   align-items: center;
@@ -121,8 +120,8 @@
 /* Theme toggle button styling */
 .theme-toggle {
   position: relative;
-  width: 64px;
-  height: 32px;
+  width: 48px;
+  height: 24px;
   border-radius: 16px;
   border: 2px solid var(--border-color);
   background-color: var(--bg-tertiary);
@@ -138,8 +137,8 @@
 
 .theme-toggle-slider {
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background-color: var(--bg-primary);
   transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -150,7 +149,7 @@
 }
 
 .theme-toggle.dark .theme-toggle-slider {
-  transform: translateX(32px);
+  transform: translateX(24px);
   background-color: var(--color-primary);
 }
 
@@ -163,13 +162,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 8px;
+  padding: 0 4px;
   pointer-events: none;
 }
 
 .theme-toggle-icon {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   transition: color 300ms ease;
 }
 

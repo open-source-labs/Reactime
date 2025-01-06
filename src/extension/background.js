@@ -662,7 +662,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         htmlBody.appendChild(script);
       };
 
-      //if (tab.url?.startsWith("chrome://")) return undefined;
       chrome.scripting.executeScript({
         target: { tabId },
         func: injectScript,
