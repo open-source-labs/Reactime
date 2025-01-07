@@ -176,21 +176,21 @@ These updates make Reactime more powerful, reliable, and user-friendly than ever
 - React Developer Tools extension must be installed
 - Chrome browser (version 80 or higher recommended)
 
-### Launch Reactime\
+### Launch Reactime
 
 There are two ways to open the Reactime panel:
 
 1. **DevTools**
 
-- Open Chrome DevTools (F12 or ⌘+⌥+I)
-- Navigate to the "Reactime" tab
-- This will open Reactime as a panel within Chrome DevTools, integrated alongside your other development tools
+   - Open Chrome DevTools (F12 or ⌘+⌥+I)
+   - Navigate to the "Reactime" tab
+   - This will open Reactime as a panel within Chrome DevTools, integrated alongside your other development tools
 
 2. **Context Menu**
 
-- Right-click anywhere on your React application
-- Select "Reactime" from the context menu
-- This will open Reactime in a separate popup window which you can resize and position independently
+   - Right-click anywhere on your React application
+   - Select "Reactime" from the context menu
+   - This will open Reactime in a separate popup window which you can resize and position independently
 
 Once launched, Reactime will automatically begin monitoring your application's state changes and performance metrics.
 <br>
