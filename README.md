@@ -178,16 +178,9 @@ These updates make Reactime more powerful, reliable, and user-friendly than ever
 
 ### Launch Reactime
 
-There are two ways to open the Reactime panel:
-
-1. **Context Menu**
-
-   - Right-click anywhere on your React application
-   - Select "Reactime" from the context menu
-
-2. **DevTools**
-   - Open Chrome DevTools (F12 or ⌘+⌥+I)
-   - Navigate to the "Reactime" tab
+- Open Chrome DevTools (F12 or ⌘+⌥+I)
+- Navigate to the "Reactime" tab
+- This will open Reactime as a panel within Chrome DevTools, integrated alongside your other development tools
 
 Once launched, Reactime will automatically begin monitoring your application's state changes and performance metrics.
 <br>
