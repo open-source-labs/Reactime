@@ -20,8 +20,30 @@ function isLocalhost(url) {
 
 // Helper function to find localhost tab
 async function findLocalhostTab() {
-  const tabs = await chrome.tabs.query({ currentWindow: true });
-  return tabs.find((tab) => tab.url && isLocalhost(tab.url));
+  try {
+    // First check current window
+    const currentWindowTabs = await chrome.tabs.query({ currentWindow: true });
+    const localhostTab = currentWindowTabs.find((tab) => tab.url && isLocalhost(tab.url));
+
+    if (localhostTab) {
+      return localhostTab;
+    }
+
+    // If not found in current window, check all windows
+    const allTabs = await chrome.tabs.query({});
+    const localhostTabAnyWindow = allTabs.find((tab) => tab.url && isLocalhost(tab.url));
+
+    if (localhostTabAnyWindow) {
+      // Focus the window containing the localhost tab
+      await chrome.windows.update(localhostTabAnyWindow.windowId, { focused: true });
+      return localhostTabAnyWindow;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error finding localhost tab:', error);
+    return null;
+  }
 }
 
 //keep alive functionality to address port disconnection issues
@@ -329,13 +351,22 @@ async function getActiveTab() {
       return localhostTab.id;
     }
 
+    // If no localhost tab is found, provide a more informative error
+    const errorMessage =
+      'No localhost tab found. Please ensure:\n' +
+      '1. A React development server is running\n' +
+      '2. The server is using localhost\n' +
+      '3. The development page is open in Chrome';
+
+    console.warn(errorMessage);
+
     // Fallback to current active tab
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tabs.length > 0) {
       return tabs[0].id;
     }
 
-    throw new Error('No active tab');
+    throw new Error(errorMessage);
   } catch (error) {
     console.error('Error in getActiveTab:', error);
     throw error;

@@ -1,6 +1,6 @@
 {
   "name": "Reactime",
-  "version": "26.0",
+  "version": "26.1",
   "devtools_page": "devtools.html",
   "description": "A Chrome extension for time travel debugging and performance monitoring in React applications.",
   "manifest_version": 3,
