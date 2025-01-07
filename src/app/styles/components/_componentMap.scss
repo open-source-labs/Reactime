@@ -1,46 +1,148 @@
-// .compMapLink {
-//   // stroke: $map-link;
-//   stroke: $secondary-color;
-// }
-.compMapLink:hover {
-  box-shadow: 10px 10px rgb(163, 205, 24);
-};
-
-.comp-map-options {
-  color: $map-options-label;
+/* Component Map Container */
+.componentMapContainer {
+  fill: var(--bg-secondary);
+  transition: all 0.3s ease;
+  overflow: auto;
+}
+.componentMapContainer svg {
+  background-color: var(--bg-secondary);
 }
 
-//this was supposed to control the dropDownStyle object in LinkControls.tsx (the dropdown menus in ComponentMap)
-// .comp-map-dropdown {
-//   backgroundColor: #ff0008;
-//   color: #ff0007;
-//   background: #ff0006;
-// }
-
-// .compMapParent {
-//   //fill: $map-parent-fill;
-//   //stroke: $map-parent-stroke;
-// }
-
-.compMapParentText {
-  fill: $map-parent-text
+#root {
+  height: 100%;
 }
 
+/* Node Styling */
+.compMapParent,
 .compMapChild {
-  fill: $map-child-fill;
-  stroke: $map-child-stroke;
+  fill: var(--bg-primary);
+  stroke: var(--border-color);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.05));
+  transition: all 0.2s ease;
 }
 
-.compMapChildText {
-  fill: $map-child-text;
+.compMapParent:hover,
+.compMapChild:hover {
+  stroke: var(--color-primary);
+  stroke-width: 2px;
+  cursor: pointer;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
+/* Root Node Styling */
 .compMapRoot {
-  //fill: $map-root-fill;
-  stroke: $map-root-stroke;
+  fill: var(--color-primary);
+  stroke: var(--color-primary-dark);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: all 0.2s ease;
 }
 
+.compMapRoot:hover {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+  cursor: pointer;
+  transform: scale(1.05);
+}
+
+/* Text Styling */
 .compMapRootText {
-  fill: $map-root-text;
+  fill: var(--bg-primary);
+  font-weight: 500;
+  user-select: none;
 }
 
+.compMapParentText,
+.compMapChildText {
+  fill: var(--text-primary);
+  font-weight: 500;
+  user-select: none;
+}
+
+/* Link Styling */
+.compMapLink {
+  stroke-linecap: round;
+  transition: all 0.3s ease;
+}
+
+.compMapLink:hover {
+  stroke-width: 2;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.link-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  justify-content: space-between;
+  max-width: 1200px;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.control-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+.control-select {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  min-width: 100px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+}
+
+.control-select:hover {
+  border-color: var(--border-color-dark);
+  background-color: var(--bg-tertiary);
+}
+
+.control-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.1);
+}
+
+.control-range {
+  appearance: none;
+  width: 120px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-color);
+  outline: none;
+  margin: 0;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    cursor: pointer;
+    transition: all 200ms ease;
+    border: none;
+
+    &:hover {
+      background: var(--color-primary-dark);
+      transform: scale(1.1);
+    }
+  }
+}

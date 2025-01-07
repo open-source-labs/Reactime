@@ -1,292 +1,189 @@
 .state-container {
-  font-size: 10px;
   overflow: auto;
-  background-color: $state-background;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.toggleAC {
-  background: #ff0001;
-  height: 50%;
-  text-decoration: none;
+.app-body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  height: 100%;
+  min-height: 0;
+}
+
+.main-navbar-container--structural {
+  height: 0;
+  padding: 0;
   border: none;
-}
-
-.toggleAC:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-.state-container .main-navbar {
-  background-color: $state-background;
-  color: #ff0000;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  height: 35px;
-  margin: 6px;
-}
-
-.state-container .componentMapContainer {
-  height: 95% !important;
-  fill: $state-background;
-}
-
-.state-container .main-navbar-container {
-  position: sticky;
-  top: 0px;
-  left: 0px;
-  z-index: 1;
-  background-color: $state-background;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  height: 35px;
-}
-
-.no-data-message {
-  color: #ff0001;
-  font: normal 13px $text-font-stack;
-  padding: 10px;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .state-container {
-  .main-navbar-text {
-    margin: 6px;
-  }
-
-  .main-router-link {
-    font-size: 14px;
-    height: 75%;
-    width: 75px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    color: $header-button-inactive-text;
-
-    background: $header-button-inactive;
-    border-radius: 5px;
-    border: 1px solid rgba(184, 196, 194, 0.25);
-  }
-
-  .main-router-link:hover {
-    background: $header-button-hover;
-  }
-
-  .main-router-link.is-active {
-    background: $header-button-active;
-    color: $header-button-active-text;
-    margin: 3px;
-    border-radius: 5px;
-    border: 1px solid rgb(36, 37, 41);
-  }
-
   .router-link {
-    height: 100%;
-    // width: 34%;
-    width: 10%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: $navbar-unselected;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-secondary);
     text-decoration: none;
-    color: $navbar-unselected-text;
+    background-color: transparent;
+    cursor: pointer;
+    transition:
+      color 200ms ease,
+      border-color 200ms ease;
+    margin: 0;
+    position: relative;
+    white-space: nowrap;
 
-    font-size: 75%;
-    // border-top-right-radius: 10px;
-    // border-top-left-radius: 10px;
-    overflow: hidden;
-  }
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background-color: var(--color-primary);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
 
-  .map-tab1 {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-  }
+    &:hover {
+      color: var(--text-primary);
+      background-color: transparent;
 
-  .accessibility-tab {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-  }
+      &::after {
+        width: 100%;
+      }
+    }
 
-  .router-link:hover {
-    background-color: $navbar-hover;
-  }
+    &.is-active {
+      color: var(--color-primary);
+      background-color: transparent;
 
-  .router-link.is-active {
-    background-color: $navbar-selected;
-    color: $navbar-selected-text;
-  }
-
-  .navbar {
-    // background-color: $navbar-background;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    height: 30px;
-    position: fixed;
-    top: 4px; //should revisit to figure out a more dynamic way of sticking the navbar to the bottom of the main-navbar // <- tried placing the main nav on the same line to save space but ran into problems with the svg div of the tree + animation. Will need closer inspection
-    left: 50%;
-    transform: translateX(-50%);
-    width: 65vw;
-    z-index: 1;
-
-
-    @extend %disable-highlight;
+      &::after {
+        width: 100%;
+        background-color: var(--color-primary);
+      }
+    }
   }
 
   .main-navbar {
-    background-color: $header-background;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    height: 35px;
-    margin: 6px;
-  }
-
-  .main-navbar-container {
-    top: 0px;
-    left: 0px;
-    z-index: 1;
-    background-color: $header-background;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    height: 40px;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .main-navbar-container {
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    padding: 4.5px 24px;
   }
 }
 
-.no-data-message {
-  color: #ff0001;
-  font: normal 13px $text-font-stack;
-  padding: 10px;
+// tool tip styles
+.tooltip-header {
+  padding: 8px 8px 8px 12px;
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-primary-dark);
+  border-radius: 8px;
 }
 
-.performance-nav-bar-container {
-  background-color: #ff0002;
-  display: flex;
-  border: $performance-subtab-border;
-  height: 30px;
+.tooltip-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--bg-primary);
 }
 
-.router-link-performance {
-  height: 100%;
-  width: 34%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: $state-background;
-  text-decoration: none;
-  color: $performance-subtab-text;
+.tooltip-container {
+  width: 250px;
+  background-color: var(--bg-primary);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.router-link-performance:hover {
-  background-color: $performance-subtab-hover;
+.tooltip-section {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 150ms ease;
 }
 
-.router-link-performance.is-active {
-  font-weight: 600;
+.tooltip-section:last-child {
+  border-bottom: none;
+}
+
+.tooltip-section-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.tooltip-content {
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.tooltip-item {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.1);
+}
+
+.tooltip-item:last-child {
+  border-bottom: none;
+}
+
+.tooltip-data {
+  border-left: 2px solid var(--color-primary-dark);
+}
+
+.tooltip-container {
+  animation: tooltipFade 150ms ease-out;
 }
 
 // Web Metrics Container
 .web-metrics-container {
   display: grid;
-  grid-template-columns: auto auto;
-  justify-content: center;
+  grid-template-columns: repeat(3, 1fr);
 }
 
-//container for metrics
 .metric {
-  min-height: 200px;
-  min-width: 200px;
-}
-
-.bargraph {
-  position: relative;
-  margin-top: 1rem;
-}
-
-.bar-graph-axis {
-  stroke: cornflowerblue;
-}
-
-#hover-box {
-  max-width: 230px;
-  background-color: #51565e;
-  border-radius: 5px;
-  color: white;
-}
-
-.bargraph-position {
-  position: relative;
-}
-
-// tool tip styles
-
-.visx-tooltip {
-  overflow-y: auto;
-  overflow-wrap: break-word;
-  pointer-events: all !important;
-}
-
-.tooltipKey {
-  margin-bottom: -1px;
-}
-
-.historyToolTip {
-  z-index: 2;
-}
-
-// .state-container .router-link {
-//   border: 0.5px solid rgba(0, 0, 0, 0.5);
-//   border-bottom: none;
-// }
-
-.tooltipData {
-  background-color: #373737;
-  margin-top: 4px;
-  margin-bottom: 4px;
-  padding: 2px;
-  max-height: 30vh;
-}
-
-.tooltipData-JSONTree {
-  list-style: none;
-  margin-top: 1px;
-  margin-bottom: 1px;
-  margin-left: 2px;
-  margin-right: 2px;
-  padding: 0px;
-  overflow-y: auto;
-  max-height: 30vh;
-  scrollbar-color: #919499 #51565e;
-}
-
-.tooltipData-JSONTree::-webkit-scrollbar-thumb {
-  background: #919499;
-}
-
-.tooltipData-JSONTree::-webkit-scrollbar-track {
-  background: #51565e;
-}
-
-.app-body {
-  height: 100%;
-}
-
-.app-content {
-  height: 100%;
-}
-
-.heat-map-legend-container {
+  width: 100%;
   display: flex;
-  height: 3px;
-  width: 200px;
-  background-image: linear-gradient(to right, $heat-level-1, $heat-level-2, $heat-level-3, $heat-level-4);
+  justify-content: center;
+  align-items: center;
 }
 
+.hover-box {
+  max-width: 250px;
+  background-color: #51565e;
+  border-radius: 8px;
+  color: white;
+  padding: 2px 8px;
+  line-height: 16px;
+}
+
+/* Tree styling */
+.json-tree {
+  overflow: auto;
+  list-style: none;
+  padding: 16px;
+  margin: 0;
+}
+
+.tree-component {
+  height: 100%;
+  overflow: auto;
+}

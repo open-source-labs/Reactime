@@ -88,7 +88,9 @@ export const mainSlice = createSlice({
           const { snapshots: newSnaps } = payload[tab];
           tabs[tab] = {
             ...payload[tab],
-            sliderIndex: newSnaps.length - 1,
+            intervalId: tabs[tab].intervalId,
+            playing: tabs[tab].playing,
+            sliderIndex: tabs[tab].sliderIndex,
             seriesSavedStatus: false,
           };
         }
@@ -126,14 +128,6 @@ export const mainSlice = createSlice({
       state.port = action.payload;
     },
 
-    // JR: REFACTOR: 12.20.23 this code has if statement to catch diff shapes of payload ('number' vs 'object'). This should not be the case, the payload should always come in as expected.
-    // consider creating a custom typescript type for the action that setTab receives.
-
-    //JR: DOCS: 12.20.23 This code will update the currentTab being tracked in the Redux state. It depends, however, on the 'mode', which is a label for the "Locked" button status.
-    // The naming is unfortunate because the backend also has a mode variable that does a completely different thing (related to time travel navigation), which creates confusion. Consider renaming this to 'locked' or somesuch.
-    // Mode is an object that expects to contain a single key, paused, with a boolean value.
-    // If true: Reactime is 'Locked', and navigating to another tab will not update the Redux state and trigger Reactime to take any actions.
-    // If false: Reactime is 'Unlocked', and navigating to another tab will update the Redux state's currentTab, which will trigger Reactime to try to run on that new tab.
     setTab: (state, action) => {
       const { tabs, currentTab } = state;
       const { mode } = tabs[currentTab] || {};
@@ -202,6 +196,7 @@ export const mainSlice = createSlice({
     },
 
     changeSlider: (state, action) => {
+      //should really be called jump to snapshot
       const { port, currentTab, tabs } = state;
       const { hierarchy, snapshots } = tabs[currentTab] || {};
 
@@ -277,59 +272,6 @@ export const mainSlice = createSlice({
 
       tabs[currentTab].playing = true;
       tabs[currentTab].intervalId = action.payload;
-    },
-
-    moveForward: (state, action) => {
-      const { port, tabs, currentTab } = state;
-      const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
-
-      if (sliderIndex < snapshots.length - 1) {
-        const newIndex = sliderIndex + 1;
-        // eslint-disable-next-line max-len
-        // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
-        const nameFromIndex = findName(newIndex, hierarchy);
-
-        port.postMessage({
-          action: 'jumpToSnap',
-          payload: snapshots[newIndex],
-          index: newIndex,
-          name: nameFromIndex,
-          tabId: currentTab,
-        });
-
-        tabs[currentTab].sliderIndex = newIndex;
-
-        // message is coming from the user
-        if (!action.payload) {
-          clearInterval(intervalId);
-          tabs[currentTab].playing = false;
-        }
-      }
-    },
-
-    moveBackward: (state, action) => {
-      const { port, tabs, currentTab } = state;
-      const { hierarchy, snapshots, sliderIndex, intervalId } = tabs[currentTab] || {};
-
-      if (sliderIndex > 0) {
-        const newIndex = sliderIndex - 1;
-        // eslint-disable-next-line max-len
-        // finds the name by the newIndex parsing through the hierarchy to send to background.js the current name in the jump action
-        const nameFromIndex = findName(newIndex, hierarchy);
-
-        port.postMessage({
-          action: 'jumpToSnap',
-          payload: snapshots[newIndex],
-          index: newIndex,
-          name: nameFromIndex,
-          tabId: currentTab,
-          newProp: 'newPropFromReducer',
-        });
-        clearInterval(intervalId);
-
-        tabs[currentTab].sliderIndex = newIndex;
-        tabs[currentTab].playing = false;
-      }
     },
 
     resetSlider: (state) => {
@@ -426,30 +368,17 @@ export const mainSlice = createSlice({
       });
     },
 
-    save: (state, action) => {
-      const { currentTab, tabs } = state;
-
-      const { newSeries, newSeriesName } = action.payload;
-      if (!tabs[currentTab].seriesSavedStatus) {
-        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'inputBoxOpen' };
-        return;
-      }
-      // Runs if series name input box is active.
-      // Updates chrome local storage with the newly saved series. Console logging the seriesArray grabbed from local storage may be helpful.
-      if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
-        let seriesArray: any = localStorage.getItem('project');
-        seriesArray = seriesArray === null ? [] : JSON.parse(seriesArray);
-        newSeries.name = newSeriesName;
-        seriesArray.push(newSeries);
-        localStorage.setItem('project', JSON.stringify(seriesArray));
-        tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: 'saved' };
-        return;
-      }
-    },
-
     toggleExpanded: (state, action) => {
       const { tabs, currentTab } = state;
-      // find correct node from currLocation and toggle isExpanded
+      const snapshot = tabs[currentTab].currLocation.stateSnapshot;
+
+      // Special case for root node
+      if (action.payload.name === 'root' && snapshot.name === 'root') {
+        snapshot.isExpanded = !snapshot.isExpanded;
+        return;
+      }
+
+      // Regular case for other nodes
       const checkChildren = (node) => {
         if (_.isEqual(node, action.payload)) {
           node.isExpanded = !node.isExpanded;
@@ -459,25 +388,7 @@ export const mainSlice = createSlice({
           });
         }
       };
-      checkChildren(tabs[currentTab].currLocation.stateSnapshot);
-    },
-
-    deleteSeries: (state) => {
-      const { tabs, currentTab } = state;
-      const allStorage = () => {
-        const keys = Object.keys(localStorage);
-        let i = keys.length;
-        while (i--) {
-          localStorage.removeItem(keys[i]);
-        }
-      };
-      allStorage();
-      Object.keys(tabs).forEach((tab) => {
-        tabs[tab] = {
-          ...tabs[tab],
-        };
-      });
-      tabs[currentTab] = { ...tabs[currentTab], seriesSavedStatus: false };
+      checkChildren(snapshot);
     },
 
     disconnected: (state) => {
@@ -522,17 +433,13 @@ export const {
   launchContentScript,
   playForward,
   startPlaying,
-  moveForward,
-  moveBackward,
   resetSlider,
   toggleMode,
   importSnapshots,
   tutorialSaveSeriesToggle,
   onHover,
   onHoverExit,
-  save,
   toggleExpanded,
-  deleteSeries,
   disconnected,
   startReconnect,
   endConnect,

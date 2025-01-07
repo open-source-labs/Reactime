@@ -17,13 +17,43 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react'],
+            presets: [
+              [
+                '@babel/preset-env',
+                {
+                  targets: {
+                    node: 'current',
+                    browsers: ['last 2 versions', 'not dead', 'not < 2%', 'not ie 11'],
+                  },
+                  useBuiltIns: 'usage',
+                  corejs: 3,
+                },
+              ],
+              [
+                '@babel/preset-react',
+                {
+                  runtime: 'automatic',
+                },
+              ],
+            ],
+            plugins: ['@babel/plugin-transform-runtime'],
           },
         },
       },
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+              compilerOptions: {
+                target: 'es2018',
+                module: 'esnext',
+              },
+            },
+          },
+        ],
         exclude: /node_modules/,
       },
     ],

@@ -1,72 +1,107 @@
-# Welcome to the Reactime contributing guide!
+# Contributing to Reactime :sparkles:
 
-Thank you for investing your time in contributing to our project! :sparkles:.
+Thank you for your interest in making Reactime even better! :heart_eyes: Your help is invaluable, and we appreciate every contribution, big or small. This guide will walk you through the process of opening issues, creating pull requests, and navigating our workflow.
 
-In this guide you will get an overview of the contribution workflow from opening an issue, creating a PR, reviewing, and merging the PR.
+## New Contributor Guide :hatching_chick:
 
-## New contributor guide
+Whether you’re brand new to open source or a seasoned pro, we encourage you to:
 
-To get an overview of the project, read the [README](README.md). Here are some resources to help you get started with open source contributions:
+- **Check out our [README](README.md).**  
+  It’ll give you a birds-eye view of what Reactime does and how you can get involved.
+- **Explore these helpful resources:**
+  - [Finding ways to contribute to open source on GitHub](https://docs.github.com/en/get-started/exploring-projects-on-github/finding-ways-to-contribute-to-open-source-on-github)
+  - [Set up Git](https://docs.github.com/en/get-started/quickstart/set-up-git)
+  - [GitHub flow](https://docs.github.com/en/get-started/quickstart/github-flow)
+  - [Collaborating with pull requests](https://docs.github.com/en/github/collaborating-with-pull-requests)
 
-- [Finding ways to contribute to open source on GitHub](https://docs.github.com/en/get-started/exploring-projects-on-github/finding-ways-to-contribute-to-open-source-on-github)
-- [Set up Git](https://docs.github.com/en/get-started/quickstart/set-up-git)
-- [GitHub flow](https://docs.github.com/en/get-started/quickstart/github-flow)
-- [Collaborating with pull requests](https://docs.github.com/en/github/collaborating-with-pull-requests)
+## Getting Started :rocket:
 
-## Getting started
+If you want to understand the codebase in more detail, take a look at our [Developer Guidelines](src/DEVELOPER_README.md). :confetti_ball:
 
-To navigate our codebase with confidence, see the [Developer Guidelines](src/DEVELOPER_README.md) :confetti_ball:.
+### Issues :eyes:
 
-### Issues
+#### Creating a New Issue :new:
 
-#### Create a new issue
+1. **Check existing issues.**  
+   Before opening a new issue, please [search if it already exists](https://github.com/open-source-labs/reactime/issues).
 
-If you spot a problem with the docs, [search if an issue already exists](https://github.com/open-source-labs/reactime/issues). If a related issue doesn't exist, you can open a new issue using a relevant [issue form](https://github.com/open-source-labs/reactime/issues/new).
+2. **Open your own issue.**  
+   If you can’t find an existing issue, feel free to [open a new one](https://github.com/open-source-labs/reactime/issues/new) to report bugs, request features, or suggest improvements.
 
-#### Solve an issue
+#### Solving an Issue :wrench:
 
-Scan through our [existing issues](https://github.com/open-source-labs/reactime/issues) to find one that interests you. As a general rule, we don’t assign issues to anyone. If you find an issue to work on, you are welcome to open a PR with a fix.
+1. **Pick an issue.**  
+   Browse through our [open issues](https://github.com/open-source-labs/reactime/issues). We don’t officially assign them, so if something sparks your interest, go for it!
 
-### Make Changes
+2. **Open a pull request.**  
+   Once you’re ready to propose a fix or feature, you can open a PR referencing the issue you’re solving.
 
-#### Make changes in the UI
+### Make Changes :rainbow:
 
-Click **Make a contribution** at the bottom of any docs page to make small changes such as a typo, sentence fix, or a broken link. This takes you to the `.md` file where you can make your changes and [create a pull request](#pull-request) for a review.
+#### Small Edits in the UI :pencil2:
 
-#### Make changes locally
+- Click **Make a contribution** at the bottom of any documentation page to quickly fix typos, broken links, or small wording changes.
+- This will take you directly to the `.md` file, where you can make edits and open a pull request.
 
-1. [Install Git LFS](https://docs.github.com/en/github/managing-large-files/versioning-large-files/installing-git-large-file-storage).
+#### Larger Changes Locally :computer:
 
-2. Fork the repository.
+1. **Install Git LFS.**  
+   Follow the instructions [here](https://docs.github.com/en/github/managing-large-files/versioning-large-files/installing-git-large-file-storage).
 
-- Using GitHub Desktop:
+2. **Fork the Repository.**
 
-  - [Getting started with GitHub Desktop](https://docs.github.com/en/desktop/installing-and-configuring-github-desktop/getting-started-with-github-desktop) will guide you through setting up Desktop.
-  - Once Desktop is set up, you can use it to [fork the repo](https://github.com/open-source-labs/reactime.git)!
+   - **GitHub Desktop:**  
+     [Getting started with GitHub Desktop](https://docs.github.com/en/desktop/installing-and-configuring-github-desktop/getting-started-with-github-desktop) walks you through setup. Then, you can [fork the repo](https://github.com/open-source-labs/reactime.git) right from GitHub Desktop!
+   - **Command Line:**  
+     [Fork the repo](https://github.com/open-source-labs/reactime.git) and clone your fork locally so you can work on your own copy.
 
-- Using the command line:
-  - [Fork the repo](https://github.com/open-source-labs/reactime.git) so that you can make your changes without affecting the original project until you're ready to merge them.
+3. **Create a working branch.**  
+   Name it something descriptive (e.g., `feature/new-feature` or `fix/typo-in-docs`).
 
-3. Create a working branch and start with your changes!
+### Commit Your Changes :white_check_mark:
 
-### Commit your update
+When you’re happy with your updates:
 
-Commit the changes once you are happy with them.
+1. **Commit them locally.**  
+   Write clear commit messages describing _what_ you changed and _why_.
 
-### Pull Request
+2. **Push to your branch.**  
+   This makes your changes visible on GitHub.
 
-When you're finished with the changes, create a pull request, also known as a PR.
+### Open a Pull Request :arrows_counterclockwise:
 
-- Fill the "Ready for review" template so that we can review your PR. This template helps reviewers understand your changes as well as the purpose of your pull request.
-- Don't forget to [link PR to issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue) if you are solving one.
-- Enable the checkbox to [allow maintainer edits](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/allowing-changes-to-a-pull-request-branch-created-from-a-fork) so the branch can be updated for a merge.
-  Once you submit your PR, a Docs team member will review your proposal. We may ask questions or request additional information.
-- We may ask for changes to be made before a PR can be merged, either using [suggested changes](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/incorporating-feedback-in-your-pull-request) or pull request comments. You can apply suggested changes directly through the UI. You can make any other changes in your fork, then commit them to your branch.
-- As you update your PR and apply changes, mark each conversation as [resolved](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/commenting-on-a-pull-request#resolving-conversations).
-- If you run into any merge issues, checkout this [git tutorial](https://github.com/skills/resolve-merge-conflicts) to help you resolve merge conflicts and other issues.
+Once you’ve finished working and pushed your code:
 
-### Your PR is merged!
+1. **Create the PR.**  
+   Click on **Compare & pull request** on your branch to open a new PR.
 
-Congratulations :tada::tada: The Reactime team thanks you! :sparkles:.
+2. **Fill the “Ready for review” template.**  
+   This helps reviewers quickly understand the context and purpose of your changes.
 
-Once your PR is merged, your contributions will be publicly visible on [Reactime](https://github.com/open-source-labs/reactime)!
+3. **Link Issues.**  
+   If your PR fixes or relates to an existing issue, [link it](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue) in the PR description.
+
+4. **Allow Maintainer Edits.**  
+   Check the box so our team can help update your branch if needed.
+
+5. **Address Feedback.**  
+   If reviewers suggest changes, you can:
+
+   - Apply **suggested changes** directly on the GitHub UI.
+   - Make edits in your local branch and push them.
+
+6. **Resolve Conversations.**  
+   Mark each PR comment as [resolved](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/commenting-on-a-pull-request#resolving-conversations) once you’ve addressed it.
+
+7. **Handle Merge Conflicts.**  
+   Check out [this tutorial](https://github.com/skills/resolve-merge-conflicts) if you get stuck.
+
+## Your PR is Merged! :tada:
+
+**Congratulations and thank you!** :dancer: :dancer: Once we merge your PR, your contributions become part of Reactime. We appreciate every contribution, and we hope you’ll stick around for more.
+
+> If you have any further questions or ideas, don’t hesitate to open another issue or join the conversation in the repo!
+
+---
+
+Happy coding and welcome to the Reactime community! :sparkles:

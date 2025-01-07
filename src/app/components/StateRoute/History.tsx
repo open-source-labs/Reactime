@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable */
 // @ts-nocheck
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 // formatting findDiff return data to show the changes with colors, aligns with actions.tsx
 import { diff, formatters } from 'jsondiffpatch';
 import * as d3 from 'd3';
@@ -14,11 +14,15 @@ import { changeView, changeSlider, setCurrentTabInApp } from '../../slices/mainS
 */
 
 const defaultMargin: DefaultMargin = {
-  top: 30,
+  top: 60,
   left: 30,
   right: 55,
   bottom: 70,
 };
+
+// Fixed node separation distances
+const FIXED_NODE_HEIGHT = 150; // Vertical distance between nodes
+const FIXED_NODE_WIDTH = 200; // Horizontal distance between nodes
 
 // main function exported to StateRoute
 // below we destructure the props
@@ -36,126 +40,87 @@ function History(props: Record<string, unknown>): JSX.Element {
   const dispatch = useDispatch();
 
   const svgRef = React.useRef(null);
-  const root = JSON.parse(JSON.stringify(hierarchy)); // why do we stringify and then parse our hierarchy back to JSON? (asked 7/31/23)
+  const root = JSON.parse(JSON.stringify(hierarchy));
+  const historyEndRef = useRef<HTMLDivElement>(null);
+
   // setting the margins for the Map to render in the tab window.
   const innerWidth: number = totalWidth - margin.left - margin.right;
   const innerHeight: number = totalHeight - margin.top - margin.bottom - 60;
 
-  function labelCurrentNode(d3root) {
-    // iterates through the parents of a node and applies a color property
-    if (d3root.data.index === currLocation.index) {
-      // node.data aka d3root.data allows us to access associated node data. So if node.index === currLocation.index...
-
-      let currNode = d3root; // make our input the currNode
-
-      while (currNode.parent) {
-        // while there are parent nodes
-        currNode.color = '#999'; // change or give the node a color property
-        currNode = currNode.parent; // change currNode to the parent
-      }
-
-      currNode.color = '#999'; // when there are no more parent nodes, change or give the last node a color property
-
-      return d3root; // return the modified d3root
-    }
-
-    let found;
-
-    if (!d3root.children) {
-      // if root has no children array
-      return found; // return undefined
-    }
-
-    d3root.children.forEach((child) => {
-      // for each child node within the children array
-      if (!found) {
-        // if found is undefined
-        found = labelCurrentNode(child); //
-      }
-    });
-    return found; // return's the found child node
-  }
-
   function findDiff(index) {
-    // determines the difference between our current index and the index-1 snapshot and produces an html string
     const statelessCleaning = (obj: {
-      //'statelessCleaning' functions in the same way as the 'statelessCleaning' function in Diff.tsx
       name?: string;
       componentData?: object;
       state?: string | any;
       stateSnaphot?: object;
       children?: any[];
     }) => {
-      const newObj = { ...obj }; // duplicate our input object into a new object
+      if (!obj) return {}; // Add null check
 
-      if (newObj.name === 'nameless') {
-        // if our new object's name is nameless
-        delete newObj.name; // delete the name property
-      }
-      if (newObj.componentData) {
-        // if our new object has a componentData property
-        delete newObj.componentData; // delete the componentData property
-      }
-      if (newObj.state === 'stateless') {
-        // if if our new object's state is stateless
-        delete newObj.state; // delete the state property
-      }
+      const newObj = { ...obj };
+      if (newObj.name === 'nameless') delete newObj.name;
+      if (newObj.componentData) delete newObj.componentData;
+      if (newObj.state === 'stateless') delete newObj.state;
       if (newObj.stateSnaphot) {
-        // if our new object has a stateSnaphot property
-        newObj.stateSnaphot = statelessCleaning(obj.stateSnaphot); // run statelessCleaning on the stateSnapshot
+        newObj.stateSnaphot = statelessCleaning(obj.stateSnaphot);
       }
-
       if (newObj.children) {
-        // if our new object has a children property
         newObj.children = [];
-        if (obj.children.length > 0) {
-          // and if our input object's children property is non-empty, go through each children object from our input object and determine, if the object being iterated on either has a stateless state or has a children array with a non-zero amount of objects. Objects that fulfill the above that need to be cleaned through statelessCleaning. Those that are cleaned through this process are then pushed to the new object's children array.
+        // Add null check for children array
+        if (Array.isArray(obj.children) && obj.children.length > 0) {
           obj.children.forEach((element: { state?: object | string; children?: [] }) => {
-            if (element.state !== 'stateless' || element.children.length > 0) {
+            // Add null check for element
+            if (
+              element &&
+              ((element.state && element.state !== 'stateless') ||
+                (element.children && element.children.length > 0))
+            ) {
               const clean = statelessCleaning(element);
               newObj.children.push(clean);
             }
           });
         }
       }
-      return newObj; // return the cleaned state snapshot(s)
+      return newObj;
     };
 
     function findStateChangeObj(delta, changedState = []) {
-      // function determines whether delta has resulted in a changedState. Function would return an empty array if there were no changes to state and an array of objects that changed state.
-      if (!delta.children && !delta.state) {
-        // if delta doesn't have a children property or a state property
-        return changedState; // returns an empty array
-      }
-
+      if (!delta) return changedState; // Add null check
+      if (!delta.children && !delta.state) return changedState;
       if (delta.state && delta.state[0] !== 'stateless') {
-        // ignore stateless delta objects
-        changedState.push(delta.state); // and push stateful delta objects to changedState
+        changedState.push(delta.state);
       }
-
-      if (!delta.children) {
-        // if the delta doesn't have any children
-        return changedState; // return the changedState array with any and all stateful delta objects.
-      }
-
+      if (!delta.children) return changedState;
       Object.keys(delta.children).forEach((child) => {
-        // but if the delta object did have children, we iterate through each child object
-        // if (isNaN(child) === false) {
-        changedState.push(...findStateChangeObj(delta.children[child])); // recursively call this function on each child object. Push every 'stateful' child into the changedState array.
-        // }
+        if (delta.children[child]) {
+          // Add null check
+          changedState.push(...findStateChangeObj(delta.children[child]));
+        }
       });
-
-      return changedState; // return the changedState array with any and all stateful delta objects.
+      return changedState;
     }
 
-    const delta = diff(
-      // 'diff' function from 'jsondiffpatch' returns the difference in state between the (snapshot that occurred before the indexed snapshot) and the (indexed snapshot).
-      statelessCleaning(snapshots[index - 1]),
-      statelessCleaning(snapshots[index]),
-    );
-    const changedState = findStateChangeObj(delta); // determines if delta had any stateful changes
-    const html = formatters.html.format(changedState[0]); // formats the difference into html string
-    return html; // return html string
+    if (index === 0) return '<span class="initial-state">Initial State</span>';
+
+    // Add null checks for snapshots
+    if (!snapshots || !snapshots[index] || !snapshots[index - 1]) {
+      return 'No state changes';
+    }
+
+    try {
+      const delta = diff(
+        statelessCleaning(snapshots[index - 1]),
+        statelessCleaning(snapshots[index]),
+      );
+
+      if (!delta) return '<span class="no-changes">No State Changes</span>';
+
+      const changedState = findStateChangeObj(delta);
+      return changedState.length > 0 ? formatters.html.format(changedState[0]) : 'No state changes';
+    } catch (error) {
+      console.error('Error in findDiff:', error);
+      return 'Error comparing states';
+    }
   }
 
   /**
@@ -163,160 +128,139 @@ function History(props: Record<string, unknown>): JSX.Element {
    */
 
   const makeD3Tree = () => {
-    const svg = d3.select(svgRef.current); // d3.select Selects the first element/node that matches svgRef.current. If no element/node match returns an empty selection. If multiple elements/nodes match the selector, only the first matching element/node (in document order) will be selected.
-    svg.selectAll('*').remove(); // Selects all elements. The elements will be selected in document order (top-to-bottom). We then remove the selected elements/nodes from the DOM. This is important as to ensure that the SVG is empty before rendering the D3 based visualization to avoid interference/overlap with any previously rendered content.
-    const tree = (data) => {
-      // function that takes in data and turns it into a d3 tree.
-      const treeRoot = d3.hierarchy(data); // 'd3.hierarchy' constructs a root node from the specified hierarchical data.
-      return d3.tree().size([innerWidth, innerHeight])(treeRoot); // d3.tree creates a new tree layout with a size option of innerWidth (~line 41) and innerHeight (~line 42). We specify our new tree layout's root as 'treeRoot' which assigns an x and y property to each node to represent an [x, y] coordinate system.
-    };
+    const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove();
 
-    const d3root = tree(root); // create a d3. tree from our root
-    const currNode = labelCurrentNode(d3root); // iterate through our nodes and apply a color property
+    // Create tree layout with fixed node size
+    const treeLayout = d3
+      .tree()
+      .nodeSize([FIXED_NODE_WIDTH, FIXED_NODE_HEIGHT])
+      .separation((a, b) => {
+        // Increase separation between unrelated subtrees
+        return a.parent === b.parent ? 1.2 : 2;
+      });
 
-    const g = svg //serves as a container for the nodes and links within the D3 Visualization of the tree
-      .append('g') // create an element 'g' on svg
-      .attr(
-        'transform',
-        `translate(${margin.left},${d3root.height === 0 ? totalHeight / 2 : margin.top})`, //Set the position of the group 'g' by translating it horizontally by 'margin.left' pixels and vertically based on the conditional expression.
-      );
+    // Create hierarchy and compute initial layout
+    const d3root = d3.hierarchy(root);
+    treeLayout(d3root);
 
-    const link = g //responsible for rendering the links or connectors between the nodes in the d3 Tree
-      .selectAll('.link') // select all elements that contain the string '.link' and return a selection
+    // Calculate the bounds of the tree
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+
+    d3root.each((d) => {
+      minX = Math.min(minX, d.x);
+      maxX = Math.max(maxX, d.x);
+      minY = Math.min(minY, d.y);
+      maxY = Math.max(maxY, d.y);
+    });
+
+    // Calculate the actual dimensions needed
+    const actualWidth = maxX - minX + FIXED_NODE_WIDTH;
+    const actualHeight = maxY - minY + FIXED_NODE_HEIGHT;
+
+    // Set SVG dimensions to accommodate the tree
+    const svgWidth = Math.max(actualWidth + margin.left + margin.right, totalWidth);
+    svg
+      .attr('width', svgWidth)
+      .attr('height', Math.max(actualHeight + margin.top + margin.bottom, totalHeight));
+
+    // Calculate center offset to keep root centered
+    const rootOffset = -d3root.x;
+    const horizontalCenter = svgWidth / 2;
+
+    // Create container group and apply transforms
+    const g = svg
+      .append('g')
+      .attr('transform', `translate(${horizontalCenter + rootOffset},${margin.top})`);
+
+    // Draw links
+    const link = g
+      .selectAll('.link')
       .data(d3root.descendants().slice(1))
       .enter()
       .append('path')
-      .attr('class', 'link')
-      .attr('stroke', '#161617')
-      .attr('fill', 'none')
-      .attr(
-        //defines the path attribute (d) for each link (edge) between nodes, using a Bézier curve (C) to connect the source node's coordinates (d.x, d.y) to the midpoint between the source and target nodes and then to the target node's coordinates (d.parent.x, d.parent.y)
-        'd',
-        (d) =>
-          `M${d.x},${d.y}C${d.x},${(d.y + d.parent.y) / 2} ${d.parent.x},${
-            (d.y + d.parent.y) / 2
-          } ${d.parent.x},${d.parent.y}`,
-      )
       .attr('class', (d) => {
-        // Adding a class based on the current node's data
-        if (d.data.index === currLocation.index) {
-          return 'link current-link'; // Apply both 'link' and 'current-link' classes
-        }
-        return 'link'; // Apply only the 'link' class
+        return d.data.index === currLocation.index ? 'link current-link' : 'link';
+      })
+      .attr('d', (d) => {
+        return `M${d.x},${d.y}
+                C${d.x},${(d.y + d.parent.y) / 2}
+                  ${d.parent.x},${(d.y + d.parent.y) / 2}
+                  ${d.parent.x},${d.parent.y}`;
       });
 
-    const node = g //responsible for rendering nodes in d3 visualization tree
+    // Create node groups
+    const node = g
       .selectAll('.node')
       .data(d3root.descendants())
       .enter()
       .append('g')
-      .style('cursor', 'pointer')
-      .attr('class', `snapshotNode`)
+      .attr('class', (d) => {
+        const baseClass = 'node';
+        const internalClass = d.children ? ' node--internal' : '';
+        const activeClass = d.data.index === currLocation.index ? ' active' : '';
+        return baseClass + internalClass + activeClass;
+      })
+      .attr('transform', (d) => `translate(${d.x},${d.y})`)
       .on('click', (event, d) => {
         dispatch(changeView(d.data.index));
         dispatch(changeSlider(d.data.index));
-        /*
-          created popup div and appended it to display div(returned in this function) 
-
-          D3 doesn't utilize z-index for priority, rather decides on placement by order of rendering needed to define the return div with a className to have a target to append to with the correct level of priority
-        */
-        function renderToolTip() {
-          const [x, y] = d3.pointer(event);
-          const div = d3
-            .select('.display:first-child')
-            .append('div')
-            .attr('class', `tooltip`)
-            .attr('id', `tt-${d.data.index}`)
-            .style('left', `${event.clientX - 10}px`)
-            .style('top', `${event.clientY - 10}px`)
-            .style('max-height', `25%`)
-            .style('overflow', `scroll`);
-          d3.selectAll('.tooltip').html(findDiff(d.data.index));
-        }
-
-        if (d3.selectAll('.tooltip')._groups['0'].length === 0) {
-          renderToolTip(); //if there are no tooltips left in the doc, we call the function to create a new tooltip
-        } else {
-          if (d3.selectAll(`#tt-${d.data.index}`)._groups['0'].length === 0) {
-            // if there is no tooltip with the specific id
-            d3.selectAll('.tooltip').remove(); //remove any existing tooltips
-            renderToolTip(); //call the function again to create a new tooltip
-          }
-        }
-      })
-      .on('mouseenter', function (event, d) {
-        const [x, y] = d3.pointer(event);
-        if (d3.selectAll('.tooltip')._groups['0'].length === 0) {
-          const div = d3
-            .select('.display:first-child')
-            .append('div')
-            .attr('class', `tooltip`)
-            .attr('id', `tt-${d.data.index}`)
-            .style('left', `${event.clientX + 0}px`)
-            .style('top', `${event.clientY + 0}px`)
-            .style('max-height', `25%`)
-            .style('overflow', `auto`)
-            .on('mouseenter', function (event, d) {})
-            .on('mouseleave', function (event, d) {
-              d3.selectAll('.tooltip').remove().style('display', 'hidden');
-            });
-
-          d3.selectAll('.tooltip').html(findDiff(d.data.index));
-        }
-      })
-      .on('mouseleave', function (event, d) {
-        if (event.relatedTarget.id !== `tt-${d.data.index}`) {
-          d3.selectAll('.tooltip').transition().delay(100).remove();
-        }
-      })
-
-      .attr('transform', function (d) {
-        return `translate(${d.x},${d.y})`;
       });
 
-    const tooltip = d3
-      .select('.tooltip')
-      .on('mousemove', function (event, d) {
-        d3.select('.tooltip').style('opacity', '1');
-      })
-      .on('mouseleave', function (event, d) {
-        d3.selectAll('.tooltip').remove();
-      });
-
+    // Add rectangles for nodes with consistent size
     node
-      .append('circle')
-      .attr('fill', (d) => {
-        if (d.data.index === currLocation.index) {
-          return '#284b63';
-        }
-        return d.color ? d.color : '#555';
-      })
-      .attr('r', 18);
+      .append('rect')
+      .attr('width', 200)
+      .attr('height', 120)
+      .attr('x', -100)
+      .attr('y', -40)
+      .attr('rx', 8)
+      .attr('ry', 8);
 
+    // Add snapshot titles
     node
       .append('text')
-      .attr('dy', '0.31em')
+      .attr('dy', '-20')
       .attr('text-anchor', 'middle')
-      .attr('fill', 'white')
-      .text((d) => `${d.data.name}.${d.data.branch}`)
-      .clone(true)
-      .lower()
-      .attr('stroke', 'white');
+      .attr('class', 'snapshot-title')
+      .text((d) => `Snapshot ${d.data.index + 1}`);
+
+    // Add state changes text
+    node
+      .append('foreignObject')
+      .attr('x', -85)
+      .attr('y', -15)
+      .attr('width', 170)
+      .attr('height', 90)
+      .append('xhtml:div')
+      .style('font-size', '12px')
+      .style('text-align', 'left')
+      .style('padding-left', '8px')
+      .html((d) => findDiff(d.data.index));
+
+    if (historyEndRef.current) {
+      historyEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
     return svg.node();
   };
 
   useEffect(() => {
     makeD3Tree();
-  }, [root /*, currLocation*/]); // if the 'root' or 'currLocation' changes, re-build the D3 Tree
+  }, [root, currLocation]);
 
   useEffect(() => {
     dispatch(setCurrentTabInApp('history')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.
   }, []);
 
-  // then rendering each node in History tab to render using D3, which will share area with LegendKey
   return (
-    <div className='display'>
-      <svg ref={svgRef} width={totalWidth} height={totalHeight} />
+    <div className='history-view'>
+      <div className='display'>
+        <svg ref={svgRef} width={totalWidth} height={totalHeight} />
+        <div ref={historyEndRef} className='history-end-anchor' />
+      </div>
     </div>
   );
 }

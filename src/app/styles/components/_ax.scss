@@ -1,6 +1,80 @@
-// Ax.tsx
-#axControls {
-    display: inline-flex;
-    position: sticky;
-    left: 0;
+/* Container for the radio controls */
+.accessibility-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+}
+
+/* Hide the default radio inputs */
+.accessibility-controls input[type='radio'] {
+  display: none;
+}
+
+/* Style the labels as buttons */
+.accessibility-controls label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--bg-primary);
+  background-color: var(--color-primary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  user-select: none;
+}
+
+.accessibility-controls label:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.accessibility-disable input[type='radio'] {
+  display: none;
+}
+
+.accessibility-disable label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  user-select: none;
+}
+
+.accessibility-disable label:hover {
+  border-color: var(--border-color-dark);
+  background-color: var(--bg-tertiary);
+}
+
+.accessibility-text {
+  padding: 12px 24px;
+  max-width: 800px;
+  line-height: 1.5;
+}
+
+.accessibility-text p {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+.tooltipData-JSONTree {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
 }

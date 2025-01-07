@@ -24,19 +24,18 @@ const margin = {
   top: 30,
   right: 30,
   bottom: 0,
-  left: 50,
+  left: 70,
 };
-const axisColor = '#161617';
-const axisTickLabelColor = '#363638';
-const axisLabelColor = '#363638';
+const axisColor = 'var(--text-primary)';
+const axisTickLabelColor = 'var(--text-secondary)';
+const axisLabelColor = 'var(--text-primary)';
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
-  //backgroundColor: 'rgba(0,0,0,0.9)', //defaults to white
-  //color: 'white', //defaults to a gray
-  fontSize: '16px',
   lineHeight: '18px',
-  fontFamily: 'Roboto',
+  pointerEvents: 'all !important',
+  padding: '8px',
+  borderRadius: '8px',
 };
 
 const BarGraph = (props: BarGraphProps): JSX.Element => {
@@ -75,7 +74,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
 
   const keys = Object.keys(data.componentData);
   const getSnapshotId = (d: snapshot) => d.snapshotId; // data accessor (used to generate scales) and formatter (add units for on hover box). d comes from data.barstack post filtered data
-  const formatSnapshotId = (id) => `Snapshot ID: ${id}`; // returns snapshot id when invoked in tooltip section
+  const formatSnapshotId = (id) => `ID: ${id}`; // returns snapshot id when invoked in tooltip section
   const formatRenderTime = (time) => `${time} ms `; // returns render time when invoked in tooltip section
 
   const snapshotIdScale = scaleBand<string>({
@@ -91,16 +90,16 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
   });
 
   const LMcolorScale = [
-    '#a0c1d6',
-    '#669bbc',
-    '#105377',
-    '#003049',
-    '#55a8ac',
-    '#3c6e71',
-    '#1c494b',
-    '#c1676d',
-    '#c1121f',
-    '#780000',
+    '#14b8a6', // Teal (matching existing accent)
+    '#0d9488', // Darker teal (matching existing accent)
+    '#3c6e71', // Primary strong teal
+    '#284b63', // Primary blue
+    '#2c5282', // Deeper blue
+    '#1a365d', // Navy
+    '#2d3748', // Blue gray
+    '#4a5568', // Darker blue gray
+    '#718096', // Medium blue gray
+    '#a0aec0', // Light blue gray
   ];
 
   const colorScale = scaleOrdinal<string>({
@@ -112,7 +111,7 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
   // setting max dimensions and scale ranges
   const xMax = width - margin.left - margin.right;
   snapshotIdScale.rangeRound([0, xMax]);
-  const yMax = height - margin.top - 150;
+  const yMax = height - margin.top - 100;
   renderingScale.range([yMax, 0]);
 
   const toStorage = {
@@ -121,56 +120,16 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
     data,
   };
 
-  useEffect(() => {
-    // Animates the save series button.
-    const saveButtons = document.getElementsByClassName('save-series-button'); // finds the buttom in the DOM
-    for (let i = 0; i < saveButtons.length; i++) {
-      if (tabs[currentTab].seriesSavedStatus === 'saved') {
-        saveButtons[i].classList.add('animate');
-        saveButtons[i].innerHTML = 'Saved!';
-      } else {
-        saveButtons[i].innerHTML = 'Save Series';
-        saveButtons[i].classList.remove('animate');
-      }
-    }
-  });
-
-  const saveSeriesClickHandler = () => {
-    // function to save the currently selected series
-    if (tabs[currentTab].seriesSavedStatus === 'inputBoxOpen') {
-      const actionNames = document.getElementsByClassName('actionname');
-      for (let i = 0; i < actionNames.length; i += 1) {
-        toStorage.data.barStack[i].name = actionNames[i].value;
-      }
-      dispatch(save({ newSeries: toStorage, newSeriesName: seriesNameInput })); // saves the series under seriesName
-      setSeriesNameInput(`Series ${comparison.length}`); // sends a reducer that saves the series/toStorage object the user wants to chrome local storage
-      return;
-    }
-    //if for some reason, code doesn't hit in first conditional, we have error handling below to account it
-    dispatch(save({ newSeries: toStorage, newSeriesName: '' })); // or use a default value for newSeriesName
-  };
-
-  const textbox = // Need to change so textbox isn't empty before saving
-    tabs[currentTab].seriesSavedStatus === 'inputBoxOpen' ? (
-      <input
-        type='text'
-        id='seriesname'
-        placeholder='Enter Series Name'
-        onChange={(e) => setSeriesNameInput(e.target.value)}
-      />
-    ) : null;
   return (
     <div className='bargraph-position'>
       <div className='saveSeriesContainer'>
-        {textbox}
-        <button type='button' className='save-series-button' onClick={saveSeriesClickHandler}>
-          Save Series
-        </button>
         <form className='routesForm' id='routes-formcontrol'>
-          <label id='routes-dropdown'>Select Route: </label>
+          <label id='routes-dropdown' htmlFor='routes-select'>
+            Route:{' '}
+          </label>
           <select
             className='performance-dropdown'
-            labelId='demo-simple-select-label'
+            labelid='demo-simple-select-label'
             id='routes-select'
             onChange={(e) => {
               setRoute(e.target.value);
@@ -181,20 +140,30 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
           >
             <option>All Routes</option>
             {allRoutes.map((route) => (
-              <option className='routes'>{route}</option>
+              <option key={route} className='routes'>
+                {route}
+              </option>
             ))}
           </select>
         </form>
         <form className='routesForm' id='routes-formcontrol'>
-          <label id='routes-dropdown'>Select Snapshot: </label>
+          <label id='routes-dropdown' htmlFor='snapshot-select'>
+            Snapshot:{' '}
+          </label>
           <select
             labelid='demo-simple-select-label'
             id='snapshot-select'
-            onChange={(e) => setSnapshot(e.target.value)}
+            value={snapshot}
+            onChange={(e) => {
+              e.preventDefault();
+              setSnapshot(e.target.value);
+            }}
           >
             <option value='All Snapshots'>All Snapshots</option>
             {filteredSnapshots.map((route) => (
-              <option className='routes'>{route.snapshotId}</option>
+              <option key={route.snapshotId} className='routes'>
+                {route.snapshotId}
+              </option>
             ))}
           </select>
         </form>
@@ -299,17 +268,18 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
             fontSize: 11,
             textAnchor: 'middle',
           })}
+          tickFormat={() => ''} // Add this line to hide tick labels
         />
-        <Text x={-yMax / 2 - 75} y='15' transform='rotate(-90)' fontSize={16} fill={axisLabelColor}>
+        <Text x={-yMax / 2 - 75} y='30' transform='rotate(-90)' fontSize={16} fill={axisLabelColor}>
           Rendering Time (ms)
         </Text>
         <br />
         {snapshot === 'All Snapshots' ? (
-          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={16} fill={axisLabelColor}>
+          <Text x={xMax / 2 + 15} y={yMax + 62} fontSize={16} fill={axisLabelColor}>
             Snapshot ID
           </Text>
         ) : (
-          <Text x={xMax / 2 + 15} y={yMax + 70} fontSize={16} fill={axisLabelColor}>
+          <Text x={xMax / 2 + 15} y={yMax + 62} fontSize={16} fill={axisLabelColor}>
             Components
           </Text>
         )}
@@ -324,11 +294,15 @@ const BarGraph = (props: BarGraphProps): JSX.Element => {
             left={tooltipLeft}
             style={tooltipStyles}
           >
-            <div style={{ color: colorScale(tooltipData.key) }}>
+            <div
+              style={{
+                color: colorScale(tooltipData.key),
+                paddingBottom: '8px',
+              }}
+            >
               {' '}
               <strong>{tooltipData.key}</strong>{' '}
             </div>
-            <div>{'State: ' + data.componentData[tooltipData.key].stateType}</div>
             <div> {'Render time: ' + formatRenderTime(tooltipData.bar.data[tooltipData.key])} </div>
             <div>
               {' '}

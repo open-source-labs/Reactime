@@ -17,8 +17,7 @@ const colors = {
   base06: '#b9b6b0',
   base07: '#e7e9db',
   base08: '#ef6155',
-  base09: '#824508', //base09 is orange for booleans and numbers. This base in particular fails to match the entered color.
-  // base09: '#592bad', // alternative purple
+  base09: '#824508',
   base0A: '#fec418',
   base0B: '#48b685',
   base0C: '#5bc4bf',
@@ -68,7 +67,7 @@ const ToolTipDataDisplay = ({ containerName, dataObj }) => {
   }
 
   return (
-    <div className='tooltipData' key={`${containerName}-data-container`}>
+    <div key={`${containerName}-data-container`}>
       <JSONTree
         data={printableObject} // data to be rendered, a snapshot object
         theme={{ extend: colors, tree: () => ({ className: `tooltipData-JSONTree` }) }} // theme set to a base16 theme that has been extended to include  "className: 'json-tree'"
