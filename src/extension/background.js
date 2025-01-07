@@ -880,3 +880,45 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sendResponse({ success: true });
   }
 });
+
+// when reactime is installed
+// create a context menu that will open our devtools in a new window
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: 'reactime',
+    title: 'Reactime',
+    contexts: ['page', 'selection', 'image', 'link'],
+  });
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === 'reactime') {
+    chrome.windows
+      .create({
+        url: chrome.runtime.getURL('panel.html'),
+        type: 'popup',
+        width: 1200,
+        height: 800,
+      })
+      .then((window) => {
+        // Listen for window close
+        chrome.windows.onRemoved.addListener(function windowClosedListener(windowId) {
+          if (windowId === window.id) {
+            // Cleanup when window is closed
+            portsArr.forEach((port) => {
+              try {
+                port.disconnect();
+              } catch (error) {
+                console.warn('Error disconnecting port:', error);
+              }
+            });
+            // Clear the ports array
+            portsArr.length = 0;
+
+            // Remove this specific listener
+            chrome.windows.onRemoved.removeListener(windowClosedListener);
+          }
+        });
+      });
+  }
+});
