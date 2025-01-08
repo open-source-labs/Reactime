@@ -23,7 +23,7 @@
 
 <h5 align="center">
 <br>
-  <a href="./README.md">🇺🇸 &nbsp; ENGLISH VERSION </a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href='./src/DEVELOPER_README.md'>👩‍💻 Руководство для разработчиков</a>
+  <a href="./README.md">🇺🇸 &nbsp; ENGLISH VERSION </a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href="./README.id.md">🇮🇩  &nbsp; VERSI BAHASA INDONESIA</a> &nbsp; • &nbsp; <a href='./src/DEVELOPER_README.md'>👩‍💻 Руководство для разработчиков</a>
   <br>
 </h5>
 <br>
