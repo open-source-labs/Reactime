@@ -1,20 +1,10 @@
 /* eslint-disable max-len */
 import React, { useState } from 'react';
-import MainSlider from '../components/TimeTravel/MainSlider';
 import Dropdown from '../components/TimeTravel/Dropdown';
-import {
-  playForward,
-  pause,
-  startPlaying,
-  moveForward,
-  moveBackward,
-  resetSlider,
-} from '../slices/mainSlice';
+import { playForward, pause, startPlaying, resetSlider, changeSlider } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainState, RootState, TravelContainerProps } from '../FrontendTypes';
-import { Button } from '@mui/material';
-import FastRewindIcon from '@mui/icons-material/FastRewind';
-import FastForwardIcon from '@mui/icons-material/FastForward';
+import { Play, Pause } from 'lucide-react';
 
 /*
   This container renders the time-travel play button, seek bar, playback controls, and the playback speed dropdown, located towards the bottom of the application, above the locked, download, upload, and tutorial buttons
@@ -54,6 +44,7 @@ function play( // function that will start/pause slider movement
         // as long as we're not the last snapshot, increment slider up through our dispatch and increment index
         dispatch(playForward(true));
         currentIndex += 1;
+        dispatch(changeSlider(currentIndex));
       } else {
         dispatch(pause()); // pause the slider when we reach the end
       }
@@ -72,40 +63,16 @@ function TravelContainer(props: TravelContainerProps): JSX.Element {
 
   return (
     <div className='travel-container'>
-      <Button
+      <button
         className='play-button'
-        variant='contained'
-        sx={{ height: 25, p: 0, mr: 1, ml: 1 }}
-        type='button'
-        // data-testid, prop for testing in RTL
-        data-testid='play-button-test'
-        //REMOVED DISPATCH FROM PLAY
         // @ts-ignore
         onClick={() => play(selectedSpeed.value, playing, dispatch, snapshotsLength, sliderIndex)}
       >
-        {playing ? 'Pause' : 'Play'}
-      </Button>
-      <MainSlider className='main-slider' snapshotsLength={snapshotsLength} />
-      <Button
-        variant='contained'
-        className='backward-button'
-        onClick={() => dispatch(moveBackward(false))}
-        type='button'
-        sx={{ height: 25, minWidth: 30, p: 0, mr: 1 }}
-        aria-label='Backward'
-      >
-        <FastRewindIcon className='backward-button-icon' />
-      </Button>
-      <Button
-        variant='contained'
-        className='forward-button'
-        onClick={() => dispatch(moveForward(false))}
-        type='button'
-        sx={{ height: 25, minWidth: 30, p: 0 }}
-        aria-label='Forward'
-      >
-        <FastForwardIcon className='forward-button-icon' />
-      </Button>
+        <div className='play-button-content'>
+          {playing ? <Pause size={18} /> : <Play size={18} />}
+          <span>{playing ? 'Pause' : 'Play'}</span>
+        </div>
+      </button>
       <Dropdown speeds={speeds} selectedSpeed={selectedSpeed} setSpeed={setSpeed} />
     </div>
   );

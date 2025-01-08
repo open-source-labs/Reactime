@@ -1,19 +1,16 @@
 import React, { useEffect } from 'react';
 import Charts from 'react-apexcharts';
 import ReactHover, { Trigger, Hover } from 'react-hover';
-import { OptionsCursorTrueWithMargin } from '../../../FrontendTypes';
 import { setCurrentTabInApp } from '../../../slices/mainSlice';
 import { useDispatch } from 'react-redux';
-/*
-  Used to render a single radial graph on the 'Web Metrics' tab
-*/
 
-const radialGraph = (props) => {
+const WebMetrics = (props) => {
   const dispatch = useDispatch();
+
   const state = {
-    series: [props.series], // series appears to be the scale at which data is displayed based on the type of webMetrics measured.
+    series: props.series,
     options: {
-      colors: [props.color], // color of the webmetrics performance bar from 'StateRoute'
+      colors: [props.color],
       chart: {
         height: 100,
         width: 100,
@@ -21,6 +18,7 @@ const radialGraph = (props) => {
         toolbar: {
           show: false,
         },
+        foreColor: 'var(--text-primary)',
       },
       plotOptions: {
         radialBar: {
@@ -30,7 +28,6 @@ const radialGraph = (props) => {
             margin: 0,
             size: '75%',
             background: 'transparent',
-            // background: '#242529',
             image: props.overLimit
               ? 'https://static.vecteezy.com/system/resources/thumbnails/012/042/301/small/warning-sign-icon-transparent-background-free-png.png'
               : undefined,
@@ -49,29 +46,21 @@ const radialGraph = (props) => {
             },
           },
           track: {
-            background: '#161617',
-            strokeWidth: '3%',
-            margin: 0, // margin is in pixels
-            dropShadow: {
-              enabled: true,
-              top: -3,
-              left: 0,
-              blur: 4,
-              opacity: 0.35,
-            },
+            background: 'var(--border-color-dark)',
+            strokeWidth: '10%',
+            margin: 0,
           },
-
           dataLabels: {
             show: true,
             name: {
               offsetY: -10,
               show: true,
-              color: '#161617',
+              color: 'var(--text-primary)',
               fontSize: '24px',
             },
             value: {
               formatter: props.formatted,
-              color: '#3c6e71',
+              color: 'var(--color-primary)',
               fontSize: '16px',
               show: true,
             },
@@ -98,45 +87,58 @@ const radialGraph = (props) => {
   };
 
   useEffect(() => {
-    dispatch(setCurrentTabInApp('webmetrics')); // dispatch sent at initial page load allowing changing "immer's" draft.currentTabInApp to 'webmetrics' to facilitate render.
+    dispatch(setCurrentTabInApp('webmetrics'));
   }, []);
 
-  const optionsCursorTrueWithMargin: OptionsCursorTrueWithMargin = {
-    followCursor: true,
+  const getThresholdColor = (type: string): string => {
+    switch (type) {
+      case 'good':
+        return '#0bce6b';
+      case 'improvement':
+        return '#fc5a03';
+      case 'poor':
+        return '#fc2000';
+      default:
+        return 'var(--text-primary)';
+    }
+  };
+
+  const hoverOptions = {
+    followCursor: false,
     shiftX: 20,
     shiftY: 0,
   };
 
   return (
     <div className='metric'>
-      <ReactHover options={optionsCursorTrueWithMargin}>
+      <ReactHover options={hoverOptions}>
         <Trigger type='trigger'>
-          <div id='chart'>
+          <div id='chart' className='chart-container'>
             <Charts
               options={state.options}
               series={state.series}
               type='radialBar'
-              height={350}
-              width={350}
+              height={250}
+              width={250}
             />
           </div>
         </Trigger>
         <Hover type='hover'>
-          <div style={{ zIndex: 1, position: 'relative', padding: '0.5rem 1rem' }} id='hover-box'>
+          <div className='hover-box'>
             <p>
               <strong>{props.name}</strong>
             </p>
             <p>{props.description}</p>
             <p>
-              <span style={{ color: '#0bce6b' }}>Good: </span>
+              <span style={{ color: getThresholdColor('good') }}>Good: </span>
               {`< ${props.score[0]}`}
             </p>
             <p>
-              <span style={{ color: '#fc5a03' }}>Needs Improvement: </span>
+              <span style={{ color: getThresholdColor('improvement') }}>Needs Improvement: </span>
               {`< ${props.score[1]}`}
             </p>
             <p>
-              <span style={{ color: '#fc2000' }}>Poor: </span>
+              <span style={{ color: getThresholdColor('poor') }}>Poor: </span>
               {`> ${props.score[1]}`}
             </p>
           </div>
@@ -146,4 +148,4 @@ const radialGraph = (props) => {
   );
 };
 
-export default radialGraph;
+export default WebMetrics;

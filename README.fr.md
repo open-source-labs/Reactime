@@ -1,217 +1,269 @@
+<!-- Fichier : README.fr.md -->
 <h1 align="center">
-  <br>
-    <img src ="./assets/logos/chromeExtensionIcons/marqueePromoTitle.png"/>
+    <img src ="./assets/logos/marqueePromoTitle.png"/>
+  Outil de Performance React
     <br>
-    <br>
-  Outil de Performance pour React
-    <br>
-    <a href="https://osawards.com/react/"> Nominé aux React Open Source Awards 2020 </a>
+    <a href="https://osawards.com/react/">🏆 Nominé pour les React Open Source Awards 2020</a>
   <br>
 </h1>
 
-<h4 align="center"> Reactime est un outil de performance et de débogage pour les développeurs React. Reactime enregistre un snapshot à chaque fois que l'état d'une application cible est modifié et permet à l'utilisateur de passer à tout état précédemment enregistré. </h4>
-
+<h4 align="center">Une puissante extension Chrome qui améliore le développement React grâce au débogage avec retour dans le temps et à la surveillance avancée des performances</h4>
 <br>
-<p align="center">
-  <a href="https://github.com/oslabs-beta/reactime">
-    <img src="https://img.shields.io/github/license/oslabs-beta/reactime" alt="GitHub">
-  </a>
-  <a href="https://travis-ci.com/oslabs-beta/reactime">
-    <img src="https://travis-ci.com/oslabs-beta/reactime.svg?branch=master" alt="Build Status">
-  </a>
-  <a href="http://badge.fury.io/js/reactime">
-    <img src="https://badge.fury.io/js/reactime.svg" alt="npm version">
-  </a>
-    <img src="https://img.shields.io/badge/babel%20preset-airbnb-ff69b4" alt="BabelPresetPrefs">
-    <img src="https://img.shields.io/badge/linted%20with-eslint-blueviolet" alt="LintPrefs">
-</p>
 
-<!-- [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime) [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime) [![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime) ![BabelPresetPrefs](https://img.shields.io/badge/babel%20preset-airbnb-ff69b4) ![LintPrefs](https://img.shields.io/badge/linted%20with-eslint-blueviolet) -->
+<p align="center">
+  <a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">
+    <img src="https://img.shields.io/chrome-web-store/v/cgibknllccemdnfhfpmjhffpjfeidjga" alt="Chrome Web Store" />
+  </a>
+  <a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">
+    <img src="https://img.shields.io/chrome-web-store/users/cgibknllccemdnfhfpmjhffpjfeidjga" alt="Utilisateurs sur le Chrome Web Store" />
+  </a>
+  <a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">
+    <img src="https://img.shields.io/chrome-web-store/rating/cgibknllccemdnfhfpmjhffpjfeidjga" alt="Évaluation sur le Chrome Web Store" />
+  </a>
+</p>
 
 <h5 align="center">
 <br>
-  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.md">🇺🇸  &nbsp; ENGLISH VERSION </a>
+  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.md">🇺🇸  &nbsp; ENGLISH VERSION </a> &nbsp; • &nbsp; <a href='./src/DEVELOPER_README.md'>👩‍💻 README Développeur</a>
   <br>
 </h5>
 <br>
 
 <p align="center">
-<img src="./assets/gifs/GeneralDemoGif_v23.gif" />
+<img src="./assets/gifs/GeneralDemoGif_V26.gif" />
 </p>
 
-<p align="center">
-  <a href="https://www.reacti.me/">Website</a>
-</p>
+## <h1>✨ Fonctionnalités Clés</h1>
 
-## <h1>Caractéristiques</h1>
+### 🔍 Visualisation de l'État
 
-### 🔹 L'Exposition
+- **Vues Multiples** : Visualisez l’état de votre application via des Graphiques de Composants, des Arborescences JSON, des Graphiques de Performances et des Arbres d’Accessibilité
+- **Historique Chronologique** : Suivez l’évolution de l’état dans le temps grâce à une représentation intuitive de l’historique
+- **Métriques Web** : Surveillez en temps réel les métriques de performance essentielles
+- **Aperçus d’Accessibilité** : Analysez l’arbre d’accessibilité de votre application pour chaque changement d’état
+  <br>
 
-Vous pouvez afficher la structure des fichiers de votre application et cliquer sur un instantané pour afficher l'état de votre application. L'état peut être visualisé dans un graphique de composants, une arborescence JSON ou un graphique de performances. Les instantanés peuvent être comparés à l'instantané précédent, qui peut être visualisé en mode Diff.
-<br>
-<br>
+<p>Sur la page principale, vous disposez de deux choix principaux depuis le menu déroulant :</p>
 
-<p align="center">
-<img src="./assets/gifs/TimeTravelGif.gif" />
-</p>
-<br>
-
-### 🔹 Enregistrement
-
-Chaque fois que l'état est modifié (chaque fois que setState, useState est appelé), cette extension créera un instantané de l'arborescence d'état actuelle et l'enregistrera. Chaque instantané sera affiché dans Chrome DevTools sous le panneau Reactime.
-<br>
-<br>
-
-### 🔹 Série d'Instantanés et Comparaison d'Actions
-
-Vous pouvez enregistrer une série d'instantanés d'état et l'utilizer pour analyser les changements dans les performances de rendu des composants entre la série d'instantanés actuelle et la série précédente. Vous pouvez également nommer les instantanés spécifiquement et comparer tous les instantanés avec le même nom.
-<br>
-<br>
-
-### 🔹 Comparaison des Composants
-
-Lorsque vous avez sélectionné un instantané, un visualisation des composants individuels de l'instantané sera affichée. Cela peut être fait sous le même onglet de performances où les instantanés sont rendus. Vous pouvez également voir les détails d'un composant lorsque vous le survolez avec votre souris.
-<br>
-<br>
-
-### 🔹 Importer/Exporter des Instantanés
-
-Vous pouvez exporter les instantanés sous forme de fichier JSON et les importer pour accéder aux arborescences d'état sur différentes sessions.
-<br>
-<br>
+- **Timejump** : Consultez et naviguez dans l’historique des snapshots de l’état de votre application. Vous pouvez revenir à n’importe quel point dans le temps pour observer l’évolution de l’état au fil des modifications. Vous pouvez également utiliser le bouton de lecture pour rejouer chaque changement d’état automatiquement.
+- **Providers / Consumers** : Comprenez mieux les dépendances de contexte de votre application et leurs interactions grâce à une visualisation des relations entre fournisseurs et consommateurs.
+  <br>
 
 <p align="center">
-<img src="./assets/gifs/importExport_v22.gif" />
+<img src="./assets/gifs/ProviderConsumer_V26.gif" />
 </p>
 <br>
 
-### 🔹 Reconnexion et Statut
+### ⏱️ Débogage avec Retour dans le Temps
 
-Si Reactime se déconnecte de l'application que vous surveillez, cliquez sur le bouton « Reconnect » pour reprendre votre travail. Il y a un petit cercle sur le bouton. Il sera vert si vous êtes connecté et rouge si vous êtes déconnecté.
-<br>
-<br>
+- **Snapshots d’État** : Capturez et naviguez à travers l’historique d’état de votre application
+- **Commandes de Lecture** : Rejouez automatiquement les changements d’état avec une vitesse ajustable
+- **Points de Saut** : Naviguez instantanément vers n’importe quel état antérieur
+- **Comparaisons Diff** : Comparez l’état entre différents snapshots
+  <br>
 
 <p align="center">
-<img src="./assets/gifs/ReconnectGif22.gif" />
+<img src="./assets/gifs/TimeTravelGif_V26.gif" />
 </p>
 <br>
 
-### 🔹 Optimisation du Rendu
+### 📊 Analyse de Performance
 
-L'un des problèmes les plus courants affectant les performances dans React est rednu plusieurs fois. Ce problème peut être résolu en vérifiant vos rendus dans le Onglet Performances dans Chrome DevTools sous le panneau Reactime.
-<br>
-<br>
+- **Métriques de Composants** : Mesurez les temps de rendu et identifiez les goulets d’étranglement
+- **Comparaison de Séries** : Comparez les performances sur différentes séries de changements d’état
+- **Détection de Re-rendu** : Identifiez et corrigez les rendus inutiles
+- **Web Vitals** : Surveillez les Core Web Vitals et d’autres métriques de performance
+  <br>
+  <br>
 
-### 🔹 Jumping
+### 🔄 Prise en Charge des Frameworks Modernes
 
-Un utilisateur peut accéder à n'importe quel instantané précédemment enregistré à l'aide de la barre latérale d'actions. Si un utilisateur appuie sur le bouton « Jump » sur un instantané, il pourra voir les informations d'état à partir du moment où cet instantané a été créé pour la première fois.
-<br>
-<br>
-
-### 🔹 Gatsby
-
-Reactime offre un support complet pour les applications Gatsby.
-<br>
-<br>
-
-### 🔹 Next.js
-
-Reactime propose des outils de débogage et de performances pour les applications Next.js : débogage de voyage dans le temps, évitant les rendus de composants inutiles et rendant votre application plus rapide.
-<br>
-<br>
-
-### 🔹 Remix
-
-Reactime propose des outils de débogage et de performances pour les applications Remix (en version bêta).
-<br>
+<ul>
+  <li>
+    Compatibilité complète avec <strong>Gatsby, Next.js et Remix</strong>
+  </li>
+    <li>
+Prise en charge de TypeScript pour les composants de classe et fonctionnels
+  </li>
+    <li>
+Prise en charge des Hooks et de l’API Context de React
+  </li>
+</ul>
 <br>
 
-### 🔹 TypeScript
+### 💾 Persistance & Partage d’État
 
-Reactime offre la prise en charge des applications TypeScript utilisant des composants de classe avec état et des composants fonctionnels. Des tests et un développement supplémentaires sont nécessaires pour les hooks personnalisés.
-<br>
-<br>
+Reactime facilite la sauvegarde et le partage de l’historique d’état de votre application :
 
-### Documentation
-
-Après avoir cloné ce référentiel, les développeurs peuvent simplement exécuter `npm run docs` au niveau racine et servir le fichier `/docs/index.html` généré dynamiquement sur un navigateur. Cela fournira une vue GUI lisible, extensible et interactive de la structure et des interfaces de la base de code.
-<br>
-<br>
-
-### <b>Caractéristiques Supplémentaires</b>
-
-- Tutoriels pour des onglets spécifiques
-- Passez la souris sur un composant pour afficher les détails de l'état
-- Double-cliquez pour masquer les composants enfants
-- Cliquez pour vous concentrer sur une partie de la carte des composants
-- A dropdown to support the development of projects on multiple tabs
-- Une liste déroulante pour accompagner le développement de projets sur plusieurs onglets
-- Fonctionnalité verrouillée/déverrouillée permettant une pause temporaire de la surveillance de l'état
-- Visualisation des propriétés à la fois en couleur et en épaisseur des branches reliant les composants
-- Barre de chaleur sous le menu supérieur
-
-<h1>Quoi de Neuf!</h1>
-
-Reactime 25.0 comprend une nouvelle fonctionnalité de visualisation des propriétés et une barre de chaleur pour les développeurs !
-
-Nous avons également résolu les problèmes de gel signalés précédemment au démarrage et avons amélioré la bibliothèque Jest, qui est maintenant en bien meilleur état qu'avant, avec la plupart des tests fonctionnant correctement.
-
-Une partie de l'interface utilisateur a été réorganisée pour être plus esthétiquement agréable et pour rendre la fenêtre principale plus grande pour l'affichage de l'arbre des composants dans le processus.
-
-<i>Regarder Plus Profondément</i>
-
-En résolvant les problèmes persistants de déconnexion/d'écran noir qui affectaient parfois les utilisateurs lors de l'utilisation régulière de l'application, nous avons apporté des améliorations décisives en supprimant la fonction « keepAlive » et en implémentant une logique robuste pour résoudre le problème principal. Cela nous a permis d'affiner le protocole de communication entre notre application et le navigateur, offrant ainsi une connexion plus cohérente et stable. Cela offre aux utilisateurs une voie de récupération rapide et constitue également une couche de protection supplémentaire contre toute déconnexion inattendue à l'avenir.
-
-Pour améliorer la maintenabilité, l'évolutivité et la longévité, nous avons mis à jour et supprimé progressivement certaines dépendances. Nous nous sommes éloignés de la bibliothèque Immer et avons transféré notre gestion d'état pour utiliser Redux Toolkit, tout en mettant à niveau l'API Web Vitals de la version 1.1.2 à 3.5.0, nous permettant d'utiliser une gamme plus large de métriques Web. Dans le cadre de cette transition, nous avons également converti tous les tests existants pour qu'ils fonctionnent avec le système de gestion d'état mis à jour, tout en élargissant encore les suites de tests pour augmenter la couverture globale des tests. Enfin, nous avons obtenu une augmentation notable de la couverture TypeScript, renforçant la qualité du code et la détection précoce des problèmes de développement potentiels.
-
-Nous avons apporté de nombreux changements destinés à améliorer l'expérience utilisateur. Le premier est la fonction de reconnexion, conçue comme une mesure de protection pour les moments inattendus où un utilisateur est déconnecté. Lorsque cela se produit, une boîte de dialogue contextuelle intuitive apparaîtra instantanément, offrant aux utilisateurs un moyen transparent de replonger directement dans leur session, tout en offrant également la possibilité de télécharger des instantanés d'état enregistrés sous forme de fichier JSON. Nous avons également intégré un indicateur d'état dynamique qui affiche de manière transparente l'état actuel de l'application d'un utilisateur, indiquant s'il est en ligne ou hors ligne. Nous avons également enrichi l'application avec deux mesures de performances Web essentielles : « Cumulative Layout Shift » (CLS) et « Interaction to Next Paint » (INP). Ces mesures sont essentielles, car elles fournissent aux développeurs des informations sur la stabilité et la réactivité de la mise en page, leur permettant ainsi d'optimiser les interactions des utilisateurs avec précision.
-
-Si vous souhaitez en savoir plus sur les versions précédentes, cliquez <a href="https://github.com/open-source-labs/reactime/releases">ici !</a>
+- **Exporter l’Historique d’État** : Enregistrez vos snapshots sous forme de fichier JSON pour une analyse ultérieure ou pour les partager
+- **Importer des Sessions Précédentes** : Chargez des snapshots enregistrés précédemment pour comparer les changements d’état entre différentes sessions
+- **Analyse Inter-Session** : Comparez les performances et les changements d’état entre différentes sessions de développement
+  <br>
 
 <p align="center">
+<img src="./assets/gifs/ImportExportGif_V26.gif" />
+</p>
+<br>
 
-<h1>Installation</h1>
+### 📚 Documentation Interactive
 
-Pour commencer, installer l’[extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) Reactime depuis le Chrome Web Store.
+Reactime propose une documentation complète pour aider les développeurs à comprendre son architecture et ses APIs.  
+Après avoir cloné ce référentiel, les développeurs peuvent simplement exécuter `npm run docs` à la racine et servir le fichier `/docs/index.html` généré dynamiquement, offrant :
 
-REMARQUE: L'[extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en) React Developer Tools est également requise pour que Reactime s'exécute, si vous ne l'avez pas déjà installé sur votre navigateur.
+<ul>
+  <li>
+  Des diagrammes interactifs de composants
+  </li>
+    <li>
+Des définitions de types et interfaces
+  </li>
+    <li>
+Une vue d’ensemble de l’architecture du code
+  </li>
+      <li>
+Des références d’API et des exemples
+  </li>
+</ul>
+<br>
 
-### <b>Installation Alternative</b>
+<h1>🎉 Nouveautés !</h1>
 
-Utilisez `src/extension/build/build.zip` pour une installation manuelle en [mode Développeur](https://developer.chrome.com/extensions/faq#faq-dev-01). Activez "Autoriser l'accès aux URL de fichiers" dans la page des détails de l'extension si vous effectuez un test local.
+La version 26.0 de Reactime propose une refonte complète de l’expérience de débogage React, avec :
 
-### Voulez-vous contribuer à Reactime ?
+- **Nouvelle Visualisation des Données de Contexte**
 
-<i>Veuillez vous référer à la documentation du développeur pour un guide détaillé :</i>
+  - Première visualisation des changements d’état du hook useContext
+  - Cartographie claire des relations fournisseur-consommateur
+  - Surveillance en temps réel de la valeur d’état du contexte
+  - Visualisation détaillée des données du fournisseur
 
-Consultez [DEVELOPER README](src/README.md) pour plus d'informations sur le projet et des instructions sur la construction à partir des sources.
+- **Débogage avec Retour dans le Temps Amélioré**
 
-### <b>Manuel</b>
+  - Interface du curseur de temps repensée, positionnée à côté des snapshots
+  - Contrôles de vitesse de lecture variables
+  - Navigation plus intuitive dans l’état
+  - Visualisation de snapshot améliorée
 
-Après avoir installé l’extension Chrome Reactime, ouvrez votre application dans le navigateur.
+- **Refonte Complète de l’UI Moderne**
 
-Ensuite, ouvrez vos Chrome DevTools et accédez au panneau Reactime.
+  - Design élégant et contemporain avec composants arrondis
+  - Améliorations de la disposition pour une meilleure intuitivité
+  - Nouveau mode sombre
+  - Hiérarchie visuelle améliorée
 
-## <b>Diagnostic des anomalies</b>
+- **Améliorations Techniques Majeures**
+  - Correction de la persistance de connexion lors de périodes d’inactivité et de changements d’onglet
+  - Restauration de la visualisation de l’arbre d’accessibilité
+  - Résolution de problèmes de capture d’état pour les hooks useState basés sur des fonctions
+  - Fiabilité et performance globales de l’extension grandement améliorées
 
-### ❓ <b>Que faire quand Reactime ne trouve pas d’application React?</b>
+Ces mises à jour rendent Reactime plus puissant, plus fiable et plus convivial que jamais, établissant un nouveau standard pour les outils de débogage React.
 
-Reactime s'exécute initialement à l'aide du hook global des outils de développement de l'API Chrome. Leur chargement dans Chrome peut prendre du temps. Essayez d'actualiser votre application plusieurs fois jusqu'à ce que Reactime s'exécute.
+Pour en savoir plus sur les versions précédentes, cliquez <a href="https://github.com/open-source-labs/reactime/releases">ici</a> !
+<br>
+<br>
 
-### ❓ <b>Un écran noir s’affiche à la place de l’extension Reactime</b>
+<h1>🚀 Bien Commencer</h1>
 
-Essayez d'actualiser l'application que vous souhaitez tester et actualisez les DevTools en cliquant sur le bouton droit de la souris «Recharger le cadre».
+### Installation
+
+1. Installez l’[extension Reactime](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) depuis le Chrome Web Store
+2. Installez l’extension requise [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en) si vous ne l’avez pas déjà
+
+### Prérequis
+
+- Votre application React doit fonctionner en **mode développement**
+- L’extension React Developer Tools doit être installée
+- Navigateur Chrome (version 80 ou supérieure recommandée)
+
+### Lancer Reactime
+
+Il existe deux manières d’ouvrir le panneau Reactime :
+
+1. **Menu Contextuel**
+
+   - Faites un clic droit n’importe où dans votre application React
+   - Sélectionnez "Reactime" dans le menu contextuel
+
+2. **DevTools**
+   - Ouvrez les DevTools de Chrome (F12 ou ⌘+⌥+I)
+   - Naviguez jusqu’à l’onglet "Reactime"
+
+Une fois lancé, Reactime commencera automatiquement à surveiller les changements d’état et les métriques de performance de votre application.
+<br>
+<br>
+
+<h1>🤝 Contribuer à Reactime</h1>
+
+Nous accueillons avec joie les contributions de développeurs de tous niveaux ! Voici comment vous pouvez aider à améliorer Reactime: <a href='./CONTRIBUTING.md'>🙋 Contributing README</a>
+
+1. **Commencer**
+
+   - Forkez le dépôt
+   - Consultez notre README Développeur détaillé
+   - Mettez en place votre environnement de développement local
+
+2. **Processus de Build**
+
+   - Suivez les instructions de build dans le README Développeur
+   - Testez soigneusement vos modifications
+   - Soumettez une Pull Request
+
+Rejoignez notre communauté grandissante de contributeurs et participez à façonner l’avenir des outils de débogage React ! Pour des lignes directrices de contribution plus détaillées et des informations sur l’architecture du projet, veuillez vous référer à notre <a href='./src/DEVELOPER_README.md'>👩‍💻 README Développeur</a>.
+<br>
+<br>
+
+<h1>🛠️ Dépannage</h1>
+
+### ❓ <b>Pourquoi Reactime n’enregistre-t-il pas les nouveaux changements d’état ?</b>
+
+Reactime a perdu sa connexion avec l’onglet que vous surveillez ; il vous suffit de cliquer sur le bouton "reconnecter"
+pour reprendre votre travail.
+
+### ❓ <b>Pourquoi Reactime ne trouve-t-il pas mes hooks ?</b>
+
+Reactime détecte et surveille les hooks en parcourant le code React non minifié de votre application en mode développement. Si votre processus de build minifie ou "uglifie" votre code — même pour les builds de développement — Reactime risque de ne pas pouvoir localiser et suivre correctement vos hooks. Pour résoudre ce problème :
+
+1. **Assurez-vous d’une vraie build de développement** : Vérifiez la configuration de votre bundler ou outil de build (par ex. Webpack, Babel, Vite, etc.) pour vous assurer que votre application n’est pas minimisée ou "uglifiée" en mode développement.
+
+   - Par exemple, avec Webpack, assurez-vous d’exécuter le mode : 'development', ce qui devrait désactiver la minification par défaut.
+   - Dans un projet Create React App, il suffit d’exécuter `npm start` ou `yarn start` pour configurer automatiquement une build de développement non minifiée.
+
+2. **Vérifiez les surcharges** : Assurez-vous qu’aucun plugin Babel ou Webpack personnalisé ne minifie votre code, surtout si vous utilisez des frameworks comme Next.js ou Gatsby. Parfois, des plugins ou scripts supplémentaires peuvent s’exécuter en arrière-plan.
+
+3. **Redémarrez & recompilez** : Après avoir modifié toute configuration de build, recompilez ou redémarrez votre serveur de développement pour vous assurer que la nouvelle configuration est prise en compte. Ensuite, rafraîchissez l’onglet de votre navigateur afin que Reactime puisse détecter vos hooks non minifiés.
+
+Après avoir modifié toute configuration de build, recompilez ou redémarrez votre serveur de développement pour vous assurer que la nouvelle configuration est prise en compte. Ensuite, rafraîchissez l’onglet de votre navigateur afin que Reactime puisse détecter vos hooks non minifiés.
+
+### ❓ <b>Pourquoi Reactime m’indique qu’aucune application React n’a été trouvée ?</b>
+
+Reactime s’exécute initialement grâce au hook global des dev tools de Chrome.  
+Il faut du temps à Chrome pour le charger. Essayez de rafraîchir votre application plusieurs fois jusqu’à ce que vous voyiez Reactime en fonctionnement.
+
+### ❓ <b>Pourquoi dois-je avoir les React Dev Tools activées ?</b>
+
+Reactime fonctionne de concert avec les React Developer Tools pour accéder à l’arbre Fiber d’une application React ; en interne, Reactime parcourt l’arbre Fiber via le hook global des React Dev Tools, récupérant toutes les informations pertinentes à afficher au développeur.
 
 ### ❓ <b>J’ai trouvé un bug dans Reactime</b>
 
-Reactime est un projet open source, et toute aide de vore part sera grandement appréciée pour nous aider à améliorer l'expérience utilisateur. Veuillez créer une pull request (ou un problème) pour proposer et collaborer sur les modifications apportées à un référentiel.
+Reactime est un projet open-source, et nous serions ravis d’avoir vos retours pour améliorer l’expérience utilisateur. Veuillez consulter le <a href='./src/DEVELOPER_README.md'>👩‍💻 README Développeur</a>,
+et créer une Pull Request (ou une issue) pour proposer et collaborer sur des modifications de Reactime.
 
-## <b>En savoir plus</b>
+### ❓ <b>Compatibilité avec les versions Node</b>
 
-- [Reactime: Real-time Debugging, Timeless Results](https://medium.com/@kelvinmirhan/reactime-real-time-debugging-timeless-results-3f163b721d01)
+Depuis la sortie de Node v18.12.1 (LTS) le 04/11/22, le script a été mis à jour avec
+`npm run dev` | `npm run build` pour assurer une rétrocompatibilité.<br/>  
+Pour la version Node v16.16.0, veuillez utiliser les scripts `npm run devlegacy` | `npm run buildlegacy`
+<br>
+<br>
 
-## <b>Auteurs</b>
+<h1>✍️ Auteurs</h1>
 
+- **Garrett Chow** - [@garrettlchow](https://github.com/garrettlchow)
+- **Ellie Simens** - [@elliesimens](https://github.com/elliesimens)
+- **Ragad Mohammed** - [@ragad-mohammed](https://github.com/ragad-mohammed)
+- **Daniel Ryczek** - [@dryczek14](https://github.com/dryczek01)
+- **Patrice Pinardo** - [@pinardo88](https://github.com/pinardo88)
 - **Haider Ali** - [@hali03](https://github.com/hali03)
 - **Jose Luis Sanchez** - [@JoseSanchez1996](https://github.com/JoseSanchez1996)
 - **Logan Nelsen** - [@ljn16](https://github.com/ljn16)
@@ -224,6 +276,14 @@ Reactime est un projet open source, et toute aide de vore part sera grandement a
 - **Eric Yun** - [@ericsngyun](https://github.com/ericsngyun)
 - **James Nghiem** - [@jemzir](https://github.com/jemzir)
 - **Wilton Lee** - [@wiltonlee948](https://github.com/wiltonlee948)
+- **Louis Lam** - [@llam722](https://github.com/llam722)
+- **Samuel Tran** - [@leumastr](https://github.com/leumastr)
+- **Brian Yang** - [@yangbrian310](https://github.com/yangbrian310)
+- **Emin Tahirov** - [@eminthrv](https://github.com/eminthrv)
+- **Peng Dong** - [@d28601581](https://github.com/d28601581)
+- **Ozair Ghulam** - [@ozairgh](https://github.com/ozairgh)
+- **Christina Or** - [@christinaor](https://github.com/christinaor)
+- **Khanh Bui** - [@AndyB909](https://github.com/AndyB909)
 - **David Kim** - [@codejunkie7](https://github.com/codejunkie7)
 - **Robby Tipton** - [@RobbyTipton](https://github.com/RobbyTipton)
 - **Kevin HoEun Lee** - [@khobread](https://github.com/khobread)
@@ -233,7 +293,8 @@ Reactime est un projet open source, et toute aide de vore part sera grandement a
 - **Daljit Gill** - [@dgill05](https://github.com/dgill05)
 - **Ben Michareune** - [@bmichare](https://github.com/bmichare)
 - **Dane Corpion** - [@danecorpion](https://github.com/danecorpion)
-- **Harry Fox** - [@StackOverFlowWhereArtThou](https://github.com/StackOverFlowWhereArtThou)
+- **Harry Fox** -
+  [@StackOverFlowWhereArtThou](https://github.com/StackOverFlowWhereArtThou)
 - **Nathan Richardson** - [@BagelEnthusiast](https://github.com/BagelEnthusiast)
 - **David Bernstein** - [@dangitbobbeh](https://github.com/dangitbobbeh)
 - **Joseph Stern** - [@josephiswhere](https://github.com/josephiswhere)
@@ -264,18 +325,19 @@ Reactime est un projet open source, et toute aide de vore part sera grandement a
 - **Bryan Lee** - [@mylee1995](https://github.com/mylee1995)
 - **Josh Kim** - [@joshua0308](https://github.com/joshua0308)
 - **Sierra Swaby** - [@starkspark](https://github.com/starkspark)
-- **Ruth Anam** - [@peachiecodes](https://github.com/peachiecodes)
+- **Ruth Anam** - [@nusanam](https://github.com/nusanam)
 - **David Chai** - [@davidchaidev](https://github.com/davidchai717)
 - **Yujin Kang** - [@yujinkay](https://github.com/yujinkay)
-- **Andy Wong** - [@andywongdev](https://github.com/andywongdev)
-- **Chris Flannery** - [@chriswillsflannery](https://github.com/chriswillsflannery)
+- **Andy Wong** - [@andynullwong](https://github.com/andynullwong)
+- **Chris Flannery** -
+  [@chriswillsflannery](https://github.com/chriswillsflannery)
 - **Rajeeb Banstola** - [@rajeebthegreat](https://github.com/rajeebthegreat)
 - **Prasanna Malla** - [@prasmalla](https://github.com/prasmalla)
 - **Rocky Lin** - [@rocky9413](https://github.com/rocky9413)
 - **Abaas Khorrami** - [@dubalol](https://github.com/dubalol)
 - **Ergi Shehu** - [@Ergi516](https://github.com/ergi516)
 - **Raymond Kwan** - [@rkwn](https://github.com/rkwn)
-- **Joshua Howard** - [@Joshua-Howard](https://github.com/joshua-howard)
+- **Joshua Howard** - [@joshua-howard](https://github.com/joshua-howard)
 - **Lina Shin** - [@rxlina](https://github.com/rxlina)
 - **Andy Tsou** - [@andytsou19](https://github.com/andytsou19)
 - **Feiyi Wu** - [@FreyaWu](https://github.com/FreyaWu)
@@ -283,7 +345,7 @@ Reactime est un projet open source, et toute aide de vore part sera grandement a
 - **Alex Gomez** - [@alexgomez9](https://github.com/alexgomez9)
 - **Edar Liu** - [@liuedar](https://github.com/liuedar)
 - **Kristina Wallen** - [@kristinawallen](https://github.com/kristinawallen)
-- **Quan Le** - [@blachfog](https://github.com/Blachfog)
+- **Quan Le** - [@Blachfog](https://github.com/Blachfog)
 - **Robert Maeda** - [@robmaeda](https://github.com/robmaeda)
 - **Lance Ziegler** - [@lanceziegler](https://github.com/lanceziegler)
 - **Ngoc Zwolinski** - [@ngoczwolinski](https://github.com/ngoczwolinski)
@@ -297,11 +359,21 @@ Reactime est un projet open source, et toute aide de vore part sera grandement a
 - **James McCollough** - [@j-mccoll](https://github.com/j-mccoll)
 - **Mike Bednarz** - [@mikebednarz](https://github.com/mikebednarz)
 - **Sergei Liubchenko** - [@sergeylvq](https://github.com/sergeylvq)
+- **Yididia Ketema** - [@yididiaketema](https://github.com/yididiaketema)
+- **Morah Geist** - [@morahgeist](https://github.com/morahgeist)
+- **Eivind Del Fierro** - [@EivindDelFierro](https://github.com/EivindDelFierro)
+- **Kyle Bell** - [@KyEBell](https://github.com/KyEBell)
+- **Sean Kelly** - [@brok3turtl3](https://github.com/brok3turtl3)
 - **Christopher Stamper** - [@ctstamper](https://github.com/ctstamper)
 - **Jimmy Phy** - [@jimmally](https://github.com/jimmally)
 - **Andrew Byun** - [@AndrewByun](https://github.com/AndrewByun)
 - **Kelvin Mirhan** - [@kelvinmirhan](https://github.com/kelvinmirhan)
+- **Jesse Rosengrant** - [@jrosengrant](https://github.com/jrosengrant)
+- **Liam Donaher** - [@leebology](https://github.com/leebology)
+- **David Moore** - [@Solodt55](https://github.com/Solodt55)
+- **John Banks** - [@Jbanks123](https://github.com/Jbanks123)
+  <br>
 
-## <b>License </b>
+<h1>⚖️ Licence </h1>
 
-Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de détails
+Ce projet est distribué sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de détails.

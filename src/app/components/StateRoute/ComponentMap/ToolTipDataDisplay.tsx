@@ -1,70 +1,110 @@
 import React from 'react';
 import { JSONTree } from 'react-json-tree';
 
-/*
-  Code that show's the tooltip of our JSON tree
-*/
+const ToolTipDataDisplay = ({ data }) => {
+  if (!data) return null;
 
-const colors = {
-  scheme: 'paraiso',
-  author: 'jan t. sott',
-  base00: '#2f1e2e',
-  base01: '#41323f',
-  base02: '#4f424c',
-  base03: '#776e71',
-  base04: '#8d8687',
-  base05: '#a39e9b',
-  base06: '#b9b6b0',
-  base07: '#e7e9db',
-  base08: '#ef6155',
-  base09: '#824508', //base09 is orange for booleans and numbers. This base in particular fails to match the entered color.
-  // base09: '#592bad', // alternative purple
-  base0A: '#fec418',
-  base0B: '#48b685',
-  base0C: '#5bc4bf',
-  base0D: '#06b6ef',
-  base0E: '#815ba4',
-  base0F: '#e96ba8',
-};
+  const jsonTheme = {
+    scheme: 'custom',
+    base00: 'transparent',
+    base0B: '#14b8a6', // dark navy for strings
+    base0D: '#60a5fa', // Keys
+    base09: '#f59e0b', // Numbers
+    base0C: '#EF4444', // Null values
+  };
 
-const ToolTipDataDisplay = ({ containerName, dataObj }) => {
-  const printableObject = {}; // The key:value properties of printableObject will be rendered in the JSON Tree
+  // Helper function to parse stringified JSON in object values
+  const parseStringifiedValues = (obj) => {
+    if (!obj || typeof obj !== 'object') return obj;
 
-  if (!dataObj) {
-    // If state is null rather than an object, print "State: null" in tooltip
-    printableObject[containerName] = dataObj;
-  } else {
-    /*
-      Props often contain circular references. 
-      Messages from the backend must be sent as JSON objects (strings). 
-      JSON objects can't contain circular ref's, so the backend filters out problematic values by stringifying the values of object properties and ignoring any values that fail the conversion due to a circular ref. The following logic converts these values back to JS so they display clearly and are collapsible.
-    */
-    const data = {};
-    for (const key in dataObj) {
-      if (typeof dataObj[key] === 'string') {
+    const parsed = { ...obj };
+    for (const key in parsed) {
+      if (typeof parsed[key] === 'string') {
         try {
-          data[key] = JSON.parse(dataObj[key]);
-        } catch {
-          data[key] = dataObj[key];
+          // Check if the string looks like JSON
+          if (parsed[key].startsWith('{') || parsed[key].startsWith('[')) {
+            const parsedValue = JSON.parse(parsed[key]);
+            parsed[key] = parsedValue;
+          }
+        } catch (e) {
+          // If parsing fails, keep original value
+          continue;
         }
-      } else {
-        data[key] = dataObj[key];
+      } else if (typeof parsed[key] === 'object') {
+        parsed[key] = parseStringifiedValues(parsed[key]);
       }
     }
-    /*
-      Adds container name (State, Props, future different names for hooks) at top of object so everything nested in it will collapse when you click on it.
-    */
-    printableObject[containerName] = data;
-  }
+    return parsed;
+  };
+
+  const formatReducerData = (reducerStates) => {
+    // Check if reducerStates exists and is an object
+    if (!reducerStates || typeof reducerStates !== 'object') {
+      return {};
+    }
+
+    // Handle both array and object formats
+    const statesArray = Array.isArray(reducerStates) ? reducerStates : Object.values(reducerStates);
+
+    return statesArray.reduce((acc, reducer) => {
+      // Add additional type checking for reducer object
+      if (reducer && typeof reducer === 'object') {
+        acc[reducer.hookName || 'Reducer'] = reducer.state;
+      }
+      return acc;
+    }, {});
+  };
+
+  const renderSection = (title, content, isReducer = false) => {
+    if (
+      !content ||
+      (Array.isArray(content) && content.length === 0) ||
+      Object.keys(content).length === 0
+    ) {
+      return null;
+    }
+
+    // Parse any stringified JSON before displaying
+    const parsedContent = parseStringifiedValues(content);
+
+    if (isReducer && parsedContent) {
+      // Only try to format if we have valid content
+      const formattedData = formatReducerData(parsedContent);
+
+      // Check if we have any formatted data to display
+      if (Object.keys(formattedData).length === 0) {
+        return null;
+      }
+
+      return (
+        <div className='tooltip-section'>
+          {Object.entries(formattedData).map(([hookName, state]) => (
+            <div key={hookName}>
+              <div className='tooltip-section-title'>{hookName}</div>
+              <div className='tooltip-data'>
+                <JSONTree data={state} theme={jsonTheme} hideRoot shouldExpandNode={() => true} />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <div className='tooltip-section'>
+        <div className='tooltip-section-title'>{title}</div>
+        <div className='tooltip-data'>
+          <JSONTree data={parsedContent} theme={jsonTheme} hideRoot shouldExpandNode={() => true} />
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className='tooltipData' key={`${containerName}-data-container`}>
-      <JSONTree
-        data={printableObject} // data to be rendered, a snapshot object
-        theme={{ extend: colors, tree: () => ({ className: `tooltipData-JSONTree` }) }} // theme set to a base16 theme that has been extended to include  "className: 'json-tree'"
-        shouldExpandNodeInitially={() => true} // determines if node should be expanded when it first renders (root is expanded by default)
-        hideRoot={true} // hides the root node
-      />
+    <div className='tooltip-container'>
+      {renderSection('Props', data.componentData?.props)}
+      {renderSection('State', data.componentData?.state || data.componentData?.hooksState)}
+      {renderSection(null, data.componentData?.reducerStates, true)}
     </div>
   );
 };

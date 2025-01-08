@@ -22,7 +22,7 @@ export interface PerfData {
 export interface PerformanceVisxProps {
   width: number;
   height: number;
-  snapshots: [];
+  snapshots: any[];
   hierarchy: any;
 }
 
@@ -44,7 +44,6 @@ export interface BarStackProp {
   currentTab?: string;
 }
 
-// On-hover data for BarGraph/BarGraphComparison.tsx
 export interface TooltipData {
   bar: SeriesPoint<snapshot>;
   key: string;
@@ -105,9 +104,12 @@ export interface BarGraphComparisonAction {
 }
 
 export interface ActionContainerProps {
-  actionView: boolean;
-  setActionView: React.Dispatch<React.SetStateAction<boolean>>;
-  toggleActionContainer: () => void;
+  snapshots?: any;
+  currLocation?: any;
+}
+
+export interface ProvConContainerProps {
+  currentSnapshot: any;
 }
 
 export interface StateContainerProps {
@@ -217,7 +219,6 @@ export interface ActionProps {
   last: boolean;
   index: number;
   sliderIndex: number;
-  // dispatch: (a: { type: string; payload: unknown }) => void;
   displayName: string;
   componentName: string;
   componentData: { actualDuration: number } | undefined;
@@ -225,7 +226,6 @@ export interface ActionProps {
   state?: Record<string, unknown>;
   viewIndex: number | undefined;
   isCurrIndex: boolean;
-  handleOnkeyDown: (e: KeyboardEvent, i: number) => void;
 }
 
 export interface DiffRouteProps {
@@ -248,8 +248,8 @@ export interface HandleProps {
 }
 
 export interface MainSliderProps {
-  className: string;
-  snapshotsLength: number;
+  className?: string;
+  snapshots?: any[];
 }
 
 export interface DefaultMargin {
@@ -297,12 +297,10 @@ export interface StepsObj {
 }
 
 export interface LinkControlProps {
-  layout: string;
   orientation: string;
   linkType: string;
   stepPercent: number;
   selectedNode: string;
-  setLayout: (layout: string) => void;
   setOrientation: (orientation: string) => void;
   setLinkType: (linkType: string) => void;
   setStepPercent: (percent: number) => void;
@@ -311,7 +309,6 @@ export interface LinkControlProps {
 }
 
 export interface ControlStyles {
-  //fontSize: string;
   padding: string;
 }
 
@@ -329,11 +326,9 @@ export interface DropDownStyle {
 export interface Node {
   children?: Node[];
   name?: string;
-  // other properties here
 }
 
 export interface LinkComponent {
-  layout: string;
   linkType: string;
   orientation: string;
 }
@@ -396,4 +391,24 @@ export interface AxContainer {
   };
   snapshots: [];
   currLocation: object;
+  setShowTree: any;
+  setShowParagraph: any;
+}
+
+export interface FilteredNode {
+  name?: string;
+  state?: any;
+  hooksState?: any;
+  props?: any;
+  componentData?: {
+    context?: any;
+    hooksState?: any;
+    props?: any;
+  };
+  children?: FilteredNode[];
+  context?: any;
+}
+
+export interface FilteredNodeChildren {
+  [key: string]: FilteredNode;
 }

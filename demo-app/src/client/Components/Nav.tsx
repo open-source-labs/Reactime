@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import ThemeToggle from './ThemeToggle';
 
 function Nav(): JSX.Element {
   return (
@@ -11,8 +12,12 @@ function Nav(): JSX.Element {
         Tic-Tac-Toe
       </Link>
       <Link className='link' to='/buttons'>
-        Counter
+        State Counter
       </Link>
+      <Link className='link' to='/reducer'>
+        Reducer Counter
+      </Link>
+      <ThemeToggle />
     </div>
   );
 }
