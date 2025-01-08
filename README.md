@@ -1,5 +1,6 @@
 <h1 align="center">
     <img src ="./assets/logos/marqueePromoTitle.png"/>
+    <br>
   React Performance Tool
     <br>
     <a href="https://osawards.com/react/">🏆 Nominated for React Open Source Awards 2020</a>
@@ -25,7 +26,7 @@
 
 <h5 align="center">
 <br>
-  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a>
+  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href="./README.id.md">🇮🇩  &nbsp; VERSI BAHASA INDONESIA</a> &nbsp; • &nbsp; <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a>
   <br>
 </h5>
 <br>
