@@ -5,217 +5,224 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-import React from 'react';
-import {
-  MemoryRouter as Router,
-  Route,
-  NavLink,
-  Switch,
-} from 'react-router-dom';
+import React, { useState } from 'react';
+import { MemoryRouter as Router, Route, NavLink, Routes, Outlet, Link } from 'react-router-dom';
 import { ParentSize } from '@visx/responsive';
 import Tree from './Tree';
 import ComponentMap from './ComponentMap/ComponentMap';
-import { changeView, changeSlider } from '../../actions/actions';
-import { useStoreContext } from '../../store';
+import { changeView, changeSlider, toggleAxTree, setCurrentTabInApp } from '../../slices/mainSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import PerformanceVisx from './PerformanceVisx/PerformanceVisx';
-import WebMetrics from '../WebMetrics';
+import WebMetricsContainer from './WebMetrics/WebMetricsContainer';
+import { MainState, RootState, StateRouteProps } from '../../FrontendTypes';
+import AxContainer from './AxMap/AxContainer';
 
 const History = require('./History').default;
-
 const NO_STATE_MSG = 'No state change detected. Trigger an event to change state';
 
-
-export interface StateRouteProps {
-  snapshot: {
-    name?: string;
-    componentData?: object;
-    state?: string | object;
-    stateSnaphot?: object;
-    children?: any[];
-  };
-  hierarchy: any;
-  snapshots: [];
-  viewIndex: number;
-  webMetrics: object;
-  currLocation: object;
-}
-
 const StateRoute = (props: StateRouteProps) => {
-  const { snapshot, hierarchy, snapshots, viewIndex, webMetrics, currLocation } = props;
-  const [{ tabs, currentTab }, dispatch] = useStoreContext();
-  const { hierarchy, sliderIndex, viewIndex } = tabs[currentTab];
+  const {
+    axSnapshots,
+    snapshot,
+    hierarchy: propsHierarchy,
+    snapshots,
+    viewIndex: propsViewIndex,
+    webMetrics,
+    currLocation,
+  } = props;
 
-  // Map
-  const renderComponentMap = () => {
-    if (hierarchy) {
-      return (
-        <ParentSize className="componentMapContainer">
-          {({ width, height }) => (
-            // eslint-disable-next-line react/prop-types
-            <ComponentMap currentSnapshot={currLocation.stateSnapshot} width={width} height={height} />
-          )}
-        </ParentSize>
-      );
-    }
-    return <div className="noState">{NO_STATE_MSG}</div>;
-  };
+  const { tabs, currentTab }: MainState = useSelector((state: RootState) => state.main);
+  const { hierarchy: tabsHierarchy, sliderIndex, viewIndex: tabsViewIndex } = tabs[currentTab];
+  const hierarchy = propsHierarchy || tabsHierarchy;
+  const viewIndex = propsViewIndex || tabsViewIndex;
 
-  // the hierarchy gets set upon the first click on the page
-  // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
-  // if true, we invoke the D3 render chart with hierarchy
-  // by invoking History component, and passing in all the props required to render D3 elements and perform timeJump from clicking of node
-  // otherwise we send an alert to the user that no state was found.
-  const renderHistory = () => {
-    if (hierarchy) {
-      return (
-        <ParentSize>
-          {({ width, height }) => (
-            <History
-              width={width}
-              height={height}
-              hierarchy={hierarchy}
-              dispatch={dispatch}
-              sliderIndex={sliderIndex}
-              viewIndex={viewIndex}
-              currLocation={currLocation}
-              snapshots={snapshots}
-            />
-          )}
-        </ParentSize>
-      );
-    }
-    return <div className="noState">{NO_STATE_MSG}</div>;
-  };
+  const dispatch = useDispatch();
+  const [showTree, setShowTree] = useState(false);
+  const [showParagraph, setShowParagraph] = useState(true);
 
-  // the hierarchy gets set on the first click in the page
-  // when the page is refreshed we may not have a hierarchy, so we need to check if hierarchy was initialized
-  // if true invoke render Tree with snapshot
-  const renderTree = () => {
-    if (hierarchy) {
-      return <Tree snapshot={snapshot} />;
-    }
-    return <div className="noState">{NO_STATE_MSG}</div>;
-  };
-  const renderWebMetrics = () => {
-    let LCPColor: String; let FIDColor: String; let FCPColor: String; let
-      TTFBColor: String;
-
-    if (webMetrics.LCP <= 2000) LCPColor = '#0bce6b';
-    if (webMetrics.LCP > 2000 && webMetrics.LCP < 4000) LCPColor = '#E56543';
-    if (webMetrics.LCP > 4000) LCPColor = '#fc2000';
-    if (webMetrics.FID <= 100) FIDColor = '#0bce6b';
-    if (webMetrics.FID > 100 && webMetrics.FID <= 300) FIDColor = '#fc5a03';
-    if (webMetrics.FID > 300) FIDColor = '#fc2000';
-    if (webMetrics.FCP <= 900) FCPColor = '#0bce6b';
-    if (webMetrics.FCP > 900 && webMetrics.FCP <= 1100) FCPColor = '#fc5a03';
-    if (webMetrics.FCP > 1100) FCPColor = '#fc2000';
-    if (webMetrics.TTFB <= 600) TTFBColor = '#0bce6b';
-    if (webMetrics.TTFB > 600) TTFBColor = '#fc2000';
-
-    return (
-      <div className="web-metrics-container">
-        <WebMetrics
-          color={LCPColor}
-          series={(webMetrics.LCP / 2500) * 100}
-          formatted={val => (Number.isNaN(val)
-            ? '- ms'
-            : `${((val / 100) * 2500).toFixed(2)} ms`)}
-          label="LCP"
-          name="Largest Contentful Paint"
-          description="Measures loading performance. The benchmark is less than 2500 ms."
-        />
-        <WebMetrics
-          color={FIDColor}
-          series={webMetrics.FID * 25}
-          formatted={val => (Number.isNaN(val) ? '- ms' : `${(val / 25).toFixed(2)} ms`)}
-          label="FID"
-          name="First Input Delay"
-          description="Measures interactivity. The benchmark is less than 100 ms."
-        />
-        <WebMetrics
-          color={FCPColor}
-          series={(webMetrics.FCP / 1000) * 100}
-          formatted={val => `${((val / 100) * 1000).toFixed(2)} ms`}
-          label="FCP"
-          name="First Contentful Paint"
-          description="Measures the time it takes the browser to render the first piece of DOM content. No benchmark."
-        />
-        <WebMetrics
-          color={TTFBColor}
-          series={(webMetrics.TTFB / 10) * 100}
-          formatted={val => `${((val / 100) * 10).toFixed(2)} ms`}
-          label="TTFB"
-          name="Time to First Byte"
-          description="Measures the time it takes for a browser to receive the first byte of page content. The benchmark is 600 ms."
-        />
-      </div>
-    );
-  };
-
-  const renderPerfView = () => {
-    if (hierarchy) {
-      return (
-        <ParentSize>
-          {({ width, height }) => (
-            <PerformanceVisx
-              width={width}
-              height={height}
-              snapshots={snapshots}
-              changeSlider={changeSlider}
-              changeView={changeView}
-              hierarchy={hierarchy}
-            />
-          )}
-        </ParentSize>
-      );
-    }
-    return <div className="noState">{NO_STATE_MSG}</div>;
+  const enableAxTreeButton = () => {
+    dispatch(toggleAxTree('toggleAxRecord'));
+    setShowParagraph(false);
+    setShowTree(true);
   };
 
   return (
-    <Router>
-      <div className="navbar">
-        <NavLink
-          className="router-link map-tab"
-          activeClassName="is-active"
-          exact
-          to="/"
-        >
-          Map
-        </NavLink>
-        <NavLink
-          className="router-link performance-tab"
-          activeClassName="is-active"
-          to="/performance"
-        >
-          Performance
-        </NavLink>
-        <NavLink
-          className="router-link history-tab"
-          activeClassName="is-active"
-          to="/history"
-        >
-          History
-        </NavLink>
-        <NavLink
-          className="router-link web-metrics-tab"
-          activeClassName="is-active"
-          to="/webMetrics"
-        >
-          Web Metrics
-        </NavLink>
-        <NavLink className="router-link tree-tab" activeClassName="is-active" to="/tree">
-          Tree
-        </NavLink>
+    <div className='app-body'>
+      <div className='main-navbar-container'>
+        <div className='main-navbar'>
+          <NavLink
+            to='/'
+            className={(navData) =>
+              navData.isActive ? 'is-active router-link map-tab' : 'router-link map-tab'
+            }
+            end
+          >
+            Map
+          </NavLink>
+          <NavLink
+            className={(navData) =>
+              navData.isActive ? 'is-active router-link history-tab' : 'router-link history-tab'
+            }
+            to='/history'
+          >
+            History
+          </NavLink>
+          <NavLink
+            className={(navData) =>
+              navData.isActive ? 'is-active router-link performance' : 'router-link performance-tab'
+            }
+            to='/performance'
+          >
+            Performance
+          </NavLink>
+
+          <NavLink
+            className={(navData) =>
+              navData.isActive
+                ? 'is-active router-link web-metrics-tab'
+                : 'router-link web-metrics-tab'
+            }
+            to='/webMetrics'
+          >
+            Web Metrics
+          </NavLink>
+          <NavLink
+            className={(navData) =>
+              navData.isActive ? 'is-active router-link tree-tab' : 'router-link tree-tab'
+            }
+            to='/tree'
+          >
+            Tree
+          </NavLink>
+          <NavLink
+            className={(navData) =>
+              navData.isActive
+                ? 'is-active router-link accessibility-tab'
+                : 'router-link accessibility-tab'
+            }
+            to='/accessibility'
+          >
+            Accessibility
+          </NavLink>
+        </div>
       </div>
-      <Switch>
-        <Route path="/performance" render={renderPerfView} />
-        <Route path="/history" render={renderHistory} />
-        <Route path="/webMetrics" render={renderWebMetrics} />
-        <Route path="/tree" render={renderTree} />
-        <Route path="/" render={renderComponentMap} />
-      </Switch>
-    </Router>
+
+      <div className='app-content'>
+        <Routes>
+          <Route
+            path='/accessibility'
+            element={
+              showTree ? (
+                <div>
+                  <AxContainer
+                    axSnapshots={axSnapshots}
+                    snapshot={snapshot}
+                    snapshots={snapshots}
+                    currLocation={currLocation}
+                    setShowTree={setShowTree}
+                    setShowParagraph={setShowParagraph}
+                  />
+                </div>
+              ) : (
+                <div>
+                  {showParagraph && (
+                    <div className='accessibility-text'>
+                      <p>
+                        A Note to Developers: Reactime is using the Chrome Debugger API in order to
+                        grab the Accessibility Tree. Enabling this option will allow you to record
+                        Accessibility Tree snapshots, but will result in the Chrome browser
+                        notifying you that the Chrome Debugger has started.
+                      </p>
+                    </div>
+                  )}
+                  <div className='accessibility-controls'>
+                    <input
+                      type='radio'
+                      id='enable'
+                      name='accessibility'
+                      value='enable'
+                      onChange={enableAxTreeButton}
+                    />
+                    <label htmlFor='enable'>Enable</label>
+                  </div>
+                </div>
+              )
+            }
+          />
+          <Route
+            path='/history'
+            element={
+              hierarchy ? (
+                <ParentSize>
+                  {({ width, height }) => (
+                    <History
+                      width={width}
+                      height={height}
+                      hierarchy={hierarchy}
+                      sliderIndex={sliderIndex}
+                      viewIndex={viewIndex}
+                      currLocation={currLocation}
+                      snapshots={snapshots}
+                    />
+                  )}
+                </ParentSize>
+              ) : (
+                <div className='noState'>{NO_STATE_MSG}</div>
+              )
+            }
+          />
+          <Route
+            path='/performance/*'
+            element={
+              hierarchy ? (
+                <div style={{ height: '100%' }}>
+                  <ParentSize>
+                    {({ width, height }) => (
+                      <PerformanceVisx
+                        width={width}
+                        height={height}
+                        snapshots={snapshots}
+                        changeSlider={changeSlider}
+                        changeView={changeView}
+                        hierarchy={hierarchy}
+                      />
+                    )}
+                  </ParentSize>
+                  <Outlet />
+                </div>
+              ) : (
+                <div className='noState'>{NO_STATE_MSG}</div>
+              )
+            }
+          />
+          <Route path='/webMetrics' element={<WebMetricsContainer webMetrics={webMetrics} />} />
+          <Route
+            path='/tree'
+            element={<Tree snapshot={snapshot} snapshots={snapshots} currLocation={currLocation} />}
+          />
+          <Route
+            path='/'
+            element={
+              hierarchy ? (
+                <ParentSize className='componentMapContainer'>
+                  {({ width, height }) => {
+                    const maxHeight = 1200;
+                    const h = Math.min(height, maxHeight);
+                    return (
+                      <ComponentMap
+                        currentSnapshot={currLocation.stateSnapshot}
+                        width={width}
+                        height={h}
+                      />
+                    );
+                  }}
+                </ParentSize>
+              ) : null
+            }
+          />
+        </Routes>
+      </div>
+    </div>
   );
 };
 

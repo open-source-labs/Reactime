@@ -1,95 +1,154 @@
-/* eslint-disable max-len */
-import React, { useState, useEffect, useRef } from 'react';
-import { launchContentScript } from '../actions/actions';
-import Loader from '../components/Loader';
-import ErrorMsg from '../components/ErrorMsg';
-import { useStoreContext } from '../store';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { launchContentScript, setTab } from '../slices/mainSlice';
+import { MainState, RootState, ErrorContainerProps } from '../FrontendTypes';
+import { RefreshCw, Github, PlayCircle } from 'lucide-react';
 
-function ErrorContainer(): any {
-  const [store, dispatch] = useStoreContext();
-  const { tabs, currentTitle, currentTab } = store;
-  // hooks for error checks
-  const [loadingArray, setLoading] = useState([true, true, true]);
-  const titleTracker = useRef(currentTitle);
-  const timeout = useRef(null);
+function ErrorContainer(props: ErrorContainerProps): JSX.Element {
+  const dispatch = useDispatch();
+  const { tabs, currentTitle, currentTab }: MainState = useSelector(
+    (state: RootState) => state.main,
+  );
 
-  function launch(): void{ dispatch(launchContentScript(tabs[currentTab])); }
+  // Helper function to check if a URL is localhost
+  const isLocalhost = (url: string): boolean => {
+    return url.startsWith('http://localhost:') || url.startsWith('https://localhost:');
+  };
 
-  // check if tabObj exists > set status
-  const status = { contentScriptLaunched: false, reactDevToolsInstalled: false, targetPageisaReactApp: false };
-  if (tabs[currentTab]) { Object.assign(status, tabs[currentTab].status); }
-
-  // hook that sets timer while waiting for a snapshot from the background script, resets if the tab changes/reloads
+  // Add effect to initialize currentTab if not set
   useEffect(() => {
-    function setLoadingArray(i: number, value: boolean) {
-      if (loadingArray[i] !== value) { // avoid unecessary state changes
-        const loadingArrayClone = [...loadingArray];
-        loadingArrayClone[i] = value;
-        setLoading(loadingArrayClone);
+    const initializeCurrentTab = async () => {
+      if (!currentTab) {
+        try {
+          // Query specifically for localhost tabs first
+          const tabs = await chrome.tabs.query({ currentWindow: true });
+          const localhostTab = tabs.find(tab => tab.url && isLocalhost(tab.url));
+          
+          if (localhostTab?.id) {
+            dispatch(setTab(localhostTab.id));
+          } else {
+            // Fallback to active tab if no localhost found
+            const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+            if (activeTab?.id) {
+              dispatch(setTab(activeTab.id));
+            }
+          }
+        } catch (error) {
+          console.error('Error getting tab:', error);
+        }
       }
-    }
+    };
 
-    // check for tab reload/change: reset loadingArray
-    if (titleTracker.current !== currentTitle) {
-      titleTracker.current = currentTitle;
-      setLoadingArray(0, true);
-      setLoadingArray(1, true);
-      setLoadingArray(2, true);
-      if (timeout.current) {
-        clearTimeout(timeout.current);
-        timeout.current = null;
+    initializeCurrentTab();
+  }, [currentTab, dispatch]);
+
+  // function that launches the main app and refreshes the page
+  async function launch(): Promise<void> {
+    try {
+      // If no current tab, try to find localhost tab first
+      if (!currentTab) {
+        const tabs = await chrome.tabs.query({ currentWindow: true });
+        const localhostTab = tabs.find(tab => tab.url && isLocalhost(tab.url));
+        
+        if (localhostTab?.id) {
+          dispatch(setTab(localhostTab.id));
+          await initializeLaunch(localhostTab.id);
+        } else {
+          console.warn('No localhost tab found');
+        }
+        return;
       }
-    }
-    // if content script hasnt been found, set timer or immediately resolve
-    if (!status.contentScriptLaunched) {
-      if (loadingArray[0] === true) {
-        timeout.current = setTimeout(() => { setLoadingArray(0, false); }, 1500);
+
+      // Verify current tab is still localhost
+      const tab = await chrome.tabs.get(currentTab);
+      if (!tab.url || !isLocalhost(tab.url)) {
+        // Try to find a localhost tab
+        const tabs = await chrome.tabs.query({ currentWindow: true });
+        const localhostTab = tabs.find(tab => tab.url && isLocalhost(tab.url));
+        
+        if (localhostTab?.id) {
+          dispatch(setTab(localhostTab.id));
+          await initializeLaunch(localhostTab.id);
+        } else {
+          console.warn('No localhost tab found');
+        }
+        return;
       }
-    } else {
-      setLoadingArray(0, false);
+
+      await initializeLaunch(currentTab);
+    } catch (error) {
+      console.error('Error during launch:', error);
     }
-    if (loadingArray[0] === false && status.contentScriptLaunched === true) {
-      setLoadingArray(1, false);
-    }
-    if (loadingArray[1] === false && status.reactDevToolsInstalled === true) {
-      setLoadingArray(2, false);
-    }
-  }, [status, currentTitle, timeout, loadingArray]);
+  }
+
+  async function initializeLaunch(tabId: number): Promise<void> {
+    const defaultPayload = {
+      status: {
+        contentScriptLaunched: false,
+        reactDevToolsInstalled: false,
+        targetPageisaReactApp: false,
+      },
+    };
+
+    dispatch(launchContentScript(defaultPayload));
+    
+    // Allow the dispatch to complete before refreshing
+    setTimeout(() => {
+      chrome.tabs.reload(tabId);
+    }, 100);
+  }
 
   return (
-    <div className="error-container">
-      <img src="../assets/logo-no-version.png" alt="Reactime Logo" height="50px" />
+    <div className='error-container'>
+      <img src='../assets/whiteBlackSquareLogo.png' alt='Reactime Logo' className='error-logo' />
 
-      <h2>
-        Launching Reactime on tab:
-        {' '}
-        {currentTitle}
-      </h2>
+      <div className='error-content'>
+        <div className='error-alert'>
+          <div className='error-title'>
+            <RefreshCw size={20} />
+            Welcome to Reactime
+          </div>
 
-      <div className="loaderChecks">
-        <p>Checking if content script has been launched on current tab</p>
-        <Loader loading={loadingArray[0]} result={status.contentScriptLaunched} />
+          <p className='error-description'>
+            To ensure Reactime works correctly with your React application, please either refresh
+            your development page or click the launch button below. This allows Reactime to properly
+            connect with your app and start monitoring state changes.
+          </p>
+          <p className='error-description'>
+            Important: Reactime requires React Developer Tools to be installed and will only track state 
+            changes on localhost development servers. If you haven't already, please{' '}
+            <a
+              href='https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='devtools-link'
+            >
+              install React Developer Tools
+            </a>{' '}
+            first.
+          </p>
+        </div>
 
-        <p>Checking if React Dev Tools has been installed</p>
-        <Loader loading={loadingArray[1]} result={status.reactDevToolsInstalled} />
+        <p className='error-note'>
+          Note: Reactime only works with React applications and by default only launches on URLs
+          starting with localhost.
+        </p>
 
-        <p>Checking if target is a compatible React app</p>
-        <Loader loading={loadingArray[2]} result={status.targetPageisaReactApp} />
+        <button type='button' className='launch-button' onClick={launch}>
+          <PlayCircle size={20} />
+          Launch Reactime
+        </button>
 
+        <a
+          href='https://github.com/open-source-labs/reactime'
+          target='_blank'
+          rel='noopener noreferrer'
+          className='github-link'
+        >
+          <Github size={18} />
+          Visit Reactime Github for more information
+        </a>
       </div>
-
-      <br />
-      <div className="errorMsg">
-        <ErrorMsg loadingArray={loadingArray} status={status} launchContent={launch} />
-      </div>
-      <br />
-      <a
-        href="https://reactime.dev/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Please visit reactime.dev to more info.
-      </a>
     </div>
   );
 }

@@ -1,78 +1,102 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-* {
-	font-family: 'Roboto', sans-serif;
-}
 .error-container {
-	height: 100%;
-	margin: 0 auto;
-	background-color: $brand-color;
-	overflow: hidden;
-	font: 'Roboto', sans-serif;
+  height: 100%;
+  background-color: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	a {
-		color: white;
-		margin-top: 1%;
-		height: 3%;
-	}
-	img {
-		text-align: center;
-		padding-top: 5%;
-		padding-bottom: 1.5%;
-	}
-	p {
-		padding: 0;
-		text-align: center;
-		margin: 2% 0;
-	}
-	.loaderChecks {
-		padding: 1%;
-		border: 1px solid;
-		border-style: solid;
-		border-color: white;
-		display: grid;
-		grid-template-columns: 4fr 1fr;
-		grid-template-rows: repeat(3, 1fr);
-		grid-column-gap: .5%;
-		grid-row-gap: .5%;
-		justify-content: center;
-		align-items: center;
-	}
-	h2 {
-		padding-left: 2%;
-		padding-right: 2%;
-	}
-	.check, .fail{
-		font-size: 3em;
-		color: green;
-		margin: 0;
-		align-self: center;
-		justify-self: center;
-	}
-	.fail{
-		color: red;
-	}
-	.errorMsg{
-		text-align: center;
-		font-weight: bold;
-	}
+.error-logo {
+  height: 50px;
+  margin-bottom: 2rem;
+}
 
-	.launchContentButton {
-		background: $blue-brand;
-    color: $brand-color;
-    margin: 3px;
-		padding: 5px 10px;
-    border-radius: 5px;
-    border: 1px solid rgb(36, 37, 41);
-	}
+.error-content {
+  max-width: 600px;
+  width: 100%;
+}
 
-	.launchContentButton:hover {
-    background: $light-background-color;
-  }
+.error-alert {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
 
-	.launchContentButton:active {
-		box-shadow: 1px 1px 10px black;
-  }
+.error-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.error-description {
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.error-note {
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.launch-button {
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1.125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.launch-button:hover {
+  background-color: var(--text-primary);
+}
+
+.launch-button:active {
+  background-color: var(--button-primary-bg);
+}
+
+.github-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.github-link:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+.devtools-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.devtools-link:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
 }

@@ -1,34 +1,24 @@
 .action-container {
-  // overflow: auto;
-  // background-color: $brand-color;
+  background: var(--bg-primary);
+  border-right: 1px solid var(--border-color);
+  transition: width 0.3s ease;
   overflow-x: hidden;
-  background-color: #282828;
-}
-
-.actionname {
-  background-color: inherit;
-  color: #fffeff;
-}
-
-#recordBtn{
+  overflow-y: auto;
   height: 100%;
-  display:flex;
+
+  .action-button-wrapper {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.2s ease,
+      visibility 0.2s ease;
+  }
 }
 
-.actionToolContainer{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.clear-button-container {
+  padding: 16px;
 }
 
-#recordBtn .fa-regular{
-  height: 100%;
-  width: 28px;
-}
-
-.route {
-  background-color: #ff6569;
-  padding-left: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+.dropdown-container {
+  padding: 4px 16px;
 }

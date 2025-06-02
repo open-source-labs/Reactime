@@ -1,72 +1,104 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-* {
-	font-family: 'Roboto', sans-serif;
-}
 .buttons-container {
-	margin: 0 1% 0 1%;
-	display: grid;
-	grid-template-columns: repeat(5, 1fr);
-	grid-gap: 1%;
-	padding: 1% 0 1% 0;
+  display: flex;
+  align-items: center;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
+  width: 100%;
 }
 
-.introjs-tooltip {
-  color: black;
-  background-color: white;
-  min-width: 20rem;
-}
-.introjs-tooltiptext ul{
-	padding-left: 2px;
-}
-
-// .introjs-helperLayer{
-//   // border: 2px solid yellow
-// }
-
-.tools-container {
-	display: flex;
-	justify-content: space-between;
-	border: .5px solid grey;
-	background-color: #35383e;
-	padding: 3px;
-	margin-bottom: 1rem;
-}
-
-#seriesname {
-	background-color: #333;
-	color: white;
-}
-
-@media (max-width: 500px) {
-	.buttons-container {
-		grid-template-columns: repeat(2, 1fr);
-	}
-}
-
-.introjs-nextbutton {
-	background-color: none;
-	color: #3256f1;
-	border: 1px solid;
-	outline: none;
-}
-
-.introjs-prevbutton{
-	background-color: none;
-	color: #3256f1;
-	border: 1px solid;
-	outline: none;
-}
-
-
-.introjs-skipbutton {
-	color: #d72828;
-	border: 1px solid;
-	margin-top: 2px;
-    font-size: 12px;
-	outline: none;
+.buttons-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  gap: 16px;
 }
 
 .introjs-button {
-	background: none; 
-	outline: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+.introjs-tooltip-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.introjs-progressbar {
+  background-color: var(--color-primary);
+}
+
+.introjs-tooltip {
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  min-width: 20rem;
+}
+
+.introjs-tooltiptext ul {
+  padding-left: 20px;
+}
+
+.introjs-nextbutton {
+  background-color: var(--color-primary);
+  color: var(--button-primary-text);
+}
+
+.introjs-prevbutton {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.introjs-skipbutton {
+  color: #d72828;
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.buttons-container button {
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  border-radius: 0.375rem;
+  transition: all 200ms ease;
+  gap: 8px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.status-dot.active {
+  background-color: var(--color-primary);
+  animation: pulse 2s infinite;
+}
+
+.status-dot.inactive {
+  background-color: var(--text-tertiary);
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

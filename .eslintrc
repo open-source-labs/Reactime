@@ -1,11 +1,13 @@
 {
   "extends": [
-    "airbnb", 
     "plugin:jest/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"],
+    "plugin:@typescript-eslint/recommended",
+    "plugin:testing-library/react", // added in for RTL tests
+    "plugin:jest-dom/recommended" // added in for RTL tests
+  ],
   "root": true,
-  "plugins": ["jest", "react", "react-hooks", "@typescript-eslint"],
+  "plugins": ["jest", "react", "react-hooks", "@typescript-eslint", "testing-library", "jest-dom"],
   "rules": {
     "arrow-parens": [2, "as-needed"],
     "import/no-unresolved": "off",
@@ -13,7 +15,8 @@
     "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
     "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
     "react/jsx-filename-extension": [0],
-    "linebreak-style": "off"
+    "linebreak-style": "off",
+    "max-len": [{ "ignoreComments": true }]
   },
   "env": {
     "es6": true,

@@ -1,259 +1,189 @@
 .state-container {
-  font-size: 10px;
   overflow: auto;
-  background-color: $brand-color;
-  // margin-left: 5px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.toggleAC {
-  // color: #00dffc;
-  color: $blue-brand;
-  background: $background-color;
-  height: 50%;
-  text-decoration: none;
+.app-body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  height: 100%;
+  min-height: 0;
+}
+
+.main-navbar-container--structural {
+  height: 0;
+  padding: 0;
   border: none;
-}
-
-.toggleAC:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-.state-container .navbar {
-  background-color: $background-color;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  height: 30px;
-  position: static;
-}
-
-.state-container .main-navbar {
-  background-color: $background-color;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  height: 35px;
-  margin: 6px;
-}
-
-.state-container .componentMapContainer{
-  height: 95% !important;
-}
-
-.state-container .main-navbar-container {
-  position: sticky;
-  top: 0px;
-  left: 0px;
-  z-index: 1;
-  // background-color: $background-color;
-  background-color: #252525;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  height: 35px;
-}
-
-.navbar {
-  // prevent navbar from scrolling with state/tree display
-  position: sticky;
-  top: 0px;
-  left: 0px;
-  z-index: 1;
-  @extend %disable-highlight;
-}
-
-.no-data-message {
-  color: $text-color;
-  font: normal 13px $text-font-stack;
-  padding: 10px;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .state-container {
-  .main-navbar-text {
-    margin: 6px;
-  }
-
-  .main-router-link {
-    font-size: 14px;
-    height: 75%;
-    width: 75px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    color: $text-color;
-
-    background: $brand-color;
-    border-radius: 5px;
-    border: 1px solid rgba(184, 196, 194, 0.25);
-  }
-
-  .main-router-link:hover {
-    background: $light-background-color;
-  }
-
-  .main-router-link.is-active {
-    background: $blue-brand;
-    color: $brand-color;
-    margin: 3px;
-    border-radius: 5px;
-    border: 1px solid rgb(36, 37, 41);
-  }
-
   .router-link {
-    height: 100%;
-    width: 34%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: $medium-background-color;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-secondary);
     text-decoration: none;
-    color: $text-color;
-  }
+    background-color: transparent;
+    cursor: pointer;
+    transition:
+      color 200ms ease,
+      border-color 200ms ease;
+    margin: 0;
+    position: relative;
+    white-space: nowrap;
 
-  .router-link:hover {
-    background-color: $light-grey-three;
-  }
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background-color: var(--color-primary);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
 
-  .router-link.is-active {
-    background-color: $brand-color;
-  }
+    &:hover {
+      color: var(--text-primary);
+      background-color: transparent;
 
-  .navbar {
-    background-color: $navbar-color;
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
-    height: 30px;
+      &::after {
+        width: 100%;
+      }
+    }
+
+    &.is-active {
+      color: var(--color-primary);
+      background-color: transparent;
+
+      &::after {
+        width: 100%;
+        background-color: var(--color-primary);
+      }
+    }
   }
 
   .main-navbar {
-    background-color: $background-color;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    height: 35px;
-    margin: 6px;
-  }
-
-  .main-navbar-container {
-    top: 0px;
-    left: 0px;
-    z-index: 1;
-    background-color: $background-color;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    height: 40px;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .main-navbar-container {
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    padding: 4.5px 24px;
   }
 }
 
-.no-data-message {
-  color: $text-color;
-  font: normal 13px $text-font-stack;
-  padding: 10px;
+// tool tip styles
+.tooltip-header {
+  padding: 8px 8px 8px 12px;
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-primary-dark);
+  border-radius: 8px;
 }
 
-.performance-nav-bar-container {
-  background-color: $navbar-color;
-  display: flex;
-  height: 30px;
+.tooltip-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--bg-primary);
 }
 
-.router-link-performance {
-  height: 100%;
-  width: 34%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: $brand-color;
-  text-decoration: none;
-  color: $text-color;
+.tooltip-container {
+  width: 250px;
+  background-color: var(--bg-primary);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.router-link-performance:hover {
-  background-color: $light-grey-four;
+.tooltip-section {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 150ms ease;
 }
 
-.router-link-performance.is-active {
-  font-weight: 600;
+.tooltip-section:last-child {
+  border-bottom: none;
+}
+
+.tooltip-section-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.tooltip-content {
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.tooltip-item {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.1);
+}
+
+.tooltip-item:last-child {
+  border-bottom: none;
+}
+
+.tooltip-data {
+  border-left: 2px solid var(--color-primary-dark);
+}
+
+.tooltip-container {
+  animation: tooltipFade 150ms ease-out;
 }
 
 // Web Metrics Container
 .web-metrics-container {
   display: grid;
-  grid-template-columns: auto auto;
-  align-items: center;
-  justify-content: center;
+  grid-template-columns: repeat(3, 1fr);
 }
 
-//container for metrics
 .metric {
-  min-height: 200px;
-  min-width: 200px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.bargraph {
-  position: relative;
-  margin-top: 1rem;
-}
-
-#hover-box {
-  max-width: 150px;
+.hover-box {
+  max-width: 250px;
   background-color: #51565e;
-  border-radius: 5px;
+  border-radius: 8px;
   color: white;
+  padding: 2px 8px;
+  line-height: 16px;
 }
 
-.bargraph-position {
-  position: relative;
+/* Tree styling */
+.json-tree {
+  overflow: auto;
+  list-style: none;
+  padding: 16px;
+  margin: 0;
 }
 
-// tool tip styles
-
-
-.visx-tooltip{
-  overflow-y: auto;
-  overflow-wrap: break-word;
-  pointer-events:all !important;
-}
-.props, .stateTip{
-  margin-top: 3px;
-  line-height: 1;
+.tree-component {
   height: 100%;
-  overflow-y: hidden;
-  max-height: 400px;
+  overflow: auto;
 }
-.props{
-  margin-top: 3px;
-}
-.props p{
-  line-height:1;
-  margin-top: 3px;
-  margin-bottom: 0px;
-}
-.stateTip p{
-  line-height:1;
-  margin-top: 3px;
-  margin-bottom: 0px;
-}
-.historyToolTip{
-  z-index: 2;
-}
-
-
-.state-container .router-link {
-  border: 0.5px solid black;
-}
-/* if state view is  width is less than 500px, stack the body containers */
-// @media (max-width: 500px) {
-
-// }

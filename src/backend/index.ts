@@ -1,51 +1,102 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable consistent-return */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable import/order */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * 'reactime' module has a single export
  * @function linkFiber
-*/
-// regenerator runtime supports async functionality
+ */
+// --------------------------START OF IMPORT------------------------------------
+// regenerator runtime supports async functionality : This package implements a fully-functional source transformation that takes the syntax for generators/yield from ECMAScript 2015 or ES2015 and Asynchronous Iteration proposal and spits out efficient JS-of-today (ES5) that behaves the same way.
 import 'regenerator-runtime/runtime';
-import linkFiberStart from './linkFiber';
-import timeJumpStart from './timeJump';
-import {
-  Snapshot, Mode, MsgData,
-} from './types/backendTypes';
+// linkFiberInitialization (actually uses the function linkFiber but is labeled here as linkFiberInitialization, returns a function). When this returned function is invoked, it checks if devTools is installed, checks if the website is a reactApp, adds event listeners for timetravel, and allows us to obtain the initial FiberRoot Node from react dev tool
+import linkFiber from './routers/linkFiber';
+// timeJumpInitialization (actually uses the function timeJumpInitiation but is labeled here as linkFiberInitialization, returns a function) returns a function that sets jumping to false and handles timetravel feature
+import timeJumpInitialization from './controllers/timeJump';
+import { Snapshot, Status, MsgData } from './types/backendTypes';
+import routes from './models/routes';
 
-// * State snapshot object initialized here
-const snapShot: Snapshot = {
-  tree: null,
-  unfilteredTree: null,
-};
-
-const mode: Mode = {
+// -------------------------INITIALIZE MODE--------------------------
+/** Indicate if mode is jumping/not jumping or navigating during jumping */
+const mode: Status = {
   jumping: false,
-  paused: false,
 };
 
-// linkFiber is now assigned the default function exported from the file linkFiber.ts
-const linkFiber = linkFiberStart(snapShot, mode);
-// timeJump is now assigned the default function exported from the file timeJump.ts
-const timeJump = timeJumpStart(mode);
+// ---------------------INITIALIZE LINKFIBER & TIMEJUMP-------------------------
+// linkFiber is now assigned the default ASYNC function exported from the file linkFiber.ts
+const linkFiberInit = linkFiber(mode);
+// timeJump is now assigned the default ASYNC function exported from the file timeJump.ts
+const timeJump = timeJumpInitialization(mode);
 
-// * Event listener for time-travel actions
-window.addEventListener('message', ({ data: { action, payload } }: MsgData) => {
+/**
+ * Invoke linkFiber to perform the following:
+ * 1. Check for ReactDev installation, valid target React App
+ * 2. Obtain the initial ReactFiber Tree from target React App
+ * 3. Send a snapshot of ReactFiber Tree to frontend/Chrome Extension
+ */
+linkFiberInit();
+
+// --------------INITIALIZE EVENT LISTENER FOR TIME TRAVEL----------------------
+/**
+ * On the chrome extension, if user click left/right arrow or the play button (a.k.a time travel functionality), frontend will send a message `jumpToSnap` with payload of the cached snapShot tree at the current step
+ * 1. Set jumping mode to true => dictate we are jumping => no new snapshot will be sent to frontend
+ * 2. If navigate to a new route during jumping => cache timeJump in navigate.
+ * 3. If not navigate during jumping =>  invoke timeJump to update ReactFiber tree with cached data from the snapshot payload
+ */
+window.addEventListener('message', async ({ data: { action, payload } }: MsgData) => {
   switch (action) {
     case 'jumpToSnap':
-      timeJump(payload, true); // * This sets state with given payload
+      // Set mode to jumping to prevent snapShot being sent to frontEnd
+      // NOTE: mode.jumping is set to false inside the timeJump.ts
+      mode.jumping = true;
+      // Check if we are navigating to another route
+      const navigating: boolean = routes.navigate(payload.route);
+      // If need to navigate
+      if (navigating) {
+        // Cache timeJump function in mode.navigating => which will be invoked during onCommitFiberRoot:
+        mode.navigating = () => timeJump(payload);
+      }
+      // If not navitating, invoke timeJump immediately to update React Application FiberTree based on the snapshotTree payload
+      else {
+        await timeJump(payload); // * This sets state with given payload
+      }
       break;
+      // case 'reinitialize':
+      // console.log('backend reinitialize received, performing checks again');
+      // let devTools;
+      // while (!devTools) {
+      //   devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+      // }
+      // console.log('backend react devtools: ', devTools);
+      // // If React Devtools is not installed, object will be undefined.
+      // if (!devTools) return;
+      // // If React Devtools is installed, send a message to front end.
 
-    case 'setPause':
-      mode.paused = payload;
+      // console.log(
+      //   'backend react devtools check passed, sending devToolsInstalled to contentScript',
+      // );
+      // window.postMessage(
+      //   {
+      //     action: 'devToolsInstalled',
+      //     payload: 'devToolsInstalled',
+      //   },
+      //   '*',
+      // );
+
+      // const reactInstance = devTools.renderers.get(1);
+      // // If target application is not a React App, this will return undefined.
+      // if (!reactInstance) {
+      //   return;
+      // }
+      // console.log('backend react instance check passed, sending aReactApp to contentScript');
+      // // If target application is a React App, send a message to front end.
+      // window.postMessage(
+      //   {
+      //     action: 'aReactApp',
+      //     payload: 'aReactApp',
+      //   },
+      //   '*',
+      // );
+
+      linkFiberInit();
       break;
-
     default:
       break;
   }
 });
-// connect to dev tools and new fiber,
-// invokes anonymous function from linkFiber.ts set to linkFiber on line 30
-linkFiber();

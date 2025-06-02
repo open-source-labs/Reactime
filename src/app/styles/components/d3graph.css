@@ -1,95 +1,122 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-body {
-	background-color: black;
-}
-
+/* Base node styling */
 .node {
-	cursor: pointer;
-	fill-opacity: 0.8;
+  cursor: pointer;
+  fill-opacity: 1;
+  transition: all 200ms ease;
 }
 
-/*   this represents leaf nodes aka nodes with no children */
+/* Node rectangle styling */
+.node rect {
+  fill: var(--bg-primary);
+  stroke: var(--border-color);
+  stroke-width: 1px;
+  transition: all 200ms ease;
+}
+
+.node:hover rect {
+  stroke: var(--color-primary);
+  stroke-width: 2px;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+/* Node text styling */
 .node text {
-	fill: #fae6e4;
-	background-color: red;
-	font-size: 10px;
-	font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  fill: var(--text-primary);
 }
 
-/*   modifies text of parent nodes (has children) */
+/* Parent node specific styling */
+.node--internal rect {
+  fill: var(--bg-primary);
+  stroke: var(--border-color);
+}
+
+.node--internal:hover rect {
+  stroke: var(--color-primary);
+  stroke-width: 2px;
+}
+
 .node--internal text {
-	fill: white;
-	font-size: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  fill: var(--text-primary);
 }
+
+/* Current/active node styling */
+.node.active rect {
+  stroke: var(--color-primary);
+  stroke-width: 2px;
+}
+
+/* Link styling */
 .link {
-	fill: none;
-	stroke: #fae6e4;
-	stroke-opacity: 0.4;
-	stroke-width: 3px;
+  fill: none;
+  stroke: var(--border-color);
+  stroke-width: 2px;
+  transition: stroke 200ms ease;
 }
 
+.link:hover {
+  stroke: var(--border-color-dark);
+}
+
+/* Current path highlight */
+.link.current-link {
+  stroke: var(--color-primary);
+  stroke-opacity: 0.6;
+}
+
+/* Tooltip styling */
 div.tooltip {
-	position: absolute;
-	padding: 0.5rem 1rem;
-	color: white;
-	z-index: 100;
-	font-size: 14px;
-	font-family: 'Roboto', sans-serif;
-	background: rgb(17, 17, 17, 0.9);
-	box-shadow: rgb(33 33 33 / 20%) 0px 1px 2px;
-	border-radius: 5px;
-	max-width: 300px;
+  position: absolute;
+  padding: 12px;
+  color: var(--text-primary);
+  z-index: 100;
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  max-width: 250px;
 }
 
-.d3-tip {
-	line-height: 1;
-	padding: 6px;
-	background: #679dca;
-	color: #2b2f39;
-	border-radius: 4px;
-	font-size: 13px;
-	max-width: 400px;
-	overflow-wrap: break-word;
-	font-family: 'Overpass Mono', monospace;
+/* Container styling */
+.display {
+  background-color: var(--bg-secondary);
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
 }
 
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-	box-sizing: border-box;
-	display: inline;
-	font-size: 15px;
-	line-height: 1;
-	color: #679dca;
-	content: '\25BC';
-	position: absolute;
-	text-align: center;
+/* State changes text container styling */
+.node foreignObject div {
+  max-height: 100%; /* Fixed height for scroll container */
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  padding-right: 6px;
+  scrollbar-color: var(--border-color-dark) var(--bg-secondary);
 }
 
-/* Style northward tooltips specifically */
-.d3-tip.n:after {
-	margin: -2px 0 0 0;
-	top: 100%;
-	left: 0;
+/* Custom scrollbar styling for Webkit browsers */
+.node foreignObject div::-webkit-scrollbar {
+  width: 6px;
 }
 
-.history-d3-container {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	height: calc(100% - 70px);
+.node foreignObject div::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 3px;
 }
 
-.perf-d3-container {
-	height: calc(100% - 70px);
+.node foreignObject div::-webkit-scrollbar-thumb {
+  background: var(--border-color-dark);
+  border-radius: 3px;
 }
 
-.perf-d3-svg {
-	display: block;
-}
-
-.perf-chart-labels {
-	font: 1.3em sans-serif;
-	fill: #2a2f3a;
-	pointer-events: none;
-	text-anchor: middle;
+.node foreignObject div::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
 }

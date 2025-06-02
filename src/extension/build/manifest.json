@@ -1,15 +1,16 @@
 {
   "name": "Reactime",
-  "version": "16.0.0",
+  "version": "26.1",
   "devtools_page": "devtools.html",
-  "description": "A Chrome extension that helps debug React applications by memorizing the state of components with every render.",
+  "description": "A Chrome extension for time travel debugging and performance monitoring in React applications.",
   "manifest_version": 3,
   "background": {
     "service_worker": "bundles/background.bundle.js"
   },
+
   "icons": {
-    "48": "assets/icon48.png",
-    "128": "assets/icon128.png"
+    "48": "assets/whiteBlackSquareIcon48.png",
+    "128": "assets/whiteBlackSquareIcon128.png"
   },
   "content_scripts": [
     {
@@ -23,6 +24,6 @@
       "matches": ["<all_urls>"]
     }
   ],
-  "permissions": ["contextMenus", "tabs", "activeTab", "scripting"],
+  "permissions": ["contextMenus", "tabs", "activeTab", "scripting", "debugger", "alarms"],
   "host_permissions": ["<all_urls>"]
 }

@@ -1,301 +1,281 @@
 <h1 align="center">
-  <br>
-    <img src ="./assets/readme-logo-300-no-version.png" width="300"/>
-    <br>
-    <br>
+    <img src ="./assets/logos/marqueePromoTitle.png"/>
   React Performance Tool
     <br>
-    <a href="https://osawards.com/react/"> Nominated for React Open Source Awards 2020 </a>
+    <a href="https://osawards.com/react/">🏆 Nominated for React Open Source Awards 2020</a>
   <br>
 </h1>
 
-<h4 align="center"> Reactime is an open source Chrome developer tool for time travel debugging and performance monitoring in React applications. Reactime enables developers to record snapshots of application state, jump between and inspect state snapshots, and monitor performance metrics such as component render time and render frequency. </h4>
+<h4 align="center">A powerful Chrome extension that enhances React development with time-travel debugging and advanced performance monitoring</h4>
 
+<h4 align="center"><a href="https://medium.com/@elliesimens/reactime-reimagined-a-major-leap-forward-in-react-debugging-7b76a0a66f42">Read our Medium Article</a> to learn more about Reactime’s behind-the-scenes and development process!</h4>
 <br>
-<p align="center">
-  <a href="https://github.com/oslabs-beta/reactime">
-    <img src="https://img.shields.io/github/license/oslabs-beta/reactime" alt="GitHub">
-  </a>
-  <a href="https://travis-ci.com/oslabs-beta/reactime">
-    <img src="https://travis-ci.com/oslabs-beta/reactime.svg?branch=master" alt="Build Status">
-  </a>
-  <a href="http://badge.fury.io/js/reactime">
-    <img src="https://badge.fury.io/js/reactime.svg" alt="npm version">
-  </a>
-    <img src="https://img.shields.io/badge/babel%20preset-airbnb-ff69b4" alt="BabelPresetPrefs">
-    <img src="https://img.shields.io/badge/linted%20with-eslint-blueviolet" alt="LintPrefs">
-</p>
 
-<!-- [![GitHub](https://img.shields.io/github/license/oslabs-beta/reactime)](https://github.com/oslabs-beta/reactime) [![Build Status](https://travis-ci.com/oslabs-beta/reactime.svg?branch=master)](https://travis-ci.com/oslabs-beta/reactime) [![npm version](https://badge.fury.io/js/reactime.svg)](http://badge.fury.io/js/reactime) ![BabelPresetPrefs](https://img.shields.io/badge/babel%20preset-airbnb-ff69b4) ![LintPrefs](https://img.shields.io/badge/linted%20with-eslint-blueviolet) -->
+<p align="center">
+  <a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">
+    <img src="https://img.shields.io/chrome-web-store/v/cgibknllccemdnfhfpmjhffpjfeidjga" alt="Chrome Web Store" />
+  </a>
+  <a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">
+    <img src="https://img.shields.io/chrome-web-store/users/cgibknllccemdnfhfpmjhffpjfeidjga" alt="Chrome Web Store Users" />
+  </a>
+  <a href="https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga">
+    <img src="https://img.shields.io/chrome-web-store/rating/cgibknllccemdnfhfpmjhffpjfeidjga" alt="Chrome Web Store Rating" />
+  </a>
+</p>
 
 <h5 align="center">
 <br>
-  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href='/DeveloperREADME.md'>DEVELOPER INSTALL</a> &nbsp; • &nbsp; <a href='./src/README.md'>DEVELOPER README</a>
+  <a href="./README.rus.md">🇷🇺  &nbsp; РУССКАЯ ВЕРСИЯ</a> &nbsp; • &nbsp;  <a href="./README.fr.md">🇫🇷  &nbsp; VERSION FRANÇAISE</a> &nbsp; • &nbsp; <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a>
   <br>
 </h5>
 <br>
 
 <p align="center">
-<img src="./assets/new-reactime.gif" />
+<img src="./assets/gifs/GeneralDemoGif_V26.gif" />
 </p>
 
+## <h1>✨ Key Features</h1>
+
+### 🔍 State Visualization
+
+- **Multiple Views**: Visualize your application state through Component Graphs, JSON Trees, Performance Graphs, and Accessibility Trees
+- **History Timeline**: Track state changes over time with an intuitive history visualization
+- **Web Metrics**: Monitor critical performance metrics in real-time
+- **Accessibility Insights**: Analyze your app's accessibility tree for each state change
+  <br>
+
+<p>On the main page, there are two main selections from the dropdown panel:</p>
+
+- **Timejump**: View and navigate through the snapshot history of your application's state. You can jump to any point in time to see how the state evolves across changes. You can also use the play button to replay each state change automatically.
+- **Providers / Consumers**: Understand your application's context dependencies and their interactions better through visualizing its provider and consumer relationships.
+  <br>
+
 <p align="center">
-  <a href="#how-to-use">How To Use</a> • <a href="#features">Features</a> • <a href="https://reactime.dev">Website</a> • <a href="#read-more">Read More</a>
+<img src="./assets/gifs/ProviderConsumer_V26.gif" />
 </p>
+<br>
 
-<b>Reactime 16.0</b> presents the codebase with substantial, much-needed
-clean-up. From the backend and frontend to testing, the Reactime XVI team has:
-removed vestigial code, added comments to clarify code, implemented 100% testing
-coverage for the codebase, compartmentalized and modularized files, and
-implemented typescript.
+### ⏱️ Time-Travel Debugging
 
-The primary purpose of this update is to allow easier understanding of
-Reactime's codebase by individuals or groups wishing to further update Reactime,
-keeping this great developer tool alive.
-
-With release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
-'npm run dev' || 'npm run build' for backwards compatibility.<br/> For version
-Node v16.16.0, please use script 'npm run devlegacy' || 'npm run buildlegacy'
-
-Previously, <b>Reactime 14.0 and 15.0</b> added the exciting features below:
-
-I. React Router Compatibility <br> Reactime is now compatible with React Router
-applications! Prior to Reactime 14.0, recording state snapshots as the user
-navigated across various routes was possible, but time travel debugging was only
-possible for the current route (i.e. jumping back to a prior state at a
-different route was not possible). In order to streamline debugging of
-applications with multiple routes, Reactime 14.0 added functionality that allows
-the user to time-travel back to different routes, including live updating in the
-browser to reflect the state of their application at that previously visited
-route.
-
-II. Classifying State Snapshots by Route <br> The list of state snapshots in the
-Reactime dashboard is now classified by route to give the developer visual cues
-of the snapshot-route relationship and make time travel debugging of various
-routes easier.
-
-III. Filtering Performance Metrics By Route <br> The Reactime dashboard includes
-a stacked bar graph showing render times for each component, with a separate bar
-stack for each snapshot. With Reactime 14.0, this composite bar graph can now be
-filtered by route to allow the developer to review detailed performance data by
-route.
-
-IV. Visualize And Compare Components Within a Snapshot <br> Users not only have
-access to multiple snapshots, but can now zone into a specified snapshot more
-granularly through a new visualization consisting of its individual components.
-These new graphs are rendered directly in the same Performance tab in Reactime
-and provide details for each component when the user hovers over, providing a
-new visual comparison of components across a single chosen state.
+- **State Snapshots**: Capture and navigate through your application's state history
+- **Playback Controls**: Automatically replay state changes with adjustable speed
+- **Jump Points**: Instantly navigate to any previous state
+- **Diff Comparisons**: Compare states between snapshots
+  <br>
 
 <p align="center">
-<img src="./assets/snapshot-comparison.gif" />
+<img src="./assets/gifs/TimeTravelGif_V26.gif" />
+</p>
+<br>
 
-After installing Reactime, you can test its functionalities with your React
-application in development mode.
+### 📊 Performance Analysis
 
-Please note, the time jumping feature will <b>ONLY</b> work when your
-application is running in <b>development mode</b>. In production mode, you are
-able to view your application’s component map but no additional features.
+- **Component Metrics**: Track render times and performance bottlenecks
+- **Series Comparison**: Compare performance across different sets of state changes
+- **Re-render Detection**: Identify and fix unnecessary render cycles
+- **Web Vitals**: Monitor Core Web Vitals and other performance metrics
+  <br>
+  <br>
 
-## <b>Installation</b>
+### 🔄 Modern Framework Support
 
-To get started, install the Reactime
-[extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga)
-from Chrome Web Store.
+<ul>
+  <li>
+    Full compatibility with <strong>Next.js, Remix, Recoil, and Gatsby</strong>
+  </li>
+    <li>
+TypeScript support for class and functional components
+  </li>
+    <li>
+Support for React Hooks and Context API
+  </li>
+  </ul>
+  <br>
 
-NOTE: The React Developer Tools
-[extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
-is also required for Reactime to run, if you do not already have it installed on
-your browser.
+### 💾 State Persistence & Sharing
 
-### Manual Installation
+Reactime makes it easy to save and share your application's state history:
 
-Go to Chrome Extensions (make sure Chrome Extension is in Developer Mode) for
-manual installation in (https://developer.chrome.com/extensions/faq#faq-dev-01)
-and click on Load Unpacked. Use `src/extension/build/` to load this extension.
-Turn on 'Allow access to file URLs' in extension details page if testing
-locally.
+- **Export State History**: Save your recorded snapshots as a JSON file for later analysis or sharing
+- **Import Previous Sessions**: Upload previously saved snapshots to compare state changes across different sessions
+- **Cross-Session Analysis**: Compare performance and state changes between different development sessions
+  <br>
 
-### Looking to contribute to Reactime?
+<p align="center">
+<img src="./assets/gifs/ImportExportGif_V26.gif" />
+</p>
+<br>
 
-<i>Please refer to Developer Install for a detailed guide:</i>
-<a href='/DeveloperREADME.md'>Developer Install</a>
+### 📚 Interactive Documentation
 
-After you finish the Develpoer Install, checkout
-[the developer README](src/README.md) for more info on the project, and
-instructions on building from source.
+Reactime provides comprehensive documentation to help developers understand its architecture and APIs:
+After cloning this repository, developers can simply run `npm run docs` at the
+root level and serve the dynamically generated `/docs/index.html` provding:
 
-## <b>How to Use</b>
+<ul>
+  <li>
+  Interactive component diagrams
+  </li>
+    <li>
+Type definitions and interfaces
+  </li>
+    <li>
+Codebase architecture overview
+  </li>
+      <li>
+API references and examples
+  </li>
+  </ul>
+  <br>
 
-After installing the Chrome extension, just open up your project in the browser.
+<h1>🎉 What's New!</h1>
 
-Then open up your Chrome DevTools and navigate to the Reactime panel.
+Reactime 26.0 brings a complete overhaul to the React debugging experience, featuring:
 
-## <b>Troubleshooting</b>
+- **New Context Data Display**
+
+  - First-ever visualization of useContext hook state changes
+  - Clear mapping of provider-consumer relationships
+  - Real-time context state value monitoring
+  - Detailed provider data visualization
+
+- **Enhanced Time Travel Debugging**
+
+  - Redesigned slider interface positioned alongside snapshots
+  - Variable playback speed controls
+  - More intuitive state navigation
+  - Improved snapshot visualization
+
+- **Modern UI Overhaul**
+
+  - Sleek, contemporary design with rounded components
+  - Intuitive layout improvements
+  - New dark mode support
+  - Enhanced visual hierarchy
+
+- **Major Technical Improvements**
+  - Fixed connection persistence during idle time and tab switches
+  - Restored accessibility tree visualization
+  - Resolved state capture issues for function-based useState hooks
+  - Improved overall extension reliability and performance
+
+These updates make Reactime more powerful, reliable, and user-friendly than ever before, setting a new standard for React debugging tools.
+<br>
+<br>
+
+<h1>🚀 Getting Started</h1>
+
+### Installation
+
+1. Install the [Reactime extension](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga) from the Chrome Web Store
+2. Install the required [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en) extension if you haven't already
+
+### Prerequisites
+
+- Your React application must be running in **development mode**
+- React Developer Tools extension must be installed
+- Chrome browser (version 80 or higher recommended)
+
+### Launch Reactime
+
+There are two ways to open the Reactime panel:
+
+1. **DevTools**
+
+   - Open Chrome DevTools (F12 or ⌘+⌥+I)
+   - Navigate to the "Reactime" tab
+   - This will open Reactime as a panel within Chrome DevTools, integrated alongside your other development tools
+
+2. **Context Menu**
+
+   - Right-click anywhere on your React application
+   - Select "Reactime" from the context menu
+   - This will open Reactime in a separate popup window which you can resize and position independently
+
+Once launched, Reactime will automatically begin monitoring your application's state changes and performance metrics.
+<br>
+<br>
+
+<h1>🤝 Contributing to Reactime</h1>
+
+We welcome contributions from developers of all skill levels! For detailed guidelines on how to contribute:
+
+1. **Get Started**
+
+   - Fork the repository
+   - Review our comprehensive Developer README
+   - Set up your local development environment
+
+2. **Build Process**
+
+   - Follow our build instructions in the Developer README
+   - Test your changes thoroughly
+   - Submit a pull request
+
+Join our growing community of contributors and help shape the future of React debugging tools! For detailed contribution guidelines and project architecture information, please refer to our <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a> and <a href='./CONTRIBUTING.md'>🙋 Contributing README</a>
+<br>
+<br>
+
+<h1>🛠️ Troubleshooting</h1>
+
+### ❓ <b>Why is Reactime not recording new state changes?</b>
+
+Reactime lost its connection to the tab you're monitoring, simply click the "reconnect" button to resume your work.
+
+### ❓ <b>Why isn’t Reactime finding my hooks?</b>
+
+Reactime detects and monitors hooks by traversing your application’s unminified React code in development mode. If your build process is minifying or uglifying your code—even for development builds—Reactime may not be able to properly locate and track your hooks. To fix this:
+
+1. **Ensure a true development build**: Double-check your bundler or build tool configuration (e.g., Webpack, Babel, Vite, etc.) to make sure that your application is not minimized or uglified in development mode.
+
+   - For example, with Webpack, make sure you’re running in mode: 'development', which should disable default minification.
+   - In a Create React App project, simply running npm start or yarn start will automatically configure a non-minified development build.
+
+2. **Check for overrides**: Ensure there are no custom Babel or Webpack plugins that minify your code, especially if you’re using frameworks like Next.js or Gatsby. Sometimes additional plugins or scripts might be running under the hood.
+
+3. **Restart & rebuild**: After changing any build configuration, rebuild or restart your development server to ensure the new configuration is applied. Then refresh your browser tab so Reactime can detect your unminified hooks.
+
+After changing any build configuration, rebuild or restart your development server to ensure the new configuration is applied. Then refresh your browser tab so Reactime can detect your unminified hooks.
 
 ### ❓ <b>Why is Reactime telling me that no React application is found?</b>
 
 Reactime initially runs using the dev tools global hook from the Chrome API. It
-takes time for Chrome to load this. Try refreshing your application a couple
+takes time for Chrome to load this. Try refreshing your application a couple of
 times until you see Reactime running.
 
-### ❓ <b>There is a black screen instead of the Reactime extension</b>
+### ❓ <b>Why do I need to have React Dev Tools enabled?</b>
 
-Try refreshing the application you want to test and refresh the DevTools by
-clicking the right mouse button “Reload frame”.
+Reactime works in tandem with the React Developer Tools to access a React application's Fiber tree; under the hood, Reactime traverses the Fiber tree through the React Developer Tool's global hook, pulling all relevant information needed to display to the developer
 
 ### ❓ <b>I found a bug in Reactime</b>
 
-Reactime is an open source project, and we’d really appreciate your help with
-improving user experience. Please read [the developer README](src/README.md),
-and create a pull request (or issue) to propose and collaborate on changes to a
-repository.
+Reactime is an open-source project, and we'd love to hear from you about
+improving the user experience. Please read the <a href='./src/DEVELOPER_README.md'>👩‍💻 Developer README</a>,
+and create a pull request (or issue) to propose and collaborate on changes to Reactime.
 
-### ❓ <b>Node version compatiability</b>
+### ❓ <b>Node version compatibility</b>
 
-With release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
+With the release of Node v18.12.1(LTS) on 11/4/22, the script has been updated to
 'npm run dev' | 'npm run build' for backwards compatibility.<br/> For version
 Node v16.16.0, please use script 'npm run devlegacy' | 'npm run buildlegacy'
-
-## <b>Features</b>
-
-### 🔹 Viewing
-
-You can view your application's file structure and click on a snapshot to view
-your app's state. State can be visualized in a Component Graph, JSON Tree, or
-Performance Graph. Snapshots can be diffed with the previous snapshot, which can
-be viewed in Diff mode.
 <br>
 <br>
 
-<p align="center">
-<img src="./assets/map-viewing.gif" />
-</p>
-<br>
+<h1>✍️ Authors</h1>
 
-### 🔹 Snapshot Series and Action Comparison
-
-You can save a series of state snapshots and use it to analyze changes in
-component render performance between current and previous series of snapshots.
-You can also name specific snapshots and compare all snapshots with the same
-name.
-<br>
-<br>
-
-<p align="center">
-<img src="./assets/action-comparison.gif" />
-</p>
-<br>
-
-### 🔹 Components Comparison
-
-When toggled to a specific snapshot, a visualization of the individual
-components of the snapshow will be displayed. This can be done under the same
-Performance tab where the snapshots are rendered. You will also find details of
-each component upon hovering.
-<br>
-<br>
-
-<p align="center">
-<img src="./assets/components-viewing.gif" />
-</p>
-<br>
-
-### 🔹 Recording
-
-Whenever state is changed (whenever setState, useState is called), this
-extension will create a snapshot of the current state tree and record it. Each
-snapshot will be displayed in Chrome DevTools under the Reactime panel.
-<br>
-<br>
-
-<p align="center">
-<img src="./assets/history-tree.gif" />
-</p>
-<br>
-
-### 🔹 Re-render Optimization
-
-One of the most common issues that affects performance in React is unnecessary
-render cycles. This problem can be fixed by checking your renders in the
-Performance tab in Chrome DevTools under the Reactime panel.
-
-### 🔹 Jumping
-
-Using the actions sidebar, a user can jump to any previous recorded snapshots.
-Hitting the jump button on any snapshot will allow a user to view state data at
-any point in the history of the target application.
-
-### 🔹 Gatsby
-
-Reactime offers full support for Gatsby applications. You would be able to
-identify unnecessary renders, duration of each rendering, travel-debugging
-features and visual representation of the tree components.
-
-### 🔹 Next.js
-
-Reactime offers debugging and performance tools for Next.js apps: time-traveling
-debugging, preventing unnecessary components re-renders and making your
-application faster.
-
-### 🔹 TypeScript Support
-
-Reactime offers beta support for TypeScript applications using stateful class
-components and functional components. Further testing and development is
-required for custom hooks, Context API, and Concurrent Mode.
-
-### 🔹 Documentation
-
-After cloning this repository, developers can simply run `npm run docs` at the
-root level and serve the dynamically generated `/docs/index.html` file on a
-browser. Doing so will provide a readable, extensible, and interactive GUI view
-of the structure and interfaces of the codebase.
-<br>
-
-### <b>Additional Features</b>
-
-- Identifying unnecessary re-renders
-- Single-click to view tooltip details on state visualizations
-- Double-click to collapse child components
-- A reverse filter with autofill to focus on a portion of the component map
-- Ability to pan and zoom on state visualizations
-- A dropdown to support development of projects on multiple tabs
-- A slider to move through snapshots quickly
-- A play button to move through snapshots automatically
-- A lock button, which stops recording each snapshot
-- A persist button to keep snapshots upon refresh (handy when changing code and
-  debugging)
-- Download/upload the current snapshots in memory
-- Declarative titles in the actions sidebar
-- Interative Tutorial Walkthrough
-- Toggle feature allowing temporary pause of state monitoring
-- Updated frontend diagram:
-
-<p align="center">
-<img src="./assets/frontend-diagram.png" />
-
-### <b>Bug Fixes</b>
-
-- Search bar now searches for specific nodes successfully
-- Tab titles of chrome browser tabs not running an application in development
-  mode are no longer affected by Reactime
-- Multiple black screens fixed
-- Improved UI and performance
-- No longer inject scripts to non-target applications
-
-## <b>Read More</b>
-
-- [Reactime XVI: Clean-up Time](https://medium.com/@emintahirov1996/reactime-xvi-cleanup-time-a14ba3dcc8a6)
-- [Inter-Route Time Travel with Reactime](https://medium.com/@robbytiptontol/inter-route-time-travel-with-reactime-d84cd55ec73b)
-- [Time-Travel State with Reactime](https://medium.com/better-programming/time-traveling-state-with-reactime-6-0-53fdc3ae2a20)
-- [React Fiber and Reactime](https://medium.com/@aquinojardim/react-fiber-reactime-4-0-f200f02e7fa8)
-- [Meet Reactime - a time-traveling State Debugger for React](https://medium.com/@yujinkay/meet-reactime-a-time-traveling-state-debugger-for-react-24f0fce96802)
-- [Deep in Weeds with Reactime, Concurrent React_fiberRoot, and Browser History Caching](https://itnext.io/deep-in-the-weeds-with-reactime-concurrent-react-fiberroot-and-browser-history-caching-7ce9d7300abb)
-- [Time-Traveling Through React State with Reactime 9.0](https://rxlina.medium.com/time-traveling-through-react-state-with-reactime-9-0-371dbdc99319)
-- [What time is it? Reactime!](https://medium.com/@liuedar/what-time-is-it-reactime-fd7267b9eb89)
-
-## <b>Authors</b>
-
+- **Garrett Chow** - [@garrettlchow](https://github.com/garrettlchow)
+- **Ellie Simens** - [@elliesimens](https://github.com/elliesimens)
+- **Ragad Mohammed** - [@ragad-mohammed](https://github.com/ragad-mohammed)
+- **Daniel Ryczek** - [@dryczek14](https://github.com/dryczek01)
+- **Patrice Pinardo** - [@pinardo88](https://github.com/pinardo88)
+- **Haider Ali** - [@hali03](https://github.com/hali03)
+- **Jose Luis Sanchez** - [@JoseSanchez1996](https://github.com/JoseSanchez1996)
+- **Logan Nelsen** - [@ljn16](https://github.com/ljn16)
+- **Mel Koppens** - [@MelKoppens](https://github.com/MelKoppens)
+- **Amy Yang** - [@ay7991](https://github.com/ay7991)
+- **Eva Ury** - [@evaSUry](https://github.com/evaSUry)
+- **Jesse Guerrero** - [@jguerrero35](https://github.com/jguerrero35)
+- **Oliver Cho** - [@Oliver-Cho](https://github.com/Oliver-Cho)
 - **Ben Margolius** - [@benmarg](https://github.com/benmarg)
 - **Eric Yun** - [@ericsngyun](https://github.com/ericsngyun)
 - **James Nghiem** - [@jemzir](https://github.com/jemzir)
@@ -371,8 +351,33 @@ of the structure and interfaces of the codebase.
 - **Kristina Wallen** - [@kristinawallen](https://github.com/kristinawallen)
 - **Quan Le** - [@blachfog](https://github.com/Blachfog)
 - **Robert Maeda** - [@robmaeda](https://github.com/robmaeda)
+- **Lance Ziegler** - [@lanceziegler](https://github.com/lanceziegler)
+- **Ngoc Zwolinski** - [@ngoczwolinski](https://github.com/ngoczwolinski)
+- **Peter Lam** - [@dev-plam](https://github.com/dev-plam)
+- **Zachary Freeman** - [@zacharydfreeman](https://github.com/zacharydfreeman/)
+- **Jackie Yuan** - [@yuanjackie1](https://github.com/yuanjackie1)
+- **Jasmine Noor** - [@jasnoo](https://github.com/jasnoo)
+- **Minzo Kim** - [@minzo-kim](https://github.com/minzo-kim)
+- **Mark Teets** - [@MarkTeets](https://github.com/MarkTeets)
+- **Nick Huemmer** - [@NickHuemmer](https://github.com/ElDuke717)
+- **James McCollough** - [@j-mccoll](https://github.com/j-mccoll)
+- **Mike Bednarz** - [@mikebednarz](https://github.com/mikebednarz)
+- **Sergei Liubchenko** - [@sergeylvq](https://github.com/sergeylvq)
+- **Yididia Ketema** - [@yididiaketema](https://github.com/yididiaketema)
+- **Morah Geist** - [@morahgeist](https://github.com/morahgeist)
+- **Eivind Del Fierro** - [@EivindDelFierro](https://github.com/EivindDelFierro)
+- **Kyle Bell** - [@KyEBell](https://github.com/KyEBell)
+- **Sean Kelly** - [@brok3turtl3](https://github.com/brok3turtl3)
+- **Christopher Stamper** - [@ctstamper](https://github.com/ctstamper)
+- **Jimmy Phy** - [@jimmally](https://github.com/jimmally)
+- **Andrew Byun** - [@AndrewByun](https://github.com/AndrewByun)
+- **Kelvin Mirhan** - [@kelvinmirhan](https://github.com/kelvinmirhan)
+- **Jesse Rosengrant** - [@jrosengrant](https://github.com/jrosengrant)
+- **Liam Donaher** - [@leebology](https://github.com/leebology)
+- **David Moore** - [@Solodt55](https://github.com/Solodt55)
+- **John Banks** - [@Jbanks123](https://github.com/Jbanks123)
+  <br>
 
-## <b>License </b>
+<h1>⚖️ License </h1>
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
-for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

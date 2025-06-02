@@ -8,14 +8,13 @@ type BoxProps = {
   handleBoxClick: (row: number, column: number) => void;
 };
 
-const Box = (props: BoxProps) => {
+const Box = (props: BoxProps): JSX.Element => {
   return (
-    <button
-      className="box"
-      onClick={(e) => props.handleBoxClick(props.row, props.column)}
-    >
-      {props.value}
-    </button>
+    <>
+      <button className='box' onClick={(e) => props.handleBoxClick(props.row, props.column)}>
+        {props.value}
+      </button>
+    </>
   );
 };
 

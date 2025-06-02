@@ -1,110 +1,115 @@
 import * as React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faUpload,
-  faDownload,
-  faSquare,
-  faColumns,
-  faUnlock,
-  faLock,
-} from '@fortawesome/free-solid-svg-icons';
-import { importSnapshots, toggleMode, toggleSplit } from '../actions/actions';
-import { useStoreContext } from '../store';
+import { Button } from '@mui/material';
+import Tutorial from '../components/Buttons/Tutorial';
+import { toggleMode, importSnapshots, startReconnect } from '../slices/mainSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import StatusDot from '../components/Buttons/StatusDot';
+import { MainState, RootState } from '../FrontendTypes';
+import { Lock, Unlock, Download, Upload, RefreshCw } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
-import Tutorial from '../components/Tutorial';
-
-function exportHandler(snapshots: []) {
-  // create invisible download anchor link
-  const fileDownload = document.createElement('a');
-
-  // set file in anchor link
+function exportHandler(snapshots: []): void {
+  const fileDownload: HTMLAnchorElement = document.createElement('a');
   fileDownload.href = URL.createObjectURL(
     new Blob([JSON.stringify(snapshots)], { type: 'application/json' }),
   );
-
-  // set anchor as file download and click it
   fileDownload.setAttribute('download', 'snapshot.json');
   fileDownload.click();
-
-  // remove file url
   URL.revokeObjectURL(fileDownload.href);
 }
 
-function importHandler(dispatch: (a: unknown) => void) {
+function importHandler(dispatch: (a: unknown) => void): void {
   const fileUpload = document.createElement('input');
   fileUpload.setAttribute('type', 'file');
 
   fileUpload.onchange = (e: Event) => {
     const reader = new FileReader();
+    const eventFiles = e.target as HTMLInputElement;
+
+    if (eventFiles) {
+      reader.readAsText(eventFiles.files[0]);
+    }
+
     reader.onload = () => {
       const test = reader.result.toString();
       return dispatch(importSnapshots(JSON.parse(test)));
     };
-    const eventFiles = e.target as HTMLInputElement;
-    if (eventFiles?.hasOwnProperty('files')) {
-      // const eventFiles = target as HTMLInputElement;
-      if (eventFiles) {
-        reader.readAsText(eventFiles.files[0]);
-      }
-    }
   };
 
   fileUpload.click();
 }
 
 function ButtonsContainer(): JSX.Element {
-  const [{ tabs, currentTab, split, currentTabInApp }, dispatch] = useStoreContext();
+  const dispatch = useDispatch();
+  const { currentTab, tabs, currentTabInApp, connectionStatus }: MainState = useSelector(
+    (state: RootState) => state.main,
+  );
+
+  //@ts-ignore
   const {
-    snapshots,
+    //@ts-ignore
     mode: { paused },
   } = tabs[currentTab];
 
+  const handleReconnect = () => {
+    dispatch(startReconnect());
+    toast.success('Successfully reconnected', {
+      duration: 2000,
+      position: 'top-right',
+      style: {
+        background: 'var(--bg-primary)',
+        color: 'var(--text-primary)',
+      },
+      iconTheme: {
+        primary: 'var(--color-primary)',
+        secondary: 'var(--text-primary)',
+      },
+    });
+  };
+
   return (
-    <div className="buttons-container">
-      <button
-        className="pause-button"
-        type="button"
-        onClick={() => dispatch(toggleMode('paused'))}
-      >
-        {paused ? (
-          <FontAwesomeIcon icon={faUnlock} />
-        ) : (
-          <FontAwesomeIcon icon={faLock} />
-        )}
-        {paused ? 'Unlock' : 'Lock'}
-      </button>
-
-      <button
-        className="split-button"
-        type="button"
-        onClick={() => dispatch(toggleSplit())}
-      >
-        {split ? (
-          <FontAwesomeIcon icon={faSquare} />
-        ) : (
-          <FontAwesomeIcon icon={faColumns} />
-        )}
-        {split ? 'Unsplit' : 'Split'}
-      </button>
-
-      <button
-        className="export-button"
-        type="button"
-        onClick={() => exportHandler(snapshots)}
-      >
-        <FontAwesomeIcon icon={faDownload} />
-        Download
-      </button>
-      <button
-        className="import-button"
-        type="button"
-        onClick={() => importHandler(dispatch)}
-      >
-        <FontAwesomeIcon icon={faUpload} />
-        Upload
-      </button>
-      {/* The component below renders a button for the tutorial walkthrough of Reactime */}
-      <Tutorial dispatch={dispatch} currentTabInApp={currentTabInApp} />
+    <div className='buttons-container'>
+      <div className='buttons-wrapper'>
+        <Button
+          className='pause-button'
+          type='button'
+          onClick={() => dispatch(toggleMode('paused'))}
+        >
+          {paused ? (
+            <Lock className='button-icon' size={18} />
+          ) : (
+            <Unlock className='button-icon' size={18} />
+          )}
+          {paused ? 'Locked' : 'Unlocked'}
+        </Button>
+        <Button
+          className='export-button'
+          type='button'
+          //@ts-ignore
+          onClick={() => exportHandler(tabs[currentTab])}
+        >
+          <Download className='button-icon' size={18} />
+          Download
+        </Button>
+        <Button className='import-button' onClick={() => importHandler(dispatch)}>
+          <Upload className='button-icon' size={18} />
+          Upload
+        </Button>
+        <Tutorial dispatch={dispatch} currentTabInApp={currentTabInApp} />
+        <Button
+          className='reconnect-button'
+          type='button'
+          onClick={handleReconnect}
+          endIcon={
+            <span style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <StatusDot status={connectionStatus ? 'active' : 'inactive'} />
+            </span>
+          }
+        >
+          <RefreshCw className='button-icon' size={18} />
+          Reconnect
+        </Button>
+      </div>
     </div>
   );
 }

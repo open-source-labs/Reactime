@@ -1,0 +1,10 @@
+{"depcheck": 
+  {
+    "ignoreMatches": [
+      "css-loader",
+      "sass-loader", 
+      "style-loader",
+      "typedoc-webpack-plugin"
+    ]
+  }
+}

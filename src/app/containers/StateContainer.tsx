@@ -3,78 +3,34 @@ import React, { useState } from 'react';
 /* <Router> that keeps the history of your “URL” in memory (does not read/write to the address bar)
  Useful in tests and non-browser environments like React Native.
 */
-import {
-  MemoryRouter as Router,
-  Route,
-  NavLink,
-  Switch,
-} from 'react-router-dom';
+import { MemoryRouter as Router, Route, NavLink, Routes, Outlet } from 'react-router-dom';
 import StateRoute from '../components/StateRoute/StateRoute';
-import DiffRoute from '../components/DiffRoute';
-
-interface StateContainerProps {
-  snapshot: Record<
-    number,
-    {
-      name?: string;
-      componentData?: Record<string, unknown>;
-      state?: Record<string, unknown>;
-      stateSnaphot?: Record<string, unknown>;
-      children?: unknown[];
-    }
-  >;
-  toggleActionContainer?: any;
-  webMetrics?: object;
-  hierarchy: Record<string, unknown>;
-  snapshots?: [];
-  viewIndex?: number;
-  currLocation?: object;
-}
+import DiffRoute from '../components/DiffRoute/DiffRoute';
+import { StateContainerProps } from '../FrontendTypes';
+import { Outlet } from 'react-router';
 
 // eslint-disable-next-line react/prop-types
 const StateContainer = (props: StateContainerProps): JSX.Element => {
   const {
-    snapshot,
-    hierarchy,
-    snapshots,
-    viewIndex,
-    webMetrics,
-    currLocation,
-    snapshots,
+    snapshot, // from 'tabs[currentTab]' object in 'MainContainer'
+    hierarchy, // from 'tabs[currentTab]' object in 'MainContainer'
+    snapshots, // from 'tabs[currentTab].snapshotDisplay' object in 'MainContainer'
+    viewIndex, // from 'tabs[currentTab]' object in 'MainContainer'
+    webMetrics, // from 'tabs[currentTab]' object in 'MainContainer'
+    currLocation, // from 'tabs[currentTab]' object in 'MainContainer'
+    axSnapshots, // from 'tabs[currentTab]' object in 'MainContainer'
   } = props;
 
   return (
-    <Router>
-      <div className="state-container">
-        <div className="main-navbar-container">
-          <div className="main-navbar-text" />
-          <div className="main-navbar">
-            <NavLink
-              className="main-router-link"
-              activeClassName="is-active"
-              exact
-              to="/"
-            >
-              State
-            </NavLink>
-            <NavLink
-              className="main-router-link"
-              activeClassName="is-active"
-              to="/diff"
-            >
-              Diff
-            </NavLink>
-          </div>
-        </div>
-        <Switch>
+    <>
+      <div className='state-container'>
+        <div className='main-navbar-container--structural'></div>
+        <Routes>
           <Route
-            path="/diff"
-            render={() => <DiffRoute snapshot={snapshot} />}
-          />
-          <Route
-            path="/"
-            render={() => (
+            path='/*'
+            element={
               <StateRoute
+                axSnapshots={axSnapshots}
                 webMetrics={webMetrics}
                 viewIndex={viewIndex}
                 snapshot={snapshot}
@@ -82,11 +38,11 @@ const StateContainer = (props: StateContainerProps): JSX.Element => {
                 snapshots={snapshots}
                 currLocation={currLocation}
               />
-            )}
+            }
           />
-        </Switch>
+        </Routes>
       </div>
-    </Router>
+    </>
   );
 };
 

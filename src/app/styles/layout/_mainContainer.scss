@@ -1,15 +1,25 @@
 .main-container {
   height: 100%;
   margin: 0 auto;
-  background-color: $brand-color;
+  background-color: var(--bg-secondary);
   overflow: hidden;
 }
 
-.state-container-container{
+.state-container-container {
   display: contents;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
 }
 
-.split {
+.history-view {
+  height: 100%;
+  width: 100%;
   display: flex;
-  overflow-y: auto;
+  flex-direction: column;
+}
+
+.history-end-anchor {
+  height: 1px;
+  width: 100%;
 }
