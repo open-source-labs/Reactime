@@ -226,6 +226,10 @@ export interface ActionProps {
   state?: Record<string, unknown>;
   viewIndex: number | undefined;
   isCurrIndex: boolean;
+  snapshots?: any[];
+  hierarchy?: any;
+  expandedIndex?: number | null;
+  setExpandedIndex?: (index: number | null) => void;
 }
 
 export interface DiffRouteProps {

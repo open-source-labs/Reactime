@@ -17,6 +17,7 @@ import RecordButton from '../components/Actions/RecordButton';
 function ActionContainer(props: ActionContainerProps): JSX.Element {
   const [dropdownSelection, setDropdownSelection] = useState('Time Jump');
   const actionsEndRef = useRef(null as unknown as HTMLDivElement);
+  const [expandedIndex, setExpandedIndex] = useState(null as number | null); // Track which snapshot is expanded
 
   const dispatch = useDispatch();
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
@@ -28,12 +29,17 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   // we create an array 'hierarchyArr' that will hold objects and numbers
   const hierarchyArr: (number | {})[] = [];
 
-  // Auto scroll when snapshots change
+  // Auto scroll when snapshots change - but only if user hasn't manually scrolled
   useEffect(() => {
+    if (actionsEndRef.current && snapshots && snapshots.length > 0) {
+      // Small delay to ensure DOM is updated
+      setTimeout(() => {
     if (actionsEndRef.current) {
-      actionsEndRef.current.scrollIntoView({ behavior: 'smooth' });
+          actionsEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+      }, 100);
     }
-  }, [snapshots]);
+  }, [snapshots?.length]);
 
   const displayArray = (obj: Obj): void => {
     if (
@@ -103,6 +109,10 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
           viewIndex={viewIndex}
           isCurrIndex={isCurrIndex}
           routePath={snapshot.routePath}
+          snapshots={snapshots}
+          hierarchy={hierarchy}
+          expandedIndex={expandedIndex}
+          setExpandedIndex={setExpandedIndex}
         />
       );
     },
@@ -149,12 +159,13 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
           setDropdownSelection={setDropdownSelection}
         />
         <div className='clear-button-container'>
-          <Button
+        <Button
             className='clear-button-modern'
             variant='text'
             onClick={() => {
               dispatch(emptySnapshots()); // set slider back to zero, visually
               dispatch(changeSlider(0));
+              setExpandedIndex(null); // Reset expanded state when clearing
             }}
             type='button'
           >

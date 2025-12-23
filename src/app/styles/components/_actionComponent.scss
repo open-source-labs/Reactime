@@ -12,21 +12,49 @@
 .route-content {
   display: flex;
   flex-direction: row;
-  margin-bottom: 50px;
+  margin-bottom: 0;
+  position: relative;
+  min-height: fit-content;
+  align-items: stretch;
+  width: 100%;
+}
+
+.slider-wrapper {
+  position: relative;
+  height: 100%;
+  min-height: 100%;
+  flex-shrink: 0;
+  width: 20px;
+  margin-right: 8px;
+  align-self: stretch;
+}
+
+.actions-container {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Container for individual action */
 .individual-action {
   margin: 0;
   padding: 0;
+  width: 100%;
+  overflow: visible;
 }
 
 .action-component {
   display: flex;
-  padding: 6px 16px;
+  flex-direction: column;
+  padding: 0;
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
   transition: background-color 200ms ease;
+  width: 100%;
+  overflow: visible;
+  position: relative;
 }
 
 .action-component:hover {
@@ -40,12 +68,150 @@
 .action-component-trigger {
   width: 100%;
   display: flex;
+  flex-direction: column;
+  padding: 6px 16px;
+  box-sizing: border-box;
+  gap: 4px;
+}
+
+/* Single-row compact design */
+.action-single-row {
+  padding: 8px 16px;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.action-single-row-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 32px;
+  position: relative;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+.action-snapshot-name {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 150px;
+  overflow: hidden;
+}
+
+.action-badge-section {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.action-time-display {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  white-space: nowrap;
+  
+  .time-text {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    white-space: nowrap;
+    overflow: visible;
+  }
+}
+
+/* Jump button - removed from top row, now in expanded section */
+.jump-button-compact {
+  flex: 0 0 auto;
+  min-width: 70px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  cursor: pointer;
+  transition: all 200ms ease;
+  
+  &:hover {
+    background: var(--text-primary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Current button - always visible */
+.current-location-compact {
+  flex: 0 0 auto;
+  min-width: 70px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-primary);
+  background: var(--bg-tertiary);
+  color: var(--color-primary);
+  cursor: default;
+}
+
+/* No hover behavior needed - jump button is in expanded section */
+
+.action-row {
+  width: 100%;
+  display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 28px;
+}
+
+.action-row-first {
+  margin-bottom: 2px;
+}
+
+.action-row-second {
+  margin-top: 2px;
+}
+
+.action-left-column {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.action-right-column {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: 12px;
 }
 
 .action-component-text {
   flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.action-name-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 /* Input styling */
@@ -54,8 +220,14 @@
   background: transparent;
   font-size: 1rem;
   color: var(--text-primary);
-  width: 100%;
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
   padding: 2px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .actionname::placeholder {
@@ -108,13 +280,13 @@
   border: 1px solid var(--color-primary);
 }
 
-/* Hide/show button transitions */
-.action-component:hover .time-button {
+/* Hide/show button transitions - only on hover of the right column */
+.action-right-column:hover .time-button {
   display: none;
 }
 
-.action-component:hover .jump-button {
-  display: block;
+.action-right-column:hover .jump-button {
+  display: flex;
 }
 
 .current-snap {
@@ -125,4 +297,321 @@
   color: var(--text-primary);
   width: 100%;
   padding: 2px 0px;
+}
+
+/* Diff Badge and Summary Styles */
+.action-diff-header {
+  padding: 6px 16px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+}
+
+/* Inline badge (next to snapshot name) - compact version */
+.diff-badge-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 200ms ease;
+  background: transparent;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.diff-badge-inline:hover {
+  background: var(--hover-bg);
+  opacity: 1;
+  transform: scale(1.02);
+}
+
+.diff-badge-inline.diff-badge-small {
+  color: var(--text-secondary); // Use same color as initial state
+  
+  .diff-badge-text,
+  .diff-badge-expand-icon {
+    color: var(--color-primary);
+  }
+}
+
+.diff-badge-inline.diff-badge-medium {
+  color: #f5a623;
+  
+  .diff-badge-text,
+  .diff-badge-expand-icon {
+    color: var(--color-primary);
+  }
+}
+
+.diff-badge-inline.diff-badge-large {
+  color: #d0021b;
+  
+  .diff-badge-text,
+  .diff-badge-expand-icon {
+    color: var(--color-primary);
+    font-size: 0.875rem; // Slightly larger for large badges
+  }
+  
+  .diff-badge-expand-icon {
+    font-size: 0.8125rem; // Slightly larger arrow for large badges
+  }
+}
+
+.diff-badge-inline.diff-badge-initial {
+  color: var(--text-secondary);
+  cursor: default;
+}
+
+.diff-badge-inline .diff-badge-icon {
+  font-size: 0.6875rem;
+  line-height: 1;
+  display: inline-block;
+  font-style: normal;
+}
+
+.diff-badge-inline .diff-badge-text {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.diff-badge-inline .diff-badge-expand-icon {
+  font-size: 0.75rem;
+  opacity: 1;
+  margin-left: 4px;
+  line-height: 1;
+  transition: transform 200ms ease, opacity 200ms ease;
+  display: inline-block;
+  color: var(--color-primary);
+}
+
+.diff-badge-inline.expanded .diff-badge-expand-icon {
+  transform: rotate(90deg);
+}
+
+.diff-badge-inline:hover .diff-badge-expand-icon {
+  opacity: 1;
+}
+
+/* Initial state badge */
+.diff-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.diff-badge-initial {
+  color: var(--text-secondary);
+}
+
+.diff-badge-icon {
+  font-size: 0.8125rem;
+}
+
+.diff-badge-text {
+  font-size: 0.8125rem;
+}
+
+.diff-badge-arrow {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+/* Collapsed summary */
+.diff-summary-collapsed {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  padding: 2px 0;
+  line-height: 1.4;
+  width: 100%;
+  min-height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: all 200ms ease;
+}
+
+.diff-summary-collapsed:hover {
+  color: var(--text-primary);
+  opacity: 0.9;
+}
+
+.diff-summary-arrow {
+  font-size: 0.7rem;
+  opacity: 0.7;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: transform 200ms ease;
+}
+
+.diff-summary-collapsed:hover .diff-summary-arrow {
+  opacity: 1;
+}
+
+.diff-summary-icon {
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+  vertical-align: middle;
+}
+
+.diff-summary-text {
+  flex: 1;
+  word-break: break-word;
+}
+
+/* Expanded Diff Details Styles */
+.diff-details {
+  padding: 8px 16px 10px 16px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  animation: slideDown 200ms ease;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  visibility: visible;
+  opacity: 1;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+    padding-top: 8px;
+    padding-bottom: 10px;
+  }
+}
+
+.diff-details-header {
+  margin-bottom: 8px;
+  display: block;
+  width: 100%;
+}
+
+.diff-details-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: inline-block;
+}
+
+.diff-section {
+  margin-bottom: 12px;
+  
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+.diff-section-header {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.diff-changes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+/* Bullet point format for changes */
+.diff-item-bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  word-break: break-word;
+  padding-left: 2px;
+  width: 100%;
+  box-sizing: border-box;
+  visibility: visible;
+}
+
+.diff-bullet {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-size: 0.875rem;
+}
+
+.diff-item-content {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.5;
+}
+
+.diff-item-label {
+  font-weight: 500;
+  color: var(--text-primary);
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+}
+
+.diff-item-name {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.8125rem;
+  flex-shrink: 0;
+}
+
+.diff-item-change {
+  color: var(--text-secondary);
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.75rem;
+  word-break: break-word;
+  flex: 1;
+  min-width: 0;
+  margin-left: 2px;
+}
+
+/* Jump button in expanded section */
+.diff-details .jump-button-expanded {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 16px;
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  min-width: auto;
+  height: auto;
+  min-height: 36px;
+  color: var(--button-primary-text);
+  transition: color 200ms ease;
+  
+  &:hover {
+    color: var(--color-primary);
+  }
 }
