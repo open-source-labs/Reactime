@@ -40,16 +40,9 @@ function statelessCleaning(obj: {
   const newObj = { ...obj };
   if (newObj.name === 'nameless') delete newObj.name;
   
-  // Preserve props from componentData while removing other componentData fields
-  // This allows us to track props changes in the diff
+  // Remove componentData entirely - we only track state changes, not props changes
   if (newObj.componentData) {
-    const props = (newObj.componentData as any)?.props;
-    // Remove componentData but preserve props if they exist
     delete newObj.componentData;
-    if (props && typeof props === 'object' && Object.keys(props).length > 0) {
-      // Store props in componentData.props for diffing
-      newObj.componentData = { props };
-    }
   }
   
   if (newObj.state === 'stateless') delete newObj.state;
