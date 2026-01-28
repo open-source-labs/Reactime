@@ -75,10 +75,9 @@ function statelessCleaning(obj: {
 function extractChanges(
   delta: any,
   componentName: string = 'Unknown',
-  propsChanges: SnapshotDiff['propsChanges'] = [],
   stateChanges: SnapshotDiff['stateChanges'] = [],
-): { propsChanges: SnapshotDiff['propsChanges']; stateChanges: SnapshotDiff['stateChanges'] } {
-  if (!delta) return { propsChanges, stateChanges };
+): { stateChanges: SnapshotDiff['stateChanges'] } {
+  if (!delta) return { stateChanges };
 
 
   // Check for state changes - jsondiffpatch format can be:
@@ -247,58 +246,6 @@ function extractChanges(
     }
   }
 
-  // Check for props changes (if componentData.props exists in the diff)
-  // jsondiffpatch stores prop changes as nested objects with arrays [oldValue, newValue]
-  if (delta.componentData && typeof delta.componentData === 'object') {
-    const componentDataDelta = delta.componentData;
-    
-    // Check if props exist in the delta
-    if (componentDataDelta.props && typeof componentDataDelta.props === 'object') {
-      // Props delta can be:
-      // 1. Object with prop keys: { propName: [oldValue, newValue] }
-      // 2. Array format if entire props object changed: [oldProps, newProps]
-      if (Array.isArray(componentDataDelta.props) && componentDataDelta.props.length >= 2) {
-        // Entire props object changed - extract individual prop changes
-        const oldProps = componentDataDelta.props[0];
-        const newProps = componentDataDelta.props[1];
-        if (typeof oldProps === 'object' && oldProps !== null && typeof newProps === 'object' && newProps !== null) {
-          const allPropKeys = new Set([...Object.keys(oldProps || {}), ...Object.keys(newProps || {})]);
-          allPropKeys.forEach((propKey) => {
-            const oldPropVal = oldProps[propKey];
-            const newPropVal = newProps[propKey];
-            if (JSON.stringify(oldPropVal) !== JSON.stringify(newPropVal)) {
-              propsChanges.push({
-                key: propKey,
-                oldValue: oldPropVal,
-                newValue: newPropVal,
-                component: componentName,
-              });
-            }
-          });
-        }
-      } else {
-        // Individual prop changes: { propName: [oldValue, newValue] }
-      Object.keys(componentDataDelta.props).forEach((key) => {
-        const propChange = componentDataDelta.props[key];
-        // jsondiffpatch format: [oldValue, newValue, 0] or just [oldValue, newValue]
-        if (Array.isArray(propChange) && propChange.length >= 2) {
-            const oldValue = propChange[0];
-            const newValue = propChange[1];
-            // Only add if values are actually different
-            if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
-          propsChanges.push({
-            key,
-                oldValue,
-                newValue,
-            component: componentName,
-          });
-            }
-        }
-      });
-      }
-    }
-  }
-
   // Recursively check children - this is critical for finding nested state changes
   // Based on History.tsx findStateChangeObj pattern
   // jsondiffpatch uses '_t' as a type marker, we should skip it
@@ -327,12 +274,12 @@ function extractChanges(
         }
         
         // Recursively extract changes from children
-        extractChanges(childDelta, childName, propsChanges, stateChanges);
+        extractChanges(childDelta, childName, stateChanges);
       }
     });
   }
 
-  return { propsChanges, stateChanges };
+  return { stateChanges };
 }
 
 /**
@@ -424,7 +371,6 @@ export function calculateSnapshotDiff(
       };
     }
 
-    const propsChanges: SnapshotDiff['propsChanges'] = [];
     const stateChanges: SnapshotDiff['stateChanges'] = [];
 
 
@@ -435,11 +381,11 @@ export function calculateSnapshotDiff(
     
     // Start extraction from root level - this will recursively process all children
     const rootName = cleanedCurrent.name || currentSnapshot.name || 'Root';
-    extractChanges(delta, rootName, propsChanges, stateChanges);
+    extractChanges(delta, rootName, stateChanges);
 
     // Deduplicate changes - same key, component, and values should only appear once
     // Use a Set to track unique changes based on key + component + oldValue + newValue
-    const deduplicateChanges = (changes: SnapshotDiff['stateChanges'] | SnapshotDiff['propsChanges']) => {
+    const deduplicateChanges = (changes: SnapshotDiff['stateChanges']) => {
       const seen = new Set<string>();
       return changes.filter((change) => {
         const key = `${change.component}::${change.key}::${JSON.stringify(change.oldValue)}::${JSON.stringify(change.newValue)}`;
@@ -452,10 +398,9 @@ export function calculateSnapshotDiff(
     };
 
     const deduplicatedStateChanges = deduplicateChanges(stateChanges) as SnapshotDiff['stateChanges'];
-    const deduplicatedPropsChanges = deduplicateChanges(propsChanges) as SnapshotDiff['propsChanges'];
 
     // Sort changes to prioritize meaningful changes (board changes before currentPlayer, etc.)
-    const prioritizeChanges = (changes: SnapshotDiff['stateChanges'] | SnapshotDiff['propsChanges']) => {
+    const prioritizeChanges = (changes: SnapshotDiff['stateChanges']) => {
       return [...changes].sort((a, b) => {
         // Prioritize board changes
         const aIsBoard = a.key.startsWith('board');
@@ -475,9 +420,8 @@ export function calculateSnapshotDiff(
     };
 
     const prioritizedStateChanges = prioritizeChanges(deduplicatedStateChanges) as SnapshotDiff['stateChanges'];
-    const prioritizedPropsChanges = prioritizeChanges(deduplicatedPropsChanges) as SnapshotDiff['propsChanges'];
 
-    // Only count state changes since props changes are redundant
+    // Count state changes
     const changeCount = prioritizedStateChanges.length;
 
     // Determine change type based on count

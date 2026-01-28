@@ -141,7 +141,11 @@ const Action = (props: ActionProps): JSX.Element => {
     shiftY: 0,
   };
 
-  const handleToggleExpand = (e: any): void => {
+  /**
+   * Handles toggling the expansion state of snapshot diff details
+   * @param e - Mouse event from button click (React.MouseEvent)
+   */
+  const handleToggleExpand = (e: { stopPropagation: () => void } & { currentTarget: HTMLButtonElement }): void => {
     e.stopPropagation();
     if (setExpandedIndex) {
       const newExpandedIndex = isExpanded ? null : index;
@@ -222,34 +226,12 @@ const Action = (props: ActionProps): JSX.Element => {
           <Hover type='hover' />
         </ReactHover>
 
-        {/* Collapsed Summary (when not expanded) */}
-        {/* {index > 0 && !isExpanded && diff.changeCount > 0 && (
-          <div className='action-diff-header'>
-            <button
-              className='diff-summary-collapsed'
-              onClick={handleToggleExpand}
-              type='button'
-              aria-label='Expand diff details'
-            >
-              <span className='diff-summary-icon'>📊</span>
-              <span className='diff-summary-text'>
-                {diff.changeCount} change{diff.changeCount !== 1 ? 's' : ''} (click to expand)
-              </span>
-              <span className='diff-summary-arrow'>▶</span>
-            </button>
-          </div>
-        )} */}
-
         {/* Expanded Diff Details */}
         {isExpanded && diff.changeCount > 0 && (
           <div 
             className='diff-details' 
             style={{ display: 'block' }}
           >
-            {/* <div className='diff-details-header'>
-              <span className='diff-details-title'>📝 Changes ({diff.changeCount}):</span>
-            </div> */}
-            
             {diff.stateChanges.length > 0 && (
               <div className='diff-section'>
                 <div className='diff-section-header'>State Changes ({diff.stateChanges.length}):</div>
@@ -257,7 +239,6 @@ const Action = (props: ActionProps): JSX.Element => {
                   {diff.stateChanges.map((change, i) => (
                     <div key={`state-${i}`} className='diff-item-bullet'>
                       <span className='diff-item-content'>
-                        {/* <span className='diff-item-label'>State:</span> */}
                         <span className='diff-item-name'>{change.key}</span>
                         <span className='diff-item-change'>
                           ({formatDiffValue(change.oldValue)} → {formatDiffValue(change.newValue)})
