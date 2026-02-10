@@ -1,7 +1,8 @@
-import { Snapshot, FiberRoot } from '../types/backendTypes';
+import { FiberRoot } from '../types/backendTypes';
 import componentActionsRecord from '../models/masterState';
 import routes from '../models/routes';
 import createTree from '../controllers/createTree';
+import { getLastUserEvent } from '../controllers/userEventCapture';
 
 // -------------------------UPDATE & SEND TREE SNAP SHOT------------------------
 /**
@@ -22,6 +23,12 @@ export default function updateAndSendSnapShotTree(fiberRoot: FiberRoot): void {
   const payload = createTree(current);
   // Save the current window url to route
   payload.route = routes.addRoute(window.location.href);
+  // Attach last user click so the extension can show "laser pointer" replay when time traveling
+  const lastEvent = getLastUserEvent();
+  if (lastEvent) {
+    // eslint-disable-next-line no-param-reassign -- attaching replay metadata to snapshot payload
+    (payload as { lastUserEvent?: ReturnType<typeof getLastUserEvent> }).lastUserEvent = lastEvent;
+  }
   // method safely enables cross-origin communication between Window objects;
   // e.g., between a page and a pop-up that it spawned, or between a page
   // and an iframe embedded within it.

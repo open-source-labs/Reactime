@@ -139,6 +139,111 @@ window.addEventListener('message', (msg) => {
   }
 });
 
+// -------------- USER INPUT VISUALIZATION (CLICK REPLAY POINTER) --------------
+const REACTIME_POINTER_OVERLAY_ID = 'reactime-pointer-overlay';
+const REACTIME_POINTER_STYLES_ID = 'reactime-pointer-styles';
+
+function getOrCreatePointerOverlay() {
+  let overlay = document.getElementById(REACTIME_POINTER_OVERLAY_ID);
+  if (!overlay) {
+    // Inject styles once – pointer designed to draw attention (larger, ripple, glow)
+    if (!document.getElementById(REACTIME_POINTER_STYLES_ID)) {
+      const style = document.createElement('style');
+      style.id = REACTIME_POINTER_STYLES_ID;
+      style.textContent = `
+        #${REACTIME_POINTER_OVERLAY_ID} {
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          z-index: 2147483647;
+        }
+        #${REACTIME_POINTER_OVERLAY_ID} .reactime-pointer-dot {
+          position: fixed;
+          width: 22px;
+          height: 22px;
+          border-radius: 50%;
+          background: #0d9488;
+          border: 3px solid #fff;
+          box-shadow: 0 0 0 1px rgba(0,0,0,0.2), 0 0 20px 4px rgba(13,148,136,0.5);
+          transform: translate(-50%, -50%);
+        }
+        #${REACTIME_POINTER_OVERLAY_ID} .reactime-pointer-ripple {
+          position: fixed;
+          width: 22px;
+          height: 22px;
+          border-radius: 50%;
+          border: 3px solid #14b8a6;
+          transform: translate(-50%, -50%);
+          opacity: 0;
+        }
+        #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-dot {
+          animation: reactime-dot-in 0.25s ease-out;
+        }
+        #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-ripple {
+          animation: reactime-ripple 0.8s ease-out 1;
+        }
+        @keyframes reactime-dot-in {
+          from { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+          to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        @keyframes reactime-ripple {
+          0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
+          100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-dot,
+          #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-ripple {
+            animation: none;
+          }
+          #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-ripple {
+            opacity: 0;
+          }
+        }
+      `;
+      (document.head || document.documentElement).appendChild(style);
+    }
+    overlay = document.createElement('div');
+    overlay.id = REACTIME_POINTER_OVERLAY_ID;
+    overlay.setAttribute('aria-hidden', 'true');
+    const ripple = document.createElement('div');
+    ripple.className = 'reactime-pointer-ripple';
+    const dot = document.createElement('div');
+    dot.className = 'reactime-pointer-dot';
+    overlay.appendChild(ripple);
+    overlay.appendChild(dot);
+    overlay.style.display = 'none';
+    (document.body || document.documentElement).appendChild(overlay);
+  }
+  return overlay;
+}
+
+function updateClickReplayPointer(payload) {
+  const event = payload?.lastUserEvent;
+  const overlay = getOrCreatePointerOverlay();
+  const dot = overlay.querySelector('.reactime-pointer-dot');
+  const ripple = overlay.querySelector('.reactime-pointer-ripple');
+  if (!dot || !(dot instanceof HTMLElement)) return;
+  if (event && typeof event.x === 'number' && typeof event.y === 'number') {
+    const left = `${event.x}px`;
+    const top = `${event.y}px`;
+    dot.style.left = left;
+    dot.style.top = top;
+    if (ripple && ripple instanceof HTMLElement) {
+      ripple.style.left = left;
+      ripple.style.top = top;
+    }
+    overlay.style.display = '';
+    // Remove then re-add visible class so ripple animation plays every time we jump
+    overlay.classList.remove('reactime-pointer-visible');
+    requestAnimationFrame(() => {
+      overlay.classList.add('reactime-pointer-visible');
+    });
+  } else {
+    overlay.classList.remove('reactime-pointer-visible');
+    overlay.style.display = 'none';
+  }
+}
+
 // FROM BACKGROUND TO CONTENT SCRIPT
 // Listening for messages from the UI of the Reactime extension.
 chrome.runtime.onMessage.addListener((request) => {
@@ -151,6 +256,7 @@ chrome.runtime.onMessage.addListener((request) => {
     }
     // this is only listening for Jump toSnap
     if (action === 'jumpToSnap') {
+      updateClickReplayPointer(request.payload);
       chrome.runtime.sendMessage(request);
       // After the jumpToSnap action has been sent back to background js,
       // it will send the same action to backend files (index.ts) for it execute the jump feature
