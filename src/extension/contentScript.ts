@@ -1,6 +1,5 @@
 // Web vital metrics calculated by 'web-vitals' npm package to be displayed
 // in Web Metrics tab of Reactime app.
-import { current } from '@reduxjs/toolkit';
 import { onTTFB, onLCP, onFID, onFCP, onCLS, onINP } from 'web-vitals';
 
 const MAX_RECONNECT_ATTEMPTS = 5;
@@ -139,114 +138,126 @@ window.addEventListener('message', (msg) => {
   }
 });
 
-// -------------- USER INPUT VISUALIZATION (CLICK REPLAY POINTER) --------------
+// User input visualization: show click position when time traveling (see docs/USER_INPUT_VISUALIZATION_IMPLEMENTATION.md)
 const REACTIME_POINTER_OVERLAY_ID = 'reactime-pointer-overlay';
 const REACTIME_POINTER_STYLES_ID = 'reactime-pointer-styles';
+const REACTIME_POINTER_VISIBLE_CLASS = 'reactime-pointer-visible';
 
-function getOrCreatePointerOverlay() {
-  let overlay = document.getElementById(REACTIME_POINTER_OVERLAY_ID);
-  if (!overlay) {
-    // Inject styles once for pointer overlay (dot + ripple, high contrast)
-    if (!document.getElementById(REACTIME_POINTER_STYLES_ID)) {
-      const style = document.createElement('style');
-      style.id = REACTIME_POINTER_STYLES_ID;
-      style.textContent = `
-        #${REACTIME_POINTER_OVERLAY_ID} {
-          position: fixed;
-          inset: 0;
-          pointer-events: none;
-          z-index: 2147483647;
-        }
-        #${REACTIME_POINTER_OVERLAY_ID} .reactime-pointer-dot {
-          position: fixed;
-          width: 22px;
-          height: 22px;
-          border-radius: 50%;
-          background: #0d9488;
-          border: 3px solid #fff;
-          box-shadow: 0 0 0 1px rgba(0,0,0,0.2), 0 0 20px 4px rgba(13,148,136,0.5);
-          transform: translate(-50%, -50%);
-        }
-        #${REACTIME_POINTER_OVERLAY_ID} .reactime-pointer-ripple {
-          position: fixed;
-          width: 22px;
-          height: 22px;
-          border-radius: 50%;
-          border: 3px solid #14b8a6;
-          transform: translate(-50%, -50%);
-          opacity: 0;
-        }
-        #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-dot {
-          animation: reactime-dot-pulse 2s ease-in-out;
-          animation-iteration-count: infinite;
-        }
-        #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-ripple {
-          animation: reactime-ripple 1.2s ease-out;
-          animation-iteration-count: infinite;
-        }
-        @keyframes reactime-dot-pulse {
-          0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; box-shadow: 0 0 0 1px rgba(0,0,0,0.2), 0 0 20px 4px rgba(13,148,136,0.5); }
-          10% { transform: translate(-50%, -50%) scale(1); opacity: 1; box-shadow: 0 0 0 1px rgba(0,0,0,0.2), 0 0 20px 4px rgba(13,148,136,0.5); }
-          50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; box-shadow: 0 0 0 1px rgba(0,0,0,0.2), 0 0 28px 8px rgba(13,148,136,0.7); }
-        }
-        @keyframes reactime-ripple {
-          0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0.7; }
-          100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-dot {
-            animation: reactime-dot-in 0.25s ease-out;
-          }
-          #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-ripple {
-            animation: none;
-            opacity: 0;
-          }
-        }
-        @keyframes reactime-dot-in {
-          from { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-          to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
-      `;
-      (document.head || document.documentElement).appendChild(style);
-    }
-    overlay = document.createElement('div');
-    overlay.id = REACTIME_POINTER_OVERLAY_ID;
-    overlay.setAttribute('aria-hidden', 'true');
-    const ripple = document.createElement('div');
-    ripple.className = 'reactime-pointer-ripple';
-    const dot = document.createElement('div');
-    dot.className = 'reactime-pointer-dot';
-    overlay.appendChild(ripple);
-    overlay.appendChild(dot);
-    overlay.style.display = 'none';
-    (document.body || document.documentElement).appendChild(overlay);
+/** Cached refs to avoid repeated DOM lookups after first use */
+let pointerOverlayRef: HTMLElement | null = null;
+let pointerDotRef: HTMLElement | null = null;
+let pointerRippleRef: HTMLElement | null = null;
+
+const REACTIME_POINTER_STYLES = `
+  #${REACTIME_POINTER_OVERLAY_ID} {
+    position: fixed; inset: 0; pointer-events: none; z-index: 2147483647;
   }
+  #${REACTIME_POINTER_OVERLAY_ID} .reactime-pointer-dot {
+    position: fixed; width: 22px; height: 22px; border-radius: 50%;
+    background: #0d9488; border: 3px solid #fff;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.2), 0 0 20px 4px rgba(13,148,136,0.5);
+    transform: translate(-50%, -50%);
+  }
+  #${REACTIME_POINTER_OVERLAY_ID} .reactime-pointer-ripple {
+    position: fixed; width: 22px; height: 22px; border-radius: 50%;
+    border: 3px solid #14b8a6; transform: translate(-50%, -50%); opacity: 0;
+  }
+  #${REACTIME_POINTER_OVERLAY_ID}.${REACTIME_POINTER_VISIBLE_CLASS} .reactime-pointer-dot {
+    animation: reactime-dot-pulse 2s ease-in-out; animation-iteration-count: infinite;
+  }
+  #${REACTIME_POINTER_OVERLAY_ID}.${REACTIME_POINTER_VISIBLE_CLASS} .reactime-pointer-ripple {
+    animation: reactime-ripple 1.2s ease-out; animation-iteration-count: infinite;
+  }
+  @keyframes reactime-dot-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; box-shadow: 0 0 0 1px rgba(0,0,0,0.2), 0 0 20px 4px rgba(13,148,136,0.5); }
+    10% { transform: translate(-50%, -50%) scale(1); opacity: 1; box-shadow: 0 0 0 1px rgba(0,0,0,0.2), 0 0 20px 4px rgba(13,148,136,0.5); }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; box-shadow: 0 0 0 1px rgba(0,0,0,0.2), 0 0 28px 8px rgba(13,148,136,0.7); }
+  }
+  @keyframes reactime-ripple {
+    0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0.7; }
+    100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #${REACTIME_POINTER_OVERLAY_ID}.${REACTIME_POINTER_VISIBLE_CLASS} .reactime-pointer-dot {
+      animation: reactime-dot-in 0.25s ease-out;
+    }
+    #${REACTIME_POINTER_OVERLAY_ID}.${REACTIME_POINTER_VISIBLE_CLASS} .reactime-pointer-ripple {
+      animation: none; opacity: 0;
+    }
+  }
+  @keyframes reactime-dot-in {
+    from { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  }
+`;
+
+/**
+ * Returns the pointer overlay element, creating it (and injecting styles) only on first use.
+ * Reuses cached refs to avoid repeated DOM lookups.
+ */
+function getOrCreatePointerOverlay(): HTMLElement {
+  if (pointerOverlayRef) return pointerOverlayRef;
+
+  if (!document.getElementById(REACTIME_POINTER_STYLES_ID)) {
+    const style = document.createElement('style');
+    style.id = REACTIME_POINTER_STYLES_ID;
+    style.textContent = REACTIME_POINTER_STYLES;
+    (document.head || document.documentElement).appendChild(style);
+  }
+
+  const overlay = document.createElement('div');
+  overlay.id = REACTIME_POINTER_OVERLAY_ID;
+  overlay.setAttribute('aria-hidden', 'true');
+  const ripple = document.createElement('div');
+  ripple.className = 'reactime-pointer-ripple';
+  const dot = document.createElement('div');
+  dot.className = 'reactime-pointer-dot';
+  overlay.appendChild(ripple);
+  overlay.appendChild(dot);
+  overlay.style.display = 'none';
+  (document.body || document.documentElement).appendChild(overlay);
+
+  pointerOverlayRef = overlay;
+  pointerDotRef = dot;
+  pointerRippleRef = ripple;
   return overlay;
 }
 
-function updateClickReplayPointer(payload) {
-  const event = payload?.lastUserEvent;
+/** Payload shape we use for click replay (snapshot may include lastUserEvent from backend). */
+interface ClickReplayPayload {
+  lastUserEvent?: { x: number; y: number } | null;
+}
+
+/**
+ * Shows or hides the click-replay pointer on the page based on snapshot payload.
+ * Uses cached overlay/dot/ripple refs after first run to avoid repeated DOM queries.
+ */
+function updateClickReplayPointer(payload: ClickReplayPayload | undefined): void {
   const overlay = getOrCreatePointerOverlay();
-  const dot = overlay.querySelector('.reactime-pointer-dot');
-  const ripple = overlay.querySelector('.reactime-pointer-ripple');
-  if (!dot || !(dot instanceof HTMLElement)) return;
-  if (event && typeof event.x === 'number' && typeof event.y === 'number') {
+  const dot = pointerDotRef;
+  const ripple = pointerRippleRef;
+  if (!dot) return;
+
+  const event = payload?.lastUserEvent;
+  const hasValidEvent =
+    event != null && typeof event.x === 'number' && typeof event.y === 'number';
+
+  if (hasValidEvent) {
     const left = `${event.x}px`;
     const top = `${event.y}px`;
     dot.style.left = left;
     dot.style.top = top;
-    if (ripple && ripple instanceof HTMLElement) {
+    if (ripple) {
       ripple.style.left = left;
       ripple.style.top = top;
     }
     overlay.style.display = '';
-    // Remove then re-add visible class so ripple animation plays every time we jump
-    overlay.classList.remove('reactime-pointer-visible');
+    overlay.classList.remove(REACTIME_POINTER_VISIBLE_CLASS);
     requestAnimationFrame(() => {
-      overlay.classList.add('reactime-pointer-visible');
+      overlay.classList.add(REACTIME_POINTER_VISIBLE_CLASS);
     });
   } else {
-    overlay.classList.remove('reactime-pointer-visible');
+    overlay.classList.remove(REACTIME_POINTER_VISIBLE_CLASS);
     overlay.style.display = 'none';
   }
 }
