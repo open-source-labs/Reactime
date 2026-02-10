@@ -146,7 +146,7 @@ const REACTIME_POINTER_STYLES_ID = 'reactime-pointer-styles';
 function getOrCreatePointerOverlay() {
   let overlay = document.getElementById(REACTIME_POINTER_OVERLAY_ID);
   if (!overlay) {
-    // Inject styles once – pointer designed to draw attention (larger, ripple, glow)
+    // Inject styles once for pointer overlay (dot + ripple, high contrast)
     if (!document.getElementById(REACTIME_POINTER_STYLES_ID)) {
       const style = document.createElement('style');
       style.id = REACTIME_POINTER_STYLES_ID;
@@ -177,27 +177,34 @@ function getOrCreatePointerOverlay() {
           opacity: 0;
         }
         #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-dot {
-          animation: reactime-dot-in 0.25s ease-out;
+          animation: reactime-dot-pulse 2s ease-in-out;
+          animation-iteration-count: infinite;
         }
         #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-ripple {
-          animation: reactime-ripple 0.8s ease-out 1;
+          animation: reactime-ripple 1.2s ease-out;
+          animation-iteration-count: infinite;
+        }
+        @keyframes reactime-dot-pulse {
+          0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; box-shadow: 0 0 0 1px rgba(0,0,0,0.2), 0 0 20px 4px rgba(13,148,136,0.5); }
+          10% { transform: translate(-50%, -50%) scale(1); opacity: 1; box-shadow: 0 0 0 1px rgba(0,0,0,0.2), 0 0 20px 4px rgba(13,148,136,0.5); }
+          50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; box-shadow: 0 0 0 1px rgba(0,0,0,0.2), 0 0 28px 8px rgba(13,148,136,0.7); }
+        }
+        @keyframes reactime-ripple {
+          0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0.7; }
+          100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-dot {
+            animation: reactime-dot-in 0.25s ease-out;
+          }
+          #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-ripple {
+            animation: none;
+            opacity: 0;
+          }
         }
         @keyframes reactime-dot-in {
           from { transform: translate(-50%, -50%) scale(0); opacity: 0; }
           to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
-        @keyframes reactime-ripple {
-          0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
-          100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-dot,
-          #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-ripple {
-            animation: none;
-          }
-          #${REACTIME_POINTER_OVERLAY_ID}.reactime-pointer-visible .reactime-pointer-ripple {
-            opacity: 0;
-          }
         }
       `;
       (document.head || document.documentElement).appendChild(style);

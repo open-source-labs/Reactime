@@ -10,7 +10,7 @@ import linkFiber from './routers/linkFiber';
 // timeJumpInitialization (actually uses the function timeJumpInitiation but is labeled here as linkFiberInitialization, returns a function) returns a function that sets jumping to false and handles timetravel feature
 import timeJumpInitialization from './controllers/timeJump';
 import { initUserEventCapture } from './controllers/userEventCapture';
-import { Snapshot, Status, MsgData } from './types/backendTypes';
+import { Status, MsgData } from './types/backendTypes';
 import routes from './models/routes';
 
 // -------------------------INITIALIZE MODE--------------------------
