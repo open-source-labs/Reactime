@@ -77,7 +77,8 @@ function MainContainer(): JSX.Element {
         break;
       }
       case 'sendSnapshots': {
-        dispatch(setTab(payload));
+        // sourceTab is the tab that sent the snapshot; setTab expects tabId, not tabsObj
+        if (typeof sourceTab === 'number') dispatch(setTab(sourceTab));
         dispatch(addNewSnapshots(payload));
         break;
       }

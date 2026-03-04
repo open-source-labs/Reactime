@@ -281,6 +281,9 @@ chrome.runtime.onMessage.addListener((request) => {
       // '*' == target window origin required for event to be dispatched, '*' = no preference
       window.postMessage(request, '*');
     }
+    if (action === 'hideClickReplay') {
+      updateClickReplayPointer(undefined);
+    }
     if (action === 'portDisconnect' && !currentPort && !isAttemptingReconnect) {
       console.log('Received disconnect message, initiating reconnection');
       // When we receive a port disconnection message, relay it to the window
