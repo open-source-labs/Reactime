@@ -207,7 +207,17 @@ async function axRecord(tabId) {
   }
 }
 
-
+// Chrome Debugger API is unused unless accessibility features are toggled on with UI.
+// This function will replace the current empty snapshot if accessibility features are toggled on and the current location's accessibility snapshot has not yet been recorded.
+async function replaceEmptySnap(tabsObj, tabId, toggleAxRecord) {
+  if (tabsObj[tabId].currLocation.axSnapshot === 'emptyAxSnap' && toggleAxRecord === true) {
+    // add new ax snapshot to currlocation
+    const addedAxSnap = await axRecord(tabId);
+    tabsObj[tabId].currLocation.axSnapshot = addedAxSnap;
+    // modify array to include the new recorded ax snapshot
+    tabsObj[tabId].axSnapshots[tabsObj[tabId].currLocation.index] = addedAxSnap;
+  }
+}
 
 // This function will create the first instance of the test app's tabs object
 // which will hold test app's snapshots, link fiber tree info, chrome tab info, etc.
