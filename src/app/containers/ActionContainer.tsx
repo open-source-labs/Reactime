@@ -193,6 +193,11 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
               snapshots first if you need to keep them.
             </DialogContentText>
           </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setClearDialogOpen(false)} autoFocus>
+              Cancel
+            </Button>
+          </DialogActions>
         </Dialog>
         <div className='snapshots'>
           {dropdownSelection === 'Providers / Consumers' && (
