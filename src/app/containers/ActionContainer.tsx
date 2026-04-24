@@ -171,9 +171,13 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             className='clear-button-modern'
             variant='text'
             onClick={() => {
-              dispatch(emptySnapshots()); // set slider back to zero, visually
-              dispatch(changeSlider(0));
-              setExpandedIndex(null); // Reset expanded state when clearing
+              if (snapshots && snapshots.length > 1) {
+                setClearDialogOpen(true);
+              } else {
+                dispatch(emptySnapshots());
+                dispatch(changeSlider(0));
+                setExpandedIndex(null);
+              }
             }}
             type='button'
           >
