@@ -9,7 +9,8 @@ import 'regenerator-runtime/runtime';
 import linkFiber from './routers/linkFiber';
 // timeJumpInitialization (actually uses the function timeJumpInitiation but is labeled here as linkFiberInitialization, returns a function) returns a function that sets jumping to false and handles timetravel feature
 import timeJumpInitialization from './controllers/timeJump';
-import { Snapshot, Status, MsgData } from './types/backendTypes';
+import { initUserEventCapture } from './controllers/userEventCapture';
+import { Status, MsgData } from './types/backendTypes';
 import routes from './models/routes';
 
 // -------------------------INITIALIZE MODE--------------------------
@@ -31,6 +32,8 @@ const timeJump = timeJumpInitialization(mode);
  * 3. Send a snapshot of ReactFiber Tree to frontend/Chrome Extension
  */
 linkFiberInit();
+// Capture user clicks so we can show "laser pointer" replay when time traveling
+initUserEventCapture();
 
 // --------------INITIALIZE EVENT LISTENER FOR TIME TRAVEL----------------------
 /**

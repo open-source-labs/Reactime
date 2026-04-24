@@ -50,10 +50,14 @@ export const mainSlice = createSlice({
       const currSnapshot = tabs[currentTab].snapshots[tabs[currentTab].currLocation.index]; // current snapshot
       const currAxSnapshot = tabs[currentTab].axSnapshots[tabs[currentTab].currLocation.index]; // current accessibility tree snapshot
 
-      tabs[currentTab].hierarchy.stateSnapshot = { ...currSnapshot }; // resets hierarchy to current snapshot
+      // Strip lastUserEvent so jumpToSnap (from changeSlider) won't re-show the pointer
+      const cleanSnapshot = { ...currSnapshot };
+      delete (cleanSnapshot as { lastUserEvent?: unknown }).lastUserEvent;
+
+      tabs[currentTab].hierarchy.stateSnapshot = { ...cleanSnapshot }; // resets hierarchy to current snapshot
       tabs[currentTab].hierarchy.axSnapshot = { ...currAxSnapshot }; // resets hierarchy to current accessibility tree snapshot
       tabs[currentTab].hierarchy.children = []; // resets hierarchy
-      tabs[currentTab].snapshots = [currSnapshot]; // resets snapshots to current snapshot
+      tabs[currentTab].snapshots = [cleanSnapshot]; // resets snapshots to current snapshot (no lastUserEvent)
       tabs[currentTab].axSnapshots = [currAxSnapshot]; // resets snapshots to current snapshot
 
       // resets currLocation to current snapshot
@@ -200,19 +204,21 @@ export const mainSlice = createSlice({
       const { port, currentTab, tabs } = state;
       const { hierarchy, snapshots } = tabs[currentTab] || {};
 
-      // finds the name by the action.payload parsing through the hierarchy to send to background.js the current name in the jump action
-      const nameFromIndex = findName(action.payload, hierarchy);
-      // nameFromIndex is a number based on which jump button is pushed
+      const index = typeof action.payload === 'object' ? action.payload.index : action.payload;
 
+      // finds the name by the index parsing through the hierarchy to send to background.js the current name in the jump action
+      const nameFromIndex = findName(index, hierarchy);
+
+      // Always pass full snapshot so laser pointer shows when snapshot has lastUserEvent
       port.postMessage({
         action: 'jumpToSnap',
-        payload: snapshots[action.payload],
-        index: action.payload,
+        payload: snapshots[index],
+        index,
         name: nameFromIndex,
         tabId: currentTab,
       });
 
-      tabs[currentTab].sliderIndex = action.payload;
+      tabs[currentTab].sliderIndex = index;
     },
 
     setCurrentTabInApp: (state, action) => {
