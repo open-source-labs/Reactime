@@ -180,6 +180,12 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             Clear
           </Button>
         </div>
+        <Dialog
+          open={clearDialogOpen}
+          onClose={() => setClearDialogOpen(false)}
+          aria-labelledby='clear-snapshots-dialog-title'
+          aria-describedby='clear-snapshots-dialog-description'
+        />
         <div className='snapshots'>
           {dropdownSelection === 'Providers / Consumers' && (
             <ProvConContainer currentSnapshot={currLocation.stateSnapshot} />
