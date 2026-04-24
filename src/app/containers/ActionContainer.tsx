@@ -197,6 +197,17 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             <Button onClick={() => setClearDialogOpen(false)} autoFocus>
               Cancel
             </Button>
+            <Button
+              onClick={() => {
+                dispatch(emptySnapshots());
+                dispatch(changeSlider(0));
+                setExpandedIndex(null);
+                setClearDialogOpen(false);
+              }}
+              color='error'
+            >
+              Clear
+            </Button>
           </DialogActions>
         </Dialog>
         <div className='snapshots'>
