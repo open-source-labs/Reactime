@@ -185,7 +185,15 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
           onClose={() => setClearDialogOpen(false)}
           aria-labelledby='clear-snapshots-dialog-title'
           aria-describedby='clear-snapshots-dialog-description'
-        />
+        >
+          <DialogTitle id='clear-snapshots-dialog-title'>Clear all snapshots?</DialogTitle>
+          <DialogContent>
+            <DialogContentText id='clear-snapshots-dialog-description'>
+              This will discard your current recording session and cannot be undone. Export your
+              snapshots first if you need to keep them.
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
         <div className='snapshots'>
           {dropdownSelection === 'Providers / Consumers' && (
             <ProvConContainer currentSnapshot={currLocation.stateSnapshot} />
