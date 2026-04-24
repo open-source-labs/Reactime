@@ -25,6 +25,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   const [dropdownSelection, setDropdownSelection] = useState('Time Jump');
   const actionsEndRef = useRef(null as unknown as HTMLDivElement);
   const [expandedIndex, setExpandedIndex] = useState(null as number | null); // Track which snapshot is expanded
+  const [clearDialogOpen, setClearDialogOpen] = useState(false); // Confirm dialog for Clear
 
   const dispatch = useDispatch();
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
