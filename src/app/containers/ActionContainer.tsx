@@ -7,7 +7,14 @@ import RouteDescription from '../components/Actions/RouteDescription';
 import DropDown from '../components/Actions/DropDown';
 import ProvConContainer from './ProvConContainer';
 import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
-import { Button } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from '@mui/material';
 import RecordButton from '../components/Actions/RecordButton';
 
 /*
@@ -18,6 +25,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   const [dropdownSelection, setDropdownSelection] = useState('Time Jump');
   const actionsEndRef = useRef(null as unknown as HTMLDivElement);
   const [expandedIndex, setExpandedIndex] = useState(null as number | null); // Track which snapshot is expanded
+  const [clearDialogOpen, setClearDialogOpen] = useState(false); // Confirm dialog for Clear
 
   const dispatch = useDispatch();
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
@@ -163,15 +171,49 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             className='clear-button-modern'
             variant='text'
             onClick={() => {
-              dispatch(emptySnapshots()); // set slider back to zero, visually
-              dispatch(changeSlider(0));
-              setExpandedIndex(null); // Reset expanded state when clearing
+              if (snapshots && snapshots.length > 1) {
+                setClearDialogOpen(true);
+              } else {
+                dispatch(emptySnapshots());
+                dispatch(changeSlider(0));
+                setExpandedIndex(null);
+              }
             }}
             type='button'
           >
             Clear
           </Button>
         </div>
+        <Dialog
+          open={clearDialogOpen}
+          onClose={() => setClearDialogOpen(false)}
+          aria-labelledby='clear-snapshots-dialog-title'
+          aria-describedby='clear-snapshots-dialog-description'
+        >
+          <DialogTitle id='clear-snapshots-dialog-title'>Clear all snapshots?</DialogTitle>
+          <DialogContent>
+            <DialogContentText id='clear-snapshots-dialog-description'>
+              This will discard your current recording session and cannot be undone. Export your
+              snapshots first if you need to keep them.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setClearDialogOpen(false)} autoFocus>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                dispatch(emptySnapshots());
+                dispatch(changeSlider(0));
+                setExpandedIndex(null);
+                setClearDialogOpen(false);
+              }}
+              color='error'
+            >
+              Clear
+            </Button>
+          </DialogActions>
+        </Dialog>
         <div className='snapshots'>
           {dropdownSelection === 'Providers / Consumers' && (
             <ProvConContainer currentSnapshot={currLocation.stateSnapshot} />
