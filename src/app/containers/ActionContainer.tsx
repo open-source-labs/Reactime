@@ -9,6 +9,8 @@ import ProvConContainer from './ProvConContainer';
 import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
 import { Button } from '@mui/material';
 import RecordButton from '../components/Actions/RecordButton';
+import { toast } from 'react-hot-toast';
+import { REACTIME_TOAST_DEFAULTS } from '../utils/toastConfig';
 
 /*
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
@@ -163,9 +165,22 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             className='clear-button-modern'
             variant='text'
             onClick={() => {
+              const clearedCount = snapshots?.length ?? 0;
               dispatch(emptySnapshots()); // set slider back to zero, visually
               dispatch(changeSlider(0));
               setExpandedIndex(null); // Reset expanded state when clearing
+              if (clearedCount > 0) {
+                toast.success(
+                  `Cleared ${clearedCount} snapshot${clearedCount === 1 ? '' : 's'}`,
+                  { ...REACTIME_TOAST_DEFAULTS, id: 'snapshots-cleared' },
+                );
+              } else {
+                toast('No snapshots to clear', {
+                  ...REACTIME_TOAST_DEFAULTS,
+                  id: 'snapshots-cleared',
+                  icon: 'ℹ️',
+                });
+              }
             }}
             type='button'
           >

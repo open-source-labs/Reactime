@@ -16,9 +16,12 @@ import {
   setCurrentLocation,
   disconnected,
   endConnect,
+  startReconnect,
 } from '../slices/mainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainState, RootState } from '../FrontendTypes';
+import { toast } from 'react-hot-toast';
+import { REACTIME_TOAST_DEFAULTS } from '../utils/toastConfig';
 
 /*
   This is the main container where everything in our application is rendered
@@ -31,7 +34,43 @@ function MainContainer(): JSX.Element {
 
   // Function handles when Reactime unexpectedly disconnects
   const handleDisconnect = (msg): void => {
-    if (msg === 'portDisconnect') dispatch(disconnected());
+    if (msg !== 'portDisconnect') return;
+    dispatch(disconnected());
+
+    // Surface the disconnect with an actionable toast: one-click reconnect
+    // without forcing the user to find the Reconnect button. The fixed toast id
+    // dedupes repeated disconnect messages so we don't stack toasts if Chrome
+    // fires multiple onDisconnect events in quick succession.
+    toast.error(
+      (t) => (
+        <span style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span>Lost connection to the tab</span>
+          <button
+            type='button'
+            onClick={() => {
+              dispatch(startReconnect());
+              toast.dismiss(t.id);
+            }}
+            style={{
+              background: 'var(--color-primary)',
+              color: 'var(--text-primary)',
+              border: 'none',
+              borderRadius: '6px',
+              padding: '4px 10px',
+              cursor: 'pointer',
+              fontWeight: 600,
+            }}
+          >
+            Reconnect
+          </button>
+        </span>
+      ),
+      {
+        ...REACTIME_TOAST_DEFAULTS,
+        id: 'port-disconnected',
+        duration: 8000,
+      },
+    );
   };
 
   // Function to listen for a message containing snapshots from the /extension/build/background.js service worker
