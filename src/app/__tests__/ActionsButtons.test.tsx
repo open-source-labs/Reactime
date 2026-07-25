@@ -321,4 +321,41 @@ describe('Clear Button', () => {
     expect(dummyDispatch).toHaveBeenCalledWith(emptySnapshots());
     expect(dummyDispatch).toHaveBeenCalledWith(changeSlider(0));
   });
+
+  test('opens confirmation dialog when clearing with existing snapshots', () => {
+    render(
+      <Provider store={mockStore}>
+        <ActionContainer snapshots={[{}, {}, {}] as any} />
+      </Provider>,
+    );
+    fireEvent.click(screen.getByText('Clear'));
+    expect(dummyDispatch).not.toHaveBeenCalledWith(emptySnapshots());
+    expect(screen.getByText('Clear all snapshots?')).toBeInTheDocument();
+  });
+
+  test('cancel button closes the dialog without clearing', () => {
+    render(
+      <Provider store={mockStore}>
+        <ActionContainer snapshots={[{}, {}, {}] as any} />
+      </Provider>,
+    );
+    fireEvent.click(screen.getByText('Clear'));
+    fireEvent.click(screen.getByText('Cancel'));
+    expect(dummyDispatch).not.toHaveBeenCalledWith(emptySnapshots());
+  });
+
+  test('confirm button in dialog dispatches clear actions', () => {
+    render(
+      <Provider store={mockStore}>
+        <ActionContainer snapshots={[{}, {}, {}] as any} />
+      </Provider>,
+    );
+    fireEvent.click(screen.getByText('Clear'));
+    const dialogClearButton = screen
+      .getAllByText('Clear')
+      .find((el) => el.closest('[role="dialog"]'));
+    fireEvent.click(dialogClearButton!);
+    expect(dummyDispatch).toHaveBeenCalledWith(emptySnapshots());
+    expect(dummyDispatch).toHaveBeenCalledWith(changeSlider(0));
+  });
 });

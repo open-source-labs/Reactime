@@ -7,7 +7,14 @@ import RouteDescription from '../components/Actions/RouteDescription';
 import DropDown from '../components/Actions/DropDown';
 import ProvConContainer from './ProvConContainer';
 import { ActionContainerProps, CurrentTab, MainState, Obj, RootState } from '../FrontendTypes';
-import { Button } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from '@mui/material';
 import RecordButton from '../components/Actions/RecordButton';
 import { toast } from 'react-hot-toast';
 import { REACTIME_TOAST_DEFAULTS } from '../utils/toastConfig';
@@ -20,6 +27,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   const [dropdownSelection, setDropdownSelection] = useState('Time Jump');
   const actionsEndRef = useRef(null as unknown as HTMLDivElement);
   const [expandedIndex, setExpandedIndex] = useState(null as number | null); // Track which snapshot is expanded
+  const [clearDialogOpen, setClearDialogOpen] = useState(false); // Confirm dialog for Clear
 
   const dispatch = useDispatch();
   const { currentTab, tabs, port }: MainState = useSelector((state: RootState) => state.main);
@@ -27,6 +35,26 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   const { currLocation, hierarchy, sliderIndex, viewIndex }: Partial<CurrentTab> = tabs[currentTab]; // we destructure the currentTab object
   const { snapshots } = props;
   const [recordingActions, setRecordingActions] = useState(true); // We create a local state 'recordingActions' and set it to true
+
+  // Clears all snapshots, resets the slider/expanded state, and surfaces toast feedback.
+  const clearSnapshotsWithFeedback = (): void => {
+    const clearedCount = snapshots?.length ?? 0;
+    dispatch(emptySnapshots()); // set slider back to zero, visually
+    dispatch(changeSlider(0));
+    setExpandedIndex(null); // Reset expanded state when clearing
+    if (clearedCount > 0) {
+      toast.success(`Cleared ${clearedCount} snapshot${clearedCount === 1 ? '' : 's'}`, {
+        ...REACTIME_TOAST_DEFAULTS,
+        id: 'snapshots-cleared',
+      });
+    } else {
+      toast('No snapshots to clear', {
+        ...REACTIME_TOAST_DEFAULTS,
+        id: 'snapshots-cleared',
+        icon: 'ℹ️',
+      });
+    }
+  };
   let actionsArr: JSX.Element[] = []; // we create an array 'actionsArr' that will hold elements we create later on
   // we create an array 'hierarchyArr' that will hold objects and numbers
   const hierarchyArr: (number | {})[] = [];
@@ -165,21 +193,11 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             className='clear-button-modern'
             variant='text'
             onClick={() => {
-              const clearedCount = snapshots?.length ?? 0;
-              dispatch(emptySnapshots()); // set slider back to zero, visually
-              dispatch(changeSlider(0));
-              setExpandedIndex(null); // Reset expanded state when clearing
-              if (clearedCount > 0) {
-                toast.success(
-                  `Cleared ${clearedCount} snapshot${clearedCount === 1 ? '' : 's'}`,
-                  { ...REACTIME_TOAST_DEFAULTS, id: 'snapshots-cleared' },
-                );
+              // Confirm before discarding a non-trivial recording session; otherwise clear directly.
+              if (snapshots && snapshots.length > 1) {
+                setClearDialogOpen(true);
               } else {
-                toast('No snapshots to clear', {
-                  ...REACTIME_TOAST_DEFAULTS,
-                  id: 'snapshots-cleared',
-                  icon: 'ℹ️',
-                });
+                clearSnapshotsWithFeedback();
               }
             }}
             type='button'
@@ -187,6 +205,34 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             Clear
           </Button>
         </div>
+        <Dialog
+          open={clearDialogOpen}
+          onClose={() => setClearDialogOpen(false)}
+          aria-labelledby='clear-snapshots-dialog-title'
+          aria-describedby='clear-snapshots-dialog-description'
+        >
+          <DialogTitle id='clear-snapshots-dialog-title'>Clear all snapshots?</DialogTitle>
+          <DialogContent>
+            <DialogContentText id='clear-snapshots-dialog-description'>
+              This will discard your current recording session and cannot be undone. Export your
+              snapshots first if you need to keep them.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setClearDialogOpen(false)} autoFocus>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                clearSnapshotsWithFeedback();
+                setClearDialogOpen(false);
+              }}
+              color='error'
+            >
+              Clear
+            </Button>
+          </DialogActions>
+        </Dialog>
         <div className='snapshots'>
           {dropdownSelection === 'Providers / Consumers' && (
             <ProvConContainer currentSnapshot={currLocation.stateSnapshot} />
