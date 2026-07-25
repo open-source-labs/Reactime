@@ -1,0 +1,34 @@
+.reactime-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 12px;
+  transition: var(--theme-transition);
+}
+
+.reactime-footer .footer-brand {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.reactime-footer .footer-separator {
+  color: var(--text-tertiary);
+  user-select: none;
+}
+
+.reactime-footer .footer-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+}

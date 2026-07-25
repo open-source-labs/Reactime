@@ -16,6 +16,8 @@ import {
   DialogActions,
 } from '@mui/material';
 import RecordButton from '../components/Actions/RecordButton';
+import { toast } from 'react-hot-toast';
+import { REACTIME_TOAST_DEFAULTS } from '../utils/toastConfig';
 
 /*
   This file renders the 'ActionContainer'. The action container is the leftmost column in the application. It includes the button that shrinks and expands the action container, a dropdown to select the active site, a clear button, the current selected Route, and a list of selectable snapshots with timestamps.
@@ -33,6 +35,26 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
   const { currLocation, hierarchy, sliderIndex, viewIndex }: Partial<CurrentTab> = tabs[currentTab]; // we destructure the currentTab object
   const { snapshots } = props;
   const [recordingActions, setRecordingActions] = useState(true); // We create a local state 'recordingActions' and set it to true
+
+  // Clears all snapshots, resets the slider/expanded state, and surfaces toast feedback.
+  const clearSnapshotsWithFeedback = (): void => {
+    const clearedCount = snapshots?.length ?? 0;
+    dispatch(emptySnapshots()); // set slider back to zero, visually
+    dispatch(changeSlider(0));
+    setExpandedIndex(null); // Reset expanded state when clearing
+    if (clearedCount > 0) {
+      toast.success(`Cleared ${clearedCount} snapshot${clearedCount === 1 ? '' : 's'}`, {
+        ...REACTIME_TOAST_DEFAULTS,
+        id: 'snapshots-cleared',
+      });
+    } else {
+      toast('No snapshots to clear', {
+        ...REACTIME_TOAST_DEFAULTS,
+        id: 'snapshots-cleared',
+        icon: 'ℹ️',
+      });
+    }
+  };
   let actionsArr: JSX.Element[] = []; // we create an array 'actionsArr' that will hold elements we create later on
   // we create an array 'hierarchyArr' that will hold objects and numbers
   const hierarchyArr: (number | {})[] = [];
@@ -171,12 +193,11 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             className='clear-button-modern'
             variant='text'
             onClick={() => {
+              // Confirm before discarding a non-trivial recording session; otherwise clear directly.
               if (snapshots && snapshots.length > 1) {
                 setClearDialogOpen(true);
               } else {
-                dispatch(emptySnapshots());
-                dispatch(changeSlider(0));
-                setExpandedIndex(null);
+                clearSnapshotsWithFeedback();
               }
             }}
             type='button'
@@ -203,9 +224,7 @@ function ActionContainer(props: ActionContainerProps): JSX.Element {
             </Button>
             <Button
               onClick={() => {
-                dispatch(emptySnapshots());
-                dispatch(changeSlider(0));
-                setExpandedIndex(null);
+                clearSnapshotsWithFeedback();
                 setClearDialogOpen(false);
               }}
               color='error'

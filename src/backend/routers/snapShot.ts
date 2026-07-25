@@ -1,17 +1,15 @@
-import { Snapshot, FiberRoot } from '../types/backendTypes';
+import { FiberRoot } from '../types/backendTypes';
 import componentActionsRecord from '../models/masterState';
 import routes from '../models/routes';
 import createTree from '../controllers/createTree';
+import { getLastUserEvent } from '../controllers/userEventCapture';
 
 // -------------------------UPDATE & SEND TREE SNAP SHOT------------------------
 /**
- * This function creates a new `snapShot` fiber tree with the provided `fiberRoot`, then send the updated snapshot to front end.
- * This runs after every Fiber commit if mode is not jumping.
- * This
- * @param snapshot The current snapshot of the fiber tree
- * @param fiberRoot The `fiberRootNode`, which is the root node of the fiber tree is stored in the current property of the fiber root object which we can use to traverse the tree
+ * Creates a new snapshot of the fiber tree and sends it to the front end.
+ * Runs after every Fiber commit when not in jumping mode.
+ * @param fiberRoot - The fiber root; the root node is in its `current` property.
  */
-// updating tree depending on current mode on the panel (pause, etc)
 export default function updateAndSendSnapShotTree(fiberRoot: FiberRoot): void {
   // This is the currently active root fiber(the mutable root of the tree)
   const { current } = fiberRoot;
@@ -22,6 +20,12 @@ export default function updateAndSendSnapShotTree(fiberRoot: FiberRoot): void {
   const payload = createTree(current);
   // Save the current window url to route
   payload.route = routes.addRoute(window.location.href);
+  // Attach last user click so the extension can show "laser pointer" replay when time traveling
+  const lastEvent = getLastUserEvent();
+  if (lastEvent) {
+    // eslint-disable-next-line no-param-reassign -- attaching replay metadata to snapshot payload
+    (payload as { lastUserEvent?: ReturnType<typeof getLastUserEvent> }).lastUserEvent = lastEvent;
+  }
   // method safely enables cross-origin communication between Window objects;
   // e.g., between a page and a pop-up that it spawned, or between a page
   // and an iframe embedded within it.

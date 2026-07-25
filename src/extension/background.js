@@ -512,6 +512,12 @@ chrome.runtime.onConnect.addListener(async (port) => {
         tabsObj[tabId].currBranch = 1; // reset currBranch
         tabsObj[tabId].currLocation = tabsObj[tabId].hierarchy; // reset currLocation
 
+        // Hide click-replay visualization since snapshots were cleared
+        try {
+          chrome.tabs.sendMessage(tabId, { action: 'hideClickReplay' });
+        } catch (err) {
+          // Tab may be closed or content script not loaded
+        }
         return true; // return true so that port remains open
 
       case 'setPause': // Pause = lock on tab
@@ -733,6 +739,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           );
         }
 
+        // User action created new snapshot; hide click-replay visualization
+        try {
+          chrome.tabs.sendMessage(sourceTab, { action: 'hideClickReplay' });
+        } catch (err) {
+          /* tab may be closed */
+        }
         break;
       }
 
@@ -756,15 +768,29 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
       if (isDuplicateSnapshot(previousSnap, incomingSnap)) {
         console.warn('Duplicate snapshot detected, skipping');
+        // Still hide pointer - user interaction triggered a snapshot even if we skipped it
+        try {
+          chrome.tabs.sendMessage(sourceTab, { action: 'hideClickReplay' });
+        } catch (err) {
+          /* tab may be closed */
+        }
         break;
       }
 
       // Or if it is a snapShot after a jump, we don't record it.
+      let didAddSnapshot = false;
       if (reloaded[tabId]) {
         // don't add anything to snapshot storage if tab is reloaded for the initial snapshot
         reloaded[tabId] = false;
+        // Still hide pointer - snapshot after jump, user has moved on
+        try {
+          chrome.tabs.sendMessage(sourceTab, { action: 'hideClickReplay' });
+        } catch (err) {
+          /* tab may be closed */
+        }
       } else {
         tabsObj[tabId].snapshots.push(request.payload);
+        didAddSnapshot = true;
         // INVOKING buildHierarchy FIGURE OUT WHAT TO PASS IN
         if (!tabsObj[tabId][index]) {
           // check if accessibility recording has been toggled on
@@ -798,6 +824,15 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         });
       } else {
         console.warn('No active ports to send snapshots to.');
+      }
+
+      // User action created new snapshot; hide click-replay visualization
+      if (didAddSnapshot) {
+        try {
+          chrome.tabs.sendMessage(sourceTab, { action: 'hideClickReplay' });
+        } catch (err) {
+          /* tab may be closed */
+        }
       }
     }
     default:
