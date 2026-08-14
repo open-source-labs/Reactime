@@ -154,6 +154,25 @@ const Action = (props: ActionProps): JSX.Element => {
       setExpandedIndex(newExpandedIndex);
     }
   };
+
+  /**
+   * Copies the snapshot's state to the clipboard as pretty-printed JSON.
+   * Uses the navigator.clipboard API; shows a small confirmation on the button.
+   */
+  const handleCopyState = async (e: { stopPropagation: () => void }): Promise<void> => {
+    e.stopPropagation();
+    try {
+      const stateText = state ? JSON.stringify(state, null, 2) : '';
+      await navigator.clipboard.writeText(stateText);
+      if (copyStatus !== 'Copied!') setCopyStatus('Copied!');
+    } catch {
+      setCopyStatus('Copy failed');
+    }
+    setTimeout(() => setCopyStatus(''), 2000);
+  };
+
+  const [copyStatus, setCopyStatus] = useState('');
+
   return (
     <div className='individual-action'>
       <div
@@ -249,6 +268,16 @@ const Action = (props: ActionProps): JSX.Element => {
                 </div>
               </div>
             )}
+
+            {/* Copy state button in expanded section */}
+            <button
+              className='copy-state-button-compact'
+              onClick={handleCopyState}
+              type='button'
+              aria-label='Copy snapshot state to clipboard'
+            >
+              {copyStatus || 'Copy state'}
+            </button>
 
             {/* Jump button in expanded section */}
             {!isCurrIndex && (
