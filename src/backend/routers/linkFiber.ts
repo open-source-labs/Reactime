@@ -1,4 +1,4 @@
-import { Snapshot, Status, FiberRoot } from '../types/backendTypes';
+import { Status, FiberRoot } from '../types/backendTypes';
 import { DevTools } from '../types/linkFiberTypes';
 import updateAndSendSnapShotTree from './snapShot';
 import throttle from '../controllers/throttle';
@@ -58,22 +58,12 @@ const throttledUpdateSnapshot = throttle(async (fiberRoot: FiberRoot, mode: Stat
 export default function linkFiber(mode: Status): () => Promise<void> {
   /** A boolean value indicate if the target React Application is visible */
   let isVisible: boolean = true;
-  /**
-   * Every React application has one or more DOM elements that act as containers. React creates a fiber root object for each of those containers.
-   * This fiber root is where React holds reference to a fiber tree
-   * The `fiberRootNode`, which is the root node of the fiber tree is stored in the current property of the fiber root object
-   */
-  let fiberRoot: FiberRoot;
-
   // Return a function to be invoked by index.js that initiates snapshot monitoring
   return async function linkFiberInitialization() {
     // -------------------CHECK REACT DEVTOOL INSTALLATION----------------------
     // react devtools global hook is a global object that was injected by the React Devtools content script, allows access to fiber nodes and react version
     // Obtain React Devtools Object:
-    let devTools; // changed to a different version of getting hook (08/04/2023)
-    while (!devTools) {
-      devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-    }
+    const devTools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
     // If React Devtools is not installed, object will be undefined.
     if (!devTools) return;
     // If React Devtools is installed, send a message to front end.
@@ -86,10 +76,8 @@ export default function linkFiber(mode: Status): () => Promise<void> {
     );
 
     // --------------------CHECK VALID REACT APPLICATION------------------------
-    // Obtain React Application information:
-    const reactInstance = devTools.renderers.get(1);
-    // If target application is not a React App, this will return undefined.
-    if (!reactInstance) {
+    // Renderer IDs are assigned by DevTools and need not start at 1.
+    if (!devTools.renderers.size) {
       return;
     }
     // If target application is a React App, send a message to front end.
@@ -109,15 +97,6 @@ export default function linkFiber(mode: Status): () => Promise<void> {
       // Hidden property = background tab/minimized window
       isVisible = !document.hidden;
     });
-
-    // ---------OBTAIN THE INITIAL FIBEROOTNODE FROM REACT DEV TOOL-------------
-    // Obtain the FiberRootNode, which is the first value in the FiberRoot Set:
-    fiberRoot = devTools.getFiberRoots(1).values().next().value;
-
-    // console.log('Initial fiber root', fiberRoot);
-
-    // ----------INITIALIZE THE TREE SNAP SHOT ON CHROME EXTENSION--------------
-    await throttledUpdateSnapshot(fiberRoot, mode); // only runs on start up
 
     // --------MONKEY PATCHING THE onCommitFiberRoot FROM REACT DEV TOOL--------
     // React has inherent methods that are called with react fiber
@@ -141,5 +120,15 @@ export default function linkFiber(mode: Status): () => Promise<void> {
       };
     }
     devTools.onCommitFiberRoot = addOneMoreStep(devTools.onCommitFiberRoot);
+
+    // A renderer can be registered before any roots have mounted (e.g. during hydration).
+    // Subscribe above even when no root exists yet, so the first commit creates the snapshot.
+    for (const rendererID of devTools.renderers.keys()) {
+      const fiberRoot = devTools.getFiberRoots(rendererID).values().next().value;
+      if (fiberRoot) {
+        await throttledUpdateSnapshot(fiberRoot, mode);
+        break;
+      }
+    }
   };
 }

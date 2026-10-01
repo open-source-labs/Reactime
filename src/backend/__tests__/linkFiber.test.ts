@@ -154,6 +154,49 @@ describe('linkFiber', () => {
     });
   });
 
+  describe('initial fiber root discovery', () => {
+    it('waits for the first commit when no root has mounted yet', async () => {
+      devTools.getFiberRoots = () => new Set();
+      const originalOnCommitFiberRoot = jest.fn();
+      devTools.onCommitFiberRoot = originalOnCommitFiberRoot;
+
+      await new Promise(linkFiberDelayed);
+      expect(mockPostMessage).not.toHaveBeenCalledWith(
+        expect.objectContaining({ action: 'recordSnap' }),
+        '*',
+      );
+
+      await new Promise(onCommitFiberRootDelayed);
+      expect(originalOnCommitFiberRoot).toHaveBeenCalledWith(0, fiberRoot, 'high');
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        { action: 'recordSnap', payload: rootPayload },
+        '*',
+      );
+    });
+
+    it('finds a mounted root when an earlier renderer has no roots', async () => {
+      devTools.renderers.set(2, { version: '19' });
+      devTools.getFiberRoots = (rendererID) => new Set(rendererID === 2 ? [fiberRoot] : []);
+
+      await new Promise(linkFiberDelayed);
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        { action: 'recordSnap', payload: rootPayload },
+        '*',
+      );
+    });
+
+    it('initializes when renderer IDs do not include 1', async () => {
+      devTools.renderers.delete(1);
+      devTools.renderers.set(2, { version: '19' });
+
+      await new Promise(linkFiberDelayed);
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        { action: 'recordSnap', payload: rootPayload },
+        '*',
+      );
+    });
+  });
+
   describe('document visibility', () => {
     it('should initiate an event listener for visibility change', async () => {
       const addEventListenerSpy = jest.spyOn(document, 'addEventListener');
