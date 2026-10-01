@@ -5,9 +5,9 @@ import { FiberRoot } from './backendTypes';
  */
 export interface DevTools {
   /**
-   * @property renderers - an Map object containing information about the React renders that are currently active on the page. The react version being used can be obtained at key = 1.
+   * @property renderers - an Map object containing information about the React renders that are currently active on the page. Each renderer is keyed by its renderer ID.
    */
-  renderers: Map<1, undefined | { version: string }>;
+  renderers: Map<number, undefined | { version: string }>;
   /**
    * @method getFiberRoots - get the Set of fiber roots that are currently mounted for the given rendererID. If not found, initalize a new empty Set at renderID key.
    * @param renderID -  a unique identifier for a specific instance of a React renderer. When a React application is first mounted, it will receive a rendererID. This rendererID will remain the same for the entire lifecycle of the application, even if the state is updated and the components are re-rendered/unmounted/added. However, if the application is unmounted and re-mounted again, it will receive a new rendererID.
